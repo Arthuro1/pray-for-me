@@ -82,9 +82,10 @@ export default function PlanTab() {
       <div className="px-4 md:px-8 pt-4">
         {/* Add button */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>Catégories</h3>
+          <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'categoriesHeading')}</h3>
           <button
             onClick={() => { setShowAddForm(true); setEditId(null); setForm({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] }); }}
+            title={t(lang, 'tipCreateCategory')}
             className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium"
             style={{ background: '#7c5cfc', color: '#fff' }}
           >
@@ -96,8 +97,8 @@ export default function PlanTab() {
         {showAddForm && (
           <div className="rounded-2xl p-4 mb-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{editId ? 'Modifier' : 'Nouvelle catégorie'}</h4>
-              <button onClick={() => setShowAddForm(false)} style={{ color: '#b0a4c0' }}><X size={16} /></button>
+              <h4 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{editId ? t(lang, 'editCategoryLabel') : t(lang, 'newCategoryLabel')}</h4>
+              <button onClick={() => setShowAddForm(false)} title={t(lang, 'tipCloseForm')} style={{ color: '#b0a4c0' }}><X size={16} /></button>
             </div>
 
             <div className="space-y-3">
@@ -112,7 +113,7 @@ export default function PlanTab() {
               />
 
               <div>
-                <p className="text-xs mb-2" style={{ color: '#9b8cb0' }}>Emoji</p>
+                <p className="text-xs mb-2" style={{ color: '#9b8cb0' }}>{t(lang, 'emojiLabel')}</p>
                 <div className="flex gap-1.5 flex-wrap">
                   {EMOJIS.map((e) => (
                     <button
@@ -128,7 +129,7 @@ export default function PlanTab() {
               </div>
 
               <div>
-                <p className="text-xs mb-2" style={{ color: '#9b8cb0' }}>Couleur</p>
+                <p className="text-xs mb-2" style={{ color: '#9b8cb0' }}>{t(lang, 'colorLabel')}</p>
                 <div className="flex gap-2 flex-wrap">
                   {COLORS.map((c) => (
                     <button
@@ -144,7 +145,7 @@ export default function PlanTab() {
               </div>
 
               <div>
-                <p className="text-xs mb-2" style={{ color: '#9b8cb0' }}>Jours de prière</p>
+                <p className="text-xs mb-2" style={{ color: '#9b8cb0' }}>{t(lang, 'prayerDays')}</p>
                 <div className="flex gap-1">
                   {DAYS.map((day, idx) => {
                     const active = (form.weekDays || []).includes(idx);
@@ -170,7 +171,7 @@ export default function PlanTab() {
                 className="w-full text-white rounded-xl py-2.5 text-sm font-semibold"
                 style={{ background: '#7c5cfc' }}
               >
-                {editId ? 'Enregistrer' : 'Ajouter'}
+                {editId ? t(lang, 'saveBtn') : t(lang, 'addBtn')}
               </button>
             </div>
           </div>
@@ -191,13 +192,15 @@ export default function PlanTab() {
                 <div className="ml-auto flex gap-1">
                   <button
                     onClick={() => startEdit(cat)}
+                    title={t(lang, 'tipEditCategory')}
                     className="text-xs px-2.5 py-1 rounded-lg"
                     style={{ background: '#f3eff9', color: '#7c5cfc' }}
                   >
-                    Modifier
+                    {t(lang, 'edit')}
                   </button>
                   <button
                     onClick={() => deleteCategory(cat.id)}
+                    title={t(lang, 'tipDeleteCategory')}
                     className="p-1.5 rounded-lg"
                     style={{ background: '#fdf0f0', color: '#c04040' }}
                   >
@@ -213,6 +216,7 @@ export default function PlanTab() {
                     <button
                       key={idx}
                       onClick={() => toggleDay(idx, cat.id)}
+                      title={t(lang, 'tipToggleDay', { day })}
                       className="flex-1 text-xs py-1.5 rounded-lg font-medium transition-colors"
                       style={active ? { backgroundColor: cat.color, color: '#fff' } : { background: '#f3eff9', color: '#b0a4c0' }}
                     >

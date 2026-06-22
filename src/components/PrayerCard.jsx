@@ -89,7 +89,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
             <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
               {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
             </span>
-            <button onClick={() => setExpanded(!expanded)} style={{ color: '#8b8ac2' }}>
+            <button onClick={() => setExpanded(!expanded)} title={expanded ? t(lang, "tipCollapse") : t(lang, "tipExpand")} style={{ color: '#8b8ac2' }}>
               {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
           </div>
@@ -146,7 +146,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                     style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddUpdate()}
                   />
-                  <button onClick={handleAddUpdate} className="rounded-lg px-2 flex items-center justify-center" style={{ background: '#7c5cfc', color: '#fff' }}>
+                  <button onClick={handleAddUpdate} title={t(lang, "tipSaveUpdate")} className="rounded-lg px-2 flex items-center justify-center" style={{ background: '#7c5cfc', color: '#fff' }}>
                     <Plus size={12} />
                   </button>
                 </div>
@@ -161,6 +161,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   <button
                     onClick={fetchUpdateRecs}
                     disabled={loadingRecs}
+                    title={t(lang, "tipAiSuggest")}
                     className="flex items-center gap-1 text-xs rounded-full px-2 py-0.5 font-medium disabled:opacity-50"
                     style={{ background: 'linear-gradient(135deg, #e8c0fc, #7c5cfc)', color: '#fff' }}
                   >
@@ -179,11 +180,11 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   <div className="flex gap-1.5 items-start">
                     <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: '#fff8e6', borderLeft: '2px solid #f5c842' }}>
                       <p className="text-xs leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
-                      <button onClick={() => setExpandedVerse(expandedVerse === pp.id ? null : pp.id)} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#c4a020' }}>
+                      <button onClick={() => setExpandedVerse(expandedVerse === pp.id ? null : pp.id)} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#c4a020' }}>
                         <BookOpen size={9} />{pp.verse}
                       </button>
                     </div>
-                    <button onClick={() => removePrayerPoint(prayer.id, pp.id)} className="opacity-0 group-hover:opacity-100 mt-1 shrink-0 transition-opacity" style={{ color: '#d4c8e4' }}>
+                    <button onClick={() => removePrayerPoint(prayer.id, pp.id)} title={t(lang, "tipRemovePoint")} className="opacity-0 group-hover:opacity-100 mt-1 shrink-0 transition-opacity" style={{ color: '#d4c8e4' }}>
                       <Trash2 size={10} />
                     </button>
                   </div>
@@ -204,12 +205,13 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   <div className="flex gap-1.5 items-start">
                     <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                       <p className="text-xs leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
-                      <button onClick={() => setExpandedVerse(expandedVerse === rec.verse ? null : rec.verse)} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#7c5cfc' }}>
+                      <button onClick={() => setExpandedVerse(expandedVerse === rec.verse ? null : rec.verse)} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#7c5cfc' }}>
                         <BookOpen size={9} />{rec.verse}
                       </button>
                     </div>
                     <button
                       onClick={() => { addPrayerPoint(prayer.id, { title: rec.title, verse: rec.verse, verseText: rec.verseText }); setUpdateRecs((prev) => prev.filter((r) => r.title !== rec.title)); }}
+                      title={t(lang, "tipAddPoint")}
                       className="mt-1 rounded-lg p-1 shrink-0" style={{ background: '#7c5cfc', color: '#fff' }}
                     >
                       <Plus size={11} />
@@ -243,20 +245,20 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
 
           <div className="flex gap-2 flex-wrap">
             {!isAnswered && (
-              <button onClick={handleMarkAnswered} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium" style={{ background: '#e8f5ed', color: '#1a6b42' }}>
+              <button onClick={handleMarkAnswered} title={showTestimony ? t(lang, "tipConfirm") : t(lang, "tipMarkAnswered")} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium" style={{ background: '#e8f5ed', color: '#1a6b42' }}>
                 <CheckCircle size={12} />
                 {showTestimony ? t(lang, 'confirm') : t(lang, 'markAnswered')}
               </button>
             )}
             {isAnswered && (
-              <button onClick={() => markActive(prayer.id)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              <button onClick={() => markActive(prayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
                 {t(lang, 'resumePrayer')}
               </button>
             )}
-            <button onClick={() => onEdit(prayer)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl ml-auto" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <button onClick={() => onEdit(prayer)} title={t(lang, "tipEditPrayer")} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl ml-auto" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
               <Edit2 size={12} />
             </button>
-            <button onClick={() => deletePrayer(prayer.id)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl" style={{ background: '#fdf0f0', color: '#c04040' }}>
+            <button onClick={() => deletePrayer(prayer.id)} title={t(lang, "tipDeletePrayer")} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl" style={{ background: '#fdf0f0', color: '#c04040' }}>
               <Trash2 size={12} />
             </button>
           </div>

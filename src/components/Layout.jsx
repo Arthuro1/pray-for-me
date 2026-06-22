@@ -61,7 +61,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
             onClick={() => setCollapsed(!collapsed)}
             className="shrink-0 rounded-lg p-1 transition-colors"
             style={{ color: 'var(--text-3)', marginLeft: collapsed ? 0 : 8 }}
-            title={collapsed ? 'Expand' : 'Collapse'}
+            title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
@@ -95,7 +95,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
         <div className="px-2 mt-4">
           <button
             onClick={onAddPrayer}
-            title={collapsed ? t(lang, 'newPrayer') : undefined}
+            title={t(lang, "tipAddPrayer")}
             className="w-full flex items-center rounded-xl text-sm font-semibold text-white transition-all active:scale-95"
             style={{
               gap: collapsed ? 0 : 10,
@@ -125,6 +125,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
       {/* ── FAB (mobile only) ── */}
       <button
         onClick={onAddPrayer}
+        title={t(lang, "tipAddPrayer")}
         className="md:hidden fixed z-20 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95"
         style={{
           bottom: '72px',

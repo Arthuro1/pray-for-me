@@ -132,6 +132,7 @@ export default function SettingsTab() {
           </div>
           <button
             onClick={signOut}
+            title={t(lang, 'tipSignOut')}
             className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
             style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
           >
@@ -144,10 +145,10 @@ export default function SettingsTab() {
         <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-3">
             {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>Appearance</h3>
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'appearance')}</h3>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {[{ value: 'light', icon: Sun, label: 'Light' }, { value: 'dark', icon: Moon, label: 'Dark' }].map(({ value, icon: Icon, label }) => (
+            {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }].map(({ value, icon: Icon, labelKey }) => (
               <button
                 key={value}
                 onClick={() => updateSettings({ theme: value })}
@@ -157,7 +158,7 @@ export default function SettingsTab() {
                   : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
               >
                 <Icon size={15} />
-                {label}
+                {t(lang, labelKey)}
               </button>
             ))}
           </div>
@@ -236,6 +237,7 @@ export default function SettingsTab() {
           {settings.notificationsGranted && (
             <button
               onClick={() => new Notification('Pray For Me 🙏', { body: 'Voici vos prières du jour. Prenez un moment pour prier!', icon: '/favicon.ico' })}
+              title={t(lang, 'tipTestNotif')}
               className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
               style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
             >

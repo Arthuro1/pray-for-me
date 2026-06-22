@@ -68,7 +68,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
           <h2 className="font-semibold text-lg" style={{ color: 'var(--text-1)' }}>
             {editPrayer ? t(lang, 'editPrayer') : t(lang, 'newPrayer')}
           </h2>
-          <button onClick={onClose} className="p-1.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+          <button onClick={onClose} title={t(lang, 'tipCloseForm')} className="p-1.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
             <X size={16} />
           </button>
         </div>
@@ -182,6 +182,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
             <button
               type="button"
               onClick={onClose}
+              title={t(lang, 'tipDiscard')}
               className="flex-1 rounded-xl py-3 text-sm font-medium"
               style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}
             >
@@ -189,6 +190,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
             </button>
             <button
               type="submit"
+              title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
               className="flex-1 rounded-xl py-3 text-sm font-semibold text-white"
               style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
             >
