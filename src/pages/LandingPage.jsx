@@ -17,13 +17,6 @@ const FEATURES = [
     desc: 'Assign categories to days of the week. Monday for family, Tuesday for health… each day you see exactly what to pray for.',
   },
   {
-    icon: Sparkles,
-    color: '#d97706',
-    bg: '#fef3c7',
-    title: 'AI-powered prayer points',
-    desc: 'Claude AI suggests relevant Bible verses and prayer angles for each request — with full verse text and direct links to Bible.com.',
-  },
-  {
     icon: CheckCircle,
     color: '#0891b2',
     bg: '#e0f2fe',
@@ -35,40 +28,40 @@ const FEATURES = [
     color: '#db2777',
     bg: '#fce7f3',
     title: '4 languages',
-    desc: 'Full UI in French, English, German, and Portuguese. Switch anytime — every label, tooltip, and AI suggestion follows your choice.',
+    desc: 'Full UI in French, English, German, and Portuguese. Switch anytime — every label and suggestion follows your choice.',
   },
   {
     icon: Lock,
     color: '#6d28d9',
     bg: '#ede9fe',
     title: 'Private & secure',
-    desc: 'Your prayers never leave your account. Row-level security in Supabase means only you can see your data — ever.',
+    desc: 'Your prayers never leave your account. Row-level security means only you can see your data — ever.',
   },
 ];
 
 const STEPS = [
   { emoji: '✍️', title: 'Add a prayer', desc: 'Type a request, assign a category, and optionally note who it\'s for.' },
   { emoji: '📅', title: 'Set your plan', desc: 'Assign categories to days. Open the app each morning and see today\'s list.' },
-  { emoji: '🤖', title: 'Let AI inspire you', desc: 'Tap the AI button to receive Bible verses and prayer angles tailored to each request.' },
+  { emoji: '📖', title: 'Find relevant Scripture', desc: 'Tap the verse finder to surface Bible passages related to your request — you discern what speaks to your situation.' },
   { emoji: '🎉', title: 'Record answers', desc: 'When God answers, mark it. Add your testimony. Revisit it whenever you need faith.' },
 ];
 
 const FAQS = [
   {
     q: 'Is my data private?',
-    a: 'Yes. Every prayer is stored in your own Supabase account with Row Level Security — no one else can read your data, not even us.',
+    a: 'Yes. Every prayer is stored in your own account with Row Level Security — no one else can read your data, not even us.',
   },
   {
     q: 'Do I need an account?',
     a: 'Yes — a free account keeps your prayers synced across devices. Sign up with Google in one tap or use email/password.',
   },
   {
-    q: 'How does the AI work?',
-    a: 'We send the title and context of your prayer to Claude (Anthropic\'s AI) which returns relevant Bible verses and prayer points. Your prayer content is not stored by Anthropic.',
+    q: 'How does the Scripture finder work?',
+    a: 'You enter the title of your prayer and the app surfaces relevant Bible verses with their full text. You choose which ones resonate with your situation.',
   },
   {
     q: 'What languages are supported?',
-    a: 'The full interface works in French, English, German, and Portuguese. The AI generates suggestions in your selected language too.',
+    a: 'The full interface works in French, English, German, and Portuguese. Verse suggestions are also returned in your chosen language.',
   },
   {
     q: 'Is it free?',
@@ -129,7 +122,7 @@ export default function LandingPage({ onGetStarted }) {
             className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-6"
             style={{ background: 'rgba(124,92,252,0.15)', color: '#a78bfa', border: '0.5px solid rgba(124,92,252,0.3)' }}
           >
-            <Sparkles size={11} /> AI-powered prayer companion
+            <Sparkles size={11} /> Your personal prayer companion
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-5 leading-tight">
             Never forget a prayer.<br />
@@ -138,7 +131,7 @@ export default function LandingPage({ onGetStarted }) {
             </span>
           </h1>
           <p className="text-base md:text-lg mb-8 max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
-            A private prayer journal with a weekly plan, AI-suggested Bible verses, and a gallery of God's answered prayers.
+            A private prayer journal with a weekly plan, relevant Bible verses for every request, and a gallery of God's answered prayers.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
@@ -240,7 +233,7 @@ export default function LandingPage({ onGetStarted }) {
         </div>
       </section>
 
-      {/* AI feature callout */}
+      {/* Scripture finder callout */}
       <section className="px-6 max-w-5xl mx-auto mb-24">
         <div
           className="rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8"
@@ -251,11 +244,14 @@ export default function LandingPage({ onGetStarted }) {
               className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4"
               style={{ background: 'rgba(124,92,252,0.2)', color: '#a78bfa' }}
             >
-              <Sparkles size={11} /> Powered by Claude AI
+              <BookOpen size={11} /> Scripture suggestions
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">Pray deeper with AI guidance</h2>
-            <p className="text-sm mb-5" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
-              Stuck on how to pray for a situation? Tap the AI button and get 3–4 prayer angles, each with 2 relevant Bible verses and their full text — ready to open directly in Bible.com.
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Find the right Word for every prayer</h2>
+            <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
+              Stuck on how to pray for a situation? Tap the verse finder and get 3–4 prayer angles, each with relevant Bible passages and their full text — ready to open directly in Bible.com.
+            </p>
+            <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
+              The suggestions surface Bible passages — you discern what speaks to your situation. The Spirit leads; this tool helps you search the Scriptures.
             </p>
             <button
               onClick={onGetStarted}
@@ -269,7 +265,7 @@ export default function LandingPage({ onGetStarted }) {
             className="w-full md:w-64 rounded-2xl p-4 shrink-0"
             style={{ background: 'rgba(0,0,0,0.3)', border: '0.5px solid rgba(255,255,255,0.08)' }}
           >
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>AI Suggestion</p>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>Scripture suggestions</p>
             {[
               { point: 'Peace that surpasses understanding', verse: 'Philippians 4:7' },
               { point: 'Trust in God\'s timing', verse: 'Isaiah 40:31' },
@@ -328,7 +324,7 @@ export default function LandingPage({ onGetStarted }) {
             <span className="text-sm font-medium text-white">Pray For Me</span>
           </div>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Built with faith · Open source · MIT License
+            Built with ❤️ and faith
           </p>
           <button
             onClick={onGetStarted}

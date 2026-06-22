@@ -65,7 +65,7 @@ Reply ONLY with a valid JSON array, no text before or after:
 ${JSON.stringify(EXAMPLE(4))}`,
     cooldown: (s) => `Please wait ${s}s before a new suggestion.`,
     rateLimited: 'API limit reached. Please try again in a few seconds.',
-    connError: 'AI connection error.',
+    connError: 'Connection error. Please try again.',
     netError: 'Network error.',
   },
   de: {
@@ -208,7 +208,7 @@ export async function getAIRecommendations({ title, description = '', type = 'ne
     if (res.status === 429) return { recs: [], error: strings.rateLimited };
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      console.error('Claude API error', res.status, err);
+      console.error('API error', res.status, err);
       return { recs: [], error: strings.connError };
     }
 

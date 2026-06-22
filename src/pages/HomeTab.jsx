@@ -258,7 +258,7 @@ export default function HomeTab({ onEdit, onAdd }) {
           </div>
         )}
 
-        {/* AI suggestions — shown regardless of list state */}
+        {/* Scripture suggestions — shown regardless of list state */}
         {suggestError && (
           <p className="text-xs text-center mt-2 mb-3" style={{ color: 'var(--text-3)' }}>{suggestError}</p>
         )}
