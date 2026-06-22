@@ -12,6 +12,7 @@ export default function PrayerCard({ prayer, onEdit }) {
   const [testimony, setTestimony] = useState('');
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
+  const [recsError, setRecsError] = useState(null);
 
   const { categories, markAnswered, markActive, markPending, addUpdate, deletePrayer, addPrayer } = usePrayerStore();
   const category = categories.find((c) => c.id === prayer.categoryId);
@@ -24,14 +25,21 @@ export default function PrayerCard({ prayer, onEdit }) {
 
   const st = statusConfig[prayer.status] || statusConfig.active;
 
-  const handleAddUpdate = async () => {
+  const handleAddUpdate = () => {
     if (!newUpdate.trim()) return;
-    const text = newUpdate.trim();
-    addUpdate(prayer.id, text);
+    addUpdate(prayer.id, newUpdate.trim());
     setNewUpdate('');
+    setUpdateRecs([]);
+  };
+
+  const fetchUpdateRecs = async () => {
+    if (loadingRecs) return;
+    const lastUpdate = (prayer.updates || []).slice(-1)[0]?.text || prayer.title;
     setLoadingRecs(true);
-    const recs = await getAIRecommendations({ title: prayer.title, description: text, type: 'evolution' });
+    setRecsError(null);
+    const { recs, error } = await getAIRecommendations({ title: prayer.title, description: lastUpdate, type: 'evolution' });
     setUpdateRecs(recs);
+    setRecsError(error);
     setLoadingRecs(false);
   };
 
@@ -131,32 +139,43 @@ export default function PrayerCard({ prayer, onEdit }) {
 
           {/* Add update */}
           {prayer.status !== 'answered' && (
-            <div className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={newUpdate}
-                onChange={(e) => setNewUpdate(e.target.value)}
-                placeholder="Ajouter une évolution..."
-                className="flex-1 text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-300"
-                onKeyDown={(e) => e.key === 'Enter' && handleAddUpdate()}
-              />
+            <div className="mb-2">
+              <div className="flex gap-2 mb-1.5">
+                <input
+                  type="text"
+                  value={newUpdate}
+                  onChange={(e) => setNewUpdate(e.target.value)}
+                  placeholder="Ajouter une évolution..."
+                  className="flex-1 text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-300"
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddUpdate()}
+                />
+                <button
+                  onClick={handleAddUpdate}
+                  className="bg-indigo-100 text-indigo-700 rounded-lg px-2 py-1.5 hover:bg-indigo-200 transition-colors"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
               <button
-                onClick={handleAddUpdate}
-                className="bg-indigo-100 text-indigo-700 rounded-lg px-2 py-1.5 hover:bg-indigo-200 transition-colors"
+                onClick={fetchUpdateRecs}
+                disabled={loadingRecs}
+                className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 disabled:opacity-50 transition-colors"
               >
-                <Plus size={14} />
+                {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                {loadingRecs ? 'Chargement...' : 'Suggestions IA'}
               </button>
             </div>
           )}
 
           {/* Update recommendations */}
-          {(loadingRecs || updateRecs.length > 0) && (
+          {(loadingRecs || updateRecs.length > 0 || recsError) && (
             <div className="bg-amber-50 border border-amber-100 rounded-xl p-2.5 mb-2">
               <div className="flex items-center gap-1.5 mb-1.5">
                 <Sparkles size={12} className="text-amber-500" />
                 <p className="text-xs font-semibold text-amber-700">Sujets suggérés par l'IA</p>
                 {loadingRecs && <Loader2 size={12} className="text-amber-400 animate-spin ml-auto" />}
               </div>
+              {recsError && <p className="text-xs text-amber-700 bg-amber-100 rounded-lg px-2 py-1">{recsError}</p>}
               <div className="space-y-1">
                 {updateRecs.map((rec) => (
                   <div key={rec.title} className="flex items-center justify-between gap-2 bg-white rounded-lg px-2.5 py-1.5 border border-amber-100">

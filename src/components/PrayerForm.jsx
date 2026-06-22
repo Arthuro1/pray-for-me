@@ -3,15 +3,6 @@ import { X, Sparkles, Plus, Loader2 } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { getAIRecommendations } from '../aiRecommendations';
 
-function useDebounce(value, delay) {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debounced;
-}
-
 export default function PrayerForm({ onClose, editPrayer }) {
   const { categories, addPrayer, updatePrayer } = usePrayerStore();
 
@@ -26,8 +17,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
 
   const [recommendations, setRecommendations] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
-
-  const debouncedTitle = useDebounce(form.title, 900);
+  const [recsError, setRecsError] = useState(null);
 
   useEffect(() => {
     if (editPrayer) {
@@ -42,16 +32,16 @@ export default function PrayerForm({ onClose, editPrayer }) {
     }
   }, [editPrayer]);
 
-  useEffect(() => {
-    if (debouncedTitle.length < 5) { setRecommendations([]); return; }
-    let cancelled = false;
+  const fetchRecommendations = async () => {
+    if (form.title.length < 5 || loadingRecs) return;
     setLoadingRecs(true);
-    getAIRecommendations({ title: debouncedTitle, description: form.description, type: 'new' })
-      .then((recs) => {
-        if (!cancelled) { setRecommendations(recs); setLoadingRecs(false); }
-      });
-    return () => { cancelled = true; };
-  }, [debouncedTitle]);
+    setRecsError(null);
+    setRecommendations([]);
+    const { recs, error } = await getAIRecommendations({ title: form.title, description: form.description, type: 'new' });
+    setRecommendations(recs);
+    setRecsError(error);
+    setLoadingRecs(false);
+  };
 
   const addRecommendation = (rec) => {
     addPrayer({
@@ -118,19 +108,29 @@ export default function PrayerForm({ onClose, editPrayer }) {
           {/* AI Recommendations */}
           {form.title.length >= 5 && (
             <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Sparkles size={13} className="text-indigo-500" />
-                <p className="text-xs font-semibold text-indigo-600">Sujets connexes suggérés par l'IA</p>
-                {loadingRecs && <Loader2 size={12} className="text-indigo-400 animate-spin ml-auto" />}
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles size={13} className="text-indigo-500" />
+                  <p className="text-xs font-semibold text-indigo-600">Suggestions de l'IA</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={fetchRecommendations}
+                  disabled={loadingRecs}
+                  className="flex items-center gap-1 text-xs bg-indigo-600 text-white px-2.5 py-1 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                >
+                  {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                  {loadingRecs ? 'Chargement...' : 'Suggérer'}
+                </button>
               </div>
 
-              {!loadingRecs && recommendations.length === 0 && (
-                <p className="text-xs text-indigo-300 italic">Continuez à écrire pour obtenir des suggestions...</p>
+              {recsError && (
+                <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-2 py-1.5">{recsError}</p>
               )}
 
               {recommendations.length > 0 && (
                 <>
-                  <p className="text-xs text-indigo-400 mb-2">Cliquez sur + pour ajouter directement à vos prières</p>
+                  <p className="text-xs text-indigo-400 mb-2">Cliquez sur + pour ajouter à vos prières</p>
                   <div className="space-y-1.5">
                     {recommendations.map((rec) => (
                       <div key={rec.title} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-indigo-100">

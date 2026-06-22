@@ -1,52 +1,68 @@
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
+
+const cache = new Map();
+let lastCallTime = 0;
+const COOLDOWN_MS = 5000;
+
+export function getRemainingCooldown() {
+  return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - lastCallTime)) / 1000));
+}
 
 export async function getAIRecommendations({ title, description = '', type = 'new' }) {
-  if (!API_KEY) return [];
+  if (!API_KEY) return { recs: [], error: null };
+
+  const cacheKey = `${type}:${title}:${description}`.slice(0, 100);
+  if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
+
+  const remaining = getRemainingCooldown();
+  if (remaining > 0) return { recs: [], error: `Veuillez attendre ${remaining}s avant une nouvelle suggestion.` };
 
   const isEvolution = type === 'evolution';
-
   const prompt = isEvolution
-    ? `Tu es un conseiller en vie de prière chrétienne. Un chrétien prie pour ce sujet : "${title}".
-Il vient d'ajouter cette évolution : "${description}".
-Suggère 3 nouveaux sujets de prière connexes ou complémentaires adaptés à cette évolution.
-Réponds UNIQUEMENT avec un JSON valide, sans texte avant ou après, sous ce format exact :
-[
-  { "title": "sujet de prière", "verse": "Référence biblique (ex: Jean 3:16)" },
-  { "title": "sujet de prière", "verse": "Référence biblique" },
-  { "title": "sujet de prière", "verse": "Référence biblique" }
-]`
-    : `Tu es un conseiller en vie de prière chrétienne. Un chrétien souhaite prier pour : "${title}".
-${description ? `Détails : "${description}".` : ''}
-Suggère 4 sujets de prière connexes, complémentaires ou plus profonds, adaptés à ce contexte.
-Réponds UNIQUEMENT avec un JSON valide, sans texte avant ou après, sous ce format exact :
-[
-  { "title": "sujet de prière", "verse": "Référence biblique (ex: Jean 3:16)" },
-  { "title": "sujet de prière", "verse": "Référence biblique" },
-  { "title": "sujet de prière", "verse": "Référence biblique" },
-  { "title": "sujet de prière", "verse": "Référence biblique" }
-]`;
+    ? `Un chrétien prie pour : "${title}". Il vient d'ajouter cette évolution : "${description}".
+Suggère 3 sujets de prière complémentaires adaptés à cette évolution.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
+[{"title":"sujet de prière","verse":"Référence biblique"},{"title":"...","verse":"..."},{"title":"...","verse":"..."}]`
+    : `Un chrétien souhaite prier pour : "${title}".${description ? ` Détails : "${description}".` : ''}
+Suggère 4 sujets de prière connexes ou plus profonds.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
+[{"title":"sujet de prière","verse":"Référence biblique"},{"title":"...","verse":"..."},{"title":"...","verse":"..."},{"title":"...","verse":"..."}]`;
+
+  lastCallTime = Date.now();
 
   try {
-    const res = await fetch(`${GEMINI_URL}?key=${API_KEY}`, {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-allow-browser': 'true',
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 512 },
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        messages: [{ role: 'user', content: prompt }],
       }),
     });
 
-    if (!res.ok) return [];
+    if (res.status === 429) return { recs: [], error: 'Limite de l\'API atteinte. Réessayez dans quelques secondes.' };
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('Claude API error', res.status, err);
+      return { recs: [], error: 'Erreur de connexion à l\'IA.' };
+    }
 
     const data = await res.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = data?.content?.[0]?.text || '';
     const match = text.match(/\[[\s\S]*\]/);
-    if (!match) return [];
+    if (!match) return { recs: [], error: null };
 
     const parsed = JSON.parse(match[0]);
-    return Array.isArray(parsed) ? parsed.filter((r) => r.title && r.verse) : [];
+    const recs = Array.isArray(parsed) ? parsed.filter((r) => r.title && r.verse) : [];
+    cache.set(cacheKey, recs);
+    return { recs, error: null };
   } catch {
-    return [];
+    return { recs: [], error: 'Erreur réseau.' };
   }
 }
