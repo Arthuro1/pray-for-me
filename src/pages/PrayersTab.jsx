@@ -2,6 +2,7 @@ import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import PrayerCard from '../components/PrayerCard';
+import PrayerDetail from './PrayerDetail';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { t } from '../i18n';
 
@@ -13,6 +14,18 @@ export default function PrayersTab({ onEdit }) {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedPrayer, setSelectedPrayer] = useState(null);
+
+  if (selectedPrayer) {
+    return (
+      <PrayerDetail
+        prayer={selectedPrayer}
+        lang={lang}
+        onBack={() => setSelectedPrayer(null)}
+        onEdit={(p) => { setSelectedPrayer(null); onEdit(p); }}
+      />
+    );
+  }
 
   const STATUS_FILTERS = [
     { id: 'all', label: t(lang, 'all') },
@@ -108,10 +121,41 @@ export default function PrayersTab({ onEdit }) {
             <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersFoundSub')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {sorted.map((prayer) => (
-              <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
-            ))}
+          <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)' }}>
+            {sorted.map((prayer, idx) => {
+              const isAnswered = prayer.status === 'answered';
+              const pCatIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
+              const pCats = categories.filter(c => pCatIds.includes(c.id));
+              return (
+                <button
+                  key={prayer.id}
+                  onClick={() => setSelectedPrayer(prayer)}
+                  className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
+                  style={{
+                    background: 'var(--surface)',
+                    borderBottom: idx < sorted.length - 1 ? '0.5px solid var(--border)' : 'none',
+                  }}
+                >
+                  <div
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
+                    style={{ background: isAnswered ? '#059669' : 'var(--accent)' }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}>
+                      {tr(prayer.title, lang)}
+                    </p>
+                    {pCats.length > 0 && (
+                      <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>
+                        {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
+                      </p>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
+                    {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>
