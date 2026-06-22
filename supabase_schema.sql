@@ -42,10 +42,16 @@ create table prayer_points (
   id uuid primary key default uuid_generate_v4(),
   prayer_id uuid references prayers(id) on delete cascade not null,
   title text not null,
+  verses jsonb default '[]',      -- [{ref: string, text: string}]
+  -- legacy columns kept for backward compat, use `verses` for new rows
   verse text default '',
   verse_text text default '',
   created_at timestamptz default now()
 );
+
+-- Migration: run once on existing databases to add the verses column
+-- alter table prayer_points add column if not exists verses jsonb default '[]';
+-- update prayer_points set verses = jsonb_build_array(jsonb_build_object('ref', verse, 'text', verse_text)) where verse != '' and (verses = '[]' or verses is null);
 
 -- Row Level Security
 alter table categories enable row level security;

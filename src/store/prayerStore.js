@@ -196,9 +196,16 @@ const usePrayerStore = create((set, get) => ({
 
   // ─── Prayer Points ────────────────────────────────────────────
   addPrayerPoint: async (prayerId, point) => {
+    // Build initial verses array from legacy single-verse fields or provided verses
+    const initialVerses = point.verses
+      ? point.verses
+      : point.verse
+        ? [{ ref: point.verse, text: point.verseText || '' }]
+        : [];
+
     const { data } = await supabase
       .from('prayer_points')
-      .insert({ prayer_id: prayerId, title: point.title, verse: point.verse || '', verse_text: point.verseText || '' })
+      .insert({ prayer_id: prayerId, title: point.title, verses: initialVerses })
       .select().single();
 
     if (data) {
@@ -210,6 +217,38 @@ const usePrayerStore = create((set, get) => ({
         ),
       }));
     }
+  },
+
+  addVerseToPoint: async (prayerId, pointId, verse) => {
+    const state = get();
+    const prayer = state.prayers.find(p => p.id === prayerId);
+    const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
+    if (!point) return;
+    const updated = [...(point.verses || []), verse];
+    await supabase.from('prayer_points').update({ verses: updated }).eq('id', pointId);
+    set((s) => ({
+      prayers: s.prayers.map(p =>
+        p.id === prayerId
+          ? { ...p, prayer_points: p.prayer_points.map(pp => pp.id === pointId ? { ...pp, verses: updated } : pp) }
+          : p
+      ),
+    }));
+  },
+
+  removeVerseFromPoint: async (prayerId, pointId, verseRef) => {
+    const state = get();
+    const prayer = state.prayers.find(p => p.id === prayerId);
+    const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
+    if (!point) return;
+    const updated = (point.verses || []).filter(v => v.ref !== verseRef);
+    await supabase.from('prayer_points').update({ verses: updated }).eq('id', pointId);
+    set((s) => ({
+      prayers: s.prayers.map(p =>
+        p.id === prayerId
+          ? { ...p, prayer_points: p.prayer_points.map(pp => pp.id === pointId ? { ...pp, verses: updated } : pp) }
+          : p
+      ),
+    }));
   },
 
   removePrayerPoint: async (prayerId, pointId) => {

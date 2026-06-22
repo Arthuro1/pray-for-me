@@ -17,8 +17,12 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
   const [expandedVerse, setExpandedVerse] = useState(null);
+  const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
+  const [showManualForm, setShowManualForm] = useState(false);
+  const [addingVerseTo, setAddingVerseTo] = useState(null); // pointId
+  const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const dateLocale = DATE_LOCALES[lang] || enUS;
 
@@ -165,63 +169,207 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
           )}
 
           <div className="space-y-2">
-            {(livePrayer.prayer_points || []).map(pp => (
-              <div key={pp.id} className="group">
-                <div className="flex gap-2 items-start">
-                  <div className="flex-1 rounded-xl p-3" style={{ background: '#fff8e6', borderLeft: '3px solid #f5c842' }}>
-                    <p className="text-sm leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
-                    <button onClick={() => setExpandedVerse(expandedVerse === pp.id ? null : pp.id)} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1.5" style={{ color: '#c4a020' }}>
-                      <BookOpen size={11} />{pp.verse}
-                    </button>
+            {(livePrayer.prayer_points || []).map(pp => {
+              // Support both new `verses` array and legacy `verse`/`verse_text` fields
+              const verses = pp.verses?.length
+                ? pp.verses
+                : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
+              return (
+                <div key={pp.id} className="group rounded-xl p-3" style={{ background: '#fff8e6', borderLeft: '3px solid #f5c842' }}>
+                  <div className="flex items-start gap-2">
+                    <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
+                    {!isAnswered && (
+                      <button onClick={() => removePrayerPoint(livePrayer.id, pp.id)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
+                        <Trash2 size={13} />
+                      </button>
+                    )}
                   </div>
-                  <button onClick={() => removePrayerPoint(livePrayer.id, pp.id)} title={t(lang, "tipRemovePoint")} className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--text-3)' }}>
-                    <Trash2 size={14} />
-                  </button>
+
+                  {/* Verse pills */}
+                  {verses.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {verses.map((v, i) => (
+                        <div key={i} className="group/verse">
+                          <button
+                            onClick={() => setExpandedVerse(expandedVerse === `${pp.id}-${i}` ? null : `${pp.id}-${i}`)}
+                            title={t(lang, 'tipVerseToggle')}
+                            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+                            style={{ background: '#f5e8a0', color: '#7a5e00' }}
+                          >
+                            <BookOpen size={9} /> {v.ref}
+                          </button>
+                          {expandedVerse === `${pp.id}-${i}` && (
+                            <div className="mt-1.5 rounded-xl p-3" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
+                              {v.text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{tr(v.text, lang)}"</p>}
+                              <div className="flex items-center justify-between">
+                                <a href={bibleUrl(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                                  <ExternalLink size={11} /> {t(lang, 'openBible')}
+                                </a>
+                                {!isAnswered && (
+                                  <button onClick={() => removeVerseFromPoint(livePrayer.id, pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="text-xs" style={{ color: '#c04040' }}>
+                                    <Trash2 size={11} />
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add verse inline form */}
+                  {!isAnswered && (
+                    addingVerseTo === pp.id ? (
+                      <div className="mt-2 space-y-1.5">
+                        <input
+                          type="text"
+                          value={newVerse.ref}
+                          onChange={e => setNewVerse(v => ({ ...v, ref: e.target.value }))}
+                          placeholder={t(lang, 'verseRefPlaceholder')}
+                          className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
+                          style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0', color: '#5a4500' }}
+                          autoFocus
+                        />
+                        <input
+                          type="text"
+                          value={newVerse.text}
+                          onChange={e => setNewVerse(v => ({ ...v, text: e.target.value }))}
+                          placeholder={t(lang, 'verseTextPlaceholder')}
+                          className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
+                          style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0', color: '#5a4500' }}
+                        />
+                        <div className="flex gap-1.5">
+                          <button onClick={() => { setAddingVerseTo(null); setNewVerse({ ref: '', text: '' }); }} className="flex-1 text-xs rounded-lg py-1.5" style={{ background: '#f5e8a0', color: '#7a5e00' }}>{t(lang, 'cancel')}</button>
+                          <button
+                            onClick={() => {
+                              if (!newVerse.ref.trim()) return;
+                              addVerseToPoint(livePrayer.id, pp.id, { ref: newVerse.ref.trim(), text: newVerse.text.trim() });
+                              setAddingVerseTo(null);
+                              setNewVerse({ ref: '', text: '' });
+                            }}
+                            title={t(lang, 'tipSaveVerse')}
+                            className="flex-1 text-xs rounded-lg py-1.5 font-medium"
+                            style={{ background: '#f5c842', color: '#5a4500' }}
+                          >
+                            {t(lang, 'addVerse')}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => { setAddingVerseTo(pp.id); setNewVerse({ ref: '', text: '' }); }}
+                        title={t(lang, 'tipAddVerse')}
+                        className="mt-1.5 flex items-center gap-1 text-xs"
+                        style={{ color: '#c4a020' }}
+                      >
+                        <Plus size={11} /> {t(lang, 'addVerse')}
+                      </button>
+                    )
+                  )}
                 </div>
-                {expandedVerse === pp.id && (
-                  <div className="mt-1.5 rounded-xl p-3 mx-0" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
-                    {pp.verse_text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{tr(pp.verse_text, lang)}"</p>}
-                    <a href={bibleUrl(pp.verse)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                      <ExternalLink size={11} /> {t(lang, 'openBible')}
-                    </a>
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: '#a07010', background: '#fff8e0' }}>{recsError}</p>}
 
           <div className="space-y-2 mt-2">
             {updateRecs.map(rec => (
-              <div key={rec.title}>
+              <div key={rec.title} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                 <div className="flex gap-2 items-start">
-                  <div className="flex-1 rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                    <p className="text-sm leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
-                    <button onClick={() => setExpandedVerse(expandedVerse === rec.verse ? null : rec.verse)} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1.5" style={{ color: 'var(--accent)' }}>
-                      <BookOpen size={11} />{rec.verse}
-                    </button>
-                  </div>
+                  <p className="flex-1 text-sm leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
                   <button
-                    onClick={() => { addPrayerPoint(livePrayer.id, { title: rec.title, verse: rec.verse, verseText: rec.verseText }); setUpdateRecs(prev => prev.filter(r => r.title !== rec.title)); }}
-                    title={t(lang, "tipAddPoint")}
-                    className="mt-2 rounded-xl p-2 text-white"
+                    onClick={() => { addPrayerPoint(livePrayer.id, { title: rec.title, verses: rec.verses }); setUpdateRecs(prev => prev.filter(r => r.title !== rec.title)); }}
+                    title={t(lang, 'tipAddPoint')}
+                    className="shrink-0 rounded-xl p-1.5 text-white"
                     style={{ background: 'var(--accent)' }}
                   >
-                    <Plus size={14} />
+                    <Plus size={13} />
                   </button>
                 </div>
-                {expandedVerse === rec.verse && (
-                  <div className="mt-1.5 rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                    {rec.verseText && <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>"{rec.verseText}"</p>}
-                    <a href={bibleUrl(rec.verse)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                      <ExternalLink size={11} /> {t(lang, 'openBible')}
-                    </a>
+                {(rec.verses || []).length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {rec.verses.map((v, i) => (
+                      <div key={i}>
+                        <button
+                          onClick={() => setExpandedVerse(expandedVerse === `rec-${rec.title}-${i}` ? null : `rec-${rec.title}-${i}`)}
+                          title={t(lang, 'tipVerseToggle')}
+                          className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+                          style={{ background: 'var(--accent-border)', color: 'var(--accent)' }}
+                        >
+                          <BookOpen size={9} /> {v.ref}
+                        </button>
+                        {expandedVerse === `rec-${rec.title}-${i}` && (
+                          <div className="mt-1.5 rounded-xl p-2" style={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
+                            {v.text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-2)' }}>"{v.text}"</p>}
+                            <a href={bibleUrl(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                              <ExternalLink size={10} /> {t(lang, 'openBible')}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
             ))}
           </div>
+
+          {/* Manual prayer point input */}
+          {!isAnswered && (
+            showManualForm ? (
+              <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'var(--surface-2)', border: '0.5px solid var(--border)' }}>
+                <input
+                  type="text"
+                  value={manualPoint.title}
+                  onChange={e => setManualPoint(p => ({ ...p, title: e.target.value }))}
+                  placeholder={t(lang, 'pointTitlePlaceholder')}
+                  className="w-full text-sm rounded-xl px-3 py-2 focus:outline-none"
+                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                  autoFocus
+                />
+                <input
+                  type="text"
+                  value={manualPoint.verse}
+                  onChange={e => setManualPoint(p => ({ ...p, verse: e.target.value }))}
+                  placeholder={t(lang, 'pointVersePlaceholder')}
+                  className="w-full text-sm rounded-xl px-3 py-2 focus:outline-none"
+                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowManualForm(false)}
+                    className="flex-1 text-sm rounded-xl py-2"
+                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    {t(lang, 'cancel')}
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!manualPoint.title.trim()) return;
+                      addPrayerPoint(livePrayer.id, { title: manualPoint.title.trim(), verse: manualPoint.verse.trim() });
+                      setManualPoint({ title: '', verse: '' });
+                      setShowManualForm(false);
+                    }}
+                    title={t(lang, 'tipAddManualPoint')}
+                    className="flex-1 text-sm rounded-xl py-2 font-medium text-white"
+                    style={{ background: 'var(--accent)' }}
+                  >
+                    {t(lang, 'addBtn')}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowManualForm(true)}
+                className="mt-3 flex items-center gap-1.5 text-xs font-medium"
+                style={{ color: 'var(--accent)' }}
+              >
+                <Plus size={13} /> {t(lang, 'addPointManually')}
+              </button>
+            )
+          )}
         </div>
 
                 {/* Updates */}
