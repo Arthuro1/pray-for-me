@@ -41,7 +41,6 @@ export default function SettingsTab() {
 
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
-  const pendingPrayers = prayers.filter((p) => p.status === 'pending');
 
   return (
     <div className="p-4">
@@ -50,7 +49,7 @@ export default function SettingsTab() {
       {/* Stats card */}
       <div className="bg-indigo-700 text-white rounded-2xl p-4 mb-4">
         <p className="text-xs font-semibold text-indigo-200 uppercase tracking-wide mb-3">Votre vie de prière</p>
-        <div className="grid grid-cols-3 gap-3 text-center">
+        <div className="grid grid-cols-2 gap-3 text-center">
           <div>
             <p className="text-2xl font-bold">{activePrayers.length}</p>
             <p className="text-xs text-indigo-200">Prières actives</p>
@@ -58,10 +57,6 @@ export default function SettingsTab() {
           <div>
             <p className="text-2xl font-bold text-green-300">{answeredPrayers.length}</p>
             <p className="text-xs text-indigo-200">Exaucées 🙌</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-amber-300">{pendingPrayers.length}</p>
-            <p className="text-xs text-indigo-200">En attente</p>
           </div>
         </div>
       </div>

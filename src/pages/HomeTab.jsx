@@ -23,6 +23,7 @@ export default function HomeTab({ onEdit }) {
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const activeCount = prayers.filter((p) => p.status === 'active').length;
 
+
   const verse = VERSES[dayIndex % VERSES.length];
 
   return (

@@ -6,7 +6,6 @@ import { Search, Filter } from 'lucide-react';
 const STATUS_FILTERS = [
   { id: 'all', label: 'Toutes' },
   { id: 'active', label: 'Actives' },
-  { id: 'pending', label: 'En attente' },
   { id: 'answered', label: 'Exaucées' },
 ];
 
@@ -29,7 +28,7 @@ export default function PrayersTab({ onEdit }) {
 
   // Sort: active first, then pending, then answered
   const sorted = [...filtered].sort((a, b) => {
-    const order = { active: 0, pending: 1, answered: 2 };
+    const order = { active: 0, answered: 1 };
     return (order[a.status] || 0) - (order[b.status] || 0);
   });
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle, Clock, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2, BookOpen, ExternalLink } from 'lucide-react';
+import { CheckCircle, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2, BookOpen, ExternalLink } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -15,13 +15,12 @@ export default function PrayerCard({ prayer, onEdit }) {
   const [recsError, setRecsError] = useState(null);
   const [expandedVerse, setExpandedVerse] = useState(null);
 
-  const { categories, markAnswered, markActive, markPending, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
   const category = categories.find((c) => c.id === prayer.categoryId);
 
   const statusConfig = {
     active: { label: 'Actif', bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
     answered: { label: 'Exaucé', bg: 'bg-green-100', text: 'text-green-700', dot: 'bg-green-500' },
-    pending: { label: 'En attente', bg: 'bg-slate-100', text: 'text-slate-500', dot: 'bg-slate-400' },
   };
 
   const st = statusConfig[prayer.status] || statusConfig.active;
@@ -292,15 +291,6 @@ export default function PrayerCard({ prayer, onEdit }) {
               >
                 <CheckCircle size={12} />
                 {showTestimony ? 'Confirmer' : 'Exaucé! 🎉'}
-              </button>
-            )}
-            {prayer.status === 'active' && (
-              <button
-                onClick={() => markPending(prayer.id)}
-                className="flex items-center gap-1 text-xs bg-slate-100 text-slate-500 px-2.5 py-1.5 rounded-lg hover:bg-slate-200 transition-colors"
-              >
-                <Clock size={12} />
-                En attente
               </button>
             )}
             {prayer.status !== 'active' && (
