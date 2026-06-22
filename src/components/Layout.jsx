@@ -51,12 +51,12 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
       >
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
           {!collapsed && (
-            <div className="flex items-center gap-2 overflow-hidden">
-              <span className="text-xl shrink-0">🙏</span>
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <img src="/logo.svg" alt="Pray For Me" className="w-8 h-8 rounded-lg shrink-0" />
               <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>Pray For Me</span>
             </div>
           )}
-          {collapsed && <span className="text-xl mx-auto">🙏</span>}
+          {collapsed && <img src="/logo.svg" alt="Pray For Me" className="w-8 h-8 rounded-lg mx-auto" />}
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="shrink-0 rounded-lg p-1 transition-colors"

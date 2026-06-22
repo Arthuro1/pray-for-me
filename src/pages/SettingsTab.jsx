@@ -2,8 +2,11 @@ import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
+import FeedbackModal from '../components/FeedbackModal';
+
+const DONATION_URL = import.meta.env.VITE_DONATION_URL || 'https://ko-fi.com';
 
 function requestNotificationPermission(onGranted) {
   if (!('Notification' in window)) {
@@ -60,6 +63,7 @@ export default function SettingsTab() {
   const { settings, updateSettings, prayers } = usePrayerStore();
   const { user, signOut } = useAuthStore();
   const { tr } = useTranslationStore();
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const handleToggleNotifications = () => {
     if (!settings.dailyReminderEnabled) {
@@ -270,11 +274,50 @@ export default function SettingsTab() {
 
         </div>{/* end md:grid */}
 
-        <div className="text-center mt-6">
-          <p className="text-xs" style={{ color: 'var(--text-3)' }}>Pray For Me v1.0</p>
-          <p className="text-xs mt-0.5" style={{ color: '#e8e0f4', fontStyle: 'italic' }}>{t(lang, 'motto')}</p>
+        {/* Feedback */}
+        <div className="rounded-2xl p-4 mb-3 mt-1" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <MessageSquare size={16} style={{ color: 'var(--accent)' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackTitle')}</h3>
+          </div>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'feedbackSub')}</p>
+          <button
+            onClick={() => setShowFeedback(true)}
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+          >
+            <MessageSquare size={14} />
+            {t(lang, 'feedbackBtn')}
+          </button>
         </div>
+
+        {/* Donate */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Heart size={16} style={{ color: '#e11d48' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
+          </div>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
+          <a
+            href={DONATION_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+            style={{ background: '#fff1f2', color: '#e11d48', border: '0.5px solid #fecdd3', textDecoration: 'none', display: 'flex' }}
+          >
+            <Heart size={14} />
+            {t(lang, 'donateBtn')}
+          </a>
+        </div>
+
+        <div className="rounded-2xl px-6 py-5 mt-2 text-center" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+          <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>
+          <p className="text-xs font-medium" style={{ color: 'var(--accent)', opacity: 0.6 }}>James 5:16</p>
+        </div>
+        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Pray For Me v1.0</p>
       </div>
+
+      {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
     </div>
   );
 }

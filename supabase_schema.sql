@@ -67,3 +67,19 @@ create policy "Users manage own updates" on prayer_updates for all using (
 create policy "Users manage own points" on prayer_points for all using (
   prayer_id in (select id from prayers where user_id = auth.uid())
 );
+
+-- Feedback
+create table feedback (
+  id uuid primary key default uuid_generate_v4(),
+  created_at timestamptz default now(),
+  user_id uuid references auth.users(id) on delete set null,
+  name text,
+  email text,
+  type text default 'general' check (type in ('general', 'feature', 'bug')),
+  message text not null,
+  lang text default 'fr'
+);
+
+alter table feedback enable row level security;
+create policy "Anyone can insert feedback" on feedback for insert with check (true);
+create policy "Admins read feedback" on feedback for select using (false);
