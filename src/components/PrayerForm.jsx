@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { X, Sparkles, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Sparkles, Plus, Loader2 } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
-import { getRecommendations } from '../recommendations';
+import { getAIRecommendations } from '../aiRecommendations';
 
 function useDebounce(value, delay) {
   const [debounced, setDebounced] = useState(value);
@@ -25,9 +25,9 @@ export default function PrayerForm({ onClose, editPrayer }) {
   });
 
   const [recommendations, setRecommendations] = useState([]);
-  const [dismissedRecs, setDismissedRecs] = useState(new Set());
+  const [loadingRecs, setLoadingRecs] = useState(false);
 
-  const debouncedTitle = useDebounce(form.title, 600);
+  const debouncedTitle = useDebounce(form.title, 900);
 
   useEffect(() => {
     if (editPrayer) {
@@ -43,9 +43,14 @@ export default function PrayerForm({ onClose, editPrayer }) {
   }, [editPrayer]);
 
   useEffect(() => {
-    if (debouncedTitle.length < 4) { setRecommendations([]); return; }
-    const recs = getRecommendations(debouncedTitle + ' ' + form.description, 'new');
-    setRecommendations(recs.filter((r) => !dismissedRecs.has(r.title)));
+    if (debouncedTitle.length < 5) { setRecommendations([]); return; }
+    let cancelled = false;
+    setLoadingRecs(true);
+    getAIRecommendations({ title: debouncedTitle, description: form.description, type: 'new' })
+      .then((recs) => {
+        if (!cancelled) { setRecommendations(recs); setLoadingRecs(false); }
+      });
+    return () => { cancelled = true; };
   }, [debouncedTitle]);
 
   const addRecommendation = (rec) => {
@@ -56,7 +61,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
       forOther: form.forOther,
       personName: form.personName,
     });
-    setDismissedRecs((prev) => new Set([...prev, rec.title]));
     setRecommendations((prev) => prev.filter((r) => r.title !== rec.title));
   };
 
@@ -111,32 +115,41 @@ export default function PrayerForm({ onClose, editPrayer }) {
             />
           </div>
 
-          {/* Recommendations */}
-          {recommendations.length > 0 && (
+          {/* AI Recommendations */}
+          {form.title.length >= 5 && (
             <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
               <div className="flex items-center gap-1.5 mb-2">
                 <Sparkles size={13} className="text-indigo-500" />
-                <p className="text-xs font-semibold text-indigo-600">Sujets connexes suggérés</p>
+                <p className="text-xs font-semibold text-indigo-600">Sujets connexes suggérés par l'IA</p>
+                {loadingRecs && <Loader2 size={12} className="text-indigo-400 animate-spin ml-auto" />}
               </div>
-              <p className="text-xs text-indigo-400 mb-2">Cliquez sur + pour ajouter directement à vos prières</p>
-              <div className="space-y-1.5">
-                {recommendations.map((rec) => (
-                  <div key={rec.title} className="flex items-center justify-between gap-2 bg-white rounded-lg px-3 py-2 border border-indigo-100">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-700 leading-tight">{rec.title}</p>
-                      <p className="text-xs text-indigo-400 mt-0.5">{rec.verse}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => addRecommendation(rec)}
-                      className="shrink-0 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-lg p-1.5 transition-colors"
-                      title="Ajouter cette prière"
-                    >
-                      <Plus size={13} />
-                    </button>
+
+              {!loadingRecs && recommendations.length === 0 && (
+                <p className="text-xs text-indigo-300 italic">Continuez à écrire pour obtenir des suggestions...</p>
+              )}
+
+              {recommendations.length > 0 && (
+                <>
+                  <p className="text-xs text-indigo-400 mb-2">Cliquez sur + pour ajouter directement à vos prières</p>
+                  <div className="space-y-1.5">
+                    {recommendations.map((rec) => (
+                      <div key={rec.title} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-indigo-100">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-slate-700 leading-tight">{rec.title}</p>
+                          <p className="text-xs text-indigo-400 mt-0.5">{rec.verse}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => addRecommendation(rec)}
+                          className="shrink-0 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-lg p-1.5 transition-colors"
+                        >
+                          <Plus size={13} />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
             </div>
           )}
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
-import { Bell, BellOff, Clock, Calendar, Phone, CheckCircle } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle } from 'lucide-react';
 
 function requestNotificationPermission(onGranted) {
   if (!('Notification' in window)) {
