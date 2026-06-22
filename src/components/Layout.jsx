@@ -1,16 +1,20 @@
 import { Home, BookOpen, Calendar, Settings, Plus } from 'lucide-react';
-
-const tabs = [
-  { id: 'home', label: "Aujourd'hui", icon: Home },
-  { id: 'prayers', label: 'Prières', icon: BookOpen },
-  { id: 'plan', label: 'Plan', icon: Calendar },
-  { id: 'settings', label: 'Paramètres', icon: Settings },
-];
+import usePrayerStore from '../store/prayerStore';
+import { t } from '../i18n';
 
 export default function Layout({ children, currentTab, onTabChange, onAddPrayer }) {
+  const { settings } = usePrayerStore();
+  const lang = settings.language || 'fr';
+
+  const tabs = [
+    { id: 'home', label: t(lang, 'today'), icon: Home },
+    { id: 'prayers', label: t(lang, 'prayers'), icon: BookOpen },
+    { id: 'plan', label: t(lang, 'plan'), icon: Calendar },
+    { id: 'settings', label: t(lang, 'settings'), icon: Settings },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col max-w-lg mx-auto relative" style={{ background: '#f7f4ef' }}>
-      {/* Content */}
       <main className="flex-1 overflow-y-auto pb-24">
         {children}
       </main>

@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import { t } from '../i18n';
 
 export default function PrayerForm({ onClose, editPrayer }) {
-  const { categories, addPrayer, updatePrayer } = usePrayerStore();
+  const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
+  const lang = settings.language || 'fr';
 
   const [form, setForm] = useState({
     title: '',
@@ -62,7 +64,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
         {/* Title bar */}
         <div className="flex items-center justify-between px-5 py-3">
           <h2 className="font-semibold text-lg" style={{ color: '#1a0f2e' }}>
-            {editPrayer ? 'Modifier la prière' : 'Nouvelle prière'}
+            {editPrayer ? t(lang, 'editPrayer') : t(lang, 'newPrayer')}
           </h2>
           <button onClick={onClose} className="p-1.5 rounded-full" style={{ background: '#ede8f5', color: '#7c5cfc' }}>
             <X size={16} />
@@ -73,14 +75,14 @@ export default function PrayerForm({ onClose, editPrayer }) {
           {/* Title */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>
-              Sujet de prière *
+              {t(lang, 'prayerSubject')}
             </label>
             <input
               type="text"
               required
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="ex: Guérison de ma mère..."
+              placeholder={t(lang, 'prayerSubjectPlaceholder')}
               className="w-full text-sm rounded-xl px-4 py-3 focus:outline-none"
               style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#1a0f2e' }}
               autoFocus
@@ -90,12 +92,12 @@ export default function PrayerForm({ onClose, editPrayer }) {
           {/* Description */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>
-              Détails (facultatif)
+              {t(lang, 'details')}
             </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="Décrivez votre sujet de prière..."
+              placeholder={t(lang, 'detailsPlaceholder')}
               className="w-full text-sm rounded-xl px-4 py-3 resize-none focus:outline-none"
               style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#1a0f2e' }}
               rows={3}
@@ -105,7 +107,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
           {/* Categories */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest mb-2 block" style={{ color: '#9b8cb0' }}>
-              Catégories <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#c5bdd4' }}>(plusieurs possibles)</span>
+              {t(lang, 'categories')} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#c5bdd4' }}>{t(lang, 'multipleAllowed')}</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {categories.map((c) => {
@@ -142,14 +144,14 @@ export default function PrayerForm({ onClose, editPrayer }) {
               >
                 {form.forOther && <span className="text-white text-xs font-bold">✓</span>}
               </div>
-              <span className="text-sm" style={{ color: '#3a2a5e' }}>C'est pour quelqu'un d'autre</span>
+              <span className="text-sm" style={{ color: '#3a2a5e' }}>{t(lang, 'forOther')}</span>
             </button>
           </div>
 
           {form.forOther && (
             <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid #e0d8f0' }}>
               <div>
-                <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>Nom</label>
+                <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>{t(lang, 'personName')}</label>
                 <input
                   type="text"
                   value={form.personName}
@@ -160,7 +162,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>Téléphone</label>
+                <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>{t(lang, 'phone')}</label>
                 <input
                   type="tel"
                   value={form.phone}
@@ -181,14 +183,14 @@ export default function PrayerForm({ onClose, editPrayer }) {
               className="flex-1 rounded-xl py-3 text-sm font-medium"
               style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#6b5b8a' }}
             >
-              Annuler
+              {t(lang, 'cancel')}
             </button>
             <button
               type="submit"
               className="flex-1 rounded-xl py-3 text-sm font-semibold text-white"
               style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
             >
-              {editPrayer ? 'Enregistrer' : 'Ajouter 🙏'}
+              {editPrayer ? t(lang, 'save') : t(lang, 'add')}
             </button>
           </div>
         </form>

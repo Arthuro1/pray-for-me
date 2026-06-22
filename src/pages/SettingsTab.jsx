@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe } from 'lucide-react';
+import { t, LANGUAGES } from '../i18n';
 
 function requestNotificationPermission(onGranted) {
   if (!('Notification' in window)) {
@@ -68,6 +69,7 @@ export default function SettingsTab() {
     }
   };
 
+  const lang = settings.language || 'fr';
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
 
@@ -97,7 +99,7 @@ export default function SettingsTab() {
           )}
           <div>
             <p className="font-semibold text-white">{displayName}</p>
-            {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>Membre depuis {memberSince}</p>}
+            {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{t(lang, 'memberSince')} {memberSince}</p>}
           </div>
         </div>
 
@@ -105,11 +107,11 @@ export default function SettingsTab() {
         <div className="grid grid-cols-2 gap-2.5">
           <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.08)', border: '0.5px solid rgba(255,255,255,0.12)' }}>
             <p className="text-2xl font-semibold text-white">{activePrayers.length}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Prières actives</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{t(lang, 'activePrayers')}</p>
           </div>
           <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.08)', border: '0.5px solid rgba(255,255,255,0.12)' }}>
             <p className="text-2xl font-semibold" style={{ color: '#6ee7a8' }}>{answeredPrayers.length}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Exaucées 🙌</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{t(lang, 'answeredPrayers')} 🙌</p>
           </div>
         </div>
       </div>
@@ -117,7 +119,7 @@ export default function SettingsTab() {
       <div className="px-4 pt-4 pb-6">
         {/* Account info */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#b0a4c0' }}>Compte</p>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#b0a4c0' }}>{t(lang, 'account')}</p>
           <div className="space-y-2.5 mb-4">
             <div className="flex items-center gap-2.5">
               <Mail size={14} style={{ color: '#b0a4c0' }} />
@@ -125,7 +127,7 @@ export default function SettingsTab() {
             </div>
             <div className="flex items-center gap-2.5">
               <Shield size={14} style={{ color: '#b0a4c0' }} />
-              <span className="text-sm" style={{ color: '#3a2a5e' }}>Via <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
+              <span className="text-sm" style={{ color: '#3a2a5e' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
             </div>
           </div>
           <button
@@ -134,18 +136,44 @@ export default function SettingsTab() {
             style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
           >
             <LogOut size={14} />
-            Se déconnecter
+            {t(lang, 'signOut')}
           </button>
+        </div>
+
+        {/* Language */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Globe size={16} style={{ color: '#7c5cfc' }} />
+            <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{t(lang, 'language')}</h3>
+          </div>
+          <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>{t(lang, 'languageSub')}</p>
+          <div className="grid grid-cols-2 gap-2">
+            {LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => updateSettings({ language: l.code })}
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+                style={
+                  lang === l.code
+                    ? { background: '#7c5cfc', color: '#fff' }
+                    : { background: '#f3eff9', color: '#3a2a5e', border: '0.5px solid #e0d8f0' }
+                }
+              >
+                <span className="text-base">{l.flag}</span>
+                {l.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Notifications */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
           <div className="flex items-center gap-2 mb-4">
             <Bell size={16} style={{ color: '#7c5cfc' }} />
-            <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>Notifications</h3>
+            <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{t(lang, 'notifications')}</h3>
           </div>
 
-          <Row label="Rappel quotidien" sub="Rappel pour prier chaque jour" icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
+          <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
             {settings.dailyReminderEnabled && (
               <div className="mt-3 flex items-center gap-2">
                 <Clock size={13} style={{ color: '#b0a4c0' }} />
@@ -160,7 +188,7 @@ export default function SettingsTab() {
             )}
           </Row>
 
-          <Row label="Suivi des prières" sub="Demander l'évolution des prières" icon={Calendar} enabled={settings.followUpEnabled} onToggle={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}>
+          <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}>
             {settings.followUpEnabled && (
               <div className="mt-3">
                 <select
@@ -169,17 +197,17 @@ export default function SettingsTab() {
                   className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
                   style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#3a2a5e' }}
                 >
-                  <option value={3}>Tous les 3 jours</option>
-                  <option value={7}>Chaque semaine</option>
-                  <option value={14}>Toutes les 2 semaines</option>
-                  <option value={30}>Chaque mois</option>
+                  <option value={3}>{t(lang, 'every3days')}</option>
+                  <option value={7}>{t(lang, 'everyWeek')}</option>
+                  <option value={14}>{t(lang, 'every2weeks')}</option>
+                  <option value={30}>{t(lang, 'everyMonth')}</option>
                 </select>
               </div>
             )}
           </Row>
 
           <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-            <Row label="Rappel d'appel" sub="Rappel pour appeler les personnes" icon={Phone} enabled={settings.callReminderEnabled} onToggle={() => updateSettings({ callReminderEnabled: !settings.callReminderEnabled })} />
+            <Row label={t(lang, 'callReminder')} sub={t(lang, 'callReminderSub')} icon={Phone} enabled={settings.callReminderEnabled} onToggle={() => updateSettings({ callReminderEnabled: !settings.callReminderEnabled })} />
           </div>
 
           {settings.notificationsGranted && (
@@ -188,7 +216,7 @@ export default function SettingsTab() {
               className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
               style={{ background: '#f3eff9', color: '#7c5cfc', border: '0.5px solid #e0d8f0' }}
             >
-              Tester une notification
+              {t(lang, 'testNotif')}
             </button>
           )}
         </div>
@@ -198,10 +226,10 @@ export default function SettingsTab() {
           <div className="rounded-2xl p-4" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
             <div className="flex items-center gap-2 mb-1">
               <CheckCircle size={16} style={{ color: '#2a7a4e' }} />
-              <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>Prières exaucées 🎉</h3>
+              <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{t(lang, 'answeredGallery')}</h3>
             </div>
             <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>
-              Dieu a exaucé {answeredPrayers.length} prière{answeredPrayers.length > 1 ? 's' : ''}. Gloire à Lui!
+              {t(lang, 'answeredGlory', { n: answeredPrayers.length, s: answeredPrayers.length > 1 ? 's' : '' })}
             </p>
             <div className="space-y-2">
               {answeredPrayers.map((p) => (
@@ -217,7 +245,7 @@ export default function SettingsTab() {
 
         <div className="text-center mt-6">
           <p className="text-xs" style={{ color: '#d4c8e4' }}>Pray For Me v1.0</p>
-          <p className="text-xs mt-0.5" style={{ color: '#e8e0f4', fontStyle: 'italic' }}>"La prière est le souffle de l'âme"</p>
+          <p className="text-xs mt-0.5" style={{ color: '#e8e0f4', fontStyle: 'italic' }}>{t(lang, 'motto')}</p>
         </div>
       </div>
     </div>

@@ -1,14 +1,40 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 
-const DEFAULT_CATEGORIES = [
-  { name: 'Famille', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
-  { name: 'Santé', color: '#059669', emoji: '🙏', week_days: [2] },
-  { name: 'Travail & Études', color: '#d97706', emoji: '💼', week_days: [3] },
-  { name: 'Église', color: '#7c3aed', emoji: '⛪', week_days: [4] },
-  { name: 'Nations & Gouvernements', color: '#dc2626', emoji: '🌍', week_days: [5] },
-  { name: 'Personnel & Spirituel', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
-];
+const DEFAULT_CATEGORIES = {
+  fr: [
+    { name: 'Famille', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
+    { name: 'Santé', color: '#059669', emoji: '🙏', week_days: [2] },
+    { name: 'Travail & Études', color: '#d97706', emoji: '💼', week_days: [3] },
+    { name: 'Église', color: '#7c3aed', emoji: '⛪', week_days: [4] },
+    { name: 'Nations & Gouvernements', color: '#dc2626', emoji: '🌍', week_days: [5] },
+    { name: 'Personnel & Spirituel', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
+  ],
+  en: [
+    { name: 'Family', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
+    { name: 'Health', color: '#059669', emoji: '🙏', week_days: [2] },
+    { name: 'Work & Studies', color: '#d97706', emoji: '💼', week_days: [3] },
+    { name: 'Church', color: '#7c3aed', emoji: '⛪', week_days: [4] },
+    { name: 'Nations & Governments', color: '#dc2626', emoji: '🌍', week_days: [5] },
+    { name: 'Personal & Spiritual', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
+  ],
+  de: [
+    { name: 'Familie', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
+    { name: 'Gesundheit', color: '#059669', emoji: '🙏', week_days: [2] },
+    { name: 'Arbeit & Studium', color: '#d97706', emoji: '💼', week_days: [3] },
+    { name: 'Kirche', color: '#7c3aed', emoji: '⛪', week_days: [4] },
+    { name: 'Nationen & Regierungen', color: '#dc2626', emoji: '🌍', week_days: [5] },
+    { name: 'Persönlich & Geistlich', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
+  ],
+  pt: [
+    { name: 'Família', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
+    { name: 'Saúde', color: '#059669', emoji: '🙏', week_days: [2] },
+    { name: 'Trabalho & Estudos', color: '#d97706', emoji: '💼', week_days: [3] },
+    { name: 'Igreja', color: '#7c3aed', emoji: '⛪', week_days: [4] },
+    { name: 'Nações & Governos', color: '#dc2626', emoji: '🌍', week_days: [5] },
+    { name: 'Pessoal & Espiritual', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
+  ],
+};
 
 const usePrayerStore = create((set, get) => ({
   prayers: [],
@@ -20,6 +46,7 @@ const usePrayerStore = create((set, get) => ({
     followUpDays: 7,
     callReminderEnabled: false,
     notificationsGranted: false,
+    language: 'fr',
   },
   loading: false,
 
@@ -35,9 +62,11 @@ const usePrayerStore = create((set, get) => ({
       .order('created_at');
 
     if (!cats || cats.length === 0) {
+      const lang = get().settings.language || 'fr';
+      const defaults = DEFAULT_CATEGORIES[lang] || DEFAULT_CATEGORIES.fr;
       const { data: newCats } = await supabase
         .from('categories')
-        .insert(DEFAULT_CATEGORIES.map((c) => ({ ...c, user_id: userId })))
+        .insert(defaults.map((c) => ({ ...c, user_id: userId })))
         .select();
       cats = newCats || [];
     }

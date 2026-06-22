@@ -8,25 +8,91 @@ export function getRemainingCooldown() {
   return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - lastCallTime)) / 1000));
 }
 
-export async function getAIRecommendations({ title, description = '', type = 'new' }) {
+const LANG_INSTRUCTIONS = {
+  fr: {
+    verseTextLang: 'en français',
+    evolution: (title, desc) =>
+      `Un chrétien prie pour : "${title}". Il vient d'ajouter cette évolution : "${desc}".
+Suggère 3 sujets de prière complémentaires adaptés à cette évolution.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
+[{"title":"sujet de prière","verse":"Référence ex: Jean 3:16","verseText":"Texte complet du verset en français"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    newPrayer: (title, desc) =>
+      `Un chrétien souhaite prier pour : "${title}".${desc ? ` Détails : "${desc}".` : ''}
+Suggère 4 sujets de prière connexes ou plus profonds.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
+[{"title":"sujet de prière","verse":"Référence ex: Jean 3:16","verseText":"Texte complet du verset en français"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    cooldown: (s) => `Veuillez attendre ${s}s avant une nouvelle suggestion.`,
+    rateLimited: "Limite de l'API atteinte. Réessayez dans quelques secondes.",
+    connError: "Erreur de connexion à l'IA.",
+    netError: 'Erreur réseau.',
+  },
+  en: {
+    verseTextLang: 'in English',
+    evolution: (title, desc) =>
+      `A Christian is praying for: "${title}". They just added this update: "${desc}".
+Suggest 3 complementary prayer topics suited to this update.
+Reply ONLY with a valid JSON array, no text before or after:
+[{"title":"prayer topic","verse":"Reference e.g. John 3:16","verseText":"Full verse text in English"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    newPrayer: (title, desc) =>
+      `A Christian wants to pray for: "${title}".${desc ? ` Details: "${desc}".` : ''}
+Suggest 4 related or deeper prayer topics.
+Reply ONLY with a valid JSON array, no text before or after:
+[{"title":"prayer topic","verse":"Reference e.g. John 3:16","verseText":"Full verse text in English"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    cooldown: (s) => `Please wait ${s}s before a new suggestion.`,
+    rateLimited: 'API limit reached. Please try again in a few seconds.',
+    connError: 'AI connection error.',
+    netError: 'Network error.',
+  },
+  de: {
+    verseTextLang: 'auf Deutsch',
+    evolution: (title, desc) =>
+      `Ein Christ betet für: "${title}". Er/sie hat gerade diese Entwicklung hinzugefügt: "${desc}".
+Schlage 3 ergänzende Gebetsanliegen vor, die zu dieser Entwicklung passen.
+Antworte NUR mit einem gültigen JSON-Array, kein Text davor oder danach:
+[{"title":"Gebetsanliegen","verse":"Referenz z.B. Johannes 3:16","verseText":"Vollständiger Verstext auf Deutsch"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    newPrayer: (title, desc) =>
+      `Ein Christ möchte für folgendes beten: "${title}".${desc ? ` Details: "${desc}".` : ''}
+Schlage 4 verwandte oder tiefere Gebetsanliegen vor.
+Antworte NUR mit einem gültigen JSON-Array, kein Text davor oder danach:
+[{"title":"Gebetsanliegen","verse":"Referenz z.B. Johannes 3:16","verseText":"Vollständiger Verstext auf Deutsch"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    cooldown: (s) => `Bitte warte ${s}s vor einem neuen Vorschlag.`,
+    rateLimited: 'API-Limit erreicht. Bitte in einigen Sekunden erneut versuchen.',
+    connError: 'KI-Verbindungsfehler.',
+    netError: 'Netzwerkfehler.',
+  },
+  pt: {
+    verseTextLang: 'em português',
+    evolution: (title, desc) =>
+      `Um cristão está orando por: "${title}". Ele/ela acabou de adicionar esta atualização: "${desc}".
+Sugira 3 tópicos de oração complementares adequados a esta atualização.
+Responda APENAS com um array JSON válido, sem texto antes ou depois:
+[{"title":"tópico de oração","verse":"Referência ex: João 3:16","verseText":"Texto completo do versículo em português"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    newPrayer: (title, desc) =>
+      `Um cristão quer orar por: "${title}".${desc ? ` Detalhes: "${desc}".` : ''}
+Sugira 4 tópicos de oração relacionados ou mais profundos.
+Responda APENAS com um array JSON válido, sem texto antes ou depois:
+[{"title":"tópico de oração","verse":"Referência ex: João 3:16","verseText":"Texto completo do versículo em português"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`,
+    cooldown: (s) => `Aguarde ${s}s antes de uma nova sugestão.`,
+    rateLimited: 'Limite da API atingido. Tente novamente em alguns segundos.',
+    connError: 'Erro de conexão com a IA.',
+    netError: 'Erro de rede.',
+  },
+};
+
+export async function getAIRecommendations({ title, description = '', type = 'new', lang = 'fr' }) {
   if (!API_KEY) return { recs: [], error: null };
 
-  const cacheKey = `${type}:${title}:${description}`.slice(0, 100);
+  const cacheKey = `${lang}:${type}:${title}:${description}`.slice(0, 100);
   if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
 
   const remaining = getRemainingCooldown();
-  if (remaining > 0) return { recs: [], error: `Veuillez attendre ${remaining}s avant une nouvelle suggestion.` };
+  const strings = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
+  if (remaining > 0) return { recs: [], error: strings.cooldown(remaining) };
 
   const isEvolution = type === 'evolution';
   const prompt = isEvolution
-    ? `Un chrétien prie pour : "${title}". Il vient d'ajouter cette évolution : "${description}".
-Suggère 3 sujets de prière complémentaires adaptés à cette évolution.
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-[{"title":"sujet de prière","verse":"Référence ex: Jean 3:16","verseText":"Texte complet du verset en français"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`
-    : `Un chrétien souhaite prier pour : "${title}".${description ? ` Détails : "${description}".` : ''}
-Suggère 4 sujets de prière connexes ou plus profonds.
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-[{"title":"sujet de prière","verse":"Référence ex: Jean 3:16","verseText":"Texte complet du verset en français"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`;
+    ? strings.evolution(title, description)
+    : strings.newPrayer(title, description);
 
   lastCallTime = Date.now();
 
@@ -51,11 +117,11 @@ Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
       }),
     });
 
-    if (res.status === 429) return { recs: [], error: 'Limite de l\'API atteinte. Réessayez dans quelques secondes.' };
+    if (res.status === 429) return { recs: [], error: strings.rateLimited };
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       console.error('Claude API error', res.status, err);
-      return { recs: [], error: 'Erreur de connexion à l\'IA.' };
+      return { recs: [], error: strings.connError };
     }
 
     const data = await res.json();
@@ -68,6 +134,6 @@ Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
     cache.set(cacheKey, recs);
     return { recs, error: null };
   } catch {
-    return { recs: [], error: 'Erreur réseau.' };
+    return { recs: [], error: strings.netError };
   }
 }

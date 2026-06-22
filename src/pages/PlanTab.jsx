@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import { Plus, Trash2, X, Check } from 'lucide-react';
-
-const DAYS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+import { t } from '../i18n';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
 export default function PlanTab() {
-  const { categories, addCategory, updateCategory, deleteCategory } = usePrayerStore();
+  const { categories, addCategory, updateCategory, deleteCategory, settings } = usePrayerStore();
+  const lang = settings.language || 'fr';
+  const DAYS = t(lang, 'days');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] });
@@ -45,10 +46,8 @@ export default function PlanTab() {
         className="px-4 pt-8 pb-5"
         style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
       >
-        <h2 className="text-xl font-semibold text-white mb-1">Plan hebdomadaire</h2>
-        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Assignez chaque catégorie à des jours de la semaine
-        </p>
+        <h2 className="text-xl font-semibold text-white mb-1">{t(lang, 'weeklyPlan')}</h2>
+        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{t(lang, 'weeklyPlanSub')}</p>
 
         {/* Weekly overview */}
         <div className="mt-4 grid grid-cols-7 gap-1">
@@ -87,7 +86,7 @@ export default function PlanTab() {
             className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium"
             style={{ background: '#7c5cfc', color: '#fff' }}
           >
-            <Plus size={13} /> Ajouter
+            <Plus size={13} /> {t(lang, 'addCategory')}
           </button>
         </div>
 

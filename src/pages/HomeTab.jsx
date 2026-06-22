@@ -2,9 +2,17 @@ import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import PrayerCard from '../components/PrayerCard';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr, enUS, de, ptBR } from 'date-fns/locale';
+import { t } from '../i18n';
 
-const DAY_NAMES = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+const DAY_NAMES = {
+  fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+  en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  de: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+  pt: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+};
+
+const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
 
 const VERSES = [
   { text: "Priez sans cesse.", ref: "1 Thessaloniciens 5:17" },
@@ -17,10 +25,12 @@ const VERSES = [
 ];
 
 export default function HomeTab({ onEdit }) {
-  const { getTodaysPrayers, categories, prayers } = usePrayerStore();
+  const { getTodaysPrayers, categories, prayers, settings } = usePrayerStore();
   const { user } = useAuthStore();
-  const todaysPrayers = getTodaysPrayers();
+  const lang = settings.language || 'fr';
+  const dateLocale = DATE_LOCALES[lang] || fr;
 
+  const todaysPrayers = getTodaysPrayers();
   const today = new Date();
   const dayIndex = today.getDay();
   const todayCategories = categories.filter((c) => c.week_days && c.week_days.includes(dayIndex));
@@ -30,10 +40,10 @@ export default function HomeTab({ onEdit }) {
 
   const displayName = user?.user_metadata?.full_name?.split(' ')[0]
     || user?.email?.split('@')[0]
-    || 'ami';
+    || '';
 
   const hour = today.getHours();
-  const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+  const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
   const greetingEmoji = hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌙';
 
   return (
@@ -53,21 +63,19 @@ export default function HomeTab({ onEdit }) {
           }}
         />
         <div className="relative">
-          {/* Greeting */}
           <p className="text-xs mb-1 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            {DAY_NAMES[dayIndex]} · {format(today, 'd MMMM yyyy', { locale: fr })}
+            {DAY_NAMES[lang]?.[dayIndex]} · {format(today, 'd MMMM yyyy', { locale: dateLocale })}
           </p>
           <h2 className="text-xl font-semibold text-white mb-5">
-            {greeting}, {displayName} {greetingEmoji}
+            {greeting}{displayName ? `, ${displayName}` : ''} {greetingEmoji}
           </h2>
 
-          {/* Verse card */}
           <div
             className="rounded-2xl p-4"
             style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.45)' }}>
-              Verset du jour
+              {t(lang, 'verseOfDay')}
             </p>
             <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
               "{verse.text}"
@@ -81,15 +89,11 @@ export default function HomeTab({ onEdit }) {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {[
-            { value: activeCount, label: 'Actives', color: '#7c5cfc' },
-            { value: answeredCount, label: 'Exaucées 🙌', color: '#2a7a4e' },
-            { value: todaysPrayers.length, label: "Aujourd'hui", color: '#c07c2a' },
+            { value: activeCount, label: t(lang, 'activePrayers'), color: '#7c5cfc' },
+            { value: answeredCount, label: t(lang, 'answeredPrayers') + ' 🙌', color: '#2a7a4e' },
+            { value: todaysPrayers.length, label: t(lang, 'todayPrayers'), color: '#c07c2a' },
           ].map(({ value, label, color }) => (
-            <div
-              key={label}
-              className="rounded-2xl p-3 text-center"
-              style={{ background: '#fff', border: '0.5px solid #ede8f5' }}
-            >
+            <div key={label} className="rounded-2xl p-3 text-center" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
               <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
               <p className="text-xs mt-0.5" style={{ color: '#9b8cb0' }}>{label}</p>
             </div>
@@ -100,15 +104,11 @@ export default function HomeTab({ onEdit }) {
         {todayCategories.length > 0 && (
           <div className="mb-4">
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#9b8cb0' }}>
-              Catégories du jour
+              {t(lang, 'todaysCategories')}
             </p>
             <div className="flex gap-2 flex-wrap">
               {todayCategories.map((cat) => (
-                <span
-                  key={cat.id}
-                  className="text-xs px-3 py-1.5 rounded-full font-medium text-white"
-                  style={{ backgroundColor: cat.color }}
-                >
+                <span key={cat.id} className="text-xs px-3 py-1.5 rounded-full font-medium text-white" style={{ backgroundColor: cat.color }}>
                   {cat.emoji} {cat.name}
                 </span>
               ))}
@@ -118,19 +118,19 @@ export default function HomeTab({ onEdit }) {
 
         {/* Today's prayers */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold" style={{ color: '#1a0f2e' }}>Prières d'aujourd'hui</h3>
-          <span className="text-xs" style={{ color: '#9b8cb0' }}>{todaysPrayers.length} sujets</span>
+          <h3 className="font-semibold" style={{ color: '#1a0f2e' }}>{t(lang, 'todaysPrayers')}</h3>
+          <span className="text-xs" style={{ color: '#9b8cb0' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
         </div>
 
         {todaysPrayers.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-5xl mb-3">🕊️</p>
-            <p className="text-sm" style={{ color: '#6b5b8a' }}>Aucune prière planifiée pour aujourd'hui</p>
-            <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>Ajoutez des prières ou configurez votre plan</p>
+            <p className="text-sm" style={{ color: '#6b5b8a' }}>{t(lang, 'noPrayersToday')}</p>
+            <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>{t(lang, 'noPrayersSub')}</p>
           </div>
         ) : (
           todaysPrayers.map((prayer) => (
-            <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} />
+            <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
           ))
         )}
       </div>
