@@ -30,15 +30,20 @@ Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
 
   lastCallTime = Date.now();
 
+  const isDev = import.meta.env.DEV;
+  const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
+
   try {
-    const res = await fetch('/api/anthropic/v1/messages', {
+    const headers = { 'Content-Type': 'application/json' };
+    if (isDev) {
+      headers['x-api-key'] = API_KEY;
+      headers['anthropic-version'] = '2023-06-01';
+      headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    }
+
+    const res = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
+      headers,
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
