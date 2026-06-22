@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { CheckCircle, Clock, ChevronDown, ChevronUp, Plus, Trash2, Edit2 } from 'lucide-react';
+import { CheckCircle, Clock, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { getRecommendations } from '../recommendations';
 
 export default function PrayerCard({ prayer, onEdit }) {
   const [expanded, setExpanded] = useState(false);
   const [newUpdate, setNewUpdate] = useState('');
   const [showTestimony, setShowTestimony] = useState(false);
   const [testimony, setTestimony] = useState('');
+  const [updateRecs, setUpdateRecs] = useState([]);
 
-  const { categories, markAnswered, markActive, markPending, addUpdate, deletePrayer } = usePrayerStore();
+  const { categories, markAnswered, markActive, markPending, addUpdate, deletePrayer, addPrayer } = usePrayerStore();
   const category = categories.find((c) => c.id === prayer.categoryId);
 
   const statusConfig = {
@@ -24,6 +26,8 @@ export default function PrayerCard({ prayer, onEdit }) {
   const handleAddUpdate = () => {
     if (!newUpdate.trim()) return;
     addUpdate(prayer.id, newUpdate.trim());
+    const recs = getRecommendations(prayer.title + ' ' + newUpdate, 'evolution');
+    setUpdateRecs(recs);
     setNewUpdate('');
   };
 
@@ -138,6 +142,36 @@ export default function PrayerCard({ prayer, onEdit }) {
               >
                 <Plus size={14} />
               </button>
+            </div>
+          )}
+
+          {/* Update recommendations */}
+          {updateRecs.length > 0 && (
+            <div className="bg-amber-50 border border-amber-100 rounded-xl p-2.5 mb-2">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Sparkles size={12} className="text-amber-500" />
+                <p className="text-xs font-semibold text-amber-700">Sujets à ajouter à votre prière</p>
+              </div>
+              <div className="space-y-1">
+                {updateRecs.map((rec) => (
+                  <div key={rec.title} className="flex items-center justify-between gap-2 bg-white rounded-lg px-2.5 py-1.5 border border-amber-100">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-slate-700 leading-tight">{rec.title}</p>
+                      <p className="text-xs text-amber-400">{rec.verse}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        addPrayer({ title: rec.title, description: `Verset: ${rec.verse}`, categoryId: prayer.categoryId });
+                        setUpdateRecs((prev) => prev.filter((r) => r.title !== rec.title));
+                      }}
+                      className="shrink-0 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg p-1 transition-colors"
+                      title="Ajouter comme nouvelle prière"
+                    >
+                      <Plus size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

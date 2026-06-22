@@ -1,6 +1,16 @@
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { X, Sparkles, Plus } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import { getRecommendations } from '../recommendations';
+
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+  return debounced;
+}
 
 export default function PrayerForm({ onClose, editPrayer }) {
   const { categories, addPrayer, updatePrayer } = usePrayerStore();
@@ -13,6 +23,11 @@ export default function PrayerForm({ onClose, editPrayer }) {
     personName: '',
     phone: '',
   });
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [dismissedRecs, setDismissedRecs] = useState(new Set());
+
+  const debouncedTitle = useDebounce(form.title, 600);
 
   useEffect(() => {
     if (editPrayer) {
@@ -27,10 +42,27 @@ export default function PrayerForm({ onClose, editPrayer }) {
     }
   }, [editPrayer]);
 
+  useEffect(() => {
+    if (debouncedTitle.length < 4) { setRecommendations([]); return; }
+    const recs = getRecommendations(debouncedTitle + ' ' + form.description, 'new');
+    setRecommendations(recs.filter((r) => !dismissedRecs.has(r.title)));
+  }, [debouncedTitle]);
+
+  const addRecommendation = (rec) => {
+    addPrayer({
+      title: rec.title,
+      description: `Verset: ${rec.verse}`,
+      categoryId: form.categoryId,
+      forOther: form.forOther,
+      personName: form.personName,
+    });
+    setDismissedRecs((prev) => new Set([...prev, rec.title]));
+    setRecommendations((prev) => prev.filter((r) => r.title !== rec.title));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
-
     if (editPrayer) {
       updatePrayer(editPrayer.id, form);
     } else {
@@ -45,7 +77,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
         className="bg-white w-full max-w-lg mx-auto rounded-t-2xl p-5 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-lg text-slate-800">
             {editPrayer ? 'Modifier la prière' : 'Nouvelle prière'}
@@ -56,7 +87,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Title */}
           <div>
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Sujet de prière *</label>
             <input
@@ -70,7 +100,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Détails (facultatif)</label>
             <textarea
@@ -82,7 +111,35 @@ export default function PrayerForm({ onClose, editPrayer }) {
             />
           </div>
 
-          {/* Category */}
+          {/* Recommendations */}
+          {recommendations.length > 0 && (
+            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Sparkles size={13} className="text-indigo-500" />
+                <p className="text-xs font-semibold text-indigo-600">Sujets connexes suggérés</p>
+              </div>
+              <p className="text-xs text-indigo-400 mb-2">Cliquez sur + pour ajouter directement à vos prières</p>
+              <div className="space-y-1.5">
+                {recommendations.map((rec) => (
+                  <div key={rec.title} className="flex items-center justify-between gap-2 bg-white rounded-lg px-3 py-2 border border-indigo-100">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-slate-700 leading-tight">{rec.title}</p>
+                      <p className="text-xs text-indigo-400 mt-0.5">{rec.verse}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => addRecommendation(rec)}
+                      className="shrink-0 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-lg p-1.5 transition-colors"
+                      title="Ajouter cette prière"
+                    >
+                      <Plus size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div>
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Catégorie</label>
             <select
@@ -97,7 +154,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
             </select>
           </div>
 
-          {/* For someone else */}
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -134,7 +190,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
             </div>
           )}
 
-          {/* Submit */}
           <div className="flex gap-2 pt-1">
             <button
               type="button"
