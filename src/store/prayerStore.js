@@ -46,7 +46,10 @@ const usePrayerStore = create((set, get) => ({
     followUpDays: 7,
     callReminderEnabled: false,
     notificationsGranted: false,
-    language: 'fr',
+    language: (() => {
+      const nav = (navigator.language || navigator.userLanguage || 'fr').toLowerCase().slice(0, 2);
+      return ['fr', 'en', 'de', 'pt'].includes(nav) ? nav : 'fr';
+    })(),
   },
   loading: false,
 
@@ -66,9 +69,14 @@ const usePrayerStore = create((set, get) => ({
       const defaults = DEFAULT_CATEGORIES[lang] || DEFAULT_CATEGORIES.fr;
       const { data: newCats } = await supabase
         .from('categories')
-        .insert(defaults.map((c) => ({ ...c, user_id: userId })))
+        .upsert(
+          defaults.map((c) => ({ ...c, user_id: userId })),
+          { onConflict: 'user_id,name', ignoreDuplicates: true }
+        )
         .select();
-      cats = newCats || [];
+      cats = newCats && newCats.length > 0 ? newCats : (
+        (await supabase.from('categories').select('*').eq('user_id', userId).order('created_at')).data || []
+      );
     }
 
     // Load prayers with updates, points and categories

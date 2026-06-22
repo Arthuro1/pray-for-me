@@ -22,8 +22,8 @@ export default function App() {
   useEffect(() => { init(); }, []);
 
   useEffect(() => {
-    if (user) loadData(user.id);
-  }, [user]);
+    if (user?.id) loadData(user.id);
+  }, [user?.id]);
 
   useEffect(() => {
     if (user) scheduleNotifications(settings, prayers, categories);
