@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { X, Sparkles, Plus, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
-import { getAIRecommendations } from '../aiRecommendations';
 
 export default function PrayerForm({ onClose, editPrayer }) {
   const { categories, addPrayer, updatePrayer } = usePrayerStore();
@@ -15,10 +14,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
     phone: '',
   });
 
-  const [recommendations, setRecommendations] = useState([]);
-  const [loadingRecs, setLoadingRecs] = useState(false);
-  const [recsError, setRecsError] = useState(null);
-
   useEffect(() => {
     if (editPrayer) {
       setForm({
@@ -31,28 +26,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
       });
     }
   }, [editPrayer]);
-
-  const fetchRecommendations = async () => {
-    if (form.title.length < 5 || loadingRecs) return;
-    setLoadingRecs(true);
-    setRecsError(null);
-    setRecommendations([]);
-    const { recs, error } = await getAIRecommendations({ title: form.title, description: form.description, type: 'new' });
-    setRecommendations(recs);
-    setRecsError(error);
-    setLoadingRecs(false);
-  };
-
-  const addRecommendation = (rec) => {
-    addPrayer({
-      title: rec.title,
-      description: `Verset: ${rec.verse}`,
-      categoryId: form.categoryId,
-      forOther: form.forOther,
-      personName: form.personName,
-    });
-    setRecommendations((prev) => prev.filter((r) => r.title !== rec.title));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -104,54 +77,6 @@ export default function PrayerForm({ onClose, editPrayer }) {
               rows={3}
             />
           </div>
-
-          {/* AI Recommendations */}
-          {form.title.length >= 5 && (
-            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="flex items-center gap-1.5">
-                  <Sparkles size={13} className="text-indigo-500" />
-                  <p className="text-xs font-semibold text-indigo-600">Suggestions de l'IA</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={fetchRecommendations}
-                  disabled={loadingRecs}
-                  className="flex items-center gap-1 text-xs bg-indigo-600 text-white px-2.5 py-1 rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
-                >
-                  {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
-                  {loadingRecs ? 'Chargement...' : 'Suggérer'}
-                </button>
-              </div>
-
-              {recsError && (
-                <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-2 py-1.5">{recsError}</p>
-              )}
-
-              {recommendations.length > 0 && (
-                <>
-                  <p className="text-xs text-indigo-400 mb-2">Chaque suggestion crée une nouvelle fiche de prière</p>
-                  <div className="space-y-1.5">
-                    {recommendations.map((rec) => (
-                      <div key={rec.title} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-indigo-100">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-slate-700 leading-tight">{rec.title}</p>
-                          <p className="text-xs text-indigo-400 mt-0.5">{rec.verse}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => addRecommendation(rec)}
-                          className="flex items-center gap-1 text-xs bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg px-2 py-1 transition-colors font-medium shrink-0"
-                        >
-                          <Plus size={11} /> Créer
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
 
           <div>
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Catégorie</label>
