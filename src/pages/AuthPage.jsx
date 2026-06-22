@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Loader2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
@@ -55,8 +55,8 @@ export default function AuthPage() {
 
       {/* Logo */}
       <div className="fixed top-0 left-0 right-0 flex flex-col items-center pt-16 pb-6 pointer-events-none">
-        <img src="/logo.svg" alt="Pray For Me" className="w-16 h-16 mb-3 rounded-2xl" />
-        <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray For Me</h1>
+        <img src="/logo.svg" alt="Pray4Me" className="w-16 h-16 mb-3 rounded-2xl" />
+        <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray4Me</h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>
           "Priez sans cesse" — 1 Thess 5:17
         </p>

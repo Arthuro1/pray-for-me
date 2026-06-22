@@ -1,4 +1,4 @@
-export function scheduleNotifications(settings, prayers, categories) {
+﻿export function scheduleNotifications(settings, prayers, categories) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
   // Daily reminder
@@ -22,7 +22,7 @@ export function scheduleNotifications(settings, prayers, categories) {
         return pCatIds.length === 0 || pCatIds.some((cid) => todayCatIds.includes(cid));
       });
 
-      new Notification('🙏 Pray For Me — Heure de prière!', {
+      new Notification('🙏 Pray4Me — Heure de prière!', {
         body: todaysPrayers.length > 0
           ? `Vous avez ${todaysPrayers.length} sujets de prière pour aujourd'hui. "Priez sans cesse" — 1 Thess 5:17`
           : 'Prenez un moment pour communier avec Dieu aujourd\'hui.',
@@ -43,7 +43,7 @@ export function scheduleNotifications(settings, prayers, categories) {
 
     if (stalePrayers.length > 0) {
       setTimeout(() => {
-        new Notification('📋 Pray For Me — Suivi de prière', {
+        new Notification('📋 Pray4Me — Suivi de prière', {
           body: `${stalePrayers.length} prière(s) n'ont pas été mises à jour depuis ${settings.followUpDays} jours. Comment Dieu agit-il?`,
           icon: '/favicon.ico',
           tag: 'follow-up',
@@ -61,7 +61,7 @@ export function scheduleNotifications(settings, prayers, categories) {
     if (prayersForOthers.length > 0) {
       setTimeout(() => {
         const p = prayersForOthers[0];
-        new Notification('📞 Pray For Me — Rappel d\'appel', {
+        new Notification('📞 Pray4Me — Rappel d\'appel', {
           body: `Pensez à appeler ${p.person_name} pour encourager et partager votre prière pour eux.`,
           icon: '/favicon.ico',
           tag: 'call-reminder',

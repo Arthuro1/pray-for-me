@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
@@ -15,7 +15,7 @@ function requestNotificationPermission(onGranted) {
   Notification.requestPermission().then((permission) => {
     if (permission === 'granted') {
       onGranted();
-      new Notification('Pray For Me 🙏', {
+      new Notification('Pray4Me 🙏', {
         body: 'Les notifications sont activées! Dieu vous entend.',
         icon: '/favicon.ico',
       });
@@ -240,7 +240,7 @@ export default function SettingsTab() {
 
           {settings.notificationsGranted && (
             <button
-              onClick={() => new Notification('Pray For Me 🙏', { body: 'Voici vos prières du jour. Prenez un moment pour prier!', icon: '/favicon.ico' })}
+              onClick={() => new Notification('Pray4Me 🙏', { body: 'Voici vos prières du jour. Prenez un moment pour prier!', icon: '/favicon.ico' })}
               title={t(lang, 'tipTestNotif')}
               className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
               style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
@@ -312,7 +312,7 @@ export default function SettingsTab() {
           <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>
           <p className="text-xs font-medium" style={{ color: 'var(--accent)', opacity: 0.6 }}>James 5:16</p>
         </div>
-        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Pray For Me v1.0</p>
+        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Pray4Me v1.0</p>
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}

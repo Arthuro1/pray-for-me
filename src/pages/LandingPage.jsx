@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 
 const LANGS = [
@@ -264,7 +264,7 @@ export default function LandingPage({ onGetStarted }) {
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 max-w-6xl mx-auto gap-4">
         <div className="flex items-center gap-2.5 shrink-0">
           <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
-          <span className="font-semibold text-lg tracking-tight">Pray For Me</span>
+          <span className="font-semibold text-lg tracking-tight">Pray4Me</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -465,7 +465,7 @@ export default function LandingPage({ onGetStarted }) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />
-            <span className="text-sm font-medium text-white">Pray For Me</span>
+            <span className="text-sm font-medium text-white">Pray4Me</span>
           </div>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{c.footerBuilt}</p>
           <button onClick={onGetStarted} className="text-xs font-medium px-4 py-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)', border: '0.5px solid rgba(255,255,255,0.1)' }}>

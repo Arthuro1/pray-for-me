@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import HomeTab from './pages/HomeTab';
@@ -51,7 +51,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
-          <img src="/logo.svg" alt="Pray For Me" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
+          <img src="/logo.svg" alt="Pray4Me" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <Loader2 className="animate-spin mx-auto" size={24} />
         </div>
       </div>
@@ -67,7 +67,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
-          <img src="/logo.svg" alt="Pray For Me" className="w-14 h-14 rounded-2xl mx-auto mb-3" />
+          <img src="/logo.svg" alt="Pray4Me" className="w-14 h-14 rounded-2xl mx-auto mb-3" />
           <Loader2 className="animate-spin mx-auto text-indigo-600" size={22} />
           <p className="text-sm text-slate-400 mt-2">Chargement de vos prières...</p>
         </div>
