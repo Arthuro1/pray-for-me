@@ -40,7 +40,7 @@ export default function PrayersTab({ onEdit }) {
 
   return (
     <div>
-      <div className="px-4 pt-8 pb-5" style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}>
+      <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}>
         <h2 className="text-xl font-semibold text-white mb-4">{t(lang, 'myPrayers')}</h2>
 
         <div className="relative">
@@ -74,7 +74,7 @@ export default function PrayersTab({ onEdit }) {
         </div>
       </div>
 
-      <div className="px-4 pt-4">
+      <div className="px-4 md:px-8 pt-4">
         {showFilters && (
           <div className="flex gap-2 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
             <button
@@ -108,9 +108,11 @@ export default function PrayersTab({ onEdit }) {
             <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>{t(lang, 'noPrayersFoundSub')}</p>
           </div>
         ) : (
-          sorted.map((prayer) => (
-            <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
-          ))
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {sorted.map((prayer) => (
+              <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
+            ))}
+          </div>
         )}
       </div>
     </div>

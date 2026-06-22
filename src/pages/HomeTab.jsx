@@ -82,7 +82,7 @@ export default function HomeTab({ onEdit }) {
     <div>
       {/* Hero banner */}
       <div
-        className="relative overflow-hidden px-5 pt-10 pb-8"
+        className="relative overflow-hidden px-5 md:px-8 pt-10 pb-8"
         style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 55%, #5a3fa0 100%)' }}
       >
         <div
@@ -117,7 +117,7 @@ export default function HomeTab({ onEdit }) {
         </div>
       </div>
 
-      <div className="px-4 -mt-4 relative z-10">
+      <div className="px-4 md:px-8 -mt-4 relative z-10">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {[
@@ -161,9 +161,11 @@ export default function HomeTab({ onEdit }) {
             <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>{t(lang, 'noPrayersSub')}</p>
           </div>
         ) : (
-          todaysPrayers.map((prayer) => (
-            <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
-          ))
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {todaysPrayers.map((prayer) => (
+              <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
+            ))}
+          </div>
         )}
       </div>
     </div>

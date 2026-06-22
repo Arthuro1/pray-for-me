@@ -52,9 +52,9 @@ export default function PrayerForm({ onClose, editPrayer }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
       <div
-        className="w-full max-w-lg mx-auto rounded-t-3xl max-h-[92vh] overflow-y-auto"
+        className="w-full max-w-lg mx-auto rounded-t-3xl md:rounded-3xl max-h-[92vh] overflow-y-auto md:shadow-2xl"
         style={{ background: '#f7f4ef' }}
         onClick={(e) => e.stopPropagation()}
       >

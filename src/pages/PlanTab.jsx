@@ -45,7 +45,7 @@ export default function PlanTab() {
     <div>
       {/* Header */}
       <div
-        className="px-4 pt-8 pb-5"
+        className="px-4 md:px-8 pt-8 pb-5"
         style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
       >
         <h2 className="text-xl font-semibold text-white mb-1">{t(lang, 'weeklyPlan')}</h2>
@@ -79,7 +79,7 @@ export default function PlanTab() {
         </div>
       </div>
 
-      <div className="px-4 pt-4">
+      <div className="px-4 md:px-8 pt-4">
         {/* Add button */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold" style={{ color: '#1a0f2e' }}>Catégories</h3>
@@ -177,7 +177,7 @@ export default function PlanTab() {
         )}
 
         {/* Category list */}
-        <div className="space-y-3 pb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
           {categories.map((cat) => (
             <div key={cat.id} className="rounded-2xl p-4" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
               <div className="flex items-center gap-2 mb-3">

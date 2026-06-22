@@ -37,7 +37,7 @@ export default function AuthPage() {
 
   return (
     <div
-      className="min-h-screen flex items-end justify-center p-0"
+      className="min-h-screen flex items-end md:items-center justify-center p-0 md:p-8"
       style={{
         background: 'linear-gradient(160deg, #1a0a2e 0%, #2d1b5e 50%, #4a2f8a 100%)',
       }}
@@ -69,7 +69,7 @@ export default function AuthPage() {
 
       {/* Bottom sheet */}
       <div
-        className="relative w-full max-w-lg rounded-t-3xl px-6 pt-6 pb-8"
+        className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
         style={{ background: '#fff' }}
       >
         {/* Tabs */}

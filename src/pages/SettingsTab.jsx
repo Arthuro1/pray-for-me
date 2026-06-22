@@ -87,7 +87,7 @@ export default function SettingsTab() {
     <div>
       {/* Header */}
       <div
-        className="px-4 pt-8 pb-5"
+        className="px-4 md:px-8 pt-8 pb-5"
         style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
       >
         {/* Profile */}
@@ -118,7 +118,8 @@ export default function SettingsTab() {
         </div>
       </div>
 
-      <div className="px-4 pt-4 pb-6">
+      <div className="px-4 md:px-8 pt-4 pb-6">
+        <div className="md:grid md:grid-cols-2 md:gap-4 md:items-start">
         {/* Account info */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#b0a4c0' }}>{t(lang, 'account')}</p>
@@ -244,6 +245,8 @@ export default function SettingsTab() {
             </div>
           </div>
         )}
+
+        </div>{/* end md:grid */}
 
         <div className="text-center mt-6">
           <p className="text-xs" style={{ color: '#d4c8e4' }}>Pray For Me v1.0</p>
