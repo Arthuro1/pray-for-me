@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle } from 'lucide-react';
+import useAuthStore from '../store/authStore';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield } from 'lucide-react';
 
 function requestNotificationPermission(onGranted) {
   if (!('Notification' in window)) {
@@ -22,6 +23,7 @@ function requestNotificationPermission(onGranted) {
 
 export default function SettingsTab() {
   const { settings, updateSettings, prayers } = usePrayerStore();
+  const { user, signOut } = useAuthStore();
   const [saved, setSaved] = useState(false);
 
   const handleToggleNotifications = () => {
@@ -42,9 +44,50 @@ export default function SettingsTab() {
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
 
+  const provider = user?.app_metadata?.provider;
+  const providerLabel = provider === 'google' ? 'Google' : provider === 'email' ? 'Email / Mot de passe' : provider || '—';
+  const avatarUrl = user?.user_metadata?.avatar_url;
+  const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
+  const memberSince = user?.created_at ? new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : null;
+
   return (
     <div className="p-4">
       <h2 className="font-bold text-slate-800 text-lg mb-4">Paramètres</h2>
+
+      {/* Profile card */}
+      <div className="bg-white rounded-2xl shadow-sm p-4 mb-4">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Profil</p>
+        <div className="flex items-center gap-3 mb-4">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover ring-2 ring-indigo-100" />
+          ) : (
+            <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center">
+              <User size={26} className="text-indigo-500" />
+            </div>
+          )}
+          <div>
+            <p className="font-semibold text-slate-800">{displayName}</p>
+            {memberSince && <p className="text-xs text-slate-400">Membre depuis {memberSince}</p>}
+          </div>
+        </div>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2.5 text-sm text-slate-600">
+            <Mail size={14} className="text-slate-400 shrink-0" />
+            <span>{user?.email}</span>
+          </div>
+          <div className="flex items-center gap-2.5 text-sm text-slate-600">
+            <Shield size={14} className="text-slate-400 shrink-0" />
+            <span>Connexion via <span className="font-medium">{providerLabel}</span></span>
+          </div>
+        </div>
+        <button
+          onClick={signOut}
+          className="w-full flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 rounded-xl py-2.5 text-sm font-medium transition-colors"
+        >
+          <LogOut size={14} />
+          Se déconnecter
+        </button>
+      </div>
 
       {/* Stats card */}
       <div className="bg-indigo-700 text-white rounded-2xl p-4 mb-4">
@@ -201,9 +244,9 @@ export default function SettingsTab() {
                     {p.testimony && (
                       <p className="text-xs text-green-600 mt-0.5 italic">"{p.testimony}"</p>
                     )}
-                    {p.answeredAt && (
+                    {p.answered_at && (
                       <p className="text-xs text-slate-400 mt-0.5">
-                        {new Date(p.answeredAt).toLocaleDateString('fr-FR')}
+                        {new Date(p.answered_at).toLocaleDateString('fr-FR')}
                       </p>
                     )}
                   </div>

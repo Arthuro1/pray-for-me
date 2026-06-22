@@ -19,7 +19,7 @@ export default function HomeTab({ onEdit }) {
 
   const today = new Date();
   const dayIndex = today.getDay();
-  const todayCategories = categories.filter((c) => c.weekDays && c.weekDays.includes(dayIndex));
+  const todayCategories = categories.filter((c) => c.week_days && c.week_days.includes(dayIndex));
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const activeCount = prayers.filter((p) => p.status === 'active').length;
 

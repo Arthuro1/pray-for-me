@@ -1,130 +1,213 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { supabase } from '../lib/supabase';
 
 const DEFAULT_CATEGORIES = [
-  { id: 'famille', name: 'Famille', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', weekDays: [1] },
-  { id: 'sante', name: 'Santé', color: '#059669', emoji: '🙏', weekDays: [2] },
-  { id: 'travail', name: 'Travail & Études', color: '#d97706', emoji: '💼', weekDays: [3] },
-  { id: 'eglise', name: 'Église', color: '#7c3aed', emoji: '⛪', weekDays: [4] },
-  { id: 'nations', name: 'Nations & Gouvernements', color: '#dc2626', emoji: '🌍', weekDays: [5] },
-  { id: 'personnel', name: 'Personnel & Spirituel', color: '#0891b2', emoji: '✨', weekDays: [0, 6] },
+  { name: 'Famille', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
+  { name: 'Santé', color: '#059669', emoji: '🙏', week_days: [2] },
+  { name: 'Travail & Études', color: '#d97706', emoji: '💼', week_days: [3] },
+  { name: 'Église', color: '#7c3aed', emoji: '⛪', week_days: [4] },
+  { name: 'Nations & Gouvernements', color: '#dc2626', emoji: '🌍', week_days: [5] },
+  { name: 'Personnel & Spirituel', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
 ];
 
-const usePrayerStore = create(
-  persist(
-    (set, get) => ({
-      prayers: [],
-      categories: DEFAULT_CATEGORIES,
-      settings: {
-        dailyReminderEnabled: false,
-        dailyReminderTime: '07:00',
-        followUpEnabled: false,
-        followUpDays: 7,
-        notificationsGranted: false,
-      },
+const usePrayerStore = create((set, get) => ({
+  prayers: [],
+  categories: [],
+  settings: {
+    dailyReminderEnabled: false,
+    dailyReminderTime: '07:00',
+    followUpEnabled: false,
+    followUpDays: 7,
+    callReminderEnabled: false,
+    notificationsGranted: false,
+  },
+  loading: false,
 
-      // Prayer actions
-      addPrayer: (prayer) => set((state) => ({
-        prayers: [...state.prayers, {
-          id: Date.now().toString(),
-          createdAt: new Date().toISOString(),
-          status: 'active',
-          updates: [],
-          ...prayer,
-        }],
-      })),
+  // ─── Load all data ───────────────────────────────────────────
+  loadData: async (userId) => {
+    set({ loading: true });
 
-      updatePrayer: (id, updates) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === id ? { ...p, ...updates, updatedAt: new Date().toISOString() } : p
-        ),
-      })),
+    // Load categories (create defaults if first time)
+    let { data: cats } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at');
 
-      markAnswered: (id, testimony) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === id
-            ? { ...p, status: 'answered', answeredAt: new Date().toISOString(), testimony: testimony || '' }
-            : p
-        ),
-      })),
-
-      markPending: (id) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === id ? { ...p, status: 'pending' } : p
-        ),
-      })),
-
-      markActive: (id) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === id ? { ...p, status: 'active' } : p
-        ),
-      })),
-
-      addUpdate: (prayerId, text) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, updates: [...(p.updates || []), { id: Date.now().toString(), text, date: new Date().toISOString() }] }
-            : p
-        ),
-      })),
-
-      addPrayerPoint: (prayerId, point) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, prayerPoints: [...(p.prayerPoints || []), { id: Date.now().toString(), ...point, addedAt: new Date().toISOString() }] }
-            : p
-        ),
-      })),
-
-      removePrayerPoint: (prayerId, pointId) => set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, prayerPoints: (p.prayerPoints || []).filter((pp) => pp.id !== pointId) }
-            : p
-        ),
-      })),
-
-      deletePrayer: (id) => set((state) => ({
-        prayers: state.prayers.filter((p) => p.id !== id),
-      })),
-
-      // Category actions
-      addCategory: (category) => set((state) => ({
-        categories: [...state.categories, { id: Date.now().toString(), weekDays: [], ...category }],
-      })),
-
-      updateCategory: (id, updates) => set((state) => ({
-        categories: state.categories.map((c) => c.id === id ? { ...c, ...updates } : c),
-      })),
-
-      deleteCategory: (id) => set((state) => ({
-        categories: state.categories.filter((c) => c.id !== id),
-        prayers: state.prayers.map((p) => p.categoryId === id ? { ...p, categoryId: '' } : p),
-      })),
-
-      // Settings
-      updateSettings: (updates) => set((state) => ({
-        settings: { ...state.settings, ...updates },
-      })),
-
-      // Get today's prayers based on weekly plan
-      getTodaysPrayers: () => {
-        const { prayers, categories } = get();
-        const today = new Date().getDay(); // 0=Sun, 1=Mon...
-        const todayCategories = categories
-          .filter((c) => c.weekDays && c.weekDays.includes(today))
-          .map((c) => c.id);
-
-        return prayers.filter((p) =>
-          p.status === 'active' &&
-          (todayCategories.includes(p.categoryId) || !p.categoryId)
-        );
-      },
-    }),
-    {
-      name: 'pray-for-me-storage',
+    if (!cats || cats.length === 0) {
+      const { data: newCats } = await supabase
+        .from('categories')
+        .insert(DEFAULT_CATEGORIES.map((c) => ({ ...c, user_id: userId })))
+        .select();
+      cats = newCats || [];
     }
-  )
-);
+
+    // Load prayers with updates and points
+    const { data: prayers } = await supabase
+      .from('prayers')
+      .select(`*, prayer_updates(*), prayer_points(*)`)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    set({ categories: cats || [], prayers: prayers || [], loading: false });
+  },
+
+  // ─── Prayers ─────────────────────────────────────────────────
+  addPrayer: async (prayer) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data, error } = await supabase
+      .from('prayers')
+      .insert({
+        user_id: user.id,
+        title: prayer.title,
+        description: prayer.description || '',
+        category_id: prayer.categoryId || null,
+        for_other: prayer.forOther || false,
+        person_name: prayer.personName || '',
+        phone: prayer.phone || '',
+        status: 'active',
+      })
+      .select(`*, prayer_updates(*), prayer_points(*)`)
+      .single();
+
+    if (!error && data) {
+      set((state) => ({ prayers: [data, ...state.prayers] }));
+    }
+  },
+
+  updatePrayer: async (id, updates) => {
+    const payload = {};
+    if (updates.title !== undefined) payload.title = updates.title;
+    if (updates.description !== undefined) payload.description = updates.description;
+    if (updates.categoryId !== undefined) payload.category_id = updates.categoryId || null;
+    if (updates.forOther !== undefined) payload.for_other = updates.forOther;
+    if (updates.personName !== undefined) payload.person_name = updates.personName;
+    if (updates.phone !== undefined) payload.phone = updates.phone;
+    payload.updated_at = new Date().toISOString();
+
+    const { data } = await supabase.from('prayers').update(payload).eq('id', id).select().single();
+    if (data) {
+      set((state) => ({
+        prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p),
+      }));
+    }
+  },
+
+  markAnswered: async (id, testimony) => {
+    const { data } = await supabase
+      .from('prayers')
+      .update({ status: 'answered', testimony: testimony || '', answered_at: new Date().toISOString() })
+      .eq('id', id).select().single();
+    if (data) {
+      set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
+    }
+  },
+
+  markActive: async (id) => {
+    const { data } = await supabase.from('prayers').update({ status: 'active', answered_at: null }).eq('id', id).select().single();
+    if (data) {
+      set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
+    }
+  },
+
+  deletePrayer: async (id) => {
+    await supabase.from('prayers').delete().eq('id', id);
+    set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
+  },
+
+  // ─── Updates ─────────────────────────────────────────────────
+  addUpdate: async (prayerId, text) => {
+    const { data } = await supabase
+      .from('prayer_updates')
+      .insert({ prayer_id: prayerId, text })
+      .select().single();
+
+    if (data) {
+      set((state) => ({
+        prayers: state.prayers.map((p) =>
+          p.id === prayerId
+            ? { ...p, prayer_updates: [...(p.prayer_updates || []), data] }
+            : p
+        ),
+      }));
+    }
+  },
+
+  // ─── Prayer Points ────────────────────────────────────────────
+  addPrayerPoint: async (prayerId, point) => {
+    const { data } = await supabase
+      .from('prayer_points')
+      .insert({ prayer_id: prayerId, title: point.title, verse: point.verse || '', verse_text: point.verseText || '' })
+      .select().single();
+
+    if (data) {
+      set((state) => ({
+        prayers: state.prayers.map((p) =>
+          p.id === prayerId
+            ? { ...p, prayer_points: [...(p.prayer_points || []), data] }
+            : p
+        ),
+      }));
+    }
+  },
+
+  removePrayerPoint: async (prayerId, pointId) => {
+    await supabase.from('prayer_points').delete().eq('id', pointId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_points: (p.prayer_points || []).filter((pp) => pp.id !== pointId) }
+          : p
+      ),
+    }));
+  },
+
+  // ─── Categories ───────────────────────────────────────────────
+  addCategory: async (category) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data } = await supabase
+      .from('categories')
+      .insert({ user_id: user.id, name: category.name, emoji: category.emoji, color: category.color, week_days: category.weekDays || [] })
+      .select().single();
+    if (data) set((state) => ({ categories: [...state.categories, data] }));
+  },
+
+  updateCategory: async (id, updates) => {
+    const payload = {};
+    if (updates.name !== undefined) payload.name = updates.name;
+    if (updates.emoji !== undefined) payload.emoji = updates.emoji;
+    if (updates.color !== undefined) payload.color = updates.color;
+    if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
+
+    const { data } = await supabase.from('categories').update(payload).eq('id', id).select().single();
+    if (data) {
+      set((state) => ({ categories: state.categories.map((c) => c.id === id ? data : c) }));
+    }
+  },
+
+  deleteCategory: async (id) => {
+    await supabase.from('categories').delete().eq('id', id);
+    set((state) => ({ categories: state.categories.filter((c) => c.id !== id) }));
+  },
+
+  // ─── Settings (localStorage only) ────────────────────────────
+  updateSettings: (updates) => set((state) => ({
+    settings: { ...state.settings, ...updates },
+  })),
+
+  // ─── Today's prayers ─────────────────────────────────────────
+  getTodaysPrayers: () => {
+    const { prayers, categories } = get();
+    const today = new Date().getDay();
+    const todayCategories = categories
+      .filter((c) => (c.week_days || []).includes(today))
+      .map((c) => c.id);
+
+    return prayers.filter((p) =>
+      p.status === 'active' &&
+      (todayCategories.includes(p.category_id) || !p.category_id)
+    );
+  },
+}));
 
 export default usePrayerStore;

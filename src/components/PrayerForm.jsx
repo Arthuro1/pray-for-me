@@ -19,9 +19,9 @@ export default function PrayerForm({ onClose, editPrayer }) {
       setForm({
         title: editPrayer.title || '',
         description: editPrayer.description || '',
-        categoryId: editPrayer.categoryId || '',
-        forOther: editPrayer.forOther || false,
-        personName: editPrayer.personName || '',
+        categoryId: editPrayer.category_id || '',
+        forOther: editPrayer.for_other || false,
+        personName: editPrayer.person_name || '',
         phone: editPrayer.phone || '',
       });
     }

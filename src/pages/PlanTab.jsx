@@ -18,7 +18,7 @@ export default function PlanTab() {
   const toggleDay = (day, catId) => {
     const cat = categories.find((c) => c.id === catId);
     if (!cat) return;
-    const days = cat.weekDays || [];
+    const days = cat.week_days || [];
     const next = days.includes(day) ? days.filter((d) => d !== day) : [...days, day];
     updateCategory(catId, { weekDays: next });
   };
@@ -36,7 +36,7 @@ export default function PlanTab() {
   };
 
   const startEdit = (cat) => {
-    setForm({ name: cat.name, emoji: cat.emoji, color: cat.color, weekDays: cat.weekDays || [] });
+    setForm({ name: cat.name, emoji: cat.emoji, color: cat.color, weekDays: cat.week_days || [] });
     setEditId(cat.id);
     setShowAddForm(true);
   };
@@ -55,7 +55,7 @@ export default function PlanTab() {
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Vue par jour</p>
         <div className="grid grid-cols-7 gap-1">
           {DAYS.map((day, idx) => {
-            const dayCats = categories.filter((c) => (c.weekDays || []).includes(idx));
+            const dayCats = categories.filter((c) => (c.week_days || []).includes(idx));
             return (
               <div key={idx} className="text-center">
                 <p className="text-xs font-bold text-slate-500 mb-1">{day}</p>
@@ -207,11 +207,11 @@ export default function PlanTab() {
                   key={idx}
                   onClick={() => toggleDay(idx, cat.id)}
                   className={`flex-1 text-xs py-1.5 rounded-lg font-medium transition-colors ${
-                    (cat.weekDays || []).includes(idx)
+                    (cat.week_days || []).includes(idx)
                       ? 'text-white'
                       : 'bg-slate-100 text-slate-400'
                   }`}
-                  style={(cat.weekDays || []).includes(idx) ? { backgroundColor: cat.color } : {}}
+                  style={(cat.week_days || []).includes(idx) ? { backgroundColor: cat.color } : {}}
                 >
                   {day}
                 </button>

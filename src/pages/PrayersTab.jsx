@@ -18,10 +18,10 @@ export default function PrayersTab({ onEdit }) {
 
   const filtered = prayers.filter((p) => {
     if (statusFilter !== 'all' && p.status !== statusFilter) return false;
-    if (categoryFilter !== 'all' && p.categoryId !== categoryFilter) return false;
+    if (categoryFilter !== 'all' && p.category_id !== categoryFilter) return false;
     if (search) {
       const q = search.toLowerCase();
-      if (!p.title.toLowerCase().includes(q) && !(p.description || '').toLowerCase().includes(q) && !(p.personName || '').toLowerCase().includes(q)) return false;
+      if (!p.title.toLowerCase().includes(q) && !(p.description || '').toLowerCase().includes(q) && !(p.person_name || '').toLowerCase().includes(q)) return false;
     }
     return true;
   });

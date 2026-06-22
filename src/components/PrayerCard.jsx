@@ -16,7 +16,7 @@ export default function PrayerCard({ prayer, onEdit }) {
   const [expandedVerse, setExpandedVerse] = useState(null);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
-  const category = categories.find((c) => c.id === prayer.categoryId);
+  const category = categories.find((c) => c.id === prayer.category_id);
 
   const statusConfig = {
     active: { label: 'Actif', bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
@@ -37,7 +37,7 @@ export default function PrayerCard({ prayer, onEdit }) {
 
   const fetchUpdateRecs = async () => {
     if (loadingRecs) return;
-    const lastUpdate = (prayer.updates || []).slice(-1)[0]?.text || prayer.title;
+    const lastUpdate = (prayer.prayer_updates || []).slice(-1)[0]?.text || prayer.title;
     setLoadingRecs(true);
     setRecsError(null);
     const { recs, error } = await getAIRecommendations({ title: prayer.title, description: lastUpdate, type: 'evolution' });
@@ -80,8 +80,8 @@ export default function PrayerCard({ prayer, onEdit }) {
             </div>
 
             {/* Person for */}
-            {prayer.forOther && prayer.personName && (
-              <p className="text-xs text-indigo-500 mt-0.5">Pour: {prayer.personName}</p>
+            {prayer.for_other && prayer.person_name && (
+              <p className="text-xs text-indigo-500 mt-0.5">Pour: {prayer.person_name}</p>
             )}
 
             {/* Category */}
@@ -120,8 +120,8 @@ export default function PrayerCard({ prayer, onEdit }) {
 
           {/* Date */}
           <p className="text-xs text-slate-400 mb-2">
-            Ajouté le {format(new Date(prayer.createdAt), 'd MMMM yyyy', { locale: fr })}
-            {prayer.answeredAt && ` · Exaucé le ${format(new Date(prayer.answeredAt), 'd MMMM yyyy', { locale: fr })}`}
+            Ajouté le {format(new Date(prayer.created_at), 'd MMMM yyyy', { locale: fr })}
+            {prayer.answered_at && ` · Exaucé le ${format(new Date(prayer.answered_at), 'd MMMM yyyy', { locale: fr })}`}
           </p>
 
           {/* Two columns: Évolutions + Sujets de prière */}
@@ -130,15 +130,15 @@ export default function PrayerCard({ prayer, onEdit }) {
             {/* Évolutions */}
             <div>
               <p className="text-xs font-semibold text-slate-500 mb-1.5">Évolutions</p>
-              {(prayer.updates || []).length === 0 && (
+              {(prayer.prayer_updates || []).length === 0 && (
                 <p className="text-xs text-slate-300 italic">Aucune évolution</p>
               )}
-              {(prayer.updates || []).map((u) => (
+              {(prayer.prayer_updates || []).map((u) => (
                 <div key={u.id} className="flex gap-1.5 mb-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
                   <div>
                     <p className="text-xs text-slate-600 leading-tight">{u.text}</p>
-                    <p className="text-xs text-slate-400">{format(new Date(u.date), 'd MMM yy', { locale: fr })}</p>
+                    <p className="text-xs text-slate-400">{format(new Date(u.created_at), 'd MMM yy', { locale: fr })}</p>
                   </div>
                 </div>
               ))}
@@ -178,12 +178,12 @@ export default function PrayerCard({ prayer, onEdit }) {
                 )}
               </div>
 
-              {(prayer.prayerPoints || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
+              {(prayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
                 <p className="text-xs text-slate-300 italic">Cliquez sur ✨ pour des suggestions</p>
               )}
 
               {/* Points existants */}
-              {(prayer.prayerPoints || []).map((pp) => (
+              {(prayer.prayer_points || []).map((pp) => (
                 <div key={pp.id} className="mb-2 group">
                   <div className="flex gap-1.5 items-start">
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />

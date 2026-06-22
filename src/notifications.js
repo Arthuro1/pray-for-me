@@ -13,11 +13,11 @@ export function scheduleNotifications(settings, prayers, categories) {
     setTimeout(() => {
       const today = new Date().getDay();
       const todayCatIds = categories
-        .filter((c) => (c.weekDays || []).includes(today))
+        .filter((c) => (c.week_days || []).includes(today))
         .map((c) => c.id);
 
       const todaysPrayers = prayers.filter(
-        (p) => p.status === 'active' && todayCatIds.includes(p.categoryId)
+        (p) => p.status === 'active' && todayCatIds.includes(p.category_id)
       );
 
       new Notification('🙏 Pray For Me — Heure de prière!', {
@@ -34,7 +34,7 @@ export function scheduleNotifications(settings, prayers, categories) {
   if (settings.followUpEnabled && settings.followUpDays) {
     const stalePrayers = prayers.filter((p) => {
       if (p.status !== 'active') return false;
-      const lastActivity = p.updatedAt || p.createdAt;
+      const lastActivity = p.updated_at || p.created_at;
       const daysSince = (Date.now() - new Date(lastActivity)) / (1000 * 60 * 60 * 24);
       return daysSince >= settings.followUpDays;
     });
@@ -53,14 +53,14 @@ export function scheduleNotifications(settings, prayers, categories) {
   // Call reminders
   if (settings.callReminderEnabled) {
     const prayersForOthers = prayers.filter(
-      (p) => p.status === 'active' && p.forOther && p.phone
+      (p) => p.status === 'active' && p.for_other && p.phone
     );
 
     if (prayersForOthers.length > 0) {
       setTimeout(() => {
         const p = prayersForOthers[0];
         new Notification('📞 Pray For Me — Rappel d\'appel', {
-          body: `Pensez à appeler ${p.personName} pour encourager et partager votre prière pour eux.`,
+          body: `Pensez à appeler ${p.person_name} pour encourager et partager votre prière pour eux.`,
           icon: '/favicon.ico',
           tag: 'call-reminder',
         });
