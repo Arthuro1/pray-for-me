@@ -18,8 +18,16 @@ const EXAMPLE = (n) =>
     ],
   }));
 
+const EXAMPLE_DAY = () =>
+  Array.from({ length: 3 }, () => ({ title: '...', description: '...' }));
+
 const LANG_INSTRUCTIONS = {
   fr: {
+    dayPlan: (cats) =>
+      `Un chrétien n'a aucune prière planifiée pour aujourd'hui. Les catégories du jour sont : ${cats}.
+Suggère 3 sujets de prière concrets et inspirants pour ces catégories.
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
+${JSON.stringify(EXAMPLE_DAY())}`,
     evolution: (title, desc) =>
       `Un chrétien prie pour : "${title}". Il vient d'ajouter cette évolution : "${desc}".
 Suggère 3 sujets de prière complémentaires adaptés à cette évolution.
@@ -38,6 +46,11 @@ ${JSON.stringify(EXAMPLE(4))}`,
     netError: 'Erreur réseau.',
   },
   en: {
+    dayPlan: (cats) =>
+      `A Christian has no prayers planned for today. Today's categories are: ${cats}.
+Suggest 3 concrete and inspiring prayer topics for these categories.
+Reply ONLY with a valid JSON array, no text before or after:
+${JSON.stringify(EXAMPLE_DAY())}`,
     evolution: (title, desc) =>
       `A Christian is praying for: "${title}". They just added this update: "${desc}".
 Suggest 3 complementary prayer topics suited to this update.
@@ -56,6 +69,11 @@ ${JSON.stringify(EXAMPLE(4))}`,
     netError: 'Network error.',
   },
   de: {
+    dayPlan: (cats) =>
+      `Ein Christ hat heute keine geplanten Gebete. Die Kategorien des Tages sind: ${cats}.
+Schlage 3 konkrete und inspirierende Gebetsanliegen für diese Kategorien vor.
+Antworte NUR mit einem gültigen JSON-Array, kein Text davor oder danach:
+${JSON.stringify(EXAMPLE_DAY())}`,
     evolution: (title, desc) =>
       `Ein Christ betet für: "${title}". Er/sie hat gerade diese Entwicklung hinzugefügt: "${desc}".
 Schlage 3 ergänzende Gebetsanliegen vor, die zu dieser Entwicklung passen.
@@ -74,6 +92,11 @@ ${JSON.stringify(EXAMPLE(4))}`,
     netError: 'Netzwerkfehler.',
   },
   pt: {
+    dayPlan: (cats) =>
+      `Um cristão não tem orações planejadas para hoje. As categorias do dia são: ${cats}.
+Sugira 3 tópicos de oração concretos e inspiradores para essas categorias.
+Responda APENAS com um array JSON válido, sem texto antes ou depois:
+${JSON.stringify(EXAMPLE_DAY())}`,
     evolution: (title, desc) =>
       `Um cristão está orando por: "${title}". Ele/ela acabou de adicionar esta atualização: "${desc}".
 Sugira 3 tópicos de oração complementares adequados a esta atualização.
@@ -92,6 +115,57 @@ ${JSON.stringify(EXAMPLE(4))}`,
     netError: 'Erro de rede.',
   },
 };
+
+export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
+  if (!API_KEY) return { recs: [], error: null };
+
+  const strings = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
+  const cacheKey = `dayplan:${lang}:${categoryNames}`;
+  if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
+
+  const remaining = getRemainingCooldown();
+  if (remaining > 0) return { recs: [], error: strings.cooldown(remaining) };
+
+  const prompt = strings.dayPlan(categoryNames);
+  lastCallTime = Date.now();
+
+  const isDev = import.meta.env.DEV;
+  const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
+
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (isDev) {
+      headers['x-api-key'] = API_KEY;
+      headers['anthropic-version'] = '2023-06-01';
+      headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    }
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    if (res.status === 429) return { recs: [], error: strings.rateLimited };
+    if (!res.ok) return { recs: [], error: strings.connError };
+
+    const data = await res.json();
+    const text = data?.content?.[0]?.text || '';
+    const match = text.match(/\[[\s\S]*\]/);
+    if (!match) return { recs: [], error: null };
+
+    const parsed = JSON.parse(match[0]);
+    const recs = Array.isArray(parsed) ? parsed.filter((r) => r.title) : [];
+    cache.set(cacheKey, recs);
+    return { recs, error: null };
+  } catch {
+    return { recs: [], error: strings.netError };
+  }
+}
 
 export async function getAIRecommendations({ title, description = '', type = 'new', lang = 'fr' }) {
   if (!API_KEY) return { recs: [], error: null };

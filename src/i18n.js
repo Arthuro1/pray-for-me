@@ -155,6 +155,11 @@ const translations = {
     tipRemoveVerse: 'Supprimer ce verset',
     tipAddVerse: 'Ajouter un verset à ce point',
     tipSaveVerse: 'Enregistrer ce verset',
+    aiDaySuggest: 'Obtenir des suggestions IA pour aujourd\'hui',
+    aiDayLoading: 'Génération de suggestions...',
+    aiDaySuggestBtn: 'Suggestions IA pour aujourd\'hui',
+    aiDayAdd: 'Ajouter cette prière',
+    aiDayNoCats: 'Configurez votre plan hebdomadaire pour voir des suggestions',
   },
 
   en: {
@@ -295,6 +300,11 @@ const translations = {
     tipRemoveVerse: 'Remove this verse',
     tipAddVerse: 'Add a verse to this point',
     tipSaveVerse: 'Save this verse',
+    aiDaySuggest: 'Get AI suggestions for today',
+    aiDayLoading: 'Generating suggestions...',
+    aiDaySuggestBtn: 'AI suggestions for today',
+    aiDayAdd: 'Add this prayer',
+    aiDayNoCats: 'Set up your weekly plan to see suggestions',
   },
 
   de: {
@@ -435,6 +445,11 @@ const translations = {
     tipRemoveVerse: 'Diesen Vers entfernen',
     tipAddVerse: 'Einen Vers zu diesem Punkt hinzufügen',
     tipSaveVerse: 'Diesen Vers speichern',
+    aiDaySuggest: 'KI-Vorschläge für heute erhalten',
+    aiDayLoading: 'Vorschläge werden generiert...',
+    aiDaySuggestBtn: 'KI-Vorschläge für heute',
+    aiDayAdd: 'Dieses Gebet hinzufügen',
+    aiDayNoCats: 'Richte deinen Wochenplan ein, um Vorschläge zu sehen',
   },
 
   pt: {
@@ -575,6 +590,11 @@ const translations = {
     tipRemoveVerse: 'Remover este versículo',
     tipAddVerse: 'Adicionar um versículo a este ponto',
     tipSaveVerse: 'Salvar este versículo',
+    aiDaySuggest: 'Obter sugestões IA para hoje',
+    aiDayLoading: 'Gerando sugestões...',
+    aiDaySuggestBtn: 'Sugestões IA para hoje',
+    aiDayAdd: 'Adicionar esta oração',
+    aiDayNoCats: 'Configure seu plano semanal para ver sugestões',
   },
 };
 

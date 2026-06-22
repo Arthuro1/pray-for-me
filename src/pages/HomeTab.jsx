@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
 import PrayerCard from '../components/PrayerCard';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
+import { Sparkles, Loader2, Plus } from 'lucide-react';
 import { t } from '../i18n';
+import { getDayPlanSuggestions } from '../aiRecommendations';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -55,9 +58,13 @@ const VERSES = {
 };
 
 export default function HomeTab({ onEdit }) {
-  const { getTodaysPrayers, categories, prayers, settings } = usePrayerStore();
+  const { getTodaysPrayers, categories, prayers, settings, addPrayer } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
+  const [daySuggestions, setDaySuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [suggestError, setSuggestError] = useState(null);
+  const [addedTitles, setAddedTitles] = useState(new Set());
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
 
@@ -77,6 +84,23 @@ export default function HomeTab({ onEdit }) {
   const hour = today.getHours();
   const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
   const greetingEmoji = hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌙';
+
+  const fetchDaySuggestions = async () => {
+    if (loadingSuggestions || todayCategories.length === 0) return;
+    setLoadingSuggestions(true);
+    setSuggestError(null);
+    const catNames = todayCategories.map(c => `${c.emoji} ${c.name}`).join(', ');
+    const { recs, error } = await getDayPlanSuggestions({ categoryNames: catNames, lang });
+    setDaySuggestions(recs);
+    setSuggestError(error);
+    setLoadingSuggestions(false);
+  };
+
+  const handleAddSuggestion = async (rec) => {
+    const catIds = todayCategories.map(c => c.id);
+    await addPrayer({ title: rec.title, description: rec.description || '', categoryIds: catIds });
+    setAddedTitles(prev => new Set([...prev, rec.title]));
+  };
 
   return (
     <div>
@@ -138,10 +162,66 @@ export default function HomeTab({ onEdit }) {
         </div>
 
         {todaysPrayers.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-5xl mb-3">🕊️</p>
-            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersToday')}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersSub')}</p>
+          <div>
+            <div className="text-center py-8">
+              <p className="text-5xl mb-3">🕊️</p>
+              <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersToday')}</p>
+              <p className="text-xs mt-1 mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersSub')}</p>
+
+              {todayCategories.length > 0 ? (
+                <button
+                  onClick={fetchDaySuggestions}
+                  disabled={loadingSuggestions}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-medium text-white disabled:opacity-60"
+                  style={{ background: 'var(--header)' }}
+                >
+                  {loadingSuggestions
+                    ? <><Loader2 size={15} className="animate-spin" /> {t(lang, 'aiDayLoading')}</>
+                    : <><Sparkles size={15} /> {t(lang, 'aiDaySuggestBtn')}</>}
+                </button>
+              ) : (
+                <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiDayNoCats')}</p>
+              )}
+            </div>
+
+            {suggestError && (
+              <p className="text-xs text-center mt-2 mb-4" style={{ color: 'var(--text-3)' }}>{suggestError}</p>
+            )}
+
+            {daySuggestions.length > 0 && (
+              <div className="space-y-2 pb-4">
+                {daySuggestions.map((rec) => {
+                  const added = addedTitles.has(rec.title);
+                  return (
+                    <div key={rec.title} className="flex items-start gap-3 rounded-2xl px-4 py-3.5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+                      <Sparkles size={15} className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
+                        {rec.description && (
+                          <p className="text-xs mt-0.5 line-clamp-2" style={{ color: 'var(--text-3)' }}>{rec.description}</p>
+                        )}
+                        <div className="flex gap-1.5 flex-wrap mt-1.5">
+                          {todayCategories.map(c => (
+                            <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
+                              {c.emoji} {tr(c.name, lang)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleAddSuggestion(rec)}
+                        disabled={added}
+                        title={t(lang, 'aiDayAdd')}
+                        className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-white disabled:opacity-50 transition-all"
+                        style={{ background: added ? 'var(--success)' : 'var(--accent)' }}
+                      >
+                        {added ? '✓' : <Plus size={15} />}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
