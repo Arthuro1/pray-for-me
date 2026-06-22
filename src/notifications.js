@@ -16,9 +16,11 @@ export function scheduleNotifications(settings, prayers, categories) {
         .filter((c) => (c.week_days || []).includes(today))
         .map((c) => c.id);
 
-      const todaysPrayers = prayers.filter(
-        (p) => p.status === 'active' && todayCatIds.includes(p.category_id)
-      );
+      const todaysPrayers = prayers.filter((p) => {
+        if (p.status !== 'active') return false;
+        const pCatIds = (p.prayer_categories || []).map((pc) => pc.category_id);
+        return pCatIds.length === 0 || pCatIds.some((cid) => todayCatIds.includes(cid));
+      });
 
       new Notification('🙏 Pray For Me — Heure de prière!', {
         body: todaysPrayers.length > 0

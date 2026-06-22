@@ -42,10 +42,10 @@ const usePrayerStore = create((set, get) => ({
       cats = newCats || [];
     }
 
-    // Load prayers with updates and points
+    // Load prayers with updates, points and categories
     const { data: prayers } = await supabase
       .from('prayers')
-      .select(`*, prayer_updates(*), prayer_points(*)`)
+      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
@@ -61,16 +61,22 @@ const usePrayerStore = create((set, get) => ({
         user_id: user.id,
         title: prayer.title,
         description: prayer.description || '',
-        category_id: prayer.categoryId || null,
         for_other: prayer.forOther || false,
         person_name: prayer.personName || '',
         phone: prayer.phone || '',
         status: 'active',
       })
-      .select(`*, prayer_updates(*), prayer_points(*)`)
+      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .single();
 
     if (!error && data) {
+      const categoryIds = prayer.categoryIds || [];
+      if (categoryIds.length > 0) {
+        await supabase.from('prayer_categories').insert(
+          categoryIds.map((cid) => ({ prayer_id: data.id, category_id: cid }))
+        );
+        data.prayer_categories = categoryIds.map((cid) => ({ category_id: cid }));
+      }
       set((state) => ({ prayers: [data, ...state.prayers] }));
     }
   },
@@ -79,16 +85,31 @@ const usePrayerStore = create((set, get) => ({
     const payload = {};
     if (updates.title !== undefined) payload.title = updates.title;
     if (updates.description !== undefined) payload.description = updates.description;
-    if (updates.categoryId !== undefined) payload.category_id = updates.categoryId || null;
     if (updates.forOther !== undefined) payload.for_other = updates.forOther;
     if (updates.personName !== undefined) payload.person_name = updates.personName;
     if (updates.phone !== undefined) payload.phone = updates.phone;
     payload.updated_at = new Date().toISOString();
 
     const { data } = await supabase.from('prayers').update(payload).eq('id', id).select().single();
+
+    if (updates.categoryIds !== undefined) {
+      await supabase.from('prayer_categories').delete().eq('prayer_id', id);
+      if (updates.categoryIds.length > 0) {
+        await supabase.from('prayer_categories').insert(
+          updates.categoryIds.map((cid) => ({ prayer_id: id, category_id: cid }))
+        );
+      }
+    }
+
     if (data) {
       set((state) => ({
-        prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p),
+        prayers: state.prayers.map((p) => {
+          if (p.id !== id) return p;
+          const prayer_categories = updates.categoryIds !== undefined
+            ? updates.categoryIds.map((cid) => ({ category_id: cid }))
+            : p.prayer_categories;
+          return { ...p, ...data, prayer_categories };
+        }),
       }));
     }
   },
@@ -199,14 +220,16 @@ const usePrayerStore = create((set, get) => ({
   getTodaysPrayers: () => {
     const { prayers, categories } = get();
     const today = new Date().getDay();
-    const todayCategories = categories
+    const todayCatIds = categories
       .filter((c) => (c.week_days || []).includes(today))
       .map((c) => c.id);
 
-    return prayers.filter((p) =>
-      p.status === 'active' &&
-      (todayCategories.includes(p.category_id) || !p.category_id)
-    );
+    return prayers.filter((p) => {
+      if (p.status !== 'active') return false;
+      const pCatIds = (p.prayer_categories || []).map((pc) => pc.category_id);
+      if (pCatIds.length === 0) return true;
+      return pCatIds.some((cid) => todayCatIds.includes(cid));
+    });
   },
 }));
 

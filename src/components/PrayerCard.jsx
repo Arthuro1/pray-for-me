@@ -16,7 +16,8 @@ export default function PrayerCard({ prayer, onEdit }) {
   const [expandedVerse, setExpandedVerse] = useState(null);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
-  const category = categories.find((c) => c.id === prayer.category_id);
+  const prayerCategoryIds = (prayer.prayer_categories || []).map((pc) => pc.category_id);
+  const prayerCategories = categories.filter((c) => prayerCategoryIds.includes(c.id));
 
   const statusConfig = {
     active: { label: 'Actif', bg: 'bg-blue-100', text: 'text-blue-700', dot: 'bg-blue-500' },
@@ -65,8 +66,10 @@ export default function PrayerCard({ prayer, onEdit }) {
       {/* Main row */}
       <div className="p-3">
         <div className="flex items-start gap-2">
-          {/* Category emoji */}
-          <span className="text-xl mt-0.5">{category?.emoji || '🙏'}</span>
+          {/* Category emoji(s) */}
+          <span className="text-xl mt-0.5">
+            {prayerCategories.length > 0 ? prayerCategories[0].emoji : '🙏'}
+          </span>
 
           <div className="flex-1 min-w-0">
             {/* Title + status */}
@@ -84,9 +87,19 @@ export default function PrayerCard({ prayer, onEdit }) {
               <p className="text-xs text-indigo-500 mt-0.5">Pour: {prayer.person_name}</p>
             )}
 
-            {/* Category */}
-            {category && (
-              <span className="text-xs text-slate-400">{category.name}</span>
+            {/* Category badges */}
+            {prayerCategories.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {prayerCategories.map((c) => (
+                  <span
+                    key={c.id}
+                    className="text-xs px-1.5 py-0.5 rounded-full text-white font-medium"
+                    style={{ backgroundColor: c.color }}
+                  >
+                    {c.emoji} {c.name}
+                  </span>
+                ))}
+              </div>
             )}
           </div>
 

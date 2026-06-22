@@ -8,7 +8,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    categoryId: categories[0]?.id || '',
+    categoryIds: [],
     forOther: false,
     personName: '',
     phone: '',
@@ -19,13 +19,22 @@ export default function PrayerForm({ onClose, editPrayer }) {
       setForm({
         title: editPrayer.title || '',
         description: editPrayer.description || '',
-        categoryId: editPrayer.category_id || '',
+        categoryIds: (editPrayer.prayer_categories || []).map((pc) => pc.category_id),
         forOther: editPrayer.for_other || false,
         personName: editPrayer.person_name || '',
         phone: editPrayer.phone || '',
       });
     }
   }, [editPrayer]);
+
+  const toggleCategory = (id) => {
+    setForm((f) => ({
+      ...f,
+      categoryIds: f.categoryIds.includes(id)
+        ? f.categoryIds.filter((c) => c !== id)
+        : [...f.categoryIds, id],
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,17 +88,33 @@ export default function PrayerForm({ onClose, editPrayer }) {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Catégorie</label>
-            <select
-              value={form.categoryId}
-              onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-              className="w-full mt-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
-            >
-              <option value="">-- Sans catégorie --</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>
-              ))}
-            </select>
+            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2 block">
+              Catégories <span className="text-slate-400 font-normal normal-case">(plusieurs possibles)</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((c) => {
+                const selected = form.categoryIds.includes(c.id);
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => toggleCategory(c.id)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                      selected
+                        ? 'text-white border-transparent'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    }`}
+                    style={selected ? { backgroundColor: c.color, borderColor: c.color } : {}}
+                  >
+                    <span>{c.emoji}</span>
+                    {c.name}
+                  </button>
+                );
+              })}
+            </div>
+            {form.categoryIds.length === 0 && (
+              <p className="text-xs text-slate-400 mt-1.5">Aucune catégorie sélectionnée</p>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
