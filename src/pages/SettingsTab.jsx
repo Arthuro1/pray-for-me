@@ -2,7 +2,7 @@ import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 
 function requestNotificationPermission(onGranted) {
@@ -40,13 +40,13 @@ function Toggle({ enabled, onToggle }) {
 
 function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
   return (
-    <div style={{ borderBottom: '0.5px solid #f0ebfa', paddingBottom: '14px', marginBottom: '14px' }}>
+    <div style={{ borderBottom: '0.5px solid var(--border-soft)', paddingBottom: '14px', marginBottom: '14px' }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          {Icon && <Icon size={15} style={{ color: '#b0a4c0' }} />}
+          {Icon && <Icon size={15} style={{ color: 'var(--text-3)' }} />}
           <div>
-            <p className="text-sm font-medium" style={{ color: '#1a0f2e' }}>{label}</p>
-            {sub && <p className="text-xs mt-0.5" style={{ color: '#b0a4c0' }}>{sub}</p>}
+            <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</p>
+            {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{sub}</p>}
           </div>
         </div>
         {onToggle !== undefined && <Toggle enabled={enabled} onToggle={onToggle} />}
@@ -86,34 +86,31 @@ export default function SettingsTab() {
   return (
     <div>
       {/* Header */}
-      <div
-        className="px-4 md:px-8 pt-8 pb-5"
-        style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
-      >
+      <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'var(--header)' }}>
         {/* Profile */}
         <div className="flex items-center gap-3 mb-4">
           {avatarUrl ? (
-            <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover" style={{ border: '2px solid rgba(255,255,255,0.2)' }} />
+            <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover" style={{ border: '2px solid rgba(255,255,255,0.3)' }} />
           ) : (
-            <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
-              <User size={24} color="rgba(255,255,255,0.8)" />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)' }}>
+              <User size={24} color="rgba(255,255,255,0.9)" />
             </div>
           )}
           <div>
             <p className="font-semibold text-white">{displayName}</p>
-            {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{t(lang, 'memberSince')} {memberSince}</p>}
+            {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{t(lang, 'memberSince')} {memberSince}</p>}
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-2.5">
-          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.08)', border: '0.5px solid rgba(255,255,255,0.12)' }}>
+          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.18)' }}>
             <p className="text-2xl font-semibold text-white">{activePrayers.length}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{t(lang, 'activePrayers')}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'activePrayers')}</p>
           </div>
-          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.08)', border: '0.5px solid rgba(255,255,255,0.12)' }}>
-            <p className="text-2xl font-semibold" style={{ color: '#6ee7a8' }}>{answeredPrayers.length}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>{t(lang, 'answeredPrayers')} 🙌</p>
+          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.18)' }}>
+            <p className="text-2xl font-semibold text-white">{answeredPrayers.length}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'answeredPrayers')} 🙌</p>
           </div>
         </div>
       </div>
@@ -121,16 +118,16 @@ export default function SettingsTab() {
       <div className="px-4 md:px-8 pt-4 pb-6">
         <div className="md:grid md:grid-cols-2 md:gap-4 md:items-start">
         {/* Account info */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#b0a4c0' }}>{t(lang, 'account')}</p>
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'account')}</p>
           <div className="space-y-2.5 mb-4">
             <div className="flex items-center gap-2.5">
-              <Mail size={14} style={{ color: '#b0a4c0' }} />
-              <span className="text-sm" style={{ color: '#3a2a5e' }}>{user?.email}</span>
+              <Mail size={14} style={{ color: 'var(--text-3)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{user?.email}</span>
             </div>
             <div className="flex items-center gap-2.5">
-              <Shield size={14} style={{ color: '#b0a4c0' }} />
-              <span className="text-sm" style={{ color: '#3a2a5e' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
+              <Shield size={14} style={{ color: 'var(--text-3)' }} />
+              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
             </div>
           </div>
           <button
@@ -143,13 +140,36 @@ export default function SettingsTab() {
           </button>
         </div>
 
-        {/* Language */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+        {/* Theme */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-3">
-            <Globe size={16} style={{ color: '#7c5cfc' }} />
-            <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{t(lang, 'language')}</h3>
+            {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>Appearance</h3>
           </div>
-          <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>{t(lang, 'languageSub')}</p>
+          <div className="grid grid-cols-2 gap-2">
+            {[{ value: 'light', icon: Sun, label: 'Light' }, { value: 'dark', icon: Moon, label: 'Dark' }].map(({ value, icon: Icon, label }) => (
+              <button
+                key={value}
+                onClick={() => updateSettings({ theme: value })}
+                className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all"
+                style={settings.theme === value
+                  ? { background: 'var(--accent)', color: '#fff' }
+                  : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                <Icon size={15} />
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Language */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Globe size={16} style={{ color: 'var(--accent)' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
+          </div>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'languageSub')}</p>
           <div className="grid grid-cols-2 gap-2">
             {LANGUAGES.map((l) => (
               <button
@@ -158,8 +178,8 @@ export default function SettingsTab() {
                 className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
                 style={
                   lang === l.code
-                    ? { background: '#7c5cfc', color: '#fff' }
-                    : { background: '#f3eff9', color: '#3a2a5e', border: '0.5px solid #e0d8f0' }
+                    ? { background: 'var(--accent)', color: '#fff' }
+                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }
                 }
               >
                 <span className="text-base">{l.flag}</span>
@@ -170,22 +190,22 @@ export default function SettingsTab() {
         </div>
 
         {/* Notifications */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-4">
             <Bell size={16} style={{ color: '#7c5cfc' }} />
-            <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{t(lang, 'notifications')}</h3>
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifications')}</h3>
           </div>
 
           <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
             {settings.dailyReminderEnabled && (
               <div className="mt-3 flex items-center gap-2">
-                <Clock size={13} style={{ color: '#b0a4c0' }} />
+                <Clock size={13} style={{ color: 'var(--text-3)' }} />
                 <input
                   type="time"
                   value={settings.dailyReminderTime}
                   onChange={(e) => updateSettings({ dailyReminderTime: e.target.value })}
                   className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                  style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#3a2a5e' }}
+                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 />
               </div>
             )}
@@ -198,7 +218,7 @@ export default function SettingsTab() {
                   value={settings.followUpDays}
                   onChange={(e) => updateSettings({ followUpDays: parseInt(e.target.value) })}
                   className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                  style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#3a2a5e' }}
+                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 >
                   <option value={3}>{t(lang, 'every3days')}</option>
                   <option value={7}>{t(lang, 'everyWeek')}</option>
@@ -217,7 +237,7 @@ export default function SettingsTab() {
             <button
               onClick={() => new Notification('Pray For Me 🙏', { body: 'Voici vos prières du jour. Prenez un moment pour prier!', icon: '/favicon.ico' })}
               className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
-              style={{ background: '#f3eff9', color: '#7c5cfc', border: '0.5px solid #e0d8f0' }}
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
             >
               {t(lang, 'testNotif')}
             </button>
@@ -226,12 +246,12 @@ export default function SettingsTab() {
 
         {/* Answered prayers */}
         {answeredPrayers.length > 0 && (
-          <div className="rounded-2xl p-4" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-1">
               <CheckCircle size={16} style={{ color: '#2a7a4e' }} />
-              <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{t(lang, 'answeredGallery')}</h3>
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'answeredGallery')}</h3>
             </div>
-            <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
               {t(lang, 'answeredGlory', { n: answeredPrayers.length, s: answeredPrayers.length > 1 ? 's' : '' })}
             </p>
             <div className="space-y-2">
@@ -249,7 +269,7 @@ export default function SettingsTab() {
         </div>{/* end md:grid */}
 
         <div className="text-center mt-6">
-          <p className="text-xs" style={{ color: '#d4c8e4' }}>Pray For Me v1.0</p>
+          <p className="text-xs" style={{ color: 'var(--text-3)' }}>Pray For Me v1.0</p>
           <p className="text-xs mt-0.5" style={{ color: '#e8e0f4', fontStyle: 'italic' }}>{t(lang, 'motto')}</p>
         </div>
       </div>

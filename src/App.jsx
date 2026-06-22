@@ -21,7 +21,11 @@ export default function App() {
   const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
   const { loadTranslations, translateContent } = useTranslationStore();
 
-  useEffect(() => { init(); }, []);
+  useEffect(() => {
+    init();
+    const saved = localStorage.getItem('pfm_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+  }, []);
 
   useEffect(() => {
     if (user?.id) {

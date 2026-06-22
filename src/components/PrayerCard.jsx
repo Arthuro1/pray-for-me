@@ -58,38 +58,38 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
   };
 
   return (
-    <div className="mb-3 overflow-hidden transition-all" style={{ background: '#fff', borderRadius: '18px', border: '0.5px solid #ede8f5' }}>
+    <div className="mb-3 overflow-hidden transition-all" style={{ background: 'var(--surface)', borderRadius: '18px', border: '0.5px solid var(--border)' }}>
       {/* Colored header */}
       <div
         className="px-4 py-3"
-        style={{ background: isAnswered ? 'linear-gradient(135deg, #1a4a2e, #2a7a4e)' : 'linear-gradient(135deg, #2d1b5e, #5a3fa0)' }}
+        style={{ background: isAnswered ? 'var(--header-answered)' : 'var(--header)' }}
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
             <h3
               className="text-sm font-semibold leading-snug mb-1.5"
-              style={{ color: isAnswered ? 'rgba(255,255,255,0.7)' : '#fff', textDecoration: isAnswered ? 'line-through' : 'none' }}
+              style={{ color: 'rgba(255,255,255,0.95)', textDecoration: isAnswered ? 'line-through' : 'none' }}
             >
               {tr(prayer.title, lang)}
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {prayerCategories.map((c) => (
-                <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)', border: '0.5px solid rgba(255,255,255,0.2)' }}>
+                <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: '0.5px solid rgba(255,255,255,0.2)' }}>
                   {c.emoji} {tr(c.name, lang)}
                 </span>
               ))}
               {prayer.for_other && prayer.person_name && (
-                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.8)' }}>
+                <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
                   👤 {prayer.person_name}
                 </span>
               )}
             </div>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.85)' }}>
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
               {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
             </span>
-            <button onClick={() => setExpanded(!expanded)} style={{ color: 'rgba(255,255,255,0.6)' }}>
+            <button onClick={() => setExpanded(!expanded)} style={{ color: '#8b8ac2' }}>
               {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
           </div>
@@ -97,13 +97,13 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
       </div>
 
       {!expanded && prayer.description && (
-        <p className="text-xs px-4 py-2.5 line-clamp-1" style={{ color: '#9b8cb0' }}>{tr(prayer.description, lang)}</p>
+        <p className="text-xs px-4 py-2.5 line-clamp-1" style={{ color: 'var(--text-3)' }}>{tr(prayer.description, lang)}</p>
       )}
 
       {expanded && (
         <div className="px-4 pb-4 pt-3">
           {prayer.description && (
-            <p className="text-sm mb-3" style={{ color: '#4a3a6a', lineHeight: 1.6 }}>{tr(prayer.description, lang)}</p>
+            <p className="text-sm mb-3" style={{ color: 'var(--text-2)', lineHeight: 1.6 }}>{tr(prayer.description, lang)}</p>
           )}
 
           {isAnswered && prayer.testimony && (
@@ -122,7 +122,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
           <div className="grid grid-cols-2 gap-3 mb-3">
             {/* Évolutions */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#9b8cb0' }}>{t(lang, 'evolutions')}</p>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'evolutions')}</p>
               {(prayer.prayer_updates || []).length === 0 && (
                 <p className="text-xs italic" style={{ color: '#d4c8e4' }}>{t(lang, 'noUpdate')}</p>
               )}
@@ -130,7 +130,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                 <div key={u.id} className="flex gap-2 mb-2">
                   <div className="w-0.5 rounded-full shrink-0 mt-1" style={{ background: '#7c5cfc', alignSelf: 'stretch', minHeight: '12px' }} />
                   <div>
-                    <p className="text-xs leading-snug" style={{ color: '#3a2a5e' }}>{tr(u.text, lang)}</p>
+                    <p className="text-xs leading-snug" style={{ color: 'var(--text-1)' }}>{tr(u.text, lang)}</p>
                     <p className="text-xs mt-0.5" style={{ color: '#c5bdd4' }}>{format(new Date(u.created_at), 'd MMM yy', { locale: dateLocale })}</p>
                   </div>
                 </div>
@@ -143,7 +143,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                     onChange={(e) => setNewUpdate(e.target.value)}
                     placeholder={t(lang, 'newUpdate')}
                     className="flex-1 text-xs rounded-lg px-2.5 py-1.5 min-w-0 focus:outline-none"
-                    style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#3a2a5e' }}
+                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddUpdate()}
                   />
                   <button onClick={handleAddUpdate} className="rounded-lg px-2 flex items-center justify-center" style={{ background: '#7c5cfc', color: '#fff' }}>
@@ -156,7 +156,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
             {/* Sujets IA */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#9b8cb0' }}>{t(lang, 'aiSubjects')}</p>
+                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
                 {!isAnswered && (
                   <button
                     onClick={fetchUpdateRecs}
@@ -202,8 +202,8 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
               {updateRecs.map((rec) => (
                 <div key={rec.title} className="mb-2">
                   <div className="flex gap-1.5 items-start">
-                    <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: '#f3eff9', border: '0.5px solid #d8cff0' }}>
-                      <p className="text-xs leading-snug font-medium" style={{ color: '#3a2a5e' }}>{rec.title}</p>
+                    <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                      <p className="text-xs leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
                       <button onClick={() => setExpandedVerse(expandedVerse === rec.verse ? null : rec.verse)} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#7c5cfc' }}>
                         <BookOpen size={9} />{rec.verse}
                       </button>
@@ -216,8 +216,8 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                     </button>
                   </div>
                   {expandedVerse === rec.verse && (
-                    <div className="mt-1.5 rounded-lg p-2" style={{ background: '#f3eff9', border: '0.5px solid #d8cff0' }}>
-                      {rec.verseText && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: '#3a2a5e' }}>"{rec.verseText}"</p>}
+                    <div className="mt-1.5 rounded-lg p-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                      {rec.verseText && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-1)' }}>"{rec.verseText}"</p>}
                       <a href={bibleUrl(rec.verse)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
                         <ExternalLink size={9} /> {t(lang, 'openBible')}
                       </a>
@@ -249,11 +249,11 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
               </button>
             )}
             {isAnswered && (
-              <button onClick={() => markActive(prayer.id)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium" style={{ background: '#f3eff9', color: '#5a3fa0' }}>
+              <button onClick={() => markActive(prayer.id)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
                 {t(lang, 'resumePrayer')}
               </button>
             )}
-            <button onClick={() => onEdit(prayer)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl ml-auto" style={{ background: '#f3eff9', color: '#7c5cfc' }}>
+            <button onClick={() => onEdit(prayer)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl ml-auto" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
               <Edit2 size={12} />
             </button>
             <button onClick={() => deletePrayer(prayer.id)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl" style={{ background: '#fdf0f0', color: '#c04040' }}>

@@ -46,10 +46,10 @@ export default function PlanTab() {
       {/* Header */}
       <div
         className="px-4 md:px-8 pt-8 pb-5"
-        style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
+        style={{ background: 'var(--header)' }}
       >
-        <h2 className="text-xl font-semibold text-white mb-1">{t(lang, 'weeklyPlan')}</h2>
-        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{t(lang, 'weeklyPlanSub')}</p>
+        <h2 className="text-xl font-semibold mb-1 text-white">{t(lang, 'weeklyPlan')}</h2>
+        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'weeklyPlanSub')}</p>
 
         {/* Weekly overview */}
         <div className="mt-4 grid grid-cols-7 gap-1">
@@ -57,7 +57,7 @@ export default function PlanTab() {
             const dayCats = categories.filter((c) => (c.week_days || []).includes(idx));
             return (
               <div key={idx} className="text-center">
-                <p className="text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.45)' }}>{day}</p>
+                <p className="text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{day}</p>
                 <div className="space-y-0.5">
                   {dayCats.length === 0 ? (
                     <div className="h-6 rounded-lg" style={{ background: 'rgba(255,255,255,0.07)' }} />
@@ -82,7 +82,7 @@ export default function PlanTab() {
       <div className="px-4 md:px-8 pt-4">
         {/* Add button */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold" style={{ color: '#1a0f2e' }}>Catégories</h3>
+          <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>Catégories</h3>
           <button
             onClick={() => { setShowAddForm(true); setEditId(null); setForm({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] }); }}
             className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium"
@@ -94,9 +94,9 @@ export default function PlanTab() {
 
         {/* Add/Edit form */}
         {showAddForm && (
-          <div className="rounded-2xl p-4 mb-4" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+          <div className="rounded-2xl p-4 mb-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center justify-between mb-3">
-              <h4 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>{editId ? 'Modifier' : 'Nouvelle catégorie'}</h4>
+              <h4 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{editId ? 'Modifier' : 'Nouvelle catégorie'}</h4>
               <button onClick={() => setShowAddForm(false)} style={{ color: '#b0a4c0' }}><X size={16} /></button>
             </div>
 
@@ -107,7 +107,7 @@ export default function PlanTab() {
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Nom de la catégorie"
                 className="w-full text-sm rounded-xl px-3 py-2.5 focus:outline-none"
-                style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 autoFocus
               />
 
@@ -179,7 +179,7 @@ export default function PlanTab() {
         {/* Category list */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
           {categories.map((cat) => (
-            <div key={cat.id} className="rounded-2xl p-4" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+            <div key={cat.id} className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
               <div className="flex items-center gap-2 mb-3">
                 <div
                   className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"

@@ -16,14 +16,12 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
 
   const sidebarWidth = collapsed ? SIDEBAR_MINI : SIDEBAR_FULL;
 
-  // Track viewport width
   useEffect(() => {
     const onResize = () => setIsMd(window.innerWidth >= MD_BREAKPOINT);
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Sync padding-left on main whenever sidebar or viewport changes
   useEffect(() => {
     if (mainRef.current) {
       mainRef.current.style.paddingLeft = isMd ? `${sidebarWidth}px` : '0px';
@@ -38,39 +36,37 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
   ];
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#f7f4ef' }}>
+    <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
 
       {/* ── Sidebar (md+) ── */}
       <aside
         className="hidden md:flex flex-col fixed top-0 left-0 h-full z-20 py-6"
         style={{
           width: `${sidebarWidth}px`,
-          background: '#fff',
-          borderRight: '0.5px solid #ede8f5',
+          background: 'var(--surface)',
+          borderRight: '0.5px solid var(--border)',
           overflow: 'hidden',
           transition: 'width 0.2s ease',
         }}
       >
-        {/* Logo + collapse toggle */}
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
           {!collapsed && (
             <div className="flex items-center gap-2 overflow-hidden">
               <span className="text-xl shrink-0">🙏</span>
-              <span className="font-bold text-sm whitespace-nowrap" style={{ color: '#2d1b5e' }}>Pray For Me</span>
+              <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>Pray For Me</span>
             </div>
           )}
           {collapsed && <span className="text-xl mx-auto">🙏</span>}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="shrink-0 rounded-lg p-1 transition-colors hover:bg-gray-100"
-            style={{ color: '#9b8cb0', marginLeft: collapsed ? 0 : 8 }}
+            className="shrink-0 rounded-lg p-1 transition-colors"
+            style={{ color: 'var(--text-3)', marginLeft: collapsed ? 0 : 8 }}
             title={collapsed ? 'Expand' : 'Collapse'}
           >
             {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
-        {/* Nav links */}
         <nav className="flex flex-col gap-1 flex-1 px-2">
           {tabs.map(({ id, label, icon: Icon }) => {
             const active = currentTab === id;
@@ -85,8 +81,8 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
                   padding: collapsed ? '10px 0' : '10px 12px',
                   justifyContent: collapsed ? 'center' : 'flex-start',
                   ...(active
-                    ? { background: 'linear-gradient(135deg, #ede8ff, #ddd5ff)', color: '#5a3fa0' }
-                    : { color: '#9b8cb0' }),
+                    ? { background: 'var(--nav-active-bg)', color: 'var(--nav-active-color)' }
+                    : { color: 'var(--text-3)' }),
                 }}
               >
                 <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
@@ -96,7 +92,6 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
           })}
         </nav>
 
-        {/* Add button */}
         <div className="px-2 mt-4">
           <button
             onClick={onAddPrayer}
@@ -106,7 +101,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
               gap: collapsed ? 0 : 10,
               padding: collapsed ? '12px 0' : '12px 14px',
               justifyContent: collapsed ? 'center' : 'flex-start',
-              background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)',
+              background: 'var(--header)',
             }}
           >
             <Plus size={18} strokeWidth={2.5} />
@@ -136,7 +131,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
           right: '20px',
           width: '52px',
           height: '52px',
-          background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)',
+          background: 'var(--header)',
         }}
       >
         <Plus size={24} color="white" strokeWidth={2.5} />
@@ -145,7 +140,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
       {/* ── Bottom nav (mobile only) ── */}
       <nav
         className="md:hidden fixed bottom-0 left-0 right-0 flex z-10"
-        style={{ background: '#fff', borderTop: '0.5px solid #ede8f5' }}
+        style={{ background: 'var(--surface)', borderTop: '0.5px solid var(--border)' }}
       >
         {tabs.map(({ id, label, icon: Icon }) => {
           const active = currentTab === id;
@@ -154,7 +149,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
               key={id}
               onClick={() => onTabChange(id)}
               className="flex-1 flex flex-col items-center py-2.5 gap-0.5 transition-colors"
-              style={{ color: active ? '#7c5cfc' : '#c5bdd4' }}
+              style={{ color: active ? 'var(--accent)' : 'var(--text-3)' }}
             >
               <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
               <span className="text-xs" style={{ fontWeight: active ? 600 : 400 }}>{label}</span>

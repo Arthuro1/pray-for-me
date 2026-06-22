@@ -39,7 +39,7 @@ export default function AuthPage() {
     <div
       className="min-h-screen flex items-end md:items-center justify-center p-0 md:p-8"
       style={{
-        background: 'linear-gradient(160deg, #1a0a2e 0%, #2d1b5e 50%, #4a2f8a 100%)',
+        background: 'var(--bg)',
       }}
     >
       {/* Background image */}
@@ -57,12 +57,12 @@ export default function AuthPage() {
       <div className="fixed top-0 left-0 right-0 flex flex-col items-center pt-16 pb-6 pointer-events-none">
         <div
           className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-3"
-          style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)' }}
+          style={{ background: 'var(--accent-soft)', border: '1px solid var(--accent-border)' }}
         >
           🙏
         </div>
-        <h1 className="text-2xl font-semibold text-white">Pray For Me</h1>
-        <p className="text-xs mt-1 italic" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray For Me</h1>
+        <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>
           "Priez sans cesse" — 1 Thess 5:17
         </p>
       </div>
@@ -70,10 +70,10 @@ export default function AuthPage() {
       {/* Bottom sheet */}
       <div
         className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
-        style={{ background: '#fff' }}
+        style={{ background: 'var(--surface)' }}
       >
         {/* Tabs */}
-        <div className="flex rounded-xl p-1 mb-5" style={{ background: '#f3eff9' }}>
+        <div className="flex rounded-xl p-1 mb-5" style={{ background: 'var(--input-bg)' }}>
           {['login', 'register'].map((m) => (
             <button
               key={m}
@@ -91,7 +91,7 @@ export default function AuthPage() {
           onClick={handleGoogle}
           disabled={loading}
           className="w-full flex items-center justify-center gap-3 rounded-xl py-3 text-sm font-medium mb-4 transition-colors disabled:opacity-50"
-          style={{ border: '0.5px solid #ede8f5', color: '#3a2a5e', background: '#faf8ff' }}
+          style={{ border: '0.5px solid var(--border)', color: 'var(--text-2)', background: 'var(--surface-2)' }}
         >
           <svg width="18" height="18" viewBox="0 0 48 48">
             <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
@@ -103,9 +103,9 @@ export default function AuthPage() {
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1 h-px" style={{ background: '#ede8f5' }} />
+          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
           <span className="text-xs" style={{ color: '#c5bdd4' }}>ou</span>
-          <div className="flex-1 h-px" style={{ background: '#ede8f5' }} />
+          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -119,7 +119,7 @@ export default function AuthPage() {
                 onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                 placeholder="Prénom et nom"
                 className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
-                style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
               />
             </div>
           )}
@@ -133,7 +133,7 @@ export default function AuthPage() {
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               placeholder="Email"
               className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
-              style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
             />
           </div>
 
@@ -146,7 +146,7 @@ export default function AuthPage() {
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder="Mot de passe"
               className="w-full rounded-xl pl-9 pr-10 py-3 text-sm focus:outline-none"
-              style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
             />
             <button
               type="button"

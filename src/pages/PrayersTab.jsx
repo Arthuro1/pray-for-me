@@ -40,20 +40,20 @@ export default function PrayersTab({ onEdit }) {
 
   return (
     <div>
-      <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}>
-        <h2 className="text-xl font-semibold text-white mb-4">{t(lang, 'myPrayers')}</h2>
+      <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'var(--header)' }}>
+        <h2 className="text-xl font-semibold mb-4 text-white">{t(lang, 'myPrayers')}</h2>
 
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.4)' }} />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.5)' }} />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t(lang, 'search')}
             className="w-full text-sm rounded-xl pl-9 pr-10 py-2.5 focus:outline-none"
-            style={{ background: 'rgba(255,255,255,0.1)', border: '0.5px solid rgba(255,255,255,0.15)', color: '#fff' }}
+            style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)', color: '#fff' }}
           />
-          <button onClick={() => setShowFilters(!showFilters)} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: showFilters ? '#a78bfa' : 'rgba(255,255,255,0.4)' }}>
+          <button onClick={() => setShowFilters(!showFilters)} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.6)' }}>
             <SlidersHorizontal size={15} />
           </button>
         </div>
@@ -65,8 +65,8 @@ export default function PrayersTab({ onEdit }) {
               onClick={() => setStatusFilter(f.id)}
               className="text-xs px-3 py-1.5 rounded-full font-medium transition-colors"
               style={statusFilter === f.id
-                ? { background: '#7c5cfc', color: '#fff' }
-                : { background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', border: '0.5px solid rgba(255,255,255,0.15)' }}
+                ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
+                : { background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)', border: '0.5px solid rgba(255,255,255,0.15)' }}
             >
               {f.label}
             </button>
@@ -97,15 +97,15 @@ export default function PrayersTab({ onEdit }) {
           </div>
         )}
 
-        <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>
+        <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
           {sorted.length} {sorted.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
         </p>
 
         {sorted.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-5xl mb-3">🙏</p>
-            <p className="text-sm" style={{ color: '#6b5b8a' }}>{t(lang, 'noPrayersFound')}</p>
-            <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>{t(lang, 'noPrayersFoundSub')}</p>
+            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersFound')}</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersFoundSub')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

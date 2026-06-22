@@ -52,6 +52,7 @@ const usePrayerStore = create((set, get) => ({
       const nav = (navigator.language || navigator.userLanguage || 'fr').toLowerCase().slice(0, 2);
       return ['fr', 'en', 'de', 'pt'].includes(nav) ? nav : 'en';
     })(),
+    theme: localStorage.getItem('pfm_theme') || 'light',
   },
   loading: false,
 
@@ -253,6 +254,10 @@ const usePrayerStore = create((set, get) => ({
   // ─── Settings (localStorage only) ────────────────────────────
   updateSettings: (updates) => {
     if (updates.language) localStorage.setItem('pfm_language', updates.language);
+    if (updates.theme) {
+      localStorage.setItem('pfm_theme', updates.theme);
+      document.documentElement.setAttribute('data-theme', updates.theme);
+    }
     set((state) => ({ settings: { ...state.settings, ...updates } }));
   },
 

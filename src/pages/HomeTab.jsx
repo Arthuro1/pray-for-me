@@ -81,53 +81,36 @@ export default function HomeTab({ onEdit }) {
   return (
     <div>
       {/* Hero banner */}
-      <div
-        className="relative overflow-hidden px-5 md:px-8 pt-10 pb-8"
-        style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 55%, #5a3fa0 100%)' }}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=40')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.07,
-          }}
-        />
+      <div className="relative overflow-hidden px-5 md:px-8 pt-10 pb-8" style={{ background: 'var(--header)' }}>
+        <div className="absolute inset-0" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=40')", backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.07 }} />
         <div className="relative">
-          <p className="text-xs mb-1 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-xs mb-1 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.55)' }}>
             {DAY_NAMES[lang]?.[dayIndex]} · {format(today, 'd MMMM yyyy', { locale: dateLocale })}
           </p>
-          <h2 className="text-xl font-semibold text-white mb-5">
+          <h2 className="text-xl font-semibold mb-5 text-white">
             {greeting}{displayName ? `, ${displayName}` : ''} {greetingEmoji}
           </h2>
-
-          <div
-            className="rounded-2xl p-4"
-            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
-          >
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
               {t(lang, 'verseOfDay')}
             </p>
-            <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
-              "{verse.text}"
-            </p>
-            <p className="text-xs text-right mt-2" style={{ color: 'rgba(255,255,255,0.45)' }}>— {verse.ref}</p>
+            <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>
+            <p className="text-xs text-right mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>— {verse.ref}</p>
           </div>
         </div>
       </div>
 
-      <div className="px-4 md:px-8 -mt-4 relative z-10">
+      <div className="px-4 md:px-8 pt-5">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {[
-            { value: activeCount, label: t(lang, 'activePrayers'), color: '#7c5cfc' },
-            { value: answeredCount, label: t(lang, 'answeredPrayers') + ' 🙌', color: '#2a7a4e' },
+            { value: activeCount, label: t(lang, 'activePrayers'), color: 'var(--accent)' },
+            { value: answeredCount, label: t(lang, 'answeredPrayers') + ' 🙌', color: 'var(--success)' },
             { value: todaysPrayers.length, label: t(lang, 'todayPrayers'), color: '#c07c2a' },
           ].map(({ value, label, color }) => (
-            <div key={label} className="rounded-2xl p-3 text-center" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+            <div key={label} className="rounded-2xl p-3 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
               <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
-              <p className="text-xs mt-0.5" style={{ color: '#9b8cb0' }}>{label}</p>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{label}</p>
             </div>
           ))}
         </div>
@@ -135,7 +118,7 @@ export default function HomeTab({ onEdit }) {
         {/* Today's categories */}
         {todayCategories.length > 0 && (
           <div className="mb-4">
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#9b8cb0' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
               {t(lang, 'todaysCategories')}
             </p>
             <div className="flex gap-2 flex-wrap">
@@ -150,15 +133,15 @@ export default function HomeTab({ onEdit }) {
 
         {/* Today's prayers */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold" style={{ color: '#1a0f2e' }}>{t(lang, 'todaysPrayers')}</h3>
-          <span className="text-xs" style={{ color: '#9b8cb0' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
+          <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'todaysPrayers')}</h3>
+          <span className="text-xs" style={{ color: 'var(--text-3)' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
         </div>
 
         {todaysPrayers.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-5xl mb-3">🕊️</p>
-            <p className="text-sm" style={{ color: '#6b5b8a' }}>{t(lang, 'noPrayersToday')}</p>
-            <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>{t(lang, 'noPrayersSub')}</p>
+            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersToday')}</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersSub')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

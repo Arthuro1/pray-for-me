@@ -2,20 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  box-sizing: border-box;
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #f0eeff;
+  --surface: #ffffff;
+  --surface-2: #f8f6ff;
+  --border: #e8e0f8;
+  --border-soft: #f0ebff;
+  --header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --header-answered: linear-gradient(135deg, #059669 0%, #34d399 100%);
+  --text-1: #1a0f2e;
+  --text-2: #5a4a7a;
+  --text-3: #a896c8;
+  --accent: #7c5cfc;
+  --accent-2: #9b7fff;
+  --accent-soft: #f0ebff;
+  --accent-border: #ddd5f8;
+  --nav-active-bg: #ede8ff;
+  --nav-active-color: #5a3fa0;
+  --input-bg: #f5f2ff;
+  --input-border: #ddd5f0;
+  --danger: #c04040;
+  --danger-bg: #fdf0f0;
+  --success: #1a6b42;
+  --success-bg: #e8f5ed;
+  --success-border: #b8dfc8;
+  --card-answered-bg: #e8f5ed;
+  --card-answered-border: #b8dfc8;
+}
+
+[data-theme="dark"] {
+  --bg: #0d0d14;
+  --surface: #16161f;
+  --surface-2: #1e1e2a;
+  --border: #2a2a3a;
+  --border-soft: #222230;
+  --header: linear-gradient(135deg, #4a3aaa 0%, #6b3a9a 100%);
+  --header-answered: linear-gradient(135deg, #065f46 0%, #059669 100%);
+  --text-1: #f0eeff;
+  --text-2: #a89fd4;
+  --text-3: #5a5278;
+  --accent: #9b7fff;
+  --accent-2: #c4b0ff;
+  --accent-soft: #1e1a30;
+  --accent-border: #2e2848;
+  --nav-active-bg: #1e1a30;
+  --nav-active-color: #b0a0ff;
+  --input-bg: #1e1a2e;
+  --input-border: #2e2848;
+  --danger: #e06060;
+  --danger-bg: #2a1414;
+  --success: #4ade80;
+  --success-bg: #0d2818;
+  --success-border: #1a4a30;
+  --card-answered-bg: #0d2818;
+  --card-answered-border: #1a4a30;
 }
 
 body {
   margin: 0;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: #f8f7ff;
+  background-color: var(--bg);
+  color: var(--text-1);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+input, textarea, select {
+  background: var(--input-bg);
+  border: 0.5px solid var(--input-border);
+  color: var(--text-1);
 }
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+
+input::placeholder, textarea::placeholder { color: var(--text-3); }
