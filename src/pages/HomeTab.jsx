@@ -2,7 +2,7 @@ import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import PrayerCard from '../components/PrayerCard';
+import PrayerDetail from './PrayerDetail';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Sparkles, Loader2, Plus } from 'lucide-react';
@@ -61,6 +61,7 @@ export default function HomeTab({ onEdit }) {
   const { getTodaysPrayers, categories, prayers, settings, addPrayer } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
+  const [selectedPrayer, setSelectedPrayer] = useState(null);
   const [daySuggestions, setDaySuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [suggestError, setSuggestError] = useState(null);
@@ -101,6 +102,17 @@ export default function HomeTab({ onEdit }) {
     await addPrayer({ title: rec.title, description: rec.description || '', categoryIds: catIds });
     setAddedTitles(prev => new Set([...prev, rec.title]));
   };
+
+  if (selectedPrayer) {
+    return (
+      <PrayerDetail
+        prayer={selectedPrayer}
+        lang={lang}
+        onBack={() => setSelectedPrayer(null)}
+        onEdit={(p) => { setSelectedPrayer(null); onEdit(p); }}
+      />
+    );
+  }
 
   return (
     <div>
@@ -155,79 +167,113 @@ export default function HomeTab({ onEdit }) {
           </div>
         )}
 
-        {/* Today's prayers */}
+        {/* Today's prayers header */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'todaysPrayers')}</h3>
-          <span className="text-xs" style={{ color: 'var(--text-3)' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
-        </div>
-
-        {todaysPrayers.length === 0 ? (
-          <div>
-            <div className="text-center py-8">
-              <p className="text-5xl mb-3">🕊️</p>
-              <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersToday')}</p>
-              <p className="text-xs mt-1 mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersSub')}</p>
-
-              {todayCategories.length > 0 ? (
-                <button
-                  onClick={fetchDaySuggestions}
-                  disabled={loadingSuggestions}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-medium text-white disabled:opacity-60"
-                  style={{ background: 'var(--header)' }}
-                >
-                  {loadingSuggestions
-                    ? <><Loader2 size={15} className="animate-spin" /> {t(lang, 'aiDayLoading')}</>
-                    : <><Sparkles size={15} /> {t(lang, 'aiDaySuggestBtn')}</>}
-                </button>
-              ) : (
-                <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiDayNoCats')}</p>
-              )}
-            </div>
-
-            {suggestError && (
-              <p className="text-xs text-center mt-2 mb-4" style={{ color: 'var(--text-3)' }}>{suggestError}</p>
-            )}
-
-            {daySuggestions.length > 0 && (
-              <div className="space-y-2 pb-4">
-                {daySuggestions.map((rec) => {
-                  const added = addedTitles.has(rec.title);
-                  return (
-                    <div key={rec.title} className="flex items-start gap-3 rounded-2xl px-4 py-3.5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-                      <Sparkles size={15} className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
-                        {rec.description && (
-                          <p className="text-xs mt-0.5 line-clamp-2" style={{ color: 'var(--text-3)' }}>{rec.description}</p>
-                        )}
-                        <div className="flex gap-1.5 flex-wrap mt-1.5">
-                          {todayCategories.map(c => (
-                            <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
-                              {c.emoji} {tr(c.name, lang)}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleAddSuggestion(rec)}
-                        disabled={added}
-                        title={t(lang, 'aiDayAdd')}
-                        className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-white disabled:opacity-50 transition-all"
-                        style={{ background: added ? 'var(--success)' : 'var(--accent)' }}
-                      >
-                        {added ? '✓' : <Plus size={15} />}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs" style={{ color: 'var(--text-3)' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
+            {todayCategories.length > 0 && (
+              <button
+                onClick={fetchDaySuggestions}
+                disabled={loadingSuggestions}
+                title={t(lang, 'aiDaySuggest')}
+                className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-xl font-medium text-white disabled:opacity-60"
+                style={{ background: 'var(--accent)' }}
+              >
+                {loadingSuggestions
+                  ? <Loader2 size={12} className="animate-spin" />
+                  : <Sparkles size={12} />}
+                {t(lang, 'aiSuggest')}
+              </button>
             )}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {todaysPrayers.map((prayer) => (
-              <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} lang={lang} />
-            ))}
+        </div>
+
+        {todaysPrayers.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-5xl mb-3">🕊️</p>
+            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersToday')}</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>
+              {todayCategories.length > 0 ? t(lang, 'noPrayersSub') : t(lang, 'aiDayNoCats')}
+            </p>
+          </div>
+        )}
+
+        {todaysPrayers.length > 0 && (
+          <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '0.5px solid var(--border)' }}>
+            {todaysPrayers.map((prayer, idx) => {
+              const isAnswered = prayer.status === 'answered';
+              const pCatIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
+              const pCats = categories.filter(c => pCatIds.includes(c.id));
+              return (
+                <button
+                  key={prayer.id}
+                  onClick={() => setSelectedPrayer(prayer)}
+                  className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
+                  style={{
+                    background: 'var(--surface)',
+                    borderBottom: idx < todaysPrayers.length - 1 ? '0.5px solid var(--border)' : 'none',
+                  }}
+                >
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: isAnswered ? '#059669' : 'var(--accent)' }} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}>
+                      {tr(prayer.title, lang)}
+                    </p>
+                    {pCats.length > 0 && (
+                      <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>
+                        {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
+                      </p>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
+                    {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* AI suggestions — shown regardless of list state */}
+        {suggestError && (
+          <p className="text-xs text-center mt-2 mb-3" style={{ color: 'var(--text-3)' }}>{suggestError}</p>
+        )}
+        {daySuggestions.length > 0 && (
+          <div className="space-y-2 pb-4">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+              <Sparkles size={11} className="inline mr-1" style={{ color: 'var(--accent)' }} />
+              {t(lang, 'aiDaySuggestBtn')}
+            </p>
+            {daySuggestions.map((rec) => {
+              const added = addedTitles.has(rec.title);
+              return (
+                <div key={rec.title} className="flex items-start gap-3 rounded-2xl px-4 py-3.5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
+                    {rec.description && (
+                      <p className="text-xs mt-0.5 line-clamp-2" style={{ color: 'var(--text-3)' }}>{rec.description}</p>
+                    )}
+                    <div className="flex gap-1.5 flex-wrap mt-1.5">
+                      {todayCategories.map(c => (
+                        <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
+                          {c.emoji} {tr(c.name, lang)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleAddSuggestion(rec)}
+                    disabled={added}
+                    title={t(lang, 'aiDayAdd')}
+                    className="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-white disabled:opacity-50 transition-all"
+                    style={{ background: added ? 'var(--success)' : 'var(--accent)' }}
+                  >
+                    {added ? '✓' : <Plus size={15} />}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
