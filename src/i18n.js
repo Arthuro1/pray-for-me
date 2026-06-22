@@ -375,8 +375,9 @@ const translations = {
 };
 
 export function t(lang, key, vars = {}) {
-  const str = translations[lang]?.[key] ?? translations['fr'][key] ?? key;
-  return str.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+  const val = translations[lang]?.[key] ?? translations['fr'][key] ?? key;
+  if (typeof val !== 'string') return val;
+  return val.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 }
 
 export default translations;
