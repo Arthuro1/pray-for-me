@@ -48,48 +48,64 @@ export default function PrayerForm({ onClose, editPrayer }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end z-50" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
       <div
-        className="bg-white w-full max-w-lg mx-auto rounded-t-2xl p-5 max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-lg mx-auto rounded-t-3xl max-h-[92vh] overflow-y-auto"
+        style={{ background: '#f7f4ef' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-lg text-slate-800">
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full" style={{ background: '#d4c8e4' }} />
+        </div>
+
+        {/* Title bar */}
+        <div className="flex items-center justify-between px-5 py-3">
+          <h2 className="font-semibold text-lg" style={{ color: '#1a0f2e' }}>
             {editPrayer ? 'Modifier la prière' : 'Nouvelle prière'}
           </h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-            <X size={20} />
+          <button onClick={onClose} className="p-1.5 rounded-full" style={{ background: '#ede8f5', color: '#7c5cfc' }}>
+            <X size={16} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="px-5 pb-8 space-y-4">
+          {/* Title */}
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Sujet de prière *</label>
+            <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>
+              Sujet de prière *
+            </label>
             <input
               type="text"
               required
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               placeholder="ex: Guérison de ma mère..."
-              className="w-full mt-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full text-sm rounded-xl px-4 py-3 focus:outline-none"
+              style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#1a0f2e' }}
               autoFocus
             />
           </div>
 
+          {/* Description */}
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Détails (facultatif)</label>
+            <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>
+              Détails (facultatif)
+            </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              placeholder="Décrivez votre sujet de prière en détail..."
-              className="w-full mt-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+              placeholder="Décrivez votre sujet de prière..."
+              className="w-full text-sm rounded-xl px-4 py-3 resize-none focus:outline-none"
+              style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#1a0f2e' }}
               rows={3}
             />
           </div>
 
+          {/* Categories */}
           <div>
-            <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2 block">
-              Catégories <span className="text-slate-400 font-normal normal-case">(plusieurs possibles)</span>
+            <label className="text-xs font-semibold uppercase tracking-widest mb-2 block" style={{ color: '#9b8cb0' }}>
+              Catégories <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#c5bdd4' }}>(plusieurs possibles)</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {categories.map((c) => {
@@ -99,73 +115,80 @@ export default function PrayerForm({ onClose, editPrayer }) {
                     key={c.id}
                     type="button"
                     onClick={() => toggleCategory(c.id)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+                    style={
                       selected
-                        ? 'text-white border-transparent'
-                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                    }`}
-                    style={selected ? { backgroundColor: c.color, borderColor: c.color } : {}}
+                        ? { backgroundColor: c.color, color: '#fff', border: `1.5px solid ${c.color}` }
+                        : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }
+                    }
                   >
-                    <span>{c.emoji}</span>
-                    {c.name}
+                    {c.emoji} {c.name}
                   </button>
                 );
               })}
             </div>
-            {form.categoryIds.length === 0 && (
-              <p className="text-xs text-slate-400 mt-1.5">Aucune catégorie sélectionnée</p>
-            )}
           </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="forOther"
-              checked={form.forOther}
-              onChange={(e) => setForm({ ...form, forOther: e.target.checked })}
-              className="w-4 h-4 text-indigo-600 rounded"
-            />
-            <label htmlFor="forOther" className="text-sm text-slate-700">C'est pour quelqu'un d'autre</label>
+          {/* For other */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, forOther: !form.forOther })}
+              className="flex items-center gap-2.5 w-full text-left"
+            >
+              <div
+                className="w-5 h-5 rounded-md flex items-center justify-center shrink-0"
+                style={{ background: form.forOther ? '#7c5cfc' : '#fff', border: form.forOther ? 'none' : '0.5px solid #d4c8e4' }}
+              >
+                {form.forOther && <span className="text-white text-xs font-bold">✓</span>}
+              </div>
+              <span className="text-sm" style={{ color: '#3a2a5e' }}>C'est pour quelqu'un d'autre</span>
+            </button>
           </div>
 
           {form.forOther && (
-            <div className="space-y-2 pl-2 border-l-2 border-indigo-200">
+            <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid #e0d8f0' }}>
               <div>
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Nom de la personne</label>
+                <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>Nom</label>
                 <input
                   type="text"
                   value={form.personName}
                   onChange={(e) => setForm({ ...form, personName: e.target.value })}
                   placeholder="Prénom Nom"
-                  className="w-full mt-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none"
+                  style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#1a0f2e' }}
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Téléphone (pour rappel d'appel)</label>
+                <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: '#9b8cb0' }}>Téléphone</label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   placeholder="+237 6xx xxx xxx"
-                  className="w-full mt-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none"
+                  style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#1a0f2e' }}
                 />
               </div>
             </div>
           )}
 
-          <div className="flex gap-2 pt-1">
+          {/* Actions */}
+          <div className="flex gap-3 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 border border-slate-200 text-slate-500 rounded-xl py-2.5 text-sm font-medium hover:bg-slate-50 transition-colors"
+              className="flex-1 rounded-xl py-3 text-sm font-medium"
+              style={{ background: '#fff', border: '0.5px solid #ede8f5', color: '#6b5b8a' }}
             >
               Annuler
             </button>
             <button
               type="submit"
-              className="flex-1 bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-indigo-700 transition-colors"
+              className="flex-1 rounded-xl py-3 text-sm font-semibold text-white"
+              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
             >
-              {editPrayer ? 'Enregistrer' : 'Ajouter la prière 🙏'}
+              {editPrayer ? 'Enregistrer' : 'Ajouter 🙏'}
             </button>
           </div>
         </form>

@@ -21,10 +21,42 @@ function requestNotificationPermission(onGranted) {
   });
 }
 
+function Toggle({ enabled, onToggle }) {
+  return (
+    <button
+      onClick={onToggle}
+      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0"
+      style={{ background: enabled ? '#7c5cfc' : '#e0d8f0' }}
+    >
+      <span
+        className="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"
+        style={{ transform: enabled ? 'translateX(24px)' : 'translateX(4px)' }}
+      />
+    </button>
+  );
+}
+
+function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
+  return (
+    <div style={{ borderBottom: '0.5px solid #f0ebfa', paddingBottom: '14px', marginBottom: '14px' }}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          {Icon && <Icon size={15} style={{ color: '#b0a4c0' }} />}
+          <div>
+            <p className="text-sm font-medium" style={{ color: '#1a0f2e' }}>{label}</p>
+            {sub && <p className="text-xs mt-0.5" style={{ color: '#b0a4c0' }}>{sub}</p>}
+          </div>
+        </div>
+        {onToggle !== undefined && <Toggle enabled={enabled} onToggle={onToggle} />}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export default function SettingsTab() {
   const { settings, updateSettings, prayers } = usePrayerStore();
   const { user, signOut } = useAuthStore();
-  const [saved, setSaved] = useState(false);
 
   const handleToggleNotifications = () => {
     if (!settings.dailyReminderEnabled) {
@@ -36,231 +68,157 @@ export default function SettingsTab() {
     }
   };
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  };
-
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
 
   const provider = user?.app_metadata?.provider;
-  const providerLabel = provider === 'google' ? 'Google' : provider === 'email' ? 'Email / Mot de passe' : provider || '—';
+  const providerLabel = provider === 'google' ? 'Google' : 'Email / Mot de passe';
   const avatarUrl = user?.user_metadata?.avatar_url;
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
-  const memberSince = user?.created_at ? new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : null;
+  const memberSince = user?.created_at
+    ? new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    : null;
 
   return (
-    <div className="p-4">
-      <h2 className="font-bold text-slate-800 text-lg mb-4">Paramètres</h2>
-
-      {/* Profile card */}
-      <div className="bg-white rounded-2xl shadow-sm p-4 mb-4">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Profil</p>
+    <div>
+      {/* Header */}
+      <div
+        className="px-4 pt-8 pb-5"
+        style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
+      >
+        {/* Profile */}
         <div className="flex items-center gap-3 mb-4">
           {avatarUrl ? (
-            <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover ring-2 ring-indigo-100" />
+            <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover" style={{ border: '2px solid rgba(255,255,255,0.2)' }} />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center">
-              <User size={26} className="text-indigo-500" />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <User size={24} color="rgba(255,255,255,0.8)" />
             </div>
           )}
           <div>
-            <p className="font-semibold text-slate-800">{displayName}</p>
-            {memberSince && <p className="text-xs text-slate-400">Membre depuis {memberSince}</p>}
+            <p className="font-semibold text-white">{displayName}</p>
+            {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>Membre depuis {memberSince}</p>}
           </div>
         </div>
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2.5 text-sm text-slate-600">
-            <Mail size={14} className="text-slate-400 shrink-0" />
-            <span>{user?.email}</span>
-          </div>
-          <div className="flex items-center gap-2.5 text-sm text-slate-600">
-            <Shield size={14} className="text-slate-400 shrink-0" />
-            <span>Connexion via <span className="font-medium">{providerLabel}</span></span>
-          </div>
-        </div>
-        <button
-          onClick={signOut}
-          className="w-full flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 rounded-xl py-2.5 text-sm font-medium transition-colors"
-        >
-          <LogOut size={14} />
-          Se déconnecter
-        </button>
-      </div>
 
-      {/* Stats card */}
-      <div className="bg-indigo-700 text-white rounded-2xl p-4 mb-4">
-        <p className="text-xs font-semibold text-indigo-200 uppercase tracking-wide mb-3">Votre vie de prière</p>
-        <div className="grid grid-cols-2 gap-3 text-center">
-          <div>
-            <p className="text-2xl font-bold">{activePrayers.length}</p>
-            <p className="text-xs text-indigo-200">Prières actives</p>
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-2.5">
+          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.08)', border: '0.5px solid rgba(255,255,255,0.12)' }}>
+            <p className="text-2xl font-semibold text-white">{activePrayers.length}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Prières actives</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-green-300">{answeredPrayers.length}</p>
-            <p className="text-xs text-indigo-200">Exaucées 🙌</p>
+          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.08)', border: '0.5px solid rgba(255,255,255,0.12)' }}>
+            <p className="text-2xl font-semibold" style={{ color: '#6ee7a8' }}>{answeredPrayers.length}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Exaucées 🙌</p>
           </div>
         </div>
       </div>
 
-      {/* Notifications section */}
-      <div className="bg-white rounded-2xl shadow-sm p-4 mb-3">
-        <div className="flex items-center gap-2 mb-3">
-          <Bell size={18} className="text-indigo-600" />
-          <h3 className="font-semibold text-slate-700">Notifications</h3>
-        </div>
-
-        {/* Daily reminder */}
-        <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
-          <div>
-            <p className="text-sm font-medium text-slate-700">Rappel quotidien</p>
-            <p className="text-xs text-slate-400">Rappel pour prier chaque jour</p>
-          </div>
-          <button
-            onClick={handleToggleNotifications}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              settings.dailyReminderEnabled ? 'bg-indigo-600' : 'bg-slate-200'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
-                settings.dailyReminderEnabled ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
-
-        {settings.dailyReminderEnabled && (
-          <div className="mb-3 pb-3 border-b border-slate-100">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock size={14} className="text-slate-400" />
-              <label className="text-sm text-slate-600">Heure du rappel</label>
+      <div className="px-4 pt-4 pb-6">
+        {/* Account info */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#b0a4c0' }}>Compte</p>
+          <div className="space-y-2.5 mb-4">
+            <div className="flex items-center gap-2.5">
+              <Mail size={14} style={{ color: '#b0a4c0' }} />
+              <span className="text-sm" style={{ color: '#3a2a5e' }}>{user?.email}</span>
             </div>
-            <input
-              type="time"
-              value={settings.dailyReminderTime}
-              onChange={(e) => updateSettings({ dailyReminderTime: e.target.value })}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            />
-          </div>
-        )}
-
-        {/* Follow-up reminder */}
-        <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
-          <div>
-            <p className="text-sm font-medium text-slate-700">Suivi des prières</p>
-            <p className="text-xs text-slate-400">Demander l'évolution des prières</p>
-          </div>
-          <button
-            onClick={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              settings.followUpEnabled ? 'bg-indigo-600' : 'bg-slate-200'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
-                settings.followUpEnabled ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
-
-        {settings.followUpEnabled && (
-          <div className="mb-3 pb-3 border-b border-slate-100">
-            <div className="flex items-center gap-2 mb-2">
-              <Calendar size={14} className="text-slate-400" />
-              <label className="text-sm text-slate-600">Fréquence du suivi</label>
-            </div>
-            <select
-              value={settings.followUpDays}
-              onChange={(e) => updateSettings({ followUpDays: parseInt(e.target.value) })}
-              className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
-            >
-              <option value={3}>Tous les 3 jours</option>
-              <option value={7}>Chaque semaine</option>
-              <option value={14}>Toutes les 2 semaines</option>
-              <option value={30}>Chaque mois</option>
-            </select>
-          </div>
-        )}
-
-        {/* Call reminder for others */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Phone size={14} className="text-slate-400" />
-            <div>
-              <p className="text-sm font-medium text-slate-700">Rappel d'appel</p>
-              <p className="text-xs text-slate-400">Rappel pour appeler les personnes</p>
+            <div className="flex items-center gap-2.5">
+              <Shield size={14} style={{ color: '#b0a4c0' }} />
+              <span className="text-sm" style={{ color: '#3a2a5e' }}>Via <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
             </div>
           </div>
           <button
-            onClick={() => updateSettings({ callReminderEnabled: !settings.callReminderEnabled })}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              settings.callReminderEnabled ? 'bg-indigo-600' : 'bg-slate-200'
-            }`}
+            onClick={signOut}
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+            style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
           >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
-                settings.callReminderEnabled ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
+            <LogOut size={14} />
+            Se déconnecter
           </button>
         </div>
-      </div>
 
-      {/* Test notification button */}
-      {settings.notificationsGranted && (
-        <button
-          onClick={() => {
-            new Notification('Pray For Me 🙏', {
-              body: 'Voici vos prières du jour. Prenez un moment pour prier!',
-              icon: '/favicon.ico',
-            });
-          }}
-          className="w-full bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-xl py-2.5 text-sm font-medium hover:bg-indigo-100 transition-colors mb-3"
-        >
-          Tester une notification
-        </button>
-      )}
-
-      {/* Answered prayers gallery */}
-      {answeredPrayers.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <CheckCircle size={18} className="text-green-500" />
-            <h3 className="font-semibold text-slate-700">Prières exaucées 🎉</h3>
+        {/* Notifications */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <Bell size={16} style={{ color: '#7c5cfc' }} />
+            <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>Notifications</h3>
           </div>
-          <p className="text-xs text-slate-400 mb-3">
-            Dieu a exaucé {answeredPrayers.length} de vos prières. Gloire à Lui!
-          </p>
-          <div className="space-y-2">
-            {answeredPrayers.map((p) => (
-              <div key={p.id} className="bg-green-50 border border-green-100 rounded-xl p-3">
-                <div className="flex items-start gap-2">
-                  <span className="text-green-500">✅</span>
-                  <div>
-                    <p className="text-sm font-medium text-slate-700 line-through text-slate-400">{p.title}</p>
-                    {p.testimony && (
-                      <p className="text-xs text-green-600 mt-0.5 italic">"{p.testimony}"</p>
-                    )}
-                    {p.answered_at && (
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {new Date(p.answered_at).toLocaleDateString('fr-FR')}
-                      </p>
-                    )}
-                  </div>
-                </div>
+
+          <Row label="Rappel quotidien" sub="Rappel pour prier chaque jour" icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
+            {settings.dailyReminderEnabled && (
+              <div className="mt-3 flex items-center gap-2">
+                <Clock size={13} style={{ color: '#b0a4c0' }} />
+                <input
+                  type="time"
+                  value={settings.dailyReminderTime}
+                  onChange={(e) => updateSettings({ dailyReminderTime: e.target.value })}
+                  className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                  style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#3a2a5e' }}
+                />
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
+          </Row>
 
-      {/* Footer */}
-      <div className="text-center mt-6 pb-2">
-        <p className="text-xs text-slate-400">Pray For Me v1.0</p>
-        <p className="text-xs text-slate-300 mt-0.5">"La prière est le souffle de l'âme"</p>
+          <Row label="Suivi des prières" sub="Demander l'évolution des prières" icon={Calendar} enabled={settings.followUpEnabled} onToggle={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}>
+            {settings.followUpEnabled && (
+              <div className="mt-3">
+                <select
+                  value={settings.followUpDays}
+                  onChange={(e) => updateSettings({ followUpDays: parseInt(e.target.value) })}
+                  className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                  style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#3a2a5e' }}
+                >
+                  <option value={3}>Tous les 3 jours</option>
+                  <option value={7}>Chaque semaine</option>
+                  <option value={14}>Toutes les 2 semaines</option>
+                  <option value={30}>Chaque mois</option>
+                </select>
+              </div>
+            )}
+          </Row>
+
+          <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
+            <Row label="Rappel d'appel" sub="Rappel pour appeler les personnes" icon={Phone} enabled={settings.callReminderEnabled} onToggle={() => updateSettings({ callReminderEnabled: !settings.callReminderEnabled })} />
+          </div>
+
+          {settings.notificationsGranted && (
+            <button
+              onClick={() => new Notification('Pray For Me 🙏', { body: 'Voici vos prières du jour. Prenez un moment pour prier!', icon: '/favicon.ico' })}
+              className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
+              style={{ background: '#f3eff9', color: '#7c5cfc', border: '0.5px solid #e0d8f0' }}
+            >
+              Tester une notification
+            </button>
+          )}
+        </div>
+
+        {/* Answered prayers */}
+        {answeredPrayers.length > 0 && (
+          <div className="rounded-2xl p-4" style={{ background: '#fff', border: '0.5px solid #ede8f5' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle size={16} style={{ color: '#2a7a4e' }} />
+              <h3 className="font-semibold text-sm" style={{ color: '#1a0f2e' }}>Prières exaucées 🎉</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>
+              Dieu a exaucé {answeredPrayers.length} prière{answeredPrayers.length > 1 ? 's' : ''}. Gloire à Lui!
+            </p>
+            <div className="space-y-2">
+              {answeredPrayers.map((p) => (
+                <div key={p.id} className="rounded-xl p-3" style={{ background: '#e8f5ed', border: '0.5px solid #b8dfc8' }}>
+                  <p className="text-sm font-medium" style={{ color: '#1a4a2e', textDecoration: 'line-through', opacity: 0.7 }}>{p.title}</p>
+                  {p.testimony && <p className="text-xs mt-1 italic" style={{ color: '#2a6040' }}>"{p.testimony}"</p>}
+                  {p.answered_at && <p className="text-xs mt-1" style={{ color: '#6aac88' }}>{new Date(p.answered_at).toLocaleDateString('fr-FR')}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="text-center mt-6">
+          <p className="text-xs" style={{ color: '#d4c8e4' }}>Pray For Me v1.0</p>
+          <p className="text-xs mt-0.5" style={{ color: '#e8e0f4', fontStyle: 'italic' }}>"La prière est le souffle de l'âme"</p>
+        </div>
       </div>
     </div>
   );

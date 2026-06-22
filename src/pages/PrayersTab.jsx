@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import PrayerCard from '../components/PrayerCard';
-import { Search, Filter } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 
 const STATUS_FILTERS = [
   { id: 'all', label: 'Toutes' },
@@ -29,90 +29,107 @@ export default function PrayersTab({ onEdit }) {
     return true;
   });
 
-  // Sort: active first, then pending, then answered
   const sorted = [...filtered].sort((a, b) => {
     const order = { active: 0, answered: 1 };
     return (order[a.status] || 0) - (order[b.status] || 0);
   });
 
   return (
-    <div className="p-4">
-      {/* Search */}
-      <div className="relative mb-3">
-        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Rechercher une prière..."
-          className="w-full border border-slate-200 rounded-xl pl-9 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
-        />
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className={`absolute right-3 top-1/2 -translate-y-1/2 ${showFilters ? 'text-indigo-600' : 'text-slate-400'}`}
-        >
-          <Filter size={15} />
-        </button>
-      </div>
+    <div>
+      {/* Header */}
+      <div
+        className="px-4 pt-8 pb-5"
+        style={{ background: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b5e 100%)' }}
+      >
+        <h2 className="text-xl font-semibold text-white mb-4">Mes prières</h2>
 
-      {/* Status filter chips */}
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-2 pb-1">
-        {STATUS_FILTERS.map((f) => (
+        {/* Search */}
+        <div className="relative">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.4)' }} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Rechercher..."
+            className="w-full text-sm rounded-xl pl-9 pr-10 py-2.5 focus:outline-none"
+            style={{ background: 'rgba(255,255,255,0.1)', border: '0.5px solid rgba(255,255,255,0.15)', color: '#fff' }}
+          />
           <button
-            key={f.id}
-            onClick={() => setStatusFilter(f.id)}
-            className={`shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-              statusFilter === f.id
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white text-slate-500 border border-slate-200 hover:border-indigo-300'
-            }`}
+            onClick={() => setShowFilters(!showFilters)}
+            className="absolute right-3 top-1/2 -translate-y-1/2"
+            style={{ color: showFilters ? '#a78bfa' : 'rgba(255,255,255,0.4)' }}
           >
-            {f.label}
+            <SlidersHorizontal size={15} />
           </button>
-        ))}
-      </div>
+        </div>
 
-      {/* Category filter */}
-      {showFilters && (
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-3 pb-1">
-          <button
-            onClick={() => setCategoryFilter('all')}
-            className={`shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-              categoryFilter === 'all' ? 'bg-slate-700 text-white' : 'bg-white text-slate-500 border border-slate-200'
-            }`}
-          >
-            Toutes catégories
-          </button>
-          {categories.map((c) => (
+        {/* Status pills */}
+        <div className="flex gap-2 mt-3">
+          {STATUS_FILTERS.map((f) => (
             <button
-              key={c.id}
-              onClick={() => setCategoryFilter(c.id)}
-              className={`shrink-0 text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-                categoryFilter === c.id ? 'text-white' : 'bg-white text-slate-500 border border-slate-200'
-              }`}
-              style={categoryFilter === c.id ? { backgroundColor: c.color } : {}}
+              key={f.id}
+              onClick={() => setStatusFilter(f.id)}
+              className="text-xs px-3 py-1.5 rounded-full font-medium transition-colors"
+              style={
+                statusFilter === f.id
+                  ? { background: '#7c5cfc', color: '#fff' }
+                  : { background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', border: '0.5px solid rgba(255,255,255,0.15)' }
+              }
             >
-              {c.emoji} {c.name}
+              {f.label}
             </button>
           ))}
         </div>
-      )}
+      </div>
 
-      {/* Count */}
-      <p className="text-xs text-slate-400 mb-3">{sorted.length} prière{sorted.length !== 1 ? 's' : ''}</p>
+      <div className="px-4 pt-4">
+        {/* Category filter */}
+        {showFilters && (
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
+            <button
+              onClick={() => setCategoryFilter('all')}
+              className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
+              style={
+                categoryFilter === 'all'
+                  ? { background: '#2d1b5e', color: '#fff' }
+                  : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }
+              }
+            >
+              Toutes catégories
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setCategoryFilter(c.id)}
+                className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
+                style={
+                  categoryFilter === c.id
+                    ? { backgroundColor: c.color, color: '#fff' }
+                    : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }
+                }
+              >
+                {c.emoji} {c.name}
+              </button>
+            ))}
+          </div>
+        )}
 
-      {/* Prayer list */}
-      {sorted.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-4xl mb-2">🙏</p>
-          <p className="text-slate-500 text-sm">Aucune prière trouvée</p>
-          <p className="text-slate-400 text-xs mt-1">Ajoutez votre première prière avec le bouton +</p>
-        </div>
-      ) : (
-        sorted.map((prayer) => (
-          <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} />
-        ))
-      )}
+        <p className="text-xs mb-3" style={{ color: '#b0a4c0' }}>
+          {sorted.length} prière{sorted.length !== 1 ? 's' : ''}
+        </p>
+
+        {sorted.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-5xl mb-3">🙏</p>
+            <p className="text-sm" style={{ color: '#6b5b8a' }}>Aucune prière trouvée</p>
+            <p className="text-xs mt-1" style={{ color: '#b0a4c0' }}>Ajoutez votre première prière avec le bouton +</p>
+          </div>
+        ) : (
+          sorted.map((prayer) => (
+            <PrayerCard key={prayer.id} prayer={prayer} onEdit={onEdit} />
+          ))
+        )}
+      </div>
     </div>
   );
 }

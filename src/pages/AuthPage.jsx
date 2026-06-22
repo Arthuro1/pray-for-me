@@ -3,7 +3,7 @@ import { Mail, Lock, User, Eye, EyeOff, Loader2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 
 export default function AuthPage() {
-  const [mode, setMode] = useState('login'); // login | register
+  const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ email: '', password: '', fullName: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,7 +17,6 @@ export default function AuthPage() {
     setLoading(true);
     setError(null);
     setSuccess(null);
-
     if (mode === 'login') {
       const { error } = await signInWithEmail(form.email, form.password);
       if (error) setError(error.message);
@@ -37,125 +36,147 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-700 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
+    <div
+      className="min-h-screen flex items-end justify-center p-0"
+      style={{
+        background: 'linear-gradient(160deg, #1a0a2e 0%, #2d1b5e 50%, #4a2f8a 100%)',
+      }}
+    >
+      {/* Background image */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=50')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.07,
+        }}
+      />
 
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-3">🙏</div>
-          <h1 className="text-2xl font-bold text-white">Pray For Me</h1>
-          <p className="text-indigo-200 text-sm mt-1">"Priez sans cesse" — 1 Thess 5:17</p>
+      {/* Logo */}
+      <div className="fixed top-0 left-0 right-0 flex flex-col items-center pt-16 pb-6 pointer-events-none">
+        <div
+          className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-3"
+          style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)' }}
+        >
+          🙏
+        </div>
+        <h1 className="text-2xl font-semibold text-white">Pray For Me</h1>
+        <p className="text-xs mt-1 italic" style={{ color: 'rgba(255,255,255,0.45)' }}>
+          "Priez sans cesse" — 1 Thess 5:17
+        </p>
+      </div>
+
+      {/* Bottom sheet */}
+      <div
+        className="relative w-full max-w-lg rounded-t-3xl px-6 pt-6 pb-8"
+        style={{ background: '#fff' }}
+      >
+        {/* Tabs */}
+        <div className="flex rounded-xl p-1 mb-5" style={{ background: '#f3eff9' }}>
+          {['login', 'register'].map((m) => (
+            <button
+              key={m}
+              onClick={() => { setMode(m); setError(null); setSuccess(null); }}
+              className="flex-1 text-sm py-2 rounded-lg font-medium transition-colors"
+              style={mode === m ? { background: '#fff', color: '#7c5cfc', boxShadow: '0 1px 4px rgba(124,92,252,0.12)' } : { color: '#b0a4c0' }}
+            >
+              {m === 'login' ? 'Connexion' : 'Inscription'}
+            </button>
+          ))}
         </div>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6">
-          {/* Tabs */}
-          <div className="flex bg-slate-100 rounded-xl p-1 mb-5">
+        {/* Google */}
+        <button
+          onClick={handleGoogle}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-3 rounded-xl py-3 text-sm font-medium mb-4 transition-colors disabled:opacity-50"
+          style={{ border: '0.5px solid #ede8f5', color: '#3a2a5e', background: '#faf8ff' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+          Continuer avec Google
+        </button>
+
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1 h-px" style={{ background: '#ede8f5' }} />
+          <span className="text-xs" style={{ color: '#c5bdd4' }}>ou</span>
+          <div className="flex-1 h-px" style={{ background: '#ede8f5' }} />
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {mode === 'register' && (
+            <div className="relative">
+              <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#c5bdd4' }} />
+              <input
+                type="text"
+                required
+                value={form.fullName}
+                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+                placeholder="Prénom et nom"
+                className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
+                style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+              />
+            </div>
+          )}
+
+          <div className="relative">
+            <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#c5bdd4' }} />
+            <input
+              type="email"
+              required
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder="Email"
+              className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
+              style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+            />
+          </div>
+
+          <div className="relative">
+            <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#c5bdd4' }} />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              placeholder="Mot de passe"
+              className="w-full rounded-xl pl-9 pr-10 py-3 text-sm focus:outline-none"
+              style={{ background: '#f3eff9', border: '0.5px solid #e0d8f0', color: '#1a0f2e' }}
+            />
             <button
-              onClick={() => { setMode('login'); setError(null); setSuccess(null); }}
-              className={`flex-1 text-sm py-2 rounded-lg font-medium transition-colors ${
-                mode === 'login' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'
-              }`}
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+              style={{ color: '#c5bdd4' }}
             >
-              Connexion
-            </button>
-            <button
-              onClick={() => { setMode('register'); setError(null); setSuccess(null); }}
-              className={`flex-1 text-sm py-2 rounded-lg font-medium transition-colors ${
-                mode === 'register' ? 'bg-white text-indigo-700 shadow-sm' : 'text-slate-500'
-              }`}
-            >
-              Inscription
+              {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
           </div>
 
-          {/* Google */}
+          {error && (
+            <p className="text-xs rounded-lg px-3 py-2" style={{ color: '#c04040', background: '#fdf0f0' }}>{error}</p>
+          )}
+          {success && (
+            <p className="text-xs rounded-lg px-3 py-2" style={{ color: '#2a7a4e', background: '#e8f5ed' }}>{success}</p>
+          )}
+
           <button
-            onClick={handleGoogle}
+            type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 border border-slate-200 rounded-xl py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors mb-4 disabled:opacity-50"
+            className="w-full rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
+            style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
           >
-            <svg width="18" height="18" viewBox="0 0 48 48">
-              <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-              <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-              <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-              <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
-            </svg>
-            Continuer avec Google
+            {loading && <Loader2 size={14} className="animate-spin" />}
+            {mode === 'login' ? 'Se connecter' : "S'inscrire"}
           </button>
+        </form>
 
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-xs text-slate-400">ou</span>
-            <div className="flex-1 h-px bg-slate-200" />
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3">
-            {mode === 'register' && (
-              <div className="relative">
-                <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  required
-                  value={form.fullName}
-                  onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                  placeholder="Prénom et nom"
-                  className="w-full border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                />
-              </div>
-            )}
-
-            <div className="relative">
-              <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="email"
-                required
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                placeholder="Email"
-                className="w-full border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-              />
-            </div>
-
-            <div className="relative">
-              <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                required
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                placeholder="Mot de passe"
-                className="w-full border border-slate-200 rounded-xl pl-9 pr-9 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
-              >
-                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-              </button>
-            </div>
-
-            {error && (
-              <p className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">{error}</p>
-            )}
-            {success && (
-              <p className="text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">{success}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading && <Loader2 size={14} className="animate-spin" />}
-              {mode === 'login' ? 'Se connecter' : "S'inscrire"}
-            </button>
-          </form>
-        </div>
-
-        <p className="text-center text-indigo-300 text-xs mt-4">
+        <p className="text-center text-xs mt-4" style={{ color: '#d4c8e4' }}>
           Vos prières sont privées et sécurisées 🔒
         </p>
       </div>
