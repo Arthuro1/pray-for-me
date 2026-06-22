@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
+import useTranslationStore from '../store/translationStore';
 import PrayerCard from '../components/PrayerCard';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { t } from '../i18n';
 
 export default function PrayersTab({ onEdit }) {
   const { prayers, categories, settings } = usePrayerStore();
+  const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -89,7 +91,7 @@ export default function PrayersTab({ onEdit }) {
                 className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
                 style={categoryFilter === c.id ? { backgroundColor: c.color, color: '#fff' } : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }}
               >
-                {c.emoji} {c.name}
+                {c.emoji} {tr(c.name, lang)}
               </button>
             ))}
           </div>

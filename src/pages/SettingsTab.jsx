@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
+import useTranslationStore from '../store/translationStore';
 import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 
@@ -58,6 +59,7 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
 export default function SettingsTab() {
   const { settings, updateSettings, prayers } = usePrayerStore();
   const { user, signOut } = useAuthStore();
+  const { tr } = useTranslationStore();
 
   const handleToggleNotifications = () => {
     if (!settings.dailyReminderEnabled) {
@@ -234,8 +236,8 @@ export default function SettingsTab() {
             <div className="space-y-2">
               {answeredPrayers.map((p) => (
                 <div key={p.id} className="rounded-xl p-3" style={{ background: '#e8f5ed', border: '0.5px solid #b8dfc8' }}>
-                  <p className="text-sm font-medium" style={{ color: '#1a4a2e', textDecoration: 'line-through', opacity: 0.7 }}>{p.title}</p>
-                  {p.testimony && <p className="text-xs mt-1 italic" style={{ color: '#2a6040' }}>"{p.testimony}"</p>}
+                  <p className="text-sm font-medium" style={{ color: '#1a4a2e', textDecoration: 'line-through', opacity: 0.7 }}>{tr(p.title, lang)}</p>
+                  {p.testimony && <p className="text-xs mt-1 italic" style={{ color: '#2a6040' }}>"{tr(p.testimony, lang)}"</p>}
                   {p.answered_at && <p className="text-xs mt-1" style={{ color: '#6aac88' }}>{new Date(p.answered_at).toLocaleDateString('fr-FR')}</p>}
                 </div>
               ))}

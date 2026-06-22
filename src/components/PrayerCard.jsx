@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
+import useTranslationStore from '../store/translationStore';
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
 
@@ -19,6 +20,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
   const [expandedVerse, setExpandedVerse] = useState(null);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
+  const { tr } = useTranslationStore();
   const dateLocale = DATE_LOCALES[lang] || fr;
   const prayerCategoryIds = (prayer.prayer_categories || []).map((pc) => pc.category_id);
   const prayerCategories = categories.filter((c) => prayerCategoryIds.includes(c.id));
@@ -68,12 +70,12 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
               className="text-sm font-semibold leading-snug mb-1.5"
               style={{ color: isAnswered ? 'rgba(255,255,255,0.7)' : '#fff', textDecoration: isAnswered ? 'line-through' : 'none' }}
             >
-              {prayer.title}
+              {tr(prayer.title, lang)}
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {prayerCategories.map((c) => (
                 <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)', border: '0.5px solid rgba(255,255,255,0.2)' }}>
-                  {c.emoji} {c.name}
+                  {c.emoji} {tr(c.name, lang)}
                 </span>
               ))}
               {prayer.for_other && prayer.person_name && (
@@ -95,19 +97,19 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
       </div>
 
       {!expanded && prayer.description && (
-        <p className="text-xs px-4 py-2.5 line-clamp-1" style={{ color: '#9b8cb0' }}>{prayer.description}</p>
+        <p className="text-xs px-4 py-2.5 line-clamp-1" style={{ color: '#9b8cb0' }}>{tr(prayer.description, lang)}</p>
       )}
 
       {expanded && (
         <div className="px-4 pb-4 pt-3">
           {prayer.description && (
-            <p className="text-sm mb-3" style={{ color: '#4a3a6a', lineHeight: 1.6 }}>{prayer.description}</p>
+            <p className="text-sm mb-3" style={{ color: '#4a3a6a', lineHeight: 1.6 }}>{tr(prayer.description, lang)}</p>
           )}
 
           {isAnswered && prayer.testimony && (
             <div className="rounded-xl p-3 mb-3" style={{ background: '#e8f5ed', border: '0.5px solid #b8dfc8' }}>
               <p className="text-xs font-semibold mb-1" style={{ color: '#1a4a2e' }}>{t(lang, 'testimony')}</p>
-              <p className="text-xs" style={{ color: '#2a6040' }}>{prayer.testimony}</p>
+              <p className="text-xs" style={{ color: '#2a6040' }}>{tr(prayer.testimony, lang)}</p>
             </div>
           )}
 
@@ -128,7 +130,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                 <div key={u.id} className="flex gap-2 mb-2">
                   <div className="w-0.5 rounded-full shrink-0 mt-1" style={{ background: '#7c5cfc', alignSelf: 'stretch', minHeight: '12px' }} />
                   <div>
-                    <p className="text-xs leading-snug" style={{ color: '#3a2a5e' }}>{u.text}</p>
+                    <p className="text-xs leading-snug" style={{ color: '#3a2a5e' }}>{tr(u.text, lang)}</p>
                     <p className="text-xs mt-0.5" style={{ color: '#c5bdd4' }}>{format(new Date(u.created_at), 'd MMM yy', { locale: dateLocale })}</p>
                   </div>
                 </div>
@@ -176,7 +178,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                 <div key={pp.id} className="mb-2 group">
                   <div className="flex gap-1.5 items-start">
                     <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: '#fff8e6', borderLeft: '2px solid #f5c842' }}>
-                      <p className="text-xs leading-snug" style={{ color: '#5a4500' }}>{pp.title}</p>
+                      <p className="text-xs leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
                       <button onClick={() => setExpandedVerse(expandedVerse === pp.id ? null : pp.id)} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#c4a020' }}>
                         <BookOpen size={9} />{pp.verse}
                       </button>
@@ -187,7 +189,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   </div>
                   {expandedVerse === pp.id && (
                     <div className="mt-1.5 rounded-lg p-2" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
-                      {pp.verse_text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: '#5a4500' }}>"{pp.verse_text}"</p>}
+                      {pp.verse_text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: '#5a4500' }}>"{tr(pp.verse_text, lang)}"</p>}
                       <a href={bibleUrl(pp.verse)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
                         <ExternalLink size={9} /> {t(lang, 'openBible')}
                       </a>

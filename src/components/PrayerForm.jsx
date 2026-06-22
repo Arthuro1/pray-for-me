@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 
 export default function PrayerForm({ onClose, editPrayer }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
+  const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
 
   const [form, setForm] = useState({
@@ -124,7 +126,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
                         : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }
                     }
                   >
-                    {c.emoji} {c.name}
+                    {c.emoji} {tr(c.name, lang)}
                   </button>
                 );
               })}

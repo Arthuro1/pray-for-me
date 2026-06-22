@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
+import useTranslationStore from '../store/translationStore';
 import { Plus, Trash2, X, Check } from 'lucide-react';
 import { t } from '../i18n';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
@@ -7,6 +8,7 @@ const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777'
 
 export default function PlanTab() {
   const { categories, addCategory, updateCategory, deleteCategory, settings } = usePrayerStore();
+  const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   const DAYS = t(lang, 'days');
   const [showAddForm, setShowAddForm] = useState(false);
@@ -185,7 +187,7 @@ export default function PlanTab() {
                 >
                   {cat.emoji}
                 </div>
-                <span className="text-sm font-semibold" style={{ color: cat.color }}>{cat.name}</span>
+                <span className="text-sm font-semibold" style={{ color: cat.color }}>{tr(cat.name, lang)}</span>
                 <div className="ml-auto flex gap-1">
                   <button
                     onClick={() => startEdit(cat)}

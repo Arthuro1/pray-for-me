@@ -8,6 +8,7 @@ import SettingsTab from './pages/SettingsTab';
 import AuthPage from './pages/AuthPage';
 import useAuthStore from './store/authStore';
 import usePrayerStore from './store/prayerStore';
+import useTranslationStore from './store/translationStore';
 import { scheduleNotifications } from './notifications';
 import { Loader2 } from 'lucide-react';
 
@@ -18,16 +19,27 @@ export default function App() {
 
   const { user, loading: authLoading, init } = useAuthStore();
   const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
+  const { loadTranslations, translateContent } = useTranslationStore();
 
   useEffect(() => { init(); }, []);
 
   useEffect(() => {
-    if (user?.id) loadData(user.id);
+    if (user?.id) {
+      loadData(user.id);
+      loadTranslations(user.id);
+    }
   }, [user?.id]);
 
   useEffect(() => {
     if (user) scheduleNotifications(settings, prayers, categories);
   }, [settings, prayers, categories]);
+
+  // Translate content whenever language, prayers, or categories change
+  useEffect(() => {
+    if (user?.id && (prayers.length > 0 || categories.length > 0)) {
+      translateContent(prayers, categories, settings.language, user.id);
+    }
+  }, [settings.language, prayers, categories, user?.id]);
 
   if (authLoading) {
     return (
