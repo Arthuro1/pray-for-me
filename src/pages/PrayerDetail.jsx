@@ -142,7 +142,7 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
         {/* Prayer points */}
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'Prayer Points')}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {!isAnswered && (
               <button
                 onClick={fetchRecs}
