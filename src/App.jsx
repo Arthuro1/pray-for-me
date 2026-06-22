@@ -6,6 +6,7 @@ import PrayersTab from './pages/PrayersTab';
 import PlanTab from './pages/PlanTab';
 import SettingsTab from './pages/SettingsTab';
 import AuthPage from './pages/AuthPage';
+import LandingPage from './pages/LandingPage';
 import useAuthStore from './store/authStore';
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
@@ -16,6 +17,7 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState('home');
   const [showForm, setShowForm] = useState(false);
   const [editPrayer, setEditPrayer] = useState(null);
+  const [showAuth, setShowAuth] = useState(false);
 
   const { user, loading: authLoading, init } = useAuthStore();
   const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
@@ -56,7 +58,10 @@ export default function App() {
     );
   }
 
-  if (!user) return <AuthPage />;
+  if (!user) {
+    if (showAuth) return <AuthPage />;
+    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
+  }
 
   if (dataLoading) {
     return (
