@@ -5,8 +5,7 @@ import useTranslationStore from '../store/translationStore';
 import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import FeedbackModal from '../components/FeedbackModal';
-
-const DONATION_URL = import.meta.env.VITE_DONATION_URL || 'https://ko-fi.com';
+import DonateModal from '../components/DonateModal';
 
 function requestNotificationPermission(onGranted) {
   if (!('Notification' in window)) {
@@ -64,6 +63,7 @@ export default function SettingsTab() {
   const { user, signOut } = useAuthStore();
   const { tr } = useTranslationStore();
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showDonate, setShowDonate] = useState(false);
 
   const handleToggleNotifications = () => {
     if (!settings.dailyReminderEnabled) {
@@ -298,16 +298,14 @@ export default function SettingsTab() {
             <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
           </div>
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
-          <a
-            href={DONATION_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => setShowDonate(true)}
             className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ background: '#fff1f2', color: '#e11d48', border: '0.5px solid #fecdd3', textDecoration: 'none', display: 'flex' }}
+            style={{ background: '#fff1f2', color: '#e11d48', border: '0.5px solid #fecdd3' }}
           >
             <Heart size={14} />
             {t(lang, 'donateBtn')}
-          </a>
+          </button>
         </div>
 
         <div className="rounded-2xl px-6 py-5 mt-2 text-center" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
@@ -318,6 +316,7 @@ export default function SettingsTab() {
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
+      {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
     </div>
   );
 }
