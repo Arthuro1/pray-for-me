@@ -26,7 +26,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
         style={{
           bottom: '72px',
           left: '50%',
-          transform: 'translateX(calc(-50% + 200px))',
+          transform: 'translateX(calc(-50% + 190px))',
           width: '52px',
           height: '52px',
           background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)',
