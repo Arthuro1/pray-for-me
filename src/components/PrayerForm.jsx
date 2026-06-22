@@ -130,7 +130,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
 
               {recommendations.length > 0 && (
                 <>
-                  <p className="text-xs text-indigo-400 mb-2">Cliquez sur + pour ajouter à vos prières</p>
+                  <p className="text-xs text-indigo-400 mb-2">Chaque suggestion crée une nouvelle fiche de prière</p>
                   <div className="space-y-1.5">
                     {recommendations.map((rec) => (
                       <div key={rec.title} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-indigo-100">
@@ -141,9 +141,9 @@ export default function PrayerForm({ onClose, editPrayer }) {
                         <button
                           type="button"
                           onClick={() => addRecommendation(rec)}
-                          className="shrink-0 bg-indigo-100 text-indigo-600 hover:bg-indigo-200 rounded-lg p-1.5 transition-colors"
+                          className="flex items-center gap-1 text-xs bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg px-2 py-1 transition-colors font-medium shrink-0"
                         >
-                          <Plus size={13} />
+                          <Plus size={11} /> Créer
                         </button>
                       </div>
                     ))}

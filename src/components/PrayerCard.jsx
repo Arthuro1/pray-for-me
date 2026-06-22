@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle, Clock, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2 } from 'lucide-react';
+import { CheckCircle, Clock, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2, BookOpen, ExternalLink } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -13,8 +13,9 @@ export default function PrayerCard({ prayer, onEdit }) {
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
+  const [expandedVerse, setExpandedVerse] = useState(null);
 
-  const { categories, markAnswered, markActive, markPending, addUpdate, deletePrayer, addPrayer } = usePrayerStore();
+  const { categories, markAnswered, markActive, markPending, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
   const category = categories.find((c) => c.id === prayer.categoryId);
 
   const statusConfig = {
@@ -31,6 +32,9 @@ export default function PrayerCard({ prayer, onEdit }) {
     setNewUpdate('');
     setUpdateRecs([]);
   };
+
+  const bibleUrl = (verse) =>
+    `https://www.bible.com/search/bible?q=${encodeURIComponent(verse)}&version_id=93`;
 
   const fetchUpdateRecs = async () => {
     if (loadingRecs) return;
@@ -121,83 +125,150 @@ export default function PrayerCard({ prayer, onEdit }) {
             {prayer.answeredAt && ` · Exaucé le ${format(new Date(prayer.answeredAt), 'd MMMM yyyy', { locale: fr })}`}
           </p>
 
-          {/* Updates */}
-          {(prayer.updates || []).length > 0 && (
-            <div className="mb-2">
-              <p className="text-xs font-semibold text-slate-500 mb-1">Évolutions:</p>
-              {prayer.updates.map((u) => (
-                <div key={u.id} className="flex gap-2 mb-1">
+          {/* Two columns: Évolutions + Sujets de prière */}
+          <div className="grid grid-cols-2 gap-3 mb-2">
+
+            {/* Évolutions */}
+            <div>
+              <p className="text-xs font-semibold text-slate-500 mb-1.5">Évolutions</p>
+              {(prayer.updates || []).length === 0 && (
+                <p className="text-xs text-slate-300 italic">Aucune évolution</p>
+              )}
+              {(prayer.updates || []).map((u) => (
+                <div key={u.id} className="flex gap-1.5 mb-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
                   <div>
-                    <p className="text-xs text-slate-600">{u.text}</p>
-                    <p className="text-xs text-slate-400">{format(new Date(u.date), 'd MMM yyyy', { locale: fr })}</p>
+                    <p className="text-xs text-slate-600 leading-tight">{u.text}</p>
+                    <p className="text-xs text-slate-400">{format(new Date(u.date), 'd MMM yy', { locale: fr })}</p>
                   </div>
                 </div>
               ))}
+              {prayer.status !== 'answered' && (
+                <div className="flex gap-1 mt-2">
+                  <input
+                    type="text"
+                    value={newUpdate}
+                    onChange={(e) => setNewUpdate(e.target.value)}
+                    placeholder="Nouvelle évolution..."
+                    className="flex-1 text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 min-w-0"
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddUpdate()}
+                  />
+                  <button
+                    onClick={handleAddUpdate}
+                    className="bg-indigo-100 text-indigo-700 rounded-lg px-1.5 hover:bg-indigo-200 transition-colors shrink-0"
+                  >
+                    <Plus size={13} />
+                  </button>
+                </div>
+              )}
             </div>
-          )}
 
-          {/* Add update */}
-          {prayer.status !== 'answered' && (
-            <div className="mb-2">
-              <div className="flex gap-2 mb-1.5">
-                <input
-                  type="text"
-                  value={newUpdate}
-                  onChange={(e) => setNewUpdate(e.target.value)}
-                  placeholder="Ajouter une évolution..."
-                  className="flex-1 text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-300"
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddUpdate()}
-                />
-                <button
-                  onClick={handleAddUpdate}
-                  className="bg-indigo-100 text-indigo-700 rounded-lg px-2 py-1.5 hover:bg-indigo-200 transition-colors"
-                >
-                  <Plus size={14} />
-                </button>
+            {/* Sujets de prière (IA) */}
+            <div>
+              <div className="flex items-center gap-1 mb-1.5">
+                <p className="text-xs font-semibold text-slate-500">Sujets de prière</p>
+                {prayer.status !== 'answered' && (
+                  <button
+                    onClick={fetchUpdateRecs}
+                    disabled={loadingRecs}
+                    className="ml-auto flex items-center gap-0.5 text-xs text-indigo-500 hover:text-indigo-700 disabled:opacity-50"
+                    title="Suggestions IA"
+                  >
+                    {loadingRecs ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                  </button>
+                )}
               </div>
-              <button
-                onClick={fetchUpdateRecs}
-                disabled={loadingRecs}
-                className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 disabled:opacity-50 transition-colors"
-              >
-                {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
-                {loadingRecs ? 'Chargement...' : 'Suggestions IA'}
-              </button>
-            </div>
-          )}
 
-          {/* Update recommendations */}
-          {(loadingRecs || updateRecs.length > 0 || recsError) && (
-            <div className="bg-amber-50 border border-amber-100 rounded-xl p-2.5 mb-2">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <Sparkles size={12} className="text-amber-500" />
-                <p className="text-xs font-semibold text-amber-700">Sujets suggérés par l'IA</p>
-                {loadingRecs && <Loader2 size={12} className="text-amber-400 animate-spin ml-auto" />}
-              </div>
-              {recsError && <p className="text-xs text-amber-700 bg-amber-100 rounded-lg px-2 py-1">{recsError}</p>}
-              <div className="space-y-1">
-                {updateRecs.map((rec) => (
-                  <div key={rec.title} className="flex items-center justify-between gap-2 bg-white rounded-lg px-2.5 py-1.5 border border-amber-100">
+              {(prayer.prayerPoints || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
+                <p className="text-xs text-slate-300 italic">Cliquez sur ✨ pour des suggestions</p>
+              )}
+
+              {/* Points existants */}
+              {(prayer.prayerPoints || []).map((pp) => (
+                <div key={pp.id} className="mb-2 group">
+                  <div className="flex gap-1.5 items-start">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-700 leading-tight">{rec.title}</p>
-                      <p className="text-xs text-amber-400">{rec.verse}</p>
+                      <p className="text-xs text-slate-600 leading-tight">{pp.title}</p>
+                      <button
+                        onClick={() => setExpandedVerse(expandedVerse === pp.id ? null : pp.id)}
+                        className="flex items-center gap-1 text-xs text-amber-500 hover:text-amber-700 mt-0.5"
+                      >
+                        <BookOpen size={10} />
+                        {pp.verse}
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => removePrayerPoint(prayer.id, pp.id)}
+                      className="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-400 transition-all shrink-0"
+                    >
+                      <Trash2 size={10} />
+                    </button>
+                  </div>
+                  {expandedVerse === pp.id && (
+                    <div className="ml-3 mt-1.5 bg-amber-50 border border-amber-100 rounded-lg p-2">
+                      {pp.verseText && (
+                        <p className="text-xs text-slate-600 italic leading-relaxed mb-1.5">"{pp.verseText}"</p>
+                      )}
+                      <a
+                        href={bibleUrl(pp.verse)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 font-medium"
+                      >
+                        <ExternalLink size={10} />
+                        Ouvrir dans Bible.com
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Suggestions IA à ajouter */}
+              {recsError && <p className="text-xs text-amber-600 bg-amber-50 rounded px-1.5 py-1">{recsError}</p>}
+              {updateRecs.map((rec) => (
+                <div key={rec.title} className="mb-2 bg-amber-50 rounded-lg px-2 py-1.5 border border-amber-100">
+                  <div className="flex gap-1.5 items-start">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-slate-600 leading-tight font-medium">{rec.title}</p>
+                      <button
+                        onClick={() => setExpandedVerse(expandedVerse === rec.verse ? null : rec.verse)}
+                        className="flex items-center gap-1 text-xs text-amber-500 hover:text-amber-700 mt-0.5"
+                      >
+                        <BookOpen size={10} />
+                        {rec.verse}
+                      </button>
                     </div>
                     <button
                       onClick={() => {
-                        addPrayer({ title: rec.title, description: `Verset: ${rec.verse}`, categoryId: prayer.categoryId });
+                        addPrayerPoint(prayer.id, { title: rec.title, verse: rec.verse, verseText: rec.verseText });
                         setUpdateRecs((prev) => prev.filter((r) => r.title !== rec.title));
                       }}
-                      className="shrink-0 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg p-1 transition-colors"
-                      title="Ajouter comme nouvelle prière"
+                      className="shrink-0 bg-amber-500 text-white hover:bg-amber-600 rounded p-0.5 transition-colors"
                     >
-                      <Plus size={12} />
+                      <Plus size={11} />
                     </button>
                   </div>
-                ))}
-              </div>
+                  {expandedVerse === rec.verse && (
+                    <div className="mt-1.5 bg-white border border-amber-100 rounded-lg p-2">
+                      {rec.verseText && (
+                        <p className="text-xs text-slate-600 italic leading-relaxed mb-1.5">"{rec.verseText}"</p>
+                      )}
+                      <a
+                        href={bibleUrl(rec.verse)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 font-medium"
+                      >
+                        <ExternalLink size={10} />
+                        Ouvrir dans Bible.com
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* Testimony input */}
           {showTestimony && (

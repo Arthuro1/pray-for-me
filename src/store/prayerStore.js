@@ -68,6 +68,22 @@ const usePrayerStore = create(
         ),
       })),
 
+      addPrayerPoint: (prayerId, point) => set((state) => ({
+        prayers: state.prayers.map((p) =>
+          p.id === prayerId
+            ? { ...p, prayerPoints: [...(p.prayerPoints || []), { id: Date.now().toString(), ...point, addedAt: new Date().toISOString() }] }
+            : p
+        ),
+      })),
+
+      removePrayerPoint: (prayerId, pointId) => set((state) => ({
+        prayers: state.prayers.map((p) =>
+          p.id === prayerId
+            ? { ...p, prayerPoints: (p.prayerPoints || []).filter((pp) => pp.id !== pointId) }
+            : p
+        ),
+      })),
+
       deletePrayer: (id) => set((state) => ({
         prayers: state.prayers.filter((p) => p.id !== id),
       })),

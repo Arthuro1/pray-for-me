@@ -22,11 +22,11 @@ export async function getAIRecommendations({ title, description = '', type = 'ne
     ? `Un chrétien prie pour : "${title}". Il vient d'ajouter cette évolution : "${description}".
 Suggère 3 sujets de prière complémentaires adaptés à cette évolution.
 Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-[{"title":"sujet de prière","verse":"Référence biblique"},{"title":"...","verse":"..."},{"title":"...","verse":"..."}]`
+[{"title":"sujet de prière","verse":"Référence ex: Jean 3:16","verseText":"Texte complet du verset en français"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`
     : `Un chrétien souhaite prier pour : "${title}".${description ? ` Détails : "${description}".` : ''}
 Suggère 4 sujets de prière connexes ou plus profonds.
 Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-[{"title":"sujet de prière","verse":"Référence biblique"},{"title":"...","verse":"..."},{"title":"...","verse":"..."},{"title":"...","verse":"..."}]`;
+[{"title":"sujet de prière","verse":"Référence ex: Jean 3:16","verseText":"Texte complet du verset en français"},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."},{"title":"...","verse":"...","verseText":"..."}]`;
 
   lastCallTime = Date.now();
 
