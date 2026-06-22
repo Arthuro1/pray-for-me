@@ -55,12 +55,7 @@ export default function AuthPage() {
 
       {/* Logo */}
       <div className="fixed top-0 left-0 right-0 flex flex-col items-center pt-16 pb-6 pointer-events-none">
-        <div
-          className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-3"
-          style={{ background: 'var(--accent-soft)', border: '1px solid var(--accent-border)' }}
-        >
-          🙏
-        </div>
+        <img src="/logo.svg" alt="Pray For Me" className="w-16 h-16 mb-3 rounded-2xl" />
         <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray For Me</h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>
           "Priez sans cesse" — 1 Thess 5:17

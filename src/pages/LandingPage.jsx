@@ -104,7 +104,7 @@ export default function LandingPage({ onGetStarted }) {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 max-w-6xl mx-auto">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl">🙏</span>
+          <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
           <span className="font-semibold text-lg tracking-tight">Pray For Me</span>
         </div>
         <button
@@ -302,7 +302,7 @@ export default function LandingPage({ onGetStarted }) {
           style={{ background: 'radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124,92,252,0.25) 0%, transparent 70%)' }}
         />
         <div className="relative max-w-xl mx-auto">
-          <p className="text-4xl mb-4">🙏</p>
+          <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Start your prayer journal today</h2>
           <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>
             Free, private, and available in 4 languages. Sign up in seconds with Google.
@@ -324,7 +324,7 @@ export default function LandingPage({ onGetStarted }) {
       <footer className="px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-lg">🙏</span>
+            <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />
             <span className="text-sm font-medium text-white">Pray For Me</span>
           </div>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
