@@ -47,8 +47,10 @@ const usePrayerStore = create((set, get) => ({
     callReminderEnabled: false,
     notificationsGranted: false,
     language: (() => {
+      const saved = localStorage.getItem('pfm_language');
+      if (saved && ['fr', 'en', 'de', 'pt'].includes(saved)) return saved;
       const nav = (navigator.language || navigator.userLanguage || 'fr').toLowerCase().slice(0, 2);
-      return ['fr', 'en', 'de', 'pt'].includes(nav) ? nav : 'fr';
+      return ['fr', 'en', 'de', 'pt'].includes(nav) ? nav : 'en';
     })(),
   },
   loading: false,
@@ -249,9 +251,10 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // ─── Settings (localStorage only) ────────────────────────────
-  updateSettings: (updates) => set((state) => ({
-    settings: { ...state.settings, ...updates },
-  })),
+  updateSettings: (updates) => {
+    if (updates.language) localStorage.setItem('pfm_language', updates.language);
+    set((state) => ({ settings: { ...state.settings, ...updates } }));
+  },
 
   // ─── Today's prayers ─────────────────────────────────────────
   getTodaysPrayers: () => {
