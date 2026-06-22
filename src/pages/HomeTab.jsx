@@ -57,7 +57,7 @@ const VERSES = {
   ],
 };
 
-export default function HomeTab({ onEdit }) {
+export default function HomeTab({ onEdit, onAdd }) {
   const { getTodaysPrayers, categories, prayers, settings, addPrayer } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
@@ -190,12 +190,35 @@ export default function HomeTab({ onEdit }) {
         </div>
 
         {todaysPrayers.length === 0 && (
-          <div className="text-center py-8">
-            <p className="text-5xl mb-3">🕊️</p>
-            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersToday')}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>
-              {todayCategories.length > 0 ? t(lang, 'noPrayersSub') : t(lang, 'aiDayNoCats')}
-            </p>
+          <div className="rounded-2xl p-6 mb-4 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-4xl mb-3">🕊️</p>
+            <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'emptyEncourage')}</p>
+            <p className="text-xs mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersToday')}</p>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={onAdd}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white"
+                style={{ background: 'var(--accent)' }}
+              >
+                <Plus size={15} /> {t(lang, 'emptyAddManual')}
+              </button>
+              {todayCategories.length > 0 && (
+                <>
+                  <span className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'emptyOrLabel')}</span>
+                  <button
+                    onClick={fetchDaySuggestions}
+                    disabled={loadingSuggestions}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium disabled:opacity-60"
+                    style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                  >
+                    {loadingSuggestions
+                      ? <Loader2 size={15} className="animate-spin" />
+                      : <Sparkles size={15} />}
+                    {t(lang, 'emptyAiGenerate')}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
 

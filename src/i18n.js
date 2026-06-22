@@ -160,6 +160,10 @@ const translations = {
     aiDaySuggestBtn: 'Suggestions IA pour aujourd\'hui',
     aiDayAdd: 'Ajouter cette prière',
     aiDayNoCats: 'Configurez votre plan hebdomadaire pour voir des suggestions',
+    emptyAddManual: 'Ajouter une prière',
+    emptyOrLabel: 'ou',
+    emptyAiGenerate: 'Générer avec l\'IA',
+    emptyEncourage: 'Commencez votre temps de prière',
   },
 
   en: {
@@ -305,6 +309,10 @@ const translations = {
     aiDaySuggestBtn: 'AI suggestions for today',
     aiDayAdd: 'Add this prayer',
     aiDayNoCats: 'Set up your weekly plan to see suggestions',
+    emptyAddManual: 'Add a prayer',
+    emptyOrLabel: 'or',
+    emptyAiGenerate: 'Generate with AI',
+    emptyEncourage: 'Start your prayer time',
   },
 
   de: {
@@ -450,6 +458,10 @@ const translations = {
     aiDaySuggestBtn: 'KI-Vorschläge für heute',
     aiDayAdd: 'Dieses Gebet hinzufügen',
     aiDayNoCats: 'Richte deinen Wochenplan ein, um Vorschläge zu sehen',
+    emptyAddManual: 'Gebet hinzufügen',
+    emptyOrLabel: 'oder',
+    emptyAiGenerate: 'Mit KI generieren',
+    emptyEncourage: 'Starte deine Gebetszeit',
   },
 
   pt: {
@@ -595,6 +607,10 @@ const translations = {
     aiDaySuggestBtn: 'Sugestões IA para hoje',
     aiDayAdd: 'Adicionar esta oração',
     aiDayNoCats: 'Configure seu plano semanal para ver sugestões',
+    emptyAddManual: 'Adicionar uma oração',
+    emptyOrLabel: 'ou',
+    emptyAiGenerate: 'Gerar com IA',
+    emptyEncourage: 'Comece seu tempo de oração',
   },
 };
 

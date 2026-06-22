@@ -72,7 +72,7 @@ export default function App() {
 
   const renderTab = () => {
     switch (currentTab) {
-      case 'home': return <HomeTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} />;
+      case 'home': return <HomeTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} onAdd={() => { setEditPrayer(null); setShowForm(true); }} />;
       case 'prayers': return <PrayersTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} />;
       case 'plan': return <PlanTab />;
       case 'settings': return <SettingsTab />;
