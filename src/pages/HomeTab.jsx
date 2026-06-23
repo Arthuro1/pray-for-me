@@ -246,7 +246,7 @@ export default function HomeTab({ onEdit, onAdd }) {
       <PrayerDetail
         prayer={selectedPrayer}
         lang={lang}
-        onBack={() => setSelectedPrayer(null)}
+        onBack={() => { setSelectedPrayer(null); setDaySuggestions([]); setSuggestError(null); }}
         onEdit={(p) => { setSelectedPrayer(null); onEdit(p); }}
       />
     );
