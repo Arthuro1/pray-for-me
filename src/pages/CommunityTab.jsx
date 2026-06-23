@@ -4,16 +4,10 @@ import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
+import { timeAgo } from '../utils/date';
+import { getAuthorName } from '../utils/user';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
-import { formatDistanceToNow } from 'date-fns';
-import { fr, enUS, de, ptBR } from 'date-fns/locale';
-
-const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
-
-function timeAgo(dateStr, lang) {
-  return formatDistanceToNow(new Date(dateStr), { addSuffix: true, locale: DATE_LOCALES[lang] || enUS });
-}
 
 // ── Group onboarding ──────────────────────────────────────────────────────────
 function NoGroupView({ lang, userId, onDone }) {
@@ -23,6 +17,8 @@ function NoGroupView({ lang, userId, onDone }) {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const reset = () => { setMode(null); setError(''); };
 
   const handleCreate = async () => {
     if (!name.trim()) return;
@@ -65,37 +61,27 @@ function NoGroupView({ lang, userId, onDone }) {
 
       {mode === 'create' && (
         <div className="w-full max-w-xs flex flex-col gap-3">
-          <input
-            autoFocus
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder={t(lang, 'groupName')}
+          <input autoFocus value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
             className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-          />
+            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }} />
           {error && <p className="text-xs text-red-500">{error}</p>}
           <button onClick={handleCreate} disabled={!name.trim() || loading} className="py-3 rounded-xl font-medium text-sm text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
             {loading ? <Loader2 size={16} className="animate-spin mx-auto" /> : t(lang, 'createGroup')}
           </button>
-          <button onClick={() => { setMode(null); setError(''); }} className="text-sm py-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'cancel')}</button>
+          <button onClick={reset} className="text-sm py-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'cancel')}</button>
         </div>
       )}
 
       {mode === 'join' && (
         <div className="w-full max-w-xs flex flex-col gap-3">
-          <input
-            autoFocus
-            value={code}
-            onChange={e => setCode(e.target.value.toUpperCase())}
-            placeholder={t(lang, 'inviteCode')}
+          <input autoFocus value={code} onChange={e => setCode(e.target.value.toUpperCase())} placeholder={t(lang, 'inviteCode')}
             className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none uppercase tracking-widest"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-          />
+            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }} />
           {error && <p className="text-xs text-red-500">{error}</p>}
           <button onClick={handleJoin} disabled={!code.trim() || loading} className="py-3 rounded-xl font-medium text-sm text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
             {loading ? <Loader2 size={16} className="animate-spin mx-auto" /> : t(lang, 'join')}
           </button>
-          <button onClick={() => { setMode(null); setError(''); }} className="text-sm py-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'cancel')}</button>
+          <button onClick={reset} className="text-sm py-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'cancel')}</button>
         </div>
       )}
     </div>
@@ -110,8 +96,7 @@ function PrayerCard({ prayer, lang, userId, onOpen }) {
   const updateCount = prayer.community_updates?.[0]?.count ?? 0;
 
   return (
-    <div
-      className="rounded-2xl p-4 cursor-pointer transition-all hover:scale-[1.01]"
+    <div className="rounded-2xl p-4 cursor-pointer transition-all hover:scale-[1.01]"
       style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
       onClick={onOpen}
     >
@@ -127,11 +112,7 @@ function PrayerCard({ prayer, lang, userId, onOpen }) {
         <button
           onClick={e => { e.stopPropagation(); toggleReaction(prayer.id, userId); }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all active:scale-95"
-          style={{
-            background: hasReacted ? 'var(--accent)' : 'var(--input-bg)',
-            color: hasReacted ? '#fff' : 'var(--text-3)',
-            border: '0.5px solid var(--input-border)',
-          }}
+          style={{ background: hasReacted ? 'var(--accent)' : 'var(--input-bg)', color: hasReacted ? '#fff' : 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
         >
           <HandHeart size={13} />
           {reactionCount > 0 && <span>{reactionCount}</span>}
@@ -167,54 +148,42 @@ function GroupHeader({ lang, userId }) {
   const [showMenu, setShowMenu] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  if (!activeGroup) return null;
+
   const handleCopy = async (e) => {
     e.stopPropagation();
-    await navigator.clipboard.writeText(activeGroup?.invite_code || '');
+    await navigator.clipboard.writeText(activeGroup.invite_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!activeGroup) return null;
-
   return (
     <div className="relative px-5 md:px-8 pt-6 pb-3">
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => setShowMenu(!showMenu)}
-          className="flex items-center gap-2 text-base font-semibold"
-          style={{ color: 'var(--text-1)' }}
-        >
+        <button onClick={() => setShowMenu(!showMenu)} className="flex items-center gap-2 text-base font-semibold" style={{ color: 'var(--text-1)' }}>
           {activeGroup.name}
           {groups.length > 1 && <ChevronDown size={16} style={{ color: 'var(--text-3)' }} />}
         </button>
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
-        >
+        <button onClick={handleCopy} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs"
+          style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}>
           {copied ? <Check size={13} style={{ color: 'var(--accent)' }} /> : <Copy size={13} />}
           {copied ? t(lang, 'codeCopied') : activeGroup.invite_code}
         </button>
       </div>
 
       {showMenu && groups.length > 1 && (
-        <div className="absolute left-5 top-14 z-30 rounded-xl overflow-hidden shadow-lg" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', minWidth: 180 }}>
+        <div className="absolute left-5 top-14 z-30 rounded-xl overflow-hidden shadow-lg"
+          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', minWidth: 180 }}>
           {groups.map(g => (
-            <button
-              key={g.id}
-              onClick={() => { setActiveGroup(g.id); setShowMenu(false); }}
+            <button key={g.id} onClick={() => { setActiveGroup(g.id); setShowMenu(false); }}
               className="w-full text-left px-4 py-3 text-sm transition-colors hover:opacity-80"
-              style={{ color: g.id === activeGroupId ? 'var(--accent)' : 'var(--text-1)', fontWeight: g.id === activeGroupId ? 600 : 400 }}
-            >
+              style={{ color: g.id === activeGroupId ? 'var(--accent)' : 'var(--text-1)', fontWeight: g.id === activeGroupId ? 600 : 400 }}>
               {g.name}
             </button>
           ))}
           <div style={{ borderTop: '0.5px solid var(--border)' }}>
-            <button
-              onClick={() => { leaveGroup(activeGroupId, userId); setShowMenu(false); }}
-              className="w-full text-left px-4 py-3 text-sm flex items-center gap-2"
-              style={{ color: '#ef4444' }}
-            >
+            <button onClick={() => { leaveGroup(activeGroupId, userId); setShowMenu(false); }}
+              className="w-full text-left px-4 py-3 text-sm flex items-center gap-2" style={{ color: '#ef4444' }}>
               <LogOut size={14} /> {t(lang, 'leaveGroup')}
             </button>
           </div>
@@ -224,47 +193,70 @@ function GroupHeader({ lang, userId }) {
   );
 }
 
+// ── Requests sub-tab ──────────────────────────────────────────────────────────
+function RequestsTab({ lang, userId, activeGroupId, prayers, loading, addPrayer }) {
+  const [showForm, setShowForm] = useState(false);
+  const [, setSelectedPrayer] = useState(null); // handled by parent
+
+  return (
+    <>
+      {showForm && (
+        <PrayerForm
+          communityMode
+          onClose={() => setShowForm(false)}
+          onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
+            const { user } = useAuthStore.getState();
+            await addPrayer({ groupId: activeGroupId, userId, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds });
+          }}
+        />
+      )}
+
+      <button onClick={() => setShowForm(true)}
+        className="flex items-center gap-2 w-full py-3 rounded-xl text-sm font-medium mb-5 justify-center"
+        style={{ background: 'var(--accent)', color: '#fff' }}>
+        <Plus size={16} /> {t(lang, 'newRequest')}
+      </button>
+
+      {loading ? (
+        <div className="flex justify-center py-12"><Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+      ) : prayers.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-sm mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'noRequests')}</p>
+          <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {prayers.map(p => (
+            <PrayerCard key={p.id} prayer={p} lang={lang} userId={userId} onOpen={() => setSelectedPrayer(p)} />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 // ── Main tab ──────────────────────────────────────────────────────────────────
 export default function CommunityTab() {
   const { settings } = usePrayerStore();
   const lang = settings.language || 'en';
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers, testimonies, userReactions, loading, fetchGroups, fetchUserReactions, addPrayer } = useCommunityStore();
+  const { groups, activeGroupId, prayers, testimonies, loading, fetchGroups, fetchUserReactions, addPrayer } = useCommunityStore();
   const [subTab, setSubTab] = useState('requests');
   const [selectedPrayer, setSelectedPrayer] = useState(null);
-  const [showNewRequest, setShowNewRequest] = useState(false);
   const [showJoinCreate, setShowJoinCreate] = useState(false);
+  const [showNewRequest, setShowNewRequest] = useState(false);
 
-  useEffect(() => {
-    if (user?.id) fetchGroups(user.id);
-  }, [user?.id]);
-
-  useEffect(() => {
-    if (activeGroupId && user?.id) fetchUserReactions(activeGroupId, user.id);
-  }, [activeGroupId, user?.id]);
+  useEffect(() => { if (user?.id) fetchGroups(user.id); }, [user?.id]);
+  useEffect(() => { if (activeGroupId && user?.id) fetchUserReactions(activeGroupId, user.id); }, [activeGroupId, user?.id]);
 
   if (!user) return null;
 
   if (selectedPrayer) {
-    return (
-      <PrayerDetail
-        communityPrayer={selectedPrayer}
-        onBack={() => setSelectedPrayer(null)}
-        lang={lang}
-      />
-    );
+    return <PrayerDetail communityPrayer={selectedPrayer} onBack={() => setSelectedPrayer(null)} lang={lang} />;
   }
 
-  const hasGroups = groups.length > 0;
-
-  if (!hasGroups || showJoinCreate) {
-    return (
-      <NoGroupView
-        lang={lang}
-        userId={user.id}
-        onDone={() => setShowJoinCreate(false)}
-      />
-    );
+  if (!groups.length || showJoinCreate) {
+    return <NoGroupView lang={lang} userId={user.id} onDone={() => setShowJoinCreate(false)} />;
   }
 
   return (
@@ -274,48 +266,33 @@ export default function CommunityTab() {
           communityMode
           onClose={() => setShowNewRequest(false)}
           onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
-            const authorName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '?';
-            await addPrayer({ groupId: activeGroupId, userId: user.id, authorName, title, description, isAnonymous, categoryIds });
+            await addPrayer({ groupId: activeGroupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds });
           }}
         />
       )}
 
       <GroupHeader lang={lang} userId={user.id} />
 
-      {/* Sub-tabs */}
       <div className="flex gap-1 px-5 md:px-8 mb-5 mt-3">
         {['requests', 'testimonies'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setSubTab(tab)}
+          <button key={tab} onClick={() => setSubTab(tab)}
             className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
-            style={{
-              background: subTab === tab ? 'var(--accent)' : 'var(--input-bg)',
-              color: subTab === tab ? '#fff' : 'var(--text-2)',
-              border: '0.5px solid var(--input-border)',
-            }}
-          >
+            style={{ background: subTab === tab ? 'var(--accent)' : 'var(--input-bg)', color: subTab === tab ? '#fff' : 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
             {tab === 'requests' ? t(lang, 'prayerRequests') : t(lang, 'testimonies')}
           </button>
         ))}
-        <button
-          onClick={() => setShowJoinCreate(true)}
-          className="ml-auto px-3 py-2 rounded-xl text-xs"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
-        >
+        <button onClick={() => setShowJoinCreate(true)} className="ml-auto px-3 py-2 rounded-xl text-xs"
+          style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}>
           + {t(lang, 'joinGroup')}
         </button>
       </div>
 
-      {/* Content */}
       <div className="px-5 md:px-8">
         {subTab === 'requests' && (
           <>
-            <button
-              onClick={() => setShowNewRequest(true)}
+            <button onClick={() => setShowNewRequest(true)}
               className="flex items-center gap-2 w-full py-3 rounded-xl text-sm font-medium mb-5 justify-center"
-              style={{ background: 'var(--accent)', color: '#fff' }}
-            >
+              style={{ background: 'var(--accent)', color: '#fff' }}>
               <Plus size={16} /> {t(lang, 'newRequest')}
             </button>
 
@@ -329,13 +306,7 @@ export default function CommunityTab() {
             ) : (
               <div className="flex flex-col gap-3">
                 {prayers.map(p => (
-                  <PrayerCard
-                    key={p.id}
-                    prayer={p}
-                    lang={lang}
-                    userId={user.id}
-                    onOpen={() => setSelectedPrayer(p)}
-                  />
+                  <PrayerCard key={p.id} prayer={p} lang={lang} userId={user.id} onOpen={() => setSelectedPrayer(p)} />
                 ))}
               </div>
             )}
@@ -343,20 +314,18 @@ export default function CommunityTab() {
         )}
 
         {subTab === 'testimonies' && (
-          <>
-            {testimonies.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-sm mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'noTestimonies')}</p>
-                <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3">
-                {testimonies.map(t => (
-                  <TestimonyCard key={t.id} testimony={t} lang={lang} />
-                ))}
-              </div>
-            )}
-          </>
+          testimonies.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-sm mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'noTestimonies')}</p>
+              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {testimonies.map(testimony => (
+                <TestimonyCard key={testimony.id} testimony={testimony} lang={lang} />
+              ))}
+            </div>
+          )
         )}
       </div>
     </div>

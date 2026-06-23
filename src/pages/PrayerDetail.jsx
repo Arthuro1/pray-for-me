@@ -4,8 +4,9 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
-import { format, formatDistanceToNow } from 'date-fns';
-import { fr, enUS, de, ptBR } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { dateLocale, timeAgo } from '../utils/date';
+import { getAuthorName } from '../utils/user';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -55,8 +56,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { user } = useAuthStore();
   const { groups, activeGroupId, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer } = useCommunityStore();
 
-  const dateLocale = DATE_LOCALES[lang] || enUS;
-  const authorName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '?';
+  const locale = dateLocale(lang);
+  const authorName = getAuthorName(user);
 
   // ── Community mode effects & handlers ────────────────────────────────────
   useEffect(() => {
@@ -233,8 +234,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </h1>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {isCommunity
-              ? (livePrayer.is_anonymous ? t(lang, 'anonymous') : livePrayer.author_name) + ' · ' + formatDistanceToNow(new Date(livePrayer.created_at), { addSuffix: true, locale: dateLocale })
-              : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale: dateLocale }) + (livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale: dateLocale })}` : '')
+              ? (livePrayer.is_anonymous ? t(lang, 'anonymous') : livePrayer.author_name) + ' · ' + timeAgo(livePrayer.created_at, lang)
+              : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale }) + (livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale })}` : '')
             }
           </p>
         </div>
@@ -566,7 +567,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     <div>
                       <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
                         {u.is_anonymous ? t(lang, 'anonymous') : u.author_name}
-                        {' · '}{formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: dateLocale })}
+                        {' · '}{timeAgo(u.created_at, lang)}
                       </p>
                       <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{u.text}</p>
                     </div>
@@ -646,7 +647,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div>
                   <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{tr(u.text, lang)}</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{format(new Date(u.created_at), 'd MMM yy', { locale: dateLocale })}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{format(new Date(u.created_at), 'd MMM yy', { locale })}</p>
                 </div>
               </div>
             ))}

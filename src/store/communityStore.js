@@ -5,6 +5,23 @@ function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
+function toError(error) {
+  return { error: error.message };
+}
+
+async function fetchPrayerWithCounts(prayerId) {
+  const { data } = await supabase
+    .from('community_prayers')
+    .select('*, community_updates(count), prayer_reactions(count)')
+    .eq('id', prayerId)
+    .single();
+  return data;
+}
+
+function updatePrayerInList(prayers, prayerId, updater) {
+  return prayers.map(p => p.id === prayerId ? updater(p) : p);
+}
+
 const useCommunityStore = create((set, get) => ({
   groups: [],
   activeGroupId: null,
@@ -37,15 +54,13 @@ const useCommunityStore = create((set, get) => ({
   },
 
   createGroup: async (name, userId) => {
-    // Use RPC to create group + member atomically, bypassing the SELECT RLS
-    // chicken-and-egg: we can't SELECT the group before we're a member.
-    const code = generateCode();
+    // RPC creates group + member atomically to bypass RLS chicken-and-egg
     const { error } = await supabase.rpc('create_group_with_member', {
       p_name: name,
-      p_invite_code: code,
+      p_invite_code: generateCode(),
       p_user_id: userId,
     });
-    if (error) return { error: error.message };
+    if (error) return toError(error);
     await get().fetchGroups(userId);
     return {};
   },
@@ -69,7 +84,7 @@ const useCommunityStore = create((set, get) => ({
   leaveGroup: async (groupId, userId) => {
     await supabase.from('group_members').delete().eq('group_id', groupId).eq('user_id', userId);
     const groups = get().groups.filter(g => g.id !== groupId);
-    const newActive = groups.length > 0 ? groups[0].id : null;
+    const newActive = groups[0]?.id ?? null;
     set({ groups, activeGroupId: newActive, prayers: [], testimonies: [] });
     if (newActive) {
       get().fetchPrayers(newActive);
@@ -89,22 +104,27 @@ const useCommunityStore = create((set, get) => ({
   },
 
   fetchUserReactions: async (groupId, userId) => {
+    const { data: prayerIds } = await supabase
+      .from('community_prayers')
+      .select('id')
+      .eq('group_id', groupId);
+    const ids = (prayerIds || []).map(p => p.id);
+    if (ids.length === 0) return;
     const { data } = await supabase
       .from('prayer_reactions')
       .select('community_prayer_id')
       .eq('user_id', userId)
-      .in('community_prayer_id',
-        (await supabase.from('community_prayers').select('id').eq('group_id', groupId)).data?.map(p => p.id) || []
-      );
+      .in('community_prayer_id', ids);
     set({ userReactions: new Set((data || []).map(r => r.community_prayer_id)) });
   },
 
   toggleReaction: async (prayerId, userId) => {
     const { userReactions } = get();
     const hasReacted = userReactions.has(prayerId);
+
     // Optimistic update
     const next = new Set(userReactions);
-    if (hasReacted) { next.delete(prayerId); } else { next.add(prayerId); }
+    hasReacted ? next.delete(prayerId) : next.add(prayerId);
     set({ userReactions: next });
 
     if (hasReacted) {
@@ -113,15 +133,9 @@ const useCommunityStore = create((set, get) => ({
     } else {
       await supabase.from('prayer_reactions').insert({ community_prayer_id: prayerId, user_id: userId });
     }
-    // Refresh count on that prayer
-    const { data } = await supabase
-      .from('community_prayers')
-      .select('*, community_updates(count), prayer_reactions(count)')
-      .eq('id', prayerId)
-      .single();
-    if (data) {
-      set(state => ({ prayers: state.prayers.map(p => p.id === prayerId ? data : p) }));
-    }
+
+    const updated = await fetchPrayerWithCounts(prayerId);
+    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
   },
 
   addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds }) => {
@@ -130,27 +144,23 @@ const useCommunityStore = create((set, get) => ({
       .insert({ group_id: groupId, user_id: userId, author_name: authorName, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
       .select()
       .single();
-    if (error) return { error: error.message };
+    if (error) return toError(error);
     const enriched = { ...data, community_updates: [{ count: 0 }], prayer_reactions: [{ count: 0 }] };
     set(state => ({ prayers: [enriched, ...state.prayers] }));
     return { prayer: data };
   },
 
   updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds }) => {
-    const { data, error } = await supabase
-      .from('community_prayers')
-      .update({ title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
-      .eq('id', prayerId)
-      .select()
-      .single();
-    if (error) return { error: error.message };
-    set(state => ({ prayers: state.prayers.map(p => p.id === prayerId ? { ...p, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] } : p) }));
-    return { prayer: data };
+    const patch = { title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] };
+    const { error } = await supabase.from('community_prayers').update(patch).eq('id', prayerId);
+    if (error) return toError(error);
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, ...patch })) }));
+    return {};
   },
 
   deleteCommunityPrayer: async (prayerId) => {
     const { error } = await supabase.from('community_prayers').delete().eq('id', prayerId);
-    if (error) return { error: error.message };
+    if (error) return toError(error);
     set(state => ({ prayers: state.prayers.filter(p => p.id !== prayerId) }));
     return {};
   },
@@ -170,16 +180,9 @@ const useCommunityStore = create((set, get) => ({
       .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, text, is_anonymous: isAnonymous })
       .select()
       .single();
-    if (error) return { error: error.message };
-    // Refresh update count
-    const { data: updated } = await supabase
-      .from('community_prayers')
-      .select('*, community_updates(count), prayer_reactions(count)')
-      .eq('id', prayerId)
-      .single();
-    if (updated) {
-      set(state => ({ prayers: state.prayers.map(p => p.id === prayerId ? updated : p) }));
-    }
+    if (error) return toError(error);
+    const updated = await fetchPrayerWithCounts(prayerId);
+    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
     return { update: data };
   },
 
@@ -198,7 +201,7 @@ const useCommunityStore = create((set, get) => ({
       .insert({ group_id: groupId, user_id: userId, author_name: authorName, content, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null })
       .select()
       .single();
-    if (error) return { error: error.message };
+    if (error) return toError(error);
     set(state => ({ testimonies: [data, ...state.testimonies] }));
     return { testimony: data };
   },
