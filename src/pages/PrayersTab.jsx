@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
-import PrayerCard from '../components/PrayerCard';
-import PrayerDetail from './PrayerDetail';
 import { Search, SlidersHorizontal, Users } from 'lucide-react';
 import { t } from '../i18n';
 
-export default function PrayersTab({ onEdit }) {
+export default function PrayersTab() {
+  const navigate = useNavigate();
   const { prayers, categories, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
@@ -20,18 +20,6 @@ export default function PrayersTab({ onEdit }) {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedPrayer, setSelectedPrayer] = useState(null);
-
-  if (selectedPrayer) {
-    return (
-      <PrayerDetail
-        prayer={selectedPrayer}
-        lang={lang}
-        onBack={() => setSelectedPrayer(null)}
-        onEdit={(p) => { setSelectedPrayer(null); onEdit(p); }}
-      />
-    );
-  }
 
   const STATUS_FILTERS = [
     { id: 'all', label: t(lang, 'all') },
@@ -135,7 +123,7 @@ export default function PrayersTab({ onEdit }) {
               return (
                 <button
                   key={prayer.id}
-                  onClick={() => setSelectedPrayer(prayer)}
+                  onClick={() => navigate(`/prayers/${prayer.id}`)}
                   className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
                   style={{
                     background: 'var(--surface)',

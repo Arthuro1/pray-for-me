@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
@@ -343,10 +344,9 @@ function Empty({ lang, title }) {
 }
 
 // ── Group View ────────────────────────────────────────────────────────────────
-function GroupView({ lang, user, groupId, onBack }) {
-  const { groups, activeGroupId, prayers, testimonies, loading, setActiveGroup, addPrayer } = useCommunityStore();
+function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer } = useCommunityStore();
   const [subTab, setSubTab] = useState('requests');
-  const [selectedPrayer, setSelectedPrayer] = useState(null);
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
 
@@ -358,10 +358,6 @@ function GroupView({ lang, user, groupId, onBack }) {
 
   const group = groups.find(g => g.id === groupId);
   const isAdmin = group?.role === 'admin';
-
-  if (selectedPrayer) {
-    return <PrayerDetail communityPrayer={selectedPrayer} onBack={() => setSelectedPrayer(null)} lang={lang} />;
-  }
 
   return (
     <div style={{ background: 'var(--bg)' }}>
@@ -408,7 +404,7 @@ function GroupView({ lang, user, groupId, onBack }) {
             ) : (
               <div className="flex flex-col gap-3">
                 {prayers.map(p => (
-                  <button key={p.id} onClick={() => setSelectedPrayer(p)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style={CARD_STYLE}>
+                  <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style={CARD_STYLE}>
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <p className="text-xs" style={{ color: 'var(--text-3)' }}>
                         {p.is_anonymous ? t(lang, 'anonymous') : p.author_name} · {timeAgo(p.created_at, lang)}
@@ -459,22 +455,42 @@ function GroupView({ lang, user, groupId, onBack }) {
   );
 }
 
-// ── Main Community Tab ──────────────────────────────────────────────────────
+// ── Community prayer detail (/community/group/:groupId/prayer/:prayerId) ───────
+function CommunityPrayerView({ lang, user, groupId, prayerId, onBack }) {
+  const { prayers, activeGroupId, loading, setActiveGroup, fetchUserReactions } = useCommunityStore();
+
+  useEffect(() => { if (groupId && groupId !== activeGroupId) setActiveGroup(groupId); }, [groupId]);
+  useEffect(() => { if (groupId && user?.id) fetchUserReactions(groupId, user.id); }, [groupId, user?.id]);
+
+  const prayer = prayers.find(p => p.id === prayerId);
+  if (!prayer) {
+    if (loading) return <div className="flex justify-center py-20"><Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>;
+    return <Navigate to={`/community/group/${groupId}`} replace />;
+  }
+  return <PrayerDetail communityPrayer={prayer} onBack={onBack} lang={lang} />;
+}
+
+// ── Main Community Tab (URL-driven) ───────────────────────────────────────────
 export default function CommunityTab() {
   const { settings } = usePrayerStore();
   const lang = settings.language || 'en';
   const { user } = useAuthStore();
-  const { fetchGroups, fetchUserReactions } = useCommunityStore();
-  const [selectedGroupId, setSelectedGroupId] = useState(null);
+  const { fetchGroups } = useCommunityStore();
+  const { groupId, prayerId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => { if (user?.id) fetchGroups(user.id); }, [user?.id]);
-  useEffect(() => { if (selectedGroupId && user?.id) fetchUserReactions(selectedGroupId, user.id); }, [selectedGroupId, user?.id]);
 
   if (!user) return null;
 
-  return selectedGroupId ? (
-    <GroupView lang={lang} user={user} groupId={selectedGroupId} onBack={() => setSelectedGroupId(null)} />
-  ) : (
-    <CommunityHub lang={lang} userId={user.id} onViewGroup={setSelectedGroupId} />
-  );
+  if (groupId && prayerId) {
+    return <CommunityPrayerView lang={lang} user={user} groupId={groupId} prayerId={prayerId}
+      onBack={() => navigate(`/community/group/${groupId}`)} />;
+  }
+  if (groupId) {
+    return <GroupView lang={lang} user={user} groupId={groupId}
+      onBack={() => navigate('/community')}
+      onOpenPrayer={(pid) => navigate(`/community/group/${groupId}/prayer/${pid}`)} />;
+  }
+  return <CommunityHub lang={lang} userId={user.id} onViewGroup={(gid) => navigate(`/community/group/${gid}`)} />;
 }

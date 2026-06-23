@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import PrayerDetail from './PrayerDetail';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Sparkles, Loader2, Plus } from 'lucide-react';
@@ -167,11 +167,11 @@ const VERSES = {
   ],
 };
 
-export default function HomeTab({ onEdit, onAdd }) {
+export default function HomeTab({ onAdd }) {
+  const navigate = useNavigate();
   const { getTodaysPrayers, categories, prayers, settings, addPrayer } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
-  const [selectedPrayer, setSelectedPrayer] = useState(null);
   const [daySuggestions, setDaySuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [suggestError, setSuggestError] = useState(null);
@@ -240,17 +240,6 @@ export default function HomeTab({ onEdit, onAdd }) {
     await addPrayer({ title: rec.title, description: rec.description || '', categoryIds: catIds });
     setAddedTitles(prev => new Set([...prev, rec.title]));
   };
-
-  if (selectedPrayer) {
-    return (
-      <PrayerDetail
-        prayer={selectedPrayer}
-        lang={lang}
-        onBack={() => { setSelectedPrayer(null); setDaySuggestions([]); setSuggestError(null); }}
-        onEdit={(p) => { setSelectedPrayer(null); onEdit(p); }}
-      />
-    );
-  }
 
   return (
     <div>
@@ -386,7 +375,7 @@ export default function HomeTab({ onEdit, onAdd }) {
               return (
                 <button
                   key={prayer.id}
-                  onClick={() => setSelectedPrayer(prayer)}
+                  onClick={() => navigate(`/prayers/${prayer.id}`)}
                   className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
                   style={{
                     background: 'var(--surface)',

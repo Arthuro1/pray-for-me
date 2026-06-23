@@ -1,4 +1,7 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import HomeTab from './pages/HomeTab';
@@ -6,6 +9,7 @@ import PrayersTab from './pages/PrayersTab';
 import PlanTab from './pages/PlanTab';
 import SettingsTab from './pages/SettingsTab';
 import CommunityTab from './pages/CommunityTab';
+import PrayerDetail from './pages/PrayerDetail';
 import AuthPage from './pages/AuthPage';
 import LandingPage from './pages/LandingPage';
 import useAuthStore from './store/authStore';
@@ -15,8 +19,18 @@ import useCommunityStore from './store/communityStore';
 import { scheduleNotifications } from './notifications';
 import { Loader2 } from 'lucide-react';
 
+// Personal prayer detail at /prayers/:id — resolves the prayer from the store.
+function PersonalPrayerPage({ onEdit }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { prayers, settings } = usePrayerStore();
+  const lang = settings.language || 'fr';
+  const prayer = prayers.find((p) => p.id === id);
+  if (!prayer) return <Navigate to="/prayers" replace />;
+  return <PrayerDetail prayer={prayer} lang={lang} onBack={() => navigate(-1)} onEdit={onEdit} />;
+}
+
 export default function App() {
-  const [currentTab, setCurrentTab] = useState('home');
   const [showForm, setShowForm] = useState(false);
   const [editPrayer, setEditPrayer] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
@@ -25,6 +39,9 @@ export default function App() {
   const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
   const { loadTranslations, translateContent } = useTranslationStore();
   const { fetchPendingCount } = useCommunityStore();
+
+  const openAdd = () => { setEditPrayer(null); setShowForm(true); };
+  const openEdit = (p) => { setEditPrayer(p); setShowForm(true); };
 
   useEffect(() => {
     init();
@@ -79,25 +96,26 @@ export default function App() {
     );
   }
 
-  const renderTab = () => {
-    switch (currentTab) {
-      case 'home': return <HomeTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} onAdd={() => { setEditPrayer(null); setShowForm(true); }} />;
-      case 'prayers': return <PrayersTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} />;
-      case 'community': return <CommunityTab />;
-      case 'plan': return <PlanTab />;
-      case 'settings': return <SettingsTab />;
-      default: return <HomeTab />;
-    }
-  };
-
   return (
     <>
-      <Layout currentTab={currentTab} onTabChange={setCurrentTab} onAddPrayer={() => { setEditPrayer(null); setShowForm(true); }}>
-        {renderTab()}
+      <Layout onAddPrayer={openAdd}>
+        <Routes>
+          <Route path="/" element={<HomeTab onAdd={openAdd} />} />
+          <Route path="/prayers" element={<PrayersTab />} />
+          <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
+          <Route path="/community" element={<CommunityTab />} />
+          <Route path="/community/group/:groupId" element={<CommunityTab />} />
+          <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
+          <Route path="/plan" element={<PlanTab />} />
+          <Route path="/settings" element={<SettingsTab />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </Layout>
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
       )}
+      <Analytics />
+      <SpeedInsights />
     </>
   );
 }
