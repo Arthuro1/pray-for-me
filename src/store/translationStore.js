@@ -10,7 +10,7 @@ let memCache = {};
 async function callTranslate(texts, targetLang) {
   if (!API_KEY || texts.length === 0) return {};
 
-  const LANG_NAMES = { fr: 'French', en: 'English', de: 'German', pt: 'Brazilian Portuguese' };
+  const LANG_NAMES = { fr: 'French', en: 'English', de: 'German', pt: 'Brazilian Portuguese', zh: 'Simplified Chinese', es: 'Spanish', hi: 'Hindi' };
   const langName = LANG_NAMES[targetLang] || 'English';
 
   const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
