@@ -1,17 +1,24 @@
 import { Sparkles, X, Shield } from 'lucide-react';
 import { t } from '../i18n';
 
-const CONSENT_KEY = 'pfm_ai_consent';
+const CONSENT_KEYS = {
+  prayer: 'pfm_ai_consent_prayer',
+  home: 'pfm_ai_consent_home',
+};
 
-export function hasAiConsent() {
-  return localStorage.getItem(CONSENT_KEY) === 'true';
+export function hasAiConsent(context = 'prayer') {
+  return localStorage.getItem(CONSENT_KEYS[context]) === 'true';
 }
 
-export function grantAiConsent() {
-  localStorage.setItem(CONSENT_KEY, 'true');
+export function grantAiConsent(context = 'prayer') {
+  localStorage.setItem(CONSENT_KEYS[context], 'true');
 }
 
-export default function AiConsentModal({ lang = 'en', onAccept, onCancel }) {
+// context: 'prayer' = sends prayer title + last update, 'home' = sends category names
+export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {
+  const noticeKey = context === 'home' ? 'aiConsentNoticeHome' : 'aiConsentNoticePrayer';
+  const bodyKey = context === 'home' ? 'aiConsentBodyHome' : 'aiConsentBodyPrayer';
+
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
       <div className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -28,12 +35,12 @@ export default function AiConsentModal({ lang = 'en', onAccept, onCancel }) {
         <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
           <Shield size={15} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} />
           <p className="text-xs leading-relaxed" style={{ color: 'var(--accent)' }}>
-            {t(lang, 'aiConsentNotice')}
+            {t(lang, noticeKey)}
           </p>
         </div>
 
         <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-2)' }}>
-          {t(lang, 'aiConsentBody')}
+          {t(lang, bodyKey)}
         </p>
 
         <div className="flex gap-2">
@@ -45,7 +52,7 @@ export default function AiConsentModal({ lang = 'en', onAccept, onCancel }) {
             {t(lang, 'aiConsentDecline')}
           </button>
           <button
-            onClick={() => { grantAiConsent(); onAccept(); }}
+            onClick={() => { grantAiConsent(context); onAccept(); }}
             className="flex-1 py-2.5 rounded-xl text-sm font-medium"
             style={{ background: 'var(--accent)', color: '#fff' }}
           >

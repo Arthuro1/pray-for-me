@@ -9,6 +9,7 @@ import { Sparkles, Loader2, Plus } from 'lucide-react';
 import { t } from '../i18n';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
+import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -176,6 +177,7 @@ export default function HomeTab({ onEdit, onAdd }) {
   const [suggestError, setSuggestError] = useState(null);
   const [addedTitles, setAddedTitles] = useState(new Set());
   const [verse, setVerse] = useState(null);
+  const [showAiConsent, setShowAiConsent] = useState(false);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
 
@@ -211,6 +213,8 @@ export default function HomeTab({ onEdit, onAdd }) {
       });
   }, [lang]);
 
+  useEffect(() => { setDaySuggestions([]); setSuggestError(null); }, [lang]);
+
   const displayName = user?.user_metadata?.full_name?.split(' ')[0]
     || user?.email?.split('@')[0]
     || '';
@@ -221,6 +225,7 @@ export default function HomeTab({ onEdit, onAdd }) {
 
   const fetchDaySuggestions = async () => {
     if (loadingSuggestions || todayCategories.length === 0) return;
+    if (!hasAiConsent('home')) { setShowAiConsent(true); return; }
     setLoadingSuggestions(true);
     setSuggestError(null);
     const catNames = todayCategories.map(c => `${c.emoji} ${c.name}`).join(', ');
@@ -249,6 +254,14 @@ export default function HomeTab({ onEdit, onAdd }) {
 
   return (
     <div>
+      {showAiConsent && (
+        <AiConsentModal
+          lang={lang}
+          context="home"
+          onAccept={() => { setShowAiConsent(false); fetchDaySuggestions(); }}
+          onCancel={() => setShowAiConsent(false)}
+        />
+      )}
       {/* Hero banner */}
       <div className="relative overflow-hidden px-5 md:px-8 pt-10 pb-8" style={{ background: 'var(--header)' }}>
         <div className="absolute inset-0" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=40')", backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.07 }} />

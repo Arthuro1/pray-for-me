@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -28,6 +28,9 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
   const { tr } = useTranslationStore();
   const dateLocale = DATE_LOCALES[lang] || enUS;
 
+  // Clear pending AI suggestions when language changes so user can re-generate in new language
+  useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
+
   const livePrayer = prayers.find(p => p.id === prayer.id) || prayer;
   const isAnswered = livePrayer.status === 'answered';
   const prayerCategoryIds = (livePrayer.prayer_categories || []).map(pc => pc.category_id);
@@ -44,7 +47,7 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
 
   const fetchRecs = async () => {
     if (loadingRecs) return;
-    if (!hasAiConsent()) { setShowAiConsent(true); return; }
+    if (!hasAiConsent('prayer')) { setShowAiConsent(true); return; }
     const lastUpdate = (livePrayer.prayer_updates || []).slice(-1)[0]?.text || livePrayer.title;
     setLoadingRecs(true);
     setRecsError(null);
