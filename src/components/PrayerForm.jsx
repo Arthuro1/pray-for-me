@@ -4,7 +4,8 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 
-export default function PrayerForm({ onClose, editPrayer }) {
+// communityMode=true hides categories/forOther and calls onCommunitySubmit({ title, description, isAnonymous })
+export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
@@ -16,6 +17,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
     forOther: false,
     personName: '',
     phone: '',
+    isAnonymous: false,
   });
 
   useEffect(() => {
@@ -23,10 +25,11 @@ export default function PrayerForm({ onClose, editPrayer }) {
       setForm({
         title: editPrayer.title || '',
         description: editPrayer.description || '',
-        categoryIds: (editPrayer.prayer_categories || []).map((pc) => pc.category_id),
+        categoryIds: editPrayer.category_ids || (editPrayer.prayer_categories || []).map((pc) => pc.category_id),
         forOther: editPrayer.for_other || false,
         personName: editPrayer.person_name || '',
         phone: editPrayer.phone || '',
+        isAnonymous: editPrayer.is_anonymous || false,
       });
     }
   }, [editPrayer]);
@@ -43,6 +46,11 @@ export default function PrayerForm({ onClose, editPrayer }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
+    if (communityMode) {
+      onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds });
+      onClose();
+      return;
+    }
     if (editPrayer) {
       updatePrayer(editPrayer.id, form);
     } else {
@@ -66,7 +74,10 @@ export default function PrayerForm({ onClose, editPrayer }) {
         {/* Title bar */}
         <div className="flex items-center justify-between px-5 py-3">
           <h2 className="font-semibold text-lg" style={{ color: 'var(--text-1)' }}>
-            {editPrayer ? t(lang, 'editPrayer') : t(lang, 'newPrayer')}
+            {communityMode
+              ? (editPrayer ? t(lang, 'tipEditPrayer') : t(lang, 'newRequest'))
+              : (editPrayer ? t(lang, 'editPrayer') : t(lang, 'newPrayer'))
+            }
           </h2>
           <button onClick={onClose} title={t(lang, 'tipCloseForm')} className="p-1.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
             <X size={16} />
@@ -106,7 +117,21 @@ export default function PrayerForm({ onClose, editPrayer }) {
             />
           </div>
 
-          {/* Categories */}
+          {/* Anonymous toggle — community only */}
+          {communityMode && (
+            <label className="flex items-center gap-2.5 cursor-pointer">
+              <div
+                className="w-5 h-5 rounded-md flex items-center justify-center shrink-0"
+                style={{ background: form.isAnonymous ? 'var(--accent)' : 'var(--input-bg)', border: form.isAnonymous ? 'none' : '0.5px solid var(--input-border)' }}
+                onClick={() => setForm(f => ({ ...f, isAnonymous: !f.isAnonymous }))}
+              >
+                {form.isAnonymous && <span className="text-white text-xs font-bold">✓</span>}
+              </div>
+              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'anonymous')}</span>
+            </label>
+          )}
+
+          {/* Categories — both modes */}
           <div>
             <label className="text-xs font-semibold uppercase tracking-widest mb-2 block" style={{ color: 'var(--text-3)' }}>
               {t(lang, 'categories')} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#c5bdd4' }}>{t(lang, 'multipleAllowed')}</span>
@@ -133,7 +158,8 @@ export default function PrayerForm({ onClose, editPrayer }) {
             </div>
           </div>
 
-          {/* For other */}
+          {/* forOther — personal mode only */}
+          {!communityMode && <>
           <div>
             <button
               type="button"
@@ -176,6 +202,7 @@ export default function PrayerForm({ onClose, editPrayer }) {
               </div>
             </div>
           )}
+          </>}
 
           {/* Actions */}
           <div className="flex gap-3 pt-1">

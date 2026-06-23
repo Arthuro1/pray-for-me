@@ -25,6 +25,7 @@ create table community_prayers (
   title text not null,
   description text,
   is_anonymous boolean default false,
+  category_ids uuid[] default '{}',
   created_at timestamptz default now()
 );
 
@@ -124,11 +125,29 @@ create policy "Group members can post prayers" on community_prayers
     group_id in (select get_my_group_ids()) and user_id = auth.uid()
   );
 
-create policy "Authors can update their prayers" on community_prayers
-  for update using (user_id = auth.uid())
-  with check (group_id in (select get_my_group_ids()) and user_id = auth.uid());
-create policy "Authors can delete their prayers" on community_prayers
-  for delete using (user_id = auth.uid());
+-- Returns group IDs where the current user is an admin (security definer avoids RLS recursion)
+create or replace function get_my_admin_group_ids()
+returns setof uuid
+language sql
+security definer
+stable
+as $$
+  select group_id from group_members where user_id = auth.uid() and role = 'admin'
+$$;
+
+create policy "Authors and admins can update prayers" on community_prayers
+  for update using (
+    user_id = auth.uid() or group_id in (select get_my_admin_group_ids())
+  )
+  with check (
+    group_id in (select get_my_group_ids()) and (
+      user_id = auth.uid() or group_id in (select get_my_admin_group_ids())
+    )
+  );
+create policy "Authors and admins can delete prayers" on community_prayers
+  for delete using (
+    user_id = auth.uid() or group_id in (select get_my_admin_group_ids())
+  );
 
 -- community_updates: group members only
 create policy "Group members can read updates" on community_updates

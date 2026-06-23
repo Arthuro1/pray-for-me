@@ -124,10 +124,10 @@ const useCommunityStore = create((set, get) => ({
     }
   },
 
-  addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous }) => {
+  addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds }) => {
     const { data, error } = await supabase
       .from('community_prayers')
-      .insert({ group_id: groupId, user_id: userId, author_name: authorName, title, description, is_anonymous: isAnonymous })
+      .insert({ group_id: groupId, user_id: userId, author_name: authorName, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
       .select()
       .single();
     if (error) return { error: error.message };
@@ -136,15 +136,15 @@ const useCommunityStore = create((set, get) => ({
     return { prayer: data };
   },
 
-  updatePrayer: async ({ prayerId, title, description }) => {
+  updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds }) => {
     const { data, error } = await supabase
       .from('community_prayers')
-      .update({ title, description })
+      .update({ title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
       .eq('id', prayerId)
       .select()
       .single();
     if (error) return { error: error.message };
-    set(state => ({ prayers: state.prayers.map(p => p.id === prayerId ? { ...p, title, description } : p) }));
+    set(state => ({ prayers: state.prayers.map(p => p.id === prayerId ? { ...p, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] } : p) }));
     return { prayer: data };
   },
 

@@ -5,6 +5,7 @@ import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import PrayerDetail from './PrayerDetail';
+import PrayerForm from '../components/PrayerForm';
 import { formatDistanceToNow } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 
@@ -97,61 +98,6 @@ function NoGroupView({ lang, userId, onDone }) {
           <button onClick={() => { setMode(null); setError(''); }} className="text-sm py-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'cancel')}</button>
         </div>
       )}
-    </div>
-  );
-}
-
-// ── New prayer request form ───────────────────────────────────────────────────
-function NewRequestModal({ lang, userId, groupId, onClose }) {
-  const { addPrayer } = useCommunityStore();
-  const { user } = useAuthStore();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const authorName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '?';
-
-  const handleSubmit = async () => {
-    if (!title.trim() || loading) return;
-    setLoading(true);
-    await addPrayer({ groupId, userId, authorName, title: title.trim(), description: description.trim(), isAnonymous });
-    setLoading(false);
-    onClose();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
-      <div className="w-full max-w-md rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-        <h3 className="font-semibold text-base mb-4" style={{ color: 'var(--text-1)' }}>{t(lang, 'newRequest')}</h3>
-        <input
-          autoFocus
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          placeholder={t(lang, 'title')}
-          className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none mb-3"
-          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-        />
-        <textarea
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          placeholder={t(lang, 'description')}
-          rows={3}
-          className="w-full px-4 py-3 rounded-xl text-sm resize-none focus:outline-none mb-3"
-          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-        />
-        <label className="flex items-center gap-2 text-sm mb-4 cursor-pointer" style={{ color: 'var(--text-2)' }}>
-          <input type="checkbox" checked={isAnonymous} onChange={e => setIsAnonymous(e.target.checked)} className="rounded" />
-          {t(lang, 'anonymous')}
-        </label>
-        <div className="flex gap-2">
-          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
-            {t(lang, 'cancel')}
-          </button>
-          <button onClick={handleSubmit} disabled={!title.trim() || loading} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-            {loading ? <Loader2 size={16} className="animate-spin mx-auto" /> : t(lang, 'send')}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
@@ -283,7 +229,7 @@ export default function CommunityTab() {
   const { settings } = usePrayerStore();
   const lang = settings.language || 'en';
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers, testimonies, userReactions, loading, fetchGroups, fetchUserReactions } = useCommunityStore();
+  const { groups, activeGroupId, prayers, testimonies, userReactions, loading, fetchGroups, fetchUserReactions, addPrayer } = useCommunityStore();
   const [subTab, setSubTab] = useState('requests');
   const [selectedPrayer, setSelectedPrayer] = useState(null);
   const [showNewRequest, setShowNewRequest] = useState(false);
@@ -324,11 +270,13 @@ export default function CommunityTab() {
   return (
     <div>
       {showNewRequest && (
-        <NewRequestModal
-          lang={lang}
-          userId={user.id}
-          groupId={activeGroupId}
+        <PrayerForm
+          communityMode
           onClose={() => setShowNewRequest(false)}
+          onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
+            const authorName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '?';
+            await addPrayer({ groupId: activeGroupId, userId: user.id, authorName, title, description, isAnonymous, categoryIds });
+          }}
         />
       )}
 
