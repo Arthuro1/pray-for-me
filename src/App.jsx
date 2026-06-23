@@ -11,6 +11,7 @@ import LandingPage from './pages/LandingPage';
 import useAuthStore from './store/authStore';
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
+import useCommunityStore from './store/communityStore';
 import { scheduleNotifications } from './notifications';
 import { Loader2 } from 'lucide-react';
 
@@ -23,6 +24,7 @@ export default function App() {
   const { user, loading: authLoading, init } = useAuthStore();
   const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
   const { loadTranslations, translateContent } = useTranslationStore();
+  const { fetchPendingCount } = useCommunityStore();
 
   useEffect(() => {
     init();
@@ -34,6 +36,7 @@ export default function App() {
     if (user?.id) {
       loadData(user.id);
       loadTranslations(user.id);
+      fetchPendingCount(user.id);
     }
   }, [user?.id]);
 
