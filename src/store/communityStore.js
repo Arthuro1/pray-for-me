@@ -136,6 +136,25 @@ const useCommunityStore = create((set, get) => ({
     return { prayer: data };
   },
 
+  updatePrayer: async ({ prayerId, title, description }) => {
+    const { data, error } = await supabase
+      .from('community_prayers')
+      .update({ title, description })
+      .eq('id', prayerId)
+      .select()
+      .single();
+    if (error) return { error: error.message };
+    set(state => ({ prayers: state.prayers.map(p => p.id === prayerId ? { ...p, title, description } : p) }));
+    return { prayer: data };
+  },
+
+  deleteCommunityPrayer: async (prayerId) => {
+    const { error } = await supabase.from('community_prayers').delete().eq('id', prayerId);
+    if (error) return { error: error.message };
+    set(state => ({ prayers: state.prayers.filter(p => p.id !== prayerId) }));
+    return {};
+  },
+
   fetchPrayerUpdates: async (prayerId) => {
     const { data } = await supabase
       .from('community_updates')

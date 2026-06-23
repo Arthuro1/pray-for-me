@@ -124,6 +124,12 @@ create policy "Group members can post prayers" on community_prayers
     group_id in (select get_my_group_ids()) and user_id = auth.uid()
   );
 
+create policy "Authors can update their prayers" on community_prayers
+  for update using (user_id = auth.uid())
+  with check (group_id in (select get_my_group_ids()) and user_id = auth.uid());
+create policy "Authors can delete their prayers" on community_prayers
+  for delete using (user_id = auth.uid());
+
 -- community_updates: group members only
 create policy "Group members can read updates" on community_updates
   for select using (

@@ -45,11 +45,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [communityTestimonyAnon, setCommunityTestimonyAnon] = useState(false);
   const [postingTestimony, setPostingTestimony] = useState(false);
   const [testimonySent, setTestimonySent] = useState(false);
+  const [showCommunityEdit, setShowCommunityEdit] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDesc, setEditDesc] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { groups, activeGroupId, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony } = useCommunityStore();
+  const { groups, activeGroupId, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer } = useCommunityStore();
 
   const dateLocale = DATE_LOCALES[lang] || enUS;
   const authorName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '?';
@@ -80,6 +86,26 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setTestimonySent(true);
     setPostingTestimony(false);
     setShowCommunityTestimony(false);
+  };
+
+  const handleCommunityEdit = () => {
+    setEditTitle(communityPrayer.title);
+    setEditDesc(communityPrayer.description || '');
+    setShowCommunityEdit(true);
+  };
+
+  const handleSaveCommunityEdit = async () => {
+    if (!editTitle.trim() || savingEdit) return;
+    setSavingEdit(true);
+    await updateCommunityPrayer({ prayerId: communityPrayer.id, title: editTitle.trim(), description: editDesc.trim() });
+    setSavingEdit(false);
+    setShowCommunityEdit(false);
+  };
+
+  const handleDeleteCommunity = async () => {
+    setDeleting(true);
+    await deleteCommunityPrayer(communityPrayer.id);
+    onBack();
   };
 
   // ── Personal mode handlers ────────────────────────────────────────────────
@@ -174,6 +200,52 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         </div>
       )}
+      {/* Community edit modal */}
+      {showCommunityEdit && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-5 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, 'tipEditPrayer')}</h3>
+            <input
+              type="text"
+              value={editTitle}
+              onChange={e => setEditTitle(e.target.value)}
+              className="w-full text-sm rounded-xl px-3 py-2.5 focus:outline-none"
+              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+              autoFocus
+            />
+            <textarea
+              value={editDesc}
+              onChange={e => setEditDesc(e.target.value)}
+              rows={3}
+              className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none"
+              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            />
+            <div className="flex gap-2 pt-1">
+              <button onClick={() => setShowCommunityEdit(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+              <button onClick={handleSaveCommunityEdit} disabled={!editTitle.trim() || savingEdit} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                {savingEdit ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'addBtn')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Community delete confirm */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--text-1)' }}>{t(lang, 'tipDeletePrayer')}</h3>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
+            <div className="flex gap-2">
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+              <button onClick={handleDeleteCommunity} disabled={deleting} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: '#e53e3e' }}>
+                {deleting ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'tipDeletePrayer')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Sticky header */}
       <div
         className="sticky top-0 z-10 px-4 md:px-8 py-4 flex items-center gap-3"
@@ -200,15 +272,27 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {isCommunity ? (
-            <button
-              onClick={() => toggleReaction(communityPrayer.id, user.id)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
-              style={{ background: communityHasReacted ? '#fff' : 'rgba(255,255,255,0.15)', color: communityHasReacted ? 'var(--accent)' : '#fff' }}
-            >
-              <HandHeart size={14} />
-              {communityReactionCount > 0 && <span>{communityReactionCount}</span>}
-              <span>{t(lang, 'iAmPraying')}</span>
-            </button>
+            <>
+              {communityPrayer.user_id === user?.id && (
+                <>
+                  <button onClick={handleCommunityEdit} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                    <Edit2 size={15} />
+                  </button>
+                  <button onClick={() => setShowDeleteConfirm(true)} title={t(lang, 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                    <Trash2 size={15} />
+                  </button>
+                </>
+              )}
+              <button
+                onClick={() => toggleReaction(communityPrayer.id, user.id)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+                style={{ background: communityHasReacted ? '#fff' : 'rgba(255,255,255,0.15)', color: communityHasReacted ? 'var(--accent)' : '#fff' }}
+              >
+                <HandHeart size={14} />
+                {communityReactionCount > 0 && <span>{communityReactionCount}</span>}
+                <span>{t(lang, 'iAmPraying')}</span>
+              </button>
+            </>
           ) : (
             <>
               {groups.length > 0 && !shared && (
