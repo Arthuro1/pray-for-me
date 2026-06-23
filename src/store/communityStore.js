@@ -195,6 +195,24 @@ const useCommunityStore = create((set, get) => ({
     if (data) set({ testimonies: data });
   },
 
+  addCommunityPrayerPoint: async (prayerId, point) => {
+    const current = get().prayers.find(p => p.id === prayerId);
+    if (!current) return { error: 'Prayer not found' };
+    const newPoint = { ...point, id: crypto.randomUUID() };
+    const points = [...(current.prayer_points || []), newPoint];
+    const { error } = await supabase
+      .from('community_prayers')
+      .update({ prayer_points: points })
+      .eq('id', prayerId)
+      .select();
+    if (error) {
+      console.error('addCommunityPrayerPoint error:', error);
+      return toError(error);
+    }
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, prayer_points: points })) }));
+    return {};
+  },
+
   addTestimony: async ({ groupId, userId, authorName, content, isAnonymous, communityPrayerId }) => {
     const { data, error } = await supabase
       .from('testimonies')

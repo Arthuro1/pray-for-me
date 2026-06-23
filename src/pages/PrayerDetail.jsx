@@ -12,8 +12,6 @@ import { t } from '../i18n';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import PrayerForm from '../components/PrayerForm';
 
-const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
-
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
   const isCommunity = !!communityPrayer;
@@ -54,7 +52,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { groups, activeGroupId, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -106,7 +104,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Clear pending AI suggestions when language changes so user can re-generate in new language
   useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
 
-  const livePrayer = isCommunity ? communityPrayer : (prayers.find(p => p.id === prayer.id) || prayer);
+  // In community mode, read from store so updates (prayer points, edits) reflect immediately
+  const livePrayer = isCommunity
+    ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
+    : (prayers.find(p => p.id === prayer.id) || prayer);
   const isAnswered = !isCommunity && livePrayer.status === 'answered';
   const prayerCategoryIds = isCommunity ? (livePrayer.category_ids || []) : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
@@ -452,8 +453,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <button
                     onClick={async () => {
                       if (isCommunity) {
-                        const { update } = await addCommunityUpdate({ prayerId: communityPrayer.id, userId: user.id, authorName, text: rec.title, isAnonymous: false });
-                        if (update) setCommunityUpdates(prev => [...prev, update]);
+                        await addCommunityPrayerPoint(communityPrayer.id, { title: rec.title, verses: rec.verses });
                       } else {
                         addPrayerPoint(livePrayer.id, { title: rec.title, verses: rec.verses });
                       }

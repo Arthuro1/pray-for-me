@@ -26,6 +26,7 @@ create table community_prayers (
   description text,
   is_anonymous boolean default false,
   category_ids uuid[] default '{}',
+  prayer_points jsonb[] default '{}',
   created_at timestamptz default now()
 );
 
