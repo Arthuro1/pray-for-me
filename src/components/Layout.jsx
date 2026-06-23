@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from 'react';
-import { Home, BookOpen, Calendar, Settings, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, BookOpen, Calendar, Settings, Plus, ChevronLeft, ChevronRight, Users } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 
@@ -31,6 +31,7 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
   const tabs = [
     { id: 'home', label: t(lang, 'today'), icon: Home },
     { id: 'prayers', label: t(lang, 'prayers'), icon: BookOpen },
+    { id: 'community', label: t(lang, 'community'), icon: Users },
     { id: 'plan', label: t(lang, 'plan'), icon: Calendar },
     { id: 'settings', label: t(lang, 'settings'), icon: Settings },
   ];

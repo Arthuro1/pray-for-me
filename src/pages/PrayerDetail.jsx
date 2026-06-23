@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import { format } from 'date-fns';
+import useAuthStore from '../store/authStore';
+import useCommunityStore from '../store/communityStore';
+import { format, formatDistanceToNow } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
@@ -10,7 +12,11 @@ import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
 
-export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
+// communityPrayer prop switches the component to community mode
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
+  const isCommunity = !!communityPrayer;
+
+  // ── Personal mode state ──────────────────────────────────────────────────
   const [newUpdate, setNewUpdate] = useState('');
   const [showTestimony, setShowTestimony] = useState(true);
   const [testimony, setTestimony] = useState('');
@@ -20,21 +26,81 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
   const [expandedVerse, setExpandedVerse] = useState(null);
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
-  const [addingVerseTo, setAddingVerseTo] = useState(null); // pointId
+  const [addingVerseTo, setAddingVerseTo] = useState(null);
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareAnon, setShareAnon] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shared, setShared] = useState(false);
+
+  // ── Community mode state ─────────────────────────────────────────────────
+  const [communityUpdates, setCommunityUpdates] = useState([]);
+  const [loadingUpdates, setLoadingUpdates] = useState(false);
+  const [wordText, setWordText] = useState('');
+  const [wordAnon, setWordAnon] = useState(false);
+  const [sendingWord, setSendingWord] = useState(false);
+  const [showCommunityTestimony, setShowCommunityTestimony] = useState(false);
+  const [communityTestimonyText, setCommunityTestimonyText] = useState('');
+  const [communityTestimonyAnon, setCommunityTestimonyAnon] = useState(false);
+  const [postingTestimony, setPostingTestimony] = useState(false);
+  const [testimonySent, setTestimonySent] = useState(false);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
+  const { user } = useAuthStore();
+  const { groups, activeGroupId, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony } = useCommunityStore();
+
   const dateLocale = DATE_LOCALES[lang] || enUS;
+  const authorName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '?';
+
+  // ── Community mode effects & handlers ────────────────────────────────────
+  useEffect(() => {
+    if (!isCommunity) return;
+    setLoadingUpdates(true);
+    fetchPrayerUpdates(communityPrayer.id).then(data => {
+      setCommunityUpdates(data);
+      setLoadingUpdates(false);
+    });
+  }, [communityPrayer?.id]);
+
+  const handleSendWord = async () => {
+    if (!wordText.trim() || sendingWord) return;
+    setSendingWord(true);
+    const { update } = await addCommunityUpdate({ prayerId: communityPrayer.id, userId: user.id, authorName, text: wordText.trim(), isAnonymous: wordAnon });
+    if (update) setCommunityUpdates(prev => [...prev, update]);
+    setWordText('');
+    setSendingWord(false);
+  };
+
+  const handlePostCommunityTestimony = async () => {
+    if (!communityTestimonyText.trim() || postingTestimony) return;
+    setPostingTestimony(true);
+    await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: communityTestimonyText.trim(), isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id });
+    setTestimonySent(true);
+    setPostingTestimony(false);
+    setShowCommunityTestimony(false);
+  };
+
+  // ── Personal mode handlers ────────────────────────────────────────────────
+  const handleShare = async () => {
+    if (!activeGroupId || sharing) return;
+    setSharing(true);
+    await addCommunityPrayer({ groupId: activeGroupId, userId: user.id, authorName, title: livePrayer.title, description: (livePrayer.prayer_updates || []).slice(-1)[0]?.text || '', isAnonymous: shareAnon });
+    setSharing(false);
+    setShared(true);
+    setShowShareModal(false);
+  };
 
   // Clear pending AI suggestions when language changes so user can re-generate in new language
   useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
 
-  const livePrayer = prayers.find(p => p.id === prayer.id) || prayer;
-  const isAnswered = livePrayer.status === 'answered';
-  const prayerCategoryIds = (livePrayer.prayer_categories || []).map(pc => pc.category_id);
+  const livePrayer = isCommunity ? communityPrayer : (prayers.find(p => p.id === prayer.id) || prayer);
+  const isAnswered = !isCommunity && livePrayer.status === 'answered';
+  const prayerCategoryIds = isCommunity ? [] : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
+  const communityHasReacted = isCommunity && userReactions.has(communityPrayer.id);
+  const communityReactionCount = isCommunity ? (communityPrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
 
   const bibleUrl = verse => `https://www.bible.com/search/bible?q=${encodeURIComponent(verse)}&version_id=93`;
 
@@ -81,6 +147,31 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
           onCancel={() => setShowAiConsent(false)}
         />
       )}
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <h3 className="font-semibold text-base mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'shareWithGroup')}</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
+            {groups.length > 1 && (
+              <p className="text-xs mb-3" style={{ color: 'var(--text-2)' }}>
+                → {groups.find(g => g.id === activeGroupId)?.name}
+              </p>
+            )}
+            <label className="flex items-center gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
+              <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
+              {t(lang, 'anonymous')}
+            </label>
+            <div className="flex gap-2">
+              <button onClick={() => setShowShareModal(false)} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+                {t(lang, 'cancel')}
+              </button>
+              <button onClick={handleShare} disabled={sharing} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'send')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Sticky header */}
       <div
         className="sticky top-0 z-10 px-4 md:px-8 py-4 flex items-center gap-3"
@@ -96,30 +187,41 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
         </button>
         <div className="flex-1 min-w-0">
           <h1 className="text-base font-semibold text-white truncate" style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}>
-            {tr(livePrayer.title, lang)}
+            {isCommunity ? livePrayer.title : tr(livePrayer.title, lang)}
           </h1>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            {format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale: dateLocale })}
-            {livePrayer.answered_at && ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale: dateLocale })}`}
+            {isCommunity
+              ? (livePrayer.is_anonymous ? t(lang, 'anonymous') : livePrayer.author_name) + ' · ' + formatDistanceToNow(new Date(livePrayer.created_at), { addSuffix: true, locale: dateLocale })
+              : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale: dateLocale }) + (livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale: dateLocale })}` : '')
+            }
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={() => onEdit(livePrayer)}
-            title={t(lang, 'tipEditPrayer')}
-            className="w-9 h-9 flex items-center justify-center rounded-full"
-            style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
-          >
-            <Edit2 size={15} />
-          </button>
-          <button
-            onClick={handleDelete}
-            title={t(lang, 'tipDeletePrayer')}
-            className="w-9 h-9 flex items-center justify-center rounded-full"
-            style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
-          >
-            <Trash2 size={15} />
-          </button>
+          {isCommunity ? (
+            <button
+              onClick={() => toggleReaction(communityPrayer.id, user.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+              style={{ background: communityHasReacted ? '#fff' : 'rgba(255,255,255,0.15)', color: communityHasReacted ? 'var(--accent)' : '#fff' }}
+            >
+              <HandHeart size={14} />
+              {communityReactionCount > 0 && <span>{communityReactionCount}</span>}
+              <span>{t(lang, 'iAmPraying')}</span>
+            </button>
+          ) : (
+            <>
+              {groups.length > 0 && !shared && (
+                <button onClick={() => setShowShareModal(true)} title={t(lang, 'shareWithGroup')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                  <Share2 size={15} />
+                </button>
+              )}
+              <button onClick={() => onEdit(livePrayer)} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                <Edit2 size={15} />
+              </button>
+              <button onClick={handleDelete} title={t(lang, 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                <Trash2 size={15} />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -159,8 +261,90 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
           </div>
         )}
 
-        {/* Prayer points */}
-        <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        {/* ── Community mode: member updates ── */}
+        {isCommunity && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'memberUpdates')}</p>
+
+            {loadingUpdates ? (
+              <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+            ) : communityUpdates.length === 0 ? (
+              <p className="text-sm italic mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
+            ) : (
+              <div className="space-y-3 mb-3">
+                {communityUpdates.map(u => (
+                  <div key={u.id} className="flex gap-3">
+                    <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
+                    <div>
+                      <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
+                        {u.is_anonymous ? t(lang, 'anonymous') : u.author_name}
+                        {' · '}{formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: dateLocale })}
+                      </p>
+                      <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{u.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                value={wordText}
+                onChange={e => setWordText(e.target.value)}
+                placeholder={t(lang, 'wordPlaceholder')}
+                className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                onKeyDown={e => e.key === 'Enter' && handleSendWord()}
+              />
+              <button onClick={handleSendWord} disabled={!wordText.trim() || sendingWord} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                {sendingWord ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+              </button>
+            </div>
+            <label className="flex items-center gap-2 text-xs mt-2 cursor-pointer" style={{ color: 'var(--text-3)' }}>
+              <input type="checkbox" checked={wordAnon} onChange={e => setWordAnon(e.target.checked)} className="rounded" />
+              {t(lang, 'anonymous')}
+            </label>
+          </div>
+        )}
+
+        {/* ── Community mode: testimony ── */}
+        {isCommunity && (
+          testimonySent ? (
+            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              🎉 {t(lang, 'testimony')}
+            </div>
+          ) : showCommunityTestimony ? (
+            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'postTestimony')}</p>
+              <textarea
+                value={communityTestimonyText}
+                onChange={e => setCommunityTestimonyText(e.target.value)}
+                rows={3}
+                className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none mb-3"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                autoFocus
+              />
+              <label className="flex items-center gap-2 text-xs mb-3 cursor-pointer" style={{ color: 'var(--text-3)' }}>
+                <input type="checkbox" checked={communityTestimonyAnon} onChange={e => setCommunityTestimonyAnon(e.target.checked)} className="rounded" />
+                {t(lang, 'anonymous')}
+              </label>
+              <div className="flex gap-2">
+                <button onClick={() => setShowCommunityTestimony(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+                <button onClick={handlePostCommunityTestimony} disabled={!communityTestimonyText.trim() || postingTestimony} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                  {postingTestimony ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'postTestimony')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setShowCommunityTestimony(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+              🎉 {t(lang, 'postTestimony')}
+            </button>
+          )
+        )}
+
+        {/* ── Personal mode: prayer points ── */}
+        {!isCommunity && <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {!isAnswered && (
@@ -383,9 +567,10 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
               </button>
             )
           )}
-        </div>
+        </div>}
 
-                {/* Updates */}
+        {/* ── Personal mode: updates, testimony, actions ── */}
+        {!isCommunity && <>
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'evolutions')}</p>
 
@@ -454,6 +639,7 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
             </button>
           )}
         </div>
+        </>}
       </div>
     </div>
   );

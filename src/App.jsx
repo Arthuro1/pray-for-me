@@ -5,6 +5,7 @@ import HomeTab from './pages/HomeTab';
 import PrayersTab from './pages/PrayersTab';
 import PlanTab from './pages/PlanTab';
 import SettingsTab from './pages/SettingsTab';
+import CommunityTab from './pages/CommunityTab';
 import AuthPage from './pages/AuthPage';
 import LandingPage from './pages/LandingPage';
 import useAuthStore from './store/authStore';
@@ -79,6 +80,7 @@ export default function App() {
     switch (currentTab) {
       case 'home': return <HomeTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} onAdd={() => { setEditPrayer(null); setShowForm(true); }} />;
       case 'prayers': return <PrayersTab onEdit={(p) => { setEditPrayer(p); setShowForm(true); }} />;
+      case 'community': return <CommunityTab />;
       case 'plan': return <PlanTab />;
       case 'settings': return <SettingsTab />;
       default: return <HomeTab />;
