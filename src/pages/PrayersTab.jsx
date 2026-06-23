@@ -4,8 +4,9 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
-import { Search, SlidersHorizontal, Users } from 'lucide-react';
+import { Search, SlidersHorizontal, Users, User, EyeOff, HeartHandshake } from 'lucide-react';
 import { t } from '../i18n';
+import { originAuthor } from '../utils/user';
 
 export default function PrayersTab() {
   const navigate = useNavigate();
@@ -143,6 +144,19 @@ export default function PrayersTab() {
                         {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
                       </p>
                     )}
+                    {prayer.for_other && prayer.person_name && (
+                      <p className="text-xs truncate mt-0.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
+                        <HeartHandshake size={11} /> {prayer.person_name}
+                      </p>
+                    )}
+                    {(() => {
+                      const oa = originAuthor(prayer);
+                      return oa ? (
+                        <p className="text-xs truncate mt-0.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
+                          <User size={11} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
+                        </p>
+                      ) : null;
+                    })()}
                     {(prayerShares[prayer.id] || []).length > 0 && (
                       <div className="flex flex-wrap items-center gap-1 mt-1.5">
                         <Users size={11} style={{ color: 'var(--accent)' }} />
@@ -151,6 +165,11 @@ export default function PrayersTab() {
                             {s.groupName}
                           </span>
                         ))}
+                        {prayerShares[prayer.id].some(s => s.isAnonymous) && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+                            <EyeOff size={9} /> {t(lang, 'anonymous')}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

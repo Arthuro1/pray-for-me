@@ -147,6 +147,8 @@ const usePrayerStore = create((set, get) => ({
         description: communityPrayer.description || '',
         status: 'active',
         community_origin_id: communityPrayer.id,
+        origin_author_name: communityPrayer.is_anonymous ? null : communityPrayer.author_name,
+        origin_is_anonymous: !!communityPrayer.is_anonymous,
       })
       .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .single();

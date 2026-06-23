@@ -6,7 +6,7 @@ import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
-import { getAuthorName } from '../utils/user';
+import { getAuthorName, originAuthor } from '../utils/user';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -32,6 +32,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showShareModal, setShowShareModal] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shareGroupIds, setShareGroupIds] = useState(new Set());
+  const [shareAnon, setShareAnon] = useState(false);
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -119,6 +120,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const openShareModal = () => {
     setShareGroupIds(new Set(sharedGroups.map(g => g.groupId)));
+    setShareAnon(sharedGroups.some(g => g.isAnonymous));
     setShowShareModal(true);
   };
 
@@ -133,7 +135,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleSaveShares = async () => {
     if (sharing) return;
     setSharing(true);
-    await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName });
+    await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
     setSharing(false);
     setShowShareModal(false);
   };
@@ -234,6 +236,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 );
               })}
             </div>
+            <label className="flex items-center gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
+              <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
+              {t(lang, 'anonymous')}
+            </label>
             <div className="flex gap-2">
               <button onClick={() => setShowShareModal(false)} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
                 {t(lang, 'cancel')}
@@ -293,7 +299,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {isCommunity
               ? (livePrayer.is_anonymous ? t(lang, 'anonymous') : livePrayer.author_name) + ' · ' + timeAgo(livePrayer.created_at, lang)
-              : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale }) + (livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale })}` : '')
+              : (() => {
+                  const oa = originAuthor(livePrayer);
+                  const author = oa ? `${oa.anonymous ? t(lang, 'anonymous') : oa.name} · ` : '';
+                  const date = format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale });
+                  const answered = livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale })}` : '';
+                  return author + date + answered;
+                })()
             }
           </p>
         </div>

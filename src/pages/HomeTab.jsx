@@ -5,8 +5,9 @@ import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus } from 'lucide-react';
+import { Sparkles, Loader2, Plus, User } from 'lucide-react';
 import { t } from '../i18n';
+import { originAuthor } from '../utils/user';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -392,6 +393,14 @@ export default function HomeTab({ onAdd }) {
                         {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
                       </p>
                     )}
+                    {(() => {
+                      const oa = originAuthor(prayer);
+                      return oa ? (
+                        <p className="text-xs truncate mt-0.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
+                          <User size={11} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
+                        </p>
+                      ) : null;
+                    })()}
                   </div>
                   <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
                     {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}

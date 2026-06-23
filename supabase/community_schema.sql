@@ -347,6 +347,10 @@ end $$;
 -- Provenance: a personal prayer can be a saved copy of a community prayer.
 -- Used to dedupe "Add to my prayers" and show the already-saved state.
 alter table prayers add column if not exists community_origin_id uuid references community_prayers(id) on delete set null;
+-- Original request author carried over when saving a community prayer, so the
+-- personal list can credit the author (or show "anonymous").
+alter table prayers add column if not exists origin_author_name text;
+alter table prayers add column if not exists origin_is_anonymous boolean default false;
 
 -- Per-member group preferences (kept separate from group_members so a user
 -- can't escalate their own role via an UPDATE). auto_add = automatically copy

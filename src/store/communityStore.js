@@ -55,19 +55,19 @@ const useCommunityStore = create((set, get) => ({
   fetchPrayerShares: async (userId) => {
     const { data } = await supabase
       .from('community_prayers')
-      .select('source_prayer_id, group_id, groups(name)')
+      .select('source_prayer_id, group_id, is_anonymous, groups(name)')
       .eq('user_id', userId)
       .not('source_prayer_id', 'is', null);
     const map = {};
     (data || []).forEach(r => {
-      (map[r.source_prayer_id] ||= []).push({ groupId: r.group_id, groupName: r.groups?.name || '?' });
+      (map[r.source_prayer_id] ||= []).push({ groupId: r.group_id, groupName: r.groups?.name || '?', isAnonymous: !!r.is_anonymous });
     });
     set({ prayerShares: map });
   },
 
   // Reconciles which groups a personal prayer is shared to: inserts community
   // copies for newly selected groups, removes copies for deselected ones.
-  setPrayerShares: async ({ prayer, groupIds, userId, authorName }) => {
+  setPrayerShares: async ({ prayer, groupIds, userId, authorName, isAnonymous = false }) => {
     const { data: existing } = await supabase
       .from('community_prayers')
       .select('id, group_id')
@@ -91,6 +91,7 @@ const useCommunityStore = create((set, get) => ({
         category_ids: categoryIds,
         prayer_points: points,
         source_prayer_id: prayer.id,
+        is_anonymous: isAnonymous,
         is_answered: prayer.status === 'answered',
       }))).select('id');
       if (error) return toError(error);
@@ -110,6 +111,12 @@ const useCommunityStore = create((set, get) => ({
     }
     if (toRemove.length > 0) {
       await supabase.from('community_prayers').delete().in('id', toRemove.map(e => e.id));
+    }
+    // Keep anonymity consistent across all remaining copies of this prayer.
+    if (target.size > 0) {
+      await supabase.from('community_prayers')
+        .update({ is_anonymous: isAnonymous })
+        .eq('source_prayer_id', prayer.id);
     }
     await get().fetchPrayerShares(userId);
     return {};
