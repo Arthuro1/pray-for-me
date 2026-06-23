@@ -48,6 +48,72 @@ const useCommunityStore = create((set, get) => ({
   userReactions: new Set(),
   loading: false,
   pendingCount: 0,
+  // { [sourcePrayerId]: [{ groupId, groupName }] } — where each personal prayer is shared.
+  prayerShares: {},
+
+  // Loads the share map for the current user's shared personal prayers.
+  fetchPrayerShares: async (userId) => {
+    const { data } = await supabase
+      .from('community_prayers')
+      .select('source_prayer_id, group_id, groups(name)')
+      .eq('user_id', userId)
+      .not('source_prayer_id', 'is', null);
+    const map = {};
+    (data || []).forEach(r => {
+      (map[r.source_prayer_id] ||= []).push({ groupId: r.group_id, groupName: r.groups?.name || '?' });
+    });
+    set({ prayerShares: map });
+  },
+
+  // Reconciles which groups a personal prayer is shared to: inserts community
+  // copies for newly selected groups, removes copies for deselected ones.
+  setPrayerShares: async ({ prayer, groupIds, userId, authorName }) => {
+    const { data: existing } = await supabase
+      .from('community_prayers')
+      .select('id, group_id')
+      .eq('source_prayer_id', prayer.id);
+
+    const existingGroupIds = new Set((existing || []).map(e => e.group_id));
+    const target = new Set(groupIds);
+    const toAdd = groupIds.filter(g => !existingGroupIds.has(g));
+    const toRemove = (existing || []).filter(e => !target.has(e.group_id));
+
+    if (toAdd.length > 0) {
+      const categoryIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
+      // Seed new copies with the prayer's current points so they match the source.
+      const points = (prayer.prayer_points || []).map(pp => ({ id: pp.id, title: pp.title, verses: pp.verses || [] }));
+      const { data: created, error } = await supabase.from('community_prayers').insert(toAdd.map(gid => ({
+        group_id: gid,
+        user_id: userId,
+        author_name: authorName,
+        title: prayer.title,
+        description: prayer.description || '',
+        category_ids: categoryIds,
+        prayer_points: points,
+        source_prayer_id: prayer.id,
+        is_answered: prayer.status === 'answered',
+      }))).select('id');
+      if (error) return toError(error);
+
+      // Seed new copies with the prayer's existing updates too.
+      const updates = prayer.prayer_updates || [];
+      if (updates.length > 0 && created) {
+        const rows = created.flatMap(c => updates.map(u => ({
+          community_prayer_id: c.id,
+          user_id: userId,
+          author_name: u.author_name || authorName,
+          text: u.text,
+          is_anonymous: u.is_anonymous || false,
+        })));
+        await supabase.from('community_updates').insert(rows);
+      }
+    }
+    if (toRemove.length > 0) {
+      await supabase.from('community_prayers').delete().in('id', toRemove.map(e => e.id));
+    }
+    await get().fetchPrayerShares(userId);
+    return {};
+  },
 
   // Count of incoming friend requests + group invitations (drives the nav badge).
   fetchPendingCount: async (userId) => {
@@ -202,16 +268,24 @@ const useCommunityStore = create((set, get) => ({
     return data || [];
   },
 
-  addUpdate: async ({ prayerId, userId, authorName, text, isAnonymous }) => {
-    const { data, error } = await supabase
-      .from('community_updates')
-      .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, text, is_anonymous: isAnonymous })
-      .select()
-      .single();
-    if (error) return toError(error);
+  // When the community prayer is shared from a personal one (sourcePrayerId),
+  // route through sync_add_update so the update also reaches the personal prayer
+  // and any sibling group copies. Otherwise write the community update directly.
+  addUpdate: async ({ prayerId, sourcePrayerId, userId, authorName, text, isAnonymous }) => {
+    if (sourcePrayerId) {
+      const { error } = await supabase.rpc('sync_add_update', {
+        p_source: sourcePrayerId, p_text: text, p_author: authorName, p_anon: isAnonymous,
+      });
+      if (error) return toError(error);
+    } else {
+      const { error } = await supabase
+        .from('community_updates')
+        .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, text, is_anonymous: isAnonymous });
+      if (error) return toError(error);
+    }
     const updated = await fetchPrayerWithCounts(prayerId);
     if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
-    return { update: data };
+    return {};
   },
 
   fetchTestimonies: async (groupId) => {
@@ -223,10 +297,28 @@ const useCommunityStore = create((set, get) => ({
     if (data) set({ testimonies: data });
   },
 
-  addCommunityPrayerPoint: async (prayerId, point) => {
+  // When the community prayer is shared from a personal one (sourcePrayerId),
+  // route through sync_add_point so the point also reaches the personal prayer
+  // and any sibling group copies. Otherwise append to this prayer only.
+  addCommunityPrayerPoint: async (prayerId, point, sourcePrayerId) => {
+    // Normalize legacy single-verse points ({ verse }) into a verses array.
+    const verses = point.verses
+      ? point.verses
+      : point.verse ? [{ ref: point.verse, text: point.verseText || '' }] : [];
+
+    if (sourcePrayerId) {
+      const { error } = await supabase.rpc('sync_add_point', {
+        p_source: sourcePrayerId, p_title: point.title, p_verses: verses,
+      });
+      if (error) { console.error('sync_add_point error:', error); return toError(error); }
+      const updated = await fetchPrayerWithCounts(prayerId);
+      if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+      return {};
+    }
+
     const current = get().prayers.find(p => p.id === prayerId);
     if (!current) return { error: 'Prayer not found' };
-    const newPoint = { ...point, id: crypto.randomUUID() };
+    const newPoint = { id: crypto.randomUUID(), title: point.title, verses };
     const points = [...(current.prayer_points || []), newPoint];
     const { error } = await supabase
       .from('community_prayers')
@@ -238,6 +330,52 @@ const useCommunityStore = create((set, get) => ({
       return toError(error);
     }
     set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, prayer_points: points })) }));
+    return {};
+  },
+
+  // Removes a point. Shared → RPC fan-out; standalone → edit this prayer's jsonb.
+  removeCommunityPrayerPoint: async (prayerId, pointId, sourcePrayerId) => {
+    if (sourcePrayerId) {
+      const { error } = await supabase.rpc('sync_remove_point', { p_source: sourcePrayerId, p_point_id: pointId });
+      if (error) return toError(error);
+    } else {
+      const current = get().prayers.find(p => p.id === prayerId);
+      const points = (current?.prayer_points || []).filter(pp => pp.id !== pointId);
+      const { error } = await supabase.from('community_prayers').update({ prayer_points: points }).eq('id', prayerId);
+      if (error) return toError(error);
+    }
+    const updated = await fetchPrayerWithCounts(prayerId);
+    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+    return {};
+  },
+
+  addCommunityVerse: async (prayerId, pointId, verse, sourcePrayerId) => {
+    if (sourcePrayerId) {
+      const { error } = await supabase.rpc('sync_add_verse', { p_source: sourcePrayerId, p_point_id: pointId, p_verse: verse });
+      if (error) return toError(error);
+    } else {
+      const current = get().prayers.find(p => p.id === prayerId);
+      const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: [...(pp.verses || []), verse] } : pp);
+      const { error } = await supabase.from('community_prayers').update({ prayer_points: points }).eq('id', prayerId);
+      if (error) return toError(error);
+    }
+    const updated = await fetchPrayerWithCounts(prayerId);
+    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+    return {};
+  },
+
+  removeCommunityVerse: async (prayerId, pointId, verseRef, sourcePrayerId) => {
+    if (sourcePrayerId) {
+      const { error } = await supabase.rpc('sync_remove_verse', { p_source: sourcePrayerId, p_point_id: pointId, p_verse_ref: verseRef });
+      if (error) return toError(error);
+    } else {
+      const current = get().prayers.find(p => p.id === prayerId);
+      const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: (pp.verses || []).filter(v => v.ref !== verseRef) } : pp);
+      const { error } = await supabase.from('community_prayers').update({ prayer_points: points }).eq('id', prayerId);
+      if (error) return toError(error);
+    }
+    const updated = await fetchPrayerWithCounts(prayerId);
+    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
     return {};
   },
 

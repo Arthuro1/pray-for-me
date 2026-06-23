@@ -30,9 +30,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [shareAnon, setShareAnon] = useState(false);
   const [sharing, setSharing] = useState(false);
-  const [shared, setShared] = useState(false);
+  const [shareGroupIds, setShareGroupIds] = useState(new Set());
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -52,7 +51,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, addPrayer: addCommunityPrayer, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -70,8 +69,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleSendWord = async () => {
     if (!wordText.trim() || sendingWord) return;
     setSendingWord(true);
-    const { update } = await addCommunityUpdate({ prayerId: communityPrayer.id, userId: user.id, authorName, text: wordText.trim(), isAnonymous: wordAnon });
-    if (update) setCommunityUpdates(prev => [...prev, update]);
+    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text: wordText.trim(), isAnonymous: wordAnon });
+    // Re-fetch so the timeline reflects the (possibly synced) update.
+    setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
     setWordText('');
     setSendingWord(false);
   };
@@ -91,13 +91,35 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     onBack();
   };
 
-  // ── Personal mode handlers ────────────────────────────────────────────────
-  const handleShare = async () => {
-    if (!activeGroupId || sharing) return;
+  // ── Personal mode: sharing to groups ──────────────────────────────────────
+  // Load the user's groups and existing share map so the share button and
+  // badges reflect reality even if the Community tab was never opened.
+  useEffect(() => {
+    if (isCommunity || !user?.id) return;
+    if (groups.length === 0) fetchGroups(user.id);
+    fetchPrayerShares(user.id);
+  }, [isCommunity, user?.id]);
+
+  const sharedGroups = isCommunity ? [] : (prayerShares[prayer.id] || []);
+
+  const openShareModal = () => {
+    setShareGroupIds(new Set(sharedGroups.map(g => g.groupId)));
+    setShowShareModal(true);
+  };
+
+  const toggleShareGroup = (groupId) => {
+    setShareGroupIds(prev => {
+      const next = new Set(prev);
+      next.has(groupId) ? next.delete(groupId) : next.add(groupId);
+      return next;
+    });
+  };
+
+  const handleSaveShares = async () => {
+    if (sharing) return;
     setSharing(true);
-    await addCommunityPrayer({ groupId: activeGroupId, userId: user.id, authorName, title: livePrayer.title, description: (livePrayer.prayer_updates || []).slice(-1)[0]?.text || '', isAnonymous: shareAnon });
+    await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName });
     setSharing(false);
-    setShared(true);
     setShowShareModal(false);
   };
 
@@ -120,10 +142,28 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const handleAddUpdate = () => {
     if (!newUpdate.trim()) return;
-    addUpdate(livePrayer.id, newUpdate.trim());
+    addUpdate(livePrayer.id, newUpdate.trim(), authorName);
     setNewUpdate('');
     setUpdateRecs([]);
   };
+
+  // Point/verse mutations are mode-aware: community mode routes through the
+  // community store (which syncs shared prayers); personal mode uses prayerStore.
+  const handleRemovePoint = (pointId) => isCommunity
+    ? removeCommunityPrayerPoint(communityPrayer.id, pointId, communityPrayer.source_prayer_id)
+    : removePrayerPoint(livePrayer.id, pointId);
+
+  const handleAddVerse = (pointId, verse) => isCommunity
+    ? addCommunityVerse(communityPrayer.id, pointId, verse, communityPrayer.source_prayer_id)
+    : addVerseToPoint(livePrayer.id, pointId, verse);
+
+  const handleRemoveVerse = (pointId, verseRef) => isCommunity
+    ? removeCommunityVerse(communityPrayer.id, pointId, verseRef, communityPrayer.source_prayer_id)
+    : removeVerseFromPoint(livePrayer.id, pointId, verseRef);
+
+  const handleAddPoint = (point) => isCommunity
+    ? addCommunityPrayerPoint(communityPrayer.id, point, communityPrayer.source_prayer_id)
+    : addPrayerPoint(livePrayer.id, point);
 
   const fetchRecs = async () => {
     if (loadingRecs) return;
@@ -168,21 +208,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <div className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <h3 className="font-semibold text-base mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'shareWithGroup')}</h3>
             <p className="text-sm mb-4" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
-            {groups.length > 1 && (
-              <p className="text-xs mb-3" style={{ color: 'var(--text-2)' }}>
-                → {groups.find(g => g.id === activeGroupId)?.name}
-              </p>
-            )}
-            <label className="flex items-center gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
-              <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
-              {t(lang, 'anonymous')}
-            </label>
+            <div className="space-y-2 mb-5 max-h-60 overflow-y-auto">
+              {groups.map(g => {
+                const checked = shareGroupIds.has(g.id);
+                return (
+                  <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+                    <input type="checkbox" checked={checked} onChange={() => toggleShareGroup(g.id)} className="rounded" />
+                    <span className="text-sm" style={{ color: 'var(--text-1)' }}>{g.name}</span>
+                  </label>
+                );
+              })}
+            </div>
             <div className="flex gap-2">
               <button onClick={() => setShowShareModal(false)} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
                 {t(lang, 'cancel')}
               </button>
-              <button onClick={handleShare} disabled={sharing} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-                {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'send')}
+              <button onClick={handleSaveShares} disabled={sharing} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'save')}
               </button>
             </div>
           </div>
@@ -265,8 +307,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </>
           ) : (
             <>
-              {groups.length > 0 && !shared && (
-                <button onClick={() => setShowShareModal(true)} title={t(lang, 'shareWithGroup')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+              {groups.length > 0 && (
+                <button onClick={openShareModal} title={t(lang, 'shareWithGroup')} className="relative w-9 h-9 flex items-center justify-center rounded-full" style={{ background: sharedGroups.length > 0 ? '#fff' : 'rgba(255,255,255,0.15)', color: sharedGroups.length > 0 ? 'var(--accent)' : '#fff' }}>
                   <Share2 size={15} />
                 </button>
               )}
@@ -350,7 +392,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <div className="flex items-start gap-2">
                     <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
                     {!isAnswered && (
-                      <button onClick={() => removePrayerPoint(livePrayer.id, pp.id)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
+                      <button onClick={() => handleRemovePoint(pp.id)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
                         <Trash2 size={13} />
                       </button>
                     )}
@@ -377,7 +419,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                                   <ExternalLink size={11} /> {t(lang, 'openBible')}
                                 </a>
                                 {!isAnswered && (
-                                  <button onClick={() => removeVerseFromPoint(livePrayer.id, pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="text-xs" style={{ color: '#c04040' }}>
+                                  <button onClick={() => handleRemoveVerse(pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="text-xs" style={{ color: '#c04040' }}>
                                     <Trash2 size={11} />
                                   </button>
                                 )}
@@ -415,7 +457,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           <button
                             onClick={() => {
                               if (!newVerse.ref.trim()) return;
-                              addVerseToPoint(livePrayer.id, pp.id, { ref: newVerse.ref.trim(), text: newVerse.text.trim() });
+                              handleAddVerse(pp.id, { ref: newVerse.ref.trim(), text: newVerse.text.trim() });
                               setAddingVerseTo(null);
                               setNewVerse({ ref: '', text: '' });
                             }}
@@ -452,11 +494,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <p className="flex-1 text-sm leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
                   <button
                     onClick={async () => {
-                      if (isCommunity) {
-                        await addCommunityPrayerPoint(communityPrayer.id, { title: rec.title, verses: rec.verses });
-                      } else {
-                        addPrayerPoint(livePrayer.id, { title: rec.title, verses: rec.verses });
-                      }
+                      await handleAddPoint({ title: rec.title, verses: rec.verses });
                       setUpdateRecs(prev => prev.filter(r => r.title !== rec.title));
                     }}
                     title={t(lang, 'tipAddPoint')}
@@ -526,7 +564,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <button
                     onClick={() => {
                       if (!manualPoint.title.trim()) return;
-                      addPrayerPoint(livePrayer.id, { title: manualPoint.title.trim(), verse: manualPoint.verse.trim() });
+                      handleAddPoint({ title: manualPoint.title.trim(), verse: manualPoint.verse.trim() });
                       setManualPoint({ title: '', verse: '' });
                       setShowManualForm(false);
                     }}
@@ -647,7 +685,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div>
                   <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{tr(u.text, lang)}</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{format(new Date(u.created_at), 'd MMM yy', { locale })}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                    {u.author_name ? `${u.is_anonymous ? t(lang, 'anonymous') : u.author_name} · ` : ''}{format(new Date(u.created_at), 'd MMM yy', { locale })}
+                  </p>
                 </div>
               </div>
             ))}

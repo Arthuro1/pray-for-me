@@ -36,6 +36,17 @@ const DEFAULT_CATEGORIES = {
   ],
 };
 
+// Keeps shared community copies in sync when the source personal prayer is
+// edited. Only touches fields that were actually changed.
+async function syncSharedCopies(prayerId, updates) {
+  const payload = {};
+  if (updates.title !== undefined) payload.title = updates.title;
+  if (updates.description !== undefined) payload.description = updates.description;
+  if (updates.categoryIds !== undefined) payload.category_ids = updates.categoryIds;
+  if (Object.keys(payload).length === 0) return;
+  await supabase.from('community_prayers').update(payload).eq('source_prayer_id', prayerId);
+}
+
 const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
@@ -141,6 +152,8 @@ const usePrayerStore = create((set, get) => ({
       }
     }
 
+    await syncSharedCopies(id, updates);
+
     if (data) {
       set((state) => ({
         prayers: state.prayers.map((p) => {
@@ -161,6 +174,7 @@ const usePrayerStore = create((set, get) => ({
       .eq('id', id).select().single();
     if (data) {
       set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
+      await supabase.from('community_prayers').update({ is_answered: true }).eq('source_prayer_id', id);
     }
   },
 
@@ -168,6 +182,7 @@ const usePrayerStore = create((set, get) => ({
     const { data } = await supabase.from('prayers').update({ status: 'active', answered_at: null }).eq('id', id).select().single();
     if (data) {
       set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
+      await supabase.from('community_prayers').update({ is_answered: false }).eq('source_prayer_id', id);
     }
   },
 
@@ -177,11 +192,12 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // ─── Updates ─────────────────────────────────────────────────
-  addUpdate: async (prayerId, text) => {
-    const { data } = await supabase
-      .from('prayer_updates')
-      .insert({ prayer_id: prayerId, text })
-      .select().single();
+  // Routed through sync_add_update so the update also fans out to any shared
+  // community copies. For non-shared prayers it just writes prayer_updates.
+  addUpdate: async (prayerId, text, authorName = '') => {
+    const { data } = await supabase.rpc('sync_add_update', {
+      p_source: prayerId, p_text: text, p_author: authorName, p_anon: false,
+    });
 
     if (data) {
       set((state) => ({
@@ -195,6 +211,8 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // ─── Prayer Points ────────────────────────────────────────────
+  // Routed through sync_add_point so the point also fans out to any shared
+  // community copies. For non-shared prayers it just writes prayer_points.
   addPrayerPoint: async (prayerId, point) => {
     // Build initial verses array from legacy single-verse fields or provided verses
     const initialVerses = point.verses
@@ -203,10 +221,9 @@ const usePrayerStore = create((set, get) => ({
         ? [{ ref: point.verse, text: point.verseText || '' }]
         : [];
 
-    const { data } = await supabase
-      .from('prayer_points')
-      .insert({ prayer_id: prayerId, title: point.title, verses: initialVerses })
-      .select().single();
+    const { data } = await supabase.rpc('sync_add_point', {
+      p_source: prayerId, p_title: point.title, p_verses: initialVerses,
+    });
 
     if (data) {
       set((state) => ({
@@ -219,13 +236,15 @@ const usePrayerStore = create((set, get) => ({
     }
   },
 
+  // Verse/point mutations route through the sync_* RPCs so they also propagate
+  // to any shared community copies (no-op fan-out when the prayer isn't shared).
   addVerseToPoint: async (prayerId, pointId, verse) => {
     const state = get();
     const prayer = state.prayers.find(p => p.id === prayerId);
     const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
     if (!point) return;
     const updated = [...(point.verses || []), verse];
-    await supabase.from('prayer_points').update({ verses: updated }).eq('id', pointId);
+    await supabase.rpc('sync_add_verse', { p_source: prayerId, p_point_id: pointId, p_verse: verse });
     set((s) => ({
       prayers: s.prayers.map(p =>
         p.id === prayerId
@@ -241,7 +260,7 @@ const usePrayerStore = create((set, get) => ({
     const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
     if (!point) return;
     const updated = (point.verses || []).filter(v => v.ref !== verseRef);
-    await supabase.from('prayer_points').update({ verses: updated }).eq('id', pointId);
+    await supabase.rpc('sync_remove_verse', { p_source: prayerId, p_point_id: pointId, p_verse_ref: verseRef });
     set((s) => ({
       prayers: s.prayers.map(p =>
         p.id === prayerId
@@ -252,7 +271,7 @@ const usePrayerStore = create((set, get) => ({
   },
 
   removePrayerPoint: async (prayerId, pointId) => {
-    await supabase.from('prayer_points').delete().eq('id', pointId);
+    await supabase.rpc('sync_remove_point', { p_source: prayerId, p_point_id: pointId });
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === prayerId

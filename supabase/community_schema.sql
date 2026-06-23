@@ -17,6 +17,9 @@ create table group_members (
 );
 
 -- ── Community prayers ─────────────────────────────────────────────────────────
+-- source_prayer_id links a shared community prayer back to the personal prayer
+-- it originated from (null when authored directly in the group). A single
+-- personal prayer can have one community row per group it is shared to.
 create table community_prayers (
   id uuid primary key default gen_random_uuid(),
   group_id uuid references groups(id) on delete cascade,
@@ -25,10 +28,14 @@ create table community_prayers (
   title text not null,
   description text,
   is_anonymous boolean default false,
+  is_answered boolean default false,
   category_ids uuid[] default '{}',
   prayer_points jsonb[] default '{}',
-  created_at timestamptz default now()
+  source_prayer_id uuid references prayers(id) on delete cascade,
+  created_at timestamptz default now(),
+  unique (group_id, source_prayer_id)
 );
+create index idx_community_prayers_source on community_prayers(source_prayer_id);
 
 -- ── Member updates on community prayers ───────────────────────────────────────
 create table community_updates (
@@ -322,3 +329,180 @@ create policy "Admins can delete invitations" on group_invitations
 -- Allow an invited user to join the group when accepting an invitation.
 -- The base "Users can join groups" policy already permits user_id = auth.uid()
 -- inserts, so no extra policy is needed for acceptGroupInvitation().
+
+-- ── Migrations for existing databases ─────────────────────────────────────────
+-- Run these if community_prayers was created before the sharing feature.
+alter table community_prayers add column if not exists is_answered boolean default false;
+alter table community_prayers add column if not exists source_prayer_id uuid references prayers(id) on delete cascade;
+create index if not exists idx_community_prayers_source on community_prayers(source_prayer_id);
+-- One community copy per (group, source prayer); ignored if it already exists.
+do $$
+begin
+  alter table community_prayers add constraint community_prayers_group_source_unique unique (group_id, source_prayer_id);
+exception
+  when duplicate_table then null;
+  when duplicate_object then null;
+end $$;
+
+-- Personal updates can now carry author info so updates that originate from a
+-- group (added by another member) display correctly on the owner's side.
+alter table prayer_updates add column if not exists author_name text;
+alter table prayer_updates add column if not exists is_anonymous boolean default false;
+
+-- ── Two-way sync for shared prayers ───────────────────────────────────────────
+-- A shared personal prayer and its community copies keep one set of updates and
+-- prayer points. These security-definer RPCs write to the source prayer AND
+-- fan out to every community copy, so an add from either side appears on both.
+-- Allowed for the prayer owner or any member of a group it is shared to.
+
+create or replace function can_sync_prayer(p_source uuid)
+returns boolean
+language sql
+security definer
+stable
+as $$
+  select exists (select 1 from prayers where id = p_source and user_id = auth.uid())
+      or exists (
+        select 1 from community_prayers cp
+        join group_members gm on gm.group_id = cp.group_id
+        where cp.source_prayer_id = p_source and gm.user_id = auth.uid()
+      );
+$$;
+
+create or replace function sync_add_update(p_source uuid, p_text text, p_author text, p_anon boolean)
+returns prayer_updates
+language plpgsql
+security definer
+as $$
+declare
+  new_row prayer_updates;
+begin
+  if not can_sync_prayer(p_source) then
+    raise exception 'not allowed to update this prayer';
+  end if;
+
+  insert into prayer_updates (prayer_id, text, author_name, is_anonymous)
+  values (p_source, p_text, p_author, p_anon)
+  returning * into new_row;
+
+  insert into community_updates (community_prayer_id, user_id, author_name, text, is_anonymous)
+  select id, auth.uid(), p_author, p_text, p_anon
+  from community_prayers where source_prayer_id = p_source;
+
+  return new_row;
+end;
+$$;
+
+create or replace function sync_add_point(p_source uuid, p_title text, p_verses jsonb)
+returns prayer_points
+language plpgsql
+security definer
+as $$
+declare
+  new_row prayer_points;
+  point_json jsonb;
+begin
+  if not can_sync_prayer(p_source) then
+    raise exception 'not allowed to update this prayer';
+  end if;
+
+  insert into prayer_points (prayer_id, title, verses)
+  values (p_source, p_title, coalesce(p_verses, '[]'::jsonb))
+  returning * into new_row;
+
+  -- Append the same point (sharing the personal row id) to each community copy.
+  point_json := jsonb_build_object('id', new_row.id, 'title', p_title, 'verses', coalesce(p_verses, '[]'::jsonb));
+  update community_prayers
+  set prayer_points = array_append(prayer_points, point_json)
+  where source_prayer_id = p_source;
+
+  return new_row;
+end;
+$$;
+
+-- Remove a prayer point from the source prayer and every community copy.
+create or replace function sync_remove_point(p_source uuid, p_point_id uuid)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  if not can_sync_prayer(p_source) then
+    raise exception 'not allowed to update this prayer';
+  end if;
+
+  delete from prayer_points where id = p_point_id and prayer_id = p_source;
+
+  update community_prayers
+  set prayer_points = (
+    select coalesce(array_agg(elem), '{}')
+    from unnest(prayer_points) elem
+    where elem->>'id' <> p_point_id::text
+  )
+  where source_prayer_id = p_source;
+end;
+$$;
+
+-- Add a verse {ref, text} to a point on the source prayer and every copy.
+create or replace function sync_add_verse(p_source uuid, p_point_id uuid, p_verse jsonb)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  if not can_sync_prayer(p_source) then
+    raise exception 'not allowed to update this prayer';
+  end if;
+
+  update prayer_points
+  set verses = coalesce(verses, '[]'::jsonb) || jsonb_build_array(p_verse)
+  where id = p_point_id and prayer_id = p_source;
+
+  update community_prayers
+  set prayer_points = (
+    select coalesce(array_agg(
+      case when elem->>'id' = p_point_id::text
+        then jsonb_set(elem, '{verses}', coalesce(elem->'verses', '[]'::jsonb) || jsonb_build_array(p_verse))
+        else elem end
+    ), '{}')
+    from unnest(prayer_points) elem
+  )
+  where source_prayer_id = p_source;
+end;
+$$;
+
+-- Remove a verse (matched by ref) from a point on the source prayer and copies.
+create or replace function sync_remove_verse(p_source uuid, p_point_id uuid, p_verse_ref text)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  if not can_sync_prayer(p_source) then
+    raise exception 'not allowed to update this prayer';
+  end if;
+
+  update prayer_points
+  set verses = (
+    select coalesce(jsonb_agg(v), '[]'::jsonb)
+    from jsonb_array_elements(coalesce(verses, '[]'::jsonb)) v
+    where v->>'ref' <> p_verse_ref
+  )
+  where id = p_point_id and prayer_id = p_source;
+
+  update community_prayers
+  set prayer_points = (
+    select coalesce(array_agg(
+      case when elem->>'id' = p_point_id::text
+        then jsonb_set(elem, '{verses}', (
+          select coalesce(jsonb_agg(v), '[]'::jsonb)
+          from jsonb_array_elements(coalesce(elem->'verses', '[]'::jsonb)) v
+          where v->>'ref' <> p_verse_ref
+        ))
+        else elem end
+    ), '{}')
+    from unnest(prayer_points) elem
+  )
+  where source_prayer_id = p_source;
+end;
+$$;

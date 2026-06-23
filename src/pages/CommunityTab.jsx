@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2 } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -350,8 +350,10 @@ function GroupView({ lang, user, groupId, onBack }) {
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
 
+  // Always (re)fetch on entering a group so freshly synced points/updates from
+  // the personal side show up, even if this group was already the active one.
   useEffect(() => {
-    if (groupId && groupId !== activeGroupId) setActiveGroup(groupId);
+    if (groupId) setActiveGroup(groupId);
   }, [groupId]);
 
   const group = groups.find(g => g.id === groupId);
@@ -407,10 +409,17 @@ function GroupView({ lang, user, groupId, onBack }) {
               <div className="flex flex-col gap-3">
                 {prayers.map(p => (
                   <button key={p.id} onClick={() => setSelectedPrayer(p)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style={CARD_STYLE}>
-                    <p className="text-xs mb-1.5" style={{ color: 'var(--text-3)' }}>
-                      {p.is_anonymous ? t(lang, 'anonymous') : p.author_name} · {timeAgo(p.created_at, lang)}
-                    </p>
-                    <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{p.title}</p>
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                        {p.is_anonymous ? t(lang, 'anonymous') : p.author_name} · {timeAgo(p.created_at, lang)}
+                      </p>
+                      {p.is_answered && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: '#e8f5ed', color: '#059669' }}>
+                          <Check size={11} /> {t(lang, 'answered2')}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>{p.title}</p>
                     {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{p.description}</p>}
                     <div className="flex items-center gap-3">
                       <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={SUBTLE_BTN}>

@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
+import useCommunityStore from '../store/communityStore';
+import useAuthStore from '../store/authStore';
 import PrayerCard from '../components/PrayerCard';
 import PrayerDetail from './PrayerDetail';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, SlidersHorizontal, Users } from 'lucide-react';
 import { t } from '../i18n';
 
 export default function PrayersTab({ onEdit }) {
   const { prayers, categories, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
+  const { user } = useAuthStore();
+  const { prayerShares, fetchPrayerShares } = useCommunityStore();
   const lang = settings.language || 'fr';
+
+  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [search, setSearch] = useState('');
@@ -148,6 +154,16 @@ export default function PrayersTab({ onEdit }) {
                       <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>
                         {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
                       </p>
+                    )}
+                    {(prayerShares[prayer.id] || []).length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                        <Users size={11} style={{ color: 'var(--accent)' }} />
+                        {prayerShares[prayer.id].map(s => (
+                          <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                            {s.groupName}
+                          </span>
+                        ))}
+                      </div>
                     )}
                   </div>
                   <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
