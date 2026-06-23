@@ -114,7 +114,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const fetchRecs = async () => {
     if (loadingRecs) return;
     if (!hasAiConsent('prayer')) { setShowAiConsent(true); return; }
-    const lastUpdate = (livePrayer.prayer_updates || []).slice(-1)[0]?.text || livePrayer.title;
+    const lastUpdate = isCommunity
+      ? (livePrayer.description || livePrayer.title)
+      : ((livePrayer.prayer_updates || []).slice(-1)[0]?.text || livePrayer.title);
     setLoadingRecs(true);
     setRecsError(null);
     const { recs, error } = await getAIRecommendations({ title: livePrayer.title, description: lastUpdate, type: 'evolution', lang });
@@ -261,93 +263,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* ── Community mode: member updates ── */}
-        {isCommunity && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'memberUpdates')}</p>
-
-            {loadingUpdates ? (
-              <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
-            ) : communityUpdates.length === 0 ? (
-              <p className="text-sm italic mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
-            ) : (
-              <div className="space-y-3 mb-3">
-                {communityUpdates.map(u => (
-                  <div key={u.id} className="flex gap-3">
-                    <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
-                    <div>
-                      <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
-                        {u.is_anonymous ? t(lang, 'anonymous') : u.author_name}
-                        {' · '}{formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: dateLocale })}
-                      </p>
-                      <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{u.text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="flex gap-2 mt-2">
-              <input
-                type="text"
-                value={wordText}
-                onChange={e => setWordText(e.target.value)}
-                placeholder={t(lang, 'wordPlaceholder')}
-                className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                onKeyDown={e => e.key === 'Enter' && handleSendWord()}
-              />
-              <button onClick={handleSendWord} disabled={!wordText.trim() || sendingWord} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-                {sendingWord ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-              </button>
-            </div>
-            <label className="flex items-center gap-2 text-xs mt-2 cursor-pointer" style={{ color: 'var(--text-3)' }}>
-              <input type="checkbox" checked={wordAnon} onChange={e => setWordAnon(e.target.checked)} className="rounded" />
-              {t(lang, 'anonymous')}
-            </label>
-          </div>
-        )}
-
-        {/* ── Community mode: testimony ── */}
-        {isCommunity && (
-          testimonySent ? (
-            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-              🎉 {t(lang, 'testimony')}
-            </div>
-          ) : showCommunityTestimony ? (
-            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'postTestimony')}</p>
-              <textarea
-                value={communityTestimonyText}
-                onChange={e => setCommunityTestimonyText(e.target.value)}
-                rows={3}
-                className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none mb-3"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                autoFocus
-              />
-              <label className="flex items-center gap-2 text-xs mb-3 cursor-pointer" style={{ color: 'var(--text-3)' }}>
-                <input type="checkbox" checked={communityTestimonyAnon} onChange={e => setCommunityTestimonyAnon(e.target.checked)} className="rounded" />
-                {t(lang, 'anonymous')}
-              </label>
-              <div className="flex gap-2">
-                <button onClick={() => setShowCommunityTestimony(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
-                <button onClick={handlePostCommunityTestimony} disabled={!communityTestimonyText.trim() || postingTestimony} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-                  {postingTestimony ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'postTestimony')}
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button onClick={() => setShowCommunityTestimony(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-              🎉 {t(lang, 'postTestimony')}
-            </button>
-          )
-        )}
-
-        {/* ── Personal mode: prayer points ── */}
-        {!isCommunity && <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        {/* ── Prayer points + AI suggestions (both modes) ── */}
+        <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
-            {!isAnswered && (
+            {(!isAnswered || isCommunity) && (
               <button
                 onClick={fetchRecs}
                 disabled={loadingRecs}
@@ -477,7 +397,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <div className="flex gap-2 items-start">
                   <p className="flex-1 text-sm leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
                   <button
-                    onClick={() => { addPrayerPoint(livePrayer.id, { title: rec.title, verses: rec.verses }); setUpdateRecs(prev => prev.filter(r => r.title !== rec.title)); }}
+                    onClick={async () => {
+                      if (isCommunity) {
+                        const { update } = await addCommunityUpdate({ prayerId: communityPrayer.id, userId: user.id, authorName, text: rec.title, isAnonymous: false });
+                        if (update) setCommunityUpdates(prev => [...prev, update]);
+                      } else {
+                        addPrayerPoint(livePrayer.id, { title: rec.title, verses: rec.verses });
+                      }
+                      setUpdateRecs(prev => prev.filter(r => r.title !== rec.title));
+                    }}
                     title={t(lang, 'tipAddPoint')}
                     className="shrink-0 rounded-xl p-1.5 text-white"
                     style={{ background: 'var(--accent)' }}
@@ -567,7 +495,89 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               </button>
             )
           )}
-        </div>}
+        </div>
+
+        {/* ── Community mode: member updates ── */}
+        {isCommunity && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'memberUpdates')}</p>
+
+            {loadingUpdates ? (
+              <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+            ) : communityUpdates.length === 0 ? (
+              <p className="text-sm italic mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
+            ) : (
+              <div className="space-y-3 mb-3">
+                {communityUpdates.map(u => (
+                  <div key={u.id} className="flex gap-3">
+                    <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
+                    <div>
+                      <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
+                        {u.is_anonymous ? t(lang, 'anonymous') : u.author_name}
+                        {' · '}{formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: dateLocale })}
+                      </p>
+                      <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{u.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                value={wordText}
+                onChange={e => setWordText(e.target.value)}
+                placeholder={t(lang, 'wordPlaceholder')}
+                className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                onKeyDown={e => e.key === 'Enter' && handleSendWord()}
+              />
+              <button onClick={handleSendWord} disabled={!wordText.trim() || sendingWord} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                {sendingWord ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+              </button>
+            </div>
+            <label className="flex items-center gap-2 text-xs mt-2 cursor-pointer" style={{ color: 'var(--text-3)' }}>
+              <input type="checkbox" checked={wordAnon} onChange={e => setWordAnon(e.target.checked)} className="rounded" />
+              {t(lang, 'anonymous')}
+            </label>
+          </div>
+        )}
+
+        {/* ── Community mode: testimony ── */}
+        {isCommunity && (
+          testimonySent ? (
+            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              🎉 {t(lang, 'testimony')}
+            </div>
+          ) : showCommunityTestimony ? (
+            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'postTestimony')}</p>
+              <textarea
+                value={communityTestimonyText}
+                onChange={e => setCommunityTestimonyText(e.target.value)}
+                rows={3}
+                className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none mb-3"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                autoFocus
+              />
+              <label className="flex items-center gap-2 text-xs mb-3 cursor-pointer" style={{ color: 'var(--text-3)' }}>
+                <input type="checkbox" checked={communityTestimonyAnon} onChange={e => setCommunityTestimonyAnon(e.target.checked)} className="rounded" />
+                {t(lang, 'anonymous')}
+              </label>
+              <div className="flex gap-2">
+                <button onClick={() => setShowCommunityTestimony(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+                <button onClick={handlePostCommunityTestimony} disabled={!communityTestimonyText.trim() || postingTestimony} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                  {postingTestimony ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'postTestimony')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setShowCommunityTestimony(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+              🎉 {t(lang, 'postTestimony')}
+            </button>
+          )
+        )}
 
         {/* ── Personal mode: updates, testimony, actions ── */}
         {!isCommunity && <>
