@@ -170,27 +170,21 @@ export default function SettingsTab() {
 
         {/* Language */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-3">
-            <Globe size={16} style={{ color: 'var(--accent)' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
-          </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'languageSub')}</p>
-          <div className="grid grid-cols-2 gap-2">
-            {LANGUAGES.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => updateSettings({ language: l.code })}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-                style={
-                  lang === l.code
-                    ? { background: 'var(--accent)', color: '#fff' }
-                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }
-                }
-              >
-                <span className="text-base">{l.flag}</span>
-                {l.label}
-              </button>
-            ))}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Globe size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
+            </div>
+            <select
+              value={lang}
+              onChange={(e) => updateSettings({ language: e.target.value })}
+              className="text-sm rounded-xl px-3 py-2 focus:outline-none"
+              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)', maxWidth: '180px' }}
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
+              ))}
+            </select>
           </div>
         </div>
 
