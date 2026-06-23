@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
+import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
 
@@ -21,6 +22,7 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
   const [showManualForm, setShowManualForm] = useState(false);
   const [addingVerseTo, setAddingVerseTo] = useState(null); // pointId
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
+  const [showAiConsent, setShowAiConsent] = useState(false);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
@@ -42,6 +44,7 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
 
   const fetchRecs = async () => {
     if (loadingRecs) return;
+    if (!hasAiConsent()) { setShowAiConsent(true); return; }
     const lastUpdate = (livePrayer.prayer_updates || []).slice(-1)[0]?.text || livePrayer.title;
     setLoadingRecs(true);
     setRecsError(null);
@@ -68,6 +71,13 @@ export default function PrayerDetail({ prayer, onBack, onEdit, lang = 'en' }) {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      {showAiConsent && (
+        <AiConsentModal
+          lang={lang}
+          onAccept={() => { setShowAiConsent(false); fetchRecs(); }}
+          onCancel={() => setShowAiConsent(false)}
+        />
+      )}
       {/* Sticky header */}
       <div
         className="sticky top-0 z-10 px-4 md:px-8 py-4 flex items-center gap-3"
