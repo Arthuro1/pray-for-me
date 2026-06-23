@@ -1,4 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import HomeTab from './pages/HomeTab';
@@ -93,6 +95,8 @@ export default function App() {
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
       )}
+      <Analytics />
+      <SpeedInsights />
     </>
   );
 }
