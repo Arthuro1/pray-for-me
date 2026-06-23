@@ -2,7 +2,9 @@
 
 <br/>
 
-# 🙏 Pray4Me
+<img src="public/logo.svg" alt="Pray4Me" width="80" height="80" />
+
+# Pray4Me
 
 ### Your personal Christian prayer companion
 
