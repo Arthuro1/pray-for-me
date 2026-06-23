@@ -136,7 +136,12 @@ const useCommunityStore = create((set, get) => ({
       .select('role, groups(*)')
       .eq('user_id', userId);
     if (!data) return;
-    const groups = data.map(d => ({ ...d.groups, role: d.role }));
+    const { data: prefs } = await supabase
+      .from('group_member_prefs')
+      .select('group_id, auto_add')
+      .eq('user_id', userId);
+    const autoAddById = Object.fromEntries((prefs || []).map(p => [p.group_id, p.auto_add]));
+    const groups = data.map(d => ({ ...d.groups, role: d.role, autoAdd: !!autoAddById[d.groups.id] }));
     set({ groups });
     const { activeGroupId } = get();
     if (groups.length > 0 && !activeGroupId) {
@@ -184,6 +189,16 @@ const useCommunityStore = create((set, get) => ({
       get().fetchPrayers(newActive);
       get().fetchTestimonies(newActive);
     }
+  },
+
+  // Per-member preference: auto-copy this group's new requests to the personal list.
+  setGroupAutoAdd: async (groupId, userId, value) => {
+    const { error } = await supabase
+      .from('group_member_prefs')
+      .upsert({ group_id: groupId, user_id: userId, auto_add: value }, { onConflict: 'group_id,user_id' });
+    if (error) return toError(error);
+    set(state => ({ groups: state.groups.map(g => g.id === groupId ? { ...g, autoAdd: value } : g) }));
+    return {};
   },
 
   fetchPrayers: async (groupId) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
@@ -346,10 +346,12 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer } = useCommunityStore();
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd } = useCommunityStore();
+  const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
   const [subTab, setSubTab] = useState('requests');
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const reconciledRef = useRef(null);
 
   // Always (re)fetch on entering a group so freshly synced points/updates from
   // the personal side show up, even if this group was already the active one.
@@ -359,6 +361,30 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
   const group = groups.find(g => g.id === groupId);
   const isAdmin = group?.role === 'admin';
+
+  // Copy group requests (not mine, not already linked) into the personal list.
+  const reconcileAutoAdd = async () => {
+    const mine = new Set(usePrayerStore.getState().prayers.map(p => p.id));
+    for (const p of prayers) {
+      if (p.user_id === user.id) continue;
+      if (p.source_prayer_id && mine.has(p.source_prayer_id)) continue;
+      await addFromCommunity(p); // idempotent: deduped by community_origin_id
+    }
+  };
+
+  // When auto-add is on, reconcile once per group entry (after prayers load).
+  useEffect(() => {
+    if (group?.autoAdd && !loading && prayers.length && reconciledRef.current !== groupId) {
+      reconciledRef.current = groupId;
+      reconcileAutoAdd();
+    }
+  }, [group?.autoAdd, loading, prayers, groupId]);
+
+  const handleToggleAutoAdd = async () => {
+    const next = !group?.autoAdd;
+    await setGroupAutoAdd(groupId, user.id, next);
+    if (next) await reconcileAutoAdd();
+  };
 
   return (
     <div style={{ background: 'var(--bg)' }}>
@@ -381,7 +407,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} />}
 
       <div className="px-5 md:px-8 py-4 max-w-4xl mx-auto">
-        <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
+        <h2 className="text-xl font-semibold mb-3" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
+
+        <button onClick={handleToggleAutoAdd} className="flex items-center justify-between gap-3 w-full p-3 rounded-xl mb-5 text-left" style={CARD_STYLE}>
+          <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'autoAddRequests')}</span>
+          <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors" style={{ background: group?.autoAdd ? 'var(--accent)' : 'var(--input-border)' }}>
+            <span className="block w-5 h-5 rounded-full bg-white transition-transform" style={{ transform: group?.autoAdd ? 'translateX(16px)' : 'translateX(0)' }} />
+          </span>
+        </button>
 
         <div className="flex gap-1 mb-5">
           {['requests', 'testimonies'].map(tab => (

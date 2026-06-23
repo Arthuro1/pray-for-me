@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, BookmarkPlus, BookmarkCheck } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -47,8 +47,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showCommunityEdit, setShowCommunityEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [savingToPersonal, setSavingToPersonal] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, prayers } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
   const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares } = useCommunityStore();
@@ -89,6 +90,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setDeleting(true);
     await deleteCommunityPrayer(communityPrayer.id);
     onBack();
+  };
+
+  // True when this community prayer is already in the user's personal list —
+  // either saved as a copy, or it was originally shared from their own prayer.
+  const alreadyInPersonal = isCommunity && (
+    prayers.some(p => p.community_origin_id === communityPrayer.id) ||
+    (communityPrayer.source_prayer_id && prayers.some(p => p.id === communityPrayer.source_prayer_id))
+  );
+
+  const handleAddToPersonal = async () => {
+    if (savingToPersonal || alreadyInPersonal) return;
+    setSavingToPersonal(true);
+    await addFromCommunity(communityPrayer);
+    setSavingToPersonal(false);
   };
 
   // ── Personal mode: sharing to groups ──────────────────────────────────────
@@ -295,6 +310,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   </button>
                 </>
               )}
+              <button
+                onClick={handleAddToPersonal}
+                disabled={alreadyInPersonal || savingToPersonal}
+                title={alreadyInPersonal ? t(lang, 'addedToMyPrayers') : t(lang, 'addToMyPrayers')}
+                className="w-9 h-9 flex items-center justify-center rounded-full disabled:opacity-100"
+                style={{ background: alreadyInPersonal ? '#fff' : 'rgba(255,255,255,0.15)', color: alreadyInPersonal ? 'var(--accent)' : '#fff' }}
+              >
+                {savingToPersonal ? <Loader2 size={15} className="animate-spin" /> : alreadyInPersonal ? <BookmarkCheck size={15} /> : <BookmarkPlus size={15} />}
+              </button>
               <button
                 onClick={() => toggleReaction(communityPrayer.id, user.id)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"

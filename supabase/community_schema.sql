@@ -344,6 +344,27 @@ exception
   when duplicate_object then null;
 end $$;
 
+-- Provenance: a personal prayer can be a saved copy of a community prayer.
+-- Used to dedupe "Add to my prayers" and show the already-saved state.
+alter table prayers add column if not exists community_origin_id uuid references community_prayers(id) on delete set null;
+
+-- Per-member group preferences (kept separate from group_members so a user
+-- can't escalate their own role via an UPDATE). auto_add = automatically copy
+-- this group's new requests into the member's personal prayer list.
+create table if not exists group_member_prefs (
+  group_id uuid references groups(id) on delete cascade,
+  user_id uuid references auth.users(id) on delete cascade,
+  auto_add boolean default false,
+  primary key (group_id, user_id)
+);
+alter table group_member_prefs enable row level security;
+do $$
+begin
+  create policy "Users manage own group prefs" on group_member_prefs
+    for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
 -- Personal updates can now carry author info so updates that originate from a
 -- group (added by another member) display correctly on the owner's side.
 alter table prayer_updates add column if not exists author_name text;

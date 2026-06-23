@@ -132,6 +132,39 @@ const usePrayerStore = create((set, get) => ({
     }
   },
 
+  // Saves a community prayer into the user's personal list as a snapshot copy
+  // (title, description, prayer points). Not ongoing-synced; deduped by origin.
+  addFromCommunity: async (communityPrayer) => {
+    const existing = get().prayers.find((p) => p.community_origin_id === communityPrayer.id);
+    if (existing) return { prayer: existing, alreadyAdded: true };
+
+    const { data: { user } } = await supabase.auth.getUser();
+    const { data, error } = await supabase
+      .from('prayers')
+      .insert({
+        user_id: user.id,
+        title: communityPrayer.title,
+        description: communityPrayer.description || '',
+        status: 'active',
+        community_origin_id: communityPrayer.id,
+      })
+      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+      .single();
+    if (error || !data) return { error: error?.message || 'failed' };
+
+    // Copy current prayer points (categories are skipped — they belong to the author).
+    const points = (communityPrayer.prayer_points || []).map((pp) => ({
+      prayer_id: data.id, title: pp.title, verses: pp.verses || [],
+    }));
+    if (points.length > 0) {
+      const { data: inserted } = await supabase.from('prayer_points').insert(points).select();
+      data.prayer_points = inserted || [];
+    }
+
+    set((state) => ({ prayers: [data, ...state.prayers] }));
+    return { prayer: data };
+  },
+
   updatePrayer: async (id, updates) => {
     const payload = {};
     if (updates.title !== undefined) payload.title = updates.title;
