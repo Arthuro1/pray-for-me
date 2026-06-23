@@ -460,12 +460,27 @@ const useCommunityStore = create((set, get) => ({
     return { requests: (data || []).map(r => ({ ...r, fromName: nameOf(r.from_user_id) })) };
   },
 
+  // Idempotent: re-inviting someone who already has a pending invitation is a
+  // no-op instead of a 409 conflict on the (group_id, invited_user_id) unique key.
   inviteToGroup: async (groupId, friendId, invitedBy) => {
     const { error } = await supabase
       .from('group_invitations')
-      .insert({ group_id: groupId, invited_user_id: friendId, invited_by: invitedBy });
-    if (error) return { error: 'exists' };
+      .upsert(
+        { group_id: groupId, invited_user_id: friendId, invited_by: invitedBy },
+        { onConflict: 'group_id,invited_user_id', ignoreDuplicates: true }
+      );
+    if (error) return toError(error);
     return {};
+  },
+
+  // User ids already invited to a group (so the admin UI can mark them invited).
+  fetchGroupInvitees: async (groupId) => {
+    const { data, error } = await supabase
+      .from('group_invitations')
+      .select('invited_user_id')
+      .eq('group_id', groupId);
+    if (error) return { error: error.message };
+    return { inviteeIds: (data || []).map(i => i.invited_user_id) };
   },
 
   // Group invitations for the current user, enriched with group name + inviter.

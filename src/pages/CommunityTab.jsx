@@ -263,16 +263,17 @@ function AddFriendModal({ lang, userId, onClose }) {
 
 // ── Group Admin Modal (invite friends + manage members) ──────────────────────
 function GroupAdminModal({ lang, userId, group, onClose }) {
-  const { fetchFriends, fetchGroupMembers, inviteToGroup, removeMember } = useCommunityStore();
+  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember } = useCommunityStore();
   const [friends, setFriends] = useState([]);
   const [members, setMembers] = useState([]);
   const [busyId, setBusyId] = useState(null);
   const [invited, setInvited] = useState({});
 
   const load = useCallback(async () => {
-    const [f, m] = await Promise.all([fetchFriends(userId), fetchGroupMembers(group.id)]);
+    const [f, m, inv] = await Promise.all([fetchFriends(userId), fetchGroupMembers(group.id), fetchGroupInvitees(group.id)]);
     setFriends(f.friends || []);
     setMembers(m.members || []);
+    setInvited(Object.fromEntries((inv.inviteeIds || []).map(id => [id, true])));
   }, [userId, group.id]);
 
   useEffect(() => { load(); }, [load]);
