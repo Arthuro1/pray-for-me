@@ -1,6 +1,7 @@
 import { X, Heart } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 const PAYPAL_URL = import.meta.env.VITE_DONATION_URL || 'https://paypal.me/YOUR_USERNAME';
 
@@ -23,6 +24,7 @@ const METHODS = [
 export default function DonateModal({ onClose }) {
   const { settings } = usePrayerStore();
   const lang = settings?.language || 'en';
+  useEscapeKey(onClose);
 
   return (
     <div

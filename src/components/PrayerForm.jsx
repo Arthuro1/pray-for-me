@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -73,6 +74,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
+  useEscapeKey(onClose);
 
   const [form, setForm] = useState(() => initialForm(editPrayer));
   useEffect(() => { if (editPrayer) setForm(initialForm(editPrayer)); }, [editPrayer]);

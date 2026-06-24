@@ -1,5 +1,6 @@
 import { Sparkles, X, Shield } from 'lucide-react';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 const CONSENT_KEYS = {
   prayer: 'pfm_ai_consent_prayer',
@@ -16,6 +17,7 @@ export function grantAiConsent(context = 'prayer') {
 
 // context: 'prayer' = sends prayer title + last update, 'home' = sends category names
 export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {
+  useEscapeKey(onCancel);
   const noticeKey = context === 'home' ? 'aiConsentNoticeHome' : 'aiConsentNoticePrayer';
   const bodyKey = context === 'home' ? 'aiConsentBodyHome' : 'aiConsentBodyPrayer';
 

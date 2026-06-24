@@ -14,6 +14,7 @@ import PrayerListSkeleton from '../components/Skeleton';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import ShareButtons from '../components/ShareButtons';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 import { QRCodeSVG } from 'qrcode.react';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
@@ -193,13 +194,14 @@ function CommunityHub({ lang, userId, onViewGroup }) {
 }
 
 // ── Modal shell ──────────────────────────────────────────────────────────────
-function Modal({ title, onClose, children }) {
+function Modal({ title, onClose, lang, children }) {
+  useEscapeKey(onClose);
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
-      <div className="w-full max-w-md rounded-2xl p-5" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl p-5" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{title}</h3>
-          <button onClick={onClose} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
+          <button onClick={onClose} aria-label={t(lang, 'close')} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
         </div>
         {children}
       </div>
@@ -236,7 +238,7 @@ function CreateGroupModal({ lang, userId, onClose, onDone }) {
   };
 
   return (
-    <Modal title={t(lang, 'createGroup')} onClose={onClose}>
+    <Modal title={t(lang, 'createGroup')} lang={lang} onClose={onClose}>
       <input autoFocus value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
         className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
       {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
@@ -271,7 +273,7 @@ function AddFriendModal({ lang, userId, onClose }) {
   };
 
   return (
-    <Modal title={t(lang, 'addFriend')} onClose={onClose}>
+    <Modal title={t(lang, 'addFriend')} lang={lang} onClose={onClose}>
       {done ? (
         <div className="text-center py-4">
           <p className="text-sm mb-4" style={{ color: 'var(--text-1)' }}>{t(lang, 'requestSent')}</p>
@@ -330,7 +332,7 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
   };
 
   return (
-    <Modal title={t(lang, 'manageGroup')} onClose={onClose}>
+    <Modal title={t(lang, 'manageGroup')} lang={lang} onClose={onClose}>
       {confirmRemove && (
         <ConfirmDialog
           title={t(lang, 'removeMemberConfirm')}
@@ -407,7 +409,7 @@ function MembersModal({ lang, group, userId, onClose }) {
   };
 
   return (
-    <Modal title={`${t(lang, 'members')} (${members.length})`} onClose={onClose}>
+    <Modal title={`${t(lang, 'members')} (${members.length})`} lang={lang} onClose={onClose}>
       <div className="flex gap-2 mb-4">
         <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
           <Share2 size={15} /> {t(lang, 'shareInviteLink')}
@@ -551,7 +553,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       {showMembers && group && <MembersModal lang={lang} group={group} userId={user.id} onClose={() => setShowMembers(false)} />}
 
       {showLeave && (
-        <Modal title={t(lang, 'leaveGroup')} onClose={() => setShowLeave(false)}>
+        <Modal title={t(lang, 'leaveGroup')} lang={lang} onClose={() => setShowLeave(false)}>
           <p className="text-sm mb-5" style={{ color: 'var(--text-2)' }}>{t(lang, 'leaveGroupConfirm')}</p>
           <div className="flex gap-2">
             <button onClick={() => setShowLeave(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={SUBTLE_BTN}>{t(lang, 'cancel')}</button>

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 const TYPES = [
   { key: 'general', icon: MessageSquare, labelKey: 'feedbackTypeGeneral' },
@@ -15,6 +16,7 @@ export default function FeedbackModal({ onClose }) {
   const { user } = useAuthStore();
   const { settings } = usePrayerStore();
   const lang = settings?.language || 'fr';
+  useEscapeKey(onClose);
 
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
   const email = user?.email || '';

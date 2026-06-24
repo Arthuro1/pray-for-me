@@ -6,6 +6,7 @@ import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { prayerOnDay } from '../utils/prayer';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
@@ -20,6 +21,7 @@ export default function PlanTab() {
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] });
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
+  useEscapeKey(selectedDay !== null ? () => setSelectedDay(null) : null);
 
   // Number of active prayers that land on a given weekday.
   const countForDay = (dayIdx) => {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BookHeart, CalendarDays, Users, Sparkles } from 'lucide-react';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 // First-run intro. Shown once (gated by localStorage in App) to orient new users.
 const STEPS = [
@@ -12,6 +13,7 @@ const STEPS = [
 
 export default function Onboarding({ lang = 'en', onFinish, onAddPrayer }) {
   const [step, setStep] = useState(0);
+  useEscapeKey(onFinish);
   const isLast = step === STEPS.length - 1;
   const { icon: Icon, titleKey, bodyKey } = STEPS[step];
 

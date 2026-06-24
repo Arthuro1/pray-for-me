@@ -15,6 +15,7 @@ import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import PrayerForm from '../components/PrayerForm';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { useEscapeKey } from '../hooks/useEscapeKey';
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
@@ -57,6 +58,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore();
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
+  // Esc closes whichever inline overlay is open (ConfirmDialog handles its own).
+  useEscapeKey(
+    showShareModal ? () => setShowShareModal(false)
+      : showDeleteConfirm ? () => setShowDeleteConfirm(false)
+      : null
+  );
   const { user } = useAuthStore();
   const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
