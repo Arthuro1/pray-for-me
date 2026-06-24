@@ -268,27 +268,50 @@ function CreateGroupModal({ lang, userId, onClose, onDone }) {
 }
 
 // ── Add Friend Modal ────────────────────────────────────────────────────────
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function AddFriendModal({ lang, userId, onClose }) {
-  const { sendFriendRequest } = useCommunityStore();
+  const { sendFriendRequest, sendFriendRequestToId, fetchFriendSuggestions } = useCommunityStore();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
+  const [suggestions, setSuggestions] = useState(null); // null = loading
+  const [addedIds, setAddedIds] = useState(new Set());
+  const [busyId, setBusyId] = useState(null);
+  const [showQR, setShowQR] = useState(false);
+
+  const friendUrl = `${window.location.origin}/community/add-friend/${userId}`;
+
+  useEffect(() => {
+    fetchFriendSuggestions(userId).then((r) => setSuggestions(r.suggestions || []));
+  }, [userId]);
 
   const errorText = {
     notFound: t(lang, 'userNotFound'),
     self: t(lang, 'cannotAddSelf'),
     exists: t(lang, 'requestExists'),
+    alreadyFriends: t(lang, 'alreadyFriends'),
   };
 
-  const handleSend = async () => {
-    if (!email.trim()) return;
+  const handleSendEmail = async () => {
+    const value = email.trim();
+    if (!EMAIL_RE.test(value)) { setError(t(lang, 'invalidEmail')); return; }
     setLoading(true);
     setError('');
-    const { error: err } = await sendFriendRequest(email.trim(), userId);
+    const { error: err } = await sendFriendRequest(value, userId);
     setLoading(false);
     if (err) { setError(errorText[err] || err); return; }
     setDone(true);
+  };
+
+  const handleAddSuggestion = async (id) => {
+    setBusyId(id);
+    const { error: err } = await sendFriendRequestToId(id, userId);
+    setBusyId(null);
+    if (err) { toast.error(errorText[err] || t(lang, 'errorGeneric')); return; }
+    setAddedIds((prev) => new Set([...prev, id]));
+    toast.success(t(lang, 'requestSent'));
   };
 
   return (
@@ -299,13 +322,64 @@ function AddFriendModal({ lang, userId, onClose }) {
           <button onClick={onClose} className="px-5 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>{t(lang, 'close')}</button>
         </div>
       ) : (
-        <>
-          <input autoFocus value={email} onChange={e => setEmail(e.target.value)} placeholder="email@example.com" type="email"
-            className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
-          {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
-          <ModalActions lang={lang} onCancel={onClose} onSubmit={handleSend}
-            disabled={!email.trim() || loading} loading={loading} submitLabel={t(lang, 'send')} />
-        </>
+        <div className="space-y-4">
+          {/* Suggestions from shared groups */}
+          {suggestions && suggestions.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'fromYourGroups')}</p>
+              <div className="space-y-2 max-h-44 overflow-y-auto">
+                {suggestions.map((s) => {
+                  const added = addedIds.has(s.id);
+                  return (
+                    <div key={s.id} className="flex items-center justify-between gap-3 p-2 rounded-xl" style={CARD_STYLE}>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Avatar name={s.name} size={32} />
+                        <span className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{s.name}</span>
+                      </div>
+                      <button onClick={() => handleAddSuggestion(s.id)} disabled={added || busyId === s.id}
+                        className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
+                        style={added ? { background: 'var(--accent-soft)', color: 'var(--accent)' } : { background: 'var(--accent)', color: '#fff' }}>
+                        {busyId === s.id ? <Loader2 size={13} className="animate-spin" /> : added ? <Check size={13} /> : t(lang, 'addBtn')}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Add by email */}
+          <div>
+            <input value={email} onChange={e => { setEmail(e.target.value); setError(''); }} placeholder="email@example.com" type="email"
+              onKeyDown={e => e.key === 'Enter' && handleSendEmail()}
+              className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
+            {error && (
+              <p className="text-xs mb-3" style={{ color: '#e53e3e' }}>
+                {error}
+                {error === t(lang, 'userNotFound') && <> — {t(lang, 'friendLinkHint')}</>}
+              </p>
+            )}
+            <button onClick={handleSendEmail} disabled={!email.trim() || loading}
+              className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+              {loading ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'send')}
+            </button>
+          </div>
+
+          {/* Share your friend link */}
+          <div className="pt-1 border-t" style={{ borderColor: 'var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mt-3 mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'shareFriendLink')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'friendLinkHint')}</p>
+            <ShareButtons url={friendUrl} text={t(lang, 'addMeFriend')} copiedLabel={t(lang, 'linkCopied')} />
+            <button onClick={() => setShowQR(v => !v)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+              <QrCode size={14} /> {t(lang, 'showQrCode')}
+            </button>
+            {showQR && (
+              <div className="flex flex-col items-center gap-2 mt-3 p-4 rounded-xl bg-white">
+                <QRCodeSVG value={friendUrl} size={150} bgColor="#ffffff" fgColor="#1a0a2e" level="M" />
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </Modal>
   );

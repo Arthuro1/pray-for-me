@@ -455,13 +455,42 @@ const useCommunityStore = create((set, get) => ({
     const { data: toUserId, error: lookupError } = await supabase.rpc('find_user_by_email', { p_email: email });
     if (lookupError) return toError(lookupError);
     if (!toUserId) return { error: 'notFound' };
-    if (toUserId === fromUserId) return { error: 'self' };
+    return get().sendFriendRequestToId(toUserId, fromUserId);
+  },
 
+  // Send a request directly by user id (used by group suggestions + invite links).
+  // Returns { error: 'self' | 'alreadyFriends' | 'exists' | msg } or {}.
+  sendFriendRequestToId: async (toUserId, fromUserId) => {
+    if (!toUserId || toUserId === fromUserId) return { error: 'self' };
+    const [a, b] = orderedPair(fromUserId, toUserId);
+    const { data: existing } = await supabase
+      .from('friendships').select('user_id').eq('user_id', a).eq('friend_id', b).maybeSingle();
+    if (existing) return { error: 'alreadyFriends' };
     const { error } = await supabase
       .from('friend_requests')
       .insert({ from_user_id: fromUserId, to_user_id: toUserId });
     if (error) return { error: 'exists' };
     return {};
+  },
+
+  // People in the user's groups who aren't already friends or pending — the most
+  // natural friend suggestions. Returns [{ id, name }].
+  fetchFriendSuggestions: async (userId) => {
+    const { data: members } = await supabase.from('group_members').select('user_id'); // RLS-scoped to my groups
+    const candidates = [...new Set((members || []).map((m) => m.user_id))].filter((id) => id !== userId);
+    if (candidates.length === 0) return { suggestions: [] };
+
+    const { data: friends } = await supabase
+      .from('friendships').select('user_id, friend_id').or(`user_id.eq.${userId},friend_id.eq.${userId}`);
+    const friendIds = new Set((friends || []).map((f) => (f.user_id === userId ? f.friend_id : f.user_id)));
+
+    const { data: reqs } = await supabase
+      .from('friend_requests').select('from_user_id, to_user_id').or(`from_user_id.eq.${userId},to_user_id.eq.${userId}`);
+    const pending = new Set((reqs || []).flatMap((r) => [r.from_user_id, r.to_user_id]));
+
+    const ids = candidates.filter((id) => !friendIds.has(id) && !pending.has(id));
+    const nameOf = await resolveNames(ids);
+    return { suggestions: ids.map((id) => ({ id, name: nameOf(id) })) };
   },
 
   acceptFriendRequest: async (requestId) => {

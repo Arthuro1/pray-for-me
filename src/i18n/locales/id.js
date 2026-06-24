@@ -295,5 +295,11 @@ export default {
   "syncing": "Menyinkronkan…",
   "pendingChanges": "{n} menunggu",
   "groupSettings": "Pengaturan grup",
-  "autoAddRequestsSub": "Permintaan baru dari grup ini otomatis ditambahkan ke doa Anda."
+  "autoAddRequestsSub": "Permintaan baru dari grup ini otomatis ditambahkan ke doa Anda.",
+  "fromYourGroups": "Dari grup Anda",
+  "shareFriendLink": "Bagikan tautan teman Anda",
+  "friendLinkHint": "Siapa pun yang membuka tautan ini dapat mengirimi Anda permintaan pertemanan",
+  "addMeFriend": "Tambahkan saya sebagai mitra doa",
+  "invalidEmail": "Masukkan alamat email yang valid",
+  "alreadyFriends": "Kalian sudah berteman"
 };

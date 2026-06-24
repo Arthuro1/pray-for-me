@@ -295,5 +295,11 @@ export default {
   "syncing": "同期中…",
   "pendingChanges": "{n} 件待機中",
   "groupSettings": "グループ設定",
-  "autoAddRequestsSub": "このグループの新しいリクエストは自動的にあなたの祈りに追加されます。"
+  "autoAddRequestsSub": "このグループの新しいリクエストは自動的にあなたの祈りに追加されます。",
+  "fromYourGroups": "あなたのグループから",
+  "shareFriendLink": "友達リンクを共有",
+  "friendLinkHint": "このリンクを開いた人は友達リクエストを送れます",
+  "addMeFriend": "祈りのパートナーとして追加してください",
+  "invalidEmail": "有効なメールアドレスを入力してください",
+  "alreadyFriends": "すでに友達です"
 };

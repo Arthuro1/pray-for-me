@@ -295,5 +295,11 @@ export default {
   "syncing": "Synchronisierung…",
   "pendingChanges": "{n} ausstehend",
   "groupSettings": "Gruppeneinstellungen",
-  "autoAddRequestsSub": "Neue Anliegen dieser Gruppe werden automatisch zu deinen Gebeten hinzugefügt."
+  "autoAddRequestsSub": "Neue Anliegen dieser Gruppe werden automatisch zu deinen Gebeten hinzugefügt.",
+  "fromYourGroups": "Aus deinen Gruppen",
+  "shareFriendLink": "Teile deinen Freundeslink",
+  "friendLinkHint": "Wer diesen Link öffnet, kann dir eine Freundschaftsanfrage senden",
+  "addMeFriend": "Füge mich als Gebetspartner hinzu",
+  "invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+  "alreadyFriends": "Ihr seid bereits Freunde"
 };

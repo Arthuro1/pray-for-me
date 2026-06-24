@@ -295,5 +295,11 @@ export default {
   "syncing": "በማመሳሰል ላይ…",
   "pendingChanges": "{n} በመጠባበቅ ላይ",
   "groupSettings": "የቡድን ቅንብሮች",
-  "autoAddRequestsSub": "የዚህ ቡድን አዲስ ጥያቄዎች በራስ-ሰር ወደ ጸሎቶችዎ ይታከላሉ።"
+  "autoAddRequestsSub": "የዚህ ቡድን አዲስ ጥያቄዎች በራስ-ሰር ወደ ጸሎቶችዎ ይታከላሉ።",
+  "fromYourGroups": "ከቡድኖችዎ",
+  "shareFriendLink": "የጓደኝነት ሊንክዎን ያጋሩ",
+  "friendLinkHint": "ይህን ሊንክ የሚከፍት ማንኛውም ሰው የጓደኝነት ጥያቄ ሊልክልዎ ይችላል",
+  "addMeFriend": "እንደ የጸሎት አጋር ያክሉኝ",
+  "invalidEmail": "እባክዎ ትክክለኛ ኢሜይል ያስገቡ",
+  "alreadyFriends": "አስቀድሞ ጓደኛሞች ናችሁ"
 };

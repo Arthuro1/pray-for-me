@@ -295,5 +295,11 @@ export default {
   "syncing": "Syncing…",
   "pendingChanges": "{n} waiting",
   "groupSettings": "Group settings",
-  "autoAddRequestsSub": "New requests from this group are added to your prayers automatically."
+  "autoAddRequestsSub": "New requests from this group are added to your prayers automatically.",
+  "fromYourGroups": "From your groups",
+  "shareFriendLink": "Share your friend link",
+  "friendLinkHint": "Anyone who opens this link can send you a friend request",
+  "addMeFriend": "Add me as a prayer partner",
+  "invalidEmail": "Please enter a valid email address",
+  "alreadyFriends": "You're already friends"
 };

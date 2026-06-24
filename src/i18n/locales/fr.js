@@ -295,5 +295,11 @@ export default {
   "syncing": "Synchronisation…",
   "pendingChanges": "{n} en attente",
   "groupSettings": "Paramètres du groupe",
-  "autoAddRequestsSub": "Les nouvelles demandes de ce groupe sont ajoutées automatiquement à vos prières."
+  "autoAddRequestsSub": "Les nouvelles demandes de ce groupe sont ajoutées automatiquement à vos prières.",
+  "fromYourGroups": "Depuis vos groupes",
+  "shareFriendLink": "Partagez votre lien d’ami",
+  "friendLinkHint": "Quiconque ouvre ce lien peut vous envoyer une demande d’ami",
+  "addMeFriend": "Ajoute-moi comme partenaire de prière",
+  "invalidEmail": "Veuillez saisir une adresse e-mail valide",
+  "alreadyFriends": "Vous êtes déjà amis"
 };

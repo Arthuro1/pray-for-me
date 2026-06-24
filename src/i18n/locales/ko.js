@@ -295,5 +295,11 @@ export default {
   "syncing": "동기화 중…",
   "pendingChanges": "{n}개 대기 중",
   "groupSettings": "그룹 설정",
-  "autoAddRequestsSub": "이 그룹의 새 기도 제목이 자동으로 내 기도에 추가됩니다."
+  "autoAddRequestsSub": "이 그룹의 새 기도 제목이 자동으로 내 기도에 추가됩니다.",
+  "fromYourGroups": "내 그룹에서",
+  "shareFriendLink": "친구 링크 공유",
+  "friendLinkHint": "이 링크를 여는 사람은 친구 요청을 보낼 수 있습니다",
+  "addMeFriend": "기도 파트너로 추가해 주세요",
+  "invalidEmail": "유효한 이메일 주소를 입력하세요",
+  "alreadyFriends": "이미 친구입니다"
 };

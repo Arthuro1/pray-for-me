@@ -295,5 +295,11 @@ export default {
   "syncing": "Sincronizando…",
   "pendingChanges": "{n} pendiente(s)",
   "groupSettings": "Ajustes del grupo",
-  "autoAddRequestsSub": "Las nuevas peticiones de este grupo se añaden automáticamente a tus oraciones."
+  "autoAddRequestsSub": "Las nuevas peticiones de este grupo se añaden automáticamente a tus oraciones.",
+  "fromYourGroups": "De tus grupos",
+  "shareFriendLink": "Comparte tu enlace de amigo",
+  "friendLinkHint": "Cualquiera que abra este enlace puede enviarte una solicitud de amistad",
+  "addMeFriend": "Agrégame como compañero de oración",
+  "invalidEmail": "Introduce un correo electrónico válido",
+  "alreadyFriends": "Ya sois amigos"
 };

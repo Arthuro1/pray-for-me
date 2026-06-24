@@ -295,5 +295,11 @@ export default {
   "syncing": "同步中…",
   "pendingChanges": "{n} 项待同步",
   "groupSettings": "群组设置",
-  "autoAddRequestsSub": "该群组的新请求会自动添加到你的祷告中。"
+  "autoAddRequestsSub": "该群组的新请求会自动添加到你的祷告中。",
+  "fromYourGroups": "来自你的群组",
+  "shareFriendLink": "分享你的好友链接",
+  "friendLinkHint": "任何打开此链接的人都可以向你发送好友请求",
+  "addMeFriend": "加我为祷告伙伴",
+  "invalidEmail": "请输入有效的电子邮件地址",
+  "alreadyFriends": "你们已经是好友"
 };

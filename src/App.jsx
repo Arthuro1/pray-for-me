@@ -69,6 +69,35 @@ function JoinGroupPage() {
   return <PageLoader />;
 }
 
+// Sends a friend request from a shared friend link (/community/add-friend/:id),
+// then routes into the community with feedback.
+function AddFriendPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const { settings } = usePrayerStore();
+  const sendFriendRequestToId = useCommunityStore(s => s.sendFriendRequestToId);
+  const lang = settings.language || 'fr';
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
+    (async () => {
+      const res = await sendFriendRequestToId(id, user.id);
+      if (cancelled) return;
+      const msgKey = !res.error ? 'requestSent'
+        : res.error === 'alreadyFriends' ? 'alreadyFriends'
+        : res.error === 'self' ? 'cannotAddSelf'
+        : 'requestExists';
+      (res.error ? toast.error : toast.success)(t(lang, msgKey));
+      navigate('/community', { replace: true });
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id, id]);
+
+  return <PageLoader />;
+}
+
 // Personal prayer detail at /prayers/:id — resolves the prayer from the store.
 function PersonalPrayerPage({ onEdit }) {
   const { id } = useParams();
@@ -180,6 +209,7 @@ export default function App() {
             <Route path="/answered" element={<AnsweredTab />} />
             <Route path="/community" element={<CommunityTab />} />
             <Route path="/community/join/:code" element={<JoinGroupPage />} />
+            <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
             <Route path="/community/group/:groupId" element={<CommunityTab />} />
             <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
             <Route path="/plan" element={<PlanTab />} />

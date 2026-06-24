@@ -295,5 +295,11 @@ export default {
   "syncing": "جارٍ المزامنة…",
   "pendingChanges": "{n} في الانتظار",
   "groupSettings": "إعدادات المجموعة",
-  "autoAddRequestsSub": "تُضاف الطلبات الجديدة من هذه المجموعة إلى صلواتك تلقائيًا."
+  "autoAddRequestsSub": "تُضاف الطلبات الجديدة من هذه المجموعة إلى صلواتك تلقائيًا.",
+  "fromYourGroups": "من مجموعاتك",
+  "shareFriendLink": "شارك رابط الصداقة",
+  "friendLinkHint": "يمكن لأي شخص يفتح هذا الرابط أن يرسل لك طلب صداقة",
+  "addMeFriend": "أضِفني كشريك صلاة",
+  "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
+  "alreadyFriends": "أنتما صديقان بالفعل"
 };

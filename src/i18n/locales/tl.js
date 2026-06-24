@@ -295,5 +295,11 @@ export default {
   "syncing": "Sini-sync…",
   "pendingChanges": "{n} naghihintay",
   "groupSettings": "Mga setting ng grupo",
-  "autoAddRequestsSub": "Ang mga bagong kahilingan mula sa grupong ito ay awtomatikong idinaragdag sa iyong mga panalangin."
+  "autoAddRequestsSub": "Ang mga bagong kahilingan mula sa grupong ito ay awtomatikong idinaragdag sa iyong mga panalangin.",
+  "fromYourGroups": "Mula sa iyong mga grupo",
+  "shareFriendLink": "Ibahagi ang iyong friend link",
+  "friendLinkHint": "Sinumang magbukas ng link na ito ay maaaring magpadala sa iyo ng friend request",
+  "addMeFriend": "Idagdag mo ako bilang kapartner sa panalangin",
+  "invalidEmail": "Maglagay ng wastong email address",
+  "alreadyFriends": "Magkaibigan na kayo"
 };

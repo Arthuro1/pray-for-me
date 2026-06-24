@@ -295,5 +295,11 @@ export default {
   "syncing": "Inasawazisha…",
   "pendingChanges": "{n} zinasubiri",
   "groupSettings": "Mipangilio ya kikundi",
-  "autoAddRequestsSub": "Maombi mapya ya kikundi hiki yanaongezwa kwenye maombi yako kiotomatiki."
+  "autoAddRequestsSub": "Maombi mapya ya kikundi hiki yanaongezwa kwenye maombi yako kiotomatiki.",
+  "fromYourGroups": "Kutoka vikundi vyako",
+  "shareFriendLink": "Shiriki kiungo chako cha rafiki",
+  "friendLinkHint": "Yeyote anayefungua kiungo hiki anaweza kukutumia ombi la urafiki",
+  "addMeFriend": "Niongeze kama mshirika wa maombi",
+  "invalidEmail": "Tafadhali weka anwani sahihi ya barua pepe",
+  "alreadyFriends": "Tayari ni marafiki"
 };
