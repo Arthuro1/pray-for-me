@@ -74,6 +74,29 @@ const useTranslationStore = create((set, get) => ({
     return memCache[lang]?.[text] ?? text;
   },
 
+  // Translate an arbitrary list of texts to lang (skipping already-cached ones),
+  // caching results in memory + Supabase. Used for on-demand community translation.
+  translateTexts: async (texts, lang, userId) => {
+    if (!lang || !API_KEY || !userId) return;
+    const langCache = memCache[lang] || {};
+    const todo = [...new Set((texts || []).filter((x) => x && !langCache[x]))];
+    if (todo.length === 0) return;
+
+    set({ translating: true });
+    const CHUNK = 20;
+    const fresh = {};
+    for (let i = 0; i < todo.length; i += CHUNK) {
+      Object.assign(fresh, await callTranslate(todo.slice(i, i + CHUNK), lang));
+    }
+    if (Object.keys(fresh).length > 0) {
+      if (!memCache[lang]) memCache[lang] = {};
+      Object.assign(memCache[lang], fresh);
+      const rows = Object.entries(fresh).map(([original_text, translated_text]) => ({ user_id: userId, lang, original_text, translated_text }));
+      await supabase.from('translations').upsert(rows, { onConflict: 'user_id,lang,original_text', ignoreDuplicates: true });
+    }
+    set({ translating: false });
+  },
+
   // Translate all texts not yet in DB for the given lang, then save to Supabase
   translateContent: async (prayers, categories, lang, userId) => {
     if (!lang || !API_KEY || !userId) return;

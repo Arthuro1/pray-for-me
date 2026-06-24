@@ -268,5 +268,7 @@ export default {
   "answeredTitle": "Prières exaucées",
   "faithfulness": "Souvenez-vous de la fidélité de Dieu",
   "noAnsweredYet": "Aucune prière exaucée pour l'instant",
-  "noAnsweredSub": "Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici."
+  "noAnsweredSub": "Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici.",
+  "seeTranslation": "Voir la traduction",
+  "showOriginal": "Voir l'original"
 };

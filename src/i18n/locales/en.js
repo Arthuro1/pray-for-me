@@ -268,5 +268,7 @@ export default {
   "answeredTitle": "Answered prayers",
   "faithfulness": "Remember God's faithfulness",
   "noAnsweredYet": "No answered prayers yet",
-  "noAnsweredSub": "When a prayer is answered, mark it and its testimony will appear here."
+  "noAnsweredSub": "When a prayer is answered, mark it and its testimony will appear here.",
+  "seeTranslation": "See translation",
+  "showOriginal": "See original"
 };

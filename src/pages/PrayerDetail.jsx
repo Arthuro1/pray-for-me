@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, BookmarkPlus, BookmarkCheck } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, BookmarkPlus, BookmarkCheck, Languages } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -55,7 +55,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [savingToPersonal, setSavingToPersonal] = useState(false);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore();
-  const { tr } = useTranslationStore();
+  const { tr, translateTexts, translating } = useTranslationStore();
+  const [showTranslated, setShowTranslated] = useState(false);
   const { user } = useAuthStore();
   const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
@@ -177,6 +178,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Clear pending AI suggestions when language changes so user can re-generate in new language
   useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
 
+  // Reset the community translation toggle when the prayer or language changes
+  useEffect(() => { setShowTranslated(false); }, [communityPrayer?.id, lang]);
+
   // In community mode, read from store so updates (prayer points, edits) reflect immediately
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
@@ -190,6 +194,27 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityHasReacted = isCommunity && userReactions.has(communityPrayer.id);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
+
+  // Personal content auto-translates; community content translates on demand
+  // (the "See translation" toggle) so members can read requests in any language.
+  const loc = (text) => {
+    if (!text) return text;
+    if (!isCommunity) return tr(text, lang);
+    return showTranslated ? tr(text, lang) : text;
+  };
+
+  const handleToggleTranslate = async () => {
+    if (showTranslated) { setShowTranslated(false); return; }
+    const texts = [livePrayer.title, livePrayer.description];
+    (livePrayer.prayer_points || []).forEach(pp => {
+      texts.push(pp.title, pp.verse_text);
+      (pp.verses || []).forEach(v => texts.push(v.text));
+    });
+    communityUpdates.forEach(u => texts.push(u.text));
+    prayerTestimonies.forEach(tm => texts.push(tm.content));
+    await translateTexts(texts.filter(Boolean), lang, user?.id);
+    setShowTranslated(true);
+  };
 
   const bibleUrl = verse => `https://www.bible.com/search/bible?q=${encodeURIComponent(verse)}&version_id=93`;
 
@@ -357,7 +382,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </button>
         <div className="flex-1 min-w-0">
           <h1 className="text-base font-semibold text-white truncate" style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}>
-            {isCommunity ? livePrayer.title : tr(livePrayer.title, lang)}
+            {loc(livePrayer.title)}
           </h1>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {isCommunity
@@ -425,6 +450,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
       <div className="px-4 md:px-8 py-5 max-w-2xl mx-auto space-y-4">
 
+        {/* On-demand translation toggle (community content can be in any language) */}
+        {isCommunity && (
+          <button
+            onClick={handleToggleTranslate}
+            disabled={translating}
+            className="flex items-center gap-1.5 text-xs font-medium disabled:opacity-50"
+            style={{ color: 'var(--accent)' }}
+          >
+            {translating ? <Loader2 size={13} className="animate-spin" /> : <Languages size={13} />}
+            {showTranslated ? t(lang, 'showOriginal') : t(lang, 'seeTranslation')}
+          </button>
+        )}
+
         {/* Categories */}
         {prayerCategories.length > 0 && (
           <div className="flex flex-wrap gap-2">
@@ -446,7 +484,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'details')}</p>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)', lineHeight: 1.7 }}>
-              {tr(livePrayer.description, lang)}
+              {loc(livePrayer.description)}
             </p>
           </div>
         )}
@@ -483,7 +521,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               return (
                 <div key={pp.id} className="group rounded-xl p-3" style={{ background: '#fff8e6', borderLeft: '3px solid #f5c842' }}>
                   <div className="flex items-start gap-2">
-                    <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
+                    <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{loc(pp.title)}</p>
                     {!isAnswered && (
                       <button onClick={() => setConfirmRemovePoint(pp)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
                         <Trash2 size={13} />
@@ -506,7 +544,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           </button>
                           {expandedVerse === `${pp.id}-${i}` && (
                             <div className="mt-1.5 rounded-xl p-3" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
-                              {v.text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{tr(v.text, lang)}"</p>}
+                              {v.text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{loc(v.text)}"</p>}
                               <div className="flex items-center justify-between">
                                 <a href={bibleUrl(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
                                   <ExternalLink size={11} /> {t(lang, 'openBible')}
@@ -700,7 +738,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         {communityAuthor(u, user?.id, lang)}
                         {' · '}{timeAgo(u.created_at, lang)}
                       </p>
-                      <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{u.text}</p>
+                      <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
                     </div>
                   </div>
                 ))}
@@ -738,7 +776,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>
                     🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}
                   </p>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{tm.content}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{loc(tm.content)}</p>
                 </div>
               ))}
             </div>
