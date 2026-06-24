@@ -19,6 +19,7 @@ import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
 import { scheduleNotifications } from './notifications';
+import { loadLocale, isLocaleLoaded } from './i18n';
 import { Loader2 } from 'lucide-react';
 
 // Fallback shown while a lazily-loaded route chunk is fetched.
@@ -51,8 +52,18 @@ export default function App() {
   const { loadTranslations, translateContent } = useTranslationStore();
   const { fetchPendingCount } = useCommunityStore();
 
+  const lang = settings.language || 'fr';
+  const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
+
   const openAdd = () => { setEditPrayer(null); setShowForm(true); };
   const openEdit = (p) => { setEditPrayer(p); setShowForm(true); };
+
+  // Load the active language's strings (French is always bundled as fallback).
+  useEffect(() => {
+    if (isLocaleLoaded(lang)) { setLocaleReady(true); return; }
+    setLocaleReady(false);
+    loadLocale(lang).then(() => setLocaleReady(true));
+  }, [lang]);
 
   useEffect(() => {
     init();
@@ -79,7 +90,7 @@ export default function App() {
     }
   }, [settings.language, prayers, categories, user?.id]);
 
-  if (authLoading) {
+  if (authLoading || !localeReady) {
     return (
       <div className="min-h-screen bg-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
