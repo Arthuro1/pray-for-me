@@ -13,6 +13,7 @@ import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
+import ShareButtons from '../components/ShareButtons';
 import { QRCodeSVG } from 'qrcode.react';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
@@ -415,6 +416,8 @@ function MembersModal({ lang, group, userId, onClose }) {
           <QrCode size={16} />
         </button>
       </div>
+
+      <ShareButtons url={inviteUrl} text={`${t(lang, 'joinMyGroup')} "${group.name}"`} copiedLabel={t(lang, 'linkCopied')} />
 
       {showQR && (
         <div className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>

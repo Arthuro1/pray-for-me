@@ -250,5 +250,6 @@ export default {
   "deleteCategoryConfirm": "Supprimer cette catégorie ?",
   "removeMemberConfirm": "Retirer ce membre du groupe ?",
   "showQrCode": "Code QR",
-  "scanToJoin": "Scannez pour rejoindre le groupe"
+  "scanToJoin": "Scannez pour rejoindre le groupe",
+  "joinMyGroup": "Rejoignez mon groupe de prière"
 };
