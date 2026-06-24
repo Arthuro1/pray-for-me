@@ -62,7 +62,9 @@
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* "Twemoji Country Flags" (injected by the polyfill) only contains flag glyphs,
+     so all other text falls through to the normal stack. */
+  font-family: 'Twemoji Country Flags', 'Segoe UI', system-ui, -apple-system, sans-serif;
   background-color: var(--bg);
   color: var(--text-1);
   transition: background-color 0.2s ease, color 0.2s ease;
