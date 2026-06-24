@@ -40,6 +40,9 @@ describe('isPermanentError', () => {
     expect(isPermanentError({ status: 404 })).toBe(true);
     expect(isPermanentError({ statusCode: 409 })).toBe(true);
   });
+  it('treats 3xx (e.g. PGRST203 ambiguous function = 300) as permanent', () => {
+    expect(isPermanentError({ status: 300 })).toBe(true);
+  });
   it('treats auth/timeout/rate-limit as transient', () => {
     expect(isPermanentError({ status: 401 })).toBe(false);
     expect(isPermanentError({ status: 408 })).toBe(false);

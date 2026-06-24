@@ -1,5 +1,5 @@
 import { get as idbGet, set as idbSet } from 'idb-keyval';
-import { addItem, removeItem, bumpTries, isPermanentError, isAuthError } from './queueCore';
+import { addItem, removeItem, bumpTries, isPermanentError, isAuthError, MAX_TRIES } from './queueCore';
 
 // Durable, FIFO offline write queue. Store actions enqueue a mutation (after
 // applying their optimistic local change); this module persists it to
@@ -70,7 +70,9 @@ export async function flushQueue() {
       } catch (err) {
         console.error(`[mutationQueue] ${item.kind} failed (status ${err?.status ?? '?'}):`, err?.message || err);
         if (isAuthError(err)) break;            // pause until session restored
-        if (isPermanentError(err)) {            // won't recover → drop + surface
+        // Drop if it won't recover, or has exhausted retries (so it can't block
+        // the rest of the queue indefinitely).
+        if (isPermanentError(err) || item.tries + 1 >= MAX_TRIES) {
           queue = removeItem(queue, item.id);
           persist();
           notify();

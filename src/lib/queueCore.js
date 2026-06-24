@@ -17,15 +17,20 @@ export function bumpTries(queue, id) {
   return queue.map((item) => (item.id === id ? { ...item, tries: item.tries + 1 } : item));
 }
 
-// A "permanent" failure is a 4xx that won't fix itself on retry (validation,
-// not-found, conflict) — EXCEPT 401/408/429 which are worth retrying. Network
-// errors have no status and are treated as transient.
+// Number of attempts before a transient-looking failure is given up on, so a
+// "poison" mutation can't block the whole queue forever.
+export const MAX_TRIES = 6;
+
+// A "permanent" failure won't fix itself on retry: a 3xx (e.g. PGRST203
+// ambiguous-function = HTTP 300) or 4xx (validation, not-found, conflict) —
+// EXCEPT 401/408/429 which are worth retrying. Network errors have no status
+// and are treated as transient.
 export function isPermanentError(error) {
   const status = error?.status ?? error?.statusCode ?? error?.code;
   const n = typeof status === 'string' ? parseInt(status, 10) : status;
   if (!Number.isFinite(n)) return false;          // network / unknown → transient
   if (n === 401 || n === 408 || n === 429) return false; // auth/timeout/rate-limit → transient
-  return n >= 400 && n < 500;
+  return n >= 300 && n < 500;
 }
 
 // An auth failure pauses the queue until the session is restored.
