@@ -24,6 +24,8 @@ import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
 import { scheduleNotifications } from './notifications';
+import { initQueue, onMutationDropped } from './lib/mutationQueue';
+import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded } from './i18n';
 import { Loader2 } from 'lucide-react';
 
@@ -105,6 +107,9 @@ export default function App() {
     init();
     const saved = localStorage.getItem('pfm_theme') || 'light';
     document.documentElement.setAttribute('data-theme', saved);
+    // Replay any writes queued offline, and surface mutations that fail for good.
+    onMutationDropped(() => toast.error(t(lang, 'errorGeneric')));
+    initQueue();
   }, []);
 
   useEffect(() => {

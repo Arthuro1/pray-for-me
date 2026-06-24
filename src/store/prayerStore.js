@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { prayerOnDay, prayerPriority, appendTestimony, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { enqueue } from '../lib/mutationQueue';
+import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 
 const DEFAULT_CATEGORIES = {
   fr: [
@@ -51,6 +53,7 @@ async function syncSharedCopies(prayerId, updates) {
 const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
+  userId: null,
   settings: {
     dailyReminderEnabled: false,
     dailyReminderTime: '07:00',
@@ -70,17 +73,24 @@ const usePrayerStore = create((set, get) => ({
 
   // ─── Load all data ───────────────────────────────────────────
   loadData: async (userId) => {
-    set({ loading: true });
+    set({ loading: true, userId });
 
-    // Load categories (create defaults if first time). Order by created_at at the
-    // DB level (always safe), then apply manual sort_order client-side — so a
-    // missing sort_order column never errors the query (which would wrongly
-    // re-create the default categories and duplicate them).
-    let { data: cats } = await supabase
-      .from('categories')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at');
+    // 1. Hydrate instantly from the local snapshot (works offline and includes
+    //    any prayers created offline that aren't on the server yet).
+    const snap = await loadSnapshot(userId);
+    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], loading: false });
+
+    // 2. Fetch authoritative data. If the network is unreachable, keep the
+    //    hydrated snapshot rather than wiping it.
+    let cats;
+    try {
+      const res = await supabase.from('categories').select('*').eq('user_id', userId).order('created_at');
+      if (res.error) throw res.error;
+      cats = res.data;
+    } catch {
+      set({ loading: false });
+      return;
+    }
 
     if (!cats || cats.length === 0) {
       const lang = get().settings.language || 'fr';
@@ -97,45 +107,65 @@ const usePrayerStore = create((set, get) => ({
       );
     }
 
-    // Load prayers with updates, points and categories
-    const { data: prayers } = await supabase
-      .from('prayers')
-      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+    let serverPrayers;
+    try {
+      const res = await supabase
+        .from('prayers')
+        .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      if (res.error) throw res.error;
+      serverPrayers = res.data || [];
+    } catch {
+      // Categories loaded but prayers didn't — keep hydrated prayers.
+      const orderedCats = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
+      set({ categories: orderedCats, loading: false });
+      return;
+    }
 
-    // Stable sort by sort_order (nulls last), preserving created_at order for ties.
+    // 3. Merge: server is authoritative, but keep local-only prayers still
+    //    pending in the offline queue (id not yet on the server).
+    const serverIds = new Set(serverPrayers.map((p) => p.id));
+    const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id));
+    const mergedPrayers = [...pendingLocal, ...serverPrayers];
+
     const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
-    set({ categories: ordered, prayers: prayers || [], loading: false });
+    set({ categories: ordered, prayers: mergedPrayers, loading: false });
+    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers });
   },
 
   // ─── Prayers ─────────────────────────────────────────────────
+  // Optimistic + offline-capable: the prayer appears immediately and the server
+  // write is queued (replayed on reconnect). A client-generated id keeps the
+  // local record and the eventual server row in sync.
   addPrayer: async (prayer) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    const { data, error } = await supabase
-      .from('prayers')
-      .insert({
-        user_id: user.id,
-        title: prayer.title,
-        description: prayer.description || '',
-        for_other: prayer.forOther || false,
-        person_name: prayer.personName || '',
-        phone: prayer.phone || '',
-        status: 'active',
-      })
-      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
-      .single();
+    // getSession reads the locally-cached session (no network), so this works offline.
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return;
 
-    if (!error && data) {
-      const categoryIds = prayer.categoryIds || [];
-      if (categoryIds.length > 0) {
-        await supabase.from('prayer_categories').insert(
-          categoryIds.map((cid) => ({ prayer_id: data.id, category_id: cid }))
-        );
-        data.prayer_categories = categoryIds.map((cid) => ({ category_id: cid }));
-      }
-      set((state) => ({ prayers: [data, ...state.prayers] }));
-    }
+    const id = crypto.randomUUID();
+    const categoryIds = prayer.categoryIds || [];
+    const row = {
+      id,
+      user_id: userId,
+      title: prayer.title,
+      description: prayer.description || '',
+      for_other: prayer.forOther || false,
+      person_name: prayer.personName || '',
+      phone: prayer.phone || '',
+      status: 'active',
+    };
+
+    const optimistic = {
+      ...row,
+      created_at: new Date().toISOString(),
+      prayer_updates: [],
+      prayer_points: [],
+      prayer_categories: categoryIds.map((category_id) => ({ category_id })),
+    };
+    set((state) => ({ prayers: [optimistic, ...state.prayers] }));
+    enqueue('createPrayer', { row, categoryIds });
   },
 
   // Saves a community prayer into the user's personal list as a snapshot copy
@@ -392,5 +422,17 @@ const usePrayerStore = create((set, get) => ({
     await Promise.all(orderedIds.map((id, i) => supabase.from('categories').update({ sort_order: i }).eq('id', id)));
   },
 }));
+
+// Persist prayers + categories locally on change (debounced), so the next load
+// can hydrate instantly and offline — including not-yet-synced prayers.
+let saveTimer;
+usePrayerStore.subscribe((state) => {
+  if (!state.userId) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(
+    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers }),
+    400
+  );
+});
 
 export default usePrayerStore;
