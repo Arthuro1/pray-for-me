@@ -248,5 +248,7 @@ export default {
   "delete": "Supprimer",
   "deleteWarning": "Cette action est irréversible.",
   "deleteCategoryConfirm": "Supprimer cette catégorie ?",
-  "removeMemberConfirm": "Retirer ce membre du groupe ?"
+  "removeMemberConfirm": "Retirer ce membre du groupe ?",
+  "showQrCode": "Code QR",
+  "scanToJoin": "Scannez pour rejoindre le groupe"
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check, LogOut, Search, Share2 } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -13,6 +13,7 @@ import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { QRCodeSVG } from 'qrcode.react';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
@@ -389,24 +390,39 @@ function MembersModal({ lang, group, userId, onClose }) {
   const { fetchGroupMembers } = useCommunityStore();
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showQR, setShowQR] = useState(false);
+
+  const inviteUrl = `${window.location.origin}/community/join/${group.invite_code}`;
 
   useEffect(() => {
     fetchGroupMembers(group.id).then(r => { setMembers(r.members || []); setLoading(false); });
   }, [group.id]);
 
   const shareInvite = async () => {
-    const url = `${window.location.origin}/community/join/${group.invite_code}`;
     try {
-      if (navigator.share) await navigator.share({ title: group.name, text: group.name, url });
-      else { await navigator.clipboard.writeText(url); toast.success(t(lang, 'linkCopied')); }
+      if (navigator.share) await navigator.share({ title: group.name, text: group.name, url: inviteUrl });
+      else { await navigator.clipboard.writeText(inviteUrl); toast.success(t(lang, 'linkCopied')); }
     } catch { /* share dismissed */ }
   };
 
   return (
     <Modal title={`${t(lang, 'members')} (${members.length})`} onClose={onClose}>
-      <button onClick={shareInvite} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium mb-4" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-        <Share2 size={15} /> {t(lang, 'shareInviteLink')}
-      </button>
+      <div className="flex gap-2 mb-4">
+        <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+          <Share2 size={15} /> {t(lang, 'shareInviteLink')}
+        </button>
+        <button onClick={() => setShowQR(v => !v)} title={t(lang, 'showQrCode')} className="px-3 rounded-xl flex items-center justify-center" style={{ background: showQR ? 'var(--accent)' : 'var(--accent-soft)', color: showQR ? '#fff' : 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+          <QrCode size={16} />
+        </button>
+      </div>
+
+      {showQR && (
+        <div className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>
+          <QRCodeSVG value={inviteUrl} size={170} bgColor="#ffffff" fgColor="#1a0a2e" level="M" />
+          <p className="text-xs" style={{ color: '#475569' }}>{t(lang, 'scanToJoin')}</p>
+          <p className="text-sm font-mono font-semibold tracking-wider" style={{ color: '#1a0a2e' }}>{group.invite_code}</p>
+        </div>
+      )}
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
       ) : (

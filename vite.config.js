@@ -56,6 +56,7 @@ export default defineConfig({
         // Split large, rarely-changing vendor libs into their own cached chunks.
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
+          if (id.includes('qrcode')) return 'qrcode';
           if (id.includes('react') || id.includes('scheduler')) return 'react';
           if (id.includes('@supabase')) return 'supabase';
           if (id.includes('date-fns')) return 'datefns';

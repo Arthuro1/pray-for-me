@@ -248,5 +248,7 @@ export default {
   "delete": "Delete",
   "deleteWarning": "This action can't be undone.",
   "deleteCategoryConfirm": "Delete this category?",
-  "removeMemberConfirm": "Remove this member from the group?"
+  "removeMemberConfirm": "Remove this member from the group?",
+  "showQrCode": "QR code",
+  "scanToJoin": "Scan to join the group"
 };
