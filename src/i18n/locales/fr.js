@@ -273,5 +273,16 @@ export default {
   "showOriginal": "Voir l'original",
   "pushUnsupported": "Votre navigateur ne prend pas en charge les notifications.",
   "pushDenied": "Notifications refusées. Activez-les dans les réglages du navigateur.",
-  "remindersOn": "Rappels activés 🙏"
+  "remindersOn": "Rappels activés 🙏",
+  "onboardWelcomeTitle": "Bienvenue sur Pray4Me",
+  "onboardWelcomeBody": "Votre compagnon de prière personnel. Préparons votre vie de prière en quelques secondes.",
+  "onboardPrayTitle": "Notez vos prières",
+  "onboardPrayBody": "Ajoutez vos sujets de prière, suivez leur évolution et célébrez quand Dieu répond.",
+  "onboardPlanTitle": "Planifiez votre semaine",
+  "onboardPlanBody": "Classez vos prières par catégories et attribuez-les à des jours, pour toujours savoir quoi prier aujourd’hui.",
+  "onboardCommunityTitle": "Priez ensemble",
+  "onboardCommunityBody": "Rejoignez des groupes, partagez des sujets et priez les uns pour les autres.",
+  "onboardSkip": "Passer",
+  "onboardNext": "Suivant",
+  "onboardStart": "Commencer"
 };

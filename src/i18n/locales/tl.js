@@ -273,5 +273,16 @@ export default {
   "showOriginal": "Tingnan ang orihinal",
   "pushUnsupported": "Hindi sinusuportahan ng iyong browser ang mga notification.",
   "pushDenied": "Tinanggihan ang mga notification. I-enable sa browser settings.",
-  "remindersOn": "Naka-on ang mga paalala 🙏"
+  "remindersOn": "Naka-on ang mga paalala 🙏",
+  "onboardWelcomeTitle": "Maligayang pagdating sa Pray4Me",
+  "onboardWelcomeBody": "Ang iyong personal na kasama sa panalangin. Ihanda natin ang iyong buhay-panalangin sa ilang segundo.",
+  "onboardPrayTitle": "Itala ang iyong mga panalangin",
+  "onboardPrayBody": "Magdagdag ng mga kahilingan, subaybayan ang pag-unlad, at magdiwang kapag sumasagot ang Diyos.",
+  "onboardPlanTitle": "Planuhin ang iyong linggo",
+  "onboardPlanBody": "Iuri ang mga panalangin sa kategorya at italaga sa mga araw, para alam mo lagi kung ano ang ipagdarasal ngayon.",
+  "onboardCommunityTitle": "Magdasal nang sama-sama",
+  "onboardCommunityBody": "Sumali sa mga grupo, magbahagi ng kahilingan, at magdasal para sa isa’t isa.",
+  "onboardSkip": "Laktawan",
+  "onboardNext": "Susunod",
+  "onboardStart": "Magsimula"
 };

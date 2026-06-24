@@ -273,5 +273,16 @@ export default {
   "showOriginal": "Ona asili",
   "pushUnsupported": "Kivinjari chako hakitumii arifa.",
   "pushDenied": "Arifa zimekataliwa. Ziwashe katika mipangilio ya kivinjari.",
-  "remindersOn": "Vikumbusho vimewashwa 🙏"
+  "remindersOn": "Vikumbusho vimewashwa 🙏",
+  "onboardWelcomeTitle": "Karibu Pray4Me",
+  "onboardWelcomeBody": "Mwenzako wa maombi. Hebu tuandae maisha yako ya maombi kwa sekunde chache.",
+  "onboardPrayTitle": "Andika maombi yako",
+  "onboardPrayBody": "Ongeza maombi, fuatilia maendeleo yake, na ufurahi Mungu anapojibu.",
+  "onboardPlanTitle": "Panga wiki yako",
+  "onboardPlanBody": "Panga maombi katika makundi na uyapange kwa siku, ili ujue kila wakati la kuombea leo.",
+  "onboardCommunityTitle": "Ombeni pamoja",
+  "onboardCommunityBody": "Jiunge na vikundi, shiriki maombi, na muombeane.",
+  "onboardSkip": "Ruka",
+  "onboardNext": "Endelea",
+  "onboardStart": "Anza"
 };

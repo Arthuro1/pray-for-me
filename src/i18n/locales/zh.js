@@ -273,5 +273,16 @@ export default {
   "showOriginal": "查看原文",
   "pushUnsupported": "您的浏览器不支持通知。",
   "pushDenied": "通知被拒绝。请在浏览器设置中启用。",
-  "remindersOn": "提醒已开启 🙏"
+  "remindersOn": "提醒已开启 🙏",
+  "onboardWelcomeTitle": "欢迎使用 Pray4Me",
+  "onboardWelcomeBody": "您的个人祷告伴侣。让我们用几秒钟设置您的祷告生活。",
+  "onboardPrayTitle": "记录您的祷告",
+  "onboardPrayBody": "添加祷告事项，追踪进展，并在神回应时一同庆祝。",
+  "onboardPlanTitle": "规划您的一周",
+  "onboardPlanBody": "将祷告分类并分配到各天，让您始终知道今天该为什么祷告。",
+  "onboardCommunityTitle": "一起祷告",
+  "onboardCommunityBody": "加入群组，分享代祷事项，彼此代祷。",
+  "onboardSkip": "跳过",
+  "onboardNext": "下一步",
+  "onboardStart": "开始"
 };

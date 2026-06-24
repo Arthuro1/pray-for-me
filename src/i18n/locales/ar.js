@@ -273,5 +273,16 @@ export default {
   "showOriginal": "عرض الأصل",
   "pushUnsupported": "متصفحك لا يدعم الإشعارات.",
   "pushDenied": "تم رفض الإشعارات. فعّلها من إعدادات المتصفح.",
-  "remindersOn": "تم تفعيل التذكيرات 🙏"
+  "remindersOn": "تم تفعيل التذكيرات 🙏",
+  "onboardWelcomeTitle": "مرحبًا بك في Pray4Me",
+  "onboardWelcomeBody": "رفيق صلاتك الشخصي. لنُعدّ حياتك الصلاتية في ثوانٍ.",
+  "onboardPrayTitle": "دوّن صلواتك",
+  "onboardPrayBody": "أضِف طلبات الصلاة، وتابع تطورها، واحتفل عندما يستجيب الله.",
+  "onboardPlanTitle": "خطّط لأسبوعك",
+  "onboardPlanBody": "رتّب الصلوات في فئات وخصّصها لأيام، لتعرف دائمًا ماذا تصلي اليوم.",
+  "onboardCommunityTitle": "صلّوا معًا",
+  "onboardCommunityBody": "انضم إلى مجموعات، وشارك الطلبات، وصلّوا بعضكم لبعض.",
+  "onboardSkip": "تخطٍّ",
+  "onboardNext": "التالي",
+  "onboardStart": "ابدأ"
 };

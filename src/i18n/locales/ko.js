@@ -273,5 +273,16 @@ export default {
   "showOriginal": "원문 보기",
   "pushUnsupported": "브라우저가 알림을 지원하지 않습니다.",
   "pushDenied": "알림이 거부되었습니다. 브라우저 설정에서 활성화하세요.",
-  "remindersOn": "알림이 켜졌습니다 🙏"
+  "remindersOn": "알림이 켜졌습니다 🙏",
+  "onboardWelcomeTitle": "Pray4Me에 오신 것을 환영합니다",
+  "onboardWelcomeBody": "당신의 개인 기도 동반자입니다. 몇 초 만에 기도 생활을 설정해 봅시다.",
+  "onboardPrayTitle": "기도를 기록하세요",
+  "onboardPrayBody": "기도 제목을 추가하고, 변화를 추적하며, 하나님이 응답하실 때 함께 기뻐하세요.",
+  "onboardPlanTitle": "한 주를 계획하세요",
+  "onboardPlanBody": "기도를 카테고리로 분류하고 요일에 배정해, 오늘 무엇을 기도할지 항상 알 수 있습니다.",
+  "onboardCommunityTitle": "함께 기도하세요",
+  "onboardCommunityBody": "그룹에 참여하고, 기도 제목을 나누며, 서로를 위해 기도하세요.",
+  "onboardSkip": "건너뛰기",
+  "onboardNext": "다음",
+  "onboardStart": "시작하기"
 };

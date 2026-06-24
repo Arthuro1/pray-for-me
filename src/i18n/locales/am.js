@@ -273,5 +273,16 @@ export default {
   "showOriginal": "ዋናውን አሳይ",
   "pushUnsupported": "አሳሽዎ ማሳወቂያዎችን አይደግፍም።",
   "pushDenied": "ማሳወቂያዎች ተከልክለዋል። በአሳሽ ቅንብሮች ውስጥ ያንቁ።",
-  "remindersOn": "አስታዋሾች ነቅተዋል 🙏"
+  "remindersOn": "አስታዋሾች ነቅተዋል 🙏",
+  "onboardWelcomeTitle": "ወደ Pray4Me እንኳን በደህና መጡ",
+  "onboardWelcomeBody": "የግል የጸሎት ጓደኛዎ። የጸሎት ሕይወትዎን በጥቂት ሰከንዶች እናዘጋጅ።",
+  "onboardPrayTitle": "ጸሎቶችዎን ይመዝግቡ",
+  "onboardPrayBody": "የጸሎት ርዕሶችን ይጨምሩ፣ እድገታቸውን ይከታተሉ፣ እግዚአብሔር ሲመልስም ይደሰቱ።",
+  "onboardPlanTitle": "ሳምንትዎን ያቅዱ",
+  "onboardPlanBody": "ጸሎቶችን በምድቦች ይከፋፍሉ እና ለቀናት ይመድቡ፣ ዛሬ ምን እንደሚጸልዩ ሁልጊዜ ለማወቅ።",
+  "onboardCommunityTitle": "በጋራ ይጸልዩ",
+  "onboardCommunityBody": "ቡድኖችን ይቀላቀሉ፣ ርዕሶችን ያጋሩ፣ እርስ በርስ ይጸልዩ።",
+  "onboardSkip": "ዝለል",
+  "onboardNext": "ቀጣይ",
+  "onboardStart": "ይጀምሩ"
 };

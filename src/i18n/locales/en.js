@@ -273,5 +273,16 @@ export default {
   "showOriginal": "See original",
   "pushUnsupported": "Your browser does not support notifications.",
   "pushDenied": "Notifications were denied. Enable them in your browser settings.",
-  "remindersOn": "Reminders enabled 🙏"
+  "remindersOn": "Reminders enabled 🙏",
+  "onboardWelcomeTitle": "Welcome to Pray4Me",
+  "onboardWelcomeBody": "Your personal prayer companion. Let’s set up your prayer life in a few seconds.",
+  "onboardPrayTitle": "Capture your prayers",
+  "onboardPrayBody": "Add prayer requests, track how they evolve, and celebrate when God answers.",
+  "onboardPlanTitle": "Plan your week",
+  "onboardPlanBody": "Sort prayers into categories and assign them to days, so you always know what to pray today.",
+  "onboardCommunityTitle": "Pray together",
+  "onboardCommunityBody": "Join groups, share requests, and pray for one another.",
+  "onboardSkip": "Skip",
+  "onboardNext": "Next",
+  "onboardStart": "Get started"
 };

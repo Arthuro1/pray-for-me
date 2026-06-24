@@ -273,5 +273,16 @@ export default {
   "showOriginal": "Original anzeigen",
   "pushUnsupported": "Dein Browser unterstützt keine Benachrichtigungen.",
   "pushDenied": "Benachrichtigungen wurden abgelehnt. Aktiviere sie in den Browsereinstellungen.",
-  "remindersOn": "Erinnerungen aktiviert 🙏"
+  "remindersOn": "Erinnerungen aktiviert 🙏",
+  "onboardWelcomeTitle": "Willkommen bei Pray4Me",
+  "onboardWelcomeBody": "Dein persönlicher Gebetsbegleiter. Richten wir dein Gebetsleben in wenigen Sekunden ein.",
+  "onboardPrayTitle": "Halte deine Gebete fest",
+  "onboardPrayBody": "Füge Gebetsanliegen hinzu, verfolge ihre Entwicklung und feiere, wenn Gott antwortet.",
+  "onboardPlanTitle": "Plane deine Woche",
+  "onboardPlanBody": "Ordne Gebete in Kategorien und weise sie Tagen zu, damit du immer weißt, was du heute beten kannst.",
+  "onboardCommunityTitle": "Gemeinsam beten",
+  "onboardCommunityBody": "Tritt Gruppen bei, teile Anliegen und betet füreinander.",
+  "onboardSkip": "Überspringen",
+  "onboardNext": "Weiter",
+  "onboardStart": "Loslegen"
 };

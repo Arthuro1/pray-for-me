@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import Toaster from './components/Toaster';
 import OfflineBanner from './components/OfflineBanner';
+import Onboarding from './components/Onboarding';
 import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
 
@@ -80,6 +81,7 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [editPrayer, setEditPrayer] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const { user, loading: authLoading, init } = useAuthStore();
   const { settings, prayers, categories, loadData } = usePrayerStore();
@@ -110,8 +112,14 @@ export default function App() {
       loadData(user.id);
       loadTranslations(user.id);
       fetchPendingCount(user.id);
+      if (!localStorage.getItem('pfm_onboarded')) setShowOnboarding(true);
     }
   }, [user?.id]);
+
+  const finishOnboarding = () => {
+    localStorage.setItem('pfm_onboarded', '1');
+    setShowOnboarding(false);
+  };
 
   // Keep the community nav badge live (incoming friend requests / invitations).
   useEffect(() => {
@@ -170,6 +178,9 @@ export default function App() {
       </Layout>
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
+      )}
+      {showOnboarding && (
+        <Onboarding lang={lang} onFinish={finishOnboarding} onAddPrayer={openAdd} />
       )}
       <OfflineBanner />
       <Toaster />

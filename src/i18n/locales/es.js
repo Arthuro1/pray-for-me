@@ -273,5 +273,16 @@ export default {
   "showOriginal": "Ver original",
   "pushUnsupported": "Tu navegador no admite notificaciones.",
   "pushDenied": "Notificaciones denegadas. Actívalas en la configuración del navegador.",
-  "remindersOn": "Recordatorios activados 🙏"
+  "remindersOn": "Recordatorios activados 🙏",
+  "onboardWelcomeTitle": "Bienvenido a Pray4Me",
+  "onboardWelcomeBody": "Tu compañero de oración personal. Preparemos tu vida de oración en segundos.",
+  "onboardPrayTitle": "Registra tus oraciones",
+  "onboardPrayBody": "Añade peticiones, sigue su evolución y celebra cuando Dios responde.",
+  "onboardPlanTitle": "Planifica tu semana",
+  "onboardPlanBody": "Organiza las oraciones en categorías y asígnalas a días, para saber siempre qué orar hoy.",
+  "onboardCommunityTitle": "Oren juntos",
+  "onboardCommunityBody": "Únete a grupos, comparte peticiones y oren unos por otros.",
+  "onboardSkip": "Omitir",
+  "onboardNext": "Siguiente",
+  "onboardStart": "Empezar"
 };

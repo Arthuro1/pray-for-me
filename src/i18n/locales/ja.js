@@ -273,5 +273,16 @@ export default {
   "showOriginal": "原文を見る",
   "pushUnsupported": "お使いのブラウザは通知に対応していません。",
   "pushDenied": "通知が拒否されました。ブラウザの設定で有効にしてください。",
-  "remindersOn": "リマインダーを有効にしました 🙏"
+  "remindersOn": "リマインダーを有効にしました 🙏",
+  "onboardWelcomeTitle": "Pray4Me へようこそ",
+  "onboardWelcomeBody": "あなたの祈りのパートナー。数秒で祈りの生活を整えましょう。",
+  "onboardPrayTitle": "祈りを書き留める",
+  "onboardPrayBody": "祈りの課題を追加し、その歩みを記録し、神が答えてくださったら共に喜びましょう。",
+  "onboardPlanTitle": "一週間を計画する",
+  "onboardPlanBody": "祈りをカテゴリ分けして曜日に割り当て、今日何を祈るか常に分かるようにします。",
+  "onboardCommunityTitle": "共に祈る",
+  "onboardCommunityBody": "グループに参加し、課題を分かち合い、互いのために祈りましょう。",
+  "onboardSkip": "スキップ",
+  "onboardNext": "次へ",
+  "onboardStart": "はじめる"
 };

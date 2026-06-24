@@ -273,5 +273,16 @@ export default {
   "showOriginal": "Lihat asli",
   "pushUnsupported": "Browser Anda tidak mendukung notifikasi.",
   "pushDenied": "Notifikasi ditolak. Aktifkan di pengaturan browser.",
-  "remindersOn": "Pengingat diaktifkan 🙏"
+  "remindersOn": "Pengingat diaktifkan 🙏",
+  "onboardWelcomeTitle": "Selamat datang di Pray4Me",
+  "onboardWelcomeBody": "Pendamping doa pribadi Anda. Mari siapkan kehidupan doa Anda dalam beberapa detik.",
+  "onboardPrayTitle": "Catat doa Anda",
+  "onboardPrayBody": "Tambahkan pokok doa, pantau perkembangannya, dan rayakan saat Tuhan menjawab.",
+  "onboardPlanTitle": "Rencanakan minggu Anda",
+  "onboardPlanBody": "Atur doa ke dalam kategori dan tetapkan ke hari, agar selalu tahu apa yang didoakan hari ini.",
+  "onboardCommunityTitle": "Berdoa bersama",
+  "onboardCommunityBody": "Bergabunglah dengan grup, bagikan pokok doa, dan saling mendoakan.",
+  "onboardSkip": "Lewati",
+  "onboardNext": "Berikutnya",
+  "onboardStart": "Mulai"
 };
