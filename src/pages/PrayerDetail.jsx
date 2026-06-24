@@ -50,7 +50,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [savingToPersonal, setSavingToPersonal] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, prayers } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
   const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares } = useCommunityStore();
@@ -259,6 +259,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           onClose={() => setShowCommunityEdit(false)}
           onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
             await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds });
+            // If the owner edits a shared prayer, sync categories back to personal + siblings.
+            if (communityPrayer.source_prayer_id && communityPrayer.user_id === user?.id) {
+              await syncCategoriesFromCommunity(communityPrayer.source_prayer_id, categoryIds);
+            }
           }}
         />
       )}

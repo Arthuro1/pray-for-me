@@ -202,6 +202,23 @@ const usePrayerStore = create((set, get) => ({
     }
   },
 
+  // Reverse direction: when the owner edits categories on a shared community
+  // prayer, push them back to the personal source and all its community copies.
+  // Owner-only (categories belong to the owner's category set).
+  syncCategoriesFromCommunity: async (sourcePrayerId, categoryIds) => {
+    const ids = categoryIds || [];
+    await supabase.from('prayer_categories').delete().eq('prayer_id', sourcePrayerId);
+    if (ids.length > 0) {
+      await supabase.from('prayer_categories').insert(ids.map((cid) => ({ prayer_id: sourcePrayerId, category_id: cid })));
+    }
+    await supabase.from('community_prayers').update({ category_ids: ids }).eq('source_prayer_id', sourcePrayerId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === sourcePrayerId ? { ...p, prayer_categories: ids.map((cid) => ({ category_id: cid })) } : p
+      ),
+    }));
+  },
+
   markAnswered: async (id, testimony) => {
     const { data } = await supabase
       .from('prayers')
