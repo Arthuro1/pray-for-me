@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { prayerOnDay, prayerPriority } from '../utils/prayer';
+import { prayerOnDay, prayerPriority, appendTestimony, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
 
 const DEFAULT_CATEGORIES = {
   fr: [
@@ -147,16 +147,7 @@ const usePrayerStore = create((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from('prayers')
-      .insert({
-        user_id: user.id,
-        title: communityPrayer.title,
-        description: communityPrayer.description || '',
-        status: 'active',
-        community_origin_id: communityPrayer.id,
-        origin_author_name: communityPrayer.is_anonymous ? null : communityPrayer.author_name,
-        origin_is_anonymous: !!communityPrayer.is_anonymous,
-        origin_group_name: groupName,
-      })
+      .insert(communityToPersonalInsert(communityPrayer, groupName, user.id))
       .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .single();
     if (error || !data) return { error: error?.message || 'failed' };
@@ -230,10 +221,7 @@ const usePrayerStore = create((set, get) => ({
   markAnswered: async (id, testimony) => {
     // Append the new testimony to the list (preserving previous ones) rather than overwriting.
     const current = get().prayers.find((p) => p.id === id);
-    const testimonies = [...(current?.testimonies || [])];
-    if (testimony && testimony.trim()) {
-      testimonies.push({ id: crypto.randomUUID(), content: testimony.trim(), created_at: new Date().toISOString() });
-    }
+    const testimonies = appendTestimony(current?.testimonies, testimony);
     const { data } = await supabase
       .from('prayers')
       .update({ status: 'answered', testimonies, answered_at: new Date().toISOString() })
@@ -400,9 +388,7 @@ const usePrayerStore = create((set, get) => ({
 
   // Persist a new category order (array of ids → sort_order = index).
   reorderCategories: async (orderedIds) => {
-    set((state) => ({
-      categories: [...state.categories].sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id)),
-    }));
+    set((state) => ({ categories: sortByOrder(state.categories, orderedIds) }));
     await Promise.all(orderedIds.map((id, i) => supabase.from('categories').update({ sort_order: i }).eq('id', id)));
   },
 }));

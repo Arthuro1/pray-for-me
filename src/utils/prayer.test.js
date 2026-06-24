@@ -1,5 +1,52 @@
 import { describe, it, expect } from 'vitest';
-import { testimonyList, prayerOnDay, prayerPriority } from './prayer.js';
+import { testimonyList, prayerOnDay, prayerPriority, appendTestimony, communityToPersonalInsert, sortByOrder } from './prayer.js';
+
+describe('appendTestimony', () => {
+  it('appends a trimmed testimony with injected id/time', () => {
+    const out = appendTestimony([{ id: 'a', content: 'old' }], '  praise!  ', 'new-id', '2026-01-01');
+    expect(out).toHaveLength(2);
+    expect(out[1]).toEqual({ id: 'new-id', content: 'praise!', created_at: '2026-01-01' });
+  });
+  it('preserves prior testimonies and does not mutate the input', () => {
+    const existing = [{ id: 'a', content: 'old' }];
+    appendTestimony(existing, 'x', 'id2', 't');
+    expect(existing).toHaveLength(1);
+  });
+  it('skips blank input', () => {
+    expect(appendTestimony([{ id: 'a' }], '   ', 'id', 't')).toEqual([{ id: 'a' }]);
+    expect(appendTestimony(undefined, '', 'id', 't')).toEqual([]);
+  });
+});
+
+describe('communityToPersonalInsert', () => {
+  it('maps a named community prayer to a personal insert payload', () => {
+    const cp = { id: 'c1', title: 'Heal', description: 'd', is_anonymous: false, author_name: 'Marie' };
+    expect(communityToPersonalInsert(cp, 'Cell', 'u1')).toEqual({
+      user_id: 'u1', title: 'Heal', description: 'd', status: 'active',
+      community_origin_id: 'c1', origin_author_name: 'Marie',
+      origin_is_anonymous: false, origin_group_name: 'Cell',
+    });
+  });
+  it('drops the author name when anonymous and defaults missing description', () => {
+    const cp = { id: 'c2', title: 'T', is_anonymous: true, author_name: 'Marie' };
+    const out = communityToPersonalInsert(cp, null, 'u1');
+    expect(out.origin_author_name).toBeNull();
+    expect(out.origin_is_anonymous).toBe(true);
+    expect(out.description).toBe('');
+  });
+});
+
+describe('sortByOrder', () => {
+  it('reorders categories to match the id order', () => {
+    const cats = [{ id: 'a' }, { id: 'b' }, { id: 'c' }];
+    expect(sortByOrder(cats, ['c', 'a', 'b']).map((c) => c.id)).toEqual(['c', 'a', 'b']);
+  });
+  it('does not mutate the input array', () => {
+    const cats = [{ id: 'a' }, { id: 'b' }];
+    sortByOrder(cats, ['b', 'a']);
+    expect(cats.map((c) => c.id)).toEqual(['a', 'b']);
+  });
+});
 
 describe('prayerPriority', () => {
   const orderById = { a: 0, b: 1, c: 2 };
