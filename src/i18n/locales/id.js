@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Siapa pun yang membuka tautan ini dapat mengirimi Anda permintaan pertemanan",
   "addMeFriend": "Tambahkan saya sebagai mitra doa",
   "invalidEmail": "Masukkan alamat email yang valid",
-  "alreadyFriends": "Kalian sudah berteman"
+  "alreadyFriends": "Kalian sudah berteman",
+  "onboardRemindTitle": "Tetap konsisten",
+  "onboardRemindBody": "Aktifkan pengingat harian dan lihat rentetan doa Anda bertambah — Pray4Me bahkan berfungsi offline."
 };

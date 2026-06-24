@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Cualquiera que abra este enlace puede enviarte una solicitud de amistad",
   "addMeFriend": "Agrégame como compañero de oración",
   "invalidEmail": "Introduce un correo electrónico válido",
-  "alreadyFriends": "Ya sois amigos"
+  "alreadyFriends": "Ya sois amigos",
+  "onboardRemindTitle": "Mantén la constancia",
+  "onboardRemindBody": "Activa un recordatorio diario y mira crecer tu racha de oración — Pray4Me funciona incluso sin conexión."
 };

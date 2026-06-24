@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Sinumang magbukas ng link na ito ay maaaring magpadala sa iyo ng friend request",
   "addMeFriend": "Idagdag mo ako bilang kapartner sa panalangin",
   "invalidEmail": "Maglagay ng wastong email address",
-  "alreadyFriends": "Magkaibigan na kayo"
+  "alreadyFriends": "Magkaibigan na kayo",
+  "onboardRemindTitle": "Maging tuloy-tuloy",
+  "onboardRemindBody": "I-on ang pang-araw-araw na paalala at panoorin lumago ang iyong prayer streak — gumagana ang Pray4Me kahit offline."
 };

@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Anyone who opens this link can send you a friend request",
   "addMeFriend": "Add me as a prayer partner",
   "invalidEmail": "Please enter a valid email address",
-  "alreadyFriends": "You're already friends"
+  "alreadyFriends": "You're already friends",
+  "onboardRemindTitle": "Stay consistent",
+  "onboardRemindBody": "Turn on a daily reminder and watch your prayer streak grow — Pray4Me even works offline."
 };

@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "任何打开此链接的人都可以向你发送好友请求",
   "addMeFriend": "加我为祷告伙伴",
   "invalidEmail": "请输入有效的电子邮件地址",
-  "alreadyFriends": "你们已经是好友"
+  "alreadyFriends": "你们已经是好友",
+  "onboardRemindTitle": "保持坚持",
+  "onboardRemindBody": "开启每日提醒，看着你的祷告连续记录增长——Pray4Me 甚至可以离线使用。"
 };

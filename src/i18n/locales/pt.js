@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Qualquer pessoa que abrir este link pode enviar um pedido de amizade",
   "addMeFriend": "Adicione-me como parceiro de oração",
   "invalidEmail": "Insira um endereço de e-mail válido",
-  "alreadyFriends": "Vocês já são amigos"
+  "alreadyFriends": "Vocês já são amigos",
+  "onboardRemindTitle": "Mantenha a constância",
+  "onboardRemindBody": "Ative um lembrete diário e veja sua sequência de oração crescer — o Pray4Me funciona até offline."
 };

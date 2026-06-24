@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Yeyote anayefungua kiungo hiki anaweza kukutumia ombi la urafiki",
   "addMeFriend": "Niongeze kama mshirika wa maombi",
   "invalidEmail": "Tafadhali weka anwani sahihi ya barua pepe",
-  "alreadyFriends": "Tayari ni marafiki"
+  "alreadyFriends": "Tayari ni marafiki",
+  "onboardRemindTitle": "Endelea kwa ukawaida",
+  "onboardRemindBody": "Washa kikumbusho cha kila siku na uone mfululizo wako wa maombi ukikua — Pray4Me hufanya kazi hata nje ya mtandao."
 };

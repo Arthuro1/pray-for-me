@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "이 링크를 여는 사람은 친구 요청을 보낼 수 있습니다",
   "addMeFriend": "기도 파트너로 추가해 주세요",
   "invalidEmail": "유효한 이메일 주소를 입력하세요",
-  "alreadyFriends": "이미 친구입니다"
+  "alreadyFriends": "이미 친구입니다",
+  "onboardRemindTitle": "꾸준히 이어가세요",
+  "onboardRemindBody": "매일 알림을 켜고 기도 연속 기록이 늘어나는 것을 지켜보세요 — Pray4Me는 오프라인에서도 작동합니다."
 };

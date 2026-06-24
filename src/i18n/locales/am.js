@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "ይህን ሊንክ የሚከፍት ማንኛውም ሰው የጓደኝነት ጥያቄ ሊልክልዎ ይችላል",
   "addMeFriend": "እንደ የጸሎት አጋር ያክሉኝ",
   "invalidEmail": "እባክዎ ትክክለኛ ኢሜይል ያስገቡ",
-  "alreadyFriends": "አስቀድሞ ጓደኛሞች ናችሁ"
+  "alreadyFriends": "አስቀድሞ ጓደኛሞች ናችሁ",
+  "onboardRemindTitle": "ቀጣይነት ይኑርዎት",
+  "onboardRemindBody": "ዕለታዊ አስታዋሽ ያብሩ እና የጸሎት ተከታታይነትዎ ሲያድግ ይመልከቱ — Pray4Me ከመስመር ውጭም ይሰራል።"
 };

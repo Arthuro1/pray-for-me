@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "このリンクを開いた人は友達リクエストを送れます",
   "addMeFriend": "祈りのパートナーとして追加してください",
   "invalidEmail": "有効なメールアドレスを入力してください",
-  "alreadyFriends": "すでに友達です"
+  "alreadyFriends": "すでに友達です",
+  "onboardRemindTitle": "続けましょう",
+  "onboardRemindBody": "毎日のリマインダーをオンにして、祈りの連続記録を伸ばしましょう。Pray4Me はオフラインでも使えます。"
 };

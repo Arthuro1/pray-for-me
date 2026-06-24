@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "يمكن لأي شخص يفتح هذا الرابط أن يرسل لك طلب صداقة",
   "addMeFriend": "أضِفني كشريك صلاة",
   "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
-  "alreadyFriends": "أنتما صديقان بالفعل"
+  "alreadyFriends": "أنتما صديقان بالفعل",
+  "onboardRemindTitle": "داوم على الصلاة",
+  "onboardRemindBody": "فعّل تذكيرًا يوميًا وشاهد سلسلة صلواتك تنمو — يعمل Pray4Me حتى دون اتصال."
 };

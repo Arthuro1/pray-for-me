@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react';
-import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Users } from 'lucide-react';
 
 const LANGS = [
   { code: 'fr', flag: '🇫🇷', label: 'FR' },
@@ -47,6 +47,7 @@ const CONTENT = {
     featuresTitle: 'Tout ce dont votre vie de prière a besoin',
     featuresSub: 'Conçu pour les chrétiens qui veulent prier avec intention et suivre la fidélité de Dieu.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Priez ensemble', desc: 'Rejoignez des groupes et des amis, partagez des demandes (ou restez anonyme), priez les uns pour les autres et célébrez les prières exaucées ensemble.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Journal de prière', desc: 'Notez chaque demande de prière — pour vous ou pour d\'autres. Ajoutez des détails, suivez les évolutions, n\'oubliez jamais qui vous avez promis de prier.' },
       { icon: Calendar, color: '#059669', title: 'Plan de prière hebdomadaire', desc: 'Assignez des catégories à chaque jour. Lundi pour la famille, mardi pour la santé… chaque matin, vous savez exactement quoi prier.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galerie de prières exaucées', desc: 'Marquez les prières comme exaucées et enregistrez votre témoignage. Regardez la fidélité de Dieu s\'accumuler au fil du temps.' },
@@ -98,6 +99,7 @@ const CONTENT = {
     featuresTitle: 'Everything your prayer life needs',
     featuresSub: 'Built for Christians who want to pray with intention and track God\'s faithfulness.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Pray together', desc: 'Join prayer groups and friends, share requests (or stay anonymous), pray for one another, and celebrate answered prayers as a community.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Prayer journal', desc: 'Log every prayer request — for yourself or for others. Add details, follow up with updates, and never forget who you said you\'d pray for.' },
       { icon: Calendar, color: '#059669', title: 'Weekly prayer plan', desc: 'Assign categories to days of the week. Monday for family, Tuesday for health… each day you see exactly what to pray for.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Answered prayer gallery', desc: 'Mark prayers as answered and record your testimony. Watch God\'s faithfulness accumulate over time in your personal gallery.' },
@@ -149,6 +151,7 @@ const CONTENT = {
     featuresTitle: 'Alles, was dein Gebetsleben braucht',
     featuresSub: 'Für Christen, die bewusst beten und Gottes Treue festhalten möchten.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Gemeinsam beten', desc: 'Tritt Gebetsgruppen und Freunden bei, teile Anliegen (oder bleibe anonym), betet füreinander und feiert erhörte Gebete gemeinsam.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Gebetstagebuch', desc: 'Notiere jede Gebetsanfrage — für dich oder für andere. Füge Details hinzu, verfolge Entwicklungen und vergiss nie, für wen du gebetet hast.' },
       { icon: Calendar, color: '#059669', title: 'Wöchentlicher Gebetsplan', desc: 'Weise Kategorien den Wochentagen zu. Montag für die Familie, Dienstag für Gesundheit… jeden Tag weißt du genau, wofür du beten sollst.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galerie erhörter Gebete', desc: 'Markiere erhörte Gebete und halte dein Zeugnis fest. Erlebe Gottes Treue, die sich über die Zeit aufbaut.' },
@@ -200,6 +203,7 @@ const CONTENT = {
     featuresTitle: 'Tudo que sua vida de oração precisa',
     featuresSub: 'Criado para cristãos que querem orar com intenção e registrar a fidelidade de Deus.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Orem juntos', desc: 'Participe de grupos e amigos, compartilhe pedidos (ou fique anônimo), orem uns pelos outros e celebrem as orações respondidas em comunidade.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Diário de oração', desc: 'Registre cada pedido de oração — para você ou para outros. Adicione detalhes, acompanhe atualizações e nunca esqueça por quem prometeu orar.' },
       { icon: Calendar, color: '#059669', title: 'Plano semanal de oração', desc: 'Atribua categorias aos dias da semana. Segunda para família, terça para saúde… cada dia você sabe exatamente pelo que orar.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeria de orações respondidas', desc: 'Marque orações como respondidas e registre seu testemunho. Veja a fidelidade de Deus se acumular ao longo do tempo.' },
@@ -252,6 +256,7 @@ const CONTENT = {
     featuresTitle: '祈りの生活に必要なすべて',
     featuresSub: '意図を持って祈り、神の誠実さを記録したいクリスチャンのために作られました。',
     features: [
+      { icon: Users, color: '#0d9488', title: '共に祈る', desc: '祈りのグループや友達に参加し、リクエストを共有（匿名も可）し、互いのために祈り、答えられた祈りを共に喜びましょう。' },
       { icon: BookOpen, color: '#7c5cfc', title: '祈り日記', desc: '自分や他の人のための祈りをすべて記録。詳細を追加し、経過を追い、誰のために祈ると約束したかを忘れない。' },
       { icon: Calendar, color: '#059669', title: '週間祈りプラン', desc: '各カテゴリを曜日に割り当て。月曜は家族、火曜は健康…毎朝何のために祈るかが明確にわかる。' },
       { icon: CheckCircle, color: '#0891b2', title: '答えられた祈りギャラリー', desc: '祈りを答えられたとして記録し、証しを残す。神の誠実さが時間とともに積み重なっていくのを見る。' },
@@ -304,6 +309,7 @@ const CONTENT = {
     featuresTitle: 'Kila kitu maisha yako ya maombi yanahitaji',
     featuresSub: 'Imeundwa kwa Wakristo wanaotaka kuomba kwa makusudi na kufuatilia uaminifu wa Mungu.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Ombeni pamoja', desc: 'Jiunge na vikundi na marafiki, shiriki maombi (au baki bila kujulikana), ombeaneni, na shangilieni maombi yaliyojibiwa pamoja.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Jarida la maombi', desc: 'Rekodi kila ombi — kwa ajili yako au wengine. Ongeza maelezo, fuatilia maendeleo, usisahau uliyomwahidi kuomba.' },
       { icon: Calendar, color: '#059669', title: 'Mpango wa maombi wa wiki', desc: 'Weka kila kundi kwa siku za wiki. Jumatatu kwa familia, Jumanne kwa afya… kila siku unajua hasa unaomba nini.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeria ya maombi yaliyojibiwa', desc: 'Weka alama maombi kama yaliyojibiwa na rekodi ushuhuda wako. Angalia uaminifu wa Mungu ukikusanyika baada ya muda.' },
@@ -354,6 +360,7 @@ const CONTENT = {
     featuresTitle: 'የጸሎት ሕይወትዎ የሚያስፈልገው ሁሉ',
     featuresSub: 'ዓላማ ይዘው ለሚጸልዩ እና የእግዚአብሔርን ታማኝነት ለሚከታተሉ ክርስቲያኖች የተዘጋጀ።',
     features: [
+      { icon: Users, color: '#0d9488', title: 'በጋራ ይጸልዩ', desc: 'የጸሎት ቡድኖችንና ጓደኞችን ይቀላቀሉ፣ ጥያቄዎችን ያጋሩ (ወይም ሳይታወቁ ይቆዩ)፣ እርስ በርስ ይጸልዩ፣ የተመለሱ ጸሎቶችንም በአንድነት ያክብሩ።' },
       { icon: BookOpen, color: '#7c5cfc', title: 'የጸሎት ዕለታዊ ጆርናል', desc: 'ለራስዎ ወይም ለሌሎች የሚደረጉ ጸሎቶችን ሁሉ ይዝግቡ። ዝርዝሮችን ያክሉ፣ ሂደቱን ይከታተሉ።' },
       { icon: Calendar, color: '#059669', title: 'የሳምንት የጸሎት እቅድ', desc: 'እያንዳንዱ ምድብ ለሳምንቱ ቀናት ይመድቡ። ሰኞ ለቤተሰብ፣ ማክሰኞ ለጤና… ሁሉ ቀን ምን ማድረግ እንዳለቦት ያውቃሉ።' },
       { icon: CheckCircle, color: '#0891b2', title: 'የተመለሱ ጸሎቶች ማሳያ', desc: 'ጸሎቶችን እንደ ተመለሱ ምልክት አድርጉ እና ምስክርነትዎን ይዝግቡ። የእግዚአብሔር ታማኝነት ከጊዜ ወደ ጊዜ ሲሰበሰብ ይመልከቱ።' },
@@ -404,6 +411,7 @@ const CONTENT = {
     featuresTitle: 'Semua yang dibutuhkan kehidupan doa Anda',
     featuresSub: 'Dirancang untuk orang Kristen yang ingin berdoa dengan niat dan melacak kesetiaan Tuhan.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Berdoa bersama', desc: 'Bergabunglah dengan grup dan teman, bagikan permohonan (atau tetap anonim), saling mendoakan, dan rayakan doa yang dijawab bersama.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Jurnal doa', desc: 'Catat setiap permohonan doa — untuk diri sendiri atau orang lain. Tambahkan detail, pantau perkembangan, dan jangan lupakan siapa yang Anda janjikan untuk doakan.' },
       { icon: Calendar, color: '#059669', title: 'Rencana doa mingguan', desc: 'Tetapkan kategori ke hari-hari dalam seminggu. Senin untuk keluarga, Selasa untuk kesehatan… setiap pagi Anda tahu persis untuk apa berdoa.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeri doa terjawab', desc: 'Tandai doa sebagai terjawab dan catat kesaksian Anda. Saksikan kesetiaan Tuhan bertambah dari waktu ke waktu.' },
@@ -454,6 +462,7 @@ const CONTENT = {
     featuresTitle: 'Lahat ng kailangan ng iyong buhay-panalangin',
     featuresSub: 'Ginawa para sa mga Kristiyano na gustong manalangin nang may layunin at subaybayan ang katapatan ng Diyos.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Magdasal nang sama-sama', desc: 'Sumali sa mga grupo at kaibigan, magbahagi ng kahilingan (o manatiling anonimo), magdasal para sa isa\'t isa, at ipagdiwang ang mga sinagot na panalangin bilang komunidad.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Talaarawan ng panalangin', desc: 'Itala ang bawat kahilingan sa panalangin — para sa iyong sarili o para sa iba. Magdagdag ng mga detalye at huwag kalimutang sino ang ipinangako mong ipanalangin.' },
       { icon: Calendar, color: '#059669', title: 'Lingguhang plano ng panalangin', desc: 'Italaga ang mga kategorya sa mga araw ng linggo. Lunes para sa pamilya, Martes para sa kalusugan… araw-araw alam mo kung para saan ka magdarasal.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeriya ng nasagot na panalangin', desc: 'Markahan ang mga panalangin bilang nasagot at itala ang iyong patotoo. Panoorin ang katapatan ng Diyos na mag-ipon sa paglipas ng panahon.' },
@@ -504,6 +513,7 @@ const CONTENT = {
     featuresTitle: '기도 생활에 필요한 모든 것',
     featuresSub: '의도적으로 기도하고 하나님의 신실하심을 기록하고 싶은 그리스도인을 위해 만들어졌습니다.',
     features: [
+      { icon: Users, color: '#0d9488', title: '함께 기도하세요', desc: '기도 그룹과 친구에 참여하고, 기도 제목을 나누거나 익명으로 유지하며, 서로를 위해 기도하고, 응답된 기도를 함께 축하하세요.' },
       { icon: BookOpen, color: '#7c5cfc', title: '기도 일기', desc: '나 자신과 다른 사람을 위한 모든 기도 요청을 기록하세요. 세부 내용을 추가하고, 경과를 추적하고, 기도하겠다고 약속한 사람을 잊지 마세요.' },
       { icon: Calendar, color: '#059669', title: '주간 기도 계획', desc: '각 카테고리를 요일에 배정하세요. 월요일은 가족, 화요일은 건강… 매일 아침 무엇을 위해 기도해야 할지 정확히 알 수 있습니다.' },
       { icon: CheckCircle, color: '#0891b2', title: '응답된 기도 갤러리', desc: '기도를 응답됨으로 표시하고 간증을 기록하세요. 시간이 지남에 따라 하나님의 신실하심이 쌓이는 것을 보세요.' },
@@ -554,6 +564,7 @@ const CONTENT = {
     featuresTitle: 'Всё для вашей молитвенной жизни',
     featuresSub: 'Создано для христиан, которые хотят молиться осознанно и отслеживать верность Бога.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Молитесь вместе', desc: 'Присоединяйтесь к группам и друзьям, делитесь просьбами (или оставайтесь анонимными), молитесь друг за друга и празднуйте отвеченные молитвы вместе.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Молитвенный журнал', desc: 'Записывайте каждую молитвенную просьбу — за себя или за других. Добавляйте детали, отслеживайте изменения, не забывайте, за кого обещали молиться.' },
       { icon: Calendar, color: '#059669', title: 'Недельный молитвенный план', desc: 'Назначайте категории на дни недели. Понедельник — для семьи, вторник — для здоровья… каждое утро вы знаете, о чём именно молиться.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Галерея отвеченных молитв', desc: 'Отмечайте молитвы как отвеченные и записывайте свидетельство. Наблюдайте, как верность Бога накапливается со временем.' },
@@ -604,6 +615,7 @@ const CONTENT = {
     featuresTitle: 'كل ما يحتاجه حياتك الصلاتية',
     featuresSub: 'صُمِّم للمسيحيين الذين يريدون الصلاة بنية وتتبع أمانة الله.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'صلّوا معًا', desc: 'انضم إلى مجموعات وأصدقاء، شارك الطلبات (أو ابقَ مجهولاً)، وصلّوا بعضكم لبعض، واحتفلوا بالصلوات المستجابة كمجتمع.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'مجلة الصلاة', desc: 'سجّل كل طلب صلاة — من أجلك أو من أجل الآخرين. أضف تفاصيل وتابع التحديثات ولا تنسَ من وعدت بالصلاة عنه.' },
       { icon: Calendar, color: '#059669', title: 'خطة الصلاة الأسبوعية', desc: 'خصّص كل فئة لأيام الأسبوع. الاثنين للعائلة، الثلاثاء للصحة… كل صباح تعرف بالضبط لماذا تصلي.' },
       { icon: CheckCircle, color: '#0891b2', title: 'غاليري الصلوات المستجابة', desc: 'علّم الصلوات كمستجابة وسجّل شهادتك. شاهد أمانة الله تتراكم عبر الزمن.' },
@@ -654,6 +666,7 @@ const CONTENT = {
     featuresTitle: 'همه چیزی که زندگی دعایی شما نیاز دارد',
     featuresSub: 'برای مسیحیانی ساخته شده که می‌خواهند با هدف دعا کنند و وفاداری خدا را پیگیری کنند.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'با هم دعا کنید', desc: 'به گروه‌ها و دوستان بپیوندید، درخواست‌ها را به اشتراک بگذارید (یا ناشناس بمانید)، برای یکدیگر دعا کنید و دعاهای مستجاب را با هم جشن بگیرید.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'دفترچه دعا', desc: 'هر درخواست دعا را ثبت کنید — برای خودتان یا دیگران. جزئیات اضافه کنید و فراموش نکنید برای چه کسی قول دعا داده‌اید.' },
       { icon: Calendar, color: '#059669', title: 'برنامه دعای هفتگی', desc: 'هر دسته‌بندی را به روزهای هفته اختصاص دهید. دوشنبه برای خانواده، سه‌شنبه برای سلامتی… هر صبح می‌دانید برای چه دعا کنید.' },
       { icon: CheckCircle, color: '#0891b2', title: 'گالری دعاهای مستجاب', desc: 'دعاها را به عنوان مستجاب علامت بزنید و شهادت خود را ثبت کنید. وفاداری خدا را در طول زمان انباشته شده ببینید.' },
@@ -704,10 +717,11 @@ const CONTENT = {
     featuresTitle: '您祷告生活所需的一切',
     featuresSub: '专为希望有意识地祷告并追踪上帝信实的基督徒设计。',
     features: [
+      { icon: Users, color: '#0d9488', title: '一起祷告', desc: '加入祷告群组和好友，分享代祷事项（或保持匿名），彼此代祷，并作为群体一同庆祝蒙应允的祷告。' },
       { icon: BookOpen, color: '#7c5cfc', title: '祷告日记', desc: '记录每个祷告请求——为自己或他人。添加详情、跟踪进展，不忘记任何一个承诺代祷的人。' },
       { icon: Calendar, color: '#059669', title: '每周祷告计划', desc: '为每天分配祷告类别。周一为家庭，周二为健康……每天清晰地知道要为什么祷告。' },
       { icon: CheckCircle, color: '#0891b2', title: '已应允祷告见证册', desc: '将祷告标记为已应允并记录您的见证。看着上帝的信实在您的个人册中积累。' },
-      { icon: Globe, color: '#db2777', title: '7种语言', desc: '完整支持法语、英语、德语、葡萄牙语、中文、西班牙语和印地语。随时切换。' },
+      { icon: Globe, color: '#db2777', title: '16 种语言', desc: '完整支持 16 种语言，包括法语、英语、德语、中文、西班牙语、阿拉伯语等。随时切换。' },
       { icon: Lock, color: '#6d28d9', title: '私密且安全', desc: '您的祷告永远不会离开您的账户。行级安全意味着只有您才能看到您的数据。' },
     ],
     stepsTitle: '使用方法',
@@ -729,11 +743,11 @@ const CONTENT = {
       { q: '我的数据是私密的吗？', a: '是的。每个祷告都存储在您自己的账户中，使用行级安全——没有人可以看到您的数据，包括我们。' },
       { q: '我需要账户吗？', a: '是的——免费账户可以在所有设备上同步您的祷告。一键用Google注册，或使用邮箱/密码。' },
       { q: '经文查找器如何工作？', a: '您输入祷告主题，应用会推荐相关圣经经文及全文。您选择与您情况相符的内容。' },
-      { q: '支持哪些语言？', a: '完整界面支持法语、英语、德语、葡萄牙语、中文、西班牙语和印地语。' },
+      { q: '支持哪些语言？', a: '完整界面支持 16 种语言。' },
       { q: '是免费的吗？', a: '是的，完全免费。该应用是开源的。' },
     ],
     ctaTitle: '今天开始您的祷告日记',
-    ctaSub: '免费、私密，支持7种语言。用Google几秒钟即可注册。',
+    ctaSub: '免费、私密，支持 16 种语言。用Google几秒钟即可注册。',
     ctaBtn: '免费开始',
     ctaVerse: '"不住地祷告。" — 帖撒罗尼迦前书 5:17',
     footerBuilt: '以信仰建造 · 开源 · MIT许可证',
@@ -756,10 +770,11 @@ const CONTENT = {
     featuresTitle: 'Todo lo que tu vida de oración necesita',
     featuresSub: 'Diseñado para cristianos que quieren orar con intención y registrar la fidelidad de Dios.',
     features: [
+      { icon: Users, color: '#0d9488', title: 'Oren juntos', desc: 'Únete a grupos y amigos, comparte peticiones (o permanece anónimo), oren unos por otros y celebren las oraciones respondidas en comunidad.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Diario de oración', desc: 'Registra cada petición de oración — para ti o para otros. Añade detalles, haz seguimiento y nunca olvides por quién prometiste orar.' },
       { icon: Calendar, color: '#059669', title: 'Plan de oración semanal', desc: 'Asigna categorías a días de la semana. Lunes para familia, martes para salud… cada mañana sabes exactamente por qué orar.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galería de oraciones respondidas', desc: 'Marca las oraciones como respondidas y registra tu testimonio. Observa la fidelidad de Dios acumularse con el tiempo.' },
-      { icon: Globe, color: '#db2777', title: '7 idiomas', desc: 'Interfaz completa en francés, inglés, alemán, portugués, chino, español e hindi. Cambia cuando quieras.' },
+      { icon: Globe, color: '#db2777', title: '16 idiomas', desc: 'Interfaz completa en 16 idiomas, incluidos francés, inglés, alemán, chino, español, árabe y más. Cambia cuando quieras.' },
       { icon: Lock, color: '#6d28d9', title: 'Privado y seguro', desc: 'Tus oraciones nunca salen de tu cuenta. La seguridad por filas significa que solo tú puedes ver tus datos — siempre.' },
     ],
     stepsTitle: 'Cómo funciona',
@@ -781,11 +796,11 @@ const CONTENT = {
       { q: '¿Son privados mis datos?', a: 'Sí. Cada oración se almacena en tu propia cuenta con seguridad por filas — nadie más puede ver tus datos, ni siquiera nosotros.' },
       { q: '¿Necesito una cuenta?', a: 'Sí — una cuenta gratuita sincroniza tus oraciones en todos tus dispositivos. Regístrate con Google en un toque o usa email/contraseña.' },
       { q: '¿Cómo funciona el buscador de versículos?', a: 'Introduces el tema de tu oración y la app sugiere versículos bíblicos relevantes con su texto completo. Tú eliges lo que resuena con tu situación.' },
-      { q: '¿Qué idiomas están disponibles?', a: 'La interfaz completa funciona en francés, inglés, alemán, portugués, chino, español e hindi.' },
+      { q: '¿Qué idiomas están disponibles?', a: 'La interfaz completa funciona en 16 idiomas.' },
       { q: '¿Es gratuito?', a: 'Sí, completamente gratuito. La aplicación es de código abierto.' },
     ],
     ctaTitle: 'Comienza tu diario de oración hoy',
-    ctaSub: 'Gratis, privado y disponible en 7 idiomas. Regístrate en segundos con Google.',
+    ctaSub: 'Gratis, privado y disponible en 16 idiomas. Regístrate en segundos con Google.',
     ctaBtn: 'Comenzar — es gratis',
     ctaVerse: '"Orad sin cesar." — 1 Tesalonicenses 5:17',
     footerBuilt: 'Hecho con fe · Código abierto · Licencia MIT',
@@ -808,10 +823,11 @@ const CONTENT = {
     featuresTitle: 'आपके प्रार्थना जीवन की सब कुछ ज़रूरतें',
     featuresSub: 'उन मसीहियों के लिए बनाया गया जो उद्देश्य से प्रार्थना करना और परमेश्वर की विश्वसनीयता को ट्रैक करना चाहते हैं।',
     features: [
+      { icon: Users, color: '#0d9488', title: 'साथ मिलकर प्रार्थना करें', desc: 'प्रार्थना समूहों और मित्रों में शामिल हों, अनुरोध साझा करें (या गुमनाम रहें), एक-दूसरे के लिए प्रार्थना करें, और उत्तरित प्रार्थनाओं का समुदाय के रूप में जश्न मनाएं।' },
       { icon: BookOpen, color: '#7c5cfc', title: 'प्रार्थना पत्रिका', desc: 'हर प्रार्थना अनुरोध दर्ज करें — अपने लिए या दूसरों के लिए। विवरण जोड़ें, अनुवर्ती करें, और कभी न भूलें कि आपने किसके लिए प्रार्थना का वादा किया था।' },
       { icon: Calendar, color: '#059669', title: 'साप्ताहिक प्रार्थना योजना', desc: 'सप्ताह के दिनों में श्रेणियाँ असाइन करें। सोमवार को परिवार, मंगलवार को स्वास्थ्य… हर दिन आप जानते हैं कि किसके लिए प्रार्थना करनी है।' },
       { icon: CheckCircle, color: '#0891b2', title: 'उत्तर मिली प्रार्थनाओं की गैलरी', desc: 'प्रार्थनाओं को उत्तर मिली के रूप में चिह्नित करें और अपनी गवाही दर्ज करें। समय के साथ परमेश्वर की विश्वसनीयता जमा होते देखें।' },
-      { icon: Globe, color: '#db2777', title: '7 भाषाएँ', desc: 'फ्रेंच, अंग्रेजी, जर्मन, पुर्तगाली, चीनी, स्पेनिश और हिंदी में पूर्ण इंटरफ़ेस। कभी भी बदलें।' },
+      { icon: Globe, color: '#db2777', title: '16 भाषाएँ', desc: '16 भाषाओं में पूर्ण इंटरफ़ेस — फ्रेंच, अंग्रेजी, जर्मन, चीनी, स्पेनिश, अरबी और अधिक। कभी भी बदलें।' },
       { icon: Lock, color: '#6d28d9', title: 'निजी और सुरक्षित', desc: 'आपकी प्रार्थनाएँ कभी भी आपके खाते से बाहर नहीं जाती। केवल आप ही अपना डेटा देख सकते हैं।' },
     ],
     stepsTitle: 'यह कैसे काम करता है',
@@ -833,11 +849,11 @@ const CONTENT = {
       { q: 'क्या मेरा डेटा निजी है?', a: 'हाँ। हर प्रार्थना आपके अपने खाते में पंक्ति-स्तरीय सुरक्षा के साथ संग्रहीत है — कोई भी आपका डेटा नहीं देख सकता, हम भी नहीं।' },
       { q: 'क्या मुझे खाते की जरूरत है?', a: 'हाँ — एक मुफ्त खाता आपकी प्रार्थनाओं को सभी डिवाइस पर सिंक करता है। एक टैप में Google से साइन अप करें या ईमेल/पासवर्ड का उपयोग करें।' },
       { q: 'वचन खोजक कैसे काम करता है?', a: 'आप अपनी प्रार्थना का विषय दर्ज करते हैं और ऐप प्रासंगिक बाइबल वचन और उनके पूरे पाठ के साथ सुझाव देता है। आप चुनते हैं कि आपकी स्थिति के लिए क्या उचित है।' },
-      { q: 'कौन सी भाषाएँ समर्थित हैं?', a: 'पूरा इंटरफ़ेस फ्रेंच, अंग्रेजी, जर्मन, पुर्तगाली, चीनी, स्पेनिश और हिंदी में काम करता है।' },
+      { q: 'कौन सी भाषाएँ समर्थित हैं?', a: 'पूरा इंटरफ़ेस 16 भाषाओं में काम करता है।' },
       { q: 'क्या यह मुफ्त है?', a: 'हाँ, पूरी तरह मुफ्त। ऐप ओपन सोर्स है।' },
     ],
     ctaTitle: 'आज ही अपनी प्रार्थना पत्रिका शुरू करें',
-    ctaSub: 'मुफ्त, निजी और 7 भाषाओं में उपलब्ध। Google से कुछ ही सेकंड में साइन अप करें।',
+    ctaSub: 'मुफ्त, निजी और 16 भाषाओं में उपलब्ध। Google से कुछ ही सेकंड में साइन अप करें।',
     ctaBtn: 'शुरू करें — यह मुफ्त है',
     ctaVerse: '"निरन्तर प्रार्थना करते रहो।" — 1 थिस्सलुनीकियों 5:17',
     footerBuilt: 'विश्वास के साथ बनाया · ओपन सोर्स · MIT लाइसेंस',

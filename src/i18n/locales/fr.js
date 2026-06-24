@@ -301,5 +301,7 @@ export default {
   "friendLinkHint": "Quiconque ouvre ce lien peut vous envoyer une demande d’ami",
   "addMeFriend": "Ajoute-moi comme partenaire de prière",
   "invalidEmail": "Veuillez saisir une adresse e-mail valide",
-  "alreadyFriends": "Vous êtes déjà amis"
+  "alreadyFriends": "Vous êtes déjà amis",
+  "onboardRemindTitle": "Restez régulier",
+  "onboardRemindBody": "Activez un rappel quotidien et regardez votre série de prière grandir — Pray4Me fonctionne même hors ligne."
 };
