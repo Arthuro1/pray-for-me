@@ -1,5 +1,20 @@
 import { describe, it, expect } from 'vitest';
-import { getAuthorName, originAuthor } from './user.js';
+import { getAuthorName, originAuthor, communityAuthor } from './user.js';
+import { t } from '../i18n.js';
+
+describe('communityAuthor', () => {
+  it('shows the localized "Me" for the current user', () => {
+    expect(communityAuthor({ user_id: 'u1', author_name: 'Marie' }, 'u1', 'fr')).toBe(t('fr', 'meAuthor'));
+  });
+
+  it('shows the author name for others', () => {
+    expect(communityAuthor({ user_id: 'u2', author_name: 'Marie' }, 'u1', 'fr')).toBe('Marie');
+  });
+
+  it('shows Anonymous regardless of who it is', () => {
+    expect(communityAuthor({ user_id: 'u1', author_name: 'Marie', is_anonymous: true }, 'u1', 'fr')).toBe(t('fr', 'anonymous'));
+  });
+});
 
 describe('getAuthorName', () => {
   it('prefers full_name from metadata', () => {

@@ -7,7 +7,7 @@ import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { timeAgo } from '../utils/date';
-import { getAuthorName } from '../utils/user';
+import { getAuthorName, communityAuthor } from '../utils/user';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
@@ -626,7 +626,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                       <div className="flex items-center gap-2 min-w-0">
                         <Avatar name={p.is_anonymous ? '?' : p.author_name} size={26} anonymous={p.is_anonymous} />
                         <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
-                          {p.is_anonymous ? t(lang, 'anonymous') : p.author_name} · {timeAgo(p.created_at, lang)}
+                          {communityAuthor(p, user.id, lang)} · {timeAgo(p.created_at, lang)}
                         </p>
                       </div>
                       {p.is_answered && (
@@ -662,7 +662,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
               {testimonies.map(testimony => (
                 <div key={testimony.id} className="rounded-2xl p-4" style={CARD_STYLE}>
                   <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>
-                    🎉 {testimony.is_anonymous ? t(lang, 'anonymous') : testimony.author_name} · {timeAgo(testimony.created_at, lang)}
+                    🎉 {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
                   </p>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{testimony.content}</p>
                 </div>

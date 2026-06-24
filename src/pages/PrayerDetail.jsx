@@ -6,7 +6,7 @@ import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
-import { getAuthorName, originAuthor } from '../utils/user';
+import { getAuthorName, originAuthor, communityAuthor } from '../utils/user';
 import { testimonyList } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
@@ -361,7 +361,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </h1>
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {isCommunity
-              ? (livePrayer.is_anonymous ? t(lang, 'anonymous') : livePrayer.author_name) + ' · ' + timeAgo(livePrayer.created_at, lang)
+              ? communityAuthor(livePrayer, user?.id, lang) + ' · ' + timeAgo(livePrayer.created_at, lang)
               : (() => {
                   const oa = originAuthor(livePrayer);
                   const author = oa ? `${oa.anonymous ? t(lang, 'anonymous') : oa.name} · ` : '';
@@ -697,7 +697,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     <Avatar name={u.is_anonymous ? '?' : u.author_name} size={28} anonymous={u.is_anonymous} />
                     <div className="min-w-0">
                       <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
-                        {u.is_anonymous ? t(lang, 'anonymous') : u.author_name}
+                        {communityAuthor(u, user?.id, lang)}
                         {' · '}{timeAgo(u.created_at, lang)}
                       </p>
                       <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{u.text}</p>
@@ -736,7 +736,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               {prayerTestimonies.map(tm => (
                 <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                   <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>
-                    🎉 {tm.is_anonymous ? t(lang, 'anonymous') : tm.author_name} · {timeAgo(tm.created_at, lang)}
+                    🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}
                   </p>
                   <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{tm.content}</p>
                 </div>
