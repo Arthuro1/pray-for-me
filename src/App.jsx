@@ -5,6 +5,8 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import Toaster from './components/Toaster';
+import OfflineBanner from './components/OfflineBanner';
+import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
 
 // Route components are code-split so each page loads as its own chunk.
@@ -20,7 +22,7 @@ import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
 import { scheduleNotifications } from './notifications';
-import { loadLocale, isLocaleLoaded } from './i18n';
+import { t, loadLocale, isLocaleLoaded } from './i18n';
 import { Loader2 } from 'lucide-react';
 
 // Fallback shown while a lazily-loaded route chunk is fetched.
@@ -30,6 +32,36 @@ function PageLoader() {
       <Loader2 className="animate-spin" size={24} style={{ color: 'var(--accent)' }} />
     </div>
   );
+}
+
+// Joins a group from a shared invite link (/community/join/:code), then routes
+// into the group. Shows the loader while the join resolves.
+function JoinGroupPage() {
+  const { code } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const { settings } = usePrayerStore();
+  const joinGroup = useCommunityStore(s => s.joinGroup);
+  const lang = settings.language || 'fr';
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
+    (async () => {
+      const res = await joinGroup(code, user.id);
+      if (cancelled) return;
+      if (res.group) {
+        toast.success(t(lang, 'joinedGroup'));
+        navigate(`/community/group/${res.group.id}`, { replace: true });
+      } else {
+        toast.error(t(lang, res.error === 'alreadyMember' ? 'alreadyMember' : 'groupNotFound'));
+        navigate('/community', { replace: true });
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id, code]);
+
+  return <PageLoader />;
 }
 
 // Personal prayer detail at /prayers/:id — resolves the prayer from the store.
@@ -125,6 +157,7 @@ export default function App() {
             <Route path="/prayers" element={<PrayersTab />} />
             <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
             <Route path="/community" element={<CommunityTab />} />
+            <Route path="/community/join/:code" element={<JoinGroupPage />} />
             <Route path="/community/group/:groupId" element={<CommunityTab />} />
             <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
             <Route path="/plan" element={<PlanTab />} />
@@ -136,6 +169,7 @@ export default function App() {
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
       )}
+      <OfflineBanner />
       <Toaster />
       <Analytics />
       <SpeedInsights />

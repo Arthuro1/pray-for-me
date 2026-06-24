@@ -238,5 +238,11 @@ export default {
   "errorGeneric": "Something went wrong. Please try again.",
   "leaveGroupConfirm": "Are you sure you want to leave this group?",
   "searchRequests": "Search a request...",
-  "noMatch": "No results"
+  "noMatch": "No results",
+  "offline": "You're offline",
+  "shareInviteLink": "Share invite link",
+  "linkCopied": "Link copied!",
+  "joinedGroup": "You joined the group",
+  "undo": "Undo",
+  "friendRemoved": "Friend removed"
 };

@@ -20,6 +20,15 @@ export default function Toaster() {
           >
             <Icon size={16} style={{ color: COLORS[t.type] || COLORS.error, flexShrink: 0 }} />
             <span className="flex-1">{t.message}</span>
+            {t.action && (
+              <button
+                onClick={() => { t.action.onClick(); dismiss(t.id); }}
+                className="text-xs font-semibold px-2 py-1 rounded-lg shrink-0"
+                style={{ color: 'var(--accent)', background: 'var(--accent-soft)' }}
+              >
+                {t.action.label}
+              </button>
+            )}
             <button onClick={() => dismiss(t.id)} style={{ color: 'var(--text-3)' }} aria-label="Dismiss">
               <X size={14} />
             </button>

@@ -502,6 +502,13 @@ const useCommunityStore = create((set, get) => ({
     return error ? toError(error) : {};
   },
 
+  // Re-create a friendship directly (used to undo an accidental removal).
+  addFriendship: async (userId, friendId) => {
+    const [uid1, uid2] = orderedPair(userId, friendId);
+    const { error } = await supabase.from('friendships').insert({ user_id: uid1, friend_id: uid2 });
+    return error ? toError(error) : {};
+  },
+
   // Returns friends as [{ id, name }] by joining the profiles table.
   fetchFriends: async (userId) => {
     const { data, error } = await supabase

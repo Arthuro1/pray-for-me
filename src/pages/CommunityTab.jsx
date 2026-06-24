@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check, LogOut, Search } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check, LogOut, Search, Share2 } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -54,7 +54,7 @@ function Section({ title, icon, children }) {
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
 function CommunityHub({ lang, userId, onViewGroup }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, fetchPendingCount } = useCommunityStore();
+  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount } = useCommunityStore();
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [groupInvitations, setGroupInvitations] = useState([]);
@@ -84,6 +84,18 @@ function CommunityHub({ lang, userId, onViewGroup }) {
     if (res?.error) toast.error(t(lang, 'errorGeneric'));
     await load();
     setBusyId(null);
+  };
+
+  // Friend removal gets an Undo affordance instead of a hard confirm dialog.
+  const handleRemoveFriend = async (friend) => {
+    setBusyId(friend.id);
+    const res = await removeFriend(userId, friend.id);
+    await load();
+    setBusyId(null);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    toast.success(t(lang, 'friendRemoved'), {
+      action: { label: t(lang, 'undo'), onClick: async () => { await addFriendship(userId, friend.id); load(); } },
+    });
   };
 
   if (loading) {
@@ -161,7 +173,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                     <Avatar name={f.name} size={36} />
                     <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
                   </div>
-                  <button onClick={() => handle(f.id, () => removeFriend(userId, f.id))} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
+                  <button onClick={() => handleRemoveFriend(f)} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
                     {t(lang, 'remove')}
                   </button>
                 </div>
@@ -368,8 +380,19 @@ function MembersModal({ lang, group, userId, onClose }) {
     fetchGroupMembers(group.id).then(r => { setMembers(r.members || []); setLoading(false); });
   }, [group.id]);
 
+  const shareInvite = async () => {
+    const url = `${window.location.origin}/community/join/${group.invite_code}`;
+    try {
+      if (navigator.share) await navigator.share({ title: group.name, text: group.name, url });
+      else { await navigator.clipboard.writeText(url); toast.success(t(lang, 'linkCopied')); }
+    } catch { /* share dismissed */ }
+  };
+
   return (
     <Modal title={`${t(lang, 'members')} (${members.length})`} onClose={onClose}>
+      <button onClick={shareInvite} className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium mb-4" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+        <Share2 size={15} /> {t(lang, 'shareInviteLink')}
+      </button>
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
       ) : (

@@ -238,5 +238,11 @@ export default {
   "errorGeneric": "Une erreur est survenue. Réessayez.",
   "leaveGroupConfirm": "Êtes-vous sûr de vouloir quitter ce groupe ?",
   "searchRequests": "Rechercher une requête...",
-  "noMatch": "Aucun résultat"
+  "noMatch": "Aucun résultat",
+  "offline": "Vous êtes hors ligne",
+  "shareInviteLink": "Partager le lien d'invitation",
+  "linkCopied": "Lien copié !",
+  "joinedGroup": "Vous avez rejoint le groupe",
+  "undo": "Annuler",
+  "friendRemoved": "Ami supprimé"
 };
