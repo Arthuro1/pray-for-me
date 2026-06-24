@@ -351,7 +351,7 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd } = useCommunityStore();
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers } = useCommunityStore();
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
   const [subTab, setSubTab] = useState('requests');
   const [showNewRequest, setShowNewRequest] = useState(false);
@@ -362,6 +362,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // the personal side show up, even if this group was already the active one.
   useEffect(() => {
     if (groupId) setActiveGroup(groupId);
+  }, [groupId]);
+
+  // Live prayer wall: reflect new/edited/answered requests from other members.
+  useEffect(() => {
+    if (!groupId) return;
+    return subscribeGroupPrayers(groupId);
   }, [groupId]);
 
   const group = groups.find(g => g.id === groupId);

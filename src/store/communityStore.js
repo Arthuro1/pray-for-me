@@ -131,6 +131,29 @@ const useCommunityStore = create((set, get) => ({
     set({ pendingCount: (fr.count || 0) + (gi.count || 0) });
   },
 
+  // ── Realtime ────────────────────────────────────────────────────────────────
+  // Live nav badge: refetch the pending count whenever an incoming friend
+  // request or group invitation for this user changes. Returns an unsubscribe fn.
+  subscribePending: (userId) => {
+    const channel = supabase.channel(`pending-${userId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'friend_requests', filter: `to_user_id=eq.${userId}` },
+        () => get().fetchPendingCount(userId))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'group_invitations', filter: `invited_user_id=eq.${userId}` },
+        () => get().fetchPendingCount(userId))
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  },
+
+  // Live prayer wall: quietly refetch a group's prayers on any change to its
+  // community_prayers rows (new/edited/deleted/answered). Returns an unsubscribe fn.
+  subscribeGroupPrayers: (groupId) => {
+    const channel = supabase.channel(`group-prayers-${groupId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_prayers', filter: `group_id=eq.${groupId}` },
+        () => get().fetchPrayers(groupId, true))
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  },
+
   setActiveGroup: (id) => {
     set({ activeGroupId: id, prayers: [], testimonies: [] });
     get().fetchPrayers(id);
@@ -208,15 +231,16 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
-  fetchPrayers: async (groupId) => {
-    set({ loading: true });
+  // quiet=true skips the loading flag (used by realtime refetches to avoid a spinner flash).
+  fetchPrayers: async (groupId, quiet = false) => {
+    if (!quiet) set({ loading: true });
     const { data } = await supabase
       .from('community_prayers')
       .select('*, community_updates(count), prayer_reactions(count)')
       .eq('group_id', groupId)
       .order('created_at', { ascending: false });
     if (data) set({ prayers: data });
-    set({ loading: false });
+    if (!quiet) set({ loading: false });
   },
 
   fetchUserReactions: async (groupId, userId) => {

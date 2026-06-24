@@ -274,6 +274,22 @@ end;
 $$;
 
 
+-- ── Realtime: publish tables that drive live UI (nav badge + prayer wall) ────
+-- Adds tables to the supabase_realtime publication (no-op if already present).
+do $$
+begin
+  alter publication supabase_realtime add table community_prayers;
+exception when duplicate_object then null; end $$;
+do $$
+begin
+  alter publication supabase_realtime add table friend_requests;
+exception when duplicate_object then null; end $$;
+do $$
+begin
+  alter publication supabase_realtime add table group_invitations;
+exception when duplicate_object then null; end $$;
+
+
 -- ── One-time backfill for data created before sync existed ───────────────────
 -- Copy each shared prayer's current points into its existing community copies.
 update community_prayers cp

@@ -51,7 +51,7 @@ export default function App() {
   const { user, loading: authLoading, init } = useAuthStore();
   const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
   const { loadTranslations, translateContent } = useTranslationStore();
-  const { fetchPendingCount } = useCommunityStore();
+  const { fetchPendingCount, subscribePending } = useCommunityStore();
 
   const lang = settings.language || 'fr';
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
@@ -78,6 +78,12 @@ export default function App() {
       loadTranslations(user.id);
       fetchPendingCount(user.id);
     }
+  }, [user?.id]);
+
+  // Keep the community nav badge live (incoming friend requests / invitations).
+  useEffect(() => {
+    if (!user?.id) return;
+    return subscribePending(user.id);
   }, [user?.id]);
 
   useEffect(() => {
