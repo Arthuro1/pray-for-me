@@ -3,6 +3,7 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { Plus, Trash2, X, Check } from 'lucide-react';
 import { t } from '../i18n';
+import ConfirmDialog from '../components/ConfirmDialog';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
@@ -14,6 +15,7 @@ export default function PlanTab() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] });
+  const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
 
   const toggleDay = (day, catId) => {
     const cat = categories.find((c) => c.id === catId);
@@ -43,6 +45,16 @@ export default function PlanTab() {
 
   return (
     <div>
+      {confirmDeleteCat && (
+        <ConfirmDialog
+          title={t(lang, 'deleteCategoryConfirm')}
+          message={`${confirmDeleteCat.emoji} ${tr(confirmDeleteCat.name, lang)} — ${t(lang, 'deleteWarning')}`}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          onConfirm={() => { deleteCategory(confirmDeleteCat.id); setConfirmDeleteCat(null); }}
+          onCancel={() => setConfirmDeleteCat(null)}
+        />
+      )}
       {/* Header */}
       <div
         className="px-4 md:px-8 pt-8 pb-5"
@@ -199,7 +211,7 @@ export default function PlanTab() {
                     {t(lang, 'edit')}
                   </button>
                   <button
-                    onClick={() => deleteCategory(cat.id)}
+                    onClick={() => setConfirmDeleteCat(cat)}
                     title={t(lang, 'tipDeleteCategory')}
                     className="p-1.5 rounded-lg"
                     style={{ background: '#fdf0f0', color: '#c04040' }}

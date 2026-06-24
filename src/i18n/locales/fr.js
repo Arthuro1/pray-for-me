@@ -244,5 +244,9 @@ export default {
   "linkCopied": "Lien copié !",
   "joinedGroup": "Vous avez rejoint le groupe",
   "undo": "Annuler",
-  "friendRemoved": "Ami supprimé"
+  "friendRemoved": "Ami supprimé",
+  "delete": "Supprimer",
+  "deleteWarning": "Cette action est irréversible.",
+  "deleteCategoryConfirm": "Supprimer cette catégorie ?",
+  "removeMemberConfirm": "Retirer ce membre du groupe ?"
 };

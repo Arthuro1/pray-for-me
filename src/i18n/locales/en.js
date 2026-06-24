@@ -244,5 +244,9 @@ export default {
   "linkCopied": "Link copied!",
   "joinedGroup": "You joined the group",
   "undo": "Undo",
-  "friendRemoved": "Friend removed"
+  "friendRemoved": "Friend removed",
+  "delete": "Delete",
+  "deleteWarning": "This action can't be undone.",
+  "deleteCategoryConfirm": "Delete this category?",
+  "removeMemberConfirm": "Remove this member from the group?"
 };

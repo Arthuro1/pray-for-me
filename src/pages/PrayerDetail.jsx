@@ -13,6 +13,7 @@ import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import PrayerForm from '../components/PrayerForm';
 import Avatar from '../components/Avatar';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
@@ -231,8 +232,31 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     onBack();
   };
 
+  const [showPersonalDelete, setShowPersonalDelete] = useState(false);
+  const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      {showPersonalDelete && (
+        <ConfirmDialog
+          title={t(lang, 'tipDeletePrayer')}
+          message={`${livePrayer.title} — ${t(lang, 'deleteWarning')}`}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          onConfirm={handleDelete}
+          onCancel={() => setShowPersonalDelete(false)}
+        />
+      )}
+      {confirmRemovePoint && (
+        <ConfirmDialog
+          title={t(lang, 'tipRemovePoint')}
+          message={`${tr(confirmRemovePoint.title, lang)} — ${t(lang, 'deleteWarning')}`}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          onConfirm={() => { handleRemovePoint(confirmRemovePoint.id); setConfirmRemovePoint(null); }}
+          onCancel={() => setConfirmRemovePoint(null)}
+        />
+      )}
       {showAiConsent && (
         <AiConsentModal
           lang={lang}
@@ -375,7 +399,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <button onClick={() => onEdit(livePrayer)} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
                 <Edit2 size={15} />
               </button>
-              <button onClick={handleDelete} title={t(lang, 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+              <button onClick={() => setShowPersonalDelete(true)} title={t(lang, 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
                 <Trash2 size={15} />
               </button>
             </>
@@ -452,7 +476,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <div className="flex items-start gap-2">
                     <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
                     {!isAnswered && (
-                      <button onClick={() => handleRemovePoint(pp.id)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
+                      <button onClick={() => setConfirmRemovePoint(pp)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
                         <Trash2 size={13} />
                       </button>
                     )}

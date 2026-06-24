@@ -12,6 +12,7 @@ import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
 import Avatar from '../components/Avatar';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
@@ -294,6 +295,7 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
   const [members, setMembers] = useState([]);
   const [busyId, setBusyId] = useState(null);
   const [invited, setInvited] = useState({});
+  const [confirmRemove, setConfirmRemove] = useState(null);
 
   const load = useCallback(async () => {
     const [f, m, inv] = await Promise.all([fetchFriends(userId), fetchGroupMembers(group.id), fetchGroupInvitees(group.id)]);
@@ -322,10 +324,22 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
     if (res?.error) toast.error(t(lang, 'errorGeneric'));
     await load();
     setBusyId(null);
+    setConfirmRemove(null);
   };
 
   return (
     <Modal title={t(lang, 'manageGroup')} onClose={onClose}>
+      {confirmRemove && (
+        <ConfirmDialog
+          title={t(lang, 'removeMemberConfirm')}
+          message={`${confirmRemove.name} — ${t(lang, 'deleteWarning')}`}
+          confirmLabel={t(lang, 'remove')}
+          cancelLabel={t(lang, 'cancel')}
+          loading={busyId === confirmRemove.user_id}
+          onConfirm={() => handleRemove(confirmRemove.user_id)}
+          onCancel={() => setConfirmRemove(null)}
+        />
+      )}
       <div className="max-h-[60vh] overflow-y-auto">
         <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'inviteFriends')}</p>
         {invitable.length === 0 ? (
@@ -358,7 +372,7 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
                 </div>
               </div>
               {m.user_id !== userId && (
-                <button onClick={() => handleRemove(m.user_id)} disabled={busyId === m.user_id} className="p-1.5 rounded-lg disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
+                <button onClick={() => setConfirmRemove(m)} disabled={busyId === m.user_id} className="p-1.5 rounded-lg disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
                   <Trash2 size={14} />
                 </button>
               )}
