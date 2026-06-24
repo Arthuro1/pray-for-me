@@ -8,14 +8,26 @@ const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '�
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
 export default function PlanTab() {
-  const { categories, addCategory, updateCategory, deleteCategory, settings } = usePrayerStore();
+  const { categories, prayers, addCategory, updateCategory, deleteCategory, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   const DAYS = t(lang, 'days');
+  const todayIdx = new Date().getDay();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] });
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  // Number of active prayers that land on a given weekday (uncategorized show every day).
+  const countForDay = (dayIdx) => {
+    const dayCatIds = categories.filter((c) => (c.week_days || []).includes(dayIdx)).map((c) => c.id);
+    return prayers.filter((p) => {
+      if (p.status !== 'active') return false;
+      const pc = (p.prayer_categories || []).map((x) => x.category_id);
+      return pc.length === 0 || pc.some((cid) => dayCatIds.includes(cid));
+    }).length;
+  };
 
   const toggleDay = (day, catId) => {
     const cat = categories.find((c) => c.id === catId);
@@ -55,6 +67,40 @@ export default function PlanTab() {
           onCancel={() => setConfirmDeleteCat(null)}
         />
       )}
+
+      {/* Day-centric editor: tap a day to toggle which categories you pray that day */}
+      {selectedDay !== null && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={() => setSelectedDay(null)}>
+          <div className="w-full max-w-md rounded-2xl p-5 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{DAYS[selectedDay]}</h3>
+              <button onClick={() => setSelectedDay(null)} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
+            </div>
+            <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayHint')}</p>
+            {categories.length === 0 ? (
+              <p className="text-sm text-center py-6" style={{ color: 'var(--text-3)' }}>{t(lang, 'noCategoriesYet')}</p>
+            ) : (
+              <div className="space-y-2">
+                {categories.map((cat) => {
+                  const on = (cat.week_days || []).includes(selectedDay);
+                  return (
+                    <button key={cat.id} onClick={() => toggleDay(selectedDay, cat.id)}
+                      className="flex items-center gap-3 w-full p-3 rounded-xl text-left transition-all"
+                      style={{ background: 'var(--input-bg)', border: on ? `1.5px solid ${cat.color}` : '0.5px solid var(--input-border)' }}>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0" style={{ backgroundColor: cat.color + '22' }}>{cat.emoji}</div>
+                      <span className="text-sm font-medium flex-1" style={{ color: 'var(--text-1)' }}>{tr(cat.name, lang)}</span>
+                      <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: on ? cat.color : 'transparent', border: on ? 'none' : '1.5px solid var(--input-border)' }}>
+                        {on && <Check size={13} color="#fff" />}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div
         className="px-4 md:px-8 pt-8 pb-5"
@@ -63,29 +109,29 @@ export default function PlanTab() {
         <h2 className="text-xl font-semibold mb-1 text-white">{t(lang, 'weeklyPlan')}</h2>
         <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'weeklyPlanSub')}</p>
 
-        {/* Weekly overview */}
+        {/* Weekly overview — tap a day to edit what you pray that day */}
         <div className="mt-4 grid grid-cols-7 gap-1">
           {DAYS.map((day, idx) => {
             const dayCats = categories.filter((c) => (c.week_days || []).includes(idx));
+            const count = countForDay(idx);
+            const isToday = idx === todayIdx;
             return (
-              <div key={idx} className="text-center">
-                <p className="text-xs font-medium mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{day}</p>
+              <button key={idx} onClick={() => setSelectedDay(idx)} className="text-center rounded-lg p-1 transition-colors"
+                style={isToday ? { background: 'rgba(255,255,255,0.16)' } : {}}>
+                <p className="text-xs font-medium mb-1" style={{ color: isToday ? '#fff' : 'rgba(255,255,255,0.6)' }}>{day}</p>
                 <div className="space-y-0.5">
                   {dayCats.length === 0 ? (
                     <div className="h-6 rounded-lg" style={{ background: 'rgba(255,255,255,0.07)' }} />
                   ) : (
                     dayCats.map((c) => (
-                      <div
-                        key={c.id}
-                        className="h-6 rounded-lg flex items-center justify-center text-xs"
-                        style={{ backgroundColor: c.color }}
-                      >
+                      <div key={c.id} className="h-6 rounded-lg flex items-center justify-center text-xs" style={{ backgroundColor: c.color }}>
                         {c.emoji}
                       </div>
                     ))
                   )}
                 </div>
-              </div>
+                <p className="text-[10px] mt-1" style={{ color: count > 0 ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.35)' }}>{count}</p>
+              </button>
             );
           })}
         </div>
@@ -118,7 +164,7 @@ export default function PlanTab() {
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Nom de la catégorie"
+                placeholder={t(lang, 'categoryNamePlaceholder')}
                 className="w-full text-sm rounded-xl px-3 py-2.5 focus:outline-none"
                 style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 autoFocus
