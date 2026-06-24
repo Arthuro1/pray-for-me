@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import { Plus, Trash2, X, Check } from 'lucide-react';
+import { Plus, Trash2, X, Check, Sparkles } from 'lucide-react';
 import { t } from '../i18n';
+import { toast } from '../store/toastStore';
 import ConfirmDialog from '../components/ConfirmDialog';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
@@ -53,6 +54,30 @@ export default function PlanTab() {
     setForm({ name: cat.name, emoji: cat.emoji, color: cat.color, weekDays: cat.week_days || [] });
     setEditId(cat.id);
     setShowAddForm(true);
+  };
+
+  // Days with no active prayers planned, and categories not assigned to any day.
+  const emptyDays = DAYS.map((_, idx) => idx).filter((idx) => countForDay(idx) === 0);
+  const unassigned = categories.filter((c) => !(c.week_days || []).length);
+
+  const activePrayerCount = (catId) =>
+    prayers.filter((p) => p.status === 'active' && (p.prayer_categories || []).some((x) => x.category_id === catId)).length;
+
+  // Fill empty days: greedily place each unassigned category on the currently
+  // lightest day (so empties get filled first and the week stays balanced). Undoable.
+  const handleFillEmptyDays = () => {
+    if (unassigned.length === 0) return;
+    const load = DAYS.map((_, idx) => countForDay(idx));
+    const prev = unassigned.map((c) => ({ id: c.id, weekDays: c.week_days || [] }));
+    unassigned.forEach((cat) => {
+      let minIdx = 0;
+      for (let d = 1; d < 7; d++) if (load[d] < load[minIdx]) minIdx = d;
+      updateCategory(cat.id, { weekDays: [minIdx] });
+      load[minIdx] += Math.max(activePrayerCount(cat.id), 1); // at least 1 so empty categories still spread
+    });
+    toast.success(t(lang, 'emptyDaysFilled'), {
+      action: { label: t(lang, 'undo'), onClick: () => prev.forEach((p) => updateCategory(p.id, { weekDays: p.weekDays })) },
+    });
   };
 
   return (
@@ -138,6 +163,23 @@ export default function PlanTab() {
       </div>
 
       <div className="px-4 md:px-8 pt-4">
+        {/* Empty-day hint — tap a day above to plan, or auto-fill from unassigned categories */}
+        {emptyDays.length > 0 && (
+          <div className="rounded-2xl p-3.5 mb-4 flex items-start gap-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+            <Sparkles size={16} className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                {t(lang, 'planEmptyDays')} {emptyDays.map((idx) => DAYS[idx]).join(', ')}
+              </p>
+              {unassigned.length > 0 && (
+                <button onClick={handleFillEmptyDays} className="mt-2 text-xs font-medium px-3 py-1.5 rounded-lg" style={{ background: 'var(--accent)', color: '#fff' }}>
+                  {t(lang, 'fillEmptyDays')}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Add button */}
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'categoriesHeading')}</h3>
