@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { dateLocale } from '../utils/date';
+import { testimonyList } from '../utils/prayer';
 import { t } from '../i18n';
 
 // A reflective "God's faithfulness" view of all answered prayers.
@@ -44,13 +45,14 @@ export default function AnsweredTab() {
               {answered.map(prayer => {
                 const pCatIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
                 const pCats = categories.filter(c => pCatIds.includes(c.id));
+                const lastTestimony = testimonyList(prayer).slice(-1)[0];
                 return (
                   <button key={prayer.id} onClick={() => navigate(`/prayers/${prayer.id}`)}
                     className="text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
                     style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', borderLeft: '3px solid var(--success)' }}>
                     <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
-                    {prayer.testimony && (
-                      <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>"{tr(prayer.testimony, lang)}"</p>
+                    {lastTestimony && (
+                      <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>"{tr(lastTestimony.content, lang)}"</p>
                     )}
                     <div className="flex items-center gap-2 flex-wrap">
                       {prayer.answered_at && (

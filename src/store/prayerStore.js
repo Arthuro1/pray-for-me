@@ -221,9 +221,15 @@ const usePrayerStore = create((set, get) => ({
   },
 
   markAnswered: async (id, testimony) => {
+    // Append the new testimony to the list (preserving previous ones) rather than overwriting.
+    const current = get().prayers.find((p) => p.id === id);
+    const testimonies = [...(current?.testimonies || [])];
+    if (testimony && testimony.trim()) {
+      testimonies.push({ id: crypto.randomUUID(), content: testimony.trim(), created_at: new Date().toISOString() });
+    }
     const { data } = await supabase
       .from('prayers')
-      .update({ status: 'answered', testimony: testimony || '', answered_at: new Date().toISOString() })
+      .update({ status: 'answered', testimonies, answered_at: new Date().toISOString() })
       .eq('id', id).select().single();
     if (data) {
       set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));

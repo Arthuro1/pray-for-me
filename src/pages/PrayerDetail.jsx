@@ -7,6 +7,7 @@ import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, originAuthor } from '../utils/user';
+import { testimonyList } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
@@ -182,6 +183,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     : (prayers.find(p => p.id === prayer.id) || prayer);
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
   const prayerTestimonies = isCommunity ? (communityTestimonies || []).filter(tm => tm.community_prayer_id === communityPrayer.id) : [];
+  const personalTestimonies = isCommunity ? [] : testimonyList(livePrayer);
   const prayerCategoryIds = isCommunity ? (livePrayer.category_ids || []) : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
   const isGroupAdmin = isCommunity && groups.find(g => g.id === communityPrayer.group_id)?.role === 'admin';
@@ -449,13 +451,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* Testimony */}
-        {isAnswered && livePrayer.testimony && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--card-answered-bg)', border: '0.5px solid var(--card-answered-border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--success)' }}>{t(lang, 'testimony')}</p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>"{tr(livePrayer.testimony, lang)}"</p>
-          </div>
-        )}
 
         {/* ── Prayer points + AI suggestions (both modes) ── */}
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -857,6 +852,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
 
 
+        {/* Saved testimonies — always above the write field, preserved across resume / re-answer */}
+        {personalTestimonies.length > 0 && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimonies')}</p>
+            <div className="space-y-3">
+              {personalTestimonies.map(tm => (
+                <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                  {tm.created_at && (
+                    <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
+                  )}
+                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(tm.content, lang)}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Testimony input (writing) */}
         {!isAnswered && showTestimony && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -870,14 +882,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               rows={3}
               autoFocus
             />
-          </div>
-        )}
-
-        {/* Saved testimony (once answered) */}
-        {isAnswered && livePrayer.testimony && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>🎉 {t(lang, 'testimony')}</p>
-            <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(livePrayer.testimony, lang)}"</p>
           </div>
         )}
 

@@ -150,6 +150,9 @@ alter table prayers add column if not exists community_origin_id uuid references
 alter table prayers add column if not exists origin_author_name text;
 alter table prayers add column if not exists origin_is_anonymous boolean default false;
 alter table prayers add column if not exists origin_group_name text;
+-- Accumulating testimonies for a personal prayer (like community testimonies),
+-- so previous ones are kept across resume / re-answer. Each: { id, content, created_at }.
+alter table prayers add column if not exists testimonies jsonb[] default '{}';
 
 
 -- ── prayer_updates: author info (for group-originated updates) ───────────────

@@ -352,6 +352,7 @@ alter table prayers add column if not exists community_origin_id uuid references
 alter table prayers add column if not exists origin_author_name text;
 alter table prayers add column if not exists origin_is_anonymous boolean default false;
 alter table prayers add column if not exists origin_group_name text;
+alter table prayers add column if not exists testimonies jsonb[] default '{}';
 
 -- Per-member group preferences (kept separate from group_members so a user
 -- can't escalate their own role via an UPDATE). auto_add = automatically copy
