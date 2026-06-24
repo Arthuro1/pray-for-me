@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "応えられた祈りはまだありません",
   "noAnsweredSub": "祈りが応えられたら、マークするとその証しがここに表示されます。",
   "seeTranslation": "翻訳を見る",
-  "showOriginal": "原文を見る"
+  "showOriginal": "原文を見る",
+  "pushUnsupported": "お使いのブラウザは通知に対応していません。",
+  "pushDenied": "通知が拒否されました。ブラウザの設定で有効にしてください。",
+  "remindersOn": "リマインダーを有効にしました 🙏"
 };

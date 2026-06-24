@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "Aucune prière exaucée pour l'instant",
   "noAnsweredSub": "Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici.",
   "seeTranslation": "Voir la traduction",
-  "showOriginal": "Voir l'original"
+  "showOriginal": "Voir l'original",
+  "pushUnsupported": "Votre navigateur ne prend pas en charge les notifications.",
+  "pushDenied": "Notifications refusées. Activez-les dans les réglages du navigateur.",
+  "remindersOn": "Rappels activés 🙏"
 };

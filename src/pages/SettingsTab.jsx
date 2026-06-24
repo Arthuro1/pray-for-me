@@ -4,26 +4,10 @@ import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
 import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
+import { toast } from '../store/toastStore';
+import { enablePush, updatePushPrefs, disablePush, pushSupported } from '../push';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
-
-function requestNotificationPermission(onGranted) {
-  if (!('Notification' in window)) {
-    alert("Votre navigateur ne supporte pas les notifications.");
-    return;
-  }
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      onGranted();
-      new Notification('Pray4Me 🙏', {
-        body: 'Les notifications sont activées! Dieu vous entend.',
-        icon: '/favicon.ico',
-      });
-    } else {
-      alert("Les notifications ont été refusées. Veuillez les activer dans les paramètres de votre navigateur.");
-    }
-  });
-}
 
 function Toggle({ enabled, onToggle }) {
   return (
@@ -65,17 +49,25 @@ export default function SettingsTab() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
 
-  const handleToggleNotifications = () => {
+  const lang = settings.language || 'fr';
+
+  const handleToggleNotifications = async () => {
     if (!settings.dailyReminderEnabled) {
-      requestNotificationPermission(() => {
-        updateSettings({ dailyReminderEnabled: true, notificationsGranted: true });
-      });
+      if (!pushSupported()) { toast.error(t(lang, 'pushUnsupported')); return; }
+      const { error } = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang });
+      if (error) { toast.error(t(lang, error === 'denied' ? 'pushDenied' : 'errorGeneric')); return; }
+      updateSettings({ dailyReminderEnabled: true, notificationsGranted: true });
+      toast.success(t(lang, 'remindersOn'));
     } else {
+      await disablePush(user?.id);
       updateSettings({ dailyReminderEnabled: false });
     }
   };
 
-  const lang = settings.language || 'fr';
+  const handleReminderTimeChange = (time) => {
+    updateSettings({ dailyReminderTime: time });
+    if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { reminderTime: time });
+  };
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
 
@@ -177,7 +169,7 @@ export default function SettingsTab() {
             </div>
             <select
               value={lang}
-              onChange={(e) => updateSettings({ language: e.target.value })}
+              onChange={(e) => { updateSettings({ language: e.target.value }); if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { lang: e.target.value }); }}
               className="text-sm rounded-xl px-3 py-2 focus:outline-none"
               style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)', maxWidth: '180px' }}
             >
@@ -202,7 +194,7 @@ export default function SettingsTab() {
                 <input
                   type="time"
                   value={settings.dailyReminderTime}
-                  onChange={(e) => updateSettings({ dailyReminderTime: e.target.value })}
+                  onChange={(e) => handleReminderTimeChange(e.target.value)}
                   className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
                   style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 />

@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "Wala pang sinagot na panalangin",
   "noAnsweredSub": "Kapag nasagot ang isang panalangin, markahan ito at lalabas dito ang patotoo nito.",
   "seeTranslation": "Tingnan ang salin",
-  "showOriginal": "Tingnan ang orihinal"
+  "showOriginal": "Tingnan ang orihinal",
+  "pushUnsupported": "Hindi sinusuportahan ng iyong browser ang mga notification.",
+  "pushDenied": "Tinanggihan ang mga notification. I-enable sa browser settings.",
+  "remindersOn": "Naka-on ang mga paalala 🙏"
 };

@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "No answered prayers yet",
   "noAnsweredSub": "When a prayer is answered, mark it and its testimony will appear here.",
   "seeTranslation": "See translation",
-  "showOriginal": "See original"
+  "showOriginal": "See original",
+  "pushUnsupported": "Your browser does not support notifications.",
+  "pushDenied": "Notifications were denied. Enable them in your browser settings.",
+  "remindersOn": "Reminders enabled 🙏"
 };

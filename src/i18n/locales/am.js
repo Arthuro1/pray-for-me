@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "እስካሁን የተመለሰ ጸሎት የለም",
   "noAnsweredSub": "ጸሎት ሲመለስ ምልክት ያድርጉበት፥ ምስክርነቱም እዚህ ይታያል።",
   "seeTranslation": "ትርጉም አሳይ",
-  "showOriginal": "ዋናውን አሳይ"
+  "showOriginal": "ዋናውን አሳይ",
+  "pushUnsupported": "አሳሽዎ ማሳወቂያዎችን አይደግፍም።",
+  "pushDenied": "ማሳወቂያዎች ተከልክለዋል። በአሳሽ ቅንብሮች ውስጥ ያንቁ።",
+  "remindersOn": "አስታዋሾች ነቅተዋል 🙏"
 };

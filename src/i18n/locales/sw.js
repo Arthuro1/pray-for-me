@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "Bado hakuna maombi yaliyojibiwa",
   "noAnsweredSub": "Ombi linapojibiwa, liweke alama na ushuhuda wake utaonekana hapa.",
   "seeTranslation": "Ona tafsiri",
-  "showOriginal": "Ona asili"
+  "showOriginal": "Ona asili",
+  "pushUnsupported": "Kivinjari chako hakitumii arifa.",
+  "pushDenied": "Arifa zimekataliwa. Ziwashe katika mipangilio ya kivinjari.",
+  "remindersOn": "Vikumbusho vimewashwa 🙏"
 };

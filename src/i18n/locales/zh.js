@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "还没有已应允的祷告",
   "noAnsweredSub": "当祷告蒙应允时，标记它，其见证将显示在此处。",
   "seeTranslation": "查看翻译",
-  "showOriginal": "查看原文"
+  "showOriginal": "查看原文",
+  "pushUnsupported": "您的浏览器不支持通知。",
+  "pushDenied": "通知被拒绝。请在浏览器设置中启用。",
+  "remindersOn": "提醒已开启 🙏"
 };

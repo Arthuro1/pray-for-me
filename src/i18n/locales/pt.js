@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "Nenhuma oração respondida ainda",
   "noAnsweredSub": "Quando uma oração for respondida, marque-a e seu testemunho aparecerá aqui.",
   "seeTranslation": "Ver tradução",
-  "showOriginal": "Ver original"
+  "showOriginal": "Ver original",
+  "pushUnsupported": "Seu navegador não suporta notificações.",
+  "pushDenied": "Notificações negadas. Ative-as nas configurações do navegador.",
+  "remindersOn": "Lembretes ativados 🙏"
 };

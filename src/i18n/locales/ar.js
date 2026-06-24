@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "لا توجد صلوات مستجابة بعد",
   "noAnsweredSub": "عندما تُستجاب صلاة، ضع علامة عليها وستظهر شهادتها هنا.",
   "seeTranslation": "عرض الترجمة",
-  "showOriginal": "عرض الأصل"
+  "showOriginal": "عرض الأصل",
+  "pushUnsupported": "متصفحك لا يدعم الإشعارات.",
+  "pushDenied": "تم رفض الإشعارات. فعّلها من إعدادات المتصفح.",
+  "remindersOn": "تم تفعيل التذكيرات 🙏"
 };

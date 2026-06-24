@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "아직 응답된 기도가 없습니다",
   "noAnsweredSub": "기도가 응답되면 표시하세요. 그 간증이 여기에 나타납니다.",
   "seeTranslation": "번역 보기",
-  "showOriginal": "원문 보기"
+  "showOriginal": "원문 보기",
+  "pushUnsupported": "브라우저가 알림을 지원하지 않습니다.",
+  "pushDenied": "알림이 거부되었습니다. 브라우저 설정에서 활성화하세요.",
+  "remindersOn": "알림이 켜졌습니다 🙏"
 };

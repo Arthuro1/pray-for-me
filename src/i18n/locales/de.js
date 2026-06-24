@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "Noch keine erhörten Gebete",
   "noAnsweredSub": "Wenn ein Gebet erhört wird, markiere es und sein Zeugnis erscheint hier.",
   "seeTranslation": "Übersetzung anzeigen",
-  "showOriginal": "Original anzeigen"
+  "showOriginal": "Original anzeigen",
+  "pushUnsupported": "Dein Browser unterstützt keine Benachrichtigungen.",
+  "pushDenied": "Benachrichtigungen wurden abgelehnt. Aktiviere sie in den Browsereinstellungen.",
+  "remindersOn": "Erinnerungen aktiviert 🙏"
 };

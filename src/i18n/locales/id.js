@@ -270,5 +270,8 @@ export default {
   "noAnsweredYet": "Belum ada doa yang dijawab",
   "noAnsweredSub": "Saat sebuah doa dijawab, tandai dan kesaksiannya akan muncul di sini.",
   "seeTranslation": "Lihat terjemahan",
-  "showOriginal": "Lihat asli"
+  "showOriginal": "Lihat asli",
+  "pushUnsupported": "Browser Anda tidak mendukung notifikasi.",
+  "pushDenied": "Notifikasi ditolak. Aktifkan di pengaturan browser.",
+  "remindersOn": "Pengingat diaktifkan 🙏"
 };
