@@ -55,12 +55,17 @@ const useCommunityStore = create((set, get) => ({
   fetchPrayerShares: async (userId) => {
     const { data } = await supabase
       .from('community_prayers')
-      .select('source_prayer_id, group_id, is_anonymous, groups(name)')
+      .select('source_prayer_id, group_id, is_anonymous, groups(name), prayer_reactions(count)')
       .eq('user_id', userId)
       .not('source_prayer_id', 'is', null);
     const map = {};
     (data || []).forEach(r => {
-      (map[r.source_prayer_id] ||= []).push({ groupId: r.group_id, groupName: r.groups?.name || '?', isAnonymous: !!r.is_anonymous });
+      (map[r.source_prayer_id] ||= []).push({
+        groupId: r.group_id,
+        groupName: r.groups?.name || '?',
+        isAnonymous: !!r.is_anonymous,
+        prayingCount: r.prayer_reactions?.[0]?.count ?? 0,
+      });
     });
     set({ prayerShares: map });
   },

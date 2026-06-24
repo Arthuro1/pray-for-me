@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
+import useCommunityStore from '../store/communityStore';
+import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, Users } from 'lucide-react';
+import { Sparkles, Loader2, Plus } from 'lucide-react';
 import { t } from '../i18n';
-import { originAuthor } from '../utils/user';
 import PrayerListSkeleton from '../components/Skeleton';
-import Avatar from '../components/Avatar';
+import PrayerListItem from '../components/PrayerListItem';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -175,6 +176,9 @@ export default function HomeTab({ onAdd }) {
   const { getTodaysPrayers, categories, prayers, settings, addPrayer, loading } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
+  const { prayerShares, fetchPrayerShares } = useCommunityStore();
+
+  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
   const [daySuggestions, setDaySuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [suggestError, setSuggestError] = useState(null);
@@ -377,53 +381,19 @@ export default function HomeTab({ onAdd }) {
         )}
 
         {todaysPrayers.length > 0 && (
-          <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '0.5px solid var(--border)' }}>
-            {todaysPrayers.map((prayer, idx) => {
-              const isAnswered = prayer.status === 'answered';
-              const pCatIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
-              const pCats = categories.filter(c => pCatIds.includes(c.id));
-              return (
-                <button
-                  key={prayer.id}
-                  onClick={() => navigate(`/prayers/${prayer.id}`)}
-                  className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
-                  style={{
-                    background: 'var(--surface)',
-                    borderBottom: idx < todaysPrayers.length - 1 ? '0.5px solid var(--border)' : 'none',
-                  }}
-                >
-                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: isAnswered ? '#059669' : 'var(--accent)' }} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}>
-                      {tr(prayer.title, lang)}
-                    </p>
-                    {pCats.length > 0 && (
-                      <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>
-                        {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
-                      </p>
-                    )}
-                    {(() => {
-                      const oa = originAuthor(prayer);
-                      if (!oa && !prayer.origin_group_name) return null;
-                      return (
-                        <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
-                          {oa && <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} />}
-                          {oa && (oa.anonymous ? t(lang, 'anonymous') : oa.name)}
-                          {prayer.origin_group_name && (
-                            <span className="flex items-center gap-1" style={{ color: 'var(--accent)' }}>
-                              <Users size={11} /> {prayer.origin_group_name}
-                            </span>
-                          )}
-                        </p>
-                      );
-                    })()}
-                  </div>
-                  <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
-                    {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
-                  </div>
-                </button>
-              );
-            })}
+          <div className="flex flex-col gap-3 mb-4">
+            {todaysPrayers.map((prayer) => (
+              <PrayerListItem
+                key={prayer.id}
+                prayer={prayer}
+                categories={categories}
+                lang={lang}
+                tr={tr}
+                shares={prayerShares[prayer.id]}
+                currentUserName={getAuthorName(user)}
+                onClick={() => navigate(`/prayers/${prayer.id}`)}
+              />
+            ))}
           </div>
         )}
 

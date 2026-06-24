@@ -5,10 +5,10 @@ import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import PrayerListSkeleton from '../components/Skeleton';
-import Avatar from '../components/Avatar';
-import { Search, SlidersHorizontal, Users, EyeOff } from 'lucide-react';
+import PrayerListItem from '../components/PrayerListItem';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import { t } from '../i18n';
-import { originAuthor } from '../utils/user';
+import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
 
 export default function PrayersTab() {
@@ -126,76 +126,19 @@ export default function PrayersTab() {
             <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersFoundSub')}</p>
           </div>
         ) : (
-          <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)' }}>
-            {sorted.map((prayer, idx) => {
-              const isAnswered = prayer.status === 'answered';
-              const pCatIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
-              const pCats = categories.filter(c => pCatIds.includes(c.id));
-              return (
-                <button
-                  key={prayer.id}
-                  onClick={() => navigate(`/prayers/${prayer.id}`)}
-                  className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
-                  style={{
-                    background: 'var(--surface)',
-                    borderBottom: idx < sorted.length - 1 ? '0.5px solid var(--border)' : 'none',
-                  }}
-                >
-                  <div
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ background: isAnswered ? '#059669' : 'var(--accent)' }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}>
-                      {tr(prayer.title, lang)}
-                    </p>
-                    {pCats.length > 0 && (
-                      <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>
-                        {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
-                      </p>
-                    )}
-                    {prayer.for_other && prayer.person_name && (
-                      <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
-                        <Avatar name={prayer.person_name} size={18} /> {prayer.person_name}
-                      </p>
-                    )}
-                    {(() => {
-                      const oa = originAuthor(prayer);
-                      if (!oa && !prayer.origin_group_name) return null;
-                      return (
-                        <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
-                          {oa && <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} />}
-                          {oa && (oa.anonymous ? t(lang, 'anonymous') : oa.name)}
-                          {prayer.origin_group_name && (
-                            <span className="flex items-center gap-1" style={{ color: 'var(--accent)' }}>
-                              <Users size={11} /> {prayer.origin_group_name}
-                            </span>
-                          )}
-                        </p>
-                      );
-                    })()}
-                    {(prayerShares[prayer.id] || []).length > 0 && (
-                      <div className="flex flex-wrap items-center gap-1 mt-1.5">
-                        <Users size={11} style={{ color: 'var(--accent)' }} />
-                        {prayerShares[prayer.id].map(s => (
-                          <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                            {s.groupName}
-                          </span>
-                        ))}
-                        {prayerShares[prayer.id].some(s => s.isAnonymous) && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
-                            <EyeOff size={9} /> {t(lang, 'anonymous')}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
-                    {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
-                  </div>
-                </button>
-              );
-            })}
+          <div className="flex flex-col gap-3">
+            {sorted.map((prayer) => (
+              <PrayerListItem
+                key={prayer.id}
+                prayer={prayer}
+                categories={categories}
+                lang={lang}
+                tr={tr}
+                shares={prayerShares[prayer.id]}
+                currentUserName={getAuthorName(user)}
+                onClick={() => navigate(`/prayers/${prayer.id}`)}
+              />
+            ))}
           </div>
         )}
       </div>

@@ -258,6 +258,7 @@ export default {
   "unassignedCategories": "{count} catégorie(s) non planifiée(s)",
   "autoSchedule": "Planifier automatiquement",
   "categoriesScheduled": "Catégories planifiées",
+  "meAuthor": "Moi",
   "moveUp": "Monter",
   "moveDown": "Descendre",
   "prayerDaysHint": "Si aucun jour n'est choisi, suit le plan des catégories",
