@@ -1,15 +1,32 @@
 ﻿import { useState, useEffect, useRef } from 'react';
-import { Home, BookOpen, Calendar, Settings, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Home, BookOpen, Calendar, Settings, Plus, ChevronLeft, ChevronRight, Users } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
+
+function Badge({ count, className = '', style = {} }) {
+  if (!count) return null;
+  return (
+    <span
+      className={`flex items-center justify-center text-[10px] font-bold text-white rounded-full ${className}`}
+      style={{ minWidth: 18, height: 18, padding: '0 5px', background: '#ef4444', ...style }}
+    >
+      {count > 9 ? '9+' : count}
+    </span>
+  );
+}
 
 const SIDEBAR_FULL = 220;
 const SIDEBAR_MINI = 64;
 const MD_BREAKPOINT = 768;
 
-export default function Layout({ children, currentTab, onTabChange, onAddPrayer }) {
+export default function Layout({ children, onAddPrayer }) {
   const { settings } = usePrayerStore();
+  const { pendingCount } = useCommunityStore();
   const lang = settings.language || 'en';
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [isMd, setIsMd] = useState(() => window.innerWidth >= MD_BREAKPOINT);
   const mainRef = useRef(null);
@@ -29,11 +46,15 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
   }, [sidebarWidth, isMd]);
 
   const tabs = [
-    { id: 'home', label: t(lang, 'today'), icon: Home },
-    { id: 'prayers', label: t(lang, 'prayers'), icon: BookOpen },
-    { id: 'plan', label: t(lang, 'plan'), icon: Calendar },
-    { id: 'settings', label: t(lang, 'settings'), icon: Settings },
+    { id: 'home', path: '/', label: t(lang, 'today'), icon: Home },
+    { id: 'prayers', path: '/prayers', label: t(lang, 'prayers'), icon: BookOpen },
+    { id: 'community', path: '/community', label: t(lang, 'community'), icon: Users, badge: pendingCount },
+    { id: 'plan', path: '/plan', label: t(lang, 'plan'), icon: Calendar },
+    { id: 'settings', path: '/settings', label: t(lang, 'settings'), icon: Settings },
   ];
+
+  // A tab is active when the path matches (home is exact; others by prefix).
+  const isActive = (path) => path === '/' ? pathname === '/' : pathname.startsWith(path);
 
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
@@ -68,14 +89,14 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
         </div>
 
         <nav className="flex flex-col gap-1 flex-1 px-2">
-          {tabs.map(({ id, label, icon: Icon }) => {
-            const active = currentTab === id;
+          {tabs.map(({ id, path, label, icon: Icon, badge }) => {
+            const active = isActive(path);
             return (
               <button
                 key={id}
-                onClick={() => onTabChange(id)}
+                onClick={() => navigate(path)}
                 title={collapsed ? label : undefined}
-                className="flex items-center rounded-xl text-sm font-medium transition-all"
+                className="relative flex items-center rounded-xl text-sm font-medium transition-all"
                 style={{
                   gap: collapsed ? 0 : 12,
                   padding: collapsed ? '10px 0' : '10px 12px',
@@ -85,8 +106,12 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
                     : { color: 'var(--text-3)' }),
                 }}
               >
-                <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
+                <span className="relative flex items-center">
+                  <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
+                  {collapsed && <Badge count={badge} className="absolute" style={{ top: -8, left: 10 }} />}
+                </span>
                 {!collapsed && <span>{label}</span>}
+                {!collapsed && <Badge count={badge} className="ml-auto" />}
               </button>
             );
           })}
@@ -143,16 +168,19 @@ export default function Layout({ children, currentTab, onTabChange, onAddPrayer 
         className="md:hidden fixed bottom-0 left-0 right-0 flex z-10"
         style={{ background: 'var(--surface)', borderTop: '0.5px solid var(--border)' }}
       >
-        {tabs.map(({ id, label, icon: Icon }) => {
-          const active = currentTab === id;
+        {tabs.map(({ id, path, label, icon: Icon, badge }) => {
+          const active = isActive(path);
           return (
             <button
               key={id}
-              onClick={() => onTabChange(id)}
+              onClick={() => navigate(path)}
               className="flex-1 flex flex-col items-center py-2.5 gap-0.5 transition-colors"
               style={{ color: active ? 'var(--accent)' : 'var(--text-3)' }}
             >
-              <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
+              <span className="relative flex items-center">
+                <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
+                <Badge count={badge} className="absolute" style={{ top: -8, left: 12 }} />
+              </span>
               <span className="text-xs" style={{ fontWeight: active ? 600 : 400 }}>{label}</span>
             </button>
           );

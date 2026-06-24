@@ -1,6 +1,8 @@
 import { X, Heart } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const PAYPAL_URL = import.meta.env.VITE_DONATION_URL || 'https://paypal.me/YOUR_USERNAME';
 
@@ -23,6 +25,8 @@ const METHODS = [
 export default function DonateModal({ onClose }) {
   const { settings } = usePrayerStore();
   const lang = settings?.language || 'en';
+  useEscapeKey(onClose);
+  const trapRef = useFocusTrap();
 
   return (
     <div
@@ -31,11 +35,16 @@ export default function DonateModal({ onClose }) {
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
+        ref={trapRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
         className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8"
         style={{ background: 'var(--surface)' }}
       >
         <button
           onClick={onClose}
+          aria-label={t(lang, 'close')}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full"
           style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}
         >

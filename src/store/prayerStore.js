@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
+import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 
 const DEFAULT_CATEGORIES = {
   fr: [
@@ -36,9 +39,12 @@ const DEFAULT_CATEGORIES = {
   ],
 };
 
+// Keeps shared community copies in sync when the source personal prayer is
+// edited. Only touches fields that were actually changed.
 const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
+  userId: null,
   settings: {
     dailyReminderEnabled: false,
     dailyReminderTime: '07:00',
@@ -54,18 +60,28 @@ const usePrayerStore = create((set, get) => ({
     })(),
     theme: localStorage.getItem('pfm_theme') || 'light',
   },
-  loading: false,
+  loading: true, // starts true so the first paint shows skeletons, not an empty flash
 
   // ─── Load all data ───────────────────────────────────────────
   loadData: async (userId) => {
-    set({ loading: true });
+    set({ loading: true, userId });
 
-    // Load categories (create defaults if first time)
-    let { data: cats } = await supabase
-      .from('categories')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at');
+    // 1. Hydrate instantly from the local snapshot (works offline and includes
+    //    any prayers created offline that aren't on the server yet).
+    const snap = await loadSnapshot(userId);
+    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], loading: false });
+
+    // 2. Fetch authoritative data. If the network is unreachable, keep the
+    //    hydrated snapshot rather than wiping it.
+    let cats;
+    try {
+      const res = await supabase.from('categories').select('*').eq('user_id', userId).order('created_at');
+      if (res.error) throw res.error;
+      cats = res.data;
+    } catch {
+      set({ loading: false });
+      return;
+    }
 
     if (!cats || cats.length === 0) {
       const lang = get().settings.language || 'fr';
@@ -82,45 +98,98 @@ const usePrayerStore = create((set, get) => ({
       );
     }
 
-    // Load prayers with updates, points and categories
-    const { data: prayers } = await supabase
-      .from('prayers')
-      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+    let serverPrayers;
+    try {
+      const res = await supabase
+        .from('prayers')
+        .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      if (res.error) throw res.error;
+      serverPrayers = res.data || [];
+    } catch {
+      // Categories loaded but prayers didn't — keep hydrated prayers.
+      const orderedCats = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
+      set({ categories: orderedCats, loading: false });
+      return;
+    }
 
-    set({ categories: cats || [], prayers: prayers || [], loading: false });
+    // 3. Merge: server is authoritative. Keep a local-only prayer only if its
+    //    creation is STILL queued — so a prayer whose create was permanently
+    //    dropped (rejected) is reconciled away rather than lingering as a ghost.
+    const serverIds = new Set(serverPrayers.map((p) => p.id));
+    const creating = pendingPrayerIds();
+    const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
+    const mergedPrayers = [...pendingLocal, ...serverPrayers];
+
+    const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
+    set({ categories: ordered, prayers: mergedPrayers, loading: false });
+    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers });
   },
 
   // ─── Prayers ─────────────────────────────────────────────────
+  // Optimistic + offline-capable: the prayer appears immediately and the server
+  // write is queued (replayed on reconnect). A client-generated id keeps the
+  // local record and the eventual server row in sync.
   addPrayer: async (prayer) => {
+    // getSession reads the locally-cached session (no network), so this works offline.
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return;
+
+    const id = crypto.randomUUID();
+    const categoryIds = prayer.categoryIds || [];
+    const row = {
+      id,
+      user_id: userId,
+      title: prayer.title,
+      description: prayer.description || '',
+      for_other: prayer.forOther || false,
+      person_name: prayer.personName || '',
+      phone: prayer.phone || '',
+      status: 'active',
+    };
+
+    const optimistic = {
+      ...row,
+      created_at: new Date().toISOString(),
+      prayer_updates: [],
+      prayer_points: [],
+      prayer_categories: categoryIds.map((category_id) => ({ category_id })),
+    };
+    set((state) => ({ prayers: [optimistic, ...state.prayers] }));
+    enqueue('createPrayer', { row, categoryIds });
+  },
+
+  // Saves a community prayer into the user's personal list as a snapshot copy
+  // (title, description, prayer points). Not ongoing-synced; deduped by origin.
+  addFromCommunity: async (communityPrayer, groupName = null) => {
+    const existing = get().prayers.find((p) => p.community_origin_id === communityPrayer.id);
+    if (existing) return { prayer: existing, alreadyAdded: true };
+
     const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from('prayers')
-      .insert({
-        user_id: user.id,
-        title: prayer.title,
-        description: prayer.description || '',
-        for_other: prayer.forOther || false,
-        person_name: prayer.personName || '',
-        phone: prayer.phone || '',
-        status: 'active',
-      })
+      .insert(communityToPersonalInsert(communityPrayer, groupName, user.id))
       .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .single();
+    if (error || !data) return { error: error?.message || 'failed' };
 
-    if (!error && data) {
-      const categoryIds = prayer.categoryIds || [];
-      if (categoryIds.length > 0) {
-        await supabase.from('prayer_categories').insert(
-          categoryIds.map((cid) => ({ prayer_id: data.id, category_id: cid }))
-        );
-        data.prayer_categories = categoryIds.map((cid) => ({ category_id: cid }));
-      }
-      set((state) => ({ prayers: [data, ...state.prayers] }));
+    // Copy current prayer points (categories are skipped — they belong to the author).
+    const points = (communityPrayer.prayer_points || []).map((pp) => ({
+      prayer_id: data.id, title: pp.title, verses: pp.verses || [],
+    }));
+    if (points.length > 0) {
+      const { data: inserted } = await supabase.from('prayer_points').insert(points).select();
+      data.prayer_points = inserted || [];
     }
+
+    set((state) => ({ prayers: [data, ...state.prayers] }));
+    return { prayer: data };
   },
 
+  // Optimistic + offline-capable. Fields map to snake_case; category links and
+  // shared-copy mirroring are handled idempotently by the executor.
   updatePrayer: async (id, updates) => {
     const payload = {};
     if (updates.title !== undefined) payload.title = updates.title;
@@ -128,73 +197,85 @@ const usePrayerStore = create((set, get) => ({
     if (updates.forOther !== undefined) payload.for_other = updates.forOther;
     if (updates.personName !== undefined) payload.person_name = updates.personName;
     if (updates.phone !== undefined) payload.phone = updates.phone;
+    if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
     payload.updated_at = new Date().toISOString();
 
-    const { data } = await supabase.from('prayers').update(payload).eq('id', id).select().single();
+    const community = {};
+    if (updates.title !== undefined) community.title = updates.title;
+    if (updates.description !== undefined) community.description = updates.description;
+    if (updates.categoryIds !== undefined) community.category_ids = updates.categoryIds;
 
-    if (updates.categoryIds !== undefined) {
-      await supabase.from('prayer_categories').delete().eq('prayer_id', id);
-      if (updates.categoryIds.length > 0) {
-        await supabase.from('prayer_categories').insert(
-          updates.categoryIds.map((cid) => ({ prayer_id: id, category_id: cid }))
-        );
-      }
-    }
+    set((state) => ({
+      prayers: state.prayers.map((p) => {
+        if (p.id !== id) return p;
+        const prayer_categories = updates.categoryIds !== undefined
+          ? updates.categoryIds.map((category_id) => ({ category_id }))
+          : p.prayer_categories;
+        return { ...p, ...payload, prayer_categories };
+      }),
+    }));
+    enqueue('updatePrayer', { id, payload, categoryIds: updates.categoryIds, community });
+  },
 
-    if (data) {
-      set((state) => ({
-        prayers: state.prayers.map((p) => {
-          if (p.id !== id) return p;
-          const prayer_categories = updates.categoryIds !== undefined
-            ? updates.categoryIds.map((cid) => ({ category_id: cid }))
-            : p.prayer_categories;
-          return { ...p, ...data, prayer_categories };
-        }),
-      }));
+  // Reverse direction: when the owner edits categories on a shared community
+  // prayer, push them back to the personal source and all its community copies.
+  // Owner-only (categories belong to the owner's category set).
+  syncCategoriesFromCommunity: async (sourcePrayerId, categoryIds) => {
+    const ids = categoryIds || [];
+    await supabase.from('prayer_categories').delete().eq('prayer_id', sourcePrayerId);
+    if (ids.length > 0) {
+      await supabase.from('prayer_categories').insert(ids.map((cid) => ({ prayer_id: sourcePrayerId, category_id: cid })));
     }
+    await supabase.from('community_prayers').update({ category_ids: ids }).eq('source_prayer_id', sourcePrayerId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === sourcePrayerId ? { ...p, prayer_categories: ids.map((cid) => ({ category_id: cid })) } : p
+      ),
+    }));
   },
 
   markAnswered: async (id, testimony) => {
-    const { data } = await supabase
-      .from('prayers')
-      .update({ status: 'answered', testimony: testimony || '', answered_at: new Date().toISOString() })
-      .eq('id', id).select().single();
-    if (data) {
-      set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
-    }
+    const answered_at = new Date().toISOString();
+    const trimmed = (testimony || '').trim();
+    // One new testimony (if any) — appended locally and server-side, never overwriting.
+    const newTestimony = trimmed ? { id: crypto.randomUUID(), content: trimmed, created_at: answered_at } : null;
+    set((state) => ({
+      prayers: state.prayers.map((p) => {
+        if (p.id !== id) return p;
+        const testimonies = newTestimony ? [...(p.testimonies || []), newTestimony] : (p.testimonies || []);
+        return { ...p, status: 'answered', testimonies, answered_at };
+      }),
+    }));
+    enqueue('markAnswered', { id, answered_at, testimony: newTestimony });
   },
 
   markActive: async (id) => {
-    const { data } = await supabase.from('prayers').update({ status: 'active', answered_at: null }).eq('id', id).select().single();
-    if (data) {
-      set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
-    }
+    set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
+    enqueue('markActive', { id });
   },
 
   deletePrayer: async (id) => {
-    await supabase.from('prayers').delete().eq('id', id);
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
+    enqueue('deletePrayer', { id });
   },
 
   // ─── Updates ─────────────────────────────────────────────────
-  addUpdate: async (prayerId, text) => {
-    const { data } = await supabase
-      .from('prayer_updates')
-      .insert({ prayer_id: prayerId, text })
-      .select().single();
-
-    if (data) {
-      set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, prayer_updates: [...(p.prayer_updates || []), data] }
-            : p
-        ),
-      }));
-    }
+  // Routed through sync_add_update so the update also fans out to any shared
+  // community copies. For non-shared prayers it just writes prayer_updates.
+  addUpdate: async (prayerId, text, authorName = '') => {
+    const id = crypto.randomUUID();
+    const row = { id, prayer_id: prayerId, text, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString() };
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId ? { ...p, prayer_updates: [...(p.prayer_updates || []), row] } : p
+      ),
+    }));
+    enqueue('addUpdate', { id, prayerId, text, authorName });
   },
 
   // ─── Prayer Points ────────────────────────────────────────────
+  // Routed through sync_add_point so the point also fans out to any shared
+  // community copies. For non-shared prayers it just writes prayer_points.
   addPrayerPoint: async (prayerId, point) => {
     // Build initial verses array from legacy single-verse fields or provided verses
     const initialVerses = point.verses
@@ -203,29 +284,24 @@ const usePrayerStore = create((set, get) => ({
         ? [{ ref: point.verse, text: point.verseText || '' }]
         : [];
 
-    const { data } = await supabase
-      .from('prayer_points')
-      .insert({ prayer_id: prayerId, title: point.title, verses: initialVerses })
-      .select().single();
-
-    if (data) {
-      set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, prayer_points: [...(p.prayer_points || []), data] }
-            : p
-        ),
-      }));
-    }
+    const id = crypto.randomUUID();
+    const row = { id, prayer_id: prayerId, title: point.title, verses: initialVerses };
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId ? { ...p, prayer_points: [...(p.prayer_points || []), row] } : p
+      ),
+    }));
+    enqueue('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
   },
 
+  // Verse/point mutations route through the sync_* RPCs so they also propagate
+  // to any shared community copies (no-op fan-out when the prayer isn't shared).
   addVerseToPoint: async (prayerId, pointId, verse) => {
     const state = get();
     const prayer = state.prayers.find(p => p.id === prayerId);
     const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
     if (!point) return;
     const updated = [...(point.verses || []), verse];
-    await supabase.from('prayer_points').update({ verses: updated }).eq('id', pointId);
     set((s) => ({
       prayers: s.prayers.map(p =>
         p.id === prayerId
@@ -233,6 +309,7 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    enqueue('addVerse', { prayerId, pointId, verse });
   },
 
   removeVerseFromPoint: async (prayerId, pointId, verseRef) => {
@@ -241,7 +318,6 @@ const usePrayerStore = create((set, get) => ({
     const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
     if (!point) return;
     const updated = (point.verses || []).filter(v => v.ref !== verseRef);
-    await supabase.from('prayer_points').update({ verses: updated }).eq('id', pointId);
     set((s) => ({
       prayers: s.prayers.map(p =>
         p.id === prayerId
@@ -249,10 +325,10 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    enqueue('removeVerse', { prayerId, pointId, verseRef });
   },
 
   removePrayerPoint: async (prayerId, pointId) => {
-    await supabase.from('prayer_points').delete().eq('id', pointId);
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === prayerId
@@ -260,6 +336,7 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    enqueue('removePoint', { prayerId, pointId });
   },
 
   // ─── Categories ───────────────────────────────────────────────
@@ -307,14 +384,29 @@ const usePrayerStore = create((set, get) => ({
     const todayCatIds = categories
       .filter((c) => (c.week_days || []).includes(today))
       .map((c) => c.id);
+    const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
+    return prayers
+      .filter((p) => prayerOnDay(p, today, todayCatIds))
+      .sort((a, b) => prayerPriority(a, orderById) - prayerPriority(b, orderById));
+  },
 
-    return prayers.filter((p) => {
-      if (p.status !== 'active') return false;
-      const pCatIds = (p.prayer_categories || []).map((pc) => pc.category_id);
-      if (pCatIds.length === 0) return true;
-      return pCatIds.some((cid) => todayCatIds.includes(cid));
-    });
+  // Persist a new category order (array of ids → sort_order = index).
+  reorderCategories: async (orderedIds) => {
+    set((state) => ({ categories: sortByOrder(state.categories, orderedIds) }));
+    await Promise.all(orderedIds.map((id, i) => supabase.from('categories').update({ sort_order: i }).eq('id', id)));
   },
 }));
+
+// Persist prayers + categories locally on change (debounced), so the next load
+// can hydrate instantly and offline — including not-yet-synced prayers.
+let saveTimer;
+usePrayerStore.subscribe((state) => {
+  if (!state.userId) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(
+    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers }),
+    400
+  );
+});
 
 export default usePrayerStore;

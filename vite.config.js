@@ -37,6 +37,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Pull our Web Push handlers into the generated service worker.
+        importScripts: ['push-sw.js'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
@@ -50,6 +52,20 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        // Split large, rarely-changing vendor libs into their own cached chunks.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (id.includes('qrcode')) return 'qrcode';
+          if (id.includes('react') || id.includes('scheduler')) return 'react';
+          if (id.includes('@supabase')) return 'supabase';
+          if (id.includes('date-fns')) return 'datefns';
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       '/api/anthropic': {

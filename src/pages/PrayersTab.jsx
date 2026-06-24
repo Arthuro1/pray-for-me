@@ -1,31 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import PrayerCard from '../components/PrayerCard';
-import PrayerDetail from './PrayerDetail';
+import useCommunityStore from '../store/communityStore';
+import useAuthStore from '../store/authStore';
+import PrayerListSkeleton from '../components/Skeleton';
+import PrayerListItem from '../components/PrayerListItem';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { t } from '../i18n';
+import { getAuthorName } from '../utils/user';
+import { prayerPriority } from '../utils/prayer';
 
-export default function PrayersTab({ onEdit }) {
-  const { prayers, categories, settings } = usePrayerStore();
+export default function PrayersTab() {
+  const navigate = useNavigate();
+  const { prayers, categories, settings, loading } = usePrayerStore();
   const { tr } = useTranslationStore();
+  const { user } = useAuthStore();
+  const { prayerShares, fetchPrayerShares } = useCommunityStore();
   const lang = settings.language || 'fr';
+
+  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedPrayer, setSelectedPrayer] = useState(null);
-
-  if (selectedPrayer) {
-    return (
-      <PrayerDetail
-        prayer={selectedPrayer}
-        lang={lang}
-        onBack={() => setSelectedPrayer(null)}
-        onEdit={(p) => { setSelectedPrayer(null); onEdit(p); }}
-      />
-    );
-  }
 
   const STATUS_FILTERS = [
     { id: 'all', label: t(lang, 'all') },
@@ -46,9 +44,12 @@ export default function PrayersTab({ onEdit }) {
     return true;
   });
 
+  const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
   const sorted = [...filtered].sort((a, b) => {
     const order = { active: 0, answered: 1 };
-    return (order[a.status] || 0) - (order[b.status] || 0);
+    const byStatus = (order[a.status] || 0) - (order[b.status] || 0);
+    if (byStatus !== 0) return byStatus;
+    return prayerPriority(a, orderById) - prayerPriority(b, orderById);
   });
 
   return (
@@ -110,52 +111,34 @@ export default function PrayersTab({ onEdit }) {
           </div>
         )}
 
-        <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
-          {sorted.length} {sorted.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
-        </p>
+        {!(loading && prayers.length === 0) && (
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
+            {sorted.length} {sorted.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
+          </p>
+        )}
 
-        {sorted.length === 0 ? (
+        {loading && prayers.length === 0 ? (
+          <PrayerListSkeleton count={5} />
+        ) : sorted.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-5xl mb-3">🙏</p>
             <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersFound')}</p>
             <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersFoundSub')}</p>
           </div>
         ) : (
-          <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)' }}>
-            {sorted.map((prayer, idx) => {
-              const isAnswered = prayer.status === 'answered';
-              const pCatIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
-              const pCats = categories.filter(c => pCatIds.includes(c.id));
-              return (
-                <button
-                  key={prayer.id}
-                  onClick={() => setSelectedPrayer(prayer)}
-                  className="w-full text-left flex items-center gap-3 px-4 py-3.5 transition-colors"
-                  style={{
-                    background: 'var(--surface)',
-                    borderBottom: idx < sorted.length - 1 ? '0.5px solid var(--border)' : 'none',
-                  }}
-                >
-                  <div
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ background: isAnswered ? '#059669' : 'var(--accent)' }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}>
-                      {tr(prayer.title, lang)}
-                    </p>
-                    {pCats.length > 0 && (
-                      <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>
-                        {pCats.map(c => `${c.emoji} ${tr(c.name, lang)}`).join(' · ')}
-                      </p>
-                    )}
-                  </div>
-                  <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>
-                    {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
-                  </div>
-                </button>
-              );
-            })}
+          <div className="flex flex-col gap-3">
+            {sorted.map((prayer) => (
+              <PrayerListItem
+                key={prayer.id}
+                prayer={prayer}
+                categories={categories}
+                lang={lang}
+                tr={tr}
+                shares={prayerShares[prayer.id]}
+                currentUserName={getAuthorName(user)}
+                onClick={() => navigate(`/prayers/${prayer.id}`)}
+              />
+            ))}
           </div>
         )}
       </div>

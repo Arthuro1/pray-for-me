@@ -1,5 +1,7 @@
 import { Sparkles, X, Shield } from 'lucide-react';
 import { t } from '../i18n';
+import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const CONSENT_KEYS = {
   prayer: 'pfm_ai_consent_prayer',
@@ -16,12 +18,14 @@ export function grantAiConsent(context = 'prayer') {
 
 // context: 'prayer' = sends prayer title + last update, 'home' = sends category names
 export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {
+  useEscapeKey(onCancel);
+  const trapRef = useFocusTrap();
   const noticeKey = context === 'home' ? 'aiConsentNoticeHome' : 'aiConsentNoticePrayer';
   const bodyKey = context === 'home' ? 'aiConsentBodyHome' : 'aiConsentBodyPrayer';
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
-      <div className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
@@ -29,7 +33,7 @@ export default function AiConsentModal({ lang = 'en', context = 'prayer', onAcce
             </div>
             <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiConsentTitle')}</h3>
           </div>
-          <button onClick={onCancel}><X size={18} style={{ color: 'var(--text-3)' }} /></button>
+          <button onClick={onCancel} aria-label={t(lang, 'close')}><X size={18} style={{ color: 'var(--text-3)' }} /></button>
         </div>
 
         <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>

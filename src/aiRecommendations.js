@@ -1,4 +1,4 @@
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
+import { aiEnabled, anthropicFetch } from './lib/anthropic';
 
 const cache = new Map();
 let lastCallTime = 0;
@@ -117,7 +117,7 @@ ${JSON.stringify(EXAMPLE(4))}`,
 };
 
 export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
-  if (!API_KEY) return { recs: [], error: null };
+  if (!aiEnabled) return { recs: [], error: null };
 
   const strings = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
   const cacheKey = `dayplan:${lang}:${categoryNames}`;
@@ -129,25 +129,11 @@ export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
   const prompt = strings.dayPlan(categoryNames);
   lastCallTime = Date.now();
 
-  const isDev = import.meta.env.DEV;
-  const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
-
   try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (isDev) {
-      headers['x-api-key'] = API_KEY;
-      headers['anthropic-version'] = '2023-06-01';
-      headers['anthropic-dangerous-direct-browser-access'] = 'true';
-    }
-
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
-        messages: [{ role: 'user', content: prompt }],
-      }),
+    const res = await anthropicFetch({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 600,
+      messages: [{ role: 'user', content: prompt }],
     });
 
     if (res.status === 429) return { recs: [], error: strings.rateLimited };
@@ -168,7 +154,7 @@ export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
 }
 
 export async function getAIRecommendations({ title, description = '', type = 'new', lang = 'fr' }) {
-  if (!API_KEY) return { recs: [], error: null };
+  if (!aiEnabled) return { recs: [], error: null };
 
   const cacheKey = `${lang}:${type}:${title}:${description}`.slice(0, 100);
   if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
@@ -184,25 +170,11 @@ export async function getAIRecommendations({ title, description = '', type = 'ne
 
   lastCallTime = Date.now();
 
-  const isDev = import.meta.env.DEV;
-  const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
-
   try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (isDev) {
-      headers['x-api-key'] = API_KEY;
-      headers['anthropic-version'] = '2023-06-01';
-      headers['anthropic-dangerous-direct-browser-access'] = 'true';
-    }
-
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1200,
-        messages: [{ role: 'user', content: prompt }],
-      }),
+    const res = await anthropicFetch({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: prompt }],
     });
 
     if (res.status === 429) return { recs: [], error: strings.rateLimited };
