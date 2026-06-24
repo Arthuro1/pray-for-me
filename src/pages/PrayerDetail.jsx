@@ -56,7 +56,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -181,6 +181,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
+  const prayerTestimonies = isCommunity ? (communityTestimonies || []).filter(tm => tm.community_prayer_id === communityPrayer.id) : [];
   const prayerCategoryIds = isCommunity ? (livePrayer.category_ids || []) : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
   const isGroupAdmin = isCommunity && groups.find(g => g.id === communityPrayer.group_id)?.role === 'admin';
@@ -732,6 +733,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
+        {/* ── Community mode: testimonies posted for this prayer ── */}
+        {isCommunity && prayerTestimonies.length > 0 && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimonies')}</p>
+            <div className="space-y-3">
+              {prayerTestimonies.map(tm => (
+                <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                  <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>
+                    🎉 {tm.is_anonymous ? t(lang, 'anonymous') : tm.author_name} · {timeAgo(tm.created_at, lang)}
+                  </p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{tm.content}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
         {isCommunity && canEditCommunityPrayer && (
           <>
@@ -839,8 +857,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
 
 
-        {/* Testimony input */}
-        {showTestimony && (
+        {/* Testimony input (writing) */}
+        {!isAnswered && showTestimony && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
             <textarea
@@ -852,6 +870,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               rows={3}
               autoFocus
             />
+          </div>
+        )}
+
+        {/* Saved testimony (once answered) */}
+        {isAnswered && livePrayer.testimony && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>🎉 {t(lang, 'testimony')}</p>
+            <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(livePrayer.testimony, lang)}"</p>
           </div>
         )}
 
