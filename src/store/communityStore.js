@@ -218,18 +218,13 @@ const useCommunityStore = create((set, get) => ({
   },
 
   joinGroup: async (code, userId) => {
-    const { data: group, error } = await supabase
-      .from('groups')
-      .select()
-      .eq('invite_code', code.trim().toUpperCase())
-      .single();
-    if (error || !group) return { error: 'notFound' };
-    const { error: memberError } = await supabase
-      .from('group_members')
-      .insert({ group_id: group.id, user_id: userId, role: 'member' });
-    if (memberError) return { error: 'alreadyMember' };
+    // Server-side: validates the invite code and adds membership atomically.
+    const { data: group, error } = await supabase.rpc('join_group_by_code', { p_code: code });
+    if (error) {
+      return { error: error.message?.includes('already member') ? 'alreadyMember' : 'notFound' };
+    }
     await get().fetchGroups(userId);
-    get().setActiveGroup(group.id);
+    if (group?.id) get().setActiveGroup(group.id);
     return { group };
   },
 

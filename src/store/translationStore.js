@@ -1,38 +1,24 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-
-const isDev = import.meta.env.DEV;
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
+import { aiEnabled, anthropicFetch } from '../lib/anthropic';
 
 // In-memory cache for fast lookups: { [lang]: { [originalText]: translatedText } }
 let memCache = {};
 
 async function callTranslate(texts, targetLang) {
-  if (!API_KEY || texts.length === 0) return {};
+  if (!aiEnabled || texts.length === 0) return {};
 
   const LANG_NAMES = { fr: 'French', en: 'English', de: 'German', pt: 'Brazilian Portuguese', zh: 'Simplified Chinese', es: 'Spanish', hi: 'Hindi', ja: 'Japanese', sw: 'Swahili', am: 'Amharic', id: 'Indonesian', tl: 'Tagalog', ko: 'Korean', ru: 'Russian', ar: 'Arabic', fa: 'Persian' };
   const langName = LANG_NAMES[targetLang] || 'English';
-
-  const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
-  const headers = { 'Content-Type': 'application/json' };
-  if (isDev) {
-    headers['x-api-key'] = API_KEY;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  }
 
   const prompt = `Translate the following texts to ${langName}. Keep proper nouns, Bible references (e.g. "John 3:16"), and names unchanged. Return ONLY a valid JSON object mapping each index to its translation, no extra text:
 ${JSON.stringify(Object.fromEntries(texts.map((t, i) => [i, t])))}`;
 
   try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }],
-      }),
+    const res = await anthropicFetch({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }],
     });
     if (!res.ok) return {};
     const data = await res.json();
@@ -77,7 +63,7 @@ const useTranslationStore = create((set, get) => ({
   // Translate an arbitrary list of texts to lang (skipping already-cached ones),
   // caching results in memory + Supabase. Used for on-demand community translation.
   translateTexts: async (texts, lang, userId) => {
-    if (!lang || !API_KEY || !userId) return;
+    if (!lang || !aiEnabled || !userId) return;
     const langCache = memCache[lang] || {};
     const todo = [...new Set((texts || []).filter((x) => x && !langCache[x]))];
     if (todo.length === 0) return;
@@ -99,7 +85,7 @@ const useTranslationStore = create((set, get) => ({
 
   // Translate all texts not yet in DB for the given lang, then save to Supabase
   translateContent: async (prayers, categories, lang, userId) => {
-    if (!lang || !API_KEY || !userId) return;
+    if (!lang || !aiEnabled || !userId) return;
 
     const langCache = memCache[lang] || {};
 
