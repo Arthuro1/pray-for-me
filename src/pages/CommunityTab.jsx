@@ -395,7 +395,7 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
                 </div>
               </div>
               {m.user_id !== userId && (
-                <button onClick={() => setConfirmRemove(m)} disabled={busyId === m.user_id} className="p-1.5 rounded-lg disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
+                <button onClick={() => setConfirmRemove(m)} disabled={busyId === m.user_id} aria-label={t(lang, 'remove')} className="p-1.5 rounded-lg disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
                   <Trash2 size={14} />
                 </button>
               )}

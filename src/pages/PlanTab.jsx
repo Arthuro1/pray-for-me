@@ -109,7 +109,7 @@ export default function PlanTab() {
           <div ref={dayTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={DAYS[selectedDay]} className="w-full max-w-md rounded-2xl p-5 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-1">
               <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{DAYS[selectedDay]}</h3>
-              <button onClick={() => setSelectedDay(null)} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
+              <button onClick={() => setSelectedDay(null)} aria-label={t(lang, 'close')} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
             </div>
             <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayHint')}</p>
             {categories.length === 0 ? (

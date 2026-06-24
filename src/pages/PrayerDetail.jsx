@@ -765,7 +765,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 onKeyDown={e => e.key === 'Enter' && handleSendWord()}
               />
-              <button onClick={handleSendWord} disabled={!wordText.trim() || sendingWord} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+              <button onClick={handleSendWord} disabled={!wordText.trim() || sendingWord} aria-label={t(lang, 'addWord')} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium disabled:opacity-40" style={{ background: 'var(--accent)' }}>
                 {sendingWord ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
               </button>
             </div>

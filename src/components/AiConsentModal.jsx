@@ -33,7 +33,7 @@ export default function AiConsentModal({ lang = 'en', context = 'prayer', onAcce
             </div>
             <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiConsentTitle')}</h3>
           </div>
-          <button onClick={onCancel}><X size={18} style={{ color: 'var(--text-3)' }} /></button>
+          <button onClick={onCancel} aria-label={t(lang, 'close')}><X size={18} style={{ color: 'var(--text-3)' }} /></button>
         </div>
 
         <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>

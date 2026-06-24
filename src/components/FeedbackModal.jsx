@@ -70,6 +70,7 @@ export default function FeedbackModal({ onClose }) {
       >
         <button
           onClick={onClose}
+          aria-label={t(lang, 'close')}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full"
           style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}
         >
