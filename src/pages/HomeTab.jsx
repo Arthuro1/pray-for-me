@@ -5,10 +5,11 @@ import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, User } from 'lucide-react';
+import { Sparkles, Loader2, Plus } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import PrayerListSkeleton from '../components/Skeleton';
+import Avatar from '../components/Avatar';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -401,8 +402,8 @@ export default function HomeTab({ onAdd }) {
                     {(() => {
                       const oa = originAuthor(prayer);
                       return oa ? (
-                        <p className="text-xs truncate mt-0.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
-                          <User size={11} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
+                        <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
+                          <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
                         </p>
                       ) : null;
                     })()}

@@ -11,6 +11,7 @@ import { getAuthorName } from '../utils/user';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
+import Avatar from '../components/Avatar';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
@@ -18,12 +19,15 @@ const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--
 const MODAL_INPUT_CLASS = 'w-full px-4 py-3 rounded-xl text-sm focus:outline-none mb-3';
 
 // ── Reusable request/invitation row ──────────────────────────────────────────
-function ActionRow({ label, sublabel, primaryText, onPrimary, onSecondary, secondaryText, busy }) {
+function ActionRow({ label, sublabel, avatarName, primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
     <div className="flex items-center justify-between p-3 rounded-xl gap-3" style={CARD_STYLE}>
-      <div className="min-w-0">
-        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{label}</p>
-        {sublabel && <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>{sublabel}</p>}
+      <div className="flex items-center gap-3 min-w-0">
+        {avatarName && <Avatar name={avatarName} size={36} />}
+        <div className="min-w-0">
+          <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{label}</p>
+          {sublabel && <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>{sublabel}</p>}
+        </div>
       </div>
       <div className="flex gap-2 shrink-0">
         <button onClick={onPrimary} disabled={busy} className="px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
@@ -107,7 +111,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         {friendRequests.length > 0 && (
           <Section title={`${t(lang, 'friendRequests')} (${friendRequests.length})`} icon={<Mail size={18} />}>
             {friendRequests.map(req => (
-              <ActionRow key={req.id} label={req.fromName} busy={busyId === req.id}
+              <ActionRow key={req.id} label={req.fromName} avatarName={req.fromName} busy={busyId === req.id}
                 primaryText={t(lang, 'accept')} secondaryText={t(lang, 'reject')}
                 onPrimary={() => handle(req.id, () => acceptFriendRequest(req.id))}
                 onSecondary={() => handle(req.id, () => rejectFriendRequest(req.id))} />
@@ -152,9 +156,12 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           <Section title={`${t(lang, 'friends')} (${friends.length})`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {friends.map(f => (
-                <div key={f.id} className="flex items-center justify-between p-3 rounded-xl" style={CARD_STYLE}>
-                  <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
-                  <button onClick={() => handle(f.id, () => removeFriend(userId, f.id))} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40" style={SUBTLE_BTN}>
+                <div key={f.id} className="flex items-center justify-between gap-3 p-3 rounded-xl" style={CARD_STYLE}>
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Avatar name={f.name} size={36} />
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
+                  </div>
+                  <button onClick={() => handle(f.id, () => removeFriend(userId, f.id))} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
                     {t(lang, 'remove')}
                   </button>
                 </div>
@@ -314,9 +321,12 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
         ) : (
           <div className="space-y-2 mb-5">
             {invitable.map(f => (
-              <div key={f.id} className="flex items-center justify-between p-2.5 rounded-xl" style={CARD_STYLE}>
-                <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
-                <button onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]} className="px-3 py-1 rounded-lg text-xs font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+              <div key={f.id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Avatar name={f.name} size={30} />
+                  <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
+                </div>
+                <button onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]} className="px-3 py-1 rounded-lg text-xs font-medium text-white disabled:opacity-40 shrink-0" style={{ background: 'var(--accent)' }}>
                   {invited[f.id] ? t(lang, 'invited') : t(lang, 'invite')}
                 </button>
               </div>
@@ -327,13 +337,16 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
         <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'members')} ({members.length})</p>
         <div className="space-y-2">
           {members.map(m => (
-            <div key={m.user_id} className="flex items-center justify-between p-2.5 rounded-xl" style={CARD_STYLE}>
-              <div className="min-w-0">
-                <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
-                {m.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
+            <div key={m.user_id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
+              <div className="flex items-center gap-2.5 min-w-0">
+                <Avatar name={m.name} size={30} />
+                <div className="min-w-0">
+                  <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
+                  {m.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
+                </div>
               </div>
               {m.user_id !== userId && (
-                <button onClick={() => handleRemove(m.user_id)} disabled={busyId === m.user_id} className="p-1.5 rounded-lg disabled:opacity-40" style={SUBTLE_BTN}>
+                <button onClick={() => handleRemove(m.user_id)} disabled={busyId === m.user_id} className="p-1.5 rounded-lg disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
                   <Trash2 size={14} />
                 </button>
               )}
@@ -341,6 +354,37 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
           ))}
         </div>
       </div>
+    </Modal>
+  );
+}
+
+// Read-only member list, available to every group member.
+function MembersModal({ lang, group, userId, onClose }) {
+  const { fetchGroupMembers } = useCommunityStore();
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchGroupMembers(group.id).then(r => { setMembers(r.members || []); setLoading(false); });
+  }, [group.id]);
+
+  return (
+    <Modal title={`${t(lang, 'members')} (${members.length})`} onClose={onClose}>
+      {loading ? (
+        <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+      ) : (
+        <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+          {members.map(m => (
+            <div key={m.user_id} className="flex items-center gap-2.5 p-2.5 rounded-xl" style={CARD_STYLE}>
+              <Avatar name={m.name} size={32} />
+              <div className="min-w-0">
+                <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
+                {m.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </Modal>
   );
 }
@@ -363,6 +407,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showLeave, setShowLeave] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [showMembers, setShowMembers] = useState(false);
   const [search, setSearch] = useState('');
   const [reqFilter, setReqFilter] = useState('all');
   const reconciledRef = useRef(null);
@@ -432,6 +477,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           <ArrowLeft size={16} /> {t(lang, 'community')}
         </button>
         <div className="flex items-center gap-2">
+          <button onClick={() => setShowMembers(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
+            <Users size={14} /> {t(lang, 'members')}
+          </button>
           {isAdmin && (
             <button onClick={() => setShowAdmin(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
               <Settings size={14} /> {t(lang, 'manageGroup')}
@@ -442,6 +490,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           </button>
         </div>
       </div>
+
+      {showMembers && group && <MembersModal lang={lang} group={group} userId={user.id} onClose={() => setShowMembers(false)} />}
 
       {showLeave && (
         <Modal title={t(lang, 'leaveGroup')} onClose={() => setShowLeave(false)}>
@@ -516,9 +566,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 {filteredPrayers.map(p => (
                   <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style={CARD_STYLE}>
                     <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <p className="text-xs" style={{ color: 'var(--text-3)' }}>
-                        {p.is_anonymous ? t(lang, 'anonymous') : p.author_name} · {timeAgo(p.created_at, lang)}
-                      </p>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Avatar name={p.is_anonymous ? '?' : p.author_name} size={26} anonymous={p.is_anonymous} />
+                        <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                          {p.is_anonymous ? t(lang, 'anonymous') : p.author_name} · {timeAgo(p.created_at, lang)}
+                        </p>
+                      </div>
                       {p.is_answered && (
                         <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: '#e8f5ed', color: '#059669' }}>
                           <Check size={11} /> {t(lang, 'answered2')}

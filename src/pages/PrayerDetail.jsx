@@ -12,6 +12,7 @@ import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import PrayerForm from '../components/PrayerForm';
+import Avatar from '../components/Avatar';
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
@@ -659,9 +660,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             ) : (
               <div className="space-y-3 mb-3">
                 {communityUpdates.map(u => (
-                  <div key={u.id} className="flex gap-3">
-                    <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
-                    <div>
+                  <div key={u.id} className="flex gap-2.5">
+                    <Avatar name={u.is_anonymous ? '?' : u.author_name} size={28} anonymous={u.is_anonymous} />
+                    <div className="min-w-0">
                       <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
                         {u.is_anonymous ? t(lang, 'anonymous') : u.author_name}
                         {' · '}{timeAgo(u.created_at, lang)}

@@ -5,7 +5,8 @@ import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import PrayerListSkeleton from '../components/Skeleton';
-import { Search, SlidersHorizontal, Users, User, EyeOff, HeartHandshake } from 'lucide-react';
+import Avatar from '../components/Avatar';
+import { Search, SlidersHorizontal, Users, EyeOff } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 
@@ -150,15 +151,15 @@ export default function PrayersTab() {
                       </p>
                     )}
                     {prayer.for_other && prayer.person_name && (
-                      <p className="text-xs truncate mt-0.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
-                        <HeartHandshake size={11} /> {prayer.person_name}
+                      <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
+                        <Avatar name={prayer.person_name} size={18} /> {prayer.person_name}
                       </p>
                     )}
                     {(() => {
                       const oa = originAuthor(prayer);
                       return oa ? (
-                        <p className="text-xs truncate mt-0.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
-                          <User size={11} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
+                        <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
+                          <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
                         </p>
                       ) : null;
                     })()}
