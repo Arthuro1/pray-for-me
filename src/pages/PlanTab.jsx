@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import { Plus, Trash2, X, Check, Sparkles } from 'lucide-react';
+import { Plus, Trash2, X, Check, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
+import { prayerOnDay } from '../utils/prayer';
 import ConfirmDialog from '../components/ConfirmDialog';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
 export default function PlanTab() {
-  const { categories, prayers, addCategory, updateCategory, deleteCategory, settings } = usePrayerStore();
+  const { categories, prayers, addCategory, updateCategory, deleteCategory, reorderCategories, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   const DAYS = t(lang, 'days');
@@ -20,14 +21,19 @@ export default function PlanTab() {
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
 
-  // Number of active prayers that land on a given weekday (uncategorized show every day).
+  // Number of active prayers that land on a given weekday.
   const countForDay = (dayIdx) => {
     const dayCatIds = categories.filter((c) => (c.week_days || []).includes(dayIdx)).map((c) => c.id);
-    return prayers.filter((p) => {
-      if (p.status !== 'active') return false;
-      const pc = (p.prayer_categories || []).map((x) => x.category_id);
-      return pc.length === 0 || pc.some((cid) => dayCatIds.includes(cid));
-    }).length;
+    return prayers.filter((p) => prayerOnDay(p, dayIdx, dayCatIds)).length;
+  };
+
+  const moveCategory = (id, dir) => {
+    const ids = categories.map((c) => c.id);
+    const i = ids.indexOf(id);
+    const j = i + dir;
+    if (j < 0 || j >= ids.length) return;
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+    reorderCategories(ids);
   };
 
   const toggleDay = (day, catId) => {
@@ -301,7 +307,17 @@ export default function PlanTab() {
                     {t(lang, 'categoryNotScheduled')}
                   </span>
                 )}
-                <div className="ml-auto flex gap-1">
+                <div className="ml-auto flex items-center gap-1">
+                  {(() => { const i = categories.findIndex((c) => c.id === cat.id); return (
+                    <>
+                      <button onClick={() => moveCategory(cat.id, -1)} disabled={i === 0} title={t(lang, 'moveUp')} className="p-1 rounded-lg disabled:opacity-30" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+                        <ChevronUp size={14} />
+                      </button>
+                      <button onClick={() => moveCategory(cat.id, 1)} disabled={i === categories.length - 1} title={t(lang, 'moveDown')} className="p-1 rounded-lg disabled:opacity-30" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+                        <ChevronDown size={14} />
+                      </button>
+                    </>
+                  ); })()}
                   <button
                     onClick={() => startEdit(cat)}
                     title={t(lang, 'tipEditCategory')}

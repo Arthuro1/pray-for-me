@@ -9,6 +9,7 @@ import Avatar from '../components/Avatar';
 import { Search, SlidersHorizontal, Users, EyeOff } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
+import { prayerPriority } from '../utils/prayer';
 
 export default function PrayersTab() {
   const navigate = useNavigate();
@@ -43,9 +44,12 @@ export default function PrayersTab() {
     return true;
   });
 
+  const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
   const sorted = [...filtered].sort((a, b) => {
     const order = { active: 0, answered: 1 };
-    return (order[a.status] || 0) - (order[b.status] || 0);
+    const byStatus = (order[a.status] || 0) - (order[b.status] || 0);
+    if (byStatus !== 0) return byStatus;
+    return prayerPriority(a, orderById) - prayerPriority(b, orderById);
   });
 
   return (

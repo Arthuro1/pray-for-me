@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { prayerOnDay, prayerPriority } from '../utils/prayer';
 
 const DEFAULT_CATEGORIES = {
   fr: [
@@ -71,7 +72,10 @@ const usePrayerStore = create((set, get) => ({
   loadData: async (userId) => {
     set({ loading: true });
 
-    // Load categories (create defaults if first time)
+    // Load categories (create defaults if first time). Order by created_at at the
+    // DB level (always safe), then apply manual sort_order client-side — so a
+    // missing sort_order column never errors the query (which would wrongly
+    // re-create the default categories and duplicate them).
     let { data: cats } = await supabase
       .from('categories')
       .select('*')
@@ -100,7 +104,9 @@ const usePrayerStore = create((set, get) => ({
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
-    set({ categories: cats || [], prayers: prayers || [], loading: false });
+    // Stable sort by sort_order (nulls last), preserving created_at order for ties.
+    const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
+    set({ categories: ordered, prayers: prayers || [], loading: false });
   },
 
   // ─── Prayers ─────────────────────────────────────────────────
@@ -175,6 +181,7 @@ const usePrayerStore = create((set, get) => ({
     if (updates.forOther !== undefined) payload.for_other = updates.forOther;
     if (updates.personName !== undefined) payload.person_name = updates.personName;
     if (updates.phone !== undefined) payload.phone = updates.phone;
+    if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
     payload.updated_at = new Date().toISOString();
 
     const { data } = await supabase.from('prayers').update(payload).eq('id', id).select().single();
@@ -385,13 +392,18 @@ const usePrayerStore = create((set, get) => ({
     const todayCatIds = categories
       .filter((c) => (c.week_days || []).includes(today))
       .map((c) => c.id);
+    const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
+    return prayers
+      .filter((p) => prayerOnDay(p, today, todayCatIds))
+      .sort((a, b) => prayerPriority(a, orderById) - prayerPriority(b, orderById));
+  },
 
-    return prayers.filter((p) => {
-      if (p.status !== 'active') return false;
-      const pCatIds = (p.prayer_categories || []).map((pc) => pc.category_id);
-      if (pCatIds.length === 0) return true;
-      return pCatIds.some((cid) => todayCatIds.includes(cid));
-    });
+  // Persist a new category order (array of ids → sort_order = index).
+  reorderCategories: async (orderedIds) => {
+    set((state) => ({
+      categories: [...state.categories].sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id)),
+    }));
+    await Promise.all(orderedIds.map((id, i) => supabase.from('categories').update({ sort_order: i }).eq('id', id)));
   },
 }));
 

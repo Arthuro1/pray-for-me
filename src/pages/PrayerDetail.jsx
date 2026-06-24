@@ -54,7 +54,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [savingToPersonal, setSavingToPersonal] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, prayers } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
   const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
@@ -810,8 +810,33 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           )
         )}
 
-        {/* ── Personal mode: updates, testimony, actions ── */}
+        {/* ── Personal mode: per-prayer schedule, updates, testimony, actions ── */}
         {!isCommunity && <>
+        {!isAnswered && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'prayerDays')}</p>
+            <div className="flex gap-1">
+              {(t(lang, 'days')).map((day, idx) => {
+                const active = (livePrayer.week_days || []).includes(idx);
+                return (
+                  <button key={idx}
+                    onClick={() => {
+                      const days = livePrayer.week_days || [];
+                      const next = days.includes(idx) ? days.filter((d) => d !== idx) : [...days, idx];
+                      updatePrayer(livePrayer.id, { weekDays: next });
+                    }}
+                    className="flex-1 text-xs py-1.5 rounded-lg font-medium transition-colors"
+                    style={active ? { background: 'var(--accent)', color: '#fff' } : { background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[11px] mt-2" style={{ color: 'var(--text-3)' }}>
+              {(livePrayer.week_days || []).length ? t(lang, 'prayerDaysCustom') : t(lang, 'prayerDaysHint')}
+            </p>
+          </div>
+        )}
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'evolutions')}</p>
 

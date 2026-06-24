@@ -153,6 +153,11 @@ alter table prayers add column if not exists origin_group_name text;
 -- Accumulating testimonies for a personal prayer (like community testimonies),
 -- so previous ones are kept across resume / re-answer. Each: { id, content, created_at }.
 alter table prayers add column if not exists testimonies jsonb[] default '{}';
+-- Optional per-prayer schedule (weekday indices 0-6). When set, overrides the
+-- category-based schedule for deciding which days the prayer appears.
+alter table prayers add column if not exists week_days int[] default '{}';
+-- Manual ordering of categories (lower = first). Null falls back to created order.
+alter table categories add column if not exists sort_order int;
 
 
 -- ── prayer_updates: author info (for group-originated updates) ───────────────
