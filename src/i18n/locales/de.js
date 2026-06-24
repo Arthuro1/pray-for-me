@@ -293,5 +293,7 @@ export default {
   "thisWeek": "diese Woche",
   "newCount": "{n} neu",
   "syncing": "Synchronisierung…",
-  "pendingChanges": "{n} ausstehend"
+  "pendingChanges": "{n} ausstehend",
+  "groupSettings": "Gruppeneinstellungen",
+  "autoAddRequestsSub": "Neue Anliegen dieser Gruppe werden automatisch zu deinen Gebeten hinzugefügt."
 };

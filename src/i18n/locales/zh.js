@@ -293,5 +293,7 @@ export default {
   "thisWeek": "本周",
   "newCount": "{n} 条新",
   "syncing": "同步中…",
-  "pendingChanges": "{n} 项待同步"
+  "pendingChanges": "{n} 项待同步",
+  "groupSettings": "群组设置",
+  "autoAddRequestsSub": "该群组的新请求会自动添加到你的祷告中。"
 };

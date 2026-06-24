@@ -293,5 +293,7 @@ export default {
   "thisWeek": "इस सप्ताह",
   "newCount": "{n} नया",
   "syncing": "सिंक हो रहा है…",
-  "pendingChanges": "{n} लंबित"
+  "pendingChanges": "{n} लंबित",
+  "groupSettings": "समूह सेटिंग्स",
+  "autoAddRequestsSub": "इस समूह की नई प्रार्थनाएं स्वतः आपकी प्रार्थनाओं में जुड़ जाती हैं।"
 };

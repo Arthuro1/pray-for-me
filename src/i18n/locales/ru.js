@@ -293,5 +293,7 @@ export default {
   "thisWeek": "на этой неделе",
   "newCount": "{n} нов.",
   "syncing": "Синхронизация…",
-  "pendingChanges": "{n} в ожидании"
+  "pendingChanges": "{n} в ожидании",
+  "groupSettings": "Настройки группы",
+  "autoAddRequestsSub": "Новые просьбы этой группы автоматически добавляются в ваши молитвы."
 };

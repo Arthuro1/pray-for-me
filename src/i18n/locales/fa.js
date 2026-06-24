@@ -293,5 +293,7 @@ export default {
   "thisWeek": "این هفته",
   "newCount": "{n} جدید",
   "syncing": "در حال همگام‌سازی…",
-  "pendingChanges": "{n} در انتظار"
+  "pendingChanges": "{n} در انتظار",
+  "groupSettings": "تنظیمات گروه",
+  "autoAddRequestsSub": "درخواست‌های جدید این گروه به‌طور خودکار به دعاهای شما افزوده می‌شود."
 };

@@ -293,5 +293,7 @@ export default {
   "thisWeek": "esta semana",
   "newCount": "{n} novo",
   "syncing": "Sincronizando…",
-  "pendingChanges": "{n} pendente(s)"
+  "pendingChanges": "{n} pendente(s)",
+  "groupSettings": "Configurações do grupo",
+  "autoAddRequestsSub": "Novos pedidos deste grupo são adicionados automaticamente às suas orações."
 };

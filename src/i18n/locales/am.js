@@ -293,5 +293,7 @@ export default {
   "thisWeek": "በዚህ ሳምንት",
   "newCount": "{n} አዲስ",
   "syncing": "በማመሳሰል ላይ…",
-  "pendingChanges": "{n} በመጠባበቅ ላይ"
+  "pendingChanges": "{n} በመጠባበቅ ላይ",
+  "groupSettings": "የቡድን ቅንብሮች",
+  "autoAddRequestsSub": "የዚህ ቡድን አዲስ ጥያቄዎች በራስ-ሰር ወደ ጸሎቶችዎ ይታከላሉ።"
 };

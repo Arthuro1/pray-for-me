@@ -293,5 +293,7 @@ export default {
   "thisWeek": "minggu ini",
   "newCount": "{n} baru",
   "syncing": "Menyinkronkan…",
-  "pendingChanges": "{n} menunggu"
+  "pendingChanges": "{n} menunggu",
+  "groupSettings": "Pengaturan grup",
+  "autoAddRequestsSub": "Permintaan baru dari grup ini otomatis ditambahkan ke doa Anda."
 };

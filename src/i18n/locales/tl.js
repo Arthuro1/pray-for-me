@@ -293,5 +293,7 @@ export default {
   "thisWeek": "ngayong linggo",
   "newCount": "{n} bago",
   "syncing": "Sini-sync…",
-  "pendingChanges": "{n} naghihintay"
+  "pendingChanges": "{n} naghihintay",
+  "groupSettings": "Mga setting ng grupo",
+  "autoAddRequestsSub": "Ang mga bagong kahilingan mula sa grupong ito ay awtomatikong idinaragdag sa iyong mga panalangin."
 };

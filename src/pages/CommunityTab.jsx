@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -485,6 +485,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const [showLeave, setShowLeave] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [search, setSearch] = useState('');
   const [reqFilter, setReqFilter] = useState('all');
   const reconciledRef = useRef(null);
@@ -558,6 +559,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           <button onClick={() => setShowMembers(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
             <Users size={14} /> {t(lang, 'members')}
           </button>
+          <button onClick={() => setShowSettings(true)} aria-label={t(lang, 'groupSettings')} className="flex items-center justify-center w-8 h-8 rounded-lg" style={SUBTLE_BTN}>
+            <SlidersHorizontal size={14} />
+          </button>
           {isAdmin && (
             <button onClick={() => setShowAdmin(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
               <Settings size={14} /> {t(lang, 'manageGroup')}
@@ -570,6 +574,20 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       </div>
 
       {showMembers && group && <MembersModal lang={lang} group={group} userId={user.id} onClose={() => setShowMembers(false)} />}
+
+      {showSettings && (
+        <Modal title={t(lang, 'groupSettings')} lang={lang} onClose={() => setShowSettings(false)}>
+          <button onClick={handleToggleAutoAdd} className="flex items-start justify-between gap-3 w-full p-3 rounded-xl text-left" style={CARD_STYLE}>
+            <span className="min-w-0">
+              <span className="block text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'autoAddRequests')}</span>
+              <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'autoAddRequestsSub')}</span>
+            </span>
+            <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors mt-0.5" style={{ background: group?.autoAdd ? 'var(--accent)' : 'var(--input-border)' }}>
+              <span className="block w-5 h-5 rounded-full bg-white transition-transform" style={{ transform: group?.autoAdd ? 'translateX(16px)' : 'translateX(0)' }} />
+            </span>
+          </button>
+        </Modal>
+      )}
 
       {showLeave && (
         <Modal title={t(lang, 'leaveGroup')} lang={lang} onClose={() => setShowLeave(false)}>
@@ -591,14 +609,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} />}
 
       <div className="px-5 md:px-8 py-4 max-w-4xl mx-auto">
-        <h2 className="text-xl font-semibold mb-3" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
-
-        <button onClick={handleToggleAutoAdd} className="flex items-center justify-between gap-3 w-full p-3 rounded-xl mb-5 text-left" style={CARD_STYLE}>
-          <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'autoAddRequests')}</span>
-          <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors" style={{ background: group?.autoAdd ? 'var(--accent)' : 'var(--input-border)' }}>
-            <span className="block w-5 h-5 rounded-full bg-white transition-transform" style={{ transform: group?.autoAdd ? 'translateX(16px)' : 'translateX(0)' }} />
-          </span>
-        </button>
+        <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
 
         <div className="flex gap-1 mb-5">
           {['requests', 'testimonies'].map(tab => (

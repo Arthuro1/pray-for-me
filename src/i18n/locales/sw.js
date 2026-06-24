@@ -293,5 +293,7 @@ export default {
   "thisWeek": "wiki hii",
   "newCount": "{n} mpya",
   "syncing": "Inasawazisha…",
-  "pendingChanges": "{n} zinasubiri"
+  "pendingChanges": "{n} zinasubiri",
+  "groupSettings": "Mipangilio ya kikundi",
+  "autoAddRequestsSub": "Maombi mapya ya kikundi hiki yanaongezwa kwenye maombi yako kiotomatiki."
 };

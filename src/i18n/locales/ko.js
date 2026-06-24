@@ -293,5 +293,7 @@ export default {
   "thisWeek": "이번 주",
   "newCount": "새 글 {n}",
   "syncing": "동기화 중…",
-  "pendingChanges": "{n}개 대기 중"
+  "pendingChanges": "{n}개 대기 중",
+  "groupSettings": "그룹 설정",
+  "autoAddRequestsSub": "이 그룹의 새 기도 제목이 자동으로 내 기도에 추가됩니다."
 };

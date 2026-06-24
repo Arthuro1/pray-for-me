@@ -293,5 +293,7 @@ export default {
   "thisWeek": "今週",
   "newCount": "新着 {n}",
   "syncing": "同期中…",
-  "pendingChanges": "{n} 件待機中"
+  "pendingChanges": "{n} 件待機中",
+  "groupSettings": "グループ設定",
+  "autoAddRequestsSub": "このグループの新しいリクエストは自動的にあなたの祈りに追加されます。"
 };
