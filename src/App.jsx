@@ -1,23 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
-import HomeTab from './pages/HomeTab';
-import PrayersTab from './pages/PrayersTab';
-import PlanTab from './pages/PlanTab';
-import SettingsTab from './pages/SettingsTab';
-import CommunityTab from './pages/CommunityTab';
-import PrayerDetail from './pages/PrayerDetail';
-import AuthPage from './pages/AuthPage';
-import LandingPage from './pages/LandingPage';
 import useAuthStore from './store/authStore';
+
+// Route components are code-split so each page loads as its own chunk.
+const HomeTab = lazy(() => import('./pages/HomeTab'));
+const PrayersTab = lazy(() => import('./pages/PrayersTab'));
+const PlanTab = lazy(() => import('./pages/PlanTab'));
+const SettingsTab = lazy(() => import('./pages/SettingsTab'));
+const CommunityTab = lazy(() => import('./pages/CommunityTab'));
+const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
 import { scheduleNotifications } from './notifications';
 import { Loader2 } from 'lucide-react';
+
+// Fallback shown while a lazily-loaded route chunk is fetched.
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center py-24" style={{ background: 'var(--bg)' }}>
+      <Loader2 className="animate-spin" size={24} style={{ color: 'var(--accent)' }} />
+    </div>
+  );
+}
 
 // Personal prayer detail at /prayers/:id — resolves the prayer from the store.
 function PersonalPrayerPage({ onEdit }) {
@@ -80,8 +91,11 @@ export default function App() {
   }
 
   if (!user) {
-    if (showAuth) return <AuthPage />;
-    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
+    return (
+      <Suspense fallback={<PageLoader />}>
+        {showAuth ? <AuthPage /> : <LandingPage onGetStarted={() => setShowAuth(true)} />}
+      </Suspense>
+    );
   }
 
   if (dataLoading) {
@@ -99,17 +113,19 @@ export default function App() {
   return (
     <>
       <Layout onAddPrayer={openAdd}>
-        <Routes>
-          <Route path="/" element={<HomeTab onAdd={openAdd} />} />
-          <Route path="/prayers" element={<PrayersTab />} />
-          <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
-          <Route path="/community" element={<CommunityTab />} />
-          <Route path="/community/group/:groupId" element={<CommunityTab />} />
-          <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
-          <Route path="/plan" element={<PlanTab />} />
-          <Route path="/settings" element={<SettingsTab />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<HomeTab onAdd={openAdd} />} />
+            <Route path="/prayers" element={<PrayersTab />} />
+            <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
+            <Route path="/community" element={<CommunityTab />} />
+            <Route path="/community/group/:groupId" element={<CommunityTab />} />
+            <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
+            <Route path="/plan" element={<PlanTab />} />
+            <Route path="/settings" element={<SettingsTab />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </Layout>
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
