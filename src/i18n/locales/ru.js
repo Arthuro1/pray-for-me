@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "Присоединяйтесь к группам, делитесь просьбами и молитесь друг за друга.",
   "onboardSkip": "Пропустить",
   "onboardNext": "Далее",
-  "onboardStart": "Начать"
+  "onboardStart": "Начать",
+  "dataTitle": "Ваши данные",
+  "exportData": "Экспортировать молитвы",
+  "exportDataSub": "Скачайте все ваши молитвы и свидетельства одним файлом.",
+  "exportDone": "Экспорт загружен 🙏"
 };

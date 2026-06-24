@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "به گروه‌ها بپیوندید، موضوعات را به اشتراک بگذارید و برای یکدیگر دعا کنید.",
   "onboardSkip": "رد شدن",
   "onboardNext": "بعدی",
-  "onboardStart": "شروع"
+  "onboardStart": "شروع",
+  "dataTitle": "داده‌های شما",
+  "exportData": "برون‌بری دعاهای من",
+  "exportDataSub": "همه دعاها و شهادت‌های خود را در یک فایل دانلود کنید.",
+  "exportDone": "برون‌بری دانلود شد 🙏"
 };

@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "Participe de grupos, compartilhe pedidos e orem uns pelos outros.",
   "onboardSkip": "Pular",
   "onboardNext": "Próximo",
-  "onboardStart": "Começar"
+  "onboardStart": "Começar",
+  "dataTitle": "Seus dados",
+  "exportData": "Exportar minhas orações",
+  "exportDataSub": "Baixe todas as suas orações e testemunhos em um arquivo.",
+  "exportDone": "Exportação baixada 🙏"
 };

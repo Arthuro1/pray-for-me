@@ -2,10 +2,11 @@
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { enablePush, updatePushPrefs, disablePush, pushSupported } from '../push';
+import { buildExport } from '../utils/export';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 
@@ -43,7 +44,7 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
 }
 
 export default function SettingsTab() {
-  const { settings, updateSettings, prayers } = usePrayerStore();
+  const { settings, updateSettings, prayers, categories } = usePrayerStore();
   const { user, signOut } = useAuthStore();
   const { tr } = useTranslationStore();
   const [showFeedback, setShowFeedback] = useState(false);
@@ -67,6 +68,18 @@ export default function SettingsTab() {
   const handleReminderTimeChange = (time) => {
     updateSettings({ dailyReminderTime: time });
     if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { reminderTime: time });
+  };
+
+  const handleExport = () => {
+    const data = buildExport(prayers, categories);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pray4me-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(t(lang, 'exportDone'));
   };
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
@@ -274,6 +287,24 @@ export default function SettingsTab() {
           >
             <MessageSquare size={14} />
             {t(lang, 'feedbackBtn')}
+          </button>
+        </div>
+
+        {/* Data export */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Download size={16} style={{ color: 'var(--accent)' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'dataTitle')}</h3>
+          </div>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
+          <button
+            onClick={handleExport}
+            disabled={prayers.length === 0}
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-40"
+            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+          >
+            <Download size={14} />
+            {t(lang, 'exportData')}
           </button>
         </div>
 

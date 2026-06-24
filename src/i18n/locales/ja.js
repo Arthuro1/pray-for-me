@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "グループに参加し、課題を分かち合い、互いのために祈りましょう。",
   "onboardSkip": "スキップ",
   "onboardNext": "次へ",
-  "onboardStart": "はじめる"
+  "onboardStart": "はじめる",
+  "dataTitle": "あなたのデータ",
+  "exportData": "祈りをエクスポート",
+  "exportDataSub": "すべての祈りと証しをファイルとしてダウンロードします。",
+  "exportDone": "エクスポートをダウンロードしました 🙏"
 };

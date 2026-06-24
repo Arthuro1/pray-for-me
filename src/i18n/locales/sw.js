@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "Jiunge na vikundi, shiriki maombi, na muombeane.",
   "onboardSkip": "Ruka",
   "onboardNext": "Endelea",
-  "onboardStart": "Anza"
+  "onboardStart": "Anza",
+  "dataTitle": "Data yako",
+  "exportData": "Hamisha maombi yangu",
+  "exportDataSub": "Pakua maombi na ushuhuda wako wote kama faili.",
+  "exportDone": "Uhamishaji umepakuliwa 🙏"
 };

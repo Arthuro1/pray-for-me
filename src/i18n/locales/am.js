@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "ቡድኖችን ይቀላቀሉ፣ ርዕሶችን ያጋሩ፣ እርስ በርስ ይጸልዩ።",
   "onboardSkip": "ዝለል",
   "onboardNext": "ቀጣይ",
-  "onboardStart": "ይጀምሩ"
+  "onboardStart": "ይጀምሩ",
+  "dataTitle": "የእርስዎ መረጃ",
+  "exportData": "ጸሎቶቼን ላክ",
+  "exportDataSub": "ሁሉንም ጸሎቶችዎን እና ምስክርነቶችዎን እንደ ፋይል ያውርዱ።",
+  "exportDone": "ወደ ውጭ መላክ ወርዷል 🙏"
 };

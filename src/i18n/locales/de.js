@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "Tritt Gruppen bei, teile Anliegen und betet füreinander.",
   "onboardSkip": "Überspringen",
   "onboardNext": "Weiter",
-  "onboardStart": "Loslegen"
+  "onboardStart": "Loslegen",
+  "dataTitle": "Deine Daten",
+  "exportData": "Meine Gebete exportieren",
+  "exportDataSub": "Lade alle deine Gebete und Zeugnisse als Datei herunter.",
+  "exportDone": "Export heruntergeladen 🙏"
 };

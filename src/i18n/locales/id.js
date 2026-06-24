@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "Bergabunglah dengan grup, bagikan pokok doa, dan saling mendoakan.",
   "onboardSkip": "Lewati",
   "onboardNext": "Berikutnya",
-  "onboardStart": "Mulai"
+  "onboardStart": "Mulai",
+  "dataTitle": "Data Anda",
+  "exportData": "Ekspor doa saya",
+  "exportDataSub": "Unduh semua doa dan kesaksian Anda sebagai file.",
+  "exportDone": "Ekspor diunduh 🙏"
 };

@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "समूहों में शामिल हों, विषय साझा करें, और एक-दूसरे के लिए प्रार्थना करें।",
   "onboardSkip": "छोड़ें",
   "onboardNext": "आगे",
-  "onboardStart": "शुरू करें"
+  "onboardStart": "शुरू करें",
+  "dataTitle": "आपका डेटा",
+  "exportData": "मेरी प्रार्थनाएं निर्यात करें",
+  "exportDataSub": "अपनी सभी प्रार्थनाएं और गवाहियां एक फ़ाइल में डाउनलोड करें।",
+  "exportDone": "निर्यात डाउनलोड हुआ 🙏"
 };

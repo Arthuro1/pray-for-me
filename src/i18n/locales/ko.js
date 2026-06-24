@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "그룹에 참여하고, 기도 제목을 나누며, 서로를 위해 기도하세요.",
   "onboardSkip": "건너뛰기",
   "onboardNext": "다음",
-  "onboardStart": "시작하기"
+  "onboardStart": "시작하기",
+  "dataTitle": "내 데이터",
+  "exportData": "내 기도 내보내기",
+  "exportDataSub": "모든 기도와 간증을 파일로 다운로드합니다.",
+  "exportDone": "내보내기 다운로드됨 🙏"
 };

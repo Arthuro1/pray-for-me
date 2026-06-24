@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "انضم إلى مجموعات، وشارك الطلبات، وصلّوا بعضكم لبعض.",
   "onboardSkip": "تخطٍّ",
   "onboardNext": "التالي",
-  "onboardStart": "ابدأ"
+  "onboardStart": "ابدأ",
+  "dataTitle": "بياناتك",
+  "exportData": "تصدير صلواتي",
+  "exportDataSub": "نزّل جميع صلواتك وشهاداتك في ملف واحد.",
+  "exportDone": "تم تنزيل التصدير 🙏"
 };

@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "加入群组，分享代祷事项，彼此代祷。",
   "onboardSkip": "跳过",
   "onboardNext": "下一步",
-  "onboardStart": "开始"
+  "onboardStart": "开始",
+  "dataTitle": "你的数据",
+  "exportData": "导出我的祷告",
+  "exportDataSub": "将你所有的祷告和见证下载为文件。",
+  "exportDone": "已下载导出 🙏"
 };

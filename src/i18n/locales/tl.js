@@ -284,5 +284,9 @@ export default {
   "onboardCommunityBody": "Sumali sa mga grupo, magbahagi ng kahilingan, at magdasal para sa isa’t isa.",
   "onboardSkip": "Laktawan",
   "onboardNext": "Susunod",
-  "onboardStart": "Magsimula"
+  "onboardStart": "Magsimula",
+  "dataTitle": "Ang iyong data",
+  "exportData": "I-export ang aking mga panalangin",
+  "exportDataSub": "I-download ang lahat ng iyong panalangin at patotoo bilang file.",
+  "exportDone": "Na-download ang export 🙏"
 };
