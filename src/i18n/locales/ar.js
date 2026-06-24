@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
   "alreadyFriends": "أنتما صديقان بالفعل",
   "onboardRemindTitle": "داوم على الصلاة",
-  "onboardRemindBody": "فعّل تذكيرًا يوميًا وشاهد سلسلة صلواتك تنمو — يعمل Pray4Me حتى دون اتصال."
+  "onboardRemindBody": "فعّل تذكيرًا يوميًا وشاهد سلسلة صلواتك تنمو — يعمل Pray4Me حتى دون اتصال.",
+  "renameGroup": "إعادة تسمية المجموعة",
+  "groupRenamed": "تم تحديث اسم المجموعة"
 };

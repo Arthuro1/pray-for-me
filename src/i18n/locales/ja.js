@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "有効なメールアドレスを入力してください",
   "alreadyFriends": "すでに友達です",
   "onboardRemindTitle": "続けましょう",
-  "onboardRemindBody": "毎日のリマインダーをオンにして、祈りの連続記録を伸ばしましょう。Pray4Me はオフラインでも使えます。"
+  "onboardRemindBody": "毎日のリマインダーをオンにして、祈りの連続記録を伸ばしましょう。Pray4Me はオフラインでも使えます。",
+  "renameGroup": "グループ名を変更",
+  "groupRenamed": "グループ名を更新しました"
 };

@@ -387,12 +387,24 @@ function AddFriendModal({ lang, userId, onClose }) {
 
 // ── Group Admin Modal (invite friends + manage members) ──────────────────────
 function GroupAdminModal({ lang, userId, group, onClose }) {
-  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember } = useCommunityStore();
+  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, renameGroup } = useCommunityStore();
   const [friends, setFriends] = useState([]);
   const [members, setMembers] = useState([]);
   const [busyId, setBusyId] = useState(null);
   const [invited, setInvited] = useState({});
   const [confirmRemove, setConfirmRemove] = useState(null);
+  const [name, setName] = useState(group.name);
+  const [renaming, setRenaming] = useState(false);
+
+  const handleRename = async () => {
+    const trimmed = name.trim();
+    if (!trimmed || trimmed === group.name || renaming) return;
+    setRenaming(true);
+    const { error } = await renameGroup(group.id, trimmed);
+    setRenaming(false);
+    if (error) { toast.error(t(lang, 'errorGeneric')); return; }
+    toast.success(t(lang, 'groupRenamed'));
+  };
 
   const load = useCallback(async () => {
     const [f, m, inv] = await Promise.all([fetchFriends(userId), fetchGroupMembers(group.id), fetchGroupInvitees(group.id)]);
@@ -438,6 +450,17 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
         />
       )}
       <div className="max-h-[60vh] overflow-y-auto">
+        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'renameGroup')}</p>
+        <div className="flex gap-2 mb-5">
+          <input value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
+            onKeyDown={e => e.key === 'Enter' && handleRename()}
+            className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none" style={INPUT_STYLE} />
+          <button onClick={handleRename} disabled={!name.trim() || name.trim() === group.name || renaming}
+            className="px-4 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+            {renaming ? <Loader2 size={14} className="animate-spin" /> : t(lang, 'save')}
+          </button>
+        </div>
+
         <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'inviteFriends')}</p>
         {invitable.length === 0 ? (
           <p className="text-sm mb-4" style={{ color: 'var(--text-3)' }}>{t(lang, 'noFriendsToInvite')}</p>

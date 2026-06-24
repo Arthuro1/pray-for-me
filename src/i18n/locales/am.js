@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "እባክዎ ትክክለኛ ኢሜይል ያስገቡ",
   "alreadyFriends": "አስቀድሞ ጓደኛሞች ናችሁ",
   "onboardRemindTitle": "ቀጣይነት ይኑርዎት",
-  "onboardRemindBody": "ዕለታዊ አስታዋሽ ያብሩ እና የጸሎት ተከታታይነትዎ ሲያድግ ይመልከቱ — Pray4Me ከመስመር ውጭም ይሰራል።"
+  "onboardRemindBody": "ዕለታዊ አስታዋሽ ያብሩ እና የጸሎት ተከታታይነትዎ ሲያድግ ይመልከቱ — Pray4Me ከመስመር ውጭም ይሰራል።",
+  "renameGroup": "የቡድን ስም ቀይር",
+  "groupRenamed": "የቡድን ስም ተዘምኗል"
 };

@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "Please enter a valid email address",
   "alreadyFriends": "You're already friends",
   "onboardRemindTitle": "Stay consistent",
-  "onboardRemindBody": "Turn on a daily reminder and watch your prayer streak grow — Pray4Me even works offline."
+  "onboardRemindBody": "Turn on a daily reminder and watch your prayer streak grow — Pray4Me even works offline.",
+  "renameGroup": "Rename group",
+  "groupRenamed": "Group name updated"
 };

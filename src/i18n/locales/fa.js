@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "لطفاً یک ایمیل معتبر وارد کنید",
   "alreadyFriends": "شما از قبل دوست هستید",
   "onboardRemindTitle": "پایدار بمانید",
-  "onboardRemindBody": "یادآوری روزانه را روشن کنید و رشد زنجیره دعای خود را ببینید — Pray4Me حتی آفلاین کار می‌کند."
+  "onboardRemindBody": "یادآوری روزانه را روشن کنید و رشد زنجیره دعای خود را ببینید — Pray4Me حتی آفلاین کار می‌کند.",
+  "renameGroup": "تغییر نام گروه",
+  "groupRenamed": "نام گروه به‌روزرسانی شد"
 };

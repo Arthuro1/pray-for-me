@@ -213,6 +213,16 @@ const useCommunityStore = create((set, get) => ({
     return { group };
   },
 
+  // Rename a group (admin only — enforced by RLS). Updates the local list.
+  renameGroup: async (groupId, name) => {
+    const trimmed = (name || '').trim();
+    if (!trimmed) return { error: 'empty' };
+    const { error } = await supabase.from('groups').update({ name: trimmed }).eq('id', groupId);
+    if (error) return toError(error);
+    set(state => ({ groups: state.groups.map(g => g.id === groupId ? { ...g, name: trimmed } : g) }));
+    return {};
+  },
+
   leaveGroup: async (groupId, userId) => {
     const { error } = await supabase.from('group_members').delete().eq('group_id', groupId).eq('user_id', userId);
     if (error) return toError(error);

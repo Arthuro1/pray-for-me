@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "Maglagay ng wastong email address",
   "alreadyFriends": "Magkaibigan na kayo",
   "onboardRemindTitle": "Maging tuloy-tuloy",
-  "onboardRemindBody": "I-on ang pang-araw-araw na paalala at panoorin lumago ang iyong prayer streak — gumagana ang Pray4Me kahit offline."
+  "onboardRemindBody": "I-on ang pang-araw-araw na paalala at panoorin lumago ang iyong prayer streak — gumagana ang Pray4Me kahit offline.",
+  "renameGroup": "Palitan ang pangalan ng grupo",
+  "groupRenamed": "Na-update ang pangalan ng grupo"
 };

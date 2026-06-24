@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "Tafadhali weka anwani sahihi ya barua pepe",
   "alreadyFriends": "Tayari ni marafiki",
   "onboardRemindTitle": "Endelea kwa ukawaida",
-  "onboardRemindBody": "Washa kikumbusho cha kila siku na uone mfululizo wako wa maombi ukikua — Pray4Me hufanya kazi hata nje ya mtandao."
+  "onboardRemindBody": "Washa kikumbusho cha kila siku na uone mfululizo wako wa maombi ukikua — Pray4Me hufanya kazi hata nje ya mtandao.",
+  "renameGroup": "Badilisha jina la kikundi",
+  "groupRenamed": "Jina la kikundi limesasishwa"
 };

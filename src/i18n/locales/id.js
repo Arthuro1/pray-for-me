@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "Masukkan alamat email yang valid",
   "alreadyFriends": "Kalian sudah berteman",
   "onboardRemindTitle": "Tetap konsisten",
-  "onboardRemindBody": "Aktifkan pengingat harian dan lihat rentetan doa Anda bertambah — Pray4Me bahkan berfungsi offline."
+  "onboardRemindBody": "Aktifkan pengingat harian dan lihat rentetan doa Anda bertambah — Pray4Me bahkan berfungsi offline.",
+  "renameGroup": "Ganti nama grup",
+  "groupRenamed": "Nama grup diperbarui"
 };

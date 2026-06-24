@@ -303,5 +303,7 @@ export default {
   "invalidEmail": "请输入有效的电子邮件地址",
   "alreadyFriends": "你们已经是好友",
   "onboardRemindTitle": "保持坚持",
-  "onboardRemindBody": "开启每日提醒，看着你的祷告连续记录增长——Pray4Me 甚至可以离线使用。"
+  "onboardRemindBody": "开启每日提醒，看着你的祷告连续记录增长——Pray4Me 甚至可以离线使用。",
+  "renameGroup": "重命名群组",
+  "groupRenamed": "群组名称已更新"
 };
