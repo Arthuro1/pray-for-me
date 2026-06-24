@@ -5,7 +5,7 @@ import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus } from 'lucide-react';
+import { Sparkles, Loader2, Plus, Users } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import PrayerListSkeleton from '../components/Skeleton';
@@ -288,14 +288,17 @@ export default function HomeTab({ onAdd }) {
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {[
             { value: activeCount, label: t(lang, 'activePrayers'), color: 'var(--accent)' },
-            { value: answeredCount, label: t(lang, 'answeredPrayers') + ' 🙌', color: 'var(--success)' },
+            { value: answeredCount, label: t(lang, 'answeredPrayers') + ' 🙌', color: 'var(--success)', onClick: () => navigate('/answered') },
             { value: todaysPrayers.length, label: t(lang, 'todayPrayers'), color: '#c07c2a' },
-          ].map(({ value, label, color }) => (
-            <div key={label} className="rounded-2xl p-3 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-              <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
-              <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{label}</p>
-            </div>
-          ))}
+          ].map(({ value, label, color, onClick }) => {
+            const Tag = onClick ? 'button' : 'div';
+            return (
+              <Tag key={label} onClick={onClick} className="rounded-2xl p-3 text-center transition-all" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', ...(onClick ? { cursor: 'pointer' } : {}) }}>
+                <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{label}</p>
+              </Tag>
+            );
+          })}
         </div>
 
         {/* Today's categories */}
@@ -401,11 +404,18 @@ export default function HomeTab({ onAdd }) {
                     )}
                     {(() => {
                       const oa = originAuthor(prayer);
-                      return oa ? (
+                      if (!oa && !prayer.origin_group_name) return null;
+                      return (
                         <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
-                          <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
+                          {oa && <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} />}
+                          {oa && (oa.anonymous ? t(lang, 'anonymous') : oa.name)}
+                          {prayer.origin_group_name && (
+                            <span className="flex items-center gap-1" style={{ color: 'var(--accent)' }}>
+                              <Users size={11} /> {prayer.origin_group_name}
+                            </span>
+                          )}
                         </p>
-                      ) : null;
+                      );
                     })()}
                   </div>
                   <div className="shrink-0 text-xs px-2 py-0.5 rounded-full" style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}>

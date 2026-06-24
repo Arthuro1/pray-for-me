@@ -157,11 +157,18 @@ export default function PrayersTab() {
                     )}
                     {(() => {
                       const oa = originAuthor(prayer);
-                      return oa ? (
+                      if (!oa && !prayer.origin_group_name) return null;
+                      return (
                         <p className="text-xs truncate mt-1 flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
-                          <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} /> {oa.anonymous ? t(lang, 'anonymous') : oa.name}
+                          {oa && <Avatar name={oa.anonymous ? '?' : oa.name} size={18} anonymous={oa.anonymous} />}
+                          {oa && (oa.anonymous ? t(lang, 'anonymous') : oa.name)}
+                          {prayer.origin_group_name && (
+                            <span className="flex items-center gap-1" style={{ color: 'var(--accent)' }}>
+                              <Users size={11} /> {prayer.origin_group_name}
+                            </span>
+                          )}
                         </p>
-                      ) : null;
+                      );
                     })()}
                     {(prayerShares[prayer.id] || []).length > 0 && (
                       <div className="flex flex-wrap items-center gap-1 mt-1.5">

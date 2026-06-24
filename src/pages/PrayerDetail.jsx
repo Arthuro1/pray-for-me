@@ -56,7 +56,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -111,6 +111,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     onBack();
   };
 
+  const handleConfirmCommunityAnswered = async () => {
+    await setCommunityAnswered(communityPrayer.id, true);
+    if (testimony.trim()) {
+      await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: testimony.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id });
+      setTestimony('');
+      setTestimonySent(true);
+    }
+  };
+
+  const handleResumeCommunity = () => setCommunityAnswered(communityPrayer.id, false);
+
   // True when this community prayer is already in the user's personal list —
   // either saved as a copy, or it was originally shared from their own prayer.
   const alreadyInPersonal = isCommunity && (
@@ -121,7 +132,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleAddToPersonal = async () => {
     if (savingToPersonal || alreadyInPersonal) return;
     setSavingToPersonal(true);
-    const res = await addFromCommunity(communityPrayer);
+    const groupName = groups.find(g => g.id === communityPrayer.group_id)?.name || null;
+    const res = await addFromCommunity(communityPrayer, groupName);
     setSavingToPersonal(false);
     if (res?.error) toast.error(t(lang, 'errorGeneric'));
     else toast.success(t(lang, 'addedToMyPrayers'));
@@ -168,7 +180,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
-  const isAnswered = !isCommunity && livePrayer.status === 'answered';
+  const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
   const prayerCategoryIds = isCommunity ? (livePrayer.category_ids || []) : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
   const isGroupAdmin = isCommunity && groups.find(g => g.id === communityPrayer.group_id)?.role === 'admin';
@@ -350,9 +362,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               : (() => {
                   const oa = originAuthor(livePrayer);
                   const author = oa ? `${oa.anonymous ? t(lang, 'anonymous') : oa.name} · ` : '';
+                  const group = livePrayer.origin_group_name ? `👥 ${livePrayer.origin_group_name} · ` : '';
                   const date = format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale });
                   const answered = livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale })}` : '';
-                  return author + date + answered;
+                  return author + group + date + answered;
                 })()
             }
           </p>
@@ -719,8 +732,38 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* ── Community mode: testimony ── */}
-        {isCommunity && (
+        {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
+        {isCommunity && canEditCommunityPrayer && (
+          <>
+            {!isAnswered && (
+              <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
+                <textarea
+                  value={testimony}
+                  onChange={e => setTestimony(e.target.value)}
+                  placeholder={t(lang, 'testimonyPlaceholder')}
+                  rows={3}
+                  className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none"
+                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                />
+              </div>
+            )}
+            <div className="flex gap-3">
+              {!isAnswered ? (
+                <button onClick={handleConfirmCommunityAnswered} title={t(lang, 'tipConfirm')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}>
+                  <CheckCircle size={15} /> {t(lang, 'confirm')}
+                </button>
+              ) : (
+                <button onClick={handleResumeCommunity} title={t(lang, 'tipResume')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                  {t(lang, 'resumePrayer')}
+                </button>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* ── Community mode: testimony (members; author/admin use the answered flow) ── */}
+        {isCommunity && !canEditCommunityPrayer && (
           testimonySent ? (
             <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
               🎉 {t(lang, 'testimony')}

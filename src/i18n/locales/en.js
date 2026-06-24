@@ -251,5 +251,9 @@ export default {
   "removeMemberConfirm": "Remove this member from the group?",
   "showQrCode": "QR code",
   "scanToJoin": "Scan to join the group",
-  "joinMyGroup": "Join my prayer group"
+  "joinMyGroup": "Join my prayer group",
+  "answeredTitle": "Answered prayers",
+  "faithfulness": "Remember God's faithfulness",
+  "noAnsweredYet": "No answered prayers yet",
+  "noAnsweredSub": "When a prayer is answered, mark it and its testimony will appear here."
 };

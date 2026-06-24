@@ -251,5 +251,9 @@ export default {
   "removeMemberConfirm": "Retirer ce membre du groupe ?",
   "showQrCode": "Code QR",
   "scanToJoin": "Scannez pour rejoindre le groupe",
-  "joinMyGroup": "Rejoignez mon groupe de prière"
+  "joinMyGroup": "Rejoignez mon groupe de prière",
+  "answeredTitle": "Prières exaucées",
+  "faithfulness": "Souvenez-vous de la fidélité de Dieu",
+  "noAnsweredYet": "Aucune prière exaucée pour l'instant",
+  "noAnsweredSub": "Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici."
 };

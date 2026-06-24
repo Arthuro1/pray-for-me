@@ -149,6 +149,7 @@ end $$;
 alter table prayers add column if not exists community_origin_id uuid references community_prayers(id) on delete set null;
 alter table prayers add column if not exists origin_author_name text;
 alter table prayers add column if not exists origin_is_anonymous boolean default false;
+alter table prayers add column if not exists origin_group_name text;
 
 
 -- ── prayer_updates: author info (for group-originated updates) ───────────────

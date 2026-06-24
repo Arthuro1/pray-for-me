@@ -134,7 +134,7 @@ const usePrayerStore = create((set, get) => ({
 
   // Saves a community prayer into the user's personal list as a snapshot copy
   // (title, description, prayer points). Not ongoing-synced; deduped by origin.
-  addFromCommunity: async (communityPrayer) => {
+  addFromCommunity: async (communityPrayer, groupName = null) => {
     const existing = get().prayers.find((p) => p.community_origin_id === communityPrayer.id);
     if (existing) return { prayer: existing, alreadyAdded: true };
 
@@ -149,6 +149,7 @@ const usePrayerStore = create((set, get) => ({
         community_origin_id: communityPrayer.id,
         origin_author_name: communityPrayer.is_anonymous ? null : communityPrayer.author_name,
         origin_is_anonymous: !!communityPrayer.is_anonymous,
+        origin_group_name: groupName,
       })
       .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .single();

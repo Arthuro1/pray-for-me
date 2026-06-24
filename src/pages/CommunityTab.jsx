@@ -497,10 +497,11 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // Copy group requests (not mine, not already linked) into the personal list.
   const reconcileAutoAdd = async () => {
     const mine = new Set(usePrayerStore.getState().prayers.map(p => p.id));
+    const groupName = groups.find(g => g.id === groupId)?.name || null;
     for (const p of prayers) {
       if (p.user_id === user.id) continue;
       if (p.source_prayer_id && mine.has(p.source_prayer_id)) continue;
-      await addFromCommunity(p); // idempotent: deduped by community_origin_id
+      await addFromCommunity(p, groupName); // idempotent: deduped by community_origin_id
     }
   };
 

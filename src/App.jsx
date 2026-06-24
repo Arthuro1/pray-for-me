@@ -12,6 +12,7 @@ import useAuthStore from './store/authStore';
 // Route components are code-split so each page loads as its own chunk.
 const HomeTab = lazy(() => import('./pages/HomeTab'));
 const PrayersTab = lazy(() => import('./pages/PrayersTab'));
+const AnsweredTab = lazy(() => import('./pages/AnsweredTab'));
 const PlanTab = lazy(() => import('./pages/PlanTab'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
 const CommunityTab = lazy(() => import('./pages/CommunityTab'));
@@ -156,6 +157,7 @@ export default function App() {
             <Route path="/" element={<HomeTab onAdd={openAdd} />} />
             <Route path="/prayers" element={<PrayersTab />} />
             <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
+            <Route path="/answered" element={<AnsweredTab />} />
             <Route path="/community" element={<CommunityTab />} />
             <Route path="/community/join/:code" element={<JoinGroupPage />} />
             <Route path="/community/group/:groupId" element={<CommunityTab />} />

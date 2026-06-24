@@ -317,6 +317,14 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
+  // Mark a community prayer answered/active (author or group admin via RLS).
+  setCommunityAnswered: async (prayerId, value) => {
+    const { error } = await supabase.from('community_prayers').update({ is_answered: value }).eq('id', prayerId);
+    if (error) return toError(error);
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, is_answered: value })) }));
+    return {};
+  },
+
   deleteCommunityPrayer: async (prayerId) => {
     const { error } = await supabase.from('community_prayers').delete().eq('id', prayerId);
     if (error) return toError(error);
