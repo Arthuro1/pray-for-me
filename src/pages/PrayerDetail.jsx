@@ -9,6 +9,7 @@ import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, originAuthor } from '../utils/user';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
+import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import PrayerForm from '../components/PrayerForm';
 
@@ -103,8 +104,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleAddToPersonal = async () => {
     if (savingToPersonal || alreadyInPersonal) return;
     setSavingToPersonal(true);
-    await addFromCommunity(communityPrayer);
+    const res = await addFromCommunity(communityPrayer);
     setSavingToPersonal(false);
+    if (res?.error) toast.error(t(lang, 'errorGeneric'));
+    else toast.success(t(lang, 'addedToMyPrayers'));
   };
 
   // ── Personal mode: sharing to groups ──────────────────────────────────────
@@ -135,8 +138,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleSaveShares = async () => {
     if (sharing) return;
     setSharing(true);
-    await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
+    const res = await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
     setSharing(false);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
     setShowShareModal(false);
   };
 

@@ -5,6 +5,7 @@ import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
+import { toast } from '../store/toastStore';
 import { timeAgo } from '../utils/date';
 import { getAuthorName } from '../utils/user';
 import PrayerDetail from './PrayerDetail';
@@ -74,7 +75,8 @@ function CommunityHub({ lang, userId, onViewGroup }) {
 
   const handle = async (id, fn) => {
     setBusyId(id);
-    await fn();
+    const res = await fn();
+    if (res?.error) toast.error(t(lang, 'errorGeneric'));
     await load();
     setBusyId(null);
   };
@@ -285,12 +287,15 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
     setBusyId(friendId);
     const { error } = await inviteToGroup(group.id, friendId, userId);
     setBusyId(null);
-    if (!error) setInvited(prev => ({ ...prev, [friendId]: true }));
+    if (error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setInvited(prev => ({ ...prev, [friendId]: true }));
+    toast.success(t(lang, 'invited'));
   };
 
   const handleRemove = async (memberId) => {
     setBusyId(memberId);
-    await removeMember(group.id, memberId);
+    const res = await removeMember(group.id, memberId);
+    if (res?.error) toast.error(t(lang, 'errorGeneric'));
     await load();
     setBusyId(null);
   };

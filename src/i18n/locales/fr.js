@@ -234,5 +234,6 @@ export default {
   "donateSelectBtn": "Choisir",
   "donateComingSoon": "Bientôt",
   "donateThanks": "Chaque contribution compte. Que Dieu vous bénisse. 🙏",
-  "close": "Fermer"
+  "close": "Fermer",
+  "errorGeneric": "Une erreur est survenue. Réessayez."
 };

@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
+import Toaster from './components/Toaster';
 import useAuthStore from './store/authStore';
 
 // Route components are code-split so each page loads as its own chunk.
@@ -141,6 +142,7 @@ export default function App() {
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
       )}
+      <Toaster />
       <Analytics />
       <SpeedInsights />
     </>
