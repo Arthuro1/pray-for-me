@@ -140,8 +140,8 @@ export default function App() {
     // Replay any writes queued offline. If a mutation fails permanently, tell
     // the user and reconcile local state back to server truth (rolls back the
     // optimistic change instead of leaving an un-saved "ghost").
-    onMutationDropped(() => {
-      toast.error(t(lang, 'errorGeneric'));
+    onMutationDropped((item, err) => {
+      toast.error(err?.message ? `${item.kind}: ${err.message}` : t(lang, 'errorGeneric'));
       const uid = useAuthStore.getState().user?.id;
       if (uid) usePrayerStore.getState().loadData(uid);
     });

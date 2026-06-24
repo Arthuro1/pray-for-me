@@ -127,6 +127,18 @@ const usePrayerStore = create((set, get) => ({
     saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers });
   },
 
+  // Refetch a single personal prayer from the server and replace it in state.
+  // Used to reflect community-side edits (two-way sync) back onto the owner's
+  // personal copy in-session. No-op for prayers the user can't read (non-owner).
+  refreshPrayer: async (prayerId) => {
+    const { data } = await supabase
+      .from('prayers')
+      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+      .eq('id', prayerId)
+      .maybeSingle();
+    if (data) set((state) => ({ prayers: state.prayers.map((p) => (p.id === prayerId ? data : p)) }));
+  },
+
   // ─── Prayers ─────────────────────────────────────────────────
   // Optimistic + offline-capable: the prayer appears immediately and the server
   // write is queued (replayed on reconnect). A client-generated id keeps the

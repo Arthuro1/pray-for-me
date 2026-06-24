@@ -5,6 +5,11 @@
 -- replayed mutation can't double-apply. Run in the Supabase SQL editor.
 -- ════════════════════════════════════════════════════════════════════════
 
+-- Drop the previous (no p_id) overloads first — otherwise two functions share a
+-- name and PostgREST RPC calls fail with PGRST203 ("could not choose candidate").
+drop function if exists sync_add_update(uuid, text, text, boolean);
+drop function if exists sync_add_point(uuid, text, jsonb);
+
 -- Member update / prayer "word": id supplied by the client; community fan-out
 -- rows get a deterministic id so replay is a no-op.
 create or replace function sync_add_update(p_id uuid, p_source uuid, p_text text, p_author text, p_anon boolean)

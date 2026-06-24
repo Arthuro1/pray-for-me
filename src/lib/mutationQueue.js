@@ -68,6 +68,7 @@ export async function flushQueue() {
         persist();
         notify();
       } catch (err) {
+        console.error(`[mutationQueue] ${item.kind} failed (status ${err?.status ?? '?'}):`, err?.message || err);
         if (isAuthError(err)) break;            // pause until session restored
         if (isPermanentError(err)) {            // won't recover → drop + surface
           queue = removeItem(queue, item.id);

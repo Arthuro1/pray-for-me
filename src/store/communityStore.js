@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
+import usePrayerStore from './prayerStore';
+
+// After a community-side edit that fans out to a shared personal prayer, refresh
+// that personal prayer in-session so the owner sees the change without reloading.
+const syncBackToPersonal = (sourcePrayerId) => {
+  if (sourcePrayerId) usePrayerStore.getState().refreshPrayer(sourcePrayerId);
+};
 
 function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -344,7 +351,8 @@ const useCommunityStore = create((set, get) => ({
       const { error } = await supabase.rpc('sync_add_update', {
         p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_text: text, p_author: authorName, p_anon: isAnonymous,
       });
-      if (error) return toError(error);
+      if (error) { console.error('sync_add_update error:', error); return toError(error); }
+      syncBackToPersonal(sourcePrayerId);
     } else {
       const { error } = await supabase
         .from('community_updates')
@@ -379,6 +387,7 @@ const useCommunityStore = create((set, get) => ({
         p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_title: point.title, p_verses: verses,
       });
       if (error) { console.error('sync_add_point error:', error); return toError(error); }
+      syncBackToPersonal(sourcePrayerId);
       const updated = await fetchPrayerWithCounts(prayerId);
       if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
       return {};
@@ -406,6 +415,7 @@ const useCommunityStore = create((set, get) => ({
     if (sourcePrayerId) {
       const { error } = await supabase.rpc('sync_remove_point', { p_source: sourcePrayerId, p_point_id: pointId });
       if (error) return toError(error);
+      syncBackToPersonal(sourcePrayerId);
     } else {
       const current = get().prayers.find(p => p.id === prayerId);
       const points = (current?.prayer_points || []).filter(pp => pp.id !== pointId);
@@ -421,6 +431,7 @@ const useCommunityStore = create((set, get) => ({
     if (sourcePrayerId) {
       const { error } = await supabase.rpc('sync_add_verse', { p_source: sourcePrayerId, p_point_id: pointId, p_verse: verse });
       if (error) return toError(error);
+      syncBackToPersonal(sourcePrayerId);
     } else {
       const current = get().prayers.find(p => p.id === prayerId);
       const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: [...(pp.verses || []), verse] } : pp);
@@ -436,6 +447,7 @@ const useCommunityStore = create((set, get) => ({
     if (sourcePrayerId) {
       const { error } = await supabase.rpc('sync_remove_verse', { p_source: sourcePrayerId, p_point_id: pointId, p_verse_ref: verseRef });
       if (error) return toError(error);
+      syncBackToPersonal(sourcePrayerId);
     } else {
       const current = get().prayers.find(p => p.id === prayerId);
       const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: (pp.verses || []).filter(v => v.ref !== verseRef) } : pp);
