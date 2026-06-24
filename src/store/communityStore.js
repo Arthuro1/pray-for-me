@@ -154,6 +154,24 @@ const useCommunityStore = create((set, get) => ({
     return () => supabase.removeChannel(channel);
   },
 
+  // Re-fetch a single prayer's counts and merge into the list (used by realtime).
+  refreshPrayer: async (prayerId) => {
+    const updated = await fetchPrayerWithCounts(prayerId);
+    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+  },
+
+  // Live activity on one open prayer: reactions and member updates. The caller
+  // supplies handlers so it can also refresh its local updates list.
+  subscribePrayerActivity: (prayerId, handlers = {}) => {
+    const channel = supabase.channel(`prayer-activity-${prayerId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'prayer_reactions', filter: `community_prayer_id=eq.${prayerId}` },
+        () => handlers.onReaction?.())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'community_updates', filter: `community_prayer_id=eq.${prayerId}` },
+        () => handlers.onUpdate?.())
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  },
+
   setActiveGroup: (id) => {
     set({ activeGroupId: id, prayers: [], testimonies: [] });
     get().fetchPrayers(id);

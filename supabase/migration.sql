@@ -288,6 +288,14 @@ do $$
 begin
   alter publication supabase_realtime add table group_invitations;
 exception when duplicate_object then null; end $$;
+do $$
+begin
+  alter publication supabase_realtime add table prayer_reactions;
+exception when duplicate_object then null; end $$;
+do $$
+begin
+  alter publication supabase_realtime add table community_updates;
+exception when duplicate_object then null; end $$;
 
 
 -- ── One-time backfill for data created before sync existed ───────────────────

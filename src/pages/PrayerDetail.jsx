@@ -54,7 +54,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, prayers } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -68,6 +68,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       setLoadingUpdates(false);
     });
   }, [communityPrayer?.id]);
+
+  // Live reactions + member updates on this open prayer.
+  useEffect(() => {
+    if (!isCommunity) return;
+    return subscribePrayerActivity(communityPrayer.id, {
+      onReaction: () => {
+        refreshPrayer(communityPrayer.id);
+        if (user?.id) fetchUserReactions(communityPrayer.group_id, user.id);
+      },
+      onUpdate: () => {
+        refreshPrayer(communityPrayer.id);
+        fetchPrayerUpdates(communityPrayer.id).then(setCommunityUpdates);
+      },
+    });
+  }, [communityPrayer?.id, isCommunity]);
 
   const handleSendWord = async () => {
     if (!wordText.trim() || sendingWord) return;
@@ -157,7 +172,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const isGroupAdmin = isCommunity && groups.find(g => g.id === communityPrayer.group_id)?.role === 'admin';
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityHasReacted = isCommunity && userReactions.has(communityPrayer.id);
-  const communityReactionCount = isCommunity ? (communityPrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
+  const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
 
   const bibleUrl = verse => `https://www.bible.com/search/bible?q=${encodeURIComponent(verse)}&version_id=93`;
 
