@@ -291,5 +291,7 @@ export default {
   "exportDone": "エクスポートをダウンロードしました 🙏",
   "streak": "{n}日連続",
   "thisWeek": "今週",
-  "newCount": "新着 {n}"
+  "newCount": "新着 {n}",
+  "syncing": "同期中…",
+  "pendingChanges": "{n} 件待機中"
 };

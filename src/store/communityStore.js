@@ -332,7 +332,7 @@ const useCommunityStore = create((set, get) => ({
   addUpdate: async ({ prayerId, sourcePrayerId, userId, authorName, text, isAnonymous }) => {
     if (sourcePrayerId) {
       const { error } = await supabase.rpc('sync_add_update', {
-        p_source: sourcePrayerId, p_text: text, p_author: authorName, p_anon: isAnonymous,
+        p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_text: text, p_author: authorName, p_anon: isAnonymous,
       });
       if (error) return toError(error);
     } else {
@@ -366,7 +366,7 @@ const useCommunityStore = create((set, get) => ({
 
     if (sourcePrayerId) {
       const { error } = await supabase.rpc('sync_add_point', {
-        p_source: sourcePrayerId, p_title: point.title, p_verses: verses,
+        p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_title: point.title, p_verses: verses,
       });
       if (error) { console.error('sync_add_point error:', error); return toError(error); }
       const updated = await fetchPrayerWithCounts(prayerId);

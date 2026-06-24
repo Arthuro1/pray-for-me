@@ -291,5 +291,7 @@ export default {
   "exportDone": "내보내기 다운로드됨 🙏",
   "streak": "{n}일 연속",
   "thisWeek": "이번 주",
-  "newCount": "새 글 {n}"
+  "newCount": "새 글 {n}",
+  "syncing": "동기화 중…",
+  "pendingChanges": "{n}개 대기 중"
 };

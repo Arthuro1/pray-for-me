@@ -291,5 +291,7 @@ export default {
   "exportDone": "ወደ ውጭ መላክ ወርዷል 🙏",
   "streak": "{n} ተከታታይ ቀናት",
   "thisWeek": "በዚህ ሳምንት",
-  "newCount": "{n} አዲስ"
+  "newCount": "{n} አዲስ",
+  "syncing": "በማመሳሰል ላይ…",
+  "pendingChanges": "{n} በመጠባበቅ ላይ"
 };

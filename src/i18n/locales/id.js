@@ -291,5 +291,7 @@ export default {
   "exportDone": "Ekspor diunduh 🙏",
   "streak": "{n} hari berturut-turut",
   "thisWeek": "minggu ini",
-  "newCount": "{n} baru"
+  "newCount": "{n} baru",
+  "syncing": "Menyinkronkan…",
+  "pendingChanges": "{n} menunggu"
 };

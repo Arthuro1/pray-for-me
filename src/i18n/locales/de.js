@@ -291,5 +291,7 @@ export default {
   "exportDone": "Export heruntergeladen 🙏",
   "streak": "{n} Tage in Folge",
   "thisWeek": "diese Woche",
-  "newCount": "{n} neu"
+  "newCount": "{n} neu",
+  "syncing": "Synchronisierung…",
+  "pendingChanges": "{n} ausstehend"
 };

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { prayerOnDay, prayerPriority, appendTestimony, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
-import { enqueue } from '../lib/mutationQueue';
+import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 
 const DEFAULT_CATEGORIES = {
@@ -41,15 +41,6 @@ const DEFAULT_CATEGORIES = {
 
 // Keeps shared community copies in sync when the source personal prayer is
 // edited. Only touches fields that were actually changed.
-async function syncSharedCopies(prayerId, updates) {
-  const payload = {};
-  if (updates.title !== undefined) payload.title = updates.title;
-  if (updates.description !== undefined) payload.description = updates.description;
-  if (updates.categoryIds !== undefined) payload.category_ids = updates.categoryIds;
-  if (Object.keys(payload).length === 0) return;
-  await supabase.from('community_prayers').update(payload).eq('source_prayer_id', prayerId);
-}
-
 const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
@@ -123,10 +114,12 @@ const usePrayerStore = create((set, get) => ({
       return;
     }
 
-    // 3. Merge: server is authoritative, but keep local-only prayers still
-    //    pending in the offline queue (id not yet on the server).
+    // 3. Merge: server is authoritative. Keep a local-only prayer only if its
+    //    creation is STILL queued — so a prayer whose create was permanently
+    //    dropped (rejected) is reconciled away rather than lingering as a ghost.
     const serverIds = new Set(serverPrayers.map((p) => p.id));
-    const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id));
+    const creating = pendingPrayerIds();
+    const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
     const mergedPrayers = [...pendingLocal, ...serverPrayers];
 
     const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
@@ -195,6 +188,8 @@ const usePrayerStore = create((set, get) => ({
     return { prayer: data };
   },
 
+  // Optimistic + offline-capable. Fields map to snake_case; category links and
+  // shared-copy mirroring are handled idempotently by the executor.
   updatePrayer: async (id, updates) => {
     const payload = {};
     if (updates.title !== undefined) payload.title = updates.title;
@@ -205,30 +200,21 @@ const usePrayerStore = create((set, get) => ({
     if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
     payload.updated_at = new Date().toISOString();
 
-    const { data } = await supabase.from('prayers').update(payload).eq('id', id).select().single();
+    const community = {};
+    if (updates.title !== undefined) community.title = updates.title;
+    if (updates.description !== undefined) community.description = updates.description;
+    if (updates.categoryIds !== undefined) community.category_ids = updates.categoryIds;
 
-    if (updates.categoryIds !== undefined) {
-      await supabase.from('prayer_categories').delete().eq('prayer_id', id);
-      if (updates.categoryIds.length > 0) {
-        await supabase.from('prayer_categories').insert(
-          updates.categoryIds.map((cid) => ({ prayer_id: id, category_id: cid }))
-        );
-      }
-    }
-
-    await syncSharedCopies(id, updates);
-
-    if (data) {
-      set((state) => ({
-        prayers: state.prayers.map((p) => {
-          if (p.id !== id) return p;
-          const prayer_categories = updates.categoryIds !== undefined
-            ? updates.categoryIds.map((cid) => ({ category_id: cid }))
-            : p.prayer_categories;
-          return { ...p, ...data, prayer_categories };
-        }),
-      }));
-    }
+    set((state) => ({
+      prayers: state.prayers.map((p) => {
+        if (p.id !== id) return p;
+        const prayer_categories = updates.categoryIds !== undefined
+          ? updates.categoryIds.map((category_id) => ({ category_id }))
+          : p.prayer_categories;
+        return { ...p, ...payload, prayer_categories };
+      }),
+    }));
+    enqueue('updatePrayer', { id, payload, categoryIds: updates.categoryIds, community });
   },
 
   // Reverse direction: when the owner edits categories on a shared community
@@ -249,49 +235,42 @@ const usePrayerStore = create((set, get) => ({
   },
 
   markAnswered: async (id, testimony) => {
-    // Append the new testimony to the list (preserving previous ones) rather than overwriting.
-    const current = get().prayers.find((p) => p.id === id);
-    const testimonies = appendTestimony(current?.testimonies, testimony);
-    const { data } = await supabase
-      .from('prayers')
-      .update({ status: 'answered', testimonies, answered_at: new Date().toISOString() })
-      .eq('id', id).select().single();
-    if (data) {
-      set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
-      await supabase.from('community_prayers').update({ is_answered: true }).eq('source_prayer_id', id);
-    }
+    const answered_at = new Date().toISOString();
+    const trimmed = (testimony || '').trim();
+    // One new testimony (if any) — appended locally and server-side, never overwriting.
+    const newTestimony = trimmed ? { id: crypto.randomUUID(), content: trimmed, created_at: answered_at } : null;
+    set((state) => ({
+      prayers: state.prayers.map((p) => {
+        if (p.id !== id) return p;
+        const testimonies = newTestimony ? [...(p.testimonies || []), newTestimony] : (p.testimonies || []);
+        return { ...p, status: 'answered', testimonies, answered_at };
+      }),
+    }));
+    enqueue('markAnswered', { id, answered_at, testimony: newTestimony });
   },
 
   markActive: async (id) => {
-    const { data } = await supabase.from('prayers').update({ status: 'active', answered_at: null }).eq('id', id).select().single();
-    if (data) {
-      set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, ...data } : p) }));
-      await supabase.from('community_prayers').update({ is_answered: false }).eq('source_prayer_id', id);
-    }
+    set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
+    enqueue('markActive', { id });
   },
 
   deletePrayer: async (id) => {
-    await supabase.from('prayers').delete().eq('id', id);
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
+    enqueue('deletePrayer', { id });
   },
 
   // ─── Updates ─────────────────────────────────────────────────
   // Routed through sync_add_update so the update also fans out to any shared
   // community copies. For non-shared prayers it just writes prayer_updates.
   addUpdate: async (prayerId, text, authorName = '') => {
-    const { data } = await supabase.rpc('sync_add_update', {
-      p_source: prayerId, p_text: text, p_author: authorName, p_anon: false,
-    });
-
-    if (data) {
-      set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, prayer_updates: [...(p.prayer_updates || []), data] }
-            : p
-        ),
-      }));
-    }
+    const id = crypto.randomUUID();
+    const row = { id, prayer_id: prayerId, text, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString() };
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId ? { ...p, prayer_updates: [...(p.prayer_updates || []), row] } : p
+      ),
+    }));
+    enqueue('addUpdate', { id, prayerId, text, authorName });
   },
 
   // ─── Prayer Points ────────────────────────────────────────────
@@ -305,19 +284,14 @@ const usePrayerStore = create((set, get) => ({
         ? [{ ref: point.verse, text: point.verseText || '' }]
         : [];
 
-    const { data } = await supabase.rpc('sync_add_point', {
-      p_source: prayerId, p_title: point.title, p_verses: initialVerses,
-    });
-
-    if (data) {
-      set((state) => ({
-        prayers: state.prayers.map((p) =>
-          p.id === prayerId
-            ? { ...p, prayer_points: [...(p.prayer_points || []), data] }
-            : p
-        ),
-      }));
-    }
+    const id = crypto.randomUUID();
+    const row = { id, prayer_id: prayerId, title: point.title, verses: initialVerses };
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId ? { ...p, prayer_points: [...(p.prayer_points || []), row] } : p
+      ),
+    }));
+    enqueue('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
   },
 
   // Verse/point mutations route through the sync_* RPCs so they also propagate
@@ -328,7 +302,6 @@ const usePrayerStore = create((set, get) => ({
     const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
     if (!point) return;
     const updated = [...(point.verses || []), verse];
-    await supabase.rpc('sync_add_verse', { p_source: prayerId, p_point_id: pointId, p_verse: verse });
     set((s) => ({
       prayers: s.prayers.map(p =>
         p.id === prayerId
@@ -336,6 +309,7 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    enqueue('addVerse', { prayerId, pointId, verse });
   },
 
   removeVerseFromPoint: async (prayerId, pointId, verseRef) => {
@@ -344,7 +318,6 @@ const usePrayerStore = create((set, get) => ({
     const point = (prayer?.prayer_points || []).find(pp => pp.id === pointId);
     if (!point) return;
     const updated = (point.verses || []).filter(v => v.ref !== verseRef);
-    await supabase.rpc('sync_remove_verse', { p_source: prayerId, p_point_id: pointId, p_verse_ref: verseRef });
     set((s) => ({
       prayers: s.prayers.map(p =>
         p.id === prayerId
@@ -352,10 +325,10 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    enqueue('removeVerse', { prayerId, pointId, verseRef });
   },
 
   removePrayerPoint: async (prayerId, pointId) => {
-    await supabase.rpc('sync_remove_point', { p_source: prayerId, p_point_id: pointId });
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === prayerId
@@ -363,6 +336,7 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    enqueue('removePoint', { prayerId, pointId });
   },
 
   // ─── Categories ───────────────────────────────────────────────

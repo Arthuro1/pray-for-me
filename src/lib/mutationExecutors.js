@@ -24,3 +24,77 @@ registerMutation('createPrayer', async ({ row, categoryIds = [] }) => {
     throwIf(ins.error, ins.status);
   }
 });
+
+// Edit a prayer's fields and (optionally) its category links + shared copies.
+registerMutation('updatePrayer', async ({ id, payload, categoryIds, community }) => {
+  const upd = await supabase.from('prayers').update(payload).eq('id', id);
+  throwIf(upd.error, upd.status);
+  if (categoryIds !== undefined) {
+    const del = await supabase.from('prayer_categories').delete().eq('prayer_id', id);
+    throwIf(del.error, del.status);
+    if (categoryIds.length) {
+      const ins = await supabase
+        .from('prayer_categories')
+        .insert(categoryIds.map((category_id) => ({ prayer_id: id, category_id })));
+      throwIf(ins.error, ins.status);
+    }
+  }
+  if (community && Object.keys(community).length) {
+    const c = await supabase.from('community_prayers').update(community).eq('source_prayer_id', id);
+    throwIf(c.error, c.status);
+  }
+});
+
+registerMutation('markAnswered', async ({ id, answered_at, testimony }) => {
+  // Appends the testimony server-side (idempotent) rather than overwriting the
+  // array, so a concurrent testimony from another device isn't lost.
+  const r = await supabase.rpc('answer_prayer', {
+    p_prayer: id,
+    p_status: 'answered',
+    p_answered_at: answered_at,
+    p_testimony_id: testimony?.id ?? null,
+    p_content: testimony?.content ?? null,
+    p_created_at: testimony?.created_at ?? null,
+  });
+  throwIf(r.error, r.status);
+});
+
+registerMutation('markActive', async ({ id }) => {
+  const r = await supabase.from('prayers').update({ status: 'active', answered_at: null }).eq('id', id);
+  throwIf(r.error, r.status);
+  const c = await supabase.from('community_prayers').update({ is_answered: false }).eq('source_prayer_id', id);
+  throwIf(c.error, c.status);
+});
+
+registerMutation('deletePrayer', async ({ id }) => {
+  const r = await supabase.from('prayers').delete().eq('id', id);
+  throwIf(r.error, r.status);
+});
+
+// Updates / points / verses route through the sync_* RPCs (which also fan out
+// to shared community copies). They take a client-supplied id so the optimistic
+// local row matches the server row, and are idempotent on replay.
+registerMutation('addUpdate', async ({ id, prayerId, text, authorName }) => {
+  const r = await supabase.rpc('sync_add_update', { p_id: id, p_source: prayerId, p_text: text, p_author: authorName || '', p_anon: false });
+  throwIf(r.error, r.status);
+});
+
+registerMutation('addPrayerPoint', async ({ id, prayerId, title, verses }) => {
+  const r = await supabase.rpc('sync_add_point', { p_id: id, p_source: prayerId, p_title: title, p_verses: verses || [] });
+  throwIf(r.error, r.status);
+});
+
+registerMutation('addVerse', async ({ prayerId, pointId, verse }) => {
+  const r = await supabase.rpc('sync_add_verse', { p_source: prayerId, p_point_id: pointId, p_verse: verse });
+  throwIf(r.error, r.status);
+});
+
+registerMutation('removeVerse', async ({ prayerId, pointId, verseRef }) => {
+  const r = await supabase.rpc('sync_remove_verse', { p_source: prayerId, p_point_id: pointId, p_verse_ref: verseRef });
+  throwIf(r.error, r.status);
+});
+
+registerMutation('removePoint', async ({ prayerId, pointId }) => {
+  const r = await supabase.rpc('sync_remove_point', { p_source: prayerId, p_point_id: pointId });
+  throwIf(r.error, r.status);
+});

@@ -29,17 +29,6 @@ export function testimonyList(prayer) {
   return [];
 }
 
-// Appends a new testimony to the existing list (preserving prior ones), skipping
-// blank input. Pure — the caller persists the result. newId/now are injectable
-// for deterministic tests.
-export function appendTestimony(existing, content, newId = crypto.randomUUID(), now = new Date().toISOString()) {
-  const list = [...(existing || [])];
-  if (content && content.trim()) {
-    list.push({ id: newId, content: content.trim(), created_at: now });
-  }
-  return list;
-}
-
 // Builds the personal-prayer insert payload when saving a community prayer.
 // Categories are intentionally omitted — they belong to the original author.
 export function communityToPersonalInsert(communityPrayer, groupName, userId) {

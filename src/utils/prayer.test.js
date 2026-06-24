@@ -1,22 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { testimonyList, prayerOnDay, prayerPriority, appendTestimony, communityToPersonalInsert, sortByOrder } from './prayer.js';
-
-describe('appendTestimony', () => {
-  it('appends a trimmed testimony with injected id/time', () => {
-    const out = appendTestimony([{ id: 'a', content: 'old' }], '  praise!  ', 'new-id', '2026-01-01');
-    expect(out).toHaveLength(2);
-    expect(out[1]).toEqual({ id: 'new-id', content: 'praise!', created_at: '2026-01-01' });
-  });
-  it('preserves prior testimonies and does not mutate the input', () => {
-    const existing = [{ id: 'a', content: 'old' }];
-    appendTestimony(existing, 'x', 'id2', 't');
-    expect(existing).toHaveLength(1);
-  });
-  it('skips blank input', () => {
-    expect(appendTestimony([{ id: 'a' }], '   ', 'id', 't')).toEqual([{ id: 'a' }]);
-    expect(appendTestimony(undefined, '', 'id', 't')).toEqual([]);
-  });
-});
+import { testimonyList, prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from './prayer.js';
 
 describe('communityToPersonalInsert', () => {
   it('maps a named community prayer to a personal insert payload', () => {

@@ -23,6 +23,11 @@ const notify = () => listeners.forEach((fn) => fn(queue.length));
 export function registerMutation(kind, executor) { executors[kind] = executor; }
 export function onMutationDropped(fn) { onDrop = fn; }
 export function pendingCount() { return queue.length; }
+// Ids of prayers whose creation is still queued — used by loadData to decide
+// which local-only prayers are genuine pending creates (vs. dropped ghosts).
+export function pendingPrayerIds() {
+  return new Set(queue.filter((i) => i.kind === 'createPrayer').map((i) => i.args?.row?.id).filter(Boolean));
+}
 export function subscribeQueue(fn) { listeners.add(fn); return () => listeners.delete(fn); }
 
 // Load any queue persisted from a previous session, wire reconnect triggers.

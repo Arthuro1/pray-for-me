@@ -291,5 +291,7 @@ export default {
   "exportDone": "Export téléchargé 🙏",
   "streak": "{n} jours de prière",
   "thisWeek": "cette semaine",
-  "newCount": "{n} nouveau"
+  "newCount": "{n} nouveau",
+  "syncing": "Synchronisation…",
+  "pendingChanges": "{n} en attente"
 };

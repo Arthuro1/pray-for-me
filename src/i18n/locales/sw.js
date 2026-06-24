@@ -291,5 +291,7 @@ export default {
   "exportDone": "Uhamishaji umepakuliwa 🙏",
   "streak": "siku {n} mfululizo",
   "thisWeek": "wiki hii",
-  "newCount": "{n} mpya"
+  "newCount": "{n} mpya",
+  "syncing": "Inasawazisha…",
+  "pendingChanges": "{n} zinasubiri"
 };

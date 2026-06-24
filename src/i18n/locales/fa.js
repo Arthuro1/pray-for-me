@@ -291,5 +291,7 @@ export default {
   "exportDone": "برون‌بری دانلود شد 🙏",
   "streak": "{n} روز پیاپی",
   "thisWeek": "این هفته",
-  "newCount": "{n} جدید"
+  "newCount": "{n} جدید",
+  "syncing": "در حال همگام‌سازی…",
+  "pendingChanges": "{n} در انتظار"
 };

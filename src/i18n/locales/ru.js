@@ -291,5 +291,7 @@ export default {
   "exportDone": "Экспорт загружен 🙏",
   "streak": "{n} дней подряд",
   "thisWeek": "на этой неделе",
-  "newCount": "{n} нов."
+  "newCount": "{n} нов.",
+  "syncing": "Синхронизация…",
+  "pendingChanges": "{n} в ожидании"
 };

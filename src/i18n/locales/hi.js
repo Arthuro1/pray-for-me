@@ -291,5 +291,7 @@ export default {
   "exportDone": "निर्यात डाउनलोड हुआ 🙏",
   "streak": "{n} दिन की निरंतरता",
   "thisWeek": "इस सप्ताह",
-  "newCount": "{n} नया"
+  "newCount": "{n} नया",
+  "syncing": "सिंक हो रहा है…",
+  "pendingChanges": "{n} लंबित"
 };

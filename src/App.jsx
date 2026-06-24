@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import Toaster from './components/Toaster';
 import OfflineBanner from './components/OfflineBanner';
+import SyncIndicator from './components/SyncIndicator';
 import Onboarding from './components/Onboarding';
 import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
@@ -107,8 +108,14 @@ export default function App() {
     init();
     const saved = localStorage.getItem('pfm_theme') || 'light';
     document.documentElement.setAttribute('data-theme', saved);
-    // Replay any writes queued offline, and surface mutations that fail for good.
-    onMutationDropped(() => toast.error(t(lang, 'errorGeneric')));
+    // Replay any writes queued offline. If a mutation fails permanently, tell
+    // the user and reconcile local state back to server truth (rolls back the
+    // optimistic change instead of leaving an un-saved "ghost").
+    onMutationDropped(() => {
+      toast.error(t(lang, 'errorGeneric'));
+      const uid = useAuthStore.getState().user?.id;
+      if (uid) usePrayerStore.getState().loadData(uid);
+    });
     initQueue();
   }, []);
 
@@ -188,6 +195,7 @@ export default function App() {
         <Onboarding lang={lang} onFinish={finishOnboarding} onAddPrayer={openAdd} />
       )}
       <OfflineBanner />
+      <SyncIndicator />
       <Toaster />
       <Analytics />
       <SpeedInsights />
