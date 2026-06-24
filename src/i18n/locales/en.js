@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "Download all your prayers and testimonies as a file.",
   "exportDone": "Export downloaded 🙏",
   "streak": "{n}-day streak",
-  "thisWeek": "this week"
+  "thisWeek": "this week",
+  "newCount": "{n} new"
 };

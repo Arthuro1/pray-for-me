@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "모든 기도와 간증을 파일로 다운로드합니다.",
   "exportDone": "내보내기 다운로드됨 🙏",
   "streak": "{n}일 연속",
-  "thisWeek": "이번 주"
+  "thisWeek": "이번 주",
+  "newCount": "새 글 {n}"
 };

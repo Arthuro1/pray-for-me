@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "Téléchargez toutes vos prières et témoignages en un fichier.",
   "exportDone": "Export téléchargé 🙏",
   "streak": "{n} jours de prière",
-  "thisWeek": "cette semaine"
+  "thisWeek": "cette semaine",
+  "newCount": "{n} nouveau"
 };

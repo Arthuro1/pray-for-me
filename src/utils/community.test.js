@@ -1,5 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { toError, orderedPair, updatePrayerInList, buildSharesMap } from './community.js';
+import { toError, orderedPair, updatePrayerInList, buildSharesMap, unreadCounts } from './community.js';
+
+describe('unreadCounts', () => {
+  const rows = [
+    { group_id: 'g1', created_at: '2026-06-10', user_id: 'other' },
+    { group_id: 'g1', created_at: '2026-06-20', user_id: 'other' },
+    { group_id: 'g1', created_at: '2026-06-22', user_id: 'me' },   // own — excluded
+    { group_id: 'g2', created_at: '2026-06-21', user_id: 'other' },
+  ];
+  it('counts only rows newer than the group seen time, excluding own posts', () => {
+    expect(unreadCounts(rows, { g1: '2026-06-15' }, 'me')).toEqual({ g1: 1, g2: 1 });
+  });
+  it('counts everything (except own) when a group was never seen', () => {
+    expect(unreadCounts(rows, {}, 'me')).toEqual({ g1: 2, g2: 1 });
+  });
+  it('returns empty when all are seen', () => {
+    expect(unreadCounts(rows, { g1: '2026-07-01', g2: '2026-07-01' }, 'me')).toEqual({});
+  });
+});
 
 describe('toError', () => {
   it('wraps a supabase error message', () => {

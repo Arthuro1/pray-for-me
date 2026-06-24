@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "I-download ang lahat ng iyong panalangin at patotoo bilang file.",
   "exportDone": "Na-download ang export 🙏",
   "streak": "{n} araw na sunod-sunod",
-  "thisWeek": "ngayong linggo"
+  "thisWeek": "ngayong linggo",
+  "newCount": "{n} bago"
 };

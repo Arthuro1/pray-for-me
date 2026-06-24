@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "Unduh semua doa dan kesaksian Anda sebagai file.",
   "exportDone": "Ekspor diunduh 🙏",
   "streak": "{n} hari berturut-turut",
-  "thisWeek": "minggu ini"
+  "thisWeek": "minggu ini",
+  "newCount": "{n} baru"
 };

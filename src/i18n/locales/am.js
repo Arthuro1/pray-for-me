@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "ሁሉንም ጸሎቶችዎን እና ምስክርነቶችዎን እንደ ፋይል ያውርዱ።",
   "exportDone": "ወደ ውጭ መላክ ወርዷል 🙏",
   "streak": "{n} ተከታታይ ቀናት",
-  "thisWeek": "በዚህ ሳምንት"
+  "thisWeek": "በዚህ ሳምንት",
+  "newCount": "{n} አዲስ"
 };

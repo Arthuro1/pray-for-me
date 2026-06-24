@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "Descarga todas tus oraciones y testimonios en un archivo.",
   "exportDone": "Exportación descargada 🙏",
   "streak": "{n} días seguidos",
-  "thisWeek": "esta semana"
+  "thisWeek": "esta semana",
+  "newCount": "{n} nuevo"
 };

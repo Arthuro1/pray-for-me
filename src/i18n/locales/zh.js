@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "将你所有的祷告和见证下载为文件。",
   "exportDone": "已下载导出 🙏",
   "streak": "连续 {n} 天",
-  "thisWeek": "本周"
+  "thisWeek": "本周",
+  "newCount": "{n} 条新"
 };

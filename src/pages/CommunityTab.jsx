@@ -8,6 +8,7 @@ import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { timeAgo } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
+import { unreadCounts } from '../utils/community';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
@@ -23,6 +24,15 @@ const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--
 const MODAL_INPUT_CLASS = 'w-full px-4 py-3 rounded-xl text-sm focus:outline-none mb-3';
 
 // ── Reusable request/invitation row ──────────────────────────────────────────
+// Per-group "last visited" timestamps, kept locally to compute unread badges.
+const SEEN_KEY = 'pfm_group_seen';
+const readSeen = () => { try { return JSON.parse(localStorage.getItem(SEEN_KEY) || '{}'); } catch { return {}; } };
+const markGroupSeen = (groupId) => {
+  const m = readSeen();
+  m[groupId] = new Date().toISOString();
+  localStorage.setItem(SEEN_KEY, JSON.stringify(m));
+};
+
 function ActionRow({ label, sublabel, avatarName, primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
     <div className="flex items-center justify-between p-3 rounded-xl gap-3" style={CARD_STYLE}>
@@ -58,10 +68,11 @@ function Section({ title, icon, children }) {
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
 function CommunityHub({ lang, userId, onViewGroup }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount } = useCommunityStore();
+  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity } = useCommunityStore();
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [groupInvitations, setGroupInvitations] = useState([]);
+  const [unread, setUnread] = useState({});
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -78,6 +89,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
     setGroupInvitations(gi.invitations || []);
     setLoading(false);
     fetchPendingCount(userId);
+    fetchGroupActivity().then((rows) => setUnread(unreadCounts(rows, readSeen(), userId)));
   }, [userId]);
 
   useEffect(() => { load(); }, [load]);
@@ -161,6 +173,11 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                       <p className="font-semibold text-sm truncate" style={{ color: 'var(--text-1)' }}>{g.name}</p>
                       {g.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
                     </div>
+                    {unread[g.id] > 0 && (
+                      <span className="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--accent)' }}>
+                        {t(lang, 'newCount', { n: unread[g.id] })}
+                      </span>
+                    )}
                   </div>
                 </button>
               ))}
@@ -473,7 +490,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // Always (re)fetch on entering a group so freshly synced points/updates from
   // the personal side show up, even if this group was already the active one.
   useEffect(() => {
-    if (groupId) setActiveGroup(groupId);
+    if (groupId) { setActiveGroup(groupId); markGroupSeen(groupId); }
   }, [groupId]);
 
   // Live prayer wall: reflect new/edited/answered requests from other members.

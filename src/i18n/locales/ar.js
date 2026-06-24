@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "نزّل جميع صلواتك وشهاداتك في ملف واحد.",
   "exportDone": "تم تنزيل التصدير 🙏",
   "streak": "{n} أيام متتالية",
-  "thisWeek": "هذا الأسبوع"
+  "thisWeek": "هذا الأسبوع",
+  "newCount": "{n} جديد"
 };

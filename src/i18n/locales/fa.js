@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "همه دعاها و شهادت‌های خود را در یک فایل دانلود کنید.",
   "exportDone": "برون‌بری دانلود شد 🙏",
   "streak": "{n} روز پیاپی",
-  "thisWeek": "این هفته"
+  "thisWeek": "این هفته",
+  "newCount": "{n} جدید"
 };

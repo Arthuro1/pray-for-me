@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "Lade alle deine Gebete und Zeugnisse als Datei herunter.",
   "exportDone": "Export heruntergeladen 🙏",
   "streak": "{n} Tage in Folge",
-  "thisWeek": "diese Woche"
+  "thisWeek": "diese Woche",
+  "newCount": "{n} neu"
 };

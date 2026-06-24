@@ -290,5 +290,6 @@ export default {
   "exportDataSub": "Pakua maombi na ushuhuda wako wote kama faili.",
   "exportDone": "Uhamishaji umepakuliwa 🙏",
   "streak": "siku {n} mfululizo",
-  "thisWeek": "wiki hii"
+  "thisWeek": "wiki hii",
+  "newCount": "{n} mpya"
 };

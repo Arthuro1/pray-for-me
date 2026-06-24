@@ -48,6 +48,13 @@ const useCommunityStore = create((set, get) => ({
     set({ prayerShares: buildSharesMap(data) });
   },
 
+  // Lightweight feed of every community prayer in the user's groups (RLS-scoped),
+  // used to compute per-group "new since last visit" counts.
+  fetchGroupActivity: async () => {
+    const { data } = await supabase.from('community_prayers').select('group_id, created_at, user_id');
+    return data || [];
+  },
+
   // Reconciles which groups a personal prayer is shared to: inserts community
   // copies for newly selected groups, removes copies for deselected ones.
   setPrayerShares: async ({ prayer, groupIds, userId, authorName, isAnonymous = false }) => {
