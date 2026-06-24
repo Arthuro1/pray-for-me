@@ -41,7 +41,7 @@
 
 ### 🤝 Community
 - Create or join **prayer groups** by invite code, link, or QR
-- **Friends** & friend requests; invite friends to your groups
+- **Friends** & friend requests — add people by tapping suggestions from your shared groups, by email, or via a shareable **friend link / QR**; invite friends to your groups
 - Share a personal prayer to one or more groups (optionally **anonymously**)
 - **Two-way sync** — updates, prayer points, verses, categories, and answered status stay in sync between your prayer and its shared copies
 - React with **"I'm praying"**, post **member updates** and **testimonies**

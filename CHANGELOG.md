@@ -19,6 +19,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/). This project us
 - Test suite (Vitest) for pure logic + GitHub Actions CI.
 
 ### Changed
+- **Add Friend** reworked for discoverability — tap-to-add suggestions from your shared groups, a shareable friend link + QR, and a polished email path (inline validation, friendlier not-found).
 - Personal & Home prayer lists redesigned into spacious cards matching the community wall, leading with author + creation date and showing source group, share badges, and "praying" counts.
 - The user's own prayers/contributions now display as **"Me"** everywhere.
 - Plan tab reworked to a day-centric editor (today highlight, prayer counts, empty-day nudges, auto-schedule, category reorder, per-prayer day overrides).
