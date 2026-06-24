@@ -75,7 +75,7 @@ export default function PlanTab() {
       updateCategory(cat.id, { weekDays: [minIdx] });
       load[minIdx] += Math.max(activePrayerCount(cat.id), 1); // at least 1 so empty categories still spread
     });
-    toast.success(t(lang, 'emptyDaysFilled'), {
+    toast.success(t(lang, 'categoriesScheduled'), {
       action: { label: t(lang, 'undo'), onClick: () => prev.forEach((p) => updateCategory(p.id, { weekDays: p.weekDays })) },
     });
   };
@@ -163,17 +163,24 @@ export default function PlanTab() {
       </div>
 
       <div className="px-4 md:px-8 pt-4">
-        {/* Empty-day hint — tap a day above to plan, or auto-fill from unassigned categories */}
-        {emptyDays.length > 0 && (
+        {/* Planning hints — unscheduled categories and/or empty days */}
+        {(unassigned.length > 0 || emptyDays.length > 0) && (
           <div className="rounded-2xl p-3.5 mb-4 flex items-start gap-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
             <Sparkles size={16} className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
             <div className="flex-1 min-w-0">
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
-                {t(lang, 'planEmptyDays')} {emptyDays.map((idx) => DAYS[idx]).join(', ')}
-              </p>
+              {unassigned.length > 0 && (
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                  {t(lang, 'unassignedCategories', { count: unassigned.length })}
+                </p>
+              )}
+              {emptyDays.length > 0 && (
+                <p className="text-xs leading-relaxed mt-0.5" style={{ color: 'var(--text-2)' }}>
+                  {t(lang, 'planEmptyDays')} {emptyDays.map((idx) => DAYS[idx]).join(', ')}
+                </p>
+              )}
               {unassigned.length > 0 && (
                 <button onClick={handleFillEmptyDays} className="mt-2 text-xs font-medium px-3 py-1.5 rounded-lg" style={{ background: 'var(--accent)', color: '#fff' }}>
-                  {t(lang, 'fillEmptyDays')}
+                  {t(lang, 'autoSchedule')}
                 </button>
               )}
             </div>
@@ -289,6 +296,11 @@ export default function PlanTab() {
                   {cat.emoji}
                 </div>
                 <span className="text-sm font-semibold" style={{ color: cat.color }}>{tr(cat.name, lang)}</span>
+                {(cat.week_days || []).length === 0 && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: '#fdf0f0', color: '#c04040' }}>
+                    {t(lang, 'categoryNotScheduled')}
+                  </span>
+                )}
                 <div className="ml-auto flex gap-1">
                   <button
                     onClick={() => startEdit(cat)}
