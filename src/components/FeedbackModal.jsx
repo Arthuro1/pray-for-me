@@ -5,6 +5,7 @@ import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const TYPES = [
   { key: 'general', icon: MessageSquare, labelKey: 'feedbackTypeGeneral' },
@@ -17,6 +18,7 @@ export default function FeedbackModal({ onClose }) {
   const { settings } = usePrayerStore();
   const lang = settings?.language || 'fr';
   useEscapeKey(onClose);
+  const trapRef = useFocusTrap();
 
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
   const email = user?.email || '';
@@ -59,6 +61,10 @@ export default function FeedbackModal({ onClose }) {
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
+        ref={trapRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
         className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8"
         style={{ background: 'var(--surface)' }}
       >

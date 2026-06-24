@@ -4,6 +4,7 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -75,6 +76,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   useEscapeKey(onClose);
+  const trapRef = useFocusTrap();
 
   const [form, setForm] = useState(() => initialForm(editPrayer));
   useEffect(() => { if (editPrayer) setForm(initialForm(editPrayer)); }, [editPrayer]);
@@ -105,6 +107,10 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
       <div
+        ref={trapRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
         className="w-full max-w-lg mx-auto rounded-t-3xl md:rounded-3xl max-h-[92vh] overflow-y-auto md:shadow-2xl"
         style={{ background: 'var(--surface)' }}
         onClick={e => e.stopPropagation()}

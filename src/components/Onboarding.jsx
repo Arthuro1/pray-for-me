@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BookHeart, CalendarDays, Users, Sparkles } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 // First-run intro. Shown once (gated by localStorage in App) to orient new users.
 const STEPS = [
@@ -14,6 +15,7 @@ const STEPS = [
 export default function Onboarding({ lang = 'en', onFinish, onAddPrayer }) {
   const [step, setStep] = useState(0);
   useEscapeKey(onFinish);
+  const trapRef = useFocusTrap();
   const isLast = step === STEPS.length - 1;
   const { icon: Icon, titleKey, bodyKey } = STEPS[step];
 
@@ -24,7 +26,7 @@ export default function Onboarding({ lang = 'en', onFinish, onAddPrayer }) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)' }}>
-      <div className="w-full max-w-sm rounded-3xl p-6 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" className="w-full max-w-sm rounded-3xl p-6 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
         <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'var(--accent-soft)' }}>
           <Icon size={30} style={{ color: 'var(--accent)' }} />
         </div>

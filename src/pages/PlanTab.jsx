@@ -7,6 +7,7 @@ import { toast } from '../store/toastStore';
 import { prayerOnDay } from '../utils/prayer';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
@@ -22,6 +23,7 @@ export default function PlanTab() {
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   useEscapeKey(selectedDay !== null ? () => setSelectedDay(null) : null);
+  const dayTrapRef = useFocusTrap(selectedDay !== null);
 
   // Number of active prayers that land on a given weekday.
   const countForDay = (dayIdx) => {
@@ -104,7 +106,7 @@ export default function PlanTab() {
       {/* Day-centric editor: tap a day to toggle which categories you pray that day */}
       {selectedDay !== null && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={() => setSelectedDay(null)}>
-          <div className="w-full max-w-md rounded-2xl p-5 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
+          <div ref={dayTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={DAYS[selectedDay]} className="w-full max-w-md rounded-2xl p-5 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-1">
               <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{DAYS[selectedDay]}</h3>
               <button onClick={() => setSelectedDay(null)} style={{ color: 'var(--text-3)' }}><X size={18} /></button>

@@ -16,6 +16,7 @@ import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import ShareButtons from '../components/ShareButtons';
 import { useEscapeKey } from '../hooks/useEscapeKey';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 import { QRCodeSVG } from 'qrcode.react';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
@@ -213,9 +214,10 @@ function CommunityHub({ lang, userId, onViewGroup }) {
 // ── Modal shell ──────────────────────────────────────────────────────────────
 function Modal({ title, onClose, lang, children }) {
   useEscapeKey(onClose);
+  const trapRef = useFocusTrap();
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
-      <div role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl p-5" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
+      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl p-5" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{title}</h3>
           <button onClick={onClose} aria-label={t(lang, 'close')} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
