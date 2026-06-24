@@ -288,5 +288,7 @@ export default {
   "dataTitle": "داده‌های شما",
   "exportData": "برون‌بری دعاهای من",
   "exportDataSub": "همه دعاها و شهادت‌های خود را در یک فایل دانلود کنید.",
-  "exportDone": "برون‌بری دانلود شد 🙏"
+  "exportDone": "برون‌بری دانلود شد 🙏",
+  "streak": "{n} روز پیاپی",
+  "thisWeek": "این هفته"
 };

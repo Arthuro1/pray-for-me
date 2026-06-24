@@ -288,5 +288,7 @@ export default {
   "dataTitle": "Data yako",
   "exportData": "Hamisha maombi yangu",
   "exportDataSub": "Pakua maombi na ushuhuda wako wote kama faili.",
-  "exportDone": "Uhamishaji umepakuliwa 🙏"
+  "exportDone": "Uhamishaji umepakuliwa 🙏",
+  "streak": "siku {n} mfululizo",
+  "thisWeek": "wiki hii"
 };

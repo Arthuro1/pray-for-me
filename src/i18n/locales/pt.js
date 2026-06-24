@@ -288,5 +288,7 @@ export default {
   "dataTitle": "Seus dados",
   "exportData": "Exportar minhas orações",
   "exportDataSub": "Baixe todas as suas orações e testemunhos em um arquivo.",
-  "exportDone": "Exportação baixada 🙏"
+  "exportDone": "Exportação baixada 🙏",
+  "streak": "{n} dias seguidos",
+  "thisWeek": "esta semana"
 };

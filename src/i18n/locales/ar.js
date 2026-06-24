@@ -288,5 +288,7 @@ export default {
   "dataTitle": "بياناتك",
   "exportData": "تصدير صلواتي",
   "exportDataSub": "نزّل جميع صلواتك وشهاداتك في ملف واحد.",
-  "exportDone": "تم تنزيل التصدير 🙏"
+  "exportDone": "تم تنزيل التصدير 🙏",
+  "streak": "{n} أيام متتالية",
+  "thisWeek": "هذا الأسبوع"
 };

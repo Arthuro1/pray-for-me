@@ -288,5 +288,7 @@ export default {
   "dataTitle": "Vos données",
   "exportData": "Exporter mes prières",
   "exportDataSub": "Téléchargez toutes vos prières et témoignages en un fichier.",
-  "exportDone": "Export téléchargé 🙏"
+  "exportDone": "Export téléchargé 🙏",
+  "streak": "{n} jours de prière",
+  "thisWeek": "cette semaine"
 };

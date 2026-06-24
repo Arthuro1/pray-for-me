@@ -288,5 +288,7 @@ export default {
   "dataTitle": "Ang iyong data",
   "exportData": "I-export ang aking mga panalangin",
   "exportDataSub": "I-download ang lahat ng iyong panalangin at patotoo bilang file.",
-  "exportDone": "Na-download ang export 🙏"
+  "exportDone": "Na-download ang export 🙏",
+  "streak": "{n} araw na sunod-sunod",
+  "thisWeek": "ngayong linggo"
 };

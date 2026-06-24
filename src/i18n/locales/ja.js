@@ -288,5 +288,7 @@ export default {
   "dataTitle": "あなたのデータ",
   "exportData": "祈りをエクスポート",
   "exportDataSub": "すべての祈りと証しをファイルとしてダウンロードします。",
-  "exportDone": "エクスポートをダウンロードしました 🙏"
+  "exportDone": "エクスポートをダウンロードしました 🙏",
+  "streak": "{n}日連続",
+  "thisWeek": "今週"
 };

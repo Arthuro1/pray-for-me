@@ -288,5 +288,7 @@ export default {
   "dataTitle": "Data Anda",
   "exportData": "Ekspor doa saya",
   "exportDataSub": "Unduh semua doa dan kesaksian Anda sebagai file.",
-  "exportDone": "Ekspor diunduh 🙏"
+  "exportDone": "Ekspor diunduh 🙏",
+  "streak": "{n} hari berturut-turut",
+  "thisWeek": "minggu ini"
 };

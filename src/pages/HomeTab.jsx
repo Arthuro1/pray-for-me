@@ -11,6 +11,7 @@ import { Sparkles, Loader2, Plus } from 'lucide-react';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
+import { computeStreak, weeklyRecap } from '../utils/streak';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -194,6 +195,8 @@ export default function HomeTab({ onAdd }) {
   const todayCategories = categories.filter((c) => c.week_days && c.week_days.includes(dayIndex));
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const activeCount = prayers.filter((p) => p.status === 'active').length;
+  const streak = computeStreak(prayers, today);
+  const recap = weeklyRecap(prayers, today);
 
   useEffect(() => {
     const dateKey = today.toISOString().slice(0, 10);
@@ -288,6 +291,22 @@ export default function HomeTab({ onAdd }) {
       </div>
 
       <div className="px-4 md:px-8 pt-5">
+        {/* Prayer streak + weekly recap */}
+        {streak >= 2 && (
+          <div className="rounded-2xl px-4 py-3 mb-3 flex items-center justify-between gap-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+            <span className="text-sm font-semibold flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
+              🔥 {t(lang, 'streak', { n: streak })}
+            </span>
+            {(recap.answered > 0 || recap.testimonies > 0) && (
+              <span className="text-xs flex items-center gap-2" style={{ color: 'var(--text-3)' }}>
+                {recap.answered > 0 && <span>🙌 {recap.answered}</span>}
+                {recap.testimonies > 0 && <span>🎉 {recap.testimonies}</span>}
+                · {t(lang, 'thisWeek')}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {[

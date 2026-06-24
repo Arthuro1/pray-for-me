@@ -288,5 +288,7 @@ export default {
   "dataTitle": "የእርስዎ መረጃ",
   "exportData": "ጸሎቶቼን ላክ",
   "exportDataSub": "ሁሉንም ጸሎቶችዎን እና ምስክርነቶችዎን እንደ ፋይል ያውርዱ።",
-  "exportDone": "ወደ ውጭ መላክ ወርዷል 🙏"
+  "exportDone": "ወደ ውጭ መላክ ወርዷል 🙏",
+  "streak": "{n} ተከታታይ ቀናት",
+  "thisWeek": "በዚህ ሳምንት"
 };

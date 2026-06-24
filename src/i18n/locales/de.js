@@ -288,5 +288,7 @@ export default {
   "dataTitle": "Deine Daten",
   "exportData": "Meine Gebete exportieren",
   "exportDataSub": "Lade alle deine Gebete und Zeugnisse als Datei herunter.",
-  "exportDone": "Export heruntergeladen 🙏"
+  "exportDone": "Export heruntergeladen 🙏",
+  "streak": "{n} Tage in Folge",
+  "thisWeek": "diese Woche"
 };
