@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, Trash2, Check, LogOut, Search } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -10,6 +10,7 @@ import { timeAgo } from '../utils/date';
 import { getAuthorName } from '../utils/user';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
+import PrayerListSkeleton from '../components/Skeleton';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
@@ -82,7 +83,11 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-20"><Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>;
+    return (
+      <div className="px-5 md:px-8 py-6 max-w-4xl mx-auto">
+        <PrayerListSkeleton count={3} />
+      </div>
+    );
   }
 
   return (
@@ -351,11 +356,15 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers } = useCommunityStore();
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup } = useCommunityStore();
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
   const [subTab, setSubTab] = useState('requests');
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showLeave, setShowLeave] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const [search, setSearch] = useState('');
+  const [reqFilter, setReqFilter] = useState('all');
   const reconciledRef = useRef(null);
 
   // Always (re)fetch on entering a group so freshly synced points/updates from
@@ -372,6 +381,17 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
   const group = groups.find(g => g.id === groupId);
   const isAdmin = group?.role === 'admin';
+
+  const filteredPrayers = prayers.filter(p => {
+    if (reqFilter === 'active' && p.is_answered) return false;
+    if (reqFilter === 'answered' && !p.is_answered) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const hay = `${p.title} ${p.description || ''} ${p.is_anonymous ? '' : p.author_name || ''}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
 
   // Copy group requests (not mine, not already linked) into the personal list.
   const reconcileAutoAdd = async () => {
@@ -397,18 +417,43 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     if (next) await reconcileAutoAdd();
   };
 
+  const handleLeave = async () => {
+    setLeaving(true);
+    const res = await leaveGroup(groupId, user.id);
+    setLeaving(false);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    onBack();
+  };
+
   return (
     <div style={{ background: 'var(--bg)' }}>
       <div className="px-5 md:px-8 pt-4 pb-2 flex items-center justify-between max-w-4xl mx-auto">
         <button onClick={onBack} className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           <ArrowLeft size={16} /> {t(lang, 'community')}
         </button>
-        {isAdmin && (
-          <button onClick={() => setShowAdmin(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
-            <Settings size={14} /> {t(lang, 'manageGroup')}
+        <div className="flex items-center gap-2">
+          {isAdmin && (
+            <button onClick={() => setShowAdmin(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
+              <Settings size={14} /> {t(lang, 'manageGroup')}
+            </button>
+          )}
+          <button onClick={() => setShowLeave(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
+            <LogOut size={14} /> {t(lang, 'leaveGroup')}
           </button>
-        )}
+        </div>
       </div>
+
+      {showLeave && (
+        <Modal title={t(lang, 'leaveGroup')} onClose={() => setShowLeave(false)}>
+          <p className="text-sm mb-5" style={{ color: 'var(--text-2)' }}>{t(lang, 'leaveGroupConfirm')}</p>
+          <div className="flex gap-2">
+            <button onClick={() => setShowLeave(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={SUBTLE_BTN}>{t(lang, 'cancel')}</button>
+            <button onClick={handleLeave} disabled={leaving} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: '#e53e3e' }}>
+              {leaving ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'leaveGroup')}
+            </button>
+          </div>
+        </Modal>
+      )}
 
       {showNewRequest && <PrayerForm communityMode onClose={() => setShowNewRequest(false)}
         onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
@@ -438,17 +483,37 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
         {subTab === 'requests' && (
           <>
-            <button onClick={() => setShowNewRequest(true)} className="flex items-center gap-2 w-full py-3 rounded-xl text-sm font-medium mb-5 justify-center text-white" style={{ background: 'var(--accent)' }}>
+            <button onClick={() => setShowNewRequest(true)} className="flex items-center gap-2 w-full py-3 rounded-xl text-sm font-medium mb-4 justify-center text-white" style={{ background: 'var(--accent)' }}>
               <Plus size={16} /> {t(lang, 'newRequest')}
             </button>
 
+            {prayers.length > 0 && (
+              <div className="mb-4 space-y-2.5">
+                <div className="relative">
+                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+                  <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
+                    className="w-full text-sm rounded-xl pl-9 pr-3 py-2.5 focus:outline-none" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }} />
+                </div>
+                <div className="flex gap-2">
+                  {['all', 'active', 'answered'].map(f => (
+                    <button key={f} onClick={() => setReqFilter(f)} className="text-xs px-3 py-1.5 rounded-full font-medium"
+                      style={reqFilter === f ? { background: 'var(--accent)', color: '#fff' } : SUBTLE_BTN}>
+                      {t(lang, f === 'all' ? 'all' : f === 'active' ? 'active' : 'answered')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {loading ? (
-              <div className="flex justify-center py-12"><Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+              <PrayerListSkeleton />
             ) : prayers.length === 0 ? (
               <Empty lang={lang} title="noRequests" />
+            ) : filteredPrayers.length === 0 ? (
+              <p className="text-center text-sm py-10" style={{ color: 'var(--text-3)' }}>{t(lang, 'noMatch')}</p>
             ) : (
               <div className="flex flex-col gap-3">
-                {prayers.map(p => (
+                {filteredPrayers.map(p => (
                   <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style={CARD_STYLE}>
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <p className="text-xs" style={{ color: 'var(--text-3)' }}>

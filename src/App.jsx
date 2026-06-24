@@ -49,7 +49,7 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
 
   const { user, loading: authLoading, init } = useAuthStore();
-  const { settings, prayers, categories, loadData, loading: dataLoading } = usePrayerStore();
+  const { settings, prayers, categories, loadData } = usePrayerStore();
   const { loadTranslations, translateContent } = useTranslationStore();
   const { fetchPendingCount, subscribePending } = useCommunityStore();
 
@@ -113,18 +113,6 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         {showAuth ? <AuthPage /> : <LandingPage onGetStarted={() => setShowAuth(true)} />}
       </Suspense>
-    );
-  }
-
-  if (dataLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <img src="/logo.svg" alt="Pray4Me" className="w-14 h-14 rounded-2xl mx-auto mb-3" />
-          <Loader2 className="animate-spin mx-auto text-indigo-600" size={22} />
-          <p className="text-sm text-slate-400 mt-2">Chargement de vos prières...</p>
-        </div>
-      </div>
     );
   }
 

@@ -229,14 +229,15 @@ const useCommunityStore = create((set, get) => ({
   },
 
   leaveGroup: async (groupId, userId) => {
-    await supabase.from('group_members').delete().eq('group_id', groupId).eq('user_id', userId);
-    const groups = get().groups.filter(g => g.id !== groupId);
-    const newActive = groups[0]?.id ?? null;
-    set({ groups, activeGroupId: newActive, prayers: [], testimonies: [] });
-    if (newActive) {
-      get().fetchPrayers(newActive);
-      get().fetchTestimonies(newActive);
-    }
+    const { error } = await supabase.from('group_members').delete().eq('group_id', groupId).eq('user_id', userId);
+    if (error) return toError(error);
+    set(state => ({
+      groups: state.groups.filter(g => g.id !== groupId),
+      activeGroupId: state.activeGroupId === groupId ? null : state.activeGroupId,
+      prayers: [],
+      testimonies: [],
+    }));
+    return {};
   },
 
   // Per-member preference: auto-copy this group's new requests to the personal list.

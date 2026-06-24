@@ -235,5 +235,8 @@ export default {
   "donateComingSoon": "Coming soon",
   "donateThanks": "Every contribution matters. God bless you. 🙏",
   "close": "Close",
-  "errorGeneric": "Something went wrong. Please try again."
+  "errorGeneric": "Something went wrong. Please try again.",
+  "leaveGroupConfirm": "Are you sure you want to leave this group?",
+  "searchRequests": "Search a request...",
+  "noMatch": "No results"
 };

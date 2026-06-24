@@ -235,5 +235,8 @@ export default {
   "donateComingSoon": "Bientôt",
   "donateThanks": "Chaque contribution compte. Que Dieu vous bénisse. 🙏",
   "close": "Fermer",
-  "errorGeneric": "Une erreur est survenue. Réessayez."
+  "errorGeneric": "Une erreur est survenue. Réessayez.",
+  "leaveGroupConfirm": "Êtes-vous sûr de vouloir quitter ce groupe ?",
+  "searchRequests": "Rechercher une requête...",
+  "noMatch": "Aucun résultat"
 };

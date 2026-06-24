@@ -8,6 +8,7 @@ import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Sparkles, Loader2, Plus, User } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
+import PrayerListSkeleton from '../components/Skeleton';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -170,7 +171,7 @@ const VERSES = {
 
 export default function HomeTab({ onAdd }) {
   const navigate = useNavigate();
-  const { getTodaysPrayers, categories, prayers, settings, addPrayer } = usePrayerStore();
+  const { getTodaysPrayers, categories, prayers, settings, addPrayer, loading } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
   const [daySuggestions, setDaySuggestions] = useState([]);
@@ -334,7 +335,11 @@ export default function HomeTab({ onAdd }) {
           </div>
         </div>
 
-        {todaysPrayers.length === 0 && (
+        {loading && prayers.length === 0 && (
+          <div className="mb-4"><PrayerListSkeleton count={3} /></div>
+        )}
+
+        {!loading && todaysPrayers.length === 0 && (
           <div className="rounded-2xl p-6 mb-4 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-4xl mb-3">🕊️</p>
             <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'emptyEncourage')}</p>

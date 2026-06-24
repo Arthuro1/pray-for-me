@@ -65,7 +65,7 @@ const usePrayerStore = create((set, get) => ({
     })(),
     theme: localStorage.getItem('pfm_theme') || 'light',
   },
-  loading: false,
+  loading: true, // starts true so the first paint shows skeletons, not an empty flash
 
   // ─── Load all data ───────────────────────────────────────────
   loadData: async (userId) => {

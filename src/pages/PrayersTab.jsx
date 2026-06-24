@@ -4,13 +4,14 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
+import PrayerListSkeleton from '../components/Skeleton';
 import { Search, SlidersHorizontal, Users, User, EyeOff, HeartHandshake } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 
 export default function PrayersTab() {
   const navigate = useNavigate();
-  const { prayers, categories, settings } = usePrayerStore();
+  const { prayers, categories, settings, loading } = usePrayerStore();
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
   const { prayerShares, fetchPrayerShares } = useCommunityStore();
@@ -105,11 +106,15 @@ export default function PrayersTab() {
           </div>
         )}
 
-        <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
-          {sorted.length} {sorted.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
-        </p>
+        {!(loading && prayers.length === 0) && (
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
+            {sorted.length} {sorted.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
+          </p>
+        )}
 
-        {sorted.length === 0 ? (
+        {loading && prayers.length === 0 ? (
+          <PrayerListSkeleton count={5} />
+        ) : sorted.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-5xl mb-3">🙏</p>
             <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersFound')}</p>
