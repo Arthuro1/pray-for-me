@@ -309,5 +309,10 @@ export default {
   "followsGroup": "يتابع هذه الصلاة المشتركة — حرّرها في المجتمع للمساهمة",
   "removeFromList": "إزالة من قائمتي",
   "removeFromListConfirm": "تُزال من قائمتك ولن تُحتسب ضمن المصلّين. يبقى الطلب في المجتمع.",
-  "groupOptions": "خيارات المجموعة"
+  "groupOptions": "خيارات المجموعة",
+  "prayNow": "صلِّ الآن",
+  "prayedBtn": "صلّيت",
+  "skip": "تخطّي",
+  "sessionDoneTitle": "وقت مبارك 🙏",
+  "sessionDoneSub": "صلّيت اليوم من أجل {n} موضوعًا."
 };

@@ -309,5 +309,10 @@ export default {
   "followsGroup": "Inafuata ombi hili lililoshirikiwa — lihariri katika Jumuiya ili kuchangia",
   "removeFromList": "Ondoa kwenye orodha yangu",
   "removeFromListConfirm": "Inaondolewa kwenye orodha yako na hutahesabiwa tena miongoni mwa wanaoomba. Ombi linabaki katika jumuiya.",
-  "groupOptions": "Chaguo za kikundi"
+  "groupOptions": "Chaguo za kikundi",
+  "prayNow": "Omba sasa",
+  "prayedBtn": "Nimeomba",
+  "skip": "Ruka",
+  "sessionDoneTitle": "Wakati wa baraka 🙏",
+  "sessionDoneSub": "Umeomba kwa ajili ya mambo {n} leo."
 };

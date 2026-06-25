@@ -309,5 +309,10 @@ export default {
   "followsGroup": "Segue esta oração compartilhada — edite-a na Comunidade para contribuir",
   "removeFromList": "Remover da minha lista",
   "removeFromListConfirm": "Remove da sua lista e você deixa de contar entre os que oram. O pedido permanece na comunidade.",
-  "groupOptions": "Opções do grupo"
+  "groupOptions": "Opções do grupo",
+  "prayNow": "Orar agora",
+  "prayedBtn": "Orei",
+  "skip": "Pular",
+  "sessionDoneTitle": "Tempo bem gasto 🙏",
+  "sessionDoneSub": "Você orou por {n} assunto(s) hoje."
 };

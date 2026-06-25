@@ -309,5 +309,10 @@ export default {
   "followsGroup": "关注此共享祷告——在社区中编辑以参与",
   "removeFromList": "从我的列表中移除",
   "removeFromListConfirm": "将其从你的列表中移除，你将不再计入祷告人数。该请求仍保留在社区中。",
-  "groupOptions": "群组选项"
+  "groupOptions": "群组选项",
+  "prayNow": "现在祷告",
+  "prayedBtn": "已祷告",
+  "skip": "跳过",
+  "sessionDoneTitle": "美好的时光 🙏",
+  "sessionDoneSub": "今天你为 {n} 个事项祷告了。"
 };

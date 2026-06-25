@@ -33,6 +33,18 @@ describe('computeStreak', () => {
     const prayers = [{ created_at: day(today, 0), updated_at: day(today, 0), answered_at: day(today, 0) }];
     expect(computeStreak(prayers, today)).toBe(1);
   });
+
+  // A completed guided prayer session counts as activity via extraDays.
+  const dayStr = (ref, n) => { const d = new Date(ref); d.setDate(d.getDate() + n); const p = (x) => String(x).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; };
+
+  it('counts a prayed-session day even with no prayer activity', () => {
+    expect(computeStreak([], today, [dayStr(today, 0)])).toBe(1);
+  });
+
+  it('merges session days with prayer activity to extend the streak', () => {
+    const prayers = [{ created_at: day(today, 0) }];
+    expect(computeStreak(prayers, today, [dayStr(today, -1)])).toBe(2);
+  });
 });
 
 describe('weeklyRecap', () => {

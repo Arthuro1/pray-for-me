@@ -309,5 +309,10 @@ export default {
   "followsGroup": "이 공유 기도를 팔로우 중 — 참여하려면 커뮤니티에서 편집하세요",
   "removeFromList": "내 목록에서 제거",
   "removeFromListConfirm": "내 목록에서 제거되며 기도하는 사람 수에서 빠집니다. 요청은 커뮤니티에 남습니다.",
-  "groupOptions": "그룹 옵션"
+  "groupOptions": "그룹 옵션",
+  "prayNow": "지금 기도하기",
+  "prayedBtn": "기도함",
+  "skip": "건너뛰기",
+  "sessionDoneTitle": "귀한 시간 🙏",
+  "sessionDoneSub": "오늘 {n}개의 기도 제목을 위해 기도했습니다."
 };

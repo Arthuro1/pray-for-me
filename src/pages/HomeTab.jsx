@@ -7,11 +7,13 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart } from 'lucide-react';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
+import PrayerSession from '../components/PrayerSession';
 import { computeStreak, weeklyRecap } from '../utils/streak';
+import { getPrayedDays, markPrayedToday } from '../lib/prayedLog';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -186,6 +188,8 @@ export default function HomeTab({ onAdd }) {
   const [addedTitles, setAddedTitles] = useState(new Set());
   const [verse, setVerse] = useState(null);
   const [showAiConsent, setShowAiConsent] = useState(false);
+  const [showSession, setShowSession] = useState(false);
+  const [prayedDays, setPrayedDays] = useState(getPrayedDays);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
 
@@ -195,7 +199,7 @@ export default function HomeTab({ onAdd }) {
   const todayCategories = categories.filter((c) => c.week_days && c.week_days.includes(dayIndex));
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const activeCount = prayers.filter((p) => p.status === 'active').length;
-  const streak = computeStreak(prayers, today);
+  const streak = computeStreak(prayers, today, prayedDays);
   const recap = weeklyRecap(prayers, today);
 
   useEffect(() => {
@@ -253,6 +257,16 @@ export default function HomeTab({ onAdd }) {
 
   return (
     <div>
+      {showSession && todaysPrayers.length > 0 && (
+        <PrayerSession
+          prayers={todaysPrayers}
+          categories={categories}
+          lang={lang}
+          tr={tr}
+          onClose={() => setShowSession(false)}
+          onComplete={() => setPrayedDays(markPrayedToday())}
+        />
+      )}
       {showAiConsent && (
         <AiConsentModal
           lang={lang}
@@ -397,6 +411,16 @@ export default function HomeTab({ onAdd }) {
               )}
             </div>
           </div>
+        )}
+
+        {todaysPrayers.length > 0 && (
+          <button
+            onClick={() => setShowSession(true)}
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white mb-3 transition-all"
+            style={{ background: 'var(--accent)' }}
+          >
+            <HandHeart size={17} /> {t(lang, 'prayNow')}
+          </button>
         )}
 
         {todaysPrayers.length > 0 && (

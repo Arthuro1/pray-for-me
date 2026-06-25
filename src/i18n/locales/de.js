@@ -309,5 +309,10 @@ export default {
   "followsGroup": "Folgt diesem geteilten Gebet — bearbeite es in der Community, um beizutragen",
   "removeFromList": "Aus meiner Liste entfernen",
   "removeFromListConfirm": "Wird aus deiner Liste entfernt; du zählst nicht mehr zu den Betenden. Das Anliegen bleibt in der Gemeinschaft.",
-  "groupOptions": "Gruppenoptionen"
+  "groupOptions": "Gruppenoptionen",
+  "prayNow": "Jetzt beten",
+  "prayedBtn": "Gebetet",
+  "skip": "Überspringen",
+  "sessionDoneTitle": "Gut genutzte Zeit 🙏",
+  "sessionDoneSub": "Du hast heute für {n} Anliegen gebetet."
 };

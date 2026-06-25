@@ -309,5 +309,10 @@ export default {
   "followsGroup": "Mengikuti doa bersama ini — edit di Komunitas untuk berkontribusi",
   "removeFromList": "Hapus dari daftar saya",
   "removeFromListConfirm": "Dihapus dari daftar Anda dan Anda tidak lagi dihitung di antara yang berdoa. Permintaan tetap ada di komunitas.",
-  "groupOptions": "Opsi grup"
+  "groupOptions": "Opsi grup",
+  "prayNow": "Berdoa sekarang",
+  "prayedBtn": "Sudah berdoa",
+  "skip": "Lewati",
+  "sessionDoneTitle": "Waktu yang berharga 🙏",
+  "sessionDoneSub": "Hari ini Anda mendoakan {n} pokok doa."
 };

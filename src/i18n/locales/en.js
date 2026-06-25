@@ -309,5 +309,10 @@ export default {
   "followsGroup": "Follows this shared prayer — edit it in Community to contribute",
   "removeFromList": "Remove from my list",
   "removeFromListConfirm": "Removes it from your list and you'll no longer count among those praying. The request stays in the community.",
-  "groupOptions": "Group options"
+  "groupOptions": "Group options",
+  "prayNow": "Pray now",
+  "prayedBtn": "Prayed",
+  "skip": "Skip",
+  "sessionDoneTitle": "Time well spent 🙏",
+  "sessionDoneSub": "You prayed through {n} subject(s) today."
 };

@@ -20,8 +20,11 @@ export function activityDays(prayers = []) {
 
 // Consecutive days of journal activity ending today (or yesterday, so the
 // streak survives until the day is over). Returns 0 if neither has activity.
-export function computeStreak(prayers = [], today = new Date()) {
+// `extraDays` are 'YYYY-MM-DD' strings (e.g. completed guided prayer sessions)
+// that count as activity even without a prayer edit that day.
+export function computeStreak(prayers = [], today = new Date(), extraDays = []) {
   const days = activityDays(prayers);
+  extraDays.forEach((d) => days.add(d));
   if (days.size === 0) return 0;
   let cursor = startOfDay(today);
   if (!days.has(dayKey(cursor))) {

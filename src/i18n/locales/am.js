@@ -309,5 +309,10 @@ export default {
   "followsGroup": "ይህን የተጋራ ጸሎት ይከታተላል — ለማበርከት በማኅበረሰብ ውስጥ ያስተካክሉ",
   "removeFromList": "ከዝርዝሬ አስወግድ",
   "removeFromListConfirm": "ከዝርዝርዎ ይወገዳል እና ከሚጸልዩት መካከል አይቆጠሩም። ጥያቄው በማኅበረሰቡ ውስጥ ይቆያል።",
-  "groupOptions": "የቡድን አማራጮች"
+  "groupOptions": "የቡድን አማራጮች",
+  "prayNow": "አሁን ጸልይ",
+  "prayedBtn": "ጸለይኩ",
+  "skip": "ዝለል",
+  "sessionDoneTitle": "የተባረከ ጊዜ 🙏",
+  "sessionDoneSub": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።"
 };

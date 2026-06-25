@@ -309,5 +309,10 @@ export default {
   "followsGroup": "Suit cette prière partagée — modifiez-la dans la Communauté pour contribuer",
   "removeFromList": "Retirer de ma liste",
   "removeFromListConfirm": "Retiré de votre liste ; vous ne comptez plus parmi ceux qui prient. La demande reste dans la communauté.",
-  "groupOptions": "Options du groupe"
+  "groupOptions": "Options du groupe",
+  "prayNow": "Prier maintenant",
+  "prayedBtn": "Prié",
+  "skip": "Passer",
+  "sessionDoneTitle": "Temps béni 🙏",
+  "sessionDoneSub": "Vous avez prié pour {n} sujet(s) aujourd’hui."
 };

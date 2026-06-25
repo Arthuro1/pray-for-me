@@ -309,5 +309,10 @@ export default {
   "followsGroup": "この共有された祈りをフォロー中 — 貢献するにはコミュニティで編集",
   "removeFromList": "リストから削除",
   "removeFromListConfirm": "リストから削除され、祈っている人数に数えられなくなります。リクエストはコミュニティに残ります。",
-  "groupOptions": "グループのオプション"
+  "groupOptions": "グループのオプション",
+  "prayNow": "今すぐ祈る",
+  "prayedBtn": "祈った",
+  "skip": "スキップ",
+  "sessionDoneTitle": "祝された時間 🙏",
+  "sessionDoneSub": "今日は{n}件のために祈りました。"
 };
