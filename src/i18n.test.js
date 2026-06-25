@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { t, LANGUAGES, isLocaleLoaded } from './i18n.js';
+import { t, LANGUAGES, isLocaleLoaded, resolveLanguage } from './i18n.js';
 import fr from './i18n/locales/fr.js';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
@@ -61,6 +61,25 @@ describe('LANGUAGES', () => {
     expect(LANGUAGES).toHaveLength(16);
     expect(isLocaleLoaded('fr')).toBe(true);
     expect(isLocaleLoaded('en')).toBe(false);
+  });
+});
+
+describe('resolveLanguage', () => {
+  it('keeps a saved choice for ANY supported language (not just the original 4)', () => {
+    // Regression: previously only fr/en/de/pt survived a reload.
+    for (const { code } of LANGUAGES) {
+      expect(resolveLanguage(code, 'en-US')).toBe(code);
+    }
+  });
+
+  it('falls back to the browser language when nothing is saved', () => {
+    expect(resolveLanguage(null, 'es-ES')).toBe('es');
+    expect(resolveLanguage(undefined, 'ja')).toBe('ja');
+  });
+
+  it('falls back to English for an unsupported saved value or browser language', () => {
+    expect(resolveLanguage('xx', 'zz-ZZ')).toBe('en');
+    expect(resolveLanguage(null, null)).toBe('fr'); // navLang '' → 'fr' slice is supported
   });
 });
 

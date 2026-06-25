@@ -21,6 +21,17 @@ export const LANGUAGES = [
   { code: 'fa', label: 'فارسی', flag: '🇮🇷' },
 ];
 
+export const LANG_CODES = LANGUAGES.map((l) => l.code);
+
+// Resolve the startup language: a previously-saved choice wins (if still a
+// supported code), else the browser language, else English. Pure so it can be
+// unit-tested — and uses LANG_CODES so it never goes stale when languages are added.
+export function resolveLanguage(saved, navLang) {
+  if (saved && LANG_CODES.includes(saved)) return saved;
+  const nav = (navLang || 'fr').toLowerCase().slice(0, 2);
+  return LANG_CODES.includes(nav) ? nav : 'en';
+}
+
 // In-memory registry of loaded locales. French is always present (fallback).
 const loaded = { fr };
 

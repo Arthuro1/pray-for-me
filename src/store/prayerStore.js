@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
+import { resolveLanguage } from '../i18n';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -57,12 +58,7 @@ const usePrayerStore = create((set, get) => ({
     followUpDays: 7,
     callReminderEnabled: false,
     notificationsGranted: false,
-    language: (() => {
-      const saved = localStorage.getItem('pfm_language');
-      if (saved && ['fr', 'en', 'de', 'pt'].includes(saved)) return saved;
-      const nav = (navigator.language || navigator.userLanguage || 'fr').toLowerCase().slice(0, 2);
-      return ['fr', 'en', 'de', 'pt'].includes(nav) ? nav : 'en';
-    })(),
+    language: resolveLanguage(localStorage.getItem('pfm_language'), navigator.language || navigator.userLanguage),
     theme: localStorage.getItem('pfm_theme') || 'light',
   },
   loading: true, // starts true so the first paint shows skeletons, not an empty flash
