@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import Toaster from './components/Toaster';
+import ConfirmHost from './components/ConfirmHost';
 import OfflineBanner from './components/OfflineBanner';
 import SyncIndicator from './components/SyncIndicator';
 import Onboarding from './components/Onboarding';
@@ -227,6 +228,7 @@ export default function App() {
       <OfflineBanner />
       <SyncIndicator />
       <Toaster />
+      <ConfirmHost />
       <Analytics />
       <SpeedInsights />
     </>

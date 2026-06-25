@@ -320,5 +320,6 @@ export default {
   "resume": "Ibalik",
   "prayerDeleted": "Tinanggal ang panalangin",
   "removedFromList": "Inalis sa iyong listahan",
-  "testimonies": "Mga patotoo"
+  "testimonies": "Mga patotoo",
+  "options": "Mga opsyon"
 };

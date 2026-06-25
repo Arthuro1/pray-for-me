@@ -320,5 +320,6 @@ export default {
   "resume": "ازسرگیری",
   "prayerDeleted": "دعا حذف شد",
   "removedFromList": "از فهرست شما حذف شد",
-  "testimonies": "شهادت‌ها"
+  "testimonies": "شهادت‌ها",
+  "options": "گزینه‌ها"
 };

@@ -320,5 +320,6 @@ export default {
   "resume": "再開",
   "prayerDeleted": "祈りを削除しました",
   "removedFromList": "リストから削除しました",
-  "testimonies": "証し"
+  "testimonies": "証し",
+  "options": "オプション"
 };

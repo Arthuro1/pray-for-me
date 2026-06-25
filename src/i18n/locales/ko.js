@@ -320,5 +320,6 @@ export default {
   "resume": "다시 활성",
   "prayerDeleted": "기도를 삭제함",
   "removedFromList": "목록에서 제거함",
-  "testimonies": "간증"
+  "testimonies": "간증",
+  "options": "옵션"
 };

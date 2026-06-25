@@ -320,5 +320,6 @@ export default {
   "resume": "Aktifkan",
   "prayerDeleted": "Doa dihapus",
   "removedFromList": "Dihapus dari daftar Anda",
-  "testimonies": "Kesaksian"
+  "testimonies": "Kesaksian",
+  "options": "Opsi"
 };

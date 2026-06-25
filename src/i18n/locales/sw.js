@@ -320,5 +320,6 @@ export default {
   "resume": "Rejesha",
   "prayerDeleted": "Ombi limefutwa",
   "removedFromList": "Imeondolewa kwenye orodha yako",
-  "testimonies": "Ushuhuda"
+  "testimonies": "Ushuhuda",
+  "options": "Chaguo"
 };

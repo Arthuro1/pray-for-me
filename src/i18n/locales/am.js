@@ -320,5 +320,6 @@ export default {
   "resume": "መልስ",
   "prayerDeleted": "ጸሎት ተሰርዟል",
   "removedFromList": "ከዝርዝርዎ ተወግዷል",
-  "testimonies": "ምስክርነቶች"
+  "testimonies": "ምስክርነቶች",
+  "options": "አማራጮች"
 };

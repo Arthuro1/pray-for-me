@@ -320,5 +320,6 @@ export default {
   "resume": "Reanudar",
   "prayerDeleted": "Oración eliminada",
   "removedFromList": "Eliminado de tu lista",
-  "testimonies": "Testimonios"
+  "testimonies": "Testimonios",
+  "options": "Opciones"
 };

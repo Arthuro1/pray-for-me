@@ -345,14 +345,14 @@ const usePrayerStore = create((set, get) => ({
     if (p) get().updatePrayer(id, { pinned: !p.pinned });
   },
 
-  // Immediate, non-undoable delete (used internally when a soft-delete commits).
+  // Immediate delete (callers warn the user first). Optimistic + offline-queued.
   deletePrayer: async (id) => {
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
     enqueue('deletePrayer', { id });
   },
 
   // Optimistically hide a prayer and defer the real delete, so an "Undo" toast
-  // can cancel it. Returns the removed prayer (for callers that want a snapshot).
+  // can cancel it. Used for low-stakes removals (unfollowing a saved copy).
   softDeletePrayer: (id) => {
     const prayer = get().prayers.find((p) => p.id === id);
     if (!prayer) return null;

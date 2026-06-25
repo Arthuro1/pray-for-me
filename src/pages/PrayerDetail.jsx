@@ -18,6 +18,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
+import OverflowMenu from '../components/OverflowMenu';
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
@@ -73,7 +74,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
-  const { removeWithUndo } = usePrayerActions(lang);
+  const { removePrayer } = usePrayerActions(lang);
 
   // ── Community mode effects & handlers ────────────────────────────────────
   useEffect(() => {
@@ -310,12 +311,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     }
   };
 
-  // Remove (own prayer) / unfollow (saved copy) — reversible via an Undo toast
-  // (the reaction is re-added on undo for saved copies), so no confirm dialog.
-  const handleDelete = () => {
-    removeWithUndo(livePrayer);
-    onBack();
-  };
+  // Own prayer → warn first; saved copy → instant unfollow + Undo. Then navigate back.
+  const handleDelete = () => removePrayer(livePrayer, onBack);
 
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
 
@@ -435,16 +432,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         <div className="flex items-center gap-2 shrink-0">
           {isCommunity ? (
             <>
-              {canEditCommunityPrayer && (
-                <>
-                  <button onClick={() => setShowCommunityEdit(true)} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-                    <Edit2 size={15} />
-                  </button>
-                  <button onClick={() => setShowDeleteConfirm(true)} title={t(lang, 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-                    <Trash2 size={15} />
-                  </button>
-                </>
-              )}
+              {/* Author/admin management tucked into an overflow menu; the primary
+                  "I'm praying" action stays visible. */}
+              <OverflowMenu
+                lang={lang}
+                ariaLabel={t(lang, 'options')}
+                triggerStyle={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
+                iconColor="#fff"
+                items={[
+                  { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => setShowCommunityEdit(true), hidden: !canEditCommunityPrayer },
+                  { key: 'delete', icon: Trash2, label: t(lang, 'delete'), danger: true, onClick: () => setShowDeleteConfirm(true), hidden: !canEditCommunityPrayer },
+                ]}
+              />
               <button
                 onClick={handleTogglePraying}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
@@ -456,27 +455,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               </button>
             </>
           ) : (
-            <>
-              {/* Pin to top — personal organisation, available on any prayer in your list. */}
-              <button onClick={() => togglePin(livePrayer.id)} title={t(lang, livePrayer.pinned ? 'unpin' : 'pin')} aria-pressed={!!livePrayer.pinned} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: livePrayer.pinned ? '#fff' : 'rgba(255,255,255,0.15)', color: livePrayer.pinned ? 'var(--accent)' : '#fff' }}>
-                <Pin size={15} fill={livePrayer.pinned ? 'currentColor' : 'none'} />
-              </button>
-              {/* Share + edit only on prayers you own — a saved-from-community copy
-                  follows the author's content, so those actions are hidden. */}
-              {!savedCopy && groups.length > 0 && (
-                <button onClick={openShareModal} title={t(lang, 'shareWithGroup')} className="relative w-9 h-9 flex items-center justify-center rounded-full" style={{ background: sharedGroups.length > 0 ? '#fff' : 'rgba(255,255,255,0.15)', color: sharedGroups.length > 0 ? 'var(--accent)' : '#fff' }}>
-                  <Share2 size={15} />
-                </button>
-              )}
-              {!savedCopy && (
-                <button onClick={() => onEdit(livePrayer)} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-                  <Edit2 size={15} />
-                </button>
-              )}
-              <button onClick={handleDelete} title={t(lang, savedCopy ? 'removeFromList' : 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-                <Trash2 size={15} />
-              </button>
-            </>
+            // All personal-prayer actions in one labelled menu — pin, share, edit,
+            // and (separated) delete/remove. A saved-from-community copy only gets
+            // pin + remove (it follows the author's content).
+            <OverflowMenu
+              lang={lang}
+              ariaLabel={t(lang, 'options')}
+              triggerStyle={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
+              iconColor="#fff"
+              items={[
+                { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
+                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: openShareModal, hidden: savedCopy || groups.length === 0 },
+                { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },
+                { key: 'delete', icon: Trash2, label: t(lang, savedCopy ? 'removeFromList' : 'delete'), danger: true, onClick: handleDelete },
+              ]}
+            />
           )}
         </div>
       </div>

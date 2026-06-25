@@ -320,5 +320,6 @@ export default {
   "resume": "استئناف",
   "prayerDeleted": "تم حذف الصلاة",
   "removedFromList": "أُزيل من قائمتك",
-  "testimonies": "الشهادات"
+  "testimonies": "الشهادات",
+  "options": "خيارات"
 };

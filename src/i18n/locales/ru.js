@@ -320,5 +320,6 @@ export default {
   "resume": "Вернуть",
   "prayerDeleted": "Молитва удалена",
   "removedFromList": "Удалено из вашего списка",
-  "testimonies": "Свидетельства"
+  "testimonies": "Свидетельства",
+  "options": "Параметры"
 };

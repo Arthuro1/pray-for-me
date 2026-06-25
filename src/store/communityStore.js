@@ -310,7 +310,7 @@ const useCommunityStore = create((set, get) => ({
     });
   },
 
-  // Re-add a reaction (used to undo an accidental remove-from-list).
+  // Re-add a reaction (used to undo an accidental remove-from-list of a saved copy).
   addReaction: async (prayerId, userId) => {
     if (!prayerId || !userId) return;
     await supabase.from('prayer_reactions').insert({ community_prayer_id: prayerId, user_id: userId });

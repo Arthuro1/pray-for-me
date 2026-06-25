@@ -320,5 +320,6 @@ export default {
   "resume": "恢复",
   "prayerDeleted": "祷告已删除",
   "removedFromList": "已从你的列表移除",
-  "testimonies": "见证"
+  "testimonies": "见证",
+  "options": "选项"
 };
