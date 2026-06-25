@@ -68,7 +68,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const shareTrapRef = useFocusTrap(showShareModal);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, removeReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -290,7 +290,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    // For a saved-from-community copy, also drop your "I'm praying" reaction so
+    // the group's praying count reflects that you've stopped following it.
+    if (savedCopy && livePrayer.community_origin_id) {
+      await removeReaction(livePrayer.community_origin_id, user?.id);
+    }
     deletePrayer(livePrayer.id);
     onBack();
   };
@@ -302,9 +307,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       {showPersonalDelete && (
         <ConfirmDialog
-          title={t(lang, 'tipDeletePrayer')}
-          message={`${livePrayer.title} — ${t(lang, 'deleteWarning')}`}
-          confirmLabel={t(lang, 'delete')}
+          title={t(lang, savedCopy ? 'removeFromList' : 'tipDeletePrayer')}
+          message={savedCopy ? `${livePrayer.title} — ${t(lang, 'removeFromListConfirm')}` : `${livePrayer.title} — ${t(lang, 'deleteWarning')}`}
+          confirmLabel={t(lang, savedCopy ? 'remove' : 'delete')}
           cancelLabel={t(lang, 'cancel')}
           onConfirm={handleDelete}
           onCancel={() => setShowPersonalDelete(false)}
@@ -455,15 +460,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </>
           ) : (
             <>
-              {groups.length > 0 && (
+              {/* Share + edit only on prayers you own — a saved-from-community copy
+                  follows the author's content, so those actions are hidden. */}
+              {!savedCopy && groups.length > 0 && (
                 <button onClick={openShareModal} title={t(lang, 'shareWithGroup')} className="relative w-9 h-9 flex items-center justify-center rounded-full" style={{ background: sharedGroups.length > 0 ? '#fff' : 'rgba(255,255,255,0.15)', color: sharedGroups.length > 0 ? 'var(--accent)' : '#fff' }}>
                   <Share2 size={15} />
                 </button>
               )}
-              <button onClick={() => onEdit(livePrayer)} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-                <Edit2 size={15} />
-              </button>
-              <button onClick={() => setShowPersonalDelete(true)} title={t(lang, 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+              {!savedCopy && (
+                <button onClick={() => onEdit(livePrayer)} title={t(lang, 'tipEditPrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                  <Edit2 size={15} />
+                </button>
+              )}
+              <button onClick={() => setShowPersonalDelete(true)} title={t(lang, savedCopy ? 'removeFromList' : 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
                 <Trash2 size={15} />
               </button>
             </>

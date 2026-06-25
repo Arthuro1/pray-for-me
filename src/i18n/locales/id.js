@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "Aktifkan pengingat harian dan lihat rentetan doa Anda bertambah — Pray4Me bahkan berfungsi offline.",
   "renameGroup": "Ganti nama grup",
   "groupRenamed": "Nama grup diperbarui",
-  "followsGroup": "Mengikuti doa bersama ini — edit di Komunitas untuk berkontribusi"
+  "followsGroup": "Mengikuti doa bersama ini — edit di Komunitas untuk berkontribusi",
+  "removeFromList": "Hapus dari daftar saya",
+  "removeFromListConfirm": "Dihapus dari daftar Anda dan Anda tidak lagi dihitung di antara yang berdoa. Permintaan tetap ada di komunitas."
 };

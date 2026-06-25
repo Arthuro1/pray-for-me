@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "I-on ang pang-araw-araw na paalala at panoorin lumago ang iyong prayer streak — gumagana ang Pray4Me kahit offline.",
   "renameGroup": "Palitan ang pangalan ng grupo",
   "groupRenamed": "Na-update ang pangalan ng grupo",
-  "followsGroup": "Sinusundan ang ibinahaging panalanging ito — i-edit sa Community para mag-ambag"
+  "followsGroup": "Sinusundan ang ibinahaging panalanging ito — i-edit sa Community para mag-ambag",
+  "removeFromList": "Alisin sa listahan ko",
+  "removeFromListConfirm": "Inaalis ito sa iyong listahan at hindi ka na mabibilang sa mga nagdarasal. Nananatili ang kahilingan sa komunidad."
 };

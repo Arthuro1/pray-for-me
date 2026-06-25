@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "매일 알림을 켜고 기도 연속 기록이 늘어나는 것을 지켜보세요 — Pray4Me는 오프라인에서도 작동합니다.",
   "renameGroup": "그룹 이름 변경",
   "groupRenamed": "그룹 이름이 변경되었습니다",
-  "followsGroup": "이 공유 기도를 팔로우 중 — 참여하려면 커뮤니티에서 편집하세요"
+  "followsGroup": "이 공유 기도를 팔로우 중 — 참여하려면 커뮤니티에서 편집하세요",
+  "removeFromList": "내 목록에서 제거",
+  "removeFromListConfirm": "내 목록에서 제거되며 기도하는 사람 수에서 빠집니다. 요청은 커뮤니티에 남습니다."
 };

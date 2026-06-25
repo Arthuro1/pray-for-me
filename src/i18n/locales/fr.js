@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "Activez un rappel quotidien et regardez votre série de prière grandir — Pray4Me fonctionne même hors ligne.",
   "renameGroup": "Renommer le groupe",
   "groupRenamed": "Nom du groupe mis à jour",
-  "followsGroup": "Suit cette prière partagée — modifiez-la dans la Communauté pour contribuer"
+  "followsGroup": "Suit cette prière partagée — modifiez-la dans la Communauté pour contribuer",
+  "removeFromList": "Retirer de ma liste",
+  "removeFromListConfirm": "Retiré de votre liste ; vous ne comptez plus parmi ceux qui prient. La demande reste dans la communauté."
 };

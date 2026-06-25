@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "ዕለታዊ አስታዋሽ ያብሩ እና የጸሎት ተከታታይነትዎ ሲያድግ ይመልከቱ — Pray4Me ከመስመር ውጭም ይሰራል።",
   "renameGroup": "የቡድን ስም ቀይር",
   "groupRenamed": "የቡድን ስም ተዘምኗል",
-  "followsGroup": "ይህን የተጋራ ጸሎት ይከታተላል — ለማበርከት በማኅበረሰብ ውስጥ ያስተካክሉ"
+  "followsGroup": "ይህን የተጋራ ጸሎት ይከታተላል — ለማበርከት በማኅበረሰብ ውስጥ ያስተካክሉ",
+  "removeFromList": "ከዝርዝሬ አስወግድ",
+  "removeFromListConfirm": "ከዝርዝርዎ ይወገዳል እና ከሚጸልዩት መካከል አይቆጠሩም። ጥያቄው በማኅበረሰቡ ውስጥ ይቆያል።"
 };

@@ -299,6 +299,17 @@ const useCommunityStore = create((set, get) => ({
     if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
   },
 
+  // Unconditionally clear the user's reaction on a community prayer (used when
+  // they remove a saved copy from their personal list, so the praying count drops).
+  removeReaction: async (prayerId, userId) => {
+    if (!prayerId || !userId) return;
+    await supabase.from('prayer_reactions').delete().eq('community_prayer_id', prayerId).eq('user_id', userId);
+    set(state => {
+      const next = new Set(state.userReactions); next.delete(prayerId);
+      return { userReactions: next };
+    });
+  },
+
   addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds }) => {
     const { data, error } = await supabase
       .from('community_prayers')

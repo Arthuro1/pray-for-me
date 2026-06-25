@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "Activa un recordatorio diario y mira crecer tu racha de oración — Pray4Me funciona incluso sin conexión.",
   "renameGroup": "Renombrar grupo",
   "groupRenamed": "Nombre del grupo actualizado",
-  "followsGroup": "Sigue esta oración compartida — edítala en Comunidad para contribuir"
+  "followsGroup": "Sigue esta oración compartida — edítala en Comunidad para contribuir",
+  "removeFromList": "Quitar de mi lista",
+  "removeFromListConfirm": "Se quita de tu lista y dejas de contar entre quienes oran. La petición permanece en la comunidad."
 };

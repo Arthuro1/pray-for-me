@@ -306,5 +306,7 @@ export default {
   "onboardRemindBody": "毎日のリマインダーをオンにして、祈りの連続記録を伸ばしましょう。Pray4Me はオフラインでも使えます。",
   "renameGroup": "グループ名を変更",
   "groupRenamed": "グループ名を更新しました",
-  "followsGroup": "この共有された祈りをフォロー中 — 貢献するにはコミュニティで編集"
+  "followsGroup": "この共有された祈りをフォロー中 — 貢献するにはコミュニティで編集",
+  "removeFromList": "リストから削除",
+  "removeFromListConfirm": "リストから削除され、祈っている人数に数えられなくなります。リクエストはコミュニティに残ります。"
 };
