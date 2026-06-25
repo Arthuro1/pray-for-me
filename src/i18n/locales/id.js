@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "Nama grup diperbarui",
   "followsGroup": "Mengikuti doa bersama ini — edit di Komunitas untuk berkontribusi",
   "removeFromList": "Hapus dari daftar saya",
-  "removeFromListConfirm": "Dihapus dari daftar Anda dan Anda tidak lagi dihitung di antara yang berdoa. Permintaan tetap ada di komunitas."
+  "removeFromListConfirm": "Dihapus dari daftar Anda dan Anda tidak lagi dihitung di antara yang berdoa. Permintaan tetap ada di komunitas.",
+  "groupOptions": "Opsi grup"
 };

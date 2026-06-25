@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "Na-update ang pangalan ng grupo",
   "followsGroup": "Sinusundan ang ibinahaging panalanging ito — i-edit sa Community para mag-ambag",
   "removeFromList": "Alisin sa listahan ko",
-  "removeFromListConfirm": "Inaalis ito sa iyong listahan at hindi ka na mabibilang sa mga nagdarasal. Nananatili ang kahilingan sa komunidad."
+  "removeFromListConfirm": "Inaalis ito sa iyong listahan at hindi ka na mabibilang sa mga nagdarasal. Nananatili ang kahilingan sa komunidad.",
+  "groupOptions": "Mga opsyon ng grupo"
 };

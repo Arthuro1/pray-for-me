@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, MoreVertical } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -572,6 +572,20 @@ function Empty({ lang, title }) {
   );
 }
 
+// A single row in the group overflow menu.
+function MenuItem({ icon: Icon, label, onClick, danger }) {
+  return (
+    <button
+      role="menuitem"
+      onClick={onClick}
+      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors hover:bg-[var(--input-bg)]"
+      style={{ color: danger ? '#e53e3e' : 'var(--text-1)' }}
+    >
+      <Icon size={15} style={{ color: danger ? '#e53e3e' : 'var(--text-3)' }} /> {label}
+    </button>
+  );
+}
+
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup } = useCommunityStore();
@@ -583,6 +597,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const [leaving, setLeaving] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [reqFilter, setReqFilter] = useState('all');
   const reconciledRef = useRef(null);
@@ -652,21 +667,29 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         <button onClick={onBack} className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           <ArrowLeft size={16} /> {t(lang, 'community')}
         </button>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowMembers(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
-            <Users size={14} /> {t(lang, 'members')}
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label={t(lang, 'groupOptions')}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            className="flex items-center justify-center w-9 h-9 rounded-lg"
+            style={SUBTLE_BTN}
+          >
+            <MoreVertical size={18} />
           </button>
-          <button onClick={() => setShowSettings(true)} aria-label={t(lang, 'groupSettings')} className="flex items-center justify-center w-8 h-8 rounded-lg" style={SUBTLE_BTN}>
-            <SlidersHorizontal size={14} />
-          </button>
-          {isAdmin && (
-            <button onClick={() => setShowAdmin(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
-              <Settings size={14} /> {t(lang, 'manageGroup')}
-            </button>
+          {menuOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+              <div role="menu" className="absolute right-0 mt-1 z-50 rounded-xl overflow-hidden py-1 min-w-[190px]" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}>
+                <MenuItem icon={Users} label={t(lang, 'members')} onClick={() => { setMenuOpen(false); setShowMembers(true); }} />
+                <MenuItem icon={SlidersHorizontal} label={t(lang, 'groupSettings')} onClick={() => { setMenuOpen(false); setShowSettings(true); }} />
+                {isAdmin && <MenuItem icon={Settings} label={t(lang, 'manageGroup')} onClick={() => { setMenuOpen(false); setShowAdmin(true); }} />}
+                <div style={{ borderTop: '0.5px solid var(--border)', margin: '4px 0' }} />
+                <MenuItem icon={LogOut} label={t(lang, 'leaveGroup')} danger onClick={() => { setMenuOpen(false); setShowLeave(true); }} />
+              </div>
+            </>
           )}
-          <button onClick={() => setShowLeave(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs" style={SUBTLE_BTN}>
-            <LogOut size={14} /> {t(lang, 'leaveGroup')}
-          </button>
         </div>
       </div>
 

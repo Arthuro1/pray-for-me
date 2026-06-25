@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "群组名称已更新",
   "followsGroup": "关注此共享祷告——在社区中编辑以参与",
   "removeFromList": "从我的列表中移除",
-  "removeFromListConfirm": "将其从你的列表中移除，你将不再计入祷告人数。该请求仍保留在社区中。"
+  "removeFromListConfirm": "将其从你的列表中移除，你将不再计入祷告人数。该请求仍保留在社区中。",
+  "groupOptions": "群组选项"
 };

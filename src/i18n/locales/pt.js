@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "Nome do grupo atualizado",
   "followsGroup": "Segue esta oração compartilhada — edite-a na Comunidade para contribuir",
   "removeFromList": "Remover da minha lista",
-  "removeFromListConfirm": "Remove da sua lista e você deixa de contar entre os que oram. O pedido permanece na comunidade."
+  "removeFromListConfirm": "Remove da sua lista e você deixa de contar entre os que oram. O pedido permanece na comunidade.",
+  "groupOptions": "Opções do grupo"
 };

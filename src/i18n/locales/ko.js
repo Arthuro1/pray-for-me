@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "그룹 이름이 변경되었습니다",
   "followsGroup": "이 공유 기도를 팔로우 중 — 참여하려면 커뮤니티에서 편집하세요",
   "removeFromList": "내 목록에서 제거",
-  "removeFromListConfirm": "내 목록에서 제거되며 기도하는 사람 수에서 빠집니다. 요청은 커뮤니티에 남습니다."
+  "removeFromListConfirm": "내 목록에서 제거되며 기도하는 사람 수에서 빠집니다. 요청은 커뮤니티에 남습니다.",
+  "groupOptions": "그룹 옵션"
 };

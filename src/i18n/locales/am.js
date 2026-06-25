@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "የቡድን ስም ተዘምኗል",
   "followsGroup": "ይህን የተጋራ ጸሎት ይከታተላል — ለማበርከት በማኅበረሰብ ውስጥ ያስተካክሉ",
   "removeFromList": "ከዝርዝሬ አስወግድ",
-  "removeFromListConfirm": "ከዝርዝርዎ ይወገዳል እና ከሚጸልዩት መካከል አይቆጠሩም። ጥያቄው በማኅበረሰቡ ውስጥ ይቆያል።"
+  "removeFromListConfirm": "ከዝርዝርዎ ይወገዳል እና ከሚጸልዩት መካከል አይቆጠሩም። ጥያቄው በማኅበረሰቡ ውስጥ ይቆያል።",
+  "groupOptions": "የቡድን አማራጮች"
 };

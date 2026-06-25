@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "グループ名を更新しました",
   "followsGroup": "この共有された祈りをフォロー中 — 貢献するにはコミュニティで編集",
   "removeFromList": "リストから削除",
-  "removeFromListConfirm": "リストから削除され、祈っている人数に数えられなくなります。リクエストはコミュニティに残ります。"
+  "removeFromListConfirm": "リストから削除され、祈っている人数に数えられなくなります。リクエストはコミュニティに残ります。",
+  "groupOptions": "グループのオプション"
 };

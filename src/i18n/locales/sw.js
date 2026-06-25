@@ -308,5 +308,6 @@ export default {
   "groupRenamed": "Jina la kikundi limesasishwa",
   "followsGroup": "Inafuata ombi hili lililoshirikiwa — lihariri katika Jumuiya ili kuchangia",
   "removeFromList": "Ondoa kwenye orodha yangu",
-  "removeFromListConfirm": "Inaondolewa kwenye orodha yako na hutahesabiwa tena miongoni mwa wanaoomba. Ombi linabaki katika jumuiya."
+  "removeFromListConfirm": "Inaondolewa kwenye orodha yako na hutahesabiwa tena miongoni mwa wanaoomba. Ombi linabaki katika jumuiya.",
+  "groupOptions": "Chaguo za kikundi"
 };
