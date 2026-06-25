@@ -168,6 +168,25 @@ const usePrayerStore = create((set, get) => ({
     }));
   },
 
+  // Fetch testimonies + member updates posted on the community copies of a
+  // personal prayer (whether it's the shared source or a saved copy), so they
+  // can be shown read-only in the personal prayer detail.
+  fetchSharedActivity: async (prayer) => {
+    let ids = [];
+    if (prayer.community_origin_id) {
+      ids = [prayer.community_origin_id];
+    } else {
+      const { data } = await supabase.from('community_prayers').select('id').eq('source_prayer_id', prayer.id);
+      ids = (data || []).map((c) => c.id);
+    }
+    if (ids.length === 0) return { testimonies: [], updates: [] };
+    const [tRes, uRes] = await Promise.all([
+      supabase.from('testimonies').select('*').in('community_prayer_id', ids).order('created_at'),
+      supabase.from('community_updates').select('*').in('community_prayer_id', ids).order('created_at', { ascending: true }),
+    ]);
+    return { testimonies: tRes.data || [], updates: uRes.data || [] };
+  },
+
   // One-way pull for prayers saved from the community: refresh the saved copy's
   // shared content (title, description, prayer points) from the linked community
   // prayer so the owner sees the author's/group's latest. Personal fields

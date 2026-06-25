@@ -56,7 +56,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [savingToPersonal, setSavingToPersonal] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
   // Esc closes whichever inline overlay is open (ConfirmDialog handles its own).
@@ -197,6 +197,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     if (!isCommunity && prayer?.community_origin_id) refreshFromCommunity(prayer.id);
   }, [isCommunity, prayer?.id]);
 
+  // Surface testimonies + member updates posted on the community copies of this
+  // personal prayer (shared source or saved copy).
+  const [sharedActivity, setSharedActivity] = useState({ testimonies: [], updates: [] });
+  const isShared = !isCommunity && (!!prayer?.community_origin_id || (prayerShares[prayer?.id]?.length > 0));
+  useEffect(() => {
+    if (isShared) fetchSharedActivity(prayer).then(setSharedActivity);
+  }, [isShared, prayer?.id]);
+
   // In community mode, read from store so updates (prayer points, edits) reflect immediately
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
@@ -217,6 +225,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
   const canAddContent = !isAnswered && (isCommunity || !savedCopy);
   const canRemoveContent = !isAnswered && (isCommunity || !savedCopy);
+  // Author copies already have member updates synced into prayer_updates; saved
+  // copies don't, so fold the group's updates into the displayed list for them.
+  const allUpdates = !isCommunity
+    ? [...(livePrayer.prayer_updates || []), ...(savedCopy ? sharedActivity.updates : [])]
+    : [];
 
   // Personal content auto-translates; community content translates on demand
   // (the "See translation" toggle) so members can read requests in any language.
@@ -917,12 +930,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'evolutions')}</p>
 
-          {(livePrayer.prayer_updates || []).length === 0 && (
+          {allUpdates.length === 0 && (
             <p className="text-sm italic mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'noUpdate')}</p>
           )}
 
           <div className="space-y-3 mb-3">
-            {(livePrayer.prayer_updates || []).map(u => (
+            {allUpdates.map(u => (
               <div key={u.id} className="flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div>
@@ -954,8 +967,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
 
 
-        {/* Saved testimonies — always above the write field, preserved across resume / re-answer */}
-        {personalTestimonies.length > 0 && (
+        {/* Testimonies — the prayer's own (preserved across resume) plus any posted
+            on its community copies (read-only). Always above the write field. */}
+        {(personalTestimonies.length > 0 || sharedActivity.testimonies.length > 0) && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimonies')}</p>
             <div className="space-y-3">
@@ -964,6 +978,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {tm.created_at && (
                     <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
                   )}
+                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(tm.content, lang)}"</p>
+                </div>
+              ))}
+              {sharedActivity.testimonies.map(tm => (
+                <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                  <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
                   <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(tm.content, lang)}"</p>
                 </div>
               ))}
