@@ -319,5 +319,6 @@ export default {
   "unpin": "取消置顶",
   "resume": "恢复",
   "prayerDeleted": "祷告已删除",
-  "removedFromList": "已从你的列表移除"
+  "removedFromList": "已从你的列表移除",
+  "testimonies": "见证"
 };

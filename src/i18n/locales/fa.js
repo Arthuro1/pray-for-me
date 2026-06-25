@@ -319,5 +319,6 @@ export default {
   "unpin": "برداشتن سنجاق",
   "resume": "ازسرگیری",
   "prayerDeleted": "دعا حذف شد",
-  "removedFromList": "از فهرست شما حذف شد"
+  "removedFromList": "از فهرست شما حذف شد",
+  "testimonies": "شهادت‌ها"
 };

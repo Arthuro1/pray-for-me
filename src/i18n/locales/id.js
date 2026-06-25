@@ -319,5 +319,6 @@ export default {
   "unpin": "Lepas",
   "resume": "Aktifkan",
   "prayerDeleted": "Doa dihapus",
-  "removedFromList": "Dihapus dari daftar Anda"
+  "removedFromList": "Dihapus dari daftar Anda",
+  "testimonies": "Kesaksian"
 };

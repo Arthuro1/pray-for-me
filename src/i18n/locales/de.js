@@ -319,5 +319,6 @@ export default {
   "unpin": "Lösen",
   "resume": "Fortsetzen",
   "prayerDeleted": "Gebet gelöscht",
-  "removedFromList": "Aus deiner Liste entfernt"
+  "removedFromList": "Aus deiner Liste entfernt",
+  "testimonies": "Zeugnisse"
 };

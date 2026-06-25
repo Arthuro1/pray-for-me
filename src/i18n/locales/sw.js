@@ -319,5 +319,6 @@ export default {
   "unpin": "Ondoa",
   "resume": "Rejesha",
   "prayerDeleted": "Ombi limefutwa",
-  "removedFromList": "Imeondolewa kwenye orodha yako"
+  "removedFromList": "Imeondolewa kwenye orodha yako",
+  "testimonies": "Ushuhuda"
 };

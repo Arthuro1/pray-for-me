@@ -319,5 +319,6 @@ export default {
   "unpin": "ピン解除",
   "resume": "再開",
   "prayerDeleted": "祈りを削除しました",
-  "removedFromList": "リストから削除しました"
+  "removedFromList": "リストから削除しました",
+  "testimonies": "証し"
 };

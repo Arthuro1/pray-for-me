@@ -319,5 +319,6 @@ export default {
   "unpin": "고정 해제",
   "resume": "다시 활성",
   "prayerDeleted": "기도를 삭제함",
-  "removedFromList": "목록에서 제거함"
+  "removedFromList": "목록에서 제거함",
+  "testimonies": "간증"
 };

@@ -319,5 +319,6 @@ export default {
   "unpin": "Unpin",
   "resume": "Resume",
   "prayerDeleted": "Prayer deleted",
-  "removedFromList": "Removed from your list"
+  "removedFromList": "Removed from your list",
+  "testimonies": "Testimonies"
 };

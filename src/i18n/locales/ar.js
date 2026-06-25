@@ -319,5 +319,6 @@ export default {
   "unpin": "إلغاء التثبيت",
   "resume": "استئناف",
   "prayerDeleted": "تم حذف الصلاة",
-  "removedFromList": "أُزيل من قائمتك"
+  "removedFromList": "أُزيل من قائمتك",
+  "testimonies": "الشهادات"
 };

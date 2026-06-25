@@ -319,5 +319,6 @@ export default {
   "unpin": "አንሳ",
   "resume": "መልስ",
   "prayerDeleted": "ጸሎት ተሰርዟል",
-  "removedFromList": "ከዝርዝርዎ ተወግዷል"
+  "removedFromList": "ከዝርዝርዎ ተወግዷል",
+  "testimonies": "ምስክርነቶች"
 };

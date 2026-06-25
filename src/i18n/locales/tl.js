@@ -319,5 +319,6 @@ export default {
   "unpin": "Alisin",
   "resume": "Ibalik",
   "prayerDeleted": "Tinanggal ang panalangin",
-  "removedFromList": "Inalis sa iyong listahan"
+  "removedFromList": "Inalis sa iyong listahan",
+  "testimonies": "Mga patotoo"
 };

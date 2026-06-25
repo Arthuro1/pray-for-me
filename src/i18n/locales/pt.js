@@ -319,5 +319,6 @@ export default {
   "unpin": "Desafixar",
   "resume": "Retomar",
   "prayerDeleted": "Oração excluída",
-  "removedFromList": "Removido da sua lista"
+  "removedFromList": "Removido da sua lista",
+  "testimonies": "Testemunhos"
 };

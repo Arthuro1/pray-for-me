@@ -319,5 +319,6 @@ export default {
   "unpin": "अनपिन",
   "resume": "फिर सक्रिय",
   "prayerDeleted": "प्रार्थना हटाई गई",
-  "removedFromList": "आपकी सूची से हटाया गया"
+  "removedFromList": "आपकी सूची से हटाया गया",
+  "testimonies": "गवाहियाँ"
 };
