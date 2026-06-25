@@ -230,6 +230,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const allUpdates = !isCommunity
     ? [...(livePrayer.prayer_updates || []), ...(savedCopy ? sharedActivity.updates : [])]
     : [];
+  // You can post updates/testimonies and mark answered only on prayers you own —
+  // a saved-from-community copy is read-only (you follow the author's prayer).
+  const canManage = !savedCopy;
 
   // Personal content auto-translates; community content translates on demand
   // (the "See translation" toggle) so members can read requests in any language.
@@ -948,7 +951,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             ))}
           </div>
 
-          {!isAnswered && (
+          {!isAnswered && canManage && (
             <div className="flex gap-2">
               <input
                 type="text"
@@ -992,7 +995,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         )}
 
         {/* Testimony input (writing) */}
-        {!isAnswered && showTestimony && (
+        {!isAnswered && showTestimony && canManage && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
             <textarea
@@ -1009,13 +1012,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* Actions */}
         <div className="flex gap-3 pb-6">
-          {!isAnswered && (
+          {!isAnswered && canManage && (
             <button onClick={handleMarkAnswered} title={showTestimony ? t(lang, "tipConfirm") : t(lang, "tipMarkAnswered")} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}>
               <CheckCircle size={15} />
               {showTestimony ? t(lang, 'confirm') : t(lang, 'markAnswered')}
             </button>
           )}
-          {isAnswered && (
+          {isAnswered && canManage && (
             <button onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
               {t(lang, 'resumePrayer')}
             </button>
