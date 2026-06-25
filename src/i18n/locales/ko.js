@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "기도함",
   "skip": "건너뛰기",
   "sessionDoneTitle": "귀한 시간 🙏",
-  "sessionDoneSub": "오늘 {n}개의 기도 제목을 위해 기도했습니다."
+  "sessionDoneSub": "오늘 {n}개의 기도 제목을 위해 기도했습니다.",
+  "pin": "고정",
+  "unpin": "고정 해제",
+  "resume": "다시 활성",
+  "prayerDeleted": "기도를 삭제함",
+  "removedFromList": "목록에서 제거함"
 };

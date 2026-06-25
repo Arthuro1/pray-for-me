@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "祈った",
   "skip": "スキップ",
   "sessionDoneTitle": "祝された時間 🙏",
-  "sessionDoneSub": "今日は{n}件のために祈りました。"
+  "sessionDoneSub": "今日は{n}件のために祈りました。",
+  "pin": "ピン留め",
+  "unpin": "ピン解除",
+  "resume": "再開",
+  "prayerDeleted": "祈りを削除しました",
+  "removedFromList": "リストから削除しました"
 };

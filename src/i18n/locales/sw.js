@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Nimeomba",
   "skip": "Ruka",
   "sessionDoneTitle": "Wakati wa baraka 🙏",
-  "sessionDoneSub": "Umeomba kwa ajili ya mambo {n} leo."
+  "sessionDoneSub": "Umeomba kwa ajili ya mambo {n} leo.",
+  "pin": "Bandika",
+  "unpin": "Ondoa",
+  "resume": "Rejesha",
+  "prayerDeleted": "Ombi limefutwa",
+  "removedFromList": "Imeondolewa kwenye orodha yako"
 };

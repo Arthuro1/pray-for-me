@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "已祷告",
   "skip": "跳过",
   "sessionDoneTitle": "美好的时光 🙏",
-  "sessionDoneSub": "今天你为 {n} 个事项祷告了。"
+  "sessionDoneSub": "今天你为 {n} 个事项祷告了。",
+  "pin": "置顶",
+  "unpin": "取消置顶",
+  "resume": "恢复",
+  "prayerDeleted": "祷告已删除",
+  "removedFromList": "已从你的列表移除"
 };

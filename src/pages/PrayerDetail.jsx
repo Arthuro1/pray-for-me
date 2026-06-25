@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users, Pin } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -17,6 +17,7 @@ import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
@@ -56,7 +57,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
   // Esc closes whichever inline overlay is open (ConfirmDialog handles its own).
@@ -68,10 +69,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const shareTrapRef = useFocusTrap(showShareModal);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, removeReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
+  const { removeWithUndo } = usePrayerActions(lang);
 
   // ── Community mode effects & handlers ────────────────────────────────────
   useEffect(() => {
@@ -308,31 +310,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     }
   };
 
-  const handleDelete = async () => {
-    // For a saved-from-community copy, also drop your "I'm praying" reaction so
-    // the group's praying count reflects that you've stopped following it.
-    if (savedCopy && livePrayer.community_origin_id) {
-      await removeReaction(livePrayer.community_origin_id, user?.id);
-    }
-    deletePrayer(livePrayer.id);
+  // Remove (own prayer) / unfollow (saved copy) — reversible via an Undo toast
+  // (the reaction is re-added on undo for saved copies), so no confirm dialog.
+  const handleDelete = () => {
+    removeWithUndo(livePrayer);
     onBack();
   };
 
-  const [showPersonalDelete, setShowPersonalDelete] = useState(false);
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      {showPersonalDelete && (
-        <ConfirmDialog
-          title={t(lang, savedCopy ? 'removeFromList' : 'tipDeletePrayer')}
-          message={savedCopy ? `${livePrayer.title} — ${t(lang, 'removeFromListConfirm')}` : `${livePrayer.title} — ${t(lang, 'deleteWarning')}`}
-          confirmLabel={t(lang, savedCopy ? 'remove' : 'delete')}
-          cancelLabel={t(lang, 'cancel')}
-          onConfirm={handleDelete}
-          onCancel={() => setShowPersonalDelete(false)}
-        />
-      )}
       {confirmRemovePoint && (
         <ConfirmDialog
           title={t(lang, 'tipRemovePoint')}
@@ -469,6 +457,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </>
           ) : (
             <>
+              {/* Pin to top — personal organisation, available on any prayer in your list. */}
+              <button onClick={() => togglePin(livePrayer.id)} title={t(lang, livePrayer.pinned ? 'unpin' : 'pin')} aria-pressed={!!livePrayer.pinned} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: livePrayer.pinned ? '#fff' : 'rgba(255,255,255,0.15)', color: livePrayer.pinned ? 'var(--accent)' : '#fff' }}>
+                <Pin size={15} fill={livePrayer.pinned ? 'currentColor' : 'none'} />
+              </button>
               {/* Share + edit only on prayers you own — a saved-from-community copy
                   follows the author's content, so those actions are hidden. */}
               {!savedCopy && groups.length > 0 && (
@@ -481,7 +473,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <Edit2 size={15} />
                 </button>
               )}
-              <button onClick={() => setShowPersonalDelete(true)} title={t(lang, savedCopy ? 'removeFromList' : 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+              <button onClick={handleDelete} title={t(lang, savedCopy ? 'removeFromList' : 'tipDeletePrayer')} className="w-9 h-9 flex items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
                 <Trash2 size={15} />
               </button>
             </>

@@ -4,6 +4,11 @@ import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } f
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 
+// Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
+// level so it survives store re-renders; an "Undo" toast clears the timer.
+const pendingDeletes = new Map();
+const UNDO_WINDOW_MS = 6000;
+
 const DEFAULT_CATEGORIES = {
   fr: [
     { name: 'Famille', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
@@ -281,6 +286,7 @@ const usePrayerStore = create((set, get) => ({
     if (updates.personName !== undefined) payload.person_name = updates.personName;
     if (updates.phone !== undefined) payload.phone = updates.phone;
     if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
+    if (updates.pinned !== undefined) payload.pinned = updates.pinned;
     payload.updated_at = new Date().toISOString();
 
     const community = {};
@@ -337,9 +343,41 @@ const usePrayerStore = create((set, get) => ({
     enqueue('markActive', { id });
   },
 
+  // Pin/unpin a prayer so it floats to the top of the lists (personal organisation).
+  togglePin: (id) => {
+    const p = get().prayers.find((x) => x.id === id);
+    if (p) get().updatePrayer(id, { pinned: !p.pinned });
+  },
+
+  // Immediate, non-undoable delete (used internally when a soft-delete commits).
   deletePrayer: async (id) => {
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
     enqueue('deletePrayer', { id });
+  },
+
+  // Optimistically hide a prayer and defer the real delete, so an "Undo" toast
+  // can cancel it. Returns the removed prayer (for callers that want a snapshot).
+  softDeletePrayer: (id) => {
+    const prayer = get().prayers.find((p) => p.id === id);
+    if (!prayer) return null;
+    set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
+    const timer = setTimeout(() => {
+      pendingDeletes.delete(id);
+      enqueue('deletePrayer', { id });
+    }, UNDO_WINDOW_MS);
+    pendingDeletes.set(id, { prayer, timer });
+    return prayer;
+  },
+
+  // Cancel a pending soft-delete and restore the prayer to the list.
+  undoDelete: (id) => {
+    const entry = pendingDeletes.get(id);
+    if (!entry) return;
+    clearTimeout(entry.timer);
+    pendingDeletes.delete(id);
+    set((state) => (state.prayers.some((p) => p.id === id)
+      ? state
+      : { prayers: [entry.prayer, ...state.prayers] }));
   },
 
   // ─── Updates ─────────────────────────────────────────────────
@@ -470,7 +508,11 @@ const usePrayerStore = create((set, get) => ({
     const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
     return prayers
       .filter((p) => prayerOnDay(p, today, todayCatIds))
-      .sort((a, b) => prayerPriority(a, orderById) - prayerPriority(b, orderById));
+      .sort((a, b) => {
+        const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
+        if (byPin !== 0) return byPin;
+        return prayerPriority(a, orderById) - prayerPriority(b, orderById);
+      });
   },
 
   // Persist a new category order (array of ids → sort_order = index).

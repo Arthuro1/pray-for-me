@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Orei",
   "skip": "Pular",
   "sessionDoneTitle": "Tempo bem gasto 🙏",
-  "sessionDoneSub": "Você orou por {n} assunto(s) hoje."
+  "sessionDoneSub": "Você orou por {n} assunto(s) hoje.",
+  "pin": "Fixar",
+  "unpin": "Desafixar",
+  "resume": "Retomar",
+  "prayerDeleted": "Oração excluída",
+  "removedFromList": "Removido da sua lista"
 };

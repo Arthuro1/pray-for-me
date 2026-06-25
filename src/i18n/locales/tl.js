@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Nanalangin",
   "skip": "Laktawan",
   "sessionDoneTitle": "Pinagpalang sandali 🙏",
-  "sessionDoneSub": "Ipinanalangin mo ang {n} paksa ngayon."
+  "sessionDoneSub": "Ipinanalangin mo ang {n} paksa ngayon.",
+  "pin": "I-pin",
+  "unpin": "Alisin",
+  "resume": "Ibalik",
+  "prayerDeleted": "Tinanggal ang panalangin",
+  "removedFromList": "Inalis sa iyong listahan"
 };

@@ -11,7 +11,9 @@ import { Sparkles, Loader2, Plus, HandHeart } from 'lucide-react';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
+import SwipeableRow from '../components/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
+import { usePrayerActions } from '../hooks/usePrayerActions';
 import { computeStreak, weeklyRecap } from '../utils/streak';
 import { getPrayedDays, markPrayedToday } from '../lib/prayedLog';
 import { getDayPlanSuggestions } from '../aiRecommendations';
@@ -192,6 +194,7 @@ export default function HomeTab({ onAdd }) {
   const [prayedDays, setPrayedDays] = useState(getPrayedDays);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
+  const { swipeActions } = usePrayerActions(lang);
 
   const todaysPrayers = getTodaysPrayers();
   const today = new Date();
@@ -426,16 +429,17 @@ export default function HomeTab({ onAdd }) {
         {todaysPrayers.length > 0 && (
           <div className="flex flex-col gap-3 mb-4">
             {todaysPrayers.map((prayer) => (
-              <PrayerListItem
-                key={prayer.id}
-                prayer={prayer}
-                categories={categories}
-                lang={lang}
-                tr={tr}
-                shares={prayerShares[prayer.id]}
-                currentUserName={getAuthorName(user)}
-                onClick={() => navigate(`/prayers/${prayer.id}`)}
-              />
+              <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+                <PrayerListItem
+                  prayer={prayer}
+                  categories={categories}
+                  lang={lang}
+                  tr={tr}
+                  shares={prayerShares[prayer.id]}
+                  currentUserName={getAuthorName(user)}
+                  onClick={() => navigate(`/prayers/${prayer.id}`)}
+                />
+              </SwipeableRow>
             ))}
           </div>
         )}

@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Prayed",
   "skip": "Skip",
   "sessionDoneTitle": "Time well spent 🙏",
-  "sessionDoneSub": "You prayed through {n} subject(s) today."
+  "sessionDoneSub": "You prayed through {n} subject(s) today.",
+  "pin": "Pin",
+  "unpin": "Unpin",
+  "resume": "Resume",
+  "prayerDeleted": "Prayer deleted",
+  "removedFromList": "Removed from your list"
 };

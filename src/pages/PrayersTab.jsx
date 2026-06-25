@@ -6,10 +6,12 @@ import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
+import SwipeableRow from '../components/SwipeableRow';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { t } from '../i18n';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
+import { usePrayerActions } from '../hooks/usePrayerActions';
 
 export default function PrayersTab() {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ export default function PrayersTab() {
   const { user } = useAuthStore();
   const { prayerShares, fetchPrayerShares } = useCommunityStore();
   const lang = settings.language || 'fr';
+  const { swipeActions } = usePrayerActions(lang);
 
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -46,6 +49,8 @@ export default function PrayersTab() {
 
   const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
   const sorted = [...filtered].sort((a, b) => {
+    const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
+    if (byPin !== 0) return byPin;
     const order = { active: 0, answered: 1 };
     const byStatus = (order[a.status] || 0) - (order[b.status] || 0);
     if (byStatus !== 0) return byStatus;
@@ -128,16 +133,17 @@ export default function PrayersTab() {
         ) : (
           <div className="flex flex-col gap-3">
             {sorted.map((prayer) => (
-              <PrayerListItem
-                key={prayer.id}
-                prayer={prayer}
-                categories={categories}
-                lang={lang}
-                tr={tr}
-                shares={prayerShares[prayer.id]}
-                currentUserName={getAuthorName(user)}
-                onClick={() => navigate(`/prayers/${prayer.id}`)}
-              />
+              <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+                <PrayerListItem
+                  prayer={prayer}
+                  categories={categories}
+                  lang={lang}
+                  tr={tr}
+                  shares={prayerShares[prayer.id]}
+                  currentUserName={getAuthorName(user)}
+                  onClick={() => navigate(`/prayers/${prayer.id}`)}
+                />
+              </SwipeableRow>
             ))}
           </div>
         )}

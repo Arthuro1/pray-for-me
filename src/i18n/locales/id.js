@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Sudah berdoa",
   "skip": "Lewati",
   "sessionDoneTitle": "Waktu yang berharga 🙏",
-  "sessionDoneSub": "Hari ini Anda mendoakan {n} pokok doa."
+  "sessionDoneSub": "Hari ini Anda mendoakan {n} pokok doa.",
+  "pin": "Sematkan",
+  "unpin": "Lepas",
+  "resume": "Aktifkan",
+  "prayerDeleted": "Doa dihapus",
+  "removedFromList": "Dihapus dari daftar Anda"
 };

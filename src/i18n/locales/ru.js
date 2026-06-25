@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Помолился",
   "skip": "Пропустить",
   "sessionDoneTitle": "Благословенное время 🙏",
-  "sessionDoneSub": "Сегодня вы помолились о {n} нуждах."
+  "sessionDoneSub": "Сегодня вы помолились о {n} нуждах.",
+  "pin": "Закрепить",
+  "unpin": "Открепить",
+  "resume": "Вернуть",
+  "prayerDeleted": "Молитва удалена",
+  "removedFromList": "Удалено из вашего списка"
 };

@@ -1,4 +1,4 @@
-import { Users, EyeOff, HandHeart } from 'lucide-react';
+import { Users, EyeOff, HandHeart, Pin } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
@@ -34,12 +34,15 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
             {prayer.origin_group_name ? ` · ${prayer.origin_group_name}` : ''}
           </p>
         </div>
-        <span
-          className="shrink-0 text-xs px-2.5 py-1 rounded-full font-medium"
-          style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}
-        >
-          {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
-        </span>
+        <div className="shrink-0 flex items-center gap-1.5">
+          {prayer.pinned && <Pin size={13} fill="currentColor" style={{ color: 'var(--accent)' }} />}
+          <span
+            className="text-xs px-2.5 py-1 rounded-full font-medium"
+            style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}
+          >
+            {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
+          </span>
+        </div>
       </div>
 
       <p

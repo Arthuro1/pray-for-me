@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, EyeOff, HandHeart } from 'lucide-react';
+import { ArrowLeft, Users, EyeOff, HandHeart, Pin } from 'lucide-react';
 import { format } from 'date-fns';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -11,6 +11,8 @@ import { testimonyList } from '../utils/prayer';
 import { originAuthor, getAuthorName } from '../utils/user';
 import { t } from '../i18n';
 import Avatar from '../components/Avatar';
+import SwipeableRow from '../components/SwipeableRow';
+import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // A reflective "God's faithfulness" view of all answered prayers.
 export default function AnsweredTab() {
@@ -22,12 +24,17 @@ export default function AnsweredTab() {
   const lang = settings.language || 'fr';
   const locale = dateLocale(lang);
   const currentUserName = getAuthorName(user);
+  const { swipeActions } = usePrayerActions(lang);
 
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
 
   const answered = prayers
     .filter(p => p.status === 'answered')
-    .sort((a, b) => new Date(b.answered_at || b.updated_at || 0) - new Date(a.answered_at || a.updated_at || 0));
+    .sort((a, b) => {
+      const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
+      if (byPin !== 0) return byPin;
+      return new Date(b.answered_at || b.updated_at || 0) - new Date(a.answered_at || a.updated_at || 0);
+    });
 
   return (
     <div>
@@ -62,16 +69,18 @@ export default function AnsweredTab() {
                 const groupShares = prayerShares[prayer.id] || [];
                 const totalPraying = groupShares.reduce((n, s) => n + (s.prayingCount || 0), 0);
                 return (
-                  <button key={prayer.id} onClick={() => navigate(`/prayers/${prayer.id}`)}
-                    className="text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
+                  <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+                  <button onClick={() => navigate(`/prayers/${prayer.id}`)}
+                    className="w-full text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
                     style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', borderLeft: '3px solid var(--success)' }}>
                     {/* Author + creation date header (matches community cards) */}
                     <div className="flex items-center gap-2 mb-1.5 min-w-0">
                       <Avatar name={authorName} size={26} anonymous={oa?.anonymous} />
-                      <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                      <p className="text-xs truncate flex-1" style={{ color: 'var(--text-3)' }}>
                         {authorLabel} · {timeAgo(prayer.created_at, lang)}
                         {prayer.origin_group_name ? ` · ${prayer.origin_group_name}` : ''}
                       </p>
+                      {prayer.pinned && <Pin size={13} fill="currentColor" className="shrink-0" style={{ color: 'var(--accent)' }} />}
                     </div>
                     <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
                     {lastTestimony && (
@@ -108,6 +117,7 @@ export default function AnsweredTab() {
                       </div>
                     )}
                   </button>
+                  </SwipeableRow>
                 );
               })}
             </div>

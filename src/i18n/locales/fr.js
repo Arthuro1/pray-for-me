@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Prié",
   "skip": "Passer",
   "sessionDoneTitle": "Temps béni 🙏",
-  "sessionDoneSub": "Vous avez prié pour {n} sujet(s) aujourd’hui."
+  "sessionDoneSub": "Vous avez prié pour {n} sujet(s) aujourd’hui.",
+  "pin": "Épingler",
+  "unpin": "Détacher",
+  "resume": "Reprendre",
+  "prayerDeleted": "Prière supprimée",
+  "removedFromList": "Retiré de votre liste"
 };

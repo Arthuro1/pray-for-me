@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "صلّيت",
   "skip": "تخطّي",
   "sessionDoneTitle": "وقت مبارك 🙏",
-  "sessionDoneSub": "صلّيت اليوم من أجل {n} موضوعًا."
+  "sessionDoneSub": "صلّيت اليوم من أجل {n} موضوعًا.",
+  "pin": "تثبيت",
+  "unpin": "إلغاء التثبيت",
+  "resume": "استئناف",
+  "prayerDeleted": "تم حذف الصلاة",
+  "removedFromList": "أُزيل من قائمتك"
 };

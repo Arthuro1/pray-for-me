@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "Gebetet",
   "skip": "Überspringen",
   "sessionDoneTitle": "Gut genutzte Zeit 🙏",
-  "sessionDoneSub": "Du hast heute für {n} Anliegen gebetet."
+  "sessionDoneSub": "Du hast heute für {n} Anliegen gebetet.",
+  "pin": "Anheften",
+  "unpin": "Lösen",
+  "resume": "Fortsetzen",
+  "prayerDeleted": "Gebet gelöscht",
+  "removedFromList": "Aus deiner Liste entfernt"
 };

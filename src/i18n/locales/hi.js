@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "प्रार्थना की",
   "skip": "छोड़ें",
   "sessionDoneTitle": "धन्य समय 🙏",
-  "sessionDoneSub": "आज आपने {n} विषय(ों) के लिए प्रार्थना की।"
+  "sessionDoneSub": "आज आपने {n} विषय(ों) के लिए प्रार्थना की।",
+  "pin": "पिन करें",
+  "unpin": "अनपिन",
+  "resume": "फिर सक्रिय",
+  "prayerDeleted": "प्रार्थना हटाई गई",
+  "removedFromList": "आपकी सूची से हटाया गया"
 };

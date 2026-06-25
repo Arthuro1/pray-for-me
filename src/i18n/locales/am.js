@@ -314,5 +314,10 @@ export default {
   "prayedBtn": "ጸለይኩ",
   "skip": "ዝለል",
   "sessionDoneTitle": "የተባረከ ጊዜ 🙏",
-  "sessionDoneSub": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።"
+  "sessionDoneSub": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።",
+  "pin": "ሰካ",
+  "unpin": "አንሳ",
+  "resume": "መልስ",
+  "prayerDeleted": "ጸሎት ተሰርዟል",
+  "removedFromList": "ከዝርዝርዎ ተወግዷል"
 };

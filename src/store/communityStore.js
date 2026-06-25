@@ -310,6 +310,16 @@ const useCommunityStore = create((set, get) => ({
     });
   },
 
+  // Re-add a reaction (used to undo an accidental remove-from-list).
+  addReaction: async (prayerId, userId) => {
+    if (!prayerId || !userId) return;
+    await supabase.from('prayer_reactions').insert({ community_prayer_id: prayerId, user_id: userId });
+    set(state => {
+      const next = new Set(state.userReactions); next.add(prayerId);
+      return { userReactions: next };
+    });
+  },
+
   addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds }) => {
     const { data, error } = await supabase
       .from('community_prayers')
