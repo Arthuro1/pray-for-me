@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, BookmarkPlus, BookmarkCheck, Languages, Users } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -55,7 +55,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showCommunityEdit, setShowCommunityEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [savingToPersonal, setSavingToPersonal] = useState(false);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
   const { tr, translateTexts, translating } = useTranslationStore();
@@ -142,14 +141,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     (communityPrayer.source_prayer_id && prayers.some(p => p.id === communityPrayer.source_prayer_id))
   );
 
-  const handleAddToPersonal = async () => {
-    if (savingToPersonal || alreadyInPersonal) return;
-    setSavingToPersonal(true);
-    const groupName = groups.find(g => g.id === communityPrayer.group_id)?.name || null;
-    const res = await addFromCommunity(communityPrayer, groupName);
-    setSavingToPersonal(false);
-    if (res?.error) toast.error(t(lang, 'errorGeneric'));
-    else toast.success(t(lang, 'addedToMyPrayers'));
+  // Tapping "I'm praying" toggles the reaction (praying count) and, when turning
+  // it on, also adds the prayer to the user's personal list (if not already there).
+  const handleTogglePraying = async () => {
+    const wasReacted = communityHasReacted;
+    await toggleReaction(communityPrayer.id, user.id);
+    if (!wasReacted && !alreadyInPersonal) {
+      const groupName = groups.find(g => g.id === communityPrayer.group_id)?.name || null;
+      const res = await addFromCommunity(communityPrayer, groupName);
+      if (!res?.error) toast.success(t(lang, 'addedToMyPrayers'));
+    }
   };
 
   // ── Personal mode: sharing to groups ──────────────────────────────────────
@@ -457,16 +458,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 </>
               )}
               <button
-                onClick={handleAddToPersonal}
-                disabled={alreadyInPersonal || savingToPersonal}
-                title={alreadyInPersonal ? t(lang, 'addedToMyPrayers') : t(lang, 'addToMyPrayers')}
-                className="w-9 h-9 flex items-center justify-center rounded-full disabled:opacity-100"
-                style={{ background: alreadyInPersonal ? '#fff' : 'rgba(255,255,255,0.15)', color: alreadyInPersonal ? 'var(--accent)' : '#fff' }}
-              >
-                {savingToPersonal ? <Loader2 size={15} className="animate-spin" /> : alreadyInPersonal ? <BookmarkCheck size={15} /> : <BookmarkPlus size={15} />}
-              </button>
-              <button
-                onClick={() => toggleReaction(communityPrayer.id, user.id)}
+                onClick={handleTogglePraying}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
                 style={{ background: communityHasReacted ? '#fff' : 'rgba(255,255,255,0.15)', color: communityHasReacted ? 'var(--accent)' : '#fff' }}
               >
