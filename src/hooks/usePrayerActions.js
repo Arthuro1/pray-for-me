@@ -29,20 +29,21 @@ export function usePrayerActions(lang) {
     });
   };
 
-  // Quick actions revealed when a card is swiped: pin, mark answered/resume, remove.
-  const swipeActions = (prayer) => [
-    {
-      key: 'pin',
-      icon: Pin,
-      label: t(lang, prayer.pinned ? 'unpin' : 'pin'),
-      bg: '#c07c2a',
-      onClick: () => togglePin(prayer.id),
-    },
-    prayer.status === 'answered'
-      ? { key: 'resume', icon: RotateCcw, label: t(lang, 'resume'), bg: 'var(--accent)', onClick: () => markActive(prayer.id) }
-      : { key: 'answered', icon: CheckCircle, label: t(lang, 'answered2'), bg: 'var(--success)', onClick: () => markAnswered(prayer.id) },
-    { key: 'remove', icon: Trash2, label: t(lang, 'remove'), bg: '#e53e3e', onClick: () => removeWithUndo(prayer) },
-  ];
+  // Quick actions revealed when a card is swiped: pin, [mark answered/resume], remove.
+  const swipeActions = (prayer) => {
+    const actions = [
+      { key: 'pin', icon: Pin, label: t(lang, prayer.pinned ? 'unpin' : 'pin'), bg: '#c07c2a', onClick: () => togglePin(prayer.id) },
+    ];
+    // Only the author can change a prayer's answered status. A saved-from-community
+    // copy (community_origin_id set) follows someone else's prayer, so omit it.
+    if (!prayer.community_origin_id) {
+      actions.push(prayer.status === 'answered'
+        ? { key: 'resume', icon: RotateCcw, label: t(lang, 'resume'), bg: 'var(--accent)', onClick: () => markActive(prayer.id) }
+        : { key: 'answered', icon: CheckCircle, label: t(lang, 'answered2'), bg: 'var(--success)', onClick: () => markAnswered(prayer.id) });
+    }
+    actions.push({ key: 'remove', icon: Trash2, label: t(lang, 'remove'), bg: '#e53e3e', onClick: () => removeWithUndo(prayer) });
+    return actions;
+  };
 
   return { removeWithUndo, swipeActions };
 }
