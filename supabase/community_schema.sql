@@ -224,16 +224,23 @@ create policy "Users can upsert their own profile" on profiles
 create policy "Users can update their own profile" on profiles
   for update using (id = auth.uid());
 
--- Auto-create a profile row whenever a user signs up.
+-- Auto-create a profile row whenever a user signs up. SECURITY DEFINER with a
+-- pinned search_path and fully-qualified table (an unqualified insert here can
+-- break signup with "Database error saving new user"); the profile mirror is
+-- non-blocking so it can never take down authentication.
 create or replace function handle_new_user()
 returns trigger
 language plpgsql
 security definer
+set search_path = ''
 as $$
 begin
-  insert into profiles (id, full_name)
+  insert into public.profiles (id, full_name)
   values (new.id, coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)))
   on conflict (id) do nothing;
+  return new;
+exception when others then
+  raise warning 'handle_new_user failed for %: %', new.id, sqlerrm;
   return new;
 end;
 $$;
