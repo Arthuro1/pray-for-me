@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Prière supprimée",
   "removedFromList": "Retiré de votre liste",
   "testimonies": "Témoignages",
-  "options": "Options"
+  "options": "Options",
+  "nextReminder": "Prochain rappel",
+  "tomorrow": "demain",
+  "notPrayedToday": "Vous n'avez pas encore prié aujourd'hui",
+  "pushUnavailable": "Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil."
 };

@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Oración eliminada",
   "removedFromList": "Eliminado de tu lista",
   "testimonies": "Testimonios",
-  "options": "Opciones"
+  "options": "Opciones",
+  "nextReminder": "Próximo recordatorio",
+  "tomorrow": "mañana",
+  "notPrayedToday": "Aún no has orado hoy",
+  "pushUnavailable": "Recordatorio activado. Las notificaciones push no están disponibles en este dispositivo."
 };

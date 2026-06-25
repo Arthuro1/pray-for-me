@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users, Pin } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -35,6 +35,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
   const [showCatPicker, setShowCatPicker] = useState(false);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState('');
+  const titleCancelRef = useRef(false);
   const [addingVerseTo, setAddingVerseTo] = useState(null);
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
@@ -314,6 +317,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Own prayer → warn first; saved copy → instant unfollow + Undo. Then navigate back.
   const handleDelete = () => removePrayer(livePrayer, onBack);
 
+  // Inline title edit — own personal prayers only (community has its own edit;
+  // a saved copy follows the author's title).
+  const canEditTitle = !isCommunity && !savedCopy;
+  const startEditTitle = () => { setTitleDraft(livePrayer.title || ''); titleCancelRef.current = false; setEditingTitle(true); };
+  const saveTitle = () => {
+    if (titleCancelRef.current) { titleCancelRef.current = false; setEditingTitle(false); return; }
+    const next = titleDraft.trim();
+    setEditingTitle(false);
+    if (next && next !== livePrayer.title) updatePrayer(livePrayer.id, { title: next });
+  };
+
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
 
   return (
@@ -412,9 +426,30 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1 min-w-0">
-          <h1 className="text-base font-semibold text-white truncate" style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}>
-            {loc(livePrayer.title)}
-          </h1>
+          {canEditTitle && editingTitle ? (
+            <input
+              autoFocus
+              value={titleDraft}
+              onChange={(e) => setTitleDraft(e.target.value)}
+              onBlur={saveTitle}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
+                else if (e.key === 'Escape') { titleCancelRef.current = true; e.currentTarget.blur(); }
+              }}
+              aria-label={t(lang, 'tipEditPrayer')}
+              className="w-full text-base font-semibold bg-transparent border-b outline-none"
+              style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.6)' }}
+            />
+          ) : (
+            <h1
+              onClick={canEditTitle ? startEditTitle : undefined}
+              className={`text-base font-semibold text-white truncate flex items-center gap-1.5 ${canEditTitle ? 'cursor-text' : ''}`}
+              style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
+            >
+              <span className="truncate">{loc(livePrayer.title)}</span>
+              {canEditTitle && <Edit2 size={12} className="shrink-0 opacity-50" />}
+            </h1>
+          )}
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {isCommunity
               ? communityAuthor(livePrayer, user?.id, lang) + ' · ' + timeAgo(livePrayer.created_at, lang)

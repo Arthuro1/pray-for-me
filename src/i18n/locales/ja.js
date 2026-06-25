@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "祈りを削除しました",
   "removedFromList": "リストから削除しました",
   "testimonies": "証し",
-  "options": "オプション"
+  "options": "オプション",
+  "nextReminder": "次のリマインダー",
+  "tomorrow": "明日",
+  "notPrayedToday": "今日はまだ祈っていません",
+  "pushUnavailable": "リマインダーをオンにしました。この端末ではプッシュ通知を利用できません。"
 };

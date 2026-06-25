@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Tinanggal ang panalangin",
   "removedFromList": "Inalis sa iyong listahan",
   "testimonies": "Mga patotoo",
-  "options": "Mga opsyon"
+  "options": "Mga opsyon",
+  "nextReminder": "Susunod na paalala",
+  "tomorrow": "bukas",
+  "notPrayedToday": "Hindi ka pa nananalangin ngayon",
+  "pushUnavailable": "Naka-on ang paalala. Hindi available ang push notifications sa device na ito."
 };

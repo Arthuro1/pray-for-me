@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "祷告已删除",
   "removedFromList": "已从你的列表移除",
   "testimonies": "见证",
-  "options": "选项"
+  "options": "选项",
+  "nextReminder": "下次提醒",
+  "tomorrow": "明天",
+  "notPrayedToday": "你今天还没有祷告",
+  "pushUnavailable": "提醒已开启。此设备不支持推送通知。"
 };

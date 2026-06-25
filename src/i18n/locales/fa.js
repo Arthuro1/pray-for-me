@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "دعا حذف شد",
   "removedFromList": "از فهرست شما حذف شد",
   "testimonies": "شهادت‌ها",
-  "options": "گزینه‌ها"
+  "options": "گزینه‌ها",
+  "nextReminder": "یادآوری بعدی",
+  "tomorrow": "فردا",
+  "notPrayedToday": "امروز هنوز دعا نکرده‌اید",
+  "pushUnavailable": "یادآوری روشن شد. اعلان‌های پوش روی این دستگاه در دسترس نیست."
 };

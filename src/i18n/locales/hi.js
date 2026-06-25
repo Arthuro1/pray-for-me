@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "प्रार्थना हटाई गई",
   "removedFromList": "आपकी सूची से हटाया गया",
   "testimonies": "गवाहियाँ",
-  "options": "विकल्प"
+  "options": "विकल्प",
+  "nextReminder": "अगला अनुस्मारक",
+  "tomorrow": "कल",
+  "notPrayedToday": "आपने आज अभी तक प्रार्थना नहीं की",
+  "pushUnavailable": "अनुस्मारक चालू है। इस डिवाइस पर पुश सूचनाएं उपलब्ध नहीं हैं।"
 };

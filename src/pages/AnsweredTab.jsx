@@ -12,6 +12,7 @@ import { originAuthor, getAuthorName } from '../utils/user';
 import { t } from '../i18n';
 import Avatar from '../components/Avatar';
 import SwipeableRow from '../components/SwipeableRow';
+import EmptyState from '../components/EmptyState';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // A reflective "God's faithfulness" view of all answered prayers.
@@ -48,11 +49,13 @@ export default function AnsweredTab() {
 
       <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
         {answered.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-5xl mb-3">🙏</p>
-            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noAnsweredYet')}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noAnsweredSub')}</p>
-          </div>
+          <EmptyState
+            emoji="🙏"
+            title={t(lang, 'noAnsweredYet')}
+            subtitle={t(lang, 'noAnsweredSub')}
+            actionLabel={t(lang, 'today')}
+            onAction={() => navigate('/')}
+          />
         ) : (
           <>
             <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>

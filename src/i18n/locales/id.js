@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Doa dihapus",
   "removedFromList": "Dihapus dari daftar Anda",
   "testimonies": "Kesaksian",
-  "options": "Opsi"
+  "options": "Opsi",
+  "nextReminder": "Pengingat berikutnya",
+  "tomorrow": "besok",
+  "notPrayedToday": "Anda belum berdoa hari ini",
+  "pushUnavailable": "Pengingat aktif. Notifikasi push tidak tersedia di perangkat ini."
 };

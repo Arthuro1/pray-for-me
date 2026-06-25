@@ -7,13 +7,14 @@ import useAuthStore from '../store/authStore';
 import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/SwipeableRow';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import EmptyState from '../components/EmptyState';
+import { Search, SlidersHorizontal, Plus } from 'lucide-react';
 import { t } from '../i18n';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 
-export default function PrayersTab() {
+export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
   const { prayers, categories, settings, loading } = usePrayerStore();
   const { tr } = useTranslationStore();
@@ -125,11 +126,14 @@ export default function PrayersTab() {
         {loading && prayers.length === 0 ? (
           <PrayerListSkeleton count={5} />
         ) : sorted.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-5xl mb-3">🙏</p>
-            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'noPrayersFound')}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersFoundSub')}</p>
-          </div>
+          <EmptyState
+            emoji="🙏"
+            title={t(lang, 'noPrayersFound')}
+            subtitle={t(lang, 'noPrayersFoundSub')}
+            actionLabel={onAdd ? t(lang, 'emptyAddManual') : undefined}
+            actionIcon={Plus}
+            onAction={onAdd}
+          />
         ) : (
           <div className="flex flex-col gap-3">
             {sorted.map((prayer) => (

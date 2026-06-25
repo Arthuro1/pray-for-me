@@ -15,7 +15,9 @@ import SwipeableRow from '../components/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { computeStreak, weeklyRecap } from '../utils/streak';
-import { getPrayedDays, markPrayedToday } from '../lib/prayedLog';
+import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
+import { nextReminder } from '../utils/reminder';
+import { Clock } from 'lucide-react';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -204,6 +206,8 @@ export default function HomeTab({ onAdd }) {
   const activeCount = prayers.filter((p) => p.status === 'active').length;
   const streak = computeStreak(prayers, today, prayedDays);
   const recap = weeklyRecap(prayers, today);
+  const prayedToday = prayedDays.includes(todayKey());
+  const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
 
   useEffect(() => {
     const dateKey = today.toISOString().slice(0, 10);
@@ -324,6 +328,22 @@ export default function HomeTab({ onAdd }) {
           </div>
         )}
 
+        {/* Gentle nudge — only when there's something to pray today and you haven't yet */}
+        {!prayedToday && todaysPrayers.length > 0 && (
+          <button
+            onClick={() => setShowSession(true)}
+            className="w-full flex items-center justify-between gap-3 rounded-2xl px-4 py-3 mb-3 text-left"
+            style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
+          >
+            <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
+              🙏 {t(lang, 'notPrayedToday')}
+            </span>
+            <span className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg text-white" style={{ background: 'var(--accent)' }}>
+              {t(lang, 'prayNow')}
+            </span>
+          </button>
+        )}
+
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {[
@@ -424,6 +444,12 @@ export default function HomeTab({ onAdd }) {
           >
             <HandHeart size={17} /> {t(lang, 'prayNow')}
           </button>
+        )}
+
+        {reminder && (
+          <p className="text-xs text-center mb-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--text-3)' }}>
+            <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
+          </p>
         )}
 
         {todaysPrayers.length > 0 && (

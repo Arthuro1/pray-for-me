@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "تم حذف الصلاة",
   "removedFromList": "أُزيل من قائمتك",
   "testimonies": "الشهادات",
-  "options": "خيارات"
+  "options": "خيارات",
+  "nextReminder": "التذكير التالي",
+  "tomorrow": "غدًا",
+  "notPrayedToday": "لم تصلِّ اليوم بعد",
+  "pushUnavailable": "تم تفعيل التذكير. إشعارات الدفع غير متوفرة على هذا الجهاز."
 };

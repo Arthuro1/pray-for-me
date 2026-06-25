@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
 import OverflowMenu from '../components/OverflowMenu';
+import EmptyState from '../components/EmptyState';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -162,7 +163,13 @@ function CommunityHub({ lang, userId, onViewGroup }) {
 
         <Section title={t(lang, 'myGroups')}>
           {groups.length === 0 ? (
-            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'noGroups')}</p>
+            <EmptyState
+              emoji="👥"
+              title={t(lang, 'noGroups')}
+              actionLabel={t(lang, 'createGroup')}
+              actionIcon={Plus}
+              onAction={() => setShowCreateGroup(true)}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {groups.map(g => (

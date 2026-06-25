@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Молитва удалена",
   "removedFromList": "Удалено из вашего списка",
   "testimonies": "Свидетельства",
-  "options": "Параметры"
+  "options": "Параметры",
+  "nextReminder": "Следующее напоминание",
+  "tomorrow": "завтра",
+  "notPrayedToday": "Вы ещё не молились сегодня",
+  "pushUnavailable": "Напоминание включено. Push-уведомления недоступны на этом устройстве."
 };

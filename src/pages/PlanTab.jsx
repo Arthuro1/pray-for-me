@@ -6,6 +6,7 @@ import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { prayerOnDay } from '../utils/prayer';
 import ConfirmDialog from '../components/ConfirmDialog';
+import EmptyState from '../components/EmptyState';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
@@ -295,6 +296,16 @@ export default function PlanTab() {
         )}
 
         {/* Category list */}
+        {categories.length === 0 && !showAddForm ? (
+          <EmptyState
+            emoji="🗂️"
+            title={t(lang, 'noCategoriesYet')}
+            subtitle={t(lang, 'weeklyPlanSub')}
+            actionLabel={t(lang, 'addCategory')}
+            actionIcon={Plus}
+            onAction={() => { setShowAddForm(true); setEditId(null); setForm({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] }); }}
+          />
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
           {categories.map((cat) => (
             <div key={cat.id} className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -360,6 +371,7 @@ export default function PlanTab() {
             </div>
           ))}
         </div>
+        )}
       </div>
     </div>
   );

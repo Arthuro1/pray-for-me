@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Oração excluída",
   "removedFromList": "Removido da sua lista",
   "testimonies": "Testemunhos",
-  "options": "Opções"
+  "options": "Opções",
+  "nextReminder": "Próximo lembrete",
+  "tomorrow": "amanhã",
+  "notPrayedToday": "Você ainda não orou hoje",
+  "pushUnavailable": "Lembrete ativado. As notificações push não estão disponíveis neste dispositivo."
 };

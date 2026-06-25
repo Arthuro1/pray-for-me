@@ -205,7 +205,7 @@ export default function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomeTab onAdd={openAdd} />} />
-            <Route path="/prayers" element={<PrayersTab />} />
+            <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
             <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
             <Route path="/answered" element={<AnsweredTab />} />
             <Route path="/community" element={<CommunityTab />} />

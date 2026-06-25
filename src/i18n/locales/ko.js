@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "기도를 삭제함",
   "removedFromList": "목록에서 제거함",
   "testimonies": "간증",
-  "options": "옵션"
+  "options": "옵션",
+  "nextReminder": "다음 알림",
+  "tomorrow": "내일",
+  "notPrayedToday": "오늘 아직 기도하지 않았어요",
+  "pushUnavailable": "알림이 켜졌습니다. 이 기기에서는 푸시 알림을 사용할 수 없습니다."
 };

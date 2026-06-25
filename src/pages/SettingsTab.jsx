@@ -5,8 +5,9 @@ import useTranslationStore from '../store/translationStore';
 import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
-import { enablePush, updatePushPrefs, disablePush, pushSupported } from '../push';
+import { enablePush, updatePushPrefs, disablePush } from '../push';
 import { buildExport } from '../utils/export';
+import { nextReminder } from '../utils/reminder';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 
@@ -54,14 +55,26 @@ export default function SettingsTab() {
 
   const handleToggleNotifications = async () => {
     if (!settings.dailyReminderEnabled) {
-      if (!pushSupported()) { toast.error(t(lang, 'pushUnsupported')); return; }
-      const { error } = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang });
-      if (error) { toast.error(t(lang, error === 'denied' ? 'pushDenied' : 'errorGeneric')); return; }
-      updateSettings({ dailyReminderEnabled: true, notificationsGranted: true });
-      toast.success(t(lang, 'remindersOn'));
+      // Flip the preference immediately so the switch responds, then enable push
+      // as best-effort. Only an explicit permission denial reverts it.
+      updateSettings({ dailyReminderEnabled: true });
+      let res;
+      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang }); }
+      catch { res = { error: 'failed' }; }
+      if (res?.error === 'denied') {
+        updateSettings({ dailyReminderEnabled: false });
+        toast.error(t(lang, 'pushDenied'));
+      } else if (res?.error) {
+        // Reminder saved, but this device/browser can't deliver push (e.g. dev
+        // server with no service worker). In-app reminders still show while open.
+        toast.info(t(lang, 'pushUnavailable'));
+      } else {
+        updateSettings({ notificationsGranted: true });
+        toast.success(t(lang, 'remindersOn'));
+      }
     } else {
-      await disablePush(user?.id);
       updateSettings({ dailyReminderEnabled: false });
+      try { await disablePush(user?.id); } catch { /* best-effort */ }
     }
   };
 
@@ -202,15 +215,25 @@ export default function SettingsTab() {
 
           <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
             {settings.dailyReminderEnabled && (
-              <div className="mt-3 flex items-center gap-2">
-                <Clock size={13} style={{ color: 'var(--text-3)' }} />
-                <input
-                  type="time"
-                  value={settings.dailyReminderTime}
-                  onChange={(e) => handleReminderTimeChange(e.target.value)}
-                  className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                />
+              <div className="mt-3">
+                <div className="flex items-center gap-2">
+                  <Clock size={13} style={{ color: 'var(--text-3)' }} />
+                  <input
+                    type="time"
+                    value={settings.dailyReminderTime}
+                    onChange={(e) => handleReminderTimeChange(e.target.value)}
+                    className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                  />
+                </div>
+                {(() => {
+                  const r = nextReminder(settings.dailyReminderTime);
+                  return (
+                    <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+                      {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
+                    </p>
+                  );
+                })()}
               </div>
             )}
           </Row>

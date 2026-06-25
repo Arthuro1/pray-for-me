@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Ombi limefutwa",
   "removedFromList": "Imeondolewa kwenye orodha yako",
   "testimonies": "Ushuhuda",
-  "options": "Chaguo"
+  "options": "Chaguo",
+  "nextReminder": "Kikumbusho kijacho",
+  "tomorrow": "kesho",
+  "notPrayedToday": "Hujaomba leo",
+  "pushUnavailable": "Kikumbusho kimewashwa. Arifa za push hazipatikani kwenye kifaa hiki."
 };

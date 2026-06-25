@@ -321,5 +321,9 @@ export default {
   "prayerDeleted": "Gebet gelöscht",
   "removedFromList": "Aus deiner Liste entfernt",
   "testimonies": "Zeugnisse",
-  "options": "Optionen"
+  "options": "Optionen",
+  "nextReminder": "Nächste Erinnerung",
+  "tomorrow": "morgen",
+  "notPrayedToday": "Du hast heute noch nicht gebetet",
+  "pushUnavailable": "Erinnerung aktiviert. Push-Benachrichtigungen sind auf diesem Gerät nicht verfügbar."
 };
