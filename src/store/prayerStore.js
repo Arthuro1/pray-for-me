@@ -139,6 +139,29 @@ const usePrayerStore = create((set, get) => ({
     if (data) set((state) => ({ prayers: state.prayers.map((p) => (p.id === prayerId ? data : p)) }));
   },
 
+  // One-way pull for prayers saved from the community: refresh the saved copy's
+  // shared content (title, description, prayer points) from the linked community
+  // prayer so the owner sees the author's/group's latest. Personal fields
+  // (scheduling, categories, status, testimonies) are left untouched.
+  refreshFromCommunity: async (prayerId) => {
+    const p = get().prayers.find((x) => x.id === prayerId);
+    if (!p?.community_origin_id) return;
+    const { data } = await supabase
+      .from('community_prayers')
+      .select('title, description, prayer_points')
+      .eq('id', p.community_origin_id)
+      .maybeSingle();
+    if (!data) return; // not a member anymore / not found → keep the snapshot
+    const points = (data.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] }));
+    set((state) => ({
+      prayers: state.prayers.map((x) =>
+        x.id === prayerId
+          ? { ...x, title: data.title ?? x.title, description: data.description ?? x.description, prayer_points: points }
+          : x
+      ),
+    }));
+  },
+
   // ─── Prayers ─────────────────────────────────────────────────
   // Optimistic + offline-capable: the prayer appears immediately and the server
   // write is queued (replayed on reconnect). A client-generated id keeps the

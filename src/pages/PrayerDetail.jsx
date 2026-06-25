@@ -56,7 +56,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [savingToPersonal, setSavingToPersonal] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, deletePrayer, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity } = usePrayerStore();
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
   // Esc closes whichever inline overlay is open (ConfirmDialog handles its own).
@@ -190,6 +190,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   // Reset the community translation toggle when the prayer or language changes
   useEffect(() => { setShowTranslated(false); }, [communityPrayer?.id, lang]);
+
+  // For a prayer saved from the community, pull the author's/group's latest
+  // shared content into this copy on open (one-way follow).
+  useEffect(() => {
+    if (!isCommunity && prayer?.community_origin_id) refreshFromCommunity(prayer.id);
+  }, [isCommunity, prayer?.id]);
 
   // In community mode, read from store so updates (prayer points, edits) reflect immediately
   const livePrayer = isCommunity
