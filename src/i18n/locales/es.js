@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Próximo recordatorio",
   "tomorrow": "mañana",
   "notPrayedToday": "Aún no has orado hoy",
-  "pushUnavailable": "Recordatorio activado. Las notificaciones push no están disponibles en este dispositivo.",
-  "signingIn": "Iniciando sesión…",
-  "backToLogin": "Volver al inicio de sesión"
+  "pushUnavailable": "Recordatorio activado. Las notificaciones push no están disponibles en este dispositivo."
 };

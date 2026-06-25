@@ -22,7 +22,6 @@ const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
-const YouVersionCallback = lazy(() => import('./pages/YouVersionCallback'));
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
@@ -180,16 +179,6 @@ export default function App() {
       translateContent(prayers, categories, settings.language, user.id);
     }
   }, [settings.language, prayers, categories, user?.id]);
-
-  // Handle the YouVersion OAuth redirect before the auth gate — there's no
-  // session yet, so this must render regardless of `user`.
-  if (window.location.pathname.startsWith('/auth/youversion/callback')) {
-    return (
-      <Suspense fallback={<PageLoader />}>
-        <YouVersionCallback />
-      </Suspense>
-    );
-  }
 
   if (authLoading || !localeReady) {
     return (

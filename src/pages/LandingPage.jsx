@@ -1,17 +1,5 @@
 ﻿import { useState } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Users } from 'lucide-react';
-import { youVersionEnabled, startYouVersionLogin } from '../lib/youversion';
-
-// "Continue with YouVersion" CTA label per language (kept here so we don't have
-// to thread it through every per-language content block below).
-const YV_CTA = {
-  fr: 'Continuer avec YouVersion', en: 'Continue with YouVersion', de: 'Mit YouVersion fortfahren',
-  pt: 'Continuar com YouVersion', es: 'Continuar con YouVersion', zh: '使用 YouVersion 继续',
-  ja: 'YouVersion で続ける', ko: 'YouVersion으로 계속하기', ru: 'Продолжить с YouVersion',
-  ar: 'المتابعة باستخدام YouVersion', fa: 'ادامه با YouVersion', hi: 'YouVersion के साथ जारी रखें',
-  sw: 'Endelea na YouVersion', am: 'በ YouVersion ይቀጥሉ', id: 'Lanjutkan dengan YouVersion',
-  tl: 'Magpatuloy gamit ang YouVersion',
-};
 
 const LANGS = [
   { code: 'fr', flag: '🇫🇷', label: 'FR' },
@@ -992,18 +980,6 @@ export default function LandingPage({ onGetStarted }) {
               {c.howItWorks}
             </button>
           </div>
-           {/*youVersionEnabled && (
-            <button
-              onClick={startYouVersionLogin}
-              className="mt-3 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-sm font-medium text-white"
-              style={{ background: '#ff3d4e' }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M7 3h2.4v5.2H14V3h2.4v13.5c0 2.5-1.5 4.5-4.7 4.5-3.2 0-4.7-2-4.7-4.5V3z" />
-              </svg>
-              {YV_CTA[lang] || YV_CTA.en}
-            </button>
-          )*/} 
           <p className="text-xs mt-4 italic" style={{ color: 'rgba(255,255,255,0.3)' }}>{c.verse}</p>
         </div>
       </section>

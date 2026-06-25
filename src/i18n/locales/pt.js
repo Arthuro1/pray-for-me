@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Próximo lembrete",
   "tomorrow": "amanhã",
   "notPrayedToday": "Você ainda não orou hoje",
-  "pushUnavailable": "Lembrete ativado. As notificações push não estão disponíveis neste dispositivo.",
-  "signingIn": "Entrando…",
-  "backToLogin": "Voltar ao login"
+  "pushUnavailable": "Lembrete ativado. As notificações push não estão disponíveis neste dispositivo."
 };

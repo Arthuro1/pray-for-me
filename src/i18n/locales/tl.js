@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Susunod na paalala",
   "tomorrow": "bukas",
   "notPrayedToday": "Hindi ka pa nananalangin ngayon",
-  "pushUnavailable": "Naka-on ang paalala. Hindi available ang push notifications sa device na ito.",
-  "signingIn": "Sinisignin ka…",
-  "backToLogin": "Bumalik sa login"
+  "pushUnavailable": "Naka-on ang paalala. Hindi available ang push notifications sa device na ito."
 };

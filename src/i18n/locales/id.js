@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Pengingat berikutnya",
   "tomorrow": "besok",
   "notPrayedToday": "Anda belum berdoa hari ini",
-  "pushUnavailable": "Pengingat aktif. Notifikasi push tidak tersedia di perangkat ini.",
-  "signingIn": "Sedang masuk…",
-  "backToLogin": "Kembali ke masuk"
+  "pushUnavailable": "Pengingat aktif. Notifikasi push tidak tersedia di perangkat ini."
 };

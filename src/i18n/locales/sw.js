@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Kikumbusho kijacho",
   "tomorrow": "kesho",
   "notPrayedToday": "Hujaomba leo",
-  "pushUnavailable": "Kikumbusho kimewashwa. Arifa za push hazipatikani kwenye kifaa hiki.",
-  "signingIn": "Inakuingiza…",
-  "backToLogin": "Rudi kwenye kuingia"
+  "pushUnavailable": "Kikumbusho kimewashwa. Arifa za push hazipatikani kwenye kifaa hiki."
 };

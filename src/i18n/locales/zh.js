@@ -325,7 +325,5 @@ export default {
   "nextReminder": "下次提醒",
   "tomorrow": "明天",
   "notPrayedToday": "你今天还没有祷告",
-  "pushUnavailable": "提醒已开启。此设备不支持推送通知。",
-  "signingIn": "正在登录…",
-  "backToLogin": "返回登录"
+  "pushUnavailable": "提醒已开启。此设备不支持推送通知。"
 };

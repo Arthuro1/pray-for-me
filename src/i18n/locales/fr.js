@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Prochain rappel",
   "tomorrow": "demain",
   "notPrayedToday": "Vous n'avez pas encore prié aujourd'hui",
-  "pushUnavailable": "Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil.",
-  "signingIn": "Connexion en cours…",
-  "backToLogin": "Retour à la connexion"
+  "pushUnavailable": "Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil."
 };

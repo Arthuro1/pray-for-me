@@ -325,7 +325,5 @@ export default {
   "nextReminder": "Nächste Erinnerung",
   "tomorrow": "morgen",
   "notPrayedToday": "Du hast heute noch nicht gebetet",
-  "pushUnavailable": "Erinnerung aktiviert. Push-Benachrichtigungen sind auf diesem Gerät nicht verfügbar.",
-  "signingIn": "Anmeldung läuft…",
-  "backToLogin": "Zurück zur Anmeldung"
+  "pushUnavailable": "Erinnerung aktiviert. Push-Benachrichtigungen sind auf diesem Gerät nicht verfügbar."
 };
