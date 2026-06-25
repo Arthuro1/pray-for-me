@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "保持坚持",
   "onboardRemindBody": "开启每日提醒，看着你的祷告连续记录增长——Pray4Me 甚至可以离线使用。",
   "renameGroup": "重命名群组",
-  "groupRenamed": "群组名称已更新"
+  "groupRenamed": "群组名称已更新",
+  "followsGroup": "关注此共享祷告——在社区中编辑以参与"
 };

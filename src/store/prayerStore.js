@@ -125,6 +125,8 @@ const usePrayerStore = create((set, get) => ({
     const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
     set({ categories: ordered, prayers: mergedPrayers, loading: false });
     saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers });
+    // Mirror shared content of saved-from-community prayers (fully-shared sync).
+    get().refreshSavedCopies();
   },
 
   // Refetch a single personal prayer from the server and replace it in state.
@@ -137,6 +139,33 @@ const usePrayerStore = create((set, get) => ({
       .eq('id', prayerId)
       .maybeSingle();
     if (data) set((state) => ({ prayers: state.prayers.map((p) => (p.id === prayerId ? data : p)) }));
+  },
+
+  // Batch version of refreshFromCommunity: mirror the shared content of ALL
+  // saved-from-community prayers from their linked community prayers in one query.
+  // Run on load so saved copies reflect the current shared content (incl. edits
+  // synced from other members), without opening each one.
+  refreshSavedCopies: async () => {
+    const saved = get().prayers.filter((p) => p.community_origin_id);
+    if (saved.length === 0) return;
+    const { data } = await supabase
+      .from('community_prayers')
+      .select('id, title, description, prayer_points')
+      .in('id', saved.map((p) => p.community_origin_id));
+    if (!data) return;
+    const byId = Object.fromEntries(data.map((c) => [c.id, c]));
+    set((state) => ({
+      prayers: state.prayers.map((p) => {
+        const c = p.community_origin_id && byId[p.community_origin_id];
+        if (!c) return p;
+        return {
+          ...p,
+          title: c.title ?? p.title,
+          description: c.description ?? p.description,
+          prayer_points: (c.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] })),
+        };
+      }),
+    }));
   },
 
   // One-way pull for prayers saved from the community: refresh the saved copy's

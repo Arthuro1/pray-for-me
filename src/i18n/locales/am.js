@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "ቀጣይነት ይኑርዎት",
   "onboardRemindBody": "ዕለታዊ አስታዋሽ ያብሩ እና የጸሎት ተከታታይነትዎ ሲያድግ ይመልከቱ — Pray4Me ከመስመር ውጭም ይሰራል።",
   "renameGroup": "የቡድን ስም ቀይር",
-  "groupRenamed": "የቡድን ስም ተዘምኗል"
+  "groupRenamed": "የቡድን ስም ተዘምኗል",
+  "followsGroup": "ይህን የተጋራ ጸሎት ይከታተላል — ለማበርከት በማኅበረሰብ ውስጥ ያስተካክሉ"
 };

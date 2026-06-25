@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, BookmarkPlus, BookmarkCheck, Languages } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, BookmarkPlus, BookmarkCheck, Languages, Users } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -210,6 +210,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityHasReacted = isCommunity && userReactions.has(communityPrayer.id);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
+
+  // ── Shared (saved-from-community) prayer flags ───────────────────────────
+  // A saved copy follows the shared content read-only: it pulls the author's/
+  // group's latest, but isn't edited here (open it in Community to contribute).
+  const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
+  const canAddContent = !isAnswered && (isCommunity || !savedCopy);
+  const canRemoveContent = !isAnswered && (isCommunity || !savedCopy);
 
   // Personal content auto-translates; community content translates on demand
   // (the "See translation" toggle) so members can read requests in any language.
@@ -506,11 +513,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         )}
 
 
+        {/* ── Saved-from-community: read-only follow indicator ── */}
+        {savedCopy && (
+          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
+            <Users size={12} style={{ color: 'var(--accent)' }} /> {t(lang, 'followsGroup')}
+          </p>
+        )}
+
         {/* ── Prayer points + AI suggestions (both modes) ── */}
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
-            {(!isAnswered || isCommunity) && (
+            {(isCommunity || canAddContent) && (
               <button
                 onClick={fetchRecs}
                 disabled={loadingRecs}
@@ -538,7 +552,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <div key={pp.id} className="group rounded-xl p-3" style={{ background: '#fff8e6', borderLeft: '3px solid #f5c842' }}>
                   <div className="flex items-start gap-2">
                     <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{loc(pp.title)}</p>
-                    {!isAnswered && (
+                    {canRemoveContent && (
                       <button onClick={() => setConfirmRemovePoint(pp)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
                         <Trash2 size={13} />
                       </button>
@@ -565,7 +579,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                                 <a href={bibleUrl(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
                                   <ExternalLink size={11} /> {t(lang, 'openBible')}
                                 </a>
-                                {!isAnswered && (
+                                {canRemoveContent && (
                                   <button onClick={() => handleRemoveVerse(pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="text-xs" style={{ color: '#c04040' }}>
                                     <Trash2 size={11} />
                                   </button>
@@ -579,7 +593,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   )}
 
                   {/* Add verse inline form */}
-                  {!isAnswered && (
+                  {canAddContent && (
                     addingVerseTo === pp.id ? (
                       <div className="mt-2 space-y-1.5">
                         <input
@@ -680,7 +694,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {/* Manual prayer point input */}
-          {!isAnswered && (
+          {canAddContent && (
             showManualForm ? (
               <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'var(--surface-2)', border: '0.5px solid var(--border)' }}>
                 <input

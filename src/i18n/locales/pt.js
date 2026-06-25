@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "Mantenha a constância",
   "onboardRemindBody": "Ative um lembrete diário e veja sua sequência de oração crescer — o Pray4Me funciona até offline.",
   "renameGroup": "Renomear grupo",
-  "groupRenamed": "Nome do grupo atualizado"
+  "groupRenamed": "Nome do grupo atualizado",
+  "followsGroup": "Segue esta oração compartilhada — edite-a na Comunidade para contribuir"
 };

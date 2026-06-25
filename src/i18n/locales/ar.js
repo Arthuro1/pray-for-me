@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "داوم على الصلاة",
   "onboardRemindBody": "فعّل تذكيرًا يوميًا وشاهد سلسلة صلواتك تنمو — يعمل Pray4Me حتى دون اتصال.",
   "renameGroup": "إعادة تسمية المجموعة",
-  "groupRenamed": "تم تحديث اسم المجموعة"
+  "groupRenamed": "تم تحديث اسم المجموعة",
+  "followsGroup": "يتابع هذه الصلاة المشتركة — حرّرها في المجتمع للمساهمة"
 };

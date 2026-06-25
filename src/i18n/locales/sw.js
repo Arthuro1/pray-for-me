@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "Endelea kwa ukawaida",
   "onboardRemindBody": "Washa kikumbusho cha kila siku na uone mfululizo wako wa maombi ukikua — Pray4Me hufanya kazi hata nje ya mtandao.",
   "renameGroup": "Badilisha jina la kikundi",
-  "groupRenamed": "Jina la kikundi limesasishwa"
+  "groupRenamed": "Jina la kikundi limesasishwa",
+  "followsGroup": "Inafuata ombi hili lililoshirikiwa — lihariri katika Jumuiya ili kuchangia"
 };

@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "Stay consistent",
   "onboardRemindBody": "Turn on a daily reminder and watch your prayer streak grow — Pray4Me even works offline.",
   "renameGroup": "Rename group",
-  "groupRenamed": "Group name updated"
+  "groupRenamed": "Group name updated",
+  "followsGroup": "Follows this shared prayer — edit it in Community to contribute"
 };

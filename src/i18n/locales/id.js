@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "Tetap konsisten",
   "onboardRemindBody": "Aktifkan pengingat harian dan lihat rentetan doa Anda bertambah — Pray4Me bahkan berfungsi offline.",
   "renameGroup": "Ganti nama grup",
-  "groupRenamed": "Nama grup diperbarui"
+  "groupRenamed": "Nama grup diperbarui",
+  "followsGroup": "Mengikuti doa bersama ini — edit di Komunitas untuk berkontribusi"
 };

@@ -305,5 +305,6 @@ export default {
   "onboardRemindTitle": "Bleib dran",
   "onboardRemindBody": "Aktiviere eine tägliche Erinnerung und sieh deine Gebetsserie wachsen — Pray4Me funktioniert sogar offline.",
   "renameGroup": "Gruppe umbenennen",
-  "groupRenamed": "Gruppenname aktualisiert"
+  "groupRenamed": "Gruppenname aktualisiert",
+  "followsGroup": "Folgt diesem geteilten Gebet — bearbeite es in der Community, um beizutragen"
 };
