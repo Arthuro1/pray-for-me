@@ -325,5 +325,7 @@ export default {
   "nextReminder": "ቀጣይ ማስታወሻ",
   "tomorrow": "ነገ",
   "notPrayedToday": "ዛሬ ገና አልጸለይክም",
-  "pushUnavailable": "ማስታወሻ በርቷል። በዚህ መሣሪያ ላይ የግፋ ማሳወቂያዎች አይገኙም።"
+  "pushUnavailable": "ማስታወሻ በርቷል። በዚህ መሣሪያ ላይ የግፋ ማሳወቂያዎች አይገኙም።",
+  "signingIn": "በመግባት ላይ…",
+  "backToLogin": "ወደ መግቢያ ተመለስ"
 };

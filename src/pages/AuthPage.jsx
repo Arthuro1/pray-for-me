@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Loader2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
+import { youVersionEnabled, startYouVersionLogin } from '../lib/youversion';
 
 export default function AuthPage() {
   const [mode, setMode] = useState('login');
@@ -96,6 +97,21 @@ export default function AuthPage() {
           </svg>
           Continuer avec Google
         </button>
+
+        {youVersionEnabled && (
+          <button
+            onClick={startYouVersionLogin}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-3 rounded-xl py-3 text-sm font-medium mb-4 transition-colors disabled:opacity-50 text-white"
+            style={{ background: '#ff3d4e' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 21s-7.5-4.35-10-9.28C.42 8.4 1.84 5 5.2 5c1.97 0 3.4 1.1 4.3 2.4C10.4 6.1 11.83 5 13.8 5c3.36 0 4.78 3.4 3.2 6.72C19.5 16.65 12 21 12 21z" opacity=".25"/>
+              <path d="M7 3h2.4v5.2H14V3h2.4v13.5c0 2.5-1.5 4.5-4.7 4.5-3.2 0-4.7-2-4.7-4.5V3z"/>
+            </svg>
+            Continuer avec YouVersion
+          </button>
+        )}
 
         <div className="flex items-center gap-3 mb-4">
           <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />

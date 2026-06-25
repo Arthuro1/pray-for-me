@@ -325,5 +325,7 @@ export default {
   "nextReminder": "다음 알림",
   "tomorrow": "내일",
   "notPrayedToday": "오늘 아직 기도하지 않았어요",
-  "pushUnavailable": "알림이 켜졌습니다. 이 기기에서는 푸시 알림을 사용할 수 없습니다."
+  "pushUnavailable": "알림이 켜졌습니다. 이 기기에서는 푸시 알림을 사용할 수 없습니다.",
+  "signingIn": "로그인 중…",
+  "backToLogin": "로그인으로 돌아가기"
 };
