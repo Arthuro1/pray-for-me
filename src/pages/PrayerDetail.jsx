@@ -32,6 +32,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [expandedVerse, setExpandedVerse] = useState(null);
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
+  const [showCatPicker, setShowCatPicker] = useState(false);
   const [addingVerseTo, setAddingVerseTo] = useState(null);
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
@@ -511,8 +512,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </button>
         )}
 
-        {/* Categories */}
-        {prayerCategories.length > 0 && (
+        {/* Categories — read-only chips, except on a saved copy where you can
+            file it under your own categories (personal organisation). */}
+        {!savedCopy && prayerCategories.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {prayerCategories.map(c => (
               <span key={c.id} className="text-xs px-3 py-1.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
@@ -523,6 +525,45 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
                 👤 {livePrayer.person_name}
               </span>
+            )}
+          </div>
+        )}
+        {savedCopy && categories.length > 0 && (
+          <div>
+            <div className="flex flex-wrap gap-1.5 items-center">
+              {/* Categories you've filed this under — tap to remove. */}
+              {prayerCategories.map(c => (
+                <button
+                  key={c.id}
+                  onClick={() => updatePrayer(livePrayer.id, { categoryIds: prayerCategoryIds.filter(id => id !== c.id) })}
+                  className="text-xs px-3 py-1.5 rounded-full font-medium text-white"
+                  style={{ backgroundColor: c.color }}
+                >
+                  {c.emoji} {tr(c.name, lang)}
+                </button>
+              ))}
+              <button
+                onClick={() => setShowCatPicker(v => !v)}
+                className="text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                <Plus size={11} /> {t(lang, 'addCategory')}
+              </button>
+            </div>
+            {/* The full choice list is revealed only after tapping "Add". */}
+            {showCatPicker && (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {categories.filter(c => !prayerCategoryIds.includes(c.id)).map(c => (
+                  <button
+                    key={c.id}
+                    onClick={() => updatePrayer(livePrayer.id, { categoryIds: [...prayerCategoryIds, c.id] })}
+                    className="text-xs px-3 py-1.5 rounded-full font-medium"
+                    style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    {c.emoji} {tr(c.name, lang)}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         )}
