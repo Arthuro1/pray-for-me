@@ -325,5 +325,7 @@ export default {
   "nextReminder": "Prochain rappel",
   "tomorrow": "demain",
   "notPrayedToday": "Vous n'avez pas encore prié aujourd'hui",
-  "pushUnavailable": "Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil."
+  "pushUnavailable": "Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil.",
+  "shareVerse": "Partager le verset",
+  "verseCopied": "Verset copié !"
 };

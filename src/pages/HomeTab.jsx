@@ -7,7 +7,8 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, HandHeart } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart, Share2 } from 'lucide-react';
+import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
@@ -262,6 +263,22 @@ export default function HomeTab({ onAdd }) {
     setAddedTitles(prev => new Set([...prev, rec.title]));
   };
 
+  // Share the verse of the day via the native share sheet, or copy it as a fallback.
+  const handleShareVerse = async () => {
+    if (!verse) return;
+    const text = `"${verse.text}" — ${verse.ref}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: t(lang, 'verseOfDay'), text, url: window.location.origin });
+      } else {
+        await navigator.clipboard.writeText(`${text}\n${window.location.origin}`);
+        toast.success(t(lang, 'verseCopied'));
+      }
+    } catch {
+      // user dismissed the share sheet, or share/clipboard was blocked — ignore
+    }
+  };
+
   return (
     <div>
       {showSession && todaysPrayers.length > 0 && (
@@ -293,9 +310,22 @@ export default function HomeTab({ onAdd }) {
             {greeting}{displayName ? `, ${displayName}` : ''} {greetingEmoji}
           </h2>
           <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              {t(lang, 'verseOfDay')}
-            </p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {t(lang, 'verseOfDay')}
+              </p>
+              {verse && (
+                <button
+                  onClick={handleShareVerse}
+                  aria-label={t(lang, 'shareVerse')}
+                  title={t(lang, 'shareVerse')}
+                  className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.12)', color: '#fff' }}
+                >
+                  <Share2 size={13} />
+                </button>
+              )}
+            </div>
             {verse ? (
               <>
                 <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>

@@ -325,5 +325,7 @@ export default {
   "nextReminder": "Next reminder",
   "tomorrow": "tomorrow",
   "notPrayedToday": "You haven't prayed today",
-  "pushUnavailable": "Reminder on. Push notifications aren't available on this device."
+  "pushUnavailable": "Reminder on. Push notifications aren't available on this device.",
+  "shareVerse": "Share verse",
+  "verseCopied": "Verse copied!"
 };

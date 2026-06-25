@@ -325,5 +325,7 @@ export default {
   "nextReminder": "Susunod na paalala",
   "tomorrow": "bukas",
   "notPrayedToday": "Hindi ka pa nananalangin ngayon",
-  "pushUnavailable": "Naka-on ang paalala. Hindi available ang push notifications sa device na ito."
+  "pushUnavailable": "Naka-on ang paalala. Hindi available ang push notifications sa device na ito.",
+  "shareVerse": "Ibahagi ang talata",
+  "verseCopied": "Nakopya ang talata!"
 };

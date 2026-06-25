@@ -325,5 +325,7 @@ export default {
   "nextReminder": "अगला अनुस्मारक",
   "tomorrow": "कल",
   "notPrayedToday": "आपने आज अभी तक प्रार्थना नहीं की",
-  "pushUnavailable": "अनुस्मारक चालू है। इस डिवाइस पर पुश सूचनाएं उपलब्ध नहीं हैं।"
+  "pushUnavailable": "अनुस्मारक चालू है। इस डिवाइस पर पुश सूचनाएं उपलब्ध नहीं हैं।",
+  "shareVerse": "पद साझा करें",
+  "verseCopied": "पद कॉपी हो गया!"
 };

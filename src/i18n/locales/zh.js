@@ -325,5 +325,7 @@ export default {
   "nextReminder": "下次提醒",
   "tomorrow": "明天",
   "notPrayedToday": "你今天还没有祷告",
-  "pushUnavailable": "提醒已开启。此设备不支持推送通知。"
+  "pushUnavailable": "提醒已开启。此设备不支持推送通知。",
+  "shareVerse": "分享经文",
+  "verseCopied": "经文已复制！"
 };

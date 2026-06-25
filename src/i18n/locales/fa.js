@@ -325,5 +325,7 @@ export default {
   "nextReminder": "یادآوری بعدی",
   "tomorrow": "فردا",
   "notPrayedToday": "امروز هنوز دعا نکرده‌اید",
-  "pushUnavailable": "یادآوری روشن شد. اعلان‌های پوش روی این دستگاه در دسترس نیست."
+  "pushUnavailable": "یادآوری روشن شد. اعلان‌های پوش روی این دستگاه در دسترس نیست.",
+  "shareVerse": "اشتراک آیه",
+  "verseCopied": "آیه کپی شد!"
 };

@@ -325,5 +325,7 @@ export default {
   "nextReminder": "Nächste Erinnerung",
   "tomorrow": "morgen",
   "notPrayedToday": "Du hast heute noch nicht gebetet",
-  "pushUnavailable": "Erinnerung aktiviert. Push-Benachrichtigungen sind auf diesem Gerät nicht verfügbar."
+  "pushUnavailable": "Erinnerung aktiviert. Push-Benachrichtigungen sind auf diesem Gerät nicht verfügbar.",
+  "shareVerse": "Vers teilen",
+  "verseCopied": "Vers kopiert!"
 };

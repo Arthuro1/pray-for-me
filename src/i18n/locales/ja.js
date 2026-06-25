@@ -325,5 +325,7 @@ export default {
   "nextReminder": "次のリマインダー",
   "tomorrow": "明日",
   "notPrayedToday": "今日はまだ祈っていません",
-  "pushUnavailable": "リマインダーをオンにしました。この端末ではプッシュ通知を利用できません。"
+  "pushUnavailable": "リマインダーをオンにしました。この端末ではプッシュ通知を利用できません。",
+  "shareVerse": "聖句を共有",
+  "verseCopied": "聖句をコピーしました！"
 };

@@ -325,5 +325,7 @@ export default {
   "nextReminder": "التذكير التالي",
   "tomorrow": "غدًا",
   "notPrayedToday": "لم تصلِّ اليوم بعد",
-  "pushUnavailable": "تم تفعيل التذكير. إشعارات الدفع غير متوفرة على هذا الجهاز."
+  "pushUnavailable": "تم تفعيل التذكير. إشعارات الدفع غير متوفرة على هذا الجهاز.",
+  "shareVerse": "مشاركة الآية",
+  "verseCopied": "تم نسخ الآية!"
 };

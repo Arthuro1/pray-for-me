@@ -325,5 +325,7 @@ export default {
   "nextReminder": "Próximo lembrete",
   "tomorrow": "amanhã",
   "notPrayedToday": "Você ainda não orou hoje",
-  "pushUnavailable": "Lembrete ativado. As notificações push não estão disponíveis neste dispositivo."
+  "pushUnavailable": "Lembrete ativado. As notificações push não estão disponíveis neste dispositivo.",
+  "shareVerse": "Compartilhar versículo",
+  "verseCopied": "Versículo copiado!"
 };
