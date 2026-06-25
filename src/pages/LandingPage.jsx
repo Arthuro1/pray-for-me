@@ -992,7 +992,7 @@ export default function LandingPage({ onGetStarted }) {
               {c.howItWorks}
             </button>
           </div>
-          {youVersionEnabled && (
+           {/*youVersionEnabled && (
             <button
               onClick={startYouVersionLogin}
               className="mt-3 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl text-sm font-medium text-white"
@@ -1003,7 +1003,7 @@ export default function LandingPage({ onGetStarted }) {
               </svg>
               {YV_CTA[lang] || YV_CTA.en}
             </button>
-          )}
+          )*/} 
           <p className="text-xs mt-4 italic" style={{ color: 'rgba(255,255,255,0.3)' }}>{c.verse}</p>
         </div>
       </section>
