@@ -36,17 +36,32 @@ function prayerDueToday(p: any, dow: number, todayCatIds: Set<string>): boolean 
   return catIds.some((id: string) => todayCatIds.has(id));
 }
 
-Deno.serve(async () => {
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  );
+const json = (obj: unknown, status = 200) =>
+  new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
 
-  webpush.setVapidDetails(
-    Deno.env.get('VAPID_SUBJECT') || 'mailto:admin@pray4me.app',
-    Deno.env.get('VAPID_PUBLIC_KEY')!,
-    Deno.env.get('VAPID_PRIVATE_KEY')!,
-  );
+Deno.serve(async () => {
+ try {
+  const url = Deno.env.get('SUPABASE_URL');
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const vapidPublic = Deno.env.get('VAPID_PUBLIC_KEY');
+  const vapidPrivate = Deno.env.get('VAPID_PRIVATE_KEY');
+
+  // Surface a clear reason instead of a blank 500 when a secret is missing.
+  const missing = ([
+    ['SUPABASE_URL', url],
+    ['SUPABASE_SERVICE_ROLE_KEY', serviceKey],
+    ['VAPID_PUBLIC_KEY', vapidPublic],
+    ['VAPID_PRIVATE_KEY', vapidPrivate],
+  ] as [string, string | undefined][]).filter(([, v]) => !v).map(([k]) => k);
+  if (missing.length) return json({ error: 'missing_env', missing }, 500);
+
+  const supabase = createClient(url!, serviceKey!);
+
+  try {
+    webpush.setVapidDetails(Deno.env.get('VAPID_SUBJECT') || 'mailto:admin@pray4me.app', vapidPublic!, vapidPrivate!);
+  } catch (e) {
+    return json({ error: 'invalid_vapid_keys', message: String((e as Error)?.message || e) }, 500);
+  }
 
   const now = new Date();
   const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
@@ -95,5 +110,9 @@ Deno.serve(async () => {
     }
   }
 
-  return new Response(JSON.stringify({ sent }), { headers: { 'Content-Type': 'application/json' } });
+  return json({ sent });
+ } catch (e) {
+  // Any unexpected failure → readable message instead of a blank 500.
+  return json({ error: 'unhandled', message: String((e as Error)?.message || e) }, 500);
+ }
 });

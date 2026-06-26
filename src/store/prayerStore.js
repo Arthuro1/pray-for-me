@@ -51,16 +51,25 @@ const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
   userId: null,
-  settings: {
-    dailyReminderEnabled: false,
-    dailyReminderTime: '07:00',
-    followUpEnabled: false,
-    followUpDays: 7,
-    callReminderEnabled: false,
-    notificationsGranted: false,
-    language: resolveLanguage(localStorage.getItem('pfm_language'), navigator.language || navigator.userLanguage),
-    theme: localStorage.getItem('pfm_theme') || 'light',
-  },
+  settings: (() => {
+    const base = {
+      dailyReminderEnabled: false,
+      dailyReminderTime: '07:00',
+      followUpEnabled: false,
+      followUpDays: 7,
+      callReminderEnabled: false,
+      notificationsGranted: false,
+    };
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('pfm_settings') || '{}'); } catch { /* ignore */ }
+    // language + theme keep their own dedicated keys as the source of truth.
+    return {
+      ...base,
+      ...saved,
+      language: resolveLanguage(localStorage.getItem('pfm_language'), navigator.language || navigator.userLanguage),
+      theme: localStorage.getItem('pfm_theme') || 'light',
+    };
+  })(),
   loading: true, // starts true so the first paint shows skeletons, not an empty flash
 
   // ─── Load all data ───────────────────────────────────────────
@@ -491,7 +500,13 @@ const usePrayerStore = create((set, get) => ({
       localStorage.setItem('pfm_theme', updates.theme);
       document.documentElement.setAttribute('data-theme', updates.theme);
     }
-    set((state) => ({ settings: { ...state.settings, ...updates } }));
+    set((state) => {
+      const next = { ...state.settings, ...updates };
+      // Persist all prefs (reminder toggle/time, follow-up, etc.) so they survive
+      // a refresh — previously only language/theme were saved.
+      try { localStorage.setItem('pfm_settings', JSON.stringify(next)); } catch { /* ignore */ }
+      return { settings: next };
+    });
   },
 
   // ─── Today's prayers ─────────────────────────────────────────
