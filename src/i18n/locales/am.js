@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "ጸሎቶችን በምድቦች ይከፋፍሉ እና ለቀናት ይመድቡ፣ ዛሬ ምን እንደሚጸልዩ ሁልጊዜ ለማወቅ።",
   "onboardCommunityTitle": "በጋራ ይጸልዩ",
   "onboardCommunityBody": "ቡድኖችን ይቀላቀሉ፣ ርዕሶችን ያጋሩ፣ እርስ በርስ ይጸልዩ።",
+  "onboardVaultTitle": "በግል ይያዙ",
+  "onboardVaultBody": "የግል ጸሎቶችዎን ከጫፍ እስከ ጫፍ በተመሰጠረ ካዝና ውስጥ ይቆልፉ — የሚስጥር ሐረግዎ ብቻ ይከፍተዋል፣ እኛም ልናነባቸው አንችልም።",
   "onboardSkip": "ዝለል",
   "onboardNext": "ቀጣይ",
   "onboardStart": "ይጀምሩ",

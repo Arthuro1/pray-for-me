@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Sort prayers into categories and assign them to days, so you always know what to pray today.",
   "onboardCommunityTitle": "Pray together",
   "onboardCommunityBody": "Join groups, share requests, and pray for one another.",
+  "onboardVaultTitle": "Keep it private",
+  "onboardVaultBody": "Lock your private prayers in an end-to-end encrypted vault — only your passphrase opens it, and not even we can read them.",
   "onboardSkip": "Skip",
   "onboardNext": "Next",
   "onboardStart": "Get started",

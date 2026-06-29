@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Ordne Gebete in Kategorien und weise sie Tagen zu, damit du immer weißt, was du heute beten kannst.",
   "onboardCommunityTitle": "Gemeinsam beten",
   "onboardCommunityBody": "Tritt Gruppen bei, teile Anliegen und betet füreinander.",
+  "onboardVaultTitle": "Bleibt privat",
+  "onboardVaultBody": "Sperre deine privaten Gebete in einen Ende-zu-Ende-verschlüsselten Tresor — nur deine Passphrase öffnet ihn, nicht einmal wir können sie lesen.",
   "onboardSkip": "Überspringen",
   "onboardNext": "Weiter",
   "onboardStart": "Loslegen",

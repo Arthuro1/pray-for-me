@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Classez vos prières par catégories et attribuez-les à des jours, pour toujours savoir quoi prier aujourd’hui.",
   "onboardCommunityTitle": "Priez ensemble",
   "onboardCommunityBody": "Rejoignez des groupes, partagez des sujets et priez les uns pour les autres.",
+  "onboardVaultTitle": "Gardez le secret",
+  "onboardVaultBody": "Verrouillez vos prières privées dans un coffre chiffré de bout en bout — seule votre phrase secrète l'ouvre, et même nous ne pouvons pas les lire.",
   "onboardSkip": "Passer",
   "onboardNext": "Suivant",
   "onboardStart": "Commencer",

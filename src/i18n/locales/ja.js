@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "祈りをカテゴリ分けして曜日に割り当て、今日何を祈るか常に分かるようにします。",
   "onboardCommunityTitle": "共に祈る",
   "onboardCommunityBody": "グループに参加し、課題を分かち合い、互いのために祈りましょう。",
+  "onboardVaultTitle": "祈りを守る",
+  "onboardVaultBody": "プライベートな祈りをエンドツーエンド暗号化の保管庫に保管。あなたのパスフレーズだけが開けられ、私たちにも読めません。",
   "onboardSkip": "スキップ",
   "onboardNext": "次へ",
   "onboardStart": "はじめる",

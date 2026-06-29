@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "기도를 카테고리로 분류하고 요일에 배정해, 오늘 무엇을 기도할지 항상 알 수 있습니다.",
   "onboardCommunityTitle": "함께 기도하세요",
   "onboardCommunityBody": "그룹에 참여하고, 기도 제목을 나누며, 서로를 위해 기도하세요.",
+  "onboardVaultTitle": "비공개로 보관",
+  "onboardVaultBody": "비공개 기도를 종단 간 암호화된 금고에 잠그세요 — 오직 당신의 암호문구만 열 수 있으며, 우리조차 읽을 수 없습니다.",
   "onboardSkip": "건너뛰기",
   "onboardNext": "다음",
   "onboardStart": "시작하기",

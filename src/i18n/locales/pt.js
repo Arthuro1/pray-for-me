@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Organize as orações em categorias e atribua-as a dias, para sempre saber o que orar hoje.",
   "onboardCommunityTitle": "Orem juntos",
   "onboardCommunityBody": "Participe de grupos, compartilhe pedidos e orem uns pelos outros.",
+  "onboardVaultTitle": "Mantenha em segredo",
+  "onboardVaultBody": "Tranque suas orações privadas em um cofre criptografado de ponta a ponta — só a sua frase secreta o abre, e nem nós podemos lê-las.",
   "onboardSkip": "Pular",
   "onboardNext": "Próximo",
   "onboardStart": "Começar",

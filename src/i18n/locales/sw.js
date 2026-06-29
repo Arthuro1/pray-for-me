@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Panga maombi katika makundi na uyapange kwa siku, ili ujue kila wakati la kuombea leo.",
   "onboardCommunityTitle": "Ombeni pamoja",
   "onboardCommunityBody": "Jiunge na vikundi, shiriki maombi, na muombeane.",
+  "onboardVaultTitle": "Iweke ya faragha",
+  "onboardVaultBody": "Funga maombi yako ya faragha katika sanduku lililosimbwa kutoka mwanzo hadi mwisho — neno lako la siri pekee linalifungua, hata sisi hatuwezi kuyasoma.",
   "onboardSkip": "Ruka",
   "onboardNext": "Endelea",
   "onboardStart": "Anza",

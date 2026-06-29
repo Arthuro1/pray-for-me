@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "将祷告分类并分配到各天，让您始终知道今天该为什么祷告。",
   "onboardCommunityTitle": "一起祷告",
   "onboardCommunityBody": "加入群组，分享代祷事项，彼此代祷。",
+  "onboardVaultTitle": "保持私密",
+  "onboardVaultBody": "将私密祷告锁入端到端加密的保险库——只有您的密码短语才能打开，连我们也无法读取。",
   "onboardSkip": "跳过",
   "onboardNext": "下一步",
   "onboardStart": "开始",

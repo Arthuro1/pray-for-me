@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookHeart, CalendarDays, Users, Sparkles, Bell } from 'lucide-react';
+import { BookHeart, CalendarDays, Users, Sparkles, Bell, ShieldCheck } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -8,6 +8,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 const STEPS = [
   { icon: Sparkles, titleKey: 'onboardWelcomeTitle', bodyKey: 'onboardWelcomeBody' },
   { icon: BookHeart, titleKey: 'onboardPrayTitle', bodyKey: 'onboardPrayBody' },
+  { icon: ShieldCheck, titleKey: 'onboardVaultTitle', bodyKey: 'onboardVaultBody' },
   { icon: CalendarDays, titleKey: 'onboardPlanTitle', bodyKey: 'onboardPlanBody' },
   { icon: Bell, titleKey: 'onboardRemindTitle', bodyKey: 'onboardRemindBody' },
   { icon: Users, titleKey: 'onboardCommunityTitle', bodyKey: 'onboardCommunityBody' },

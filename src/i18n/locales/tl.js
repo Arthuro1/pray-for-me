@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Iuri ang mga panalangin sa kategorya at italaga sa mga araw, para alam mo lagi kung ano ang ipagdarasal ngayon.",
   "onboardCommunityTitle": "Magdasal nang sama-sama",
   "onboardCommunityBody": "Sumali sa mga grupo, magbahagi ng kahilingan, at magdasal para sa isa’t isa.",
+  "onboardVaultTitle": "Panatilihing pribado",
+  "onboardVaultBody": "I-lock ang iyong mga pribadong panalangin sa isang end-to-end encrypted na vault — tanging ang iyong passphrase lang ang makakapagbukas, hindi rin namin ito mababasa.",
   "onboardSkip": "Laktawan",
   "onboardNext": "Susunod",
   "onboardStart": "Magsimula",

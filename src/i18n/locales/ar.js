@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "رتّب الصلوات في فئات وخصّصها لأيام، لتعرف دائمًا ماذا تصلي اليوم.",
   "onboardCommunityTitle": "صلّوا معًا",
   "onboardCommunityBody": "انضم إلى مجموعات، وشارك الطلبات، وصلّوا بعضكم لبعض.",
+  "onboardVaultTitle": "اجعلها خاصة",
+  "onboardVaultBody": "اقفل صلواتك الخاصة في خزنة مشفّرة من طرف إلى طرف — لا يفتحها سوى عبارة المرور الخاصة بك، ولا يمكننا نحن قراءتها.",
   "onboardSkip": "تخطٍّ",
   "onboardNext": "التالي",
   "onboardStart": "ابدأ",

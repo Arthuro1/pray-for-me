@@ -319,6 +319,8 @@ export default {
   "onboardPlanBody": "Atur doa ke dalam kategori dan tetapkan ke hari, agar selalu tahu apa yang didoakan hari ini.",
   "onboardCommunityTitle": "Berdoa bersama",
   "onboardCommunityBody": "Bergabunglah dengan grup, bagikan pokok doa, dan saling mendoakan.",
+  "onboardVaultTitle": "Tetap pribadi",
+  "onboardVaultBody": "Kunci doa pribadi Anda dalam brankas terenkripsi ujung-ke-ujung — hanya frasa sandi Anda yang membukanya, kami pun tidak bisa membacanya.",
   "onboardSkip": "Lewati",
   "onboardNext": "Berikutnya",
   "onboardStart": "Mulai",

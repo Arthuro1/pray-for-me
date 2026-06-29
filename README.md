@@ -96,6 +96,13 @@ Every label, tooltip, button, and daily verse adapts to the selected language. E
 - All data stored in your own Supabase database with **Row Level Security**
 - Group joins validated server-side by invite code; shared-prayer writes scoped to their owner
 
+### 🔐 Prayer Vault — End-to-End Encryption
+- Opt-in **client-side E2EE** for your private prayers — encrypted with a passphrase only you know (we never see it)
+- **AES-256-GCM** content encryption via the Web Crypto API; the master key is wrapped by a key derived from your passphrase and never leaves the device in plaintext
+- **One-time recovery code** generated at setup — the only way back in if you forget your passphrase (there is no other backdoor)
+- **Auto-locks on inactivity**; unlock once to read/edit, lock instantly from Settings, or change your passphrase anytime
+- The wrapped key syncs across your devices; **sharing a prayer to a group publishes its plaintext** by design — encryption covers the private scope only
+
 ---
 
 ## 🚀 Quick Start
@@ -196,6 +203,7 @@ npx supabase secrets set ANTHROPIC_API_KEY=your_key VAPID_PUBLIC_KEY=... VAPID_P
 | Backend / Auth | [Supabase](https://supabase.com) (PostgreSQL + RLS + Edge Functions + `pg_cron`) |
 | AI | [Claude Haiku](https://anthropic.com) via Anthropic API (authenticated proxy in prod) |
 | Offline | [idb-keyval](https://github.com/jakearchibald/idb-keyval) (IndexedDB write queue) |
+| Encryption | [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API) — AES-256-GCM E2EE (Prayer Vault) |
 | Push | [web-push](https://github.com/web-push-libs/web-push) (VAPID) |
 | Icons / QR | [Lucide React](https://lucide.dev) · [qrcode.react](https://github.com/zpao/qrcode.react) |
 | Dates | [date-fns](https://date-fns.org) |
@@ -211,7 +219,7 @@ npx supabase secrets set ANTHROPIC_API_KEY=your_key VAPID_PUBLIC_KEY=... VAPID_P
 src/
 ├── components/                 # Layout, PrayerForm, PrayerListItem, Onboarding,
 │                               #   ConfirmDialog, Avatar, Toaster, OfflineBanner,
-│                               #   SyncIndicator, ShareButtons, Skeleton, modals…
+│                               #   SyncIndicator, ShareButtons, Skeleton, VaultModal, modals…
 ├── pages/
 │   ├── HomeTab.jsx             # Dashboard: verse, stats, streak, today's prayers
 │   ├── PrayersTab.jsx          # Full prayer list with search & filters
@@ -226,6 +234,7 @@ src/
 │   ├── prayerStore.js          # Personal prayers (optimistic + offline queue)
 │   ├── communityStore.js       # Groups, friends, sharing, sync
 │   ├── authStore.js            # Auth state (Supabase session)
+│   ├── vaultStore.js           # Prayer Vault lock/unlock state (E2EE)
 │   ├── translationStore.js     # Dynamic content translation cache
 │   └── toastStore.js           # Toasts
 ├── lib/
@@ -234,6 +243,8 @@ src/
 │   ├── mutationQueue.js        # Durable IndexedDB write queue + flush loop
 │   ├── queueCore.js            # Pure queue transforms (tested)
 │   ├── mutationExecutors.js    # Server executors for queued mutations
+│   ├── crypto/                 # Prayer Vault E2EE: keyManager, prayerCrypto (AES-256-GCM)
+│   ├── vaultSync.js            # Syncs the wrapped master key across devices
 │   └── dataCache.js            # Local snapshot of prayers/categories
 ├── hooks/                      # useEscapeKey, useFocusTrap
 ├── utils/                      # prayer, community, streak, export, user, date…
