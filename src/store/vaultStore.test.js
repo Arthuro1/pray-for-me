@@ -1,4 +1,23 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// vaultStore → vaultSync imports the real Supabase client, which builds its
+// realtime/WebSocket layer at construct time and throws on Node < 22 in CI.
+// This suite only exercises local crypto; the vault's sync calls are
+// fire-and-forget, so stub the client to a no-op (mirrors noPlaintextLeak.test).
+vi.mock('../lib/supabase', () => {
+  const chain = {
+    upsert: () => Promise.resolve({ data: null, error: null }),
+    select: () => chain,
+    eq: () => chain,
+    maybeSingle: () => Promise.resolve({ data: null, error: null }),
+  };
+  return {
+    supabase: {
+      auth: { getUser: async () => ({ data: { user: null } }) },
+      from: () => chain,
+    },
+  };
+});
 
 // localStorage shim must exist before the store/keyManager import touches it.
 function installStorage() {
