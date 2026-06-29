@@ -4,10 +4,13 @@ import {
   canEncrypt,
   isPrayerEncrypted,
   encryptPrayerForStorage,
+  encryptChildForStorage,
   decryptPrayerFromStorage,
   decryptPrayers,
   encryptPrayersForCache,
   SENSITIVE_FIELDS,
+  UPDATE_SENSITIVE_FIELDS,
+  POINT_SENSITIVE_FIELDS,
 } from './prayerCrypto.js';
 
 function installStorage() {
@@ -142,6 +145,58 @@ describe('nested cache encryption (Phase 3b)', () => {
     const [out] = await encryptPrayersForCache([saved]);
     expect(isPrayerEncrypted(out)).toBe(false);
     expect(out.prayer_updates).toHaveLength(1);
+  });
+});
+
+describe('nested server-side encryption (Phase 3b: prayer_updates / prayer_points)', () => {
+  beforeEach(async () => { await createVault('pass-phrase'); });
+
+  const updateRow = () => ({ id: 'u1', prayer_id: 'p1', text: 'Surgery went well', author_name: '', created_at: '2026-01-01' });
+  const pointRow = () => ({ id: 'pt1', prayer_id: 'p1', title: 'Healing', verses: [{ ref: 'Ps 23', text: 'The Lord is my shepherd' }] });
+
+  it('encrypts + redacts an update row, leaving non-sensitive columns intact', async () => {
+    const enc = await encryptChildForStorage(updateRow(), UPDATE_SENSITIVE_FIELDS);
+    expect(enc.text).toBe(''); // redacted
+    expect(enc.author_name).toBe(''); // non-sensitive, untouched
+    expect(enc.id).toBe('u1');
+    expect(enc.encrypted_payload).toBeTruthy();
+    expect(JSON.stringify(enc)).not.toContain('Surgery went well');
+  });
+
+  it('encrypts + redacts a point row including its verses', async () => {
+    const enc = await encryptChildForStorage(pointRow(), POINT_SENSITIVE_FIELDS);
+    expect(enc.title).toBe('');
+    expect(enc.verses).toEqual([]);
+    const serialized = JSON.stringify(enc);
+    expect(serialized).not.toContain('Healing');
+    expect(serialized).not.toContain('Ps 23');
+  });
+
+  it('decrypts encrypted child rows even when the parent row is plaintext', async () => {
+    const row = {
+      id: 'p1', title: 'plain parent',
+      prayer_updates: [await encryptChildForStorage(updateRow(), UPDATE_SENSITIVE_FIELDS)],
+      prayer_points: [await encryptChildForStorage(pointRow(), POINT_SENSITIVE_FIELDS)],
+    };
+    const dec = await decryptPrayerFromStorage(row);
+    expect(dec.prayer_updates[0].text).toBe('Surgery went well');
+    expect(dec.prayer_updates[0].encrypted_payload).toBeUndefined(); // ciphertext stripped
+    expect(dec.prayer_points[0].title).toBe('Healing');
+    expect(dec.prayer_points[0].verses[0].ref).toBe('Ps 23');
+  });
+
+  it('passes plaintext child rows (shared prayers) through untouched', async () => {
+    const row = { id: 'p1', title: 'plain', prayer_updates: [{ id: 'u', text: 'public update' }] };
+    const dec = await decryptPrayerFromStorage(row);
+    expect(dec.prayer_updates[0].text).toBe('public update');
+  });
+
+  it('flags encrypted child rows _locked when the vault is locked', async () => {
+    const row = { id: 'p1', prayer_updates: [await encryptChildForStorage(updateRow(), UPDATE_SENSITIVE_FIELDS)] };
+    lock();
+    const dec = await decryptPrayerFromStorage(row);
+    expect(dec.prayer_updates[0]._locked).toBe(true);
+    expect(dec.prayer_updates[0].text).toBe(''); // still redacted — no leak
   });
 });
 

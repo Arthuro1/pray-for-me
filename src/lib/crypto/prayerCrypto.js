@@ -11,13 +11,22 @@ export const ENCRYPTION_VERSION = 1;
 // Scalar prayer-row fields encrypted everywhere (server rows + local cache).
 export const SENSITIVE_FIELDS = ['title', 'description', 'person_name', 'phone'];
 
-// Nested collections encrypted ONLY in the local at-rest cache (Phase 3b). On
-// the server these live in their own tables (prayer_updates / prayer_points) or
-// flow through community fan-out RPCs that publish them as plaintext by design,
-// so they stay there. Locally we bundle each collection wholesale into the
-// encrypted payload so a private prayer's updates, points, testimonies (and the
-// legacy single `testimony`) never sit in plaintext in IndexedDB.
+// Nested collections bundled wholesale into the parent's encrypted payload for
+// the local at-rest cache, so a private prayer's updates, points, testimonies
+// (and the legacy single `testimony`) never sit in plaintext in IndexedDB.
 export const CACHE_NESTED_FIELDS = ['prayer_updates', 'prayer_points', 'testimonies', 'testimony'];
+
+// Child-table collections that are ALSO encrypted on the server (Phase 3b) for
+// PRIVATE prayers — each row carries its own encrypted_payload (see the column
+// added in supabase/e2ee_migration.sql). Shared prayers keep these rows in
+// plaintext because the community fan-out RPCs must read them; the store gates
+// this with canEncryptNested. `testimonies` stay on the parent row and are out
+// of this phase (still server-plaintext for private prayers).
+const SERVER_NESTED_COLLECTIONS = ['prayer_updates', 'prayer_points'];
+
+// Sensitive columns per child table, bundled into that row's encrypted_payload.
+export const UPDATE_SENSITIVE_FIELDS = ['text'];
+export const POINT_SENSITIVE_FIELDS = ['title', 'verses'];
 
 // A prayer is encryptable when the vault is unlocked AND it is the user's own
 // prayer. Saved-from-community copies (community_origin_id) mirror plaintext
@@ -57,19 +66,72 @@ export async function encryptPrayerForStorage(row, { nested = false } = {}) {
   return out;
 }
 
-// Restores sensitive fields from encrypted_payload onto a fetched row. Legacy
-// plaintext rows (no payload) pass through unchanged. If the vault is locked or
-// the payload can't be decrypted, the row is flagged `_locked` so the UI can
-// show a placeholder instead of blank content.
-export async function decryptPrayerFromStorage(row) {
-  if (!isPrayerEncrypted(row)) return row;
+// Bundle a child row's (prayer_update / prayer_point) sensitive fields into its
+// encrypted_payload and redact the plaintext columns (text → '', title → '',
+// verses → []). Non-sensitive columns (id, prayer_id, author_name, created_at)
+// are left intact. Requires the vault unlocked. Used by the store for PRIVATE
+// prayers so updates/points never reach the server tables in plaintext.
+export async function encryptChildForStorage(row, fields) {
+  const key = getMasterKey();
+  const payload = {};
+  for (const f of fields) payload[f] = row[f] ?? null;
+  const encrypted_payload = await encryptJson(key, payload);
+  const out = { ...row, encrypted_payload, encryption_version: ENCRYPTION_VERSION };
+  for (const f of fields) if (f in out) out[f] = Array.isArray(row[f]) ? [] : '';
+  return out;
+}
+
+// Restore one encrypted child row, stripping the ciphertext so the in-memory /
+// cache form is clean plaintext. Plaintext rows (shared prayers, legacy) and a
+// locked/failed decrypt are handled like the parent path.
+async function decryptChildRow(row) {
+  if (!isEncryptedPayload(row?.encrypted_payload)) return row;
   if (!isUnlocked()) return { ...row, _locked: true };
   try {
     const data = await decryptJson(getMasterKey(), row.encrypted_payload);
-    return { ...row, ...data, _locked: false };
+    // Strip the ciphertext so the in-memory / cache form is clean plaintext.
+    const rest = { ...row };
+    delete rest.encrypted_payload;
+    delete rest.encryption_version;
+    return { ...rest, ...data };
   } catch {
     return { ...row, _locked: true };
   }
+}
+
+// Decrypt any encrypted rows inside the server child collections. No-op (and
+// preserves the reference) when nothing is encrypted — so cache rows (whose
+// nested data is restored plaintext from the parent payload) and legacy rows
+// pass straight through.
+async function decryptNestedCollections(row) {
+  let out = row;
+  for (const coll of SERVER_NESTED_COLLECTIONS) {
+    const arr = out[coll];
+    if (Array.isArray(arr) && arr.some((c) => isEncryptedPayload(c?.encrypted_payload))) {
+      out = { ...out, [coll]: await Promise.all(arr.map(decryptChildRow)) };
+    }
+  }
+  return out;
+}
+
+// Restores sensitive fields from encrypted_payload onto a fetched row. Legacy
+// plaintext rows (no payload) pass through unchanged. If the vault is locked or
+// the payload can't be decrypted, the row is flagged `_locked` so the UI can
+// show a placeholder instead of blank content. Encrypted child rows (updates /
+// points of a private prayer) are decrypted too, even when the parent itself is
+// plaintext (e.g. a prayer created before the vault, edited after unlocking).
+export async function decryptPrayerFromStorage(row) {
+  let out = row;
+  if (isPrayerEncrypted(row)) {
+    if (!isUnlocked()) return { ...row, _locked: true };
+    try {
+      const data = await decryptJson(getMasterKey(), row.encrypted_payload);
+      out = { ...row, ...data, _locked: false };
+    } catch {
+      return { ...row, _locked: true };
+    }
+  }
+  return decryptNestedCollections(out);
 }
 
 // Convenience for arrays (load paths). Decrypts each row, preserving order.

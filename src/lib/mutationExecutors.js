@@ -84,6 +84,30 @@ registerMutation('addPrayerPoint', async ({ id, prayerId, title, verses }) => {
   throwIf(r.error, r.status);
 });
 
+// Encrypted (PRIVATE-prayer) variants. These bypass the sync_* fan-out RPCs —
+// a private prayer has no community copies to fan out to — and write the already
+// -encrypted child row straight to its table. RLS lets the owner manage child
+// rows of their own prayers (supabase/rls_audit.sql). Idempotent via the
+// client-supplied row id. The store only enqueues these when the prayer is
+// private (canEncryptNested), so the redacted plaintext columns never leak.
+registerMutation('addUpdateEncrypted', async ({ row }) => {
+  const r = await supabase.from('prayer_updates').upsert(row, { onConflict: 'id' });
+  throwIf(r.error, r.status);
+});
+
+registerMutation('addPointEncrypted', async ({ row }) => {
+  const r = await supabase.from('prayer_points').upsert(row, { onConflict: 'id' });
+  throwIf(r.error, r.status);
+});
+
+// Re-encrypt a private prayer point in place after a verse add/remove: the
+// verses live inside encrypted_payload, so we overwrite the blob and keep the
+// plaintext columns redacted.
+registerMutation('updatePointEncrypted', async ({ pointId, row }) => {
+  const r = await supabase.from('prayer_points').update(row).eq('id', pointId);
+  throwIf(r.error, r.status);
+});
+
 registerMutation('addVerse', async ({ prayerId, pointId, verse }) => {
   const r = await supabase.rpc('sync_add_verse', { p_source: prayerId, p_point_id: pointId, p_verse: verse });
   throwIf(r.error, r.status);

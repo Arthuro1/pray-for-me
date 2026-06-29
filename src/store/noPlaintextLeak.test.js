@@ -8,9 +8,11 @@
 // that round-trips back under the master key.
 //
 // Scope note: writes to `community_prayers` are intentionally plaintext (sharing
-// publishes a readable copy by design), and the nested server tables
-// (prayer_updates / prayer_points / testimonies) are Phase 3b — both are out of
-// scope here and asserted separately where relevant.
+// publishes a readable copy by design). The nested server tables
+// (prayer_updates / prayer_points) are now encrypted for PRIVATE prayers
+// (Phase 3b) and asserted in the dedicated block at the bottom of this file;
+// `testimonies` remain server-plaintext (different lifecycle) and are out of
+// scope here.
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // prayerStore reads localStorage at module-init time, so the shim must exist
@@ -184,5 +186,68 @@ describe('no private plaintext reaches Supabase (prayers table)', () => {
     expect(write).toBeTruthy();
     expect(write.payload.encrypted_payload).toBeUndefined();
     expect(write.payload.title).toBe('plain title');
+  });
+});
+
+// Phase 3b: a PRIVATE prayer's nested rows (prayer_updates / prayer_points) must
+// also reach the server only as ciphertext, and bypass the plaintext fan-out
+// RPCs (a private prayer has no community copies to fan out to).
+describe('no private plaintext reaches Supabase (nested tables: Phase 3b)', () => {
+  const UPDATE_SECRET = 'SECRET_UPDATE_surgery_went_well';
+  const POINT_SECRET = 'SECRET_POINT_healing_request';
+  const VERSE_SECRET = 'SECRET_VERSE_psalm_23';
+  const VERSE_SECRET_2 = 'SECRET_VERSE_isaiah_41';
+
+  async function freshPrivatePrayer() {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'host prayer' });
+    await drainQueue();
+    const id = usePrayerStore.getState().prayers[0].id;
+    rec.writes.length = 0;
+    rec.rpcs.length = 0;
+    return id;
+  }
+
+  it('addUpdate encrypts the text and skips the sync_add_update fan-out', async () => {
+    const id = await freshPrivatePrayer();
+    await usePrayerStore.getState().addUpdate(id, UPDATE_SECRET, 'me');
+    await drainQueue();
+
+    const writes = rec.writes.filter((w) => w.table === 'prayer_updates');
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) {
+      const json = JSON.stringify(w.payload);
+      expect(json).not.toContain(UPDATE_SECRET);
+      expect(json).toContain('encrypted_payload');
+    }
+    expect(rec.rpcs.find((r) => r.name === 'sync_add_update')).toBeUndefined();
+
+    const w = writes.find((w) => w.payload?.encrypted_payload);
+    const data = await decryptJson(getMasterKey(), w.payload.encrypted_payload);
+    expect(data.text).toBe(UPDATE_SECRET);
+  });
+
+  it('addPrayerPoint + addVerse keep the title and verses encrypted, no fan-out', async () => {
+    const id = await freshPrivatePrayer();
+    await usePrayerStore.getState().addPrayerPoint(id, {
+      title: POINT_SECRET,
+      verses: [{ ref: VERSE_SECRET, text: 'the Lord is my shepherd' }],
+    });
+    await drainQueue();
+    const pointId = usePrayerStore.getState().prayers.find((p) => p.id === id).prayer_points[0].id;
+    await usePrayerStore.getState().addVerseToPoint(id, pointId, { ref: VERSE_SECRET_2, text: 'fear not' });
+    await drainQueue();
+
+    const writes = rec.writes.filter((w) => w.table === 'prayer_points');
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) {
+      const json = JSON.stringify(w.payload);
+      for (const secret of [POINT_SECRET, VERSE_SECRET, VERSE_SECRET_2]) {
+        expect(json).not.toContain(secret);
+      }
+      expect(json).toContain('encrypted_payload');
+    }
+    expect(rec.rpcs.find((r) => r.name === 'sync_add_point')).toBeUndefined();
+    expect(rec.rpcs.find((r) => r.name === 'sync_add_verse')).toBeUndefined();
   });
 });

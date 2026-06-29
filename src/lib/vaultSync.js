@@ -5,11 +5,12 @@
 // All functions fail soft: if the vault_keys table doesn't exist yet (migration
 // not run) or the network is down, they no-op rather than throwing.
 import { supabase } from './supabase';
-import { exportVaultRecord, importVaultRecord, isVaultInitialized } from './crypto/keyManager';
+import { exportVaultRecord, importVaultRecord, isVaultInitialized, hydrate } from './crypto/keyManager';
 import { devError } from './logger';
 
 // Upload the local wrapped record. Call after create / change / reset.
 export async function pushVaultRecord() {
+  await hydrate();
   const record = exportVaultRecord();
   if (!record) return;
   try {
@@ -26,6 +27,7 @@ export async function pushVaultRecord() {
 // Pull the wrapped record onto this device if it has none yet. Returns true if a
 // vault record is now present locally (synced or already there).
 export async function pullVaultRecord() {
+  await hydrate(); // ensure the local cache reflects IndexedDB before we decide
   if (isVaultInitialized()) return true; // already have a (possibly newer) local record
   try {
     const { data: { user } } = await supabase.auth.getUser();

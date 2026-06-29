@@ -74,6 +74,27 @@ export default defineConfig(({ mode }) => {
     },
   },
   server: {
+    // Dev-mode CSP parity with vercel.json so violations (e.g. a stray external
+    // script/connection) surface locally instead of only in production. Vite's
+    // dev server needs 'unsafe-inline'/'unsafe-eval' for HMR and a ws: socket;
+    // the non-script directives mirror prod exactly.
+    headers: {
+      'Content-Security-Policy': [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: https:",
+        "font-src 'self' data:",
+        "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co",
+        "worker-src 'self' blob:",
+        "manifest-src 'self'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-src 'none'",
+        "frame-ancestors 'none'",
+        "object-src 'none'",
+      ].join('; '),
+    },
     proxy: {
       '/api/anthropic': {
         target: 'https://api.anthropic.com',

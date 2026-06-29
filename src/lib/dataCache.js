@@ -1,5 +1,5 @@
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
-import { isVaultInitialized, isUnlocked, destroyVault } from './crypto/keyManager';
+import { isVaultInitialized, isUnlocked, destroyVault, hydrate } from './crypto/keyManager';
 import { encryptPrayersForCache, decryptPrayers } from './crypto/prayerCrypto';
 
 // Persists the user's prayers + categories locally (IndexedDB) so the app can
@@ -25,6 +25,7 @@ export async function loadSnapshot(userId) {
 
 export async function saveSnapshot(userId, data) {
   if (!hasIDB || !userId) return;
+  await hydrate(); // so isVaultInitialized() reflects IndexedDB, not a cold cache
   // Don't overwrite the at-rest ciphertext while the vault is locked — we have no
   // key to re-encrypt, and the in-memory state may still hold plaintext.
   if (isVaultInitialized() && !isUnlocked()) return;
@@ -40,7 +41,7 @@ export async function saveSnapshot(userId, data) {
 // shared device: the cached prayer snapshot, the offline mutation queue, and the
 // vault record (the wrapped key) in localStorage.
 export async function clearLocalData(userId) {
-  destroyVault();
+  await destroyVault();
   if (!hasIDB) return;
   try {
     if (userId) await idbDel(key(userId));

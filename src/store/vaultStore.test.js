@@ -65,7 +65,7 @@ describe('vaultStore', () => {
 
   it('destroy clears initialized + unlocked', async () => {
     await useVaultStore.getState().createVault('passphrase-1');
-    useVaultStore.getState().destroy();
+    await useVaultStore.getState().destroy();
     expect(useVaultStore.getState().initialized).toBe(false);
     expect(useVaultStore.getState().unlocked).toBe(false);
   });

@@ -15,7 +15,7 @@ plaintext.
 |-------|-------------|
 | Private prayer content (title, description, person_name, phone, updates, points, testimonies) | High |
 | Vault master key (in memory only) | Critical |
-| Wrapped vault record (`vault_keys`, localStorage) | Low at rest (ciphertext) |
+| Wrapped vault record (`vault_keys`, IndexedDB) | Low at rest (ciphertext) |
 | Vault passphrase / recovery code | Critical |
 | Supabase session (access/refresh token) | High |
 | Anthropic API key | High (cost/abuse) |
@@ -41,23 +41,26 @@ plaintext.
   `phone`) are ciphertext in `prayers.encrypted_payload` — unreadable without
   the master key, which is never stored server-side (`vault_keys` holds only the
   *wrapped* key). Recovery code and passphrase are never stored.
-- **Residual risk (HIGH):** For vault users, nested collections
-  (`prayer_updates`, `prayer_points`, `testimonies`) are still stored **in
-  plaintext** server-side because they fan out to shared community copies via
-  the `sync_*` RPCs. Row metadata (timestamps, category links, user_id) is also
-  plaintext. Community/shared prayers are plaintext by design.
 - **Mitigations in place:** owner-only RLS on every user table; client-side E2EE
-  of scalar fields; zero-knowledge vault key storage.
-- **Planned:** encrypt nested collections server-side for *unshared* prayers
-  (the `encrypted_payload`/`encryption_version` columns already exist on
-  `prayer_updates`/`prayer_points` — Phase 3b). Tracked as the top remaining
-  risk.
+  of scalar fields; zero-knowledge vault key storage. **Phase 3b (done):** for
+  *unshared* vault prayers, the nested `prayer_updates` and `prayer_points` rows
+  (incl. verses) are now stored as ciphertext too — each child row carries its
+  own `encrypted_payload` and the plaintext columns are redacted (see
+  `encryptChildForStorage` + `canEncryptNested`). When a prayer is first shared,
+  those rows are rewritten to plaintext so the `sync_*` fan-out can read them.
+- **Residual risk (MEDIUM):** `testimonies` (stored on `prayers.testimonies`,
+  appended via the `answer_prayer` RPC) are still plaintext server-side for vault
+  users, as are shared prayers' nested rows (plaintext by design) and row
+  metadata (timestamps, category links, user_id). Community/shared prayers are
+  plaintext by design.
+- **Planned:** encrypt `testimonies` server-side for unshared prayers (different
+  lifecycle — server-side append RPC + `jsonb[]` column on the parent row).
 
 ### 2. XSS (attacker runs JS in the app origin)
 - **Exposure:** An attacker with script execution can read the in-memory master
-  key while the vault is unlocked, the Supabase session, and `localStorage`
-  (theme, settings, the *wrapped* vault record). This is the worst case for any
-  client-side-E2EE app.
+  key while the vault is unlocked, the Supabase session, `localStorage` (theme,
+  settings), and the *wrapped* vault record in IndexedDB. This is the worst case
+  for any client-side-E2EE app.
 - **Mitigations in place:** strict CSP (`script-src 'self'` + the Vercel
   analytics origin — **no `unsafe-inline`/`unsafe-eval` for scripts**),
   `object-src 'none'`, `frame-ancestors 'none'`, `X-Content-Type-Options`,
@@ -70,7 +73,7 @@ plaintext.
 
 ### 3. Stolen / lost device (unlocked OS session)
 - **Exposure:** The wrapped vault record and cached ciphertext sit in
-  localStorage/IndexedDB. Without the passphrase they are unreadable. If the
+  IndexedDB. Without the passphrase they are unreadable. If the
   vault was left **unlocked**, the master key is in memory until auto-lock fires
   (default 5 min idle) or the tab closes.
 - **Mitigations in place:** auto-lock on inactivity; master key never persisted;
@@ -102,7 +105,7 @@ plaintext.
 
 ### 6. Leaked recovery code
 - **Exposure:** Anyone with the recovery code **and** access to the wrapped vault
-  record (`vault_keys` or device localStorage) can reset the passphrase and
+  record (`vault_keys` or device IndexedDB) can reset the passphrase and
   decrypt everything. The code alone, without the record, is useless.
 - **Mitigations in place:** the code is 128-bit, shown once, never stored in
   retrievable form; resetting requires the record.

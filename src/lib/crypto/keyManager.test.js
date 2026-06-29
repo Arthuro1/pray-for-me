@@ -10,6 +10,7 @@ import {
   changePassphrase,
   rotateRecoveryCode,
   destroyVault,
+  exportVaultRecord,
   generateRecoveryCode,
 } from './keyManager.ts';
 import { encryptJson, decryptJson } from './e2ee.ts';
@@ -25,9 +26,12 @@ function installStorage() {
   };
 }
 
-beforeEach(() => {
+// The record now lives in an in-memory cache (backed by IndexedDB in the
+// browser; absent in this node env). destroyVault clears that cache, so it
+// doubles as a per-test reset to keep tests isolated.
+beforeEach(async () => {
   installStorage();
-  lock();
+  await destroyVault();
 });
 
 describe('vault lifecycle', () => {
@@ -63,7 +67,7 @@ describe('vault lifecycle', () => {
 
   it('never persists the key or passphrase in cleartext', async () => {
     await createVault('zebra-lantern-velvet');
-    const stored = globalThis.localStorage.getItem('pfm_vault');
+    const stored = exportVaultRecord(); // the at-rest record (cache mirrors IndexedDB)
     const mkRaw = await crypto.subtle.exportKey('raw', getMasterKey());
     const mkB64 = Buffer.from(mkRaw).toString('base64');
     expect(stored).not.toContain(mkB64);
@@ -145,8 +149,27 @@ describe('changePassphrase', () => {
 describe('destroyVault', () => {
   it('removes the record and locks', async () => {
     await createVault('pass');
-    destroyVault();
+    await destroyVault();
     expect(isVaultInitialized()).toBe(false);
     expect(isUnlocked()).toBe(false);
+  });
+});
+
+describe('storage migration', () => {
+  // A fresh module instance (resetModules) so hydrate() runs its one-time
+  // migration against a pre-seeded legacy localStorage record.
+  it('migrates a legacy localStorage record into the cache and clears localStorage', async () => {
+    vi.resetModules();
+    installStorage();
+    const legacy = { v: 1, passSalt: 'ps', recoverySalt: 'rs', passWrapped: { iv: 'i', data: 'd' }, recoveryWrapped: { iv: 'i2', data: 'd2' } };
+    globalThis.localStorage.setItem('pfm_vault', JSON.stringify(legacy));
+
+    const km = await import('./keyManager.ts');
+    await km.hydrate();
+
+    expect(km.isVaultInitialized()).toBe(true);
+    // The wrapped key no longer lives in localStorage after migration.
+    expect(globalThis.localStorage.getItem('pfm_vault')).toBe(null);
+    expect(km.exportVaultRecord()).toContain('passSalt');
   });
 });

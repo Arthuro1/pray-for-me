@@ -18,7 +18,12 @@
 alter table prayers add column if not exists encrypted_payload jsonb;
 alter table prayers add column if not exists encryption_version int;
 
--- Child tables (used in Phase 3b: updates, points). Added now for forward-compat.
+-- Child tables — Phase 3b (NOW ACTIVE): for unshared/private vault prayers, each
+-- prayer_updates / prayer_points row is stored as ciphertext in encrypted_payload
+-- with its plaintext columns redacted (see src/lib/crypto/prayerCrypto.js
+-- encryptChildForStorage). Shared prayers keep these rows in plaintext so the
+-- sync_* fan-out can read them. No new RLS is needed — owners already manage
+-- their own child rows (supabase/rls_audit.sql).
 alter table prayer_updates add column if not exists encrypted_payload jsonb;
 alter table prayer_updates add column if not exists encryption_version int;
 alter table prayer_points  add column if not exists encrypted_payload jsonb;

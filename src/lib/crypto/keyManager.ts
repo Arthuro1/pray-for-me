@@ -15,6 +15,7 @@
 // MK under a fresh passphrase). Losing BOTH means the data is unrecoverable by
 // design — that is the cost of true zero-knowledge encryption.
 
+import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { toB64, fromB64 } from './e2ee';
 
 const VAULT_VERSION = 1;
@@ -22,7 +23,7 @@ const PBKDF2_ITERATIONS = 310_000; // OWASP-recommended floor for PBKDF2-SHA256
 const SALT_BYTES = 16;
 const IV_BYTES = 12;
 const RECOVERY_BYTES = 16; // 128 bits of entropy
-const STORAGE_KEY = 'pfm_vault';
+const STORAGE_KEY = 'pfm_vault'; // IndexedDB key (and legacy localStorage key)
 const DEFAULT_AUTO_LOCK_MS = 5 * 60 * 1000;
 
 // Crockford base32 (no I/L/O/U) — unambiguous to read off a recovery sheet.
@@ -49,8 +50,20 @@ const listeners = new Set<(unlocked: boolean) => void>();
 
 const enc = new TextEncoder();
 
-// ─── Storage (browser localStorage; absent in the Node test env) ─────────────
-function storage(): Storage | null {
+// ─── Storage (IndexedDB; in-memory cache mirrors it for synchronous reads) ────
+// The wrapped record lives in IndexedDB rather than localStorage: it's the same
+// durable store the rest of the app uses, and it keeps the (wrapped) key out of
+// the synchronous, string-only localStorage bucket. A module-level cache mirrors
+// it so isVaultInitialized()/exportVaultRecord() can stay synchronous — callers
+// must await hydrate() once at boot before trusting them (App does this via
+// pullVaultRecord).
+const hasIDB = (): boolean => typeof indexedDB !== 'undefined';
+
+let cachedRecord: VaultRecord | null = null;
+let hydration: Promise<void> | null = null;
+
+// Legacy localStorage access (only to migrate an existing record out of it).
+function legacyStorage(): Storage | null {
   try {
     return typeof globalThis !== 'undefined' && globalThis.localStorage ? globalThis.localStorage : null;
   } catch {
@@ -58,18 +71,47 @@ function storage(): Storage | null {
   }
 }
 
-function loadRecord(): VaultRecord | null {
-  const raw = storage()?.getItem(STORAGE_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as VaultRecord;
-  } catch {
-    return null;
+async function doHydrate(): Promise<void> {
+  // One-time migration: if a record still sits in localStorage (older clients),
+  // move it into IndexedDB and drop the localStorage copy so the wrapped key no
+  // longer persists there.
+  const ls = legacyStorage();
+  const legacy = ls?.getItem(STORAGE_KEY);
+  if (legacy) {
+    try {
+      cachedRecord = JSON.parse(legacy) as VaultRecord;
+      if (hasIDB()) await idbSet(STORAGE_KEY, cachedRecord);
+      ls?.removeItem(STORAGE_KEY);
+      return;
+    } catch {
+      cachedRecord = null;
+    }
+  }
+  if (hasIDB()) {
+    try {
+      cachedRecord = ((await idbGet(STORAGE_KEY)) as VaultRecord) ?? null;
+    } catch {
+      cachedRecord = null;
+    }
   }
 }
 
+// Load the persisted record into the in-memory cache. Idempotent — safe to call
+// from multiple boot paths; the work runs at most once.
+export function hydrate(): Promise<void> {
+  if (!hydration) hydration = doHydrate();
+  return hydration;
+}
+
+function loadRecord(): VaultRecord | null {
+  return cachedRecord;
+}
+
+// Update the cache and persist to IndexedDB (best-effort; cache is the source of
+// truth for the running session).
 function saveRecord(record: VaultRecord): void {
-  storage()?.setItem(STORAGE_KEY, JSON.stringify(record));
+  cachedRecord = record;
+  if (hasIDB()) idbSet(STORAGE_KEY, record).catch(() => {});
 }
 
 // ─── Key derivation & (un)wrapping ───────────────────────────────────────────
@@ -271,10 +313,20 @@ export function onLockChange(listener: (unlocked: boolean) => void): () => void 
 }
 
 // Permanently destroy the vault record. After this the encrypted data is
-// unrecoverable — callers must confirm with the user first.
-export function destroyVault(): void {
-  storage()?.removeItem(STORAGE_KEY);
+// unrecoverable — callers must confirm with the user first. Awaitable so a
+// caller wiping local data (account deletion / sign-out) can be sure the
+// IndexedDB entry is gone before continuing.
+export async function destroyVault(): Promise<void> {
+  cachedRecord = null;
   setMasterKey(null);
+  legacyStorage()?.removeItem(STORAGE_KEY); // clear any un-migrated legacy copy
+  if (hasIDB()) {
+    try {
+      await idbDel(STORAGE_KEY);
+    } catch {
+      /* best-effort */
+    }
+  }
 }
 
 // ─── Cross-device sync of the WRAPPED record (ciphertext only) ────────────────
@@ -283,15 +335,18 @@ export function destroyVault(): void {
 // server-side so the vault can be unlocked on another device.
 
 // Raw record string for upload, or null if no vault exists on this device.
+// Reads the in-memory cache, so callers must have awaited hydrate() first.
 export function exportVaultRecord(): string | null {
-  return storage()?.getItem(STORAGE_KEY) ?? null;
+  return cachedRecord ? JSON.stringify(cachedRecord) : null;
 }
 
 // Seed this device's vault from a synced record. By default it won't clobber an
 // existing local record (which may be newer); pass overwrite to force.
 export function importVaultRecord(recordJson: string, overwrite = false): void {
-  const store = storage();
-  if (!store) return;
-  if (!overwrite && store.getItem(STORAGE_KEY)) return;
-  store.setItem(STORAGE_KEY, recordJson);
+  if (!overwrite && cachedRecord) return;
+  try {
+    saveRecord(JSON.parse(recordJson) as VaultRecord);
+  } catch {
+    /* malformed record — ignore */
+  }
 }

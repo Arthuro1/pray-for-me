@@ -4,7 +4,17 @@ import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } f
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { resolveLanguage } from '../i18n';
-import { canEncrypt, encryptPrayerForStorage, decryptPrayers, decryptPrayerFromStorage, SENSITIVE_FIELDS } from '../lib/crypto/prayerCrypto';
+import {
+  canEncrypt,
+  encryptPrayerForStorage,
+  encryptChildForStorage,
+  decryptPrayers,
+  decryptPrayerFromStorage,
+  SENSITIVE_FIELDS,
+  UPDATE_SENSITIVE_FIELDS,
+  POINT_SENSITIVE_FIELDS,
+} from '../lib/crypto/prayerCrypto';
+import useCommunityStore from './communityStore';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -45,6 +55,16 @@ const DEFAULT_CATEGORIES = {
     { name: 'Pessoal & Espiritual', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
   ],
 };
+
+// A prayer's NESTED content (updates / points) can be encrypted server-side only
+// when it is truly PRIVATE: the vault is unlocked, it's the user's own prayer
+// (canEncrypt), AND it isn't shared to any group. Shared prayers must keep their
+// child rows in plaintext so the community fan-out RPCs can read/append them.
+function canEncryptNested(prayer) {
+  if (!canEncrypt(prayer)) return false;
+  const shares = useCommunityStore.getState().prayerShares[prayer?.id];
+  return !shares || shares.length === 0;
+}
 
 // Keeps shared community copies in sync when the source personal prayer is
 // edited. Only touches fields that were actually changed.
@@ -423,7 +443,15 @@ const usePrayerStore = create((set, get) => ({
         p.id === prayerId ? { ...p, prayer_updates: [...(p.prayer_updates || []), row] } : p
       ),
     }));
-    enqueue('addUpdate', { id, prayerId, text, authorName });
+    // Private prayer → store the update as ciphertext directly; shared prayer →
+    // route through sync_add_update so it fans out to the community copies.
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    if (canEncryptNested(prayer)) {
+      const encRow = await encryptChildForStorage(row, UPDATE_SENSITIVE_FIELDS);
+      enqueue('addUpdateEncrypted', { row: encRow });
+    } else {
+      enqueue('addUpdate', { id, prayerId, text, authorName });
+    }
   },
 
   // ─── Prayer Points ────────────────────────────────────────────
@@ -444,7 +472,13 @@ const usePrayerStore = create((set, get) => ({
         p.id === prayerId ? { ...p, prayer_points: [...(p.prayer_points || []), row] } : p
       ),
     }));
-    enqueue('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    if (canEncryptNested(prayer)) {
+      const encRow = await encryptChildForStorage(row, POINT_SENSITIVE_FIELDS);
+      enqueue('addPointEncrypted', { row: encRow });
+    } else {
+      enqueue('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
+    }
   },
 
   // Verse/point mutations route through the sync_* RPCs so they also propagate
@@ -462,7 +496,11 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
-    enqueue('addVerse', { prayerId, pointId, verse });
+    if (canEncryptNested(prayer)) {
+      await get()._persistEncryptedPoint(pointId, point.title, updated);
+    } else {
+      enqueue('addVerse', { prayerId, pointId, verse });
+    }
   },
 
   removeVerseFromPoint: async (prayerId, pointId, verseRef) => {
@@ -478,7 +516,11 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
-    enqueue('removeVerse', { prayerId, pointId, verseRef });
+    if (canEncryptNested(prayer)) {
+      await get()._persistEncryptedPoint(pointId, point.title, updated);
+    } else {
+      enqueue('removeVerse', { prayerId, pointId, verseRef });
+    }
   },
 
   removePrayerPoint: async (prayerId, pointId) => {
@@ -489,7 +531,21 @@ const usePrayerStore = create((set, get) => ({
           : p
       ),
     }));
+    // Deletion exposes no plaintext, so it can use the shared remove RPC for both
+    // private and shared prayers (the community fan-out is a no-op when private).
     enqueue('removePoint', { prayerId, pointId });
+  },
+
+  // Re-encrypt a PRIVATE prayer point after its verses changed and queue the
+  // server update — the verses live inside encrypted_payload, so we overwrite the
+  // blob and keep the plaintext columns redacted. Encrypts before enqueue so the
+  // offline queue never holds the plaintext.
+  _persistEncryptedPoint: async (pointId, title, verses) => {
+    const enc = await encryptChildForStorage({ title, verses }, POINT_SENSITIVE_FIELDS);
+    enqueue('updatePointEncrypted', {
+      pointId,
+      row: { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version, title: '', verses: [] },
+    });
   },
 
   // ─── Categories ───────────────────────────────────────────────

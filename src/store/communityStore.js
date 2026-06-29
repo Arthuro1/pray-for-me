@@ -2,7 +2,29 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
 import { devError } from '../lib/logger';
+import { isUnlocked } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
+
+// A private prayer stores its child rows (updates / points) as ciphertext on the
+// server. The community fan-out RPCs (sync_*) read/append those rows in
+// plaintext, so when a prayer is FIRST shared we rewrite its child rows from the
+// in-memory plaintext and clear the ciphertext. Best-effort and only with the
+// vault unlocked — otherwise memory holds redacted placeholders, not plaintext.
+async function plaintextifyNestedRows(prayer) {
+  if (!isUnlocked()) return;
+  for (const u of prayer.prayer_updates || []) {
+    if (!u.id || u._locked) continue;
+    await supabase.from('prayer_updates')
+      .update({ text: u.text ?? '', encrypted_payload: null, encryption_version: null })
+      .eq('id', u.id);
+  }
+  for (const pp of prayer.prayer_points || []) {
+    if (!pp.id || pp._locked) continue;
+    await supabase.from('prayer_points')
+      .update({ title: pp.title ?? '', verses: pp.verses || [], encrypted_payload: null, encryption_version: null })
+      .eq('id', pp.id);
+  }
+}
 
 // After a community-side edit that fans out to a shared personal prayer, refresh
 // that personal prayer in-session so the owner sees the change without reloading.
@@ -106,6 +128,11 @@ const useCommunityStore = create((set, get) => ({
         })));
         await supabase.from('community_updates').insert(rows);
       }
+    }
+    // First-time share: convert any ciphertext child rows to plaintext so the
+    // fan-out can read them (private prayers store updates/points encrypted).
+    if (existingGroupIds.size === 0 && toAdd.length > 0) {
+      await plaintextifyNestedRows(prayer);
     }
     if (toRemove.length > 0) {
       await supabase.from('community_prayers').delete().in('id', toRemove.map(e => e.id));

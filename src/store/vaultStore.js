@@ -53,8 +53,8 @@ const useVaultStore = create((set) => ({
 
   // Destroys the vault record — encrypted data becomes unrecoverable. Callers
   // must confirm with the user first (see ConfirmDialog).
-  destroy: () => {
-    vault.destroyVault();
+  destroy: async () => {
+    await vault.destroyVault();
     set({ initialized: false, unlocked: false });
   },
 }));
