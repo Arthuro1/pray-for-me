@@ -81,11 +81,11 @@ export default defineConfig(({ mode }) => {
     headers: {
       'Content-Security-Policy': [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: https:",
         "font-src 'self' data:",
-        "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co",
+        "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co https://va.vercel-scripts.com https://*.vercel-insights.com",
         "worker-src 'self' blob:",
         "manifest-src 'self'",
         "base-uri 'self'",
