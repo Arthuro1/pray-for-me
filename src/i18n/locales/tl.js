@@ -95,6 +95,8 @@ export default {
   "postTestimony": "Mag-post ng patotoo",
   "anonymous": "I-post nang walang pangalan",
   "shareWithGroup": "Ibahagi sa grupo",
+  "shareEncryptedWarning": "This prayer is protected by your Prayer Vault. Sharing it publishes a plaintext copy to everyone in the selected group(s). That copy is NOT end-to-end encrypted and the vault cannot protect it.",
+  "shareEncryptedAck": "I understand this publishes an unencrypted copy to the group.",
   "groupCode": "Code ng grupo",
   "codeCopied": "Nakopya!",
   "noRequests": "Wala pang kahilingan",

@@ -96,6 +96,8 @@ export default {
   "postTestimony": "Partager un témoignage",
   "anonymous": "Publier anonymement",
   "shareWithGroup": "Partager avec le groupe",
+  "shareEncryptedWarning": "Cette prière est protégée par votre Coffre de prière. La partager publie une copie en clair à tous les membres du ou des groupes sélectionnés. Cette copie n'est PAS chiffrée de bout en bout et le coffre ne peut pas la protéger.",
+  "shareEncryptedAck": "Je comprends que cela publie une copie non chiffrée dans le groupe.",
   "groupCode": "Code du groupe",
   "codeCopied": "Copié !",
   "noRequests": "Aucune requête pour l'instant",

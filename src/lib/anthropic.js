@@ -1,29 +1,26 @@
 import { supabase } from './supabase';
 
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
+// The Anthropic API key is NEVER referenced from client code or import.meta.env,
+// so it can never be inlined into the browser bundle (no VITE_ fallback). Both
+// dev and prod route through a server-side proxy that injects the key:
+//   • dev  → the Vite dev-server proxy (vite.config.js) adds the x-api-key
+//            header from process.env.ANTHROPIC_API_KEY (Node-side, not bundled).
+//   • prod → the /api/anthropic serverless function, which also enforces a valid
+//            Supabase session, a pinned model, payload caps and rate limiting.
+// AI is therefore always "enabled" from the client's point of view; the proxy is
+// the single gatekeeper for whether the key is actually configured.
 const isDev = import.meta.env.DEV;
+export const aiEnabled = true;
 
-// In dev we call Anthropic directly (via the Vite proxy) using the local key.
-// In prod we route through the /api/anthropic serverless proxy, which holds the
-// key server-side and now requires a valid Supabase session — so the key is
-// never shipped to the browser. AI is therefore "enabled" in prod regardless of
-// the client-side key, and only requires the local key in dev.
-export const aiEnabled = isDev ? !!API_KEY : true;
-
-// POST a message to Claude, transparently handling dev vs prod auth.
+// POST a message to Claude through the appropriate server-side proxy.
 export async function anthropicFetch(body) {
   const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
   const headers = { 'Content-Type': 'application/json' };
 
-  if (isDev) {
-    headers['x-api-key'] = API_KEY;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  } else {
-    // Attach the user's access token so the proxy can authorize the request.
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
-  }
+  // Attach the user's access token so the proxy can authorize the request. In
+  // dev the Vite proxy ignores it; in prod the serverless function requires it.
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
 
   return fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body) });
 }

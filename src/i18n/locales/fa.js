@@ -95,6 +95,8 @@ export default {
   "postTestimony": "به اشتراک گذاری شهادت",
   "anonymous": "ارسال ناشناس",
   "shareWithGroup": "اشتراک‌گذاری با گروه",
+  "shareEncryptedWarning": "This prayer is protected by your Prayer Vault. Sharing it publishes a plaintext copy to everyone in the selected group(s). That copy is NOT end-to-end encrypted and the vault cannot protect it.",
+  "shareEncryptedAck": "I understand this publishes an unencrypted copy to the group.",
   "groupCode": "کد گروه",
   "codeCopied": "کپی شد!",
   "noRequests": "هنوز درخواستی نیست",

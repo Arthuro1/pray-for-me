@@ -96,6 +96,8 @@ export default {
   "postTestimony": "Zeugnis teilen",
   "anonymous": "Anonym posten",
   "shareWithGroup": "Mit Gruppe teilen",
+  "shareEncryptedWarning": "Dieses Gebet ist durch deinen Gebets-Tresor geschützt. Beim Teilen wird eine Klartextkopie an alle Mitglieder der ausgewählten Gruppe(n) veröffentlicht. Diese Kopie ist NICHT Ende-zu-Ende-verschlüsselt und der Tresor kann sie nicht schützen.",
+  "shareEncryptedAck": "Mir ist bewusst, dass dies eine unverschlüsselte Kopie in der Gruppe veröffentlicht.",
   "groupCode": "Gruppencode",
   "codeCopied": "Kopiert!",
   "noRequests": "Noch keine Anliegen",

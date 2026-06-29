@@ -96,6 +96,8 @@ export default {
   "postTestimony": "分享见证",
   "anonymous": "匿名发布",
   "shareWithGroup": "与群组分享",
+  "shareEncryptedWarning": "This prayer is protected by your Prayer Vault. Sharing it publishes a plaintext copy to everyone in the selected group(s). That copy is NOT end-to-end encrypted and the vault cannot protect it.",
+  "shareEncryptedAck": "I understand this publishes an unencrypted copy to the group.",
   "groupCode": "群组代码",
   "codeCopied": "已复制！",
   "noRequests": "暂无请求",

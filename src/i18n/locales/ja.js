@@ -96,6 +96,8 @@ export default {
   "postTestimony": "証しを投稿",
   "anonymous": "匿名で投稿",
   "shareWithGroup": "グループと共有",
+  "shareEncryptedWarning": "This prayer is protected by your Prayer Vault. Sharing it publishes a plaintext copy to everyone in the selected group(s). That copy is NOT end-to-end encrypted and the vault cannot protect it.",
+  "shareEncryptedAck": "I understand this publishes an unencrypted copy to the group.",
   "groupCode": "グループコード",
   "codeCopied": "コピーしました！",
   "noRequests": "まだリクエストがありません",

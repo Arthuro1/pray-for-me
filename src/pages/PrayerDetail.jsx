@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users, Pin } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -9,6 +9,7 @@ import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, originAuthor, communityAuthor } from '../utils/user';
 import { testimonyList } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
+import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
@@ -45,6 +46,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [sharing, setSharing] = useState(false);
   const [shareGroupIds, setShareGroupIds] = useState(new Set());
   const [shareAnon, setShareAnon] = useState(false);
+  // Explicit acknowledgement that sharing a vault-protected prayer publishes a
+  // plaintext copy the vault cannot protect. Required before such a share.
+  const [shareAck, setShareAck] = useState(false);
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -173,6 +177,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const openShareModal = () => {
     setShareGroupIds(new Set(sharedGroups.map(g => g.groupId)));
     setShareAnon(sharedGroups.some(g => g.isAnonymous));
+    setShareAck(false);
     setShowShareModal(true);
   };
 
@@ -185,7 +190,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   };
 
   const handleSaveShares = async () => {
-    if (sharing) return;
+    if (sharing || needsShareAck) return; // block accidental share of vault content
     setSharing(true);
     const res = await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
     setSharing(false);
@@ -217,6 +222,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
+  // Vault-protected (E2E-encrypted at rest) personal prayer. Sharing it publishes
+  // a plaintext copy to group members that the vault cannot protect, so we warn
+  // and require an explicit acknowledgement before adding new groups.
+  const isVaultPrayer = !isCommunity && isPrayerEncrypted(livePrayer);
+  const alreadySharedIds = new Set(sharedGroups.map(g => g.groupId));
+  const addingNewGroups = [...shareGroupIds].some(id => !alreadySharedIds.has(id));
+  const needsShareAck = isVaultPrayer && addingNewGroups && !shareAck;
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
   const prayerTestimonies = isCommunity ? (communityTestimonies || []).filter(tm => tm.community_prayer_id === communityPrayer.id) : [];
   const personalTestimonies = isCommunity ? [] : testimonyList(livePrayer);
@@ -354,6 +366,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <div ref={shareTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'shareWithGroup')} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={e => e.stopPropagation()}>
             <h3 className="font-semibold text-base mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'shareWithGroup')}</h3>
             <p className="text-sm mb-4" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
+            {isVaultPrayer && (
+              <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'rgba(229,62,62,0.08)', border: '0.5px solid rgba(229,62,62,0.35)' }}>
+                <ShieldAlert size={16} style={{ color: '#e53e3e', flexShrink: 0, marginTop: 1 }} />
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'shareEncryptedWarning')}</p>
+              </div>
+            )}
             <div className="space-y-2 mb-5 max-h-60 overflow-y-auto">
               {groups.map(g => {
                 const checked = shareGroupIds.has(g.id);
@@ -365,15 +383,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 );
               })}
             </div>
-            <label className="flex items-center gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
+            <label className="flex items-center gap-2 text-sm mb-3 cursor-pointer" style={{ color: 'var(--text-2)' }}>
               <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
               {t(lang, 'anonymous')}
             </label>
+            {isVaultPrayer && addingNewGroups && (
+              <label className="flex items-start gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
+                <input type="checkbox" checked={shareAck} onChange={e => setShareAck(e.target.checked)} className="rounded mt-0.5" />
+                <span>{t(lang, 'shareEncryptedAck')}</span>
+              </label>
+            )}
             <div className="flex gap-2">
               <button onClick={() => setShowShareModal(false)} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
                 {t(lang, 'cancel')}
               </button>
-              <button onClick={handleSaveShares} disabled={sharing} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+              <button onClick={handleSaveShares} disabled={sharing || needsShareAck} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
                 {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'save')}
               </button>
             </div>

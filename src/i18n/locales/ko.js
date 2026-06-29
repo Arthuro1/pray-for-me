@@ -95,6 +95,8 @@ export default {
   "postTestimony": "간증 나누기",
   "anonymous": "익명으로 게시",
   "shareWithGroup": "그룹과 공유",
+  "shareEncryptedWarning": "This prayer is protected by your Prayer Vault. Sharing it publishes a plaintext copy to everyone in the selected group(s). That copy is NOT end-to-end encrypted and the vault cannot protect it.",
+  "shareEncryptedAck": "I understand this publishes an unencrypted copy to the group.",
   "groupCode": "그룹 코드",
   "codeCopied": "복사됨!",
   "noRequests": "아직 요청이 없습니다",

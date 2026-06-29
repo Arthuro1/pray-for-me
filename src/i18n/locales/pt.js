@@ -96,6 +96,8 @@ export default {
   "postTestimony": "Compartilhar testemunho",
   "anonymous": "Publicar anonimamente",
   "shareWithGroup": "Compartilhar com o grupo",
+  "shareEncryptedWarning": "Esta oração está protegida pelo seu Cofre de oração. Compartilhá-la publica uma cópia em texto simples para todos os membros do(s) grupo(s) selecionado(s). Essa cópia NÃO é criptografada de ponta a ponta e o cofre não pode protegê-la.",
+  "shareEncryptedAck": "Entendo que isso publica uma cópia não criptografada no grupo.",
   "groupCode": "Código do grupo",
   "codeCopied": "Copiado!",
   "noRequests": "Nenhum pedido ainda",
