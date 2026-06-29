@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { clearLocalData } from '../lib/dataCache';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -39,6 +40,18 @@ const useAuthStore = create((set) => ({
   signOut: async () => {
     await supabase.auth.signOut();
     set({ user: null });
+  },
+
+  // Permanently delete the account and ALL server-side data (right to erasure),
+  // then wipe local caches and sign out. Irreversible — callers MUST confirm.
+  deleteAccount: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const { error } = await supabase.rpc('delete_account');
+    if (error) return { error };
+    await clearLocalData(user?.id);
+    await supabase.auth.signOut();
+    set({ user: null });
+    return { error: null };
   },
 }));
 

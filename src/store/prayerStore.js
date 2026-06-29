@@ -4,6 +4,7 @@ import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } f
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { resolveLanguage } from '../i18n';
+import { canEncrypt, encryptPrayerForStorage, decryptPrayers, decryptPrayerFromStorage, SENSITIVE_FIELDS } from '../lib/crypto/prayerCrypto';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -124,9 +125,11 @@ const usePrayerStore = create((set, get) => ({
       return;
     }
 
-    // 3. Merge: server is authoritative. Keep a local-only prayer only if its
+    // 3. Decrypt any encrypted rows (legacy plaintext rows pass through). Then
+    //    merge: server is authoritative. Keep a local-only prayer only if its
     //    creation is STILL queued — so a prayer whose create was permanently
     //    dropped (rejected) is reconciled away rather than lingering as a ghost.
+    serverPrayers = await decryptPrayers(serverPrayers);
     const serverIds = new Set(serverPrayers.map((p) => p.id));
     const creating = pendingPrayerIds();
     const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
@@ -148,7 +151,10 @@ const usePrayerStore = create((set, get) => ({
       .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
       .eq('id', prayerId)
       .maybeSingle();
-    if (data) set((state) => ({ prayers: state.prayers.map((p) => (p.id === prayerId ? data : p)) }));
+    if (data) {
+      const decrypted = await decryptPrayerFromStorage(data);
+      set((state) => ({ prayers: state.prayers.map((p) => (p.id === prayerId ? decrypted : p)) }));
+    }
   },
 
   // Batch version of refreshFromCommunity: mirror the shared content of ALL
@@ -251,7 +257,10 @@ const usePrayerStore = create((set, get) => ({
       prayer_categories: categoryIds.map((category_id) => ({ category_id })),
     };
     set((state) => ({ prayers: [optimistic, ...state.prayers] }));
-    enqueue('createPrayer', { row, categoryIds });
+    // In-memory stays plaintext; only the persisted row is encrypted (if the
+    // vault is unlocked). New prayers have no community_origin_id → encryptable.
+    const persistRow = canEncrypt(optimistic) ? await encryptPrayerForStorage(row) : row;
+    enqueue('createPrayer', { row: persistRow, categoryIds });
   },
 
   // Saves a community prayer into the user's personal list as a snapshot copy
@@ -299,6 +308,7 @@ const usePrayerStore = create((set, get) => ({
     if (updates.description !== undefined) community.description = updates.description;
     if (updates.categoryIds !== undefined) community.category_ids = updates.categoryIds;
 
+    const current = get().prayers.find((p) => p.id === id);
     set((state) => ({
       prayers: state.prayers.map((p) => {
         if (p.id !== id) return p;
@@ -308,7 +318,24 @@ const usePrayerStore = create((set, get) => ({
         return { ...p, ...payload, prayer_categories };
       }),
     }));
-    enqueue('updatePrayer', { id, payload, categoryIds: updates.categoryIds, community });
+
+    // Encrypt the persisted payload from the merged plaintext (in-memory) state.
+    // The whole sensitive set is re-encrypted (the payload is the full blob), and
+    // the plaintext columns are redacted. The community fan-out object stays
+    // plaintext so shared copies remain readable by group members.
+    let persistPayload = payload;
+    if (canEncrypt(current)) {
+      const merged = { ...current, ...payload };
+      const sensitive = Object.fromEntries(SENSITIVE_FIELDS.map((f) => [f, merged[f] ?? '']));
+      const enc = await encryptPrayerForStorage(sensitive);
+      persistPayload = {
+        ...payload,
+        title: '', description: '', person_name: '', phone: '',
+        encrypted_payload: enc.encrypted_payload,
+        encryption_version: enc.encryption_version,
+      };
+    }
+    enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds, community });
   },
 
   // Reverse direction: when the owner edits categories on a shared community

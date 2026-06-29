@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "오늘 아직 기도하지 않았어요",
   "pushUnavailable": "알림이 켜졌습니다. 이 기기에서는 푸시 알림을 사용할 수 없습니다.",
   "shareVerse": "구절 공유",
-  "verseCopied": "구절이 복사되었습니다!"
+  "verseCopied": "구절이 복사되었습니다!",
+  "dangerZone": "위험 구역",
+  "deleteAccount": "계정 삭제",
+  "deleteAccountSub": "계정과 모든 데이터를 영구적으로 삭제합니다.",
+  "deleteAccountWarning": "계정과 모든 기도, 간증, 데이터가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+  "deleteAccountConfirm": "계정 삭제",
+  "deleteAccountDone": "계정이 삭제되었습니다",
+  "deleteAccountError": "계정을 삭제할 수 없습니다. 다시 시도해 주세요."
 };

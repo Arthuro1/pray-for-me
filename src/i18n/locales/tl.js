@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "Hindi ka pa nananalangin ngayon",
   "pushUnavailable": "Naka-on ang paalala. Hindi available ang push notifications sa device na ito.",
   "shareVerse": "Ibahagi ang talata",
-  "verseCopied": "Nakopya ang talata!"
+  "verseCopied": "Nakopya ang talata!",
+  "dangerZone": "Mapanganib na bahagi",
+  "deleteAccount": "Burahin ang aking account",
+  "deleteAccountSub": "Permanenteng burahin ang iyong account at lahat ng iyong data.",
+  "deleteAccountWarning": "Permanenteng buburahin nito ang iyong account at lahat ng iyong panalangin, testimonya at data. Hindi ito maibabalik.",
+  "deleteAccountConfirm": "Burahin ang account",
+  "deleteAccountDone": "Nabura na ang iyong account",
+  "deleteAccountError": "Hindi mabura ang iyong account. Pakisubukang muli."
 };

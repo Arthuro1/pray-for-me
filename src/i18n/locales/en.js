@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "You haven't prayed today",
   "pushUnavailable": "Reminder on. Push notifications aren't available on this device.",
   "shareVerse": "Share verse",
-  "verseCopied": "Verse copied!"
+  "verseCopied": "Verse copied!",
+  "dangerZone": "Danger zone",
+  "deleteAccount": "Delete my account",
+  "deleteAccountSub": "Permanently erase your account and all your data.",
+  "deleteAccountWarning": "This permanently deletes your account and all your prayers, testimonies and data. This cannot be undone.",
+  "deleteAccountConfirm": "Delete account",
+  "deleteAccountDone": "Your account has been deleted",
+  "deleteAccountError": "Could not delete your account. Please try again."
 };

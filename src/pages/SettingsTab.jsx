@@ -2,9 +2,10 @@
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, Trash2 } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
+import { confirm } from '../store/confirmStore';
 import { enablePush, updatePushPrefs, disablePush } from '../push';
 import { buildExport } from '../utils/export';
 import { nextReminder } from '../utils/reminder';
@@ -48,7 +49,7 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
 
 export default function SettingsTab() {
   const { settings, updateSettings, prayers, categories } = usePrayerStore();
-  const { user, signOut } = useAuthStore();
+  const { user, signOut, deleteAccount } = useAuthStore();
   const { tr } = useTranslationStore();
   const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);
@@ -102,6 +103,21 @@ export default function SettingsTab() {
     a.click();
     URL.revokeObjectURL(url);
     toast.success(t(lang, 'exportDone'));
+  };
+
+  const handleDeleteAccount = () => {
+    confirm({
+      title: t(lang, 'deleteAccount'),
+      message: t(lang, 'deleteAccountWarning'),
+      confirmLabel: t(lang, 'deleteAccountConfirm'),
+      cancelLabel: t(lang, 'cancel'),
+      danger: true,
+      onConfirm: async () => {
+        const { error } = await deleteAccount();
+        if (error) toast.error(t(lang, 'deleteAccountError'));
+        else toast.success(t(lang, 'deleteAccountDone'));
+      },
+    });
   };
   const answeredPrayers = prayers.filter((p) => p.status === 'answered');
   const activePrayers = prayers.filter((p) => p.status === 'active');
@@ -395,6 +411,20 @@ export default function SettingsTab() {
             <Download size={14} />
             {t(lang, 'exportData')}
           </button>
+
+          {/* Danger zone — irreversible account deletion (right to erasure) */}
+          <div className="mt-4 pt-4" style={{ borderTop: '0.5px solid var(--border-soft)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#c04040' }}>{t(lang, 'dangerZone')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'deleteAccountSub')}</p>
+            <button
+              onClick={handleDeleteAccount}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
+            >
+              <Trash2 size={14} />
+              {t(lang, 'deleteAccount')}
+            </button>
+          </div>
         </div>
 
         {/* Donate */}

@@ -53,7 +53,9 @@ function PrimaryButton({ onClick, disabled, busy, children }) {
 
 // Unified vault dialog. `initialMode`: 'setup' | 'unlock' | 'change'.
 // onUnlocked fires once the vault becomes usable (created/unlocked/reset).
-export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked }) {
+// `dismissable=false` turns it into a hard gate (no close button, no backdrop /
+// Escape dismiss) — used to block the app until the vault is unlocked.
+export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true }) {
   const { createVault, unlock, resetPassphrase, changePassphrase } = useVaultStore();
   const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change
   const [pass, setPass] = useState('');
@@ -64,7 +66,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
-  useEscapeKey(onClose);
+  useEscapeKey(dismissable ? onClose : () => {});
   const trapRef = useFocusTrap();
 
   const done = (msgKey) => {
@@ -133,7 +135,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   const Icon = mode === 'unlock' ? Lock : mode === 'recovery' ? KeyRound : mode === 'reset' || mode === 'change' ? KeyRound : Shield;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }} onClick={onClose}>
+    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }} onClick={dismissable ? onClose : undefined}>
       <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -142,7 +144,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
             </div>
             <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, titleKey)}</h3>
           </div>
-          <button onClick={onClose} aria-label={t(lang, 'close')}><X size={18} style={{ color: 'var(--text-3)' }} /></button>
+          {dismissable && <button onClick={onClose} aria-label={t(lang, 'close')}><X size={18} style={{ color: 'var(--text-3)' }} /></button>}
         </div>
 
         {/* ─── Setup ─── */}

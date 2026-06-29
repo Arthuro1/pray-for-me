@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "امروز هنوز دعا نکرده‌اید",
   "pushUnavailable": "یادآوری روشن شد. اعلان‌های پوش روی این دستگاه در دسترس نیست.",
   "shareVerse": "اشتراک آیه",
-  "verseCopied": "آیه کپی شد!"
+  "verseCopied": "آیه کپی شد!",
+  "dangerZone": "منطقه خطر",
+  "deleteAccount": "حذف حساب من",
+  "deleteAccountSub": "حساب و همه داده‌های خود را برای همیشه پاک کنید.",
+  "deleteAccountWarning": "این کار حساب و همه دعاها، شهادت‌ها و داده‌های شما را برای همیشه حذف می‌کند. این عمل قابل بازگشت نیست.",
+  "deleteAccountConfirm": "حذف حساب",
+  "deleteAccountDone": "حساب شما حذف شد",
+  "deleteAccountError": "حذف حساب ممکن نشد. لطفاً دوباره تلاش کنید."
 };

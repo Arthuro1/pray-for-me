@@ -25,6 +25,9 @@ const LandingPage = lazy(() => import('./pages/LandingPage'));
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
+import useVaultStore from './store/vaultStore';
+import VaultModal from './components/VaultModal';
+import { pullVaultRecord } from './lib/vaultSync';
 import { scheduleNotifications } from './notifications';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
@@ -120,9 +123,11 @@ export default function App() {
   const { settings, prayers, categories, loadData } = usePrayerStore();
   const { loadTranslations, translateContent } = useTranslationStore();
   const { fetchPendingCount, subscribePending } = useCommunityStore();
+  const { initialized: vaultInitialized, unlocked: vaultUnlocked } = useVaultStore();
 
   const lang = settings.language || 'fr';
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
+  const [vaultChecked, setVaultChecked] = useState(false);
 
   const openAdd = () => { setEditPrayer(null); setShowForm(true); };
   const openEdit = (p) => { setEditPrayer(p); setShowForm(true); };
@@ -158,6 +163,26 @@ export default function App() {
     }
   }, [user?.id]);
 
+  // Pull the (wrapped) vault record so the lock gate reflects vaults created on
+  // another device. Gates the splash until we know whether a vault exists.
+  useEffect(() => {
+    if (!user?.id) { setVaultChecked(false); return undefined; }
+    let cancelled = false;
+    (async () => {
+      await pullVaultRecord();
+      if (cancelled) return;
+      useVaultStore.getState().refresh();
+      setVaultChecked(true);
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  // Re-decrypt by reloading once the vault is unlocked (the first load may have
+  // run while locked, leaving encrypted rows as locked placeholders).
+  useEffect(() => {
+    if (user?.id && vaultUnlocked) loadData(user.id);
+  }, [vaultUnlocked]);
+
   const finishOnboarding = () => {
     localStorage.setItem('pfm_onboarded', '1');
     setShowOnboarding(false);
@@ -180,7 +205,7 @@ export default function App() {
     }
   }, [settings.language, prayers, categories, user?.id]);
 
-  if (authLoading || !localeReady) {
+  if (authLoading || !localeReady || (user && !vaultChecked)) {
     return (
       <div className="min-h-screen bg-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
@@ -196,6 +221,17 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         {showAuth ? <AuthPage /> : <LandingPage onGetStarted={() => setShowAuth(true)} />}
       </Suspense>
+    );
+  }
+
+  // Hard gate: a vault exists but is locked → block the app until it's unlocked,
+  // so encrypted content is never rendered (or re-cached) without the key.
+  if (vaultInitialized && !vaultUnlocked) {
+    // Unlocking flips vaultUnlocked → the reload-on-unlock effect re-decrypts.
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <VaultModal lang={lang} initialMode="unlock" dismissable={false} />
+      </div>
     );
   }
 

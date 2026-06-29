@@ -259,3 +259,22 @@ export function destroyVault(): void {
   storage()?.removeItem(STORAGE_KEY);
   setMasterKey(null);
 }
+
+// ─── Cross-device sync of the WRAPPED record (ciphertext only) ────────────────
+// The record holds only the master key wrapped by the passphrase and recovery
+// code, plus salts — never the key or passphrase. It is therefore safe to store
+// server-side so the vault can be unlocked on another device.
+
+// Raw record string for upload, or null if no vault exists on this device.
+export function exportVaultRecord(): string | null {
+  return storage()?.getItem(STORAGE_KEY) ?? null;
+}
+
+// Seed this device's vault from a synced record. By default it won't clobber an
+// existing local record (which may be newer); pass overwrite to force.
+export function importVaultRecord(recordJson: string, overwrite = false): void {
+  const store = storage();
+  if (!store) return;
+  if (!overwrite && store.getItem(STORAGE_KEY)) return;
+  store.setItem(STORAGE_KEY, recordJson);
+}

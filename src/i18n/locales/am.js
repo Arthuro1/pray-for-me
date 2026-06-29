@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "ዛሬ ገና አልጸለይክም",
   "pushUnavailable": "ማስታወሻ በርቷል። በዚህ መሣሪያ ላይ የግፋ ማሳወቂያዎች አይገኙም።",
   "shareVerse": "ጥቅሱን አጋራ",
-  "verseCopied": "ጥቅሱ ተቀድቷል!"
+  "verseCopied": "ጥቅሱ ተቀድቷል!",
+  "dangerZone": "አደገኛ ቦታ",
+  "deleteAccount": "መለያዬን ሰርዝ",
+  "deleteAccountSub": "መለያዎንና ሁሉንም ውሂብዎን በቋሚነት ይሰርዙ።",
+  "deleteAccountWarning": "ይህ መለያዎንና ሁሉንም ጸሎቶችዎንና ምስክርነቶችዎንና ውሂብዎን በቋሚነት ይሰርዛል። ይህ እርምጃ ሊቀለበስ አይችልም።",
+  "deleteAccountConfirm": "መለያ ሰርዝ",
+  "deleteAccountDone": "መለያዎ ተሰርዟል",
+  "deleteAccountError": "መለያዎን መሰረዝ አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
 };

@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "Você ainda não orou hoje",
   "pushUnavailable": "Lembrete ativado. As notificações push não estão disponíveis neste dispositivo.",
   "shareVerse": "Compartilhar versículo",
-  "verseCopied": "Versículo copiado!"
+  "verseCopied": "Versículo copiado!",
+  "dangerZone": "Zona de perigo",
+  "deleteAccount": "Excluir minha conta",
+  "deleteAccountSub": "Apague permanentemente sua conta e todos os seus dados.",
+  "deleteAccountWarning": "Isso exclui permanentemente sua conta e todas as suas orações, testemunhos e dados. Não pode ser desfeito.",
+  "deleteAccountConfirm": "Excluir conta",
+  "deleteAccountDone": "Sua conta foi excluída",
+  "deleteAccountError": "Não foi possível excluir sua conta. Tente novamente."
 };

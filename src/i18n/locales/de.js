@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "Du hast heute noch nicht gebetet",
   "pushUnavailable": "Erinnerung aktiviert. Push-Benachrichtigungen sind auf diesem Gerät nicht verfügbar.",
   "shareVerse": "Vers teilen",
-  "verseCopied": "Vers kopiert!"
+  "verseCopied": "Vers kopiert!",
+  "dangerZone": "Gefahrenzone",
+  "deleteAccount": "Mein Konto löschen",
+  "deleteAccountSub": "Lösche dein Konto und alle deine Daten dauerhaft.",
+  "deleteAccountWarning": "Dadurch werden dein Konto und alle deine Gebete, Zeugnisse und Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+  "deleteAccountConfirm": "Konto löschen",
+  "deleteAccountDone": "Dein Konto wurde gelöscht",
+  "deleteAccountError": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut."
 };

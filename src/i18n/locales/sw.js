@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "Hujaomba leo",
   "pushUnavailable": "Kikumbusho kimewashwa. Arifa za push hazipatikani kwenye kifaa hiki.",
   "shareVerse": "Shiriki andiko",
-  "verseCopied": "Andiko limenakiliwa!"
+  "verseCopied": "Andiko limenakiliwa!",
+  "dangerZone": "Eneo hatari",
+  "deleteAccount": "Futa akaunti yangu",
+  "deleteAccountSub": "Futa kabisa akaunti yako na data yako yote.",
+  "deleteAccountWarning": "Hii itafuta kabisa akaunti yako na maombi, ushuhuda na data yako yote. Kitendo hiki hakiwezi kutenduliwa.",
+  "deleteAccountConfirm": "Futa akaunti",
+  "deleteAccountDone": "Akaunti yako imefutwa",
+  "deleteAccountError": "Imeshindikana kufuta akaunti yako. Tafadhali jaribu tena."
 };

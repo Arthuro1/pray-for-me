@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "आपने आज अभी तक प्रार्थना नहीं की",
   "pushUnavailable": "अनुस्मारक चालू है। इस डिवाइस पर पुश सूचनाएं उपलब्ध नहीं हैं।",
   "shareVerse": "पद साझा करें",
-  "verseCopied": "पद कॉपी हो गया!"
+  "verseCopied": "पद कॉपी हो गया!",
+  "dangerZone": "खतरनाक क्षेत्र",
+  "deleteAccount": "मेरा खाता हटाएं",
+  "deleteAccountSub": "अपना खाता और सभी डेटा स्थायी रूप से मिटाएं।",
+  "deleteAccountWarning": "इससे आपका खाता और आपकी सभी प्रार्थनाएं, गवाहियां और डेटा स्थायी रूप से हट जाएंगे। इसे पूर्ववत नहीं किया जा सकता।",
+  "deleteAccountConfirm": "खाता हटाएं",
+  "deleteAccountDone": "आपका खाता हटा दिया गया है",
+  "deleteAccountError": "आपका खाता हटाया नहीं जा सका। कृपया पुनः प्रयास करें।"
 };

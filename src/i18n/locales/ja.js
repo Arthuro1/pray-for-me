@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "今日はまだ祈っていません",
   "pushUnavailable": "リマインダーをオンにしました。この端末ではプッシュ通知を利用できません。",
   "shareVerse": "聖句を共有",
-  "verseCopied": "聖句をコピーしました！"
+  "verseCopied": "聖句をコピーしました！",
+  "dangerZone": "危険な操作",
+  "deleteAccount": "アカウントを削除",
+  "deleteAccountSub": "アカウントとすべてのデータを完全に削除します。",
+  "deleteAccountWarning": "アカウントと、すべての祈り・証し・データが完全に削除されます。この操作は元に戻せません。",
+  "deleteAccountConfirm": "アカウントを削除",
+  "deleteAccountDone": "アカウントを削除しました",
+  "deleteAccountError": "アカウントを削除できませんでした。もう一度お試しください。"
 };

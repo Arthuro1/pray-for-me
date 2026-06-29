@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "لم تصلِّ اليوم بعد",
   "pushUnavailable": "تم تفعيل التذكير. إشعارات الدفع غير متوفرة على هذا الجهاز.",
   "shareVerse": "مشاركة الآية",
-  "verseCopied": "تم نسخ الآية!"
+  "verseCopied": "تم نسخ الآية!",
+  "dangerZone": "منطقة الخطر",
+  "deleteAccount": "حذف حسابي",
+  "deleteAccountSub": "احذف حسابك وجميع بياناتك نهائيًا.",
+  "deleteAccountWarning": "سيؤدي هذا إلى حذف حسابك وجميع صلواتك وشهاداتك وبياناتك نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
+  "deleteAccountConfirm": "حذف الحساب",
+  "deleteAccountDone": "تم حذف حسابك",
+  "deleteAccountError": "تعذّر حذف حسابك. يرجى المحاولة مرة أخرى."
 };

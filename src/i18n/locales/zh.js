@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "你今天还没有祷告",
   "pushUnavailable": "提醒已开启。此设备不支持推送通知。",
   "shareVerse": "分享经文",
-  "verseCopied": "经文已复制！"
+  "verseCopied": "经文已复制！",
+  "dangerZone": "危险操作",
+  "deleteAccount": "删除我的账户",
+  "deleteAccountSub": "永久删除您的账户和所有数据。",
+  "deleteAccountWarning": "这将永久删除您的账户以及所有祷告、见证和数据。此操作无法撤销。",
+  "deleteAccountConfirm": "删除账户",
+  "deleteAccountDone": "您的账户已删除",
+  "deleteAccountError": "无法删除您的账户，请重试。"
 };

@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "Anda belum berdoa hari ini",
   "pushUnavailable": "Pengingat aktif. Notifikasi push tidak tersedia di perangkat ini.",
   "shareVerse": "Bagikan ayat",
-  "verseCopied": "Ayat disalin!"
+  "verseCopied": "Ayat disalin!",
+  "dangerZone": "Zona berbahaya",
+  "deleteAccount": "Hapus akun saya",
+  "deleteAccountSub": "Hapus akun dan semua data Anda secara permanen.",
+  "deleteAccountWarning": "Ini akan menghapus akun dan semua doa, kesaksian, serta data Anda secara permanen. Tindakan ini tidak dapat dibatalkan.",
+  "deleteAccountConfirm": "Hapus akun",
+  "deleteAccountDone": "Akun Anda telah dihapus",
+  "deleteAccountError": "Tidak dapat menghapus akun Anda. Silakan coba lagi."
 };

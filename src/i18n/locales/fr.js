@@ -364,5 +364,12 @@ export default {
   "notPrayedToday": "Vous n'avez pas encore prié aujourd'hui",
   "pushUnavailable": "Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil.",
   "shareVerse": "Partager le verset",
-  "verseCopied": "Verset copié !"
+  "verseCopied": "Verset copié !",
+  "dangerZone": "Zone sensible",
+  "deleteAccount": "Supprimer mon compte",
+  "deleteAccountSub": "Effacez définitivement votre compte et toutes vos données.",
+  "deleteAccountWarning": "Cette action supprime définitivement votre compte et toutes vos prières, témoignages et données. Elle est irréversible.",
+  "deleteAccountConfirm": "Supprimer le compte",
+  "deleteAccountDone": "Votre compte a été supprimé",
+  "deleteAccountError": "Impossible de supprimer votre compte. Veuillez réessayer."
 };
