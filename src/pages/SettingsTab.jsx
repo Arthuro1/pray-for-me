@@ -2,7 +2,7 @@
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, Trash2 } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2 } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -240,6 +240,14 @@ export default function SettingsTab() {
               >
                 <KeyRound size={14} />
                 {t(lang, 'vaultChangePass')}
+              </button>
+              <button
+                onClick={() => setVaultMode('rotate')}
+                className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                <RefreshCw size={14} />
+                {t(lang, 'vaultRotateCode')}
               </button>
             </div>
           )}

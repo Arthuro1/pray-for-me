@@ -56,8 +56,8 @@ function PrimaryButton({ onClick, disabled, busy, children }) {
 // `dismissable=false` turns it into a hard gate (no close button, no backdrop /
 // Escape dismiss) — used to block the app until the vault is unlocked.
 export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true }) {
-  const { createVault, unlock, resetPassphrase, changePassphrase } = useVaultStore();
-  const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change
+  const { createVault, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode } = useVaultStore();
+  const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change | rotate
   const [pass, setPass] = useState('');
   const [confirm, setConfirm] = useState('');
   const [code, setCode] = useState('');
@@ -119,6 +119,16 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     done('vaultChangedToast');
   };
 
+  const handleRotate = async () => {
+    setError('');
+    setBusy(true);
+    const rc = await rotateRecoveryCode();
+    setBusy(false);
+    if (!rc) return setError(t(lang, 'vaultWrongPass')); // locked or no vault
+    setRecoveryCode(rc);
+    setMode('recovery');
+  };
+
   const copyCode = async () => {
     try {
       await navigator.clipboard.writeText(recoveryCode);
@@ -130,9 +140,11 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
 
   const titleKey = {
     setup: 'vaultSetupTitle', recovery: 'vaultRecoveryTitle', unlock: 'vaultUnlockTitle',
-    reset: 'vaultResetTitle', change: 'vaultChangeTitle',
+    reset: 'vaultResetTitle', change: 'vaultChangeTitle', rotate: 'vaultRotateTitle',
   }[mode];
-  const Icon = mode === 'unlock' ? Lock : mode === 'recovery' ? KeyRound : mode === 'reset' || mode === 'change' ? KeyRound : Shield;
+  const Icon = mode === 'unlock' ? Lock
+    : mode === 'recovery' || mode === 'reset' || mode === 'change' || mode === 'rotate' ? KeyRound
+      : Shield;
 
   return (
     <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }} onClick={dismissable ? onClose : undefined}>
@@ -212,6 +224,15 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
             {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
             <PrimaryButton onClick={handleChange} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultChangeSave')}</PrimaryButton>
+          </div>
+        )}
+
+        {/* ─── Rotate recovery code ─── */}
+        {mode === 'rotate' && (
+          <div className="space-y-3">
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultRotateIntro')}</p>
+            {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
+            <PrimaryButton onClick={handleRotate} busy={busy}>{t(lang, 'vaultRotateGenerate')}</PrimaryButton>
           </div>
         )}
       </div>

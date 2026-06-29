@@ -8,6 +8,7 @@ import {
   getMasterKey,
   resetPassphrase,
   changePassphrase,
+  rotateRecoveryCode,
   destroyVault,
   generateRecoveryCode,
 } from './keyManager.ts';
@@ -93,6 +94,36 @@ describe('recovery code', () => {
   it('generates grouped, readable codes', () => {
     const code = generateRecoveryCode();
     expect(code).toMatch(/^[0-9A-HJ-NP-TV-Z]{5}(-[0-9A-HJ-NP-TV-Z]{1,5})+$/);
+  });
+});
+
+describe('rotateRecoveryCode', () => {
+  it('issues a new code that works and invalidates the old one', async () => {
+    const oldCode = await createVault('pass');
+    const payload = await encryptJson(getMasterKey(), { v: 'survives rotation' });
+
+    const newCode = await rotateRecoveryCode();
+    expect(typeof newCode).toBe('string');
+    expect(newCode).not.toBe(oldCode);
+
+    // Old code no longer resets; data still decrypts after a reset with the new one.
+    lock();
+    expect(await resetPassphrase(oldCode, 'x-pass')).toBe(false);
+    expect(await resetPassphrase(newCode, 'new-pass')).toBe(true);
+    expect(await decryptJson(getMasterKey(), payload)).toEqual({ v: 'survives rotation' });
+  });
+
+  it('leaves the passphrase untouched', async () => {
+    await createVault('keep-me');
+    await rotateRecoveryCode();
+    lock();
+    expect(await unlock('keep-me')).toBe(true);
+  });
+
+  it('returns null when the vault is locked', async () => {
+    await createVault('pass');
+    lock();
+    expect(await rotateRecoveryCode()).toBe(null);
   });
 });
 

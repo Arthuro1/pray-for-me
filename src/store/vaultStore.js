@@ -43,6 +43,14 @@ const useVaultStore = create((set) => ({
     return ok;
   },
 
+  // Rotate the recovery code (vault must be unlocked). Returns the new code to
+  // show once, or null on failure. Syncs the re-wrapped record to other devices.
+  rotateRecoveryCode: async () => {
+    const code = await vault.rotateRecoveryCode();
+    if (code) pushVaultRecord(); // recovery wrapping changed
+    return code;
+  },
+
   // Destroys the vault record — encrypted data becomes unrecoverable. Callers
   // must confirm with the user first (see ConfirmDialog).
   destroy: () => {

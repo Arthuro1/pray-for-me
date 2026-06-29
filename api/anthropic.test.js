@@ -21,12 +21,24 @@ function req({ method = 'POST', auth = 'Bearer good-token', body = validBody() }
   return { method, headers: { authorization: auth }, body };
 }
 
-// fetch is called twice per successful request: (1) Supabase /auth/v1/user to
-// authorize, (2) the upstream Anthropic call. We stub both by URL.
-function installFetch({ authOk = true, userId = 'user-1' } = {}) {
-  global.fetch = vi.fn(async (url) => {
-    if (String(url).includes('/auth/v1/user')) {
+// fetch is called up to three times per successful request: (1) Supabase
+// /auth/v1/user to authorize, (2) the check_ai_rate_limit RPC, (3) the upstream
+// Anthropic call. We stub all three by URL. The RPC stub maintains a fixed-window
+// counter (reset each installFetch) to mirror the real shared limiter; pass
+// rpcOk=false to simulate the shared store being unreachable (forces the proxy's
+// in-memory fallback).
+function installFetch({ authOk = true, userId = 'user-1', rpcOk = true } = {}) {
+  let rpcCount = 0;
+  global.fetch = vi.fn(async (url, opts) => {
+    const u = String(url);
+    if (u.includes('/auth/v1/user')) {
       return { ok: authOk, json: async () => (authOk ? { id: userId } : {}) };
+    }
+    if (u.includes('/rpc/check_ai_rate_limit')) {
+      if (!rpcOk) return { ok: false, status: 500, json: async () => ({}) };
+      const { p_max } = JSON.parse(opts.body);
+      rpcCount += 1;
+      return { ok: true, status: 200, json: async () => rpcCount <= p_max };
     }
     return { ok: true, status: 200, json: async () => ({ content: [{ text: '[]' }] }) };
   });
@@ -103,8 +115,7 @@ describe('AI proxy — request validation', () => {
 });
 
 describe('AI proxy — per-user rate limiting', () => {
-  it('returns 429 once a user exceeds the per-minute limit', async () => {
-    // Use a unique user id so this test is independent of others' counters.
+  it('returns 429 once a user exceeds the per-minute limit (shared store)', async () => {
     installFetch({ userId: `rl-${Date.now()}` });
     let limited = false;
     for (let i = 0; i < 25; i++) {
@@ -123,5 +134,18 @@ describe('AI proxy — per-user rate limiting', () => {
     const b = mockRes();
     await handler(req(), b);
     expect(b.statusCode).toBe(200);
+  });
+
+  it('falls back to the in-memory limiter when the shared store is unreachable', async () => {
+    // rpcOk:false makes the RPC fail, so the proxy must still throttle via its
+    // per-instance fallback. Unique user id keeps it isolated from other tests.
+    installFetch({ userId: `fb-${Date.now()}`, rpcOk: false });
+    let limited = false;
+    for (let i = 0; i < 25; i++) {
+      const res = mockRes();
+      await handler(req(), res);
+      if (res.statusCode === 429) { limited = true; break; }
+    }
+    expect(limited).toBe(true);
   });
 });

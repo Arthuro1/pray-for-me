@@ -15,16 +15,17 @@ const MAX_BODY_BYTES = 64 * 1024; // generous for prayer prompts, blocks abuse
 const MAX_MESSAGES = 20; // a single suggestion is 1-2 turns; cap relay abuse
 const ALLOWED_ROLES = new Set(['user', 'assistant']);
 
-// ── Per-user rate limiting (sliding window, in-memory) ───────────────────────
-// Caps how often one account can hit the AI relay. In-memory state is per
-// serverless instance, so this is a best-effort throttle that blunts cost/abuse
-// from a single client; pair it with a shared store (Upstash/KV) for a hard
-// global limit. See docs/THREAT_MODEL.md ("compromised AI provider"/abuse).
+// ── Per-user rate limiting ───────────────────────────────────────────────────
+// Primary: a SHARED Postgres counter (the check_ai_rate_limit RPC), so the cap
+// is global across every serverless instance — a hard limit, not best-effort.
+// Fallback: a per-instance in-memory sliding window, used only if the shared
+// store is unreachable (migration not applied / transient error) so the relay is
+// never left completely unthrottled. See docs/THREAT_MODEL.md (abuse).
 const RATE_LIMIT_MAX = 20; // requests
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // per minute, per user
 const hits = new Map(); // userId -> number[] (timestamps)
 
-function rateLimited(userId) {
+function rateLimitedInMemory(userId) {
   const now = Date.now();
   const recent = (hits.get(userId) || []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
   if (recent.length >= RATE_LIMIT_MAX) {
@@ -40,6 +41,30 @@ function rateLimited(userId) {
     }
   }
   return false;
+}
+
+// Hit the shared counter. The RPC is SECURITY DEFINER and keyed on auth.uid(),
+// so the user's own Bearer token is enough — no service-role key on the server.
+// Returns { ok, limited }; ok=false signals the caller to use the in-memory
+// fallback (the RPC is missing, errored, or returned an unexpected shape).
+async function rateLimitedShared(supabaseBase, anonKey, token) {
+  try {
+    const res = await fetch(`${supabaseBase}/rest/v1/rpc/check_ai_rate_limit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        apikey: anonKey,
+      },
+      body: JSON.stringify({ p_max: RATE_LIMIT_MAX, p_window_seconds: RATE_LIMIT_WINDOW_MS / 1000 }),
+    });
+    if (!res.ok) return { ok: false };
+    const allowed = await res.json(); // scalar boolean: true = under the limit
+    if (typeof allowed !== 'boolean') return { ok: false };
+    return { ok: true, limited: !allowed };
+  } catch {
+    return { ok: false };
+  }
 }
 
 export default async function handler(req, res) {
@@ -70,8 +95,10 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  // ── Per-user rate limit ────────────────────────────────────────────────────
-  if (rateLimited(userId)) {
+  // ── Per-user rate limit (shared store, in-memory fallback) ─────────────────
+  const shared = await rateLimitedShared(supabaseBase, process.env.VITE_SUPABASE_ANON_KEY, token);
+  const limited = shared.ok ? shared.limited : rateLimitedInMemory(userId);
+  if (limited) {
     return res.status(429).json({ error: 'Rate limit exceeded' });
   }
 

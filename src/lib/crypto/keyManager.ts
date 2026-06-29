@@ -242,6 +242,23 @@ export async function changePassphrase(currentPassphrase: string, newPassphrase:
   return true;
 }
 
+// Rotate the recovery code while the vault is unlocked. Generates a fresh code,
+// re-wraps the SAME master key under it (so existing ciphertext stays readable),
+// and invalidates the previous code. Returns the new code to show the user once,
+// or null if the vault is locked (no master key in memory to re-wrap). The
+// passphrase wrapping is untouched.
+export async function rotateRecoveryCode(): Promise<string | null> {
+  const record = loadRecord();
+  if (!record || !masterKey) return null;
+  const recoveryCode = generateRecoveryCode();
+  const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
+  const recoveryKey = await deriveWrappingKey(normalizeCode(recoveryCode), recoverySalt);
+  record.recoverySalt = toB64(recoverySalt);
+  record.recoveryWrapped = await wrapMasterKey(masterKey, recoveryKey);
+  saveRecord(record);
+  return recoveryCode;
+}
+
 // Drop the master key from memory. Encrypted data on disk stays encrypted.
 export function lock(): void {
   setMasterKey(null);
