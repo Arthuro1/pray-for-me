@@ -1,4 +1,5 @@
 import { aiEnabled, anthropicFetch } from './lib/anthropic';
+import { devError } from './lib/logger';
 
 const cache = new Map();
 let lastCallTime = 0;
@@ -179,8 +180,9 @@ export async function getAIRecommendations({ title, description = '', type = 'ne
 
     if (res.status === 429) return { recs: [], error: strings.rateLimited };
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      console.error('API error', res.status, err);
+      // Log only the status — never the response body, which can echo the
+      // prompt (and therefore prayer content).
+      devError('AI request failed', res.status);
       return { recs: [], error: strings.connError };
     }
 

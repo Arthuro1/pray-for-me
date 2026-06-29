@@ -2,7 +2,7 @@
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { enablePush, updatePushPrefs, disablePush } from '../push';
@@ -10,6 +10,8 @@ import { buildExport } from '../utils/export';
 import { nextReminder } from '../utils/reminder';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
+import VaultModal from '../components/VaultModal';
+import useVaultStore from '../store/vaultStore';
 
 function Toggle({ enabled, onToggle }) {
   return (
@@ -48,10 +50,17 @@ export default function SettingsTab() {
   const { settings, updateSettings, prayers, categories } = usePrayerStore();
   const { user, signOut } = useAuthStore();
   const { tr } = useTranslationStore();
+  const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
+  const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
 
   const lang = settings.language || 'fr';
+
+  const handleLockVault = () => {
+    lockVault();
+    toast.success(t(lang, 'vaultLockedToast'));
+  };
 
   const handleToggleNotifications = async () => {
     if (!settings.dailyReminderEnabled) {
@@ -161,6 +170,63 @@ export default function SettingsTab() {
             <LogOut size={14} />
             {t(lang, 'signOut')}
           </button>
+        </div>
+
+        {/* Prayer Vault */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            {vaultInitialized && !vaultUnlocked ? <Lock size={16} style={{ color: 'var(--accent)' }} /> : <Shield size={16} style={{ color: 'var(--accent)' }} />}
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'vaultTitle')}</h3>
+            {vaultInitialized && (
+              <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
+              </span>
+            )}
+          </div>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultManageSub')}</p>
+
+          {!vaultInitialized && (
+            <button
+              onClick={() => setVaultMode('setup')}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <Shield size={14} />
+              {t(lang, 'vaultSetup')}
+            </button>
+          )}
+
+          {vaultInitialized && !vaultUnlocked && (
+            <button
+              onClick={() => setVaultMode('unlock')}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <Unlock size={14} />
+              {t(lang, 'vaultUnlock')}
+            </button>
+          )}
+
+          {vaultInitialized && vaultUnlocked && (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleLockVault}
+                className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                <Lock size={14} />
+                {t(lang, 'vaultLockNow')}
+              </button>
+              <button
+                onClick={() => setVaultMode('change')}
+                className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                <KeyRound size={14} />
+                {t(lang, 'vaultChangePass')}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Theme */}
@@ -357,6 +423,9 @@ export default function SettingsTab() {
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
+      {vaultMode && (
+        <VaultModal lang={lang} initialMode={vaultMode} onClose={() => setVaultMode(null)} />
+      )}
     </div>
   );
 }

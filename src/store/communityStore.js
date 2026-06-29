@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
+import { devError } from '../lib/logger';
 import usePrayerStore from './prayerStore';
 
 // After a community-side edit that fans out to a shared personal prayer, refresh
@@ -372,7 +373,7 @@ const useCommunityStore = create((set, get) => ({
       const { error } = await supabase.rpc('sync_add_update', {
         p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_text: text, p_author: authorName, p_anon: isAnonymous,
       });
-      if (error) { console.error('sync_add_update error:', error); return toError(error); }
+      if (error) { devError('sync_add_update failed', error?.status); return toError(error); }
       syncBackToPersonal(sourcePrayerId);
     } else {
       const { error } = await supabase
@@ -407,7 +408,7 @@ const useCommunityStore = create((set, get) => ({
       const { error } = await supabase.rpc('sync_add_point', {
         p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_title: point.title, p_verses: verses,
       });
-      if (error) { console.error('sync_add_point error:', error); return toError(error); }
+      if (error) { devError('sync_add_point failed', error?.status); return toError(error); }
       syncBackToPersonal(sourcePrayerId);
       const updated = await fetchPrayerWithCounts(prayerId);
       if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
@@ -424,7 +425,7 @@ const useCommunityStore = create((set, get) => ({
       .eq('id', prayerId)
       .select();
     if (error) {
-      console.error('addCommunityPrayerPoint error:', error);
+      devError('addCommunityPrayerPoint failed', error?.status);
       return toError(error);
     }
     set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, prayer_points: points })) }));
