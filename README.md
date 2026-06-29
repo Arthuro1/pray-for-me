@@ -103,9 +103,11 @@ Every label, tooltip, button, and daily verse adapts to the selected language. E
 ### 🔐 Prayer Vault — End-to-End Encryption
 - Opt-in **client-side E2EE** for your private prayers — encrypted with a passphrase only you know (we never see it)
 - **AES-256-GCM** content encryption via the Web Crypto API; the master key is wrapped by a key derived from your passphrase and never leaves the device in plaintext
+- **Nested data is encrypted too** — prayer updates and prayer points (not just the title/description) are encrypted before they reach the server, so no sensitive content is stored in plaintext
 - **One-time recovery code** generated at setup — the only way back in if you forget your passphrase (there is no other backdoor)
 - **Auto-locks on inactivity**; unlock once to read/edit, lock instantly from Settings, or change your passphrase anytime
-- The wrapped key syncs across your devices; **sharing a prayer to a group publishes its plaintext** by design — encryption covers the private scope only
+- Vault key state is held in **IndexedDB** (not `localStorage`); the wrapped key syncs across your devices
+- **Sharing a prayer to a group publishes its plaintext** by design — encryption covers the private scope only
 
 ---
 
