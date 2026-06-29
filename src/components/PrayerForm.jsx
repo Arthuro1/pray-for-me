@@ -5,6 +5,7 @@ import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import ScriptureFirstStep from './ScriptureFirstStep';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -79,6 +80,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   const trapRef = useFocusTrap();
 
   const [form, setForm] = useState(() => initialForm(editPrayer));
+  const [created, setCreated] = useState(null);
   useEffect(() => { if (editPrayer) setForm(initialForm(editPrayer)); }, [editPrayer]);
 
   const patch = (key, value) => setForm(f => ({ ...f, [key]: value }));
@@ -87,18 +89,36 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
     : [...form.categoryIds, id]
   );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
     if (communityMode) {
       onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds });
+      onClose();
     } else if (editPrayer) {
       updatePrayer(editPrayer.id, form);
+      onClose();
     } else {
-      addPrayer(form);
+      // New personal prayer: create it, then invite the user into Scripture
+      // before they pray (Step 2). The prayer already exists by then, so
+      // closing the Scripture step at any point keeps the prayer.
+      const id = await addPrayer(form);
+      if (id) setCreated({ id, title: form.title.trim(), description: form.description.trim() });
+      else onClose();
     }
-    onClose();
   };
+
+  if (created) {
+    return (
+      <ScriptureFirstStep
+        prayerId={created.id}
+        title={created.title}
+        description={created.description}
+        lang={lang}
+        onClose={onClose}
+      />
+    );
+  }
 
   const title = communityMode
     ? (editPrayer ? t(lang, 'tipEditPrayer') : t(lang, 'newRequest'))

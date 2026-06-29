@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, originAuthor, communityAuthor } from '../utils/user';
 import { testimonyList } from '../utils/prayer';
+import { bibleLink } from '../utils/bibleLink';
 import { getAIRecommendations } from '../aiRecommendations';
 import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
@@ -274,8 +275,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     await translateTexts(texts.filter(Boolean), lang, user?.id);
     setShowTranslated(true);
   };
-
-  const bibleUrl = verse => `https://www.bible.com/search/bible?q=${encodeURIComponent(verse)}&version_id=93`;
 
   const handleAddUpdate = () => {
     if (!newUpdate.trim()) return;
@@ -678,7 +677,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                             <div className="mt-1.5 rounded-xl p-3" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
                               {v.text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{loc(v.text)}"</p>}
                               <div className="flex items-center justify-between">
-                                <a href={bibleUrl(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                                <a href={bibleLink(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
                                   <ExternalLink size={11} /> {t(lang, 'openBible')}
                                 </a>
                                 {canRemoveContent && (
@@ -782,7 +781,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         {expandedVerse === `rec-${rec.title}-${i}` && (
                           <div className="mt-1.5 rounded-xl p-2" style={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
                             {v.text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-2)' }}>"{v.text}"</p>}
-                            <a href={bibleUrl(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                            <a href={bibleLink(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
                               <ExternalLink size={10} /> {t(lang, 'openBible')}
                             </a>
                           </div>

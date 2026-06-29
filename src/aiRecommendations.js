@@ -1,17 +1,21 @@
-import { aiEnabled, anthropicFetch } from './lib/anthropic';
-import { devError } from './lib/logger';
+// Optional AI assistance for prayer: suggested prayer points (with verses) and
+// day-plan topics. This is deliberately the LAST, opt-in step — Scripture comes
+// first (see scriptureGuidance.js). All calls run through aiCore, so they share
+// the one theological guardrail system prompt and the one client-side cooldown.
+//
+// Prompts are written in English with the target language handled by the
+// guardrail system prompt ("Write ALL content in <language>"). That covers all
+// 16 supported languages — earlier this file only had prompts for 4 and silently
+// fell back to French for the rest.
+import { callClaudeForJson, getRemainingCooldown, localizeAiError } from './lib/aiCore';
+
+export { getRemainingCooldown };
 
 const cache = new Map();
-let lastCallTime = 0;
-const COOLDOWN_MS = 5000;
 
-export function getRemainingCooldown() {
-  return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - lastCallTime)) / 1000));
-}
-
-// Each point now returns verses as an array: [{ref, text}, ...]
+// Each point returns verses as an array: [{ref, text}, ...]
 const EXAMPLE = (n) =>
-  Array.from({ length: n }, (_, i) => ({
+  Array.from({ length: n }, () => ({
     title: '...',
     verses: [
       { ref: '...', text: '...' },
@@ -22,184 +26,60 @@ const EXAMPLE = (n) =>
 const EXAMPLE_DAY = () =>
   Array.from({ length: 3 }, () => ({ title: '...', description: '...' }));
 
-const LANG_INSTRUCTIONS = {
-  fr: {
-    dayPlan: (cats) =>
-      `Un chrétien n'a aucune prière planifiée pour aujourd'hui. Les catégories du jour sont : ${cats}.
-Suggère 3 sujets de prière concrets et inspirants pour ces catégories.
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-${JSON.stringify(EXAMPLE_DAY())}`,
-    evolution: (title, desc) =>
-      `Un chrétien prie pour : "${title}". Il vient d'ajouter cette évolution : "${desc}".
-Suggère 3 sujets de prière complémentaires adaptés à cette évolution.
-Pour chaque sujet, fournis 2 versets bibliques pertinents avec leur texte complet en français.
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-${JSON.stringify(EXAMPLE(3))}`,
-    newPrayer: (title, desc) =>
-      `Un chrétien souhaite prier pour : "${title}".${desc ? ` Détails : "${desc}".` : ''}
-Suggère 4 sujets de prière connexes ou plus profonds.
-Pour chaque sujet, fournis 2 versets bibliques pertinents avec leur texte complet en français.
-Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ou après :
-${JSON.stringify(EXAMPLE(4))}`,
-    cooldown: (s) => `Veuillez attendre ${s}s avant une nouvelle suggestion.`,
-    rateLimited: "Limite de l'API atteinte. Réessayez dans quelques secondes.",
-    connError: "Erreur de connexion à l'IA.",
-    netError: 'Erreur réseau.',
-  },
-  en: {
-    dayPlan: (cats) =>
-      `A Christian has no prayers planned for today. Today's categories are: ${cats}.
-Suggest 3 concrete and inspiring prayer topics for these categories.
+function dayPlanPrompt(categoryNames) {
+  return `A believer has no prayers planned for today. Today's prayer categories are: ${categoryNames}.
+Suggest 3 concrete, encouraging prayer topics for these categories — each a way to seek God, not a task to complete.
 Reply ONLY with a valid JSON array, no text before or after:
-${JSON.stringify(EXAMPLE_DAY())}`,
-    evolution: (title, desc) =>
-      `A Christian is praying for: "${title}". They just added this update: "${desc}".
-Suggest 3 complementary prayer topics suited to this update.
-For each topic, provide 2 relevant Bible verses with their full text in English.
+${JSON.stringify(EXAMPLE_DAY())}`;
+}
+
+function pointsPrompt(title, description, isEvolution) {
+  const intro = isEvolution
+    ? `A believer is praying for: "${title}". They just added this update: "${description}".
+Suggest 3 further prayer points suited to this update.`
+    : `A believer wants to pray for: "${title}".${description ? ` Details: "${description}".` : ''}
+Suggest 4 related or deeper prayer points.`;
+  return `${intro}
+For each point, provide 2 relevant Bible references with the full text of the key verse(s), read in context.
 Reply ONLY with a valid JSON array, no text before or after:
-${JSON.stringify(EXAMPLE(3))}`,
-    newPrayer: (title, desc) =>
-      `A Christian wants to pray for: "${title}".${desc ? ` Details: "${desc}".` : ''}
-Suggest 4 related or deeper prayer topics.
-For each topic, provide 2 relevant Bible verses with their full text in English.
-Reply ONLY with a valid JSON array, no text before or after:
-${JSON.stringify(EXAMPLE(4))}`,
-    cooldown: (s) => `Please wait ${s}s before a new suggestion.`,
-    rateLimited: 'API limit reached. Please try again in a few seconds.',
-    connError: 'Connection error. Please try again.',
-    netError: 'Network error.',
-  },
-  de: {
-    dayPlan: (cats) =>
-      `Ein Christ hat heute keine geplanten Gebete. Die Kategorien des Tages sind: ${cats}.
-Schlage 3 konkrete und inspirierende Gebetsanliegen für diese Kategorien vor.
-Antworte NUR mit einem gültigen JSON-Array, kein Text davor oder danach:
-${JSON.stringify(EXAMPLE_DAY())}`,
-    evolution: (title, desc) =>
-      `Ein Christ betet für: "${title}". Er/sie hat gerade diese Entwicklung hinzugefügt: "${desc}".
-Schlage 3 ergänzende Gebetsanliegen vor, die zu dieser Entwicklung passen.
-Gib für jedes Anliegen 2 relevante Bibelverse mit vollständigem Text auf Deutsch an.
-Antworte NUR mit einem gültigen JSON-Array, kein Text davor oder danach:
-${JSON.stringify(EXAMPLE(3))}`,
-    newPrayer: (title, desc) =>
-      `Ein Christ möchte für folgendes beten: "${title}".${desc ? ` Details: "${desc}".` : ''}
-Schlage 4 verwandte oder tiefere Gebetsanliegen vor.
-Gib für jedes Anliegen 2 relevante Bibelverse mit vollständigem Text auf Deutsch an.
-Antworte NUR mit einem gültigen JSON-Array, kein Text davor oder danach:
-${JSON.stringify(EXAMPLE(4))}`,
-    cooldown: (s) => `Bitte warte ${s}s vor einem neuen Vorschlag.`,
-    rateLimited: 'API-Limit erreicht. Bitte in einigen Sekunden erneut versuchen.',
-    connError: 'KI-Verbindungsfehler.',
-    netError: 'Netzwerkfehler.',
-  },
-  pt: {
-    dayPlan: (cats) =>
-      `Um cristão não tem orações planejadas para hoje. As categorias do dia são: ${cats}.
-Sugira 3 tópicos de oração concretos e inspiradores para essas categorias.
-Responda APENAS com um array JSON válido, sem texto antes ou depois:
-${JSON.stringify(EXAMPLE_DAY())}`,
-    evolution: (title, desc) =>
-      `Um cristão está orando por: "${title}". Ele/ela acabou de adicionar esta atualização: "${desc}".
-Sugira 3 tópicos de oração complementares adequados a esta atualização.
-Para cada tópico, forneça 2 versículos bíblicos relevantes com seu texto completo em português.
-Responda APENAS com um array JSON válido, sem texto antes ou depois:
-${JSON.stringify(EXAMPLE(3))}`,
-    newPrayer: (title, desc) =>
-      `Um cristão quer orar por: "${title}".${desc ? ` Detalhes: "${desc}".` : ''}
-Sugira 4 tópicos de oração relacionados ou mais profundos.
-Para cada tópico, forneça 2 versículos bíblicos relevantes com seu texto completo em português.
-Responda APENAS com um array JSON válido, sem texto antes ou depois:
-${JSON.stringify(EXAMPLE(4))}`,
-    cooldown: (s) => `Aguarde ${s}s antes de uma nova sugestão.`,
-    rateLimited: 'Limite da API atingido. Tente novamente em alguns segundos.',
-    connError: 'Erro de conexão com a IA.',
-    netError: 'Erro de rede.',
-  },
-};
+${JSON.stringify(EXAMPLE(isEvolution ? 3 : 4))}`;
+}
 
 export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
-  if (!aiEnabled) return { recs: [], error: null };
-
-  const strings = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
   const cacheKey = `dayplan:${lang}:${categoryNames}`;
   if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
 
-  const remaining = getRemainingCooldown();
-  if (remaining > 0) return { recs: [], error: strings.cooldown(remaining) };
+  const { data, error } = await callClaudeForJson({
+    prompt: dayPlanPrompt(categoryNames),
+    lang,
+    maxTokens: 600,
+    shape: 'array',
+  });
+  if (error) return { recs: [], error: localizeAiError(error, lang) };
 
-  const prompt = strings.dayPlan(categoryNames);
-  lastCallTime = Date.now();
-
-  try {
-    const res = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 600,
-      messages: [{ role: 'user', content: prompt }],
-    });
-
-    if (res.status === 429) return { recs: [], error: strings.rateLimited };
-    if (!res.ok) return { recs: [], error: strings.connError };
-
-    const data = await res.json();
-    const text = data?.content?.[0]?.text || '';
-    const match = text.match(/\[[\s\S]*\]/);
-    if (!match) return { recs: [], error: null };
-
-    const parsed = JSON.parse(match[0]);
-    const recs = Array.isArray(parsed) ? parsed.filter((r) => r.title) : [];
-    cache.set(cacheKey, recs);
-    return { recs, error: null };
-  } catch {
-    return { recs: [], error: strings.netError };
-  }
+  const recs = Array.isArray(data) ? data.filter((r) => r && r.title) : [];
+  if (recs.length > 0) cache.set(cacheKey, recs);
+  return { recs, error: null };
 }
 
 export async function getAIRecommendations({ title, description = '', type = 'new', lang = 'fr' }) {
-  if (!aiEnabled) return { recs: [], error: null };
-
   const cacheKey = `${lang}:${type}:${title}:${description}`.slice(0, 100);
   if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
 
-  const remaining = getRemainingCooldown();
-  const strings = LANG_INSTRUCTIONS[lang] || LANG_INSTRUCTIONS.fr;
-  if (remaining > 0) return { recs: [], error: strings.cooldown(remaining) };
-
   const isEvolution = type === 'evolution';
-  const prompt = isEvolution
-    ? strings.evolution(title, description)
-    : strings.newPrayer(title, description);
+  const { data, error } = await callClaudeForJson({
+    prompt: pointsPrompt(title, description, isEvolution),
+    lang,
+    maxTokens: 1200,
+    shape: 'array',
+  });
+  if (error) return { recs: [], error: localizeAiError(error, lang) };
 
-  lastCallTime = Date.now();
-
-  try {
-    const res = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1200,
-      messages: [{ role: 'user', content: prompt }],
-    });
-
-    if (res.status === 429) return { recs: [], error: strings.rateLimited };
-    if (!res.ok) {
-      // Log only the status — never the response body, which can echo the
-      // prompt (and therefore prayer content).
-      devError('AI request failed', res.status);
-      return { recs: [], error: strings.connError };
-    }
-
-    const data = await res.json();
-    const text = data?.content?.[0]?.text || '';
-    const match = text.match(/\[[\s\S]*\]/);
-    if (!match) return { recs: [], error: null };
-
-    const parsed = JSON.parse(match[0]);
-    const recs = Array.isArray(parsed)
-      ? parsed
-          .filter((r) => r.title && Array.isArray(r.verses) && r.verses.length > 0)
-          .map((r) => ({ ...r, verses: r.verses.filter((v) => v.ref) }))
-      : [];
-    cache.set(cacheKey, recs);
-    return { recs, error: null };
-  } catch {
-    return { recs: [], error: strings.netError };
-  }
+  const recs = Array.isArray(data)
+    ? data
+        .filter((r) => r && r.title && Array.isArray(r.verses) && r.verses.length > 0)
+        .map((r) => ({ ...r, verses: r.verses.filter((v) => v && v.ref) }))
+    : [];
+  if (recs.length > 0) cache.set(cacheKey, recs);
+  return { recs, error: null };
 }

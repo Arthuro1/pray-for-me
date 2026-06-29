@@ -63,9 +63,9 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
       )}
 
       {prayer.for_other && prayer.person_name && (
-        <p className="text-xs flex items-center gap-1.5 mb-1" style={{ color: 'var(--text-3)' }}>
+        <div className="text-xs flex items-center gap-1.5 mb-1" style={{ color: 'var(--text-3)' }}>
           <Avatar name={prayer.person_name} size={18} /> {prayer.person_name}
-        </p>
+        </div>
       )}
 
       {groupShares.length > 0 && (

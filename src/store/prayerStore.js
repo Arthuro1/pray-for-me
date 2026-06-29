@@ -254,7 +254,7 @@ const usePrayerStore = create((set, get) => ({
     // getSession reads the locally-cached session (no network), so this works offline.
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user?.id;
-    if (!userId) return;
+    if (!userId) return null;
 
     const id = crypto.randomUUID();
     const categoryIds = prayer.categoryIds || [];
@@ -281,6 +281,7 @@ const usePrayerStore = create((set, get) => ({
     // vault is unlocked). New prayers have no community_origin_id → encryptable.
     const persistRow = canEncrypt(optimistic) ? await encryptPrayerForStorage(row) : row;
     enqueue('createPrayer', { row: persistRow, categoryIds });
+    return id;
   },
 
   // Saves a community prayer into the user's personal list as a snapshot copy
