@@ -102,7 +102,7 @@ export default function GuideReader({ guide, lang, onClose }) {
         <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-2)' }}>{pick(step.prompt, lang)}</p>
         {ref && (
           <a
-            href={bibleLink(ref)}
+            href={bibleLink(ref, lang)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-between gap-3 rounded-2xl p-4"

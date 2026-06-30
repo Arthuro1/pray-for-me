@@ -43,7 +43,7 @@ export default function ArticleReader({ article, lang, onClose }) {
                       return (
                         <a
                           key={r}
-                          href={bibleLink(ref)}
+                          href={bibleLink(ref, lang)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"

@@ -190,7 +190,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   {expandedVerse === pp.id && (
                     <div className="mt-1.5 rounded-lg p-2" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
                       {pp.verse_text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: '#5a4500' }}>"{tr(pp.verse_text, lang)}"</p>}
-                      <a href={bibleLink(pp.verse)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
+                      <a href={bibleLink(pp.verse, lang)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
                         <ExternalLink size={9} /> {t(lang, 'openBible')}
                       </a>
                     </div>
@@ -219,7 +219,7 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   {expandedVerse === rec.verse && (
                     <div className="mt-1.5 rounded-lg p-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                       {rec.verseText && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-1)' }}>"{rec.verseText}"</p>}
-                      <a href={bibleLink(rec.verse)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
+                      <a href={bibleLink(rec.verse, lang)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
                         <ExternalLink size={9} /> {t(lang, 'openBible')}
                       </a>
                     </div>

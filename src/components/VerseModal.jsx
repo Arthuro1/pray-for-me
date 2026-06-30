@@ -4,7 +4,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { bibleLink } from '../utils/bibleLink';
-import { fetchVerseText } from '../lib/verseText';
+import { fetchVerseText, fetchScriptureText } from '../lib/verseText';
 import { localizeAiError } from '../lib/aiCore';
 import AiConsentModal, { hasAiConsent } from './AiConsentModal';
 import AiDisclaimer from './AiDisclaimer';
@@ -48,9 +48,21 @@ export default function VerseModal({ reference, lang, initialText, onClose }) {
     }
   };
 
-  // With no preview text there's nothing to read yet, so fetch on open.
+  // On open: with no preview there's nothing to read yet, so fetch (may use AI,
+  // hence consent). With a preview, silently upgrade it to authoritative
+  // YouVersion text when available — no extra tap, no consent. If that yields
+  // nothing, the preview stays and "Read full passage" remains for the AI path.
   useEffect(() => {
-    if (!initialText) loadPassage();
+    if (!initialText) { loadPassage(); return; }
+    let cancelled = false;
+    fetchScriptureText({ reference, lang }).then((res) => {
+      if (!cancelled && res?.text) {
+        setText(res.text);
+        setSource(res.source || 'youversion');
+        setStatus('full');
+      }
+    });
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -148,7 +160,7 @@ export default function VerseModal({ reference, lang, initialText, onClose }) {
 
         <div className="px-5 py-4 shrink-0" style={{ borderTop: '0.5px solid var(--border)' }}>
           <a
-            href={bibleLink(reference)}
+            href={bibleLink(reference, lang)}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold"

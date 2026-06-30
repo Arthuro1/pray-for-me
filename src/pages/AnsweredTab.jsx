@@ -150,7 +150,7 @@ export default function AnsweredTab() {
             {/* Remembrance: a Psalm of God's faithfulness, read in full */}
             {faithfulnessRef && (
               <a
-                href={bibleLink(faithfulnessRef)}
+                href={bibleLink(faithfulnessRef, lang)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between gap-3 rounded-2xl p-4 mb-4"

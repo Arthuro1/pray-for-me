@@ -62,6 +62,23 @@ async function fromAI(reference, lang) {
   return { data: null, error };
 }
 
+// Consent-free enrichment for the reader: return text we already have cached, or
+// fetch authoritative YouVersion text when a version is mapped for the language.
+// Never touches the AI path, so the reader can upgrade a saved verse to publisher
+// text silently on open — no extra tap, no AI-consent prompt. Returns the passage
+// or null (in which case the AI fallback stays behind an explicit button).
+export async function fetchScriptureText({ reference, lang }) {
+  if (!reference) return null;
+
+  const cached = getCachedVerseText(lang, reference);
+  if (cached?.text) return cached;
+
+  if (!youVersionEnabled()) return null;
+  const yv = await fromYouVersion(reference, lang);
+  if (yv) cache(lang, reference, yv);
+  return yv;
+}
+
 // Resolve the full passage text for a reference. Returns { data: { text, ref,
 // source } | null, error } — the same shape the AI callers use, so the reader can
 // reuse localizeAiError.

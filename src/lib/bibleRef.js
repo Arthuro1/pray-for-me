@@ -3,14 +3,27 @@
 // per language and a USFM passage id ("PHP.4.6").
 import { anthropicFetch } from './anthropic';
 
-// Curated YouVersion version ids per UI language. We pick public-domain /
-// openly-licensed translations so the Platform API reliably returns full text.
-// Verified ids: 93 = Louis Segond 1910 (French), 206 = World English Bible.
-// Discover more via GET /v1/bibles?language_ranges[]=<bcp47>; any language not
-// mapped here simply falls back to the AI text path in verseText.js.
+// Curated YouVersion version ids per UI language. Each is a public-domain (or
+// copyright-expired, freely served) translation, so the Platform API reliably
+// returns full text. Every id is the number in its bible.com URL —
+// e.g. bible.com/versions/51-delut-… → 51. Languages with no trustworthy
+// public-domain edition on YouVersion (Swahili, Amharic) are intentionally left
+// out and fall back to the AI text path in verseText.js.
 export const LANG_VERSION = {
-  fr: 93,   // LSG — La Sainte Bible par Louis Segond 1910 (public domain)
-  en: 206,  // WEB — World English Bible (public domain)
+  fr: 93,    // LSG    — Louis Segond 1910
+  en: 206,   // WEB    — World English Bible
+  de: 51,    // DELUT  — Lutherbibel 1912
+  es: 147,   // RVES   — Reina-Valera Antigua
+  pt: 215,   // ARC    — Almeida Revista e Corrigida
+  ru: 167,   // СИНОД  — Синодальный перевод (Synodal)
+  zh: 48,    // CUNPSS — 新标点和合本, 神版 (Chinese Union, simplified)
+  ja: 1820,  // 口語訳 — Colloquial Japanese 1955
+  ko: 88,    // KRV    — 개역한글 (Korean Revised)
+  ar: 13,    // AVD    — الكتاب المقدس، فان دايك (Smith & Van Dyke)
+  hi: 819,   // HHBD   — Hindi Holy Bible
+  fa: 136,   // POV    — Persian Old Version (Tarjumeh-ye Qadim)
+  id: 2861,  // LAI-TL — Alkitab Terjemahan Lama
+  tl: 2196,  // ABTAG  — Ang Biblia (1905/1982)
 };
 
 export function versionForLang(lang) {
