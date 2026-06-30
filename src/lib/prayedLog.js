@@ -1,5 +1,5 @@
-// Local record of days the user completed a guided prayer session, so a session
-// counts toward the streak even if no prayer was edited/answered that day.
+// Local record of days the user completed a guided prayer session, so the home
+// screen can gently note when you haven't prayed yet today (not a streak/score).
 const KEY = 'pfm_prayed_days';
 const pad = (n) => String(n).padStart(2, '0');
 

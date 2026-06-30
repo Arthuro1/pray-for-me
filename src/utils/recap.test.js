@@ -1,51 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { computeStreak, weeklyRecap } from './streak.js';
+import { weeklyRecap } from './recap.js';
 
 // Build a local Date at midnight, n days before the reference.
 const day = (ref, n) => { const d = new Date(ref); d.setDate(d.getDate() + n); return d.toISOString(); };
-
-describe('computeStreak', () => {
-  const today = new Date(2026, 5, 24); // 2026-06-24 local
-
-  it('counts consecutive days ending today', () => {
-    const prayers = [{ created_at: day(today, 0) }, { updated_at: day(today, -1) }, { answered_at: day(today, -2) }];
-    expect(computeStreak(prayers, today)).toBe(3);
-  });
-
-  it('still counts when the last activity was yesterday', () => {
-    expect(computeStreak([{ created_at: day(today, -1) }], today)).toBe(1);
-  });
-
-  it('breaks the streak on a gap', () => {
-    const prayers = [{ created_at: day(today, 0) }, { created_at: day(today, -2) }];
-    expect(computeStreak(prayers, today)).toBe(1);
-  });
-
-  it('is 0 when the most recent activity is older than yesterday', () => {
-    expect(computeStreak([{ created_at: day(today, -3) }], today)).toBe(0);
-  });
-
-  it('is 0 with no prayers', () => {
-    expect(computeStreak([], today)).toBe(0);
-  });
-
-  it('dedupes multiple activities on the same day', () => {
-    const prayers = [{ created_at: day(today, 0), updated_at: day(today, 0), answered_at: day(today, 0) }];
-    expect(computeStreak(prayers, today)).toBe(1);
-  });
-
-  // A completed guided prayer session counts as activity via extraDays.
-  const dayStr = (ref, n) => { const d = new Date(ref); d.setDate(d.getDate() + n); const p = (x) => String(x).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; };
-
-  it('counts a prayed-session day even with no prayer activity', () => {
-    expect(computeStreak([], today, [dayStr(today, 0)])).toBe(1);
-  });
-
-  it('merges session days with prayer activity to extend the streak', () => {
-    const prayers = [{ created_at: day(today, 0) }];
-    expect(computeStreak(prayers, today, [dayStr(today, -1)])).toBe(2);
-  });
-});
 
 describe('weeklyRecap', () => {
   const now = new Date(2026, 5, 24);

@@ -15,7 +15,7 @@ import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
 import { usePrayerActions } from '../hooks/usePrayerActions';
-import { computeStreak, weeklyRecap } from '../utils/streak';
+import { weeklyRecap } from '../utils/recap';
 import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
 import { nextReminder } from '../utils/reminder';
 import { Clock } from 'lucide-react';
@@ -205,7 +205,6 @@ export default function HomeTab({ onAdd }) {
   const todayCategories = categories.filter((c) => c.week_days && c.week_days.includes(dayIndex));
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const activeCount = prayers.filter((p) => p.status === 'active').length;
-  const streak = computeStreak(prayers, today, prayedDays);
   const recap = weeklyRecap(prayers, today);
   const prayedToday = prayedDays.includes(todayKey());
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
@@ -342,19 +341,14 @@ export default function HomeTab({ onAdd }) {
       </div>
 
       <div className="px-4 md:px-8 pt-5">
-        {/* Prayer streak + weekly recap */}
-        {streak >= 2 && (
-          <div className="rounded-2xl px-4 py-3 mb-3 flex items-center justify-between gap-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-            <span className="text-sm font-semibold flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
-              🔥 {t(lang, 'streak', { n: streak })}
+        {/* Remembrance of God's faithfulness this week — answered prayers + testimonies (not a score) */}
+        {(recap.answered > 0 || recap.testimonies > 0) && (
+          <div className="rounded-2xl px-4 py-3 mb-3 flex items-center gap-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+            <span className="text-xs flex items-center gap-2 flex-wrap" style={{ color: 'var(--text-3)' }}>
+              {recap.answered > 0 && <span>🙌 {recap.answered}</span>}
+              {recap.testimonies > 0 && <span>🎉 {recap.testimonies}</span>}
+              · {t(lang, 'thisWeek')}
             </span>
-            {(recap.answered > 0 || recap.testimonies > 0) && (
-              <span className="text-xs flex items-center gap-2" style={{ color: 'var(--text-3)' }}>
-                {recap.answered > 0 && <span>🙌 {recap.answered}</span>}
-                {recap.testimonies > 0 && <span>🎉 {recap.testimonies}</span>}
-                · {t(lang, 'thisWeek')}
-              </span>
-            )}
           </div>
         )}
 

@@ -61,8 +61,8 @@
 - Day-centric editor: tap a day to choose what you pray, with today highlighted and prayer counts
 - Per-prayer day overrides, category reordering, and smart "schedule automatically" for empty days
 
-### 🔥 Habit & Reflection
-- **Prayer streak** + weekly recap (answered prayers / testimonies) on the home screen
+### 🕊️ Faithfulness & Reflection
+- **Weekly recap** (answered prayers / testimonies) on the home screen — a remembrance of God's faithfulness
 - First-run **onboarding** to orient new users
 - **Export my data** — download your full prayer journal as JSON
 
@@ -232,7 +232,7 @@ src/
 │                               #   ConfirmDialog, Avatar, Toaster, OfflineBanner,
 │                               #   SyncIndicator, ShareButtons, Skeleton, VaultModal, modals…
 ├── pages/
-│   ├── HomeTab.jsx             # Dashboard: verse, stats, streak, today's prayers
+│   ├── HomeTab.jsx             # Dashboard: verse, stats, weekly recap, today's prayers
 │   ├── PrayersTab.jsx          # Full prayer list with search & filters
 │   ├── PrayerDetail.jsx        # Prayer detail (personal + community modes)
 │   ├── AnsweredTab.jsx         # Answered-prayers reflection view
@@ -258,7 +258,7 @@ src/
 │   ├── vaultSync.js            # Syncs the wrapped master key across devices
 │   └── dataCache.js            # Local snapshot of prayers/categories
 ├── hooks/                      # useEscapeKey, useFocusTrap
-├── utils/                      # prayer, community, streak, export, user, date…
+├── utils/                      # prayer, community, recap, export, user, date…  (recap.js = weekly answered/testimony counts)
 ├── i18n.js + i18n/locales/     # Lazy per-language UI strings (16 languages)
 ├── push.js                     # Web Push subscribe / prefs
 ├── aiRecommendations.js        # Claude prayer-point / day suggestions

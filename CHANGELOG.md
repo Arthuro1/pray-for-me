@@ -12,13 +12,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/). This project us
 - **Offline support** — create/edit/delete/answer prayers and add updates/points/verses while offline, with optimistic UI, a durable IndexedDB write queue, idempotent replay on reconnect, local snapshot hydration, and a "syncing" indicator.
 - **Real push notifications** — Web Push daily reminders delivered even when the app is closed, via `pg_cron` + a `send-reminders` Supabase Edge Function (localized, per-user local time).
 - **Answered-prayers reflection view**; testimonies kept as a running list across resume / re-answer.
-- **Prayer streak + weekly recap** on the home screen.
+- **Weekly recap** (answered prayers / testimonies) on the home screen — a remembrance of God's faithfulness.
 - **First-run onboarding** and **Export my data** (JSON download of the full journal).
 - **Accessibility**: Esc-to-close, focus trapping, and `role="dialog"` semantics on every modal; accessible names on icon-only buttons.
 - **Vercel Analytics** + client-side routing (lazy routes) for per-page tracking.
 - Test suite (Vitest) for pure logic + GitHub Actions CI.
 
 ### Changed
+- **Scripture-first, discipleship-focused reframe.** Creating a prayer now begins with God's Word (passages to read, faithful context, themes, reflection) before any optional AI-written prayer. **"Pray now"** meets you where you are — pray straight through your requests, or opt into a guided path or the full **ACTS** flow (Adoration → Confession → Thanksgiving → Supplication), each movement pointing to a Psalm to read. The **streak counter was removed** (no gamification); the weekly recap of answered prayers / testimonies remains as a remembrance of God's faithfulness.
 - **Add Friend** reworked for discoverability — tap-to-add suggestions from your shared groups, a shareable friend link + QR, and a polished email path (inline validation, friendlier not-found).
 - Personal & Home prayer lists redesigned into spacious cards matching the community wall, leading with author + creation date and showing source group, share badges, and "praying" counts.
 - The user's own prayers/contributions now display as **"Me"** everywhere.
