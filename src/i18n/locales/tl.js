@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "Permanenteng buburahin nito ang iyong account at lahat ng iyong panalangin, testimonya at data. Hindi ito maibabalik.",
   "deleteAccountConfirm": "Burahin ang account",
   "deleteAccountDone": "Nabura na ang iyong account",
-  "deleteAccountError": "Hindi mabura ang iyong account. Pakisubukang muli."
+  "deleteAccountError": "Hindi mabura ang iyong account. Pakisubukang muli.",
+  "grow": "Lumago",
+  "growTitle": "Lumago sa panalangin",
+  "growSubtitle": "Matutong manalangin ayon sa Salita ng Diyos.",
+  "growPray": "Manalangin",
+  "growLearn": "Matuto",
+  "growPrayIntro": "Maiikling gabay na nakabatay sa Kasulatan na maipapanalangin — sa iyong sariling mga salita, sa harap ng Diyos.",
+  "growLearnIntro": "Maiikling babasahin tungkol sa panalangin at buhay-Kristiyano, bawat isa'y nakaugat sa Kasulatan.",
+  "guideBegin": "Magsimula",
+  "guideDoneTitle": "Amen",
+  "guideDoneSub": "Naririnig ka Niya. Dalhin mo ito sa iyong araw.",
+  "openInBible": "Buksan sa iyong Bibliya",
+  "growScriptureNote": "Huwag mo lang basta paniwalaan ang sinasabi namin — buksan ang Kasulatan at tingnan mo mismo (Mga Gawa 17:11).",
 };

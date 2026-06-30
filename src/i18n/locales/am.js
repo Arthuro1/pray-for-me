@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "ይህ መለያዎንና ሁሉንም ጸሎቶችዎንና ምስክርነቶችዎንና ውሂብዎን በቋሚነት ይሰርዛል። ይህ እርምጃ ሊቀለበስ አይችልም።",
   "deleteAccountConfirm": "መለያ ሰርዝ",
   "deleteAccountDone": "መለያዎ ተሰርዟል",
-  "deleteAccountError": "መለያዎን መሰረዝ አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
+  "deleteAccountError": "መለያዎን መሰረዝ አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
+  "grow": "እድገት",
+  "growTitle": "በጸሎት ማደግ",
+  "growSubtitle": "በእግዚአብሔር ቃል መሠረት መጸለይን ተማር።",
+  "growPray": "ጸልይ",
+  "growLearn": "ተማር",
+  "growPrayIntro": "በመጽሐፍ ቅዱስ ላይ የተመሠረቱ አጫጭር የጸሎት መመሪያዎች — በራስህ ቃላት፣ በእግዚአብሔር ፊት።",
+  "growLearnIntro": "ስለ ጸሎትና ስለ ክርስቲያናዊ ሕይወት አጫጭር ንባቦች፣ እያንዳንዱ በመጽሐፍ ቅዱስ የተመሠረተ።",
+  "guideBegin": "ጀምር",
+  "guideDoneTitle": "አሜን",
+  "guideDoneSub": "ይሰማሃል። ይህን ወደ ቀንህ ይዘህ ሂድ።",
+  "openInBible": "በመጽሐፍ ቅዱስህ ክፈት",
+  "growScriptureNote": "በቃላችን ብቻ አትመን — መጽሐፍ ቅዱስን ከፍተህ ራስህ ተመልከት (የሐዋርያት ሥራ 17:11)።",
 };

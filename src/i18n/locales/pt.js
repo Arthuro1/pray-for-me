@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "Isso exclui permanentemente sua conta e todas as suas orações, testemunhos e dados. Não pode ser desfeito.",
   "deleteAccountConfirm": "Excluir conta",
   "deleteAccountDone": "Sua conta foi excluída",
-  "deleteAccountError": "Não foi possível excluir sua conta. Tente novamente."
+  "deleteAccountError": "Não foi possível excluir sua conta. Tente novamente.",
+  "grow": "Crescer",
+  "growTitle": "Cresça na oração",
+  "growSubtitle": "Aprenda a orar segundo a Palavra de Deus.",
+  "growPray": "Orar",
+  "growLearn": "Aprender",
+  "growPrayIntro": "Guias curtos e bíblicos para orar — com suas próprias palavras, diante de Deus.",
+  "growLearnIntro": "Leituras curtas sobre a oração e a vida cristã, cada uma enraizada nas Escrituras.",
+  "guideBegin": "Começar",
+  "guideDoneTitle": "Amém",
+  "guideDoneSub": "Ele te ouve. Leve isto para o seu dia.",
+  "openInBible": "Abrir na sua Bíblia",
+  "growScriptureNote": "Não acredite só na nossa palavra — abra as Escrituras e veja por si mesmo (Atos 17:11).",
 };

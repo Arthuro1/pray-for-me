@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "Cette action supprime définitivement votre compte et toutes vos prières, témoignages et données. Elle est irréversible.",
   "deleteAccountConfirm": "Supprimer le compte",
   "deleteAccountDone": "Votre compte a été supprimé",
-  "deleteAccountError": "Impossible de supprimer votre compte. Veuillez réessayer."
+  "deleteAccountError": "Impossible de supprimer votre compte. Veuillez réessayer.",
+  "grow": "Grandir",
+  "growTitle": "Grandir dans la prière",
+  "growSubtitle": "Apprends à prier selon la Parole de Dieu.",
+  "growPray": "Prier",
+  "growLearn": "Apprendre",
+  "growPrayIntro": "De courts guides bibliques à prier — avec tes mots, devant Dieu.",
+  "growLearnIntro": "De courtes lectures sur la prière et la vie chrétienne, enracinées dans l'Écriture.",
+  "guideBegin": "Commencer",
+  "guideDoneTitle": "Amen",
+  "guideDoneSub": "Il t'entend. Emporte cela dans ta journée.",
+  "openInBible": "Ouvre dans ta Bible",
+  "growScriptureNote": "Ne nous crois pas sur parole — ouvre les Écritures et vois par toi-même (Actes 17:11)."
 };

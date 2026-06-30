@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "Ini akan menghapus akun dan semua doa, kesaksian, serta data Anda secara permanen. Tindakan ini tidak dapat dibatalkan.",
   "deleteAccountConfirm": "Hapus akun",
   "deleteAccountDone": "Akun Anda telah dihapus",
-  "deleteAccountError": "Tidak dapat menghapus akun Anda. Silakan coba lagi."
+  "deleteAccountError": "Tidak dapat menghapus akun Anda. Silakan coba lagi.",
+  "grow": "Bertumbuh",
+  "growTitle": "Bertumbuh dalam doa",
+  "growSubtitle": "Belajar berdoa sesuai dengan Firman Allah.",
+  "growPray": "Berdoa",
+  "growLearn": "Belajar",
+  "growPrayIntro": "Panduan singkat berdasarkan Alkitab untuk didoakan — dengan kata-katamu sendiri, di hadapan Allah.",
+  "growLearnIntro": "Bacaan singkat tentang doa dan kehidupan Kristen, masing-masing berakar pada Alkitab.",
+  "guideBegin": "Mulai",
+  "guideDoneTitle": "Amin",
+  "guideDoneSub": "Ia mendengar engkau. Bawalah ini ke dalam harimu.",
+  "openInBible": "Buka di Alkitabmu",
+  "growScriptureNote": "Jangan hanya percaya pada kata-kata kami — bukalah Kitab Suci dan periksalah sendiri (Kisah Para Rasul 17:11).",
 };

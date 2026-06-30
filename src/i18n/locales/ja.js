@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "アカウントと、すべての祈り・証し・データが完全に削除されます。この操作は元に戻せません。",
   "deleteAccountConfirm": "アカウントを削除",
   "deleteAccountDone": "アカウントを削除しました",
-  "deleteAccountError": "アカウントを削除できませんでした。もう一度お試しください。"
+  "deleteAccountError": "アカウントを削除できませんでした。もう一度お試しください。",
+  "grow": "成長",
+  "growTitle": "祈りにおいて成長する",
+  "growSubtitle": "神の言葉に従って祈ることを学びましょう。",
+  "growPray": "祈る",
+  "growLearn": "学ぶ",
+  "growPrayIntro": "聖書に基づく短い祈りの手引き——あなた自身の言葉で、神の前で祈りましょう。",
+  "growLearnIntro": "祈りとキリスト者の生活についての短い読み物。どれも聖書に根ざしています。",
+  "guideBegin": "始める",
+  "guideDoneTitle": "アーメン",
+  "guideDoneSub": "神はあなたの祈りを聞いておられます。これを一日の中へ携えていきましょう。",
+  "openInBible": "あなたの聖書で開く",
+  "growScriptureNote": "私たちの言葉をうのみにせず、聖書を開いて自分で確かめてください（使徒の働き 17:11）。",
 };

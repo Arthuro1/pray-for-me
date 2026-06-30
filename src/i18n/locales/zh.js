@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "这将永久删除您的账户以及所有祷告、见证和数据。此操作无法撤销。",
   "deleteAccountConfirm": "删除账户",
   "deleteAccountDone": "您的账户已删除",
-  "deleteAccountError": "无法删除您的账户，请重试。"
+  "deleteAccountError": "无法删除您的账户，请重试。",
+  "grow": "成长",
+  "growTitle": "在祷告中成长",
+  "growSubtitle": "学习按照神的话语祷告。",
+  "growPray": "祷告",
+  "growLearn": "学习",
+  "growPrayIntro": "简短、以圣经为本的祷告指引——用你自己的话，在神面前祷告。",
+  "growLearnIntro": "关于祷告与基督徒生活的简短阅读，每篇都扎根于圣经。",
+  "guideBegin": "开始",
+  "guideDoneTitle": "阿们",
+  "guideDoneSub": "祂垂听你。把这带进你的一天。",
+  "openInBible": "在你的圣经中打开",
+  "growScriptureNote": "不要只听我们说——打开圣经，亲自查考（使徒行传 17:11）。",
 };

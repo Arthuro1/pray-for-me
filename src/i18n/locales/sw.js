@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "Hii itafuta kabisa akaunti yako na maombi, ushuhuda na data yako yote. Kitendo hiki hakiwezi kutenduliwa.",
   "deleteAccountConfirm": "Futa akaunti",
   "deleteAccountDone": "Akaunti yako imefutwa",
-  "deleteAccountError": "Imeshindikana kufuta akaunti yako. Tafadhali jaribu tena."
+  "deleteAccountError": "Imeshindikana kufuta akaunti yako. Tafadhali jaribu tena.",
+  "grow": "Kua",
+  "growTitle": "Kua katika maombi",
+  "growSubtitle": "Jifunze kuomba kulingana na Neno la Mungu.",
+  "growPray": "Omba",
+  "growLearn": "Jifunze",
+  "growPrayIntro": "Miongozo mifupi yenye msingi wa Maandiko ya kuomba — kwa maneno yako mwenyewe, mbele za Mungu.",
+  "growLearnIntro": "Masomo mafupi kuhusu maombi na maisha ya Kikristo, kila moja yenye mizizi katika Maandiko.",
+  "guideBegin": "Anza",
+  "guideDoneTitle": "Amina",
+  "guideDoneSub": "Anakusikia. Chukua haya katika siku yako.",
+  "openInBible": "Fungua katika Biblia yako",
+  "growScriptureNote": "Usiamini neno letu tu — fungua Maandiko ujionee mwenyewe (Matendo 17:11).",
 };

@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "계정과 모든 기도, 간증, 데이터가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
   "deleteAccountConfirm": "계정 삭제",
   "deleteAccountDone": "계정이 삭제되었습니다",
-  "deleteAccountError": "계정을 삭제할 수 없습니다. 다시 시도해 주세요."
+  "deleteAccountError": "계정을 삭제할 수 없습니다. 다시 시도해 주세요.",
+  "grow": "성장",
+  "growTitle": "기도 안에서 자라가기",
+  "growSubtitle": "하나님의 말씀을 따라 기도하는 법을 배우세요.",
+  "growPray": "기도하기",
+  "growLearn": "배우기",
+  "growPrayIntro": "성경에 기초한 짧은 기도 안내 — 당신 자신의 말로, 하나님 앞에서 기도하세요.",
+  "growLearnIntro": "기도와 그리스도인의 삶에 관한 짧은 글들, 모두 성경에 뿌리내린 것입니다.",
+  "guideBegin": "시작하기",
+  "guideDoneTitle": "아멘",
+  "guideDoneSub": "그분이 당신의 기도를 들으십니다. 이것을 오늘 하루에 품고 가세요.",
+  "openInBible": "당신의 성경에서 열기",
+  "growScriptureNote": "우리 말만 믿지 마시고, 성경을 펴서 직접 확인해 보세요 (사도행전 17:11).",
 };

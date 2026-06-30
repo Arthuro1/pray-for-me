@@ -17,6 +17,7 @@ const HomeTab = lazy(() => import('./pages/HomeTab'));
 const PrayersTab = lazy(() => import('./pages/PrayersTab'));
 const AnsweredTab = lazy(() => import('./pages/AnsweredTab'));
 const PlanTab = lazy(() => import('./pages/PlanTab'));
+const GrowTab = lazy(() => import('./pages/GrowTab'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
 const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
@@ -250,6 +251,7 @@ export default function App() {
             <Route path="/community/group/:groupId" element={<CommunityTab />} />
             <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
             <Route path="/plan" element={<PlanTab />} />
+            <Route path="/grow" element={<GrowTab />} />
             <Route path="/settings" element={<SettingsTab />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

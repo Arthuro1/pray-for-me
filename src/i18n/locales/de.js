@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "Dadurch werden dein Konto und alle deine Gebete, Zeugnisse und Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
   "deleteAccountConfirm": "Konto löschen",
   "deleteAccountDone": "Dein Konto wurde gelöscht",
-  "deleteAccountError": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut."
+  "deleteAccountError": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
+  "grow": "Wachsen",
+  "growTitle": "Im Gebet wachsen",
+  "growSubtitle": "Lerne, nach Gottes Wort zu beten.",
+  "growPray": "Durchbeten",
+  "growLearn": "Lernen",
+  "growPrayIntro": "Kurze, schriftgegründete Anleitungen zum Durchbeten – mit deinen eigenen Worten, vor Gott.",
+  "growLearnIntro": "Kurze Texte über das Gebet und das christliche Leben, jeder in der Schrift verwurzelt.",
+  "guideBegin": "Beginnen",
+  "guideDoneTitle": "Amen",
+  "guideDoneSub": "Er hört dich. Nimm dies mit in deinen Tag.",
+  "openInBible": "In deiner Bibel öffnen",
+  "growScriptureNote": "Glaube nicht uns aufs Wort – schlage die Schrift auf und überzeuge dich selbst (Apostelgeschichte 17,11).",
 };

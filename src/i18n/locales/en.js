@@ -416,5 +416,17 @@ export default {
   "deleteAccountWarning": "This permanently deletes your account and all your prayers, testimonies and data. This cannot be undone.",
   "deleteAccountConfirm": "Delete account",
   "deleteAccountDone": "Your account has been deleted",
-  "deleteAccountError": "Could not delete your account. Please try again."
+  "deleteAccountError": "Could not delete your account. Please try again.",
+  "grow": "Grow",
+  "growTitle": "Grow in prayer",
+  "growSubtitle": "Learn to pray according to God's Word.",
+  "growPray": "Pray through",
+  "growLearn": "Learn",
+  "growPrayIntro": "Short, Scripture-first guides to pray through — in your own words, before God.",
+  "growLearnIntro": "Short readings on prayer and the Christian life, each rooted in Scripture.",
+  "guideBegin": "Begin",
+  "guideDoneTitle": "Amen",
+  "guideDoneSub": "He hears you. Carry this into your day.",
+  "openInBible": "Open in your Bible",
+  "growScriptureNote": "Don't take our word for it — open the Scriptures and see for yourself (Acts 17:11)."
 };
