@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, ExternalLink, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -8,7 +8,6 @@ import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, originAuthor, communityAuthor } from '../utils/user';
 import { testimonyList } from '../utils/prayer';
-import { bibleLink } from '../utils/bibleLink';
 import { getAIRecommendations } from '../aiRecommendations';
 import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
@@ -16,6 +15,7 @@ import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
+import VerseModal from '../components/VerseModal';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -39,6 +39,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
   const [expandedVerse, setExpandedVerse] = useState(null);
+  const [readVerse, setReadVerse] = useState(null); // a verse opened to read in-app
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
   const [showCatPicker, setShowCatPicker] = useState(false);
@@ -359,6 +360,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      {readVerse && (
+        <VerseModal reference={readVerse.ref} lang={lang} initialText={readVerse.text} onClose={() => setReadVerse(null)} />
+      )}
       {confirmRemovePoint && (
         <ConfirmDialog
           title={t(lang, 'tipRemovePoint')}
@@ -693,9 +697,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                             <div className="mt-1.5 rounded-xl p-3" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
                               {v.text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{loc(v.text)}"</p>}
                               <div className="flex items-center justify-between">
-                                <a href={bibleLink(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                                  <ExternalLink size={11} /> {t(lang, 'openBible')}
-                                </a>
+                                <button onClick={() => setReadVerse({ ref: v.ref, text: loc(v.text) })} className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                                  <BookOpen size={11} /> {t(lang, 'readInApp')}
+                                </button>
                                 {canRemoveContent && (
                                   <button onClick={() => handleRemoveVerse(pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="text-xs" style={{ color: '#c04040' }}>
                                     <Trash2 size={11} />
@@ -797,9 +801,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         {expandedVerse === `rec-${rec.title}-${i}` && (
                           <div className="mt-1.5 rounded-xl p-2" style={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
                             {v.text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-2)' }}>"{v.text}"</p>}
-                            <a href={bibleLink(v.ref)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                              <ExternalLink size={10} /> {t(lang, 'openBible')}
-                            </a>
+                            <button onClick={() => setReadVerse({ ref: v.ref, text: v.text || '' })} className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                              <BookOpen size={10} /> {t(lang, 'readInApp')}
+                            </button>
                           </div>
                         )}
                       </div>

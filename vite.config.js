@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   // is never exposed to `import.meta.env` / the browser bundle.
   const env = loadEnv(mode, process.cwd(), '')
   const anthropicKey = env.ANTHROPIC_API_KEY || env.VITE_ANTHROPIC_API_KEY || ''
+  const yvpKey = env.YVP_APP_KEY || ''
 
   return {
   plugins: [
@@ -106,6 +107,25 @@ export default defineConfig(({ mode }) => {
           proxy.on('proxyReq', (proxyReq) => {
             if (anthropicKey) proxyReq.setHeader('x-api-key', anthropicKey)
             proxyReq.setHeader('anthropic-version', '2023-06-01')
+          })
+        },
+      },
+      // YouVersion Platform API: the client calls /api/youversion?version=&ref=,
+      // and we rewrite that to the upstream passages path + inject the App Key
+      // Node-side so it never reaches the browser. Mirrors the prod serverless
+      // function (api/youversion.js).
+      '/api/youversion': {
+        target: 'https://api.youversion.com',
+        changeOrigin: true,
+        rewrite: (path) => {
+          const q = new URL(path, 'http://x').searchParams
+          const version = q.get('version') || ''
+          const ref = (q.get('ref') || '').toUpperCase()
+          return `/v1/bibles/${version}/passages/${ref}?format=text`
+        },
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            if (yvpKey) proxyReq.setHeader('X-YVP-App-Key', yvpKey)
           })
         },
       },

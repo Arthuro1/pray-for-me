@@ -7,22 +7,20 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import AiConsentModal, { hasAiConsent } from './AiConsentModal';
 import AiDisclaimer from './AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
-import { bibleLink } from '../utils/bibleLink';
+import VerseModal from './VerseModal';
 
-// One suggested passage: reference + read-the-whole-chapter link, the key
-// verse(s), why it speaks to the request, and an opt-in "add as prayer point".
-function Passage({ p, lang, added, onAdd }) {
+// One suggested passage: reference + read-in-app link, the key verse(s), why it
+// speaks to the request, and an opt-in "add as prayer point".
+function Passage({ p, lang, added, onAdd, onRead }) {
   return (
     <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <a
-        href={bibleLink(p.readWhole)}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        onClick={onRead}
         className="text-sm font-semibold flex items-center gap-1.5 mb-1"
         style={{ color: 'var(--accent)' }}
       >
         <BookOpen size={14} /> {p.ref}
-      </a>
+      </button>
       {p.text && (
         <p className="text-sm italic leading-relaxed pl-3 mb-2" style={{ color: 'var(--text-2)', borderLeft: '2px solid var(--accent-border)' }}>
           "{p.text}"
@@ -30,9 +28,9 @@ function Passage({ p, lang, added, onAdd }) {
       )}
       {p.why && <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-3)' }}>{p.why}</p>}
       <div className="flex items-center justify-between gap-2">
-        <a href={bibleLink(p.readWhole)} target="_blank" rel="noopener noreferrer" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
-          {t(lang, 'readWholeChapter')} →
-        </a>
+        <button onClick={onRead} className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+          {t(lang, 'readInApp')} →
+        </button>
         {added ? (
           <span className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--accent)' }}>
             <Check size={13} /> {t(lang, 'addedPoint')}
@@ -66,6 +64,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
   const [error, setError] = useState(null);
   const [showConsent, setShowConsent] = useState(false);
   const [added, setAdded] = useState({}); // passage ref -> true
+  const [openVerse, setOpenVerse] = useState(null); // a passage tapped to read in-app
 
   const fetchGuidance = async () => {
     if (!hasAiConsent('prayer')) { setShowConsent(true); return; }
@@ -144,7 +143,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
 
         <div className="space-y-3">
           {guidance.passages.map((p, i) => (
-            <Passage key={p.ref || i} p={p} lang={lang} added={!!added[p.ref]} onAdd={() => addPassage(p)} />
+            <Passage key={p.ref || i} p={p} lang={lang} added={!!added[p.ref]} onAdd={() => addPassage(p)} onRead={() => setOpenVerse(p)} />
           ))}
         </div>
 
@@ -226,6 +225,10 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
           onAccept={() => { setShowConsent(false); fetchGuidance(); }}
           onCancel={() => setShowConsent(false)}
         />
+      )}
+
+      {openVerse && (
+        <VerseModal reference={openVerse.ref} lang={lang} initialText={openVerse.text} onClose={() => setOpenVerse(null)} />
       )}
     </div>
   );
