@@ -53,6 +53,7 @@ export function localizeAiError(error, lang) {
   if (!error) return null;
   if (error.type === 'cooldown') return t(lang, 'aiCooldown', { s: error.seconds });
   if (error.type === 'busy') return t(lang, 'aiBusy');
+  logError('AI request failed', error);
   return t(lang, 'aiError');
 }
 
