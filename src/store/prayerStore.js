@@ -391,6 +391,24 @@ const usePrayerStore = create((set, get) => ({
     enqueue('markAnswered', { id, answered_at, testimony: newTestimony });
   },
 
+  // Append a thanksgiving/testimony to an already-answered prayer WITHOUT changing
+  // its answered_at date — remembrance, not a re-answer. Reuses the markAnswered
+  // mutation (the answer_prayer RPC appends idempotently) with the prayer's
+  // existing answered_at so the original date is preserved.
+  addTestimony: async (id, content) => {
+    const trimmed = (content || '').trim();
+    if (!trimmed) return;
+    const prayer = get().prayers.find((p) => p.id === id);
+    const answered_at = prayer?.answered_at || new Date().toISOString();
+    const newTestimony = { id: crypto.randomUUID(), content: trimmed, created_at: new Date().toISOString() };
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === id ? { ...p, testimonies: [...(p.testimonies || []), newTestimony] } : p
+      ),
+    }));
+    enqueue('markAnswered', { id, answered_at, testimony: newTestimony });
+  },
+
   markActive: async (id) => {
     set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
     enqueue('markActive', { id });

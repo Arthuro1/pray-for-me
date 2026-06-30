@@ -5,6 +5,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { bibleLink } from '../utils/bibleLink';
 import { movementPassage } from '../lib/prayerMovements';
+import Encouragement from './Encouragement';
 
 // "Pray now" meets the user where they are, then gently invites them deeper:
 //   requests — pray straight through today's burdens (the default)
@@ -128,6 +129,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         <div className="text-6xl mb-1">🙏</div>
         <h2 className="text-xl font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
         <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'sessionDoneSub', { n: total })}</p>
+        <Encouragement lang={lang} className="max-w-xs" />
         <button
           onClick={onClose}
           className="mt-4 px-6 py-3 rounded-xl text-sm font-medium text-white"

@@ -31,6 +31,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [newUpdate, setNewUpdate] = useState('');
   const [showTestimony, setShowTestimony] = useState(true);
   const [testimony, setTestimony] = useState('');
+  // Adding a word of thanks to an already-answered prayer (remembrance).
+  const [showThanks, setShowThanks] = useState(false);
+  const [thanksText, setThanksText] = useState('');
+  const [savingThanks, setSavingThanks] = useState(false);
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
@@ -67,7 +71,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
+  const { categories, markAnswered, markActive, addTestimony: addPersonalTestimony, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
   // Esc closes whichever inline overlay is open (ConfirmDialog handles its own).
@@ -314,6 +318,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setUpdateRecs(recs);
     setRecsError(error);
     setLoadingRecs(false);
+  };
+
+  const handleAddThanks = async () => {
+    const text = thanksText.trim();
+    if (!text || savingThanks) return;
+    setSavingThanks(true);
+    await addPersonalTestimony(livePrayer.id, text);
+    setSavingThanks(false);
+    setThanksText('');
+    setShowThanks(false);
+    toast.success(t(lang, 'thanksSaved'));
   };
 
   const handleMarkAnswered = () => {
@@ -1071,6 +1086,35 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               ))}
             </div>
           </div>
+        )}
+
+        {/* Add a word of thanks to an already-answered prayer — remembrance,
+            without changing the answered date */}
+        {isAnswered && canManage && (
+          showThanks ? (
+            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
+              <textarea
+                value={thanksText}
+                onChange={e => setThanksText(e.target.value)}
+                placeholder={t(lang, 'testimonyPlaceholder')}
+                rows={3}
+                className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                autoFocus
+              />
+              <div className="flex gap-2 mt-3">
+                <button onClick={() => { setShowThanks(false); setThanksText(''); }} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+                <button onClick={handleAddThanks} disabled={!thanksText.trim() || savingThanks} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+                  {savingThanks ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'addThanks')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setShowThanks(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+              🙏 {t(lang, 'addThanks')}
+            </button>
+          )
         )}
 
         {/* Testimony input (writing) */}

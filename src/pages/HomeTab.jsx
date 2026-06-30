@@ -7,7 +7,9 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, HandHeart, Share2 } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart, Share2, BookOpen } from 'lucide-react';
+import { bibleLink } from '../utils/bibleLink';
+import Encouragement from '../components/Encouragement';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/Skeleton';
@@ -330,6 +332,15 @@ export default function HomeTab({ onAdd }) {
               <>
                 <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>
                 <p className="text-xs text-right mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>— {verse.ref}</p>
+                <a
+                  href={bibleLink(verse.ref)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-end gap-1.5 mt-1.5 text-xs"
+                  style={{ color: 'rgba(255,255,255,0.7)' }}
+                >
+                  <BookOpen size={11} /> {t(lang, 'readWholeChapter')}
+                </a>
               </>
             ) : (
               <div className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
@@ -458,6 +469,7 @@ export default function HomeTab({ onAdd }) {
                 </>
               )}
             </div>
+            <Encouragement lang={lang} className="mt-5" />
           </div>
         )}
 
