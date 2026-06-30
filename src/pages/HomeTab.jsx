@@ -22,6 +22,7 @@ import { Clock } from 'lucide-react';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { supabase } from '../lib/supabase';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
+import AiDisclaimer from '../components/AiDisclaimer';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -533,6 +534,7 @@ export default function HomeTab({ onAdd }) {
                 </div>
               );
             })}
+            <AiDisclaimer lang={lang} className="px-1 pt-1" />
           </div>
         )}
       </div>

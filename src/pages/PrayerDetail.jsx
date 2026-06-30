@@ -14,6 +14,7 @@ import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
+import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -793,6 +794,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               </div>
             ))}
           </div>
+
+          {updateRecs.length > 0 && <AiDisclaimer lang={lang} className="mt-2" />}
 
           {/* Manual prayer point input */}
           {canAddContent && (

@@ -5,6 +5,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import AiConsentModal, { hasAiConsent } from './AiConsentModal';
+import AiDisclaimer from './AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
 import { bibleLink } from '../utils/bibleLink';
 
@@ -116,7 +117,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
           >
             <Sparkles size={16} /> {t(lang, 'findScripture')}
           </button>
-          <p className="text-xs text-center" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSuggestedLabel')}</p>
+          <AiDisclaimer lang={lang} className="justify-center" />
         </div>
       );
     }
@@ -139,9 +140,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
 
     return (
       <div className="flex flex-col gap-4 py-3">
-        <p className="text-xs flex items-center gap-1.5" style={{ color: 'var(--text-3)' }}>
-          <Sparkles size={12} /> {t(lang, 'aiSuggestedLabel')}
-        </p>
+        <AiDisclaimer lang={lang} />
 
         <div className="space-y-3">
           {guidance.passages.map((p, i) => (

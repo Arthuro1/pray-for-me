@@ -4,6 +4,7 @@ import usePrayerStore from '../store/prayerStore';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
+import AiDisclaimer from './AiDisclaimer';
 import { bibleLink } from '../utils/bibleLink';
 import { t } from '../i18n';
 import useTranslationStore from '../store/translationStore';
@@ -225,6 +226,8 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   )}
                 </div>
               ))}
+
+              {updateRecs.length > 0 && <AiDisclaimer lang={lang} className="mt-1.5" />}
             </div>
           </div>
 

@@ -2,6 +2,7 @@ import { Sparkles, X, Shield } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import AiDisclaimer from './AiDisclaimer';
 
 const CONSENT_KEYS = {
   prayer: 'pfm_ai_consent_prayer',
@@ -14,6 +15,16 @@ export function hasAiConsent(context = 'prayer') {
 
 export function grantAiConsent(context = 'prayer') {
   localStorage.setItem(CONSENT_KEYS[context], 'true');
+}
+
+// True if the user has opted into AI for at least one context.
+export function hasAnyAiConsent() {
+  return Object.values(CONSENT_KEYS).some((k) => localStorage.getItem(k) === 'true');
+}
+
+// Withdraw consent everywhere — the next AI use will ask again.
+export function revokeAiConsent() {
+  Object.values(CONSENT_KEYS).forEach((k) => localStorage.removeItem(k));
 }
 
 // context: 'prayer' = sends prayer title + last update, 'home' = sends category names
@@ -35,6 +46,8 @@ export default function AiConsentModal({ lang = 'en', context = 'prayer', onAcce
           </div>
           <button onClick={onCancel} aria-label={t(lang, 'close')}><X size={18} style={{ color: 'var(--text-3)' }} /></button>
         </div>
+
+        <AiDisclaimer lang={lang} variant="full" className="mb-3" />
 
         <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
           <Shield size={15} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} />

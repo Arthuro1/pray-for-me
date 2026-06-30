@@ -2,7 +2,7 @@
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
-import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2 } from 'lucide-react';
+import { Bell, Clock, Calendar, Phone, CheckCircle, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -12,6 +12,8 @@ import { nextReminder } from '../utils/reminder';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 import VaultModal from '../components/VaultModal';
+import AiDisclaimer from '../components/AiDisclaimer';
+import { hasAnyAiConsent, revokeAiConsent } from '../components/AiConsentModal';
 import useVaultStore from '../store/vaultStore';
 
 function Toggle({ enabled, onToggle }) {
@@ -55,6 +57,7 @@ export default function SettingsTab() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
+  const [aiOn, setAiOn] = useState(hasAnyAiConsent());
 
   const lang = settings.language || 'fr';
 
@@ -91,6 +94,12 @@ export default function SettingsTab() {
   const handleReminderTimeChange = (time) => {
     updateSettings({ dailyReminderTime: time });
     if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { reminderTime: time });
+  };
+
+  const handleRevokeAi = () => {
+    revokeAiConsent();
+    setAiOn(false);
+    toast.success(t(lang, 'aiRevoked'));
   };
 
   const handleExport = () => {
@@ -294,6 +303,27 @@ export default function SettingsTab() {
               ))}
             </select>
           </div>
+        </div>
+
+        {/* AI assistance */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles size={16} style={{ color: 'var(--accent)' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiAboutTitle')}</h3>
+          </div>
+          <AiDisclaimer lang={lang} variant="full" className="my-3" />
+          {aiOn ? (
+            <button
+              onClick={handleRevokeAi}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+            >
+              <Sparkles size={14} />
+              {t(lang, 'aiRevoke')}
+            </button>
+          ) : (
+            <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
+          )}
         </div>
 
         {/* Notifications */}
