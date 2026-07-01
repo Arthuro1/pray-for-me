@@ -14,6 +14,7 @@
 import { callClaudeForJson, languageName } from './aiCore';
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
 import { versionForLang, referenceToUsfm } from './bibleRef';
+import { supabase } from './supabase';
 
 const cacheKey = (lang, reference) => `verseText:${lang}:${reference}`;
 
@@ -32,6 +33,44 @@ function cache(lang, reference, value) {
     localStorage.setItem(cacheKey(lang, reference), JSON.stringify(value));
   } catch {
     // localStorage full / unavailable — the passage still shows this session.
+  }
+}
+
+// ── Shared server cache (verse_cache) ────────────────────────────────────────
+// Holds only public Scripture text, so it's reused across every user and device:
+// a verse resolved once is never re-fetched (and never re-billed) for anyone else.
+// Any failure (offline, table not yet migrated) returns null so the caller falls
+// through to a live fetch.
+async function getSharedVerse(lang, reference, { authoritativeOnly = false } = {}) {
+  try {
+    let query = supabase
+      .from('verse_cache')
+      .select('text, source')
+      .eq('lang', lang)
+      .eq('reference', reference);
+    if (authoritativeOnly) query = query.eq('source', 'youversion');
+    const { data } = await query.maybeSingle();
+    if (!data?.text) return null;
+    return { text: data.text, ref: reference, source: data.source };
+  } catch {
+    return null;
+  }
+}
+
+// Fire-and-forget: contributing to the shared cache must never block or fail the
+// reader. Write-once (ignoreDuplicates) since Scripture text is immutable.
+function putSharedVerse(lang, reference, value) {
+  if (!value?.text) return;
+  try {
+    supabase
+      .from('verse_cache')
+      .upsert(
+        { lang, reference, text: value.text, source: value.source || 'ai' },
+        { onConflict: 'lang,reference', ignoreDuplicates: true },
+      )
+      .then(() => {}, () => {});
+  } catch {
+    // ignore — a missing table or offline write is non-fatal.
   }
 }
 
@@ -73,9 +112,15 @@ export async function fetchScriptureText({ reference, lang }) {
   const cached = getCachedVerseText(lang, reference);
   if (cached?.text) return cached;
 
+  // Reuse authoritative text another user already resolved. Restricted to
+  // 'youversion' entries: this consent-free path must never surface AI-sourced
+  // text (that stays behind the explicit AI button in fetchVerseText).
+  const shared = await getSharedVerse(lang, reference, { authoritativeOnly: true });
+  if (shared) { cache(lang, reference, shared); return shared; }
+
   if (!youVersionEnabled()) return null;
   const yv = await fromYouVersion(reference, lang);
-  if (yv) cache(lang, reference, yv);
+  if (yv) { cache(lang, reference, yv); putSharedVerse(lang, reference, yv); }
   return yv;
 }
 
@@ -88,15 +133,21 @@ export async function fetchVerseText({ reference, lang }) {
   const cached = getCachedVerseText(lang, reference);
   if (cached) return { data: cached, error: null };
 
+  // Reuse any passage (authoritative or AI) already resolved by another
+  // user/device before spending a live API call on the same verse.
+  const shared = await getSharedVerse(lang, reference);
+  if (shared) { cache(lang, reference, shared); return { data: shared, error: null }; }
+
   if (youVersionEnabled()) {
     const yv = await fromYouVersion(reference, lang);
     if (yv) {
       cache(lang, reference, yv);
+      putSharedVerse(lang, reference, yv);
       return { data: yv, error: null };
     }
   }
 
   const { data, error } = await fromAI(reference, lang);
-  if (data) cache(lang, reference, data);
+  if (data) { cache(lang, reference, data); putSharedVerse(lang, reference, data); }
   return { data, error };
 }

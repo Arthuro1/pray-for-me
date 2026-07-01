@@ -176,18 +176,13 @@ Run these SQL files in your Supabase SQL editor (in order):
 4. [`supabase/offline_client_ids.sql`](./supabase/offline_client_ids.sql) — client-id sync RPCs for offline writes
 5. [`supabase/offline_conflict_hardening.sql`](./supabase/offline_conflict_hardening.sql) — `answer_prayer` (append-not-overwrite testimonies)
 6. [`supabase/push_notifications.sql`](./supabase/push_notifications.sql) — `push_subscriptions` table + `pg_cron` reminder job
+7. [`supabase/verse_cache.sql`](./supabase/verse_cache.sql) — shared, world-readable cache of resolved Scripture text (one fetch per verse for all users)
+8. [`supabase/community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped shared cache for community translations (members reuse each other's)
 
-Also create the `daily_verse` table for the shared AI-generated verse of the day:
-
-```sql
-create table daily_verse (
-  date date not null, lang text not null,
-  text text not null, ref text not null,
-  primary key (date, lang)
-);
-alter table daily_verse enable row level security;
-create policy "Public read" on daily_verse for select using (true);
-```
+> The daily verse is now served client-side from a curated pool
+> ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)) — same verse for
+> everyone each day, instant and offline. The old AI-generated `daily_verse` table
+> and its cron are no longer used and can be dropped.
 
 ---
 
@@ -195,16 +190,22 @@ create policy "Public read" on daily_verse for select using (true);
 
 | Function | Purpose | Trigger |
 |---|---|---|
-| `generate-daily-verse` | One Bible verse per language per day → `daily_verse` | Daily cron (midnight UTC) |
 | `send-reminders` | Sends localized Web Push reminders at each user's local reminder time | `pg_cron`, every 15 min |
 
-```bash
-# Daily verse
-npx supabase functions deploy generate-daily-verse
+> `generate-daily-verse` is **deprecated** (the daily verse is now client-side). If
+> it's still deployed, unschedule its cron and delete the function so it can't run
+> up an AI bill:
+> ```sql
+> select cron.unschedule('generate-daily-verse');  -- only if such a job exists
+> ```
+> ```bash
+> npx supabase functions delete generate-daily-verse
+> ```
 
+```bash
 # Push reminders (generate a VAPID keypair first: npx web-push generate-vapid-keys)
 npx supabase functions deploy send-reminders --no-verify-jwt
-npx supabase secrets set ANTHROPIC_API_KEY=your_key VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
+npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 ```
 
 ---

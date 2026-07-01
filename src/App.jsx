@@ -30,6 +30,8 @@ import useVaultStore from './store/vaultStore';
 import VaultModal from './components/VaultModal';
 import { pullVaultRecord } from './lib/vaultSync';
 import { scheduleNotifications } from './notifications';
+import { hasAiConsent } from './components/AiConsentModal';
+import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded } from './i18n';
@@ -160,6 +162,10 @@ export default function App() {
       loadData(user.id);
       loadTranslations(user.id);
       fetchPendingCount(user.id);
+      // Default the user's writing language to the current display language, so a
+      // monolingual user is never billed to "translate" content into its own
+      // language. Refreshed to the real authoring language on the next prayer.
+      ensureContentLang(lang);
       if (!localStorage.getItem('pfm_onboarded')) setShowOnboarding(true);
     }
   }, [user?.id]);
@@ -199,10 +205,19 @@ export default function App() {
     if (user) scheduleNotifications(settings, prayers);
   }, [settings, prayers]);
 
-  // Translate content whenever language, prayers, or categories change
+  // Translate personal content only when the user is actually reading in a
+  // language other than the one they write in, and has opted into AI. This avoids
+  // paying to "translate" content into the language it's already written in (the
+  // common monolingual case), and never sends private prayer content — including
+  // decrypted E2EE testimonies — to the AI translator without explicit consent.
   useEffect(() => {
-    if (user?.id && (prayers.length > 0 || categories.length > 0)) {
-      translateContent(prayers, categories, settings.language, user.id);
+    if (!user?.id) return;
+    const target = settings.language;
+    const contentLang = getContentLang() || target;
+    if (target === contentLang) return;
+    if (!hasAiConsent('prayer')) return;
+    if (prayers.length > 0 || categories.length > 0) {
+      translateContent(prayers, categories, target, user.id);
     }
   }, [settings.language, prayers, categories, user?.id]);
 

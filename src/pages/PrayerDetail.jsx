@@ -278,7 +278,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     });
     communityUpdates.forEach(u => texts.push(u.text));
     prayerTestimonies.forEach(tm => texts.push(tm.content));
-    await translateTexts(texts.filter(Boolean), lang, user?.id);
+    await translateTexts(texts.filter(Boolean), lang, user?.id, communityPrayer?.group_id);
     setShowTranslated(true);
   };
 

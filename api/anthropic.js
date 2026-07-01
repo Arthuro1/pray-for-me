@@ -128,7 +128,15 @@ export default async function handler(req, res) {
     // Forward only {role, content} — never extra client-supplied fields.
     messages: body.messages.map((m) => ({ role: m.role, content: m.content })),
   };
-  if (typeof body.system === 'string') safeBody.system = body.system;
+  if (typeof body.system === 'string' && body.system.length > 0) {
+    // Mark the (identical, every-call) guardrail system prompt as cacheable so
+    // repeat input is billed at the cache read rate. Above the model's cache
+    // minimum this is a real saving; below it the API silently ignores the
+    // breakpoint, so sending it is always safe.
+    safeBody.system = [
+      { type: 'text', text: body.system, cache_control: { type: 'ephemeral' } },
+    ];
+  }
   if (typeof body.temperature === 'number') {
     safeBody.temperature = Math.min(Math.max(body.temperature, 0), 1);
   }

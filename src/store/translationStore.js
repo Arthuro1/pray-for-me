@@ -1,9 +1,59 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { aiEnabled, anthropicFetch } from '../lib/anthropic';
+import { hashText } from '../utils/hash';
 
 // In-memory cache for fast lookups: { [lang]: { [originalText]: translatedText } }
 let memCache = {};
+
+// ── Group-scoped shared cache (community_translations) ───────────────────────
+// Community requests are visible to every member of the group, so their
+// translations can be shared among those same members — the first member's
+// translation spares everyone else the AI call. Scoped to the group, never used
+// for private personal prayers.
+
+// Fill memCache from the group cache; return the subset still needing translation.
+async function fillFromGroupCache(todo, lang, groupId) {
+  try {
+    const byHash = new Map(todo.map((txt) => [hashText(txt), txt]));
+    const { data } = await supabase
+      .from('community_translations')
+      .select('source_hash, original_text, translated_text')
+      .eq('group_id', groupId)
+      .eq('lang', lang)
+      .in('source_hash', [...byHash.keys()]);
+    if (!memCache[lang]) memCache[lang] = {};
+    const hit = new Set();
+    for (const row of data || []) {
+      // Trust a row only on an exact original-text match (guards hash collisions).
+      if (byHash.get(row.source_hash) === row.original_text) {
+        memCache[lang][row.original_text] = row.translated_text;
+        hit.add(row.original_text);
+      }
+    }
+    return todo.filter((txt) => !hit.has(txt));
+  } catch {
+    return todo; // table missing / offline → translate everything
+  }
+}
+
+// Contribute freshly-translated texts back to the group cache for the next member.
+async function writeGroupCache(fresh, lang, groupId) {
+  try {
+    const rows = Object.entries(fresh).map(([original_text, translated_text]) => ({
+      group_id: groupId,
+      lang,
+      source_hash: hashText(original_text),
+      original_text,
+      translated_text,
+    }));
+    await supabase
+      .from('community_translations')
+      .upsert(rows, { onConflict: 'group_id,lang,source_hash', ignoreDuplicates: true });
+  } catch {
+    // non-fatal — the translation still shows this session.
+  }
+}
 
 async function callTranslate(texts, targetLang) {
   if (!aiEnabled || texts.length === 0) return {};
@@ -60,25 +110,31 @@ const useTranslationStore = create((set) => ({
     return memCache[lang]?.[text] ?? text;
   },
 
-  // Translate an arbitrary list of texts to lang (skipping already-cached ones),
-  // caching results in memory + Supabase. Used for on-demand community translation.
-  translateTexts: async (texts, lang, userId) => {
+  // Translate an arbitrary list of texts to lang (skipping already-cached ones).
+  // Used for on-demand community translation: when groupId is given, translations
+  // are shared across the group so each member doesn't re-pay for the same text.
+  translateTexts: async (texts, lang, userId, groupId) => {
     if (!lang || !aiEnabled || !userId) return;
     const langCache = memCache[lang] || {};
     const todo = [...new Set((texts || []).filter((x) => x && !langCache[x]))];
     if (todo.length === 0) return;
 
     set({ translating: true });
+
+    // Reuse anything a fellow group member already translated before calling AI.
+    const stillTodo = groupId ? await fillFromGroupCache(todo, lang, groupId) : todo;
+
     const CHUNK = 20;
     const fresh = {};
-    for (let i = 0; i < todo.length; i += CHUNK) {
-      Object.assign(fresh, await callTranslate(todo.slice(i, i + CHUNK), lang));
+    for (let i = 0; i < stillTodo.length; i += CHUNK) {
+      Object.assign(fresh, await callTranslate(stillTodo.slice(i, i + CHUNK), lang));
     }
     if (Object.keys(fresh).length > 0) {
       if (!memCache[lang]) memCache[lang] = {};
       Object.assign(memCache[lang], fresh);
       const rows = Object.entries(fresh).map(([original_text, translated_text]) => ({ user_id: userId, lang, original_text, translated_text }));
       await supabase.from('translations').upsert(rows, { onConflict: 'user_id,lang,original_text', ignoreDuplicates: true });
+      if (groupId) await writeGroupCache(fresh, lang, groupId);
     }
     set({ translating: false });
   },

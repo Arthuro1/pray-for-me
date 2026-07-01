@@ -5,6 +5,7 @@ import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { setContentLang } from '../lib/contentLang';
 import ScriptureFirstStep from './ScriptureFirstStep';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
@@ -103,8 +104,12 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       // before they pray (Step 2). The prayer already exists by then, so
       // closing the Scripture step at any point keeps the prayer.
       const id = await addPrayer(form);
-      if (id) setCreated({ id, title: form.title.trim(), description: form.description.trim() });
-      else onClose();
+      if (id) {
+        // Record the language this prayer was written in, so we don't later pay
+        // to translate personal content into the language it's already in.
+        setContentLang(lang);
+        setCreated({ id, title: form.title.trim(), description: form.description.trim() });
+      } else onClose();
     }
   };
 
