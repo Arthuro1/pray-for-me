@@ -48,18 +48,22 @@ export default function VerseModal({ reference, lang, initialText, onClose }) {
     }
   };
 
-  // On open: with no preview there's nothing to read yet, so fetch (may use AI,
-  // hence consent). With a preview, silently upgrade it to authoritative
-  // YouVersion text when available — no extra tap, no consent. If that yields
-  // nothing, the preview stays and "Read full passage" remains for the AI path.
+  // On open, always try the consent-free source first (cache, then authoritative
+  // YouVersion text). When it delivers, show real scripture with no tap and no
+  // AI-consent prompt — this is what lets a bare reference (e.g. tapped in the
+  // Grow tab) open straight into readable text. Only when there's nothing to read
+  // AND YouVersion can't serve it do we fall to the AI path (which needs consent);
+  // if we already had a preview, we keep it and leave "Read full passage" for AI.
   useEffect(() => {
-    if (!initialText) { loadPassage(); return; }
     let cancelled = false;
     fetchScriptureText({ reference, lang }).then((res) => {
-      if (!cancelled && res?.text) {
+      if (cancelled) return;
+      if (res?.text) {
         setText(res.text);
         setSource(res.source || 'youversion');
         setStatus('full');
+      } else if (!initialText) {
+        loadPassage();
       }
     });
     return () => { cancelled = true; };

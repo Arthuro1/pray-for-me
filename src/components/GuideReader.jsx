@@ -3,8 +3,8 @@ import { X, Check, ChevronRight, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { bibleLink } from '../utils/bibleLink';
 import { pick, localizeRef } from '../content/teaching';
+import VerseModal from './VerseModal';
 
 // A pray-through reader for a prayer guide: an intro, then one step at a time.
 // Each step gives a heading and a gentle prompt, and (usually) points to a
@@ -13,6 +13,7 @@ import { pick, localizeRef } from '../content/teaching';
 export default function GuideReader({ guide, lang, onClose }) {
   // index -1 = intro screen; 0..n-1 = steps; n = done
   const [index, setIndex] = useState(-1);
+  const [openVerse, setOpenVerse] = useState(null); // a passage tapped to read in-app
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
@@ -101,24 +102,26 @@ export default function GuideReader({ guide, lang, onClose }) {
         <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{pick(step.title, lang)}</h2>
         <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-2)' }}>{pick(step.prompt, lang)}</p>
         {ref && (
-          <a
-            href={bibleLink(ref, lang)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between gap-3 rounded-2xl p-4"
+          <button
+            onClick={() => setOpenVerse(ref)}
+            className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
             style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
           >
             <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
               <BookOpen size={15} style={{ color: 'var(--accent)' }} /> {ref}
             </span>
-            <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'openInBible')}</span>
-          </a>
+            <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readFullPassage')}</span>
+          </button>
         )}
       </div>
 
       <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
         {advanceButton(t(lang, 'continueBtn'), isLastStep)}
       </div>
+
+      {openVerse && (
+        <VerseModal reference={openVerse} lang={lang} onClose={() => setOpenVerse(null)} />
+      )}
     </>
   );
 }

@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { X, BookOpen, ArrowLeft } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { bibleLink } from '../utils/bibleLink';
 import { pick, localizeRef } from '../content/teaching';
+import VerseModal from './VerseModal';
 
 // A read-only reader for a theology explanation. Each section is short prose
 // followed by the Scripture references it rests on — rendered as links so the
@@ -12,6 +13,7 @@ import { pick, localizeRef } from '../content/teaching';
 export default function ArticleReader({ article, lang, onClose }) {
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
+  const [openVerse, setOpenVerse] = useState(null); // a reference tapped to read in-app
 
   return (
     <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
@@ -41,16 +43,14 @@ export default function ArticleReader({ article, lang, onClose }) {
                     {section.refs.map((r) => {
                       const ref = localizeRef(r, lang);
                       return (
-                        <a
+                        <button
                           key={r}
-                          href={bibleLink(ref, lang)}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          onClick={() => setOpenVerse(ref)}
                           className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"
                           style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
                         >
                           <BookOpen size={11} /> {ref}
-                        </a>
+                        </button>
                       );
                     })}
                   </div>
@@ -64,6 +64,10 @@ export default function ArticleReader({ article, lang, onClose }) {
           </p>
         </div>
       </div>
+
+      {openVerse && (
+        <VerseModal reference={openVerse} lang={lang} onClose={() => setOpenVerse(null)} />
+      )}
     </div>
   );
 }
