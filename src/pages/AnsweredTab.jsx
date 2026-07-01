@@ -6,7 +6,7 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
-import { dateLocale, timeAgo } from '../utils/date';
+import { dateLocale, timeAgo, groupByThisMonth } from '../utils/date';
 import { testimonyList } from '../utils/prayer';
 import { originAuthor, getAuthorName } from '../utils/user';
 import { bibleLink } from '../utils/bibleLink';
@@ -42,15 +42,7 @@ export default function AnsweredTab() {
 
   // Split into "this month" and "earlier" for a sense of remembrance over time
   // (not a score). Order within each group keeps the pinned-first / recent-first sort.
-  const now = new Date();
-  const inThisMonth = (p) => {
-    const d = new Date(p.answered_at || p.updated_at || 0);
-    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-  };
-  const groups = [
-    { key: 'answeredThisMonth', items: answered.filter(inThisMonth) },
-    { key: 'answeredEarlier', items: answered.filter(p => !inThisMonth(p)) },
-  ].filter(g => g.items.length > 0);
+  const groups = groupByThisMonth(answered, (p) => p.answered_at || p.updated_at);
 
   const faithfulnessRef = faithfulnessPassage(lang);
 

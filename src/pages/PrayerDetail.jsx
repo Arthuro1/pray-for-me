@@ -16,7 +16,7 @@ import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
-import VerseModal from '../components/VerseModal';
+import VerseAccordion from '../components/VerseAccordion';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -39,8 +39,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
-  const [expandedVerse, setExpandedVerse] = useState(null);
-  const [readVerse, setReadVerse] = useState(null); // a verse opened to read in-app
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
   const [showCatPicker, setShowCatPicker] = useState(false);
@@ -362,9 +360,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      {readVerse && (
-        <VerseModal reference={readVerse.ref} lang={lang} initialText={readVerse.text} onClose={() => setReadVerse(null)} />
-      )}
       {showScripture && (
         <ScriptureFirstStep
           prayerId={livePrayer.id}
@@ -697,29 +692,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {verses.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {verses.map((v, i) => (
-                        <div key={i} className="group/verse">
-                          <button
-                            onClick={() => setExpandedVerse(expandedVerse === `${pp.id}-${i}` ? null : `${pp.id}-${i}`)}
-                            title={t(lang, 'tipVerseToggle')}
-                            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-                            style={{ background: '#f5e8a0', color: '#7a5e00' }}
-                          >
-                            <BookOpen size={9} /> {v.ref}
-                          </button>
-                          {expandedVerse === `${pp.id}-${i}` && (
-                            <div className="mt-1.5 rounded-xl p-3" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
-                              {v.text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: '#5a4500' }}>"{loc(v.text)}"</p>}
-                              <div className="flex items-center justify-between">
-                                <button onClick={() => setReadVerse({ ref: v.ref, text: loc(v.text) })} className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                                  <BookOpen size={11} /> {t(lang, 'readInApp')}
-                                </button>
-                                {canRemoveContent && (
-                                  <button onClick={() => handleRemoveVerse(pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="text-xs" style={{ color: '#c04040' }}>
-                                    <Trash2 size={11} />
-                                  </button>
-                                )}
-                              </div>
-                            </div>
+                        <div key={i} className="group/verse inline-flex items-start gap-1">
+                          <VerseAccordion reference={v.ref} lang={lang} initialText={loc(v.text)} panelStyle={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
+                            {({ toggle }) => (
+                              <button
+                                onClick={toggle}
+                                title={t(lang, 'tipVerseToggle')}
+                                className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+                                style={{ background: '#f5e8a0', color: '#7a5e00' }}
+                              >
+                                <BookOpen size={9} /> {v.ref}
+                              </button>
+                            )}
+                          </VerseAccordion>
+                          {canRemoveContent && (
+                            <button onClick={() => handleRemoveVerse(pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="opacity-0 group-hover/verse:opacity-100 transition-opacity mt-1.5 shrink-0" style={{ color: '#c04040' }}>
+                              <Trash2 size={11} />
+                            </button>
                           )}
                         </div>
                       ))}
@@ -802,24 +791,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 {(rec.verses || []).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {rec.verses.map((v, i) => (
-                      <div key={i}>
-                        <button
-                          onClick={() => setExpandedVerse(expandedVerse === `rec-${rec.title}-${i}` ? null : `rec-${rec.title}-${i}`)}
-                          title={t(lang, 'tipVerseToggle')}
-                          className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-                          style={{ background: 'var(--accent-border)', color: 'var(--accent)' }}
-                        >
-                          <BookOpen size={9} /> {v.ref}
-                        </button>
-                        {expandedVerse === `rec-${rec.title}-${i}` && (
-                          <div className="mt-1.5 rounded-xl p-2" style={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
-                            {v.text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-2)' }}>"{v.text}"</p>}
-                            <button onClick={() => setReadVerse({ ref: v.ref, text: v.text || '' })} className="flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                              <BookOpen size={10} /> {t(lang, 'readInApp')}
-                            </button>
-                          </div>
+                      <VerseAccordion key={i} reference={v.ref} lang={lang} initialText={v.text} panelStyle={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
+                        {({ toggle }) => (
+                          <button
+                            onClick={toggle}
+                            title={t(lang, 'tipVerseToggle')}
+                            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+                            style={{ background: 'var(--accent-border)', color: 'var(--accent)' }}
+                          >
+                            <BookOpen size={9} /> {v.ref}
+                          </button>
                         )}
-                      </div>
+                      </VerseAccordion>
                     ))}
                   </div>
                 )}

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { CheckCircle, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2, BookOpen, ExternalLink } from 'lucide-react';
+import { CheckCircle, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2, BookOpen } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
 import AiDisclaimer from './AiDisclaimer';
-import { bibleLink } from '../utils/bibleLink';
+import VerseAccordion from './VerseAccordion';
 import { t } from '../i18n';
 import useTranslationStore from '../store/translationStore';
 
@@ -19,7 +19,6 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
-  const [expandedVerse, setExpandedVerse] = useState(null);
 
   const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
   const { tr } = useTranslationStore();
@@ -179,22 +178,18 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   <div className="flex gap-1.5 items-start">
                     <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: '#fff8e6', borderLeft: '2px solid #f5c842' }}>
                       <p className="text-xs leading-snug" style={{ color: '#5a4500' }}>{tr(pp.title, lang)}</p>
-                      <button onClick={() => setExpandedVerse(expandedVerse === pp.id ? null : pp.id)} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#c4a020' }}>
-                        <BookOpen size={9} />{pp.verse}
-                      </button>
+                      <VerseAccordion reference={pp.verse} lang={lang} initialText={tr(pp.verse_text, lang)} panelStyle={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
+                        {({ toggle }) => (
+                          <button onClick={toggle} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#c4a020' }}>
+                            <BookOpen size={9} />{pp.verse}
+                          </button>
+                        )}
+                      </VerseAccordion>
                     </div>
                     <button onClick={() => removePrayerPoint(prayer.id, pp.id)} title={t(lang, "tipRemovePoint")} className="opacity-0 group-hover:opacity-100 mt-1 shrink-0 transition-opacity" style={{ color: '#d4c8e4' }}>
                       <Trash2 size={10} />
                     </button>
                   </div>
-                  {expandedVerse === pp.id && (
-                    <div className="mt-1.5 rounded-lg p-2" style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
-                      {pp.verse_text && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: '#5a4500' }}>"{tr(pp.verse_text, lang)}"</p>}
-                      <a href={bibleLink(pp.verse, lang)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
-                        <ExternalLink size={9} /> {t(lang, 'openBible')}
-                      </a>
-                    </div>
-                  )}
                 </div>
               ))}
 
@@ -204,9 +199,13 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                   <div className="flex gap-1.5 items-start">
                     <div className="flex-1 min-w-0 rounded-lg p-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                       <p className="text-xs leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
-                      <button onClick={() => setExpandedVerse(expandedVerse === rec.verse ? null : rec.verse)} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#7c5cfc' }}>
-                        <BookOpen size={9} />{rec.verse}
-                      </button>
+                      <VerseAccordion reference={rec.verse} lang={lang} initialText={rec.verseText}>
+                        {({ toggle }) => (
+                          <button onClick={toggle} title={t(lang, "tipVerseToggle")} className="flex items-center gap-1 text-xs mt-1" style={{ color: '#7c5cfc' }}>
+                            <BookOpen size={9} />{rec.verse}
+                          </button>
+                        )}
+                      </VerseAccordion>
                     </div>
                     <button
                       onClick={() => { addPrayerPoint(prayer.id, { title: rec.title, verse: rec.verse, verseText: rec.verseText }); setUpdateRecs((prev) => prev.filter((r) => r.title !== rec.title)); }}
@@ -216,14 +215,6 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
                       <Plus size={11} />
                     </button>
                   </div>
-                  {expandedVerse === rec.verse && (
-                    <div className="mt-1.5 rounded-lg p-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                      {rec.verseText && <p className="text-xs italic leading-relaxed mb-1.5" style={{ color: 'var(--text-1)' }}>"{rec.verseText}"</p>}
-                      <a href={bibleLink(rec.verse, lang)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs font-medium" style={{ color: '#7c5cfc' }}>
-                        <ExternalLink size={9} /> {t(lang, 'openBible')}
-                      </a>
-                    </div>
-                  )}
                 </div>
               ))}
 

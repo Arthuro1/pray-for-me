@@ -8,7 +8,7 @@ import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
-import { timeAgo } from '../utils/date';
+import { timeAgo, groupByThisMonth } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
 import { unreadCounts } from '../utils/community';
 import PrayerDetail from './PrayerDetail';
@@ -791,16 +791,31 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           testimonies.length === 0 ? (
             <Empty lang={lang} title="noTestimonies" />
           ) : (
-            <div className="flex flex-col gap-3">
-              {testimonies.map(testimony => (
-                <div key={testimony.id} className="rounded-2xl p-4" style={CARD_STYLE}>
-                  <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>
-                    🎉 {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
-                  </p>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{testimony.content}</p>
+            groupByThisMonth(testimonies, tm => tm.created_at).map(g => (
+              <div key={g.key} className="mb-5">
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+                  {t(lang, g.key)}
+                </p>
+                <div className="flex flex-col gap-3">
+                  {g.items.map(testimony => (
+                    <button
+                      key={testimony.id}
+                      onClick={() => onOpenPrayer(testimony.community_prayer_id)}
+                      className="w-full text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
+                      style={{ ...CARD_STYLE, borderLeft: '3px solid var(--success)' }}
+                    >
+                      <div className="flex items-center gap-2 mb-1.5 min-w-0">
+                        <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} size={26} anonymous={testimony.is_anonymous} />
+                        <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                          {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
+                        </p>
+                      </div>
+                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>🎉 "{testimony.content}"</p>
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))
           )
         )}
       </div>

@@ -7,9 +7,9 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, HandHeart, Share2, BookOpen } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
 import Encouragement from '../components/Encouragement';
-import VerseModal from '../components/VerseModal';
+import { bibleLink } from '../utils/bibleLink';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/Skeleton';
@@ -49,7 +49,6 @@ export default function HomeTab({ onAdd }) {
   const [suggestError, setSuggestError] = useState(null);
   const [addedTitles, setAddedTitles] = useState(new Set());
   const [verse, setVerse] = useState(null);
-  const [showVerse, setShowVerse] = useState(false);
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showSession, setShowSession] = useState(false);
   const [prayedDays, setPrayedDays] = useState(getPrayedDays);
@@ -68,11 +67,11 @@ export default function HomeTab({ onAdd }) {
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
 
   // Verse of the day: a curated, deterministic pick that's the same for everyone
-  // on a given day. Core verses ship embedded text (instant + offline); the rest
-  // resolve their text through the authoritative pipeline (cache → shared cache →
-  // YouVersion) and are cached forever after the first view, so the daily verse
-  // stays zero-cost and works offline thereafter. This never touches the AI path
-  // (that stays behind VerseModal's explicit "Read full passage" button).
+  // on a given day, shown in full immediately (no tap needed). Core verses ship
+  // embedded text (instant + offline); the rest resolve their text through the
+  // authoritative pipeline (cache → shared cache → YouVersion) and are cached
+  // forever after the first view, so the daily verse stays zero-cost and works
+  // offline thereafter. This never touches the AI path.
   useEffect(() => {
     const v = verseOfDay(lang, today);
     setVerse(v);
@@ -150,9 +149,6 @@ export default function HomeTab({ onAdd }) {
           onCancel={() => setShowAiConsent(false)}
         />
       )}
-      {showVerse && verse && (
-        <VerseModal reference={verse.ref} lang={lang} initialText={verse.text} onClose={() => setShowVerse(false)} />
-      )}
       {/* Hero banner */}
       <div className="relative overflow-hidden px-5 md:px-8 pt-10 pb-8" style={{ background: 'var(--header)' }}>
         <div className="absolute inset-0" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=40')", backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.07 }} />
@@ -181,18 +177,26 @@ export default function HomeTab({ onAdd }) {
               )}
             </div>
             {verse ? (
-              <button onClick={() => setShowVerse(true)} className="block w-full text-left" title={t(lang, 'readInApp')}>
+              <div>
                 {verse.text
                   ? <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>
-                  : <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>{t(lang, 'tapToReadVerse')}</p>}
+                  : (
+                    <div className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      <Loader2 size={13} className="animate-spin" />
+                      <span className="text-xs">{t(lang, 'loadingVerse')}</span>
+                    </div>
+                  )}
                 <p className="text-xs text-right mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>— {verse.ref}</p>
-                <span
+                <a
+                  href={bibleLink(verse.ref, lang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-end gap-1.5 mt-1.5 text-xs"
                   style={{ color: 'rgba(255,255,255,0.7)' }}
                 >
-                  <BookOpen size={11} /> {t(lang, 'readInApp')}
-                </span>
-              </button>
+                  <ExternalLink size={11} /> {t(lang, 'readWholeChapter')}
+                </a>
+              </div>
             ) : (
               <div className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
                 <Loader2 size={14} className="animate-spin" />

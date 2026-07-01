@@ -5,7 +5,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { movementPassage } from '../lib/prayerMovements';
 import Encouragement from './Encouragement';
-import VerseModal from './VerseModal';
+import VerseAccordion from './VerseAccordion';
 
 // "Pray now" meets the user where they are, then gently invites them deeper:
 //   requests — pray straight through today's burdens (the default)
@@ -36,8 +36,6 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
   const [done, setDone] = useState(false);
-  // A verse the user tapped to read in-app: { ref, text }.
-  const [openVerse, setOpenVerse] = useState(null);
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
@@ -70,9 +68,6 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
         {children}
       </div>
-      {openVerse && (
-        <VerseModal reference={openVerse.ref} lang={lang} initialText={openVerse.text} onClose={() => setOpenVerse(null)} />
-      )}
     </div>
   );
 
@@ -173,16 +168,20 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{t(lang, meta.titleKey)}</h2>
           <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-2)' }}>{t(lang, meta.promptKey)}</p>
           {ref && (
-            <button
-              onClick={() => setOpenVerse({ ref, text: '' })}
-              className="w-full flex items-center justify-between gap-3 rounded-2xl p-4 text-left"
-              style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
-            >
-              <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-                <BookOpen size={15} style={{ color: 'var(--accent)' }} /> {ref}
-              </span>
-              <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readInApp')}</span>
-            </button>
+            <VerseAccordion reference={ref} lang={lang}>
+              {({ toggle }) => (
+                <button
+                  onClick={toggle}
+                  className="w-full flex items-center justify-between gap-3 rounded-2xl p-4 text-left"
+                  style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                >
+                  <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
+                    <BookOpen size={15} style={{ color: 'var(--accent)' }} /> {ref}
+                  </span>
+                  <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readInApp')}</span>
+                </button>
+              )}
+            </VerseAccordion>
           )}
         </div>
         <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
@@ -238,14 +237,18 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
                   <div key={vi} className="mt-2 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
                     {v.text && <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-2)' }}>"{v.text}"</p>}
                     {v.ref && (
-                      <button
-                        onClick={() => setOpenVerse({ ref: v.ref, text: v.text || '' })}
-                        title={t(lang, 'readInApp')}
-                        className="text-xs mt-1 flex items-center gap-1"
-                        style={{ color: 'var(--accent)' }}
-                      >
-                        <BookOpen size={11} /> {v.ref}
-                      </button>
+                      <VerseAccordion reference={v.ref} lang={lang} initialText={v.text}>
+                        {({ toggle }) => (
+                          <button
+                            onClick={toggle}
+                            title={t(lang, 'readInApp')}
+                            className="text-xs mt-1 flex items-center gap-1"
+                            style={{ color: 'var(--accent)' }}
+                          >
+                            <BookOpen size={11} /> {v.ref}
+                          </button>
+                        )}
+                      </VerseAccordion>
                     )}
                   </div>
                 ))}
