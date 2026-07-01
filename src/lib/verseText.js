@@ -76,11 +76,14 @@ function putSharedVerse(lang, reference, value) {
 
 // Try YouVersion first: map the reference to USFM, then fetch authoritative text.
 // Returns { text, ref, source } or null so the caller can fall back to AI.
-async function fromYouVersion(reference, lang) {
+// `knownUsfm` lets callers that already know the passage id (e.g. the curated
+// daily-verse pool, which stores USFM book codes) skip the AI-based reference→
+// USFM conversion entirely — no Anthropic call needed for those verses.
+async function fromYouVersion(reference, lang, knownUsfm) {
   const versionId = versionForLang(lang);
   if (!versionId) return null;
 
-  const usfm = await referenceToUsfm(reference);
+  const usfm = knownUsfm || await referenceToUsfm(reference);
   if (!usfm) return null;
 
   const { data } = await fetchYouVersionPassage({ versionId, usfm });
@@ -106,7 +109,7 @@ async function fromAI(reference, lang) {
 // Never touches the AI path, so the reader can upgrade a saved verse to publisher
 // text silently on open — no extra tap, no AI-consent prompt. Returns the passage
 // or null (in which case the AI fallback stays behind an explicit button).
-export async function fetchScriptureText({ reference, lang }) {
+export async function fetchScriptureText({ reference, lang, usfm }) {
   if (!reference) return null;
 
   const cached = getCachedVerseText(lang, reference);
@@ -119,7 +122,7 @@ export async function fetchScriptureText({ reference, lang }) {
   if (shared) { cache(lang, reference, shared); return shared; }
 
   if (!youVersionEnabled()) return null;
-  const yv = await fromYouVersion(reference, lang);
+  const yv = await fromYouVersion(reference, lang, usfm);
   if (yv) { cache(lang, reference, yv); putSharedVerse(lang, reference, yv); }
   return yv;
 }

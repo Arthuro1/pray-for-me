@@ -24,6 +24,7 @@ const SALT_BYTES = 16;
 const IV_BYTES = 12;
 const RECOVERY_BYTES = 16; // 128 bits of entropy
 const STORAGE_KEY = 'pfm_vault'; // IndexedDB key (and legacy localStorage key)
+const SESSION_KEY = 'pfm_vault_session'; // sessionStorage: raw master key, tab-scoped
 const DEFAULT_AUTO_LOCK_MS = 5 * 60 * 1000;
 
 // Crockford base32 (no I/L/O/U) — unambiguous to read off a recovery sheet.
@@ -71,29 +72,69 @@ function legacyStorage(): Storage | null {
   }
 }
 
+function sessionStorageRef(): Storage | null {
+  try {
+    return typeof globalThis !== 'undefined' && globalThis.sessionStorage ? globalThis.sessionStorage : null;
+  } catch {
+    return null;
+  }
+}
+
+// Keep the vault unlocked across a page refresh (but not a fresh browser tab):
+// the raw master key is mirrored into sessionStorage, which is tab-scoped and
+// cleared when the tab closes. This doesn't meaningfully change the exposure —
+// anything that can read the in-memory key (e.g. injected JS) could read this
+// too — it just avoids forcing a passphrase re-entry on every reload.
+async function persistSessionKey(mk: CryptoKey): Promise<void> {
+  try {
+    const raw = await crypto.subtle.exportKey('raw', mk);
+    sessionStorageRef()?.setItem(SESSION_KEY, toB64(new Uint8Array(raw)));
+  } catch {
+    /* best-effort */
+  }
+}
+
+function clearSessionKey(): void {
+  sessionStorageRef()?.removeItem(SESSION_KEY);
+}
+
+async function restoreSessionKey(): Promise<void> {
+  if (masterKey) return;
+  const b64 = sessionStorageRef()?.getItem(SESSION_KEY);
+  if (!b64) return;
+  try {
+    const mk = await crypto.subtle.importKey('raw', fromB64(b64), { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
+    setMasterKey(mk);
+  } catch {
+    clearSessionKey();
+  }
+}
+
 async function doHydrate(): Promise<void> {
   // One-time migration: if a record still sits in localStorage (older clients),
   // move it into IndexedDB and drop the localStorage copy so the wrapped key no
   // longer persists there.
   const ls = legacyStorage();
   const legacy = ls?.getItem(STORAGE_KEY);
+  let migrated = false;
   if (legacy) {
     try {
       cachedRecord = JSON.parse(legacy) as VaultRecord;
       if (hasIDB()) await idbSet(STORAGE_KEY, cachedRecord);
       ls?.removeItem(STORAGE_KEY);
-      return;
+      migrated = true;
     } catch {
       cachedRecord = null;
     }
   }
-  if (hasIDB()) {
+  if (!migrated && hasIDB()) {
     try {
       cachedRecord = ((await idbGet(STORAGE_KEY)) as VaultRecord) ?? null;
     } catch {
       cachedRecord = null;
     }
   }
+  await restoreSessionKey();
 }
 
 // Load the persisted record into the in-memory cache. Idempotent — safe to call
@@ -167,8 +208,8 @@ function normalizeCode(code: string): string {
 // ─── Auto-lock ───────────────────────────────────────────────────────────────
 function setMasterKey(mk: CryptoKey | null): void {
   masterKey = mk;
-  if (mk) resetAutoLock();
-  else clearAutoLock();
+  if (mk) { resetAutoLock(); persistSessionKey(mk); }
+  else { clearAutoLock(); clearSessionKey(); }
   for (const l of listeners) l(mk !== null);
 }
 

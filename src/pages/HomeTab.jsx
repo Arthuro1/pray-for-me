@@ -79,7 +79,7 @@ export default function HomeTab({ onAdd }) {
     if (v.text) { setVerseResolving(false); return undefined; }
     let cancelled = false;
     setVerseResolving(true);
-    fetchScriptureText({ reference: v.ref, lang }).then((res) => {
+    fetchScriptureText({ reference: v.ref, lang, usfm: v.usfm }).then((res) => {
       if (cancelled) return;
       if (res?.text) {
         setVerse((cur) => (cur && cur.ref === v.ref ? { ...cur, text: res.text } : cur));

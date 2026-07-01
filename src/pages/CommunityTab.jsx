@@ -6,6 +6,7 @@ import EmptyState from '../components/EmptyState';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
+import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { timeAgo, groupByThisMonth } from '../utils/date';
@@ -584,6 +585,8 @@ function Empty({ lang, title }) {
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup } = useCommunityStore();
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
+  const categories = usePrayerStore(s => s.categories);
+  const tr = useTranslationStore(s => s.tr);
   const [subTab, setSubTab] = useState('requests');
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
@@ -797,22 +800,38 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                   {t(lang, g.key)}
                 </p>
                 <div className="flex flex-col gap-3">
-                  {g.items.map(testimony => (
-                    <button
-                      key={testimony.id}
-                      onClick={() => onOpenPrayer(testimony.community_prayer_id)}
-                      className="w-full text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
-                      style={{ ...CARD_STYLE, borderLeft: '3px solid var(--success)' }}
-                    >
-                      <div className="flex items-center gap-2 mb-1.5 min-w-0">
-                        <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} size={26} anonymous={testimony.is_anonymous} />
-                        <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
-                          {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
-                        </p>
-                      </div>
-                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>🎉 "{testimony.content}"</p>
-                    </button>
-                  ))}
+                  {g.items.map(testimony => {
+                    const linkedPrayer = testimony.community_prayers;
+                    const testimonyCategories = categories.filter(c => (linkedPrayer?.category_ids || []).includes(c.id));
+                    return (
+                      <button
+                        key={testimony.id}
+                        onClick={() => onOpenPrayer(testimony.community_prayer_id)}
+                        className="w-full text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
+                        style={{ ...CARD_STYLE, borderLeft: '3px solid var(--success)' }}
+                      >
+                        <div className="flex items-center gap-2 mb-1.5 min-w-0">
+                          <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} size={26} anonymous={testimony.is_anonymous} />
+                          <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                            {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
+                          </p>
+                        </div>
+                        {linkedPrayer?.title && (
+                          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{linkedPrayer.title}</p>
+                        )}
+                        {testimonyCategories.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mb-2">
+                            {testimonyCategories.map(c => (
+                              <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
+                                {c.emoji} {tr(c.name, lang)}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>🎉 "{testimony.content}"</p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             ))

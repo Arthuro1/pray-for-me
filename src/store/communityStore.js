@@ -416,7 +416,7 @@ const useCommunityStore = create((set, get) => ({
   fetchTestimonies: async (groupId) => {
     const { data } = await supabase
       .from('testimonies')
-      .select('*')
+      .select('*, community_prayers(title, category_ids)')
       .eq('group_id', groupId)
       .order('created_at', { ascending: false });
     if (data) set({ testimonies: data });
@@ -512,7 +512,7 @@ const useCommunityStore = create((set, get) => ({
     const { data, error } = await supabase
       .from('testimonies')
       .insert({ group_id: groupId, user_id: userId, author_name: authorName, content, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null })
-      .select()
+      .select('*, community_prayers(title, category_ids)')
       .single();
     if (error) return toError(error);
     set(state => ({ testimonies: [data, ...state.testimonies] }));

@@ -141,11 +141,14 @@ function localizedRef(entry, lang) {
 }
 
 // The verse of the day: deterministic per calendar day, shared across all users.
-// Returns { ref, text } — `ref` is the localized reference; `text` is the embedded
-// SEED text when we have it in this language (instant + offline), else '' so the
-// caller resolves it through the authoritative pipeline and caches it.
+// Returns { ref, text, usfm } — `ref` is the localized reference; `text` is the
+// embedded SEED text when we have it in this language (instant + offline), else
+// '' so the caller resolves it through the authoritative pipeline and caches it;
+// `usfm` (e.g. "PHP.4.6") is derived directly from the pool entry's own USFM book
+// code, so resolving the daily verse via YouVersion never needs an AI call to
+// re-derive the passage id from the localized reference string.
 export function verseOfDay(lang, date = new Date()) {
   const entry = POOL[dayOfYear(date) % POOL.length];
   const key = `${entry.book} ${entry.cv}`;
-  return { ref: localizedRef(entry, lang), text: SEED[key]?.[lang] || '' };
+  return { ref: localizedRef(entry, lang), text: SEED[key]?.[lang] || '', usfm: `${entry.book}.${entry.cv.replace(':', '.')}` };
 }
