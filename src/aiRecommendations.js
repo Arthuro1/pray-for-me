@@ -7,9 +7,7 @@
 // guardrail system prompt ("Write ALL content in <language>"). That covers all
 // 16 supported languages — earlier this file only had prompts for 4 and silently
 // fell back to French for the rest.
-import { callClaudeForJson, getRemainingCooldown, localizeAiError } from './lib/aiCore';
-
-export { getRemainingCooldown };
+import { callClaudeForJson, localizeAiError } from './lib/aiCore';
 
 const cache = new Map();
 
@@ -54,6 +52,7 @@ export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
     lang,
     maxTokens: 600,
     shape: 'array',
+    feature: 'dayplan',
   });
   if (error) return { recs: [], error: localizeAiError(error, lang) };
 
@@ -72,6 +71,7 @@ export async function getAIRecommendations({ title, description = '', type = 'ne
     lang,
     maxTokens: 1200,
     shape: 'array',
+    feature: 'points',
   });
   if (error) return { recs: [], error: localizeAiError(error, lang) };
 

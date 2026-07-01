@@ -179,9 +179,13 @@ Run these SQL files in your Supabase SQL editor (in order):
 7. [`supabase/verse_cache.sql`](./supabase/verse_cache.sql) — shared, world-readable cache of resolved Scripture text (one fetch per verse for all users)
 8. [`supabase/community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped shared cache for community translations (members reuse each other's)
 
-> The daily verse is now served client-side from a curated pool
-> ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)) — same verse for
-> everyone each day, instant and offline. The old AI-generated `daily_verse` table
+> The daily verse is served client-side from a curated pool of ~200 vetted,
+> prayer-themed references ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)),
+> rotated by day-of-year so everyone sees the same verse each day and the year
+> rarely repeats. A hand-vetted core set ships embedded text in all 16 languages
+> (instant + offline); the rest resolve their text once through the shared
+> `verse_cache`/YouVersion pipeline and are cached forever after — zero recurring
+> cost, and never AI-generated Scripture. The old AI-generated `daily_verse` table
 > and its cron are no longer used and can be dropped.
 
 ---

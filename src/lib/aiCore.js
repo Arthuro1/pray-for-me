@@ -12,10 +12,18 @@ import { t } from '../i18n';
 // Pinned to the one model the server proxy allows (see api/anthropic.js).
 const MODEL = 'claude-haiku-4-5-20251001';
 const COOLDOWN_MS = 5000;
-let lastCallTime = 0;
 
-export function getRemainingCooldown() {
-  return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - lastCallTime)) / 1000));
+// Per-feature cooldowns. The throttle is meant to stop one feature from being
+// hammered, not to make unrelated actions block each other — so each distinct
+// action (Scripture guidance, prayer points, day plan, verse reader) keeps its
+// own timer. Asking for prayer points then opening a verse no longer trips a
+// shared "please wait Ns". Callers pass a stable `feature` key; unkeyed calls
+// share a single 'default' bucket.
+const lastCallByFeature = new Map();
+
+export function getRemainingCooldown(feature = 'default') {
+  const last = lastCallByFeature.get(feature) || 0;
+  return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000));
 }
 
 // English names so the model reliably understands which language to write in,
@@ -62,11 +70,11 @@ export function localizeAiError(error, lang) {
 // in the response. `shape` selects whether we expect a top-level object or array.
 // Errors come back as a typed token ({ type, seconds? }) so each caller can map
 // them to its own localized copy — this module stays free of i18n.
-export async function callClaudeForJson({ prompt, lang, maxTokens = 900, shape = 'object' }) {
-  const remaining = getRemainingCooldown();
+export async function callClaudeForJson({ prompt, lang, maxTokens = 900, shape = 'object', feature = 'default' }) {
+  const remaining = getRemainingCooldown(feature);
   if (remaining > 0) return { data: null, error: { type: 'cooldown', seconds: remaining } };
 
-  lastCallTime = Date.now();
+  lastCallByFeature.set(feature, Date.now());
   try {
     const res = await anthropicFetch({
       model: MODEL,

@@ -23,6 +23,7 @@ import { nextReminder } from '../utils/reminder';
 import { Clock } from 'lucide-react';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { verseOfDay } from '../content/dailyVerses';
+import { fetchScriptureText } from '../lib/verseText';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 
@@ -67,9 +68,22 @@ export default function HomeTab({ onAdd }) {
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
 
   // Verse of the day: a curated, deterministic pick that's the same for everyone
-  // on a given day. Instant and offline — no per-day AI generation or DB round-trip.
+  // on a given day. Core verses ship embedded text (instant + offline); the rest
+  // resolve their text through the authoritative pipeline (cache → shared cache →
+  // YouVersion) and are cached forever after the first view, so the daily verse
+  // stays zero-cost and works offline thereafter. This never touches the AI path
+  // (that stays behind VerseModal's explicit "Read full passage" button).
   useEffect(() => {
-    setVerse(verseOfDay(lang, today));
+    const v = verseOfDay(lang, today);
+    setVerse(v);
+    if (v.text) return undefined;
+    let cancelled = false;
+    fetchScriptureText({ reference: v.ref, lang }).then((res) => {
+      if (!cancelled && res?.text) {
+        setVerse((cur) => (cur && cur.ref === v.ref ? { ...cur, text: res.text } : cur));
+      }
+    });
+    return () => { cancelled = true; };
   }, [lang]);
 
   useEffect(() => { setDaySuggestions([]); setSuggestError(null); }, [lang]);
@@ -103,7 +117,7 @@ export default function HomeTab({ onAdd }) {
   // Share the verse of the day via the native share sheet, or copy it as a fallback.
   const handleShareVerse = async () => {
     if (!verse) return;
-    const text = `"${verse.text}" — ${verse.ref}`;
+    const text = verse.text ? `"${verse.text}" — ${verse.ref}` : verse.ref;
     try {
       if (navigator.share) {
         await navigator.share({ title: t(lang, 'verseOfDay'), text, url: window.location.origin });
@@ -168,7 +182,9 @@ export default function HomeTab({ onAdd }) {
             </div>
             {verse ? (
               <button onClick={() => setShowVerse(true)} className="block w-full text-left" title={t(lang, 'readInApp')}>
-                <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>
+                {verse.text
+                  ? <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>
+                  : <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.78)' }}>{t(lang, 'tapToReadVerse')}</p>}
                 <p className="text-xs text-right mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>— {verse.ref}</p>
                 <span
                   className="flex items-center justify-end gap-1.5 mt-1.5 text-xs"

@@ -27,7 +27,7 @@ import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
 import useVaultStore from './store/vaultStore';
-import VaultModal from './components/VaultModal';
+import VaultLockScreen from './components/VaultLockScreen';
 import { pullVaultRecord } from './lib/vaultSync';
 import { scheduleNotifications } from './notifications';
 import { hasAiConsent } from './components/AiConsentModal';
@@ -242,13 +242,9 @@ export default function App() {
 
   // Hard gate: a vault exists but is locked → block the app until it's unlocked,
   // so encrypted content is never rendered (or re-cached) without the key.
+  // Unlocking flips vaultUnlocked → the reload-on-unlock effect re-decrypts.
   if (vaultInitialized && !vaultUnlocked) {
-    // Unlocking flips vaultUnlocked → the reload-on-unlock effect re-decrypts.
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
-        <VaultModal lang={lang} initialMode="unlock" dismissable={false} />
-      </div>
-    );
+    return <VaultLockScreen lang={lang} />;
   }
 
   return (

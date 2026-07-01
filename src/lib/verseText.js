@@ -96,7 +96,7 @@ async function fromAI(reference, lang) {
   const prompt = `Provide the exact, word-for-word text of the Bible passage "${reference}" from a widely-used ${name} translation. Quote only the real canonical text — never paraphrase, summarise, or invent words. If the reference names a single verse, include just that verse. Respond ONLY with JSON:
 {"text": "<the passage text in ${name}>", "ref": "${reference}"}`;
 
-  const { data, error } = await callClaudeForJson({ prompt, lang, maxTokens: 700 });
+  const { data, error } = await callClaudeForJson({ prompt, lang, maxTokens: 700, feature: 'verse' });
   if (data?.text) return { data: { text: data.text, ref: data.ref || reference, source: 'ai' }, error: null };
   return { data: null, error };
 }

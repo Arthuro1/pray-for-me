@@ -3,9 +3,7 @@
 // reflection questions — so the user meets God's Word BEFORE (and instead of
 // leaning on) any AI-written prayer. Generating actual prayer points stays a
 // separate, opt-in last step (see aiRecommendations.getAIRecommendations).
-import { callClaudeForJson, getRemainingCooldown, localizeAiError } from './lib/aiCore';
-
-export { getRemainingCooldown };
+import { callClaudeForJson, localizeAiError } from './lib/aiCore';
 
 const cache = new Map();
 
@@ -58,6 +56,7 @@ export async function getScriptureGuidance({ title, description = '', lang = 'fr
     lang,
     maxTokens: 900,
     shape: 'object',
+    feature: 'guidance',
   });
 
   if (error) return { guidance: null, error: localizeAiError(error, lang) };

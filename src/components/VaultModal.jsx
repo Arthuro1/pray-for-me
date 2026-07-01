@@ -55,7 +55,10 @@ function PrimaryButton({ onClick, disabled, busy, children }) {
 // onUnlocked fires once the vault becomes usable (created/unlocked/reset).
 // `dismissable=false` turns it into a hard gate (no close button, no backdrop /
 // Escape dismiss) — used to block the app until the vault is unlocked.
-export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true }) {
+// `embedded=true` renders just the card (no fixed overlay/backdrop) so a host
+// like VaultLockScreen can place it inside its own friendlier layout while still
+// reusing the unlock + recovery-code logic here.
+export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false }) {
   const { createVault, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode } = useVaultStore();
   const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change | rotate
   const [pass, setPass] = useState('');
@@ -67,7 +70,10 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   const [busy, setBusy] = useState(false);
 
   useEscapeKey(dismissable ? onClose : () => {});
-  const trapRef = useFocusTrap();
+  // As an overlay modal, trap focus in the card; when embedded in a full-page
+  // host (VaultLockScreen), don't — the host has its own controls (e.g. sign out)
+  // that keyboard users must still be able to reach.
+  const trapRef = useFocusTrap(!embedded);
 
   const done = (msgKey) => {
     if (msgKey) toast.success(t(lang, msgKey));
@@ -146,9 +152,8 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     : mode === 'recovery' || mode === 'reset' || mode === 'change' || mode === 'rotate' ? KeyRound
       : Shield;
 
-  return (
-    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }} onClick={dismissable ? onClose : undefined}>
-      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
+  const card = (
+    <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
@@ -236,6 +241,13 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
           </div>
         )}
       </div>
+  );
+
+  if (embedded) return card;
+
+  return (
+    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }} onClick={dismissable ? onClose : undefined}>
+      {card}
     </div>
   );
 }
