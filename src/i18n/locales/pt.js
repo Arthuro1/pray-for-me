@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "Adicionar como pedido de oração",
   "addedPoint": "Adicionado",
   "prayNowCta": "Vou orar agora",
+  "viewScripture": "Ver a Escritura",
+  "tipViewScripture": "Rever a Palavra aberta para esta oração",
   "scriptureOffline": "Você está offline. Reconecte-se para abrir a Palavra — você sempre pode adicionar um trecho você mesmo.",
   "scriptureNone": "Nenhum trecho desta vez. Tente novamente ou abra sua Bíblia e adicione o seu.",
   "retryScripture": "Tentar novamente",

@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "Ajouter comme sujet de prière",
   "addedPoint": "Ajouté",
   "prayNowCta": "Je vais prier",
+  "viewScripture": "Voir la Parole",
+  "tipViewScripture": "Revoir la Parole ouverte pour cette prière",
   "scriptureOffline": "Vous êtes hors ligne. Reconnectez-vous pour ouvrir la Parole — vous pouvez toujours ajouter un passage vous-même.",
   "scriptureNone": "Aucun passage cette fois. Réessayez, ou ouvrez votre Bible et ajoutez le vôtre.",
   "retryScripture": "Réessayer",

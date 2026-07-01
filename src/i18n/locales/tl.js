@@ -174,6 +174,8 @@ export default {
   "addAsPoint": "Idagdag bilang panalangin",
   "addedPoint": "Naidagdag",
   "prayNowCta": "Mananalangin na ako",
+  "viewScripture": "Tingnan ang Kasulatan",
+  "tipViewScripture": "Muling tingnan ang Salitang binuksan para sa panalanging ito",
   "scriptureOffline": "Offline ka. Kumonekta muli para buksan ang Salita — maaari kang palaging magdagdag ng talata nang ikaw mismo.",
   "scriptureNone": "Walang talata sa pagkakataong ito. Subukan muli, o buksan ang iyong Bibliya at magdagdag ng sarili mo.",
   "retryScripture": "Subukan muli",

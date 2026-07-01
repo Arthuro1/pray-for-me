@@ -15,6 +15,7 @@ import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
+import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseModal from '../components/VerseModal';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -50,6 +51,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showScripture, setShowScripture] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shareGroupIds, setShareGroupIds] = useState(new Set());
   const [shareAnon, setShareAnon] = useState(false);
@@ -363,6 +365,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       {readVerse && (
         <VerseModal reference={readVerse.ref} lang={lang} initialText={readVerse.text} onClose={() => setReadVerse(null)} />
       )}
+      {showScripture && (
+        <ScriptureFirstStep
+          prayerId={livePrayer.id}
+          title={livePrayer.title}
+          description={livePrayer.description}
+          lang={lang}
+          initialGuidance={livePrayer.scripture_guidance || null}
+          onClose={() => setShowScripture(false)}
+        />
+      )}
       {confirmRemovePoint && (
         <ConfirmDialog
           title={t(lang, 'tipRemovePoint')}
@@ -542,6 +554,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               triggerStyle={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
               iconColor="#fff"
               items={[
+                { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
                 { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: openShareModal, hidden: savedCopy || groups.length === 0 },
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },

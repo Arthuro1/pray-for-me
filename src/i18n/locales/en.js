@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "Add as prayer point",
   "addedPoint": "Added",
   "prayNowCta": "I'll pray now",
+  "viewScripture": "View Scripture",
+  "tipViewScripture": "Revisit the Scripture opened for this prayer",
   "scriptureOffline": "You're offline. Reconnect to open the Word on this — you can always add a passage yourself.",
   "scriptureNone": "No passage came back this time. Try again, or open your Bible and add your own.",
   "retryScripture": "Try again",

@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "Añadir como motivo de oración",
   "addedPoint": "Añadido",
   "prayNowCta": "Voy a orar ahora",
+  "viewScripture": "Ver la Escritura",
+  "tipViewScripture": "Volver a ver la Palabra abierta para esta oración",
   "scriptureOffline": "Estás sin conexión. Reconéctate para abrir la Palabra; siempre puedes añadir un pasaje tú mismo.",
   "scriptureNone": "Esta vez no se obtuvo ningún pasaje. Inténtalo de nuevo o abre tu Biblia y añade el tuyo.",
   "retryScripture": "Reintentar",

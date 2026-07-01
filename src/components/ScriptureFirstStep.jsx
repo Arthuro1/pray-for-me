@@ -54,13 +54,17 @@ function Passage({ p, lang, added, onAdd, onRead }) {
 // prayer points stay a separate, opt-in step elsewhere. The prayer already
 // exists by the time we get here, so closing without fetching is always fine —
 // this is an invitation, never a gate.
-export default function ScriptureFirstStep({ prayerId, title, description, lang, onClose }) {
-  const { addPrayerPoint } = usePrayerStore();
+//
+// `initialGuidance` is the prayer's previously-saved guidance (if any), passed
+// in when this is reopened later (see PrayerDetail's "view Scripture" action) so
+// it can be recalled without a new AI request.
+export default function ScriptureFirstStep({ prayerId, title, description, lang, initialGuidance = null, onClose }) {
+  const { addPrayerPoint, setScriptureGuidance } = usePrayerStore();
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
-  const [status, setStatus] = useState('intro'); // intro | loading | done | offline
-  const [guidance, setGuidance] = useState(null);
+  const [status, setStatus] = useState(initialGuidance ? 'done' : 'intro'); // intro | loading | done | offline
+  const [guidance, setGuidance] = useState(initialGuidance);
   const [error, setError] = useState(null);
   const [showConsent, setShowConsent] = useState(false);
   const [added, setAdded] = useState({}); // passage ref -> true
@@ -75,6 +79,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     setGuidance(g);
     setError(e);
     setStatus('done');
+    if (g) setScriptureGuidance(prayerId, g);
   };
 
   const addPassage = (p) => {

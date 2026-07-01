@@ -174,6 +174,8 @@ export default {
   "addAsPoint": "እንደ የጸሎት ነጥብ ጨምር",
   "addedPoint": "ታክሏል",
   "prayNowCta": "አሁን እጸልያለሁ",
+  "viewScripture": "ቃሉን ተመልከት",
+  "tipViewScripture": "ለዚህ ጸሎት የተከፈተውን ቃል እንደገና ተመልከት",
   "scriptureOffline": "ከመስመር ውጭ ነህ። ቃሉን ለመክፈት እንደገና ተገናኝ — ሁልጊዜ ራስህ ክፍል መጨመር ትችላለህ።",
   "scriptureNone": "በዚህ ጊዜ ምንም ክፍል አልተገኘም። እንደገና ሞክር፣ ወይም መጽሐፍ ቅዱስህን ከፍተህ የራስህን ጨምር።",
   "retryScripture": "እንደገና ሞክር",

@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "添加为祷告要点",
   "addedPoint": "已添加",
   "prayNowCta": "我现在就祷告",
+  "viewScripture": "查看经文",
+  "tipViewScripture": "重新查看为这个祷告打开的经文",
   "scriptureOffline": "你当前离线。请重新连接以打开圣经 — 你随时可以自己添加经文。",
   "scriptureNone": "这次没有返回经文。请重试，或打开圣经自行添加。",
   "retryScripture": "重试",

@@ -9,6 +9,7 @@ import {
   decryptPrayers,
   encryptPrayersForCache,
   SENSITIVE_FIELDS,
+  SENSITIVE_JSON_FIELDS,
   UPDATE_SENSITIVE_FIELDS,
   POINT_SENSITIVE_FIELDS,
   TESTIMONY_SENSITIVE_FIELDS,
@@ -242,6 +243,40 @@ describe('testimony server-side encryption (Phase 3c: prayer_testimonies)', () =
     const dec = await decryptPrayerFromStorage(row);
     expect(dec.prayer_testimonies[0]._locked).toBe(true);
     expect(dec.prayer_testimonies[0].content).toBe(''); // still redacted — no leak
+  });
+});
+
+describe('Scripture guidance (SENSITIVE_JSON_FIELDS)', () => {
+  beforeEach(async () => { await createVault('pass-phrase'); });
+
+  const guidance = { passages: [{ ref: 'Ps 23', text: 'The Lord is my shepherd' }], context: 'A psalm of David', themes: ['comfort'], reflections: ['Who is your shepherd?'] };
+
+  it('bundles scripture_guidance into the encrypted_payload and redacts it to null', async () => {
+    const enc = await encryptPrayerForStorage({ ...samplePrayer(), scripture_guidance: guidance });
+    expect(SENSITIVE_JSON_FIELDS).toContain('scripture_guidance');
+    expect(enc.scripture_guidance).toBeNull();
+    expect(JSON.stringify(enc)).not.toContain('shepherd');
+  });
+
+  it('restores scripture_guidance on decrypt', async () => {
+    const enc = await encryptPrayerForStorage({ ...samplePrayer(), scripture_guidance: guidance });
+    const dec = await decryptPrayerFromStorage(enc);
+    expect(dec.scripture_guidance).toEqual(guidance);
+  });
+
+  it('does not add a scripture_guidance key when the prayer never had one', async () => {
+    const enc = await encryptPrayerForStorage(samplePrayer());
+    expect('scripture_guidance' in enc).toBe(false);
+  });
+
+  it('survives a title edit re-encryption (bundled fields are not dropped)', async () => {
+    const enc = await encryptPrayerForStorage({ ...samplePrayer(), scripture_guidance: guidance });
+    const dec = await decryptPrayerFromStorage(enc);
+    // Re-encrypt as if only the title changed, merging the decrypted guidance forward.
+    const reEnc = await encryptPrayerForStorage({ ...dec, title: 'Updated title' });
+    const reDec = await decryptPrayerFromStorage(reEnc);
+    expect(reDec.title).toBe('Updated title');
+    expect(reDec.scripture_guidance).toEqual(guidance);
   });
 });
 

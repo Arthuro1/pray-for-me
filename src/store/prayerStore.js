@@ -11,6 +11,7 @@ import {
   decryptPrayers,
   decryptPrayerFromStorage,
   SENSITIVE_FIELDS,
+  SENSITIVE_JSON_FIELDS,
   UPDATE_SENSITIVE_FIELDS,
   POINT_SENSITIVE_FIELDS,
   TESTIMONY_SENSITIVE_FIELDS,
@@ -72,6 +73,26 @@ function canEncryptNested(prayer) {
 // queued/written for private prayers.
 function buildTestimonyRow(prayerId, content, created_at) {
   return { id: crypto.randomUUID(), prayer_id: prayerId, content, author_name: '', created_at };
+}
+
+// Re-encrypts the whole SENSITIVE_FIELDS/SENSITIVE_JSON_FIELDS bundle from
+// `merged` (the prayer's current in-memory values with any pending edits
+// applied) into a single encrypted_payload, redacting every plaintext column
+// it covers. Used whenever ANY of those fields change, so the ciphertext
+// always carries the full bundle forward instead of dropping fields the
+// caller didn't touch (e.g. editing the title must not lose saved Scripture
+// guidance, and vice versa). Callers must gate this with canEncrypt(prayer).
+async function encryptedSensitiveFields(merged) {
+  const sensitive = {
+    ...Object.fromEntries(SENSITIVE_FIELDS.map((f) => [f, merged[f] ?? ''])),
+    ...Object.fromEntries(SENSITIVE_JSON_FIELDS.map((f) => [f, merged[f] ?? null])),
+  };
+  const enc = await encryptPrayerForStorage(sensitive);
+  return {
+    title: '', description: '', person_name: '', phone: '', scripture_guidance: null,
+    encrypted_payload: enc.encrypted_payload,
+    encryption_version: enc.encryption_version,
+  };
 }
 
 // Keeps shared community copies in sync when the source personal prayer is
@@ -355,17 +376,25 @@ const usePrayerStore = create((set, get) => ({
     // plaintext so shared copies remain readable by group members.
     let persistPayload = payload;
     if (canEncrypt(current)) {
-      const merged = { ...current, ...payload };
-      const sensitive = Object.fromEntries(SENSITIVE_FIELDS.map((f) => [f, merged[f] ?? '']));
-      const enc = await encryptPrayerForStorage(sensitive);
-      persistPayload = {
-        ...payload,
-        title: '', description: '', person_name: '', phone: '',
-        encrypted_payload: enc.encrypted_payload,
-        encryption_version: enc.encryption_version,
-      };
+      persistPayload = { ...payload, ...(await encryptedSensitiveFields({ ...current, ...payload })) };
     }
     enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds, community });
+  },
+
+  // Persist the Scripture-first AI guidance once fetched, so reopening the step
+  // later recalls it instead of firing a new AI request. Bundled into the same
+  // encrypted_payload as title/description for PRIVATE prayers; stored as plain
+  // jsonb otherwise (mirrors updatePrayer's encryption gating).
+  setScriptureGuidance: async (prayerId, guidance) => {
+    set((state) => ({
+      prayers: state.prayers.map((p) => (p.id === prayerId ? { ...p, scripture_guidance: guidance } : p)),
+    }));
+    const current = get().prayers.find((p) => p.id === prayerId);
+    if (!current) return;
+    const persistPayload = canEncrypt(current)
+      ? await encryptedSensitiveFields(current)
+      : { scripture_guidance: guidance };
+    enqueue('updatePrayer', { id: prayerId, payload: persistPayload });
   },
 
   // Reverse direction: when the owner edits categories on a shared community

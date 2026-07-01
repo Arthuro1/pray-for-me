@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "Als Gebetsanliegen hinzufügen",
   "addedPoint": "Hinzugefügt",
   "prayNowCta": "Ich werde jetzt beten",
+  "viewScripture": "Schrift ansehen",
+  "tipViewScripture": "Das für diese Bitte geöffnete Wort erneut ansehen",
   "scriptureOffline": "Du bist offline. Verbinde dich neu, um das Wort zu öffnen – du kannst jederzeit selbst einen Bibeltext hinzufügen.",
   "scriptureNone": "Diesmal kam kein Bibeltext zurück. Versuche es erneut oder öffne deine Bibel und füge deinen eigenen hinzu.",
   "retryScripture": "Erneut versuchen",

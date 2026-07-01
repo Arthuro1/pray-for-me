@@ -175,6 +175,8 @@ export default {
   "addAsPoint": "祈りの項目として追加",
   "addedPoint": "追加しました",
   "prayNowCta": "今、祈ります",
+  "viewScripture": "御言葉を見る",
+  "tipViewScripture": "この祈りのために開かれた御言葉を再び見る",
   "scriptureOffline": "オフラインです。再接続して御言葉を開いてください — いつでもご自分で箇所を追加できます。",
   "scriptureNone": "今回は箇所が見つかりませんでした。もう一度試すか、聖書を開いてご自分で追加してください。",
   "retryScripture": "再試行",

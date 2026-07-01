@@ -174,6 +174,8 @@ export default {
   "addAsPoint": "Ongeza kama hoja ya maombi",
   "addedPoint": "Imeongezwa",
   "prayNowCta": "Nitaomba sasa",
+  "viewScripture": "Angalia Neno",
+  "tipViewScripture": "Angalia tena Neno lililofunguliwa kwa ajili ya ombi hili",
   "scriptureOffline": "Hauko mtandaoni. Unganisha tena ili kufungua Neno — unaweza kila wakati kuongeza fungu mwenyewe.",
   "scriptureNone": "Hakuna fungu lililopatikana wakati huu. Jaribu tena, au fungua Biblia yako na uongeze lako.",
   "retryScripture": "Jaribu tena",

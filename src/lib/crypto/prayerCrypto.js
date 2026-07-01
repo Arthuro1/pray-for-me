@@ -11,6 +11,12 @@ export const ENCRYPTION_VERSION = 1;
 // Scalar prayer-row fields encrypted everywhere (server rows + local cache).
 export const SENSITIVE_FIELDS = ['title', 'description', 'person_name', 'phone'];
 
+// Object-typed sensitive field(s), bundled into the same encrypted_payload as
+// SENSITIVE_FIELDS but redacted/defaulted with null rather than '' — their
+// column is jsonb, and '' is not valid JSON. Currently just the Scripture-first
+// AI guidance attached to a prayer, so it can be recalled without a new AI call.
+export const SENSITIVE_JSON_FIELDS = ['scripture_guidance'];
+
 // Nested collections bundled wholesale into the parent's encrypted payload for
 // the local at-rest cache, so a private prayer's updates, points, testimonies
 // (the new `prayer_testimonies` rows plus the legacy `testimonies` jsonb array
@@ -57,12 +63,14 @@ export async function encryptPrayerForStorage(row, { nested = false } = {}) {
   const key = getMasterKey();
   const payload = {};
   for (const f of SENSITIVE_FIELDS) payload[f] = row[f] ?? '';
+  for (const f of SENSITIVE_JSON_FIELDS) payload[f] = row[f] ?? null;
   if (nested) {
     for (const f of CACHE_NESTED_FIELDS) if (row[f] != null) payload[f] = row[f];
   }
   const encrypted_payload = await encryptJson(key, payload);
   const out = { ...row, encrypted_payload, encryption_version: ENCRYPTION_VERSION };
   for (const f of SENSITIVE_FIELDS) if (f in out) out[f] = '';
+  for (const f of SENSITIVE_JSON_FIELDS) if (f in out) out[f] = null;
   if (nested) {
     for (const f of CACHE_NESTED_FIELDS) if (row[f] != null) out[f] = Array.isArray(row[f]) ? [] : '';
   }

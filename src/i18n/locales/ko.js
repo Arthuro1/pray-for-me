@@ -174,6 +174,8 @@ export default {
   "addAsPoint": "기도 제목으로 추가",
   "addedPoint": "추가됨",
   "prayNowCta": "이제 기도하겠습니다",
+  "viewScripture": "말씀 보기",
+  "tipViewScripture": "이 기도를 위해 열었던 말씀 다시 보기",
   "scriptureOffline": "오프라인 상태입니다. 다시 연결하여 말씀을 여세요 — 언제든지 직접 본문을 추가할 수 있습니다.",
   "scriptureNone": "이번에는 본문을 찾지 못했습니다. 다시 시도하거나 성경을 열어 직접 추가하세요.",
   "retryScripture": "다시 시도",

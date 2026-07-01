@@ -174,6 +174,8 @@ export default {
   "addAsPoint": "Tambahkan sebagai pokok doa",
   "addedPoint": "Ditambahkan",
   "prayNowCta": "Saya akan berdoa sekarang",
+  "viewScripture": "Lihat Firman",
+  "tipViewScripture": "Lihat kembali Firman yang dibuka untuk doa ini",
   "scriptureOffline": "Anda sedang offline. Sambungkan kembali untuk membuka Firman — Anda selalu bisa menambahkan bagian sendiri.",
   "scriptureNone": "Tidak ada bagian kali ini. Coba lagi, atau buka Alkitab Anda dan tambahkan sendiri.",
   "retryScripture": "Coba lagi",
