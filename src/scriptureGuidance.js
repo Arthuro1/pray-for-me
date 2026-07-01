@@ -54,7 +54,7 @@ export async function getScriptureGuidance({ title, description = '', lang = 'fr
   const { data, error } = await callClaudeForJson({
     prompt: buildPrompt(title, description),
     lang,
-    maxTokens: 900,
+    maxTokens: 1500,
     shape: 'object',
     feature: 'guidance',
   });

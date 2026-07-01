@@ -92,6 +92,11 @@ export async function callClaudeForJson({ prompt, lang, maxTokens = 900, shape =
     }
 
     const body = await res.json();
+    // A 200 response can still be an incomplete answer if Claude hit maxTokens
+    // mid-JSON. That's otherwise silent (no error, just an unmatched/unparsable
+    // regex below), which looks identical to a real failure from the caller's
+    // side — log it so a too-small maxTokens budget is diagnosable.
+    if (body?.stop_reason === 'max_tokens') devError('AI response truncated (max_tokens)', feature);
     const text = body?.content?.[0]?.text || '';
     const match = text.match(shape === 'array' ? /\[[\s\S]*\]/ : /\{[\s\S]*\}/);
     if (!match) return { data: null, error: null };
