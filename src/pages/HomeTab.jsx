@@ -49,6 +49,7 @@ export default function HomeTab({ onAdd }) {
   const [suggestError, setSuggestError] = useState(null);
   const [addedTitles, setAddedTitles] = useState(new Set());
   const [verse, setVerse] = useState(null);
+  const [verseResolving, setVerseResolving] = useState(false);
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showSession, setShowSession] = useState(false);
   const [prayedDays, setPrayedDays] = useState(getPrayedDays);
@@ -75,12 +76,17 @@ export default function HomeTab({ onAdd }) {
   useEffect(() => {
     const v = verseOfDay(lang, today);
     setVerse(v);
-    if (v.text) return undefined;
+    if (v.text) { setVerseResolving(false); return undefined; }
     let cancelled = false;
+    setVerseResolving(true);
     fetchScriptureText({ reference: v.ref, lang }).then((res) => {
-      if (!cancelled && res?.text) {
+      if (cancelled) return;
+      if (res?.text) {
         setVerse((cur) => (cur && cur.ref === v.ref ? { ...cur, text: res.text } : cur));
       }
+      // Resolve either way — YouVersion being disabled, misconfigured, or
+      // offline must not leave the placeholder spinning forever.
+      setVerseResolving(false);
     });
     return () => { cancelled = true; };
   }, [lang]);
@@ -180,12 +186,14 @@ export default function HomeTab({ onAdd }) {
               <div>
                 {verse.text
                   ? <p className="text-sm italic leading-relaxed" style={{ color: 'rgba(255,255,255,0.92)' }}>"{verse.text}"</p>
-                  : (
-                    <div className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                      <Loader2 size={13} className="animate-spin" />
-                      <span className="text-xs">{t(lang, 'loadingVerse')}</span>
-                    </div>
-                  )}
+                  : verseResolving
+                    ? (
+                      <div className="flex items-center gap-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                        <Loader2 size={13} className="animate-spin" />
+                        <span className="text-xs">{t(lang, 'loadingVerse')}</span>
+                      </div>
+                    )
+                    : null}
                 <p className="text-xs text-right mt-2" style={{ color: 'rgba(255,255,255,0.5)' }}>— {verse.ref}</p>
                 <a
                   href={bibleLink(verse.ref, lang)}
