@@ -18,6 +18,16 @@ dist-ssr
 
 supabase/.temp/
 
+# Android TWA (Play Store wrapper) — never commit the signing keystore or build output
+android-twa/*.keystore
+android-twa/.gradle/
+android-twa/app/build/
+android-twa/build/
+android-twa/local.properties
+android-twa/*.apk
+android-twa/*.aab
+android-twa/KEYSTORE_CREDENTIALS.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
