@@ -7,7 +7,10 @@ export default defineConfig(({ mode }) => {
   // server-only ANTHROPIC_API_KEY. This is read in the Node dev server only and
   // is never exposed to `import.meta.env` / the browser bundle.
   const env = loadEnv(mode, process.cwd(), '')
-  const anthropicKey = env.ANTHROPIC_API_KEY || env.VITE_ANTHROPIC_API_KEY || ''
+  // Server-only key. There is NO VITE_ fallback on purpose: a VITE_-prefixed name
+  // is inlined into the browser bundle, so accepting one here would reintroduce
+  // the client-side-secret foot-gun. Keep this in sync with api/anthropic.js.
+  const anthropicKey = env.ANTHROPIC_API_KEY || ''
   const yvpKey = env.YVP_APP_KEY || ''
 
   return {

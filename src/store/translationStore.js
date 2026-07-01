@@ -34,7 +34,7 @@ ${JSON.stringify(Object.fromEntries(texts.map((t, i) => [i, t])))}`;
   }
 }
 
-const useTranslationStore = create((set, get) => ({
+const useTranslationStore = create((set) => ({
   translating: false,
 
   // Load all translations for a user from Supabase into memCache

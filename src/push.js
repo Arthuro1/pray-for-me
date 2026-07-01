@@ -90,7 +90,7 @@ export async function updatePushPrefs(userId, prefs = {}) {
 }
 
 // Disable reminders for this device: unsubscribe locally and remove the row.
-export async function disablePush(userId) {
+export async function disablePush() {
   const reg = await swReady();
   const sub = reg && await reg.pushManager.getSubscription();
   if (!sub) return;

@@ -21,12 +21,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Lint is now enforced: the build fails on any ESLint error. Warnings
+      # (e.g. react-hooks/exhaustive-deps) are still surfaced but non-blocking.
       - name: Lint
         run: npm run lint
-        continue-on-error: true
-
-      - name: Build
-        run: npm run build
 
       - name: Test
         run: npm test
+
+      - name: Build
+        run: npm run build

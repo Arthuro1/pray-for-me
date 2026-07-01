@@ -85,7 +85,7 @@ export default function SettingsTab() {
       }
     } else {
       updateSettings({ dailyReminderEnabled: false });
-      try { await disablePush(user?.id); } catch { /* best-effort */ }
+      try { await disablePush(); } catch { /* best-effort */ }
     }
   };
 

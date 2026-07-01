@@ -1,4 +1,4 @@
-﻿export function scheduleNotifications(settings, prayers, categories) {
+﻿export function scheduleNotifications(settings, prayers) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
   // The daily reminder is now delivered server-side via Web Push (works even

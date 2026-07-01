@@ -196,8 +196,8 @@ export default function App() {
   }, [user?.id]);
 
   useEffect(() => {
-    if (user) scheduleNotifications(settings, prayers, categories);
-  }, [settings, prayers, categories]);
+    if (user) scheduleNotifications(settings, prayers);
+  }, [settings, prayers]);
 
   // Translate content whenever language, prayers, or categories change
   useEffect(() => {

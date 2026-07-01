@@ -218,7 +218,7 @@ export default function HomeTab({ onAdd }) {
     const cacheKey = `verse_${dateKey}_${lang}`;
     const cached = localStorage.getItem(cacheKey);
     if (cached) {
-      try { setVerse(JSON.parse(cached)); return; } catch {}
+      try { setVerse(JSON.parse(cached)); return; } catch { /* ignore malformed cache */ }
     }
     // Show fallback immediately
     const fallbackList = VERSES[lang] || VERSES.en;

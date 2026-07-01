@@ -53,7 +53,8 @@ export function localizeAiError(error, lang) {
   if (!error) return null;
   if (error.type === 'cooldown') return t(lang, 'aiCooldown', { s: error.seconds });
   if (error.type === 'busy') return t(lang, 'aiBusy');
-  logError('AI request failed', error);
+  // Dev-only, and only the typed token — never the prompt/prayer content.
+  devError('AI request failed', error.type);
   return t(lang, 'aiError');
 }
 

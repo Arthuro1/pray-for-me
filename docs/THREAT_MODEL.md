@@ -53,8 +53,44 @@ plaintext.
   users, as are shared prayers' nested rows (plaintext by design) and row
   metadata (timestamps, category links, user_id). Community/shared prayers are
   plaintext by design.
-- **Planned:** encrypt `testimonies` server-side for unshared prayers (different
-  lifecycle — server-side append RPC + `jsonb[]` column on the parent row).
+- **Planned (Phase 3c — designed, not yet built):** encrypt personal
+  `testimonies` server-side for unshared vault prayers. The blocker is that
+  today's testimonies live in the `prayers.testimonies` `jsonb[]` column and are
+  appended **server-side** by the `answer_prayer` RPC
+  (`supabase/offline_conflict_hardening.sql`) specifically to avoid the
+  lost-update that a full-array rewrite causes when two devices answer/append
+  offline and later sync. Encrypting them into the parent `encrypted_payload`
+  would force that append back onto the client (decrypt → append → re-encrypt →
+  write whole payload), reintroducing exactly that concurrent-loss window.
+
+  **Decided design:** migrate personal testimonies to their own child table
+  `prayer_testimonies (id, prayer_id, author_name, created_at, content,
+  encrypted_payload, encryption_version)`, mirroring the `prayer_updates` /
+  `prayer_points` model that Phase 3b already ships. This resolves the trade-off
+  cleanly:
+  - **Conflict-free without a server RPC:** an append becomes a plain row
+    `INSERT`, which cannot lose a concurrent sibling the way a `jsonb[]` rewrite
+    can — so the `answer_prayer` server-side append hack is no longer needed and
+    the offline guarantee is *preserved by construction*, not by the RPC.
+  - **E2EE reuses proven code:** for unshared prayers the client bundles
+    `content` into the row's `encrypted_payload` via `encryptChildForStorage`
+    (add `'content'` to a `TESTIMONY_SENSITIVE_FIELDS`) and redacts the plaintext
+    column; `SERVER_NESTED_COLLECTIONS` gains `prayer_testimonies` so
+    `decryptNestedCollections` restores it. Shared prayers keep testimonies
+    plaintext (community fan-out must read them), gated by `canEncryptNested`.
+  - **Backward compatibility:** the SQL migration back-fills existing
+    `prayers.testimonies` `jsonb[]` and the legacy scalar `prayers.testimony`
+    into `prayer_testimonies` rows (plaintext — they were never encrypted), then
+    the reader treats the old columns as a legacy fallback while the app
+    re-encrypts on next save. Old columns are retained read-only for one release,
+    then dropped. Existing rows stay readable throughout (no flag day).
+  - **Migration & test plan:** new `supabase/e2ee_testimonies.sql`; extend
+    `noPlaintextLeak.test.js` to assert no testimony `content` reaches a server
+    row for an unshared vault prayer; add round-trip + legacy-fallback unit tests
+    in `prayerCrypto.test.js`; verify the offline replay path in
+    `mutationExecutors`. **Requires product sign-off before build** — it changes
+    the answered-prayer data model for every existing user, so it is staged
+    behind an explicit go decision rather than shipped opportunistically.
 
 ### 2. XSS (attacker runs JS in the app origin)
 - **Exposure:** An attacker with script execution can read the in-memory master
