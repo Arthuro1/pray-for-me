@@ -9,10 +9,10 @@
 //
 // Scope note: writes to `community_prayers` are intentionally plaintext (sharing
 // publishes a readable copy by design). The nested server tables
-// (prayer_updates / prayer_points) are now encrypted for PRIVATE prayers
-// (Phase 3b) and asserted in the dedicated block at the bottom of this file;
-// `testimonies` remain server-plaintext (different lifecycle) and are out of
-// scope here.
+// (prayer_updates / prayer_points) are encrypted for PRIVATE prayers (Phase 3b)
+// and testimonies now live in their own `prayer_testimonies` table, also
+// encrypted for PRIVATE prayers (Phase 3c) — both asserted in dedicated blocks
+// at the bottom of this file.
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // prayerStore reads localStorage at module-init time, so the shim must exist
@@ -83,6 +83,7 @@ import { createVault, lock } from '../lib/crypto/keyManager';
 import { decryptJson } from '../lib/crypto/e2ee';
 import { getMasterKey } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
+import useCommunityStore from './communityStore';
 
 // The flush is kicked off (un-awaited) by enqueue; drain it deterministically.
 async function drainQueue() {
@@ -110,6 +111,7 @@ beforeEach(() => {
   rec.writes.length = 0;
   rec.rpcs.length = 0;
   usePrayerStore.setState({ prayers: [] });
+  useCommunityStore.setState({ prayerShares: {} });
 });
 
 describe('no private plaintext reaches Supabase (prayers table)', () => {
@@ -249,5 +251,72 @@ describe('no private plaintext reaches Supabase (nested tables: Phase 3b)', () =
     }
     expect(rec.rpcs.find((r) => r.name === 'sync_add_point')).toBeUndefined();
     expect(rec.rpcs.find((r) => r.name === 'sync_add_verse')).toBeUndefined();
+  });
+});
+
+// Phase 3c: a PRIVATE prayer's testimonies (now their own prayer_testimonies
+// rows) must reach the server only as ciphertext, and never via the legacy
+// answer_prayer RPC. Shared prayers keep testimonies plaintext.
+describe('no private plaintext reaches Supabase (prayer_testimonies: Phase 3c)', () => {
+  const TESTIMONY_SECRET = 'SECRET_TESTIMONY_healed_completely';
+  const THANKS_SECRET = 'SECRET_THANKS_still_grateful';
+
+  async function freshPrivatePrayer() {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'host prayer' });
+    await drainQueue();
+    const id = usePrayerStore.getState().prayers[0].id;
+    rec.writes.length = 0;
+    rec.rpcs.length = 0;
+    return id;
+  }
+
+  function testimonyWrites() {
+    return rec.writes.filter((w) => w.table === 'prayer_testimonies');
+  }
+
+  it('markAnswered encrypts the testimony and never calls answer_prayer', async () => {
+    const id = await freshPrivatePrayer();
+    await usePrayerStore.getState().markAnswered(id, TESTIMONY_SECRET);
+    await drainQueue();
+
+    const writes = testimonyWrites();
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) {
+      const json = JSON.stringify(w.payload);
+      expect(json).not.toContain(TESTIMONY_SECRET);
+      expect(json).toContain('encrypted_payload');
+    }
+    expect(rec.rpcs.find((r) => r.name === 'answer_prayer')).toBeUndefined();
+
+    const w = writes.find((w) => w.payload?.encrypted_payload);
+    const data = await decryptJson(getMasterKey(), w.payload.encrypted_payload);
+    expect(data.content).toBe(TESTIMONY_SECRET);
+    expect(w.payload.content).toBe(''); // plaintext column redacted
+  });
+
+  it('addTestimony (word of thanks) encrypts the content', async () => {
+    const id = await freshPrivatePrayer();
+    await usePrayerStore.getState().addTestimony(id, THANKS_SECRET);
+    await drainQueue();
+
+    const writes = testimonyWrites();
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) {
+      expect(JSON.stringify(w.payload)).not.toContain(THANKS_SECRET);
+      expect(w.payload.encrypted_payload).toBeTruthy();
+    }
+  });
+
+  it('a SHARED prayer keeps its testimony plaintext (never fans out, but not gated for encryption)', async () => {
+    const id = await freshPrivatePrayer();
+    // Mark the prayer as shared to a group → canEncryptNested is false.
+    useCommunityStore.setState({ prayerShares: { [id]: ['group-1'] } });
+    await usePrayerStore.getState().markAnswered(id, 'PUBLIC_testimony_ok');
+    await drainQueue();
+
+    const w = testimonyWrites().find((w) => w.payload?.content === 'PUBLIC_testimony_ok');
+    expect(w).toBeTruthy();
+    expect(w.payload.encrypted_payload).toBeUndefined();
   });
 });

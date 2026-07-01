@@ -18,15 +18,25 @@ export function prayerPriority(prayer, orderById) {
   return Math.min(...ids.map((id) => orderById[id] ?? Infinity));
 }
 
-// Returns a personal prayer's testimonies as an array of { id, content, created_at },
-// falling back to the legacy single `testimony` field for prayers answered before
-// testimonies became a list.
+// Returns a personal prayer's testimonies as a chronologically-ordered array of
+// { id, content, created_at }. Merges the current `prayer_testimonies` child rows
+// (Phase 3c) with the legacy `prayers.testimonies` jsonb array, deduped by id so a
+// backfilled row and its jsonb twin collapse into one. Falls back to the legacy
+// single `testimony` scalar only when neither source has any entries.
 export function testimonyList(prayer) {
-  if (prayer?.testimonies?.length) return prayer.testimonies;
-  if (prayer?.testimony) {
-    return [{ id: 'legacy', content: prayer.testimony, created_at: prayer.answered_at || prayer.updated_at }];
+  const rows = prayer?.prayer_testimonies || [];
+  const legacy = prayer?.testimonies || [];
+  const merged = [...rows];
+  const seen = new Set(merged.map((t) => t.id).filter(Boolean));
+  for (const t of legacy) {
+    if (t.id && seen.has(t.id)) continue;
+    if (t.id) seen.add(t.id);
+    merged.push(t);
   }
-  return [];
+  if (merged.length === 0 && prayer?.testimony) {
+    merged.push({ id: 'legacy', content: prayer.testimony, created_at: prayer.answered_at || prayer.updated_at });
+  }
+  return merged.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
 }
 
 // Builds the personal-prayer insert payload when saving a community prayer.

@@ -32,8 +32,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/). This project us
 - AI proxy (`/api/anthropic`) now **requires a valid Supabase session**; the Anthropic key is server-only (`ANTHROPIC_API_KEY`) and never shipped to the browser.
 - Group joins are validated **server-side by invite code** (RLS no longer lets a user self-add by group id).
 - Community prayers can only link a `source_prayer_id` the inserter owns (closes a tampering path through the sync RPCs).
+- **End-to-end encryption ("Prayer Vault")** — private prayer content (title, description, person, phone, updates, prayer points, and now **testimonies**) is encrypted client-side and stored as ciphertext the server cannot read. Testimonies moved to their own `prayer_testimonies` table so each append is a conflict-free row insert (requires running `supabase/e2ee_testimonies.sql`).
 
 ### Fixed
-- Mark-answered now **appends** the testimony server-side instead of overwriting the array (no lost concurrent testimonies).
+- Answered-prayer testimonies are stored as individual rows, so a testimony added offline on one device can never overwrite a concurrent one from another.
 - Permanently failed offline writes roll back to server truth instead of leaving "ghost" records.
 - Confirmation dialogs required before destructive actions (deletes, removing points/members).

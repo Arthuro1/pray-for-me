@@ -28,8 +28,8 @@ do $$
 declare
   t text;
   tables text[] := array[
-    'categories', 'prayers', 'prayer_updates', 'prayer_points', 'translations',
-    'feedback', 'push_subscriptions', 'vault_keys',
+    'categories', 'prayers', 'prayer_updates', 'prayer_points', 'prayer_testimonies',
+    'translations', 'feedback', 'push_subscriptions', 'vault_keys',
     'groups', 'group_members', 'group_member_prefs', 'group_invitations',
     'community_prayers', 'community_updates', 'prayer_reactions', 'testimonies',
     'profiles', 'friendships', 'friend_requests'
@@ -66,6 +66,13 @@ create policy "Users manage own updates" on prayer_updates
 -- prayer_points (owned via the parent prayer) ────────────────────────────────
 drop policy if exists "Users manage own points" on prayer_points;
 create policy "Users manage own points" on prayer_points
+  for all
+  using (prayer_id in (select id from prayers where user_id = auth.uid()))
+  with check (prayer_id in (select id from prayers where user_id = auth.uid()));
+
+-- prayer_testimonies (owned via the parent prayer; Phase 3c) ─────────────────
+drop policy if exists "Users manage own testimonies" on prayer_testimonies;
+create policy "Users manage own testimonies" on prayer_testimonies
   for all
   using (prayer_id in (select id from prayers where user_id = auth.uid()))
   with check (prayer_id in (select id from prayers where user_id = auth.uid()));

@@ -13,6 +13,7 @@ import {
   SENSITIVE_FIELDS,
   UPDATE_SENSITIVE_FIELDS,
   POINT_SENSITIVE_FIELDS,
+  TESTIMONY_SENSITIVE_FIELDS,
 } from '../lib/crypto/prayerCrypto';
 import useCommunityStore from './communityStore';
 
@@ -64,6 +65,13 @@ function canEncryptNested(prayer) {
   if (!canEncrypt(prayer)) return false;
   const shares = useCommunityStore.getState().prayerShares[prayer?.id];
   return !shares || shares.length === 0;
+}
+
+// A fresh plaintext testimony row for the prayer_testimonies child table. The
+// in-memory form is always plaintext; _persistTestimony encrypts before it is
+// queued/written for private prayers.
+function buildTestimonyRow(prayerId, content, created_at) {
+  return { id: crypto.randomUUID(), prayer_id: prayerId, content, author_name: '', created_at };
 }
 
 // Keeps shared community copies in sync when the source personal prayer is
@@ -133,7 +141,7 @@ const usePrayerStore = create((set, get) => ({
     try {
       const res = await supabase
         .from('prayers')
-        .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+        .select(`*, prayer_updates(*), prayer_points(*), prayer_testimonies(*), prayer_categories(category_id)`)
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
       if (res.error) throw res.error;
@@ -168,7 +176,7 @@ const usePrayerStore = create((set, get) => ({
   refreshPrayer: async (prayerId) => {
     const { data } = await supabase
       .from('prayers')
-      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+      .select(`*, prayer_updates(*), prayer_points(*), prayer_testimonies(*), prayer_categories(category_id)`)
       .eq('id', prayerId)
       .maybeSingle();
     if (data) {
@@ -274,6 +282,7 @@ const usePrayerStore = create((set, get) => ({
       created_at: new Date().toISOString(),
       prayer_updates: [],
       prayer_points: [],
+      prayer_testimonies: [],
       prayer_categories: categoryIds.map((category_id) => ({ category_id })),
     };
     set((state) => ({ prayers: [optimistic, ...state.prayers] }));
@@ -294,7 +303,7 @@ const usePrayerStore = create((set, get) => ({
     const { data, error } = await supabase
       .from('prayers')
       .insert(communityToPersonalInsert(communityPrayer, groupName, user.id))
-      .select(`*, prayer_updates(*), prayer_points(*), prayer_categories(category_id)`)
+      .select(`*, prayer_updates(*), prayer_points(*), prayer_testimonies(*), prayer_categories(category_id)`)
       .single();
     if (error || !data) return { error: error?.message || 'failed' };
 
@@ -379,34 +388,46 @@ const usePrayerStore = create((set, get) => ({
   markAnswered: async (id, testimony) => {
     const answered_at = new Date().toISOString();
     const trimmed = (testimony || '').trim();
-    // One new testimony (if any) — appended locally and server-side, never overwriting.
-    const newTestimony = trimmed ? { id: crypto.randomUUID(), content: trimmed, created_at: answered_at } : null;
+    const prayer = get().prayers.find((p) => p.id === id);
+    // One new testimony (if any), stored as its own row (Phase 3c) — appended
+    // locally and server-side, never overwriting a concurrent sibling.
+    const row = trimmed ? buildTestimonyRow(id, trimmed, answered_at) : null;
     set((state) => ({
       prayers: state.prayers.map((p) => {
         if (p.id !== id) return p;
-        const testimonies = newTestimony ? [...(p.testimonies || []), newTestimony] : (p.testimonies || []);
-        return { ...p, status: 'answered', testimonies, answered_at };
+        const prayer_testimonies = row ? [...(p.prayer_testimonies || []), row] : (p.prayer_testimonies || []);
+        return { ...p, status: 'answered', prayer_testimonies, answered_at };
       }),
     }));
-    enqueue('markAnswered', { id, answered_at, testimony: newTestimony });
+    enqueue('markAnswered', { id, answered_at });
+    if (row) await get()._persistTestimony(prayer, row);
   },
 
-  // Append a thanksgiving/testimony to an already-answered prayer WITHOUT changing
-  // its answered_at date — remembrance, not a re-answer. Reuses the markAnswered
-  // mutation (the answer_prayer RPC appends idempotently) with the prayer's
-  // existing answered_at so the original date is preserved.
+  // Append a thanksgiving/testimony to an already-answered prayer. It becomes its
+  // own row, so the prayer's status and answered_at are untouched — remembrance,
+  // not a re-answer.
   addTestimony: async (id, content) => {
     const trimmed = (content || '').trim();
     if (!trimmed) return;
     const prayer = get().prayers.find((p) => p.id === id);
-    const answered_at = prayer?.answered_at || new Date().toISOString();
-    const newTestimony = { id: crypto.randomUUID(), content: trimmed, created_at: new Date().toISOString() };
+    const row = buildTestimonyRow(id, trimmed, new Date().toISOString());
     set((state) => ({
       prayers: state.prayers.map((p) =>
-        p.id === id ? { ...p, testimonies: [...(p.testimonies || []), newTestimony] } : p
+        p.id === id ? { ...p, prayer_testimonies: [...(p.prayer_testimonies || []), row] } : p
       ),
     }));
-    enqueue('markAnswered', { id, answered_at, testimony: newTestimony });
+    await get()._persistTestimony(prayer, row);
+  },
+
+  // Persist a personal testimony as its own row. Encrypt the content for PRIVATE
+  // prayers (redacting the plaintext column) and pass shared prayers through in
+  // plaintext — mirrors _persistEncryptedPoint. Encrypts BEFORE enqueue so the
+  // offline queue never holds the plaintext.
+  _persistTestimony: async (prayer, row) => {
+    const persistRow = canEncryptNested(prayer)
+      ? await encryptChildForStorage(row, TESTIMONY_SENSITIVE_FIELDS)
+      : row;
+    enqueue('addTestimonyRow', { row: persistRow });
   },
 
   markActive: async (id) => {

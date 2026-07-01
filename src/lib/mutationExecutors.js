@@ -45,17 +45,24 @@ registerMutation('updatePrayer', async ({ id, payload, categoryIds, community })
   }
 });
 
-registerMutation('markAnswered', async ({ id, answered_at, testimony }) => {
-  // Appends the testimony server-side (idempotent) rather than overwriting the
-  // array, so a concurrent testimony from another device isn't lost.
-  const r = await supabase.rpc('answer_prayer', {
-    p_prayer: id,
-    p_status: 'answered',
-    p_answered_at: answered_at,
-    p_testimony_id: testimony?.id ?? null,
-    p_content: testimony?.content ?? null,
-    p_created_at: testimony?.created_at ?? null,
-  });
+// Mark a prayer answered: set its status + mirror onto any shared community
+// copies. Testimonies are their own rows now (see addTestimonyRow), so the
+// answer_prayer RPC append hack is gone — this is plain idempotent updates,
+// exactly like markActive below.
+registerMutation('markAnswered', async ({ id, answered_at }) => {
+  const r = await supabase.from('prayers').update({ status: 'answered', answered_at }).eq('id', id);
+  throwIf(r.error, r.status);
+  const c = await supabase.from('community_prayers').update({ is_answered: true }).eq('source_prayer_id', id);
+  throwIf(c.error, c.status);
+});
+
+// Append a personal testimony as its own row (Phase 3c). Conflict-free by
+// construction — a plain INSERT can't lose a concurrent sibling the way a
+// jsonb[] rewrite can. Idempotent via the client-supplied row id. The row is
+// already ciphertext for private prayers (redacted plaintext columns) or
+// plaintext for shared ones; this executor forwards it either way.
+registerMutation('addTestimonyRow', async ({ row }) => {
+  const r = await supabase.from('prayer_testimonies').upsert(row, { onConflict: 'id' });
   throwIf(r.error, r.status);
 });
 

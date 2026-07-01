@@ -11,6 +11,7 @@ import {
   SENSITIVE_FIELDS,
   UPDATE_SENSITIVE_FIELDS,
   POINT_SENSITIVE_FIELDS,
+  TESTIMONY_SENSITIVE_FIELDS,
 } from './prayerCrypto.js';
 
 function installStorage() {
@@ -95,7 +96,8 @@ describe('nested cache encryption (Phase 3b)', () => {
     ...samplePrayer(),
     prayer_updates: [{ id: 'u1', text: 'Surgery went well', created_at: '2026-01-01' }],
     prayer_points: [{ id: 'pt1', title: 'Healing', verses: [{ ref: 'Ps 23', text: 'The Lord is my shepherd' }] }],
-    testimonies: [{ id: 't1', content: 'Fully recovered, praise God', created_at: '2026-02-01' }],
+    prayer_testimonies: [{ id: 'tr1', content: 'Fully recovered, praise God', created_at: '2026-02-01' }],
+    testimonies: [{ id: 't1', content: 'Legacy jsonb testimony', created_at: '2026-02-01' }],
     testimony: 'legacy testimony text',
   });
 
@@ -111,12 +113,14 @@ describe('nested cache encryption (Phase 3b)', () => {
     expect(isPrayerEncrypted(enc)).toBe(true);
     expect(enc.prayer_updates).toEqual([]);
     expect(enc.prayer_points).toEqual([]);
+    expect(enc.prayer_testimonies).toEqual([]);
     expect(enc.testimonies).toEqual([]);
     expect(enc.testimony).toBe('');
     const serialized = JSON.stringify(enc);
     expect(serialized).not.toContain('Surgery went well');
     expect(serialized).not.toContain('Healing');
     expect(serialized).not.toContain('Fully recovered');
+    expect(serialized).not.toContain('Legacy jsonb testimony');
     expect(serialized).not.toContain('legacy testimony text');
   });
 
@@ -126,7 +130,8 @@ describe('nested cache encryption (Phase 3b)', () => {
     expect(dec.prayer_updates[0].text).toBe('Surgery went well');
     expect(dec.prayer_points[0].title).toBe('Healing');
     expect(dec.prayer_points[0].verses[0].ref).toBe('Ps 23');
-    expect(dec.testimonies[0].content).toBe('Fully recovered, praise God');
+    expect(dec.prayer_testimonies[0].content).toBe('Fully recovered, praise God');
+    expect(dec.testimonies[0].content).toBe('Legacy jsonb testimony');
     expect(dec.testimony).toBe('legacy testimony text');
     expect(dec._locked).toBe(false);
   });
@@ -137,6 +142,7 @@ describe('nested cache encryption (Phase 3b)', () => {
     const dec = await decryptPrayerFromStorage(enc);
     expect(dec._locked).toBe(true);
     expect(dec.prayer_updates).toEqual([]);
+    expect(dec.prayer_testimonies).toEqual([]);
     expect(dec.testimonies).toEqual([]);
   });
 
@@ -197,6 +203,45 @@ describe('nested server-side encryption (Phase 3b: prayer_updates / prayer_point
     const dec = await decryptPrayerFromStorage(row);
     expect(dec.prayer_updates[0]._locked).toBe(true);
     expect(dec.prayer_updates[0].text).toBe(''); // still redacted — no leak
+  });
+});
+
+describe('testimony server-side encryption (Phase 3c: prayer_testimonies)', () => {
+  beforeEach(async () => { await createVault('pass-phrase'); });
+
+  const testimonyRow = () => ({ id: 'tr1', prayer_id: 'p1', content: 'Fully recovered, praise God', author_name: '', created_at: '2026-02-01' });
+
+  it('encrypts + redacts the content, leaving non-sensitive columns intact', async () => {
+    const enc = await encryptChildForStorage(testimonyRow(), TESTIMONY_SENSITIVE_FIELDS);
+    expect(enc.content).toBe(''); // redacted
+    expect(enc.id).toBe('tr1');
+    expect(enc.prayer_id).toBe('p1');
+    expect(enc.encrypted_payload).toBeTruthy();
+    expect(JSON.stringify(enc)).not.toContain('Fully recovered');
+  });
+
+  it('decrypts encrypted testimony rows even when the parent row is plaintext', async () => {
+    const row = {
+      id: 'p1', title: 'plain parent',
+      prayer_testimonies: [await encryptChildForStorage(testimonyRow(), TESTIMONY_SENSITIVE_FIELDS)],
+    };
+    const dec = await decryptPrayerFromStorage(row);
+    expect(dec.prayer_testimonies[0].content).toBe('Fully recovered, praise God');
+    expect(dec.prayer_testimonies[0].encrypted_payload).toBeUndefined(); // ciphertext stripped
+  });
+
+  it('passes plaintext testimony rows (shared prayers) through untouched', async () => {
+    const row = { id: 'p1', title: 'plain', prayer_testimonies: [{ id: 'tr', content: 'public praise' }] };
+    const dec = await decryptPrayerFromStorage(row);
+    expect(dec.prayer_testimonies[0].content).toBe('public praise');
+  });
+
+  it('flags encrypted testimony rows _locked when the vault is locked', async () => {
+    const row = { id: 'p1', prayer_testimonies: [await encryptChildForStorage(testimonyRow(), TESTIMONY_SENSITIVE_FIELDS)] };
+    lock();
+    const dec = await decryptPrayerFromStorage(row);
+    expect(dec.prayer_testimonies[0]._locked).toBe(true);
+    expect(dec.prayer_testimonies[0].content).toBe(''); // still redacted — no leak
   });
 });
 

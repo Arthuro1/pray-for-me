@@ -13,20 +13,23 @@ export const SENSITIVE_FIELDS = ['title', 'description', 'person_name', 'phone']
 
 // Nested collections bundled wholesale into the parent's encrypted payload for
 // the local at-rest cache, so a private prayer's updates, points, testimonies
-// (and the legacy single `testimony`) never sit in plaintext in IndexedDB.
-export const CACHE_NESTED_FIELDS = ['prayer_updates', 'prayer_points', 'testimonies', 'testimony'];
+// (the new `prayer_testimonies` rows plus the legacy `testimonies` jsonb array
+// and single `testimony`) never sit in plaintext in IndexedDB.
+export const CACHE_NESTED_FIELDS = ['prayer_updates', 'prayer_points', 'prayer_testimonies', 'testimonies', 'testimony'];
 
-// Child-table collections that are ALSO encrypted on the server (Phase 3b) for
-// PRIVATE prayers — each row carries its own encrypted_payload (see the column
-// added in supabase/e2ee_migration.sql). Shared prayers keep these rows in
-// plaintext because the community fan-out RPCs must read them; the store gates
-// this with canEncryptNested. `testimonies` stay on the parent row and are out
-// of this phase (still server-plaintext for private prayers).
-const SERVER_NESTED_COLLECTIONS = ['prayer_updates', 'prayer_points'];
+// Child-table collections that are ALSO encrypted on the server for PRIVATE
+// prayers — each row carries its own encrypted_payload (see the columns added in
+// supabase/e2ee_migration.sql for updates/points and supabase/e2ee_testimonies.sql
+// for testimonies). Shared prayers keep these rows in plaintext because the
+// community fan-out RPCs must read updates/points; the store gates this with
+// canEncryptNested. `prayer_testimonies` (Phase 3c) joins here: they never fan
+// out, but are gated the same way for consistency with Phase 3b.
+const SERVER_ENCRYPTED_COLLECTIONS = ['prayer_updates', 'prayer_points', 'prayer_testimonies'];
 
 // Sensitive columns per child table, bundled into that row's encrypted_payload.
 export const UPDATE_SENSITIVE_FIELDS = ['text'];
 export const POINT_SENSITIVE_FIELDS = ['title', 'verses'];
+export const TESTIMONY_SENSITIVE_FIELDS = ['content'];
 
 // A prayer is encryptable when the vault is unlocked AND it is the user's own
 // prayer. Saved-from-community copies (community_origin_id) mirror plaintext
@@ -81,9 +84,10 @@ export async function encryptChildForStorage(row, fields) {
   return out;
 }
 
-// Restore one encrypted child row, stripping the ciphertext so the in-memory /
-// cache form is clean plaintext. Plaintext rows (shared prayers, legacy) and a
-// locked/failed decrypt are handled like the parent path.
+// Restore one encrypted child row (a prayer_update / prayer_point / testimony),
+// stripping the ciphertext so the in-memory / cache form is clean plaintext.
+// Plaintext rows (shared prayers, legacy) and a locked/failed decrypt are
+// handled like the parent path.
 async function decryptChildRow(row) {
   if (!isEncryptedPayload(row?.encrypted_payload)) return row;
   if (!isUnlocked()) return { ...row, _locked: true };
@@ -105,7 +109,7 @@ async function decryptChildRow(row) {
 // pass straight through.
 async function decryptNestedCollections(row) {
   let out = row;
-  for (const coll of SERVER_NESTED_COLLECTIONS) {
+  for (const coll of SERVER_ENCRYPTED_COLLECTIONS) {
     const arr = out[coll];
     if (Array.isArray(arr) && arr.some((c) => isEncryptedPayload(c?.encrypted_payload))) {
       out = { ...out, [coll]: await Promise.all(arr.map(decryptChildRow)) };
@@ -118,8 +122,9 @@ async function decryptNestedCollections(row) {
 // plaintext rows (no payload) pass through unchanged. If the vault is locked or
 // the payload can't be decrypted, the row is flagged `_locked` so the UI can
 // show a placeholder instead of blank content. Encrypted child rows (updates /
-// points of a private prayer) are decrypted too, even when the parent itself is
-// plaintext (e.g. a prayer created before the vault, edited after unlocking).
+// points / testimonies of a private prayer) are decrypted too, even when the
+// parent itself is plaintext (e.g. a prayer created before the vault, edited
+// after unlocking).
 export async function decryptPrayerFromStorage(row) {
   let out = row;
   if (isPrayerEncrypted(row)) {

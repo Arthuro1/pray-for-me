@@ -71,9 +71,9 @@ describe('prayerOnDay', () => {
 });
 
 describe('testimonyList', () => {
-  it('returns the testimonies array when present', () => {
-    const arr = [{ id: '1', content: 'Praise', created_at: 'x' }];
-    expect(testimonyList({ testimonies: arr })).toBe(arr);
+  it('returns the prayer_testimonies rows when present', () => {
+    const rows = [{ id: '1', content: 'Praise', created_at: '2026-01-01' }];
+    expect(testimonyList({ prayer_testimonies: rows })).toEqual(rows);
   });
 
   it('falls back to the legacy single testimony field', () => {
@@ -82,9 +82,26 @@ describe('testimonyList', () => {
     expect(out[0]).toMatchObject({ id: 'legacy', content: 'Old one', created_at: '2026-01-01' });
   });
 
-  it('prefers the array over the legacy field', () => {
-    const arr = [{ id: '1', content: 'New', created_at: 'x' }];
-    expect(testimonyList({ testimonies: arr, testimony: 'Old' })).toBe(arr);
+  it('uses the legacy testimonies jsonb array as a source', () => {
+    const arr = [{ id: '1', content: 'New', created_at: '2026-01-01' }];
+    expect(testimonyList({ testimonies: arr, testimony: 'Old' })).toEqual(arr);
+  });
+
+  it('merges child rows with the legacy jsonb array, chronologically', () => {
+    const out = testimonyList({
+      prayer_testimonies: [{ id: 'r', content: 'newer row', created_at: '2026-03-01' }],
+      testimonies: [{ id: 'j', content: 'older jsonb', created_at: '2026-01-01' }],
+    });
+    expect(out.map((t) => t.content)).toEqual(['older jsonb', 'newer row']);
+  });
+
+  it('dedups a backfilled row against its legacy jsonb twin by id', () => {
+    const out = testimonyList({
+      prayer_testimonies: [{ id: 'same', content: 'canonical', created_at: '2026-01-01' }],
+      testimonies: [{ id: 'same', content: 'stale legacy copy', created_at: '2026-01-01' }],
+    });
+    expect(out).toHaveLength(1);
+    expect(out[0].content).toBe('canonical');
   });
 
   it('returns an empty array when there is nothing', () => {
