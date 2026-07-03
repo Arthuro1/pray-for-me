@@ -2,29 +2,33 @@ import { Sparkles, X, Shield } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import usePrayerStore from '../store/prayerStore';
 import AiDisclaimer from './AiDisclaimer';
 
-const CONSENT_KEYS = {
-  prayer: 'pfm_ai_consent_prayer',
-  home: 'pfm_ai_consent_home',
-};
+// Consent is a settings-store field (aiConsentPrayer / aiConsentHome), so it is
+// account-level: persisted locally with the other settings and synced through
+// user_settings to every browser the user signs into.
 
 export function hasAiConsent(context = 'prayer') {
-  return localStorage.getItem(CONSENT_KEYS[context]) === 'true';
+  const { aiConsentPrayer, aiConsentHome } = usePrayerStore.getState().settings;
+  return context === 'home' ? !!aiConsentHome : !!aiConsentPrayer;
 }
 
 export function grantAiConsent(context = 'prayer') {
-  localStorage.setItem(CONSENT_KEYS[context], 'true');
+  usePrayerStore.getState().updateSettings(
+    context === 'home' ? { aiConsentHome: true } : { aiConsentPrayer: true }
+  );
 }
 
 // True if the user has opted into AI for at least one context.
 export function hasAnyAiConsent() {
-  return Object.values(CONSENT_KEYS).some((k) => localStorage.getItem(k) === 'true');
+  const { aiConsentPrayer, aiConsentHome } = usePrayerStore.getState().settings;
+  return !!(aiConsentPrayer || aiConsentHome);
 }
 
 // Withdraw consent everywhere — the next AI use will ask again.
 export function revokeAiConsent() {
-  Object.values(CONSENT_KEYS).forEach((k) => localStorage.removeItem(k));
+  usePrayerStore.getState().updateSettings({ aiConsentPrayer: false, aiConsentHome: false });
 }
 
 // context: 'prayer' = sends prayer title + last update, 'home' = sends category names

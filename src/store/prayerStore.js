@@ -110,6 +110,11 @@ const usePrayerStore = create((set, get) => ({
       followUpEnabled: false,
       followUpDays: 7,
       notificationsGranted: false,
+      // AI consent used to live in dedicated pfm_ai_consent_* keys; read them
+      // here so existing users keep their choice (pfm_settings overrides once
+      // any settings change is saved).
+      aiConsentPrayer: localStorage.getItem('pfm_ai_consent_prayer') === 'true',
+      aiConsentHome: localStorage.getItem('pfm_ai_consent_home') === 'true',
     };
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem('pfm_settings') || '{}'); } catch { /* ignore */ }
@@ -651,9 +656,10 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // ─── Settings ────────────────────────────────────────────────
-  // localStorage is the instant local copy; language + reminder prefs are also
-  // mirrored to the account-level user_settings row so every signed-in browser
-  // agrees (theme + notificationsGranted stay device-local on purpose).
+  // localStorage is the instant local copy; language, theme, AI consent and
+  // reminder prefs are also mirrored to the account-level user_settings row so
+  // every signed-in browser agrees (notificationsGranted stays device-local —
+  // it's a permission fact, not a preference).
   // `sync: false` is used when applying values that just came FROM the server.
   updateSettings: (updates, { sync = true } = {}) => {
     if (updates.language) localStorage.setItem('pfm_language', updates.language);
@@ -686,6 +692,7 @@ const usePrayerStore = create((set, get) => ({
         if (server.language) {
           server.language = resolveLanguage(server.language, navigator.language || navigator.userLanguage);
         }
+        if (server.theme !== 'light' && server.theme !== 'dark') delete server.theme;
         get().updateSettings(server, { sync: false });
       } else {
         await saveUserSettings(userId, get().settings);

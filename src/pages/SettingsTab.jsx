@@ -12,7 +12,7 @@ import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 import VaultModal from '../components/VaultModal';
 import AiDisclaimer from '../components/AiDisclaimer';
-import { hasAnyAiConsent, revokeAiConsent } from '../components/AiConsentModal';
+import { revokeAiConsent } from '../components/AiConsentModal';
 import useVaultStore from '../store/vaultStore';
 
 function Toggle({ enabled, onToggle }) {
@@ -107,10 +107,12 @@ export default function SettingsTab() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
-  const [aiOn, setAiOn] = useState(hasAnyAiConsent());
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
 
   const lang = settings.language || 'fr';
+  // Derived from synced settings so consent granted/revoked anywhere (another
+  // tab, another browser) is reflected here without a remount.
+  const aiOn = !!(settings.aiConsentPrayer || settings.aiConsentHome);
 
   // Server sets last_follow_up_sent_at each time it actually pushes one; pull
   // it in whenever the toggle is on so "next follow-up" reflects reality.
@@ -205,7 +207,6 @@ export default function SettingsTab() {
 
   const handleRevokeAi = () => {
     revokeAiConsent();
-    setAiOn(false);
     toast.success(t(lang, 'aiRevoked'));
   };
 

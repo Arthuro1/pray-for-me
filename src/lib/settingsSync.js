@@ -1,17 +1,20 @@
-// Account-level settings sync (user_settings table). Language and reminder
-// preferences are the same for a user everywhere they sign in; this module
-// moves them between the store's camelCase settings object and the one-row-
-// per-user server table. Theme and notificationsGranted are deliberately NOT
-// here — they are per-device (see supabase/user_settings.sql).
+// Account-level settings sync (user_settings table). Language, appearance,
+// AI consent and reminder preferences are the same for a user everywhere they
+// sign in; this module moves them between the store's camelCase settings
+// object and the one-row-per-user server table. notificationsGranted is
+// deliberately NOT here — it is a per-device browser fact, not a preference.
 import { supabase } from './supabase';
 
 // store key → user_settings column
 const COLUMNS = {
   language: 'language',
+  theme: 'theme',
   dailyReminderEnabled: 'daily_reminder_enabled',
   dailyReminderTime: 'daily_reminder_time',
   followUpEnabled: 'follow_up_enabled',
   followUpDays: 'follow_up_days',
+  aiConsentPrayer: 'ai_consent_prayer',
+  aiConsentHome: 'ai_consent_home',
 };
 
 // True when a settings patch touches anything that lives server-side.
