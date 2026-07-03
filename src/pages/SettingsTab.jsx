@@ -178,9 +178,6 @@ export default function SettingsTab() {
       },
     });
   };
-  const answeredPrayers = prayers.filter((p) => p.status === 'answered');
-  const activePrayers = prayers.filter((p) => p.status === 'active');
-
   const provider = user?.app_metadata?.provider;
   const providerLabel = provider === 'google' ? 'Google' : 'Email / Mot de passe';
   const avatarUrl = user?.user_metadata?.avatar_url;
@@ -205,18 +202,6 @@ export default function SettingsTab() {
           <div>
             <p className="font-semibold text-white">{displayName}</p>
             {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{t(lang, 'memberSince')} {memberSince}</p>}
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-2.5">
-          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.18)' }}>
-            <p className="text-2xl font-semibold text-white">{activePrayers.length}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'activePrayers')}</p>
-          </div>
-          <div className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.18)' }}>
-            <p className="text-2xl font-semibold text-white">{answeredPrayers.length}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'answeredPrayers')} 🙌</p>
           </div>
         </div>
       </div>
