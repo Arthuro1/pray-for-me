@@ -37,7 +37,13 @@ const useAuthStore = create((set) => ({
     return { user: data?.user, error };
   },
 
+  // Vault record + prayer cache live in IndexedDB unscoped to the signed-in
+  // session (the vault key isn't namespaced per-user), so a leftover record from
+  // this account would block login on a different account on the same device —
+  // clear local traces before signing out.
   signOut: async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    await clearLocalData(user?.id);
     await supabase.auth.signOut();
     set({ user: null });
   },

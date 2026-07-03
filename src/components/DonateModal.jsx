@@ -53,7 +53,7 @@ export default function DonateModal({ onClose }) {
 
         {/* Header */}
         <div className="flex items-center gap-2 mb-3">
-          <Heart size={18} style={{ color: '#e11d48' }} />
+          <Heart size={18} style={{ color: '#16a34a' }} />
           <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>
             {t(lang, 'donateTitle')}
           </h2>

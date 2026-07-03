@@ -473,14 +473,14 @@ export default function SettingsTab() {
         {/* Donate */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-1">
-            <Heart size={16} style={{ color: '#e11d48' }} />
+            <Heart size={16} style={{ color: '#16a34a' }} />
             <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
           </div>
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
           <button
             onClick={() => setShowDonate(true)}
             className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ background: '#fff1f2', color: '#e11d48', border: '0.5px solid #fecdd3' }}
+            style={{ background: '#f0fdf4', color: '#16a34a', border: '0.5px solid #bbf7d0' }}
           >
             <Heart size={14} />
             {t(lang, 'donateBtn')}

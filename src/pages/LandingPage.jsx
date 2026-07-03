@@ -1,23 +1,26 @@
 ﻿import { useState } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Users } from 'lucide-react';
 
+// `complete: false` marks languages whose landing-page copy (FAQs, feature
+// blurbs) is still an abbreviated placeholder rather than the full translation
+// — shown with a small dot in the language dropdown so it doesn't look finished.
 const LANGS = [
-  { code: 'fr', flag: '🇫🇷', label: 'FR' },
-  { code: 'en', flag: '🇬🇧', label: 'EN' },
-  { code: 'de', flag: '🇩🇪', label: 'DE' },
-  { code: 'pt', flag: '🇧🇷', label: 'PT' },
-  { code: 'zh', flag: '🇨🇳', label: 'ZH' },
-  { code: 'es', flag: '🇪🇸', label: 'ES' },
-  { code: 'hi', flag: '🇮🇳', label: 'HI' },
-  { code: 'ja', flag: '🇯🇵', label: 'JA' },
-  { code: 'sw', flag: '🇰🇪', label: 'SW' },
-  { code: 'am', flag: '🇪🇹', label: 'AM' },
-  { code: 'id', flag: '🇮🇩', label: 'ID' },
-  { code: 'tl', flag: '🇵🇭', label: 'TL' },
-  { code: 'ko', flag: '🇰🇷', label: 'KO' },
-  { code: 'ru', flag: '🇷🇺', label: 'RU' },
-  { code: 'ar', flag: '🇸🇦', label: 'AR' },
-  { code: 'fa', flag: '🇮🇷', label: 'FA' },
+  { code: 'fr', flag: '🇫🇷', label: 'FR', complete: true },
+  { code: 'en', flag: '🇬🇧', label: 'EN', complete: true },
+  { code: 'de', flag: '🇩🇪', label: 'DE', complete: true },
+  { code: 'pt', flag: '🇧🇷', label: 'PT', complete: true },
+  { code: 'zh', flag: '🇨🇳', label: 'ZH', complete: true },
+  { code: 'es', flag: '🇪🇸', label: 'ES', complete: true },
+  { code: 'hi', flag: '🇮🇳', label: 'HI', complete: true },
+  { code: 'ja', flag: '🇯🇵', label: 'JA', complete: true },
+  { code: 'sw', flag: '🇰🇪', label: 'SW', complete: false },
+  { code: 'am', flag: '🇪🇹', label: 'AM', complete: false },
+  { code: 'id', flag: '🇮🇩', label: 'ID', complete: false },
+  { code: 'tl', flag: '🇵🇭', label: 'TL', complete: false },
+  { code: 'ko', flag: '🇰🇷', label: 'KO', complete: false },
+  { code: 'ru', flag: '🇷🇺', label: 'RU', complete: false },
+  { code: 'ar', flag: '🇸🇦', label: 'AR', complete: false },
+  { code: 'fa', flag: '🇮🇷', label: 'FA', complete: false },
 ];
 
 const ALL_CODES = LANGS.map(l => l.code);
@@ -896,7 +899,7 @@ export default function LandingPage({ onGetStarted }) {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0d0a1e', color: '#fff' }}>
+    <div className="min-h-screen" style={{ background: '#2b2154', color: '#fff' }}>
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 max-w-6xl mx-auto gap-4">
@@ -921,9 +924,9 @@ export default function LandingPage({ onGetStarted }) {
             {langOpen && (
               <div
                 className="absolute right-0 mt-1 rounded-xl overflow-hidden z-50"
-                style={{ background: '#1a1630', border: '0.5px solid rgba(255,255,255,0.12)', minWidth: '130px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
+                style={{ background: '#3a2f68', border: '0.5px solid rgba(255,255,255,0.12)', minWidth: '130px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
               >
-                {LANGS.map(({ code, flag, label }) => (
+                {LANGS.map(({ code, flag, label, complete }) => (
                   <button
                     key={code}
                     onClick={() => handleLang(code)}
@@ -933,7 +936,14 @@ export default function LandingPage({ onGetStarted }) {
                       : { color: 'rgba(255,255,255,0.7)' }}
                   >
                     <span>{flag}</span>
-                    <span>{label}</span>
+                    <span className="flex-1">{label}</span>
+                    {!complete && (
+                      <span
+                        title="Translation still in progress"
+                        className="w-1.5 h-1.5 rounded-full shrink-0"
+                        style={{ background: '#f5c842' }}
+                      />
+                    )}
                   </button>
                 ))}
               </div>
