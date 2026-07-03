@@ -107,7 +107,6 @@ const usePrayerStore = create((set, get) => ({
       dailyReminderTime: '07:00',
       followUpEnabled: false,
       followUpDays: 7,
-      callReminderEnabled: false,
       notificationsGranted: false,
     };
     let saved = {};

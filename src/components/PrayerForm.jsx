@@ -60,19 +60,18 @@ function CategorySelector({ categories, selectedIds, onToggle, tr, lang }) {
 }
 
 function initialForm(editPrayer) {
-  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', phone: '', isAnonymous: false };
+  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false };
   return {
     title: editPrayer.title || '',
     description: editPrayer.description || '',
     categoryIds: editPrayer.category_ids || (editPrayer.prayer_categories || []).map(pc => pc.category_id),
     forOther: editPrayer.for_other || false,
     personName: editPrayer.person_name || '',
-    phone: editPrayer.phone || '',
     isAnonymous: editPrayer.is_anonymous || false,
   };
 }
 
-// communityMode hides forOther/phone fields and calls onCommunitySubmit instead of prayerStore
+// communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
 export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
   const { tr } = useTranslationStore();
@@ -207,11 +206,6 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
                   <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'personName')}</label>
                   <input type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
                     placeholder="Prénom Nom" className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none" style={INPUT_STYLE} />
-                </div>
-                <div>
-                  <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'phone')}</label>
-                  <input type="tel" value={form.phone} onChange={e => patch('phone', e.target.value)}
-                    placeholder="+237 6xx xxx xxx" className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none" style={INPUT_STYLE} />
                 </div>
               </div>
             )}

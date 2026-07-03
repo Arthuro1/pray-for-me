@@ -1,7 +1,7 @@
-﻿import { useState } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, Phone, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles } from 'lucide-react';
+import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -44,6 +44,58 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
         {onToggle !== undefined && <Toggle enabled={enabled} onToggle={onToggle} />}
       </div>
       {children}
+    </div>
+  );
+}
+
+// Native <select>/<option> can't render color flag emoji on Windows (the OS
+// combobox popup uses its own text rendering, not the browser's), so this
+// uses a custom button + list instead.
+function LanguageDropdown({ lang, onChange }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const active = LANGUAGES.find((l) => l.code === lang);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClickOutside = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex items-center gap-1.5 text-sm rounded-xl px-3 py-2 focus:outline-none"
+        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+      >
+        <span>{active?.flag}</span>
+        <span>{active?.label}</span>
+        <ChevronDown size={14} style={{ opacity: 0.6 }} />
+      </button>
+      {open && (
+        <div
+          className="absolute right-0 mt-1 rounded-xl overflow-hidden overflow-y-auto z-50"
+          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', minWidth: '160px', maxHeight: '260px', boxShadow: '0 8px 24px rgba(0,0,0,0.25)' }}
+        >
+          {LANGUAGES.map((l) => (
+            <button
+              key={l.code}
+              type="button"
+              onClick={() => { onChange(l.code); setOpen(false); }}
+              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors"
+              style={l.code === lang
+                ? { background: 'var(--accent-soft)', color: 'var(--accent)' }
+                : { color: 'var(--text-2)' }}
+            >
+              <span>{l.flag}</span>
+              <span>{l.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -290,16 +342,10 @@ export default function SettingsTab() {
               <Globe size={16} style={{ color: 'var(--accent)' }} />
               <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
             </div>
-            <select
-              value={lang}
-              onChange={(e) => { updateSettings({ language: e.target.value }); if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { lang: e.target.value }); }}
-              className="text-sm rounded-xl px-3 py-2 focus:outline-none"
-              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)', maxWidth: '180px' }}
-            >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
-              ))}
-            </select>
+            <LanguageDropdown
+              lang={lang}
+              onChange={(code) => { updateSettings({ language: code }); if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { lang: code }); }}
+            />
           </div>
         </div>
 
@@ -356,26 +402,24 @@ export default function SettingsTab() {
             )}
           </Row>
 
-          <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}>
-            {settings.followUpEnabled && (
-              <div className="mt-3">
-                <select
-                  value={settings.followUpDays}
-                  onChange={(e) => updateSettings({ followUpDays: parseInt(e.target.value) })}
-                  className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                >
-                  <option value={3}>{t(lang, 'every3days')}</option>
-                  <option value={7}>{t(lang, 'everyWeek')}</option>
-                  <option value={14}>{t(lang, 'every2weeks')}</option>
-                  <option value={30}>{t(lang, 'everyMonth')}</option>
-                </select>
-              </div>
-            )}
-          </Row>
-
           <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-            <Row label={t(lang, 'callReminder')} sub={t(lang, 'callReminderSub')} icon={Phone} enabled={settings.callReminderEnabled} onToggle={() => updateSettings({ callReminderEnabled: !settings.callReminderEnabled })} />
+            <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}>
+              {settings.followUpEnabled && (
+                <div className="mt-3">
+                  <select
+                    value={settings.followUpDays}
+                    onChange={(e) => updateSettings({ followUpDays: parseInt(e.target.value) })}
+                    className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                  >
+                    <option value={3}>{t(lang, 'every3days')}</option>
+                    <option value={7}>{t(lang, 'everyWeek')}</option>
+                    <option value={14}>{t(lang, 'every2weeks')}</option>
+                    <option value={30}>{t(lang, 'everyMonth')}</option>
+                  </select>
+                </div>
+              )}
+            </Row>
           </div>
 
           {settings.notificationsGranted && (
