@@ -899,7 +899,7 @@ export default function LandingPage({ onGetStarted }) {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#2b2154', color: '#fff' }}>
+    <div className="min-h-screen" style={{ background: '#0d0a1e', color: '#fff' }}>
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 max-w-6xl mx-auto gap-4">
@@ -924,7 +924,7 @@ export default function LandingPage({ onGetStarted }) {
             {langOpen && (
               <div
                 className="absolute right-0 mt-1 rounded-xl overflow-hidden z-50"
-                style={{ background: '#3a2f68', border: '0.5px solid rgba(255,255,255,0.12)', minWidth: '130px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
+                style={{ background: '#1a1630', border: '0.5px solid rgba(255,255,255,0.12)', minWidth: '130px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
               >
                 {LANGS.map(({ code, flag, label, complete }) => (
                   <button

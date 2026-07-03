@@ -221,6 +221,7 @@ export default {
   "reminderTime": "अनुस्मारक समय",
   "followUp": "प्रार्थना अनुवर्ती",
   "followUpSub": "प्रार्थना अपडेट माँगें",
+  "followUpNotifBody": "{count} प्रार्थनाएँ {days} दिनों से अपडेट नहीं हुई हैं। परमेश्वर कैसे काम कर रहा है?",
   "followUpFreq": "आवृत्ति",
   "every3days": "हर 3 दिन",
   "everyWeek": "हर हफ्ते",

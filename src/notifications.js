@@ -1,4 +1,6 @@
-﻿export function scheduleNotifications(settings, prayers) {
+﻿import { t } from './i18n';
+
+export function scheduleNotifications(settings, prayers) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
   // The daily reminder is now delivered server-side via Web Push (works even
@@ -14,9 +16,10 @@
     });
 
     if (stalePrayers.length > 0) {
+      const lang = settings.language || 'en';
       setTimeout(() => {
-        new Notification('📋 Pray4Me — Suivi de prière', {
-          body: `${stalePrayers.length} prière(s) n'ont pas été mises à jour depuis ${settings.followUpDays} jours. Comment Dieu agit-il?`,
+        new Notification(`📋 Pray4Me — ${t(lang, 'followUp')}`, {
+          body: t(lang, 'followUpNotifBody', { count: stalePrayers.length, days: settings.followUpDays }),
           icon: '/favicon.ico',
           tag: 'follow-up',
         });

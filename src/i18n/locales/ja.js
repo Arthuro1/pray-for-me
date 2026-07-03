@@ -222,6 +222,7 @@ export default {
   "reminderTime": "リマインド時間",
   "followUp": "フォローアップ",
   "followUpSub": "祈りの更新を求める",
+  "followUpNotifBody": "{count} 件の祈りが {days} 日間更新されていません。神様はどのように働いておられますか？",
   "followUpFreq": "頻度",
   "every3days": "3日ごと",
   "everyWeek": "毎週",

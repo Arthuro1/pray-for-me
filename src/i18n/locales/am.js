@@ -221,6 +221,7 @@ export default {
   "reminderTime": "የማስታወሻ ሰዓት",
   "followUp": "ክትትል",
   "followUpSub": "የጸሎት ዝማኔዎችን ይጠይቁ",
+  "followUpNotifBody": "{count} ጸሎቶች ላለፉት {days} ቀናት አልዘመኑም። እግዚአብሔር እንዴት እየሠራ ነው?",
   "followUpFreq": "ድግግሞሽ",
   "every3days": "በ3 ቀን",
   "everyWeek": "በሳምንት",

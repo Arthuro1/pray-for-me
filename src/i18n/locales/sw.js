@@ -221,6 +221,7 @@ export default {
   "reminderTime": "Wakati wa ukumbusho",
   "followUp": "Ufuatiliaji wa maombi",
   "followUpSub": "Omba masasisho ya maombi",
+  "followUpNotifBody": "Maombi {count} hayajasasishwa kwa siku {days}. Je, Mungu anafanyaje kazi?",
   "followUpFreq": "Mara ngapi",
   "every3days": "Kila siku 3",
   "everyWeek": "Kila wiki",

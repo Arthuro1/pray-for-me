@@ -221,6 +221,7 @@ export default {
   "reminderTime": "Waktu pengingat",
   "followUp": "Tindak lanjut doa",
   "followUpSub": "Minta pembaruan doa",
+  "followUpNotifBody": "{count} doa belum diperbarui selama {days} hari. Bagaimana Tuhan sedang bekerja?",
   "followUpFreq": "Frekuensi",
   "every3days": "Setiap 3 hari",
   "everyWeek": "Setiap minggu",

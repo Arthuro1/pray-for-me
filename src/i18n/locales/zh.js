@@ -222,6 +222,7 @@ export default {
   "reminderTime": "提醒时间",
   "followUp": "祷告跟进",
   "followUpSub": "请求祷告更新",
+  "followUpNotifBody": "{count} 个祷告事项已有 {days} 天未更新。神在如何动工呢？",
   "followUpFreq": "跟进频率",
   "every3days": "每3天",
   "everyWeek": "每周",

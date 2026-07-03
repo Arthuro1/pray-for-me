@@ -221,6 +221,7 @@ export default {
   "reminderTime": "زمان یادآوری",
   "followUp": "پیگیری دعا",
   "followUpSub": "درخواست به‌روزرسانی دعاها",
+  "followUpNotifBody": "{count} دعا در {days} روز گذشته به‌روزرسانی نشده‌اند. خدا چگونه عمل می‌کند؟",
   "followUpFreq": "دفعات",
   "every3days": "هر ۳ روز",
   "everyWeek": "هر هفته",

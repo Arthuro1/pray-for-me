@@ -221,6 +221,7 @@ export default {
   "reminderTime": "وقت التذكير",
   "followUp": "متابعة الصلوات",
   "followUpSub": "طلب تحديثات الصلوات",
+  "followUpNotifBody": "{count} صلاة (صلوات) لم يتم تحديثها منذ {days} يومًا. كيف يعمل الله؟",
   "followUpFreq": "التكرار",
   "every3days": "كل 3 أيام",
   "everyWeek": "كل أسبوع",
