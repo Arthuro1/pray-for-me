@@ -139,7 +139,9 @@ export function initReminderEnv(): { supabase: SupabaseClient } | { error: Respo
 }
 
 // Sends one Web Push message. `gone` is true when the subscription is
-// expired/invalid (404/410) and should be deleted by the caller.
+// expired/invalid (404/410) or permanently rejected by the push service
+// (401/403 — e.g. bound to a since-rotated VAPID key) and should be deleted
+// by the caller so the client is forced to create a fresh one.
 export async function sendPush(
   sub: { endpoint: string; p256dh: string; auth: string },
   payload: string,
@@ -151,6 +153,10 @@ export async function sendPush(
     );
     return { sent: true, gone: false };
   } catch (e: any) {
-    return { sent: false, gone: e?.statusCode === 404 || e?.statusCode === 410 };
+    // Logged so silent delivery failures (auth/VAPID mismatch, etc.) are
+    // visible in the function's logs instead of just never sending.
+    console.error('push send failed', e?.statusCode, e?.body || e?.message || e);
+    const gone = [401, 403, 404, 410].includes(e?.statusCode);
+    return { sent: false, gone };
   }
 }

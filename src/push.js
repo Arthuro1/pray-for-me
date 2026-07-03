@@ -53,13 +53,17 @@ export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', 
   if (!reg) return { error: 'unsupported' }; // no service worker (dev / registration failed)
 
   try {
+    // Always re-subscribe rather than reusing whatever's already registered:
+    // a PushSubscription is permanently bound to the applicationServerKey it
+    // was created with, so if VAPID_PUBLIC_KEY was ever rotated since this
+    // device last subscribed, reusing the stale one would keep silently
+    // failing server-side (webpush send fails auth, no error surfaces).
     let sub = await reg.pushManager.getSubscription();
-    if (!sub) {
-      sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-      });
-    }
+    if (sub) await sub.unsubscribe();
+    sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    });
     const json = sub.toJSON();
     const payload = {
       user_id: userId,
