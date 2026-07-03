@@ -8,15 +8,18 @@ export function nextReminder(timeStr, now = new Date()) {
   return { tomorrow: next <= now, time: `${pad(h)}:${pad(m)}` };
 }
 
-// When the next follow-up reminder will fire, given the last time one was
-// sent (null if never), the cadence in days, and the daily reminder time it
-// rides on. Mirrors followUpDue() in the send-follow-up-reminder Edge
-// Function so the UI matches what the server will actually do. Pure so it
-// can be unit-tested.
+// When the next follow-up reminder will fire, given the cadence anchor (the
+// last time one was sent, or the moment follow-up was enabled), the cadence
+// in days, and the follow-up delivery time. With no anchor yet the count
+// starts now, so the shown date always sits one full cadence out and moves
+// when the user picks a different frequency. Mirrors followUpDue() in the
+// send-follow-up-reminder Edge Function so the UI matches what the server
+// will actually do. Pure so it can be unit-tested.
 export function nextFollowUp(lastSentAt, days, timeStr, now = new Date()) {
   const [h, m] = (timeStr || '07:00').split(':').map((n) => parseInt(n, 10) || 0);
   const pad = (n) => String(n).padStart(2, '0');
-  const dueAt = lastSentAt ? new Date(new Date(lastSentAt).getTime() + (days || 7) * 86400000) : now;
+  const anchor = lastSentAt ? new Date(lastSentAt) : now;
+  const dueAt = new Date(anchor.getTime() + (days || 7) * 86400000);
 
   const target = new Date(Math.max(dueAt.getTime(), now.getTime()));
   target.setHours(h, m, 0, 0);

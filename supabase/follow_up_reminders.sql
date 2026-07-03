@@ -10,7 +10,8 @@
 alter table public.push_subscriptions
   add column if not exists follow_up_enabled boolean not null default false,
   add column if not exists follow_up_days int not null default 7,
-  add column if not exists last_follow_up_sent_at timestamptz;
+  add column if not exists follow_up_time text not null default '07:00',  -- local "HH:MM", independent of reminder_time
+  add column if not exists last_follow_up_sent_at timestamptz;            -- cadence anchor (stamped on enable / on send)
 
 -- Scheduled job — runs every 15 minutes and invokes the send-follow-up-reminder
 -- Edge Function. Requires the pg_cron and pg_net extensions (already enabled

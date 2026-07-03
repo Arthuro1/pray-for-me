@@ -109,6 +109,7 @@ const usePrayerStore = create((set, get) => ({
       dailyReminderTime: '07:00',
       followUpEnabled: false,
       followUpDays: 7,
+      followUpTime: '07:00',
       notificationsGranted: false,
       // AI consent used to live in dedicated pfm_ai_consent_* keys; read them
       // here so existing users keep their choice (pfm_settings overrides once

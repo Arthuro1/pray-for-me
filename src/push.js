@@ -48,7 +48,7 @@ function boundToCurrentKey(sub) {
 // only when explicitly passed (leaving any existing value untouched), so
 // enabling the daily reminder alone doesn't clobber the follow-up reminder's
 // independent state on their shared subscription row.
-function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays }) {
+function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays, followUpTime }) {
   const json = sub.toJSON();
   const row = {
     user_id: userId,
@@ -63,6 +63,7 @@ function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', ena
   };
   if (followUpEnabled !== undefined) row.follow_up_enabled = followUpEnabled;
   if (followUpDays !== undefined) row.follow_up_days = followUpDays;
+  if (followUpTime !== undefined) row.follow_up_time = followUpTime;
   return row;
 }
 
@@ -70,7 +71,7 @@ function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', ena
 // in Supabase. Returns { error } on failure ('denied' | 'unsupported' | 'failed').
 // Never hangs or throws. Safe to call repeatedly. Callers must pass the current
 // `enabled` explicitly to preserve it (see subscriptionRow).
-export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays } = {}) {
+export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays, followUpTime } = {}) {
   if (!pushSupported() || !VAPID_PUBLIC_KEY || !userId) return { error: 'unsupported' };
 
   let permission;
@@ -96,7 +97,7 @@ export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', 
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     });
     const { error } = await supabase.from('push_subscriptions').upsert(
-      subscriptionRow(userId, sub, { reminderTime, lang, enabled, followUpEnabled, followUpDays }),
+      subscriptionRow(userId, sub, { reminderTime, lang, enabled, followUpEnabled, followUpDays, followUpTime }),
       { onConflict: 'endpoint' }
     );
     return { error: error ? 'failed' : undefined };
@@ -138,6 +139,7 @@ export async function ensurePushSubscription(userId, settings = {}) {
         enabled: !!settings.dailyReminderEnabled,
         followUpEnabled: !!settings.followUpEnabled,
         followUpDays: settings.followUpDays,
+        followUpTime: settings.followUpTime,
       }),
       { onConflict: 'endpoint' }
     );
@@ -160,6 +162,11 @@ export async function updatePushPrefs(userId, prefs = {}) {
   if (prefs.enabled !== undefined) patch.enabled = prefs.enabled;
   if (prefs.followUpEnabled !== undefined) patch.follow_up_enabled = prefs.followUpEnabled;
   if (prefs.followUpDays !== undefined) patch.follow_up_days = prefs.followUpDays;
+  if (prefs.followUpTime) patch.follow_up_time = prefs.followUpTime;
+  // Cadence anchor — stamped when the user enables follow-ups so the first
+  // one arrives a full follow_up_days later (the server otherwise stamps it
+  // on its next pass; see send-follow-up-reminder).
+  if (prefs.followUpLastSentAt) patch.last_follow_up_sent_at = prefs.followUpLastSentAt;
   await supabase.from('push_subscriptions').update(patch).eq('user_id', userId);
 
   const reg = await swReady();

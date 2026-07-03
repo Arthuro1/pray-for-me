@@ -166,11 +166,14 @@ export default function SettingsTab() {
   };
 
   // Follow-up reminders fire on the same schedule engine as the daily one
-  // (server-side, at the user's local reminder time) but only every N days,
+  // (server-side, at their own local follow-up time) but only every N days,
   // so they share a push subscription row with independent on/off flags.
   const handleToggleFollowUp = async () => {
     if (!settings.followUpEnabled) {
       updateSettings({ followUpEnabled: true });
+      // Enabling (re)starts the cadence: stamp the anchor so the first
+      // follow-up arrives a full followUpDays from now, not at the next window.
+      const anchor = new Date().toISOString();
       let res;
       try {
         res = await enablePush(user?.id, {
@@ -179,6 +182,7 @@ export default function SettingsTab() {
           enabled: settings.dailyReminderEnabled,
           followUpEnabled: true,
           followUpDays: settings.followUpDays,
+          followUpTime: settings.followUpTime,
         });
       } catch { res = { error: 'failed' }; }
       if (res?.error === 'denied') {
@@ -192,7 +196,15 @@ export default function SettingsTab() {
           toast.success(t(lang, 'remindersOn'));
         }
         // Account-level toggle — align the other devices' rows as well.
-        try { await updatePushPrefs(user?.id, { followUpEnabled: true, followUpDays: settings.followUpDays }); } catch { /* best-effort */ }
+        try {
+          await updatePushPrefs(user?.id, {
+            followUpEnabled: true,
+            followUpDays: settings.followUpDays,
+            followUpTime: settings.followUpTime,
+            followUpLastSentAt: anchor,
+          });
+        } catch { /* best-effort */ }
+        setFollowUpLastSent(anchor);
       }
     } else {
       updateSettings({ followUpEnabled: false });
@@ -203,6 +215,11 @@ export default function SettingsTab() {
   const handleFollowUpDaysChange = (days) => {
     updateSettings({ followUpDays: days });
     updatePushPrefs(user?.id, { followUpDays: days });
+  };
+
+  const handleFollowUpTimeChange = (time) => {
+    updateSettings({ followUpTime: time });
+    updatePushPrefs(user?.id, { followUpTime: time });
   };
 
   const handleRevokeAi = () => {
@@ -449,19 +466,31 @@ export default function SettingsTab() {
             <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
               {settings.followUpEnabled && (
                 <div className="mt-3">
-                  <select
-                    value={settings.followUpDays}
-                    onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
-                    className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                  >
-                    <option value={3}>{t(lang, 'every3days')}</option>
-                    <option value={7}>{t(lang, 'everyWeek')}</option>
-                    <option value={14}>{t(lang, 'every2weeks')}</option>
-                    <option value={30}>{t(lang, 'everyMonth')}</option>
-                  </select>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <select
+                      value={settings.followUpDays}
+                      onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
+                      className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                      style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                    >
+                      <option value={3}>{t(lang, 'every3days')}</option>
+                      <option value={7}>{t(lang, 'everyWeek')}</option>
+                      <option value={14}>{t(lang, 'every2weeks')}</option>
+                      <option value={30}>{t(lang, 'everyMonth')}</option>
+                    </select>
+                    <div className="flex items-center gap-2">
+                      <Clock size={13} style={{ color: 'var(--text-3)' }} />
+                      <input
+                        type="time"
+                        value={settings.followUpTime || '07:00'}
+                        onChange={(e) => handleFollowUpTimeChange(e.target.value)}
+                        className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                      />
+                    </div>
+                  </div>
                   {(() => {
-                    const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.dailyReminderTime);
+                    const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.followUpTime);
                     const dayLabel = nf.daysAhead === 0
                       ? t(lang, 'today')
                       : nf.daysAhead === 1

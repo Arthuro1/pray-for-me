@@ -78,6 +78,9 @@ export default defineConfig(({ mode }) => {
     },
   },
   server: {
+    // Honour the PORT the dev-preview tooling assigns (it falls back to a free
+    // port when 5173 is taken by another running dev server).
+    port: Number(process.env.PORT) || 5173,
     // Dev-mode CSP parity with vercel.json so violations (e.g. a stray external
     // script/connection) surface locally instead of only in production. Vite's
     // dev server needs 'unsafe-inline'/'unsafe-eval' for HMR and a ws: socket;

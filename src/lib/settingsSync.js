@@ -13,6 +13,7 @@ const COLUMNS = {
   dailyReminderTime: 'daily_reminder_time',
   followUpEnabled: 'follow_up_enabled',
   followUpDays: 'follow_up_days',
+  followUpTime: 'follow_up_time',
   aiConsentPrayer: 'ai_consent_prayer',
   aiConsentHome: 'ai_consent_home',
 };

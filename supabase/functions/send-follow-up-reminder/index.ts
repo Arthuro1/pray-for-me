@@ -32,7 +32,16 @@ Deno.serve(async () => {
 
     let sent = 0;
     for (const sub of subs || []) {
-      if (!isWithinReminderWindow(sub, utcMinutes)) continue;
+      // No cadence anchor yet (row predates the client stamping one on
+      // enable): start counting now instead of firing immediately, so the
+      // first follow-up lands one full follow_up_days after enabling.
+      if (!sub.last_follow_up_sent_at) {
+        await supabase.from('push_subscriptions').update({ last_follow_up_sent_at: now.toISOString() }).eq('endpoint', sub.endpoint);
+        continue;
+      }
+      // The follow-up has its own delivery time (default 07:00), independent
+      // of the daily reminder's.
+      if (!isWithinReminderWindow(sub, utcMinutes, sub.follow_up_time || '07:00')) continue;
       if (!followUpDue(sub.last_follow_up_sent_at, sub.follow_up_days, now)) continue;
 
       const { data: prayers } = await supabase

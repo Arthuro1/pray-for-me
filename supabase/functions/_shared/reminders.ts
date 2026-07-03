@@ -85,10 +85,12 @@ export function buildFollowUpNames(prayers: { person_name?: string; for_other?: 
   return `${names.slice(0, MAX_LISTED_TITLES).join(', ')}${names.length > MAX_LISTED_TITLES ? '…' : ''}`;
 }
 
-// True once `days` have elapsed since the last follow-up push (or immediately,
-// if none has ever been sent for this subscription).
+// True once `days` have elapsed since the cadence anchor (last follow-up
+// push, or the enable-time stamp the client writes). A missing anchor is
+// never "due now" — the scheduler stamps it on first sight instead — so the
+// first follow-up always arrives one full cadence after enabling.
 export function followUpDue(lastSentAt: string | null, days: number | null, now: Date): boolean {
-  if (!lastSentAt) return true;
+  if (!lastSentAt) return false;
   const elapsedMs = now.getTime() - new Date(lastSentAt).getTime();
   return elapsedMs >= (days || 7) * 86400000;
 }
@@ -100,11 +102,16 @@ export function prayerDueToday(p: any, dow: number, todayCatIds: Set<string>): b
   return catIds.some((id: string) => todayCatIds.has(id));
 }
 
-// True when `sub`'s local clock has just reached its reminder_time (within
-// the cron's polling window). Both reminder types anchor to this same field.
-export function isWithinReminderWindow(sub: { tz_offset?: number; reminder_time?: string }, utcMinutes: number): boolean {
+// True when `sub`'s local clock has just reached `time` (within the cron's
+// polling window). Defaults to the daily reminder_time; the follow-up
+// scheduler passes the subscription's own follow_up_time instead.
+export function isWithinReminderWindow(
+  sub: { tz_offset?: number; reminder_time?: string },
+  utcMinutes: number,
+  time: string | undefined = sub.reminder_time,
+): boolean {
   const local = (((utcMinutes + (sub.tz_offset || 0)) % 1440) + 1440) % 1440;
-  const [rh, rm] = String(sub.reminder_time || '07:00').split(':').map(Number);
+  const [rh, rm] = String(time || '07:00').split(':').map(Number);
   const diff = local - (rh * 60 + rm);
   return diff >= 0 && diff < WINDOW_MIN;
 }

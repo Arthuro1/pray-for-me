@@ -23,6 +23,7 @@ create table if not exists public.user_settings (
   daily_reminder_time    text    not null default '07:00',   -- local "HH:MM"
   follow_up_enabled      boolean not null default false,
   follow_up_days         int     not null default 7,
+  follow_up_time         text    not null default '07:00',   -- local "HH:MM"
   ai_consent_prayer      boolean not null default false,     -- AI on prayer title + last update
   ai_consent_home        boolean not null default false,     -- AI on today's category names
   updated_at             timestamptz not null default now()
@@ -33,6 +34,7 @@ create table if not exists public.user_settings (
 alter table public.user_settings add column if not exists theme text;
 alter table public.user_settings add column if not exists ai_consent_prayer boolean not null default false;
 alter table public.user_settings add column if not exists ai_consent_home boolean not null default false;
+alter table public.user_settings add column if not exists follow_up_time text not null default '07:00';
 
 alter table public.user_settings enable row level security;
 

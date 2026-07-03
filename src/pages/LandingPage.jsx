@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react';
-import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Users } from 'lucide-react';
+import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Sun, Moon, Users } from 'lucide-react';
 
 // `complete: false` marks languages whose landing-page copy (FAQs, feature
 // blurbs) is still an abbreviated placeholder rather than the full translation
@@ -863,23 +863,90 @@ const CONTENT = {
   },
 };
 
-function FAQ({ q, a }) {
+// Landing-page palettes. The page keeps its own marketing look (deep-purple
+// dark by default) rather than the app's data-theme CSS variables, so both
+// modes are defined locally; the toggle still writes pfm_theme so the auth
+// page and the app continue with the visitor's choice after sign-in.
+const THEMES = {
+  dark: {
+    bg: '#0d0a1e',
+    text: '#ffffff',
+    textSoft: 'rgba(255,255,255,0.75)',
+    textMuted: 'rgba(255,255,255,0.6)',
+    textFaint: 'rgba(255,255,255,0.5)',
+    textDim: 'rgba(255,255,255,0.4)',
+    textGhost: 'rgba(255,255,255,0.3)',
+    surface: 'rgba(255,255,255,0.04)',
+    surfaceStrong: 'rgba(255,255,255,0.06)',
+    chipBg: 'rgba(255,255,255,0.07)',
+    border: 'rgba(255,255,255,0.08)',
+    borderStrong: 'rgba(255,255,255,0.12)',
+    menuBg: '#1a1630',
+    menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
+    accentText: '#a78bfa',
+    accentSoftBg: 'rgba(124,92,252,0.15)',
+    accentChipBg: 'rgba(124,92,252,0.2)',
+    accentActiveBg: 'rgba(124,92,252,0.25)',
+    accentBorder: 'rgba(124,92,252,0.3)',
+    heroGlow: 'rgba(124,92,252,0.35)',
+    ctaGlow: 'rgba(124,92,252,0.25)',
+    calloutBg: 'linear-gradient(135deg, rgba(124,92,252,0.2), rgba(167,139,250,0.08))',
+    calloutBorder: 'rgba(124,92,252,0.25)',
+    previewBg: 'rgba(0,0,0,0.3)',
+    previewItemBg: 'rgba(255,255,255,0.05)',
+    gold: '#f5c842',
+    ctaShadow: '0 0 30px rgba(124,92,252,0.4)',
+    ctaShadowBig: '0 0 40px rgba(124,92,252,0.45)',
+  },
+  light: {
+    bg: '#f7f5fc',
+    text: '#1a1630',
+    textSoft: 'rgba(26,22,48,0.78)',
+    textMuted: 'rgba(26,22,48,0.65)',
+    textFaint: 'rgba(26,22,48,0.55)',
+    textDim: 'rgba(26,22,48,0.45)',
+    textGhost: 'rgba(26,22,48,0.38)',
+    surface: '#ffffff',
+    surfaceStrong: '#ffffff',
+    chipBg: 'rgba(26,22,48,0.05)',
+    border: 'rgba(26,22,48,0.08)',
+    borderStrong: 'rgba(26,22,48,0.14)',
+    menuBg: '#ffffff',
+    menuShadow: '0 8px 24px rgba(26,22,48,0.14)',
+    accentText: '#6d4df0',
+    accentSoftBg: 'rgba(124,92,252,0.1)',
+    accentChipBg: 'rgba(124,92,252,0.12)',
+    accentActiveBg: 'rgba(124,92,252,0.14)',
+    accentBorder: 'rgba(124,92,252,0.3)',
+    heroGlow: 'rgba(124,92,252,0.16)',
+    ctaGlow: 'rgba(124,92,252,0.12)',
+    calloutBg: 'linear-gradient(135deg, rgba(124,92,252,0.12), rgba(167,139,250,0.05))',
+    calloutBorder: 'rgba(124,92,252,0.25)',
+    previewBg: '#ffffff',
+    previewItemBg: 'rgba(124,92,252,0.06)',
+    gold: '#b45309',
+    ctaShadow: '0 10px 25px rgba(124,92,252,0.35)',
+    ctaShadowBig: '0 12px 32px rgba(124,92,252,0.35)',
+  },
+};
+
+function FAQ({ q, a, T }) {
   const [open, setOpen] = useState(false);
   return (
     <div
       className="rounded-2xl overflow-hidden cursor-pointer"
-      style={{ background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(255,255,255,0.1)' }}
+      style={{ background: T.surfaceStrong, border: `0.5px solid ${T.border}` }}
       onClick={() => setOpen(o => !o)}
     >
       <div className="flex items-center justify-between px-5 py-4">
-        <p className="text-sm font-medium text-white pr-4">{q}</p>
+        <p className="text-sm font-medium pr-4" style={{ color: T.text }}>{q}</p>
         {open
-          ? <ChevronUp size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />
-          : <ChevronDown size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />}
+          ? <ChevronUp size={16} style={{ color: T.textFaint }} />
+          : <ChevronDown size={16} style={{ color: T.textFaint }} />}
       </div>
       {open && (
         <div className="px-5 pb-4">
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>{a}</p>
+          <p className="text-sm" style={{ color: T.textMuted, lineHeight: 1.7 }}>{a}</p>
         </div>
       )}
     </div>
@@ -889,7 +956,11 @@ function FAQ({ q, a }) {
 export default function LandingPage({ onGetStarted }) {
   const [lang, setLang] = useState(detectLang);
   const [langOpen, setLangOpen] = useState(false);
+  // Dark is the landing's native look; light kicks in when the visitor picked
+  // it here before, or in the app (both share the pfm_theme key).
+  const [theme, setTheme] = useState(() => (localStorage.getItem('pfm_theme') === 'light' ? 'light' : 'dark'));
   const c = CONTENT[lang];
+  const T = THEMES[theme];
   const activeLang = LANGS.find(l => l.code === lang);
 
   const handleLang = (code) => {
@@ -898,8 +969,17 @@ export default function LandingPage({ onGetStarted }) {
     localStorage.setItem('pfm_language', code);
   };
 
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    // Same key + attribute the app reads, so the choice follows the visitor
+    // through sign-in.
+    localStorage.setItem('pfm_theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+  };
+
   return (
-    <div className="min-h-screen" style={{ background: '#0d0a1e', color: '#fff' }}>
+    <div className="min-h-screen" style={{ background: T.bg, color: T.text }}>
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 max-w-6xl mx-auto gap-4">
@@ -909,12 +989,22 @@ export default function LandingPage({ onGetStarted }) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all shrink-0"
+            style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
+          >
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+
           {/* Language dropdown */}
           <div className="relative">
             <button
               onClick={() => setLangOpen(o => !o)}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all"
-              style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.75)', border: '0.5px solid rgba(255,255,255,0.12)' }}
+              style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
             >
               <span>{activeLang?.flag}</span>
               <span>{activeLang?.label}</span>
@@ -924,7 +1014,7 @@ export default function LandingPage({ onGetStarted }) {
             {langOpen && (
               <div
                 className="absolute right-0 mt-1 rounded-xl overflow-hidden z-50"
-                style={{ background: '#1a1630', border: '0.5px solid rgba(255,255,255,0.12)', minWidth: '130px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}
+                style={{ background: T.menuBg, border: `0.5px solid ${T.borderStrong}`, minWidth: '130px', boxShadow: T.menuShadow }}
               >
                 {LANGS.map(({ code, flag, label, complete }) => (
                   <button
@@ -932,8 +1022,8 @@ export default function LandingPage({ onGetStarted }) {
                     onClick={() => handleLang(code)}
                     className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors"
                     style={lang === code
-                      ? { background: 'rgba(124,92,252,0.25)', color: '#a78bfa' }
-                      : { color: 'rgba(255,255,255,0.7)' }}
+                      ? { background: T.accentActiveBg, color: T.accentText }
+                      : { color: T.textSoft }}
                   >
                     <span>{flag}</span>
                     <span className="flex-1">{label}</span>
@@ -941,7 +1031,7 @@ export default function LandingPage({ onGetStarted }) {
                       <span
                         title="Translation still in progress"
                         className="w-1.5 h-1.5 rounded-full shrink-0"
-                        style={{ background: '#f5c842' }}
+                        style={{ background: T.gold }}
                       />
                     )}
                   </button>
@@ -953,7 +1043,7 @@ export default function LandingPage({ onGetStarted }) {
           <button
             onClick={onGetStarted}
             className="text-sm font-medium px-4 py-2 rounded-xl transition-all shrink-0"
-            style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '0.5px solid rgba(255,255,255,0.15)' }}
+            style={{ background: T.chipBg, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
           >
             {c.signIn}
           </button>
@@ -962,9 +1052,9 @@ export default function LandingPage({ onGetStarted }) {
 
       {/* Hero */}
       <section className="relative text-center px-6 pt-16 pb-24 max-w-3xl mx-auto">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,92,252,0.35) 0%, transparent 70%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${T.heroGlow} 0%, transparent 70%)` }} />
         <div className="relative">
-          <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-6" style={{ background: 'rgba(124,92,252,0.15)', color: '#a78bfa', border: '0.5px solid rgba(124,92,252,0.3)' }}>
+          <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-6" style={{ background: T.accentSoftBg, color: T.accentText, border: `0.5px solid ${T.accentBorder}` }}>
             <Sparkles size={11} /> {c.badge}
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-5 leading-tight">
@@ -973,36 +1063,36 @@ export default function LandingPage({ onGetStarted }) {
               {c.h1b}
             </span>
           </h1>
-          <p className="text-base md:text-lg mb-8 max-w-xl mx-auto" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>{c.subtitle}</p>
+          <p className="text-base md:text-lg mb-8 max-w-xl mx-auto" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.subtitle}</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={onGetStarted}
               className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-semibold text-white"
-              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: '0 0 30px rgba(124,92,252,0.4)' }}
+              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadow }}
             >
               {c.cta}
             </button>
             <button
               onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
               className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-medium"
-              style={{ background: 'rgba(255,255,255,0.06)', color: '#fff', border: '0.5px solid rgba(255,255,255,0.12)' }}
+              style={{ background: T.surfaceStrong, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
             >
               {c.howItWorks}
             </button>
           </div>
-          <p className="text-xs mt-4 italic" style={{ color: 'rgba(255,255,255,0.3)' }}>{c.verse}</p>
+          <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.verse}</p>
         </div>
       </section>
 
       {/* Stats strip */}
       <section className="px-6 max-w-4xl mx-auto mb-24">
-        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-4" style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)' }}>
+        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-4" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
           {c.stats.map(({ emoji, label, value, sub }) => (
             <div key={label} className="text-center py-2">
               <div className="text-3xl mb-2">{emoji}</div>
               <div className="text-3xl font-bold mb-0.5" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{value}</div>
-              <div className="text-xs font-medium text-white mb-0.5">{label}</div>
-              <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{sub}</div>
+              <div className="text-xs font-medium mb-0.5" style={{ color: T.text }}>{label}</div>
+              <div className="text-xs" style={{ color: T.textDim }}>{sub}</div>
             </div>
           ))}
         </div>
@@ -1012,16 +1102,16 @@ export default function LandingPage({ onGetStarted }) {
       <section className="px-6 max-w-5xl mx-auto mb-24">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>{c.featuresSub}</p>
+          <p className="text-sm" style={{ color: T.textFaint }}>{c.featuresSub}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {c.features.map(({ icon: Icon, color, title, desc }) => (
-            <div key={title} className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)' }}>
+            <div key={title} className="rounded-2xl p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: color + '22' }}>
                 <Icon size={18} style={{ color }} />
               </div>
-              <h3 className="text-sm font-semibold mb-1.5 text-white">{title}</h3>
-              <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{desc}</p>
+              <h3 className="text-sm font-semibold mb-1.5" style={{ color: T.text }}>{title}</h3>
+              <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
             </div>
           ))}
         </div>
@@ -1031,22 +1121,22 @@ export default function LandingPage({ onGetStarted }) {
       <section id="how-it-works" className="px-6 max-w-3xl mx-auto mb-24">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>{c.stepsSub}</p>
+          <p className="text-sm" style={{ color: T.textFaint }}>{c.stepsSub}</p>
         </div>
         <div className="space-y-4">
           {c.steps.map(({ emoji, title, desc }, i) => (
-            <div key={title} className="flex items-start gap-5 rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.08)' }}>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'rgba(124,92,252,0.15)', border: '0.5px solid rgba(124,92,252,0.2)' }}>
+            <div key={title} className="flex items-start gap-5 rounded-2xl p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: T.accentSoftBg, border: `0.5px solid ${T.accentBorder}` }}>
                 {emoji}
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: 'rgba(124,92,252,0.2)', color: '#a78bfa' }}>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: T.accentChipBg, color: T.accentText }}>
                     {lang === 'de' ? `Schritt ${i + 1}` : lang === 'fr' ? `Étape ${i + 1}` : lang === 'pt' ? `Passo ${i + 1}` : `Step ${i + 1}`}
                   </span>
-                  <h3 className="text-sm font-semibold text-white">{title}</h3>
+                  <h3 className="text-sm font-semibold" style={{ color: T.text }}>{title}</h3>
                 </div>
-                <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{desc}</p>
+                <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
               </div>
             </div>
           ))}
@@ -1055,27 +1145,27 @@ export default function LandingPage({ onGetStarted }) {
 
       {/* Scripture finder callout */}
       <section className="px-6 max-w-5xl mx-auto mb-24">
-        <div className="rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: 'linear-gradient(135deg, rgba(124,92,252,0.2), rgba(167,139,250,0.08))', border: '0.5px solid rgba(124,92,252,0.25)' }}>
+        <div className="rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `0.5px solid ${T.calloutBorder}` }}>
           <div className="flex-1">
-            <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,92,252,0.2)', color: '#a78bfa' }}>
+            <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4" style={{ background: T.accentChipBg, color: T.accentText }}>
               <BookOpen size={11} /> {c.calloutBadge}
             </div>
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
-            <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
-            <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
+            <p className="text-sm mb-3" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.calloutDesc}</p>
+            <p className="text-xs mb-5 italic" style={{ color: T.textDim, lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
             <button onClick={onGetStarted} className="px-6 py-3 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
               {c.calloutTry}
             </button>
           </div>
-          <div className="w-full md:w-64 rounded-2xl p-4 shrink-0" style={{ background: 'rgba(0,0,0,0.3)', border: '0.5px solid rgba(255,255,255,0.08)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>{c.calloutPreviewLabel}</p>
+          <div className="w-full md:w-64 rounded-2xl p-4 shrink-0" style={{ background: T.previewBg, border: `0.5px solid ${T.border}` }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: T.textDim }}>{c.calloutPreviewLabel}</p>
             {[
               { point: lang === 'fr' ? 'La paix qui surpasse tout entendement' : lang === 'de' ? 'Friede, der allen Verstand übersteigt' : lang === 'pt' ? 'A paz que excede todo entendimento' : 'Peace that surpasses understanding', verse: 'Philippians 4:7' },
               { point: lang === 'fr' ? 'Faire confiance au temps de Dieu' : lang === 'de' ? 'Gottes Timing vertrauen' : lang === 'pt' ? 'Confiar no tempo de Deus' : 'Trust in God\'s timing', verse: 'Isaiah 40:31' },
             ].map(({ point, verse }) => (
-              <div key={verse} className="rounded-xl p-3 mb-2" style={{ background: 'rgba(255,255,255,0.05)', borderLeft: '3px solid #f5c842' }}>
-                <p className="text-xs text-white mb-1">{point}</p>
-                <p className="text-xs flex items-center gap-1" style={{ color: '#f5c842' }}>
+              <div key={verse} className="rounded-xl p-3 mb-2" style={{ background: T.previewItemBg, borderLeft: `3px solid ${T.gold}` }}>
+                <p className="text-xs mb-1" style={{ color: T.text }}>{point}</p>
+                <p className="text-xs flex items-center gap-1" style={{ color: T.gold }}>
                   <BookOpen size={9} /> {verse}
                 </p>
               </div>
@@ -1090,33 +1180,33 @@ export default function LandingPage({ onGetStarted }) {
           <h2 className="text-3xl font-bold mb-3">{c.faqTitle}</h2>
         </div>
         <div className="space-y-2">
-          {c.faqs.map(faq => <FAQ key={faq.q} {...faq} />)}
+          {c.faqs.map(faq => <FAQ key={faq.q} {...faq} T={T} />)}
         </div>
       </section>
 
       {/* Final CTA */}
       <section className="relative px-6 py-20 text-center overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124,92,252,0.25) 0%, transparent 70%)' }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 70% 80% at 50% 50%, ${T.ctaGlow} 0%, transparent 70%)` }} />
         <div className="relative max-w-xl mx-auto">
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
-          <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.7 }}>{c.ctaSub}</p>
-          <button onClick={onGetStarted} className="px-8 py-4 rounded-2xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: '0 0 40px rgba(124,92,252,0.45)' }}>
+          <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
+          <button onClick={onGetStarted} className="px-8 py-4 rounded-2xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadowBig }}>
             {c.ctaBtn}
           </button>
-          <p className="text-xs mt-4 italic" style={{ color: 'rgba(255,255,255,0.25)' }}>{c.ctaVerse}</p>
+          <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
+      <footer className="px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: T.border }}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />
-            <span className="text-sm font-medium text-white">Pray4Me</span>
+            <span className="text-sm font-medium" style={{ color: T.text }}>Pray4Me</span>
           </div>
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>{c.footerBuilt}</p>
-          <button onClick={onGetStarted} className="text-xs font-medium px-4 py-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)', border: '0.5px solid rgba(255,255,255,0.1)' }}>
+          <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
+          <button onClick={onGetStarted} className="text-xs font-medium px-4 py-2 rounded-xl" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>
             {c.signIn} →
           </button>
         </div>
