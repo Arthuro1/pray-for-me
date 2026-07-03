@@ -180,6 +180,7 @@ Run these SQL files in your Supabase SQL editor (in order):
 8. [`supabase/verse_cache.sql`](./supabase/verse_cache.sql) — shared, world-readable cache of resolved Scripture text (one fetch per verse for all users)
 9. [`supabase/community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped shared cache for community translations (members reuse each other's)
 10. [`supabase/split_reminder_crons.sql`](./supabase/split_reminder_crons.sql) — **upgrade only**: run once if your project still has the old combined `send-reminders` cron, to cut over to the two split jobs above
+11. [`supabase/user_settings.sql`](./supabase/user_settings.sql) — account-level `user_settings` table (language + reminder prefs synced across browsers/devices)
 
 > The daily verse is served client-side from a curated pool of ~200 vetted,
 > prayer-themed references ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)),

@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
+import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
+import { ensurePushSubscription } from '../push';
 import { resolveLanguage } from '../i18n';
 import {
   canEncrypt,
@@ -124,6 +126,10 @@ const usePrayerStore = create((set, get) => ({
   // ─── Load all data ───────────────────────────────────────────
   loadData: async (userId) => {
     set({ loading: true, userId });
+
+    // Account-level settings (language, reminder prefs) sync in parallel —
+    // fire-and-forget so an offline settings fetch never blocks prayers.
+    get().syncSettings(userId);
 
     // 1. Hydrate instantly from the local snapshot (works offline and includes
     //    any prayers created offline that aren't on the server yet).
@@ -644,20 +650,48 @@ const usePrayerStore = create((set, get) => ({
     set((state) => ({ categories: state.categories.filter((c) => c.id !== id) }));
   },
 
-  // ─── Settings (localStorage only) ────────────────────────────
-  updateSettings: (updates) => {
+  // ─── Settings ────────────────────────────────────────────────
+  // localStorage is the instant local copy; language + reminder prefs are also
+  // mirrored to the account-level user_settings row so every signed-in browser
+  // agrees (theme + notificationsGranted stay device-local on purpose).
+  // `sync: false` is used when applying values that just came FROM the server.
+  updateSettings: (updates, { sync = true } = {}) => {
     if (updates.language) localStorage.setItem('pfm_language', updates.language);
     if (updates.theme) {
       localStorage.setItem('pfm_theme', updates.theme);
       document.documentElement.setAttribute('data-theme', updates.theme);
     }
+    let next;
     set((state) => {
-      const next = { ...state.settings, ...updates };
+      next = { ...state.settings, ...updates };
       // Persist all prefs (reminder toggle/time, follow-up, etc.) so they survive
       // a refresh — previously only language/theme were saved.
       try { localStorage.setItem('pfm_settings', JSON.stringify(next)); } catch { /* ignore */ }
       return { settings: next };
     });
+    const { userId } = get();
+    if (sync && userId && touchesSyncedSettings(updates)) {
+      saveUserSettings(userId, next).catch(() => { /* offline — next change retries */ });
+    }
+  },
+
+  // Pull the account's settings so this browser matches the others; a browser
+  // signing in before any server row exists seeds it from its local state.
+  // Afterwards, re-align this device's push subscription with whatever won, so
+  // reminders enabled elsewhere are delivered here too (permission permitting).
+  syncSettings: async (userId) => {
+    try {
+      const server = await fetchUserSettings(userId);
+      if (server) {
+        if (server.language) {
+          server.language = resolveLanguage(server.language, navigator.language || navigator.userLanguage);
+        }
+        get().updateSettings(server, { sync: false });
+      } else {
+        await saveUserSettings(userId, get().settings);
+      }
+      await ensurePushSubscription(userId, get().settings);
+    } catch { /* offline — local settings stand */ }
   },
 
   // ─── Today's prayers ─────────────────────────────────────────

@@ -5,7 +5,7 @@ import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, Globe, Sun, Moon, Me
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
-import { enablePush, updatePushPrefs, disablePush, getFollowUpLastSent } from '../push';
+import { enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
 import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
 import FeedbackModal from '../components/FeedbackModal';
@@ -115,11 +115,11 @@ export default function SettingsTab() {
   // Server sets last_follow_up_sent_at each time it actually pushes one; pull
   // it in whenever the toggle is on so "next follow-up" reflects reality.
   useEffect(() => {
-    if (!settings.followUpEnabled) return;
+    if (!settings.followUpEnabled || !user?.id) return;
     let cancelled = false;
-    getFollowUpLastSent().then((val) => { if (!cancelled) setFollowUpLastSent(val); });
+    getFollowUpLastSent(user.id).then((val) => { if (!cancelled) setFollowUpLastSent(val); });
     return () => { cancelled = true; };
-  }, [settings.followUpEnabled]);
+  }, [settings.followUpEnabled, user?.id]);
 
   const handleLockVault = () => {
     lockVault();
@@ -137,29 +137,30 @@ export default function SettingsTab() {
       if (res?.error === 'denied') {
         updateSettings({ dailyReminderEnabled: false });
         toast.error(t(lang, 'pushDenied'));
-      } else if (res?.error) {
-        // Reminder saved, but this device/browser can't deliver push (e.g. dev
-        // server with no service worker). In-app reminders still show while open.
-        toast.info(t(lang, 'pushUnavailable'));
       } else {
-        updateSettings({ notificationsGranted: true });
-        toast.success(t(lang, 'remindersOn'));
+        if (res?.error) {
+          // Reminder saved, but this device/browser can't deliver push (e.g. dev
+          // server with no service worker). In-app reminders still show while open.
+          toast.info(t(lang, 'pushUnavailable'));
+        } else {
+          updateSettings({ notificationsGranted: true });
+          toast.success(t(lang, 'remindersOn'));
+        }
+        // The toggle is account-level: align every other signed-in device's
+        // subscription row too (enablePush only wrote this one's).
+        try { await updatePushPrefs(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); } catch { /* best-effort */ }
       }
     } else {
       updateSettings({ dailyReminderEnabled: false });
-      // The daily and follow-up reminders share one push subscription row —
-      // only tear it down (unsubscribe + delete) once neither is wanted.
-      if (settings.followUpEnabled) {
-        try { await updatePushPrefs(user?.id, { enabled: false }); } catch { /* best-effort */ }
-      } else {
-        try { await disablePush(); } catch { /* best-effort */ }
-      }
+      // Subscription rows stay (the scheduler skips enabled=false) so
+      // re-enabling later doesn't need a new permission prompt anywhere.
+      try { await updatePushPrefs(user?.id, { enabled: false }); } catch { /* best-effort */ }
     }
   };
 
   const handleReminderTimeChange = (time) => {
     updateSettings({ dailyReminderTime: time });
-    if (settings.dailyReminderEnabled || settings.followUpEnabled) updatePushPrefs(user?.id, { reminderTime: time });
+    updatePushPrefs(user?.id, { reminderTime: time });
   };
 
   // Follow-up reminders fire on the same schedule engine as the daily one
@@ -181,25 +182,25 @@ export default function SettingsTab() {
       if (res?.error === 'denied') {
         updateSettings({ followUpEnabled: false });
         toast.error(t(lang, 'pushDenied'));
-      } else if (res?.error) {
-        toast.info(t(lang, 'pushUnavailable'));
       } else {
-        updateSettings({ notificationsGranted: true });
-        toast.success(t(lang, 'remindersOn'));
+        if (res?.error) {
+          toast.info(t(lang, 'pushUnavailable'));
+        } else {
+          updateSettings({ notificationsGranted: true });
+          toast.success(t(lang, 'remindersOn'));
+        }
+        // Account-level toggle — align the other devices' rows as well.
+        try { await updatePushPrefs(user?.id, { followUpEnabled: true, followUpDays: settings.followUpDays }); } catch { /* best-effort */ }
       }
     } else {
       updateSettings({ followUpEnabled: false });
-      if (settings.dailyReminderEnabled) {
-        try { await updatePushPrefs(user?.id, { followUpEnabled: false }); } catch { /* best-effort */ }
-      } else {
-        try { await disablePush(); } catch { /* best-effort */ }
-      }
+      try { await updatePushPrefs(user?.id, { followUpEnabled: false }); } catch { /* best-effort */ }
     }
   };
 
   const handleFollowUpDaysChange = (days) => {
     updateSettings({ followUpDays: days });
-    if (settings.followUpEnabled) updatePushPrefs(user?.id, { followUpDays: days });
+    updatePushPrefs(user?.id, { followUpDays: days });
   };
 
   const handleRevokeAi = () => {
@@ -385,7 +386,7 @@ export default function SettingsTab() {
             </div>
             <LanguageDropdown
               lang={lang}
-              onChange={(code) => { updateSettings({ language: code }); if (settings.dailyReminderEnabled || settings.followUpEnabled) updatePushPrefs(user?.id, { lang: code }); }}
+              onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
             />
           </div>
         </div>
