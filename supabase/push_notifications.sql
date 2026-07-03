@@ -32,23 +32,25 @@ drop policy if exists "own push subs" on public.push_subscriptions;
 create policy "own push subs" on public.push_subscriptions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
--- 2. Scheduled job — runs every 15 minutes and invokes the send-reminders
+-- 2. Scheduled job — runs every 15 minutes and invokes the send-daily-reminder
 --    Edge Function, which decides which subscriptions are due in their local
---    timezone. Requires the pg_cron and pg_net extensions.
+--    timezone. Requires the pg_cron and pg_net extensions. The follow-up
+--    reminder has its own, independently-scheduled function/cron — see
+--    supabase/follow_up_reminders.sql.
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
 
 -- Remove any previous schedule with the same name, then (re)create it.
 -- ⚠️  Replace <PROJECT_REF> and <SERVICE_ROLE_KEY> below before running.
-select cron.unschedule('send-reminders')
-  where exists (select 1 from cron.job where jobname = 'send-reminders');
+select cron.unschedule('send-daily-reminder')
+  where exists (select 1 from cron.job where jobname = 'send-daily-reminder');
 
 select cron.schedule(
-  'send-reminders',
+  'send-daily-reminder',
   '*/15 * * * *',
   $$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-reminders',
+    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-daily-reminder',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
       'Authorization', 'Bearer <SERVICE_ROLE_KEY>'

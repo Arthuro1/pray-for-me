@@ -1,19 +1,16 @@
-// Supabase Edge Function: send-reminders
-// Invoked every ~15 min by pg_cron. Finds subscriptions whose local time has
-// just reached their reminder_time and sends a localized Web Push.
-//
-// Deploy:  supabase functions deploy send-reminders --no-verify-jwt
-// Secrets: supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
-import { createClient } from 'npm:@supabase/supabase-js@2';
+// Shared helpers for the independently-scheduled send-daily-reminder and
+// send-follow-up-reminder Edge Functions (split from the original combined
+// send-reminders function so each reminder type has its own cron/deploy).
+import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import webpush from 'npm:web-push@3.6.7';
 
-const WINDOW_MIN = 15; // must match the cron interval
+export const WINDOW_MIN = 15; // must match each cron's interval
 
 // Short localized templates. {count} is replaced; body0 is used when count === 0.
 // {titles} is a ": Title1, Title2…" suffix (built in code, empty when no plaintext
 // titles are available — e.g. prayers still locked in an E2EE vault) inserted
 // right before the closing punctuation of the count sentence.
-const MSG: Record<string, { title: string; body: string; body0: string }> = {
+export const MSG: Record<string, { title: string; body: string; body0: string }> = {
   en: { title: 'Daily reminder', body: 'You have {count} prayer subject(s) for today{titles}.', body0: 'Take a moment with God today.' },
   fr: { title: 'Rappel quotidien', body: 'Vous avez {count} sujet(s) de prière aujourd\'hui{titles}.', body0: 'Prenez un moment avec Dieu aujourd\'hui.' },
   de: { title: 'Tägliche Erinnerung', body: 'Du hast heute {count} Gebetsanliegen{titles}.', body0: 'Nimm dir heute einen Moment mit Gott.' },
@@ -36,7 +33,7 @@ const MSG: Record<string, { title: string; body: string; body0: string }> = {
 // (or the user themself) and logging the answer on the prayer. Fires on the
 // same local reminder_time window as the daily reminder, but only every
 // {days}, per subscription (see FOLLOWUP_MSG.self / followUpDue below).
-const FOLLOWUP_MSG: Record<string, { title: string; body: string; body0: string; self: string }> = {
+export const FOLLOWUP_MSG: Record<string, { title: string; body: string; body0: string; self: string }> = {
   en: { title: 'Prayer follow-up', body: 'Reach out to {names} and see how God has been moving — then add what you learn to their prayer.', body0: "Reach out to those you've prayed for — yourself included — and see how God has been moving. Add what you learn to their prayer.", self: 'yourself' },
   fr: { title: 'Suivi des prières', body: 'Prenez des nouvelles de {names} et voyez comment Dieu a agi — puis ajoutez sa réponse à la prière.', body0: 'Prenez des nouvelles des personnes pour qui vous avez prié — vous y compris — et voyez comment Dieu a agi. Ajoutez ce que vous apprenez à la prière.', self: 'vous-même' },
   de: { title: 'Gebet-Nachverfolgung', body: 'Melde dich bei {names} und erfahre, wie Gott gewirkt hat — füge die Antwort dann zum Gebet hinzu.', body0: 'Melde dich bei den Menschen, für die du gebetet hast — dich eingeschlossen — und erfahre, wie Gott gewirkt hat. Füge es dem Gebet hinzu.', self: 'dir selbst' },
@@ -59,7 +56,7 @@ const MAX_LISTED_TITLES = 5;
 
 // Builds the "{titles}" suffix, e.g. ": Healing for Mom, Job interview…".
 // Empty when no plaintext titles exist (E2EE-locked prayers store '' server-side).
-function buildTitleSuffix(prayers: { title?: string }[]): string {
+export function buildTitleSuffix(prayers: { title?: string }[]): string {
   const titles = prayers.map((p) => (p.title || '').trim()).filter(Boolean);
   if (!titles.length) return '';
   const shown = titles.slice(0, MAX_LISTED_TITLES).join(', ');
@@ -71,7 +68,7 @@ function buildTitleSuffix(prayers: { title?: string }[]): string {
 // any prayer for the user's own life adds `selfLabel` once. Empty when a prayer
 // is for someone else but its name is E2EE-locked (stored as '' server-side)
 // and there's no personal prayer to fall back to — the caller uses body0 then.
-function buildFollowUpNames(prayers: { person_name?: string; for_other?: boolean }[], selfLabel: string): string {
+export function buildFollowUpNames(prayers: { person_name?: string; for_other?: boolean }[], selfLabel: string): string {
   const names: string[] = [];
   const seen = new Set<string>();
   let includeSelf = false;
@@ -90,135 +87,70 @@ function buildFollowUpNames(prayers: { person_name?: string; for_other?: boolean
 
 // True once `days` have elapsed since the last follow-up push (or immediately,
 // if none has ever been sent for this subscription).
-function followUpDue(lastSentAt: string | null, days: number | null, now: Date): boolean {
+export function followUpDue(lastSentAt: string | null, days: number | null, now: Date): boolean {
   if (!lastSentAt) return true;
   const elapsedMs = now.getTime() - new Date(lastSentAt).getTime();
   return elapsedMs >= (days || 7) * 86400000;
 }
 
-function prayerDueToday(p: any, dow: number, todayCatIds: Set<string>): boolean {
+export function prayerDueToday(p: any, dow: number, todayCatIds: Set<string>): boolean {
   if (Array.isArray(p.week_days) && p.week_days.length) return p.week_days.includes(dow);
   const catIds = (p.prayer_categories || []).map((pc: any) => pc.category_id);
   if (catIds.length === 0) return true; // uncategorized = every day
   return catIds.some((id: string) => todayCatIds.has(id));
 }
 
-const json = (obj: unknown, status = 200) =>
+// True when `sub`'s local clock has just reached its reminder_time (within
+// the cron's polling window). Both reminder types anchor to this same field.
+export function isWithinReminderWindow(sub: { tz_offset?: number; reminder_time?: string }, utcMinutes: number): boolean {
+  const local = (((utcMinutes + (sub.tz_offset || 0)) % 1440) + 1440) % 1440;
+  const [rh, rm] = String(sub.reminder_time || '07:00').split(':').map(Number);
+  const diff = local - (rh * 60 + rm);
+  return diff >= 0 && diff < WINDOW_MIN;
+}
+
+export const json = (obj: unknown, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
 
-Deno.serve(async () => {
- try {
+// Reads/validates the env this function needs and returns a ready Supabase
+// client, or a Response to return immediately when something's missing —
+// surfaces a clear reason instead of a blank 500.
+export function initReminderEnv(): { supabase: SupabaseClient } | { error: Response } {
   const url = Deno.env.get('SUPABASE_URL');
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   const vapidPublic = Deno.env.get('VAPID_PUBLIC_KEY');
   const vapidPrivate = Deno.env.get('VAPID_PRIVATE_KEY');
 
-  // Surface a clear reason instead of a blank 500 when a secret is missing.
   const missing = ([
     ['SUPABASE_URL', url],
     ['SUPABASE_SERVICE_ROLE_KEY', serviceKey],
     ['VAPID_PUBLIC_KEY', vapidPublic],
     ['VAPID_PRIVATE_KEY', vapidPrivate],
   ] as [string, string | undefined][]).filter(([, v]) => !v).map(([k]) => k);
-  if (missing.length) return json({ error: 'missing_env', missing }, 500);
-
-  const supabase = createClient(url!, serviceKey!);
+  if (missing.length) return { error: json({ error: 'missing_env', missing }, 500) };
 
   try {
     webpush.setVapidDetails(Deno.env.get('VAPID_SUBJECT') || 'mailto:admin@pray4me.app', vapidPublic!, vapidPrivate!);
   } catch (e) {
-    return json({ error: 'invalid_vapid_keys', message: String((e as Error)?.message || e) }, 500);
+    return { error: json({ error: 'invalid_vapid_keys', message: String((e as Error)?.message || e) }, 500) };
   }
 
-  const now = new Date();
-  const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+  return { supabase: createClient(url!, serviceKey!) };
+}
 
-  // A subscription is fetched if either reminder type is switched on for it —
-  // the two share one row (one per device) but fire independently below.
-  const { data: subs, error } = await supabase
-    .from('push_subscriptions')
-    .select('*')
-    .or('enabled.eq.true,follow_up_enabled.eq.true');
-  if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-
-  let sent = 0;
-  for (const sub of subs || []) {
-    const local = (((utcMinutes + (sub.tz_offset || 0)) % 1440) + 1440) % 1440;
-    const [rh, rm] = String(sub.reminder_time || '07:00').split(':').map(Number);
-    const diff = local - (rh * 60 + rm);
-    if (diff < 0 || diff >= WINDOW_MIN) continue; // neither reminder is due in this window (both anchor to reminder_time)
-
-    const dueFollowUp = !!sub.follow_up_enabled && followUpDue(sub.last_follow_up_sent_at, sub.follow_up_days, now);
-    if (!sub.enabled && !dueFollowUp) continue;
-
-    const { data: prayers } = await supabase
-      .from('prayers')
-      .select('title, week_days, person_name, for_other, prayer_categories(category_id)')
-      .eq('user_id', sub.user_id)
-      .eq('status', 'active');
-
-    let subscriptionGone = false;
-
-    if (sub.enabled) {
-      // Count today's prayers in the subscriber's local timezone.
-      const localDow = new Date(now.getTime() + (sub.tz_offset || 0) * 60000).getUTCDay();
-      const { data: cats } = await supabase.from('categories').select('id, week_days').eq('user_id', sub.user_id);
-      const todayCatIds = new Set((cats || []).filter((c: any) => (c.week_days || []).includes(localDow)).map((c: any) => c.id));
-      const duePrayers = (prayers || []).filter((p: any) => prayerDueToday(p, localDow, todayCatIds));
-
-      const m = MSG[sub.lang] || MSG.en;
-      const payload = JSON.stringify({
-        title: m.title,
-        body: duePrayers.length > 0
-          ? m.body.replace('{count}', String(duePrayers.length)).replace('{titles}', buildTitleSuffix(duePrayers))
-          : m.body0,
-        url: '/',
-        tag: 'daily-reminder',
-      });
-
-      try {
-        await webpush.sendNotification(
-          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-          payload,
-        );
-        sent++;
-      } catch (e: any) {
-        // Subscription expired/invalid — clean it up and skip the follow-up below too.
-        if (e?.statusCode === 404 || e?.statusCode === 410) {
-          await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
-          subscriptionGone = true;
-        }
-      }
-    }
-
-    if (!subscriptionGone && dueFollowUp && (prayers || []).length > 0) {
-      const fm = FOLLOWUP_MSG[sub.lang] || FOLLOWUP_MSG.en;
-      const names = buildFollowUpNames(prayers as any[], fm.self);
-      const payload = JSON.stringify({
-        title: fm.title,
-        body: names ? fm.body.replace('{names}', names) : fm.body0,
-        url: '/',
-        tag: 'follow-up',
-      });
-
-      try {
-        await webpush.sendNotification(
-          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-          payload,
-        );
-        await supabase.from('push_subscriptions').update({ last_follow_up_sent_at: now.toISOString() }).eq('endpoint', sub.endpoint);
-        sent++;
-      } catch (e: any) {
-        if (e?.statusCode === 404 || e?.statusCode === 410) {
-          await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
-        }
-      }
-    }
+// Sends one Web Push message. `gone` is true when the subscription is
+// expired/invalid (404/410) and should be deleted by the caller.
+export async function sendPush(
+  sub: { endpoint: string; p256dh: string; auth: string },
+  payload: string,
+): Promise<{ sent: boolean; gone: boolean }> {
+  try {
+    await webpush.sendNotification(
+      { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+      payload,
+    );
+    return { sent: true, gone: false };
+  } catch (e: any) {
+    return { sent: false, gone: e?.statusCode === 404 || e?.statusCode === 410 };
   }
-
-  return json({ sent });
- } catch (e) {
-  // Any unexpected failure → readable message instead of a blank 500.
-  return json({ error: 'unhandled', message: String((e as Error)?.message || e) }, 500);
- }
-});
+}

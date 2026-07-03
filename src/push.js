@@ -98,8 +98,8 @@ export async function updatePushPrefs(userId, prefs = {}) {
 }
 
 // Reads this device's last-follow-up-sent timestamp (set server-side by
-// send-reminders), so Settings can show when the next one is due. Null if
-// never sent yet or there's no subscription for this device.
+// send-follow-up-reminder), so Settings can show when the next one is due.
+// Null if never sent yet or there's no subscription for this device.
 export async function getFollowUpLastSent() {
   const reg = await swReady();
   const sub = reg && await reg.pushManager.getSubscription();

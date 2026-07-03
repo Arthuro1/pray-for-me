@@ -10,8 +10,9 @@ export function nextReminder(timeStr, now = new Date()) {
 
 // When the next follow-up reminder will fire, given the last time one was
 // sent (null if never), the cadence in days, and the daily reminder time it
-// rides on. Mirrors followUpDue() in the send-reminders Edge Function so the
-// UI matches what the server will actually do. Pure so it can be unit-tested.
+// rides on. Mirrors followUpDue() in the send-follow-up-reminder Edge
+// Function so the UI matches what the server will actually do. Pure so it
+// can be unit-tested.
 export function nextFollowUp(lastSentAt, days, timeStr, now = new Date()) {
   const [h, m] = (timeStr || '07:00').split(':').map((n) => parseInt(n, 10) || 0);
   const pad = (n) => String(n).padStart(2, '0');

@@ -10,7 +10,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/). This project us
 - **Prayer sharing & two-way sync** — share a personal prayer to multiple groups (optionally anonymous); updates, prayer points, verses, categories, and answered status stay in sync between a prayer and its shared copies.
 - **On-demand translation** of community content ("See translation") into the viewer's language.
 - **Offline support** — create/edit/delete/answer prayers and add updates/points/verses while offline, with optimistic UI, a durable IndexedDB write queue, idempotent replay on reconnect, local snapshot hydration, and a "syncing" indicator.
-- **Real push notifications** — Web Push daily reminders delivered even when the app is closed, via `pg_cron` + a `send-reminders` Supabase Edge Function (localized, per-user local time).
+- **Real push notifications** — Web Push daily + follow-up reminders delivered even when the app is closed, via `pg_cron` + independently-scheduled `send-daily-reminder` / `send-follow-up-reminder` Supabase Edge Functions (localized, per-user local time).
 - **Answered-prayers reflection view**; testimonies kept as a running list across resume / re-answer.
 - **Weekly recap** (answered prayers / testimonies) on the home screen — a remembrance of God's faithfulness.
 - **First-run onboarding** and **Export my data** (JSON download of the full journal).

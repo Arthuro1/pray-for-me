@@ -162,7 +162,7 @@ YVP_APP_KEY=your-youversion-app-key              # optional — in-app verse rea
 >
 > The **YouVersion App Key** follows the same rule: set `YVP_APP_KEY` (server-only) and `VITE_YOUVERSION_ENABLED=true` (public on/off flag) to read authoritative verse text in the app. The dev proxy and [`api/youversion.js`](./api/youversion.js) inject it as `X-YVP-App-Key` server-side. Leave both unset to keep the AI text fallback.
 >
-> The **VAPID private key** is used only by the `send-reminders` Edge Function and lives in Supabase secrets (`supabase secrets set VAPID_PRIVATE_KEY=...`) — never in `.env` and never `VITE_`-prefixed.
+> The **VAPID private key** is used only by the `send-daily-reminder` and `send-follow-up-reminder` Edge Functions and lives in Supabase secrets (`supabase secrets set VAPID_PRIVATE_KEY=...`) — never in `.env` and never `VITE_`-prefixed.
 
 ---
 
@@ -175,10 +175,11 @@ Run these SQL files in your Supabase SQL editor (in order):
 3. [`supabase/security_hardening.sql`](./supabase/security_hardening.sql) — invite-code-validated joins, forgeable-source fix
 4. [`supabase/offline_client_ids.sql`](./supabase/offline_client_ids.sql) — client-id sync RPCs for offline writes
 5. [`supabase/offline_conflict_hardening.sql`](./supabase/offline_conflict_hardening.sql) — `answer_prayer` (append-not-overwrite testimonies)
-6. [`supabase/push_notifications.sql`](./supabase/push_notifications.sql) — `push_subscriptions` table + `pg_cron` reminder job
-7. [`supabase/follow_up_reminders.sql`](./supabase/follow_up_reminders.sql) — adds the independently-scheduled follow-up reminder columns to `push_subscriptions`
+6. [`supabase/push_notifications.sql`](./supabase/push_notifications.sql) — `push_subscriptions` table + `pg_cron` job for `send-daily-reminder`
+7. [`supabase/follow_up_reminders.sql`](./supabase/follow_up_reminders.sql) — adds the follow-up reminder columns to `push_subscriptions` + its own `pg_cron` job for `send-follow-up-reminder`
 8. [`supabase/verse_cache.sql`](./supabase/verse_cache.sql) — shared, world-readable cache of resolved Scripture text (one fetch per verse for all users)
 9. [`supabase/community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped shared cache for community translations (members reuse each other's)
+10. [`supabase/split_reminder_crons.sql`](./supabase/split_reminder_crons.sql) — **upgrade only**: run once if your project still has the old combined `send-reminders` cron, to cut over to the two split jobs above
 
 > The daily verse is served client-side from a curated pool of ~200 vetted,
 > prayer-themed references ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)),
@@ -195,7 +196,10 @@ Run these SQL files in your Supabase SQL editor (in order):
 
 | Function | Purpose | Trigger |
 |---|---|---|
-| `send-reminders` | Sends localized daily + follow-up Web Push reminders at each user's local reminder time | `pg_cron`, every 15 min |
+| `send-daily-reminder` | Sends the localized daily Web Push (today's prayer subjects) at each user's local reminder time | `pg_cron`, every 15 min |
+| `send-follow-up-reminder` | Sends the localized follow-up Web Push (reach out to who you prayed for) at each user's local reminder time, every `follow_up_days` | `pg_cron`, every 15 min |
+
+Both functions share localization templates and scheduling logic from [`supabase/functions/_shared/reminders.ts`](./supabase/functions/_shared/reminders.ts) but run as separate deployments with separate cron jobs, so either reminder can be redeployed, rescheduled, or disabled without touching the other.
 
 > `generate-daily-verse` is **deprecated** (the daily verse is now client-side). If
 > it's still deployed, unschedule its cron and delete the function so it can't run
@@ -209,7 +213,8 @@ Run these SQL files in your Supabase SQL editor (in order):
 
 ```bash
 # Push reminders (generate a VAPID keypair first: npx web-push generate-vapid-keys)
-npx supabase functions deploy send-reminders --no-verify-jwt
+npx supabase functions deploy send-daily-reminder --no-verify-jwt
+npx supabase functions deploy send-follow-up-reminder --no-verify-jwt
 npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 ```
 
@@ -281,9 +286,11 @@ src/
 └── App.jsx                     # Routes, queue init, theme
 supabase/
 ├── functions/
-│   ├── generate-daily-verse/   # Edge Function: daily Bible verse cron
-│   └── send-reminders/         # Edge Function: Web Push reminders (pg_cron)
-└── *.sql                       # Schema, sync, security, offline, push migrations
+│   ├── generate-daily-verse/       # Edge Function: daily Bible verse cron (deprecated)
+│   ├── send-daily-reminder/        # Edge Function: daily Web Push (pg_cron)
+│   ├── send-follow-up-reminder/    # Edge Function: follow-up Web Push (pg_cron)
+│   └── _shared/                    # Shared reminder templates + helpers
+└── *.sql                           # Schema, sync, security, offline, push migrations
 ```
 
 ---
