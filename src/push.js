@@ -97,6 +97,21 @@ export async function updatePushPrefs(userId, prefs = {}) {
   await supabase.from('push_subscriptions').update(patch).eq('endpoint', sub.endpoint);
 }
 
+// Reads this device's last-follow-up-sent timestamp (set server-side by
+// send-reminders), so Settings can show when the next one is due. Null if
+// never sent yet or there's no subscription for this device.
+export async function getFollowUpLastSent() {
+  const reg = await swReady();
+  const sub = reg && await reg.pushManager.getSubscription();
+  if (!sub) return null;
+  const { data } = await supabase
+    .from('push_subscriptions')
+    .select('last_follow_up_sent_at')
+    .eq('endpoint', sub.endpoint)
+    .maybeSingle();
+  return data?.last_follow_up_sent_at || null;
+}
+
 // Disable reminders for this device: unsubscribe locally and remove the row.
 export async function disablePush() {
   const reg = await swReady();

@@ -5,9 +5,9 @@ import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, Globe, Sun, Moon, Me
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
-import { enablePush, updatePushPrefs, disablePush } from '../push';
+import { enablePush, updatePushPrefs, disablePush, getFollowUpLastSent } from '../push';
 import { buildExport } from '../utils/export';
-import { nextReminder } from '../utils/reminder';
+import { nextReminder, nextFollowUp } from '../utils/reminder';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 import VaultModal from '../components/VaultModal';
@@ -108,8 +108,18 @@ export default function SettingsTab() {
   const [showDonate, setShowDonate] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [aiOn, setAiOn] = useState(hasAnyAiConsent());
+  const [followUpLastSent, setFollowUpLastSent] = useState(null);
 
   const lang = settings.language || 'fr';
+
+  // Server sets last_follow_up_sent_at each time it actually pushes one; pull
+  // it in whenever the toggle is on so "next follow-up" reflects reality.
+  useEffect(() => {
+    if (!settings.followUpEnabled) return;
+    let cancelled = false;
+    getFollowUpLastSent().then((val) => { if (!cancelled) setFollowUpLastSent(val); });
+    return () => { cancelled = true; };
+  }, [settings.followUpEnabled]);
 
   const handleLockVault = () => {
     lockVault();
@@ -448,6 +458,19 @@ export default function SettingsTab() {
                     <option value={14}>{t(lang, 'every2weeks')}</option>
                     <option value={30}>{t(lang, 'everyMonth')}</option>
                   </select>
+                  {(() => {
+                    const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.dailyReminderTime);
+                    const dayLabel = nf.daysAhead === 0
+                      ? t(lang, 'today')
+                      : nf.daysAhead === 1
+                        ? t(lang, 'tomorrow')
+                        : nf.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
+                    return (
+                      <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+                        {t(lang, 'nextReminder')} · {dayLabel} {nf.time}
+                      </p>
+                    );
+                  })()}
                 </div>
               )}
             </Row>
