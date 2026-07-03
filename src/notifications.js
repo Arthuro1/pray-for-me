@@ -17,9 +17,14 @@ export function scheduleNotifications(settings, prayers) {
 
     if (stalePrayers.length > 0) {
       const lang = settings.language || 'en';
+      const MAX_LISTED_TITLES = 5;
+      const titles = stalePrayers.map((p) => (p.title || '').trim()).filter(Boolean);
+      const titleSuffix = titles.length
+        ? `: ${titles.slice(0, MAX_LISTED_TITLES).join(', ')}${titles.length > MAX_LISTED_TITLES ? '…' : ''}`
+        : '';
       setTimeout(() => {
         new Notification(`📋 Pray4Me — ${t(lang, 'followUp')}`, {
-          body: t(lang, 'followUpNotifBody', { count: stalePrayers.length, days: settings.followUpDays }),
+          body: t(lang, 'followUpNotifBody', { count: stalePrayers.length, days: settings.followUpDays, titles: titleSuffix }),
           icon: '/favicon.ico',
           tag: 'follow-up',
         });

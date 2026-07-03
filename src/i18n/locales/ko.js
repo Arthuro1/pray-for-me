@@ -221,7 +221,7 @@ export default {
   "reminderTime": "알림 시간",
   "followUp": "기도 후속",
   "followUpSub": "기도 업데이트 요청",
-  "followUpNotifBody": "{count}개의 기도 제목이 {days}일 동안 업데이트되지 않았습니다. 하나님은 어떻게 일하고 계신가요?",
+  "followUpNotifBody": "{count}개의 기도 제목이 {days}일 동안 업데이트되지 않았습니다{titles}. 하나님은 어떻게 일하고 계신가요?",
   "followUpFreq": "빈도",
   "every3days": "3일마다",
   "everyWeek": "매주",

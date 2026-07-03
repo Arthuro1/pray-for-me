@@ -222,7 +222,7 @@ export default {
   "reminderTime": "Reminder time",
   "followUp": "Prayer follow-up",
   "followUpSub": "Ask for prayer updates",
-  "followUpNotifBody": "{count} prayer(s) haven't been updated in {days} days. How is God working?",
+  "followUpNotifBody": "{count} prayer(s) haven't been updated in {days} days{titles}. How is God working?",
   "followUpFreq": "Follow-up frequency",
   "every3days": "Every 3 days",
   "everyWeek": "Every week",

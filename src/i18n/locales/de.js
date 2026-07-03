@@ -222,7 +222,7 @@ export default {
   "reminderTime": "Erinnerungszeit",
   "followUp": "Gebet-Nachverfolgung",
   "followUpSub": "Nach Entwicklungen der Gebete fragen",
-  "followUpNotifBody": "{count} Gebet(e) wurden seit {days} Tagen nicht aktualisiert. Wie wirkt Gott?",
+  "followUpNotifBody": "{count} Gebet(e) wurden seit {days} Tagen nicht aktualisiert{titles}. Wie wirkt Gott?",
   "followUpFreq": "Häufigkeit",
   "every3days": "Alle 3 Tage",
   "everyWeek": "Jede Woche",

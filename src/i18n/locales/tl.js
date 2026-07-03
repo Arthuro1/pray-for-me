@@ -221,7 +221,7 @@ export default {
   "reminderTime": "Oras ng paalala",
   "followUp": "Follow-up ng panalangin",
   "followUpSub": "Humingi ng mga update sa panalangin",
-  "followUpNotifBody": "May {count} panalangin na hindi na-update sa loob ng {days} araw. Paano gumagalaw ang Diyos?",
+  "followUpNotifBody": "May {count} panalangin na hindi na-update sa loob ng {days} araw{titles}. Paano gumagalaw ang Diyos?",
   "followUpFreq": "Dalas",
   "every3days": "Bawat 3 araw",
   "everyWeek": "Bawat linggo",
