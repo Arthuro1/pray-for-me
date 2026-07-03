@@ -81,9 +81,9 @@ Every label, tooltip, button, and daily verse adapts to the selected language. E
 - Local snapshot hydration so your journal loads instantly, even offline
 
 ### 🔔 Push Notifications
-- Real **Web Push** daily reminders — delivered even when the app is closed
-- Server-driven: `pg_cron` invokes a Supabase Edge Function that sends localized pushes at each user's chosen local time
-- Follow-up and call reminders
+- Real **Web Push** daily reminders — delivered even when the app is closed, listing that day's prayer subjects by title
+- Follow-up reminders at a user-chosen frequency (every 3 days, weekly, every 2 weeks, monthly) — nudges you to reach out to whoever each active prayer is for (yourself included) and add what you learn back to the prayer
+- Server-driven: both reminders are sent by one `pg_cron`-invoked Supabase Edge Function, independently toggled per device
 - _iOS: push requires the app installed to the Home Screen (PWA), iOS 16.4+_
 
 ### ♿ Accessibility
@@ -176,8 +176,9 @@ Run these SQL files in your Supabase SQL editor (in order):
 4. [`supabase/offline_client_ids.sql`](./supabase/offline_client_ids.sql) — client-id sync RPCs for offline writes
 5. [`supabase/offline_conflict_hardening.sql`](./supabase/offline_conflict_hardening.sql) — `answer_prayer` (append-not-overwrite testimonies)
 6. [`supabase/push_notifications.sql`](./supabase/push_notifications.sql) — `push_subscriptions` table + `pg_cron` reminder job
-7. [`supabase/verse_cache.sql`](./supabase/verse_cache.sql) — shared, world-readable cache of resolved Scripture text (one fetch per verse for all users)
-8. [`supabase/community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped shared cache for community translations (members reuse each other's)
+7. [`supabase/follow_up_reminders.sql`](./supabase/follow_up_reminders.sql) — adds the independently-scheduled follow-up reminder columns to `push_subscriptions`
+8. [`supabase/verse_cache.sql`](./supabase/verse_cache.sql) — shared, world-readable cache of resolved Scripture text (one fetch per verse for all users)
+9. [`supabase/community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped shared cache for community translations (members reuse each other's)
 
 > The daily verse is served client-side from a curated pool of ~200 vetted,
 > prayer-themed references ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)),
@@ -194,7 +195,7 @@ Run these SQL files in your Supabase SQL editor (in order):
 
 | Function | Purpose | Trigger |
 |---|---|---|
-| `send-reminders` | Sends localized Web Push reminders at each user's local reminder time | `pg_cron`, every 15 min |
+| `send-reminders` | Sends localized daily + follow-up Web Push reminders at each user's local reminder time | `pg_cron`, every 15 min |
 
 > `generate-daily-verse` is **deprecated** (the daily verse is now client-side). If
 > it's still deployed, unschedule its cron and delete the function so it can't run

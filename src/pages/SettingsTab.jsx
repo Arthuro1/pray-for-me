@@ -122,7 +122,7 @@ export default function SettingsTab() {
       // as best-effort. Only an explicit permission denial reverts it.
       updateSettings({ dailyReminderEnabled: true });
       let res;
-      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang }); }
+      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); }
       catch { res = { error: 'failed' }; }
       if (res?.error === 'denied') {
         updateSettings({ dailyReminderEnabled: false });
@@ -137,13 +137,59 @@ export default function SettingsTab() {
       }
     } else {
       updateSettings({ dailyReminderEnabled: false });
-      try { await disablePush(); } catch { /* best-effort */ }
+      // The daily and follow-up reminders share one push subscription row —
+      // only tear it down (unsubscribe + delete) once neither is wanted.
+      if (settings.followUpEnabled) {
+        try { await updatePushPrefs(user?.id, { enabled: false }); } catch { /* best-effort */ }
+      } else {
+        try { await disablePush(); } catch { /* best-effort */ }
+      }
     }
   };
 
   const handleReminderTimeChange = (time) => {
     updateSettings({ dailyReminderTime: time });
-    if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { reminderTime: time });
+    if (settings.dailyReminderEnabled || settings.followUpEnabled) updatePushPrefs(user?.id, { reminderTime: time });
+  };
+
+  // Follow-up reminders fire on the same schedule engine as the daily one
+  // (server-side, at the user's local reminder time) but only every N days,
+  // so they share a push subscription row with independent on/off flags.
+  const handleToggleFollowUp = async () => {
+    if (!settings.followUpEnabled) {
+      updateSettings({ followUpEnabled: true });
+      let res;
+      try {
+        res = await enablePush(user?.id, {
+          reminderTime: settings.dailyReminderTime,
+          lang,
+          enabled: settings.dailyReminderEnabled,
+          followUpEnabled: true,
+          followUpDays: settings.followUpDays,
+        });
+      } catch { res = { error: 'failed' }; }
+      if (res?.error === 'denied') {
+        updateSettings({ followUpEnabled: false });
+        toast.error(t(lang, 'pushDenied'));
+      } else if (res?.error) {
+        toast.info(t(lang, 'pushUnavailable'));
+      } else {
+        updateSettings({ notificationsGranted: true });
+        toast.success(t(lang, 'remindersOn'));
+      }
+    } else {
+      updateSettings({ followUpEnabled: false });
+      if (settings.dailyReminderEnabled) {
+        try { await updatePushPrefs(user?.id, { followUpEnabled: false }); } catch { /* best-effort */ }
+      } else {
+        try { await disablePush(); } catch { /* best-effort */ }
+      }
+    }
+  };
+
+  const handleFollowUpDaysChange = (days) => {
+    updateSettings({ followUpDays: days });
+    if (settings.followUpEnabled) updatePushPrefs(user?.id, { followUpDays: days });
   };
 
   const handleRevokeAi = () => {
@@ -329,7 +375,7 @@ export default function SettingsTab() {
             </div>
             <LanguageDropdown
               lang={lang}
-              onChange={(code) => { updateSettings({ language: code }); if (settings.dailyReminderEnabled) updatePushPrefs(user?.id, { lang: code }); }}
+              onChange={(code) => { updateSettings({ language: code }); if (settings.dailyReminderEnabled || settings.followUpEnabled) updatePushPrefs(user?.id, { lang: code }); }}
             />
           </div>
         </div>
@@ -388,12 +434,12 @@ export default function SettingsTab() {
           </Row>
 
           <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-            <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={() => updateSettings({ followUpEnabled: !settings.followUpEnabled })}>
+            <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
               {settings.followUpEnabled && (
                 <div className="mt-3">
                   <select
                     value={settings.followUpDays}
-                    onChange={(e) => updateSettings({ followUpDays: parseInt(e.target.value) })}
+                    onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
                     className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
                     style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                   >

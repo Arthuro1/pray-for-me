@@ -222,7 +222,6 @@ export default {
   "reminderTime": "Heure du rappel",
   "followUp": "Suivi des prières",
   "followUpSub": "Demander l'évolution des prières",
-  "followUpNotifBody": "{count} prière(s) n'ont pas été mises à jour depuis {days} jours{titles}. Comment Dieu agit-il ?",
   "followUpFreq": "Fréquence du suivi",
   "every3days": "Tous les 3 jours",
   "everyWeek": "Chaque semaine",

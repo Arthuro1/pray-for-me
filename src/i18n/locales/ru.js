@@ -221,7 +221,6 @@ export default {
   "reminderTime": "Время напоминания",
   "followUp": "Отслеживание молитв",
   "followUpSub": "Запрашивать обновления молитв",
-  "followUpNotifBody": "{count} молитв(ы) не обновлялись {days} дней{titles}. Как действует Бог?",
   "followUpFreq": "Частота",
   "every3days": "Каждые 3 дня",
   "everyWeek": "Каждую неделю",

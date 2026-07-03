@@ -32,6 +32,29 @@ const MSG: Record<string, { title: string; body: string; body0: string }> = {
   tl: { title: '🙏 Oras na manalangin', body: 'May {count} paksa ng panalangin ka ngayon{titles}.', body0: 'Maglaan ng sandali kasama ang Diyos ngayon.' },
 };
 
+// Follow-up reminder: encourages reaching out to whoever a prayer is for
+// (or the user themself) and logging the answer on the prayer. Fires on the
+// same local reminder_time window as the daily reminder, but only every
+// {days}, per subscription (see FOLLOWUP_MSG.self / followUpDue below).
+const FOLLOWUP_MSG: Record<string, { title: string; body: string; body0: string; self: string }> = {
+  en: { title: '📋 Time to follow up', body: 'Reach out to {names} and see how God has been moving — then add what you learn to their prayer.', body0: "Reach out to those you've prayed for — yourself included — and see how God has been moving. Add what you learn to their prayer.", self: 'yourself' },
+  fr: { title: '📋 Temps de suivi', body: 'Prenez des nouvelles de {names} et voyez comment Dieu a agi — puis ajoutez sa réponse à la prière.', body0: 'Prenez des nouvelles des personnes pour qui vous avez prié — vous y compris — et voyez comment Dieu a agi. Ajoutez ce que vous apprenez à la prière.', self: 'vous-même' },
+  de: { title: '📋 Zeit für ein Update', body: 'Melde dich bei {names} und erfahre, wie Gott gewirkt hat — füge die Antwort dann zum Gebet hinzu.', body0: 'Melde dich bei den Menschen, für die du gebetet hast — dich eingeschlossen — und erfahre, wie Gott gewirkt hat. Füge es dem Gebet hinzu.', self: 'dir selbst' },
+  pt: { title: '📋 Hora de fazer um acompanhamento', body: 'Entre em contato com {names} e veja como Deus tem agido — depois adicione a resposta à oração.', body0: 'Entre em contato com quem você orou — incluindo você mesmo — e veja como Deus tem agido. Adicione o que descobrir à oração.', self: 'você mesmo' },
+  es: { title: '📋 Hora de dar seguimiento', body: 'Contacta a {names} y descubre cómo ha actuado Dios — luego añade la respuesta a la oración.', body0: 'Contacta a quienes has orado — incluyéndote a ti mismo — y descubre cómo ha actuado Dios. Añade lo que descubras a la oración.', self: 'ti mismo' },
+  zh: { title: '📋 该跟进了', body: '联系 {names}，看看神做了什么工作——然后把结果添加到祷告详情中。', body0: '联系你曾为之祷告的人（也包括你自己），看看神做了什么工作，并把结果添加到祷告详情中。', self: '你自己' },
+  ja: { title: '📋 フォローアップの時間です', body: '{names} に連絡して、神様の働きを聞いてみましょう。祈りの詳細に追記してください。', body0: '祈った相手に——あなた自身も含めて——連絡して、神様の働きを聞いてみましょう。祈りの詳細に追記してください。', self: 'あなた自身' },
+  ko: { title: '📋 후속 확인할 시간', body: '{names}님에게 연락해 하나님이 어떻게 역사하셨는지 확인하고, 기도 항목에 추가해 보세요.', body0: '기도했던 분들에게(자기 자신 포함) 연락해 하나님의 역사하심을 확인하고 기도 항목에 추가해 보세요.', self: '자기 자신' },
+  ru: { title: '📋 Время узнать новости', body: 'Свяжитесь с {names} и узнайте, как действовал Бог — затем добавьте ответ к молитве.', body0: 'Свяжитесь с теми, за кого вы молились — включая себя — и узнайте, как действовал Бог. Добавьте это к молитве.', self: 'собой' },
+  ar: { title: '📋 وقت المتابعة', body: 'تواصل مع {names} واكتشف كيف عمل الله — ثم أضف الإجابة إلى الصلاة.', body0: 'تواصل مع من صليت لأجلهم — بما في ذلك نفسك — واكتشف كيف عمل الله، وأضف ما تتعلمه إلى الصلاة.', self: 'نفسك' },
+  fa: { title: '📋 وقت پیگیری', body: 'با {names} تماس بگیرید و ببینید خدا چه کرده است — سپس پاسخ را به دعا اضافه کنید.', body0: 'با کسانی که برایشان دعا کرده‌اید—از جمله خودتان—تماس بگیرید و آنچه خدا انجام داده را به دعا اضافه کنید.', self: 'خودتان' },
+  hi: { title: '📋 फॉलो-अप का समय', body: '{names} से संपर्क करें और देखें परमेश्वर ने क्या किया — फिर उत्तर को प्रार्थना में जोड़ें।', body0: 'जिनके लिए आपने प्रार्थना की है (स्वयं सहित) उनसे संपर्क करें और परमेश्वर के काम को प्रार्थना विवरण में जोड़ें।', self: 'स्वयं' },
+  sw: { title: '📋 Wakati wa kufuatilia', body: 'Wasiliana na {names} uone jinsi Mungu alivyofanya kazi — kisha ongeza jibu kwenye maombi.', body0: 'Wasiliana na wale uliowaombea — ukiwemo wewe mwenyewe — uone jinsi Mungu alivyofanya kazi, kisha uongeze kwenye maombi.', self: 'wewe mwenyewe' },
+  am: { title: '📋 የክትትል ጊዜ', body: '{names}ን ያግኙ እና እግዚአብሔር እንዴት እንደሠራ ይመልከቱ — ከዚያ መልሱን ወደ ጸሎቱ ያክሉ።', body0: 'ስለ እነርሱ የጸለዩላቸውን ሰዎች — እራስዎን ጨምሮ — ያግኙ እና እግዚአብሔር የሠራውን ወደ ጸሎቱ ያክሉ።', self: 'እራስዎ' },
+  id: { title: '📋 Waktunya menindaklanjuti', body: 'Hubungi {names} dan lihat bagaimana Tuhan bekerja — lalu tambahkan jawabannya ke doa.', body0: 'Hubungi orang yang Anda doakan — termasuk diri sendiri — dan lihat bagaimana Tuhan bekerja. Tambahkan ke detail doa.', self: 'diri sendiri' },
+  tl: { title: '📋 Oras na para mag-follow up', body: 'Makipag-ugnayan kay {names} at tingnan kung paano gumagalaw ang Diyos — pagkatapos ay idagdag ang sagot sa panalangin.', body0: 'Makipag-ugnayan sa mga ipinananalangin mo — kasama ang sarili mo — at tingnan kung paano gumagalaw ang Diyos. Idagdag ito sa detalye ng panalangin.', self: 'sa sarili mo' },
+};
+
 const MAX_LISTED_TITLES = 5;
 
 // Builds the "{titles}" suffix, e.g. ": Healing for Mom, Job interview…".
@@ -41,6 +64,36 @@ function buildTitleSuffix(prayers: { title?: string }[]): string {
   if (!titles.length) return '';
   const shown = titles.slice(0, MAX_LISTED_TITLES).join(', ');
   return `: ${shown}${titles.length > MAX_LISTED_TITLES ? '…' : ''}`;
+}
+
+// Builds the "{names}" list for the follow-up reminder — who to reach out to.
+// Prayers "for someone else" contribute their plaintext person_name (deduped);
+// any prayer for the user's own life adds `selfLabel` once. Empty when a prayer
+// is for someone else but its name is E2EE-locked (stored as '' server-side)
+// and there's no personal prayer to fall back to — the caller uses body0 then.
+function buildFollowUpNames(prayers: { person_name?: string; for_other?: boolean }[], selfLabel: string): string {
+  const names: string[] = [];
+  const seen = new Set<string>();
+  let includeSelf = false;
+  for (const p of prayers) {
+    if (p.for_other) {
+      const name = (p.person_name || '').trim();
+      if (name && !seen.has(name)) { seen.add(name); names.push(name); }
+    } else {
+      includeSelf = true;
+    }
+  }
+  if (includeSelf) names.push(selfLabel);
+  if (!names.length) return '';
+  return `${names.slice(0, MAX_LISTED_TITLES).join(', ')}${names.length > MAX_LISTED_TITLES ? '…' : ''}`;
+}
+
+// True once `days` have elapsed since the last follow-up push (or immediately,
+// if none has ever been sent for this subscription).
+function followUpDue(lastSentAt: string | null, days: number | null, now: Date): boolean {
+  if (!lastSentAt) return true;
+  const elapsedMs = now.getTime() - new Date(lastSentAt).getTime();
+  return elapsedMs >= (days || 7) * 86400000;
 }
 
 function prayerDueToday(p: any, dow: number, todayCatIds: Set<string>): boolean {
@@ -80,10 +133,12 @@ Deno.serve(async () => {
   const now = new Date();
   const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
 
+  // A subscription is fetched if either reminder type is switched on for it —
+  // the two share one row (one per device) but fire independently below.
   const { data: subs, error } = await supabase
     .from('push_subscriptions')
     .select('*')
-    .eq('enabled', true);
+    .or('enabled.eq.true,follow_up_enabled.eq.true');
   if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
 
   let sent = 0;
@@ -91,37 +146,72 @@ Deno.serve(async () => {
     const local = (((utcMinutes + (sub.tz_offset || 0)) % 1440) + 1440) % 1440;
     const [rh, rm] = String(sub.reminder_time || '07:00').split(':').map(Number);
     const diff = local - (rh * 60 + rm);
-    if (diff < 0 || diff >= WINDOW_MIN) continue; // not due in this window
+    if (diff < 0 || diff >= WINDOW_MIN) continue; // neither reminder is due in this window (both anchor to reminder_time)
 
-    // Count today's prayers in the subscriber's local timezone.
-    const localDow = new Date(now.getTime() + (sub.tz_offset || 0) * 60000).getUTCDay();
-    const [{ data: cats }, { data: prayers }] = await Promise.all([
-      supabase.from('categories').select('id, week_days').eq('user_id', sub.user_id),
-      supabase.from('prayers').select('title, week_days, prayer_categories(category_id)').eq('user_id', sub.user_id).eq('status', 'active'),
-    ]);
-    const todayCatIds = new Set((cats || []).filter((c: any) => (c.week_days || []).includes(localDow)).map((c: any) => c.id));
-    const duePrayers = (prayers || []).filter((p: any) => prayerDueToday(p, localDow, todayCatIds));
+    const dueFollowUp = !!sub.follow_up_enabled && followUpDue(sub.last_follow_up_sent_at, sub.follow_up_days, now);
+    if (!sub.enabled && !dueFollowUp) continue;
 
-    const m = MSG[sub.lang] || MSG.en;
-    const payload = JSON.stringify({
-      title: m.title,
-      body: duePrayers.length > 0
-        ? m.body.replace('{count}', String(duePrayers.length)).replace('{titles}', buildTitleSuffix(duePrayers))
-        : m.body0,
-      url: '/',
-      tag: 'daily-reminder',
-    });
+    const { data: prayers } = await supabase
+      .from('prayers')
+      .select('title, week_days, person_name, for_other, prayer_categories(category_id)')
+      .eq('user_id', sub.user_id)
+      .eq('status', 'active');
 
-    try {
-      await webpush.sendNotification(
-        { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-        payload,
-      );
-      sent++;
-    } catch (e: any) {
-      // Subscription expired/invalid — clean it up.
-      if (e?.statusCode === 404 || e?.statusCode === 410) {
-        await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+    let subscriptionGone = false;
+
+    if (sub.enabled) {
+      // Count today's prayers in the subscriber's local timezone.
+      const localDow = new Date(now.getTime() + (sub.tz_offset || 0) * 60000).getUTCDay();
+      const { data: cats } = await supabase.from('categories').select('id, week_days').eq('user_id', sub.user_id);
+      const todayCatIds = new Set((cats || []).filter((c: any) => (c.week_days || []).includes(localDow)).map((c: any) => c.id));
+      const duePrayers = (prayers || []).filter((p: any) => prayerDueToday(p, localDow, todayCatIds));
+
+      const m = MSG[sub.lang] || MSG.en;
+      const payload = JSON.stringify({
+        title: m.title,
+        body: duePrayers.length > 0
+          ? m.body.replace('{count}', String(duePrayers.length)).replace('{titles}', buildTitleSuffix(duePrayers))
+          : m.body0,
+        url: '/',
+        tag: 'daily-reminder',
+      });
+
+      try {
+        await webpush.sendNotification(
+          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+          payload,
+        );
+        sent++;
+      } catch (e: any) {
+        // Subscription expired/invalid — clean it up and skip the follow-up below too.
+        if (e?.statusCode === 404 || e?.statusCode === 410) {
+          await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+          subscriptionGone = true;
+        }
+      }
+    }
+
+    if (!subscriptionGone && dueFollowUp && (prayers || []).length > 0) {
+      const fm = FOLLOWUP_MSG[sub.lang] || FOLLOWUP_MSG.en;
+      const names = buildFollowUpNames(prayers as any[], fm.self);
+      const payload = JSON.stringify({
+        title: fm.title,
+        body: names ? fm.body.replace('{names}', names) : fm.body0,
+        url: '/',
+        tag: 'follow-up',
+      });
+
+      try {
+        await webpush.sendNotification(
+          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+          payload,
+        );
+        await supabase.from('push_subscriptions').update({ last_follow_up_sent_at: now.toISOString() }).eq('endpoint', sub.endpoint);
+        sent++;
+      } catch (e: any) {
+        if (e?.statusCode === 404 || e?.statusCode === 410) {
+          await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+        }
       }
     }
   }

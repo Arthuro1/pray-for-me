@@ -33,8 +33,12 @@ async function swReady(timeoutMs = 3000) {
 
 // Ask permission, subscribe via the service worker, and store the subscription
 // in Supabase. Returns { error } on failure ('denied' | 'unsupported' | 'failed').
-// Never hangs or throws. Safe to call repeatedly.
-export async function enablePush(userId, { reminderTime = '07:00', lang = 'en' } = {}) {
+// Never hangs or throws. Safe to call repeatedly. `followUpEnabled`/`followUpDays`
+// are omitted from the upsert (leaving any existing value untouched) unless
+// explicitly passed, so enabling the daily reminder alone doesn't clobber the
+// follow-up reminder's independent state on their shared subscription row —
+// callers must pass the current `enabled` explicitly to preserve it likewise.
+export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays } = {}) {
   if (!pushSupported() || !VAPID_PUBLIC_KEY || !userId) return { error: 'unsupported' };
 
   let permission;
@@ -57,27 +61,28 @@ export async function enablePush(userId, { reminderTime = '07:00', lang = 'en' }
       });
     }
     const json = sub.toJSON();
-    const { error } = await supabase.from('push_subscriptions').upsert(
-      {
-        user_id: userId,
-        endpoint: sub.endpoint,
-        p256dh: json.keys?.p256dh,
-        auth: json.keys?.auth,
-        reminder_time: reminderTime,
-        tz_offset: tzOffset(),
-        lang,
-        enabled: true,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'endpoint' }
-    );
+    const payload = {
+      user_id: userId,
+      endpoint: sub.endpoint,
+      p256dh: json.keys?.p256dh,
+      auth: json.keys?.auth,
+      reminder_time: reminderTime,
+      tz_offset: tzOffset(),
+      lang,
+      enabled: enabled === undefined ? true : enabled,
+      updated_at: new Date().toISOString(),
+    };
+    if (followUpEnabled !== undefined) payload.follow_up_enabled = followUpEnabled;
+    if (followUpDays !== undefined) payload.follow_up_days = followUpDays;
+    const { error } = await supabase.from('push_subscriptions').upsert(payload, { onConflict: 'endpoint' });
     return { error: error ? 'failed' : undefined };
   } catch {
     return { error: 'failed' };
   }
 }
 
-// Update reminder time / language for this device's subscription (if any).
+// Update reminder time / language / reminder toggles for this device's
+// subscription (if any). Only the passed fields are touched.
 export async function updatePushPrefs(userId, prefs = {}) {
   if (!pushSupported() || !userId) return;
   const reg = await swReady();
@@ -86,6 +91,9 @@ export async function updatePushPrefs(userId, prefs = {}) {
   const patch = { tz_offset: tzOffset(), updated_at: new Date().toISOString() };
   if (prefs.reminderTime) patch.reminder_time = prefs.reminderTime;
   if (prefs.lang) patch.lang = prefs.lang;
+  if (prefs.enabled !== undefined) patch.enabled = prefs.enabled;
+  if (prefs.followUpEnabled !== undefined) patch.follow_up_enabled = prefs.followUpEnabled;
+  if (prefs.followUpDays !== undefined) patch.follow_up_days = prefs.followUpDays;
   await supabase.from('push_subscriptions').update(patch).eq('endpoint', sub.endpoint);
 }
 

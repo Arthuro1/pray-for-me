@@ -222,7 +222,6 @@ export default {
   "reminderTime": "Horário do lembrete",
   "followUp": "Acompanhamento",
   "followUpSub": "Pedir atualizações das orações",
-  "followUpNotifBody": "{count} oração(ões) não foram atualizadas há {days} dias{titles}. Como Deus está agindo?",
   "followUpFreq": "Frequência",
   "every3days": "A cada 3 dias",
   "everyWeek": "Toda semana",

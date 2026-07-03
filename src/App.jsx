@@ -29,7 +29,6 @@ import useCommunityStore from './store/communityStore';
 import useVaultStore from './store/vaultStore';
 import VaultLockScreen from './components/VaultLockScreen';
 import { pullVaultRecord } from './lib/vaultSync';
-import { scheduleNotifications } from './notifications';
 import { hasAiConsent } from './components/AiConsentModal';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
@@ -200,10 +199,6 @@ export default function App() {
     if (!user?.id) return;
     return subscribePending(user.id);
   }, [user?.id]);
-
-  useEffect(() => {
-    if (user) scheduleNotifications(settings, prayers);
-  }, [settings, prayers]);
 
   // Translate personal content only when the user is actually reading in a
   // language other than the one they write in, and has opted into AI. This avoids
