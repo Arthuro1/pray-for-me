@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "Sumusunod sa lingguhang plano",
   "schedOnce": "Minsanan",
   "schedRecurring": "Paulit-ulit",
+  "schedAdvanced": "Mga advanced na opsyon",
+  "supporterTag": "Supporter",
   "freqDaily": "Araw-araw",
   "freqWeekly": "Lingguhan",
   "freqInterval": "Bawat N araw",

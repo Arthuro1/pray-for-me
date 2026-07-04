@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "주간 계획 따르기",
   "schedOnce": "한 번만",
   "schedRecurring": "반복",
+  "schedAdvanced": "고급 옵션",
+  "supporterTag": "서포터",
   "freqDaily": "매일",
   "freqWeekly": "매주",
   "freqInterval": "N일마다",

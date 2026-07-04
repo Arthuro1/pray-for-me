@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "Inafuata mpango wa wiki",
   "schedOnce": "Mara moja",
   "schedRecurring": "Inayojirudia",
+  "schedAdvanced": "Chaguo za kina",
+  "supporterTag": "Mdhamini",
   "freqDaily": "Kila siku",
   "freqWeekly": "Kila wiki",
   "freqInterval": "Kila siku N",

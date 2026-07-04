@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "طبق برنامهٔ هفتگی",
   "schedOnce": "یک‌بار",
   "schedRecurring": "تکرارشونده",
+  "schedAdvanced": "گزینه‌های پیشرفته",
+  "supporterTag": "حامی",
   "freqDaily": "روزانه",
   "freqWeekly": "هفتگی",
   "freqInterval": "هر N روز",

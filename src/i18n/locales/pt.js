@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "Segue o plano semanal",
   "schedOnce": "Uma vez",
   "schedRecurring": "Recorrente",
+  "schedAdvanced": "Opções avançadas",
+  "supporterTag": "Apoiador",
   "freqDaily": "Diário",
   "freqWeekly": "Semanal",
   "freqInterval": "A cada N dias",

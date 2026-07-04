@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "يتبع الخطة الأسبوعية",
   "schedOnce": "مرة واحدة",
   "schedRecurring": "متكررة",
+  "schedAdvanced": "خيارات متقدمة",
+  "supporterTag": "داعم",
   "freqDaily": "يوميًا",
   "freqWeekly": "أسبوعيًا",
   "freqInterval": "كل N أيام",

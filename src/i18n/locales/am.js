@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "የሳምንቱን እቅድ ይከተላል",
   "schedOnce": "አንድ ጊዜ",
   "schedRecurring": "ተደጋጋሚ",
+  "schedAdvanced": "የላቁ አማራጮች",
+  "supporterTag": "ደጋፊ",
   "freqDaily": "በየቀኑ",
   "freqWeekly": "በየሳምንቱ",
   "freqInterval": "በየ N ቀን",

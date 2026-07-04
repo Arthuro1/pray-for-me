@@ -1,7 +1,9 @@
-import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check } from 'lucide-react';
+import { useState } from 'react';
+import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown, Sparkles } from 'lucide-react';
 import { t } from '../i18n';
 import { normalizeSchedule, parseKey, SLOTS } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
+import { isSupporterFeature, FEATURES } from '../lib/plan';
 
 // Plain-language recurrence picker. Deliberately presets-first (no cron-style
 // builder): one-time / daily / weekdays / every-N-days / monthly / yearly,
@@ -13,6 +15,22 @@ import { todayKey } from '../lib/prayedLog';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const SLOT_ICONS = { morning: Sunrise, midday: Sun, evening: Moon };
+
+// Simple/Advanced split (Task 3). "Simple" covers the everyday cases — daily or
+// weekly recurrence that runs forever or "until answered". The Supporter-tier
+// ADVANCED_SCHEDULING controls (custom recurrence rules + bounded end dates) live
+// behind an "Advanced options" toggle carrying a soft, non-blocking Supporter tag.
+// Nothing is locked while BILLING_ENABLED is false — the tag is a gentle
+// thank-you hint, not a gate, so every existing schedule keeps working.
+const ADVANCED_FREQS = ['interval', 'monthly', 'yearly'];
+const ADVANCED_END_KINDS = ['date', 'count'];
+
+// True when a draft already uses an advanced control. Used to auto-open the
+// advanced section when editing an existing schedule so nothing is hidden.
+export function isAdvancedDraft(d) {
+  if (!d || d.mode !== 'recurring') return false;
+  return ADVANCED_FREQS.includes(d.freq) || ADVANCED_END_KINDS.includes(d.endKind);
+}
 
 export function emptyDraft() {
   return {
@@ -123,6 +141,19 @@ function Chip({ active, onClick, children }) {
 export default function ScheduleEditor({ draft, onChange, lang }) {
   const d = draft;
   const patch = (updates) => onChange({ ...d, ...updates });
+  const [advanced, setAdvanced] = useState(() => isAdvancedDraft(draft));
+  const showSupporterTag = isSupporterFeature(FEATURES.ADVANCED_SCHEDULING);
+  // Collapsing means "I just want the simple version" — fall back to simple
+  // defaults so the draft matches the visible controls (no hidden selection).
+  const toggleAdvanced = () => {
+    if (advanced) {
+      const reset = {};
+      if (ADVANCED_FREQS.includes(d.freq)) reset.freq = 'daily';
+      if (ADVANCED_END_KINDS.includes(d.endKind)) reset.endKind = 'never';
+      if (Object.keys(reset).length) patch(reset);
+    }
+    setAdvanced(!advanced);
+  };
   const DAYS = t(lang, 'days');
   const label = (key) => (
     <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, key)}</p>
@@ -153,9 +184,11 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
           <div className="flex flex-wrap gap-2">
             <Chip active={d.freq === 'daily'} onClick={() => patch({ freq: 'daily' })}>{t(lang, 'freqDaily')}</Chip>
             <Chip active={d.freq === 'weekly'} onClick={() => patch({ freq: 'weekly' })}>{t(lang, 'freqWeekly')}</Chip>
-            <Chip active={d.freq === 'interval'} onClick={() => patch({ freq: 'interval' })}>{t(lang, 'freqInterval')}</Chip>
-            <Chip active={d.freq === 'monthly'} onClick={() => patch({ freq: 'monthly' })}>{t(lang, 'freqMonthly')}</Chip>
-            <Chip active={d.freq === 'yearly'} onClick={() => patch({ freq: 'yearly' })}>{t(lang, 'freqYearly')}</Chip>
+            {advanced && <>
+              <Chip active={d.freq === 'interval'} onClick={() => patch({ freq: 'interval' })}>{t(lang, 'freqInterval')}</Chip>
+              <Chip active={d.freq === 'monthly'} onClick={() => patch({ freq: 'monthly' })}>{t(lang, 'freqMonthly')}</Chip>
+              <Chip active={d.freq === 'yearly'} onClick={() => patch({ freq: 'yearly' })}>{t(lang, 'freqYearly')}</Chip>
+            </>}
           </div>
 
           {d.freq === 'weekly' && (
@@ -177,7 +210,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
             </div>
           )}
 
-          {d.freq === 'interval' && (
+          {advanced && d.freq === 'interval' && (
             <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-2)' }}>
               <span>{t(lang, 'intervalEvery')}</span>
               <input
@@ -190,7 +223,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
             </div>
           )}
 
-          {d.freq === 'monthly' && (
+          {advanced && d.freq === 'monthly' && (
             <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-2)' }}>
               <span>{t(lang, 'monthlyOnDay')}</span>
               <input
@@ -202,7 +235,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
             </div>
           )}
 
-          {d.freq === 'yearly' && (
+          {advanced && d.freq === 'yearly' && (
             <input
               type="date"
               value={d.yearlyDate}
@@ -211,6 +244,25 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
               style={INPUT_STYLE}
             />
           )}
+
+          <button
+            type="button"
+            onClick={toggleAdvanced}
+            aria-expanded={advanced}
+            className="flex items-center gap-1.5 text-xs font-medium pt-0.5"
+            style={{ color: 'var(--text-3)' }}
+          >
+            <ChevronDown size={13} style={{ transform: advanced ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+            {t(lang, 'schedAdvanced')}
+            {showSupporterTag && (
+              <span
+                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                <Sparkles size={9} /> {t(lang, 'supporterTag')}
+              </span>
+            )}
+          </button>
         </div>
       )}
 
@@ -237,10 +289,12 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
           <div className="flex flex-wrap gap-2">
             <Chip active={d.endKind === 'never'} onClick={() => patch({ endKind: 'never' })}>{t(lang, 'endNever')}</Chip>
             <Chip active={d.endKind === 'answered'} onClick={() => patch({ endKind: 'answered' })}><Check size={12} /> {t(lang, 'endWhenAnswered')}</Chip>
-            <Chip active={d.endKind === 'date'} onClick={() => patch({ endKind: 'date' })}>{t(lang, 'endOnDate')}</Chip>
-            <Chip active={d.endKind === 'count'} onClick={() => patch({ endKind: 'count' })}>{t(lang, 'endAfterCount')}</Chip>
+            {advanced && <>
+              <Chip active={d.endKind === 'date'} onClick={() => patch({ endKind: 'date' })}>{t(lang, 'endOnDate')}</Chip>
+              <Chip active={d.endKind === 'count'} onClick={() => patch({ endKind: 'count' })}>{t(lang, 'endAfterCount')}</Chip>
+            </>}
           </div>
-          {d.endKind === 'date' && (
+          {advanced && d.endKind === 'date' && (
             <input
               type="date"
               value={d.endDate}
@@ -249,7 +303,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
               style={INPUT_STYLE}
             />
           )}
-          {d.endKind === 'count' && (
+          {advanced && d.endKind === 'count' && (
             <div className="flex items-center gap-2 mt-2 text-sm" style={{ color: 'var(--text-2)' }}>
               <input
                 type="number" min="1" max="365" value={d.endCount}

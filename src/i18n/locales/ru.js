@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "По недельному плану",
   "schedOnce": "Один раз",
   "schedRecurring": "Повторяющаяся",
+  "schedAdvanced": "Расширенные параметры",
+  "supporterTag": "Сторонник",
   "freqDaily": "Ежедневно",
   "freqWeekly": "Еженедельно",
   "freqInterval": "Каждые N дней",

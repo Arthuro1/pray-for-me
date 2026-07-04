@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "跟随每周计划",
   "schedOnce": "一次性",
   "schedRecurring": "重复",
+  "schedAdvanced": "高级选项",
+  "supporterTag": "支持者",
   "freqDaily": "每天",
   "freqWeekly": "每周",
   "freqInterval": "每 N 天",

@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "Mengikuti rencana mingguan",
   "schedOnce": "Sekali",
   "schedRecurring": "Berulang",
+  "schedAdvanced": "Opsi lanjutan",
+  "supporterTag": "Pendukung",
   "freqDaily": "Harian",
   "freqWeekly": "Mingguan",
   "freqInterval": "Setiap N hari",

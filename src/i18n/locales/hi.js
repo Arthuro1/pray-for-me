@@ -446,6 +446,8 @@ export default {
   "schedFollowPlan": "साप्ताहिक योजना के अनुसार",
   "schedOnce": "एक बार",
   "schedRecurring": "दोहराव",
+  "schedAdvanced": "उन्नत विकल्प",
+  "supporterTag": "समर्थक",
   "freqDaily": "प्रतिदिन",
   "freqWeekly": "साप्ताहिक",
   "freqInterval": "हर N दिन",
