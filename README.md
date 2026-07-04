@@ -35,7 +35,7 @@
 - **🗂️ Prayer journal** — log requests for yourself or others, organize by category, add updates and prayer points with Bible verses, mark prayers answered and keep testimonies in an **Answered** reflection view
 - **🤝 Community** — prayer groups (invite code, link, or QR), friends, anonymous sharing, "I'm praying" reactions, member updates and testimonies, two-way sync between your prayer and its shared copies, and on-demand translation of any group prayer
 - **🌱 Grow** — a Scripture-first library: 12 prayer guides to pray through (the Psalms, God's promises, for your enemies…) and 16 short readings on prayer and the Christian life
-- **📅 Weekly plan** — assign categories to days of the week, per-prayer day overrides, automatic scheduling for empty days
+- **📅 Prayer scheduling** — schedule any prayer once or recurring (daily, chosen weekdays, every N days, monthly, yearly) into morning / midday / evening slots, with four end conditions including *until answered* (the prayer retires itself when God answers); a month/week calendar with per-occurrence skips & moves, gentle **catch-up** for days missed (grace, not guilt), **rotation lists** to pray large lists round-robin, guided **prayer plans** (gratitude, novena, 21-day breakthrough…), group **prayer chains** (members claim days), and one-click **.ics** export to Google/Apple/Outlook. The recurrence engine is a pure, fully offline module ([`src/lib/schedule.js`](./src/lib/schedule.js)); prayers without a schedule keep the simple weekly category plan (assign categories to days, per-prayer overrides, auto-fill empty days)
 - **🤖 AI, humbly** — Claude suggests prayer angles with Bible verses in your language, behind theological guardrails (never speaks for God, always points back to Scripture) and a one-tap opt-out; the API key stays server-side, session-gated and rate-limited
 - **📖 Scripture in-app** — a daily verse from a curated pool, plus an in-app reader for any reference (YouVersion Platform API text when configured, cached fallback otherwise)
 - **🔔 Push reminders** — a daily Web Push with the day's prayer subjects, and follow-up nudges at your chosen cadence to check in with the people you pray for; sent server-side via `pg_cron` + Edge Functions (iOS requires the installed PWA, 16.4+)
@@ -101,7 +101,8 @@ Run these in the Supabase SQL editor, in order:
 9. [`verse_cache.sql`](./supabase/verse_cache.sql) — shared Scripture text cache
 10. [`community_translation_cache.sql`](./supabase/community_translation_cache.sql) — group-scoped translation cache
 11. [`user_settings.sql`](./supabase/user_settings.sql) — account-level settings sync
-12. [`split_reminder_crons.sql`](./supabase/split_reminder_crons.sql) — **upgrade only**: replaces the old combined `send-reminders` cron
+12. [`prayer_scheduling.sql`](./supabase/prayer_scheduling.sql) — `schedule`/`schedule_overrides` columns, `prayer_completions` + `prayer_commitments` tables, RLS
+13. [`split_reminder_crons.sql`](./supabase/split_reminder_crons.sql) — **upgrade only**: replaces the old combined `send-reminders` cron
 
 The daily verse is client-side: a curated pool of ~200 vetted references rotated by day-of-year ([`src/content/dailyVerses.js`](./src/content/dailyVerses.js)) — never AI-generated, no recurring cost.
 

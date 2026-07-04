@@ -52,7 +52,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Priez ensemble', desc: 'Rejoignez des groupes et des amis, partagez des demandes (ou restez anonyme), priez les uns pour les autres et célébrez les prières exaucées ensemble.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Journal de prière', desc: 'Notez chaque demande de prière — pour vous ou pour d\'autres. Ajoutez des détails, suivez les évolutions, n\'oubliez jamais qui vous avez promis de prier.' },
-      { icon: Calendar, color: '#059669', title: 'Plan de prière hebdomadaire', desc: 'Assignez des catégories à chaque jour. Lundi pour la famille, mardi pour la santé… chaque matin, vous savez exactement quoi prier.' },
+      { icon: Calendar, color: '#059669', title: 'Planifiez vos prières', desc: 'Programmez chaque prière — ponctuelle ou récurrente (quotidienne, jours choisis, tous les N jours, mensuelle, annuelle), voire « jusqu\'à la réponse ». Calendrier mensuel, rattrapage en douceur, chaînes de prière en groupe et export .ics vers Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galerie de prières exaucées', desc: 'Marquez les prières comme exaucées et enregistrez votre témoignage. Regardez la fidélité de Dieu s\'accumuler au fil du temps.' },
       { icon: Sprout, color: '#65a30d', title: 'Grandir dans la prière', desc: 'Une bibliothèque enracinée dans l\'Écriture : 12 guides de prière à prier (les Psaumes, les promesses de Dieu, pour vos ennemis…) et de courtes lectures sur la prière et la vie chrétienne.' },
       { icon: Bell, color: '#ea580c', title: 'Rappels de prière', desc: 'Une notification quotidienne avec vos sujets du jour, et de doux rappels de suivi pour prendre des nouvelles de ceux pour qui vous priez — même app fermée.' },
@@ -107,7 +107,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Pray together', desc: 'Join prayer groups and friends, share requests (or stay anonymous), pray for one another, and celebrate answered prayers as a community.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Prayer journal', desc: 'Log every prayer request — for yourself or for others. Add details, follow up with updates, and never forget who you said you\'d pray for.' },
-      { icon: Calendar, color: '#059669', title: 'Weekly prayer plan', desc: 'Assign categories to days of the week. Monday for family, Tuesday for health… each day you see exactly what to pray for.' },
+      { icon: Calendar, color: '#059669', title: 'Prayer scheduling', desc: 'Schedule any prayer — one-time or recurring (daily, chosen weekdays, every N days, monthly, yearly), even "until answered." A month calendar, gentle catch-up for missed days, group prayer chains, and one-tap .ics export to Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Answered prayer gallery', desc: 'Mark prayers as answered and record your testimony. Watch God\'s faithfulness accumulate over time in your personal gallery.' },
       { icon: Sprout, color: '#65a30d', title: 'Grow in prayer', desc: 'A Scripture-first library: 12 prayer guides to pray through (the Psalms, God\'s promises, for your enemies…) and short readings on prayer and the Christian life.' },
       { icon: Bell, color: '#ea580c', title: 'Prayer reminders', desc: 'A daily notification with the day\'s prayer subjects, plus gentle follow-up nudges to check in with the people you\'re praying for — even when the app is closed.' },
@@ -162,7 +162,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Gemeinsam beten', desc: 'Tritt Gebetsgruppen und Freunden bei, teile Anliegen (oder bleibe anonym), betet füreinander und feiert erhörte Gebete gemeinsam.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Gebetstagebuch', desc: 'Notiere jede Gebetsanfrage — für dich oder für andere. Füge Details hinzu, verfolge Entwicklungen und vergiss nie, für wen du gebetet hast.' },
-      { icon: Calendar, color: '#059669', title: 'Wöchentlicher Gebetsplan', desc: 'Weise Kategorien den Wochentagen zu. Montag für die Familie, Dienstag für Gesundheit… jeden Tag weißt du genau, wofür du beten sollst.' },
+      { icon: Calendar, color: '#059669', title: 'Gebete planen', desc: 'Plane jedes Gebet — einmalig oder wiederkehrend (täglich, gewählte Wochentage, alle N Tage, monatlich, jährlich), sogar „bis erhört". Monatskalender, sanftes Nachholen, gemeinsame Gebetsketten und .ics-Export für Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galerie erhörter Gebete', desc: 'Markiere erhörte Gebete und halte dein Zeugnis fest. Erlebe Gottes Treue, die sich über die Zeit aufbaut.' },
       { icon: Sprout, color: '#65a30d', title: 'Im Gebet wachsen', desc: 'Eine in der Schrift verwurzelte Bibliothek: 12 Gebetsleitfäden zum Durchbeten (die Psalmen, Gottes Verheißungen, für deine Feinde…) und kurze Texte über Gebet und christliches Leben.' },
       { icon: Bell, color: '#ea580c', title: 'Gebetserinnerungen', desc: 'Eine tägliche Benachrichtigung mit deinen Gebetsanliegen des Tages, plus sanfte Erinnerungen, dich bei denen zu melden, für die du betest — auch bei geschlossener App.' },
@@ -217,7 +217,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Orem juntos', desc: 'Participe de grupos e amigos, compartilhe pedidos (ou fique anônimo), orem uns pelos outros e celebrem as orações respondidas em comunidade.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Diário de oração', desc: 'Registre cada pedido de oração — para você ou para outros. Adicione detalhes, acompanhe atualizações e nunca esqueça por quem prometeu orar.' },
-      { icon: Calendar, color: '#059669', title: 'Plano semanal de oração', desc: 'Atribua categorias aos dias da semana. Segunda para família, terça para saúde… cada dia você sabe exatamente pelo que orar.' },
+      { icon: Calendar, color: '#059669', title: 'Agende suas orações', desc: 'Agende cada oração — única ou recorrente (diária, dias escolhidos, a cada N dias, mensal, anual), até "quando respondida". Calendário mensal, recuperação suave, correntes de oração em grupo e exportação .ics para Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeria de orações respondidas', desc: 'Marque orações como respondidas e registre seu testemunho. Veja a fidelidade de Deus se acumular ao longo do tempo.' },
       { icon: Sprout, color: '#65a30d', title: 'Cresça na oração', desc: 'Uma biblioteca enraizada nas Escrituras: 12 guias de oração para orar (os Salmos, as promessas de Deus, pelos seus inimigos…) e leituras curtas sobre oração e vida cristã.' },
       { icon: Bell, color: '#ea580c', title: 'Lembretes de oração', desc: 'Uma notificação diária com os assuntos de oração do dia, além de lembretes suaves para acompanhar as pessoas por quem você ora — mesmo com o app fechado.' },
@@ -273,7 +273,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: '共に祈る', desc: '祈りのグループや友達に参加し、リクエストを共有（匿名も可）し、互いのために祈り、答えられた祈りを共に喜びましょう。' },
       { icon: BookOpen, color: '#7c5cfc', title: '祈り日記', desc: '自分や他の人のための祈りをすべて記録。詳細を追加し、経過を追い、誰のために祈ると約束したかを忘れない。' },
-      { icon: Calendar, color: '#059669', title: '週間祈りプラン', desc: '各カテゴリを曜日に割り当て。月曜は家族、火曜は健康…毎朝何のために祈るかが明確にわかる。' },
+      { icon: Calendar, color: '#059669', title: '祈りのスケジュール', desc: '各祈りをスケジュール — 一度きり、または繰り返し（毎日、選んだ曜日、N日ごと、毎月、毎年）、「答えられるまで」も可能。月間カレンダー、優しいキャッチアップ、グループの祈りチェーン、Google/Apple/Outlook向け.icsエクスポート。' },
       { icon: CheckCircle, color: '#0891b2', title: '答えられた祈りギャラリー', desc: '祈りを答えられたとして記録し、証しを残す。神の誠実さが時間とともに積み重なっていくのを見る。' },
       { icon: Sprout, color: '#65a30d', title: '祈りにおいて成長する', desc: '聖書に根ざしたライブラリ：祈り抜くための12の祈りのガイド（詩篇、神の約束、敵のための祈り…）と、祈りとクリスチャン生活についての短い読み物。' },
       { icon: Bell, color: '#ea580c', title: '祈りのリマインダー', desc: 'その日の祈りの課題を毎日通知でお知らせ。祈っている相手を気にかけるためのフォローアップ通知も — アプリを閉じていても届きます。' },
@@ -329,7 +329,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Ombeni pamoja', desc: 'Jiunge na vikundi na marafiki, shiriki maombi (au baki bila kujulikana), ombeaneni, na shangilieni maombi yaliyojibiwa pamoja.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Jarida la maombi', desc: 'Rekodi kila ombi — kwa ajili yako au wengine. Ongeza maelezo, fuatilia maendeleo, usisahau uliyomwahidi kuomba.' },
-      { icon: Calendar, color: '#059669', title: 'Mpango wa maombi wa wiki', desc: 'Weka kila kundi kwa siku za wiki. Jumatatu kwa familia, Jumanne kwa afya… kila siku unajua hasa unaomba nini.' },
+      { icon: Calendar, color: '#059669', title: 'Ratiba ya maombi', desc: 'Panga kila ombi — mara moja au kwa kujirudia (kila siku, siku ulizochagua, kila siku N, kila mwezi, kila mwaka), hata "hadi lijibiwe". Kalenda ya mwezi, minyororo ya maombi ya kikundi, na hamishi .ics kwa Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeria ya maombi yaliyojibiwa', desc: 'Weka alama maombi kama yaliyojibiwa na rekodi ushuhuda wako. Angalia uaminifu wa Mungu ukikusanyika baada ya muda.' },
       { icon: Sprout, color: '#65a30d', title: 'Kua katika maombi', desc: 'Maktaba iliyojikita katika Maandiko: miongozo 12 ya maombi ya kuomba (Zaburi, ahadi za Mungu, kwa ajili ya adui…) na masomo mafupi kuhusu maombi na maisha ya Kikristo.' },
       { icon: Bell, color: '#ea580c', title: 'Vikumbusho vya maombi', desc: 'Arifa ya kila siku yenye maombi ya leo, na vikumbusho vya kufuatilia wale unaowaombea — hata app ikiwa imefungwa.' },
@@ -383,7 +383,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'በጋራ ይጸልዩ', desc: 'የጸሎት ቡድኖችንና ጓደኞችን ይቀላቀሉ፣ ጥያቄዎችን ያጋሩ (ወይም ሳይታወቁ ይቆዩ)፣ እርስ በርስ ይጸልዩ፣ የተመለሱ ጸሎቶችንም በአንድነት ያክብሩ።' },
       { icon: BookOpen, color: '#7c5cfc', title: 'የጸሎት ዕለታዊ ጆርናል', desc: 'ለራስዎ ወይም ለሌሎች የሚደረጉ ጸሎቶችን ሁሉ ይዝግቡ። ዝርዝሮችን ያክሉ፣ ሂደቱን ይከታተሉ።' },
-      { icon: Calendar, color: '#059669', title: 'የሳምንት የጸሎት እቅድ', desc: 'እያንዳንዱ ምድብ ለሳምንቱ ቀናት ይመድቡ። ሰኞ ለቤተሰብ፣ ማክሰኞ ለጤና… ሁሉ ቀን ምን ማድረግ እንዳለቦት ያውቃሉ።' },
+      { icon: Calendar, color: '#059669', title: 'የጸሎት መርሐ ግብር', desc: 'እያንዳንዱን ጸሎት ያቀናብሩ — አንዴ ወይም በተደጋጋሚ (በየቀኑ፣ በተመረጡ ቀናት፣ በየN ቀኑ፣ በየወሩ፣ በየዓመቱ)፣ "እስኪመለስ ድረስ" ጭምር። የወር ቀን መቁጠሪያ፣ የቡድን የጸሎት ሰንሰለቶች እና ወደ Google/Apple/Outlook .ics ወጪ።' },
       { icon: CheckCircle, color: '#0891b2', title: 'የተመለሱ ጸሎቶች ማሳያ', desc: 'ጸሎቶችን እንደ ተመለሱ ምልክት አድርጉ እና ምስክርነትዎን ይዝግቡ። የእግዚአብሔር ታማኝነት ከጊዜ ወደ ጊዜ ሲሰበሰብ ይመልከቱ።' },
       { icon: Sprout, color: '#65a30d', title: 'በጸሎት ያድጉ', desc: 'በቅዱሳት መጻሕፍት ላይ የተመሠረተ ቤተ-መጻሕፍት፦ 12 የጸሎት መመሪያዎች (መዝሙራት፣ የእግዚአብሔር ተስፋዎች፣ ለጠላቶች…) እና ስለ ጸሎትና ክርስቲያናዊ ሕይወት አጫጭር ንባቦች።' },
       { icon: Bell, color: '#ea580c', title: 'የጸሎት ማስታወሻዎች', desc: 'የቀኑን የጸሎት ርዕሶች የያዘ ዕለታዊ ማሳወቂያ፣ እንዲሁም ለምትጸልዩላቸው ሰዎች ደህንነት ለመጠየቅ የክትትል ማስታወሻዎች — መተግበሪያው ተዘግቶም ቢሆን።' },
@@ -437,7 +437,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Berdoa bersama', desc: 'Bergabunglah dengan grup dan teman, bagikan permohonan (atau tetap anonim), saling mendoakan, dan rayakan doa yang dijawab bersama.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Jurnal doa', desc: 'Catat setiap permohonan doa — untuk diri sendiri atau orang lain. Tambahkan detail, pantau perkembangan, dan jangan lupakan siapa yang Anda janjikan untuk doakan.' },
-      { icon: Calendar, color: '#059669', title: 'Rencana doa mingguan', desc: 'Tetapkan kategori ke hari-hari dalam seminggu. Senin untuk keluarga, Selasa untuk kesehatan… setiap pagi Anda tahu persis untuk apa berdoa.' },
+      { icon: Calendar, color: '#059669', title: 'Jadwal doa', desc: 'Jadwalkan setiap doa — sekali atau berulang (harian, hari pilihan, setiap N hari, bulanan, tahunan), bahkan "sampai dijawab". Kalender bulanan, rantai doa grup, dan ekspor .ics ke Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeri doa terjawab', desc: 'Tandai doa sebagai terjawab dan catat kesaksian Anda. Saksikan kesetiaan Tuhan bertambah dari waktu ke waktu.' },
       { icon: Sprout, color: '#65a30d', title: 'Bertumbuh dalam doa', desc: 'Perpustakaan yang berakar pada Alkitab: 12 panduan doa untuk didoakan (Mazmur, janji-janji Tuhan, bagi musuh…) dan bacaan singkat tentang doa dan kehidupan Kristen.' },
       { icon: Bell, color: '#ea580c', title: 'Pengingat doa', desc: 'Notifikasi harian berisi pokok doa hari ini, plus pengingat tindak lanjut untuk menanyakan kabar orang yang Anda doakan — bahkan saat aplikasi ditutup.' },
@@ -491,7 +491,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Magdasal nang sama-sama', desc: 'Sumali sa mga grupo at kaibigan, magbahagi ng kahilingan (o manatiling anonimo), magdasal para sa isa\'t isa, at ipagdiwang ang mga sinagot na panalangin bilang komunidad.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Talaarawan ng panalangin', desc: 'Itala ang bawat kahilingan sa panalangin — para sa iyong sarili o para sa iba. Magdagdag ng mga detalye at huwag kalimutang sino ang ipinangako mong ipanalangin.' },
-      { icon: Calendar, color: '#059669', title: 'Lingguhang plano ng panalangin', desc: 'Italaga ang mga kategorya sa mga araw ng linggo. Lunes para sa pamilya, Martes para sa kalusugan… araw-araw alam mo kung para saan ka magdarasal.' },
+      { icon: Calendar, color: '#059669', title: 'Pag-iskedyul ng panalangin', desc: 'I-iskedyul ang bawat panalangin — isang beses o paulit-ulit (araw-araw, piniling araw, bawat N araw, buwanan, taunan), kahit "hanggang masagot". Buwanang kalendaryo, mga prayer chain ng grupo, at .ics export sa Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galeriya ng nasagot na panalangin', desc: 'Markahan ang mga panalangin bilang nasagot at itala ang iyong patotoo. Panoorin ang katapatan ng Diyos na mag-ipon sa paglipas ng panahon.' },
       { icon: Sprout, color: '#65a30d', title: 'Lumago sa panalangin', desc: 'Isang aklatan na nakaugat sa Kasulatan: 12 gabay sa panalangin (ang Mga Awit, mga pangako ng Diyos, para sa mga kaaway…) at maiikling babasahin tungkol sa panalangin at buhay Kristiyano.' },
       { icon: Bell, color: '#ea580c', title: 'Mga paalala sa panalangin', desc: 'Araw-araw na notification ng mga panalangin ngayong araw, at banayad na follow-up para kamustahin ang mga ipinapanalangin mo — kahit nakasara ang app.' },
@@ -545,7 +545,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: '함께 기도하세요', desc: '기도 그룹과 친구에 참여하고, 기도 제목을 나누거나 익명으로 유지하며, 서로를 위해 기도하고, 응답된 기도를 함께 축하하세요.' },
       { icon: BookOpen, color: '#7c5cfc', title: '기도 일기', desc: '나 자신과 다른 사람을 위한 모든 기도 요청을 기록하세요. 세부 내용을 추가하고, 경과를 추적하고, 기도하겠다고 약속한 사람을 잊지 마세요.' },
-      { icon: Calendar, color: '#059669', title: '주간 기도 계획', desc: '각 카테고리를 요일에 배정하세요. 월요일은 가족, 화요일은 건강… 매일 아침 무엇을 위해 기도해야 할지 정확히 알 수 있습니다.' },
+      { icon: Calendar, color: '#059669', title: '기도 일정', desc: '모든 기도를 예약하세요 — 한 번 또는 반복(매일, 선택한 요일, N일마다, 매월, 매년), "응답받을 때까지"도 가능. 월간 캘린더, 그룹 기도 사슬, Google/Apple/Outlook용 .ics 내보내기.' },
       { icon: CheckCircle, color: '#0891b2', title: '응답된 기도 갤러리', desc: '기도를 응답됨으로 표시하고 간증을 기록하세요. 시간이 지남에 따라 하나님의 신실하심이 쌓이는 것을 보세요.' },
       { icon: Sprout, color: '#65a30d', title: '기도 안에서 성장하세요', desc: '성경에 뿌리내린 자료실: 기도할 수 있는 12가지 기도 가이드(시편, 하나님의 약속, 원수를 위한 기도…)와 기도와 신앙 생활에 관한 짧은 글들.' },
       { icon: Bell, color: '#ea580c', title: '기도 알림', desc: '오늘의 기도 제목을 담은 매일 알림과, 기도하고 있는 사람들의 안부를 묻도록 돕는 부드러운 후속 알림 — 앱이 닫혀 있어도 도착합니다.' },
@@ -599,7 +599,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Молитесь вместе', desc: 'Присоединяйтесь к группам и друзьям, делитесь просьбами (или оставайтесь анонимными), молитесь друг за друга и празднуйте отвеченные молитвы вместе.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Молитвенный журнал', desc: 'Записывайте каждую молитвенную просьбу — за себя или за других. Добавляйте детали, отслеживайте изменения, не забывайте, за кого обещали молиться.' },
-      { icon: Calendar, color: '#059669', title: 'Недельный молитвенный план', desc: 'Назначайте категории на дни недели. Понедельник — для семьи, вторник — для здоровья… каждое утро вы знаете, о чём именно молиться.' },
+      { icon: Calendar, color: '#059669', title: 'Расписание молитв', desc: 'Планируйте каждую молитву — разово или регулярно (ежедневно, в выбранные дни, каждые N дней, ежемесячно, ежегодно), даже «пока не будет ответа». Месячный календарь, групповые молитвенные цепочки и экспорт .ics в Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Галерея отвеченных молитв', desc: 'Отмечайте молитвы как отвеченные и записывайте свидетельство. Наблюдайте, как верность Бога накапливается со временем.' },
       { icon: Sprout, color: '#65a30d', title: 'Растите в молитве', desc: 'Библиотека, укоренённая в Писании: 12 молитвенных руководств (Псалмы, обетования Бога, молитва за врагов…) и короткие чтения о молитве и христианской жизни.' },
       { icon: Bell, color: '#ea580c', title: 'Напоминания о молитве', desc: 'Ежедневное уведомление с молитвенными темами дня и мягкие напоминания узнать, как дела у тех, за кого вы молитесь — даже когда приложение закрыто.' },
@@ -653,7 +653,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'صلّوا معًا', desc: 'انضم إلى مجموعات وأصدقاء، شارك الطلبات (أو ابقَ مجهولاً)، وصلّوا بعضكم لبعض، واحتفلوا بالصلوات المستجابة كمجتمع.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'مجلة الصلاة', desc: 'سجّل كل طلب صلاة — من أجلك أو من أجل الآخرين. أضف تفاصيل وتابع التحديثات ولا تنسَ من وعدت بالصلاة عنه.' },
-      { icon: Calendar, color: '#059669', title: 'خطة الصلاة الأسبوعية', desc: 'خصّص كل فئة لأيام الأسبوع. الاثنين للعائلة، الثلاثاء للصحة… كل صباح تعرف بالضبط لماذا تصلي.' },
+      { icon: Calendar, color: '#059669', title: 'جدولة الصلاة', desc: 'جدول كل صلاة — مرة واحدة أو متكررة (يوميًا، أيام مختارة، كل N يوم، شهريًا، سنويًا)، حتى "إلى أن يُستجاب لها". تقويم شهري، وسلاسل صلاة جماعية، وتصدير .ics إلى Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'غاليري الصلوات المستجابة', desc: 'علّم الصلوات كمستجابة وسجّل شهادتك. شاهد أمانة الله تتراكم عبر الزمن.' },
       { icon: Sprout, color: '#65a30d', title: 'انمُ في الصلاة', desc: 'مكتبة متجذرة في الكتاب المقدس: 12 دليل صلاة للصلاة بها (المزامير، وعود الله، من أجل الأعداء…) وقراءات قصيرة عن الصلاة والحياة المسيحية.' },
       { icon: Bell, color: '#ea580c', title: 'تذكيرات الصلاة', desc: 'إشعار يومي بمواضيع صلاة اليوم، وتذكيرات متابعة لطيفة للاطمئنان على من تصلي لأجلهم — حتى والتطبيق مغلق.' },
@@ -707,7 +707,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'با هم دعا کنید', desc: 'به گروه‌ها و دوستان بپیوندید، درخواست‌ها را به اشتراک بگذارید (یا ناشناس بمانید)، برای یکدیگر دعا کنید و دعاهای مستجاب را با هم جشن بگیرید.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'دفترچه دعا', desc: 'هر درخواست دعا را ثبت کنید — برای خودتان یا دیگران. جزئیات اضافه کنید و فراموش نکنید برای چه کسی قول دعا داده‌اید.' },
-      { icon: Calendar, color: '#059669', title: 'برنامه دعای هفتگی', desc: 'هر دسته‌بندی را به روزهای هفته اختصاص دهید. دوشنبه برای خانواده، سه‌شنبه برای سلامتی… هر صبح می‌دانید برای چه دعا کنید.' },
+      { icon: Calendar, color: '#059669', title: 'زمان‌بندی دعا', desc: 'هر دعا را زمان‌بندی کنید — یک‌بار یا تکرارشونده (روزانه، روزهای انتخابی، هر N روز، ماهانه، سالانه)، حتی «تا زمان پاسخ». تقویم ماهانه، زنجیره‌های دعای گروهی و خروجی .ics برای Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'گالری دعاهای مستجاب', desc: 'دعاها را به عنوان مستجاب علامت بزنید و شهادت خود را ثبت کنید. وفاداری خدا را در طول زمان انباشته شده ببینید.' },
       { icon: Sprout, color: '#65a30d', title: 'در دعا رشد کنید', desc: 'کتابخانه‌ای ریشه‌دار در کتاب مقدس: ۱۲ راهنمای دعا برای دعا کردن (مزامیر، وعده‌های خدا، برای دشمنان…) و خواندنی‌های کوتاه درباره دعا و زندگی مسیحی.' },
       { icon: Bell, color: '#ea580c', title: 'یادآورهای دعا', desc: 'اعلان روزانه با موضوعات دعای امروز، به‌علاوه یادآورهای پیگیری برای احوال‌پرسی از کسانی که برایشان دعا می‌کنید — حتی وقتی اپ بسته است.' },
@@ -761,7 +761,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: '一起祷告', desc: '加入祷告群组和好友，分享代祷事项（或保持匿名），彼此代祷，并作为群体一同庆祝蒙应允的祷告。' },
       { icon: BookOpen, color: '#7c5cfc', title: '祷告日记', desc: '记录每个祷告请求——为自己或他人。添加详情、跟踪进展，不忘记任何一个承诺代祷的人。' },
-      { icon: Calendar, color: '#059669', title: '每周祷告计划', desc: '为每天分配祷告类别。周一为家庭，周二为健康……每天清晰地知道要为什么祷告。' },
+      { icon: Calendar, color: '#059669', title: '祷告日程', desc: '为每个祷告安排日程——一次性或重复（每天、选定的星期、每N天、每月、每年），甚至"直到蒙应允"。月历、小组祷告链，以及导出 .ics 到 Google/Apple/Outlook。' },
       { icon: CheckCircle, color: '#0891b2', title: '已应允祷告见证册', desc: '将祷告标记为已应允并记录您的见证。看着上帝的信实在您的个人册中积累。' },
       { icon: Sprout, color: '#65a30d', title: '在祷告中成长', desc: '根植于圣经的资料库：12 个可以照着祷告的祷告指南（诗篇、神的应许、为仇敌祷告……）以及关于祷告和基督徒生活的简短读物。' },
       { icon: Bell, color: '#ea580c', title: '祷告提醒', desc: '每日通知列出当天的祷告事项，还有温和的跟进提醒，鼓励您问候您所代祷的人——即使应用已关闭。' },
@@ -817,7 +817,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'Oren juntos', desc: 'Únete a grupos y amigos, comparte peticiones (o permanece anónimo), oren unos por otros y celebren las oraciones respondidas en comunidad.' },
       { icon: BookOpen, color: '#7c5cfc', title: 'Diario de oración', desc: 'Registra cada petición de oración — para ti o para otros. Añade detalles, haz seguimiento y nunca olvides por quién prometiste orar.' },
-      { icon: Calendar, color: '#059669', title: 'Plan de oración semanal', desc: 'Asigna categorías a días de la semana. Lunes para familia, martes para salud… cada mañana sabes exactamente por qué orar.' },
+      { icon: Calendar, color: '#059669', title: 'Programa tus oraciones', desc: 'Programa cada oración — única o recurrente (diaria, días elegidos, cada N días, mensual, anual), incluso "hasta ser respondida". Calendario mensual, cadenas de oración en grupo y exportación .ics a Google/Apple/Outlook.' },
       { icon: CheckCircle, color: '#0891b2', title: 'Galería de oraciones respondidas', desc: 'Marca las oraciones como respondidas y registra tu testimonio. Observa la fidelidad de Dios acumularse con el tiempo.' },
       { icon: Sprout, color: '#65a30d', title: 'Crece en la oración', desc: 'Una biblioteca arraigada en las Escrituras: 12 guías de oración para orar (los Salmos, las promesas de Dios, por tus enemigos…) y lecturas breves sobre la oración y la vida cristiana.' },
       { icon: Bell, color: '#ea580c', title: 'Recordatorios de oración', desc: 'Una notificación diaria con los temas de oración del día, más suaves recordatorios de seguimiento para saber de las personas por quienes oras — incluso con la app cerrada.' },
@@ -873,7 +873,7 @@ const CONTENT = {
     features: [
       { icon: Users, color: '#0d9488', title: 'साथ मिलकर प्रार्थना करें', desc: 'प्रार्थना समूहों और मित्रों में शामिल हों, अनुरोध साझा करें (या गुमनाम रहें), एक-दूसरे के लिए प्रार्थना करें, और उत्तरित प्रार्थनाओं का समुदाय के रूप में जश्न मनाएं।' },
       { icon: BookOpen, color: '#7c5cfc', title: 'प्रार्थना पत्रिका', desc: 'हर प्रार्थना अनुरोध दर्ज करें — अपने लिए या दूसरों के लिए। विवरण जोड़ें, अनुवर्ती करें, और कभी न भूलें कि आपने किसके लिए प्रार्थना का वादा किया था।' },
-      { icon: Calendar, color: '#059669', title: 'साप्ताहिक प्रार्थना योजना', desc: 'सप्ताह के दिनों में श्रेणियाँ असाइन करें। सोमवार को परिवार, मंगलवार को स्वास्थ्य… हर दिन आप जानते हैं कि किसके लिए प्रार्थना करनी है।' },
+      { icon: Calendar, color: '#059669', title: 'प्रार्थना शेड्यूल', desc: 'किसी भी प्रार्थना को शेड्यूल करें — एक बार या दोहराव (दैनिक, चुने हुए दिन, हर N दिन, मासिक, वार्षिक), यहाँ तक कि "उत्तर मिलने तक"। मासिक कैलेंडर, समूह प्रार्थना श्रृंखलाएँ, और Google/Apple/Outlook के लिए .ics निर्यात।' },
       { icon: CheckCircle, color: '#0891b2', title: 'उत्तर मिली प्रार्थनाओं की गैलरी', desc: 'प्रार्थनाओं को उत्तर मिली के रूप में चिह्नित करें और अपनी गवाही दर्ज करें। समय के साथ परमेश्वर की विश्वसनीयता जमा होते देखें।' },
       { icon: Sprout, color: '#65a30d', title: 'प्रार्थना में बढ़ें', desc: 'पवित्रशास्त्र पर आधारित एक पुस्तकालय: प्रार्थना करने के लिए 12 प्रार्थना गाइड (भजन संहिता, परमेश्वर की प्रतिज्ञाएँ, शत्रुओं के लिए…) और प्रार्थना व मसीही जीवन पर छोटे पाठ।' },
       { icon: Bell, color: '#ea580c', title: 'प्रार्थना अनुस्मारक', desc: 'दिन के प्रार्थना विषयों के साथ दैनिक सूचना, और जिनके लिए आप प्रार्थना करते हैं उनका हाल पूछने के लिए कोमल फॉलो-अप अनुस्मारक — ऐप बंद होने पर भी।' },
