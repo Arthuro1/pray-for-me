@@ -9,6 +9,19 @@ describe('isEventAllowed', () => {
     expect(isEventAllowed('')).toBe(false);
     expect(isEventAllowed(undefined)).toBe(false);
   });
+
+  // The product activation/habit funnel the app is expected to be able to
+  // measure. Guards against an event name being dropped or renamed by accident.
+  it('allowlists the full required product-activation event set', () => {
+    const required = [
+      'first_prayer_created', 'reminder_set', 'prayer_prayed', 'prayer_updated',
+      'prayer_answered', 'vault_enabled', 'ai_consent_enabled', 'ai_consent_revoked',
+      'group_joined', 'prayer_shared', 'data_exported', 'account_deleted_started',
+      'supporter_prompt_viewed', 'supporter_prompt_clicked', 'feature_gate_seen',
+      'privacy_center_opened',
+    ];
+    for (const name of required) expect(isEventAllowed(name)).toBe(true);
+  });
 });
 
 describe('sanitizeProps — the privacy guard', () => {

@@ -81,7 +81,9 @@ function putSharedVerse(lang, reference, value) {
 }
 
 // Try YouVersion first: map the reference to USFM, then fetch authoritative text.
-// Returns { text, ref, source } or null so the caller can fall back to AI.
+// Returns { text, ref, source } or null. When null, the caller shows the
+// reference only (with a link to the user's Bible) — there is NO AI text
+// fallback; an LLM must never produce canonical Scripture wording.
 // `knownUsfm` lets callers that already know the passage id (e.g. the curated
 // daily-verse pool, which stores USFM book codes) skip the AI-based reference→
 // USFM conversion entirely — no Anthropic call needed for those verses.

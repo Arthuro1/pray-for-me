@@ -12,6 +12,7 @@ import { getAIRecommendations } from '../aiRecommendations';
 import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
+import { track, EVENTS } from '../lib/analytics';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
@@ -207,10 +208,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const handleSaveShares = async () => {
     if (sharing || needsShareAck) return; // block accidental share of vault content
+    const isNewShare = addingNewGroups; // capture before the modal state changes
     setSharing(true);
     const res = await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
     setSharing(false);
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    // Content-free: only that a prayer was shared to a group (not what it says).
+    // Skip when the save only removed groups so telemetry reflects real shares.
+    if (isNewShare) track(EVENTS.PRAYER_SHARED, { channel: 'group' });
     setShowShareModal(false);
   };
 

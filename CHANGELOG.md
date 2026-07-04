@@ -9,7 +9,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/). This project us
 - **Free vs Supporter tiering (scaffold)** — a centralized feature-tier config (`src/lib/plan.js`: `FREE_FEATURES`, `SUPPORTER_FEATURES`, `isFeatureAvailable`, `getFeatureTier`). No billing is wired in; while `BILLING_ENABLED` is `false` nothing is locked (the free app is never crippled). Privacy, export, and account deletion are always free.
 - **Privacy Center** — a plain-language Settings surface explaining private/vault/shared prayers, AI, push, export, deletion, and the Free-vs-Supporter privacy guarantees (`src/components/PrivacyCenter.jsx`).
 - **Supporter membership UX** — generous, non-manipulative "Become a Supporter" surface with pay-what-you-can giving levels, kept clearly separate from the optional one-time Donate flow (`src/components/SupporterModal.jsx`).
-- **Privacy-preserving analytics** — a single choke point (`src/lib/analytics.js`) that emits only allowlisted product-activation events and structurally drops anything resembling prayer content.
+- **Privacy-preserving analytics** — a single choke point (`src/lib/analytics.js`) that emits only allowlisted product-activation events and structurally drops anything resembling prayer content. The activation funnel is now wired through the app (first prayer, prayed, answered, reminder set, vault enabled, group joined, prayer shared, AI consent, export, account-deletion start, supporter prompts, and `privacy_center_opened`) — all content-free.
 - App version is now sourced from `package.json` via Vite `define` (`__APP_VERSION__`), so the Settings/About line never drifts (set to **1.0.0**).
 
 ### Changed

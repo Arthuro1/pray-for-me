@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2, Heart } from 'lucide-react';
 import { t } from '../i18n';
+import { track, EVENTS } from '../lib/analytics';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 
@@ -22,6 +24,12 @@ const SECTIONS = [
 export default function PrivacyCenter({ lang = 'en', onClose }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
+
+  // Content-free impression: record that the user opened their privacy
+  // explanation so understanding-your-privacy can be measured. No prayer data.
+  useEffect(() => {
+    track(EVENTS.PRIVACY_CENTER_OPENED, { source: 'settings' });
+  }, []);
 
   return (
     <div

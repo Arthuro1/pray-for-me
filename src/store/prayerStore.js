@@ -680,6 +680,7 @@ const usePrayerStore = create((set, get) => ({
       prayers: state.prayers.map((p) => (p.id === prayerId ? { ...p, last_prayed_at: now } : p)),
     }));
     enqueue('logCompletion', { row, last_prayed_at: now });
+    track(EVENTS.PRAYER_PRAYED); // deduped above — one event per prayer per day
   },
 
   unmarkPrayedOn: (prayerId, dayKey) => {

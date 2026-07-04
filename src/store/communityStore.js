@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
 import { devError } from '../lib/logger';
+import { track, EVENTS } from '../lib/analytics';
 import { isUnlocked } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
 
@@ -248,6 +249,7 @@ const useCommunityStore = create((set, get) => ({
     }
     await get().fetchGroups(userId);
     if (group?.id) get().setActiveGroup(group.id);
+    track(EVENTS.GROUP_JOINED); // content-free: only that a group was joined
     return { group };
   },
 

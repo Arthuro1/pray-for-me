@@ -33,6 +33,7 @@ export const EVENTS = Object.freeze({
   SUPPORTER_PROMPT_VIEWED: 'supporter_prompt_viewed',
   SUPPORTER_PROMPT_CLICKED: 'supporter_prompt_clicked',
   FEATURE_GATE_SEEN: 'feature_gate_seen',
+  PRIVACY_CENTER_OPENED: 'privacy_center_opened',
 });
 
 const ALLOWED_EVENTS = new Set(Object.values(EVENTS));
