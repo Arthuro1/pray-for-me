@@ -33,7 +33,7 @@
 ## ✨ Features
 
 - **🗂️ Prayer journal** — log requests for yourself or others, organize by category, add updates and prayer points with Bible verses, mark prayers answered and keep testimonies in an **Answered** reflection view
-- **🤝 Community** — prayer groups (invite code, link, or QR), friends, anonymous sharing, "I'm praying" reactions, member updates and testimonies, two-way sync between your prayer and its shared copies, and on-demand translation of any group prayer
+- **🤝 Community** — prayer groups (invite code, link, or QR), friends, anonymous sharing with a **share preview** that shows exactly what attribution members will see before you publish, "I'm praying" reactions, member updates and testimonies, two-way sync between your prayer and its shared copies, and on-demand translation of any group prayer
 - **🌱 Grow** — a Scripture-first library: 12 prayer guides to pray through (the Psalms, God's promises, for your enemies…) and 16 short readings on prayer and the Christian life
 - **📅 Prayer scheduling** — schedule any prayer once or recurring (daily, chosen weekdays, every N days, monthly, yearly) into morning / midday / evening slots, with four end conditions including *until answered* (the prayer retires itself when God answers); a month/week calendar with per-occurrence skips & moves, gentle **catch-up** for days missed (grace, not guilt), **rotation lists** to pray large lists round-robin, guided **prayer plans** (gratitude, novena, 21-day breakthrough…), group **prayer chains** (members claim days), and one-click **.ics** export to Google/Apple/Outlook. The recurrence engine is a pure, fully offline module ([`src/lib/schedule.js`](./src/lib/schedule.js)); prayers without a schedule keep the simple weekly category plan (assign categories to days, per-prayer overrides, auto-fill empty days)
 - **🤖 AI, humbly** — Claude suggests prayer angles with Bible verses in your language, behind theological guardrails (never speaks for God, always points back to Scripture) and a one-tap opt-out; the API key stays server-side, session-gated and rate-limited
@@ -41,7 +41,7 @@
 - **🔔 Push reminders** — a daily Web Push with the day's prayer subjects, and follow-up nudges at your chosen cadence to check in with the people you pray for; sent server-side via `pg_cron` + Edge Functions (iOS requires the installed PWA, 16.4+)
 - **📱 PWA & offline** — installable on Android, iOS, and desktop; create and edit prayers offline with a durable IndexedDB write queue that replays on reconnect
 - **🌍 16 languages** — full UI in French, English, German, Portuguese, Chinese, Spanish, Hindi, Japanese, Swahili, Amharic, Indonesian, Tagalog, Korean, Russian, Arabic, and Persian; dynamic content translated via AI and cached
-- **🔐 Prayer Vault (E2EE)** — opt-in client-side AES-256-GCM encryption of private prayers (including updates and prayer points) with a passphrase and one-time recovery code; sharing to a group publishes plaintext by design
+- **🔐 Prayer Vault (E2EE)** — opt-in client-side AES-256-GCM encryption of private prayers (including updates and prayer points) with a passphrase and one-time recovery code, plus **one-tap migration** to encrypt prayers created before you unlocked the vault; sharing to a group publishes plaintext by design
 - **🔒 Security** — Supabase Auth (Google or email/password), Row Level Security, server-only secrets, strict CSP; full threat model in [`docs/THREAT_MODEL.md`](./docs/THREAT_MODEL.md)
 - Light & dark mode, accessible modals (Esc-to-close, focus trap), JSON export of your data
 
