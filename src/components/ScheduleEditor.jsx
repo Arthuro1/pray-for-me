@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown, Sparkles } from 'lucide-react';
+import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown } from 'lucide-react';
 import { t } from '../i18n';
 import { normalizeSchedule, parseKey, SLOTS } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
-import { isSupporterFeature, FEATURES } from '../lib/plan';
+import { FEATURES } from '../lib/plan';
+import SupporterTag from './SupporterTag';
 
 // Plain-language recurrence picker. Deliberately presets-first (no cron-style
 // builder): one-time / daily / weekdays / every-N-days / monthly / yearly,
@@ -142,7 +143,6 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
   const d = draft;
   const patch = (updates) => onChange({ ...d, ...updates });
   const [advanced, setAdvanced] = useState(() => isAdvancedDraft(draft));
-  const showSupporterTag = isSupporterFeature(FEATURES.ADVANCED_SCHEDULING);
   // Collapsing means "I just want the simple version" — fall back to simple
   // defaults so the draft matches the visible controls (no hidden selection).
   const toggleAdvanced = () => {
@@ -254,14 +254,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
           >
             <ChevronDown size={13} style={{ transform: advanced ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
             {t(lang, 'schedAdvanced')}
-            {showSupporterTag && (
-              <span
-                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-              >
-                <Sparkles size={9} /> {t(lang, 'supporterTag')}
-              </span>
-            )}
+            <SupporterTag feature={FEATURES.ADVANCED_SCHEDULING} lang={lang} />
           </button>
         </div>
       )}

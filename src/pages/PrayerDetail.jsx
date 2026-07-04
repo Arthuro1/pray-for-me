@@ -15,6 +15,9 @@ import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
+import SharePreview from '../components/SharePreview';
+import SupporterTag from '../components/SupporterTag';
+import { FEATURES } from '../lib/plan';
 import { scheduleSummary } from '../components/ScheduleEditor';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
@@ -419,6 +422,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
               {t(lang, 'anonymous')}
             </label>
+            {/* Live preview of the attribution group members will see — updates as
+                the anonymous toggle changes, so nothing is shared unseen. */}
+            <div className="mb-4">
+              <SharePreview authorName={authorName} isAnonymous={shareAnon} title={livePrayer.title} lang={lang} />
+            </div>
             {isVaultPrayer && addingNewGroups && (
               <label className="flex items-start gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
                 <input type="checkbox" checked={shareAck} onChange={e => setShareAck(e.target.checked)} className="rounded mt-0.5" />
@@ -693,16 +701,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {(isCommunity || canAddContent) && (
-              <button
-                onClick={fetchRecs}
-                disabled={loadingRecs}
-                title={t(lang, 'tipAiSuggest')}
-                className="flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 font-medium disabled:opacity-50 text-white"
-                style={{ background: 'var(--accent)' }}
-              >
-                {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
-                {t(lang, 'aiSuggest')}
-              </button>
+              <div className="flex items-center gap-1.5">
+                {/* Soft Supporter tag — AI assistance is a Supporter-tier tool.
+                    Non-blocking: the button stays fully usable (see lib/plan.js). */}
+                <SupporterTag feature={FEATURES.AI_ASSISTANCE} lang={lang} />
+                <button
+                  onClick={fetchRecs}
+                  disabled={loadingRecs}
+                  title={t(lang, 'tipAiSuggest')}
+                  className="flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 font-medium disabled:opacity-50 text-white"
+                  style={{ background: 'var(--accent)' }}
+                >
+                  {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                  {t(lang, 'aiSuggest')}
+                </button>
+              </div>
             )}
           </div>
 
