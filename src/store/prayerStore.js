@@ -7,6 +7,7 @@ import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
+import { track, EVENTS } from '../lib/analytics';
 import { ensurePushSubscription } from '../push';
 import { resolveLanguage } from '../i18n';
 import {
@@ -321,6 +322,10 @@ const usePrayerStore = create((set, get) => ({
     const userId = session?.user?.id;
     if (!userId) return null;
 
+    // Activation signal: was the journal empty before this? (No content is sent —
+    // just the fact that a first prayer was created. See lib/analytics.js.)
+    const isFirst = get().prayers.length === 0;
+
     const id = crypto.randomUUID();
     const categoryIds = prayer.categoryIds || [];
     const row = {
@@ -349,6 +354,7 @@ const usePrayerStore = create((set, get) => ({
     // vault is unlocked). New prayers have no community_origin_id → encryptable.
     const persistRow = canEncrypt(optimistic) ? await encryptPrayerForStorage(row) : row;
     enqueue('createPrayer', { row: persistRow, categoryIds });
+    if (isFirst) track(EVENTS.FIRST_PRAYER_CREATED);
     return id;
   },
 
@@ -469,6 +475,7 @@ const usePrayerStore = create((set, get) => ({
       }),
     }));
     enqueue('markAnswered', { id, answered_at });
+    track(EVENTS.PRAYER_ANSWERED);
     if (row) await get()._persistTestimony(prayer, row);
   },
 

@@ -1,17 +1,21 @@
 // Resolve the full text of a Bible passage so the user can read it inside the
 // app instead of leaving for Bible.com.
 //
-// Source order:
-//   1. YouVersion Platform API (authoritative publisher text) — when configured
+// AUTHORITATIVE-TEXT-ONLY policy: we never let an LLM generate canonical
+// Scripture wording — that is the app's single most sensitive correctness/safety
+// boundary (a misquoted verse presented as Scripture is worse than no verse).
+// So the only source of full verse TEXT is authoritative:
+//   1. localStorage cache (a previously-resolved passage).
+//   2. The shared verse_cache table — but ONLY 'youversion' rows, so no legacy
+//      AI-sourced text can resurface as if authoritative.
+//   3. YouVersion Platform API (authoritative publisher text) — when configured
 //      (VITE_YOUVERSION_ENABLED) and we have a version id for the language. The
 //      localized reference is mapped to USFM first (see bibleRef.js).
-//   2. The guardrailed AI helper — the same path the daily verse uses — as a
-//      universal fallback for any language/reference YouVersion can't serve.
 //
-// Either way the result is cached in localStorage so reopening a verse is instant
-// and never re-spends an API call. `source` ('youversion' | 'ai') lets the reader
-// label AI-sourced text honestly.
-import { callClaudeForJson, languageName } from './aiCore';
+// When none of these can serve the passage, we return null and the reader shows
+// the REFERENCE only with a link to open it in the user's Bible — never invented
+// text. AI may still offer a devotional REFLECTION elsewhere (behind consent),
+// but it must not produce the verse text itself.
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
 import { versionForLang, referenceToUsfm } from './bibleRef';
 import { supabase } from './supabase';
@@ -58,14 +62,16 @@ async function getSharedVerse(lang, reference, { authoritativeOnly = false } = {
 }
 
 // Fire-and-forget: contributing to the shared cache must never block or fail the
-// reader. Write-once (ignoreDuplicates) since Scripture text is immutable.
+// reader. Write-once (ignoreDuplicates) since Scripture text is immutable. Only
+// authoritative ('youversion') text is ever contributed — the shared cache must
+// never hold LLM-generated Scripture.
 function putSharedVerse(lang, reference, value) {
-  if (!value?.text) return;
+  if (!value?.text || value.source !== 'youversion') return;
   try {
     supabase
       .from('verse_cache')
       .upsert(
-        { lang, reference, text: value.text, source: value.source || 'ai' },
+        { lang, reference, text: value.text, source: 'youversion' },
         { onConflict: 'lang,reference', ignoreDuplicates: true },
       )
       .then(() => {}, () => {});
@@ -92,18 +98,6 @@ async function fromYouVersion(reference, lang, knownUsfm) {
   return { text: data.text, ref: data.reference || reference, source: 'youversion' };
 }
 
-// Ask the AI for the passage text (universal fallback). Honours the app's
-// "never isolate a verse from its context" posture via the shared guardrail.
-async function fromAI(reference, lang) {
-  const name = languageName(lang);
-  const prompt = `Provide the exact, word-for-word text of the Bible passage "${reference}" from a widely-used ${name} translation. Quote only the real canonical text — never paraphrase, summarise, or invent words. If the reference names a single verse, include just that verse. Respond ONLY with JSON:
-{"text": "<the passage text in ${name}>", "ref": "${reference}"}`;
-
-  const { data, error } = await callClaudeForJson({ prompt, lang, maxTokens: 700, feature: 'verse' });
-  if (data?.text) return { data: { text: data.text, ref: data.ref || reference, source: 'ai' }, error: null };
-  return { data: null, error };
-}
-
 // Consent-free enrichment for the reader: return text we already have cached, or
 // fetch authoritative YouVersion text when a version is mapped for the language.
 // Never touches the AI path, so the reader can upgrade a saved verse to publisher
@@ -127,18 +121,20 @@ export async function fetchScriptureText({ reference, lang, usfm }) {
   return yv;
 }
 
-// Resolve the full passage text for a reference. Returns { data: { text, ref,
-// source } | null, error } — the same shape the AI callers use, so the reader can
-// reuse localizeAiError.
+// Resolve the full passage text for a reference from authoritative sources only.
+// Returns { data: { text, ref, source } | null, error }. `data` is null (with no
+// error) when no authoritative text is available — the reader then shows the
+// reference with a link to open it in the user's Bible, never invented text.
 export async function fetchVerseText({ reference, lang }) {
   if (!reference) return { data: null, error: null };
 
   const cached = getCachedVerseText(lang, reference);
-  if (cached) return { data: cached, error: null };
+  if (cached?.text) return { data: cached, error: null };
 
-  // Reuse any passage (authoritative or AI) already resolved by another
-  // user/device before spending a live API call on the same verse.
-  const shared = await getSharedVerse(lang, reference);
+  // Reuse authoritative text already resolved by another user/device before
+  // spending a live API call. Restricted to 'youversion' rows so no legacy
+  // AI-sourced entry can resurface as authoritative Scripture.
+  const shared = await getSharedVerse(lang, reference, { authoritativeOnly: true });
   if (shared) { cache(lang, reference, shared); return { data: shared, error: null }; }
 
   if (youVersionEnabled()) {
@@ -150,7 +146,6 @@ export async function fetchVerseText({ reference, lang }) {
     }
   }
 
-  const { data, error } = await fromAI(reference, lang);
-  if (data) { cache(lang, reference, data); putSharedVerse(lang, reference, data); }
-  return { data, error };
+  // No authoritative source could serve it — reference-only fallback.
+  return { data: null, error: null };
 }

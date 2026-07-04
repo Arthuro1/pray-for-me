@@ -1,6 +1,12 @@
+import { readFileSync } from 'node:fs'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+
+// Single source of truth for the app version: package.json. Injected as the
+// compile-time constant __APP_VERSION__ so the UI (Settings/About) and any docs
+// never drift from the published version.
+const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
 export default defineConfig(({ mode }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
@@ -14,6 +20,9 @@ export default defineConfig(({ mode }) => {
   const yvpKey = env.YVP_APP_KEY || ''
 
   return {
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   plugins: [
     react(),
     VitePWA({

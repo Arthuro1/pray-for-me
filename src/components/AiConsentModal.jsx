@@ -3,6 +3,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import usePrayerStore from '../store/prayerStore';
+import { track, EVENTS } from '../lib/analytics';
 import AiDisclaimer from './AiDisclaimer';
 
 // Consent is a settings-store field (aiConsentPrayer / aiConsentHome), so it is
@@ -18,6 +19,7 @@ export function grantAiConsent(context = 'prayer') {
   usePrayerStore.getState().updateSettings(
     context === 'home' ? { aiConsentHome: true } : { aiConsentPrayer: true }
   );
+  track(EVENTS.AI_CONSENT_ENABLED, { source: context });
 }
 
 // True if the user has opted into AI for at least one context.
@@ -29,6 +31,7 @@ export function hasAnyAiConsent() {
 // Withdraw consent everywhere — the next AI use will ask again.
 export function revokeAiConsent() {
   usePrayerStore.getState().updateSettings({ aiConsentPrayer: false, aiConsentHome: false });
+  track(EVENTS.AI_CONSENT_REVOKED);
 }
 
 // context: 'prayer' = sends prayer title + last update, 'home' = sends category names

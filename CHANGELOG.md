@@ -6,6 +6,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/). This project us
 ## [Unreleased] — 2026-07-04
 
 ### Added
+- **Free vs Supporter tiering (scaffold)** — a centralized feature-tier config (`src/lib/plan.js`: `FREE_FEATURES`, `SUPPORTER_FEATURES`, `isFeatureAvailable`, `getFeatureTier`). No billing is wired in; while `BILLING_ENABLED` is `false` nothing is locked (the free app is never crippled). Privacy, export, and account deletion are always free.
+- **Privacy Center** — a plain-language Settings surface explaining private/vault/shared prayers, AI, push, export, deletion, and the Free-vs-Supporter privacy guarantees (`src/components/PrivacyCenter.jsx`).
+- **Supporter membership UX** — generous, non-manipulative "Become a Supporter" surface with pay-what-you-can giving levels, kept clearly separate from the optional one-time Donate flow (`src/components/SupporterModal.jsx`).
+- **Privacy-preserving analytics** — a single choke point (`src/lib/analytics.js`) that emits only allowlisted product-activation events and structurally drops anything resembling prayer content.
+- App version is now sourced from `package.json` via Vite `define` (`__APP_VERSION__`), so the Settings/About line never drifts (set to **1.0.0**).
+
+### Changed
+- **Onboarding simplified** — the first-run flow is now three warm, action-first slides ending in "Add your first prayer"; advanced tools (groups, plans, vault, AI, recurring rules) are no longer toured up front, and no Supporter prompts appear during onboarding.
+
+### Security / Safety
+- **No AI-generated Bible text** — the verse reader's AI fallback was removed. Verse text now comes only from authoritative sources (cache → shared cache → YouVersion); when none is available the reader shows the reference with a link to the user's Bible. AI may still offer reflections (behind consent) but never produces canonical Scripture wording (`src/lib/verseText.js`).
+
+### Previously
 - **Prayer scheduling** — one-time and recurring prayers per prayer (daily, chosen weekdays, every N days, monthly, yearly), with four end conditions: never, on a date, after N times, or **until answered** (the prayer retires itself when God answers). Recurrence is a small pure engine (`src/lib/schedule.js`) over local day keys, fully offline-capable; prayers without a schedule keep the weekly category plan unchanged.
 - **Prayer-time slots** — schedule into morning / midday / evening (or anytime) instead of clock times; Today and the day agenda group by slot.
 - **Month calendar in the Plan tab** — new Month/Week switcher; month grid with colored dots (recurring / one-time / weekly plan / group), tap a day for its agenda, mark prayed per prayer per day.

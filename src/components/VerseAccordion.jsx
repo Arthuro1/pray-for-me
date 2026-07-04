@@ -3,47 +3,41 @@ import { BookOpen, ExternalLink, RefreshCw, WifiOff } from 'lucide-react';
 import { t } from '../i18n';
 import { bibleLink } from '../utils/bibleLink';
 import { fetchVerseText, fetchScriptureText } from '../lib/verseText';
-import { localizeAiError } from '../lib/aiCore';
-import AiConsentModal, { hasAiConsent } from './AiConsentModal';
-import AiDisclaimer from './AiDisclaimer';
 
 // Tap a verse reference to expand it in place and read the passage without
-// leaving the page — no modal. Shows whatever text is already known at once,
-// pulls the fuller passage on demand through the guardrailed AI helper when no
-// authoritative source has it, and offers "read the whole chapter" as the
-// deepest dive. The trigger itself is supplied by the caller (as a render
-// prop) so each screen keeps its own pill/row styling; this component owns
-// only the expand state, the fetch, and the panel underneath.
+// leaving the page — no modal. Shows whatever text is already known at once, and
+// pulls the fuller passage on demand from AUTHORITATIVE sources only (cache →
+// shared cache → YouVersion). We never generate Scripture text with AI: when no
+// authoritative source has the passage, we show the reference with a link to open
+// it in the user's own Bible ("reference-only") rather than inventing wording.
+// The trigger itself is supplied by the caller (as a render prop) so each screen
+// keeps its own pill/row styling; this component owns only the expand state, the
+// fetch, and the panel underneath.
 export default function VerseAccordion({ reference, lang, initialText, className = '', panelStyle, children }) {
   const [expanded, setExpanded] = useState(false);
   const [text, setText] = useState(initialText || '');
-  const [status, setStatus] = useState('idle'); // idle | loading | full | error | offline
-  const [source, setSource] = useState(null);
-  const [error, setError] = useState(null);
-  const [showConsent, setShowConsent] = useState(false);
+  // idle | loading | full | refonly | offline
+  const [status, setStatus] = useState('idle');
   const fetchedOnce = useRef(false);
 
+  // Fetch the full passage from authoritative sources. No AI, no consent prompt —
+  // only publisher/cached Scripture text is ever requested here.
   const loadPassage = async () => {
-    if (!hasAiConsent('prayer')) { setShowConsent(true); return; }
     if (typeof navigator !== 'undefined' && !navigator.onLine) { setStatus('offline'); return; }
     setStatus('loading');
-    setError(null);
-    const { data, error: e } = await fetchVerseText({ reference, lang });
+    const { data } = await fetchVerseText({ reference, lang });
     if (data?.text) {
       setText(data.text);
-      setSource(data.source || 'ai');
       setStatus('full');
-    } else if (text) {
-      setError(localizeAiError(e, lang));
-      setStatus('idle');
     } else {
-      setError(localizeAiError(e, lang) || t(lang, 'scriptureNone'));
-      setStatus('error');
+      // No authoritative text available — show the reference with a Bible link.
+      setStatus('refonly');
     }
   };
 
-  // On first expand, try the consent-free source (cache, then YouVersion)
-  // before ever falling to the AI path.
+  // On first expand, try the consent-free authoritative source (cache, then
+  // YouVersion). If nothing is available and we have no short text to show, fall
+  // to the reference-only state.
   useEffect(() => {
     if (!expanded || fetchedOnce.current) return;
     fetchedOnce.current = true;
@@ -52,7 +46,6 @@ export default function VerseAccordion({ reference, lang, initialText, className
       if (cancelled) return;
       if (res?.text) {
         setText(res.text);
-        setSource(res.source || 'youversion');
         setStatus('full');
       } else if (!initialText) {
         loadPassage();
@@ -63,6 +56,18 @@ export default function VerseAccordion({ reference, lang, initialText, className
   }, [expanded]);
 
   const toggle = () => setExpanded((v) => !v);
+
+  const chapterLink = (
+    <a
+      href={bibleLink(reference, lang)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-1 text-xs font-medium"
+      style={{ color: 'var(--accent)' }}
+    >
+      <ExternalLink size={11} /> {t(lang, 'readWholeChapter')}
+    </a>
+  );
 
   return (
     <div className={className}>
@@ -83,52 +88,29 @@ export default function VerseAccordion({ reference, lang, initialText, className
             </div>
           )}
 
-          {status === 'error' && (
+          {/* Reference-only: no authoritative text here — point to the user's Bible. */}
+          {status === 'refonly' && (
             <div className="flex flex-col gap-2">
-              <p className="text-xs" style={{ color: 'var(--text-2)' }}>{error}</p>
-              <button
-                onClick={loadPassage}
-                className="self-start text-xs font-medium px-3 py-1.5 rounded-full flex items-center gap-1.5"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-              >
-                <RefreshCw size={11} /> {t(lang, 'retryScripture')}
-              </button>
+              {text && <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{text}"</p>}
+              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'scriptureRefOnly')}</p>
+              {chapterLink}
             </div>
           )}
 
           {(status === 'idle' || status === 'full') && (
             <>
               {text && <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-1)' }}>"{text}"</p>}
-              {error && <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>{error}</p>}
               <div className="flex items-center justify-between flex-wrap gap-2">
                 {status === 'idle' ? (
                   <button onClick={loadPassage} className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--accent)' }}>
                     <BookOpen size={11} /> {t(lang, 'readFullPassage')}
                   </button>
                 ) : <span />}
-                <a
-                  href={bibleLink(reference, lang)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-xs font-medium"
-                  style={{ color: 'var(--accent)' }}
-                >
-                  <ExternalLink size={11} /> {t(lang, 'readWholeChapter')}
-                </a>
+                {chapterLink}
               </div>
-              {status === 'full' && source === 'ai' && <AiDisclaimer lang={lang} className="mt-1.5" />}
             </>
           )}
         </div>
-      )}
-
-      {showConsent && (
-        <AiConsentModal
-          lang={lang}
-          context="prayer"
-          onAccept={() => { setShowConsent(false); loadPassage(); }}
-          onCancel={() => setShowConsent(false)}
-        />
       )}
     </div>
   );

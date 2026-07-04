@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { BookHeart, CalendarDays, Users, Sparkles, Bell, ShieldCheck } from 'lucide-react';
+import { BookHeart, Sparkles, Bell } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 
 // First-run intro. Shown once (gated by localStorage in App) to orient new users.
+// Deliberately SHORT and warm: it centres on the one core habit — adding your
+// first prayer — and ends with that as the primary action. Advanced tools
+// (groups, reading plans, the encrypted vault, AI, recurring rules, calendar
+// export) are intentionally NOT toured here; the app surfaces them later, once
+// the first prayer exists. No Supporter prompts appear during onboarding.
 const STEPS = [
   { icon: Sparkles, titleKey: 'onboardWelcomeTitle', bodyKey: 'onboardWelcomeBody' },
   { icon: BookHeart, titleKey: 'onboardPrayTitle', bodyKey: 'onboardPrayBody' },
-  { icon: ShieldCheck, titleKey: 'onboardVaultTitle', bodyKey: 'onboardVaultBody' },
-  { icon: CalendarDays, titleKey: 'onboardPlanTitle', bodyKey: 'onboardPlanBody' },
   { icon: Bell, titleKey: 'onboardRemindTitle', bodyKey: 'onboardRemindBody' },
-  { icon: Users, titleKey: 'onboardCommunityTitle', bodyKey: 'onboardCommunityBody' },
 ];
 
 export default function Onboarding({ lang = 'en', onFinish, onAddPrayer }) {
@@ -34,7 +36,10 @@ export default function Onboarding({ lang = 'en', onFinish, onAddPrayer }) {
         </div>
 
         <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-1)' }}>{t(lang, titleKey)}</h2>
-        <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-3)', lineHeight: 1.7 }}>{t(lang, bodyKey)}</p>
+        <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-3)', lineHeight: 1.7 }}>{t(lang, bodyKey)}</p>
+        {isLast && (
+          <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--text-3)', opacity: 0.8 }}>{t(lang, 'onboardMoreLater')}</p>
+        )}
 
         {/* Progress dots */}
         <div className="flex justify-center gap-1.5 mb-6">
@@ -49,7 +54,7 @@ export default function Onboarding({ lang = 'en', onFinish, onAddPrayer }) {
           </button>
           {isLast ? (
             <button onClick={() => finish(true)} className="flex-1 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
-              {t(lang, 'onboardStart')}
+              {t(lang, 'onboardAddFirst')}
             </button>
           ) : (
             <button onClick={() => setStep((s) => s + 1)} className="flex-1 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
