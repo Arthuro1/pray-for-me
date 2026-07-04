@@ -22,6 +22,7 @@ import {
   POINT_SENSITIVE_FIELDS,
   TESTIMONY_SENSITIVE_FIELDS,
 } from '../lib/crypto/prayerCrypto';
+import { isUnlocked } from '../lib/crypto/keyManager';
 import useCommunityStore from './communityStore';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
@@ -99,6 +100,93 @@ async function encryptedSensitiveFields(merged) {
     encrypted_payload: enc.encrypted_payload,
     encryption_version: enc.encryption_version,
   };
+}
+
+// ─── Vault migration (encrypt legacy rows at rest) ───────────────────
+// The vault only encrypts what a user writes AFTER turning it on; prayers
+// created before it existed (or while it was locked) stay plaintext on the
+// server. These helpers find those PRIVATE rows and re-store them as ciphertext
+// so "Prayer Vault" protects a user's whole private history, not just new writes.
+// Shared and saved-from-community prayers are deliberately skipped — group
+// members must read the former, and the latter mirrors public community content.
+const MIGRATABLE_COLLECTIONS = ['prayer_updates', 'prayer_points', 'prayer_testimonies'];
+
+// A row is encrypted at rest once it carries an encryption_version (written
+// alongside every encrypted_payload). Legacy plaintext rows leave it null.
+const isRowEncrypted = (row) => row?.encryption_version != null;
+
+// True when a PRIVATE prayer still has anything stored in plaintext — its own
+// row or any nested update / point / testimony.
+function prayerNeedsEncryption(p) {
+  if (!isRowEncrypted(p)) return true;
+  return MIGRATABLE_COLLECTIONS.some((coll) => (p[coll] || []).some((r) => !isRowEncrypted(r)));
+}
+
+// Ids of the user's personal prayers shared to at least one group — their
+// content is plaintext by design and must stay out of the migration.
+async function fetchSharedPrayerIds(userId) {
+  const { data } = await supabase
+    .from('community_prayers')
+    .select('source_prayer_id')
+    .eq('user_id', userId)
+    .not('source_prayer_id', 'is', null);
+  return new Set((data || []).map((r) => r.source_prayer_id));
+}
+
+// Owned prayers with only the flags the read-only coverage check needs — no
+// plaintext content is pulled just to count what's protected.
+async function fetchOwnedEncryptionState(userId) {
+  const { data, error } = await supabase
+    .from('prayers')
+    .select(`id, community_origin_id, encryption_version,
+             prayer_updates(id, encryption_version),
+             prayer_points(id, encryption_version),
+             prayer_testimonies(id, encryption_version)`)
+    .eq('user_id', userId);
+  if (error) throw error;
+  return data || [];
+}
+
+// Owned prayers with the plaintext content too, so legacy rows can be re-encrypted.
+async function fetchOwnedForMigration(userId) {
+  const { data, error } = await supabase
+    .from('prayers')
+    .select(`id, community_origin_id, encryption_version,
+             title, description, person_name, phone, scripture_guidance,
+             prayer_updates(id, encryption_version, text),
+             prayer_points(id, encryption_version, title, verses),
+             prayer_testimonies(id, encryption_version, content)`)
+    .eq('user_id', userId);
+  if (error) throw error;
+  return data || [];
+}
+
+// Encrypt any still-plaintext child rows of one collection, in place.
+async function encryptChildRows(table, rows, fields) {
+  for (const row of rows || []) {
+    if (isRowEncrypted(row)) continue;
+    const enc = await encryptChildForStorage(row, fields);
+    const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+    for (const f of fields) patch[f] = enc[f]; // redacted plaintext ('' / [])
+    const { error } = await supabase.from(table).update(patch).eq('id', row.id);
+    if (error) throw error;
+  }
+}
+
+// Re-store one PRIVATE prayer (and its nested rows) as ciphertext: the parent
+// scalars/guidance are bundled into encrypted_payload and their columns redacted,
+// then each plaintext child row is encrypted in place. Parts already encrypted
+// are left untouched (e.g. a formerly-shared prayer whose parent is encrypted but
+// whose child rows were kept plaintext for fan-out).
+async function encryptExistingPrayer(p) {
+  if (!isRowEncrypted(p)) {
+    const patch = await encryptedSensitiveFields(p);
+    const { error } = await supabase.from('prayers').update(patch).eq('id', p.id);
+    if (error) throw error;
+  }
+  await encryptChildRows('prayer_updates', p.prayer_updates, UPDATE_SENSITIVE_FIELDS);
+  await encryptChildRows('prayer_points', p.prayer_points, POINT_SENSITIVE_FIELDS);
+  await encryptChildRows('prayer_testimonies', p.prayer_testimonies, TESTIMONY_SENSITIVE_FIELDS);
 }
 
 // Keeps shared community copies in sync when the source personal prayer is
@@ -310,6 +398,50 @@ const usePrayerStore = create((set, get) => ({
           : x
       ),
     }));
+  },
+
+  // ─── Vault coverage / migration ──────────────────────────────
+  // Read-only: how many of the user's PRIVATE prayers are protected vs. still
+  // plaintext at rest. Returns null when the server can't be reached (offline)
+  // so the UI can stay silent rather than assert a state it can't verify.
+  scanVaultCoverage: async () => {
+    const { userId } = get();
+    if (!userId) return { total: 0, pending: 0 };
+    let rows, sharedIds;
+    try {
+      [rows, sharedIds] = await Promise.all([fetchOwnedEncryptionState(userId), fetchSharedPrayerIds(userId)]);
+    } catch {
+      return null;
+    }
+    let total = 0, pending = 0;
+    for (const p of rows) {
+      if (p.community_origin_id || sharedIds.has(p.id)) continue; // plaintext by design
+      total++;
+      if (prayerNeedsEncryption(p)) pending++;
+    }
+    return { total, pending };
+  },
+
+  // Encrypt every still-plaintext PRIVATE prayer at rest. Requires the vault
+  // unlocked (needs the master key) and a network connection. In-memory state is
+  // left untouched — it already holds the same plaintext; only the server's (and,
+  // on the next snapshot save, the local cache's) at-rest form changes.
+  migrateToVault: async () => {
+    const { userId } = get();
+    if (!userId || !isUnlocked()) return { migrated: 0, failed: 0 };
+    let rows, sharedIds;
+    try {
+      [rows, sharedIds] = await Promise.all([fetchOwnedForMigration(userId), fetchSharedPrayerIds(userId)]);
+    } catch {
+      return { migrated: 0, failed: 0 };
+    }
+    let migrated = 0, failed = 0;
+    for (const p of rows) {
+      if (p.community_origin_id || sharedIds.has(p.id) || !prayerNeedsEncryption(p)) continue;
+      try { await encryptExistingPrayer(p); migrated++; }
+      catch { failed++; }
+    }
+    return { migrated, failed };
   },
 
   // ─── Prayers ─────────────────────────────────────────────────

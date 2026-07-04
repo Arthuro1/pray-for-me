@@ -14,6 +14,7 @@ import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
 import SupporterModal from '../components/SupporterModal';
 import VaultModal from '../components/VaultModal';
+import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/AiDisclaimer';
 import { revokeAiConsent } from '../components/AiConsentModal';
 import useVaultStore from '../store/vaultStore';
@@ -362,32 +363,35 @@ export default function SettingsTab() {
           )}
 
           {vaultInitialized && vaultUnlocked && (
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={handleLockVault}
-                className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <Lock size={14} />
-                {t(lang, 'vaultLockNow')}
-              </button>
-              <button
-                onClick={() => setVaultMode('change')}
-                className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <KeyRound size={14} />
-                {t(lang, 'vaultChangePass')}
-              </button>
-              <button
-                onClick={() => setVaultMode('rotate')}
-                className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <RefreshCw size={14} />
-                {t(lang, 'vaultRotateCode')}
-              </button>
-            </div>
+            <>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={handleLockVault}
+                  className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <Lock size={14} />
+                  {t(lang, 'vaultLockNow')}
+                </button>
+                <button
+                  onClick={() => setVaultMode('change')}
+                  className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <KeyRound size={14} />
+                  {t(lang, 'vaultChangePass')}
+                </button>
+                <button
+                  onClick={() => setVaultMode('rotate')}
+                  className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <RefreshCw size={14} />
+                  {t(lang, 'vaultRotateCode')}
+                </button>
+              </div>
+              <VaultMigrationStatus lang={lang} />
+            </>
           )}
         </div>
 
