@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert, Repeat } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -15,6 +15,12 @@ import { toast } from '../store/toastStore';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
+import { scheduleSummary } from '../components/ScheduleEditor';
+import { planDayNumber } from '../lib/schedule';
+import { todayKey } from '../lib/prayedLog';
+import { planDayContent } from '../content/prayerPlans';
+import { pick } from '../content/teaching';
+import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
 import Avatar from '../components/Avatar';
@@ -591,6 +597,39 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )}
           </div>
         )}
+
+        {/* Schedule at a glance — edit via the prayer form */}
+        {livePrayer.schedule && (
+          <p className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+            <Repeat size={12} className="shrink-0" /> {scheduleSummary(livePrayer.schedule, lang)}
+          </p>
+        )}
+
+        {/* Guided plan: today's theme + passage (only on a plan day) */}
+        {livePrayer.schedule?.plan && (() => {
+          const n = planDayNumber(livePrayer.schedule, todayKey());
+          const content = n ? planDayContent(livePrayer.schedule.plan.id, n) : null;
+          if (!content) return null;
+          return (
+            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>
+                {t(lang, 'planDayOf', { n, total: livePrayer.schedule.end?.count || '' })}
+              </p>
+              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(content.theme, lang)}</p>
+              <VerseAccordion reference={content.ref} lang={lang}>
+                {({ toggle }) => (
+                  <button
+                    onClick={toggle}
+                    className="text-xs flex items-center gap-1.5"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    <BookOpen size={12} /> {content.ref}
+                  </button>
+                )}
+              </VerseAccordion>
+            </div>
+          );
+        })()}
         {savedCopy && categories.length > 0 && (
           <div>
             <div className="flex flex-wrap gap-1.5 items-center">
@@ -867,6 +906,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )
           )}
         </div>
+
+        {/* ── Community mode: prayer-chain calendar (claim a day) ── */}
+        {isCommunity && (
+          <GroupPrayerCalendar
+            communityPrayer={communityPrayer}
+            groupId={communityPrayer.group_id}
+            lang={lang}
+            user={user}
+          />
+        )}
 
         {/* ── Community mode: member updates ── */}
         {isCommunity && (

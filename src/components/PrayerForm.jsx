@@ -7,6 +7,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import ScriptureFirstStep from './ScriptureFirstStep';
+import ScheduleEditor, { emptyDraft, draftFromSchedule, scheduleFromDraft } from './ScheduleEditor';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -60,7 +61,7 @@ function CategorySelector({ categories, selectedIds, onToggle, tr, lang }) {
 }
 
 function initialForm(editPrayer) {
-  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false };
+  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft() };
   return {
     title: editPrayer.title || '',
     description: editPrayer.description || '',
@@ -68,6 +69,7 @@ function initialForm(editPrayer) {
     forOther: editPrayer.for_other || false,
     personName: editPrayer.person_name || '',
     isAnonymous: editPrayer.is_anonymous || false,
+    scheduleDraft: draftFromSchedule(editPrayer.schedule),
   };
 }
 
@@ -96,13 +98,13 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds });
       onClose();
     } else if (editPrayer) {
-      updatePrayer(editPrayer.id, form);
+      updatePrayer(editPrayer.id, { ...form, schedule: scheduleFromDraft(form.scheduleDraft, editPrayer.schedule) });
       onClose();
     } else {
       // New personal prayer: create it, then invite the user into Scripture
       // before they pray (Step 2). The prayer already exists by then, so
       // closing the Scripture step at any point keeps the prayer.
-      const id = await addPrayer(form);
+      const id = await addPrayer({ ...form, schedule: scheduleFromDraft(form.scheduleDraft) });
       if (id) {
         // Record the language this prayer was written in, so we don't later pay
         // to translate personal content into the language it's already in.
@@ -194,6 +196,12 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
           />
 
           {!communityMode && <>
+            <ScheduleEditor
+              draft={form.scheduleDraft}
+              onChange={(d) => patch('scheduleDraft', d)}
+              lang={lang}
+            />
+
             <CheckboxToggle
               checked={form.forOther}
               onChange={() => patch('forOther', !form.forOther)}

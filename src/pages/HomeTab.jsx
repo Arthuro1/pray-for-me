@@ -20,7 +20,9 @@ import { usePrayerActions } from '../hooks/usePrayerActions';
 import { weeklyRecap } from '../utils/recap';
 import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
 import { nextReminder } from '../utils/reminder';
-import { Clock } from 'lucide-react';
+import { groupBySlot, SLOT_ORDER } from '../lib/planner';
+import { parseKey } from '../lib/schedule';
+import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
@@ -38,7 +40,7 @@ const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR, zh: enUS, es: enUS, hi: enUS,
 
 export default function HomeTab({ onAdd }) {
   const navigate = useNavigate();
-  const { getTodaysPrayers, categories, prayers, settings, addPrayer, loading } = usePrayerStore();
+  const { getTodaysPrayers, getEntriesForDay, getCatchUp, markPrayedOn, categories, prayers, settings, addPrayer, loading } = usePrayerStore();
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
   const { prayerShares, fetchPrayerShares } = useCommunityStore();
@@ -58,6 +60,10 @@ export default function HomeTab({ onAdd }) {
   const { swipeActions } = usePrayerActions(lang);
 
   const todaysPrayers = getTodaysPrayers();
+  const todayEntries = getEntriesForDay(todayKey());
+  const slotGroups = groupBySlot(todayEntries);
+  const useSlots = todayEntries.some((e) => e.slot); // headers only once slots are in use
+  const catchUp = getCatchUp();
   const today = new Date();
   const dayIndex = today.getDay();
   const todayCategories = categories.filter((c) => c.week_days && c.week_days.includes(dayIndex));
@@ -144,7 +150,12 @@ export default function HomeTab({ onAdd }) {
           lang={lang}
           tr={tr}
           onClose={() => setShowSession(false)}
-          onComplete={() => setPrayedDays(markPrayedToday())}
+          onComplete={() => {
+            setPrayedDays(markPrayedToday());
+            // Per-prayer completion log: feeds catch-up, the calendar history
+            // and rotation fairness (last_prayed_at).
+            todaysPrayers.forEach((p) => markPrayedOn(p.id, todayKey()));
+          }}
         />
       )}
       {showAiConsent && (
@@ -224,6 +235,36 @@ export default function HomeTab({ onAdd }) {
               {recap.testimonies > 0 && <span>🎉 {recap.testimonies}</span>}
               · {t(lang, 'thisWeek')}
             </span>
+          </div>
+        )}
+
+        {/* Catch up — prayers missed the last few days. Grace, not guilt: one
+            tap marks them prayed, or they quietly age out of the window. */}
+        {catchUp.length > 0 && (
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-sm font-semibold mb-0.5" style={{ color: 'var(--text-1)' }}>🌿 {t(lang, 'catchUpTitle')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'catchUpSub')}</p>
+            <div className="space-y-1.5">
+              {catchUp.map(({ prayer, day }) => (
+                <div key={prayer.id} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: 'var(--input-bg)' }}>
+                  <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-left">
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
+                    <p className="text-[10px]" style={{ color: 'var(--text-3)' }}>
+                      {t(lang, 'missedOn', { date: parseKey(day).toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' }) })}
+                    </p>
+                  </button>
+                  <button
+                    onClick={() => markPrayedOn(prayer.id, day)}
+                    title={t(lang, 'markPrayed')}
+                    aria-label={t(lang, 'markPrayed')}
+                    className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: 'var(--surface)', border: '1.5px solid var(--input-border)', color: 'var(--text-3)' }}
+                  >
+                    <Check size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -354,19 +395,34 @@ export default function HomeTab({ onAdd }) {
 
         {todaysPrayers.length > 0 && (
           <div className="flex flex-col gap-3 mb-4">
-            {todaysPrayers.map((prayer) => (
-              <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
-                <PrayerListItem
-                  prayer={prayer}
-                  categories={categories}
-                  lang={lang}
-                  tr={tr}
-                  shares={prayerShares[prayer.id]}
-                  currentUserName={getAuthorName(user)}
-                  onClick={() => navigate(`/prayers/${prayer.id}`)}
-                />
-              </SwipeableRow>
-            ))}
+            {/* Grouped by prayer-time slot once any prayer uses one; flat list otherwise */}
+            {(useSlots ? SLOT_ORDER : ['anytime']).map((slot) => {
+              const slotEntries = useSlots ? slotGroups[slot] : todayEntries;
+              if (!slotEntries || slotEntries.length === 0) return null;
+              const SlotIcon = { morning: Sunrise, midday: Sun, evening: Moon, anytime: Clock }[slot];
+              return (
+                <div key={slot} className="flex flex-col gap-3">
+                  {useSlots && (
+                    <p className="text-xs font-semibold uppercase tracking-widest flex items-center gap-1.5 mt-1" style={{ color: 'var(--text-3)' }}>
+                      <SlotIcon size={12} /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
+                    </p>
+                  )}
+                  {slotEntries.map(({ prayer }) => (
+                    <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+                      <PrayerListItem
+                        prayer={prayer}
+                        categories={categories}
+                        lang={lang}
+                        tr={tr}
+                        shares={prayerShares[prayer.id]}
+                        currentUserName={getAuthorName(user)}
+                        onClick={() => navigate(`/prayers/${prayer.id}`)}
+                      />
+                    </SwipeableRow>
+                  ))}
+                </div>
+              );
+            })}
           </div>
         )}
 

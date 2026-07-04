@@ -3,7 +3,21 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/). This project uses date-based entries.
 
-## [Unreleased] — 2026-06-24
+## [Unreleased] — 2026-07-04
+
+### Added
+- **Prayer scheduling** — one-time and recurring prayers per prayer (daily, chosen weekdays, every N days, monthly, yearly), with four end conditions: never, on a date, after N times, or **until answered** (the prayer retires itself when God answers). Recurrence is a small pure engine (`src/lib/schedule.js`) over local day keys, fully offline-capable; prayers without a schedule keep the weekly category plan unchanged.
+- **Prayer-time slots** — schedule into morning / midday / evening (or anytime) instead of clock times; Today and the day agenda group by slot.
+- **Month calendar in the Plan tab** — new Month/Week switcher; month grid with colored dots (recurring / one-time / weekly plan / group), tap a day for its agenda, mark prayed per prayer per day.
+- **Per-occurrence edit scopes** — skip a day, move one occurrence to another date, restore it, or end the series before a day ("this day only" / "this and future"); series-wide edits stay in the prayer form.
+- **Catch-up** — prayers missed the last 3 days surface gently on Home (grace, not guilt), one tap to mark prayed; per-prayer completions feed a new `prayer_completions` table + `last_prayed_at`.
+- **Rotation lists** — a category can pray N subjects per day round-robin (deterministic by date, works offline), so large lists stay coverable without burnout.
+- **Prayer plans** — guided journeys (7 days of gratitude, novena, 21 days of breakthrough, 30 days for others) with a theme + passage per day, authored en/fr with English fallback like the teaching layer; one tap creates the capped recurring prayer.
+- **Group prayer calendar (prayer chain)** — on a community prayer, members claim days ("I'll pray this day"); coverage is visible to the group and claimed days land on each member's personal calendar. New `prayer_commitments` table with RLS.
+- **Calendar export (.ics)** — download the whole prayer schedule (RRULE-based) for Google/Apple/Outlook calendars.
+- Migration: `supabase/prayer_scheduling.sql` (run in the Supabase SQL editor). New i18n keys translated across **all 16 languages**.
+
+## 2026-06-24
 
 ### Added
 - **Community / social hub** — prayer groups (join by code, link, or QR), friends & friend requests, group invitations, member tools, reactions ("I'm praying"), member updates, and testimonies.

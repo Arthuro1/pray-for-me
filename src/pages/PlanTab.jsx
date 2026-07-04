@@ -1,23 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import { Plus, Trash2, X, Check, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
+import useAuthStore from '../store/authStore';
+import useCommunityStore from '../store/communityStore';
+import { Plus, Trash2, X, Check, Sparkles, ChevronUp, ChevronDown, CalendarDays, LayoutGrid, Download } from 'lucide-react';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { prayerOnDay } from '../utils/prayer';
+import { monthDots } from '../lib/planner';
+import { addDays } from '../lib/schedule';
+import { todayKey } from '../lib/prayedLog';
+import { buildICS } from '../utils/ics';
+import { PLANS } from '../content/prayerPlans';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
+import MonthCalendar, { monthDayKeys } from '../components/MonthCalendar';
+import DayAgenda from '../components/DayAgenda';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
 export default function PlanTab() {
-  const { categories, prayers, addCategory, updateCategory, deleteCategory, reorderCategories, settings } = usePrayerStore();
+  const {
+    categories, prayers, addCategory, updateCategory, deleteCategory, reorderCategories, settings, addPrayer,
+    completions, getEntriesForDay, markPrayedOn, unmarkPrayedOn, skipOccurrence, moveOccurrence, setOccurrenceOverride, endSeriesBefore,
+  } = usePrayerStore();
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   const DAYS = t(lang, 'days');
   const todayIdx = new Date().getDay();
+  const [view, setView] = useState('month'); // 'month' (calendar) | 'week' (legacy category plan)
+  const [monthDate, setMonthDate] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
+  const [selectedKey, setSelectedKey] = useState(todayKey());
   const [showAddForm, setShowAddForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] });
@@ -25,6 +40,54 @@ export default function PlanTab() {
   const [selectedDay, setSelectedDay] = useState(null);
   useEscapeKey(selectedDay !== null ? () => setSelectedDay(null) : null);
   const dayTrapRef = useFocusTrap(selectedDay !== null);
+
+  const { user } = useAuthStore();
+  const { myCommitments, fetchMyCommitments } = useCommunityStore();
+  useEffect(() => {
+    if (user?.id) fetchMyCommitments(user.id, addDays(todayKey(), -92));
+  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const dots = view === 'month' ? monthDots(prayers, categories, monthDayKeys(monthDate)) : {};
+  if (view === 'month') {
+    // Group prayer-chain claims appear on the personal calendar too.
+    for (const c of myCommitments) {
+      if (c.day.slice(0, 7) === `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, '0')}`) {
+        dots[c.day] = { ...(dots[c.day] || {}), group: ((dots[c.day] || {}).group || 0) + 1 };
+      }
+    }
+  }
+  const dayEntries = view === 'month' ? getEntriesForDay(selectedKey) : [];
+  const dayCommitments = view === 'month' ? myCommitments.filter((c) => c.day === selectedKey) : [];
+
+  // Download the whole schedule as an .ics file (Google/Apple/Outlook).
+  const exportCalendar = () => {
+    const blob = new Blob([buildICS(prayers, myCommitments)], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pray4me-schedule.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(t(lang, 'exportDone'));
+  };
+
+  // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
+  // the engine numbers the days and prayerPlans.js supplies each day's theme.
+  const activePlanIds = new Set(prayers.filter((p) => p.status === 'active' && p.schedule?.plan?.id).map((p) => p.schedule.plan.id));
+  const startPlan = async (plan) => {
+    const start = todayKey();
+    await addPrayer({
+      title: t(lang, plan.titleKey),
+      description: t(lang, plan.subKey),
+      categoryIds: [],
+      schedule: {
+        type: 'recurring', freq: 'daily', startDate: start,
+        end: { kind: 'count', count: plan.count },
+        plan: { id: plan.id, startDate: start },
+      },
+    });
+    toast.success(t(lang, 'planStarted'));
+  };
 
   // Number of active prayers that land on a given weekday.
   const countForDay = (dayIdx) => {
@@ -142,10 +205,28 @@ export default function PlanTab() {
         className="px-4 md:px-8 pt-8 pb-5"
         style={{ background: 'var(--header)' }}
       >
-        <h2 className="text-xl font-semibold mb-1 text-white">{t(lang, 'weeklyPlan')}</h2>
-        <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, 'weeklyPlanSub')}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold mb-1 text-white">{t(lang, view === 'month' ? 'calendarTitle' : 'weeklyPlan')}</h2>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, view === 'month' ? 'calendarSub' : 'weeklyPlanSub')}</p>
+          </div>
+          {/* View switcher: calendar (day-by-day) vs weekly category plan */}
+          <div className="flex rounded-xl overflow-hidden shrink-0" style={{ border: '1px solid rgba(255,255,255,0.25)' }}>
+            {[['month', CalendarDays, 'monthView'], ['week', LayoutGrid, 'weekView']].map(([v, Icon, key]) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 font-medium"
+                style={view === v ? { background: 'rgba(255,255,255,0.22)', color: '#fff' } : { color: 'rgba(255,255,255,0.6)' }}
+              >
+                <Icon size={12} /> {t(lang, key)}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* Weekly overview — tap a day to edit what you pray that day */}
+        {view === 'week' && (
         <div className="mt-4 grid grid-cols-7 gap-1">
           {DAYS.map((day, idx) => {
             const dayCats = categories.filter((c) => (c.week_days || []).includes(idx));
@@ -171,8 +252,79 @@ export default function PlanTab() {
             );
           })}
         </div>
+        )}
       </div>
 
+      {/* Month calendar + day agenda */}
+      {view === 'month' && (
+        <div className="px-4 md:px-8 pt-4 pb-6 space-y-3">
+          <MonthCalendar
+            monthDate={monthDate}
+            dots={dots}
+            selectedKey={selectedKey}
+            onSelect={setSelectedKey}
+            onMonthChange={setMonthDate}
+            lang={lang}
+          />
+          <DayAgenda
+            dayKey={selectedKey}
+            lang={lang}
+            tr={tr}
+            entries={dayEntries}
+            completions={completions}
+            commitments={dayCommitments}
+            onTogglePrayed={(id, day, prayed) => (prayed ? unmarkPrayedOn(id, day) : markPrayedOn(id, day))}
+            onSkip={(id, day) => { skipOccurrence(id, day); toast.success(t(lang, 'occurrenceSkipped')); }}
+            onMove={(id, from, to) => { moveOccurrence(id, from, to); toast.success(t(lang, 'occurrenceMoved', { date: to })); }}
+            onRestore={(id, day) => setOccurrenceOverride(id, day, null)}
+            onEndSeries={(id, day) => { endSeriesBefore(id, day); toast.success(t(lang, 'seriesEnded')); }}
+          />
+
+          {/* Guided prayer plans */}
+          <div className="pt-2">
+            <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'plansTitle')}</h3>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'plansSub')}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {PLANS.map((plan) => {
+                const running = activePlanIds.has(plan.id);
+                return (
+                  <div key={plan.id} className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
+                      {plan.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</p>
+                      <button
+                        onClick={() => startPlan(plan)}
+                        disabled={running}
+                        className="mt-2.5 text-xs font-medium px-3 py-1.5 rounded-lg disabled:opacity-50"
+                        style={running
+                          ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
+                          : { background: 'var(--accent)', color: '#fff' }}
+                      >
+                        {running ? `✓ ${t(lang, 'planRunning')}` : `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ICS export — take the schedule into any external calendar */}
+          <button
+            onClick={exportCalendar}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-xs font-medium"
+            style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+            title={t(lang, 'exportIcsSub')}
+          >
+            <Download size={13} /> {t(lang, 'exportIcs')}
+          </button>
+        </div>
+      )}
+
+      {view === 'week' && (
       <div className="px-4 md:px-8 pt-4">
         {/* Planning hints — unscheduled categories and/or empty days */}
         {(unassigned.length > 0 || emptyDays.length > 0) && (
@@ -368,11 +520,36 @@ export default function PlanTab() {
                   );
                 })}
               </div>
+
+              {/* Rotation: pray N of this list per planned day (round-robin) instead
+                  of the whole list — big lists stay coverable without burnout. */}
+              <div className="flex items-center gap-1.5 mt-2 flex-wrap" title={t(lang, 'rotationHint')}>
+                <span className="text-[10px] font-medium" style={{ color: 'var(--text-3)' }}>🔄 {t(lang, 'rotationLabel')}</span>
+                {[null, 3, 5, 10].map((n) => {
+                  const active = (cat.rotation?.perDay || null) === n;
+                  return (
+                    <button
+                      key={n ?? 'off'}
+                      onClick={() => updateCategory(cat.id, { rotation: n ? { perDay: n } : null })}
+                      className="text-[10px] px-2 py-1 rounded-lg font-medium transition-colors"
+                      style={active ? { backgroundColor: cat.color, color: '#fff' } : { background: 'var(--input-bg)', color: 'var(--text-3)' }}
+                    >
+                      {n ?? t(lang, 'rotationOffShort')}
+                    </button>
+                  );
+                })}
+                {cat.rotation?.perDay && (
+                  <span className="text-[10px]" style={{ color: 'var(--text-3)' }}>
+                    {t(lang, 'rotationPerDay', { n: cat.rotation.perDay })}
+                  </span>
+                )}
+              </div>
             </div>
           ))}
         </div>
         )}
       </div>
+      )}
     </div>
   );
 }

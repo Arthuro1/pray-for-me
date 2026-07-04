@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { prayersForDay, sortEntries, catchUpPrayers } from '../lib/planner';
+import { addDays } from '../lib/schedule';
+import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
@@ -102,6 +105,9 @@ async function encryptedSensitiveFields(merged) {
 const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
+  // prayerId -> ['YYYY-MM-DD', ...] days the prayer was marked prayed (last ~90
+  // days). Plain object so it serialises into the offline snapshot untouched.
+  completions: {},
   userId: null,
   settings: (() => {
     const base = {
@@ -140,7 +146,7 @@ const usePrayerStore = create((set, get) => ({
     // 1. Hydrate instantly from the local snapshot (works offline and includes
     //    any prayers created offline that aren't on the server yet).
     const snap = await loadSnapshot(userId);
-    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], loading: false });
+    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], completions: snap.completions || {}, loading: false });
 
     // 2. Fetch authoritative data. If the network is unreachable, keep the
     //    hydrated snapshot rather than wiping it.
@@ -195,9 +201,28 @@ const usePrayerStore = create((set, get) => ({
     const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
     const mergedPrayers = [...pendingLocal, ...serverPrayers];
 
+    // Recent per-prayer completions (catch-up + rotation fairness). Best-effort:
+    // offline keeps the snapshot's copy, and pending queued completions replay.
+    let completions = get().completions;
+    try {
+      const res = await supabase
+        .from('prayer_completions')
+        .select('prayer_id, day')
+        .eq('user_id', userId)
+        .gte('day', addDays(todayKey(), -90));
+      if (!res.error && res.data) {
+        // Union with local state so completions queued offline (not yet
+        // flushed) aren't dropped from the UI.
+        const merged = {};
+        for (const [pid, days] of Object.entries(get().completions)) merged[pid] = new Set(days);
+        for (const c of res.data) (merged[c.prayer_id] ||= new Set()).add(c.day);
+        completions = Object.fromEntries(Object.entries(merged).map(([pid, days]) => [pid, [...days]]));
+      }
+    } catch { /* offline — snapshot completions stand */ }
+
     const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
-    set({ categories: ordered, prayers: mergedPrayers, loading: false });
-    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers });
+    set({ categories: ordered, prayers: mergedPrayers, completions, loading: false });
+    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers, completions });
     // Mirror shared content of saved-from-community prayers (fully-shared sync).
     get().refreshSavedCopies();
   },
@@ -307,6 +332,8 @@ const usePrayerStore = create((set, get) => ({
       person_name: prayer.personName || '',
       phone: prayer.phone || '',
       status: 'active',
+      // Scheduling metadata stays outside the E2EE envelope (timing, not content).
+      schedule: prayer.schedule || null,
     };
 
     const optimistic = {
@@ -363,6 +390,8 @@ const usePrayerStore = create((set, get) => ({
     if (updates.phone !== undefined) payload.phone = updates.phone;
     if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
     if (updates.pinned !== undefined) payload.pinned = updates.pinned;
+    if (updates.schedule !== undefined) payload.schedule = updates.schedule; // null clears
+    if (updates.scheduleOverrides !== undefined) payload.schedule_overrides = updates.scheduleOverrides;
     payload.updated_at = new Date().toISOString();
 
     const community = {};
@@ -473,6 +502,67 @@ const usePrayerStore = create((set, get) => ({
   markActive: async (id) => {
     set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
     enqueue('markActive', { id });
+  },
+
+  // ─── Scheduling ──────────────────────────────────────────────
+  // Per-occurrence exception on a scheduled prayer: { skip: true } or
+  // { movedTo: 'YYYY-MM-DD' }; null clears the exception. The series itself
+  // is untouched — this is the "this day only" edit scope.
+  setOccurrenceOverride: (prayerId, dayKey, override) => {
+    const p = get().prayers.find((x) => x.id === prayerId);
+    if (!p?.schedule) return;
+    const overrides = { ...(p.schedule_overrides || {}) };
+    if (override) overrides[dayKey] = override;
+    else delete overrides[dayKey];
+    set((state) => ({
+      prayers: state.prayers.map((x) => (x.id === prayerId ? { ...x, schedule_overrides: overrides } : x)),
+    }));
+    enqueue('updatePrayer', { id: prayerId, payload: { schedule_overrides: overrides, updated_at: new Date().toISOString() } });
+  },
+  skipOccurrence: (prayerId, dayKey) => get().setOccurrenceOverride(prayerId, dayKey, { skip: true }),
+  moveOccurrence: (prayerId, fromKey, toKey) => get().setOccurrenceOverride(prayerId, fromKey, { movedTo: toKey }),
+
+  // "This and future" edit scope: end the series the day before `fromKey`.
+  endSeriesBefore: (prayerId, fromKey) => {
+    const p = get().prayers.find((x) => x.id === prayerId);
+    if (!p?.schedule || p.schedule.type !== 'recurring') return;
+    get().updatePrayer(prayerId, { schedule: { ...p.schedule, end: { kind: 'date', date: addDays(fromKey, -1) } } });
+  },
+
+  // Mark one prayer prayed on a local day (idempotent; powers catch-up,
+  // calendar history and rotation fairness). Optimistic + offline-queued.
+  markPrayedOn: (prayerId, dayKey, slot = null) => {
+    const { userId, completions } = get();
+    if ((completions[prayerId] || []).includes(dayKey)) return;
+    const now = new Date().toISOString();
+    const row = { id: crypto.randomUUID(), user_id: userId, prayer_id: prayerId, day: dayKey, slot };
+    set((state) => ({
+      completions: { ...state.completions, [prayerId]: [...(state.completions[prayerId] || []), dayKey] },
+      prayers: state.prayers.map((p) => (p.id === prayerId ? { ...p, last_prayed_at: now } : p)),
+    }));
+    enqueue('logCompletion', { row, last_prayed_at: now });
+  },
+
+  unmarkPrayedOn: (prayerId, dayKey) => {
+    set((state) => ({
+      completions: { ...state.completions, [prayerId]: (state.completions[prayerId] || []).filter((d) => d !== dayKey) },
+    }));
+    enqueue('removeCompletion', { prayerId, day: dayKey });
+  },
+
+  // completions as Map(prayerId -> Set(day)) for the planner helpers.
+  completedDaysMap: () => new Map(Object.entries(get().completions).map(([pid, days]) => [pid, new Set(days)])),
+
+  // All planned entries ({ prayer, source, slot }) for a local day, sorted.
+  getEntriesForDay: (dayKey) => {
+    const { prayers, categories } = get();
+    return sortEntries(prayersForDay(prayers, categories, dayKey), categories);
+  },
+
+  // Missed prayers from the last few days (not completed, not on today's list).
+  getCatchUp: (windowDays = 3) => {
+    const { prayers, categories } = get();
+    return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays);
   },
 
   // Pin/unpin a prayer so it floats to the top of the lists (personal organisation).
@@ -644,6 +734,7 @@ const usePrayerStore = create((set, get) => ({
     if (updates.emoji !== undefined) payload.emoji = updates.emoji;
     if (updates.color !== undefined) payload.color = updates.color;
     if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
+    if (updates.rotation !== undefined) payload.rotation = updates.rotation; // { perDay: n } | null
 
     const { data } = await supabase.from('categories').update(payload).eq('id', id).select().single();
     if (data) {
@@ -703,20 +794,11 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // ─── Today's prayers ─────────────────────────────────────────
+  // Planner-backed: per-prayer schedules (one-time/recurring/slots/rotation)
+  // and the legacy weekly category plan, merged and sorted.
   getTodaysPrayers: () => {
     const { prayers, categories } = get();
-    const today = new Date().getDay();
-    const todayCatIds = categories
-      .filter((c) => (c.week_days || []).includes(today))
-      .map((c) => c.id);
-    const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
-    return prayers
-      .filter((p) => prayerOnDay(p, today, todayCatIds))
-      .sort((a, b) => {
-        const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
-        if (byPin !== 0) return byPin;
-        return prayerPriority(a, orderById) - prayerPriority(b, orderById);
-      });
+    return sortEntries(prayersForDay(prayers, categories, todayKey()), categories).map((e) => e.prayer);
   },
 
   // Persist a new category order (array of ids → sort_order = index).
@@ -733,7 +815,7 @@ usePrayerStore.subscribe((state) => {
   if (!state.userId) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(
-    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers }),
+    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers, completions: state.completions }),
     400
   );
 });

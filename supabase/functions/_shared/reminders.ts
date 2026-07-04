@@ -95,13 +95,6 @@ export function followUpDue(lastSentAt: string | null, days: number | null, now:
   return elapsedMs >= (days || 7) * 86400000;
 }
 
-export function prayerDueToday(p: any, dow: number, todayCatIds: Set<string>): boolean {
-  if (Array.isArray(p.week_days) && p.week_days.length) return p.week_days.includes(dow);
-  const catIds = (p.prayer_categories || []).map((pc: any) => pc.category_id);
-  if (catIds.length === 0) return true; // uncategorized = every day
-  return catIds.some((id: string) => todayCatIds.has(id));
-}
-
 // True when `sub`'s local clock has just reached `time` (within the cron's
 // polling window). Defaults to the daily reminder_time; the follow-up
 // scheduler passes the subscription's own follow_up_time instead.
