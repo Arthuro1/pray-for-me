@@ -25,7 +25,7 @@ describe('SharePreview', () => {
   it('hides the sharer name behind the anonymous label when sharing anonymously', () => {
     render(<SharePreview authorName="Alice" isAnonymous title="Healing for Mom" lang={lang} />);
     expect(screen.queryByText('Alice')).toBeNull();
-    expect(screen.getByText(t(lang, 'anonymous'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'anonymousAuthor'))).toBeTruthy();
     // The title still previews so the user knows which request they're sharing.
     expect(screen.getByText('Healing for Mom')).toBeTruthy();
   });

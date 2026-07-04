@@ -120,6 +120,7 @@ export default {
   "wordPlaceholder": "말씀, 격려, 감동...",
   "postTestimony": "간증 나누기",
   "anonymous": "익명으로 게시",
+  "anonymousAuthor": "익명",
   "shareWithGroup": "그룹과 공유",
   "shareEncryptedWarning": "이 기도는 기도 금고로 보호되고 있습니다. 공유하면 선택한 그룹의 모든 사람에게 평문 사본이 게시됩니다. 이 사본은 종단 간 암호화되지 않으며 금고가 보호할 수 없습니다.",
   "shareEncryptedAck": "이렇게 하면 그룹에 암호화되지 않은 사본이 게시된다는 것을 이해합니다.",

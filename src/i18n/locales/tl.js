@@ -120,6 +120,7 @@ export default {
   "wordPlaceholder": "Isang talata, pagpapalakas ng loob, inspirasyon...",
   "postTestimony": "Mag-post ng patotoo",
   "anonymous": "I-post nang walang pangalan",
+  "anonymousAuthor": "Walang pangalan",
   "shareWithGroup": "Ibahagi sa grupo",
   "shareEncryptedWarning": "Protektado ang panalanging ito ng iyong Vault ng Panalangin. Ang pagbabahagi nito ay naglalathala ng plaintext na kopya sa lahat ng nasa napiling grupo. Ang kopyang iyon ay HINDI end-to-end encrypted at hindi ito mapoprotektahan ng vault.",
   "shareEncryptedAck": "Nauunawaan ko na naglalathala ito ng hindi naka-encrypt na kopya sa grupo.",

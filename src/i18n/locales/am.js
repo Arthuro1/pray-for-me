@@ -120,6 +120,7 @@ export default {
   "wordPlaceholder": "ቁጥር፣ ማበረታቻ፣ ጥበብ...",
   "postTestimony": "ምስክርነት አጋራ",
   "anonymous": "ስም ሳይገልጽ ልጥፍ",
+  "anonymousAuthor": "ስም አልባ",
   "shareWithGroup": "ከቡድኑ ጋር አጋራ",
   "shareEncryptedWarning": "ይህ ጸሎት በእርስዎ የጸሎት ካዝና የተጠበቀ ነው። ማጋራቱ ግልጽ ቅጂ ለተመረጡት ቡድን(ኖች) አባላት ሁሉ ያሳትማል። ያ ቅጂ ከጫፍ እስከ ጫፍ የተመሰጠረ አይደለም፣ እና ካዝናው ሊጠብቀው አይችልም።",
   "shareEncryptedAck": "ይህ ያልተመሰጠረ ቅጂ ወደ ቡድኑ እንደሚያሳትም ተረድቻለሁ።",

@@ -120,6 +120,7 @@ export default {
   "wordPlaceholder": "Mstari, moyo, msukumo...",
   "postTestimony": "Shiriki ushuhuda",
   "anonymous": "Chapisha bila jina",
+  "anonymousAuthor": "Bila jina",
   "shareWithGroup": "Shiriki na kikundi",
   "shareEncryptedWarning": "Ombi hili linalindwa na Sanduku lako la Maombi. Ukilishiriki, nakala ya maandishi wazi huchapishwa kwa kila mtu katika kikundi ulichochagua. Nakala hiyo HAIJAsimbwa kutoka mwanzo hadi mwisho, na sanduku haliwezi kuilinda.",
   "shareEncryptedAck": "Naelewa kuwa hii huchapisha nakala isiyosimbwa kwenye kikundi.",

@@ -7,7 +7,7 @@ export function getAuthorName(user) {
 // Author label for a community record ({ user_id, author_name, is_anonymous }):
 // "Anonymous" if anonymous, "Me" if it's the current user, else the author name.
 export function communityAuthor(record, userId, lang) {
-  if (record?.is_anonymous) return t(lang, 'anonymous');
+  if (record?.is_anonymous) return t(lang, 'anonymousAuthor');
   if (record?.user_id && record.user_id === userId) return t(lang, 'meAuthor');
   return record?.author_name || '?';
 }

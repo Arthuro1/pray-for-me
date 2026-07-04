@@ -121,6 +121,7 @@ export default {
   "wordPlaceholder": "一节经文、一句鼓励、一个感动...",
   "postTestimony": "分享见证",
   "anonymous": "匿名发布",
+  "anonymousAuthor": "匿名",
   "shareWithGroup": "与群组分享",
   "shareEncryptedWarning": "这个祷告受您的祷告保险库保护。分享它会向所选群组中的所有人发布一份明文副本。该副本未经端到端加密，保险库无法保护它。",
   "shareEncryptedAck": "我明白这会向群组发布一份未加密的副本。",

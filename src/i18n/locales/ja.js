@@ -121,6 +121,7 @@ export default {
   "wordPlaceholder": "聖句、励まし、インスピレーション...",
   "postTestimony": "証しを投稿",
   "anonymous": "匿名で投稿",
+  "anonymousAuthor": "匿名",
   "shareWithGroup": "グループと共有",
   "shareEncryptedWarning": "この祈りはあなたの祈りの保管庫で保護されています。共有すると、選択したグループの全員に平文のコピーが公開されます。そのコピーはエンドツーエンドで暗号化されておらず、保管庫では保護できません。",
   "shareEncryptedAck": "これによりグループに暗号化されていないコピーが公開されることを理解しています。",

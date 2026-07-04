@@ -120,6 +120,7 @@ export default {
   "wordPlaceholder": "Sebuah ayat, dorongan, inspirasi...",
   "postTestimony": "Posting kesaksian",
   "anonymous": "Posting anonim",
+  "anonymousAuthor": "Anonim",
   "shareWithGroup": "Bagikan ke grup",
   "shareEncryptedWarning": "Doa ini dilindungi oleh Brankas Doa Anda. Membagikannya akan menerbitkan salinan teks biasa kepada semua orang di grup yang dipilih. Salinan itu TIDAK dienkripsi ujung-ke-ujung dan brankas tidak dapat melindunginya.",
   "shareEncryptedAck": "Saya memahami bahwa ini menerbitkan salinan yang tidak terenkripsi ke grup.",

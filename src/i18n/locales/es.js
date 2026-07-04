@@ -121,6 +121,7 @@ export default {
   "wordPlaceholder": "Un versículo, ánimo, inspiración...",
   "postTestimony": "Compartir testimonio",
   "anonymous": "Publicar anónimamente",
+  "anonymousAuthor": "Anónimo",
   "shareWithGroup": "Compartir con el grupo",
   "shareEncryptedWarning": "Esta oración está protegida por tu Bóveda de oración. Compartirla publica una copia en texto plano para todos los miembros del grupo o grupos seleccionados. Esa copia NO está cifrada de extremo a extremo y la bóveda no puede protegerla.",
   "shareEncryptedAck": "Entiendo que esto publica una copia sin cifrar en el grupo.",

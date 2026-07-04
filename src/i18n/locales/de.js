@@ -121,6 +121,7 @@ export default {
   "wordPlaceholder": "Ein Vers, eine Ermutigung, eine Inspiration...",
   "postTestimony": "Zeugnis teilen",
   "anonymous": "Anonym posten",
+  "anonymousAuthor": "Anonym",
   "shareWithGroup": "Mit Gruppe teilen",
   "shareEncryptedWarning": "Dieses Gebet ist durch deinen Gebets-Tresor geschützt. Beim Teilen wird eine Klartextkopie an alle Mitglieder der ausgewählten Gruppe(n) veröffentlicht. Diese Kopie ist NICHT Ende-zu-Ende-verschlüsselt und der Tresor kann sie nicht schützen.",
   "shareEncryptedAck": "Mir ist bewusst, dass dies eine unverschlüsselte Kopie in der Gruppe veröffentlicht.",
