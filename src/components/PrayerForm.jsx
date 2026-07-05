@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
@@ -73,6 +73,15 @@ function initialForm(editPrayer) {
   };
 }
 
+// A brand-new personal prayer opens in compact "Quick Add" mode (subject +
+// detail only). Only reveal the extra options up-front when editing a prayer
+// that already uses categories, a schedule, or the "for someone else" fields.
+function hasDetails(editPrayer) {
+  if (!editPrayer) return false;
+  const cats = editPrayer.category_ids || (editPrayer.prayer_categories || []);
+  return !!(editPrayer.schedule || editPrayer.for_other || cats.length);
+}
+
 // communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
 export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
@@ -83,7 +92,10 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
 
   const [form, setForm] = useState(() => initialForm(editPrayer));
   const [created, setCreated] = useState(null);
-  useEffect(() => { if (editPrayer) setForm(initialForm(editPrayer)); }, [editPrayer]);
+  // Quick Add: a new personal prayer opens collapsed to just subject + detail;
+  // editing a prayer that already has options opens expanded so nothing hides.
+  const [expanded, setExpanded] = useState(() => hasDetails(editPrayer));
+  useEffect(() => { if (editPrayer) { setForm(initialForm(editPrayer)); setExpanded(hasDetails(editPrayer)); } }, [editPrayer]);
 
   const patch = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const toggleCategory = (id) => patch('categoryIds', form.categoryIds.includes(id)
@@ -187,15 +199,17 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
             />
           )}
 
-          <CategorySelector
-            categories={categories}
-            selectedIds={form.categoryIds}
-            onToggle={toggleCategory}
-            tr={tr}
-            lang={lang}
-          />
+          {(communityMode || expanded) && (
+            <CategorySelector
+              categories={categories}
+              selectedIds={form.categoryIds}
+              onToggle={toggleCategory}
+              tr={tr}
+              lang={lang}
+            />
+          )}
 
-          {!communityMode && <>
+          {!communityMode && expanded && <>
             <ScheduleEditor
               draft={form.scheduleDraft}
               onChange={(d) => patch('scheduleDraft', d)}
@@ -218,6 +232,22 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
               </div>
             )}
           </>}
+
+          {/* Quick Add keeps the default new-prayer form to just a subject and a
+              detail; categories, scheduling and "for someone else" live behind
+              this toggle so the first prayer is only one field away. */}
+          {!communityMode && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="flex items-center gap-1.5 text-xs font-semibold"
+              style={{ color: 'var(--accent)' }}
+            >
+              <ChevronDown size={14} style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+              {t(lang, expanded ? 'fewerOptions' : 'moreOptions')}
+            </button>
+          )}
 
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} title={t(lang, 'tipDiscard')}

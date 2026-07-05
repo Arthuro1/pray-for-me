@@ -104,7 +104,8 @@ async function fromYouVersion(reference, lang, knownUsfm) {
 // fetch authoritative YouVersion text when a version is mapped for the language.
 // Never touches the AI path, so the reader can upgrade a saved verse to publisher
 // text silently on open — no extra tap, no AI-consent prompt. Returns the passage
-// or null (in which case the AI fallback stays behind an explicit button).
+// or null, in which case the reader shows the reference with a link to the user's
+// Bible — there is no AI fallback.
 export async function fetchScriptureText({ reference, lang, usfm }) {
   if (!reference) return null;
 
@@ -112,8 +113,9 @@ export async function fetchScriptureText({ reference, lang, usfm }) {
   if (cached?.text) return cached;
 
   // Reuse authoritative text another user already resolved. Restricted to
-  // 'youversion' entries: this consent-free path must never surface AI-sourced
-  // text (that stays behind the explicit AI button in fetchVerseText).
+  // 'youversion' entries so any legacy AI-sourced row in the shared cache can
+  // never resurface as Scripture — no path in this module produces verse text
+  // with AI.
   const shared = await getSharedVerse(lang, reference, { authoritativeOnly: true });
   if (shared) { cache(lang, reference, shared); return shared; }
 

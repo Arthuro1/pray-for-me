@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown } from 'lucide-react';
+import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown, Bell } from 'lucide-react';
 import { t } from '../i18n';
-import { normalizeSchedule, parseKey, SLOTS } from '../lib/schedule';
+import { normalizeSchedule, parseKey, addDays, SLOTS } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { FEATURES } from '../lib/plan';
 import SupporterTag from './SupporterTag';
@@ -26,11 +26,30 @@ const SLOT_ICONS = { morning: Sunrise, midday: Sun, evening: Moon };
 const ADVANCED_FREQS = ['interval', 'monthly', 'yearly'];
 const ADVANCED_END_KINDS = ['date', 'count'];
 
+// A "follow-up" nudge is a one-time prayer a few days out — a gentle "check
+// back in on this" rather than a standing habit.
+const FOLLOWUP_NUDGE_DAYS = 3;
+
 // True when a draft already uses an advanced control. Used to auto-open the
 // advanced section when editing an existing schedule so nothing is hidden.
 export function isAdvancedDraft(d) {
   if (!d || d.mode !== 'recurring') return false;
   return ADVANCED_FREQS.includes(d.freq) || ADVANCED_END_KINDS.includes(d.endKind);
+}
+
+// Which human-first preset a draft matches (drives chip highlighting), or null
+// when it's a custom setup that only the advanced controls express.
+export function presetOf(d) {
+  if (!d || d.mode === 'plan') return 'plan';
+  if (d.mode === 'once') {
+    const today = todayKey();
+    if (d.date === today) return 'today';
+    if (d.date === addDays(today, FOLLOWUP_NUDGE_DAYS)) return 'followup';
+    return null;
+  }
+  if (d.freq === 'daily') return 'daily';
+  if (d.freq === 'weekly') return 'weekly';
+  return null;
 }
 
 export function emptyDraft() {
@@ -159,14 +178,27 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
     <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, key)}</p>
   );
   const preview = scheduleFromDraft(d);
+  const active = presetOf(d);
+
+  // Human-first presets: one-tap habits instead of "plan / once / recurring".
+  // Each just sets the underlying draft; "Advanced options" stays for custom
+  // recurrence rules and bounded end dates.
+  const defaultWeekDays = () => (d.weekDays.length ? d.weekDays : [parseKey(todayKey()).getDay()]);
+  const setPlan = () => patch({ mode: 'plan' });
+  const setToday = () => patch({ mode: 'once', date: todayKey() });
+  const setDaily = () => patch({ mode: 'recurring', freq: 'daily' });
+  const setWeekly = () => patch({ mode: 'recurring', freq: 'weekly', weekDays: defaultWeekDays() });
+  const setFollowUp = () => patch({ mode: 'once', date: addDays(todayKey(), FOLLOWUP_NUDGE_DAYS) });
 
   return (
     <div className="space-y-3">
-      {label('scheduleLabel')}
+      {label('scheduleHowOften')}
       <div className="flex flex-wrap gap-2" style={{ marginTop: 0 }}>
-        <Chip active={d.mode === 'plan'} onClick={() => patch({ mode: 'plan' })}>{t(lang, 'schedFollowPlan')}</Chip>
-        <Chip active={d.mode === 'once'} onClick={() => patch({ mode: 'once' })}><CalendarDays size={12} /> {t(lang, 'schedOnce')}</Chip>
-        <Chip active={d.mode === 'recurring'} onClick={() => patch({ mode: 'recurring' })}><Repeat size={12} /> {t(lang, 'schedRecurring')}</Chip>
+        <Chip active={active === 'plan'} onClick={setPlan}>{t(lang, 'schedFollowPlan')}</Chip>
+        <Chip active={active === 'today'} onClick={setToday}><CalendarDays size={12} /> {t(lang, 'schedPrayToday')}</Chip>
+        <Chip active={active === 'daily'} onClick={setDaily}><Repeat size={12} /> {t(lang, 'schedPrayDaily')}</Chip>
+        <Chip active={active === 'weekly'} onClick={setWeekly}><CalendarDays size={12} /> {t(lang, 'schedPrayWeekly')}</Chip>
+        <Chip active={active === 'followup'} onClick={setFollowUp}><Bell size={12} /> {t(lang, 'schedFollowUp')}</Chip>
       </div>
 
       {d.mode === 'once' && (
@@ -181,27 +213,29 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
 
       {d.mode === 'recurring' && (
         <div className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            <Chip active={d.freq === 'daily'} onClick={() => patch({ freq: 'daily' })}>{t(lang, 'freqDaily')}</Chip>
-            <Chip active={d.freq === 'weekly'} onClick={() => patch({ freq: 'weekly' })}>{t(lang, 'freqWeekly')}</Chip>
-            {advanced && <>
+          {/* Full recurrence control lives under "Advanced options"; the presets
+              above already cover the everyday daily/weekly cases. */}
+          {advanced && (
+            <div className="flex flex-wrap gap-2">
+              <Chip active={d.freq === 'daily'} onClick={() => patch({ freq: 'daily' })}>{t(lang, 'freqDaily')}</Chip>
+              <Chip active={d.freq === 'weekly'} onClick={() => patch({ freq: 'weekly', weekDays: defaultWeekDays() })}>{t(lang, 'freqWeekly')}</Chip>
               <Chip active={d.freq === 'interval'} onClick={() => patch({ freq: 'interval' })}>{t(lang, 'freqInterval')}</Chip>
               <Chip active={d.freq === 'monthly'} onClick={() => patch({ freq: 'monthly' })}>{t(lang, 'freqMonthly')}</Chip>
               <Chip active={d.freq === 'yearly'} onClick={() => patch({ freq: 'yearly' })}>{t(lang, 'freqYearly')}</Chip>
-            </>}
-          </div>
+            </div>
+          )}
 
           {d.freq === 'weekly' && (
             <div className="flex gap-1">
               {DAYS.map((day, idx) => {
-                const active = d.weekDays.includes(idx);
+                const on = d.weekDays.includes(idx);
                 return (
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => patch({ weekDays: active ? d.weekDays.filter((x) => x !== idx) : [...d.weekDays, idx] })}
+                    onClick={() => patch({ weekDays: on ? d.weekDays.filter((x) => x !== idx) : [...d.weekDays, idx] })}
                     className="flex-1 text-xs py-1.5 rounded-lg font-medium transition-colors"
-                    style={active ? { background: 'var(--accent)', color: '#fff' } : { background: 'var(--input-bg)', color: 'var(--text-3)' }}
+                    style={on ? { background: 'var(--accent)', color: '#fff' } : { background: 'var(--input-bg)', color: 'var(--text-3)' }}
                   >
                     {day}
                   </button>
