@@ -1,19 +1,26 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown } from 'lucide-react';
+import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
 import { enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
 import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
+import { track, EVENTS } from '../lib/analytics';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
+import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
+import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/AiDisclaimer';
 import { revokeAiConsent } from '../components/AiConsentModal';
 import useVaultStore from '../store/vaultStore';
+
+// Version comes from package.json via Vite's `define` (see vite.config.js), so
+// the About line never drifts. Fallback keeps it defined outside a Vite build.
+const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '1.0.0';
 
 function Toggle({ enabled, onToggle }) {
   return (
@@ -106,6 +113,7 @@ export default function SettingsTab() {
   const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
 
@@ -133,6 +141,7 @@ export default function SettingsTab() {
       // Flip the preference immediately so the switch responds, then enable push
       // as best-effort. Only an explicit permission denial reverts it.
       updateSettings({ dailyReminderEnabled: true });
+      track(EVENTS.REMINDER_SET, { method: 'daily' });
       let res;
       try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); }
       catch { res = { error: 'failed' }; }
@@ -171,6 +180,7 @@ export default function SettingsTab() {
   const handleToggleFollowUp = async () => {
     if (!settings.followUpEnabled) {
       updateSettings({ followUpEnabled: true });
+      track(EVENTS.REMINDER_SET, { method: 'followUp' });
       // Enabling (re)starts the cadence: stamp the anchor so the first
       // follow-up arrives a full followUpDays from now, not at the next window.
       const anchor = new Date().toISOString();
@@ -236,10 +246,12 @@ export default function SettingsTab() {
     a.download = `pray4me-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    track(EVENTS.DATA_EXPORTED);
     toast.success(t(lang, 'exportDone'));
   };
 
   const handleDeleteAccount = () => {
+    track(EVENTS.ACCOUNT_DELETED_STARTED);
     confirm({
       title: t(lang, 'deleteAccount'),
       message: t(lang, 'deleteAccountWarning'),
@@ -343,32 +355,35 @@ export default function SettingsTab() {
           )}
 
           {vaultInitialized && vaultUnlocked && (
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={handleLockVault}
-                className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <Lock size={14} />
-                {t(lang, 'vaultLockNow')}
-              </button>
-              <button
-                onClick={() => setVaultMode('change')}
-                className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <KeyRound size={14} />
-                {t(lang, 'vaultChangePass')}
-              </button>
-              <button
-                onClick={() => setVaultMode('rotate')}
-                className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <RefreshCw size={14} />
-                {t(lang, 'vaultRotateCode')}
-              </button>
-            </div>
+            <>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={handleLockVault}
+                  className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <Lock size={14} />
+                  {t(lang, 'vaultLockNow')}
+                </button>
+                <button
+                  onClick={() => setVaultMode('change')}
+                  className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <KeyRound size={14} />
+                  {t(lang, 'vaultChangePass')}
+                </button>
+                <button
+                  onClick={() => setVaultMode('rotate')}
+                  className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <RefreshCw size={14} />
+                  {t(lang, 'vaultRotateCode')}
+                </button>
+              </div>
+              <VaultMigrationStatus lang={lang} />
+            </>
           )}
         </div>
 
@@ -521,6 +536,24 @@ export default function SettingsTab() {
 
         </div>{/* end md:grid */}
 
+        {/* Privacy Center — plain-language explanation of storage & sharing.
+            Basic privacy is free for everyone; this is never gated. */}
+        <div className="rounded-2xl p-4 mb-3 mt-1" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'privacyCenterTitle')}</h3>
+          </div>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'privacyCenterSub')}</p>
+          <button
+            onClick={() => setShowPrivacy(true)}
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+          >
+            <ShieldCheck size={14} />
+            {t(lang, 'privacyCenterBtn')}
+          </button>
+        </div>
+
         {/* Feedback */}
         <div className="rounded-2xl p-4 mb-3 mt-1" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-1">
@@ -570,7 +603,8 @@ export default function SettingsTab() {
           </div>
         </div>
 
-        {/* Donate */}
+        {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
+            never unlocks features and the whole app works without it. */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-1">
             <Heart size={16} style={{ color: '#16a34a' }} />
@@ -591,11 +625,12 @@ export default function SettingsTab() {
           <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>
           <p className="text-xs font-medium" style={{ color: 'var(--accent)', opacity: 0.6 }}>James 5:16</p>
         </div>
-        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Pray4Me v1.0</p>
+        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Pray4Me v{APP_VERSION}</p>
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
+      {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
       {vaultMode && (
         <VaultModal lang={lang} initialMode={vaultMode} onClose={() => setVaultMode(null)} />
       )}

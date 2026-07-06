@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
 import { devError } from '../lib/logger';
+import { track, EVENTS } from '../lib/analytics';
 import { isUnlocked } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
 
@@ -67,6 +68,9 @@ const useCommunityStore = create((set, get) => ({
   pendingCount: 0,
   // { [sourcePrayerId]: [{ groupId, groupName }] } — where each personal prayer is shared.
   prayerShares: {},
+  // The user's upcoming group-calendar commitments (joined with title/group),
+  // merged into the personal calendar as 'group' entries.
+  myCommitments: [],
 
   // Loads the share map for the current user's shared personal prayers.
   fetchPrayerShares: async (userId) => {
@@ -245,6 +249,7 @@ const useCommunityStore = create((set, get) => ({
     }
     await get().fetchGroups(userId);
     if (group?.id) get().setActiveGroup(group.id);
+    track(EVENTS.GROUP_JOINED); // content-free: only that a group was joined
     return { group };
   },
 
@@ -705,6 +710,64 @@ const useCommunityStore = create((set, get) => ({
       .eq('group_id', groupId)
       .eq('user_id', memberId);
     return error ? toError(error) : {};
+  },
+
+  // ── Group prayer calendar (commitments) ────────────────────────────────────
+  // Prayer-chain style: a member claims a local day for a community prayer
+  // ("I'll pray for this on the 18th"). The group sees its coverage, and each
+  // claimed day also lands on the member's personal calendar (fetchMyCommitments).
+
+  // All commitments for one community prayer, day-ascending.
+  fetchCommitments: async (communityPrayerId) => {
+    const { data, error } = await supabase
+      .from('prayer_commitments')
+      .select('*')
+      .eq('community_prayer_id', communityPrayerId)
+      .order('day', { ascending: true });
+    if (error) return { error: error.message };
+    return { commitments: data || [] };
+  },
+
+  // Claim a day. Unique (prayer, user, day) → a duplicate claim is a no-op.
+  addCommitment: async ({ communityPrayerId, groupId, userId, userName, day, slot = null }) => {
+    const { data, error } = await supabase
+      .from('prayer_commitments')
+      .upsert(
+        { community_prayer_id: communityPrayerId, group_id: groupId, user_id: userId, user_name: userName || '', day, slot },
+        { onConflict: 'community_prayer_id,user_id,day' }
+      )
+      .select()
+      .single();
+    if (error) return toError(error);
+    return { commitment: data };
+  },
+
+  removeCommitment: async (commitmentId) => {
+    const { error } = await supabase.from('prayer_commitments').delete().eq('id', commitmentId);
+    return error ? toError(error) : {};
+  },
+
+  // The user's commitments across all groups from a day onward, joined with the
+  // prayer title + group name so the personal calendar can render them standalone.
+  fetchMyCommitments: async (userId, fromDay) => {
+    const { data, error } = await supabase
+      .from('prayer_commitments')
+      .select('id, community_prayer_id, group_id, day, slot, community_prayers(title), groups(name)')
+      .eq('user_id', userId)
+      .gte('day', fromDay)
+      .order('day', { ascending: true });
+    if (error) return;
+    set({
+      myCommitments: (data || []).map((c) => ({
+        id: c.id,
+        community_prayer_id: c.community_prayer_id,
+        group_id: c.group_id,
+        day: c.day,
+        slot: c.slot,
+        title: c.community_prayers?.title || '?',
+        group_name: c.groups?.name || '',
+      })),
+    });
   },
 }));
 

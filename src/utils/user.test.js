@@ -12,7 +12,7 @@ describe('communityAuthor', () => {
   });
 
   it('shows Anonymous regardless of who it is', () => {
-    expect(communityAuthor({ user_id: 'u1', author_name: 'Marie', is_anonymous: true }, 'u1', 'fr')).toBe(t('fr', 'anonymous'));
+    expect(communityAuthor({ user_id: 'u1', author_name: 'Marie', is_anonymous: true }, 'u1', 'fr')).toBe(t('fr', 'anonymousAuthor'));
   });
 });
 

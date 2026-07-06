@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import * as vault from '../lib/crypto/keyManager';
 import { pushVaultRecord } from '../lib/vaultSync';
+import { track, EVENTS } from '../lib/analytics';
 
 // Reactive wrapper around the keyManager singleton so React can render the
 // vault's locked/unlocked state. The keyManager owns the crypto + the in-memory
@@ -17,6 +18,7 @@ const useVaultStore = create((set) => ({
     const code = await vault.createVault(passphrase);
     set({ initialized: true, unlocked: true });
     pushVaultRecord(); // sync the wrapped key to other devices (fire-and-forget)
+    track(EVENTS.VAULT_ENABLED); // content-free: only that the vault was enabled
     return code;
   },
 

@@ -78,6 +78,20 @@ registerMutation('deletePrayer', async ({ id }) => {
   throwIf(r.error, r.status);
 });
 
+// Log "prayed this prayer on this local day" (idempotent via the unique
+// (prayer_id, day) constraint) and refresh the denormalised last_prayed_at.
+registerMutation('logCompletion', async ({ row, last_prayed_at }) => {
+  const r = await supabase.from('prayer_completions').upsert(row, { onConflict: 'prayer_id,day' });
+  throwIf(r.error, r.status);
+  const u = await supabase.from('prayers').update({ last_prayed_at }).eq('id', row.prayer_id);
+  throwIf(u.error, u.status);
+});
+
+registerMutation('removeCompletion', async ({ prayerId, day }) => {
+  const r = await supabase.from('prayer_completions').delete().eq('prayer_id', prayerId).eq('day', day);
+  throwIf(r.error, r.status);
+});
+
 // Updates / points / verses route through the sync_* RPCs (which also fan out
 // to shared community copies). They take a client-supplied id so the optimistic
 // local row matches the server row, and are idempotent on replay.

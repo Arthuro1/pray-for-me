@@ -1,9 +1,13 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { prayersForDay, sortEntries, catchUpPrayers } from '../lib/planner';
+import { addDays } from '../lib/schedule';
+import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
+import { track, EVENTS } from '../lib/analytics';
 import { ensurePushSubscription } from '../push';
 import { resolveLanguage } from '../i18n';
 import {
@@ -18,6 +22,7 @@ import {
   POINT_SENSITIVE_FIELDS,
   TESTIMONY_SENSITIVE_FIELDS,
 } from '../lib/crypto/prayerCrypto';
+import { isUnlocked } from '../lib/crypto/keyManager';
 import useCommunityStore from './communityStore';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
@@ -97,11 +102,101 @@ async function encryptedSensitiveFields(merged) {
   };
 }
 
+// ─── Vault migration (encrypt legacy rows at rest) ───────────────────
+// The vault only encrypts what a user writes AFTER turning it on; prayers
+// created before it existed (or while it was locked) stay plaintext on the
+// server. These helpers find those PRIVATE rows and re-store them as ciphertext
+// so "Prayer Vault" protects a user's whole private history, not just new writes.
+// Shared and saved-from-community prayers are deliberately skipped — group
+// members must read the former, and the latter mirrors public community content.
+const MIGRATABLE_COLLECTIONS = ['prayer_updates', 'prayer_points', 'prayer_testimonies'];
+
+// A row is encrypted at rest once it carries an encryption_version (written
+// alongside every encrypted_payload). Legacy plaintext rows leave it null.
+const isRowEncrypted = (row) => row?.encryption_version != null;
+
+// True when a PRIVATE prayer still has anything stored in plaintext — its own
+// row or any nested update / point / testimony.
+function prayerNeedsEncryption(p) {
+  if (!isRowEncrypted(p)) return true;
+  return MIGRATABLE_COLLECTIONS.some((coll) => (p[coll] || []).some((r) => !isRowEncrypted(r)));
+}
+
+// Ids of the user's personal prayers shared to at least one group — their
+// content is plaintext by design and must stay out of the migration.
+async function fetchSharedPrayerIds(userId) {
+  const { data } = await supabase
+    .from('community_prayers')
+    .select('source_prayer_id')
+    .eq('user_id', userId)
+    .not('source_prayer_id', 'is', null);
+  return new Set((data || []).map((r) => r.source_prayer_id));
+}
+
+// Owned prayers with only the flags the read-only coverage check needs — no
+// plaintext content is pulled just to count what's protected.
+async function fetchOwnedEncryptionState(userId) {
+  const { data, error } = await supabase
+    .from('prayers')
+    .select(`id, community_origin_id, encryption_version,
+             prayer_updates(id, encryption_version),
+             prayer_points(id, encryption_version),
+             prayer_testimonies(id, encryption_version)`)
+    .eq('user_id', userId);
+  if (error) throw error;
+  return data || [];
+}
+
+// Owned prayers with the plaintext content too, so legacy rows can be re-encrypted.
+async function fetchOwnedForMigration(userId) {
+  const { data, error } = await supabase
+    .from('prayers')
+    .select(`id, community_origin_id, encryption_version,
+             title, description, person_name, phone, scripture_guidance,
+             prayer_updates(id, encryption_version, text),
+             prayer_points(id, encryption_version, title, verses),
+             prayer_testimonies(id, encryption_version, content)`)
+    .eq('user_id', userId);
+  if (error) throw error;
+  return data || [];
+}
+
+// Encrypt any still-plaintext child rows of one collection, in place.
+async function encryptChildRows(table, rows, fields) {
+  for (const row of rows || []) {
+    if (isRowEncrypted(row)) continue;
+    const enc = await encryptChildForStorage(row, fields);
+    const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+    for (const f of fields) patch[f] = enc[f]; // redacted plaintext ('' / [])
+    const { error } = await supabase.from(table).update(patch).eq('id', row.id);
+    if (error) throw error;
+  }
+}
+
+// Re-store one PRIVATE prayer (and its nested rows) as ciphertext: the parent
+// scalars/guidance are bundled into encrypted_payload and their columns redacted,
+// then each plaintext child row is encrypted in place. Parts already encrypted
+// are left untouched (e.g. a formerly-shared prayer whose parent is encrypted but
+// whose child rows were kept plaintext for fan-out).
+async function encryptExistingPrayer(p) {
+  if (!isRowEncrypted(p)) {
+    const patch = await encryptedSensitiveFields(p);
+    const { error } = await supabase.from('prayers').update(patch).eq('id', p.id);
+    if (error) throw error;
+  }
+  await encryptChildRows('prayer_updates', p.prayer_updates, UPDATE_SENSITIVE_FIELDS);
+  await encryptChildRows('prayer_points', p.prayer_points, POINT_SENSITIVE_FIELDS);
+  await encryptChildRows('prayer_testimonies', p.prayer_testimonies, TESTIMONY_SENSITIVE_FIELDS);
+}
+
 // Keeps shared community copies in sync when the source personal prayer is
 // edited. Only touches fields that were actually changed.
 const usePrayerStore = create((set, get) => ({
   prayers: [],
   categories: [],
+  // prayerId -> ['YYYY-MM-DD', ...] days the prayer was marked prayed (last ~90
+  // days). Plain object so it serialises into the offline snapshot untouched.
+  completions: {},
   userId: null,
   settings: (() => {
     const base = {
@@ -140,7 +235,7 @@ const usePrayerStore = create((set, get) => ({
     // 1. Hydrate instantly from the local snapshot (works offline and includes
     //    any prayers created offline that aren't on the server yet).
     const snap = await loadSnapshot(userId);
-    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], loading: false });
+    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], completions: snap.completions || {}, loading: false });
 
     // 2. Fetch authoritative data. If the network is unreachable, keep the
     //    hydrated snapshot rather than wiping it.
@@ -195,9 +290,28 @@ const usePrayerStore = create((set, get) => ({
     const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
     const mergedPrayers = [...pendingLocal, ...serverPrayers];
 
+    // Recent per-prayer completions (catch-up + rotation fairness). Best-effort:
+    // offline keeps the snapshot's copy, and pending queued completions replay.
+    let completions = get().completions;
+    try {
+      const res = await supabase
+        .from('prayer_completions')
+        .select('prayer_id, day')
+        .eq('user_id', userId)
+        .gte('day', addDays(todayKey(), -90));
+      if (!res.error && res.data) {
+        // Union with local state so completions queued offline (not yet
+        // flushed) aren't dropped from the UI.
+        const merged = {};
+        for (const [pid, days] of Object.entries(get().completions)) merged[pid] = new Set(days);
+        for (const c of res.data) (merged[c.prayer_id] ||= new Set()).add(c.day);
+        completions = Object.fromEntries(Object.entries(merged).map(([pid, days]) => [pid, [...days]]));
+      }
+    } catch { /* offline — snapshot completions stand */ }
+
     const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
-    set({ categories: ordered, prayers: mergedPrayers, loading: false });
-    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers });
+    set({ categories: ordered, prayers: mergedPrayers, completions, loading: false });
+    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers, completions });
     // Mirror shared content of saved-from-community prayers (fully-shared sync).
     get().refreshSavedCopies();
   },
@@ -286,6 +400,50 @@ const usePrayerStore = create((set, get) => ({
     }));
   },
 
+  // ─── Vault coverage / migration ──────────────────────────────
+  // Read-only: how many of the user's PRIVATE prayers are protected vs. still
+  // plaintext at rest. Returns null when the server can't be reached (offline)
+  // so the UI can stay silent rather than assert a state it can't verify.
+  scanVaultCoverage: async () => {
+    const { userId } = get();
+    if (!userId) return { total: 0, pending: 0 };
+    let rows, sharedIds;
+    try {
+      [rows, sharedIds] = await Promise.all([fetchOwnedEncryptionState(userId), fetchSharedPrayerIds(userId)]);
+    } catch {
+      return null;
+    }
+    let total = 0, pending = 0;
+    for (const p of rows) {
+      if (p.community_origin_id || sharedIds.has(p.id)) continue; // plaintext by design
+      total++;
+      if (prayerNeedsEncryption(p)) pending++;
+    }
+    return { total, pending };
+  },
+
+  // Encrypt every still-plaintext PRIVATE prayer at rest. Requires the vault
+  // unlocked (needs the master key) and a network connection. In-memory state is
+  // left untouched — it already holds the same plaintext; only the server's (and,
+  // on the next snapshot save, the local cache's) at-rest form changes.
+  migrateToVault: async () => {
+    const { userId } = get();
+    if (!userId || !isUnlocked()) return { migrated: 0, failed: 0 };
+    let rows, sharedIds;
+    try {
+      [rows, sharedIds] = await Promise.all([fetchOwnedForMigration(userId), fetchSharedPrayerIds(userId)]);
+    } catch {
+      return { migrated: 0, failed: 0 };
+    }
+    let migrated = 0, failed = 0;
+    for (const p of rows) {
+      if (p.community_origin_id || sharedIds.has(p.id) || !prayerNeedsEncryption(p)) continue;
+      try { await encryptExistingPrayer(p); migrated++; }
+      catch { failed++; }
+    }
+    return { migrated, failed };
+  },
+
   // ─── Prayers ─────────────────────────────────────────────────
   // Optimistic + offline-capable: the prayer appears immediately and the server
   // write is queued (replayed on reconnect). A client-generated id keeps the
@@ -295,6 +453,10 @@ const usePrayerStore = create((set, get) => ({
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user?.id;
     if (!userId) return null;
+
+    // Activation signal: was the journal empty before this? (No content is sent —
+    // just the fact that a first prayer was created. See lib/analytics.js.)
+    const isFirst = get().prayers.length === 0;
 
     const id = crypto.randomUUID();
     const categoryIds = prayer.categoryIds || [];
@@ -307,6 +469,8 @@ const usePrayerStore = create((set, get) => ({
       person_name: prayer.personName || '',
       phone: prayer.phone || '',
       status: 'active',
+      // Scheduling metadata stays outside the E2EE envelope (timing, not content).
+      schedule: prayer.schedule || null,
     };
 
     const optimistic = {
@@ -322,6 +486,7 @@ const usePrayerStore = create((set, get) => ({
     // vault is unlocked). New prayers have no community_origin_id → encryptable.
     const persistRow = canEncrypt(optimistic) ? await encryptPrayerForStorage(row) : row;
     enqueue('createPrayer', { row: persistRow, categoryIds });
+    if (isFirst) track(EVENTS.FIRST_PRAYER_CREATED);
     return id;
   },
 
@@ -363,6 +528,8 @@ const usePrayerStore = create((set, get) => ({
     if (updates.phone !== undefined) payload.phone = updates.phone;
     if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
     if (updates.pinned !== undefined) payload.pinned = updates.pinned;
+    if (updates.schedule !== undefined) payload.schedule = updates.schedule; // null clears
+    if (updates.scheduleOverrides !== undefined) payload.schedule_overrides = updates.scheduleOverrides;
     payload.updated_at = new Date().toISOString();
 
     const community = {};
@@ -440,6 +607,7 @@ const usePrayerStore = create((set, get) => ({
       }),
     }));
     enqueue('markAnswered', { id, answered_at });
+    track(EVENTS.PRAYER_ANSWERED);
     if (row) await get()._persistTestimony(prayer, row);
   },
 
@@ -473,6 +641,68 @@ const usePrayerStore = create((set, get) => ({
   markActive: async (id) => {
     set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
     enqueue('markActive', { id });
+  },
+
+  // ─── Scheduling ──────────────────────────────────────────────
+  // Per-occurrence exception on a scheduled prayer: { skip: true } or
+  // { movedTo: 'YYYY-MM-DD' }; null clears the exception. The series itself
+  // is untouched — this is the "this day only" edit scope.
+  setOccurrenceOverride: (prayerId, dayKey, override) => {
+    const p = get().prayers.find((x) => x.id === prayerId);
+    if (!p?.schedule) return;
+    const overrides = { ...(p.schedule_overrides || {}) };
+    if (override) overrides[dayKey] = override;
+    else delete overrides[dayKey];
+    set((state) => ({
+      prayers: state.prayers.map((x) => (x.id === prayerId ? { ...x, schedule_overrides: overrides } : x)),
+    }));
+    enqueue('updatePrayer', { id: prayerId, payload: { schedule_overrides: overrides, updated_at: new Date().toISOString() } });
+  },
+  skipOccurrence: (prayerId, dayKey) => get().setOccurrenceOverride(prayerId, dayKey, { skip: true }),
+  moveOccurrence: (prayerId, fromKey, toKey) => get().setOccurrenceOverride(prayerId, fromKey, { movedTo: toKey }),
+
+  // "This and future" edit scope: end the series the day before `fromKey`.
+  endSeriesBefore: (prayerId, fromKey) => {
+    const p = get().prayers.find((x) => x.id === prayerId);
+    if (!p?.schedule || p.schedule.type !== 'recurring') return;
+    get().updatePrayer(prayerId, { schedule: { ...p.schedule, end: { kind: 'date', date: addDays(fromKey, -1) } } });
+  },
+
+  // Mark one prayer prayed on a local day (idempotent; powers catch-up,
+  // calendar history and rotation fairness). Optimistic + offline-queued.
+  markPrayedOn: (prayerId, dayKey, slot = null) => {
+    const { userId, completions } = get();
+    if ((completions[prayerId] || []).includes(dayKey)) return;
+    const now = new Date().toISOString();
+    const row = { id: crypto.randomUUID(), user_id: userId, prayer_id: prayerId, day: dayKey, slot };
+    set((state) => ({
+      completions: { ...state.completions, [prayerId]: [...(state.completions[prayerId] || []), dayKey] },
+      prayers: state.prayers.map((p) => (p.id === prayerId ? { ...p, last_prayed_at: now } : p)),
+    }));
+    enqueue('logCompletion', { row, last_prayed_at: now });
+    track(EVENTS.PRAYER_PRAYED); // deduped above — one event per prayer per day
+  },
+
+  unmarkPrayedOn: (prayerId, dayKey) => {
+    set((state) => ({
+      completions: { ...state.completions, [prayerId]: (state.completions[prayerId] || []).filter((d) => d !== dayKey) },
+    }));
+    enqueue('removeCompletion', { prayerId, day: dayKey });
+  },
+
+  // completions as Map(prayerId -> Set(day)) for the planner helpers.
+  completedDaysMap: () => new Map(Object.entries(get().completions).map(([pid, days]) => [pid, new Set(days)])),
+
+  // All planned entries ({ prayer, source, slot }) for a local day, sorted.
+  getEntriesForDay: (dayKey) => {
+    const { prayers, categories } = get();
+    return sortEntries(prayersForDay(prayers, categories, dayKey), categories);
+  },
+
+  // Missed prayers from the last few days (not completed, not on today's list).
+  getCatchUp: (windowDays = 3) => {
+    const { prayers, categories } = get();
+    return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays);
   },
 
   // Pin/unpin a prayer so it floats to the top of the lists (personal organisation).
@@ -644,6 +874,7 @@ const usePrayerStore = create((set, get) => ({
     if (updates.emoji !== undefined) payload.emoji = updates.emoji;
     if (updates.color !== undefined) payload.color = updates.color;
     if (updates.weekDays !== undefined) payload.week_days = updates.weekDays;
+    if (updates.rotation !== undefined) payload.rotation = updates.rotation; // { perDay: n } | null
 
     const { data } = await supabase.from('categories').update(payload).eq('id', id).select().single();
     if (data) {
@@ -703,20 +934,11 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // ─── Today's prayers ─────────────────────────────────────────
+  // Planner-backed: per-prayer schedules (one-time/recurring/slots/rotation)
+  // and the legacy weekly category plan, merged and sorted.
   getTodaysPrayers: () => {
     const { prayers, categories } = get();
-    const today = new Date().getDay();
-    const todayCatIds = categories
-      .filter((c) => (c.week_days || []).includes(today))
-      .map((c) => c.id);
-    const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
-    return prayers
-      .filter((p) => prayerOnDay(p, today, todayCatIds))
-      .sort((a, b) => {
-        const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
-        if (byPin !== 0) return byPin;
-        return prayerPriority(a, orderById) - prayerPriority(b, orderById);
-      });
+    return sortEntries(prayersForDay(prayers, categories, todayKey()), categories).map((e) => e.prayer);
   },
 
   // Persist a new category order (array of ids → sort_order = index).
@@ -733,7 +955,7 @@ usePrayerStore.subscribe((state) => {
   if (!state.userId) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(
-    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers }),
+    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers, completions: state.completions }),
     400
   );
 });

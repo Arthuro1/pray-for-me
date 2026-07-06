@@ -10,12 +10,20 @@
 import {
   MSG,
   buildTitleSuffix,
-  prayerDueToday,
   isWithinReminderWindow,
   initReminderEnv,
   sendPush,
   json,
 } from '../_shared/reminders.ts';
+import { prayersForDay } from '../_shared/planner.ts';
+
+const pad = (n: number) => String(n).padStart(2, '0');
+// Local calendar day key ("YYYY-MM-DD") for a subscription — the same key the
+// app's planner uses, so scheduled/recurring prayers are counted identically.
+function localDayKey(now: Date, tzOffsetMin: number): string {
+  const d = new Date(now.getTime() + tzOffsetMin * 60000);
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
+}
 
 Deno.serve(async () => {
   try {
@@ -33,15 +41,14 @@ Deno.serve(async () => {
     for (const sub of subs || []) {
       if (!isWithinReminderWindow(sub, utcMinutes)) continue;
 
-      const localDow = new Date(now.getTime() + (sub.tz_offset || 0) * 60000).getUTCDay();
+      const todayKey = localDayKey(now, sub.tz_offset || 0);
       const { data: prayers } = await supabase
         .from('prayers')
-        .select('title, week_days, prayer_categories(category_id)')
+        .select('id, title, status, created_at, week_days, schedule, schedule_overrides, prayer_categories(category_id)')
         .eq('user_id', sub.user_id)
         .eq('status', 'active');
-      const { data: cats } = await supabase.from('categories').select('id, week_days').eq('user_id', sub.user_id);
-      const todayCatIds = new Set((cats || []).filter((c: any) => (c.week_days || []).includes(localDow)).map((c: any) => c.id));
-      const duePrayers = (prayers || []).filter((p: any) => prayerDueToday(p, localDow, todayCatIds));
+      const { data: cats } = await supabase.from('categories').select('id, week_days, rotation').eq('user_id', sub.user_id);
+      const duePrayers = prayersForDay((prayers as any[]) || [], (cats as any[]) || [], todayKey);
 
       const m = MSG[sub.lang] || MSG.en;
       const payload = JSON.stringify({

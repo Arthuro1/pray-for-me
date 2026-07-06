@@ -3,7 +3,37 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/). This project uses date-based entries.
 
-## [Unreleased] — 2026-06-24
+## [Unreleased] — 2026-07-06
+
+### Removed
+- **Free vs Supporter product model** — all plan-based feature gating, the Supporter membership surface (modal + Settings card), the `src/lib/plan.js` tier scaffold, the soft "Supporter" feature tags, and the supporter/feature-gate analytics events (`supporter_prompt_viewed`, `supporter_prompt_clicked`, `feature_gate_seen`) were removed from `dev`. The app now has **no active paid feature gating** — every feature is available to everyone. This work is preserved on the `feature/supporter-model-staged` branch for possible future use.
+
+### Added
+- **Per-prayer follow-up reminders** — "Remind me to follow up" is now a per-prayer check-back reminder (Tomorrow / in 3 days / 1 week / 2 weeks / pick a date), **separate** from the prayer's recurrence schedule and from the account-level follow-up cadence in Settings. It surfaces in-app as a banner on the prayer with Add update / Mark answered / Snooze / Set another / Dismiss (`src/store/followUpStore.js`, `src/components/FollowUpField.jsx`, `src/components/FollowUpBanner.jsx`). Delivery is in-app for now; push/cross-device sync is a documented TODO.
+- **Privacy Center** — a plain-language Settings surface explaining private/vault/shared prayers, AI, push, export and deletion (`src/components/PrivacyCenter.jsx`).
+- **Privacy-preserving analytics** — a single choke point (`src/lib/analytics.js`) that emits only allowlisted product-activation events and structurally drops anything resembling prayer content (first prayer, prayed, answered, reminder set, vault enabled, group joined, prayer shared, AI consent, export, account-deletion start, and `privacy_center_opened`) — all content-free.
+- App version is now sourced from `package.json` via Vite `define` (`__APP_VERSION__`), so the Settings/About line never drifts (set to **1.0.0**).
+
+### Changed
+- **Scheduling is Simple/Advanced by UX only** — the Simple presets (follow plan / pray today / daily / weekly) and the "Advanced options" disclosure (interval / monthly / yearly rules + bounded end dates) are a pure overload-reduction split; they no longer carry any plan or "Supporter" tag, and every option stays available to everyone.
+- **Onboarding simplified** — the first-run flow is three warm, action-first slides ending in "Add your first prayer"; advanced tools (groups, plans, vault, AI, recurring rules) are not toured up front, and no Supporter/pricing prompts appear.
+
+### Security / Safety
+- **No AI-generated Bible text** — the verse reader's AI fallback was removed. Verse text now comes only from authoritative sources (cache → shared cache → YouVersion); when none is available the reader shows the reference with a link to the user's Bible. AI may still offer reflections (behind consent) but never produces canonical Scripture wording (`src/lib/verseText.js`).
+
+### Previously
+- **Prayer scheduling** — one-time and recurring prayers per prayer (daily, chosen weekdays, every N days, monthly, yearly), with four end conditions: never, on a date, after N times, or **until answered** (the prayer retires itself when God answers). Recurrence is a small pure engine (`src/lib/schedule.js`) over local day keys, fully offline-capable; prayers without a schedule keep the weekly category plan unchanged.
+- **Prayer-time slots** — schedule into morning / midday / evening (or anytime) instead of clock times; Today and the day agenda group by slot.
+- **Month calendar in the Plan tab** — new Month/Week switcher; month grid with colored dots (recurring / one-time / weekly plan / group), tap a day for its agenda, mark prayed per prayer per day.
+- **Per-occurrence edit scopes** — skip a day, move one occurrence to another date, restore it, or end the series before a day ("this day only" / "this and future"); series-wide edits stay in the prayer form.
+- **Catch-up** — prayers missed the last 3 days surface gently on Home (grace, not guilt), one tap to mark prayed; per-prayer completions feed a new `prayer_completions` table + `last_prayed_at`.
+- **Rotation lists** — a category can pray N subjects per day round-robin (deterministic by date, works offline), so large lists stay coverable without burnout.
+- **Prayer plans** — guided journeys (7 days of gratitude, novena, 21 days of breakthrough, 30 days for others) with a theme + passage per day, authored en/fr with English fallback like the teaching layer; one tap creates the capped recurring prayer.
+- **Group prayer calendar (prayer chain)** — on a community prayer, members claim days ("I'll pray this day"); coverage is visible to the group and claimed days land on each member's personal calendar. New `prayer_commitments` table with RLS.
+- **Calendar export (.ics)** — download the whole prayer schedule (RRULE-based) for Google/Apple/Outlook calendars.
+- Migration: `supabase/prayer_scheduling.sql` (run in the Supabase SQL editor). New i18n keys translated across **all 16 languages**.
+
+## 2026-06-24
 
 ### Added
 - **Community / social hub** — prayer groups (join by code, link, or QR), friends & friend requests, group invitations, member tools, reactions ("I'm praying"), member updates, and testimonies.

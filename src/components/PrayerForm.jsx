@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
@@ -7,6 +7,9 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import ScriptureFirstStep from './ScriptureFirstStep';
+import ScheduleEditor, { emptyDraft, draftFromSchedule, scheduleFromDraft } from './ScheduleEditor';
+import FollowUpField from './FollowUpField';
+import useFollowUpStore from '../store/followUpStore';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -59,8 +62,14 @@ function CategorySelector({ categories, selectedIds, onToggle, tr, lang }) {
   );
 }
 
+// The per-prayer follow-up lives in followUpStore (client-side), not on the
+// prayer row, so read it here to pre-fill the form when editing.
+function initialFollowUpDate(editPrayer) {
+  return editPrayer ? (useFollowUpStore.getState().getFollowUp(editPrayer.id)?.date || null) : null;
+}
+
 function initialForm(editPrayer) {
-  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false };
+  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft(), followUpDate: null };
   return {
     title: editPrayer.title || '',
     description: editPrayer.description || '',
@@ -68,12 +77,24 @@ function initialForm(editPrayer) {
     forOther: editPrayer.for_other || false,
     personName: editPrayer.person_name || '',
     isAnonymous: editPrayer.is_anonymous || false,
+    scheduleDraft: draftFromSchedule(editPrayer.schedule),
+    followUpDate: initialFollowUpDate(editPrayer),
   };
+}
+
+// A brand-new personal prayer opens in compact "Quick Add" mode (subject +
+// detail only). Only reveal the extra options up-front when editing a prayer
+// that already uses categories, a schedule, or the "for someone else" fields.
+function hasDetails(editPrayer) {
+  if (!editPrayer) return false;
+  const cats = editPrayer.category_ids || (editPrayer.prayer_categories || []);
+  return !!(editPrayer.schedule || editPrayer.for_other || cats.length);
 }
 
 // communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
 export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
+  const setFollowUp = useFollowUpStore((s) => s.setFollowUp);
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   useEscapeKey(onClose);
@@ -81,7 +102,10 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
 
   const [form, setForm] = useState(() => initialForm(editPrayer));
   const [created, setCreated] = useState(null);
-  useEffect(() => { if (editPrayer) setForm(initialForm(editPrayer)); }, [editPrayer]);
+  // Quick Add: a new personal prayer opens collapsed to just subject + detail;
+  // editing a prayer that already has options opens expanded so nothing hides.
+  const [expanded, setExpanded] = useState(() => hasDetails(editPrayer));
+  useEffect(() => { if (editPrayer) { setForm(initialForm(editPrayer)); setExpanded(hasDetails(editPrayer)); } }, [editPrayer]);
 
   const patch = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const toggleCategory = (id) => patch('categoryIds', form.categoryIds.includes(id)
@@ -96,14 +120,18 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds });
       onClose();
     } else if (editPrayer) {
-      updatePrayer(editPrayer.id, form);
+      updatePrayer(editPrayer.id, { ...form, schedule: scheduleFromDraft(form.scheduleDraft, editPrayer.schedule) });
+      // Follow-up is a per-prayer client-side reminder, saved separately from the
+      // prayer row / recurrence schedule.
+      setFollowUp(editPrayer.id, form.followUpDate);
       onClose();
     } else {
       // New personal prayer: create it, then invite the user into Scripture
       // before they pray (Step 2). The prayer already exists by then, so
       // closing the Scripture step at any point keeps the prayer.
-      const id = await addPrayer(form);
+      const id = await addPrayer({ ...form, schedule: scheduleFromDraft(form.scheduleDraft) });
       if (id) {
+        setFollowUp(id, form.followUpDate);
         // Record the language this prayer was written in, so we don't later pay
         // to translate personal content into the language it's already in.
         setContentLang(lang);
@@ -185,15 +213,29 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
             />
           )}
 
-          <CategorySelector
-            categories={categories}
-            selectedIds={form.categoryIds}
-            onToggle={toggleCategory}
-            tr={tr}
-            lang={lang}
-          />
+          {(communityMode || expanded) && (
+            <CategorySelector
+              categories={categories}
+              selectedIds={form.categoryIds}
+              onToggle={toggleCategory}
+              tr={tr}
+              lang={lang}
+            />
+          )}
 
-          {!communityMode && <>
+          {!communityMode && expanded && <>
+            <ScheduleEditor
+              draft={form.scheduleDraft}
+              onChange={(d) => patch('scheduleDraft', d)}
+              lang={lang}
+            />
+
+            <FollowUpField
+              value={form.followUpDate}
+              onChange={(d) => patch('followUpDate', d)}
+              lang={lang}
+            />
+
             <CheckboxToggle
               checked={form.forOther}
               onChange={() => patch('forOther', !form.forOther)}
@@ -210,6 +252,22 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
               </div>
             )}
           </>}
+
+          {/* Quick Add keeps the default new-prayer form to just a subject and a
+              detail; categories, scheduling and "for someone else" live behind
+              this toggle so the first prayer is only one field away. */}
+          {!communityMode && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              aria-expanded={expanded}
+              className="flex items-center gap-1.5 text-xs font-semibold"
+              style={{ color: 'var(--accent)' }}
+            >
+              <ChevronDown size={14} style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+              {t(lang, expanded ? 'fewerOptions' : 'moreOptions')}
+            </button>
+          )}
 
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} title={t(lang, 'tipDiscard')}

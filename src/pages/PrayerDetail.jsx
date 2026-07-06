@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert, Repeat } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -12,9 +12,18 @@ import { getAIRecommendations } from '../aiRecommendations';
 import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
+import { track, EVENTS } from '../lib/analytics';
 import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
+import SharePreview from '../components/SharePreview';
+import FollowUpBanner from '../components/FollowUpBanner';
+import { scheduleSummary } from '../components/ScheduleEditor';
+import { planDayNumber } from '../lib/schedule';
+import { todayKey } from '../lib/prayedLog';
+import { planDayContent } from '../content/prayerPlans';
+import { pick } from '../content/teaching';
+import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
 import Avatar from '../components/Avatar';
@@ -198,10 +207,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const handleSaveShares = async () => {
     if (sharing || needsShareAck) return; // block accidental share of vault content
+    const isNewShare = addingNewGroups; // capture before the modal state changes
     setSharing(true);
     const res = await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
     setSharing(false);
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    // Content-free: only that a prayer was shared to a group (not what it says).
+    // Skip when the save only removed groups so telemetry reflects real shares.
+    if (isNewShare) track(EVENTS.PRAYER_SHARED, { channel: 'group' });
     setShowShareModal(false);
   };
 
@@ -413,6 +426,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
               {t(lang, 'anonymous')}
             </label>
+            {/* Live preview of the attribution group members will see — updates as
+                the anonymous toggle changes, so nothing is shared unseen. */}
+            <div className="mb-4">
+              <SharePreview authorName={authorName} isAnonymous={shareAnon} title={livePrayer.title} lang={lang} />
+            </div>
             {isVaultPrayer && addingNewGroups && (
               <label className="flex items-start gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
                 <input type="checkbox" checked={shareAck} onChange={e => setShareAck(e.target.checked)} className="rounded mt-0.5" />
@@ -591,6 +609,39 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )}
           </div>
         )}
+
+        {/* Schedule at a glance — edit via the prayer form */}
+        {livePrayer.schedule && (
+          <p className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+            <Repeat size={12} className="shrink-0" /> {scheduleSummary(livePrayer.schedule, lang)}
+          </p>
+        )}
+
+        {/* Guided plan: today's theme + passage (only on a plan day) */}
+        {livePrayer.schedule?.plan && (() => {
+          const n = planDayNumber(livePrayer.schedule, todayKey());
+          const content = n ? planDayContent(livePrayer.schedule.plan.id, n) : null;
+          if (!content) return null;
+          return (
+            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>
+                {t(lang, 'planDayOf', { n, total: livePrayer.schedule.end?.count || '' })}
+              </p>
+              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(content.theme, lang)}</p>
+              <VerseAccordion reference={content.ref} lang={lang}>
+                {({ toggle }) => (
+                  <button
+                    onClick={toggle}
+                    className="text-xs flex items-center gap-1.5"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    <BookOpen size={12} /> {content.ref}
+                  </button>
+                )}
+              </VerseAccordion>
+            </div>
+          );
+        })()}
         {savedCopy && categories.length > 0 && (
           <div>
             <div className="flex flex-wrap gap-1.5 items-center">
@@ -642,6 +693,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         )}
 
 
+        {/* ── Per-prayer follow-up reminder (own personal prayers only) ── */}
+        {!isCommunity && !savedCopy && !isAnswered && (
+          <FollowUpBanner
+            prayer={livePrayer}
+            lang={lang}
+            onAddUpdate={() => {
+              const el = document.getElementById('pd-updates');
+              el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el?.querySelector('input')?.focus();
+            }}
+            onMarkAnswered={handleMarkAnswered}
+          />
+        )}
+
         {/* ── Saved-from-community: read-only follow indicator ── */}
         {savedCopy && (
           <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
@@ -654,16 +719,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {(isCommunity || canAddContent) && (
-              <button
-                onClick={fetchRecs}
-                disabled={loadingRecs}
-                title={t(lang, 'tipAiSuggest')}
-                className="flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 font-medium disabled:opacity-50 text-white"
-                style={{ background: 'var(--accent)' }}
-              >
-                {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
-                {t(lang, 'aiSuggest')}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={fetchRecs}
+                  disabled={loadingRecs}
+                  title={t(lang, 'tipAiSuggest')}
+                  className="flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 font-medium disabled:opacity-50 text-white"
+                  style={{ background: 'var(--accent)' }}
+                >
+                  {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                  {t(lang, 'aiSuggest')}
+                </button>
+              </div>
             )}
           </div>
 
@@ -868,6 +935,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           )}
         </div>
 
+        {/* ── Community mode: prayer-chain calendar (claim a day) ── */}
+        {isCommunity && (
+          <GroupPrayerCalendar
+            communityPrayer={communityPrayer}
+            groupId={communityPrayer.group_id}
+            lang={lang}
+            user={user}
+          />
+        )}
+
         {/* ── Community mode: member updates ── */}
         {isCommunity && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -1046,7 +1123,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {!isAnswered && canManage && (
-            <div className="flex gap-2">
+            <div className="flex gap-2" id="pd-updates">
               <input
                 type="text"
                 value={newUpdate}

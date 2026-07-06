@@ -1,6 +1,8 @@
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
+  // Compile-time constant injected by Vite (see vite.config.js `define`).
+  globals: { __APP_VERSION__: 'readonly' },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
