@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown } from 'lucide-react';
@@ -15,7 +16,7 @@ import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
 import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/AiDisclaimer';
-import { revokeAiConsent } from '../components/AiConsentModal';
+import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
@@ -108,7 +109,9 @@ function LanguageDropdown({ lang, onChange }) {
 }
 
 export default function SettingsTab() {
-  const { settings, updateSettings, prayers, categories } = usePrayerStore();
+  const { settings, updateSettings, prayers, categories } = usePrayerStore(
+    useShallow((s) => ({ settings: s.settings, updateSettings: s.updateSettings, prayers: s.prayers, categories: s.categories }))
+  );
   const { user, signOut, deleteAccount } = useAuthStore();
   const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);

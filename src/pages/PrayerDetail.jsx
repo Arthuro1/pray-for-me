@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, ShieldAlert, Repeat } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, HandHeart, Send, Languages, Users, Pin, Repeat } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -9,16 +10,15 @@ import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, originAuthor, communityAuthor } from '../utils/user';
 import { testimonyList } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
-import { isPrayerEncrypted } from '../lib/crypto/prayerCrypto';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
-import { track, EVENTS } from '../lib/analytics';
-import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
+import AiConsentModal from '../components/AiConsentModal';
+import { hasAiConsent } from '../lib/aiConsent';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
-import SharePreview from '../components/SharePreview';
+import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
-import { scheduleSummary } from '../components/ScheduleEditor';
+import { scheduleSummary } from '../lib/scheduleDraft';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { planDayContent } from '../content/prayerPlans';
@@ -59,12 +59,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showScripture, setShowScripture] = useState(false);
-  const [sharing, setSharing] = useState(false);
-  const [shareGroupIds, setShareGroupIds] = useState(new Set());
-  const [shareAnon, setShareAnon] = useState(false);
-  // Explicit acknowledgement that sharing a vault-protected prayer publishes a
-  // plaintext copy the vault cannot protect. Required before such a share.
-  const [shareAck, setShareAck] = useState(false);
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -81,19 +75,60 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const { categories, markAnswered, markActive, addTestimony: addPersonalTestimony, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore();
+  const { categories, markAnswered, markActive, addTestimony: addPersonalTestimony, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
+    useShallow((s) => ({
+      categories: s.categories,
+      markAnswered: s.markAnswered,
+      markActive: s.markActive,
+      addTestimony: s.addTestimony,
+      addUpdate: s.addUpdate,
+      addPrayerPoint: s.addPrayerPoint,
+      addVerseToPoint: s.addVerseToPoint,
+      removeVerseFromPoint: s.removeVerseFromPoint,
+      removePrayerPoint: s.removePrayerPoint,
+      togglePin: s.togglePin,
+      addFromCommunity: s.addFromCommunity,
+      syncCategoriesFromCommunity: s.syncCategoriesFromCommunity,
+      updatePrayer: s.updatePrayer,
+      prayers: s.prayers,
+      refreshFromCommunity: s.refreshFromCommunity,
+      fetchSharedActivity: s.fetchSharedActivity,
+    }))
+  );
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
-  // Esc closes whichever inline overlay is open (ConfirmDialog handles its own).
-  useEscapeKey(
-    showShareModal ? () => setShowShareModal(false)
-      : showDeleteConfirm ? () => setShowDeleteConfirm(false)
-      : null
-  );
-  const shareTrapRef = useFocusTrap(showShareModal);
+  // Esc closes the delete overlay (the share modal handles its own Esc/focus
+  // trap; ConfirmDialog handles its own).
+  useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore();
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
+    useShallow((s) => ({
+      groups: s.groups,
+      activeGroupId: s.activeGroupId,
+      prayers: s.prayers,
+      userReactions: s.userReactions,
+      toggleReaction: s.toggleReaction,
+      fetchUserReactions: s.fetchUserReactions,
+      fetchPrayerUpdates: s.fetchPrayerUpdates,
+      addUpdate: s.addUpdate,
+      addTestimony: s.addTestimony,
+      updatePrayer: s.updatePrayer,
+      deleteCommunityPrayer: s.deleteCommunityPrayer,
+      addCommunityPrayerPoint: s.addCommunityPrayerPoint,
+      removeCommunityPrayerPoint: s.removeCommunityPrayerPoint,
+      addCommunityVerse: s.addCommunityVerse,
+      removeCommunityVerse: s.removeCommunityVerse,
+      setCommunityAnswered: s.setCommunityAnswered,
+      testimonies: s.testimonies,
+      prayerShares: s.prayerShares,
+      fetchGroups: s.fetchGroups,
+      fetchPrayerShares: s.fetchPrayerShares,
+      setPrayerShares: s.setPrayerShares,
+      refreshPrayer: s.refreshPrayer,
+      subscribePrayerActivity: s.subscribePrayerActivity,
+    }))
+  );
 
   const locale = dateLocale(lang);
   const authorName = getAuthorName(user);
@@ -190,34 +225,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const sharedGroups = isCommunity ? [] : (prayerShares[prayer.id] || []);
 
-  const openShareModal = () => {
-    setShareGroupIds(new Set(sharedGroups.map(g => g.groupId)));
-    setShareAnon(sharedGroups.some(g => g.isAnonymous));
-    setShareAck(false);
-    setShowShareModal(true);
-  };
-
-  const toggleShareGroup = (groupId) => {
-    setShareGroupIds(prev => {
-      const next = new Set(prev);
-      next.has(groupId) ? next.delete(groupId) : next.add(groupId);
-      return next;
-    });
-  };
-
-  const handleSaveShares = async () => {
-    if (sharing || needsShareAck) return; // block accidental share of vault content
-    const isNewShare = addingNewGroups; // capture before the modal state changes
-    setSharing(true);
-    const res = await setPrayerShares({ prayer: livePrayer, groupIds: [...shareGroupIds], userId: user.id, authorName, isAnonymous: shareAnon });
-    setSharing(false);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    // Content-free: only that a prayer was shared to a group (not what it says).
-    // Skip when the save only removed groups so telemetry reflects real shares.
-    if (isNewShare) track(EVENTS.PRAYER_SHARED, { channel: 'group' });
-    setShowShareModal(false);
-  };
-
   // Clear pending AI suggestions when language changes so user can re-generate in new language
   useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
 
@@ -242,13 +249,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
-  // Vault-protected (E2E-encrypted at rest) personal prayer. Sharing it publishes
-  // a plaintext copy to group members that the vault cannot protect, so we warn
-  // and require an explicit acknowledgement before adding new groups.
-  const isVaultPrayer = !isCommunity && isPrayerEncrypted(livePrayer);
-  const alreadySharedIds = new Set(sharedGroups.map(g => g.groupId));
-  const addingNewGroups = [...shareGroupIds].some(id => !alreadySharedIds.has(id));
-  const needsShareAck = isVaultPrayer && addingNewGroups && !shareAck;
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
   const prayerTestimonies = isCommunity ? (communityTestimonies || []).filter(tm => tm.community_prayer_id === communityPrayer.id) : [];
   const personalTestimonies = isCommunity ? [] : testimonyList(livePrayer);
@@ -401,52 +401,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         />
       )}
       {showShareModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={() => setShowShareModal(false)}>
-          <div ref={shareTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'shareWithGroup')} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={e => e.stopPropagation()}>
-            <h3 className="font-semibold text-base mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'shareWithGroup')}</h3>
-            <p className="text-sm mb-4" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
-            {isVaultPrayer && (
-              <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'rgba(229,62,62,0.08)', border: '0.5px solid rgba(229,62,62,0.35)' }}>
-                <ShieldAlert size={16} style={{ color: '#e53e3e', flexShrink: 0, marginTop: 1 }} />
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'shareEncryptedWarning')}</p>
-              </div>
-            )}
-            <div className="space-y-2 mb-5 max-h-60 overflow-y-auto">
-              {groups.map(g => {
-                const checked = shareGroupIds.has(g.id);
-                return (
-                  <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-                    <input type="checkbox" checked={checked} onChange={() => toggleShareGroup(g.id)} className="rounded" />
-                    <span className="text-sm" style={{ color: 'var(--text-1)' }}>{g.name}</span>
-                  </label>
-                );
-              })}
-            </div>
-            <label className="flex items-center gap-2 text-sm mb-3 cursor-pointer" style={{ color: 'var(--text-2)' }}>
-              <input type="checkbox" checked={shareAnon} onChange={e => setShareAnon(e.target.checked)} className="rounded" />
-              {t(lang, 'anonymous')}
-            </label>
-            {/* Live preview of the attribution group members will see — updates as
-                the anonymous toggle changes, so nothing is shared unseen. */}
-            <div className="mb-4">
-              <SharePreview authorName={authorName} isAnonymous={shareAnon} title={livePrayer.title} lang={lang} />
-            </div>
-            {isVaultPrayer && addingNewGroups && (
-              <label className="flex items-start gap-2 text-sm mb-5 cursor-pointer" style={{ color: 'var(--text-2)' }}>
-                <input type="checkbox" checked={shareAck} onChange={e => setShareAck(e.target.checked)} className="rounded mt-0.5" />
-                <span>{t(lang, 'shareEncryptedAck')}</span>
-              </label>
-            )}
-            <div className="flex gap-2">
-              <button onClick={() => setShowShareModal(false)} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
-                {t(lang, 'cancel')}
-              </button>
-              <button onClick={handleSaveShares} disabled={sharing || needsShareAck} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-                {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'save')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <PrayerShareModal
+          prayer={livePrayer}
+          groups={groups}
+          sharedGroups={sharedGroups}
+          authorName={authorName}
+          userId={user.id}
+          setPrayerShares={setPrayerShares}
+          lang={lang}
+          onClose={() => setShowShareModal(false)}
+        />
       )}
       {/* Community edit modal */}
       {showCommunityEdit && (
@@ -569,7 +533,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               items={[
                 { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
-                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: openShareModal, hidden: savedCopy || groups.length === 0 },
+                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 },
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },
                 { key: 'delete', icon: Trash2, label: t(lang, savedCopy ? 'removeFromList' : 'delete'), danger: true, onClick: handleDelete },
               ]}

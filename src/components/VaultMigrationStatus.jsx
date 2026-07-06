@@ -10,7 +10,8 @@ import { t } from '../i18n';
 // unlocked (the migration needs the master key). Stays silent while checking,
 // offline, or when there's nothing to protect.
 export default function VaultMigrationStatus({ lang }) {
-  const { scanVaultCoverage, migrateToVault } = usePrayerStore();
+  const scanVaultCoverage = usePrayerStore((s) => s.scanVaultCoverage);
+  const migrateToVault = usePrayerStore((s) => s.migrateToVault);
   const [status, setStatus] = useState(undefined); // undefined=checking | {total,pending} | null=couldn't check
   const [migrating, setMigrating] = useState(false);
 

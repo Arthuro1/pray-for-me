@@ -23,6 +23,18 @@ export const LANGUAGES = [
 
 export const LANG_CODES = LANGUAGES.map((l) => l.code);
 
+// Right-to-left scripts we ship. Used to set <html dir> so Arabic/Persian read
+// correctly instead of rendering left-to-right. Keep in sync with LANGUAGES.
+export const RTL_LANGS = ['ar', 'fa'];
+
+export function isRtl(lang) {
+  return RTL_LANGS.includes(lang);
+}
+
+export function dirFor(lang) {
+  return isRtl(lang) ? 'rtl' : 'ltr';
+}
+
 // Resolve the startup language: a previously-saved choice wins (if still a
 // supported code), else the browser language, else English. Pure so it can be
 // unit-tested — and uses LANG_CODES so it never goes stale when languages are added.

@@ -1,5 +1,6 @@
-﻿import { useState } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Sun, Moon, Users, Sprout, Bell, Smartphone } from 'lucide-react';
+import { dirFor } from '../i18n';
 
 // `complete: false` marks languages whose landing-page copy (FAQs, feature
 // blurbs) is still an abbreviated placeholder rather than the full translation
@@ -1010,6 +1011,14 @@ export default function LandingPage({ onGetStarted }) {
   const c = CONTENT[lang];
   const T = THEMES[theme];
   const activeLang = LANGS.find(l => l.code === lang);
+
+  // Reflect the visitor's language on <html> so screen readers pronounce the
+  // marketing copy correctly and Arabic/Persian render right-to-left. Mirrors the
+  // in-app effect in App.jsx, which takes over once the visitor signs in.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = dirFor(lang);
+  }, [lang]);
 
   const handleLang = (code) => {
     setLang(code);

@@ -15,7 +15,7 @@ const TYPES = [
 
 export default function FeedbackModal({ onClose }) {
   const { user } = useAuthStore();
-  const { settings } = usePrayerStore();
+  const settings = usePrayerStore((s) => s.settings);
   const lang = settings?.language || 'fr';
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();

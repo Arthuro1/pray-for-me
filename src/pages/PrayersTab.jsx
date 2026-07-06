@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
@@ -16,10 +17,13 @@ import { usePrayerActions } from '../hooks/usePrayerActions';
 
 export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
-  const { prayers, categories, settings, loading } = usePrayerStore();
+  const { prayers, categories, settings, loading } = usePrayerStore(
+    useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings, loading: s.loading }))
+  );
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { prayerShares, fetchPrayerShares } = useCommunityStore();
+  const prayerShares = useCommunityStore((s) => s.prayerShares);
+  const fetchPrayerShares = useCommunityStore((s) => s.fetchPrayerShares);
   const lang = settings.language || 'fr';
   const { swipeActions } = usePrayerActions(lang);
 

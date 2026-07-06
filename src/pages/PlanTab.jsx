@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -14,7 +15,8 @@ import { buildICS } from '../utils/ics';
 import { PLANS } from '../content/prayerPlans';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
-import MonthCalendar, { monthDayKeys } from '../components/MonthCalendar';
+import MonthCalendar from '../components/MonthCalendar';
+import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -25,7 +27,26 @@ export default function PlanTab() {
   const {
     categories, prayers, addCategory, updateCategory, deleteCategory, reorderCategories, settings, addPrayer,
     completions, getEntriesForDay, markPrayedOn, unmarkPrayedOn, skipOccurrence, moveOccurrence, setOccurrenceOverride, endSeriesBefore,
-  } = usePrayerStore();
+  } = usePrayerStore(
+    useShallow((s) => ({
+      categories: s.categories,
+      prayers: s.prayers,
+      addCategory: s.addCategory,
+      updateCategory: s.updateCategory,
+      deleteCategory: s.deleteCategory,
+      reorderCategories: s.reorderCategories,
+      settings: s.settings,
+      addPrayer: s.addPrayer,
+      completions: s.completions,
+      getEntriesForDay: s.getEntriesForDay,
+      markPrayedOn: s.markPrayedOn,
+      unmarkPrayedOn: s.unmarkPrayedOn,
+      skipOccurrence: s.skipOccurrence,
+      moveOccurrence: s.moveOccurrence,
+      setOccurrenceOverride: s.setOccurrenceOverride,
+      endSeriesBefore: s.endSeriesBefore,
+    }))
+  );
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   const DAYS = t(lang, 'days');
@@ -42,7 +63,8 @@ export default function PlanTab() {
   const dayTrapRef = useFocusTrap(selectedDay !== null);
 
   const { user } = useAuthStore();
-  const { myCommitments, fetchMyCommitments } = useCommunityStore();
+  const myCommitments = useCommunityStore((s) => s.myCommitments);
+  const fetchMyCommitments = useCommunityStore((s) => s.fetchMyCommitments);
   useEffect(() => {
     if (user?.id) fetchMyCommitments(user.id, addDays(todayKey(), -92));
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps

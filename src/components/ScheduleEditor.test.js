@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { emptyDraft, isAdvancedDraft, scheduleFromDraft, draftFromSchedule } from './ScheduleEditor';
+import { emptyDraft, isAdvancedDraft, scheduleFromDraft, draftFromSchedule } from '../lib/scheduleDraft';
 
 // The Simple/Advanced split hinges on isAdvancedDraft() deciding whether an
 // existing schedule needs the advanced controls revealed. Advanced is a pure UX

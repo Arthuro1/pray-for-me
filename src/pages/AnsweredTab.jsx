@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, EyeOff, HandHeart, Pin, BookOpen } from 'lucide-react';
 import { format } from 'date-fns';
+import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
@@ -21,10 +22,13 @@ import { usePrayerActions } from '../hooks/usePrayerActions';
 // A reflective "God's faithfulness" view of all answered prayers.
 export default function AnsweredTab() {
   const navigate = useNavigate();
-  const { prayers, categories, settings } = usePrayerStore();
+  const { prayers, categories, settings } = usePrayerStore(
+    useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings }))
+  );
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
-  const { prayerShares, fetchPrayerShares } = useCommunityStore();
+  const prayerShares = useCommunityStore((s) => s.prayerShares);
+  const fetchPrayerShares = useCommunityStore((s) => s.fetchPrayerShares);
   const lang = settings.language || 'fr';
   const locale = dateLocale(lang);
   const currentUserName = getAuthorName(user);

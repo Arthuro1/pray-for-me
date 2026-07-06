@@ -12,7 +12,10 @@ import MonthCalendar from './MonthCalendar';
 // this day") so the group covers the request continuously. Claimed days land
 // on each member's personal calendar too (communityStore.fetchMyCommitments).
 export default function GroupPrayerCalendar({ communityPrayer, groupId, lang, user }) {
-  const { fetchCommitments, addCommitment, removeCommitment, fetchMyCommitments } = useCommunityStore();
+  const fetchCommitments = useCommunityStore((s) => s.fetchCommitments);
+  const addCommitment = useCommunityStore((s) => s.addCommitment);
+  const removeCommitment = useCommunityStore((s) => s.removeCommitment);
+  const fetchMyCommitments = useCommunityStore((s) => s.fetchMyCommitments);
   const [commitments, setCommitments] = useState(null); // null = loading
   const [busy, setBusy] = useState(false);
   const [monthDate, setMonthDate] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });

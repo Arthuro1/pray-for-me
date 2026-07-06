@@ -23,7 +23,7 @@ const METHODS = [
 ];
 
 export default function DonateModal({ onClose }) {
-  const { settings } = usePrayerStore();
+  const settings = usePrayerStore((s) => s.settings);
   const lang = settings?.language || 'en';
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();

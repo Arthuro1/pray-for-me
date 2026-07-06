@@ -6,8 +6,8 @@ import { parseKey, planDayNumber } from '../lib/schedule';
 import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { planDayContent } from '../content/prayerPlans';
 import { pick } from '../content/teaching';
-import { scheduleSummary } from './ScheduleEditor';
-import { DOT_COLORS } from './MonthCalendar';
+import { scheduleSummary } from '../lib/scheduleDraft';
+import { DOT_COLORS } from '../lib/monthCalendar';
 import OverflowMenu from './OverflowMenu';
 
 // Agenda for one selected day: planned prayers grouped by prayer-time slot,

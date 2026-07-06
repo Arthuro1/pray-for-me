@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
@@ -26,7 +27,8 @@ import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
-import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
+import AiConsentModal from '../components/AiConsentModal';
+import { hasAiConsent } from '../lib/aiConsent';
 import AiDisclaimer from '../components/AiDisclaimer';
 
 const DAY_NAMES = {
@@ -40,10 +42,23 @@ const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR, zh: enUS, es: enUS, hi: enUS,
 
 export default function HomeTab({ onAdd }) {
   const navigate = useNavigate();
-  const { getTodaysPrayers, getEntriesForDay, getCatchUp, markPrayedOn, categories, prayers, settings, addPrayer, loading } = usePrayerStore();
+  const { getTodaysPrayers, getEntriesForDay, getCatchUp, markPrayedOn, categories, prayers, settings, addPrayer, loading } = usePrayerStore(
+    useShallow((s) => ({
+      getTodaysPrayers: s.getTodaysPrayers,
+      getEntriesForDay: s.getEntriesForDay,
+      getCatchUp: s.getCatchUp,
+      markPrayedOn: s.markPrayedOn,
+      categories: s.categories,
+      prayers: s.prayers,
+      settings: s.settings,
+      addPrayer: s.addPrayer,
+      loading: s.loading,
+    }))
+  );
   const { user } = useAuthStore();
   const { tr } = useTranslationStore();
-  const { prayerShares, fetchPrayerShares } = useCommunityStore();
+  const prayerShares = useCommunityStore((s) => s.prayerShares);
+  const fetchPrayerShares = useCommunityStore((s) => s.fetchPrayerShares);
 
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
   const [daySuggestions, setDaySuggestions] = useState([]);

@@ -1,5 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useShallow } from 'zustand/react/shallow';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
@@ -9,6 +10,7 @@ import ConfirmHost from './components/ConfirmHost';
 import OfflineBanner from './components/OfflineBanner';
 import SyncIndicator from './components/SyncIndicator';
 import Onboarding from './components/Onboarding';
+import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
 
@@ -29,11 +31,11 @@ import useCommunityStore from './store/communityStore';
 import useVaultStore from './store/vaultStore';
 import VaultLockScreen from './components/VaultLockScreen';
 import { pullVaultRecord } from './lib/vaultSync';
-import { hasAiConsent } from './components/AiConsentModal';
+import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
-import { t, loadLocale, isLocaleLoaded } from './i18n';
+import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
 import { Loader2 } from 'lucide-react';
 
 // Fallback shown while a lazily-loaded route chunk is fetched.
@@ -51,7 +53,7 @@ function JoinGroupPage() {
   const { code } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { settings } = usePrayerStore();
+  const settings = usePrayerStore((s) => s.settings);
   const joinGroup = useCommunityStore(s => s.joinGroup);
   const lang = settings.language || 'fr';
 
@@ -81,7 +83,7 @@ function AddFriendPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { settings } = usePrayerStore();
+  const settings = usePrayerStore((s) => s.settings);
   const sendFriendRequestToId = useCommunityStore(s => s.sendFriendRequestToId);
   const lang = settings.language || 'fr';
 
@@ -108,7 +110,9 @@ function AddFriendPage() {
 function PersonalPrayerPage({ onEdit }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { prayers, settings } = usePrayerStore();
+  const { prayers, settings } = usePrayerStore(
+    useShallow((s) => ({ prayers: s.prayers, settings: s.settings }))
+  );
   const lang = settings.language || 'fr';
   const prayer = prayers.find((p) => p.id === id);
   if (!prayer) return <Navigate to="/prayers" replace />;
@@ -122,12 +126,16 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const { user, loading: authLoading, init } = useAuthStore();
-  const { settings, prayers, categories, loadData } = usePrayerStore();
+  const { settings, prayers, categories, loadData } = usePrayerStore(
+    useShallow((s) => ({ settings: s.settings, prayers: s.prayers, categories: s.categories, loadData: s.loadData }))
+  );
   const { loadTranslations, translateContent } = useTranslationStore();
-  const { fetchPendingCount, subscribePending } = useCommunityStore();
+  const fetchPendingCount = useCommunityStore((s) => s.fetchPendingCount);
+  const subscribePending = useCommunityStore((s) => s.subscribePending);
   const { initialized: vaultInitialized, unlocked: vaultUnlocked } = useVaultStore();
 
   const lang = settings.language || 'fr';
+  const location = useLocation();
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
   const [vaultChecked, setVaultChecked] = useState(false);
 
@@ -139,6 +147,13 @@ export default function App() {
     if (isLocaleLoaded(lang)) { setLocaleReady(true); return; }
     setLocaleReady(false);
     loadLocale(lang).then(() => setLocaleReady(true));
+  }, [lang]);
+
+  // Reflect the active language on <html> so screen readers pronounce content
+  // correctly and Arabic/Persian render right-to-left instead of left-to-right.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = dirFor(lang);
   }, [lang]);
 
   useEffect(() => {
@@ -245,23 +260,25 @@ export default function App() {
   return (
     <>
       <Layout onAddPrayer={openAdd}>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<HomeTab onAdd={openAdd} />} />
-            <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
-            <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
-            <Route path="/answered" element={<AnsweredTab />} />
-            <Route path="/community" element={<CommunityTab />} />
-            <Route path="/community/join/:code" element={<JoinGroupPage />} />
-            <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
-            <Route path="/community/group/:groupId" element={<CommunityTab />} />
-            <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
-            <Route path="/plan" element={<PlanTab />} />
-            <Route path="/grow" element={<GrowTab />} />
-            <Route path="/settings" element={<SettingsTab />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
+        <ErrorBoundary lang={lang} resetKey={location.pathname}>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<HomeTab onAdd={openAdd} />} />
+              <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
+              <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
+              <Route path="/answered" element={<AnsweredTab />} />
+              <Route path="/community" element={<CommunityTab />} />
+              <Route path="/community/join/:code" element={<JoinGroupPage />} />
+              <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
+              <Route path="/community/group/:groupId" element={<CommunityTab />} />
+              <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
+              <Route path="/plan" element={<PlanTab />} />
+              <Route path="/grow" element={<GrowTab />} />
+              <Route path="/settings" element={<SettingsTab />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </Layout>
       {showForm && (
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />

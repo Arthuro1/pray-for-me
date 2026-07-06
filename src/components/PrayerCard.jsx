@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle, ChevronDown, ChevronUp, Plus, Trash2, Edit2, Sparkles, Loader2, BookOpen } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
@@ -20,7 +21,17 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
 
-  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore();
+  const { categories, markAnswered, markActive, addUpdate, addPrayerPoint, removePrayerPoint, deletePrayer } = usePrayerStore(
+    useShallow((s) => ({
+      categories: s.categories,
+      markAnswered: s.markAnswered,
+      markActive: s.markActive,
+      addUpdate: s.addUpdate,
+      addPrayerPoint: s.addPrayerPoint,
+      removePrayerPoint: s.removePrayerPoint,
+      deletePrayer: s.deletePrayer,
+    }))
+  );
   const { tr } = useTranslationStore();
   const dateLocale = DATE_LOCALES[lang] || fr;
   const prayerCategoryIds = (prayer.prayer_categories || []).map((pc) => pc.category_id);

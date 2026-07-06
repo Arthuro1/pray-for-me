@@ -1,25 +1,12 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { t } from '../i18n';
-import { toKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
+import { DOT_COLORS, monthDayKeys } from '../lib/monthCalendar';
 
 // Month grid with per-day dots. `dots` maps dayKey -> { once, recurring, plan,
 // group } counts (see planner.monthDots; `group` is added by the community
 // commitments). Presentation-only: selection and month paging live upstream.
-
-export const DOT_COLORS = {
-  recurring: 'var(--accent)',
-  once: '#d97706',
-  plan: '#94a3b8',
-  group: '#0891b2',
-};
-
-export function monthDayKeys(monthDate) {
-  const y = monthDate.getFullYear();
-  const m = monthDate.getMonth();
-  const count = new Date(y, m + 1, 0).getDate();
-  return Array.from({ length: count }, (_, i) => toKey(new Date(y, m, i + 1)));
-}
+// The DOT_COLORS map and monthDayKeys() helper live in lib/monthCalendar.js.
 
 export default function MonthCalendar({ monthDate, dots, selectedKey, onSelect, onMonthChange, lang }) {
   const DAYS = t(lang, 'days');

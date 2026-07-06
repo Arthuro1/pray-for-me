@@ -22,8 +22,8 @@ const SIDEBAR_MINI = 64;
 const MD_BREAKPOINT = 768;
 
 export default function Layout({ children, onAddPrayer }) {
-  const { settings } = usePrayerStore();
-  const { pendingCount } = useCommunityStore();
+  const settings = usePrayerStore((s) => s.settings);
+  const pendingCount = useCommunityStore((s) => s.pendingCount);
   const lang = settings.language || 'en';
   const { pathname } = useLocation();
   const navigate = useNavigate();

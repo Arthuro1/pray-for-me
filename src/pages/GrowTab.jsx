@@ -10,7 +10,7 @@ import ArticleReader from '../components/ArticleReader';
 // to God's Word. Two sections — prayer guides to PRAY THROUGH, and theology
 // explanations to READ — both Scripture-first, both pointing past the app to Christ.
 export default function GrowTab() {
-  const { settings } = usePrayerStore();
+  const settings = usePrayerStore((s) => s.settings);
   const lang = settings.language || 'fr';
   const [view, setView] = useState('pray'); // 'pray' | 'learn'
   const [openGuide, setOpenGuide] = useState(null);

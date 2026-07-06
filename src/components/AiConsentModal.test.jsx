@@ -20,7 +20,8 @@ vi.mock('../lib/analytics', async (importOriginal) => {
   return { ...actual, track: vi.fn() };
 });
 
-import AiConsentModal, { grantAiConsent, revokeAiConsent, hasAiConsent } from './AiConsentModal';
+import AiConsentModal from './AiConsentModal';
+import { grantAiConsent, revokeAiConsent, hasAiConsent } from '../lib/aiConsent';
 import usePrayerStore from '../store/prayerStore';
 import { track, EVENTS } from '../lib/analytics';
 import { t } from '../i18n';

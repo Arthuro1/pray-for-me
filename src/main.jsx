@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill'
 import App from './App.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './index.css'
 
 // Injects a small "Twemoji Country Flags" web font so flag emojis render on
@@ -14,8 +15,10 @@ polyfillCountryFlagEmojis('Twemoji Country Flags', '/fonts/TwemojiCountryFlags.w
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 )

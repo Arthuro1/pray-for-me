@@ -4,7 +4,8 @@ import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import AiConsentModal, { hasAiConsent } from './AiConsentModal';
+import AiConsentModal from './AiConsentModal';
+import { hasAiConsent } from '../lib/aiConsent';
 import AiDisclaimer from './AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
 import VerseAccordion from './VerseAccordion';
@@ -59,7 +60,8 @@ function Passage({ p, lang, added, onAdd }) {
 // in when this is reopened later (see PrayerDetail's "view Scripture" action) so
 // it can be recalled without a new AI request.
 export default function ScriptureFirstStep({ prayerId, title, description, lang, initialGuidance = null, onClose }) {
-  const { addPrayerPoint, setScriptureGuidance } = usePrayerStore();
+  const addPrayerPoint = usePrayerStore((s) => s.addPrayerPoint);
+  const setScriptureGuidance = usePrayerStore((s) => s.setScriptureGuidance);
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/OverflowMenu';
 import EmptyState from '../components/EmptyState';
 import useCommunityStore from '../store/communityStore';
@@ -72,7 +73,22 @@ function Section({ title, icon, children }) {
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
 function CommunityHub({ lang, userId, onViewGroup }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity } = useCommunityStore();
+  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity } = useCommunityStore(
+    useShallow((s) => ({
+      groups: s.groups,
+      fetchFriends: s.fetchFriends,
+      fetchFriendRequests: s.fetchFriendRequests,
+      fetchGroupInvitations: s.fetchGroupInvitations,
+      acceptFriendRequest: s.acceptFriendRequest,
+      rejectFriendRequest: s.rejectFriendRequest,
+      acceptGroupInvitation: s.acceptGroupInvitation,
+      rejectGroupInvitation: s.rejectGroupInvitation,
+      removeFriend: s.removeFriend,
+      addFriendship: s.addFriendship,
+      fetchPendingCount: s.fetchPendingCount,
+      fetchGroupActivity: s.fetchGroupActivity,
+    }))
+  );
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [groupInvitations, setGroupInvitations] = useState([]);
@@ -251,7 +267,7 @@ function ModalActions({ lang, onCancel, onSubmit, disabled, loading, submitLabel
 
 // ── Create Group Modal ──────────────────────────────────────────────────────
 function CreateGroupModal({ lang, userId, onClose, onDone }) {
-  const { createGroup } = useCommunityStore();
+  const createGroup = useCommunityStore((s) => s.createGroup);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -280,7 +296,9 @@ function CreateGroupModal({ lang, userId, onClose, onDone }) {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function AddFriendModal({ lang, userId, onClose }) {
-  const { sendFriendRequest, sendFriendRequestToId, fetchFriendSuggestions } = useCommunityStore();
+  const sendFriendRequest = useCommunityStore((s) => s.sendFriendRequest);
+  const sendFriendRequestToId = useCommunityStore((s) => s.sendFriendRequestToId);
+  const fetchFriendSuggestions = useCommunityStore((s) => s.fetchFriendSuggestions);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -396,7 +414,16 @@ function AddFriendModal({ lang, userId, onClose }) {
 
 // ── Group Admin Modal (invite friends + manage members) ──────────────────────
 function GroupAdminModal({ lang, userId, group, onClose }) {
-  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, renameGroup } = useCommunityStore();
+  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, renameGroup } = useCommunityStore(
+    useShallow((s) => ({
+      fetchFriends: s.fetchFriends,
+      fetchGroupMembers: s.fetchGroupMembers,
+      fetchGroupInvitees: s.fetchGroupInvitees,
+      inviteToGroup: s.inviteToGroup,
+      removeMember: s.removeMember,
+      renameGroup: s.renameGroup,
+    }))
+  );
   const [friends, setFriends] = useState([]);
   const [members, setMembers] = useState([]);
   const [busyId, setBusyId] = useState(null);
@@ -515,7 +542,7 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
 
 // Read-only member list, available to every group member.
 function MembersModal({ lang, group, userId, onClose }) {
-  const { fetchGroupMembers } = useCommunityStore();
+  const fetchGroupMembers = useCommunityStore((s) => s.fetchGroupMembers);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showQR, setShowQR] = useState(false);
@@ -583,7 +610,19 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup } = useCommunityStore();
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup } = useCommunityStore(
+    useShallow((s) => ({
+      groups: s.groups,
+      prayers: s.prayers,
+      testimonies: s.testimonies,
+      loading: s.loading,
+      setActiveGroup: s.setActiveGroup,
+      addPrayer: s.addPrayer,
+      setGroupAutoAdd: s.setGroupAutoAdd,
+      subscribeGroupPrayers: s.subscribeGroupPrayers,
+      leaveGroup: s.leaveGroup,
+    }))
+  );
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
   const categories = usePrayerStore(s => s.categories);
   const tr = useTranslationStore(s => s.tr);
@@ -844,7 +883,15 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
 // ── Community prayer detail (/community/group/:groupId/prayer/:prayerId) ───────
 function CommunityPrayerView({ lang, user, groupId, prayerId, onBack }) {
-  const { prayers, activeGroupId, loading, setActiveGroup, fetchUserReactions } = useCommunityStore();
+  const { prayers, activeGroupId, loading, setActiveGroup, fetchUserReactions } = useCommunityStore(
+    useShallow((s) => ({
+      prayers: s.prayers,
+      activeGroupId: s.activeGroupId,
+      loading: s.loading,
+      setActiveGroup: s.setActiveGroup,
+      fetchUserReactions: s.fetchUserReactions,
+    }))
+  );
 
   useEffect(() => { if (groupId && groupId !== activeGroupId) setActiveGroup(groupId); }, [groupId]);
   useEffect(() => { if (groupId && user?.id) fetchUserReactions(groupId, user.id); }, [groupId, user?.id]);
@@ -859,10 +906,10 @@ function CommunityPrayerView({ lang, user, groupId, prayerId, onBack }) {
 
 // ── Main Community Tab (URL-driven) ───────────────────────────────────────────
 export default function CommunityTab() {
-  const { settings } = usePrayerStore();
+  const settings = usePrayerStore((s) => s.settings);
   const lang = settings.language || 'en';
   const { user } = useAuthStore();
-  const { fetchGroups } = useCommunityStore();
+  const fetchGroups = useCommunityStore((s) => s.fetchGroups);
   const { groupId, prayerId } = useParams();
   const navigate = useNavigate();
 

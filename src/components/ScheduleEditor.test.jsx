@@ -11,7 +11,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { useState } from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import ScheduleEditor, { emptyDraft, scheduleFromDraft, presetOf } from './ScheduleEditor';
+import ScheduleEditor from './ScheduleEditor';
+import { emptyDraft, scheduleFromDraft, presetOf } from '../lib/scheduleDraft';
 import { t } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';

@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { X, ChevronDown } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import { useShallow } from 'zustand/react/shallow';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import ScriptureFirstStep from './ScriptureFirstStep';
-import ScheduleEditor, { emptyDraft, draftFromSchedule, scheduleFromDraft } from './ScheduleEditor';
+import ScheduleEditor from './ScheduleEditor';
+import { emptyDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
 import FollowUpField from './FollowUpField';
 import useFollowUpStore from '../store/followUpStore';
 
@@ -93,7 +95,14 @@ function hasDetails(editPrayer) {
 
 // communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
 export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
-  const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
+  const { categories, addPrayer, updatePrayer, settings } = usePrayerStore(
+    useShallow((s) => ({
+      categories: s.categories,
+      addPrayer: s.addPrayer,
+      updatePrayer: s.updatePrayer,
+      settings: s.settings,
+    }))
+  );
   const setFollowUp = useFollowUpStore((s) => s.setFollowUp);
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';

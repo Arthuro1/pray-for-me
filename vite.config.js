@@ -57,6 +57,12 @@ export default defineConfig(({ mode }) => {
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // Keep the install-time precache to the shell. The 15 non-French locale
+        // chunks are code-split and loaded on demand — precaching all of them
+        // (~450 KB) forces every user to download 15 languages they'll never use,
+        // re-fetched on each deploy. They're served from cache after first use via
+        // the runtimeCaching rule below. (French ships in the main bundle.)
+        globIgnores: ['**/assets/{ar,de,es,fa,hi,id,ja,ko,pt,ru,sw,tl,zh,am,en}-*.js'],
         // Pull our Web Push handlers into the generated service worker.
         importScripts: ['push-sw.js'],
         runtimeCaching: [
@@ -66,6 +72,16 @@ export default defineConfig(({ mode }) => {
             options: {
               cacheName: 'supabase-cache',
               expiration: { maxEntries: 50, maxAgeSeconds: 300 },
+            },
+          },
+          {
+            // On-demand locale chunks: serve from cache once fetched so offline
+            // language switching still works, without bloating the precache.
+            urlPattern: /\/assets\/(ar|de|es|fa|hi|id|ja|ko|pt|ru|sw|tl|zh|am|en)-[\w-]+\.js$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'locale-cache',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
             },
           },
         ],
