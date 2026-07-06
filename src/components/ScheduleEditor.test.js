@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { emptyDraft, isAdvancedDraft, scheduleFromDraft, draftFromSchedule } from './ScheduleEditor';
 
-// Task 3: the Simple/Advanced split hinges on isAdvancedDraft() deciding whether
-// an existing schedule needs the Supporter-tier controls revealed. The soft tag
-// never blocks — these tests pin the classification and confirm the underlying
-// draft→schedule round-trip is untouched by the UI split.
+// The Simple/Advanced split hinges on isAdvancedDraft() deciding whether an
+// existing schedule needs the advanced controls revealed. Advanced is a pure UX
+// disclosure (never a gate) — these tests pin the classification and confirm the
+// underlying draft→schedule round-trip is untouched by the UI split.
 describe('isAdvancedDraft', () => {
   it('treats no schedule / one-time / plain daily+weekly as simple', () => {
     expect(isAdvancedDraft(null)).toBe(false);

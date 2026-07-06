@@ -17,21 +17,28 @@ describe('isEventAllowed', () => {
       'first_prayer_created', 'reminder_set', 'prayer_prayed', 'prayer_updated',
       'prayer_answered', 'vault_enabled', 'ai_consent_enabled', 'ai_consent_revoked',
       'group_joined', 'prayer_shared', 'data_exported', 'account_deleted_started',
-      'supporter_prompt_viewed', 'supporter_prompt_clicked', 'feature_gate_seen',
       'privacy_center_opened',
     ];
     for (const name of required) expect(isEventAllowed(name)).toBe(true);
+  });
+
+  // No paid-plan gating ships in the app, so the Supporter/feature-gate events
+  // must NOT exist — this guards against them being reintroduced.
+  it('does not allow Supporter / feature-gate prompt events', () => {
+    for (const name of ['supporter_prompt_viewed', 'supporter_prompt_clicked', 'feature_gate_seen']) {
+      expect(isEventAllowed(name)).toBe(false);
+    }
   });
 });
 
 describe('sanitizeProps — the privacy guard', () => {
   it('keeps allowlisted scalar props', () => {
-    expect(sanitizeProps({ plan: 'free', count: 3, enabled: true })).toEqual({
-      plan: 'free', count: 3, enabled: true,
+    expect(sanitizeProps({ source: 'settings', count: 3, enabled: true })).toEqual({
+      source: 'settings', count: 3, enabled: true,
     });
   });
 
-  it('drops any key not on the allowlist (e.g. anything resembling content)', () => {
+  it('drops any key not on the allowlist (content, and the removed plan/tier keys)', () => {
     const dirty = {
       title: 'Pray for my mother',
       description: 'she is very sick',
@@ -40,13 +47,15 @@ describe('sanitizeProps — the privacy guard', () => {
       testimony: 'God healed her',
       prompt: 'write a prayer about...',
       text: 'secret',
-      plan: 'supporter',
+      plan: 'supporter', // plan/tier are no longer tracked at all
+      tier: 'supporter',
+      source: 'settings',
     };
-    expect(sanitizeProps(dirty)).toEqual({ plan: 'supporter' });
+    expect(sanitizeProps(dirty)).toEqual({ source: 'settings' });
   });
 
   it('drops non-scalar values even on allowlisted keys', () => {
-    expect(sanitizeProps({ feature: { nested: 1 }, count: [1, 2], method: () => {} })).toBeUndefined();
+    expect(sanitizeProps({ source: { nested: 1 }, count: [1, 2], method: () => {} })).toBeUndefined();
   });
 
   it('drops overly long strings (guards against smuggled free text)', () => {

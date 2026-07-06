@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown, Bell } from 'lucide-react';
+import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown } from 'lucide-react';
 import { t } from '../i18n';
-import { normalizeSchedule, parseKey, addDays, SLOTS } from '../lib/schedule';
+import { normalizeSchedule, parseKey, SLOTS } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
-import { FEATURES } from '../lib/plan';
-import SupporterTag from './SupporterTag';
 
 // Plain-language recurrence picker. Deliberately presets-first (no cron-style
 // builder): one-time / daily / weekdays / every-N-days / monthly / yearly,
@@ -17,18 +15,17 @@ import SupporterTag from './SupporterTag';
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const SLOT_ICONS = { morning: Sunrise, midday: Sun, evening: Moon };
 
-// Simple/Advanced split (Task 3). "Simple" covers the everyday cases — daily or
-// weekly recurrence that runs forever or "until answered". The Supporter-tier
-// ADVANCED_SCHEDULING controls (custom recurrence rules + bounded end dates) live
-// behind an "Advanced options" toggle carrying a soft, non-blocking Supporter tag.
-// Nothing is locked while BILLING_ENABLED is false — the tag is a gentle
-// thank-you hint, not a gate, so every existing schedule keeps working.
+// Simple/Advanced split — a pure UX simplification, never a plan or paywall.
+// "Simple" covers the everyday cases: daily or weekly recurrence that runs
+// forever or "until answered". The advanced controls (custom recurrence rules +
+// bounded end dates) live behind an "Advanced options" toggle so new users
+// aren't overloaded. Every option stays available to everyone — advanced is one
+// tap away, never locked.
+//
+// A per-prayer "follow up / check back in" reminder is NOT a recurrence and does
+// not live here — it is a separate concept (see FollowUpField / followUpStore).
 const ADVANCED_FREQS = ['interval', 'monthly', 'yearly'];
 const ADVANCED_END_KINDS = ['date', 'count'];
-
-// A "follow-up" nudge is a one-time prayer a few days out — a gentle "check
-// back in on this" rather than a standing habit.
-const FOLLOWUP_NUDGE_DAYS = 3;
 
 // True when a draft already uses an advanced control. Used to auto-open the
 // advanced section when editing an existing schedule so nothing is hidden.
@@ -41,12 +38,7 @@ export function isAdvancedDraft(d) {
 // when it's a custom setup that only the advanced controls express.
 export function presetOf(d) {
   if (!d || d.mode === 'plan') return 'plan';
-  if (d.mode === 'once') {
-    const today = todayKey();
-    if (d.date === today) return 'today';
-    if (d.date === addDays(today, FOLLOWUP_NUDGE_DAYS)) return 'followup';
-    return null;
-  }
+  if (d.mode === 'once') return d.date === todayKey() ? 'today' : null;
   if (d.freq === 'daily') return 'daily';
   if (d.freq === 'weekly') return 'weekly';
   return null;
@@ -188,7 +180,6 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
   const setToday = () => patch({ mode: 'once', date: todayKey() });
   const setDaily = () => patch({ mode: 'recurring', freq: 'daily' });
   const setWeekly = () => patch({ mode: 'recurring', freq: 'weekly', weekDays: defaultWeekDays() });
-  const setFollowUp = () => patch({ mode: 'once', date: addDays(todayKey(), FOLLOWUP_NUDGE_DAYS) });
 
   return (
     <div className="space-y-3">
@@ -198,7 +189,6 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
         <Chip active={active === 'today'} onClick={setToday}><CalendarDays size={12} /> {t(lang, 'schedPrayToday')}</Chip>
         <Chip active={active === 'daily'} onClick={setDaily}><Repeat size={12} /> {t(lang, 'schedPrayDaily')}</Chip>
         <Chip active={active === 'weekly'} onClick={setWeekly}><CalendarDays size={12} /> {t(lang, 'schedPrayWeekly')}</Chip>
-        <Chip active={active === 'followup'} onClick={setFollowUp}><Bell size={12} /> {t(lang, 'schedFollowUp')}</Chip>
       </div>
 
       {d.mode === 'once' && (
@@ -288,7 +278,6 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
           >
             <ChevronDown size={13} style={{ transform: advanced ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
             {t(lang, 'schedAdvanced')}
-            <SupporterTag feature={FEATURES.ADVANCED_SCHEDULING} lang={lang} />
           </button>
         </div>
       )}

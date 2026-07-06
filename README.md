@@ -137,26 +137,20 @@ npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJEC
 
 ---
 
-## 💛 Free vs Supporter
+## 💛 No paid feature gating
 
-Pray4Me follows a generous freemium model:
+Pray4Me currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, the encrypted vault, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
 
-> **Free = pray faithfully. Supporter = organize, automate, collaborate, go deeper, and help sustain Pray4Me.**
+Some of the richer flows use a **Simple vs Advanced** split purely to keep new users from being overloaded — it is a UX distinction, **not** a plan distinction:
 
-The tiering lives in one place — [`src/lib/plan.js`](./src/lib/plan.js) (`FREE_FEATURES`, `SUPPORTER_FEATURES`, `isFeatureAvailable`, `getFeatureTier`). It is a **scaffold only**: there is no payment provider wired in, and while `BILLING_ENABLED` is `false` **nothing is actually locked** — the free app is never crippled. UI can still show a gentle "Supporter" thank-you tag via `getFeatureTier`.
+- **Simple** = fewer fields, faster action, safe defaults (e.g. Pray today / daily / weekly).
+- **Advanced** = more control, revealed only when asked for (custom recurrence, intervals, monthly/yearly rules, "until answered", calendar export, rotations).
 
-| Free (always) | Supporter (advanced tools as a thank-you) |
-|---|---|
-| Personal prayer journal · create/edit/archive | Advanced recurrence & "until answered" automation |
-| Simple reminders (today / daily / weekly / follow-up) | Prayer chains · group admin tools · larger groups |
-| Mark answered · testimonies · basic categories | AI prayer suggestions & Scripture reflections |
-| **Private prayers · encrypted vault (basic)** | Larger / unlimited encrypted vault |
-| **Data export · account deletion** | Calendar export · rich PDF/devotional export |
-| Multilingual UI · basic community | Reflection insights · answered-prayer timeline |
+Advanced options are always one tap away for every user.
 
-**Privacy is never a paid feature.** Private prayers, the encrypted vault, data export and account deletion are free for everyone.
+**Optional donations** (the Donate modal in Settings) are exactly that — a voluntary one-time gift that never unlocks features and is never required to use the app.
 
-> **A Supporter membership is not a donation.** A true one-time gift (see the Donate modal) is always optional and never unlocks features. On mobile app stores, unlocking features for payment may require in-app purchase — any future checkout must stay provider-agnostic. See the header comment in [`src/lib/plan.js`](./src/lib/plan.js).
+> A future "Supporter membership" model is **staged separately** on the `feature/supporter-model-staged` branch and is **not active** on `dev`.
 
 ---
 

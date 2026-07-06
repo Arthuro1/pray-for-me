@@ -11,9 +11,10 @@ import { t } from '../i18n';
 const lang = 'fr';
 afterEach(cleanup);
 
+// Onboarding must never mention Supporter/Free/Premium/pricing/donations, in any
+// language — assert on the rendered text, not on (now-removed) supporter keys.
 const expectNoSupporterPrompt = () => {
-  expect(screen.queryByText(t(lang, 'supporterTitle'))).toBeNull();
-  expect(screen.queryByText(t(lang, 'supporterWhatTitle'))).toBeNull();
+  expect(document.body.textContent).not.toMatch(/supporter|premium|abonnement/i);
 };
 
 describe('Onboarding', () => {

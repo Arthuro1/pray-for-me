@@ -3,17 +3,20 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/). This project uses date-based entries.
 
-## [Unreleased] — 2026-07-04
+## [Unreleased] — 2026-07-06
+
+### Removed
+- **Free vs Supporter product model** — all plan-based feature gating, the Supporter membership surface (modal + Settings card), the `src/lib/plan.js` tier scaffold, the soft "Supporter" feature tags, and the supporter/feature-gate analytics events (`supporter_prompt_viewed`, `supporter_prompt_clicked`, `feature_gate_seen`) were removed from `dev`. The app now has **no active paid feature gating** — every feature is available to everyone. This work is preserved on the `feature/supporter-model-staged` branch for possible future use.
 
 ### Added
-- **Free vs Supporter tiering (scaffold)** — a centralized feature-tier config (`src/lib/plan.js`: `FREE_FEATURES`, `SUPPORTER_FEATURES`, `isFeatureAvailable`, `getFeatureTier`). No billing is wired in; while `BILLING_ENABLED` is `false` nothing is locked (the free app is never crippled). Privacy, export, and account deletion are always free.
-- **Privacy Center** — a plain-language Settings surface explaining private/vault/shared prayers, AI, push, export, deletion, and the Free-vs-Supporter privacy guarantees (`src/components/PrivacyCenter.jsx`).
-- **Supporter membership UX** — generous, non-manipulative "Become a Supporter" surface with pay-what-you-can giving levels, kept clearly separate from the optional one-time Donate flow (`src/components/SupporterModal.jsx`).
-- **Privacy-preserving analytics** — a single choke point (`src/lib/analytics.js`) that emits only allowlisted product-activation events and structurally drops anything resembling prayer content. The activation funnel is now wired through the app (first prayer, prayed, answered, reminder set, vault enabled, group joined, prayer shared, AI consent, export, account-deletion start, supporter prompts, and `privacy_center_opened`) — all content-free.
+- **Per-prayer follow-up reminders** — "Remind me to follow up" is now a per-prayer check-back reminder (Tomorrow / in 3 days / 1 week / 2 weeks / pick a date), **separate** from the prayer's recurrence schedule and from the account-level follow-up cadence in Settings. It surfaces in-app as a banner on the prayer with Add update / Mark answered / Snooze / Set another / Dismiss (`src/store/followUpStore.js`, `src/components/FollowUpField.jsx`, `src/components/FollowUpBanner.jsx`). Delivery is in-app for now; push/cross-device sync is a documented TODO.
+- **Privacy Center** — a plain-language Settings surface explaining private/vault/shared prayers, AI, push, export and deletion (`src/components/PrivacyCenter.jsx`).
+- **Privacy-preserving analytics** — a single choke point (`src/lib/analytics.js`) that emits only allowlisted product-activation events and structurally drops anything resembling prayer content (first prayer, prayed, answered, reminder set, vault enabled, group joined, prayer shared, AI consent, export, account-deletion start, and `privacy_center_opened`) — all content-free.
 - App version is now sourced from `package.json` via Vite `define` (`__APP_VERSION__`), so the Settings/About line never drifts (set to **1.0.0**).
 
 ### Changed
-- **Onboarding simplified** — the first-run flow is now three warm, action-first slides ending in "Add your first prayer"; advanced tools (groups, plans, vault, AI, recurring rules) are no longer toured up front, and no Supporter prompts appear during onboarding.
+- **Scheduling is Simple/Advanced by UX only** — the Simple presets (follow plan / pray today / daily / weekly) and the "Advanced options" disclosure (interval / monthly / yearly rules + bounded end dates) are a pure overload-reduction split; they no longer carry any plan or "Supporter" tag, and every option stays available to everyone.
+- **Onboarding simplified** — the first-run flow is three warm, action-first slides ending in "Add your first prayer"; advanced tools (groups, plans, vault, AI, recurring rules) are not toured up front, and no Supporter/pricing prompts appear.
 
 ### Security / Safety
 - **No AI-generated Bible text** — the verse reader's AI fallback was removed. Verse text now comes only from authoritative sources (cache → shared cache → YouVersion); when none is available the reader shows the reference with a link to the user's Bible. AI may still offer reflections (behind consent) but never produces canonical Scripture wording (`src/lib/verseText.js`).

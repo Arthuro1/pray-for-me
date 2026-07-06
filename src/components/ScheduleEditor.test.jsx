@@ -1,9 +1,13 @@
 // @vitest-environment jsdom
 //
 // Human-first scheduling: the simple tier leads with habits (Pray today / daily /
-// weekly / follow up) instead of engine language. These tests drive the real
-// chip clicks through a small stateful harness and assert the SCHEDULE they
-// produce (the persisted contract), plus the presetOf() highlight mapping.
+// weekly) instead of engine language. These tests drive the real chip clicks
+// through a small stateful harness and assert the SCHEDULE they produce (the
+// persisted contract), plus the presetOf() highlight mapping.
+//
+// "Remind me to follow up" is deliberately NOT a schedule preset here — it is a
+// separate per-prayer reminder (see followUpStore.test.js), so a one-time date a
+// few days out is just a custom one-time schedule, never a recurrence.
 import { describe, it, expect, afterEach } from 'vitest';
 import { useState } from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
@@ -56,13 +60,9 @@ describe('ScheduleEditor presets', () => {
     expect(currentSchedule()).toEqual(expect.objectContaining({ type: 'once', date: todayKey() }));
   });
 
-  it('"Follow up" builds a one-time nudge a few days out', () => {
+  it('offers no "follow up" recurrence preset (follow-up is a separate concept)', () => {
     render(<Harness />);
-    fireEvent.click(screen.getByText(t(lang, 'schedFollowUp')));
-    const s = currentSchedule();
-    expect(s.type).toBe('once');
-    expect(s.date).toBe(addDays(todayKey(), 3));
-    expect(s.date > todayKey()).toBe(true);
+    expect(screen.queryByText(t(lang, 'schedFollowUp'))).toBeNull();
   });
 });
 
@@ -70,10 +70,11 @@ describe('presetOf', () => {
   it('maps drafts back to their preset for chip highlighting', () => {
     expect(presetOf(emptyDraft())).toBe('plan');
     expect(presetOf({ mode: 'once', date: todayKey() })).toBe('today');
-    expect(presetOf({ mode: 'once', date: addDays(todayKey(), 3) })).toBe('followup');
     expect(presetOf({ mode: 'recurring', freq: 'daily' })).toBe('daily');
     expect(presetOf({ mode: 'recurring', freq: 'weekly' })).toBe('weekly');
-    // A custom one-time date or an advanced frequency has no simple preset.
+    // Any one-time date other than today (incl. a few days out — formerly the
+    // "follow up" preset) or an advanced frequency has no simple preset.
+    expect(presetOf({ mode: 'once', date: addDays(todayKey(), 3) })).toBeNull();
     expect(presetOf({ mode: 'once', date: addDays(todayKey(), 30) })).toBeNull();
     expect(presetOf({ mode: 'recurring', freq: 'monthly' })).toBeNull();
   });

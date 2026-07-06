@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2, Heart } from 'lucide-react';
+import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2 } from 'lucide-react';
 import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -7,9 +7,8 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 
 // A user-facing, plain-language explanation of how prayers are stored and shared.
 // Deliberately non-technical and honest: it never exposes implementation secrets
-// and never overpromises "perfect" security. It also makes clear that basic
-// privacy (private prayers, the encrypted vault, export, deletion) is free for
-// everyone — never a Supporter upgrade.
+// and never overpromises "perfect" security. Privacy is for everyone — private
+// prayers, the encrypted vault, export and deletion are simply how the app works.
 const SECTIONS = [
   { icon: Lock, titleKey: 'pcPrivateTitle', bodyKey: 'pcPrivateBody' },
   { icon: ShieldCheck, titleKey: 'pcVaultTitle', bodyKey: 'pcVaultBody' },
@@ -18,7 +17,6 @@ const SECTIONS = [
   { icon: Bell, titleKey: 'pcPushTitle', bodyKey: 'pcPushBody' },
   { icon: Download, titleKey: 'pcExportTitle', bodyKey: 'pcExportBody' },
   { icon: Trash2, titleKey: 'pcDeleteTitle', bodyKey: 'pcDeleteBody' },
-  { icon: Heart, titleKey: 'pcTiersTitle', bodyKey: 'pcTiersBody' },
 ];
 
 export default function PrivacyCenter({ lang = 'en', onClose }) {

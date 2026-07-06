@@ -30,9 +30,6 @@ export const EVENTS = Object.freeze({
   PRAYER_SHARED: 'prayer_shared',
   DATA_EXPORTED: 'data_exported',
   ACCOUNT_DELETED_STARTED: 'account_deleted_started',
-  SUPPORTER_PROMPT_VIEWED: 'supporter_prompt_viewed',
-  SUPPORTER_PROMPT_CLICKED: 'supporter_prompt_clicked',
-  FEATURE_GATE_SEEN: 'feature_gate_seen',
   PRIVACY_CENTER_OPENED: 'privacy_center_opened',
 });
 
@@ -42,9 +39,6 @@ const ALLOWED_EVENTS = new Set(Object.values(EVENTS));
 // carry free text about a prayer. Adding a key here is a deliberate act — think
 // hard before allowing anything that could echo user content.
 const ALLOWED_PROP_KEYS = new Set([
-  'plan',         // 'free' | 'supporter' | 'sponsor'
-  'tier',         // 'free' | 'supporter'
-  'feature',      // a FEATURES key (enum-like, not user text)
   'source',       // where the action originated (e.g. 'onboarding', 'settings')
   'method',       // e.g. reminder type: 'daily' | 'weekly' | 'followUp'
   'channel',      // e.g. share channel: 'group' | 'link'

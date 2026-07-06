@@ -12,7 +12,6 @@ import { track, EVENTS } from '../lib/analytics';
 import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
-import SupporterModal from '../components/SupporterModal';
 import VaultModal from '../components/VaultModal';
 import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/AiDisclaimer';
@@ -115,7 +114,6 @@ export default function SettingsTab() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [showDonate, setShowDonate] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
-  const [showSupporter, setShowSupporter] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
 
@@ -132,12 +130,6 @@ export default function SettingsTab() {
     getFollowUpLastSent(user.id).then((val) => { if (!cancelled) setFollowUpLastSent(val); });
     return () => { cancelled = true; };
   }, [settings.followUpEnabled, user?.id]);
-
-  // The Supporter card is visible on this screen — record the (content-free)
-  // impression once per mount so activation can be measured later.
-  useEffect(() => {
-    track(EVENTS.SUPPORTER_PROMPT_VIEWED, { source: 'settings' });
-  }, []);
 
   const handleLockVault = () => {
     lockVault();
@@ -611,26 +603,8 @@ export default function SettingsTab() {
           </div>
         </div>
 
-        {/* Become a Supporter — pay-what-you-can membership (advanced tools as a
-            thank-you). Distinct from the one-time Donate flow below. */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Heart size={16} style={{ color: 'var(--accent)' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'supporterTitle')}</h3>
-          </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'supporterSub')}</p>
-          <button
-            onClick={() => { track(EVENTS.SUPPORTER_PROMPT_CLICKED, { source: 'settings' }); setShowSupporter(true); }}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-          >
-            <Heart size={14} />
-            {t(lang, 'supporterBtn')}
-          </button>
-        </div>
-
-        {/* Donate — a true, optional one-time gift. Kept separate from Supporter
-            membership: a donation never unlocks features (see lib/plan.js). */}
+        {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
+            never unlocks features and the whole app works without it. */}
         <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-1">
             <Heart size={16} style={{ color: '#16a34a' }} />
@@ -657,7 +631,6 @@ export default function SettingsTab() {
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
       {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
-      {showSupporter && <SupporterModal lang={lang} onClose={() => setShowSupporter(false)} />}
       {vaultMode && (
         <VaultModal lang={lang} initialMode={vaultMode} onClose={() => setVaultMode(null)} />
       )}

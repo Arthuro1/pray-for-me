@@ -8,6 +8,8 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import ScriptureFirstStep from './ScriptureFirstStep';
 import ScheduleEditor, { emptyDraft, draftFromSchedule, scheduleFromDraft } from './ScheduleEditor';
+import FollowUpField from './FollowUpField';
+import useFollowUpStore from '../store/followUpStore';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -60,8 +62,14 @@ function CategorySelector({ categories, selectedIds, onToggle, tr, lang }) {
   );
 }
 
+// The per-prayer follow-up lives in followUpStore (client-side), not on the
+// prayer row, so read it here to pre-fill the form when editing.
+function initialFollowUpDate(editPrayer) {
+  return editPrayer ? (useFollowUpStore.getState().getFollowUp(editPrayer.id)?.date || null) : null;
+}
+
 function initialForm(editPrayer) {
-  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft() };
+  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft(), followUpDate: null };
   return {
     title: editPrayer.title || '',
     description: editPrayer.description || '',
@@ -70,6 +78,7 @@ function initialForm(editPrayer) {
     personName: editPrayer.person_name || '',
     isAnonymous: editPrayer.is_anonymous || false,
     scheduleDraft: draftFromSchedule(editPrayer.schedule),
+    followUpDate: initialFollowUpDate(editPrayer),
   };
 }
 
@@ -85,6 +94,7 @@ function hasDetails(editPrayer) {
 // communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
 export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore();
+  const setFollowUp = useFollowUpStore((s) => s.setFollowUp);
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
   useEscapeKey(onClose);
@@ -111,6 +121,9 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       onClose();
     } else if (editPrayer) {
       updatePrayer(editPrayer.id, { ...form, schedule: scheduleFromDraft(form.scheduleDraft, editPrayer.schedule) });
+      // Follow-up is a per-prayer client-side reminder, saved separately from the
+      // prayer row / recurrence schedule.
+      setFollowUp(editPrayer.id, form.followUpDate);
       onClose();
     } else {
       // New personal prayer: create it, then invite the user into Scripture
@@ -118,6 +131,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       // closing the Scripture step at any point keeps the prayer.
       const id = await addPrayer({ ...form, schedule: scheduleFromDraft(form.scheduleDraft) });
       if (id) {
+        setFollowUp(id, form.followUpDate);
         // Record the language this prayer was written in, so we don't later pay
         // to translate personal content into the language it's already in.
         setContentLang(lang);
@@ -213,6 +227,12 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
             <ScheduleEditor
               draft={form.scheduleDraft}
               onChange={(d) => patch('scheduleDraft', d)}
+              lang={lang}
+            />
+
+            <FollowUpField
+              value={form.followUpDate}
+              onChange={(d) => patch('followUpDate', d)}
               lang={lang}
             />
 

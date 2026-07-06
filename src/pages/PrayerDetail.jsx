@@ -17,8 +17,7 @@ import AiConsentModal, { hasAiConsent } from '../components/AiConsentModal';
 import AiDisclaimer from '../components/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
 import SharePreview from '../components/SharePreview';
-import SupporterTag from '../components/SupporterTag';
-import { FEATURES } from '../lib/plan';
+import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../components/ScheduleEditor';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
@@ -694,6 +693,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         )}
 
 
+        {/* ── Per-prayer follow-up reminder (own personal prayers only) ── */}
+        {!isCommunity && !savedCopy && !isAnswered && (
+          <FollowUpBanner
+            prayer={livePrayer}
+            lang={lang}
+            onAddUpdate={() => {
+              const el = document.getElementById('pd-updates');
+              el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el?.querySelector('input')?.focus();
+            }}
+            onMarkAnswered={handleMarkAnswered}
+          />
+        )}
+
         {/* ── Saved-from-community: read-only follow indicator ── */}
         {savedCopy && (
           <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
@@ -707,9 +720,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {(isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
-                {/* Soft Supporter tag — AI assistance is a Supporter-tier tool.
-                    Non-blocking: the button stays fully usable (see lib/plan.js). */}
-                <SupporterTag feature={FEATURES.AI_ASSISTANCE} lang={lang} />
                 <button
                   onClick={fetchRecs}
                   disabled={loadingRecs}
@@ -1113,7 +1123,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {!isAnswered && canManage && (
-            <div className="flex gap-2">
+            <div className="flex gap-2" id="pd-updates">
               <input
                 type="text"
                 value={newUpdate}
