@@ -5,14 +5,55 @@
 // supported languages and resolved via pick(); pick() still falls back to
 // English if a key is ever missing. Verse references are language-neutral and
 // resolve through the localized verse pipeline.
+//
+// Each plan also carries teaching content the detail view shows before a user
+// commits: `intro` (what the journey is) and `biblical` (the Scripture story it
+// follows — when and how it was prayed/fasted in the Bible, with a reference).
+// Following the teaching-content convention, intro/biblical are authored in
+// English + French only and fall back to English via pick() in other languages;
+// the per-day themes remain authored in all 16 languages.
 
 export const PLANS = [
+  {
+    id: 'fast3',
+    emoji: '🕯️',
+    count: 3,
+    titleKey: 'planFast3Title',
+    subKey: 'planFast3Sub',
+    intro: {
+      en: "A short, focused fast in the pattern of Scripture: three days set apart to humble yourself, seek God's face, and pray for a breakthrough only He can give. Fast in a way that is wise for your health — a meal, a whole day, or the Daniel fast (giving up rich food) — and offer the hunger back to God as prayer. The point was never the food; it was turning wholly to Him.",
+      fr: "Un jeûne court et ciblé, à la manière de l'Écriture : trois jours mis à part pour t'humilier, chercher la face de Dieu et prier pour une percée que Lui seul peut donner. Jeûne d'une façon sage pour ta santé — un repas, une journée entière ou le jeûne de Daniel (renoncer aux mets délicats) — et offre cette faim à Dieu comme une prière. Le jeûne n'a jamais concerné la nourriture, mais le fait de se tourner entièrement vers Lui.",
+    },
+    biblical: {
+      ref: 'Esther 4:15-16',
+      text: {
+        en: "Facing an impossible situation, Esther called her people to a three-day fast — neither eating nor drinking, night or day — before she dared approach the king: 'If I perish, I perish' (Esther 4:16). Scripture is full of three-day fasts sought before God: Nineveh turned from ruin (Jonah 3), Ezra fasted for protection on a dangerous road (Ezra 8:21-23), and after meeting the risen Jesus, Saul spent three days without food or drink (Acts 9:9). Three days, set apart, to trust God for deliverance.",
+        fr: "Face à une situation impossible, Esther appela son peuple à un jeûne de trois jours — sans manger ni boire, ni jour ni nuit — avant d'oser s'approcher du roi : « Si je péris, je péris » (Esther 4:16). L'Écriture est remplie de jeûnes de trois jours devant Dieu : Ninive se détourna de sa ruine (Jonas 3), Esdras jeûna pour être protégé sur une route dangereuse (Esdras 8:21-23), et après sa rencontre avec Jésus ressuscité, Saul resta trois jours sans manger ni boire (Actes 9:9). Trois jours, mis à part, pour se confier en Dieu pour la délivrance.",
+      },
+    },
+    days: [
+      { theme: { en: 'Consecrate the fast — turn your whole heart to God', fr: 'Consacre le jeûne — tourne tout ton cœur vers Dieu', es: 'Consagra el ayuno — vuelve todo tu corazón a Dios', pt: 'Consagre o jejum — volte todo o seu coração para Deus', de: 'Weihe das Fasten — wende dein ganzes Herz Gott zu', ru: 'Освяти пост — обрати всё сердце к Богу', zh: '分别这禁食——全心归向神', ja: '断食を聖別しよう——心を尽くして神様に向かおう', ko: '금식을 구별하라 — 온 마음을 하나님께 돌이키라', ar: 'كرِّس الصوم — ارجع بكل قلبك إلى الله', fa: 'روزه را تقدیس کن — با تمام دل به‌سوی خدا بازگرد', hi: 'उपवास को समर्पित करें — अपना सारा मन परमेश्वर की ओर लगाएं', id: 'Kuduskan puasa ini — berbaliklah dengan segenap hati kepada Allah', sw: 'Weka wakfu mfungo huu — mgeukie Mungu kwa moyo wako wote', tl: 'Italaga ang pag-aayuno — ibaling ang buong puso mo sa Diyos', am: 'ጾሙን ቀድስ — ልብህን ሙሉ በሙሉ ወደ እግዚአብሔር መልስ' }, ref: 'Joel 2:12' },
+      { theme: { en: 'Choose the fast God loves — humble yourself and loosen every chain', fr: "Choisis le jeûne que Dieu aime — humilie-toi et brise toute chaîne", es: 'Escoge el ayuno que Dios ama — humíllate y rompe toda cadena', pt: 'Escolha o jejum que Deus ama — humilhe-se e quebre toda corrente', de: 'Wähle das Fasten, das Gott gefällt — demütige dich und löse jede Kette', ru: 'Избери пост, угодный Богу — смирись и разорви всякую цепь', zh: '选择神所喜悦的禁食——谦卑自己，松开一切锁链', ja: '神様が喜ばれる断食を選ぼう——へりくだり、すべての鎖を解こう', ko: '하나님이 기뻐하시는 금식을 택하라 — 자신을 낮추고 모든 결박을 풀라', ar: 'اختَر الصوم الذي يحبه الله — اتّضع وفُكَّ كل قيد', fa: 'روزه‌ای را برگزین که خدا می‌پسندد — فروتن شو و هر زنجیر را بگسل', hi: 'वह उपवास चुनें जिससे परमेश्वर प्रेम करता है — नम्र बनें और हर बंधन तोड़ें', id: 'Pilih puasa yang Allah kehendaki — rendahkan dirimu dan lepaskan setiap belenggu', sw: 'Chagua mfungo ampendao Mungu — jinyenyekeze na ufungue kila mnyororo', tl: 'Piliin ang pag-aayunong minamahal ng Diyos — magpakumbaba at kalagin ang bawat tanikala', am: 'እግዚአብሔር የሚወደውን ጾም ምረጥ — ራስህን አዋርድ፤ ሁሉንም ሰንሰለት ፍታ' }, ref: 'Isaiah 58:6' },
+      { theme: { en: "Stand in the gap with bold faith — 'If I perish, I perish'", fr: "Tiens-toi sur la brèche avec une foi audacieuse — « Si je péris, je péris »", es: 'Ponte en la brecha con fe audaz — «Si perezco, que perezca»', pt: 'Ponha-se na brecha com fé ousada — “Se perecer, perecerei”', de: 'Tritt mit kühnem Glauben in den Riss — „Komme ich um, so komme ich um“', ru: 'Встань в проломе с дерзновенной верой — «Если погибнуть — погибну»', zh: '以刚强的信心站在破口——「我若死就死吧」', ja: '大胆な信仰で破れ口に立とう——「死ななければならないなら、死にます」', ko: "담대한 믿음으로 무너진 곳에 서라 — '죽으면 죽으리이다'", ar: 'قِف في الثغرة بإيمان جريء — «إن هلكتُ هلكتُ»', fa: 'با ایمانی دلیر در شکاف بایست — «اگر هلاک شوم، هلاک شوم»', hi: "साहसिक विश्वास के साथ नाके में खड़े हों — 'यदि मैं नष्ट हो जाऊं, तो हो जाऊं'", id: "Berdirilah di celah dengan iman yang berani — 'Kalau terpaksa mati, biarlah aku mati'", sw: "Simama katika lengo kwa imani thabiti — 'Nikiangamia, na niangamie'", tl: "Tumayo sa puwang nang may matapang na pananampalataya — 'Kung ako'y mamatay, mamatay'", am: "በድፍረት እምነት በተሰበረው ስፍራ ቁም — 'ብጠፋም ልጥፋ'" }, ref: 'Esther 4:16' },
+    ],
+  },
   {
     id: 'gratitude7',
     emoji: '🌅',
     count: 7,
     titleKey: 'planWeek7Title',
     subKey: 'planWeek7Sub',
+    intro: {
+      en: 'Seven days to retrain your heart toward thankfulness. Each day takes one reason to give thanks — for who God is, for salvation, for the people around you, for His provision, even in the trial — until gratitude becomes your first response instead of your last.',
+      fr: "Sept jours pour rééduquer ton cœur à la reconnaissance. Chaque jour prend une raison de rendre grâce — pour qui est Dieu, pour le salut, pour ceux qui t'entourent, pour Sa provision, même dans l'épreuve — jusqu'à ce que la gratitude devienne ta première réaction plutôt que la dernière.",
+    },
+    biblical: {
+      ref: 'Luke 17:11-19',
+      text: {
+        en: "Jesus healed ten lepers, but only one — a Samaritan — turned back, praising God with a loud voice, and fell at His feet to thank Him. 'Were not ten cleansed? Where are the nine?' (Luke 17:17). Thanksgiving runs all through Scripture, from David inviting us to 'enter His gates with thanksgiving' (Psalm 100:4) to Paul's charge to 'give thanks in all circumstances' (1 Thessalonians 5:18). This week is a call to be the one who comes back.",
+        fr: "Jésus guérit dix lépreux, mais un seul — un Samaritain — revint, glorifiant Dieu à haute voix, et se jeta à Ses pieds pour Le remercier. « Les dix n'ont-ils pas été guéris ? Où sont les neuf autres ? » (Luc 17:17). L'action de grâce traverse toute l'Écriture, de David qui nous invite à « entrer dans Ses portes avec des louanges » (Psaume 100:4) jusqu'à l'appel de Paul à « rendre grâces en toutes choses » (1 Thessaloniciens 5:18). Cette semaine est un appel à être celui qui revient.",
+      },
+    },
     days: [
       { theme: { en: 'Thank God for who He is', fr: 'Remercie Dieu pour qui Il est', es: 'Agradece a Dios por quién es Él', pt: 'Agradeça a Deus por quem Ele é', de: 'Danke Gott für das, was Er ist', ru: 'Благодари Бога за то, каков Он', zh: '为神的本相感谢祂', ja: '神様がどのような方かを感謝しよう', ko: '하나님이 어떤 분이신지 감사하라', ar: 'اشكر الله على ما هو عليه', fa: 'خدا را برای آنچه هست شکر کن', hi: 'परमेश्वर जैसा है, उसके लिए धन्यवाद दें', id: 'Bersyukurlah kepada Allah atas siapa Dia', sw: 'Mshukuru Mungu kwa vile alivyo', tl: 'Pasalamatan ang Diyos sa kung sino Siya', am: 'እግዚአብሔርን ስለ ማንነቱ አመስግኑ' }, ref: 'Psalm 100:4-5' },
       { theme: { en: 'Thank Him for salvation', fr: 'Remercie-Le pour le salut', es: 'Agradécele por la salvación', pt: 'Agradeça-Lhe pela salvação', de: 'Danke Ihm für die Erlösung', ru: 'Благодари Его за спасение', zh: '为救恩感谢祂', ja: '救いを感謝しよう', ko: '구원을 주심에 감사하라', ar: 'اشكره على الخلاص', fa: 'او را برای نجات شکر کن', hi: 'उद्धार के लिए उसका धन्यवाद करें', id: 'Bersyukurlah kepada-Nya atas keselamatan', sw: 'Mshukuru kwa wokovu', tl: 'Pasalamatan Siya sa kaligtasan', am: 'ስለ መዳን አመስግኑት' }, ref: 'Ephesians 2:8-9' },
@@ -24,21 +65,33 @@ export const PLANS = [
     ],
   },
   {
-    id: 'novena9',
-    emoji: '🕊️',
-    count: 9,
-    titleKey: 'planNovenaTitle',
-    subKey: 'planNovenaSub',
+    id: 'upperRoom10',
+    emoji: '🔥',
+    count: 10,
+    titleKey: 'planUpperRoomTitle',
+    subKey: 'planUpperRoomSub',
+    intro: {
+      en: "Ten days of united, waiting prayer — the same stretch the first disciples spent between Jesus' ascension and Pentecost. You're not striving to earn the Spirit; you're making room, asking the Father, and expecting Him to pour out what He promised.",
+      fr: "Dix jours de prière commune et d'attente — le même intervalle que les premiers disciples ont passé entre l'ascension de Jésus et la Pentecôte. Tu ne t'efforces pas de mériter l'Esprit ; tu fais de la place, tu demandes au Père, et tu t'attends à ce qu'Il répande ce qu'Il a promis.",
+    },
+    biblical: {
+      ref: 'Acts 1:12-14',
+      text: {
+        en: "After Jesus ascended, the disciples returned to an upper room in Jerusalem and 'with one accord were devoting themselves to prayer' (Acts 1:14). For about ten days they waited together for what the Father had promised (Acts 1:4). Then, on the day of Pentecost, the Holy Spirit fell on them and the church was born (Acts 2:1-4). This plan walks those ten days with them — waiting, united, and expectant.",
+        fr: "Après l'ascension de Jésus, les disciples regagnèrent une chambre haute à Jérusalem et « persévéraient d'un commun accord dans la prière » (Actes 1:14). Pendant une dizaine de jours, ils attendirent ensemble ce que le Père avait promis (Actes 1:4). Puis, le jour de la Pentecôte, le Saint-Esprit descendit sur eux et l'Église naquit (Actes 2:1-4). Ce plan traverse ces dix jours avec eux — dans l'attente, l'unité et l'espérance.",
+      },
+    },
     days: [
-      { theme: { en: 'Place your request before God', fr: 'Dépose ta requête devant Dieu', es: 'Presenta tu petición delante de Dios', pt: 'Apresente seu pedido diante de Deus', de: 'Bring dein Anliegen vor Gott', ru: 'Изложи свою просьбу перед Богом', zh: '将你的祈求呈到神面前', ja: 'あなたの願いを神様の前に置こう', ko: '너의 간구를 하나님 앞에 아뢰라', ar: 'ضع طلبك أمام الله', fa: 'درخواستت را به حضور خدا بگذار', hi: 'अपनी विनती परमेश्वर के सामने रखें', id: 'Sampaikan permohonanmu di hadapan Allah', sw: 'Weka ombi lako mbele za Mungu', tl: 'Ilagay ang iyong kahilingan sa harap ng Diyos', am: 'ልመናህን በእግዚአብሔር ፊት አቅርብ' }, ref: 'Philippians 4:6-7' },
-      { theme: { en: 'Ask, seek, knock', fr: 'Demande, cherche, frappe', es: 'Pide, busca, llama', pt: 'Peça, busque, bata', de: 'Bitte, suche, klopfe an', ru: 'Проси, ищи, стучи', zh: '祈求，寻找，叩门', ja: '求めよ、探せ、たたけ', ko: '구하라, 찾으라, 두드리라', ar: 'اسأل، اطلب، اقرع', fa: 'بخواه، بجوی، در بزن', hi: 'मांगो, ढूंढो, खटखटाओ', id: 'Mintalah, carilah, ketuklah', sw: 'Omba, tafuta, bisha', tl: 'Humingi, maghanap, kumatok', am: 'ለምን፣ ፈልግ፣ አንኳኳ' }, ref: 'Matthew 7:7-8' },
-      { theme: { en: 'Pray with faith', fr: 'Prie avec foi', es: 'Ora con fe', pt: 'Ore com fé', de: 'Bete im Glauben', ru: 'Молись с верой', zh: '凭信心祷告', ja: '信仰をもって祈ろう', ko: '믿음으로 기도하라', ar: 'صلِّ بإيمان', fa: 'با ایمان دعا کن', hi: 'विश्वास के साथ प्रार्थना करें', id: 'Berdoalah dengan iman', sw: 'Omba kwa imani', tl: 'Manalangin nang may pananampalataya', am: 'በእምነት ጸልይ' }, ref: 'Mark 11:24' },
-      { theme: { en: 'Wait with hope', fr: 'Attends avec espérance', es: 'Espera con esperanza', pt: 'Aguarde com esperança', de: 'Warte mit Hoffnung', ru: 'Жди с надеждой', zh: '带着盼望等候', ja: '望みをもって待とう', ko: '소망으로 기다리라', ar: 'انتظر برجاء', fa: 'با امید منتظر بمان', hi: 'आशा के साथ प्रतीक्षा करें', id: 'Menantilah dengan pengharapan', sw: 'Ngoja kwa tumaini', tl: 'Maghintay nang may pag-asa', am: 'በተስፋ ጠብቅ' }, ref: 'Psalm 130:5-6' },
-      { theme: { en: 'Surrender the outcome', fr: 'Remets l\'issue entre Ses mains', es: 'Entrega el resultado', pt: 'Entregue o resultado', de: 'Überlass Ihm das Ergebnis', ru: 'Вверь Ему исход', zh: '将结果交托给祂', ja: '結果を神様に委ねよう', ko: '결과를 그분께 맡기라', ar: 'سلِّم النتيجة له', fa: 'نتیجه را به او بسپار', hi: 'परिणाम उसे सौंप दें', id: 'Serahkan hasilnya kepada-Nya', sw: 'Mkabidhi matokeo', tl: 'Ipagkatiwala sa Kanya ang kalalabasan', am: 'ውጤቱን ለእርሱ አስረክብ' }, ref: 'Luke 22:42' },
-      { theme: { en: 'Persist — do not lose heart', fr: 'Persévère — ne te décourage pas', es: 'Persiste — no desmayes', pt: 'Persista — não desanime', de: 'Halte durch — verzage nicht', ru: 'Не переставай — не унывай', zh: '坚持不懈——不要灰心', ja: '祈り続けよう——落胆してはならない', ko: '끈질기게 구하라 — 낙심하지 말라', ar: 'واظب — لا تفقد الرجاء', fa: 'پایداری کن — دلسرد نشو', hi: 'लगे रहें — हियाव न छोड़ें', id: 'Bertekunlah — jangan tawar hati', sw: 'Dumu — usikate tamaa', tl: 'Magpumilit — huwag panghinaan ng loob', am: 'ጽና — ተስፋ አትቁረጥ' }, ref: 'Luke 18:1' },
-      { theme: { en: 'Remember His faithfulness', fr: 'Souviens-toi de Sa fidélité', es: 'Recuerda Su fidelidad', pt: 'Lembre-se da Sua fidelidade', de: 'Erinnere dich an Seine Treue', ru: 'Вспомни Его верность', zh: '记念祂的信实', ja: '神様の真実を思い起こそう', ko: '그분의 신실하심을 기억하라', ar: 'تذكّر أمانته', fa: 'وفاداری او را به یاد آور', hi: 'उसकी विश्वासयोग्यता को स्मरण करें', id: 'Ingatlah kesetiaan-Nya', sw: 'Kumbuka uaminifu wake', tl: 'Alalahanin ang Kanyang katapatan', am: 'ታማኝነቱን አስታውስ' }, ref: 'Lamentations 3:22-23' },
-      { theme: { en: 'Pray in agreement with His will', fr: 'Prie en accord avec Sa volonté', es: 'Ora conforme a Su voluntad', pt: 'Ore em conformidade com a Sua vontade', de: 'Bete im Einklang mit Seinem Willen', ru: 'Молись в согласии с Его волей', zh: '照着祂的旨意祷告', ja: '神様の御心にかなって祈ろう', ko: '그분의 뜻에 따라 기도하라', ar: 'صلِّ وفق مشيئته', fa: 'مطابق ارادهٔ او دعا کن', hi: 'उसकी इच्छा के अनुसार प्रार्थना करें', id: 'Berdoalah sesuai dengan kehendak-Nya', sw: 'Omba kulingana na mapenzi yake', tl: 'Manalangin ayon sa Kanyang kalooban', am: 'እንደ ፈቃዱ ጸልይ' }, ref: '1 John 5:14-15' },
-      { theme: { en: 'Entrust and give thanks', fr: 'Confie-Lui tout et rends grâce', es: 'Confía y da gracias', pt: 'Confie e dê graças', de: 'Vertraue an und danke', ru: 'Доверься и благодари', zh: '交托并感恩', ja: '委ねて感謝しよう', ko: '맡기고 감사하라', ar: 'استودعه واشكر', fa: 'بسپار و شکر کن', hi: 'सौंप दें और धन्यवाद दें', id: 'Percayakan dan bersyukurlah', sw: 'Mkabidhi na ushukuru', tl: 'Ipagkatiwala at magpasalamat', am: 'አደራ ስጥና አመስግን' }, ref: 'Psalm 37:5' },
+      { theme: { en: 'Wait for what the Father promised', fr: 'Attends ce que le Père a promis', es: 'Espera lo que el Padre prometió', pt: 'Aguarde o que o Pai prometeu', de: 'Warte auf das, was der Vater verheißen hat', ru: 'Жди того, что обещал Отец', zh: '等候父所应许的', ja: '父が約束されたものを待とう', ko: '아버지께서 약속하신 것을 기다리라', ar: 'انتظر ما وعد به الآب', fa: 'منتظر آنچه پدر وعده داد باش', hi: 'पिता की प्रतिज्ञा की प्रतीक्षा करें', id: 'Nantikanlah apa yang Bapa janjikan', sw: 'Ngoja kile Baba alichoahidi', tl: 'Hintayin ang ipinangako ng Ama', am: 'አብ ቃል የገባውን ጠብቅ' }, ref: 'Acts 1:4' },
+      { theme: { en: 'You will receive power', fr: 'Tu recevras la puissance', es: 'Recibirás poder', pt: 'Você receberá poder', de: 'Du wirst Kraft empfangen', ru: 'Ты примешь силу', zh: '你必得着能力', ja: 'あなたは力を受ける', ko: '너는 권능을 받으리라', ar: 'ستنال قوة', fa: 'قوت خواهی یافت', hi: 'तुम सामर्थ्य पाओगे', id: 'Kamu akan menerima kuasa', sw: 'Utapokea nguvu', tl: 'Tatanggap ka ng kapangyarihan', am: 'ኃይል ትቀበላለህ' }, ref: 'Acts 1:8' },
+      { theme: { en: 'Gather with one accord', fr: 'Rassemble-toi d\'un même cœur', es: 'Reúnete unánime', pt: 'Reúna-se em unânime acordo', de: 'Versammelt euch einmütig', ru: 'Собирайся в единодушии', zh: '同心合意地聚集', ja: '心を合わせて集まろう', ko: '한마음으로 모이라', ar: 'اجتمعوا بنفس واحدة', fa: 'با یک‌دلی گرد هم آیید', hi: 'एकचित्त होकर इकट्ठे हों', id: 'Berkumpullah dengan sehati', sw: 'Kusanyikeni kwa nia moja', tl: 'Magtipon nang nagkakaisang loob', am: 'በአንድ ልብ ተሰብሰቡ' }, ref: 'Acts 1:14' },
+      { theme: { en: 'Devote yourselves to prayer', fr: 'Persévère dans la prière', es: 'Persevera en la oración', pt: 'Perseverem na oração', de: 'Haltet fest am Gebet', ru: 'Постоянно пребывай в молитве', zh: '恒切祷告', ja: '祈りに専念しよう', ko: '기도에 힘쓰라', ar: 'واظبوا على الصلاة', fa: 'در دعا مواظبت کنید', hi: 'प्रार्थना में लगे रहें', id: 'Bertekunlah dalam doa', sw: 'Dumuni katika maombi', tl: 'Manatili sa panalangin', am: 'በጸሎት ጽኑ' }, ref: 'Acts 2:42' },
+      { theme: { en: 'Ask the Father for the Spirit', fr: 'Demande l\'Esprit au Père', es: 'Pide al Padre el Espíritu', pt: 'Peça ao Pai o Espírito', de: 'Bitte den Vater um den Geist', ru: 'Проси у Отца Духа', zh: '向父求圣灵', ja: '父に御霊を求めよう', ko: '아버지께 성령을 구하라', ar: 'اطلب الروح من الآب', fa: 'روح را از پدر بخواه', hi: 'पिता से आत्मा मांगें', id: 'Mintalah Roh kepada Bapa', sw: 'Mwombe Baba Roho', tl: 'Hingin sa Ama ang Espiritu', am: 'መንፈስን ከአብ ለምን' }, ref: 'Luke 11:13' },
+      { theme: { en: 'Be of one heart and mind', fr: 'Sois d\'un seul cœur et d\'un seul esprit', es: 'Sé de un solo corazón y mente', pt: 'Seja de um só coração e mente', de: 'Sei ein Herz und eine Seele', ru: 'Будь един сердцем и разумом', zh: '同心合意，合而为一', ja: '心と思いを一つにしよう', ko: '한마음 한뜻이 되라', ar: 'كن قلبًا واحدًا وفكرًا واحدًا', fa: 'یک‌دل و یک‌رأی باش', hi: 'एक मन और एक चित्त हों', id: 'Sehati dan sepikirlah', sw: 'Uwe na moyo mmoja na nia moja', tl: 'Magkaisa sa puso at isip', am: 'በአንድ ልብና በአንድ ሐሳብ ሁን' }, ref: 'John 17:21' },
+      { theme: { en: 'Repent and make room for Him', fr: 'Repens-toi et fais-Lui de la place', es: 'Arrepiéntete y hazle lugar', pt: 'Arrependa-se e abra espaço para Ele', de: 'Kehr um und mach Ihm Raum', ru: 'Покайся и освободи Ему место', zh: '悔改，为祂腾出空间', ja: '悔い改めて、神様に場所を空けよう', ko: '회개하고 그분께 자리를 내어 드리라', ar: 'توبوا وافسحوا له مكانًا', fa: 'توبه کن و برای او جا باز کن', hi: 'मन फिराएं और उसके लिए स्थान बनाएं', id: 'Bertobatlah dan berilah tempat bagi-Nya', sw: 'Tubu na umpishe nafasi', tl: 'Magsisi at bigyang-daan Siya', am: 'ንስሐ ግባ፤ ለእርሱም ስፍራ አዘጋጅ' }, ref: 'Acts 2:38' },
+      { theme: { en: 'Expect the outpouring', fr: 'Attends-toi à l\'effusion', es: 'Espera el derramamiento', pt: 'Espere o derramamento', de: 'Erwarte die Ausgießung', ru: 'Ожидай излияния', zh: '期待圣灵的浇灌', ja: '御霊の注ぎを待ち望もう', ko: '부어 주심을 기대하라', ar: 'ترقّبوا الفيض', fa: 'منتظر ریخته‌شدن روح باش', hi: 'उंडेले जाने की आशा रखें', id: 'Nantikanlah pencurahan-Nya', sw: 'Tarajia kumwagwa kwa Roho', tl: 'Asahan ang pagbubuhos ng Espiritu', am: 'መንፈሱ መፍሰሱን ተጠባበቅ' }, ref: 'Acts 2:17' },
+      { theme: { en: 'Keep watch in steadfast prayer', fr: 'Veille dans une prière persévérante', es: 'Vela en oración perseverante', pt: 'Vigie em oração perseverante', de: 'Wache in beharrlichem Gebet', ru: 'Бодрствуй в постоянной молитве', zh: '在恒切的祷告中警醒', ja: '絶えず祈りつつ目を覚まそう', ko: '깨어 기도에 항상 힘쓰라', ar: 'اسهروا في صلاة دائمة', fa: 'در دعای پیوسته بیدار بمان', hi: 'निरंतर प्रार्थना में जागते रहें', id: 'Berjaga-jagalah dalam doa yang tekun', sw: 'Kesha katika maombi ya kudumu', tl: 'Magbantay sa masikap na panalangin', am: 'በጽኑ ጸሎት ንቁ' }, ref: 'Colossians 4:2' },
+      { theme: { en: 'Receive power, then go', fr: 'Reçois la puissance, puis va', es: 'Recibe poder, y luego ve', pt: 'Receba poder, e então vá', de: 'Empfange Kraft, dann geh', ru: 'Прими силу и иди', zh: '领受能力，然后出去', ja: '力を受けて、そして出て行こう', ko: '권능을 받고 나아가라', ar: 'انل القوة ثم اذهب', fa: 'قوت را بگیر و برو', hi: 'सामर्थ्य पाएं, फिर जाएं', id: 'Terimalah kuasa, lalu pergilah', sw: 'Pokea nguvu, kisha nenda', tl: 'Tumanggap ng kapangyarihan, at humayo', am: 'ኃይል ተቀበል፤ ከዚያም ሂድ' }, ref: 'Acts 2:1-4' },
     ],
   },
   {
@@ -47,6 +100,17 @@ export const PLANS = [
     count: 21,
     titleKey: 'planTheme21Title',
     subKey: 'planTheme21Sub',
+    intro: {
+      en: "Three weeks of persistent, daily prayer for one thing you're believing God for. It rests on a truth Daniel discovered: heaven can move from day one even when the answer takes time to arrive — so you keep praying, in faith, refusing to give up before the breakthrough comes.",
+      fr: "Trois semaines de prière quotidienne et persévérante pour une chose que tu attends de Dieu. Ce plan repose sur une vérité que Daniel a découverte : le ciel peut se mettre en mouvement dès le premier jour, même si la réponse tarde à venir — alors tu continues de prier, dans la foi, sans lâcher avant la percée.",
+    },
+    biblical: {
+      ref: 'Daniel 10:12-13',
+      text: {
+        en: "Daniel set his heart to understand and humbled himself before God, mourning and praying for three full weeks (Daniel 10:2-3). When the answer finally came, the angel explained: 'From the first day... your words were heard, and I have come because of your words' — but he had been withstood twenty-one days until help arrived (Daniel 10:12-13). The delay was never God's silence. This plan is twenty-one days of not giving up.",
+        fr: "Daniel disposa son cœur à comprendre et s'humilia devant Dieu, dans le deuil et la prière pendant trois semaines entières (Daniel 10:2-3). Quand la réponse vint enfin, l'ange expliqua : « Dès le premier jour... tes paroles ont été entendues, et je viens à cause de tes paroles » — mais il avait été retenu vingt et un jours avant que le secours n'arrive (Daniel 10:12-13). Le retard n'a jamais été le silence de Dieu. Ce plan, c'est vingt et un jours pour ne pas lâcher.",
+      },
+    },
     days: [
       { theme: { en: 'Set your heart to seek God', fr: 'Dispose ton cœur à chercher Dieu', es: 'Dispón tu corazón para buscar a Dios', pt: 'Disponha seu coração para buscar a Deus', de: 'Richte dein Herz darauf aus, Gott zu suchen', ru: 'Расположи сердце искать Бога', zh: '定意寻求神', ja: '心を定めて神様を求めよう', ko: '하나님을 찾기로 마음을 정하라', ar: 'وطِّن قلبك على طلب الله', fa: 'دلت را برای طلبیدن خدا آماده کن', hi: 'परमेश्वर को खोजने के लिए अपना मन लगाएं', id: 'Arahkan hatimu untuk mencari Allah', sw: 'Kaza moyo wako kumtafuta Mungu', tl: 'Ihanda ang iyong puso na hanapin ang Diyos', am: 'እግዚአብሔርን ለመፈለግ ልብህን አዘጋጅ' }, ref: 'Jeremiah 29:12-13' },
       { theme: { en: 'Come boldly to the throne', fr: 'Approche-toi avec assurance du trône', es: 'Acércate con confianza al trono', pt: 'Aproxime-se com confiança do trono', de: 'Tritt freimütig vor den Thron', ru: 'Приступай с дерзновением к престолу', zh: '坦然无惧地来到宝座前', ja: '大胆に御座に近づこう', ko: '담대히 보좌 앞에 나아가라', ar: 'تقدَّم بثقة إلى العرش', fa: 'با دلیری به تخت فیض نزدیک شو', hi: 'साहस के साथ सिंहासन के पास आएं', id: 'Datanglah dengan berani ke takhta', sw: 'Njoo kwa ujasiri kwenye kiti cha enzi', tl: 'Lumapit nang may lakas ng loob sa trono', am: 'በድፍረት ወደ ዙፋኑ ቅረብ' }, ref: 'Hebrews 4:16' },
@@ -77,6 +141,17 @@ export const PLANS = [
     count: 30,
     titleKey: 'plan30Title',
     subKey: 'plan30Sub',
+    intro: {
+      en: 'A month of looking outward — one person or group to lift up each day, from those closest to you to strangers, the hurting, the lost, and your nation. It trains you to carry others to God the way Christ carries us.',
+      fr: "Un mois tourné vers les autres — une personne ou un groupe à porter chaque jour, de tes proches aux inconnus, des personnes qui souffrent aux perdus, jusqu'à ta nation. Il t'exerce à porter les autres devant Dieu comme Christ nous porte.",
+    },
+    biblical: {
+      ref: 'Colossians 4:12',
+      text: {
+        en: "Paul described Epaphras as one 'always struggling on your behalf in his prayers, that you may stand mature and fully assured in all the will of God' (Colossians 4:12). Scripture honours the intercessor: Job's own fortunes turned when he prayed for his friends (Job 42:10), and Samuel called it sin to stop — 'far be it from me that I should sin against the LORD by ceasing to pray for you' (1 Samuel 12:23). This plan is thirty days of that kind of love.",
+        fr: "Paul disait d'Épaphras qu'il « combat toujours pour vous dans ses prières, afin que vous demeuriez parfaits et pleinement convaincus de toute la volonté de Dieu » (Colossiens 4:12). L'Écriture honore l'intercesseur : le sort de Job changea lorsqu'il pria pour ses amis (Job 42:10), et Samuel tenait pour un péché de cesser — « loin de moi de pécher contre l'Éternel en cessant de prier pour vous » (1 Samuel 12:23). Ce plan, c'est trente jours de cet amour-là.",
+      },
+    },
     days: [
       { theme: { en: 'Your spouse or closest person', fr: 'Ton conjoint ou la personne la plus proche', es: 'Tu cónyuge o la persona más cercana', pt: 'Seu cônjuge ou a pessoa mais próxima', de: 'Dein Ehepartner oder der nächste Mensch', ru: 'Твой супруг или самый близкий человек', zh: '你的配偶或最亲近的人', ja: 'あなたの配偶者、または最も近しい人', ko: '당신의 배우자나 가장 가까운 사람', ar: 'زوجك أو أقرب الناس إليك', fa: 'همسرت یا نزدیک‌ترین فرد', hi: 'आपका जीवनसाथी या सबसे करीबी व्यक्ति', id: 'Pasanganmu atau orang terdekat', sw: 'Mwenzi wako au mtu wa karibu zaidi', tl: 'Ang iyong asawa o pinakamalapit na tao', am: 'የትዳር አጋርህ ወይም በጣም ቅርብ የሆነው ሰው' }, ref: 'Philippians 1:9-11' },
       { theme: { en: 'Your children or the next generation', fr: 'Tes enfants ou la génération suivante', es: 'Tus hijos o la próxima generación', pt: 'Seus filhos ou a próxima geração', de: 'Deine Kinder oder die nächste Generation', ru: 'Твои дети или следующее поколение', zh: '你的儿女或下一代', ja: 'あなたの子ども、または次の世代', ko: '당신의 자녀나 다음 세대', ar: 'أولادك أو الجيل القادم', fa: 'فرزندانت یا نسل بعد', hi: 'आपके बच्चे या अगली पीढ़ी', id: 'Anak-anakmu atau generasi berikutnya', sw: 'Watoto wako au kizazi kijacho', tl: 'Ang iyong mga anak o susunod na henerasyon', am: 'ልጆችህ ወይም ቀጣዩ ትውልድ' }, ref: 'Isaiah 54:13' },

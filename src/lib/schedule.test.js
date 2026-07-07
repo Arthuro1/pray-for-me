@@ -123,7 +123,7 @@ describe('ranges and next occurrence', () => {
 
 describe('planDayNumber', () => {
   it('numbers plan days 1..N along the base pattern', () => {
-    const s = { type: 'recurring', freq: 'daily', startDate: '2026-07-04', end: { kind: 'count', count: 9 }, plan: { id: 'novena', startDate: '2026-07-04' } };
+    const s = { type: 'recurring', freq: 'daily', startDate: '2026-07-04', end: { kind: 'count', count: 9 }, plan: { id: 'upperRoom', startDate: '2026-07-04' } };
     expect(planDayNumber(s, '2026-07-04')).toBe(1);
     expect(planDayNumber(s, '2026-07-12')).toBe(9);
     expect(planDayNumber(s, '2026-07-05')).toBe(2);

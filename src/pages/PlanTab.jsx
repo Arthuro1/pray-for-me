@@ -18,6 +18,7 @@ import EmptyState from '../components/EmptyState';
 import MonthCalendar from '../components/MonthCalendar';
 import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
+import PlanDetailModal from '../components/PlanDetailModal';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
@@ -59,6 +60,7 @@ export default function PlanTab() {
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] });
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [detailPlan, setDetailPlan] = useState(null); // plan whose explanation modal is open
   useEscapeKey(selectedDay !== null ? () => setSelectedDay(null) : null);
   const dayTrapRef = useFocusTrap(selectedDay !== null);
 
@@ -96,8 +98,8 @@ export default function PlanTab() {
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = new Set(prayers.filter((p) => p.status === 'active' && p.schedule?.plan?.id).map((p) => p.schedule.plan.id));
-  const startPlan = async (plan) => {
-    const start = todayKey();
+  const startPlan = async (plan, startDate) => {
+    const start = startDate || todayKey();
     await addPrayer({
       title: t(lang, plan.titleKey),
       description: t(lang, plan.subKey),
@@ -178,6 +180,16 @@ export default function PlanTab() {
 
   return (
     <div>
+      {detailPlan && (
+        <PlanDetailModal
+          plan={detailPlan}
+          lang={lang}
+          running={activePlanIds.has(detailPlan.id)}
+          onStart={startPlan}
+          onClose={() => setDetailPlan(null)}
+        />
+      )}
+
       {confirmDeleteCat && (
         <ConfirmDialog
           title={t(lang, 'deleteCategoryConfirm')}
@@ -310,25 +322,25 @@ export default function PlanTab() {
               {PLANS.map((plan) => {
                 const running = activePlanIds.has(plan.id);
                 return (
-                  <div key={plan.id} className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+                  <button
+                    key={plan.id}
+                    onClick={() => setDetailPlan(plan)}
+                    className="rounded-2xl p-4 flex items-start gap-3 text-left w-full transition-colors hover:brightness-[0.98]"
+                    style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                  >
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
                       {plan.emoji}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
                       <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</p>
-                      <button
-                        onClick={() => startPlan(plan)}
-                        disabled={running}
-                        className="mt-2.5 text-xs font-medium px-3 py-1.5 rounded-lg disabled:opacity-50"
-                        style={running
-                          ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
-                          : { background: 'var(--accent)', color: '#fff' }}
-                      >
-                        {running ? `✓ ${t(lang, 'planRunning')}` : `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`}
-                      </button>
+                      <p className="text-xs mt-2 font-medium" style={{ color: running ? 'var(--success)' : 'var(--accent)' }}>
+                        {running
+                          ? `✓ ${t(lang, 'planRunning')}`
+                          : `${t(lang, 'planTapToPreview')} · ${t(lang, 'planDays', { n: plan.count })}`}
+                      </p>
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>

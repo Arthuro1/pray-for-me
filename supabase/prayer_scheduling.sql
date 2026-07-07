@@ -9,7 +9,7 @@
 --     "weekDays": [2,5], "interval": 3, "dayOfMonth": 15, "month": 7, "day": 14,
 --     "startDate": "2026-07-04", "slot": "evening",
 --     "end": { "kind": "never|date|count|answered", "date": "...", "count": 21 },
---     "plan": { "id": "novena", "startDate": "2026-07-04" } }
+--     "plan": { "id": "upperRoom", "startDate": "2026-07-04" } }
 --
 -- Scheduling metadata deliberately stays OUTSIDE the E2EE envelope (like
 -- week_days today): it reveals timing, never content. Prayers without a
