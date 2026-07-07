@@ -23,7 +23,8 @@ import {
   TESTIMONY_SENSITIVE_FIELDS,
 } from '../lib/crypto/prayerCrypto';
 import { isUnlocked } from '../lib/crypto/keyManager';
-import useCommunityStore from './communityStore';
+import { groupKeyResolver } from '../lib/crypto/groupKeys';
+import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -65,14 +66,13 @@ const DEFAULT_CATEGORIES = {
   ],
 };
 
-// A prayer's NESTED content (updates / points) can be encrypted server-side only
-// when it is truly PRIVATE: the vault is unlocked, it's the user's own prayer
-// (canEncrypt), AND it isn't shared to any group. Shared prayers must keep their
-// child rows in plaintext so the community fan-out RPCs can read/append them.
+// A prayer's NESTED content (updates / points / testimonies) is encrypted at rest
+// under the account key exactly when the prayer itself is (canEncrypt). Sharing no
+// longer forces the child rows to stay plaintext: a shared prayer's community copy
+// is an independent snapshot encrypted under the GROUP key (communityStore), so the
+// owner's personal child rows can always stay private under the account key.
 function canEncryptNested(prayer) {
-  if (!canEncrypt(prayer)) return false;
-  const shares = useCommunityStore.getState().prayerShares[prayer?.id];
-  return !shares || shares.length === 0;
+  return canEncrypt(prayer);
 }
 
 // A fresh plaintext testimony row for the prayer_testimonies child table. The
@@ -340,10 +340,11 @@ const usePrayerStore = create((set, get) => ({
     if (saved.length === 0) return;
     const { data } = await supabase
       .from('community_prayers')
-      .select('id, title, description, prayer_points')
+      .select('id, group_id, title, description, prayer_points, encrypted_payload, encryption_version, key_version')
       .in('id', saved.map((p) => p.community_origin_id));
     if (!data) return;
-    const byId = Object.fromEntries(data.map((c) => [c.id, c]));
+    const decrypted = await Promise.all(data.map((c) => decryptCommunityRow(groupKeyResolver(c.group_id), c)));
+    const byId = Object.fromEntries(decrypted.map((c) => [c.id, c]));
     set((state) => ({
       prayers: state.prayers.map((p) => {
         const c = p.community_origin_id && byId[p.community_origin_id];
@@ -362,19 +363,21 @@ const usePrayerStore = create((set, get) => ({
   // personal prayer (whether it's the shared source or a saved copy), so they
   // can be shown read-only in the personal prayer detail.
   fetchSharedActivity: async (prayer) => {
-    let ids = [];
-    if (prayer.community_origin_id) {
-      ids = [prayer.community_origin_id];
-    } else {
-      const { data } = await supabase.from('community_prayers').select('id').eq('source_prayer_id', prayer.id);
-      ids = (data || []).map((c) => c.id);
-    }
-    if (ids.length === 0) return { testimonies: [], updates: [] };
+    // The community copies whose activity we display, each with its group so the
+    // rows can be decrypted under the right group key.
+    const col = prayer.community_origin_id ? 'id' : 'source_prayer_id';
+    const val = prayer.community_origin_id || prayer.id;
+    const { data: copies } = await supabase.from('community_prayers').select('id, group_id').eq(col, val);
+    if (!copies || copies.length === 0) return { testimonies: [], updates: [] };
+    const ids = copies.map((c) => c.id);
+    const groupByCp = Object.fromEntries(copies.map((c) => [c.id, c.group_id]));
     const [tRes, uRes] = await Promise.all([
       supabase.from('testimonies').select('*').in('community_prayer_id', ids).order('created_at'),
       supabase.from('community_updates').select('*').in('community_prayer_id', ids).order('created_at', { ascending: true }),
     ]);
-    return { testimonies: tRes.data || [], updates: uRes.data || [] };
+    const testimonies = await Promise.all((tRes.data || []).map((t) => decryptCommunityRow(groupKeyResolver(t.group_id), t)));
+    const updates = await Promise.all((uRes.data || []).map((u) => decryptCommunityRow(groupKeyResolver(groupByCp[u.community_prayer_id]), u)));
+    return { testimonies, updates };
   },
 
   // One-way pull for prayers saved from the community: refresh the saved copy's
@@ -386,15 +389,16 @@ const usePrayerStore = create((set, get) => ({
     if (!p?.community_origin_id) return;
     const { data } = await supabase
       .from('community_prayers')
-      .select('title, description, prayer_points')
+      .select('group_id, title, description, prayer_points, encrypted_payload, encryption_version, key_version')
       .eq('id', p.community_origin_id)
       .maybeSingle();
     if (!data) return; // not a member anymore / not found → keep the snapshot
-    const points = (data.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] }));
+    const c = await decryptCommunityRow(groupKeyResolver(data.group_id), data);
+    const points = (c.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] }));
     set((state) => ({
       prayers: state.prayers.map((x) =>
         x.id === prayerId
-          ? { ...x, title: data.title ?? x.title, description: data.description ?? x.description, prayer_points: points }
+          ? { ...x, title: c.title ?? x.title, description: c.description ?? x.description, prayer_points: points }
           : x
       ),
     }));
@@ -532,11 +536,6 @@ const usePrayerStore = create((set, get) => ({
     if (updates.scheduleOverrides !== undefined) payload.schedule_overrides = updates.scheduleOverrides;
     payload.updated_at = new Date().toISOString();
 
-    const community = {};
-    if (updates.title !== undefined) community.title = updates.title;
-    if (updates.description !== undefined) community.description = updates.description;
-    if (updates.categoryIds !== undefined) community.category_ids = updates.categoryIds;
-
     const current = get().prayers.find((p) => p.id === id);
     set((state) => ({
       prayers: state.prayers.map((p) => {
@@ -549,14 +548,16 @@ const usePrayerStore = create((set, get) => ({
     }));
 
     // Encrypt the persisted payload from the merged plaintext (in-memory) state.
-    // The whole sensitive set is re-encrypted (the payload is the full blob), and
-    // the plaintext columns are redacted. The community fan-out object stays
-    // plaintext so shared copies remain readable by group members.
+    // The whole sensitive set is re-encrypted (the payload is the full blob) and
+    // the plaintext columns are redacted. Editing a personal prayer no longer fans
+    // title/description out to its community copies — those are independent
+    // snapshots encrypted under the group key, so pushing plaintext here would both
+    // leak content and be unreadable under the wrong key.
     let persistPayload = payload;
     if (canEncrypt(current)) {
       persistPayload = { ...payload, ...(await encryptedSensitiveFields({ ...current, ...payload })) };
     }
-    enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds, community });
+    enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds });
   },
 
   // Persist the Scripture-first AI guidance once fetched, so reopening the step

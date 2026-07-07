@@ -330,15 +330,22 @@ describe('no private plaintext reaches Supabase (prayer_testimonies: Phase 3c)',
     }
   });
 
-  it('a SHARED prayer keeps its testimony plaintext (never fans out, but not gated for encryption)', async () => {
+  it('a SHARED prayer now encrypts its PERSONAL testimony under the account key', async () => {
     const id = await freshPrivatePrayer();
-    // Mark the prayer as shared to a group → canEncryptNested is false.
+    // Sharing no longer forces personal child rows to plaintext: the community copy
+    // is a separate snapshot encrypted under the GROUP key, so the owner's personal
+    // testimony stays private under the account key (canEncryptNested === canEncrypt).
     useCommunityStore.setState({ prayerShares: { [id]: ['group-1'] } });
-    await usePrayerStore.getState().markAnswered(id, 'PUBLIC_testimony_ok');
+    const SECRET = 'SECRET_shared_prayer_testimony';
+    await usePrayerStore.getState().markAnswered(id, SECRET);
     await drainQueue();
 
-    const w = testimonyWrites().find((w) => w.payload?.content === 'PUBLIC_testimony_ok');
-    expect(w).toBeTruthy();
-    expect(w.payload.encrypted_payload).toBeUndefined();
+    const writes = testimonyWrites();
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) {
+      expect(JSON.stringify(w.payload)).not.toContain(SECRET);
+      expect(w.payload.encrypted_payload).toBeTruthy();
+      expect(w.payload.content).toBe(''); // plaintext column redacted
+    }
   });
 });

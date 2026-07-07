@@ -3,35 +3,43 @@ import { supabase } from '../lib/supabase';
 import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
 import { devError } from '../lib/logger';
 import { track, EVENTS } from '../lib/analytics';
-import { isUnlocked } from '../lib/crypto/keyManager';
-import usePrayerStore from './prayerStore';
+import { ensureGroupKey, groupKeyResolver } from '../lib/crypto/groupKeys';
+import {
+  encryptCommunityPrayer,
+  encryptCommunityUpdate,
+  encryptCommunityTestimony,
+  decryptCommunityRow,
+  decryptCommunityRows,
+} from '../lib/crypto/communityCrypto';
 
-// A private prayer stores its child rows (updates / points) as ciphertext on the
-// server. The community fan-out RPCs (sync_*) read/append those rows in
-// plaintext, so when a prayer is FIRST shared we rewrite its child rows from the
-// in-memory plaintext and clear the ciphertext. Best-effort and only with the
-// vault unlocked — otherwise memory holds redacted placeholders, not plaintext.
-async function plaintextifyNestedRows(prayer) {
-  if (!isUnlocked()) return;
-  for (const u of prayer.prayer_updates || []) {
-    if (!u.id || u._locked) continue;
-    await supabase.from('prayer_updates')
-      .update({ text: u.text ?? '', encrypted_payload: null, encryption_version: null })
-      .eq('id', u.id);
-  }
-  for (const pp of prayer.prayer_points || []) {
-    if (!pp.id || pp._locked) continue;
-    await supabase.from('prayer_points')
-      .update({ title: pp.title ?? '', verses: pp.verses || [], encrypted_payload: null, encryption_version: null })
-      .eq('id', pp.id);
-  }
+// ── Community content encryption (per-group key) ──────────────────────────────
+// Community prayers / updates / testimonies are end-to-end encrypted under the
+// group's content key (GCK): sensitive fields move into encrypted_payload and the
+// plaintext columns are redacted, so Supabase only ever stores ciphertext the
+// members can read. Each helper takes a resolved GCK ({ key, version } or null)
+// and returns the column patch to persist. When no key is available it falls back
+// to plaintext (degraded/legacy path) so posting never hard-fails; a later fetch
+// treats such rows as legacy plaintext and renders them as-is.
+async function encPrayerCols(gk, { title = '', description = '', prayer_points = [] }) {
+  if (!gk) return { title, description, prayer_points };
+  const e = await encryptCommunityPrayer(gk, { title, description, prayer_points });
+  return {
+    title: e.title, description: e.description, prayer_points: e.prayer_points,
+    encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version,
+  };
 }
 
-// After a community-side edit that fans out to a shared personal prayer, refresh
-// that personal prayer in-session so the owner sees the change without reloading.
-const syncBackToPersonal = (sourcePrayerId) => {
-  if (sourcePrayerId) usePrayerStore.getState().refreshPrayer(sourcePrayerId);
-};
+async function encUpdateCols(gk, text) {
+  if (!gk) return { text };
+  const e = await encryptCommunityUpdate(gk, { text });
+  return { text: e.text, encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version };
+}
+
+async function encTestimonyCols(gk, content) {
+  if (!gk) return { content };
+  const e = await encryptCommunityTestimony(gk, { content });
+  return { content: e.content, encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version };
+}
 
 function generateCode() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -43,7 +51,8 @@ async function fetchPrayerWithCounts(prayerId) {
     .select('*, community_updates(count), prayer_reactions(count)')
     .eq('id', prayerId)
     .single();
-  return data;
+  if (!data) return data;
+  return decryptCommunityRow(groupKeyResolver(data.group_id), data);
 }
 
 // Looks up display names for the given user ids and returns a resolver
@@ -106,37 +115,39 @@ const useCommunityStore = create((set, get) => ({
       const categoryIds = (prayer.prayer_categories || []).map(pc => pc.category_id);
       // Seed new copies with the prayer's current points so they match the source.
       const points = (prayer.prayer_points || []).map(pp => ({ id: pp.id, title: pp.title, verses: pp.verses || [] }));
-      const { data: created, error } = await supabase.from('community_prayers').insert(toAdd.map(gid => ({
-        group_id: gid,
-        user_id: userId,
-        author_name: authorName,
-        title: prayer.title,
-        description: prayer.description || '',
-        category_ids: categoryIds,
-        prayer_points: points,
-        source_prayer_id: prayer.id,
-        is_anonymous: isAnonymous,
-        is_answered: prayer.status === 'answered',
-      }))).select('id');
-      if (error) return toError(error);
-
-      // Seed new copies with the prayer's existing updates too.
       const updates = prayer.prayer_updates || [];
-      if (updates.length > 0 && created) {
-        const rows = created.flatMap(c => updates.map(u => ({
-          community_prayer_id: c.id,
+      // Each community copy is an independent encrypted snapshot under ITS group's
+      // key, so seed + encrypt per group (the personal prayer stays encrypted under
+      // the account key — no plaintext conversion needed anymore).
+      for (const gid of toAdd) {
+        const gk = await ensureGroupKey(gid);
+        const cols = await encPrayerCols(gk, { title: prayer.title, description: prayer.description || '', prayer_points: points });
+        const { data: created, error } = await supabase.from('community_prayers').insert({
+          group_id: gid,
           user_id: userId,
-          author_name: u.author_name || authorName,
-          text: u.text,
-          is_anonymous: u.is_anonymous || false,
-        })));
-        await supabase.from('community_updates').insert(rows);
+          author_name: authorName,
+          ...cols,
+          category_ids: categoryIds,
+          source_prayer_id: prayer.id,
+          is_anonymous: isAnonymous,
+          is_answered: prayer.status === 'answered',
+        }).select('id').single();
+        if (error) return toError(error);
+
+        if (updates.length > 0 && created) {
+          const rows = [];
+          for (const u of updates) {
+            rows.push({
+              community_prayer_id: created.id,
+              user_id: userId,
+              author_name: u.author_name || authorName,
+              is_anonymous: u.is_anonymous || false,
+              ...(await encUpdateCols(gk, u.text ?? '')),
+            });
+          }
+          await supabase.from('community_updates').insert(rows);
+        }
       }
-    }
-    // First-time share: convert any ciphertext child rows to plaintext so the
-    // fan-out can read them (private prayers store updates/points encrypted).
-    if (existingGroupIds.size === 0 && toAdd.length > 0) {
-      await plaintextifyNestedRows(prayer);
     }
     if (toRemove.length > 0) {
       await supabase.from('community_prayers').delete().in('id', toRemove.map(e => e.id));
@@ -203,6 +214,9 @@ const useCommunityStore = create((set, get) => ({
 
   setActiveGroup: (id) => {
     set({ activeGroupId: id, prayers: [], testimonies: [] });
+    // Provision/redistribute the group content key on open, so a key-holder hands
+    // it to any member who joined since the last time the group was touched.
+    ensureGroupKey(id);
     get().fetchPrayers(id);
     get().fetchTestimonies(id);
   },
@@ -293,7 +307,7 @@ const useCommunityStore = create((set, get) => ({
       .select('*, community_updates(count), prayer_reactions(count)')
       .eq('group_id', groupId)
       .order('created_at', { ascending: false });
-    if (data) set({ prayers: data });
+    if (data) set({ prayers: await decryptCommunityRows(groupKeyResolver(groupId), data) });
     if (!quiet) set({ loading: false });
   },
 
@@ -354,22 +368,31 @@ const useCommunityStore = create((set, get) => ({
   },
 
   addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds }) => {
+    const gk = await ensureGroupKey(groupId);
+    const cols = await encPrayerCols(gk, { title, description: description || '', prayer_points: [] });
     const { data, error } = await supabase
       .from('community_prayers')
-      .insert({ group_id: groupId, user_id: userId, author_name: authorName, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
+      .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
       .select()
       .single();
     if (error) return toError(error);
-    const enriched = { ...data, community_updates: [{ count: 0 }], prayer_reactions: [{ count: 0 }] };
+    // Keep plaintext in memory — the server row has redacted columns when encrypted.
+    const plaintext = { ...data, title, description: description || '', prayer_points: [] };
+    const enriched = { ...plaintext, community_updates: [{ count: 0 }], prayer_reactions: [{ count: 0 }] };
     set(state => ({ prayers: [enriched, ...state.prayers] }));
-    return { prayer: data };
+    return { prayer: plaintext };
   },
 
   updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds }) => {
-    const patch = { title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] };
-    const { error } = await supabase.from('community_prayers').update(patch).eq('id', prayerId);
+    const current = get().prayers.find((p) => p.id === prayerId);
+    const gk = await ensureGroupKey(current?.group_id);
+    // Title + description share the prayer's encrypted_payload with its points, so
+    // re-encrypt the whole bundle from the current (plaintext, in-memory) state.
+    const cols = await encPrayerCols(gk, { title, description: description || '', prayer_points: current?.prayer_points || [] });
+    const persist = { ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [] };
+    const { error } = await supabase.from('community_prayers').update(persist).eq('id', prayerId);
     if (error) return toError(error);
-    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, ...patch })) }));
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })) }));
     return {};
   },
 
@@ -394,25 +417,23 @@ const useCommunityStore = create((set, get) => ({
       .select('*')
       .eq('community_prayer_id', prayerId)
       .order('created_at', { ascending: true });
-    return data || [];
+    const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
+    return decryptCommunityRows(groupKeyResolver(groupId), data || []);
   },
 
-  // When the community prayer is shared from a personal one (sourcePrayerId),
-  // route through sync_add_update so the update also reaches the personal prayer
-  // and any sibling group copies. Otherwise write the community update directly.
-  addUpdate: async ({ prayerId, sourcePrayerId, userId, authorName, text, isAnonymous }) => {
-    if (sourcePrayerId) {
-      const { error } = await supabase.rpc('sync_add_update', {
-        p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_text: text, p_author: authorName, p_anon: isAnonymous,
-      });
-      if (error) { devError('sync_add_update failed', error?.status); return toError(error); }
-      syncBackToPersonal(sourcePrayerId);
-    } else {
-      const { error } = await supabase
-        .from('community_updates')
-        .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, text, is_anonymous: isAnonymous });
-      if (error) return toError(error);
-    }
+  // A member's update on a community prayer stays community-side, encrypted under
+  // the group key. It is NOT synced back into the owner's personal prayer (that's
+  // a different key, and a member can't write the owner's row) — the owner sees it
+  // read-only via the shared-activity view. `sourcePrayerId` is still accepted for
+  // caller compatibility but no longer drives a server-side plaintext fan-out.
+  addUpdate: async ({ prayerId, userId, authorName, text, isAnonymous }) => {
+    const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
+    const gk = await ensureGroupKey(groupId);
+    const cols = await encUpdateCols(gk, text);
+    const { error } = await supabase
+      .from('community_updates')
+      .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, is_anonymous: isAnonymous, ...cols });
+    if (error) return toError(error);
     const updated = await fetchPrayerWithCounts(prayerId);
     if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
     return {};
@@ -424,38 +445,25 @@ const useCommunityStore = create((set, get) => ({
       .select('*, community_prayers(title, category_ids)')
       .eq('group_id', groupId)
       .order('created_at', { ascending: false });
-    if (data) set({ testimonies: data });
+    if (data) set({ testimonies: await decryptCommunityRows(groupKeyResolver(groupId), data) });
   },
 
-  // When the community prayer is shared from a personal one (sourcePrayerId),
-  // route through sync_add_point so the point also reaches the personal prayer
-  // and any sibling group copies. Otherwise append to this prayer only.
-  addCommunityPrayerPoint: async (prayerId, point, sourcePrayerId) => {
+  // Append a prayer point to a community prayer, re-encrypting the content bundle
+  // (title/description/points share one payload). Community-side only — no
+  // personal fan-out. `sourcePrayerId` is accepted for caller compatibility.
+  addCommunityPrayerPoint: async (prayerId, point) => {
     // Normalize legacy single-verse points ({ verse }) into a verses array.
     const verses = point.verses
       ? point.verses
       : point.verse ? [{ ref: point.verse, text: point.verseText || '' }] : [];
 
-    if (sourcePrayerId) {
-      const { error } = await supabase.rpc('sync_add_point', {
-        p_id: crypto.randomUUID(), p_source: sourcePrayerId, p_title: point.title, p_verses: verses,
-      });
-      if (error) { devError('sync_add_point failed', error?.status); return toError(error); }
-      syncBackToPersonal(sourcePrayerId);
-      const updated = await fetchPrayerWithCounts(prayerId);
-      if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
-      return {};
-    }
-
     const current = get().prayers.find(p => p.id === prayerId);
     if (!current) return { error: 'Prayer not found' };
     const newPoint = { id: crypto.randomUUID(), title: point.title, verses };
     const points = [...(current.prayer_points || []), newPoint];
-    const { error } = await supabase
-      .from('community_prayers')
-      .update({ prayer_points: points })
-      .eq('id', prayerId)
-      .select();
+    const gk = await ensureGroupKey(current.group_id);
+    const cols = await encPrayerCols(gk, { title: current.title || '', description: current.description || '', prayer_points: points });
+    const { error } = await supabase.from('community_prayers').update(cols).eq('id', prayerId);
     if (error) {
       devError('addCommunityPrayerPoint failed', error?.status);
       return toError(error);
@@ -464,64 +472,53 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
-  // Removes a point. Shared → RPC fan-out; standalone → edit this prayer's jsonb.
-  removeCommunityPrayerPoint: async (prayerId, pointId, sourcePrayerId) => {
-    if (sourcePrayerId) {
-      const { error } = await supabase.rpc('sync_remove_point', { p_source: sourcePrayerId, p_point_id: pointId });
-      if (error) return toError(error);
-      syncBackToPersonal(sourcePrayerId);
-    } else {
-      const current = get().prayers.find(p => p.id === prayerId);
-      const points = (current?.prayer_points || []).filter(pp => pp.id !== pointId);
-      const { error } = await supabase.from('community_prayers').update({ prayer_points: points }).eq('id', prayerId);
-      if (error) return toError(error);
-    }
-    const updated = await fetchPrayerWithCounts(prayerId);
-    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+  // Remove a point, re-encrypting the remaining content bundle. Community-side only.
+  removeCommunityPrayerPoint: async (prayerId, pointId) => {
+    const current = get().prayers.find(p => p.id === prayerId);
+    const points = (current?.prayer_points || []).filter(pp => pp.id !== pointId);
+    const gk = await ensureGroupKey(current?.group_id);
+    const cols = await encPrayerCols(gk, { title: current?.title || '', description: current?.description || '', prayer_points: points });
+    const { error } = await supabase.from('community_prayers').update(cols).eq('id', prayerId);
+    if (error) return toError(error);
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, prayer_points: points })) }));
     return {};
   },
 
-  addCommunityVerse: async (prayerId, pointId, verse, sourcePrayerId) => {
-    if (sourcePrayerId) {
-      const { error } = await supabase.rpc('sync_add_verse', { p_source: sourcePrayerId, p_point_id: pointId, p_verse: verse });
-      if (error) return toError(error);
-      syncBackToPersonal(sourcePrayerId);
-    } else {
-      const current = get().prayers.find(p => p.id === prayerId);
-      const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: [...(pp.verses || []), verse] } : pp);
-      const { error } = await supabase.from('community_prayers').update({ prayer_points: points }).eq('id', prayerId);
-      if (error) return toError(error);
-    }
-    const updated = await fetchPrayerWithCounts(prayerId);
-    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+  addCommunityVerse: async (prayerId, pointId, verse) => {
+    const current = get().prayers.find(p => p.id === prayerId);
+    const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: [...(pp.verses || []), verse] } : pp);
+    const gk = await ensureGroupKey(current?.group_id);
+    const cols = await encPrayerCols(gk, { title: current?.title || '', description: current?.description || '', prayer_points: points });
+    const { error } = await supabase.from('community_prayers').update(cols).eq('id', prayerId);
+    if (error) return toError(error);
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, prayer_points: points })) }));
     return {};
   },
 
-  removeCommunityVerse: async (prayerId, pointId, verseRef, sourcePrayerId) => {
-    if (sourcePrayerId) {
-      const { error } = await supabase.rpc('sync_remove_verse', { p_source: sourcePrayerId, p_point_id: pointId, p_verse_ref: verseRef });
-      if (error) return toError(error);
-      syncBackToPersonal(sourcePrayerId);
-    } else {
-      const current = get().prayers.find(p => p.id === prayerId);
-      const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: (pp.verses || []).filter(v => v.ref !== verseRef) } : pp);
-      const { error } = await supabase.from('community_prayers').update({ prayer_points: points }).eq('id', prayerId);
-      if (error) return toError(error);
-    }
-    const updated = await fetchPrayerWithCounts(prayerId);
-    if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+  removeCommunityVerse: async (prayerId, pointId, verseRef) => {
+    const current = get().prayers.find(p => p.id === prayerId);
+    const points = (current?.prayer_points || []).map(pp => pp.id === pointId ? { ...pp, verses: (pp.verses || []).filter(v => v.ref !== verseRef) } : pp);
+    const gk = await ensureGroupKey(current?.group_id);
+    const cols = await encPrayerCols(gk, { title: current?.title || '', description: current?.description || '', prayer_points: points });
+    const { error } = await supabase.from('community_prayers').update(cols).eq('id', prayerId);
+    if (error) return toError(error);
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, prayer_points: points })) }));
     return {};
   },
 
   addTestimony: async ({ groupId, userId, authorName, content, isAnonymous, communityPrayerId }) => {
+    const gk = await ensureGroupKey(groupId);
+    const cols = await encTestimonyCols(gk, content);
     const { data, error } = await supabase
       .from('testimonies')
-      .insert({ group_id: groupId, user_id: userId, author_name: authorName, content, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null })
+      .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null })
       .select('*, community_prayers(title, category_ids)')
       .single();
     if (error) return toError(error);
-    set(state => ({ testimonies: [data, ...state.testimonies] }));
-    return { testimony: data };
+    // Keep plaintext content in memory (the server row's content column is redacted).
+    const plaintext = { ...data, content };
+    set(state => ({ testimonies: [plaintext, ...state.testimonies] }));
+    return { testimony: plaintext };
   },
 
   // ── Friends & Requests ──────────────────────────────────────────────────────

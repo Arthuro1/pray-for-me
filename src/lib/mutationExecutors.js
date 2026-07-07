@@ -25,8 +25,11 @@ registerMutation('createPrayer', async ({ row, categoryIds = [] }) => {
   }
 });
 
-// Edit a prayer's fields and (optionally) its category links + shared copies.
-registerMutation('updatePrayer', async ({ id, payload, categoryIds, community }) => {
+// Edit a prayer's fields and (optionally) its category links. Content no longer
+// fans out to community copies — those are independent snapshots encrypted under
+// the group key (see communityStore / setPrayerShares), so a plaintext push here
+// would leak content and be unreadable under the wrong key.
+registerMutation('updatePrayer', async ({ id, payload, categoryIds }) => {
   const upd = await supabase.from('prayers').update(payload).eq('id', id);
   throwIf(upd.error, upd.status);
   if (categoryIds !== undefined) {
@@ -38,10 +41,6 @@ registerMutation('updatePrayer', async ({ id, payload, categoryIds, community })
         .insert(categoryIds.map((category_id) => ({ prayer_id: id, category_id })));
       throwIf(ins.error, ins.status);
     }
-  }
-  if (community && Object.keys(community).length) {
-    const c = await supabase.from('community_prayers').update(community).eq('source_prayer_id', id);
-    throwIf(c.error, c.status);
   }
 });
 
