@@ -25,4 +25,21 @@ describe('PrivacyCenter', () => {
     expect(screen.getByText(t(lang, 'pcPrivateTitle'))).toBeTruthy();
     expect(track).toHaveBeenCalledWith(EVENTS.PRIVACY_CENTER_OPENED, expect.objectContaining({ source: 'settings' }));
   });
+
+  it('describes private vs community encryption honestly (does not overpromise)', () => {
+    render(<PrivacyCenter lang={lang} onClose={() => {}} />);
+    // Both private and community sections are present and distinct.
+    expect(screen.getByText(t(lang, 'pcPrivateTitle'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'pcSharedTitle'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'pcRecoveryTitle'))).toBeTruthy();
+
+    // The community copy is honest: readable by the group's members, and it
+    // must NOT claim only-you-can-read-everything for shared prayers.
+    const shared = t(lang, 'pcSharedBody');
+    expect(shared.toLowerCase()).toContain('membres du groupe');
+    expect(shared.toLowerCase()).not.toContain('toi seul');
+
+    // Reminders are generic by default (opt-in for detail), not "never".
+    expect(t(lang, 'pcPushBody').toLowerCase()).toContain('par défaut');
+  });
 });

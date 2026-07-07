@@ -1,18 +1,20 @@
 import { useState } from 'react';
-import { BookHeart, Sparkles, Bell } from 'lucide-react';
+import { BookHeart, Sparkles, Bell, Lock } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 
 // First-run intro. Shown once (gated by localStorage in App) to orient new users.
 // Deliberately SHORT and warm: it centres on the one core habit — adding your
-// first prayer — and ends with that as the primary action. Advanced tools
-// (groups, reading plans, the encrypted vault, AI, recurring rules, calendar
-// export) are intentionally NOT toured here; the app surfaces them later, once
-// the first prayer exists. No Supporter prompts appear during onboarding.
+// first prayer — and ends with that as the primary action. One calm privacy step
+// reassures that prayers are encrypted by default and that recovery is optional
+// and can wait — the user is NEVER asked to set up encryption before praying.
+// Advanced tools (groups, reading plans, recovery, AI, recurring rules, calendar
+// export) are otherwise surfaced later, once the first prayer exists.
 const STEPS = [
   { icon: Sparkles, titleKey: 'onboardWelcomeTitle', bodyKey: 'onboardWelcomeBody' },
   { icon: BookHeart, titleKey: 'onboardPrayTitle', bodyKey: 'onboardPrayBody' },
+  { icon: Lock, titleKey: 'onboardPrivacyTitle', bodyKey: 'onboardPrivacyBody' },
   { icon: Bell, titleKey: 'onboardRemindTitle', bodyKey: 'onboardRemindBody' },
 ];
 

@@ -1,4 +1,12 @@
 export default {
+  "shareGroupInfo": "Esta oração poderá ser lida pelos membros deste grupo. O Pray4Me armazena o conteúdo compartilhado de forma criptografada.",
+  "shareAnonNote": "Seu nome ficará oculto para os membros do grupo, mas eles ainda poderão ler o conteúdo da oração.",
+  "onboardPrivacyTitle": "Privado por padrão",
+  "onboardPrivacyBody": "Suas orações são criptografadas por padrão — você pode começar a orar agora mesmo. Configure a recuperação mais tarde se quiser abri-las em outro dispositivo. As orações que você compartilha com um grupo são criptografadas para os membros desse grupo.",
+  "pcRecoveryTitle": "Recuperação e outros dispositivos",
+  "pcRecoveryBody": "Suas orações são criptografadas com uma chave mantida neste dispositivo. Configure a recuperação se quiser abri-las em outro dispositivo — sem ela, as orações criptografadas só podem ser lidas aqui. Se você perder o código de recuperação, as orações criptografadas não poderão ser recuperadas.",
+  "savedPrivately": "Salvo em privado.",
+  "savedEncrypted": "Salvo em privado · Criptografado neste dispositivo.",
   "testNotifBody": "Aqui estão suas orações de hoje. Reserve um momento para orar 🙏",
   "addThanks": "Adicionar uma palavra de gratidão",
   "thanksSaved": "Sua gratidão foi registrada 🙏",

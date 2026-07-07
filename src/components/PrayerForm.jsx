@@ -7,6 +7,8 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
+import { toast } from '../store/toastStore';
+import { canEncrypt } from '../lib/crypto/prayerCrypto';
 import ScriptureFirstStep from './ScriptureFirstStep';
 import ScheduleEditor from './ScheduleEditor';
 import { emptyDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
@@ -122,6 +124,11 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
     : [...form.categoryIds, id]
   );
 
+  // Subtle, non-technical reassurance after a personal prayer is saved. Encryption
+  // is automatic and invisible, so we only hint at it — "Saved privately" always,
+  // with "Encrypted on this device" added when the account key is actually ready.
+  const notifySaved = () => toast.success(t(lang, canEncrypt({}) ? 'savedEncrypted' : 'savedPrivately'));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
@@ -133,6 +140,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       // Follow-up is a per-prayer client-side reminder, saved separately from the
       // prayer row / recurrence schedule.
       setFollowUp(editPrayer.id, form.followUpDate);
+      notifySaved();
       onClose();
     } else {
       // New personal prayer: create it, then invite the user into Scripture
@@ -144,6 +152,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
         // Record the language this prayer was written in, so we don't later pay
         // to translate personal content into the language it's already in.
         setContentLang(lang);
+        notifySaved();
         setCreated({ id, title: form.title.trim(), description: form.description.trim() });
       } else onClose();
     }

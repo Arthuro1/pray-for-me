@@ -37,11 +37,13 @@ export const UPDATE_SENSITIVE_FIELDS = ['text'];
 export const POINT_SENSITIVE_FIELDS = ['title', 'verses'];
 export const TESTIMONY_SENSITIVE_FIELDS = ['content'];
 
-// A prayer is encryptable when the vault is unlocked AND it is the user's own
-// prayer. Saved-from-community copies (community_origin_id) mirror plaintext
-// community content and must stay readable without the vault, so they are never
-// encrypted. Sharing a prayer to a group publishes a separate plaintext copy
-// (community_prayers), so an owned prayer can be both encrypted and shared.
+// A prayer is encryptable when the account key is ready (isUnlocked) AND it is
+// the user's own prayer. Saved-from-community copies (community_origin_id) mirror
+// the group's own encrypted content and are decrypted with the group key, so
+// they are never re-encrypted under the account key here. Sharing a prayer to a
+// group writes a separate copy encrypted under that GROUP's key
+// (community_prayers), so an owned prayer is encrypted under the account key AND
+// its shared copies are encrypted under their group keys — never plaintext.
 export function canEncrypt(prayer) {
   return isUnlocked() && !!prayer && !prayer.community_origin_id;
 }

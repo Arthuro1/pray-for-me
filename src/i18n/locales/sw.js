@@ -1,4 +1,12 @@
 export default {
+  "shareGroupInfo": "Maombi haya yataweza kusomwa na washiriki wa kikundi hiki. Pray4Me huhifadhi maudhui yaliyoshirikiwa yakiwa yamesimbwa kwa njia fiche.",
+  "shareAnonNote": "Jina lako litafichwa kwa washiriki wa kikundi, lakini bado wanaweza kusoma maudhui ya maombi.",
+  "onboardPrivacyTitle": "Faragha kwa chaguo-msingi",
+  "onboardPrivacyBody": "Maombi yako yamesimbwa kwa njia fiche kwa chaguo-msingi — unaweza kuanza kuomba mara moja. Weka urejeshaji baadaye ikiwa unataka kuyafungua kwenye kifaa kingine. Maombi unayoshiriki na kikundi husimbwa kwa njia fiche kwa ajili ya washiriki wa kikundi hicho.",
+  "pcRecoveryTitle": "Urejeshaji na vifaa vingine",
+  "pcRecoveryBody": "Maombi yako husimbwa kwa njia fiche kwa ufunguo unaohifadhiwa kwenye kifaa hiki. Weka urejeshaji ikiwa unataka kuyafungua kwenye kifaa kingine — bila huo, maombi yaliyosimbwa yanaweza kusomwa hapa tu. Ukipoteza msimbo wako wa urejeshaji, maombi yaliyosimbwa hayawezi kurejeshwa.",
+  "savedPrivately": "Imehifadhiwa faraghani.",
+  "savedEncrypted": "Imehifadhiwa faraghani · Imesimbwa kwenye kifaa hiki.",
   "testNotifBody": "Hizi ni sala zako za leo. Tumia muda kuomba 🙏",
   "addThanks": "Ongeza neno la shukrani",
   "thanksSaved": "Shukrani yako imerekodiwa 🙏",

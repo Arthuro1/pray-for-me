@@ -9,14 +9,13 @@
 // Deploy:  supabase functions deploy send-follow-up-reminder --no-verify-jwt
 // Secrets: supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 import {
-  FOLLOWUP_MSG,
-  buildFollowUpNames,
   followUpDue,
   isWithinReminderWindow,
   initReminderEnv,
   sendPush,
   json,
 } from '../_shared/reminders.ts';
+import { followUpPayload } from '../_shared/notify.ts';
 
 Deno.serve(async () => {
   try {
@@ -44,21 +43,18 @@ Deno.serve(async () => {
       if (!isWithinReminderWindow(sub, utcMinutes, sub.follow_up_time || '07:00')) continue;
       if (!followUpDue(sub.last_follow_up_sent_at, sub.follow_up_days, now)) continue;
 
+      // Only the EXISTENCE of an active prayer is checked (select 'id' — never
+      // person_name or any content): skip the nudge when there's nothing to
+      // follow up on. The push body is always generic and names no one.
       const { data: prayers } = await supabase
         .from('prayers')
-        .select('person_name, for_other')
+        .select('id')
         .eq('user_id', sub.user_id)
-        .eq('status', 'active');
+        .eq('status', 'active')
+        .limit(1);
       if (!prayers || prayers.length === 0) continue;
 
-      const fm = FOLLOWUP_MSG[sub.lang] || FOLLOWUP_MSG.en;
-      const names = buildFollowUpNames(prayers as any[], fm.self);
-      const payload = JSON.stringify({
-        title: fm.title,
-        body: names ? fm.body.replace('{names}', names) : fm.body0,
-        url: '/',
-        tag: 'follow-up',
-      });
+      const payload = followUpPayload(sub.lang);
 
       const result = await sendPush(sub, payload);
       if (result.gone) {

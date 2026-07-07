@@ -1,20 +1,22 @@
 import { useEffect } from 'react';
-import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2 } from 'lucide-react';
+import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2, KeyRound } from 'lucide-react';
 import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 
-// A user-facing, plain-language explanation of how prayers are stored and shared.
-// Deliberately non-technical and honest: it never exposes implementation secrets
-// and never overpromises "perfect" security. Privacy is for everyone — private
-// prayers, the encrypted vault, export and deletion are simply how the app works.
+// A user-facing, plain-language "what leaves your device?" explanation of how
+// prayers are stored and shared. Deliberately non-technical and honest: it never
+// exposes implementation secrets and never overpromises. Crucially it does NOT
+// claim "only you can read everything" — community prayers are readable by the
+// group you share them with; the copy states private vs community encryption
+// separately and honestly (acceptance criterion #12).
 const SECTIONS = [
   { icon: Lock, titleKey: 'pcPrivateTitle', bodyKey: 'pcPrivateBody' },
-  { icon: ShieldCheck, titleKey: 'pcVaultTitle', bodyKey: 'pcVaultBody' },
   { icon: Users, titleKey: 'pcSharedTitle', bodyKey: 'pcSharedBody' },
-  { icon: Sparkles, titleKey: 'pcAiTitle', bodyKey: 'pcAiBody' },
   { icon: Bell, titleKey: 'pcPushTitle', bodyKey: 'pcPushBody' },
+  { icon: Sparkles, titleKey: 'pcAiTitle', bodyKey: 'pcAiBody' },
+  { icon: KeyRound, titleKey: 'pcRecoveryTitle', bodyKey: 'pcRecoveryBody' },
   { icon: Download, titleKey: 'pcExportTitle', bodyKey: 'pcExportBody' },
   { icon: Trash2, titleKey: 'pcDeleteTitle', bodyKey: 'pcDeleteBody' },
 ];

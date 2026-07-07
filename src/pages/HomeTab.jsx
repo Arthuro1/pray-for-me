@@ -23,7 +23,7 @@ import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
 import { nextReminder } from '../utils/reminder';
 import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { parseKey } from '../lib/schedule';
-import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
+import { Clock, Check, Sunrise, Sun, Moon, CalendarDays } from 'lucide-react';
 import { getDayPlanSuggestions } from '../aiRecommendations';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
@@ -336,6 +336,16 @@ export default function HomeTab({ onAdd }) {
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'todaysPrayers')}</h3>
           <div className="flex items-center gap-2">
+            {/* Plan/calendar is folded out of the primary nav — reachable here. */}
+            <button
+              onClick={() => navigate('/plan')}
+              title={t(lang, 'plan')}
+              aria-label={t(lang, 'plan')}
+              className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-xl font-medium"
+              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+            >
+              <CalendarDays size={12} /> {t(lang, 'plan')}
+            </button>
             <span className="text-xs" style={{ color: 'var(--text-3)' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
             {todayCategories.length > 0 && (
               <button

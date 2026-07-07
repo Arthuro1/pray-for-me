@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, BookOpen, Calendar, Settings, Plus, ChevronLeft, ChevronRight, Users, Sprout } from 'lucide-react';
+import { Home, BookOpen, Settings, Plus, ChevronLeft, ChevronRight, Users, Sprout } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
@@ -45,11 +45,14 @@ export default function Layout({ children, onAddPrayer }) {
     }
   }, [sidebarWidth, isMd]);
 
+  // Primary navigation is kept to the five most-used spiritual areas so the
+  // daily prayer rhythm stays front-and-centre. "Plan" (the scheduling calendar)
+  // is folded into Today — its /plan route stays reachable from the Home header,
+  // it's just no longer a top-level tab competing for attention.
   const tabs = [
     { id: 'home', path: '/', label: t(lang, 'today'), icon: Home },
     { id: 'prayers', path: '/prayers', label: t(lang, 'prayers'), icon: BookOpen },
     { id: 'community', path: '/community', label: t(lang, 'community'), icon: Users, badge: pendingCount },
-    { id: 'plan', path: '/plan', label: t(lang, 'plan'), icon: Calendar },
     { id: 'grow', path: '/grow', label: t(lang, 'grow'), icon: Sprout },
     { id: 'settings', path: '/settings', label: t(lang, 'settings'), icon: Settings },
   ];

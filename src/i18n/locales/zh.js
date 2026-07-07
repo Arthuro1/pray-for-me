@@ -1,4 +1,12 @@
 export default {
+  "shareGroupInfo": "本群组的成员将能够阅读这条祷告。Pray4Me 以加密方式存储所分享的内容。",
+  "shareAnonNote": "群组成员将看不到你的名字，但他们仍然可以阅读祷告内容。",
+  "onboardPrivacyTitle": "默认私密",
+  "onboardPrivacyBody": "你的祷告默认已加密——你可以立即开始祷告。若想在另一台设备上打开它们，稍后可设置恢复。你分享给群组的祷告会为该群组的成员加密。",
+  "pcRecoveryTitle": "恢复与其他设备",
+  "pcRecoveryBody": "你的祷告使用保存在本设备上的密钥加密。若想在另一台设备上打开它们，请设置恢复——否则加密的祷告只能在这里阅读。如果你丢失了恢复码，加密的祷告将无法恢复。",
+  "savedPrivately": "已私密保存。",
+  "savedEncrypted": "已私密保存 · 已在本设备加密。",
   "testNotifBody": "这是您今天的祷告。花点时间祷告吧 🙏",
   "addThanks": "添加一句感恩的话",
   "thanksSaved": "您的感恩已记录 🙏",

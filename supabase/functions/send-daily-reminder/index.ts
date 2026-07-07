@@ -8,13 +8,12 @@
 // Deploy:  supabase functions deploy send-daily-reminder --no-verify-jwt
 // Secrets: supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 import {
-  MSG,
-  buildTitleSuffix,
   isWithinReminderWindow,
   initReminderEnv,
   sendPush,
   json,
 } from '../_shared/reminders.ts';
+import { dailyPayload, normalizeDetail } from '../_shared/notify.ts';
 import { prayersForDay } from '../_shared/planner.ts';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -41,24 +40,23 @@ Deno.serve(async () => {
     for (const sub of subs || []) {
       if (!isWithinReminderWindow(sub, utcMinutes)) continue;
 
-      const todayKey = localDayKey(now, sub.tz_offset || 0);
-      const { data: prayers } = await supabase
-        .from('prayers')
-        .select('id, title, status, created_at, week_days, schedule, schedule_overrides, prayer_categories(category_id)')
-        .eq('user_id', sub.user_id)
-        .eq('status', 'active');
-      const { data: cats } = await supabase.from('categories').select('id, week_days, rotation').eq('user_id', sub.user_id);
-      const duePrayers = prayersForDay((prayers as any[]) || [], (cats as any[]) || [], todayKey);
+      // Only a due-prayer COUNT is ever computed — never titles or any prayer
+      // content — and it is used only when the account opted into the 'count'
+      // detail level. The default 'generic' payload ignores it entirely.
+      const detail = normalizeDetail(sub.notification_detail);
+      let count = 0;
+      if (detail !== 'generic') {
+        const todayKey = localDayKey(now, sub.tz_offset || 0);
+        const { data: prayers } = await supabase
+          .from('prayers')
+          .select('id, status, created_at, week_days, schedule, schedule_overrides, prayer_categories(category_id)')
+          .eq('user_id', sub.user_id)
+          .eq('status', 'active');
+        const { data: cats } = await supabase.from('categories').select('id, week_days, rotation').eq('user_id', sub.user_id);
+        count = prayersForDay((prayers as any[]) || [], (cats as any[]) || [], todayKey).length;
+      }
 
-      const m = MSG[sub.lang] || MSG.en;
-      const payload = JSON.stringify({
-        title: m.title,
-        body: duePrayers.length > 0
-          ? m.body.replace('{count}', String(duePrayers.length)).replace('{titles}', buildTitleSuffix(duePrayers))
-          : m.body0,
-        url: '/',
-        tag: 'daily-reminder',
-      });
+      const payload = dailyPayload(sub.lang, detail, count);
 
       const result = await sendPush(sub, payload);
       if (result.gone) {

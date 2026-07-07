@@ -1,4 +1,12 @@
 export default {
+  "shareGroupInfo": "Dieses Gebet ist für die Mitglieder dieser Gruppe lesbar. Pray4Me speichert den geteilten Inhalt verschlüsselt.",
+  "shareAnonNote": "Dein Name wird vor den Gruppenmitgliedern verborgen, aber sie können den Gebetsinhalt trotzdem lesen.",
+  "onboardPrivacyTitle": "Standardmäßig privat",
+  "onboardPrivacyBody": "Deine Gebete sind standardmäßig verschlüsselt — du kannst sofort mit dem Beten beginnen. Richte später eine Wiederherstellung ein, wenn du sie auf einem anderen Gerät öffnen möchtest. Gebete, die du mit einer Gruppe teilst, sind für die Mitglieder dieser Gruppe verschlüsselt.",
+  "pcRecoveryTitle": "Wiederherstellung & andere Geräte",
+  "pcRecoveryBody": "Deine Gebete sind mit einem Schlüssel verschlüsselt, der auf diesem Gerät bleibt. Richte eine Wiederherstellung ein, wenn du sie auf einem anderen Gerät öffnen möchtest — ohne sie können verschlüsselte Gebete nur hier gelesen werden. Wenn du deinen Wiederherstellungscode verlierst, können verschlüsselte Gebete nicht wiederhergestellt werden.",
+  "savedPrivately": "Privat gespeichert.",
+  "savedEncrypted": "Privat gespeichert · Auf diesem Gerät verschlüsselt.",
   "testNotifBody": "Hier sind deine Gebete für heute. Nimm dir einen Moment zum Beten 🙏",
   "addThanks": "Ein Wort des Dankes hinzufügen",
   "thanksSaved": "Dein Dank ist festgehalten 🙏",

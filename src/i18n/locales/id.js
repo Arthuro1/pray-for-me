@@ -1,4 +1,12 @@
 export default {
+  "shareGroupInfo": "Doa ini dapat dibaca oleh anggota grup ini. Pray4Me menyimpan konten yang dibagikan dalam bentuk terenkripsi.",
+  "shareAnonNote": "Nama Anda akan disembunyikan dari anggota grup, tetapi mereka tetap dapat membaca isi doa.",
+  "onboardPrivacyTitle": "Privat secara default",
+  "onboardPrivacyBody": "Doa Anda dienkripsi secara default — Anda bisa langsung mulai berdoa. Siapkan pemulihan nanti jika Anda ingin membukanya di perangkat lain. Doa yang Anda bagikan dengan grup dienkripsi untuk anggota grup tersebut.",
+  "pcRecoveryTitle": "Pemulihan & perangkat lain",
+  "pcRecoveryBody": "Doa Anda dienkripsi dengan kunci yang disimpan di perangkat ini. Siapkan pemulihan jika Anda ingin membukanya di perangkat lain — tanpa itu, doa terenkripsi hanya bisa dibaca di sini. Jika Anda kehilangan kode pemulihan, doa terenkripsi tidak dapat dipulihkan.",
+  "savedPrivately": "Disimpan secara privat.",
+  "savedEncrypted": "Disimpan secara privat · Terenkripsi di perangkat ini.",
   "testNotifBody": "Inilah doa-doa Anda hari ini. Luangkan waktu untuk berdoa 🙏",
   "addThanks": "Tambahkan ucapan syukur",
   "thanksSaved": "Syukur Anda telah dicatat 🙏",

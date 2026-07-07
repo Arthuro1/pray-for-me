@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 //
-// Extracted from PrayerDetail. The critical behaviour to lock in is the vault
-// safety gate: sharing an E2E-encrypted prayer to a NEW group publishes a
-// plaintext copy, so the Save button must stay disabled until the user ticks the
-// acknowledgement. French is the always-loaded locale, so assertions go through t().
+// Extracted from PrayerDetail. Under default E2EE a shared prayer is written to
+// the group ENCRYPTED under the group's key (not plaintext), so there is no
+// "unencrypted copy" ack gate anymore — instead the modal always shows an
+// honest note that group members will be able to read the request. French is
+// the always-loaded locale, so assertions go through t().
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 
@@ -45,11 +46,21 @@ function renderModal(props = {}) {
 }
 
 describe('PrayerShareModal', () => {
-  it('lists the user\'s groups and shows no vault warning for a plain prayer', () => {
+  it('lists the user\'s groups and shows the honest "group members can read this" note', () => {
     renderModal();
     expect(screen.getByText('Family')).toBeTruthy();
     expect(screen.getByText('Church')).toBeTruthy();
-    expect(screen.queryByText(t(lang, 'shareEncryptedWarning'))).toBeNull();
+    // Honest new-model copy is always present.
+    expect(screen.getByText(t(lang, 'shareGroupInfo'))).toBeTruthy();
+  });
+
+  it('surfaces the anonymity note only when sharing anonymously', () => {
+    renderModal();
+    expect(screen.queryByText(t(lang, 'shareAnonNote'))).toBeNull();
+    // The anonymous toggle is the checkbox after the group checkboxes.
+    const boxes = screen.getAllByRole('checkbox');
+    fireEvent.click(boxes[groups.length]); // the "anonymous" toggle
+    expect(screen.getByText(t(lang, 'shareAnonNote'))).toBeTruthy();
   });
 
   it('shares the selected group and fires a content-free share event', async () => {
@@ -67,22 +78,20 @@ describe('PrayerShareModal', () => {
     expect(trackSpy).toHaveBeenCalledWith('prayer_shared', { channel: 'group' });
   });
 
-  it('warns and blocks Save until the vault acknowledgement is ticked', () => {
-    const { setPrayerShares } = renderModal({ prayer: vaultPrayer });
-    expect(screen.getByText(t(lang, 'shareEncryptedWarning'))).toBeTruthy();
+  it('shares an encrypted (vault) prayer to a new group without any ack gate', async () => {
+    // The community copy is encrypted under the group key, so sharing needs no
+    // "I understand this is unencrypted" acknowledgement — Save works directly.
+    const { setPrayerShares, onClose } = renderModal({ prayer: vaultPrayer });
+    // The honest note is shown; there is no acknowledgement checkbox to gate Save.
+    expect(screen.getByText(t(lang, 'shareGroupInfo'))).toBeTruthy();
 
-    // Adding a NEW group surfaces the acknowledgement and gates Save.
-    fireEvent.click(screen.getAllByRole('checkbox')[0]);
+    fireEvent.click(screen.getAllByRole('checkbox')[0]); // select Family
     const saveBtn = screen.getByText(t(lang, 'save')).closest('button');
-    expect(saveBtn.disabled).toBe(true);
-
-    // Tick the acknowledgement (last checkbox) → Save unlocks.
-    const boxes = screen.getAllByRole('checkbox');
-    fireEvent.click(boxes[boxes.length - 1]);
     expect(saveBtn.disabled).toBe(false);
 
     fireEvent.click(saveBtn);
     expect(setPrayerShares).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
   });
 
   it('closes without sharing when Cancel is clicked', () => {

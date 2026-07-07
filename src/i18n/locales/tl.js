@@ -1,4 +1,12 @@
 export default {
+  "shareGroupInfo": "Mababasa ng mga miyembro ng grupong ito ang panalanging ito. Iniimbak ng Pray4Me ang ibinahaging nilalaman nang naka-encrypt.",
+  "shareAnonNote": "Itatago ang iyong pangalan sa mga miyembro ng grupo, ngunit mababasa pa rin nila ang nilalaman ng panalangin.",
+  "onboardPrivacyTitle": "Pribado bilang default",
+  "onboardPrivacyBody": "Naka-encrypt ang iyong mga panalangin bilang default — maaari ka nang magsimulang manalangin agad. Mag-set up ng recovery mamaya kung nais mong buksan ang mga ito sa ibang device. Ang mga panalanging ibinabahagi mo sa isang grupo ay naka-encrypt para sa mga miyembro ng grupong iyon.",
+  "pcRecoveryTitle": "Recovery at iba pang device",
+  "pcRecoveryBody": "Naka-encrypt ang iyong mga panalangin gamit ang isang key na nananatili sa device na ito. Mag-set up ng recovery kung nais mong buksan ang mga ito sa ibang device — kung wala nito, mababasa lang dito ang mga naka-encrypt na panalangin. Kung mawala ang iyong recovery code, hindi na mababawi ang mga naka-encrypt na panalangin.",
+  "savedPrivately": "Naka-save nang pribado.",
+  "savedEncrypted": "Naka-save nang pribado · Naka-encrypt sa device na ito.",
   "testNotifBody": "Narito ang iyong mga panalangin ngayon. Maglaan ng sandali upang manalangin 🙏",
   "addThanks": "Magdagdag ng salita ng pasasalamat",
   "thanksSaved": "Naitala ang iyong pasasalamat 🙏",

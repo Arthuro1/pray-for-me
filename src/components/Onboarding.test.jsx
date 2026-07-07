@@ -17,8 +17,13 @@ const expectNoSupporterPrompt = () => {
   expect(document.body.textContent).not.toMatch(/supporter|premium|abonnement/i);
 };
 
+// Steps between the first and the last CTA. Advancing through all of them and
+// landing on "add your first prayer" proves onboarding never GATES prayer
+// creation behind vault/recovery setup (acceptance criterion #12/onboarding).
+const NEXT_CLICKS = 3; // Welcome → Pray → Privacy → Remind (last)
+
 describe('Onboarding', () => {
-  it('walks 3 steps to "add your first prayer" with no Supporter prompt', () => {
+  it('walks to "add your first prayer" with no Supporter prompt and no setup gate', () => {
     const onFinish = vi.fn();
     const onAddPrayer = vi.fn();
     render(<Onboarding lang={lang} onFinish={onFinish} onAddPrayer={onAddPrayer} />);
@@ -26,16 +31,26 @@ describe('Onboarding', () => {
     expect(screen.getByText(t(lang, 'onboardWelcomeTitle'))).toBeTruthy();
     expectNoSupporterPrompt();
 
-    fireEvent.click(screen.getByText(t(lang, 'onboardNext')));
-    expectNoSupporterPrompt();
-    fireEvent.click(screen.getByText(t(lang, 'onboardNext')));
-    expectNoSupporterPrompt();
+    for (let i = 0; i < NEXT_CLICKS; i++) {
+      fireEvent.click(screen.getByText(t(lang, 'onboardNext')));
+      expectNoSupporterPrompt();
+    }
 
-    // Final step: the primary CTA is adding a prayer, not upgrading.
+    // Final step: the primary CTA is adding a prayer, not setting up encryption.
     const addFirst = screen.getByText(t(lang, 'onboardAddFirst'));
     expect(addFirst).toBeTruthy();
     fireEvent.click(addFirst);
     expect(onFinish).toHaveBeenCalled();
     expect(onAddPrayer).toHaveBeenCalled();
+  });
+
+  it('reassures that prayers are encrypted by default (recovery is optional/later)', () => {
+    render(<Onboarding lang={lang} onFinish={vi.fn()} onAddPrayer={vi.fn()} />);
+    fireEvent.click(screen.getByText(t(lang, 'onboardNext'))); // → Pray
+    fireEvent.click(screen.getByText(t(lang, 'onboardNext'))); // → Privacy
+    expect(screen.getByText(t(lang, 'onboardPrivacyTitle'))).toBeTruthy();
+    // Honest framing: encrypted by default, recovery is a "later" option.
+    expect(t(lang, 'onboardPrivacyBody').toLowerCase()).toContain('par défaut');
+    expect(t(lang, 'onboardPrivacyBody').toLowerCase()).toContain('récupération');
   });
 });
