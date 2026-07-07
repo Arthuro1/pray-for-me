@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { clearLocalData } from '../lib/dataCache';
+import { forgetAccountKey } from '../lib/crypto/accountKey';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -37,10 +38,12 @@ const useAuthStore = create((set) => ({
     return { user: data?.user, error };
   },
 
-  // Vault record + prayer cache live in IndexedDB unscoped to the signed-in
-  // session (the vault key isn't namespaced per-user), so a leftover record from
-  // this account would block login on a different account on the same device —
-  // clear local traces before signing out.
+  // Clear local traces (prayer cache, mutation queue, wrapped recovery record)
+  // so a leftover record can't block login on a different account here. The
+  // transparent per-user account key is DELIBERATELY kept: for a user who never
+  // set up recovery it is the only copy, so wiping it on sign-out would lock
+  // them out of their own encrypted prayers. It is scoped by user id (no
+  // cross-account bleed) and only removed on account deletion.
   signOut: async () => {
     const { data: { user } } = await supabase.auth.getUser();
     await clearLocalData(user?.id);
@@ -55,6 +58,7 @@ const useAuthStore = create((set) => ({
     const { error } = await supabase.rpc('delete_account');
     if (error) return { error };
     await clearLocalData(user?.id);
+    await forgetAccountKey(user?.id); // the account is gone — remove the local key too
     await supabase.auth.signOut();
     set({ user: null });
     return { error: null };

@@ -79,7 +79,7 @@ function installStorage() {
 // are imported after the mock is in place (vi.mock is hoisted above all imports).
 import '../lib/mutationExecutors';
 import { pendingCount, flushQueue } from '../lib/mutationQueue';
-import { createVault, lock } from '../lib/crypto/keyManager';
+import { createVault, lock, autoInitAccountKey } from '../lib/crypto/keyManager';
 import { decryptJson } from '../lib/crypto/e2ee';
 import { getMasterKey } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
@@ -115,6 +115,27 @@ beforeEach(() => {
 });
 
 describe('no private plaintext reaches Supabase (prayers table)', () => {
+  // The default model: encryption happens with the auto-provisioned account key,
+  // WITHOUT the user ever creating a vault or entering a passphrase.
+  it('encrypts by default via the auto-provisioned account key (no createVault)', async () => {
+    await autoInitAccountKey(); // first authenticated use — no vault, no passphrase
+
+    await usePrayerStore.getState().addPrayer({
+      title: SECRETS.title,
+      description: SECRETS.description,
+      personName: SECRETS.person_name,
+      phone: SECRETS.phone,
+    });
+    await drainQueue();
+
+    const writes = prayersWritesJson();
+    expect(writes.length).toBeGreaterThan(0);
+    for (const json of writes) {
+      for (const secret of Object.values(SECRETS)) expect(json).not.toContain(secret);
+      expect(json).toContain('encrypted_payload');
+    }
+  });
+
   it('addPrayer encrypts scalar fields before they leave the client', async () => {
     await createVault('correct horse battery staple');
 
@@ -178,9 +199,10 @@ describe('no private plaintext reaches Supabase (prayers table)', () => {
     }
   });
 
-  it('does NOT encrypt when the vault is locked (legacy plaintext path)', async () => {
-    // No vault → canEncrypt is false → the row is written as-is. This documents
-    // the boundary: encryption is opt-in via the vault, not silently assumed.
+  it('does NOT encrypt when no account key is available (new device, locked)', async () => {
+    // No key in memory (e.g. a new device with a recovery-protected key not yet
+    // unlocked) → canEncrypt is false → the row is written as-is rather than
+    // silently dropped. Normal use auto-provisions the key so this path is rare.
     await usePrayerStore.getState().addPrayer({ title: 'plain title', description: 'plain' });
     await drainQueue();
 

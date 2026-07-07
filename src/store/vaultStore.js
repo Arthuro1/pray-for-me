@@ -22,6 +22,20 @@ const useVaultStore = create((set) => ({
     return code;
   },
 
+  // Turn on recovery / cross-device access for the account key that was already
+  // auto-provisioned (encryption works before this). Wraps the SAME key under a
+  // passphrase + recovery code, so existing ciphertext stays readable. Returns
+  // the one-time recovery code, or null if no key is loaded.
+  setUpRecovery: async (passphrase) => {
+    const code = await vault.setUpRecovery(passphrase);
+    if (code) {
+      set({ initialized: true, unlocked: true });
+      pushVaultRecord(); // sync the wrapped record so other devices can unlock
+      track(EVENTS.VAULT_ENABLED); // content-free: only that recovery was enabled
+    }
+    return code;
+  },
+
   unlock: async (passphrase) => {
     const ok = await vault.unlock(passphrase);
     if (ok) set({ unlocked: true });

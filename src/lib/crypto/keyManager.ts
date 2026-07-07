@@ -25,7 +25,12 @@ const IV_BYTES = 12;
 const RECOVERY_BYTES = 16; // 128 bits of entropy
 const STORAGE_KEY = 'pfm_vault'; // IndexedDB key (and legacy localStorage key)
 const SESSION_KEY = 'pfm_vault_session'; // sessionStorage: raw master key, tab-scoped
-const DEFAULT_AUTO_LOCK_MS = 5 * 60 * 1000;
+// Idle auto-lock is disabled by default: under the "encryption by default"
+// model the account key is transparent (persisted device-local by the
+// accountKey layer), so locking it on idle would only break encrypt/decrypt
+// mid-session without adding protection. The machinery is kept for a future
+// opt-in app-lock; setAutoLockMs(>0) re-enables it.
+const DEFAULT_AUTO_LOCK_MS = 0;
 
 // Crockford base32 (no I/L/O/U) — unambiguous to read off a recovery sheet.
 const CODE_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
@@ -268,6 +273,64 @@ export async function createVault(passphrase: string): Promise<string> {
   });
   setMasterKey(mk);
   return recoveryCode;
+}
+
+// Provision the account content key automatically on first authenticated use —
+// no passphrase, no recovery record. Encryption "just works" and stays
+// transparent: the raw key is persisted device-local (per user) by the
+// accountKey layer, and recovery / cross-device is layered on later via
+// setUpRecovery(). No-op if a key is already loaded.
+export async function autoInitAccountKey(): Promise<void> {
+  if (masterKey) return;
+  const mk = await generateMasterKey();
+  setMasterKey(mk);
+}
+
+// Turn on recovery / cross-device access for the key ALREADY in memory: wrap it
+// under a passphrase + a fresh recovery code and persist the wrapped record
+// (which vaultSync uploads). Unlike createVault it never generates a new key, so
+// all existing ciphertext stays readable. Returns the one-time recovery code, or
+// null if no key is loaded.
+export async function setUpRecovery(passphrase: string): Promise<string | null> {
+  if (!masterKey) return null;
+  const recoveryCode = generateRecoveryCode();
+  const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
+  const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
+  const passKey = await deriveWrappingKey(passphrase, passSalt);
+  const recoveryKey = await deriveWrappingKey(normalizeCode(recoveryCode), recoverySalt);
+  saveRecord({
+    v: VAULT_VERSION,
+    passSalt: toB64(passSalt),
+    recoverySalt: toB64(recoverySalt),
+    passWrapped: await wrapMasterKey(masterKey, passKey),
+    recoveryWrapped: await wrapMasterKey(masterKey, recoveryKey),
+  });
+  return recoveryCode;
+}
+
+// Load a raw (base64) account key into memory — restores the transparent
+// per-user key on boot (see accountKey.ensureAccountCryptoReady). Returns false
+// if the bytes aren't a valid AES-GCM key.
+export async function importRawMasterKey(b64: string): Promise<boolean> {
+  try {
+    const mk = await crypto.subtle.importKey('raw', fromB64(b64), { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
+    setMasterKey(mk);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Export the in-memory account key as base64 so the accountKey layer can persist
+// it for transparent access on this device. Null when locked.
+export async function exportRawMasterKey(): Promise<string | null> {
+  if (!masterKey) return null;
+  try {
+    const raw = await crypto.subtle.exportKey('raw', masterKey);
+    return toB64(new Uint8Array(raw));
+  } catch {
+    return null;
+  }
 }
 
 // Unlock with the passphrase. Returns false on a wrong passphrase (no throw).

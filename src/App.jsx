@@ -31,6 +31,7 @@ import useCommunityStore from './store/communityStore';
 import useVaultStore from './store/vaultStore';
 import VaultLockScreen from './components/VaultLockScreen';
 import { pullVaultRecord } from './lib/vaultSync';
+import { ensureAccountCryptoReady, rememberAccountKey } from './lib/crypto/accountKey';
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
@@ -184,13 +185,17 @@ export default function App() {
     }
   }, [user?.id]);
 
-  // Pull the (wrapped) vault record so the lock gate reflects vaults created on
-  // another device. Gates the splash until we know whether a vault exists.
+  // Pull any (wrapped) recovery record synced from another device, then make the
+  // account key ready: this auto-provisions encryption transparently on first
+  // use, restores the device-local key on later boots, or leaves it locked when
+  // a recovery-protected key exists elsewhere (new device → VaultLockScreen).
+  // Gates the splash until the crypto state is known.
   useEffect(() => {
     if (!user?.id) { setVaultChecked(false); return undefined; }
     let cancelled = false;
     (async () => {
       await pullVaultRecord();
+      await ensureAccountCryptoReady(user.id);
       if (cancelled) return;
       useVaultStore.getState().refresh();
       setVaultChecked(true);
@@ -198,10 +203,11 @@ export default function App() {
     return () => { cancelled = true; };
   }, [user?.id]);
 
-  // Re-decrypt by reloading once the vault is unlocked (the first load may have
-  // run while locked, leaving encrypted rows as locked placeholders).
+  // Re-decrypt by reloading once the key becomes available (the first load may
+  // have run before auto-init/unlock, leaving encrypted rows as placeholders).
+  // Also remember the key for transparent access on this device from now on.
   useEffect(() => {
-    if (user?.id && vaultUnlocked) loadData(user.id);
+    if (user?.id && vaultUnlocked) { rememberAccountKey(user.id); loadData(user.id); }
   }, [vaultUnlocked]);
 
   const finishOnboarding = () => {
