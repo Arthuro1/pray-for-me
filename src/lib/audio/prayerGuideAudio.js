@@ -1,14 +1,23 @@
-// Spoken prayer guide for Hands-free Prayer Mode, using the browser's on-device
-// Web Speech API (speechSynthesis).
+// On-device speech via the browser's Web Speech API (speechSynthesis). Two
+// callers, with DIFFERENT privacy properties — read this before adding a third.
 //
-// PRIVACY — this is the whole reason the guide is "prompts only": this module is
-// ONLY ever handed generic movement prompts and Scripture references (e.g.
-// "Begin by adoring God…", "Psalm 103:1-2"). It is never given a prayer title,
-// description, person name, or any user content, so nothing about the user's
-// prayers can reach a browser's (sometimes cloud-backed) voice engine.
+// PRIVACY — a browser's voice engine is not guaranteed to be on-device; several
+// platforms route speechSynthesis to a cloud service. So what we hand this module
+// matters:
+//
+//   • Hands-free Prayer Mode (the reason the guide is "prompts only") passes ONLY
+//     generic movement prompts and Scripture references — "Begin by adoring God…",
+//     "Psalm 103:1-2". No prayer title, description, or person name. Nothing about
+//     the user's prayers can reach the voice engine.
+//
+//   • Spoken Prayer Guide passes the generated script, which DOES contain
+//     privacy-reduced prayer content — but only as a FALLBACK, when the private
+//     backend produced no audio (see SpokenGuideMode). The user has already chosen
+//     a privacy mode and consented to that content being spoken aloud. Server audio
+//     from Pray4Me's own Piper backend is always preferred.
 //
 // It degrades quietly: where speech is unsupported, speak() resolves immediately
-// so the hands-free session simply guides the user in silence instead.
+// so the session simply guides the user in silence instead.
 import { devWarn } from '../logger';
 
 // App language → a BCP-47 tag we ask the voice engine for.

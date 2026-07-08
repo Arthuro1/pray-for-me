@@ -1,13 +1,20 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import {
-  X, Play, Pause, RotateCcw, SkipBack, SkipForward, Car, Loader2, Eye, EyeOff, Check,
+  X, Play, Pause, RotateCcw, SkipBack, SkipForward, Car, Loader2, Eye, EyeOff, Check, Info,
 } from 'lucide-react';
 import { t } from '../i18n';
 import usePrayerStore from '../store/prayerStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { requestSpokenGuide, fetchGuideAudio, defaultPrivacyMode } from '../lib/spokenGuide';
+import {
+  requestSpokenGuide,
+  fetchGuideAudio,
+  defaultPrivacyMode,
+  resolveSpokenGuideLocale,
+  SPOKEN_GUIDE_LANGUAGE_AUTO,
+  SPOKEN_GUIDE_LOCALES,
+} from '../lib/spokenGuide';
 import { speak, cancelSpeech, pauseSpeech, resumeSpeech } from '../lib/audio/prayerGuideAudio';
 import { track as trackEvent, EVENTS } from '../lib/analytics';
 import Encouragement from './Encouragement';
@@ -18,9 +25,11 @@ import Encouragement from './Encouragement';
 // sends privacy-reduced prayer content to Pray4Me's PRIVATE AI + voice backend so
 // it can be read aloud. The user previews and confirms the privacy mode first.
 //
-// Playback prefers the backend audio (fetched through the app's own authenticated
-// proxy, so the browser never calls the backend directly). If no audio is
-// available (e.g. dev), it falls back to speaking the returned script on-device.
+// The session is spoken in the user's app language (or a language they pinned).
+// Playback prefers the backend audio, fetched through the app's own authenticated
+// proxy so the browser never calls the backend directly. We fall back to on-device
+// speech ONLY when there is genuinely no server audio: the response carried no
+// audio URL, the audio fetch failed, or the backend was unreachable.
 const MODE_META = [
   { id: 'names_only', titleKey: 'sgModeNamesOnly', descKey: 'sgModeNamesOnlyDesc' },
   { id: 'summary', titleKey: 'sgModeSummary', descKey: 'sgModeSummaryDesc' },
@@ -34,8 +43,21 @@ function fmt(sec) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+// "de-DE" → "German" in the UI's own language. Intl.DisplayNames is in every
+// browser we target; if it throws for an odd tag, show the tag itself.
+function languageName(locale, uiLang) {
+  if (!locale) return '';
+  try {
+    return new Intl.DisplayNames([uiLang || 'en'], { type: 'language' }).of(locale) || locale;
+  } catch {
+    return locale;
+  }
+}
+
 export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose, onComplete }) {
-  const { settings } = usePrayerStore(useShallow((s) => ({ settings: s.settings })));
+  const { settings, updateSettings } = usePrayerStore(
+    useShallow((s) => ({ settings: s.settings, updateSettings: s.updateSettings }))
+  );
   const trapRef = useFocusTrap(true);
 
   const [phase, setPhase] = useState('setup'); // setup | loading | playing | error | done
@@ -48,6 +70,14 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
   const [audioSrc, setAudioSrc] = useState(null); // object URL, or null (speech fallback)
   const [showWords, setShowWords] = useState(false);
   const [markPrayed, setMarkPrayed] = useState(true);
+  // Set from the response when the backend had no voice for the requested locale.
+  const [voiceFallbackUsed, setVoiceFallbackUsed] = useState(false);
+
+  // The language the guide will be spoken in: an explicitly pinned choice, else
+  // the app language. Recomputed when either setting changes.
+  const spokenLocale = useMemo(() => resolveSpokenGuideLocale(settings), [settings]);
+  const followsAppLanguage =
+    !settings.spokenGuideLanguage || settings.spokenGuideLanguage === SPOKEN_GUIDE_LANGUAGE_AUTO;
 
   // Playback state.
   const audioRef = useRef(null);
@@ -78,13 +108,19 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
   const start = useCallback(async () => {
     setPhase('loading');
     trackEvent(EVENTS.HANDS_FREE_SESSION_STARTED, { mode: 'spoken_guide' });
+    // `data` is already normalized (camelCase) whatever the environment served —
+    // see normalizeSpokenGuideResponse. Dev's snake_case `audio_url` arrives here
+    // as `audioUrl`, so server audio plays locally too.
     const { ok, data } = await requestSpokenGuide({
       prayers, tr, lang, categories, privacyMode, length, includeScripture, readFullDetails,
+      locale: spokenLocale,
     });
     if (!ok || !data || !data.script) { setPhase('error'); return; }
 
     setScript(data.script);
-    // Prefer server audio through the in-app proxy; fall back to on-device speech.
+    setVoiceFallbackUsed(data.voiceFallbackUsed === true);
+    // Prefer server audio through the in-app proxy. Only a genuinely missing or
+    // unfetchable audio URL drops us to on-device speech.
     const url = await fetchGuideAudio(data.audioUrl);
     if (url) {
       objectUrlRef.current = url;
@@ -95,7 +131,7 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
       setAudioSrc(null);
     }
     setPhase('playing');
-  }, [prayers, tr, lang, categories, privacyMode, length, includeScripture, readFullDetails]);
+  }, [prayers, tr, lang, categories, privacyMode, length, includeScripture, readFullDetails, spokenLocale]);
 
   // ── Audio-element playback wiring ──
   useEffect(() => {
@@ -120,13 +156,16 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
   }, [phase, audioSrc, finish]);
 
   // ── On-device speech fallback (no server audio) ──
+  // Speak in the same language the script was written in. voiceLang() keys on the
+  // bare language code, so hand it "de", not "de-DE".
+  const speechLang = spokenLocale.split('-')[0];
   useEffect(() => {
     if (phase !== 'playing' || audioSrc || !speechModeRef.current || !script) return undefined;
     let cancelled = false;
     setPlaying(true);
-    speak(script, { lang }).then(() => { if (!cancelled) finish(); });
+    speak(script, { lang: speechLang }).then(() => { if (!cancelled) finish(); });
     return () => { cancelled = true; cancelSpeech(); };
-  }, [phase, audioSrc, script, lang, finish]);
+  }, [phase, audioSrc, script, speechLang, finish]);
 
   // ── Controls ──
   const togglePlay = useCallback(() => {
@@ -152,9 +191,9 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
     } else {
       cancelSpeech();
       setPlaying(true);
-      speak(script, { lang }).then(() => finish());
+      speak(script, { lang: speechLang }).then(() => finish());
     }
-  }, [audioSrc, script, lang, finish]);
+  }, [audioSrc, script, speechLang, finish]);
 
   const handleDone = useCallback(() => {
     if (markPrayed) onComplete?.();
@@ -248,6 +287,28 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
             ))}
           </div>
 
+          {/* Spoken language — which voice will read the guide. */}
+          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'sgLanguage')}</p>
+          <select
+            value={settings.spokenGuideLanguage || SPOKEN_GUIDE_LANGUAGE_AUTO}
+            onChange={(e) => updateSettings({ spokenGuideLanguage: e.target.value })}
+            aria-label={t(lang, 'sgLanguage')}
+            className="w-full py-2.5 px-3 rounded-2xl text-sm mb-2"
+            style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+          >
+            <option value={SPOKEN_GUIDE_LANGUAGE_AUTO}>{t(lang, 'sgLanguageAuto')}</option>
+            {SPOKEN_GUIDE_LOCALES.map((loc) => (
+              <option key={loc} value={loc}>{languageName(loc, lang)}</option>
+            ))}
+          </select>
+          <p className="text-xs mb-5" style={{ color: 'var(--text-3)' }}>
+            {t(lang, 'sgLanguagePreview', {
+              value: followsAppLanguage
+                ? `${t(lang, 'sgLanguageAuto')} — ${languageName(spokenLocale, lang)}`
+                : languageName(spokenLocale, lang),
+            })}
+          </p>
+
           {/* Privacy note */}
           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'sgPrivacyNote')}</p>
         </div>
@@ -319,6 +380,14 @@ export default function SpokenGuideMode({ prayers, categories, lang, tr, onClose
         <div className="text-6xl mb-5" aria-hidden="true">🙏</div>
         <p className="text-lg font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'sgNowPlaying')}</p>
         {!audioSrc && <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'sgOnDeviceVoice')}</p>}
+
+        {/* The backend had no voice for this language and used another. Gentle, not an error. */}
+        {voiceFallbackUsed && (
+          <p role="status" className="text-xs flex items-start gap-1.5 text-left max-w-xs mt-1 mb-2" style={{ color: 'var(--text-3)' }}>
+            <Info size={13} className="shrink-0 mt-0.5" aria-hidden="true" />
+            {t(lang, 'sgVoiceFallback')}
+          </p>
+        )}
 
         {audioSrc && (
           <div className="w-full max-w-sm mt-4">

@@ -15,6 +15,25 @@ const LENGTHS = new Set(['short', 'medium']);
 const AUDIO_FORMATS = new Set(['mp3', 'wav', 'ogg']);
 const MAX_BODY_BYTES = 256 * 1024;
 const AUDIO_FILE_RE = /^[a-f0-9]{16,64}\.(mp3|wav|ogg)$/;
+const DEFAULT_LOCALE = 'en-US';
+const LANG_SUBTAG_RE = /^[a-z]{2,3}$/i;
+const REGION_SUBTAG_RE = /^[a-z0-9]{2,8}$/i;
+
+// Deliberately duplicated from src/lib/spokenGuide.js rather than imported: this
+// serverless function must not pull in the browser bundle (and its Supabase
+// client). Keep the two in step — src/lib/spokenGuide.test.js covers the shared
+// cases, api/spoken-guide.test.js covers this copy.
+function sanitizeLocale(raw) {
+  if (typeof raw !== 'string') return DEFAULT_LOCALE;
+  const parts = raw.trim().replace(/_/g, '-').split('-').filter(Boolean);
+  if (!parts.length) return DEFAULT_LOCALE;
+  const lang = parts[0];
+  if (!LANG_SUBTAG_RE.test(lang)) return DEFAULT_LOCALE;
+  if (parts.length === 1) return lang.toLowerCase();
+  const region = parts[parts.length - 1];
+  if (!REGION_SUBTAG_RE.test(region)) return DEFAULT_LOCALE;
+  return `${lang.toLowerCase()}-${region.toUpperCase()}`;
+}
 
 // ── Per-user rate limiting (shared store, in-memory fallback) ────────────────
 const RATE_LIMIT_MAX = 10; // spoken-guide is heavier than a text call
@@ -198,7 +217,8 @@ export default async function handler(req, res) {
     .map((p) => sanitizePrayer(p, privacyMode, readFullDetails, includeScripture))
     .filter(Boolean);
 
-  // Forward ONLY the sanitized, known fields — never the raw client body.
+  // Forward ONLY the sanitized, known fields — never the raw client body. Anything
+  // the client tacked on (other settings, ids, tokens) is dropped here, not merged.
   const safeBody = {
     mode: 'driving',
     privacyMode,
@@ -207,7 +227,7 @@ export default async function handler(req, res) {
     includeScripture,
     readFullDetails,
     prayers,
-    locale: typeof body.locale === 'string' ? body.locale.slice(0, 12) : 'en',
+    locale: sanitizeLocale(body.locale),
     audioFormat,
   };
 
@@ -251,5 +271,10 @@ export default async function handler(req, res) {
     durationSeconds: data.duration_seconds ?? null,
     expiresAt: data.expires_at ?? null,
     privacyMode,
+    // Language the script was written in, and the voice that read it. They differ
+    // when the backend had no matching Piper voice — the app shows a gentle notice.
+    locale: data.locale ?? safeBody.locale,
+    voiceLocale: data.voice_locale ?? null,
+    voiceFallbackUsed: data.voice_fallback_used === true,
   });
 }

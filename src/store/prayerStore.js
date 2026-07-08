@@ -227,6 +227,9 @@ const usePrayerStore = create((set, get) => ({
       spokenGuideEnabled: true,
       spokenGuidePrivacyMode: 'summary', // 'full' | 'summary' | 'names_only'
       spokenGuideLowDetail: false, // when true, default the guide to 'names_only'
+      // Which language the guide is spoken in. 'auto' follows `language` above;
+      // otherwise a pinned locale such as 'de-DE'. See lib/spokenGuide.js.
+      spokenGuideLanguage: 'auto',
     };
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem('pfm_settings') || '{}'); } catch { /* ignore */ }

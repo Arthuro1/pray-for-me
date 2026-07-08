@@ -8,6 +8,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 // never drift from the published version.
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
+// A generated audio file name (backend session id + extension). Must match the
+// regex in api/spoken-guide.js — both gate a user-supplied value before it is
+// interpolated into a backend path.
+const AUDIO_FILE_RE = /^[a-f0-9]{16,64}\.(mp3|wav|ogg)$/
+
 export default defineConfig(({ mode }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
   // server-only ANTHROPIC_API_KEY. This is read in the Node dev server only and
@@ -160,13 +165,25 @@ export default defineConfig(({ mode }) => {
           })
         },
       },
-      // Private AI backend — spoken prayer guide. POST generates a session; the
-      // audio proxy (?audio=…) is prod-only (needs the serverless rewrite), so in
-      // dev the driving screen falls back to on-device speech of the script.
+      // Private AI backend — spoken prayer guide. Mirrors the two methods of the
+      // prod serverless function (api/spoken-guide.js):
+      //   POST /api/spoken-guide         → /v1/spoken-guide   (generate a session)
+      //   GET  /api/spoken-guide?audio=… → /v1/audio/<file>   (fetch the audio)
+      //
+      // Both inject the service key Node-side, so it never reaches the browser and
+      // the browser never calls the private backend directly — in dev either. The
+      // GET route is what lets local dev play real Piper audio instead of silently
+      // dropping to on-device speech.
       '/api/spoken-guide': {
         target: aiBackendUrl,
         changeOrigin: true,
-        rewrite: () => '/v1/spoken-guide',
+        rewrite: (path) => {
+          const audio = new URL(path, 'http://x').searchParams.get('audio')
+          if (audio === null) return '/v1/spoken-guide'
+          // Validate before it reaches a path: this is untrusted input. An invalid
+          // name is sent to a route that 404s rather than falling through to POST.
+          return AUDIO_FILE_RE.test(audio) ? `/v1/audio/${audio}` : '/v1/audio/invalid'
+        },
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
             if (aiBackendKey) proxyReq.setHeader('Authorization', `Bearer ${aiBackendKey}`)
