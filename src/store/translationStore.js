@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { aiEnabled, anthropicFetch } from '../lib/anthropic';
+import { aiEnabled, aiFetch, extractText, AI_MODEL } from '../lib/aiClient';
 import { hashText } from '../utils/hash';
 
 // In-memory cache for fast lookups: { [lang]: { [originalText]: translatedText } }
@@ -65,14 +65,14 @@ async function callTranslate(texts, targetLang) {
 ${JSON.stringify(Object.fromEntries(texts.map((t, i) => [i, t])))}`;
 
   try {
-    const res = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
+    const res = await aiFetch({
+      model: AI_MODEL,
       max_tokens: 2000,
       messages: [{ role: 'user', content: prompt }],
     });
     if (!res.ok) return {};
     const data = await res.json();
-    const text = data?.content?.[0]?.text || '';
+    const text = extractText(data);
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return {};
     const parsed = JSON.parse(match[0]);

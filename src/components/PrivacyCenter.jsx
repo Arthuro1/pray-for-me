@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2, KeyRound } from 'lucide-react';
+import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2, KeyRound, Car } from 'lucide-react';
 import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -16,6 +16,7 @@ const SECTIONS = [
   { icon: Users, titleKey: 'pcSharedTitle', bodyKey: 'pcSharedBody' },
   { icon: Bell, titleKey: 'pcPushTitle', bodyKey: 'pcPushBody' },
   { icon: Sparkles, titleKey: 'pcAiTitle', bodyKey: 'pcAiBody' },
+  { icon: Car, titleKey: 'pcSpokenTitle', bodyKey: 'pcSpokenBody' },
   { icon: KeyRound, titleKey: 'pcRecoveryTitle', bodyKey: 'pcRecoveryBody' },
   { icon: Download, titleKey: 'pcExportTitle', bodyKey: 'pcExportBody' },
   { icon: Trash2, titleKey: 'pcDeleteTitle', bodyKey: 'pcDeleteBody' },

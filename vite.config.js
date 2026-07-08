@@ -18,6 +18,11 @@ export default defineConfig(({ mode }) => {
   // the client-side-secret foot-gun. Keep this in sync with api/anthropic.js.
   const anthropicKey = env.ANTHROPIC_API_KEY || ''
   const yvpKey = env.YVP_APP_KEY || ''
+  // Private AI backend (pray-for-me-ai). In dev, the proxy injects the service
+  // key Node-side so it never reaches the browser — mirrors the /api/ai and
+  // /api/spoken-guide serverless functions in prod.
+  const aiBackendUrl = (env.AI_BACKEND_URL || 'http://localhost:3000').replace(/\/$/, '')
+  const aiBackendKey = env.AI_BACKEND_API_KEY || ''
 
   return {
   define: {
@@ -130,6 +135,7 @@ export default defineConfig(({ mode }) => {
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: https:",
         "font-src 'self' data:",
+        "media-src 'self' blob:",
         "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co https://va.vercel-scripts.com https://*.vercel-insights.com",
         "worker-src 'self' blob:",
         "manifest-src 'self'",
@@ -141,6 +147,32 @@ export default defineConfig(({ mode }) => {
       ].join('; '),
     },
     proxy: {
+      // Private AI backend — general chat. The client posts an OpenAI-compatible
+      // body to /api/ai; we rewrite to the backend's endpoint and add the service
+      // key. Response passes through unchanged (already OpenAI-shaped).
+      '/api/ai': {
+        target: aiBackendUrl,
+        changeOrigin: true,
+        rewrite: () => '/v1/chat/completions',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            if (aiBackendKey) proxyReq.setHeader('Authorization', `Bearer ${aiBackendKey}`)
+          })
+        },
+      },
+      // Private AI backend — spoken prayer guide. POST generates a session; the
+      // audio proxy (?audio=…) is prod-only (needs the serverless rewrite), so in
+      // dev the driving screen falls back to on-device speech of the script.
+      '/api/spoken-guide': {
+        target: aiBackendUrl,
+        changeOrigin: true,
+        rewrite: () => '/v1/spoken-guide',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            if (aiBackendKey) proxyReq.setHeader('Authorization', `Bearer ${aiBackendKey}`)
+          })
+        },
+      },
       '/api/anthropic': {
         target: 'https://api.anthropic.com',
         changeOrigin: true,

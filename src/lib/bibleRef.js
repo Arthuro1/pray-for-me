@@ -1,7 +1,7 @@
 // Bridges the app's localized verse references (e.g. "Philippiens 4:6",
 // "腓立比书 4:6") to what the YouVersion Platform API needs: a numeric version id
 // per language and a USFM passage id ("PHP.4.6").
-import { anthropicFetch } from './anthropic';
+import { aiFetch, extractText, AI_MODEL } from './aiClient';
 
 // Curated YouVersion version ids per UI language. Each is a public-domain (or
 // copyright-expired, freely served) translation, so the Platform API reliably
@@ -34,12 +34,12 @@ export function versionForLang(lang) {
 const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3})?$/;
 const cacheKey = (reference) => `usfm:${reference}`;
 
-const MODEL = 'claude-haiku-4-5-20251001';
+const MODEL = AI_MODEL;
 
 // Convert a (possibly localized) reference into a USFM passage id. This is a
 // deterministic citation transform, NOT scripture generation — the authoritative
 // verse text still comes from YouVersion; the model only maps the reference.
-// Cached permanently per reference string. Uses anthropicFetch directly (not the
+// Cached permanently per reference string. Uses aiFetch directly (not the
 // cooldown-throttled callClaudeForJson) so it never blocks the AI text fallback
 // that may run on the same tap.
 export async function referenceToUsfm(reference) {
@@ -55,14 +55,14 @@ export async function referenceToUsfm(reference) {
 
   let res;
   try {
-    res = await anthropicFetch({ model: MODEL, max_tokens: 60, messages: [{ role: 'user', content: prompt }] });
+    res = await aiFetch({ model: MODEL, max_tokens: 60, messages: [{ role: 'user', content: prompt }] });
   } catch {
     return null;
   }
   if (!res.ok) return null;
 
   const body = await res.json().catch(() => null);
-  const text = body?.content?.[0]?.text || '';
+  const text = extractText(body);
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) return null;
   let usfm;

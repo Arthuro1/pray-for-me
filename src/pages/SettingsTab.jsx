@@ -2,7 +2,7 @@
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown } from 'lucide-react';
+import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, Car, Headphones } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -446,6 +446,46 @@ export default function SettingsTab() {
           ) : (
             <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
           )}
+        </div>
+
+        {/* Private AI & voice */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'setAiPrivacyTitle')}</h3>
+          </div>
+          <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'setPrivateAiNote')}</p>
+
+          <Row
+            label={t(lang, 'setAiForPrayer')}
+            sub={t(lang, 'setAiForPrayerSub')}
+            icon={Sparkles}
+            enabled={settings.aiPrayerContentEnabled !== false}
+            onToggle={() => updateSettings({ aiPrayerContentEnabled: settings.aiPrayerContentEnabled === false })}
+          />
+
+          <Row
+            label={t(lang, 'setSpokenGuide')}
+            sub={t(lang, 'setSpokenGuideSub')}
+            icon={Car}
+            enabled={settings.spokenGuideEnabled !== false}
+            onToggle={() => updateSettings({ spokenGuideEnabled: settings.spokenGuideEnabled === false })}
+          />
+
+          {settings.spokenGuideEnabled !== false && (
+            <Row
+              label={t(lang, 'setLowDetail')}
+              sub={t(lang, 'setLowDetailSub')}
+              icon={Lock}
+              enabled={!!settings.spokenGuideLowDetail}
+              onToggle={() => updateSettings({ spokenGuideLowDetail: !settings.spokenGuideLowDetail })}
+            />
+          )}
+
+          {/* Placeholder — a future fully-on-device mode (no data leaves the device). */}
+          <div className="opacity-50">
+            <Row label={t(lang, 'setOnDeviceAi')} sub={t(lang, 'setOnDeviceAiSub')} icon={Headphones} />
+          </div>
         </div>
 
         {/* Notifications */}

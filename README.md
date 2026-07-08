@@ -70,7 +70,8 @@ The **only** required config is Supabase (`VITE_SUPABASE_URL` + `VITE_SUPABASE_A
 | Integration | Env | Without it |
 |---|---|---|
 | **Supabase** | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | **required** — app won't sign in |
-| **Anthropic (AI)** | `ANTHROPIC_API_KEY` (server-only) | AI features stay off (they're consent-gated anyway) |
+| **Private AI backend** | `AI_BACKEND_URL`, `AI_BACKEND_API_KEY` (server-only) | AI + Spoken Guide stay off (they're consent-gated anyway) |
+| **Spoken Prayer Guide** | `SPOKEN_GUIDE_ENABLED` (+ the AI backend) | the driving-safe spoken guide is hidden |
 | **YouVersion** | `VITE_YOUVERSION_ENABLED`, `YVP_APP_KEY` | verse reader shows the reference + a Bible.com link |
 | **Web Push** | `VITE_VAPID_PUBLIC_KEY` (+ Edge secrets) | push reminders unavailable; in-app reminders still work |
 | **Analytics** | *none* | Vercel Analytics auto-injects in prod; a no-op locally. Disable with `localStorage.pfm_analytics_off = '1'` |
@@ -89,12 +90,35 @@ VITE_VAPID_PUBLIC_KEY=your-vapid-public-key      # Web Push (npx web-push genera
 VITE_DONATION_URL=https://paypal.me/your-handle  # optional
 VITE_YOUVERSION_ENABLED=true                     # optional — YouVersion verse text
 
+VITE_AI_MODEL=llama3.1:8b                         # model the browser requests (server enforces the allowlist)
+
 # Server-only — never bundled
-ANTHROPIC_API_KEY=your-claude-api-key            # AI features
+AI_PROVIDER=private                               # default: talk only to the private backend
+AI_BACKEND_URL=https://ai-api.example.com         # your pray-for-me-ai deployment
+AI_BACKEND_API_KEY=your-strong-service-secret     # must match pray-for-me-ai
+AI_MODEL=llama3.1:8b
+AI_ALLOWED_MODELS=llama3.1:8b,mistral:7b,qwen2.5:7b
+SPOKEN_GUIDE_ENABLED=true                         # driving-safe spoken prayer guide
+SPOKEN_GUIDE_MAX_PRAYERS=20
+SPOKEN_GUIDE_MAX_CHARS_PER_PRAYER=1000
 YVP_APP_KEY=your-youversion-app-key              # optional — in-app verse reader
+# ANTHROPIC_API_KEY=...  # LEGACY, not used by default (see below)
 ```
 
 The VAPID **private** key is used only by the reminder Edge Functions and lives in Supabase secrets: `supabase secrets set VAPID_PRIVATE_KEY=...`
+
+---
+
+## 🔒 AI, voice & privacy
+
+Pray4Me's AI runs on **your own** infrastructure, not a foreign AI provider.
+
+- **Private by default.** `/api/ai` (text) and `/api/spoken-guide` (voice) talk only to the private **[pray-for-me-ai](../pray-for-me-ai)** backend, which serves a self-hosted LLM (Ollama/vLLM) and TTS (Piper/Kokoro). **Anthropic is no longer used by default** — the old `/api/anthropic` proxy is kept only for backwards compatibility and is never called. There is no automatic fallback to any third-party AI/TTS provider.
+- **The browser never calls the backend directly.** It only ever calls Pray4Me's own `/api/*` endpoints, which authenticate the Supabase session, rate-limit per user, validate/sanitize input, and forward to the backend with a service key. Audio is proxied through `/api/spoken-guide?audio=…`.
+- **Configure it** by pointing `AI_BACKEND_URL` at your `pray-for-me-ai` deployment and setting a shared `AI_BACKEND_API_KEY`. See that repo's README for running Ollama + Piper.
+- **Disable AI for prayer content** any time in Settings → *Private AI & voice* (or the master toggle). When off, no prayer content is sent to any AI.
+- **Spoken Guide** turns selected prayers into a calm, driving-safe spoken session. Privacy modes limit what is voiced: **full**, **summary**, or **names only**. Low-detail (names-only) mode never reads sensitive details aloud; generated audio is temporary and expires quickly.
+- **Honest limits.** AI and voice need plaintext input, so encrypted prayer content is decrypted **on your device** before being sent to the private backend. **Data sharing is reduced, not eliminated** — until a future on-device mode exists, prayer content is still processed (on infrastructure you control, not a third party). The in-app Privacy Center states this plainly.
 
 ---
 
@@ -162,7 +186,7 @@ React 18 · Tailwind CSS 3 · React Router 7 · Zustand 5 · Vite + vite-plugin-
 
 ## 🌐 Deployment
 
-Deployed at **[pray4me.space](https://pray4me.space)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies for Anthropic and YouVersion.
+Deployed at **[pray4me.space](https://pray4me.space)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies — `ai.js` (private AI), `spoken-guide.js` (Spoken Guide + audio proxy), `youversion.js`, and the legacy `anthropic.js`. The private AI/voice backend (`pray-for-me-ai`) is deployed separately; point `AI_BACKEND_URL` at it.
 
 ---
 

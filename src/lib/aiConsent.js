@@ -9,7 +9,10 @@ import usePrayerStore from '../store/prayerStore';
 import { track, EVENTS } from './analytics';
 
 export function hasAiConsent(context = 'prayer') {
-  const { aiConsentPrayer, aiConsentHome } = usePrayerStore.getState().settings;
+  const { aiConsentPrayer, aiConsentHome, aiPrayerContentEnabled } = usePrayerStore.getState().settings;
+  // Master switch: "Disable AI for prayer content" turns every prayer-content AI
+  // feature off regardless of prior consent. Defaults on when unset.
+  if (aiPrayerContentEnabled === false) return false;
   return context === 'home' ? !!aiConsentHome : !!aiConsentPrayer;
 }
 

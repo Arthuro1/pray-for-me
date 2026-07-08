@@ -5,12 +5,13 @@
 //   2. One shared cooldown + JSON-call helper, so all AI features (Scripture
 //      guidance, prayer points, day plan) share the same client-side throttle
 //      and parsing instead of each re-implementing it.
-import { anthropicFetch } from './anthropic';
+import { aiFetch, extractText, wasTruncated, AI_MODEL } from './aiClient';
 import { devError } from './logger';
 import { t } from '../i18n';
 
-// Pinned to the one model the server proxy allows (see api/anthropic.js).
-const MODEL = 'claude-haiku-4-5-20251001';
+// The model the client requests; the server proxy (/api/ai) enforces its own
+// allowlist. Configurable via VITE_AI_MODEL.
+const MODEL = AI_MODEL;
 const COOLDOWN_MS = 5000;
 
 // Per-feature cooldowns. The throttle is meant to stop one feature from being
@@ -76,11 +77,15 @@ export async function callClaudeForJson({ prompt, lang, maxTokens = 900, shape =
 
   lastCallByFeature.set(feature, Date.now());
   try {
-    const res = await anthropicFetch({
+    // OpenAI-compatible shape: the theological guardrail rides as a `system`
+    // message (the private backend accepts system/user/assistant roles).
+    const res = await aiFetch({
       model: MODEL,
       max_tokens: maxTokens,
-      system: scriptureSystemPrompt(lang),
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        { role: 'system', content: scriptureSystemPrompt(lang) },
+        { role: 'user', content: prompt },
+      ],
     });
 
     if (res.status === 429) return { data: null, error: { type: 'busy' } };
@@ -92,12 +97,12 @@ export async function callClaudeForJson({ prompt, lang, maxTokens = 900, shape =
     }
 
     const body = await res.json();
-    // A 200 response can still be an incomplete answer if Claude hit maxTokens
-    // mid-JSON. That's otherwise silent (no error, just an unmatched/unparsable
-    // regex below), which looks identical to a real failure from the caller's
-    // side — log it so a too-small maxTokens budget is diagnosable.
-    if (body?.stop_reason === 'max_tokens') devError('AI response truncated (max_tokens)', feature);
-    const text = body?.content?.[0]?.text || '';
+    // A 200 response can still be an incomplete answer if the model hit maxTokens
+    // mid-JSON. That's otherwise silent (just an unparsable regex below), which
+    // looks identical to a real failure — log it so a too-small budget is
+    // diagnosable.
+    if (wasTruncated(body)) devError('AI response truncated (max_tokens)', feature);
+    const text = extractText(body);
     const match = text.match(shape === 'array' ? /\[[\s\S]*\]/ : /\{[\s\S]*\}/);
     if (!match) return { data: null, error: null };
     return { data: JSON.parse(match[0]), error: null };

@@ -218,6 +218,15 @@ const usePrayerStore = create((set, get) => ({
       audioVolume: 0.18,
       audioVoiceEnabled: true,
       audioPauseLength: 'medium',
+      // ── Spoken Prayer Guide (server-backed, driving-safe) ──────────────────
+      // Unlike Hands-free Mode (on-device, never speaks prayer content), the
+      // Spoken Guide uses Pray4Me's PRIVATE AI + voice backend and CAN read
+      // privacy-reduced prayer content aloud. All three are account-syncable
+      // choices about how much is spoken and whether AI touches prayer content.
+      aiPrayerContentEnabled: true, // master switch: AI on prayer content
+      spokenGuideEnabled: true,
+      spokenGuidePrivacyMode: 'summary', // 'full' | 'summary' | 'names_only'
+      spokenGuideLowDetail: false, // when true, default the guide to 'names_only'
     };
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem('pfm_settings') || '{}'); } catch { /* ignore */ }

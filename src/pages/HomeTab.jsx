@@ -8,7 +8,7 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink, Headphones } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink, Headphones, Car } from 'lucide-react';
 import Encouragement from '../components/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
 import { toast } from '../store/toastStore';
@@ -18,6 +18,7 @@ import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
 import HandsFreePrayerMode from '../components/HandsFreePrayerMode';
+import SpokenGuideMode from '../components/SpokenGuideMode';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { weeklyRecap } from '../utils/recap';
 import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
@@ -71,6 +72,7 @@ export default function HomeTab({ onAdd }) {
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showSession, setShowSession] = useState(false);
   const [showHandsFree, setShowHandsFree] = useState(false);
+  const [showSpokenGuide, setShowSpokenGuide] = useState(false);
   const [prayedDays, setPrayedDays] = useState(getPrayedDays);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
@@ -185,6 +187,16 @@ export default function HomeTab({ onAdd }) {
           lang={lang}
           tr={tr}
           onClose={() => setShowHandsFree(false)}
+          onComplete={handleSessionComplete}
+        />
+      )}
+      {showSpokenGuide && todaysPrayers.length > 0 && (
+        <SpokenGuideMode
+          prayers={todaysPrayers}
+          categories={categories}
+          lang={lang}
+          tr={tr}
+          onClose={() => setShowSpokenGuide(false)}
           onComplete={handleSessionComplete}
         />
       )}
@@ -434,6 +446,17 @@ export default function HomeTab({ onAdd }) {
             >
               <Headphones size={16} style={{ color: 'var(--accent)' }} /> {t(lang, 'handsFreePrayer')}
             </button>
+            {/* Spoken Prayer Guide — server-backed voice session for driving. Gated
+                on the feature flag AND the "AI on prayer content" master switch. */}
+            {settings.spokenGuideEnabled !== false && settings.aiPrayerContentEnabled !== false && (
+              <button
+                onClick={() => setShowSpokenGuide(true)}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-medium transition-all"
+                style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+              >
+                <Car size={16} style={{ color: 'var(--accent)' }} /> {t(lang, 'sgTitle')}
+              </button>
+            )}
           </div>
         )}
 
