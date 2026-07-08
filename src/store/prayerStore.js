@@ -211,6 +211,13 @@ const usePrayerStore = create((set, get) => ({
       // any settings change is saved).
       aiConsentPrayer: localStorage.getItem('pfm_ai_consent_prayer') === 'true',
       aiConsentHome: localStorage.getItem('pfm_ai_consent_home') === 'true',
+      // Hands-free Prayer Mode atmosphere. Device-local (NOT in settingsSync
+      // COLUMNS): audio prefs are a per-device choice, not account state, so they
+      // persist via pfm_settings without a server round-trip. Silence is default.
+      audioTrackId: 'silence',
+      audioVolume: 0.18,
+      audioVoiceEnabled: true,
+      audioPauseLength: 'medium',
     };
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem('pfm_settings') || '{}'); } catch { /* ignore */ }

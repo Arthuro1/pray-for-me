@@ -8,7 +8,7 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink, Headphones } from 'lucide-react';
 import Encouragement from '../components/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
 import { toast } from '../store/toastStore';
@@ -17,6 +17,7 @@ import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
+import HandsFreePrayerMode from '../components/HandsFreePrayerMode';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { weeklyRecap } from '../utils/recap';
 import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
@@ -69,6 +70,7 @@ export default function HomeTab({ onAdd }) {
   const [verseResolving, setVerseResolving] = useState(false);
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showSession, setShowSession] = useState(false);
+  const [showHandsFree, setShowHandsFree] = useState(false);
   const [prayedDays, setPrayedDays] = useState(getPrayedDays);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
@@ -156,6 +158,14 @@ export default function HomeTab({ onAdd }) {
     }
   };
 
+  // Marking a whole session prayed: the day's remembrance plus a per-prayer
+  // completion log (feeds catch-up, the calendar history and rotation fairness).
+  // Shared by the tap-based session and Hands-free Mode.
+  const handleSessionComplete = () => {
+    setPrayedDays(markPrayedToday());
+    todaysPrayers.forEach((p) => markPrayedOn(p.id, todayKey()));
+  };
+
   return (
     <div>
       {showSession && todaysPrayers.length > 0 && (
@@ -165,12 +175,17 @@ export default function HomeTab({ onAdd }) {
           lang={lang}
           tr={tr}
           onClose={() => setShowSession(false)}
-          onComplete={() => {
-            setPrayedDays(markPrayedToday());
-            // Per-prayer completion log: feeds catch-up, the calendar history
-            // and rotation fairness (last_prayed_at).
-            todaysPrayers.forEach((p) => markPrayedOn(p.id, todayKey()));
-          }}
+          onComplete={handleSessionComplete}
+        />
+      )}
+      {showHandsFree && todaysPrayers.length > 0 && (
+        <HandsFreePrayerMode
+          prayers={todaysPrayers}
+          categories={categories}
+          lang={lang}
+          tr={tr}
+          onClose={() => setShowHandsFree(false)}
+          onComplete={handleSessionComplete}
         />
       )}
       {showAiConsent && (
@@ -403,13 +418,23 @@ export default function HomeTab({ onAdd }) {
         )}
 
         {todaysPrayers.length > 0 && (
-          <button
-            onClick={() => setShowSession(true)}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white mb-3 transition-all"
-            style={{ background: 'var(--accent)' }}
-          >
-            <HandHeart size={17} /> {t(lang, 'prayNow')}
-          </button>
+          <div className="flex flex-col gap-2 mb-3">
+            <button
+              onClick={() => setShowSession(true)}
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white transition-all"
+              style={{ background: 'var(--accent)' }}
+            >
+              <HandHeart size={17} /> {t(lang, 'prayNow')}
+            </button>
+            {/* Voice-guided, eyes-closed (or hands-on-the-wheel) alternative. */}
+            <button
+              onClick={() => setShowHandsFree(true)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-medium transition-all"
+              style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+            >
+              <Headphones size={16} style={{ color: 'var(--accent)' }} /> {t(lang, 'handsFreePrayer')}
+            </button>
+          </div>
         )}
 
         {reminder && (

@@ -31,6 +31,12 @@ export const EVENTS = Object.freeze({
   DATA_EXPORTED: 'data_exported',
   ACCOUNT_DELETED_STARTED: 'account_deleted_started',
   PRIVACY_CENTER_OPENED: 'privacy_center_opened',
+  // Hands-free Prayer Mode. Strictly generic: that a session ran and whether a
+  // background atmosphere was on — never the prayer subjects or spoken script.
+  // The instrumental style rides on the existing `method` prop (e.g. 'soft-piano').
+  HANDS_FREE_SESSION_STARTED: 'hands_free_session_started',
+  BACKGROUND_AUDIO_ENABLED: 'background_audio_enabled',
+  SESSION_COMPLETED: 'session_completed',
 });
 
 const ALLOWED_EVENTS = new Set(Object.values(EVENTS));

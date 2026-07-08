@@ -4,6 +4,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { movementPassage } from '../lib/prayerMovements';
+import { MODE_STAGES, MOVEMENT_META } from '../lib/prayerFlow';
 import Encouragement from './Encouragement';
 import VerseAccordion from './VerseAccordion';
 
@@ -12,19 +13,8 @@ import VerseAccordion from './VerseAccordion';
 //   guided   — open in adoration, pray the requests, close in thanksgiving
 //   acts     — Adoration → Confession → Thanksgiving → Supplication (the requests)
 // Prayer is not a form: each Scripture movement points to a passage to read, and
-// the requests themselves are always the heart of the session.
-const MODE_STAGES = {
-  requests: ['requests'],
-  guided: ['adoration', 'requests', 'thanksgiving'],
-  acts: ['adoration', 'confession', 'thanksgiving', 'requests'],
-};
-
-const MOVEMENT_META = {
-  adoration: { emoji: '🙌', titleKey: 'stageAdoration', promptKey: 'stageAdorationPrompt' },
-  confession: { emoji: '🕊️', titleKey: 'stageConfession', promptKey: 'stageConfessionPrompt' },
-  thanksgiving: { emoji: '🙏', titleKey: 'stageThanksgiving', promptKey: 'stageThanksgivingPrompt' },
-};
-
+// the requests themselves are always the heart of the session. The flow stages
+// live in ../lib/prayerFlow so HandsFreePrayerMode shares the same definitions.
 const MODE_OPTIONS = [
   { mode: 'requests', titleKey: 'modeRequests', descKey: 'modeRequestsDesc', primary: true },
   { mode: 'guided', titleKey: 'modeGuided', descKey: 'modeGuidedDesc' },

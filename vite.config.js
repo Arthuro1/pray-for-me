@@ -84,6 +84,19 @@ export default defineConfig(({ mode }) => {
               expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
             },
           },
+          {
+            // Hands-free background instrumentals: cache the first time a track is
+            // played so the prayer atmosphere works offline thereafter, without
+            // precaching (potentially large) audio into the install bundle.
+            urlPattern: /\/audio\/.*\.(?:mp3|ogg|m4a|wav)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'audio-cache',
+              expiration: { maxEntries: 12, maxAgeSeconds: 60 * 60 * 24 * 90 },
+              cacheableResponse: { statuses: [0, 200] },
+              rangeRequests: true,
+            },
+          },
         ],
       },
     }),
