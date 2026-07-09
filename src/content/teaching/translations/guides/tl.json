@@ -1,0 +1,234 @@
+{
+  "acts": {
+    "title": "Ang pormang ACTS",
+    "summary": "Pagsamba, Pagtatapat, Pasasalamat, Pagsusumamo — isang simpleng balangkas para sa isang buong panalangin.",
+    "intro": "Ang ACTS ay hindi isang pormula na pumipilit sa tainga ng Diyos; ito ay isang tulong upang ang panalangin ay hindi maging listahan lamang ng mga hiling. Nagsisimula tayo kung saan nagsisimula ang Kasulatan — sa Diyos mismo — bago dalhin ang ating mga pangangailangan.",
+    "steps": [
+      {
+        "title": "Pagsamba",
+        "prompt": "Purihin ang Diyos dahil sa kung sino Siya, hindi lamang sa kung ano ang Kaniyang ibinibigay. Basahin ang salmo nang dahan-dahan at isauli sa Kaniya ang Kaniyang mga salita."
+      },
+      {
+        "title": "Pagtatapat",
+        "prompt": "Matapat na sumang-ayon sa Diyos tungkol sa iyong kasalanan. Siya ay tapat at matuwid upang magpatawad — ang pagtatapat ay pag-uwi, hindi pagkamit ng pag-ibig."
+      },
+      {
+        "title": "Pasasalamat",
+        "prompt": "Pangalanan ang mga tiyak na kaawaan mula ngayong araw at ngayong linggo. Ang pasasalamat ay nagpapatatag sa puso bago ito humingi ng anuman."
+      },
+      {
+        "title": "Pagsusumamo",
+        "prompt": "Ngayon dalhin ang iyong mga kahilingan — para sa iyong sarili at para sa iba — nang may pagtitiwala, dahil sa kung sino Siya. Ipanalangin ang mga pasanin ng iyong puso."
+      }
+    ]
+  },
+  "psalms": {
+    "title": "Pananalangin sa pamamagitan ng mga Salmo",
+    "summary": "Ibinibigay sa atin ng mga Salmo ang mismong mga salita ng Diyos upang isauli sa Kaniya sa panalangin — sa galak, sa dalamhati, at sa lahat ng nasa pagitan.",
+    "intro": "Sa loob ng maraming siglo, ipinananalangin ng iglesya ang mga Salmo sapagkat itinuturo ng mga ito kung paano makadama nang wasto sa harap ng Diyos. Pumili ng isa, basahin nang dahan-dahan, at hayaang hubugin nito ang iyong sariling panalangin, taludtod sa taludtod.",
+    "steps": [
+      {
+        "title": "Basahin nang buo",
+        "prompt": "Basahin ang salmo minsan, dahan-dahan, nakikinig lamang. Pansinin kung ano ang sinasabi ng may-akda sa Diyos at tungkol sa Diyos."
+      },
+      {
+        "title": "Isauli ito sa panalangin",
+        "prompt": "Balikan itong muli, sa pagkakataong ito ay gawing iyong sariling panalangin ang mga salita nito — taludtod sa taludtod, sa iyong sariling tinig."
+      },
+      {
+        "title": "Isama rito ang iyong buhay",
+        "prompt": "Kung saan binabanggit ng salmo ang takot, pag-asa, o papuri, banggitin ang sa iyo. Hayaang bigyan nito ng salita ang iyong nadarama."
+      }
+    ]
+  },
+  "scripture": {
+    "title": "Pananalangin ng Kasulatan",
+    "summary": "Gawing panalangin ang isang bahagi na iyong binabasa, upang ang iyong mga panalangin ay hubugin ng mga salita ng Diyos, hindi lamang ng iyong sarili.",
+    "intro": "Ang pananalangin ng Kasulatan ay nagpapanatili sa ating humingi ng mga bagay na ipinangako ng Diyos na ibibigay. Ang mga panalangin ni Pablo sa kaniyang mga sulat ay isang kahanga-hangang lugar upang matuto — ipanalangin ang mga ito para sa iyong sarili at para sa iba.",
+    "steps": [
+      {
+        "title": "Pumili ng isang bahagi",
+        "prompt": "Basahin ang panalangin ni Pablo nang dahan-dahan. Itanong: ano ang minimithi niyang malaman at maging ng mga mananampalatayang ito?"
+      },
+      {
+        "title": "Ipanalangin ito para sa sarili",
+        "prompt": "Ilagay ang iyong pangalan sa bahaging ito. Hilingin sa Diyos na gawin ang mga bagay na ito sa iyo."
+      },
+      {
+        "title": "Ipanalangin ito para sa iba",
+        "prompt": "Pangalanan ang mga minamahal mo at ipanalangin ang parehong Kasulatan sa kanila — para sa kanilang pananampalataya, pag-ibig, at pagkakaugat kay Cristo."
+      }
+    ]
+  },
+  "promises": {
+    "title": "Pananalangin ng mga pangako ng Diyos",
+    "summary": "Panagutin ang Diyos sa Kaniyang sariling salita — binabasa ang bawat pangako sa konteksto upang humingi nang wasto, hindi nang may kapangahasan.",
+    "intro": "Ang mga pangako ng Diyos ay “oo” kay Cristo (2 Corinto 1:20). Ngunit ang isang pangako ay dapat basahin sa konteksto nito: kanino ito ibinigay, at ano talaga ang ipinapangako nito. Saka natin ito maipananalangin nang may pagtitiwala.",
+    "steps": [
+      {
+        "title": "Basahin ito sa konteksto",
+        "prompt": "Basahin ang mga talatang nakapaligid, hindi lamang ang pangako. Kanino ito nakatuon, at ano ang ipinapangako ng Diyos?"
+      },
+      {
+        "title": "Iugat ito kay Cristo",
+        "prompt": "Itanong kung paano natutupad ang pangakong ito kay Jesus. Bawat tunay na pangako ay bumabalik sa Kaniya."
+      },
+      {
+        "title": "Isauli ito sa Diyos sa panalangin",
+        "prompt": "Hilingin sa Diyos na gawin ang Kaniyang ipinangako — para sa Kaniyang kaluwalhatian at sa iyong ikabubuti — at magpahinga sa Kaniyang katapatan."
+      }
+    ]
+  },
+  "wisdom": {
+    "title": "Pananalangin para sa karunungan",
+    "summary": "Kapag hindi mo alam kung ano ang gagawin, iniimbitahan ka ng Diyos na humingi sa Kaniya ng karunungan — ibinibigay nang saganang-sagana.",
+    "intro": "Ang karunungan ay hindi lamang katalinuhan; ito ang kasanayang mamuhay ayon sa paraan ng Diyos sa daigdig ng Diyos. Sinasabi ni Santiago na ibinibigay ito ng Diyos nang malaya sa mga humihingi nang may pananampalataya.",
+    "steps": [
+      {
+        "title": "Humingi nang may pananampalataya",
+        "prompt": "Dalhin ang pasya sa harap ng Diyos. Humingi ng karunungan nang tuwiran, na nagtitiwala sa Kaniyang pangakong ibigay ito."
+      },
+      {
+        "title": "Matakot sa Panginoon",
+        "prompt": "Ang karunungan ay nagsisimula sa paggalang sa Diyos. Hilingin sa Kaniya na gawin kang mas nagnanais ng Kaniyang kalooban kaysa sa iyong sarili."
+      },
+      {
+        "title": "Magtiwala, huwag umasa sa sarili",
+        "prompt": "Isuko ang iyong sariling pang-unawa. Hilingin sa Diyos na ituwid ang iyong mga landas habang ikaw ay sumusulong."
+      }
+    ]
+  },
+  "enemies": {
+    "title": "Pananalangin para sa mga kaaway",
+    "summary": "Tinatawag tayo ni Jesus na pagpalain ang mga gumagawa sa atin ng masama — ang pinakamahirap, at pinaka-kawangis-ni-Cristo na panalangin.",
+    "intro": "Ang manalangin para sa isang kaaway ay pagsunod kay Jesus at pagkalaya mula sa pait. Hindi tayo nananalangin na durugin sila ng Diyos, kundi na kaawaan Niya sila — kung paanong kinaawaan Niya tayo.",
+    "steps": [
+      {
+        "title": "Pakinggan ang utos ni Jesus",
+        "prompt": "Basahin ang Kaniyang mga salita. Hayaang tumimo: ibigin ninyo ang inyong mga kaaway, at ipanalangin ang mga umuusig sa inyo."
+      },
+      {
+        "title": "Pangalanan sila sa harap ng Diyos",
+        "prompt": "Pangalanan ang tao nang matapat. Hilingin sa Diyos na pagpalain siya, palambutin siya, at iligtas siya."
+      },
+      {
+        "title": "Bitawan ang kasalanang ginawa sa iyo",
+        "prompt": "Ibigay ang kamalian sa Diyos, na humahatol nang matuwid. Hilingin sa Kaniya na palayain ang iyong puso mula sa pait."
+      }
+    ]
+  },
+  "authorities": {
+    "title": "Pananalangin para sa mga may kapangyarihan",
+    "summary": "Sinasabi sa atin ng Kasulatan na ipanalangin ang mga hari at lahat ng may kapangyarihan — para sa kapayapaan, katarungan, at paglaganap ng ebanghelyo.",
+    "intro": "Hinihikayat ni Pablo ang panalangin para sa mga pinuno upang ang iglesya ay mamuhay nang tahimik at ang ebanghelyo ay malayang tumakbo. Ipinananalangin natin ang mga pinuno, sang-ayon man tayo sa kanila o hindi.",
+    "steps": [
+      {
+        "title": "Manalangin ayon sa utos ng Kasulatan",
+        "prompt": "Basahin ang bilin ni Pablo. Ipanalangin ang mga namamahala, upang tayo ay mamuhay nang tahimik at maka-Diyos."
+      },
+      {
+        "title": "Humingi ng katarungan at awa",
+        "prompt": "Ipanalangin na ang mga pinuno ay mamahala nang makatarungan, ipagtanggol ang mahihina, at pigilan ang kasamaan."
+      },
+      {
+        "title": "Ipanalangin ang ebanghelyo",
+        "prompt": "Hilingin na ang iglesya ay malayang makasamba at ang mabuting balita ni Jesus ay lumaganap sa ilalim ng kanilang pamamahala."
+      }
+    ]
+  },
+  "missionaries": {
+    "title": "Pananalangin para sa mga misyonero",
+    "summary": "Ipanalangin ang mga nagdadala ng ebanghelyo sa mga bansa — para sa mga bukas na pinto, katapangan, at pagtitiyaga.",
+    "intro": "Ang aanihin ay marami ngunit kakaunti ang mga manggagawa. Sinasabi sa atin ni Jesus na hilingin sa Panginoon ng anihan na sila ay isugo, at hinihiling ni Pablo sa mga iglesya na ipanalangin ang kaniyang mga salita at tapang.",
+    "steps": [
+      {
+        "title": "Humingi ng mga manggagawa",
+        "prompt": "Manalangin, gaya ng iniutos ni Jesus, na magsugo ang Diyos ng mga manggagawa sa Kaniyang anihan."
+      },
+      {
+        "title": "Ipanalangin ang mga bukas na pinto",
+        "prompt": "Hilingin sa Diyos na magbukas ng mga pinto para sa mensahe at magbigay ng linaw at tapang sa mga nangangaral nito."
+      },
+      {
+        "title": "Ipanalangin ang pagtitiyaga",
+        "prompt": "Ipanalangin ang kanilang kaligtasan, kagalakan, at pagtitiyaga — at ang bungang mananatili."
+      }
+    ]
+  },
+  "church": {
+    "title": "Pananalangin para sa iyong lokal na iglesya",
+    "summary": "Ipanalangin ang mga taong inilagay ng Diyos sa paligid mo — para sa pag-ibig, pagkakaisa, at katapatan kay Cristo.",
+    "intro": "Ang iglesya ay katawan ni Cristo at iyong pamilya. Ipanalangin ang mga pinuno nito, ang pag-ibig nito, at ang paglago nito sa katotohanan — kung paanong ang unang mga mananampalataya ay nagkakaisa sa panalangin.",
+    "steps": [
+      {
+        "title": "Ipanalangin ang pagkakaisa at pag-ibig",
+        "prompt": "Hilingin sa Diyos na pag-isahin ang iyong iglesya sa pag-ibig, upang malaman ng sanlibutan na kayo ay sumusunod kay Jesus."
+      },
+      {
+        "title": "Ipanalangin ang iyong mga pinuno",
+        "prompt": "Ipanalangin ang mga pastor at matatanda — na sila ay magturo nang tapat at magpastol nang may kagalakan."
+      },
+      {
+        "title": "Ipanalangin ang paglago",
+        "prompt": "Hilingin na ang iyong iglesya ay lumago tungo kay Cristo — sa katotohanan, kabanalan, at pagpapatotoo."
+      }
+    ]
+  },
+  "unbelievers": {
+    "title": "Pananalangin para sa mga hindi pa sumasampalataya",
+    "summary": "Ipanalangin ang mga kaibigan at pamilyang malayo sa Diyos — na mabuksan ang kanilang mga mata kay Cristo.",
+    "intro": "Ang kaligtasan ay gawa ng Diyos; Siya lamang ang nagbubukas ng bulag na mga mata. Kaya nananalangin tayo nang may pag-asa, pinangangalanan ang mga minamahal natin, at hinihiling sa Diyos na mapagpasensya at maawain na akitin sila sa Kaniya.",
+    "steps": [
+      {
+        "title": "Pangalanan sila",
+        "prompt": "Dalhin ang mga tiyak na tao sa harap ng Diyos sa pangalan. Kilala at minamahal Niya sila nang higit kaysa sa iyo."
+      },
+      {
+        "title": "Hilingin sa Diyos na magbukas ng mga mata",
+        "prompt": "Ipanalangin na pasilangin ng Diyos ang liwanag ng ebanghelyo sa mga pusong ngayon ay binulag."
+      },
+      {
+        "title": "Hilinging maging saksi",
+        "prompt": "Ipanalangin ang mga bukas na pinto at mga salitang puno ng biyaya, upang maituro mo sila kay Jesus."
+      }
+    ]
+  },
+  "suffering": {
+    "title": "Pananalangin sa gitna ng pagdurusa",
+    "summary": "Kapag ikaw ay nasa sakit, hindi mo kailangan ng pinakintab na mga salita. Dalhin ang iyong tapat na dalamhati sa isang Amang malapit.",
+    "intro": "Binibigyan tayo ng Kasulatan ng pahintulot na managhoy — na ibuhos ang ating kabalisaan sa harap ng Diyos. Malapit Siya sa mga bagbag ang puso, at si Jesus mismo ay nanalangin sa matinding dalamhati. Hindi ka nag-iisa, at hindi mo kailangang magkunwari.",
+    "steps": [
+      {
+        "title": "Ibuhos ang iyong puso",
+        "prompt": "Sabihin sa Diyos kung ano talaga ang nangyayari — ang iyong sakit, ang iyong mga tanong, ang iyong takot. Kaya Niyang pasanin ito."
+      },
+      {
+        "title": "Alalahanin kung sino Siya",
+        "prompt": "Malapit Siya sa mga bagbag ang puso. Ihagis sa Kaniya ang iyong kabalisaan, sapagkat ikaw ay Kaniyang inaalala."
+      },
+      {
+        "title": "Magpahinga sa Kaniyang presensya",
+        "prompt": "Maaaring wala kang mga sagot, ngunit nasa iyo Siya. Umupo nang tahimik, hinihiling lamang ang Kaniyang pagiging malapit."
+      }
+    ]
+  },
+  "temptation": {
+    "title": "Pananalangin sa gitna ng tukso",
+    "summary": "Kapag natutukso, tumakbo sa Diyos sa panalangin. Naglalaan Siya ng daang paglabas at lakas upang manatiling matatag.",
+    "intro": "Itinuro sa atin ni Jesus na manalangin ng “huwag mo kaming ihatid sa tukso”. Ang tukso ay hindi kasalanan, ngunit ito ay isang labanan — at ang panalangin ay kung paano tayo nakikipaglaban, na sumasandal hindi sa lakas ng loob kundi sa kapangyarihan ng Diyos.",
+    "steps": [
+      {
+        "title": "Ipagtapat ito sa Diyos",
+        "prompt": "Pangalanan ang tukso nang matapat sa harap Niya. Ang pagdadala nito sa liwanag ay nagpapaluwag ng hawak nito."
+      },
+      {
+        "title": "Panghawakan ang Kaniyang pangako",
+        "prompt": "Ang Diyos ay tapat; maglalaan Siya ng daang paglabas. Hilingin sa Kaniya na ipakita ang pinto, at daanan ito."
+      },
+      {
+        "title": "Humingi ng lakas",
+        "prompt": "Ipanalangin ang tulong ng Espiritu upang tumakas sa kasalanan at hanapin ang mabuti. Magbantay at manalangin."
+      }
+    ]
+  }
+}

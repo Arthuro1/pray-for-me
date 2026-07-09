@@ -1,0 +1,234 @@
+{
+  "acts": {
+    "title": "Das ACTS-Muster",
+    "summary": "Anbetung, Bekenntnis, Danksagung, Bitte — eine einfache Form für ein vollständiges Gebet.",
+    "intro": "ACTS ist keine Formel, die Gottes Ohr erzwingt; es ist eine Hilfe, damit das Gebet nicht zu einer Liste von Wünschen verkommt. Wir beginnen dort, wo die Schrift beginnt — bei Gott selbst — bevor wir unsere Anliegen bringen.",
+    "steps": [
+      {
+        "title": "Anbetung",
+        "prompt": "Lobe Gott für das, was er ist, nicht nur für das, was er gibt. Lies den Psalm langsam und gib ihm seine Worte zurück."
+      },
+      {
+        "title": "Bekenntnis",
+        "prompt": "Stimme Gott ehrlich über deine Sünde zu. Er ist treu und gerecht, zu vergeben — Bekennen ist Heimkommen, kein Verdienen von Liebe."
+      },
+      {
+        "title": "Danksagung",
+        "prompt": "Nenne konkrete Wohltaten von heute und dieser Woche. Dankbarkeit macht das Herz ruhig, bevor es um irgendetwas bittet."
+      },
+      {
+        "title": "Bitte",
+        "prompt": "Bring nun deine Anliegen — für dich und für andere — mit Zuversicht, wegen dessen, der er ist. Bete durch die Lasten deines Herzens."
+      }
+    ]
+  },
+  "psalms": {
+    "title": "Durch die Psalmen beten",
+    "summary": "Die Psalmen geben uns Gottes eigene Worte, um sie ihm zurückzubeten — in Freude, Trauer und allem dazwischen.",
+    "intro": "Seit Jahrhunderten betet die Kirche die Psalmen, weil sie uns lehren, vor Gott recht zu empfinden. Wähle einen aus, lies ihn langsam und lass ihn Zeile für Zeile dein eigenes Gebet formen.",
+    "steps": [
+      {
+        "title": "Lies ihn ganz",
+        "prompt": "Lies den Psalm einmal langsam, einfach hörend. Achte darauf, was der Verfasser zu Gott und über Gott sagt."
+      },
+      {
+        "title": "Bete ihn zurück",
+        "prompt": "Geh ihn noch einmal durch, diesmal machst du seine Worte zu deinem eigenen Gebet — Zeile für Zeile, mit deiner Stimme."
+      },
+      {
+        "title": "Bring dein Leben hinein",
+        "prompt": "Wo der Psalm eine Furcht, eine Hoffnung oder ein Lob nennt, nenne deine. Lass ihn dem Worte geben, was du empfindest."
+      }
+    ]
+  },
+  "scripture": {
+    "title": "Die Schrift beten",
+    "summary": "Verwandle einen Abschnitt, den du liest, in Gebet, damit deine Gebete von Gottes Worten geprägt sind, nicht nur von deinen eigenen.",
+    "intro": "Die Schrift zu beten hält uns dabei, um das zu bitten, was Gott zu geben verheißen hat. Die Gebete des Paulus in seinen Briefen sind ein wunderbarer Ort zum Lernen — bete sie für dich selbst und für andere.",
+    "steps": [
+      {
+        "title": "Wähle einen Abschnitt",
+        "prompt": "Lies das Gebet des Paulus langsam. Frage: Was ersehnt er, dass diese Gläubigen erkennen und werden?"
+      },
+      {
+        "title": "Bete ihn für dich selbst",
+        "prompt": "Setze deinen eigenen Namen in den Abschnitt ein. Bitte Gott, eben diese Dinge in dir zu wirken."
+      },
+      {
+        "title": "Bete ihn für andere",
+        "prompt": "Nenne Menschen, die du liebst, und bete dieselbe Schrift über sie — für ihren Glauben, ihre Liebe und ihre Verwurzelung in Christus."
+      }
+    ]
+  },
+  "promises": {
+    "title": "Gottes Verheißungen beten",
+    "summary": "Nimm Gott bei seinem eigenen Wort — indem du jede Verheißung im Zusammenhang liest, damit du recht bittest, nicht anmaßend.",
+    "intro": "Gottes Verheißungen sind „Ja“ in Christus (2. Korinther 1,20). Doch eine Verheißung muss im Zusammenhang gelesen werden: wem sie gegeben wurde und was sie tatsächlich zusagt. Dann können wir sie mit Zuversicht beten.",
+    "steps": [
+      {
+        "title": "Lies sie im Zusammenhang",
+        "prompt": "Lies die umliegenden Verse, nicht nur die Verheißung. Wer wird angesprochen, und was sagt Gott zu?"
+      },
+      {
+        "title": "Verankere sie in Christus",
+        "prompt": "Frage, wie diese Verheißung sich in Jesus erfüllt. Jede wahre Verheißung führt zu ihm zurück."
+      },
+      {
+        "title": "Bete sie zu Gott zurück",
+        "prompt": "Bitte Gott, zu tun, was er verheißen hat — zu seiner Ehre und deinem Guten — und ruhe in seiner Treue."
+      }
+    ]
+  },
+  "wisdom": {
+    "title": "Um Weisheit beten",
+    "summary": "Wenn du nicht weißt, was du tun sollst, lädt Gott dich ein, ihn um Weisheit zu bitten — reichlich gegeben.",
+    "intro": "Weisheit ist nicht bloß Klugheit; sie ist die Kunst, Gottes Weg in Gottes Welt zu leben. Jakobus sagt, dass Gott sie denen freigebig schenkt, die im Glauben bitten.",
+    "steps": [
+      {
+        "title": "Bitte im Glauben",
+        "prompt": "Bring die Entscheidung vor Gott. Bitte schlicht um Weisheit und vertraue seiner Verheißung, sie zu geben."
+      },
+      {
+        "title": "Fürchte den Herrn",
+        "prompt": "Weisheit beginnt mit Ehrfurcht vor Gott. Bitte ihn, dass du seinen Willen mehr willst als deinen eigenen."
+      },
+      {
+        "title": "Vertraue, verlass dich nicht",
+        "prompt": "Gib deine eigene Einsicht auf. Bitte Gott, deine Wege zu ebnen, während du vorangehst."
+      }
+    ]
+  },
+  "enemies": {
+    "title": "Für Feinde beten",
+    "summary": "Jesus ruft uns auf, die zu segnen, die uns Unrecht tun — das schwerste und christusähnlichste Gebet.",
+    "intro": "Für einen Feind zu beten heißt Jesus zu gehorchen und von Bitterkeit frei zu werden. Wir beten nicht, dass Gott sie zermalmt, sondern dass er sich ihrer erbarmt — wie er sich unser erbarmt hat.",
+    "steps": [
+      {
+        "title": "Höre Jesu Gebot",
+        "prompt": "Lies seine Worte. Lass sie ankommen: Liebt eure Feinde, betet für die, die euch verfolgen."
+      },
+      {
+        "title": "Nenne sie vor Gott",
+        "prompt": "Nenne die Person ehrlich. Bitte Gott, sie zu segnen, sie zu erweichen und sie zu retten."
+      },
+      {
+        "title": "Lass die Kränkung los",
+        "prompt": "Übergib das Unrecht Gott, der gerecht richtet. Bitte ihn, dein Herz von Bitterkeit zu befreien."
+      }
+    ]
+  },
+  "authorities": {
+    "title": "Für die Obrigkeit beten",
+    "summary": "Die Schrift sagt uns, für Könige und alle in Autorität zu beten — für Frieden, Gerechtigkeit und die Ausbreitung des Evangeliums.",
+    "intro": "Paulus drängt zum Gebet für Herrscher, damit die Kirche ein ruhiges Leben führen kann und das Evangelium ungehindert läuft. Wir beten für Regierende, ob wir ihnen zustimmen oder nicht.",
+    "steps": [
+      {
+        "title": "Bete, wie die Schrift gebietet",
+        "prompt": "Lies die Weisung des Paulus. Bete für die, die regieren, damit wir ein friedliches und gottgefälliges Leben führen."
+      },
+      {
+        "title": "Bitte um Gerechtigkeit und Barmherzigkeit",
+        "prompt": "Bete, dass die Führenden gerecht regieren, die Schwachen schützen und das Böse zurückhalten."
+      },
+      {
+        "title": "Bete für das Evangelium",
+        "prompt": "Bitte, dass die Kirche frei anbeten kann und die gute Nachricht von Jesus sich unter ihrer Fürsorge ausbreitet."
+      }
+    ]
+  },
+  "missionaries": {
+    "title": "Für Missionare beten",
+    "summary": "Bete für die, die das Evangelium zu den Völkern tragen — für offene Türen, Freimut und Ausdauer.",
+    "intro": "Die Ernte ist groß, aber die Arbeiter sind wenige. Jesus sagt uns, den Herrn der Ernte zu bitten, sie auszusenden, und Paulus bittet die Gemeinden, für seine Worte und seinen Mut zu beten.",
+    "steps": [
+      {
+        "title": "Bitte um Arbeiter",
+        "prompt": "Bete, wie Jesus geboten hat, dass Gott Arbeiter in seine Ernte aussendet."
+      },
+      {
+        "title": "Bete um offene Türen",
+        "prompt": "Bitte Gott, Türen für die Botschaft zu öffnen und denen, die sie verkünden, Klarheit und Freimut zu geben."
+      },
+      {
+        "title": "Bete um Ausdauer",
+        "prompt": "Bete für ihren Schutz, ihre Freude und ihr Durchhalten — und für Frucht, die bleibt."
+      }
+    ]
+  },
+  "church": {
+    "title": "Für deine örtliche Gemeinde beten",
+    "summary": "Bete für die Menschen, die Gott um dich gestellt hat — für Liebe, Einheit und Treue zu Christus.",
+    "intro": "Die Gemeinde ist der Leib Christi und deine Familie. Bete für ihre Leiter, ihre Liebe und ihr Wachstum in der Wahrheit — wie die ersten Gläubigen sich gemeinsam dem Gebet widmeten.",
+    "steps": [
+      {
+        "title": "Bete für Einheit und Liebe",
+        "prompt": "Bitte Gott, deine Gemeinde in Liebe zusammenzufügen, damit die Welt erkennt, dass ihr Jesus nachfolgt."
+      },
+      {
+        "title": "Bete für deine Leiter",
+        "prompt": "Bete für Pastoren und Älteste — dass sie treu lehren und mit Freude hüten."
+      },
+      {
+        "title": "Bete für Wachstum",
+        "prompt": "Bitte, dass deine Gemeinde zu Christus heranwächst — in Wahrheit, Heiligkeit und Zeugnis."
+      }
+    ]
+  },
+  "unbelievers": {
+    "title": "Für die beten, die noch nicht glauben",
+    "summary": "Bete für Freunde und Familie, die fern von Gott sind — dass ihre Augen für Christus geöffnet werden.",
+    "intro": "Das Heil ist Gottes Werk; nur er öffnet blinde Augen. Darum beten wir mit Hoffnung, nennen die Menschen, die wir lieben, und bitten den geduldigen und barmherzigen Gott, sie zu sich zu ziehen.",
+    "steps": [
+      {
+        "title": "Nenne sie",
+        "prompt": "Bring bestimmte Menschen mit Namen vor Gott. Er kennt und liebt sie mehr als du."
+      },
+      {
+        "title": "Bitte Gott, Augen zu öffnen",
+        "prompt": "Bete, dass Gott das Licht des Evangeliums in Herzen scheinen lässt, die jetzt verblendet sind."
+      },
+      {
+        "title": "Bitte, ein Zeuge zu sein",
+        "prompt": "Bete um offene Türen und gnädige Worte, damit du sie auf Jesus hinweisen kannst."
+      }
+    ]
+  },
+  "suffering": {
+    "title": "Im Leid beten",
+    "summary": "Wenn du Schmerz hast, brauchst du keine feinen Worte. Bring deine ehrliche Trauer zu einem Vater, der nahe ist.",
+    "intro": "Die Schrift gibt uns die Erlaubnis zu klagen — unsere Not vor Gott auszuschütten. Er ist nahe denen, die zerbrochenen Herzens sind, und Jesus selbst betete in Angst. Du bist nicht allein, und du musst nichts vortäuschen.",
+    "steps": [
+      {
+        "title": "Schütte dein Herz aus",
+        "prompt": "Sag Gott genau, wie es ist — dein Schmerz, deine Fragen, deine Furcht. Er kann es tragen."
+      },
+      {
+        "title": "Erinnere dich, wer er ist",
+        "prompt": "Er ist nahe denen, die zerbrochenen Herzens sind. Wirf deine Sorge auf ihn, denn er sorgt für dich."
+      },
+      {
+        "title": "Ruhe in seiner Gegenwart",
+        "prompt": "Vielleicht hast du keine Antworten, aber du hast ihn. Sitze still und bitte nur um seine Nähe."
+      }
+    ]
+  },
+  "temptation": {
+    "title": "In der Versuchung beten",
+    "summary": "Wenn du versucht wirst, lauf im Gebet zu Gott. Er schafft einen Ausweg und Kraft zum Standhalten.",
+    "intro": "Jesus lehrte uns zu beten: „Führe uns nicht in Versuchung.“ Versuchung ist keine Sünde, aber sie ist ein Kampf — und Gebet ist, wie wir ihn führen, indem wir uns nicht auf Willenskraft, sondern auf Gottes Kraft stützen.",
+    "steps": [
+      {
+        "title": "Gestehe es Gott",
+        "prompt": "Nenne die Versuchung ehrlich vor ihm. Sie ins Licht zu bringen lockert ihren Griff."
+      },
+      {
+        "title": "Ergreife seine Verheißung",
+        "prompt": "Gott ist treu; er wird einen Ausweg schaffen. Bitte ihn, dir die Tür zu zeigen, und nimm sie."
+      },
+      {
+        "title": "Bitte um Kraft",
+        "prompt": "Bete um die Hilfe des Geistes, die Sünde zu fliehen und dem Guten nachzujagen. Wache und bete."
+      }
+    ]
+  }
+}

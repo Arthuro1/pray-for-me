@@ -1,0 +1,234 @@
+{
+  "acts": {
+    "title": "O modelo ACTS",
+    "summary": "Adoração, Confissão, Ação de graças, Súplica — um formato simples para uma oração completa.",
+    "intro": "ACTS não é uma fórmula que force o ouvido de Deus; é uma ajuda para que a oração não se reduza a uma lista de pedidos. Começamos onde a Escritura começa — em Deus mesmo — antes de trazer as nossas necessidades.",
+    "steps": [
+      {
+        "title": "Adoração",
+        "prompt": "Louva a Deus por quem Ele é, não só pelo que Ele dá. Lê o salmo devagar e devolve-lhe as suas próprias palavras."
+      },
+      {
+        "title": "Confissão",
+        "prompt": "Concorda com Deus acerca do teu pecado com sinceridade. Ele é fiel e justo para perdoar — confessar é voltar para casa, não merecer amor."
+      },
+      {
+        "title": "Ação de graças",
+        "prompt": "Nomeia misericórdias concretas de hoje e desta semana. A gratidão firma o coração antes de pedir seja o que for."
+      },
+      {
+        "title": "Súplica",
+        "prompt": "Traz agora os teus pedidos — por ti e pelos outros — com confiança, por causa de quem Ele é. Ora através dos fardos do teu coração."
+      }
+    ]
+  },
+  "psalms": {
+    "title": "Orar através dos Salmos",
+    "summary": "Os Salmos dão-nos as próprias palavras de Deus para lhas devolvermos em oração — na alegria, na tristeza e em tudo o que está entre elas.",
+    "intro": "Há séculos que a Igreja ora os Salmos porque eles nos ensinam a sentir corretamente diante de Deus. Escolhe um, lê-o devagar e deixa-o moldar a tua própria oração, linha a linha.",
+    "steps": [
+      {
+        "title": "Lê-o por inteiro",
+        "prompt": "Lê o salmo uma vez, devagar, apenas escutando. Repara no que o autor diz a Deus e sobre Deus."
+      },
+      {
+        "title": "Devolve-o em oração",
+        "prompt": "Percorre-o de novo, desta vez fazendo das suas palavras a tua própria oração — linha a linha, com a tua voz."
+      },
+      {
+        "title": "Faz entrar nele a tua vida",
+        "prompt": "Onde o salmo nomeia um medo, uma esperança ou um louvor, nomeia os teus. Deixa-o dar palavras ao que sentes."
+      }
+    ]
+  },
+  "scripture": {
+    "title": "Orar a Palavra",
+    "summary": "Transforma em oração um trecho que estás a ler, para que as tuas orações sejam moldadas pelas palavras de Deus, e não só pelas tuas.",
+    "intro": "Orar a Palavra mantém-nos a pedir aquilo que Deus prometeu dar. As orações de Paulo nas suas cartas são um lugar maravilhoso para aprender — ora-as por ti mesmo e pelos outros.",
+    "steps": [
+      {
+        "title": "Escolhe um trecho",
+        "prompt": "Lê a oração de Paulo devagar. Pergunta: o que anseia ele que estes crentes conheçam e se tornem?"
+      },
+      {
+        "title": "Ora-a por ti mesmo",
+        "prompt": "Coloca o teu próprio nome no trecho. Pede a Deus que opere estas mesmas coisas em ti."
+      },
+      {
+        "title": "Ora-a pelos outros",
+        "prompt": "Nomeia pessoas que amas e ora a mesma Escritura sobre elas — pela sua fé, amor e enraizamento em Cristo."
+      }
+    ]
+  },
+  "promises": {
+    "title": "Orar as promessas de Deus",
+    "summary": "Toma Deus pela sua própria palavra — lendo cada promessa no contexto para pedir com retidão, sem presunção.",
+    "intro": "As promessas de Deus são «sim» em Cristo (2 Coríntios 1:20). Mas uma promessa deve ser lida no seu contexto: a quem foi dada e o que de facto assegura. Então podemos orá-la com confiança.",
+    "steps": [
+      {
+        "title": "Lê-a no contexto",
+        "prompt": "Lê os versículos ao redor, não só a promessa. A quem se dirige e o que está Deus a garantir?"
+      },
+      {
+        "title": "Ancora-a em Cristo",
+        "prompt": "Pergunta como esta promessa se cumpre em Jesus. Toda promessa verdadeira conduz de volta a Ele."
+      },
+      {
+        "title": "Devolve-a a Deus em oração",
+        "prompt": "Pede a Deus que faça o que prometeu — para a Sua glória e o teu bem — e repousa na Sua fidelidade."
+      }
+    ]
+  },
+  "wisdom": {
+    "title": "Orar por sabedoria",
+    "summary": "Quando não sabes o que fazer, Deus convida-te a pedir-lhe sabedoria — dada com generosidade.",
+    "intro": "A sabedoria não é mera esperteza; é a arte de viver ao modo de Deus no mundo de Deus. Tiago diz que Deus a dá livremente a quem pede com fé.",
+    "steps": [
+      {
+        "title": "Pede com fé",
+        "prompt": "Traz a decisão diante de Deus. Pede sabedoria com clareza, confiando na Sua promessa de a dar."
+      },
+      {
+        "title": "Teme o Senhor",
+        "prompt": "A sabedoria começa com reverência a Deus. Pede-Lhe que te faça desejar a Sua vontade mais do que a tua."
+      },
+      {
+        "title": "Confia, não te apoies",
+        "prompt": "Renuncia à tua própria compreensão. Pede a Deus que endireite as tuas veredas enquanto avanças."
+      }
+    ]
+  },
+  "enemies": {
+    "title": "Orar pelos inimigos",
+    "summary": "Jesus chama-nos a abençoar quem nos faz mal — a oração mais difícil e a mais semelhante a Cristo.",
+    "intro": "Orar por um inimigo é obedecer a Jesus e ser libertado da amargura. Não oramos para que Deus os esmague, mas para que tenha misericórdia deles — como teve misericórdia de nós.",
+    "steps": [
+      {
+        "title": "Ouve a ordem de Jesus",
+        "prompt": "Lê as Suas palavras. Deixa-as tocar-te: amai os vossos inimigos, orai pelos que vos perseguem."
+      },
+      {
+        "title": "Nomeia-os diante de Deus",
+        "prompt": "Nomeia a pessoa com sinceridade. Pede a Deus que a abençoe, a amoleça e a salve."
+      },
+      {
+        "title": "Solta a ofensa",
+        "prompt": "Entrega o mal a Deus, que julga com justiça. Pede-Lhe que liberte o teu coração da amargura."
+      }
+    ]
+  },
+  "authorities": {
+    "title": "Orar pelas autoridades",
+    "summary": "A Escritura diz-nos para orar pelos reis e por todos os que governam — pela paz, pela justiça e pelo avanço do evangelho.",
+    "intro": "Paulo insta à oração pelos governantes para que a Igreja viva em paz e o evangelho corra livremente. Oramos pelos líderes, concordemos ou não com eles.",
+    "steps": [
+      {
+        "title": "Ora como a Escritura ordena",
+        "prompt": "Lê a exortação de Paulo. Ora pelos que governam, para que levemos uma vida pacífica e piedosa."
+      },
+      {
+        "title": "Pede justiça e misericórdia",
+        "prompt": "Ora para que os líderes governem com justiça, protejam os fracos e refreiem o mal."
+      },
+      {
+        "title": "Ora pelo evangelho",
+        "prompt": "Pede que a Igreja possa adorar livremente e que a boa nova de Jesus se espalhe sob o seu governo."
+      }
+    ]
+  },
+  "missionaries": {
+    "title": "Orar pelos missionários",
+    "summary": "Ora por quem leva o evangelho às nações — por portas abertas, ousadia e perseverança.",
+    "intro": "A messe é grande, mas os trabalhadores são poucos. Jesus diz-nos para pedir ao Senhor da messe que os envie, e Paulo pede às igrejas que orem pelas suas palavras e coragem.",
+    "steps": [
+      {
+        "title": "Pede trabalhadores",
+        "prompt": "Ora, como Jesus ordenou, para que Deus envie trabalhadores para a Sua messe."
+      },
+      {
+        "title": "Ora por portas abertas",
+        "prompt": "Pede a Deus que abra portas para a mensagem e dê clareza e ousadia a quem a prega."
+      },
+      {
+        "title": "Ora por perseverança",
+        "prompt": "Ora pela sua proteção, alegria e perseverança — e por fruto que permaneça."
+      }
+    ]
+  },
+  "church": {
+    "title": "Orar pela tua igreja local",
+    "summary": "Ora pelas pessoas que Deus colocou à tua volta — por amor, unidade e fidelidade a Cristo.",
+    "intro": "A igreja é o corpo de Cristo e a tua família. Ora pelos seus líderes, pelo seu amor e pelo seu crescimento na verdade — como os primeiros crentes se dedicavam juntos à oração.",
+    "steps": [
+      {
+        "title": "Ora por unidade e amor",
+        "prompt": "Pede a Deus que una a tua igreja no amor, para que o mundo saiba que seguem Jesus."
+      },
+      {
+        "title": "Ora pelos teus líderes",
+        "prompt": "Ora pelos pastores e presbíteros — para que ensinem com fidelidade e pastoreiem com alegria."
+      },
+      {
+        "title": "Ora por crescimento",
+        "prompt": "Pede que a tua igreja cresça para Cristo — em verdade, santidade e testemunho."
+      }
+    ]
+  },
+  "unbelievers": {
+    "title": "Orar por quem ainda não crê",
+    "summary": "Ora por amigos e familiares longe de Deus — para que os seus olhos se abram a Cristo.",
+    "intro": "A salvação é obra de Deus; só Ele abre olhos cegos. Por isso oramos com esperança, nomeando as pessoas que amamos e pedindo ao Deus paciente e misericordioso que as atraia a Si.",
+    "steps": [
+      {
+        "title": "Nomeia-os",
+        "prompt": "Traz pessoas concretas diante de Deus pelo nome. Ele conhece-as e ama-as mais do que tu."
+      },
+      {
+        "title": "Pede a Deus que abra os olhos",
+        "prompt": "Ora para que Deus faça brilhar a luz do evangelho em corações agora cegos."
+      },
+      {
+        "title": "Pede para ser testemunha",
+        "prompt": "Ora por portas abertas e palavras cheias de graça, para que os possas apontar para Jesus."
+      }
+    ]
+  },
+  "suffering": {
+    "title": "Orar no sofrimento",
+    "summary": "Quando estás em dor, não precisas de palavras elaboradas. Traz o teu lamento sincero a um Pai que está perto.",
+    "intro": "A Escritura dá-nos permissão para lamentar — para derramar a nossa angústia diante de Deus. Ele está perto dos quebrantados de coração, e o próprio Jesus orou em agonia. Não estás sozinho e não tens de fingir.",
+    "steps": [
+      {
+        "title": "Derrama o teu coração",
+        "prompt": "Diz a Deus exatamente como é — a tua dor, as tuas perguntas, o teu medo. Ele pode suportá-lo."
+      },
+      {
+        "title": "Lembra-te de quem Ele é",
+        "prompt": "Ele está perto dos quebrantados de coração. Lança sobre Ele a tua ansiedade, porque Ele cuida de ti."
+      },
+      {
+        "title": "Repousa na Sua presença",
+        "prompt": "Podes não ter respostas, mas tens a Ele. Fica em silêncio, pedindo apenas a Sua presença."
+      }
+    ]
+  },
+  "temptation": {
+    "title": "Orar na tentação",
+    "summary": "Quando és tentado, corre para Deus em oração. Ele dá uma saída e força para permanecer firme.",
+    "intro": "Jesus ensinou-nos a orar «não nos deixes cair em tentação». A tentação não é pecado, mas é uma batalha — e a oração é como a travamos, apoiando-nos não na força de vontade, mas no poder de Deus.",
+    "steps": [
+      {
+        "title": "Confessa-o a Deus",
+        "prompt": "Nomeia a tentação com sinceridade diante d'Ele. Trazê-la à luz afrouxa o seu domínio."
+      },
+      {
+        "title": "Agarra a Sua promessa",
+        "prompt": "Deus é fiel; Ele providenciará uma saída. Pede-Lhe que te mostre a porta, e passa por ela."
+      },
+      {
+        "title": "Pede força",
+        "prompt": "Ora pela ajuda do Espírito para fugir do pecado e buscar o bem. Vigia e ora."
+      }
+    ]
+  }
+}

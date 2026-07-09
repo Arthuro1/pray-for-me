@@ -1,0 +1,234 @@
+{
+  "acts": {
+    "title": "Pola ACTS",
+    "summary": "Penyembahan, Pengakuan, Ucapan syukur, Permohonan — sebuah kerangka sederhana untuk doa yang utuh.",
+    "intro": "ACTS bukan rumus yang memaksa telinga Allah; ia adalah alat bantu agar doa tidak merosot menjadi daftar keinginan. Kita mulai dari tempat Kitab Suci mulai — dari Allah sendiri — sebelum membawa kebutuhan kita.",
+    "steps": [
+      {
+        "title": "Penyembahan",
+        "prompt": "Pujilah Allah karena siapa Dia, bukan hanya karena apa yang Dia berikan. Bacalah mazmur itu perlahan dan kembalikan kata-kata-Nya kepada-Nya."
+      },
+      {
+        "title": "Pengakuan",
+        "prompt": "Akuilah dosamu dengan jujur di hadapan Allah. Ia setia dan adil untuk mengampuni — pengakuan adalah pulang ke rumah, bukan mengupayakan kasih."
+      },
+      {
+        "title": "Ucapan syukur",
+        "prompt": "Sebutkanlah belas kasihan yang nyata dari hari ini dan minggu ini. Rasa syukur meneguhkan hati sebelum ia meminta apa pun."
+      },
+      {
+        "title": "Permohonan",
+        "prompt": "Kini bawalah permohonanmu — bagi dirimu dan bagi orang lain — dengan keyakinan, karena siapa Dia. Berdoalah melalui beban-beban hatimu."
+      }
+    ]
+  },
+  "psalms": {
+    "title": "Berdoa melalui Mazmur",
+    "summary": "Mazmur memberi kita kata-kata Allah sendiri untuk kita doakan kembali kepada-Nya — dalam sukacita, dukacita, dan segala yang ada di antaranya.",
+    "intro": "Selama berabad-abad gereja berdoa dengan Mazmur karena Mazmur mengajar kita merasa dengan benar di hadapan Allah. Pilih satu, bacalah perlahan, dan biarkan ia membentuk doamu sendiri baris demi baris.",
+    "steps": [
+      {
+        "title": "Baca seluruhnya",
+        "prompt": "Bacalah mazmur itu sekali, perlahan, hanya mendengarkan. Perhatikan apa yang dikatakan penulisnya kepada Allah dan tentang Allah."
+      },
+      {
+        "title": "Doakan kembali",
+        "prompt": "Telusuri lagi, kali ini menjadikan kata-katanya doamu sendiri — baris demi baris, dengan suaramu sendiri."
+      },
+      {
+        "title": "Bawa hidupmu ke dalamnya",
+        "prompt": "Di mana mazmur menyebut ketakutan, harapan, atau pujian, sebutkanlah milikmu. Biarkan ia memberi kata bagi apa yang kaurasakan."
+      }
+    ]
+  },
+  "scripture": {
+    "title": "Berdoa dengan Firman",
+    "summary": "Ubahlah bagian yang sedang kaubaca menjadi doa, supaya doamu dibentuk oleh firman Allah, bukan hanya oleh dirimu sendiri.",
+    "intro": "Berdoa dengan Firman membuat kita terus meminta apa yang Allah janjikan untuk diberikan. Doa-doa Paulus dalam surat-suratnya adalah tempat yang indah untuk belajar — doakanlah bagi dirimu dan bagi orang lain.",
+    "steps": [
+      {
+        "title": "Pilih satu bagian",
+        "prompt": "Bacalah doa Paulus perlahan. Tanyakan: apa yang dirindukannya agar orang-orang percaya ini ketahui dan menjadi?"
+      },
+      {
+        "title": "Doakan bagi dirimu",
+        "prompt": "Masukkan namamu sendiri ke dalam bagian itu. Mintalah Allah mengerjakan hal-hal ini dalam dirimu."
+      },
+      {
+        "title": "Doakan bagi orang lain",
+        "prompt": "Sebutkan orang-orang yang kaukasihi dan doakan Firman yang sama atas mereka — bagi iman, kasih, dan keberakaran mereka di dalam Kristus."
+      }
+    ]
+  },
+  "promises": {
+    "title": "Berdoa dengan janji-janji Allah",
+    "summary": "Peganglah Allah pada firman-Nya sendiri — membaca setiap janji dalam konteksnya supaya kau meminta dengan benar, bukan dengan lancang.",
+    "intro": "Janji-janji Allah adalah “ya” di dalam Kristus (2 Korintus 1:20). Tetapi sebuah janji harus dibaca dalam konteksnya: kepada siapa ia diberikan, dan apa sebenarnya yang ia janjikan. Barulah kita dapat mendoakannya dengan keyakinan.",
+    "steps": [
+      {
+        "title": "Baca dalam konteks",
+        "prompt": "Bacalah ayat-ayat di sekitarnya, bukan hanya janji itu. Kepada siapa ditujukan, dan apa yang Allah janjikan?"
+      },
+      {
+        "title": "Tambatkan pada Kristus",
+        "prompt": "Tanyakan bagaimana janji ini digenapi dalam Yesus. Setiap janji yang sejati menuntun kembali kepada-Nya."
+      },
+      {
+        "title": "Doakan kembali kepada Allah",
+        "prompt": "Mintalah Allah melakukan apa yang telah Ia janjikan — bagi kemuliaan-Nya dan kebaikanmu — dan beristirahatlah dalam kesetiaan-Nya."
+      }
+    ]
+  },
+  "wisdom": {
+    "title": "Berdoa memohon hikmat",
+    "summary": "Ketika kau tidak tahu harus berbuat apa, Allah mengundangmu untuk meminta hikmat kepada-Nya — diberikan dengan murah hati.",
+    "intro": "Hikmat bukan sekadar kepintaran; ia adalah kecakapan menjalani jalan Allah di dunia Allah. Yakobus berkata bahwa Allah memberikannya dengan limpah kepada yang meminta dengan iman.",
+    "steps": [
+      {
+        "title": "Minta dengan iman",
+        "prompt": "Bawalah keputusan itu ke hadapan Allah. Mintalah hikmat dengan sederhana, memercayai janji-Nya untuk memberikannya."
+      },
+      {
+        "title": "Takut akan TUHAN",
+        "prompt": "Hikmat dimulai dengan hormat kepada Allah. Mintalah agar Ia membuatmu menginginkan kehendak-Nya lebih daripada kehendakmu sendiri."
+      },
+      {
+        "title": "Percaya, jangan bersandar",
+        "prompt": "Serahkan pengertianmu sendiri. Mintalah Allah meluruskan jalan-jalanmu saat kau melangkah maju."
+      }
+    ]
+  },
+  "enemies": {
+    "title": "Berdoa bagi musuh",
+    "summary": "Yesus memanggil kita memberkati mereka yang menyakiti kita — doa yang paling sulit, dan paling serupa Kristus.",
+    "intro": "Berdoa bagi musuh berarti menaati Yesus dan dibebaskan dari kepahitan. Kita tidak berdoa agar Allah meremukkan mereka, tetapi agar Ia berbelaskasihan kepada mereka — seperti Ia berbelaskasihan kepada kita.",
+    "steps": [
+      {
+        "title": "Dengarkan perintah Yesus",
+        "prompt": "Bacalah kata-kata-Nya. Biarkan meresap: kasihilah musuhmu, dan berdoalah bagi mereka yang menganiaya kamu."
+      },
+      {
+        "title": "Sebut mereka di hadapan Allah",
+        "prompt": "Sebutkan orang itu dengan jujur. Mintalah Allah memberkati, melembutkan, dan menyelamatkannya."
+      },
+      {
+        "title": "Lepaskan pelanggaran itu",
+        "prompt": "Serahkan kesalahan itu kepada Allah, yang menghakimi dengan adil. Mintalah Ia membebaskan hatimu dari kepahitan."
+      }
+    ]
+  },
+  "authorities": {
+    "title": "Berdoa bagi para penguasa",
+    "summary": "Kitab Suci menyuruh kita berdoa bagi raja-raja dan semua yang memegang kuasa — bagi damai, keadilan, dan tersebarnya Injil.",
+    "intro": "Paulus mendesak doa bagi para pemimpin supaya gereja hidup tenteram dan Injil berjalan bebas. Kita berdoa bagi para pemimpin, entah kita setuju dengan mereka atau tidak.",
+    "steps": [
+      {
+        "title": "Berdoa seperti diperintahkan Kitab Suci",
+        "prompt": "Bacalah pesan Paulus. Berdoalah bagi mereka yang memerintah, supaya kita menjalani hidup yang tenteram dan saleh."
+      },
+      {
+        "title": "Mintalah keadilan dan belas kasihan",
+        "prompt": "Berdoalah agar para pemimpin memerintah dengan adil, melindungi yang lemah, dan menahan kejahatan."
+      },
+      {
+        "title": "Berdoa bagi Injil",
+        "prompt": "Mintalah agar gereja boleh beribadah dengan bebas dan agar kabar baik tentang Yesus tersebar di bawah pemerintahan mereka."
+      }
+    ]
+  },
+  "missionaries": {
+    "title": "Berdoa bagi para misionaris",
+    "summary": "Berdoalah bagi mereka yang membawa Injil kepada bangsa-bangsa — bagi pintu yang terbuka, keberanian, dan ketekunan.",
+    "intro": "Tuaian memang banyak, tetapi pekerja sedikit. Yesus menyuruh kita meminta kepada Tuan yang empunya tuaian untuk mengutus mereka, dan Paulus meminta jemaat berdoa bagi kata-kata dan keberaniannya.",
+    "steps": [
+      {
+        "title": "Mintalah pekerja",
+        "prompt": "Berdoalah, seperti diperintahkan Yesus, agar Allah mengutus pekerja ke dalam tuaian-Nya."
+      },
+      {
+        "title": "Berdoa bagi pintu yang terbuka",
+        "prompt": "Mintalah Allah membuka pintu bagi berita itu dan memberi kejelasan serta keberanian kepada mereka yang memberitakannya."
+      },
+      {
+        "title": "Berdoa bagi ketekunan",
+        "prompt": "Berdoalah bagi perlindungan, sukacita, dan ketekunan mereka — dan bagi buah yang akan bertahan."
+      }
+    ]
+  },
+  "church": {
+    "title": "Berdoa bagi gereja setempatmu",
+    "summary": "Berdoalah bagi orang-orang yang Allah tempatkan di sekitarmu — bagi kasih, kesatuan, dan kesetiaan kepada Kristus.",
+    "intro": "Gereja adalah tubuh Kristus dan keluargamu. Berdoalah bagi para pemimpinnya, kasihnya, dan pertumbuhannya dalam kebenaran — seperti orang-orang percaya mula-mula bertekun bersama dalam doa.",
+    "steps": [
+      {
+        "title": "Berdoa bagi kesatuan dan kasih",
+        "prompt": "Mintalah Allah merajut gerejamu dalam kasih, supaya dunia tahu bahwa kalian mengikut Yesus."
+      },
+      {
+        "title": "Berdoa bagi para pemimpinmu",
+        "prompt": "Berdoalah bagi para gembala dan penatua — agar mereka mengajar dengan setia dan menggembalakan dengan sukacita."
+      },
+      {
+        "title": "Berdoa bagi pertumbuhan",
+        "prompt": "Mintalah agar gerejamu bertumbuh ke arah Kristus — dalam kebenaran, kekudusan, dan kesaksian."
+      }
+    ]
+  },
+  "unbelievers": {
+    "title": "Berdoa bagi mereka yang belum percaya",
+    "summary": "Berdoalah bagi sahabat dan keluarga yang jauh dari Allah — agar mata mereka terbuka kepada Kristus.",
+    "intro": "Keselamatan adalah pekerjaan Allah; hanya Dia yang membuka mata yang buta. Maka kita berdoa dengan harapan, menyebut nama orang-orang yang kita kasihi, dan meminta Allah yang sabar dan penuh belas kasihan untuk menarik mereka kepada-Nya.",
+    "steps": [
+      {
+        "title": "Sebut nama mereka",
+        "prompt": "Bawalah orang-orang tertentu ke hadapan Allah dengan nama. Ia mengenal dan mengasihi mereka lebih daripada kau."
+      },
+      {
+        "title": "Mintalah Allah membuka mata",
+        "prompt": "Berdoalah agar Allah menyinarkan terang Injil ke dalam hati yang kini dibutakan."
+      },
+      {
+        "title": "Mintalah untuk menjadi saksi",
+        "prompt": "Berdoalah bagi pintu yang terbuka dan kata-kata yang penuh anugerah, supaya kau dapat menunjuk mereka kepada Yesus."
+      }
+    ]
+  },
+  "suffering": {
+    "title": "Berdoa dalam penderitaan",
+    "summary": "Ketika kau kesakitan, kau tidak memerlukan kata-kata yang tertata rapi. Bawalah dukamu yang jujur kepada Bapa yang dekat.",
+    "intro": "Kitab Suci memberi kita izin untuk meratap — mencurahkan kesusahan kita di hadapan Allah. Ia dekat dengan yang patah hati, dan Yesus sendiri berdoa dalam kepedihan. Kau tidak sendirian, dan kau tidak perlu berpura-pura.",
+    "steps": [
+      {
+        "title": "Curahkan hatimu",
+        "prompt": "Katakan kepada Allah apa adanya — rasa sakitmu, pertanyaanmu, ketakutanmu. Ia sanggup menanggungnya."
+      },
+      {
+        "title": "Ingatlah siapa Dia",
+        "prompt": "Ia dekat dengan yang patah hati. Serahkan kekhawatiranmu kepada-Nya, sebab Ia memelihara kamu."
+      },
+      {
+        "title": "Beristirahatlah dalam hadirat-Nya",
+        "prompt": "Mungkin kau tidak punya jawaban, tetapi kau memiliki Dia. Duduklah dengan tenang, hanya meminta kedekatan-Nya."
+      }
+    ]
+  },
+  "temptation": {
+    "title": "Berdoa dalam pencobaan",
+    "summary": "Ketika dicobai, larilah kepada Allah dalam doa. Ia menyediakan jalan keluar dan kekuatan untuk bertahan.",
+    "intro": "Yesus mengajar kita berdoa “janganlah membawa kami ke dalam pencobaan”. Pencobaan bukan dosa, tetapi ia adalah pertempuran — dan doa adalah cara kita berjuang, bersandar bukan pada kekuatan kehendak, melainkan pada kuasa Allah.",
+    "steps": [
+      {
+        "title": "Akui kepada Allah",
+        "prompt": "Sebutkan pencobaan itu dengan jujur di hadapan-Nya. Membawanya ke dalam terang melonggarkan cengkeramannya."
+      },
+      {
+        "title": "Peganglah janji-Nya",
+        "prompt": "Allah setia; Ia akan menyediakan jalan keluar. Mintalah Ia menunjukkan pintunya, lalu masukilah."
+      },
+      {
+        "title": "Mintalah kekuatan",
+        "prompt": "Berdoalah bagi pertolongan Roh untuk lari dari dosa dan mengejar yang baik. Berjaga-jagalah dan berdoalah."
+      }
+    ]
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "acts": {
+    "title": "El modelo ACTS",
+    "summary": "Adoración, Confesión, Acción de gracias, Súplica — un esquema sencillo para una oración completa.",
+    "intro": "ACTS no es una fórmula que fuerce el oído de Dios; es una ayuda para que la oración no se reduzca a una lista de deseos. Comenzamos donde comienza la Escritura — en Dios mismo — antes de traer nuestras necesidades.",
+    "steps": [
+      {
+        "title": "Adoración",
+        "prompt": "Alaba a Dios por quién es, no solo por lo que da. Lee el salmo despacio y devuélvele sus propias palabras."
+      },
+      {
+        "title": "Confesión",
+        "prompt": "Reconoce tu pecado con sinceridad ante Dios. Él es fiel y justo para perdonar — confesar es volver a casa, no ganarse el amor."
+      },
+      {
+        "title": "Acción de gracias",
+        "prompt": "Nombra misericordias concretas de hoy y de esta semana. La gratitud afirma el corazón antes de pedir nada."
+      },
+      {
+        "title": "Súplica",
+        "prompt": "Trae ahora tus peticiones — por ti y por los demás — con confianza, por quién es Él. Ora a través de las cargas de tu corazón."
+      }
+    ]
+  },
+  "psalms": {
+    "title": "Orar a través de los Salmos",
+    "summary": "Los Salmos nos dan las propias palabras de Dios para devolvérselas en oración — en el gozo, la tristeza y todo lo que hay entre medias.",
+    "intro": "Durante siglos la Iglesia ha orado los Salmos porque nos enseñan a sentir rectamente ante Dios. Escoge uno, léelo despacio y deja que dé forma a tu propia oración, línea por línea.",
+    "steps": [
+      {
+        "title": "Léelo entero",
+        "prompt": "Lee el salmo una vez, despacio, solo escuchando. Fíjate en lo que el autor dice a Dios y sobre Dios."
+      },
+      {
+        "title": "Devuélvelo en oración",
+        "prompt": "Recórrelo de nuevo, haciendo esta vez de sus palabras tu propia oración — línea por línea, con tu voz."
+      },
+      {
+        "title": "Haz entrar tu vida en él",
+        "prompt": "Donde el salmo nombra un temor, una esperanza o una alabanza, nombra los tuyos. Deja que dé palabras a lo que sientes."
+      }
+    ]
+  },
+  "scripture": {
+    "title": "Orar la Palabra",
+    "summary": "Convierte en oración un pasaje que estás leyendo, para que tus oraciones sean moldeadas por las palabras de Dios, no solo por las tuyas.",
+    "intro": "Orar la Palabra nos mantiene pidiendo lo que Dios ha prometido dar. Las oraciones de Pablo en sus cartas son un lugar maravilloso para aprender — órales por ti mismo y por los demás.",
+    "steps": [
+      {
+        "title": "Escoge un pasaje",
+        "prompt": "Lee la oración de Pablo despacio. Pregunta: ¿qué anhela él que estos creyentes conozcan y lleguen a ser?"
+      },
+      {
+        "title": "Órala por ti mismo",
+        "prompt": "Pon tu propio nombre en el pasaje. Pide a Dios que obre estas mismas cosas en ti."
+      },
+      {
+        "title": "Órala por los demás",
+        "prompt": "Nombra a personas que amas y ora la misma Escritura sobre ellas — por su fe, su amor y su arraigo en Cristo."
+      }
+    ]
+  },
+  "promises": {
+    "title": "Orar las promesas de Dios",
+    "summary": "Toma a Dios por su propia palabra — leyendo cada promesa en su contexto para pedir con rectitud, sin presunción.",
+    "intro": "Las promesas de Dios son «sí» en Cristo (2 Corintios 1:20). Pero una promesa debe leerse en su contexto: a quién se dio y qué compromete realmente. Entonces podemos orarla con confianza.",
+    "steps": [
+      {
+        "title": "Léela en su contexto",
+        "prompt": "Lee los versículos que la rodean, no solo la promesa. ¿A quién se dirige y qué está prometiendo Dios?"
+      },
+      {
+        "title": "Ánclala en Cristo",
+        "prompt": "Pregunta cómo se cumple esta promesa en Jesús. Toda promesa verdadera conduce de vuelta a Él."
+      },
+      {
+        "title": "Devuélvela a Dios en oración",
+        "prompt": "Pide a Dios que haga lo que ha prometido — para su gloria y tu bien — y descansa en su fidelidad."
+      }
+    ]
+  },
+  "wisdom": {
+    "title": "Orar por sabiduría",
+    "summary": "Cuando no sabes qué hacer, Dios te invita a pedirle sabiduría — dada con generosidad.",
+    "intro": "La sabiduría no es mera astucia; es el arte de vivir a la manera de Dios en el mundo de Dios. Santiago dice que Dios la da libremente a quienes piden con fe.",
+    "steps": [
+      {
+        "title": "Pide con fe",
+        "prompt": "Trae la decisión ante Dios. Pide sabiduría con claridad, confiando en su promesa de darla."
+      },
+      {
+        "title": "Teme al Señor",
+        "prompt": "La sabiduría comienza con la reverencia a Dios. Pídele que te haga desear su voluntad más que la tuya."
+      },
+      {
+        "title": "Confía, no te apoyes",
+        "prompt": "Renuncia a tu propia inteligencia. Pide a Dios que enderece tus sendas mientras avanzas."
+      }
+    ]
+  },
+  "enemies": {
+    "title": "Orar por los enemigos",
+    "summary": "Jesús nos llama a bendecir a quienes nos hacen mal — la oración más difícil y la más semejante a Cristo.",
+    "intro": "Orar por un enemigo es obedecer a Jesús y quedar libre de la amargura. No oramos para que Dios los aplaste, sino para que tenga misericordia de ellos — como la tuvo de nosotros.",
+    "steps": [
+      {
+        "title": "Escucha el mandato de Jesús",
+        "prompt": "Lee sus palabras. Deja que te lleguen: amad a vuestros enemigos, orad por los que os persiguen."
+      },
+      {
+        "title": "Nómbralos ante Dios",
+        "prompt": "Nombra a la persona con sinceridad. Pide a Dios que la bendiga, la ablande y la salve."
+      },
+      {
+        "title": "Suelta la ofensa",
+        "prompt": "Entrega el agravio a Dios, que juzga con justicia. Pídele que libere tu corazón de la amargura."
+      }
+    ]
+  },
+  "authorities": {
+    "title": "Orar por las autoridades",
+    "summary": "La Escritura nos dice que oremos por los reyes y por todos los que gobiernan — por la paz, la justicia y el avance del evangelio.",
+    "intro": "Pablo insta a orar por los gobernantes para que la Iglesia viva en paz y el evangelio corra libremente. Oramos por los líderes, estemos o no de acuerdo con ellos.",
+    "steps": [
+      {
+        "title": "Ora como manda la Escritura",
+        "prompt": "Lee la exhortación de Pablo. Ora por quienes gobiernan, para que llevemos una vida pacífica y piadosa."
+      },
+      {
+        "title": "Pide justicia y misericordia",
+        "prompt": "Ora para que los líderes gobiernen con justicia, protejan al débil y refrenen el mal."
+      },
+      {
+        "title": "Ora por el evangelio",
+        "prompt": "Pide que la Iglesia pueda adorar libremente y que la buena noticia de Jesús se extienda bajo su gobierno."
+      }
+    ]
+  },
+  "missionaries": {
+    "title": "Orar por los misioneros",
+    "summary": "Ora por quienes llevan el evangelio a las naciones — por puertas abiertas, valentía y perseverancia.",
+    "intro": "La mies es mucha, pero los obreros son pocos. Jesús nos dice que pidamos al Señor de la mies que los envíe, y Pablo pide a las iglesias que oren por sus palabras y su valor.",
+    "steps": [
+      {
+        "title": "Pide obreros",
+        "prompt": "Ora, como mandó Jesús, para que Dios envíe obreros a su mies."
+      },
+      {
+        "title": "Ora por puertas abiertas",
+        "prompt": "Pide a Dios que abra puertas para el mensaje y dé claridad y valentía a quienes lo predican."
+      },
+      {
+        "title": "Ora por perseverancia",
+        "prompt": "Ora por su protección, su gozo y su perseverancia — y por fruto que permanezca."
+      }
+    ]
+  },
+  "church": {
+    "title": "Orar por tu iglesia local",
+    "summary": "Ora por las personas que Dios ha puesto a tu alrededor — por amor, unidad y fidelidad a Cristo.",
+    "intro": "La iglesia es el cuerpo de Cristo y tu familia. Ora por sus líderes, su amor y su crecimiento en la verdad — como los primeros creyentes se dedicaban juntos a la oración.",
+    "steps": [
+      {
+        "title": "Ora por la unidad y el amor",
+        "prompt": "Pide a Dios que una a tu iglesia en el amor, para que el mundo sepa que siguen a Jesús."
+      },
+      {
+        "title": "Ora por tus líderes",
+        "prompt": "Ora por los pastores y ancianos — para que enseñen con fidelidad y pastoreen con gozo."
+      },
+      {
+        "title": "Ora por el crecimiento",
+        "prompt": "Pide que tu iglesia crezca hacia Cristo — en verdad, santidad y testimonio."
+      }
+    ]
+  },
+  "unbelievers": {
+    "title": "Orar por quienes aún no creen",
+    "summary": "Ora por amigos y familiares lejos de Dios — para que sus ojos se abran a Cristo.",
+    "intro": "La salvación es obra de Dios; solo Él abre los ojos ciegos. Por eso oramos con esperanza, nombrando a las personas que amamos y pidiendo al Dios paciente y misericordioso que las atraiga a Sí.",
+    "steps": [
+      {
+        "title": "Nómbralos",
+        "prompt": "Trae ante Dios a personas concretas por su nombre. Él las conoce y las ama más que tú."
+      },
+      {
+        "title": "Pide a Dios que abra los ojos",
+        "prompt": "Ora para que Dios haga brillar la luz del evangelio en corazones ahora cegados."
+      },
+      {
+        "title": "Pide ser testigo",
+        "prompt": "Ora por puertas abiertas y palabras llenas de gracia, para poder señalarlos a Jesús."
+      }
+    ]
+  },
+  "suffering": {
+    "title": "Orar en el sufrimiento",
+    "summary": "Cuando estás en dolor, no necesitas palabras pulidas. Trae tu pena sincera a un Padre que está cerca.",
+    "intro": "La Escritura nos da permiso para lamentarnos — para derramar nuestra angustia ante Dios. Él está cerca de los quebrantados de corazón, y Jesús mismo oró en angustia. No estás solo y no tienes que fingir.",
+    "steps": [
+      {
+        "title": "Derrama tu corazón",
+        "prompt": "Dile a Dios exactamente cómo es — tu dolor, tus preguntas, tu miedo. Él puede sostenerlo."
+      },
+      {
+        "title": "Recuerda quién es Él",
+        "prompt": "Él está cerca de los quebrantados de corazón. Echa sobre Él tu ansiedad, porque Él cuida de ti."
+      },
+      {
+        "title": "Descansa en su presencia",
+        "prompt": "Tal vez no tengas respuestas, pero le tienes a Él. Quédate en silencio, pidiendo solo su cercanía."
+      }
+    ]
+  },
+  "temptation": {
+    "title": "Orar en la tentación",
+    "summary": "Cuando eres tentado, corre a Dios en oración. Él da una salida y fuerza para mantenerte firme.",
+    "intro": "Jesús nos enseñó a orar «no nos dejes caer en tentación». La tentación no es pecado, pero es una batalla — y la oración es cómo la libramos, apoyándonos no en la fuerza de voluntad, sino en el poder de Dios.",
+    "steps": [
+      {
+        "title": "Confiésalo a Dios",
+        "prompt": "Nombra la tentación con sinceridad ante Él. Traerla a la luz afloja su dominio."
+      },
+      {
+        "title": "Aférrate a su promesa",
+        "prompt": "Dios es fiel; Él dará una salida. Pídele que te muestre la puerta, y tómala."
+      },
+      {
+        "title": "Pide fuerza",
+        "prompt": "Ora por la ayuda del Espíritu para huir del pecado y buscar el bien. Vela y ora."
+      }
+    ]
+  }
+}

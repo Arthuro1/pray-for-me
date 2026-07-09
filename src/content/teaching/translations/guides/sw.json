@@ -1,0 +1,234 @@
+{
+  "acts": {
+    "title": "Mtindo wa ACTS",
+    "summary": "Kuabudu, Kuungama, Kushukuru, Kuomba — muundo rahisi kwa sala kamili.",
+    "intro": "ACTS si fomula inayolazimisha sikio la Mungu; ni msaada ili sala isiwe orodha ya matakwa tu. Tunaanza pale Maandiko yanapoanza — kwa Mungu mwenyewe — kabla ya kuleta mahitaji yetu.",
+    "steps": [
+      {
+        "title": "Kuabudu",
+        "prompt": "Msifu Mungu kwa vile alivyo, si kwa vile atoavyo tu. Soma zaburi polepole na umrudishie maneno yake."
+      },
+      {
+        "title": "Kuungama",
+        "prompt": "Kubaliana na Mungu kwa uaminifu kuhusu dhambi yako. Yeye ni mwaminifu na wa haki kusamehe — kuungama ni kurudi nyumbani, si kujipatia upendo."
+      },
+      {
+        "title": "Kushukuru",
+        "prompt": "Taja rehema mahususi za leo na za wiki hii. Shukrani huutuliza moyo kabla haujaomba lolote."
+      },
+      {
+        "title": "Kuomba",
+        "prompt": "Sasa leta maombi yako — kwa ajili yako na wengine — kwa ujasiri, kwa sababu ya vile alivyo. Omba kwa ajili ya mizigo ya moyo wako."
+      }
+    ]
+  },
+  "psalms": {
+    "title": "Kuomba kupitia Zaburi",
+    "summary": "Zaburi hutupa maneno ya Mungu mwenyewe ili tumrudishie katika sala — katika furaha, huzuni, na kila kilicho katikati.",
+    "intro": "Kwa karne nyingi kanisa limeomba kwa Zaburi kwa sababu zinatufundisha kuhisi kwa usahihi mbele za Mungu. Chagua moja, isome polepole, na uiache iunde sala yako mstari kwa mstari.",
+    "steps": [
+      {
+        "title": "Isome yote",
+        "prompt": "Soma zaburi mara moja, polepole, ukisikiliza tu. Angalia mwandishi anamwambia nini Mungu na anasema nini kuhusu Mungu."
+      },
+      {
+        "title": "Irudishe katika sala",
+        "prompt": "Ipitie tena, wakati huu ukifanya maneno yake kuwa sala yako mwenyewe — mstari kwa mstari, kwa sauti yako."
+      },
+      {
+        "title": "Ingiza maisha yako ndani yake",
+        "prompt": "Pale zaburi inapotaja hofu, tumaini, au sifa, taja lako. Iiache iyapatie maneno unayohisi."
+      }
+    ]
+  },
+  "scripture": {
+    "title": "Kuomba kwa Maandiko",
+    "summary": "Geuza fungu unalolisoma kuwa sala, ili sala zako ziundwe na maneno ya Mungu, si kwa yako tu.",
+    "intro": "Kuomba kwa Maandiko hutuweka tukiomba yale Mungu aliyoahidi kutoa. Sala za Paulo katika nyaraka zake ni mahali pazuri pa kujifunza — ziombe kwa ajili yako na wengine.",
+    "steps": [
+      {
+        "title": "Chagua fungu",
+        "prompt": "Soma sala ya Paulo polepole. Uliza: anatamani waamini hawa wajue nini na wawe nini?"
+      },
+      {
+        "title": "Iiombe kwa ajili yako",
+        "prompt": "Weka jina lako mwenyewe katika fungu hilo. Mwombe Mungu atende mambo haya ndani yako."
+      },
+      {
+        "title": "Iiombe kwa ajili ya wengine",
+        "prompt": "Taja wale unaowapenda na omba Maandiko yaleyale juu yao — kwa ajili ya imani yao, upendo, na kuwa na mizizi katika Kristo."
+      }
+    ]
+  },
+  "promises": {
+    "title": "Kuomba ahadi za Mungu",
+    "summary": "Mshike Mungu kwa neno lake mwenyewe — ukisoma kila ahadi katika muktadha wake ili uombe kwa usahihi, si kwa kiburi.",
+    "intro": "Ahadi za Mungu ni “ndiyo” katika Kristo (2 Wakorintho 1:20). Lakini ahadi lazima isomwe katika muktadha wake: ilipewa nani, na inaahidi nini hasa. Ndipo tunaweza kuiomba kwa ujasiri.",
+    "steps": [
+      {
+        "title": "Isome katika muktadha",
+        "prompt": "Soma mistari inayoizunguka, si ahadi tu. Inaelekezwa kwa nani, na Mungu anaahidi nini?"
+      },
+      {
+        "title": "Iishike katika Kristo",
+        "prompt": "Uliza jinsi ahadi hii inavyotimizwa katika Yesu. Kila ahadi ya kweli hurudi kwake."
+      },
+      {
+        "title": "Mrudishie Mungu katika sala",
+        "prompt": "Mwombe Mungu afanye alichoahidi — kwa utukufu wake na wema wako — na upumzike katika uaminifu wake."
+      }
+    ]
+  },
+  "wisdom": {
+    "title": "Kuomba hekima",
+    "summary": "Usipojua la kufanya, Mungu anakualika umwombe hekima — inayotolewa kwa ukarimu.",
+    "intro": "Hekima si werevu tu; ni ustadi wa kuishi kwa njia ya Mungu katika ulimwengu wa Mungu. Yakobo anasema Mungu anaitoa kwa wingi kwa wale waombao kwa imani.",
+    "steps": [
+      {
+        "title": "Omba kwa imani",
+        "prompt": "Leta uamuzi mbele za Mungu. Omba hekima waziwazi, ukiitumaini ahadi yake ya kuitoa."
+      },
+      {
+        "title": "Mche Bwana",
+        "prompt": "Hekima huanza kwa kumcha Mungu. Mwombe akufanye utamani mapenzi yake kuliko yako."
+      },
+      {
+        "title": "Tumaini, usitegemee",
+        "prompt": "Achilia ufahamu wako mwenyewe. Mwombe Mungu anyoshe njia zako unapoendelea mbele."
+      }
+    ]
+  },
+  "enemies": {
+    "title": "Kuwaombea adui",
+    "summary": "Yesu anatuita tuwabariki wale watutendeao vibaya — sala ngumu kuliko zote, na inayofanana zaidi na Kristo.",
+    "intro": "Kumwombea adui ni kumtii Yesu na kuwekwa huru kutoka uchungu. Hatuombi kwamba Mungu awaseti, bali kwamba awarehemu — kama alivyoturehemu sisi.",
+    "steps": [
+      {
+        "title": "Sikia amri ya Yesu",
+        "prompt": "Soma maneno yake. Yaache yaguse moyo: wapendeni adui zenu, waombeeni wanaowatesa."
+      },
+      {
+        "title": "Wataje mbele za Mungu",
+        "prompt": "Mtaje mtu huyo kwa uaminifu. Mwombe Mungu ambariki, amlainishe, na amwokoe."
+      },
+      {
+        "title": "Achilia kosa hilo",
+        "prompt": "Mkabidhi Mungu ubaya huo, ahukumuye kwa haki. Mwombe auweke huru moyo wako kutoka uchungu."
+      }
+    ]
+  },
+  "authorities": {
+    "title": "Kuwaombea wenye mamlaka",
+    "summary": "Maandiko yanatuambia tuwaombee wafalme na wote wenye mamlaka — kwa ajili ya amani, haki, na kuenea kwa injili.",
+    "intro": "Paulo anahimiza sala kwa ajili ya watawala ili kanisa liishi maisha ya amani na injili ienee kwa uhuru. Tunawaombea viongozi, tukiwakubali au la.",
+    "steps": [
+      {
+        "title": "Omba kama Maandiko yanavyoamuru",
+        "prompt": "Soma agizo la Paulo. Waombee wale watawalao, ili tuishi maisha ya amani na ucha Mungu."
+      },
+      {
+        "title": "Omba haki na rehema",
+        "prompt": "Omba kwamba viongozi watawale kwa haki, wawalinde wanyonge, na wauzuie uovu."
+      },
+      {
+        "title": "Omba kwa ajili ya injili",
+        "prompt": "Omba kwamba kanisa liabudu kwa uhuru na kwamba habari njema ya Yesu ienee chini ya utawala wao."
+      }
+    ]
+  },
+  "missionaries": {
+    "title": "Kuwaombea wamisionari",
+    "summary": "Waombee wale wanaoipeleka injili kwa mataifa — kwa milango iliyo wazi, ujasiri, na uvumilivu.",
+    "intro": "Mavuno ni mengi lakini watenda kazi ni wachache. Yesu anatuambia tumwombe Bwana wa mavuno awatume, na Paulo anayaomba makanisa yaombee maneno yake na ujasiri wake.",
+    "steps": [
+      {
+        "title": "Omba watenda kazi",
+        "prompt": "Omba, kama Yesu alivyoamuru, kwamba Mungu apeleke watenda kazi katika mavuno yake."
+      },
+      {
+        "title": "Omba milango iliyo wazi",
+        "prompt": "Mwombe Mungu afungue milango kwa ajili ya ujumbe na awape uwazi na ujasiri wale wauhubirio."
+      },
+      {
+        "title": "Omba uvumilivu",
+        "prompt": "Omba kwa ajili ya ulinzi wao, furaha, na uvumilivu — na kwa matunda yatakayodumu."
+      }
+    ]
+  },
+  "church": {
+    "title": "Kuliombea kanisa lako la mahali",
+    "summary": "Waombee watu ambao Mungu amewaweka karibu nawe — kwa upendo, umoja, na uaminifu kwa Kristo.",
+    "intro": "Kanisa ni mwili wa Kristo na familia yako. Ombea viongozi wake, upendo wake, na kukua kwake katika kweli — kama vile waamini wa kwanza walivyojitoa pamoja katika sala.",
+    "steps": [
+      {
+        "title": "Omba umoja na upendo",
+        "prompt": "Mwombe Mungu aliunganishe kanisa lako katika upendo, ili ulimwengu ujue kwamba mnamfuata Yesu."
+      },
+      {
+        "title": "Waombee viongozi wako",
+        "prompt": "Waombee wachungaji na wazee — kwamba wafundishe kwa uaminifu na wachunge kwa furaha."
+      },
+      {
+        "title": "Omba kukua",
+        "prompt": "Omba kwamba kanisa lako likue kuelekea Kristo — katika kweli, utakatifu, na ushuhuda."
+      }
+    ]
+  },
+  "unbelievers": {
+    "title": "Kuwaombea wasioamini bado",
+    "summary": "Waombee marafiki na jamaa walio mbali na Mungu — kwamba macho yao yafumbuliwe kwa Kristo.",
+    "intro": "Wokovu ni kazi ya Mungu; yeye peke yake ndiye afungua macho yaliyopofuka. Kwa hiyo tunaomba kwa tumaini, tukiwataja wale tunaowapenda na kumwomba Mungu mvumilivu na mwenye rehema awavute kwake.",
+    "steps": [
+      {
+        "title": "Wataje",
+        "prompt": "Walete watu mahususi mbele za Mungu kwa majina. Yeye anawajua na kuwapenda kuliko wewe."
+      },
+      {
+        "title": "Mwombe Mungu afungue macho",
+        "prompt": "Omba kwamba Mungu aangaze nuru ya injili ndani ya mioyo iliyopofushwa sasa."
+      },
+      {
+        "title": "Omba kuwa shahidi",
+        "prompt": "Omba milango iliyo wazi na maneno yaliyojaa neema, ili uweze kuwaelekeza kwa Yesu."
+      }
+    ]
+  },
+  "suffering": {
+    "title": "Kuomba katika mateso",
+    "summary": "Uwapo katika maumivu, huhitaji maneno yaliyonoolewa. Leta huzuni yako ya kweli kwa Baba aliye karibu.",
+    "intro": "Maandiko yanatupa ruhusa kuomboleza — kumwaga taabu yetu mbele za Mungu. Yeye yu karibu na waliovunjika moyo, na Yesu mwenyewe aliomba katika uchungu. Hauko peke yako, wala huna haja ya kujifanya.",
+    "steps": [
+      {
+        "title": "Mwaga moyo wako",
+        "prompt": "Mwambie Mungu jinsi ilivyo hasa — maumivu yako, maswali yako, hofu yako. Anaweza kuyabeba."
+      },
+      {
+        "title": "Kumbuka yeye ni nani",
+        "prompt": "Yu karibu na waliovunjika moyo. Mtwike yeye wasiwasi wako, kwa maana anakujali."
+      },
+      {
+        "title": "Pumzika katika uwepo wake",
+        "prompt": "Huenda huna majibu, lakini unaye yeye. Kaa kimya, ukiomba tu ukaribu wake."
+      }
+    ]
+  },
+  "temptation": {
+    "title": "Kuomba katika majaribu",
+    "summary": "Ujaribiwapo, mkimbilie Mungu katika sala. Yeye hutoa njia ya kutokea na nguvu ya kusimama.",
+    "intro": "Yesu alitufundisha kuomba “usitutie majaribuni”. Jaribu si dhambi, lakini ni vita — na sala ndiyo jinsi tunavyopigana, tukitegemea si nguvu ya utashi bali nguvu ya Mungu.",
+    "steps": [
+      {
+        "title": "Mkiri Mungu",
+        "prompt": "Litaje jaribu kwa uaminifu mbele zake. Kulileta nuruni hulegeza mtego wake."
+      },
+      {
+        "title": "Shika ahadi yake",
+        "prompt": "Mungu ni mwaminifu; atatoa njia ya kutokea. Mwombe akuonyeshe mlango, na uupite."
+      },
+      {
+        "title": "Omba nguvu",
+        "prompt": "Omba msaada wa Roho ili kuikimbia dhambi na kuyafuata mema. Kesheni na kuomba."
+      }
+    ]
+  }
+}
