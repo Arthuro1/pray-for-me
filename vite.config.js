@@ -138,6 +138,12 @@ export default defineConfig(({ mode }) => {
           proxy.on('proxyReq', (proxyReq) => {
             if (anthropicKey) proxyReq.setHeader('x-api-key', anthropicKey)
             proxyReq.setHeader('anthropic-version', '2023-06-01')
+            // The browser sends an Origin header which the proxy forwards; Anthropic
+            // then rejects the call ("CORS requests must set
+            // 'anthropic-dangerous-direct-browser-access'") with a 401, which silently
+            // broke the reference→USFM step and made the in-app verse reader fall back
+            // to "reference only". This IS a server-side proxy call, so acknowledge it.
+            proxyReq.setHeader('anthropic-dangerous-direct-browser-access', 'true')
           })
         },
       },

@@ -5,12 +5,17 @@
 // Scripture wording — that is the app's single most sensitive correctness/safety
 // boundary (a misquoted verse presented as Scripture is worse than no verse).
 // So the only source of full verse TEXT is authoritative:
+//   0. The OFFLINE BUNDLE (src/content/verses/*.json via verseBundle.js) — public
+//      domain text pre-resolved at build time for the whole curated pool. Instant,
+//      offline, free, and un-misquotable; it means the reader almost never needs
+//      the network for a pool verse, and never the AI reference→USFM step.
 //   1. localStorage cache (a previously-resolved passage).
 //   2. The shared verse_cache table — but ONLY 'youversion' rows, so no legacy
 //      AI-sourced text can resurface as if authoritative.
 //   3. YouVersion Platform API (authoritative publisher text) — when configured
 //      (VITE_YOUVERSION_ENABLED) and we have a version id for the language. The
-//      localized reference is mapped to USFM first (see bibleRef.js).
+//      localized reference is mapped to USFM first (see bibleRef.js). Used only for
+//      references outside the bundle (e.g. verses attached to individual prayers).
 //
 // When none of these can serve the passage, we return null and the reader shows
 // the REFERENCE only with a link to open it in the user's Bible — never invented
@@ -18,6 +23,7 @@
 // but it must not produce the verse text itself.
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
 import { versionForLang, referenceToUsfm } from './bibleRef';
+import { getBundledVerse } from './verseBundle';
 import { supabase } from './supabase';
 
 const cacheKey = (lang, reference) => `verseText:${lang}:${reference}`;
@@ -109,6 +115,10 @@ async function fromYouVersion(reference, lang, knownUsfm) {
 export async function fetchScriptureText({ reference, lang, usfm }) {
   if (!reference) return null;
 
+  // Offline bundle first: no network, no AI, no cost. Covers the curated pool.
+  const bundled = await getBundledVerse({ reference, lang, usfm });
+  if (bundled) return bundled;
+
   const cached = getCachedVerseText(lang, reference);
   if (cached?.text) return cached;
 
@@ -129,8 +139,12 @@ export async function fetchScriptureText({ reference, lang, usfm }) {
 // Returns { data: { text, ref, source } | null, error }. `data` is null (with no
 // error) when no authoritative text is available — the reader then shows the
 // reference with a link to open it in the user's Bible, never invented text.
-export async function fetchVerseText({ reference, lang }) {
+export async function fetchVerseText({ reference, lang, usfm }) {
   if (!reference) return { data: null, error: null };
+
+  // Offline bundle first: no network, no AI, no cost. Covers the curated pool.
+  const bundled = await getBundledVerse({ reference, lang, usfm });
+  if (bundled) return { data: bundled, error: null };
 
   const cached = getCachedVerseText(lang, reference);
   if (cached?.text) return { data: cached, error: null };
