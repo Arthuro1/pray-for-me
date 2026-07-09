@@ -1,9 +1,11 @@
 // Helpers for the teaching content layer (prayer guides + theology explanations).
 // Content is authored in English and French (the app's primary + default
-// languages). Every other supported language falls back to English so the
-// teaching is never shown as an empty or machine-mangled string. We deliberately
-// keep doctrine out of the AI translation pipeline — sound teaching is authored,
-// not generated.
+// languages). Theology articles additionally carry authored translations for the
+// other supported languages, folded in on demand as JSON overlays (see
+// translations.js); any language, article, or field without one falls back here
+// to English/French so the teaching is never shown blank or half-translated. We
+// deliberately keep doctrine out of the AI translation pipeline — sound teaching is
+// authored and reviewed, not generated at runtime.
 
 // Resolve a localized field of shape { en, fr } to the active language, falling
 // back to English, then to whatever is present. Accepts plain strings too.

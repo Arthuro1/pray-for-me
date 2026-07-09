@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { ChevronRight, HandHeart, BookOpen } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
-import { guides, articles, pick } from '../content/teaching';
+import { guides, pick } from '../content/teaching';
+import { useLocalizedArticles } from '../hooks/useLocalizedArticles';
 import GuideReader from '../components/GuideReader';
 import ArticleReader from '../components/ArticleReader';
 
@@ -16,6 +17,9 @@ export default function GrowTab() {
   const [openGuide, setOpenGuide] = useState(null);
   const [openArticle, setOpenArticle] = useState(null);
 
+  // Articles carry per-language translations loaded on demand; guides are authored
+  // in en/fr and fall back through pick().
+  const articles = useLocalizedArticles(lang);
   const items = view === 'pray' ? guides : articles;
 
   const ItemCard = ({ item, onOpen }) => (
