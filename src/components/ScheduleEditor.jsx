@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check, ChevronDown } from 'lucide-react';
+import { Repeat, CalendarDays, Sunrise, Sun, Moon, Check } from 'lucide-react';
 import { t } from '../i18n';
 import { SLOTS, parseKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import {
-  ADVANCED_END_KINDS,
-  isAdvancedDraft,
   presetOf,
   scheduleFromDraft,
   scheduleSummary,
@@ -51,13 +48,6 @@ function Chip({ active, onClick, children }) {
 export default function ScheduleEditor({ draft, onChange, lang }) {
   const d = draft;
   const patch = (updates) => onChange({ ...d, ...updates });
-  const [advanced, setAdvanced] = useState(() => isAdvancedDraft(draft));
-  // Collapsing means "I just want the simple version" — fall back to a simple
-  // end condition so the draft matches the visible controls (no hidden selection).
-  const toggleAdvanced = () => {
-    if (advanced && ADVANCED_END_KINDS.includes(d.endKind)) patch({ endKind: 'never' });
-    setAdvanced(!advanced);
-  };
   const DAYS = t(lang, 'days');
   const label = (key) => (
     <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, key)}</p>
@@ -182,17 +172,15 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
       {mode === 'recurring' && (
         <div>
           {label('endsLabel')}
-          {/* "Advanced options" now holds exactly one thing: the two bounded end
-              conditions. Everyday prayers end never or when answered. */}
+          {/* All four end conditions sit in the open — never / when answered /
+              on a date / after N times. */}
           <div className="flex flex-wrap gap-2">
             <Chip active={d.endKind === 'never'} onClick={() => patch({ endKind: 'never' })}>{t(lang, 'endNever')}</Chip>
             <Chip active={d.endKind === 'answered'} onClick={() => patch({ endKind: 'answered' })}><Check size={12} /> {t(lang, 'endWhenAnswered')}</Chip>
-            {advanced && <>
-              <Chip active={d.endKind === 'date'} onClick={() => patch({ endKind: 'date' })}>{t(lang, 'endOnDate')}</Chip>
-              <Chip active={d.endKind === 'count'} onClick={() => patch({ endKind: 'count' })}>{t(lang, 'endAfterCount')}</Chip>
-            </>}
+            <Chip active={d.endKind === 'date'} onClick={() => patch({ endKind: 'date' })}>{t(lang, 'endOnDate')}</Chip>
+            <Chip active={d.endKind === 'count'} onClick={() => patch({ endKind: 'count' })}>{t(lang, 'endAfterCount')}</Chip>
           </div>
-          {advanced && d.endKind === 'date' && (
+          {d.endKind === 'date' && (
             <input
               type="date"
               value={d.endDate}
@@ -201,7 +189,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
               style={INPUT_STYLE}
             />
           )}
-          {advanced && d.endKind === 'count' && (
+          {d.endKind === 'count' && (
             <div className="flex items-center gap-2 mt-2 text-sm" style={{ color: 'var(--text-2)' }}>
               <input
                 type="number" min="1" max="365" value={d.endCount}
@@ -212,16 +200,6 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
               <span>{t(lang, 'endTimesSuffix')}</span>
             </div>
           )}
-          <button
-            type="button"
-            onClick={toggleAdvanced}
-            aria-expanded={advanced}
-            className="flex items-center gap-1.5 text-xs font-medium pt-2"
-            style={{ color: 'var(--text-3)' }}
-          >
-            <ChevronDown size={13} style={{ transform: advanced ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
-            {t(lang, 'schedAdvanced')}
-          </button>
         </div>
       )}
 

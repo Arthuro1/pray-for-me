@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 //
-// Quick Add: a brand-new personal prayer must open to just a subject + detail,
-// with categories / scheduling / "for someone else" tucked behind More options,
-// so the first prayer is one field away. French is the always-loaded locale, so
-// assertions go through t() to verify the show/hide LOGIC rather than pin copy.
+// Quick Add: a brand-new personal prayer surfaces categories and "for someone
+// else" directly, and tucks only the recurrence schedule behind More options.
+// French is the always-loaded locale, so assertions go through t() to verify the
+// show/hide LOGIC rather than pin copy.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -32,22 +32,32 @@ beforeEach(() => {
 });
 
 describe('PrayerForm — Quick Add', () => {
-  it('opens collapsed to just subject + detail, hiding scheduling and categories', () => {
+  it('surfaces "for someone else" directly and keeps only scheduling behind More options', () => {
     render(<PrayerForm onClose={() => {}} />);
     expect(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder'))).toBeTruthy();
     expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeTruthy();
-    // The schedule editor and "for someone else" live behind More options.
+    // "For someone else" is now visible up-front; only the schedule editor hides.
+    expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'scheduleHowOften'))).toBeNull();
-    expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
     expect(screen.getByText(t(lang, 'moreOptions'))).toBeTruthy();
   });
 
-  it('"More options" reveals scheduling and the for-someone-else field', () => {
+  it('"More options" reveals the recurrence schedule', () => {
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.click(screen.getByText(t(lang, 'moreOptions')));
     expect(screen.getByText(t(lang, 'scheduleHowOften'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'fewerOptions'))).toBeTruthy();
+  });
+
+  it('shows category chips directly, without opening More options', () => {
+    usePrayerStore.setState({
+      categories: [{ id: 'c1', name: 'Famille', emoji: '👨‍👩‍👧', color: '#7c5cfc' }],
+      settings: { language: lang },
+    });
+    render(<PrayerForm onClose={() => {}} />);
+    // Category is present up-front; the schedule editor still hides.
+    expect(screen.getByText('Famille', { exact: false })).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'scheduleHowOften'))).toBeNull();
   });
 
   it('creates a minimal prayer (title only, no schedule) from the collapsed form', () => {
