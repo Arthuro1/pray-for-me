@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -26,9 +26,11 @@ export default function PrayersTab({ onAdd }) {
   const fetchPrayerShares = useCommunityStore((s) => s.fetchPrayerShares);
   const lang = settings.language || 'fr';
   const { swipeActions } = usePrayerActions(lang);
+  const location = useLocation();
 
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
-  const [statusFilter, setStatusFilter] = useState('all');
+  // Opened from a Home shortcut (e.g. the "Active" stat) with a preset filter.
+  const [statusFilter, setStatusFilter] = useState(location.state?.filter || 'all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -65,6 +67,7 @@ export default function PrayersTab({ onAdd }) {
   return (
     <div>
       <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'var(--header)' }}>
+        <div className="max-w-2xl mx-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">{t(lang, 'myPrayers')}</h2>
 
         <div className="relative">
@@ -96,9 +99,10 @@ export default function PrayersTab({ onAdd }) {
             </button>
           ))}
         </div>
+        </div>
       </div>
 
-      <div className="px-4 md:px-8 pt-4">
+      <div className="px-4 md:px-8 pt-4 max-w-2xl mx-auto">
         {showFilters && (
           <div className="flex gap-2 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
             <button

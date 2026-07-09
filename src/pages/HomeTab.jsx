@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
@@ -8,7 +8,7 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
+import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink, ChevronRight } from 'lucide-react';
 import Encouragement from '../components/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
 import { toast } from '../store/toastStore';
@@ -70,6 +70,7 @@ export default function HomeTab({ onAdd }) {
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showSession, setShowSession] = useState(false);
   const [prayedDays, setPrayedDays] = useState(getPrayedDays);
+  const listRef = useRef(null);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
   const { swipeActions } = usePrayerActions(lang);
@@ -156,6 +157,34 @@ export default function HomeTab({ onAdd }) {
     }
   };
 
+  // At-a-glance summary. Each tile is a shortcut to the full view, so the three
+  // core states (active / answered / today) read as one consistent, tappable row
+  // instead of three static counters. "This week" is folded into Answered rather
+  // than repeated as a separate banner.
+  const stats = [
+    {
+      value: activeCount,
+      label: t(lang, 'activePrayers'),
+      color: 'var(--accent)',
+      onClick: () => navigate('/prayers', { state: { filter: 'active' } }),
+      nav: true,
+    },
+    {
+      value: answeredCount,
+      label: t(lang, 'answeredPrayers'),
+      color: 'var(--success)',
+      onClick: () => navigate('/answered'),
+      nav: true,
+      sub: recap.answered > 0 ? `+${recap.answered} ${t(lang, 'thisWeek')}` : null,
+    },
+    {
+      value: todaysPrayers.length,
+      label: t(lang, 'todayPrayers'),
+      color: '#c07c2a',
+      onClick: () => listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    },
+  ];
+
   return (
     <div>
       {showSession && todaysPrayers.length > 0 && (
@@ -184,7 +213,7 @@ export default function HomeTab({ onAdd }) {
       {/* Hero banner */}
       <div className="relative overflow-hidden px-5 md:px-8 pt-10 pb-8" style={{ background: 'var(--header)' }}>
         <div className="absolute inset-0" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=600&q=40')", backgroundSize: 'cover', backgroundPosition: 'center', opacity: 0.07 }} />
-        <div className="relative">
+        <div className="relative max-w-2xl mx-auto">
           <p className="text-xs mb-1 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.55)' }}>
             {DAY_NAMES[lang]?.[dayIndex]} · {format(today, 'd MMMM yyyy', { locale: dateLocale })}
           </p>
@@ -241,18 +270,7 @@ export default function HomeTab({ onAdd }) {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 pt-5">
-        {/* Remembrance of God's faithfulness this week — answered prayers + testimonies (not a score) */}
-        {(recap.answered > 0 || recap.testimonies > 0) && (
-          <div className="rounded-2xl px-4 py-3 mb-3 flex items-center gap-2" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-            <span className="text-xs flex items-center gap-2 flex-wrap" style={{ color: 'var(--text-3)' }}>
-              {recap.answered > 0 && <span>🙌 {recap.answered}</span>}
-              {recap.testimonies > 0 && <span>🎉 {recap.testimonies}</span>}
-              · {t(lang, 'thisWeek')}
-            </span>
-          </div>
-        )}
-
+      <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
         {/* Catch up — prayers missed the last few days. Grace, not guilt: one
             tap marks them prayed, or they quietly age out of the window. */}
         {catchUp.length > 0 && (
@@ -283,7 +301,7 @@ export default function HomeTab({ onAdd }) {
           </div>
         )}
 
-        {/* Gentle nudge — only when there's something to pray today and you haven't yet */}
+{/* Gentle nudge — only when there's something to pray today and you haven't yet */}
         {!prayedToday && todaysPrayers.length > 0 && (
           <button
             onClick={() => setShowSession(true)}
@@ -298,25 +316,25 @@ export default function HomeTab({ onAdd }) {
             </span>
           </button>
         )}
-
-        {/* Stats */}
+        
+        {/* At-a-glance stats — Active / Answered / Today, each a shortcut */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
-          {[
-            { value: activeCount, label: t(lang, 'activePrayers'), color: 'var(--accent)' },
-            { value: answeredCount, label: t(lang, 'answeredPrayers') + ' 🙌', color: 'var(--success)', onClick: () => navigate('/answered') },
-            { value: todaysPrayers.length, label: t(lang, 'todayPrayers'), color: '#c07c2a' },
-          ].map(({ value, label, color, onClick }) => {
-            const Tag = onClick ? 'button' : 'div';
-            return (
-              <Tag key={label} onClick={onClick} className="rounded-2xl p-3 text-center transition-all" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', ...(onClick ? { cursor: 'pointer' } : {}) }}>
-                <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
-                <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{label}</p>
-              </Tag>
-            );
-          })}
+          {stats.map(({ value, label, color, onClick, nav, sub }) => (
+            <button
+              key={label}
+              onClick={onClick}
+              className="rounded-2xl p-3 flex flex-col items-center justify-center text-center transition-all active:scale-95"
+              style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+            >
+              <p className="text-2xl font-semibold" style={{ color }}>{value}</p>
+              <p className="text-xs mt-0.5 flex items-center gap-0.5" style={{ color: 'var(--text-3)' }}>
+                {label}{nav && <ChevronRight size={11} style={{ opacity: 0.5 }} />}
+              </p>
+              {sub && <p className="text-[10px] mt-0.5 font-medium" style={{ color: 'var(--success)' }}>{sub}</p>}
+            </button>
+          ))}
         </div>
-
-        {/* Today's categories */}
+{/* Today's categories */}
         {todayCategories.length > 0 && (
           <div className="mb-4">
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
@@ -331,9 +349,8 @@ export default function HomeTab({ onAdd }) {
             </div>
           </div>
         )}
-
         {/* Today's prayers header */}
-        <div className="flex items-center justify-between mb-3">
+        <div ref={listRef} className="flex items-center justify-between mb-3 scroll-mt-4">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'todaysPrayers')}</h3>
           <div className="flex items-center gap-2">
             {/* Plan/calendar is folded out of the primary nav — reachable here. */}
@@ -346,7 +363,6 @@ export default function HomeTab({ onAdd }) {
             >
               <CalendarDays size={12} /> {t(lang, 'plan')}
             </button>
-            <span className="text-xs" style={{ color: 'var(--text-3)' }}>{todaysPrayers.length} {t(lang, 'subjects')}</span>
             {todayCategories.length > 0 && (
               <button
                 onClick={fetchDaySuggestions}
@@ -402,13 +418,18 @@ export default function HomeTab({ onAdd }) {
           </div>
         )}
 
+        {/* Single primary action — reflects whether today's prayer has been done */}
         {todaysPrayers.length > 0 && (
           <button
             onClick={() => setShowSession(true)}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white mb-3 transition-all"
-            style={{ background: 'var(--accent)' }}
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold mb-2 transition-all active:scale-95"
+            style={prayedToday
+              ? { background: 'var(--surface)', color: 'var(--success)', border: '0.5px solid var(--border)' }
+              : { background: 'var(--accent)', color: '#fff' }}
           >
-            <HandHeart size={17} /> {t(lang, 'prayNow')}
+            {prayedToday
+              ? <><Check size={16} /> {t(lang, 'prayedOnDay')}</>
+              : <><HandHeart size={17} /> {t(lang, 'prayNow')}</>}
           </button>
         )}
 
