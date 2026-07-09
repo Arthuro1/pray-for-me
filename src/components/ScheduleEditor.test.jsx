@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 //
-// Human-first scheduling: the simple tier leads with habits (Pray today / daily /
-// weekly) instead of engine language. These tests drive the real chip clicks
-// through a small stateful harness and assert the SCHEDULE they produce (the
-// persisted contract), plus the presetOf() highlight mapping.
+// Human-first scheduling: the top row names the MODE (follow the plan / pray once
+// / pray regularly), and the rhythm is a second question only recurring prayers
+// are asked. These tests drive the real chip clicks through a small stateful
+// harness and assert the SCHEDULE they produce (the persisted contract), plus the
+// presetOf() highlight mapping.
 //
 // "Remind me to follow up" is deliberately NOT a schedule preset here — it is a
 // separate per-prayer reminder (see followUpStore.test.js), so a one-time date a
@@ -38,26 +39,34 @@ describe('ScheduleEditor presets', () => {
     expect(currentSchedule()).toBeNull();
   });
 
-  it('"Pray daily" builds a daily recurring schedule', () => {
+  it('"Pray regularly" builds a daily recurring schedule by default', () => {
     render(<Harness />);
-    fireEvent.click(screen.getByText(t(lang, 'schedPrayDaily')));
+    fireEvent.click(screen.getByText(t(lang, 'schedPrayRecurring')));
     const s = currentSchedule();
     expect(s.type).toBe('recurring');
     expect(s.freq).toBe('daily');
   });
 
-  it('"Pray weekly" builds a weekly schedule seeded to today\'s weekday', () => {
+  it('"Pray regularly" then "Weekly" seeds the weekly schedule to today\'s weekday', () => {
     render(<Harness />);
-    fireEvent.click(screen.getByText(t(lang, 'schedPrayWeekly')));
+    fireEvent.click(screen.getByText(t(lang, 'schedPrayRecurring')));
+    fireEvent.click(screen.getByText(t(lang, 'freqWeekly')));
     const s = currentSchedule();
     expect(s.type).toBe('recurring');
     expect(s.freq).toBe('weekly');
     expect(s.weekDays).toContain(new Date().getDay());
   });
 
-  it('"Pray today" builds a one-time schedule for today', () => {
+  it('"Pray regularly" then "Monthly" builds a monthly schedule with no advanced toggle needed', () => {
     render(<Harness />);
-    fireEvent.click(screen.getByText(t(lang, 'schedPrayToday')));
+    fireEvent.click(screen.getByText(t(lang, 'schedPrayRecurring')));
+    fireEvent.click(screen.getByText(t(lang, 'freqMonthly')));
+    expect(currentSchedule().freq).toBe('monthly');
+  });
+
+  it('"Pray once" builds a one-time schedule for today', () => {
+    render(<Harness />);
+    fireEvent.click(screen.getByText(t(lang, 'schedPrayOnce')));
     expect(currentSchedule()).toEqual(expect.objectContaining({ type: 'once', date: todayKey() }));
   });
 
@@ -68,15 +77,20 @@ describe('ScheduleEditor presets', () => {
 });
 
 describe('presetOf', () => {
-  it('maps drafts back to their preset for chip highlighting', () => {
+  it('maps a draft to its MODE chip, whatever value that mode holds', () => {
     expect(presetOf(emptyDraft())).toBe('plan');
-    expect(presetOf({ mode: 'once', date: todayKey() })).toBe('today');
-    expect(presetOf({ mode: 'recurring', freq: 'daily' })).toBe('daily');
-    expect(presetOf({ mode: 'recurring', freq: 'weekly' })).toBe('weekly');
-    // Any one-time date other than today (incl. a few days out — formerly the
-    // "follow up" preset) or an advanced frequency has no simple preset.
-    expect(presetOf({ mode: 'once', date: addDays(todayKey(), 3) })).toBeNull();
-    expect(presetOf({ mode: 'once', date: addDays(todayKey(), 30) })).toBeNull();
-    expect(presetOf({ mode: 'recurring', freq: 'monthly' })).toBeNull();
+    expect(presetOf({ mode: 'once', date: todayKey() })).toBe('once');
+    expect(presetOf({ mode: 'recurring', freq: 'daily' })).toBe('recurring');
+    expect(presetOf({ mode: 'recurring', freq: 'weekly' })).toBe('recurring');
+  });
+
+  it('keeps the chip lit after the date or frequency moves off its default', () => {
+    // These previously returned null, leaving no chip highlighted — the bug the
+    // mode-named chips fix. A prayer scheduled a few days out is still "pray
+    // once"; a monthly prayer is still "pray regularly".
+    expect(presetOf({ mode: 'once', date: addDays(todayKey(), 3) })).toBe('once');
+    expect(presetOf({ mode: 'once', date: addDays(todayKey(), 30) })).toBe('once');
+    expect(presetOf({ mode: 'recurring', freq: 'monthly' })).toBe('recurring');
+    expect(presetOf({ mode: 'recurring', freq: 'yearly' })).toBe('recurring');
   });
 });

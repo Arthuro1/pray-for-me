@@ -1,12 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { emptyDraft, isAdvancedDraft, scheduleFromDraft, draftFromSchedule } from '../lib/scheduleDraft';
 
-// The Simple/Advanced split hinges on isAdvancedDraft() deciding whether an
-// existing schedule needs the advanced controls revealed. Advanced is a pure UX
-// disclosure (never a gate) — these tests pin the classification and confirm the
-// underlying draft→schedule round-trip is untouched by the UI split.
+// "Advanced options" now discloses exactly one thing: the two bounded end
+// conditions (on a date / after N times). isAdvancedDraft() decides whether an
+// existing schedule needs that section revealed. Recurrence FREQUENCY is no
+// longer advanced — every rhythm sits in the open — so only the end condition
+// flips the classification. Advanced is a pure UX disclosure (never a gate);
+// these tests pin the classification and confirm the underlying draft→schedule
+// round-trip is untouched by the UI split.
 describe('isAdvancedDraft', () => {
-  it('treats no schedule / one-time / plain daily+weekly as simple', () => {
+  it('treats no schedule / one-time / any plain-ending recurrence as simple', () => {
     expect(isAdvancedDraft(null)).toBe(false);
     expect(isAdvancedDraft(emptyDraft())).toBe(false); // mode: 'plan'
     expect(isAdvancedDraft({ ...emptyDraft(), mode: 'once' })).toBe(false);
@@ -19,9 +22,9 @@ describe('isAdvancedDraft', () => {
     expect(isAdvancedDraft({ ...emptyDraft(), mode: 'recurring', freq: 'weekly', endKind: 'never' })).toBe(false);
   });
 
-  it('flags custom recurrence rules as advanced', () => {
+  it('no longer treats monthly/yearly/interval frequency as advanced', () => {
     for (const freq of ['interval', 'monthly', 'yearly']) {
-      expect(isAdvancedDraft({ ...emptyDraft(), mode: 'recurring', freq })).toBe(true);
+      expect(isAdvancedDraft({ ...emptyDraft(), mode: 'recurring', freq })).toBe(false);
     }
   });
 
@@ -31,7 +34,7 @@ describe('isAdvancedDraft', () => {
     }
   });
 
-  it('auto-opens for an existing monthly-until-count schedule (round-trips)', () => {
+  it('auto-opens for an existing until-count schedule (round-trips)', () => {
     const draft = draftFromSchedule({ type: 'recurring', freq: 'monthly', dayOfMonth: 15, end: { kind: 'count', count: 30 } });
     expect(isAdvancedDraft(draft)).toBe(true);
     // The split is UI-only: the persisted schedule must be unchanged.

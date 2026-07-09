@@ -4,7 +4,6 @@ import { t } from '../i18n';
 import { SLOTS, parseKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import {
-  ADVANCED_FREQS,
   ADVANCED_END_KINDS,
   isAdvancedDraft,
   presetOf,
@@ -12,10 +11,17 @@ import {
   scheduleSummary,
 } from '../lib/scheduleDraft';
 
-// Plain-language recurrence picker. Deliberately presets-first (no cron-style
-// builder): one-time / daily / weekdays / every-N-days / monthly / yearly,
-// prayer-time slots instead of clock times, and four end conditions including
+// Plain-language recurrence picker, in two questions: WHAT KIND of schedule
+// (follow the weekly plan / pray once / pray regularly), then — only when it
+// recurs — WHICH RHYTHM (daily / weekly / every-N-days / monthly / yearly).
+// Prayer-time slots stand in for clock times, and four end conditions include
 // the prayer-specific "until answered".
+//
+// The top row names the MODE, never one of its values. An earlier version
+// offered "pray today" and "pray daily", which were really "once, defaulting to
+// today" and "recurring, defaulting to daily" — so moving the date or picking
+// monthly left the schedule with no chip highlighted at all. Naming the mode
+// keeps the chip lit for every value it can hold (see presetOf).
 //
 // Works on a DRAFT object the parent owns (see lib/scheduleDraft.js);
 // scheduleFromDraft() turns it into the persisted schedule (or null = follows
@@ -46,15 +52,10 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
   const d = draft;
   const patch = (updates) => onChange({ ...d, ...updates });
   const [advanced, setAdvanced] = useState(() => isAdvancedDraft(draft));
-  // Collapsing means "I just want the simple version" — fall back to simple
-  // defaults so the draft matches the visible controls (no hidden selection).
+  // Collapsing means "I just want the simple version" — fall back to a simple
+  // end condition so the draft matches the visible controls (no hidden selection).
   const toggleAdvanced = () => {
-    if (advanced) {
-      const reset = {};
-      if (ADVANCED_FREQS.includes(d.freq)) reset.freq = 'daily';
-      if (ADVANCED_END_KINDS.includes(d.endKind)) reset.endKind = 'never';
-      if (Object.keys(reset).length) patch(reset);
-    }
+    if (advanced && ADVANCED_END_KINDS.includes(d.endKind)) patch({ endKind: 'never' });
     setAdvanced(!advanced);
   };
   const DAYS = t(lang, 'days');
@@ -62,28 +63,27 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
     <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, key)}</p>
   );
   const preview = scheduleFromDraft(d);
-  const active = presetOf(d);
+  const mode = presetOf(d);
 
-  // Human-first presets: one-tap habits instead of "plan / once / recurring".
-  // Each just sets the underlying draft; "Advanced options" stays for custom
-  // recurrence rules and bounded end dates.
+  // Each chip sets only its mode and leaves the draft's values alone, so
+  // switching away and back doesn't silently discard a chosen date or rhythm.
   const defaultWeekDays = () => (d.weekDays.length ? d.weekDays : [parseKey(todayKey()).getDay()]);
   const setPlan = () => patch({ mode: 'plan' });
-  const setToday = () => patch({ mode: 'once', date: todayKey() });
-  const setDaily = () => patch({ mode: 'recurring', freq: 'daily' });
-  const setWeekly = () => patch({ mode: 'recurring', freq: 'weekly', weekDays: defaultWeekDays() });
+  const setOnce = () => patch({ mode: 'once', date: d.date || todayKey() });
+  const setRecurring = () => patch({ mode: 'recurring' });
+  // Weekly is the one rhythm that needs a value seeded, or it would match no days.
+  const setFreq = (freq) => patch(freq === 'weekly' ? { freq, weekDays: defaultWeekDays() } : { freq });
 
   return (
     <div className="space-y-3">
       {label('scheduleHowOften')}
       <div className="flex flex-wrap gap-2" style={{ marginTop: 0 }}>
-        <Chip active={active === 'plan'} onClick={setPlan}>{t(lang, 'schedFollowPlan')}</Chip>
-        <Chip active={active === 'today'} onClick={setToday}><CalendarDays size={12} /> {t(lang, 'schedPrayToday')}</Chip>
-        <Chip active={active === 'daily'} onClick={setDaily}><Repeat size={12} /> {t(lang, 'schedPrayDaily')}</Chip>
-        <Chip active={active === 'weekly'} onClick={setWeekly}><CalendarDays size={12} /> {t(lang, 'schedPrayWeekly')}</Chip>
+        <Chip active={mode === 'plan'} onClick={setPlan}>{t(lang, 'schedFollowPlan')}</Chip>
+        <Chip active={mode === 'once'} onClick={setOnce}><CalendarDays size={12} /> {t(lang, 'schedPrayOnce')}</Chip>
+        <Chip active={mode === 'recurring'} onClick={setRecurring}><Repeat size={12} /> {t(lang, 'schedPrayRecurring')}</Chip>
       </div>
 
-      {d.mode === 'once' && (
+      {mode === 'once' && (
         <input
           type="date"
           value={d.date}
@@ -93,19 +93,18 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
         />
       )}
 
-      {d.mode === 'recurring' && (
+      {mode === 'recurring' && (
         <div className="space-y-3">
-          {/* Full recurrence control lives under "Advanced options"; the presets
-              above already cover the everyday daily/weekly cases. */}
-          {advanced && (
-            <div className="flex flex-wrap gap-2">
-              <Chip active={d.freq === 'daily'} onClick={() => patch({ freq: 'daily' })}>{t(lang, 'freqDaily')}</Chip>
-              <Chip active={d.freq === 'weekly'} onClick={() => patch({ freq: 'weekly', weekDays: defaultWeekDays() })}>{t(lang, 'freqWeekly')}</Chip>
-              <Chip active={d.freq === 'interval'} onClick={() => patch({ freq: 'interval' })}>{t(lang, 'freqInterval')}</Chip>
-              <Chip active={d.freq === 'monthly'} onClick={() => patch({ freq: 'monthly' })}>{t(lang, 'freqMonthly')}</Chip>
-              <Chip active={d.freq === 'yearly'} onClick={() => patch({ freq: 'yearly' })}>{t(lang, 'freqYearly')}</Chip>
-            </div>
-          )}
+          {/* "Pray regularly" is the mode; this row is which rhythm. None of it
+              hides behind "Advanced options" — a monthly prayer is no more
+              advanced than a daily one, just less common. */}
+          <div className="flex flex-wrap gap-2">
+            <Chip active={d.freq === 'daily'} onClick={() => setFreq('daily')}>{t(lang, 'freqDaily')}</Chip>
+            <Chip active={d.freq === 'weekly'} onClick={() => setFreq('weekly')}>{t(lang, 'freqWeekly')}</Chip>
+            <Chip active={d.freq === 'interval'} onClick={() => setFreq('interval')}>{t(lang, 'freqInterval')}</Chip>
+            <Chip active={d.freq === 'monthly'} onClick={() => setFreq('monthly')}>{t(lang, 'freqMonthly')}</Chip>
+            <Chip active={d.freq === 'yearly'} onClick={() => setFreq('yearly')}>{t(lang, 'freqYearly')}</Chip>
+          </div>
 
           {d.freq === 'weekly' && (
             <div className="flex gap-1">
@@ -126,7 +125,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
             </div>
           )}
 
-          {advanced && d.freq === 'interval' && (
+          {d.freq === 'interval' && (
             <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-2)' }}>
               <span>{t(lang, 'intervalEvery')}</span>
               <input
@@ -139,7 +138,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
             </div>
           )}
 
-          {advanced && d.freq === 'monthly' && (
+          {d.freq === 'monthly' && (
             <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-2)' }}>
               <span>{t(lang, 'monthlyOnDay')}</span>
               <input
@@ -151,7 +150,7 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
             </div>
           )}
 
-          {advanced && d.freq === 'yearly' && (
+          {d.freq === 'yearly' && (
             <input
               type="date"
               value={d.yearlyDate}
@@ -160,21 +159,10 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
               style={INPUT_STYLE}
             />
           )}
-
-          <button
-            type="button"
-            onClick={toggleAdvanced}
-            aria-expanded={advanced}
-            className="flex items-center gap-1.5 text-xs font-medium pt-0.5"
-            style={{ color: 'var(--text-3)' }}
-          >
-            <ChevronDown size={13} style={{ transform: advanced ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
-            {t(lang, 'schedAdvanced')}
-          </button>
         </div>
       )}
 
-      {d.mode !== 'plan' && (
+      {mode !== 'plan' && (
         <div>
           {label('slotLabel')}
           <div className="flex flex-wrap gap-2">
@@ -191,9 +179,11 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
         </div>
       )}
 
-      {d.mode === 'recurring' && (
+      {mode === 'recurring' && (
         <div>
           {label('endsLabel')}
+          {/* "Advanced options" now holds exactly one thing: the two bounded end
+              conditions. Everyday prayers end never or when answered. */}
           <div className="flex flex-wrap gap-2">
             <Chip active={d.endKind === 'never'} onClick={() => patch({ endKind: 'never' })}>{t(lang, 'endNever')}</Chip>
             <Chip active={d.endKind === 'answered'} onClick={() => patch({ endKind: 'answered' })}><Check size={12} /> {t(lang, 'endWhenAnswered')}</Chip>
@@ -222,6 +212,16 @@ export default function ScheduleEditor({ draft, onChange, lang }) {
               <span>{t(lang, 'endTimesSuffix')}</span>
             </div>
           )}
+          <button
+            type="button"
+            onClick={toggleAdvanced}
+            aria-expanded={advanced}
+            className="flex items-center gap-1.5 text-xs font-medium pt-2"
+            style={{ color: 'var(--text-3)' }}
+          >
+            <ChevronDown size={13} style={{ transform: advanced ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+            {t(lang, 'schedAdvanced')}
+          </button>
         </div>
       )}
 

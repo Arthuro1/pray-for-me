@@ -8,27 +8,24 @@ import { t } from '../i18n';
 import { normalizeSchedule, parseKey } from './schedule';
 import { todayKey } from './prayedLog';
 
-// Advanced controls (custom recurrence rules + bounded end dates) live behind an
-// "Advanced options" toggle so new users aren't overloaded. Every option stays
-// available to everyone — advanced is one tap away, never locked.
-export const ADVANCED_FREQS = ['interval', 'monthly', 'yearly'];
+// Bounded end conditions live behind an "Advanced options" toggle so new users
+// aren't overloaded. Every option stays available to everyone — advanced is one
+// tap away, never locked. Recurrence FREQUENCY is not advanced: it is the whole
+// point of "pray regularly", so all five rhythms sit in the open.
 export const ADVANCED_END_KINDS = ['date', 'count'];
 
 // True when a draft already uses an advanced control. Used to auto-open the
 // advanced section when editing an existing schedule so nothing is hidden.
 export function isAdvancedDraft(d) {
   if (!d || d.mode !== 'recurring') return false;
-  return ADVANCED_FREQS.includes(d.freq) || ADVANCED_END_KINDS.includes(d.endKind);
+  return ADVANCED_END_KINDS.includes(d.endKind);
 }
 
-// Which human-first preset a draft matches (drives chip highlighting), or null
-// when it's a custom setup that only the advanced controls express.
+// Which mode chip a draft matches (drives chip highlighting). The chips name the
+// MODE — "pray once" / "pray regularly" — not one of its values, so moving the
+// date off today or the frequency off daily can never orphan the highlight.
 export function presetOf(d) {
-  if (!d || d.mode === 'plan') return 'plan';
-  if (d.mode === 'once') return d.date === todayKey() ? 'today' : null;
-  if (d.freq === 'daily') return 'daily';
-  if (d.freq === 'weekly') return 'weekly';
-  return null;
+  return d?.mode || 'plan';
 }
 
 export function emptyDraft() {
