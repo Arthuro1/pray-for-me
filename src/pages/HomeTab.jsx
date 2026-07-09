@@ -301,22 +301,8 @@ export default function HomeTab({ onAdd }) {
           </div>
         )}
 
-{/* Gentle nudge — only when there's something to pray today and you haven't yet */}
-        {!prayedToday && todaysPrayers.length > 0 && (
-          <button
-            onClick={() => setShowSession(true)}
-            className="w-full flex items-center justify-between gap-3 rounded-2xl px-4 py-3 mb-3 text-left"
-            style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
-          >
-            <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
-              🙏 {t(lang, 'notPrayedToday')}
-            </span>
-            <span className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg text-white" style={{ background: 'var(--accent)' }}>
-              {t(lang, 'prayNow')}
-            </span>
-          </button>
-        )}
-        
+
+
         {/* At-a-glance stats — Active / Answered / Today, each a shortcut */}
         <div className="grid grid-cols-3 gap-2.5 mb-5">
           {stats.map(({ value, label, color, onClick, nav, sub }) => (
