@@ -10,10 +10,10 @@ import useCommunityStore from '../store/communityStore';
 import { dateLocale, timeAgo, groupByThisMonth } from '../utils/date';
 import { testimonyList } from '../utils/prayer';
 import { originAuthor, getAuthorName } from '../utils/user';
-import { bibleLink } from '../utils/bibleLink';
 import { faithfulnessPassage } from '../lib/prayerMovements';
 import { t } from '../i18n';
 import Avatar from '../components/Avatar';
+import VerseAccordion from '../components/VerseAccordion';
 import SwipeableRow from '../components/SwipeableRow';
 import EmptyState from '../components/EmptyState';
 import Encouragement from '../components/Encouragement';
@@ -143,20 +143,24 @@ export default function AnsweredTab() {
           </>
         ) : (
           <>
-            {/* Remembrance: a Psalm of God's faithfulness, read in full */}
+            {/* Remembrance: a Psalm of God's faithfulness. Tap to read the passage
+                in place (authoritative text, no AI); the whole-chapter link lives
+                inside the expanded panel — same as every other verse in the app. */}
             {faithfulnessRef && (
-              <a
-                href={bibleLink(faithfulnessRef, lang)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between gap-3 rounded-2xl p-4 mb-4"
-                style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
-              >
-                <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
-                  <BookOpen size={15} /> {faithfulnessRef}
-                </span>
-                <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readWholeChapter')}</span>
-              </a>
+              <VerseAccordion reference={faithfulnessRef} lang={lang} className="mb-4">
+                {({ toggle }) => (
+                  <button
+                    onClick={toggle}
+                    className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
+                    style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
+                  >
+                    <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
+                      <BookOpen size={15} /> {faithfulnessRef}
+                    </span>
+                    <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readFullPassage')}</span>
+                  </button>
+                )}
+              </VerseAccordion>
             )}
 
             <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>
