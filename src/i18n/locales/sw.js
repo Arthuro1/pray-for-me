@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Ombeni pamoja",
+  "beFirstToPray": "Kuwa wa kwanza kuomba",
+  "andNMore": "na wengine {n}",
   "shareGroupInfo": "Maombi haya yataweza kusomwa na washiriki wa kikundi hiki. Pray4Me huhifadhi maudhui yaliyoshirikiwa yakiwa yamesimbwa kwa njia fiche.",
   "shareAnonNote": "Jina lako litafichwa kwa washiriki wa kikundi, lakini bado wanaweza kusoma maudhui ya maombi.",
   "onboardPrivacyTitle": "Faragha kwa chaguo-msingi",

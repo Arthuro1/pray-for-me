@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "一緒に祈る",
+  "beFirstToPray": "最初に祈りましょう",
+  "andNMore": "他 {n} 人",
   "shareGroupInfo": "この祈りはこのグループのメンバーが読めるようになります。Pray4Me は共有された内容を暗号化して保存します。",
   "shareAnonNote": "あなたの名前はグループのメンバーには表示されませんが、メンバーは祈りの内容を読むことができます。",
   "onboardPrivacyTitle": "既定でプライベート",

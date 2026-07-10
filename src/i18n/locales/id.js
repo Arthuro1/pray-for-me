@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Berdoa bersama",
+  "beFirstToPray": "Jadilah yang pertama berdoa",
+  "andNMore": "dan {n} lainnya",
   "shareGroupInfo": "Doa ini dapat dibaca oleh anggota grup ini. Pray4Me menyimpan konten yang dibagikan dalam bentuk terenkripsi.",
   "shareAnonNote": "Nama Anda akan disembunyikan dari anggota grup, tetapi mereka tetap dapat membaca isi doa.",
   "onboardPrivacyTitle": "Privat secara default",

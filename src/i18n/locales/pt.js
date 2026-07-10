@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Orar juntos",
+  "beFirstToPray": "Seja o primeiro a orar",
+  "andNMore": "e mais {n}",
   "shareGroupInfo": "Esta oração poderá ser lida pelos membros deste grupo. O Pray4Me armazena o conteúdo compartilhado de forma criptografada.",
   "shareAnonNote": "Seu nome ficará oculto para os membros do grupo, mas eles ainda poderão ler o conteúdo da oração.",
   "onboardPrivacyTitle": "Privado por padrão",

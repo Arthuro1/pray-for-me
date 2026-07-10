@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Gemeinsam beten",
+  "beFirstToPray": "Bete als Erster",
+  "andNMore": "und {n} weitere",
   "shareGroupInfo": "Dieses Gebet ist für die Mitglieder dieser Gruppe lesbar. Pray4Me speichert den geteilten Inhalt verschlüsselt.",
   "shareAnonNote": "Dein Name wird vor den Gruppenmitgliedern verborgen, aber sie können den Gebetsinhalt trotzdem lesen.",
   "onboardPrivacyTitle": "Standardmäßig privat",

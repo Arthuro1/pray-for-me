@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "一起祷告",
+  "beFirstToPray": "第一个来祷告",
+  "andNMore": "等 {n} 人",
   "shareGroupInfo": "本群组的成员将能够阅读这条祷告。Pray4Me 以加密方式存储所分享的内容。",
   "shareAnonNote": "群组成员将看不到你的名字，但他们仍然可以阅读祷告内容。",
   "onboardPrivacyTitle": "默认私密",

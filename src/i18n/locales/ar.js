@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "لنصلِّ معًا",
+  "beFirstToPray": "كن أول من يصلّي",
+  "andNMore": "و{n} آخرين",
   "shareGroupInfo": "سيتمكن أعضاء هذه المجموعة من قراءة هذه الصلاة. يخزّن Pray4Me المحتوى المشترك مشفَّرًا.",
   "shareAnonNote": "سيُخفى اسمك عن أعضاء المجموعة، لكن يمكنهم قراءة محتوى الصلاة.",
   "onboardPrivacyTitle": "خاص افتراضيًا",

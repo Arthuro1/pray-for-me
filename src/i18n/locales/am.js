@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "አብረን እንጸልይ",
+  "beFirstToPray": "መጀመሪያ ሆነው ይጸልዩ",
+  "andNMore": "እና {n} ተጨማሪ",
   "shareGroupInfo": "ይህ ጸሎት በዚህ ቡድን አባላት ሊነበብ ይችላል። Pray4Me የተጋራውን ይዘት ተመስጥሮ ያስቀምጣል።",
   "shareAnonNote": "ስምዎ ከቡድኑ አባላት ይደበቃል፣ ነገር ግን የጸሎቱን ይዘት አሁንም ማንበብ ይችላሉ።",
   "onboardPrivacyTitle": "በነባሪ የግል",

@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Prier ensemble",
+  "beFirstToPray": "Soyez le premier à prier",
+  "andNMore": "et {n} de plus",
   "testNotifBody": "Voici vos prières du jour. Prenez un moment pour prier 🙏",
   "addThanks": "Ajouter un mot de reconnaissance",
   "thanksSaved": "Votre reconnaissance est enregistrée 🙏",

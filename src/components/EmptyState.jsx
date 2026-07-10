@@ -1,11 +1,11 @@
 // A friendly empty state with one clear next-step CTA, so an empty tab points
 // the user forward instead of being a dead end.
-export default function EmptyState({ emoji = '🙏', title, subtitle, actionLabel, onAction, actionIcon: Icon }) {
+export default function EmptyState({ emoji = '🙏', title, subtitle, actionLabel, onAction, actionIcon: Icon, compact = false }) {
   return (
-    <div className="text-center py-14 px-6">
-      <p className="text-5xl mb-3">{emoji}</p>
+    <div className={`text-center ${compact ? 'py-6 px-4' : 'py-14 px-6'}`}>
+      <p className={compact ? 'text-3xl mb-2' : 'text-5xl mb-3'}>{emoji}</p>
       <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{title}</p>
-      {subtitle && <p className="text-xs mb-5 max-w-xs mx-auto leading-relaxed" style={{ color: 'var(--text-3)' }}>{subtitle}</p>}
+      {subtitle && <p className={`text-xs ${compact ? 'mb-3' : 'mb-5'} max-w-xs mx-auto leading-relaxed`} style={{ color: 'var(--text-3)' }}>{subtitle}</p>}
       {actionLabel && onAction && (
         <button
           onClick={onAction}

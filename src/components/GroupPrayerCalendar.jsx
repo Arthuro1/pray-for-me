@@ -6,6 +6,9 @@ import { toast } from '../store/toastStore';
 import { parseKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { getAuthorName } from '../utils/user';
+import usePrayerStore from '../store/prayerStore';
+import { monthDots } from '../lib/planner';
+import { monthDayKeys } from '../lib/monthCalendar';
 import MonthCalendar from './MonthCalendar';
 
 // Prayer-chain calendar on a community prayer: members claim days ("I'll pray
@@ -16,6 +19,8 @@ export default function GroupPrayerCalendar({ communityPrayer, groupId, lang, us
   const addCommitment = useCommunityStore((s) => s.addCommitment);
   const removeCommitment = useCommunityStore((s) => s.removeCommitment);
   const fetchMyCommitments = useCommunityStore((s) => s.fetchMyCommitments);
+  const personalPrayers = usePrayerStore((s) => s.prayers);
+  const categories = usePrayerStore((s) => s.categories);
   const [commitments, setCommitments] = useState(null); // null = loading
   const [busy, setBusy] = useState(false);
   const [monthDate, setMonthDate] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
@@ -34,8 +39,16 @@ export default function GroupPrayerCalendar({ communityPrayer, groupId, lang, us
     return <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>;
   }
 
-  const dots = {};
-  for (const c of commitments) dots[c.day] = { group: (dots[c.day]?.group || 0) + 1 };
+  // Merge this prayer's own schedule (recurring / one-time / weekly plan) with the
+  // group's claimed days, so the calendar's four categories all apply here. The
+  // schedule comes from the user's copy of this prayer — their shared original
+  // (source_prayer_id) or a saved copy (community_origin_id).
+  const myCopy = personalPrayers.find(
+    (p) => p.community_origin_id === communityPrayer.id ||
+      (communityPrayer.source_prayer_id && p.id === communityPrayer.source_prayer_id)
+  );
+  const dots = myCopy ? monthDots([myCopy], categories, monthDayKeys(monthDate)) : {};
+  for (const c of commitments) dots[c.day] = { ...(dots[c.day] || {}), group: (dots[c.day]?.group || 0) + 1 };
   const dayCommitments = commitments.filter((c) => c.day === selectedKey);
   const mine = dayCommitments.find((c) => c.user_id === user?.id);
   const dayLabel = parseKey(selectedKey).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });

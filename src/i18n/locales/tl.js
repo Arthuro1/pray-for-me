@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Manalangin nang sama-sama",
+  "beFirstToPray": "Maging una sa pananalangin",
+  "andNMore": "at {n} pa",
   "shareGroupInfo": "Mababasa ng mga miyembro ng grupong ito ang panalanging ito. Iniimbak ng Pray4Me ang ibinahaging nilalaman nang naka-encrypt.",
   "shareAnonNote": "Itatago ang iyong pangalan sa mga miyembro ng grupo, ngunit mababasa pa rin nila ang nilalaman ng panalangin.",
   "onboardPrivacyTitle": "Pribado bilang default",

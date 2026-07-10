@@ -326,6 +326,20 @@ const useCommunityStore = create((set, get) => ({
     set({ userReactions: new Set((data || []).map(r => r.community_prayer_id)) });
   },
 
+  // Who's praying: the identities behind a prayer's reaction count, for the
+  // presence row on the detail page. Names resolve the same way as group
+  // members, so visibility matches what members already see of each other.
+  fetchReactors: async (prayerId) => {
+    const { data, error } = await supabase
+      .from('prayer_reactions')
+      .select('user_id')
+      .eq('community_prayer_id', prayerId);
+    if (error) return { reactors: [] };
+    const ids = (data || []).map(r => r.user_id);
+    const nameOf = await resolveNames(ids);
+    return { reactors: ids.map(id => ({ user_id: id, name: nameOf(id) })) };
+  },
+
   toggleReaction: async (prayerId, userId) => {
     const { userReactions } = get();
     const hasReacted = userReactions.has(prayerId);

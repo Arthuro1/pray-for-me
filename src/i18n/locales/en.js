@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "Pray together",
+  "beFirstToPray": "Be the first to pray",
+  "andNMore": "and {n} more",
   "testNotifBody": "Here are today's prayers. Take a moment to pray 🙏",
   "addThanks": "Add a word of thanks",
   "thanksSaved": "Your thanks is recorded 🙏",

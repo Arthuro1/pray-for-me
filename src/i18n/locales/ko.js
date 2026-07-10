@@ -1,4 +1,7 @@
 export default {
+  "prayTogether": "함께 기도하기",
+  "beFirstToPray": "가장 먼저 기도하기",
+  "andNMore": "외 {n}명",
   "shareGroupInfo": "이 기도는 이 그룹의 구성원이 읽을 수 있습니다. Pray4Me는 공유된 내용을 암호화하여 저장합니다.",
   "shareAnonNote": "그룹 구성원에게는 이름이 숨겨지지만, 구성원은 기도 내용을 읽을 수 있습니다.",
   "onboardPrivacyTitle": "기본적으로 비공개",
