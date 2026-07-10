@@ -219,6 +219,7 @@ export default {
   "weeklyPlan": "每周计划",
   "weeklyPlanSub": "为每个类别分配星期几",
   "addCategory": "添加",
+  "addCategoryFull": "添加分类",
   "newCategory": "新类别",
   "edit": "编辑",
   "days": [

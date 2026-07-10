@@ -213,6 +213,7 @@ export default {
   "weeklyPlan": "Plan hebdomadaire",
   "weeklyPlanSub": "Assignez chaque catégorie à des jours de la semaine",
   "addCategory": "Ajouter",
+  "addCategoryFull": "Ajouter une catégorie",
   "newCategory": "Nouvelle catégorie",
   "edit": "Modifier",
   "days": [

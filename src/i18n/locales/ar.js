@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "الخطة الأسبوعية",
   "weeklyPlanSub": "خصص كل فئة لأيام الأسبوع",
   "addCategory": "إضافة",
+  "addCategoryFull": "إضافة فئة",
   "newCategory": "فئة جديدة",
   "edit": "تعديل",
   "days": [

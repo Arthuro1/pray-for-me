@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "Rencana mingguan",
   "weeklyPlanSub": "Tetapkan setiap kategori ke hari dalam seminggu",
   "addCategory": "Tambah",
+  "addCategoryFull": "Tambah kategori",
   "newCategory": "Kategori baru",
   "edit": "Edit",
   "days": [

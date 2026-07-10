@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "برنامه هفتگی",
   "weeklyPlanSub": "هر دسته‌بندی را به روزهای هفته اختصاص دهید",
   "addCategory": "افزودن",
+  "addCategoryFull": "افزودن دسته",
   "newCategory": "دسته‌بندی جدید",
   "edit": "ویرایش",
   "days": [

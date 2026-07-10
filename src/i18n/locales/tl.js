@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "Lingguhang plano",
   "weeklyPlanSub": "Italaga ang bawat kategorya sa mga araw ng linggo",
   "addCategory": "Idagdag",
+  "addCategoryFull": "Magdagdag ng kategorya",
   "newCategory": "Bagong kategorya",
   "edit": "I-edit",
   "days": [

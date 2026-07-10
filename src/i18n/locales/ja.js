@@ -219,6 +219,7 @@ export default {
   "weeklyPlan": "週間プラン",
   "weeklyPlanSub": "各カテゴリを曜日に割り当てる",
   "addCategory": "追加",
+  "addCategoryFull": "カテゴリを追加",
   "newCategory": "新しいカテゴリ",
   "edit": "編集",
   "days": [

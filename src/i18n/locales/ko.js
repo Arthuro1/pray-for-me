@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "주간 계획",
   "weeklyPlanSub": "각 카테고리를 요일에 배정하세요",
   "addCategory": "추가",
+  "addCategoryFull": "카테고리 추가",
   "newCategory": "새 카테고리",
   "edit": "수정",
   "days": [

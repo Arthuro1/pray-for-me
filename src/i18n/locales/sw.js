@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "Mpango wa wiki",
   "weeklyPlanSub": "Weka kila kundi kwa siku za wiki",
   "addCategory": "Ongeza",
+  "addCategoryFull": "Ongeza kategoria",
   "newCategory": "Kundi jipya",
   "edit": "Hariri",
   "days": [

@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "साप्ताहिक योजना",
   "weeklyPlanSub": "प्रत्येक श्रेणी को सप्ताह के दिनों से जोड़ें",
   "addCategory": "जोड़ें",
+  "addCategoryFull": "श्रेणी जोड़ें",
   "newCategory": "नई श्रेणी",
   "edit": "संपादित करें",
   "days": [

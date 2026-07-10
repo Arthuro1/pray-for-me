@@ -25,7 +25,6 @@ import { planDayContent } from '../content/prayerPlans';
 import { pick } from '../content/teaching';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
-import CategorySelector from '../components/CategorySelector';
 import PrayTogetherCard from '../components/PrayTogetherCard';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
@@ -55,6 +54,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [recsError, setRecsError] = useState(null);
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
+  const [showCatPicker, setShowCatPicker] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState('');
   const titleCancelRef = useRef(false);
@@ -303,15 +303,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setUpdateRecs([]);
   };
 
-  // Categories are personal organisation, so they stay editable inline for your
-  // own prayers and for copies saved from the community alike.
-  const toggleCategory = (id) => {
-    const next = prayerCategoryIds.includes(id)
-      ? prayerCategoryIds.filter((x) => x !== id)
-      : [...prayerCategoryIds, id];
-    updatePrayer(livePrayer.id, { categoryIds: next });
-  };
-
   // Point/verse mutations are mode-aware: community mode routes through the
   // community store (which syncs shared prayers); personal mode uses prayerStore.
   const handleRemovePoint = (pointId) => isCommunity
@@ -556,34 +547,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </button>
         )}
 
-        {/* ── Organise this prayer: first the categories, then when to pray it.
-            In your own list (own prayers and saved community copies) both are
-            editable inline; in community mode they stay read-only. */}
-        {isCommunity ? (
-          prayerCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {prayerCategories.map(c => (
-                <span key={c.id} className="text-xs px-3 py-1.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
-                  {c.emoji} {tr(c.name, lang)}
-                </span>
-              ))}
-            </div>
-          )
-        ) : (
-          <>
-            <CategorySelector
-              categories={categories}
-              selectedIds={prayerCategoryIds}
-              onToggle={toggleCategory}
-              tr={tr}
-              lang={lang}
-            />
+        {/* Categories — read-only chips, except on a saved copy where you can
+            file it under your own categories (personal organisation). */}
+        {!savedCopy && prayerCategories.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {prayerCategories.map(c => (
+              <span key={c.id} className="text-xs px-3 py-1.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
+                {c.emoji} {tr(c.name, lang)}
+              </span>
+            ))}
             {livePrayer.for_other && livePrayer.person_name && (
-              <span className="inline-flex text-xs px-3 py-1.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+              <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
                 👤 {livePrayer.person_name}
               </span>
             )}
-          </>
+          </div>
         )}
 
         {/* Prayer plan (recurrence) — editable inline on any active prayer in your
@@ -630,6 +608,46 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </div>
           );
         })()}
+        {savedCopy && categories.length > 0 && (
+          <div>
+            <div className="flex flex-wrap gap-1.5 items-center">
+              {/* Categories you've filed this under — tap to remove. */}
+              {prayerCategories.map(c => (
+                <button
+                  key={c.id}
+                  onClick={() => updatePrayer(livePrayer.id, { categoryIds: prayerCategoryIds.filter(id => id !== c.id) })}
+                  className="text-xs px-3 py-1.5 rounded-full font-medium text-white"
+                  style={{ backgroundColor: c.color }}
+                >
+                  {c.emoji} {tr(c.name, lang)}
+                </button>
+              ))}
+              <button
+                onClick={() => setShowCatPicker(v => !v)}
+                className="text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                <Plus size={11} /> {t(lang, 'addCategoryFull')}
+              </button>
+            </div>
+            {/* The full choice list is revealed only after tapping "Add a category". */}
+            {showCatPicker && (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {categories.filter(c => !prayerCategoryIds.includes(c.id)).map(c => (
+                  <button
+                    key={c.id}
+                    onClick={() => updatePrayer(livePrayer.id, { categoryIds: [...prayerCategoryIds, c.id] })}
+                    className="text-xs px-3 py-1.5 rounded-full font-medium"
+                    style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    {c.emoji} {tr(c.name, lang)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Description */}
         {livePrayer.description && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>

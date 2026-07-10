@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "Недельный план",
   "weeklyPlanSub": "Назначьте каждую категорию на дни недели",
   "addCategory": "Добавить",
+  "addCategoryFull": "Добавить категорию",
   "newCategory": "Новая категория",
   "edit": "Изменить",
   "days": [

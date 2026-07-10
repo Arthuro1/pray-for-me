@@ -218,6 +218,7 @@ export default {
   "weeklyPlan": "የሳምንት እቅድ",
   "weeklyPlanSub": "እያንዳንዱ ምድብ ለሳምንቱ ቀናት ይመድቡ",
   "addCategory": "ያክሉ",
+  "addCategoryFull": "ምድብ ያክሉ",
   "newCategory": "አዲስ ምድብ",
   "edit": "አርትዕ",
   "days": [
