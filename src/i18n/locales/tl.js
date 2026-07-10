@@ -466,6 +466,8 @@ export default {
   "openInBible": "Buksan sa iyong Bibliya",
   "growScriptureNote": "Huwag mo lang basta paniwalaan ang sinasabi namin — buksan ang Kasulatan at tingnan mo mismo (Mga Gawa 17:11).",
   "scheduleLabel": "Iskedyul",
+  "addSchedule": "Magdagdag ng iskedyul",
+  "editSchedule": "I-edit ang iskedyul",
   "schedFollowPlan": "Sumusunod sa lingguhang plano",
   "schedOnce": "Minsanan",
   "schedRecurring": "Paulit-ulit",

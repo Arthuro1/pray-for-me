@@ -466,6 +466,8 @@ export default {
   "openInBible": "在你的圣经中打开",
   "growScriptureNote": "不要只听我们说——打开圣经，亲自查考（使徒行传 17:11）。",
   "scheduleLabel": "排期",
+  "addSchedule": "添加排期",
+  "editSchedule": "编辑排期",
   "schedFollowPlan": "跟随每周计划",
   "schedOnce": "一次性",
   "schedRecurring": "重复",

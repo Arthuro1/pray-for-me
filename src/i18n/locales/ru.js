@@ -466,6 +466,8 @@ export default {
   "openInBible": "Открыть в твоей Библии",
   "growScriptureNote": "Не верьте нам на слово — откройте Писание и убедитесь сами (Деяния 17:11).",
   "scheduleLabel": "Расписание",
+  "addSchedule": "Добавить расписание",
+  "editSchedule": "Изменить расписание",
   "schedFollowPlan": "По недельному плану",
   "schedOnce": "Один раз",
   "schedRecurring": "Повторяющаяся",

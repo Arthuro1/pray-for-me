@@ -462,6 +462,8 @@ export default {
   "openInBible": "Open in your Bible",
   "growScriptureNote": "Don't take our word for it — open the Scriptures and see for yourself (Acts 17:11).",
   "scheduleLabel": "Schedule",
+  "addSchedule": "Add a schedule",
+  "editSchedule": "Edit schedule",
   "schedFollowPlan": "Follows weekly plan",
   "schedOnce": "One-time",
   "schedRecurring": "Recurring",

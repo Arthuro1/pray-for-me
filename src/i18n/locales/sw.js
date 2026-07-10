@@ -466,6 +466,8 @@ export default {
   "openInBible": "Fungua katika Biblia yako",
   "growScriptureNote": "Usiamini neno letu tu — fungua Maandiko ujionee mwenyewe (Matendo 17:11).",
   "scheduleLabel": "Ratiba",
+  "addSchedule": "Ongeza ratiba",
+  "editSchedule": "Hariri ratiba",
   "schedFollowPlan": "Inafuata mpango wa wiki",
   "schedOnce": "Mara moja",
   "schedRecurring": "Inayojirudia",

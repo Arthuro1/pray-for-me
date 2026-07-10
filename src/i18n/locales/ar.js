@@ -466,6 +466,8 @@ export default {
   "openInBible": "افتح في كتابك المقدس",
   "growScriptureNote": "لا تصدّق كلامنا فحسب — افتح الكتاب المقدس وتحقّق بنفسك (أعمال الرسل 17:11).",
   "scheduleLabel": "الجدولة",
+  "addSchedule": "إضافة جدولة",
+  "editSchedule": "تعديل الجدولة",
   "schedFollowPlan": "يتبع الخطة الأسبوعية",
   "schedOnce": "مرة واحدة",
   "schedRecurring": "متكررة",

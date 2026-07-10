@@ -466,6 +466,8 @@ export default {
   "openInBible": "Abrir en tu Biblia",
   "growScriptureNote": "No nos creas solo a nosotros — abre las Escrituras y compruébalo por ti mismo (Hechos 17:11).",
   "scheduleLabel": "Programación",
+  "addSchedule": "Añadir una programación",
+  "editSchedule": "Editar la programación",
   "schedFollowPlan": "Sigue el plan semanal",
   "schedOnce": "Una vez",
   "schedRecurring": "Recurrente",

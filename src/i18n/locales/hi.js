@@ -466,6 +466,8 @@ export default {
   "openInBible": "अपनी बाइबल में खोलें",
   "growScriptureNote": "केवल हमारी बात पर विश्वास न करें — पवित्रशास्त्र खोलें और स्वयं देखें (प्रेरितों के काम 17:11)।",
   "scheduleLabel": "समय-योजना",
+  "addSchedule": "समय-योजना जोड़ें",
+  "editSchedule": "समय-योजना संपादित करें",
   "schedFollowPlan": "साप्ताहिक योजना के अनुसार",
   "schedOnce": "एक बार",
   "schedRecurring": "दोहराव",

@@ -466,6 +466,8 @@ export default {
   "openInBible": "Abrir na sua Bíblia",
   "growScriptureNote": "Não acredite só na nossa palavra — abra as Escrituras e veja por si mesmo (Atos 17:11).",
   "scheduleLabel": "Agendamento",
+  "addSchedule": "Adicionar um agendamento",
+  "editSchedule": "Editar o agendamento",
   "schedFollowPlan": "Segue o plano semanal",
   "schedOnce": "Uma vez",
   "schedRecurring": "Recorrente",

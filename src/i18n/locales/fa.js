@@ -466,6 +466,8 @@ export default {
   "openInBible": "در کتاب‌مقدّس خود باز کن",
   "growScriptureNote": "تنها به گفته‌ی ما اعتماد نکنید — کتاب‌مقدّس را بگشایید و خود ببینید (اعمال رسولان ۱۷:۱۱).",
   "scheduleLabel": "زمان‌بندی",
+  "addSchedule": "افزودن زمان‌بندی",
+  "editSchedule": "ویرایش زمان‌بندی",
   "schedFollowPlan": "طبق برنامهٔ هفتگی",
   "schedOnce": "یک‌بار",
   "schedRecurring": "تکرارشونده",

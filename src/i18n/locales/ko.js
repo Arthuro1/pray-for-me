@@ -466,6 +466,8 @@ export default {
   "openInBible": "당신의 성경에서 열기",
   "growScriptureNote": "우리 말만 믿지 마시고, 성경을 펴서 직접 확인해 보세요 (사도행전 17:11).",
   "scheduleLabel": "일정",
+  "addSchedule": "일정 추가",
+  "editSchedule": "일정 편집",
   "schedFollowPlan": "주간 계획 따르기",
   "schedOnce": "한 번만",
   "schedRecurring": "반복",

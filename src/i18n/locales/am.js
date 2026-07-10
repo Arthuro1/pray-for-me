@@ -466,6 +466,8 @@ export default {
   "openInBible": "በመጽሐፍ ቅዱስህ ክፈት",
   "growScriptureNote": "በቃላችን ብቻ አትመን — መጽሐፍ ቅዱስን ከፍተህ ራስህ ተመልከት (የሐዋርያት ሥራ 17:11)።",
   "scheduleLabel": "መርሐ ግብር",
+  "addSchedule": "መርሐ ግብር ጨምር",
+  "editSchedule": "መርሐ ግብር አስተካክል",
   "schedFollowPlan": "የሳምንቱን እቅድ ይከተላል",
   "schedOnce": "አንድ ጊዜ",
   "schedRecurring": "ተደጋጋሚ",

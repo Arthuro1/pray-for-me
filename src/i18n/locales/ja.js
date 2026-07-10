@@ -466,6 +466,8 @@ export default {
   "openInBible": "あなたの聖書で開く",
   "growScriptureNote": "私たちの言葉をうのみにせず、聖書を開いて自分で確かめてください（使徒の働き 17:11）。",
   "scheduleLabel": "スケジュール",
+  "addSchedule": "スケジュールを追加",
+  "editSchedule": "スケジュールを編集",
   "schedFollowPlan": "週間プランに従う",
   "schedOnce": "1回のみ",
   "schedRecurring": "繰り返し",

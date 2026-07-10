@@ -466,6 +466,8 @@ export default {
   "openInBible": "In deiner Bibel öffnen",
   "growScriptureNote": "Glaube nicht uns aufs Wort – schlage die Schrift auf und überzeuge dich selbst (Apostelgeschichte 17,11).",
   "scheduleLabel": "Planung",
+  "addSchedule": "Planung hinzufügen",
+  "editSchedule": "Planung bearbeiten",
   "schedFollowPlan": "Folgt dem Wochenplan",
   "schedOnce": "Einmalig",
   "schedRecurring": "Wiederkehrend",

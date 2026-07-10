@@ -466,6 +466,8 @@ export default {
   "openInBible": "Buka di Alkitabmu",
   "growScriptureNote": "Jangan hanya percaya pada kata-kata kami — bukalah Kitab Suci dan periksalah sendiri (Kisah Para Rasul 17:11).",
   "scheduleLabel": "Jadwal",
+  "addSchedule": "Tambahkan jadwal",
+  "editSchedule": "Edit jadwal",
   "schedFollowPlan": "Mengikuti rencana mingguan",
   "schedOnce": "Sekali",
   "schedRecurring": "Berulang",

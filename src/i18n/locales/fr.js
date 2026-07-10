@@ -462,6 +462,8 @@ export default {
   "openInBible": "Ouvre dans ta Bible",
   "growScriptureNote": "Ne nous crois pas sur parole — ouvre les Écritures et vois par toi-même (Actes 17:11).",
   "scheduleLabel": "Planification",
+  "addSchedule": "Ajouter une planification",
+  "editSchedule": "Modifier la planification",
   "schedFollowPlan": "Suit le plan hebdo",
   "schedOnce": "Une fois",
   "schedRecurring": "Récurrent",
