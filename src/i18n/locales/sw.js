@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "Siku kumi za maombi kwa nia moja, mkimngoja Roho aliyeahidiwa",
   "planWeek7Title": "Siku 7 za shukrani",
   "planWeek7Sub": "Wiki moja ya shukrani, mada moja kwa siku",
+  "planAltar7Title": "Washa upya madhabahu — Siku 7",
+  "planAltar7Sub": "Wiki ya kurudi katika uwepo wa Mungu na kuamsha njaa mpya kwake",
   "plan30Title": "Siku 30 kwa ajili ya wengine",
   "plan30Sub": "Mwezi mmoja wa maombezi kwa watu wanaokuzunguka",
   "groupCalendarTitle": "Kalenda ya maombi",

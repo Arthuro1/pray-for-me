@@ -552,6 +552,8 @@ export default {
   "planUpperRoomSub": "Dix jours de prière unie, dans l'attente de l'Esprit promis",
   "planWeek7Title": "7 jours de gratitude",
   "planWeek7Sub": "Une semaine d'actions de grâces, un thème par jour",
+  "planAltar7Title": "Rallume l'autel — 7 jours",
+  "planAltar7Sub": "Une semaine pour revenir à la présence de Dieu et raviver la faim de Lui",
   "plan30Title": "30 jours pour les autres",
   "plan30Sub": "Un mois d'intercession pour ceux qui t'entourent",
   "groupCalendarTitle": "Calendrier de prière",

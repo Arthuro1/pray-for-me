@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "Zehn Tage einmütigen Gebets, in Erwartung des verheißenen Geistes",
   "planWeek7Title": "7 Tage Dankbarkeit",
   "planWeek7Sub": "Eine Woche Danksagung, ein Thema pro Tag",
+  "planAltar7Title": "Entfache den Altar neu — 7 Tage",
+  "planAltar7Sub": "Eine Woche, um in Gottes Gegenwart zurückzukehren und den Hunger nach Ihm neu zu entfachen",
   "plan30Title": "30 Tage für andere",
   "plan30Sub": "Ein Monat Fürbitte für Menschen um dich herum",
   "groupCalendarTitle": "Gebetskalender",

@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "十天同心合意的祷告，等候所应许的圣灵",
   "planWeek7Title": "7 天感恩",
   "planWeek7Sub": "一周的感恩，每天一个主题",
+  "planAltar7Title": "重燃祭坛——7 天",
+  "planAltar7Sub": "用一周回到神的同在，重新点燃对祂的渴慕",
   "plan30Title": "为他人祷告 30 天",
   "plan30Sub": "一个月为你身边的人代祷",
   "groupCalendarTitle": "祷告日历",

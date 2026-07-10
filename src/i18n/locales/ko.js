@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "약속하신 성령을 기다리며 드리는 열흘간의 한마음 기도",
   "planWeek7Title": "감사의 7일",
   "planWeek7Sub": "한 주간의 감사, 매일 하나의 주제",
+  "planAltar7Title": "제단에 다시 불을 지피라 — 7일",
+  "planAltar7Sub": "하나님의 임재로 돌아가 그분을 향한 새로운 갈망을 일깨우는 한 주",
   "plan30Title": "이웃을 위한 30일",
   "plan30Sub": "주변 사람들을 위한 한 달의 중보",
   "groupCalendarTitle": "기도 달력",

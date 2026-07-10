@@ -552,6 +552,8 @@ export default {
   "planUpperRoomSub": "Ten days of united prayer, waiting on the promised Spirit",
   "planWeek7Title": "7 days of gratitude",
   "planWeek7Sub": "A week of thanksgiving, one theme a day",
+  "planAltar7Title": "Rekindle the altar — 7 days",
+  "planAltar7Sub": "A week to return to God's presence and stir fresh hunger for Him",
   "plan30Title": "30 days for others",
   "plan30Sub": "A month of intercession for people around you",
   "groupCalendarTitle": "Prayer calendar",

@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "Sampung araw ng nagkakaisang panalangin, hinihintay ang ipinangakong Espiritu",
   "planWeek7Title": "7 araw ng pasasalamat",
   "planWeek7Sub": "Isang linggo ng pagpapasalamat, isang tema bawat araw",
+  "planAltar7Title": "Muling pag-alabin ang dambana — 7 araw",
+  "planAltar7Sub": "Isang linggo para manumbalik sa presensya ng Diyos at pukawin ang bagong gutom sa Kanya",
   "plan30Title": "30 araw para sa iba",
   "plan30Sub": "Isang buwan ng pamamagitan para sa mga tao sa paligid mo",
   "groupCalendarTitle": "Kalendaryo ng panalangin",

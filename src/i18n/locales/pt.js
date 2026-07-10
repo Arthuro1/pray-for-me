@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "Dez dias de oração unânime, esperando o Espírito prometido",
   "planWeek7Title": "7 dias de gratidão",
   "planWeek7Sub": "Uma semana de ações de graças, um tema por dia",
+  "planAltar7Title": "Reacenda o altar — 7 dias",
+  "planAltar7Sub": "Uma semana para voltar à presença de Deus e reavivar a fome por Ele",
   "plan30Title": "30 dias pelos outros",
   "plan30Sub": "Um mês de intercessão pelas pessoas ao seu redor",
   "groupCalendarTitle": "Calendário de oração",

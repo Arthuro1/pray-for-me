@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "Sepuluh hari doa sehati, menantikan Roh yang dijanjikan",
   "planWeek7Title": "7 hari bersyukur",
   "planWeek7Sub": "Sepekan ucapan syukur, satu tema per hari",
+  "planAltar7Title": "Nyalakan kembali mezbah — 7 hari",
+  "planAltar7Sub": "Sepekan untuk kembali ke hadirat Allah dan membangkitkan lapar yang baru akan Dia",
   "plan30Title": "30 hari untuk sesama",
   "plan30Sub": "Sebulan doa syafaat bagi orang di sekitarmu",
   "groupCalendarTitle": "Kalender doa",

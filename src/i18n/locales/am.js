@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "ቃል የተገባለትን መንፈስ በመጠባበቅ፣ አሥር ቀናት በአንድ ልብ የሚደረግ ጸሎት",
   "planWeek7Title": "የ7 ቀናት ምስጋና",
   "planWeek7Sub": "አንድ ሳምንት ምስጋና፣ በቀን አንድ ጭብጥ",
+  "planAltar7Title": "መሠዊያውን እንደ አዲስ አንድድ — 7 ቀናት",
+  "planAltar7Sub": "ወደ እግዚአብሔር ሕልውና ለመመለስና ለእርሱ አዲስ ራብ ለማነሳሳት አንድ ሳምንት",
   "plan30Title": "ለሌሎች 30 ቀናት",
   "plan30Sub": "በዙሪያህ ላሉ ሰዎች የአንድ ወር ማማለድ",
   "groupCalendarTitle": "የጸሎት ቀን መቁጠሪያ",

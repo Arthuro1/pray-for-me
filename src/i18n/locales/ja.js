@@ -556,6 +556,8 @@ export default {
   "planUpperRoomSub": "約束の御霊を待ち望む、心を合わせた十日間の祈り",
   "planWeek7Title": "感謝の7日間",
   "planWeek7Sub": "感謝の1週間、毎日ひとつのテーマ",
+  "planAltar7Title": "祭壇に火を灯し直す——7日間",
+  "planAltar7Sub": "神様の臨在に立ち返り、神様への渇望を新たにする一週間",
   "plan30Title": "他者のための30日",
   "plan30Sub": "身近な人々のための1か月のとりなし",
   "groupCalendarTitle": "祈りのカレンダー",
