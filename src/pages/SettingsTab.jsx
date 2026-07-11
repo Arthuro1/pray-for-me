@@ -16,6 +16,7 @@ import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
 import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/AiDisclaimer';
+import NotificationPreferences from '../components/NotificationPreferences';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 
@@ -133,6 +134,14 @@ export default function SettingsTab() {
     getFollowUpLastSent(user.id).then((val) => { if (!cancelled) setFollowUpLastSent(val); });
     return () => { cancelled = true; };
   }, [settings.followUpEnabled, user?.id]);
+
+  // Deep-link into a section (e.g. /settings#notifications from the inbox).
+  useEffect(() => {
+    const hash = window.location.hash?.slice(1);
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   const handleLockVault = () => {
     lockVault();
@@ -449,7 +458,7 @@ export default function SettingsTab() {
         </div>
 
         {/* Notifications */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        <div id="notifications" className="rounded-2xl p-4 mb-3 scroll-mt-16" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center gap-2 mb-4">
             <Bell size={16} style={{ color: '#7c5cfc' }} />
             <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifications')}</h3>
@@ -535,6 +544,16 @@ export default function SettingsTab() {
               {t(lang, 'testNotif')}
             </button>
           )}
+        </div>
+
+        {/* Community notification preferences (in-app inbox + push per type) */}
+        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Bell size={16} style={{ color: '#7c5cfc' }} />
+            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPrefsTitle')}</h3>
+          </div>
+          <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPrefsSub')}</p>
+          <NotificationPreferences />
         </div>
 
         </div>{/* end md:grid */}

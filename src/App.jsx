@@ -25,9 +25,11 @@ const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
+import useNotificationStore from './store/notificationStore';
 import useVaultStore from './store/vaultStore';
 import VaultLockScreen from './components/VaultLockScreen';
 import { pullVaultRecord } from './lib/vaultSync';
@@ -133,6 +135,9 @@ export default function App() {
   const { loadTranslations, translateContent } = useTranslationStore();
   const fetchPendingCount = useCommunityStore((s) => s.fetchPendingCount);
   const subscribePending = useCommunityStore((s) => s.subscribePending);
+  const { fetchNotifications, subscribeNotifications, resetNotifications } = useNotificationStore(
+    useShallow((s) => ({ fetchNotifications: s.fetchNotifications, subscribeNotifications: s.subscribeNotifications, resetNotifications: s.reset }))
+  );
   const { initialized: vaultInitialized, unlocked: vaultUnlocked } = useVaultStore();
 
   const lang = settings.language || 'fr';
@@ -221,6 +226,16 @@ export default function App() {
     return subscribePending(user.id);
   }, [user?.id]);
 
+  // Notification inbox: load the latest + unread count and subscribe to live
+  // inserts so the bell badge stays accurate. Reset first so one account's inbox
+  // never leaks into another's on logout / account change.
+  useEffect(() => {
+    resetNotifications();
+    if (!user?.id) return undefined;
+    fetchNotifications(user.id);
+    return subscribeNotifications(user.id);
+  }, [user?.id]);
+
   // Translate personal content only when the user is actually reading in a
   // language other than the one they write in, and has opted into AI. This avoids
   // paying to "translate" content into the language it's already written in (the
@@ -280,6 +295,7 @@ export default function App() {
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
               <Route path="/plan" element={<PlanTab />} />
               <Route path="/grow" element={<GrowTab />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/settings" element={<SettingsTab />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

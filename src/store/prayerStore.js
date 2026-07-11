@@ -9,6 +9,7 @@ import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
 import { track, EVENTS } from '../lib/analytics';
 import { ensurePushSubscription } from '../push';
+import { isEventPushEnabled } from '../lib/notificationPrefs';
 import { resolveLanguage } from '../i18n';
 import {
   canEncrypt,
@@ -930,7 +931,12 @@ const usePrayerStore = create((set, get) => ({
       } else {
         await saveUserSettings(userId, get().settings);
       }
-      await ensurePushSubscription(userId, get().settings);
+      // Also honour the account-level event-push master switch, so turning on
+      // "Push notifications" on one device keeps every other permission-granted
+      // device subscribed too (not just the reminder toggles).
+      let eventPush = false;
+      try { eventPush = await isEventPushEnabled(userId); } catch { /* default off */ }
+      await ensurePushSubscription(userId, get().settings, eventPush);
     } catch { /* offline — local settings stand */ }
   },
 

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, BookOpen, Settings, Plus, ChevronLeft, ChevronRight, Users, Sprout } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
+import NotificationBell from './NotificationBell';
 import { t } from '../i18n';
 
 function Badge({ count, className = '', style = {} }) {
@@ -82,14 +83,17 @@ export default function Layout({ children, onAddPrayer }) {
             </div>
           )}
           {collapsed && <img src="/logo.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg mx-auto" />}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="shrink-0 rounded-lg p-1 transition-colors"
-            style={{ color: 'var(--text-3)', marginLeft: collapsed ? 0 : 8 }}
-            title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
-          >
-            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-          </button>
+          <div className="flex items-center gap-1 shrink-0">
+            {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--text-3)' }} />}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="rounded-lg p-1 transition-colors"
+              style={{ color: 'var(--text-3)', marginLeft: collapsed ? 0 : 4 }}
+              title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
+            >
+              {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            </button>
+          </div>
         </div>
 
         <nav className="flex flex-col gap-1 flex-1 px-2">
@@ -139,10 +143,22 @@ export default function Layout({ children, onAddPrayer }) {
         </div>
       </aside>
 
+      {/* ── Mobile top bar (holds the notification bell; no sidebar on mobile) ── */}
+      <header
+        className="md:hidden fixed top-0 left-0 right-0 h-12 z-30 flex items-center justify-between px-4"
+        style={{ background: 'var(--surface)', borderBottom: '0.5px solid var(--border)' }}
+      >
+        <div className="flex items-center gap-2">
+          <img src="/logo.svg" alt="Pray4Me" className="w-7 h-7 rounded-lg" />
+          <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>Pray4Me</span>
+        </div>
+        <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
+      </header>
+
       {/* ── Main content ── */}
       <main
         ref={mainRef}
-        className="flex-1 overflow-y-auto pb-24 md:pb-8 w-full"
+        className="flex-1 overflow-y-auto pt-12 md:pt-0 pb-24 md:pb-8 w-full"
         style={{
           paddingLeft: isMd ? `${sidebarWidth}px` : '0px',
           transition: 'padding-left 0.2s ease',

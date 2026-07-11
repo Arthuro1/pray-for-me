@@ -15,6 +15,15 @@ function urlBase64ToUint8Array(base64String) {
 
 const tzOffset = () => -new Date().getTimezoneOffset(); // minutes to add to UTC for local time
 
+// IANA timezone (e.g. 'Europe/Berlin'). This is the primary timezone
+// representation for notification scheduling / quiet hours — it stays correct
+// across daylight-saving changes, unlike a fixed numeric offset. tz_offset is
+// still written alongside it for backward compatibility with the existing
+// reminder schedulers.
+const tzName = () => {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone || null; } catch { return null; }
+};
+
 // Resolve the active service worker registration WITHOUT hanging. `serviceWorker
 // .ready` never resolves when no SW is registered (e.g. `npm run dev`, or a
 // failed registration), which would otherwise freeze the caller. Give up after
@@ -57,6 +66,7 @@ function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', ena
     auth: json.keys?.auth,
     reminder_time: reminderTime,
     tz_offset: tzOffset(),
+    timezone: tzName(),
     lang,
     enabled: enabled === undefined ? true : enabled,
     updated_at: new Date().toISOString(),
@@ -106,16 +116,79 @@ export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', 
   }
 }
 
+// Subscribe THIS device for community/event Web Push, independent of the daily
+// and follow-up reminders. Those live on `enabled`/`follow_up_enabled`; event
+// push is gated only by the account-level notification_preferences.push_enabled.
+// So all we need here is a live push endpoint on file — we must NOT flip the
+// reminder flags. Returns { error } like enablePush ('denied' | 'unsupported' |
+// 'failed'). Never hangs or throws.
+export async function subscribeDeviceForPush(userId, { lang = 'en' } = {}) {
+  if (!pushSupported() || !VAPID_PUBLIC_KEY || !userId) return { error: 'unsupported' };
+
+  let permission;
+  try {
+    permission = await Notification.requestPermission();
+  } catch {
+    return { error: 'unsupported' };
+  }
+  if (permission !== 'granted') return { error: 'denied' };
+
+  const reg = await swReady();
+  if (!reg) return { error: 'unsupported' }; // no service worker (dev / registration failed)
+
+  try {
+    let sub = await reg.pushManager.getSubscription();
+    if (sub && !boundToCurrentKey(sub)) {
+      await sub.unsubscribe(); // stale VAPID binding — sends would fail silently
+      sub = null;
+    }
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+    }
+    // Preserve any existing daily-reminder `enabled` on this endpoint; a brand-new
+    // row defaults to enabled=false so subscribing for event push never silently
+    // switches the daily reminder on (the column default is true — see
+    // push_notifications.sql).
+    const { data: existing } = await supabase
+      .from('push_subscriptions')
+      .select('enabled')
+      .eq('endpoint', sub.endpoint)
+      .maybeSingle();
+    const json = sub.toJSON();
+    const { error } = await supabase.from('push_subscriptions').upsert({
+      user_id: userId,
+      endpoint: sub.endpoint,
+      p256dh: json.keys?.p256dh,
+      auth: json.keys?.auth,
+      lang,
+      enabled: existing?.enabled ?? false,
+      tz_offset: tzOffset(),
+      timezone: tzName(),
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'endpoint' });
+    return { error: error ? 'failed' : undefined };
+  } catch {
+    return { error: 'failed' };
+  }
+}
+
 // Silently re-align this device with the account's settings on app load.
-// Reminder prefs are account-level (user_settings), so a reminder enabled in
-// one browser must also be delivered by every other signed-in browser: if this
+// Reminder AND event-push prefs are account-level, so a device enabled in one
+// browser must also be delivered by every other signed-in browser: if this
 // device already granted notification permission, make sure it holds a live
 // subscription bound to the current VAPID key, with the account prefs on its
-// row. Never prompts — devices that haven't granted permission are left alone
-// until the user flips a toggle there explicitly.
-export async function ensurePushSubscription(userId, settings = {}) {
+// row. `eventPushEnabled` (notification_preferences.push_enabled) is a third
+// reason to keep the subscription alive — it lets a "Push notifications" toggle
+// flipped on one device propagate to every other permission-granted device.
+// Never prompts — devices that haven't granted permission are left alone until
+// the user flips a toggle there explicitly (the browser forbids subscribing
+// without a prior permission grant).
+export async function ensurePushSubscription(userId, settings = {}, eventPushEnabled = false) {
   if (!pushSupported() || !VAPID_PUBLIC_KEY || !userId) return;
-  if (!settings.dailyReminderEnabled && !settings.followUpEnabled) return;
+  if (!settings.dailyReminderEnabled && !settings.followUpEnabled && !eventPushEnabled) return;
   if (Notification.permission !== 'granted') return;
   const reg = await swReady();
   if (!reg) return;
@@ -173,7 +246,7 @@ export async function updatePushPrefs(userId, prefs = {}) {
   const sub = reg && await reg.pushManager.getSubscription();
   if (sub) {
     await supabase.from('push_subscriptions')
-      .update({ tz_offset: tzOffset(), updated_at: now })
+      .update({ tz_offset: tzOffset(), timezone: tzName(), updated_at: now })
       .eq('endpoint', sub.endpoint);
   }
 }

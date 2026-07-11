@@ -26,6 +26,7 @@ import { pick } from '../content/teaching';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
+import FollowPrayerButton from '../components/FollowPrayerButton';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
 import CommunityUpdates from '../components/CommunityUpdates';
@@ -691,6 +692,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             user={user}
             onTogglePraying={handleTogglePraying}
           />
+        )}
+
+        {/* Follow this prayer for update / answered / testimony notifications.
+            Reversible surface for the auto-follow that happens on "I'm praying". */}
+        {isCommunity && user?.id && (
+          <div className="flex items-center justify-end mb-4">
+            <FollowPrayerButton userId={user.id} prayerId={communityPrayer.id} lang={lang} />
+          </div>
         )}
 
         {/* ── Community mode: prayer-chain calendar (claim a day) ── */}

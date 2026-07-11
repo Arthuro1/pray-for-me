@@ -4,6 +4,7 @@ import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../uti
 import { devError } from '../lib/logger';
 import { track, EVENTS } from '../lib/analytics';
 import { ensureGroupKey, groupKeyResolver } from '../lib/crypto/groupKeys';
+import { autoFollowOnReaction } from '../lib/prayerFollow';
 import {
   encryptCommunityPrayer,
   encryptCommunityUpdate,
@@ -354,6 +355,9 @@ const useCommunityStore = create((set, get) => ({
         .eq('community_prayer_id', prayerId).eq('user_id', userId);
     } else {
       await supabase.from('prayer_reactions').insert({ community_prayer_id: prayerId, user_id: userId });
+      // Tapping "I'm praying" also follows the prayer for notifications — a
+      // convenience the user can reverse from the prayer's follow toggle.
+      autoFollowOnReaction(userId, prayerId);
     }
 
     const updated = await fetchPrayerWithCounts(prayerId);
