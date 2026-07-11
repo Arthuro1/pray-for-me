@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { isInvitePath, savePendingInvite, takePendingInvite } from './pendingInvite';
+import { isInvitePath, savePendingInvite, takePendingInvite, authRedirectTarget } from './pendingInvite';
 
 describe('isInvitePath', () => {
   it('matches the shareable invite routes an anonymous visitor can land on', () => {
@@ -33,5 +33,17 @@ describe('save/takePendingInvite', () => {
 
   it('returns null when nothing was stashed', () => {
     expect(takePendingInvite()).toBe(null);
+  });
+});
+
+describe('authRedirectTarget', () => {
+  it('returns origin + path so the auth round-trip lands back on the invite', () => {
+    history.replaceState({}, '', '/community/join/ABC123');
+    expect(authRedirectTarget()).toBe(`${window.location.origin}/community/join/ABC123`);
+  });
+
+  it('drops the query string so no transient params leak into the redirect', () => {
+    history.replaceState({}, '', '/community/join/ABC123?ref=email&x=1');
+    expect(authRedirectTarget()).toBe(`${window.location.origin}/community/join/ABC123`);
   });
 });

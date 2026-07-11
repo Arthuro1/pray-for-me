@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { clearLocalData } from '../lib/dataCache';
 import { forgetAccountKey } from '../lib/crypto/accountKey';
+import { authRedirectTarget } from '../lib/pendingInvite';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -17,9 +18,11 @@ const useAuthStore = create((set) => ({
   },
 
   signInWithGoogle: async () => {
+    // Return to the current path (e.g. an invite link), not just the site root,
+    // so the OAuth round-trip preserves the deep link the visitor arrived on.
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: authRedirectTarget() },
     });
     return { error };
   },
@@ -30,10 +33,13 @@ const useAuthStore = create((set) => ({
   },
 
   signUpWithEmail: async (email, password, fullName) => {
+    // Point the confirmation email back at the current path so a visitor who
+    // signed up from an invite link is returned to it after confirming (even
+    // on another device, where the localStorage replay can't reach them).
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: { data: { full_name: fullName }, emailRedirectTo: authRedirectTarget() },
     });
     return { user: data?.user, error };
   },

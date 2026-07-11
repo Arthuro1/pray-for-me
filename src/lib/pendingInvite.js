@@ -28,3 +28,17 @@ export function takePendingInvite() {
     return null;
   }
 }
+
+// Where email-confirmation / OAuth should return the user: the current path,
+// minus any query string, so a CROSS-device confirmation (link opened in a
+// browser that never stashed the invite) still lands back on it instead of the
+// site root. Requires the origin's `<origin>/**` to be on the Supabase Auth
+// "Redirect URLs" allow-list; otherwise Supabase safely falls back to the Site
+// URL (root), and the localStorage replay still covers same-browser flows.
+export function authRedirectTarget() {
+  try {
+    return window.location.origin + window.location.pathname;
+  } catch {
+    return undefined;
+  }
+}
