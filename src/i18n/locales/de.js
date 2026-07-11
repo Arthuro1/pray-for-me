@@ -197,6 +197,8 @@ export default {
   "remove": "Entfernen",
   "admin": "Admin",
   "invitedBy": "Eingeladen von",
+  "groupInviteFallbackTitle": "Einladung zu einer Gebetsgruppe",
+  "groupInviteFallbackDesc": "Du wurdest eingeladen, beizutreten und gemeinsam zu beten",
   "userNotFound": "Kein Benutzer mit dieser E-Mail",
   "cannotAddSelf": "Du kannst dich nicht selbst hinzufügen",
   "requestExists": "Anfrage bereits gesendet",

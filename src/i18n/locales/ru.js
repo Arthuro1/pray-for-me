@@ -196,6 +196,8 @@ export default {
   "remove": "Удалить",
   "admin": "Админ",
   "invitedBy": "Приглашён",
+  "groupInviteFallbackTitle": "Приглашение в молитвенную группу",
+  "groupInviteFallbackDesc": "Вас пригласили присоединиться и молиться вместе",
   "userNotFound": "Пользователь с таким email не найден",
   "cannotAddSelf": "Нельзя добавить самого себя",
   "requestExists": "Запрос уже отправлен",

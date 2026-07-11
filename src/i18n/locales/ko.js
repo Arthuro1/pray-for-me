@@ -196,6 +196,8 @@ export default {
   "remove": "삭제",
   "admin": "관리자",
   "invitedBy": "초대한 사람",
+  "groupInviteFallbackTitle": "기도 그룹 초대",
+  "groupInviteFallbackDesc": "함께 참여하여 기도하도록 초대받았습니다",
   "userNotFound": "해당 이메일의 사용자가 없습니다",
   "cannotAddSelf": "자신을 추가할 수 없습니다",
   "requestExists": "이미 요청을 보냈습니다",

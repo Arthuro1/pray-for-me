@@ -196,6 +196,8 @@ export default {
   "remove": "Ondoa",
   "admin": "Msimamizi",
   "invitedBy": "Amealikwa na",
+  "groupInviteFallbackTitle": "Mwaliko wa kikundi cha maombi",
+  "groupInviteFallbackDesc": "Umealikwa kujiunga na kuomba pamoja",
   "userNotFound": "Hakuna mtumiaji mwenye barua pepe hiyo",
   "cannotAddSelf": "Huwezi kujiongeza mwenyewe",
   "requestExists": "Ombi tayari limetumwa",

@@ -676,11 +676,15 @@ const useCommunityStore = create((set, get) => ({
       .eq('invited_user_id', userId);
     if (error) return { error: error.message };
     const nameOf = await resolveNames((data || []).map(i => i.invited_by));
-    const invitations = (data || []).map(i => ({
-      ...i,
-      groupName: i.groups?.name || '?',
-      inviterName: nameOf(i.invited_by),
-    }));
+    const invitations = (data || []).map(i => {
+      const inviter = nameOf(i.invited_by);
+      return {
+        ...i,
+        // Null (not "?") when unresolved so the UI can show meaningful fallback copy.
+        groupName: i.groups?.name || null,
+        inviterName: inviter && inviter !== '?' ? inviter : null,
+      };
+    });
     return { invitations };
   },
 

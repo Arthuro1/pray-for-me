@@ -197,6 +197,8 @@ export default {
   "remove": "Eliminar",
   "admin": "Admin",
   "invitedBy": "Invitado por",
+  "groupInviteFallbackTitle": "Invitación a un grupo de oración",
+  "groupInviteFallbackDesc": "Te han invitado a unirte y orar juntos",
   "userNotFound": "Ningún usuario con ese correo",
   "cannotAddSelf": "No puedes añadirte a ti mismo",
   "requestExists": "Solicitud ya enviada",

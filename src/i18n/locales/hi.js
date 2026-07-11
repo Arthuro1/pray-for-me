@@ -196,6 +196,8 @@ export default {
   "remove": "हटाएं",
   "admin": "व्यवस्थापक",
   "invitedBy": "द्वारा आमंत्रित",
+  "groupInviteFallbackTitle": "प्रार्थना समूह का निमंत्रण",
+  "groupInviteFallbackDesc": "आपको शामिल होकर साथ मिलकर प्रार्थना करने के लिए आमंत्रित किया गया है",
   "userNotFound": "उस ईमेल वाला कोई उपयोगकर्ता नहीं",
   "cannotAddSelf": "आप स्वयं को नहीं जोड़ सकते",
   "requestExists": "अनुरोध पहले ही भेजा जा चुका है",

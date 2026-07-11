@@ -189,6 +189,8 @@ export default {
   "remove": "Supprimer",
   "admin": "Admin",
   "invitedBy": "Invité par",
+  "groupInviteFallbackTitle": "Invitation à un groupe de prière",
+  "groupInviteFallbackDesc": "Vous êtes invité à rejoindre et à prier ensemble",
   "userNotFound": "Aucun utilisateur avec cet e-mail",
   "cannotAddSelf": "Vous ne pouvez pas vous ajouter vous-même",
   "requestExists": "Demande déjà envoyée",

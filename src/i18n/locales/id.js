@@ -196,6 +196,8 @@ export default {
   "remove": "Hapus",
   "admin": "Admin",
   "invitedBy": "Diundang oleh",
+  "groupInviteFallbackTitle": "Undangan grup doa",
+  "groupInviteFallbackDesc": "Anda diundang untuk bergabung dan berdoa bersama",
   "userNotFound": "Tidak ada pengguna dengan email itu",
   "cannotAddSelf": "Anda tidak dapat menambahkan diri sendiri",
   "requestExists": "Permintaan sudah dikirim",

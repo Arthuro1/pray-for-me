@@ -197,6 +197,8 @@ export default {
   "remove": "移除",
   "admin": "管理员",
   "invitedBy": "邀请人",
+  "groupInviteFallbackTitle": "祷告小组邀请",
+  "groupInviteFallbackDesc": "您受邀加入并一起祷告",
   "userNotFound": "找不到使用该邮箱的用户",
   "cannotAddSelf": "无法添加自己",
   "requestExists": "请求已发送",

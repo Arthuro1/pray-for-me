@@ -196,6 +196,8 @@ export default {
   "remove": "إزالة",
   "admin": "مشرف",
   "invitedBy": "دعاه",
+  "groupInviteFallbackTitle": "دعوة إلى مجموعة صلاة",
+  "groupInviteFallbackDesc": "لقد تمت دعوتك للانضمام والصلاة معًا",
   "userNotFound": "لا يوجد مستخدم بهذا البريد الإلكتروني",
   "cannotAddSelf": "لا يمكنك إضافة نفسك",
   "requestExists": "تم إرسال الطلب بالفعل",

@@ -196,6 +196,8 @@ export default {
   "remove": "Alisin",
   "admin": "Admin",
   "invitedBy": "Inimbitahan ni",
+  "groupInviteFallbackTitle": "Imbitasyon sa grupo ng panalangin",
+  "groupInviteFallbackDesc": "Inaanyayahan kang sumali at manalangin nang magkasama",
   "userNotFound": "Walang user na may email na iyon",
   "cannotAddSelf": "Hindi mo maidaragdag ang sarili mo",
   "requestExists": "Naipadala na ang hiling",

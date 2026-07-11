@@ -196,6 +196,8 @@ export default {
   "remove": "አስወግድ",
   "admin": "አስተዳዳሪ",
   "invitedBy": "የተጋበዘ በ",
+  "groupInviteFallbackTitle": "የጸሎት ቡድን ግብዣ",
+  "groupInviteFallbackDesc": "እንዲቀላቀሉና በአንድነት እንዲጸልዩ ተጋብዘዋል",
   "userNotFound": "በዚህ ኢሜይል ተጠቃሚ የለም",
   "cannotAddSelf": "ራስዎን መጨመር አይችሉም",
   "requestExists": "ጥያቄ አስቀድሞ ተልኳል",

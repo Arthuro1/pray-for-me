@@ -197,6 +197,8 @@ export default {
   "remove": "削除",
   "admin": "管理者",
   "invitedBy": "招待者",
+  "groupInviteFallbackTitle": "祈りのグループへの招待",
+  "groupInviteFallbackDesc": "参加して一緒に祈るよう招待されました",
   "userNotFound": "そのメールのユーザーが見つかりません",
   "cannotAddSelf": "自分を追加することはできません",
   "requestExists": "リクエストは送信済みです",

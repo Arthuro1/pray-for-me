@@ -170,7 +170,11 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         {groupInvitations.length > 0 && (
           <Section title={`${t(lang, 'groupInvitations')} (${groupInvitations.length})`} icon={<Mail size={18} />}>
             {groupInvitations.map(inv => (
-              <ActionRow key={inv.id} label={inv.groupName} sublabel={`${t(lang, 'invitedBy')} ${inv.inviterName}`} busy={busyId === inv.id}
+              <ActionRow key={inv.id}
+                label={inv.groupName || t(lang, 'groupInviteFallbackTitle')}
+                sublabel={inv.inviterName ? `${t(lang, 'invitedBy')} ${inv.inviterName}` : t(lang, 'groupInviteFallbackDesc')}
+                avatarName={inv.groupName || t(lang, 'groupInviteFallbackTitle')}
+                busy={busyId === inv.id}
                 primaryText={t(lang, 'join')} secondaryText={t(lang, 'reject')}
                 onPrimary={() => handle(inv.id, () => acceptGroupInvitation(inv.id, userId))}
                 onSecondary={() => handle(inv.id, () => rejectGroupInvitation(inv.id))} />

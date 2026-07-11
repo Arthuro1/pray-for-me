@@ -196,6 +196,8 @@ export default {
   "remove": "حذف",
   "admin": "مدیر",
   "invitedBy": "دعوت‌شده توسط",
+  "groupInviteFallbackTitle": "دعوت به گروه دعا",
+  "groupInviteFallbackDesc": "شما دعوت شده‌اید تا بپیوندید و با هم دعا کنید",
   "userNotFound": "کاربری با این ایمیل یافت نشد",
   "cannotAddSelf": "نمی‌توانید خودتان را اضافه کنید",
   "requestExists": "درخواست قبلاً ارسال شده است",
