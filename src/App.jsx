@@ -37,6 +37,7 @@ import { ensureAccountCryptoReady, rememberAccountKey } from './lib/crypto/accou
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
+import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
 import { Loader2 } from 'lucide-react';
@@ -142,6 +143,7 @@ export default function App() {
 
   const lang = settings.language || 'fr';
   const location = useLocation();
+  const navigate = useNavigate();
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
   const [vaultChecked, setVaultChecked] = useState(false);
 
@@ -188,6 +190,20 @@ export default function App() {
       ensureContentLang(lang);
       if (!localStorage.getItem('pfm_onboarded')) setShowOnboarding(true);
     }
+  }, [user?.id]);
+
+  // An anonymous visitor opening an invite link only ever sees the auth screen
+  // (the router below is gated on `user`), so remember the intended path. After
+  // sign-in — even a round-trip through email confirmation or OAuth — replay it
+  // so the join they clicked actually completes.
+  useEffect(() => {
+    if (!user && isInvitePath(location.pathname)) savePendingInvite(location.pathname);
+  }, [user, location.pathname]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const pending = takePendingInvite();
+    if (pending) navigate(pending, { replace: true });
   }, [user?.id]);
 
   // Pull any (wrapped) recovery record synced from another device, then make the
