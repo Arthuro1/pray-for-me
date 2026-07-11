@@ -26,9 +26,15 @@ const RSA_IMPORT = { name: 'RSA-OAEP', hash: 'SHA-256' };
 // In-memory only: the unwrapped private key + its public JWK for this session.
 let cache = null; // { userId, publicJwk, privateKey }
 
+// Session memo of OTHER members' imported public keys (immutable per user), so a
+// repeated group-key fan-out doesn't re-fetch + re-import every recipient's key.
+// userId -> CryptoKey | null (null = looked up, none published yet — re-checked).
+const memberKeyCache = new Map();
+
 // Reset the in-memory keypair (sign-out / tests). The server row is untouched.
 export function clearUserKeyCache() {
   cache = null;
+  memberKeyCache.clear();
 }
 
 // Ensure the signed-in user has a published identity keypair, and that this
@@ -89,8 +95,13 @@ export function getMyPrivateKey() {
 
 // Import another member's public key (for wrapping a group key to them). Reads
 // the public_keys view (never exposes anyone's private key). Null if unknown.
+// A successful import is memoized for the session (public keys are immutable);
+// a miss is NOT cached, so a member who publishes their key mid-session is
+// picked up on the next fan-out.
 export async function getMemberPublicKey(userId) {
   if (!userId) return null;
+  const memo = memberKeyCache.get(userId);
+  if (memo) return memo;
   try {
     const { data } = await supabase
       .from('public_keys')
@@ -98,7 +109,9 @@ export async function getMemberPublicKey(userId) {
       .eq('user_id', userId)
       .maybeSingle();
     if (!data?.public_key_jwk) return null;
-    return await crypto.subtle.importKey('jwk', data.public_key_jwk, RSA_IMPORT, false, ['encrypt']);
+    const key = await crypto.subtle.importKey('jwk', data.public_key_jwk, RSA_IMPORT, false, ['encrypt']);
+    memberKeyCache.set(userId, key);
+    return key;
   } catch {
     return null;
   }

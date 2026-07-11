@@ -1,7 +1,8 @@
 -- ════════════════════════════════════════════════════════════════════════
 -- Push notifications: subscriptions table + scheduled reminder job
--- Run this in the Supabase SQL editor. Replace the two placeholders at the
--- bottom (<PROJECT_REF> and <SERVICE_ROLE_KEY>) before running the cron block.
+-- Run this in the Supabase SQL editor. Prerequisite for the cron block at the
+-- bottom: run supabase/_cron_secrets.sql once (stores project_url +
+-- notify_fn_secret in Vault; the cron reads them at run time).
 -- ════════════════════════════════════════════════════════════════════════
 
 -- 1. Web Push subscriptions (one row per device/browser). reminder_time, lang
@@ -41,7 +42,9 @@ create extension if not exists pg_cron;
 create extension if not exists pg_net;
 
 -- Remove any previous schedule with the same name, then (re)create it.
--- ⚠️  Replace <PROJECT_REF> and <SERVICE_ROLE_KEY> below before running.
+-- ⚠️  Prerequisite: run supabase/_cron_secrets.sql once (stores project_url +
+--     notify_fn_secret in Vault). The cron body below reads them at run time —
+--     no placeholders to substitute here.
 select cron.unschedule('send-daily-reminder')
   where exists (select 1 from cron.job where jobname = 'send-daily-reminder');
 
@@ -50,10 +53,11 @@ select cron.schedule(
   '*/15 * * * *',
   $$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-daily-reminder',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')
+               || '/functions/v1/send-daily-reminder',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'notify_fn_secret')
     ),
     body    := '{}'::jsonb
   );

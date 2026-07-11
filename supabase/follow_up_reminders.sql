@@ -16,7 +16,8 @@ alter table public.push_subscriptions
 -- Scheduled job — runs every 15 minutes and invokes the send-follow-up-reminder
 -- Edge Function. Requires the pg_cron and pg_net extensions (already enabled
 -- by push_notifications.sql).
--- ⚠️  Replace <PROJECT_REF> and <SERVICE_ROLE_KEY> below before running.
+-- ⚠️  Prerequisite: run supabase/_cron_secrets.sql once (stores project_url +
+--     notify_fn_secret in Vault). The cron body reads them at run time.
 select cron.unschedule('send-follow-up-reminder')
   where exists (select 1 from cron.job where jobname = 'send-follow-up-reminder');
 
@@ -25,10 +26,11 @@ select cron.schedule(
   '*/15 * * * *',
   $$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-follow-up-reminder',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')
+               || '/functions/v1/send-follow-up-reminder',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'notify_fn_secret')
     ),
     body    := '{}'::jsonb
   );

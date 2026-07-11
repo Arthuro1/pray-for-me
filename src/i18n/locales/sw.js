@@ -179,6 +179,7 @@ export default {
   "noTestimonies": "Bado hakuna ushuhuda",
   "beFirst": "Kuwa wa kwanza kushiriki",
   "memberUpdates": "Maneno ya wanachama",
+  "updateSyncing": "Inasawazisha… neno hili bado halipatikani kwenye kifaa hiki.",
   "leaveGroup": "Acha kikundi",
   "groupNotFound": "Kikundi hakipatikani",
   "alreadyMember": "Tayari wewe ni mwanachama",

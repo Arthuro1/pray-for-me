@@ -172,6 +172,7 @@ export default {
   "noTestimonies": "No testimonies yet",
   "beFirst": "Be the first to share",
   "memberUpdates": "Member updates",
+  "updateSyncing": "Syncing… this word isn't available on this device yet.",
   "leaveGroup": "Leave group",
   "groupNotFound": "Group not found",
   "alreadyMember": "You're already a member",

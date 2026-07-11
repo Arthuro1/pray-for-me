@@ -180,6 +180,7 @@ export default {
   "noTestimonies": "まだ証しがありません",
   "beFirst": "最初に共有する",
   "memberUpdates": "メンバーの言葉",
+  "updateSyncing": "同期中… この言葉はまだこの端末で表示できません。",
   "leaveGroup": "グループを退出",
   "groupNotFound": "グループが見つかりません",
   "alreadyMember": "すでにメンバーです",

@@ -179,6 +179,7 @@ export default {
   "noTestimonies": "لا توجد شهادات بعد",
   "beFirst": "كن أول من يشارك",
   "memberUpdates": "كلمات الأعضاء",
+  "updateSyncing": "جارٍ المزامنة… هذه الكلمة غير متاحة على هذا الجهاز بعد.",
   "leaveGroup": "مغادرة المجموعة",
   "groupNotFound": "المجموعة غير موجودة",
   "alreadyMember": "أنت بالفعل عضو",

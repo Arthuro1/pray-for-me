@@ -12,7 +12,8 @@
 --   2. Delete the old one so it can't run against a stale deployment:
 --        npx supabase functions delete send-reminders
 --
--- ⚠️  Replace <PROJECT_REF> and <SERVICE_ROLE_KEY> below before running.
+-- ⚠️  Prerequisite: run supabase/_cron_secrets.sql once (stores project_url +
+--     notify_fn_secret in Vault). The cron bodies read them at run time.
 -- ════════════════════════════════════════════════════════════════════════
 
 select cron.unschedule('send-reminders')
@@ -26,10 +27,11 @@ select cron.schedule(
   '*/15 * * * *',
   $$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-daily-reminder',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')
+               || '/functions/v1/send-daily-reminder',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'notify_fn_secret')
     ),
     body    := '{}'::jsonb
   );
@@ -44,10 +46,11 @@ select cron.schedule(
   '*/15 * * * *',
   $$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-follow-up-reminder',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')
+               || '/functions/v1/send-follow-up-reminder',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'notify_fn_secret')
     ),
     body    := '{}'::jsonb
   );

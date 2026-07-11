@@ -179,6 +179,7 @@ export default {
   "noTestimonies": "Wala pang patotoo",
   "beFirst": "Maging una sa pagbabahagi",
   "memberUpdates": "Mga salita ng miyembro",
+  "updateSyncing": "Nagsi-sync… hindi pa available ang salitang ito sa device na ito.",
   "leaveGroup": "Umalis sa grupo",
   "groupNotFound": "Hindi nahanap ang grupo",
   "alreadyMember": "Miyembro ka na",

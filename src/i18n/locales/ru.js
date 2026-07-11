@@ -179,6 +179,7 @@ export default {
   "noTestimonies": "Пока нет свидетельств",
   "beFirst": "Будьте первым, кто поделится",
   "memberUpdates": "Слова членов",
+  "updateSyncing": "Синхронизация… это слово пока недоступно на этом устройстве.",
   "leaveGroup": "Покинуть группу",
   "groupNotFound": "Группа не найдена",
   "alreadyMember": "Вы уже являетесь членом",

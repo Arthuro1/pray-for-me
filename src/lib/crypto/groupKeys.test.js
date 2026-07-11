@@ -206,6 +206,45 @@ describe('group content key lifecycle', () => {
     expect(db.group_key_versions.length).toBe(1);
   });
 
+  it('wraps in a member who publishes their identity key AFTER the first fan-out', async () => {
+    resetDb();
+    clearGroupKeyCache();
+    await destroyVault();
+    clearUserKeyCache();
+    installStorage();
+    // Bob is a member from the start, but has NOT published an identity key when
+    // Alice first provisions + distributes the group key.
+    db.group_members.push({ group_id: 'g1', user_id: 'alice' }, { group_id: 'g1', user_id: 'bob' });
+    const ackAlice = await provisionUser('alice');
+
+    const realNow = Date.now;
+    let clock = 1_000_000;
+    Date.now = () => clock;
+    try {
+      await becomeUser('alice', ackAlice);
+      await ensureGroupKey('g1'); // creates v1; bob has no public key yet → skipped
+      expect(db.group_member_keys.has('g1:1:alice')).toBe(true);
+      expect(db.group_member_keys.has('g1:1:bob')).toBe(false);
+
+      // Bob now comes online and publishes his identity key (from his own device).
+      const bobKp = await crypto.subtle.generateKey(
+        { name: 'RSA-OAEP', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' },
+        true, ['encrypt', 'decrypt'],
+      );
+      const bobPubJwk = await crypto.subtle.exportKey('jwk', bobKp.publicKey);
+      db.user_crypto_keys.set('bob', { user_id: 'bob', public_key_jwk: bobPubJwk });
+
+      // Alice touches the group again in the SAME session, past the coalescing
+      // window → the still-incomplete fan-out retries and tops bob in. (The old
+      // once-per-session guard would have skipped this and left bob unable to read.)
+      clock += 10_000;
+      await ensureGroupKey('g1');
+      expect(db.group_member_keys.has('g1:1:bob')).toBe(true);
+    } finally {
+      Date.now = realNow;
+    }
+  });
+
   it('forward-only rotation mints the next version wrapped to current members only', async () => {
     const { ackAlice } = await setupTwoMemberGroup();
     await becomeUser('alice', ackAlice);

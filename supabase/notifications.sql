@@ -491,7 +491,8 @@ grant execute on function public.finish_notification_delivery(uuid, text, text, 
 -- everything; the optional Database Webhook (see docs/notifications.md) just
 -- makes the FIRST attempt near-instant. Row claiming above keeps the two from
 -- double-sending.
--- ⚠️  Replace <PROJECT_REF> and <SERVICE_ROLE_KEY> before running this block.
+-- ⚠️  Prerequisite: run supabase/_cron_secrets.sql once (stores project_url +
+--     notify_fn_secret in Vault). The cron body reads them at run time.
 create extension if not exists pg_cron;
 create extension if not exists pg_net;
 
@@ -503,10 +504,11 @@ select cron.schedule(
   '*/5 * * * *',
   $CRON$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-event-notifications',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')
+               || '/functions/v1/send-event-notifications',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'notify_fn_secret')
     ),
     body    := '{}'::jsonb
   );
@@ -712,7 +714,8 @@ grant execute on function public.claim_user_digest(uuid) to service_role;
 -- 10g. Digest cron — hourly. Sends each user their batched summary (respecting
 --      quiet hours, inside the Edge Function). Reuses the same function via the
 --      { "digest": true } body.
---      ⚠️  Replace <PROJECT_REF> and <SERVICE_ROLE_KEY> before running.
+--      ⚠️  Prerequisite: run supabase/_cron_secrets.sql once (stores project_url
+--          + notify_fn_secret in Vault). The cron body reads them at run time.
 select cron.unschedule('digest-event-notifications')
   where exists (select 1 from cron.job where jobname = 'digest-event-notifications');
 
@@ -721,10 +724,11 @@ select cron.schedule(
   '0 * * * *',
   $CRON$
   select net.http_post(
-    url     := 'https://<PROJECT_REF>.supabase.co/functions/v1/send-event-notifications',
+    url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')
+               || '/functions/v1/send-event-notifications',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>'
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'notify_fn_secret')
     ),
     body    := '{"digest": true}'::jsonb
   );

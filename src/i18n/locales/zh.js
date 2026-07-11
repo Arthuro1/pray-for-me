@@ -180,6 +180,7 @@ export default {
   "noTestimonies": "暂无见证",
   "beFirst": "成为第一个分享的人",
   "memberUpdates": "成员话语",
+  "updateSyncing": "同步中…… 此消息尚未在此设备上可用。",
   "leaveGroup": "离开群组",
   "groupNotFound": "未找到群组",
   "alreadyMember": "您已经是成员",

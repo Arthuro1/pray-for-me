@@ -178,10 +178,17 @@ Deno.serve(async (req) => {
 
     // Only an internal/server caller may drive delivery. The function is
     // deployed with --no-verify-jwt (so pg_net / the webhook can reach it), so
-    // gate on the service-role bearer explicitly.
+    // gate on a shared secret explicitly. Accept EITHER the platform service-role
+    // key OR a dedicated NOTIFY_FN_SECRET — the latter is rotation-proof and set
+    // by you (`supabase secrets set NOTIFY_FN_SECRET=...`), so delivery no longer
+    // depends on the caller reproducing the exact injected service-role string.
+    // The bearer is normalised (prefix stripped + trimmed) so a stray newline or
+    // space in a cron/webhook header can't cause a false 401.
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    const auth = req.headers.get('Authorization') || '';
-    if (!serviceKey || auth !== `Bearer ${serviceKey}`) {
+    const fnSecret = Deno.env.get('NOTIFY_FN_SECRET');
+    const bearer = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+    const allowed = [serviceKey, fnSecret].filter((k): k is string => !!k);
+    if (allowed.length === 0 || !allowed.includes(bearer)) {
       return json({ error: 'unauthorized' }, 401);
     }
 

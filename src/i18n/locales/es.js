@@ -180,6 +180,7 @@ export default {
   "noTestimonies": "Sin testimonios aún",
   "beFirst": "Sé el primero en compartir",
   "memberUpdates": "Palabras de los miembros",
+  "updateSyncing": "Sincronizando… esta palabra aún no está disponible en este dispositivo.",
   "leaveGroup": "Salir del grupo",
   "groupNotFound": "Grupo no encontrado",
   "alreadyMember": "Ya eres miembro",

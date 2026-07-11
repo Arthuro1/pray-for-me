@@ -17,8 +17,19 @@ const AES_PARAMS = { name: 'AES-GCM', length: 256 };
 
 // In-memory, session-scoped caches, keyed by group + version so old-version
 // content stays decryptable after a rotation.
-const keyCache = new Map();    // `${groupId}:${version}` -> CryptoKey (unwrapped GCK)
-const distributed = new Set(); // `${groupId}:${version}` already fanned out this session
+const keyCache = new Map();      // `${groupId}:${version}` -> CryptoKey (unwrapped GCK)
+// Fan-out bookkeeping per `${groupId}:${version}`:
+//   { complete: bool, lastAt: number }
+// `complete` is true only once EVERY current member has been wrapped in; while a
+// member still hasn't published an identity key we keep retrying (throttled) so a
+// late joiner converges without the holder having to reload the whole app.
+const distributed = new Map();
+// Small coalescing window: while a fan-out is still incomplete (some member
+// hasn't published a key yet) we retry on the holder's next touch, but not more
+// than once per this interval, so a burst of ensureGroupKey calls within one UI
+// flow doesn't re-run it repeatedly. Member public keys are memoized, so a retry
+// is cheap once everyone reachable has been wrapped in.
+const REDISTRIBUTE_THROTTLE_MS = 5_000;
 
 export function clearGroupKeyCache() {
   keyCache.clear();
@@ -75,16 +86,27 @@ async function myIdentity(myUserId) {
 
 // Wrap `gckRaw` for every current member with a published public key and upsert
 // the rows. Idempotent — onConflict ignores existing rows, and since the key
-// material is identical any prior wrap stays valid. Runs at most once per
-// (group, version) per session unless forced.
+// material is identical any prior wrap stays valid.
+//
+// Convergence: a member who published their identity key AFTER a previous fan-out
+// would otherwise never receive a wrapped copy (the old guard stopped after the
+// first run). We instead keep retrying — throttled — until every current member
+// has been wrapped in, then mark the (group, version) `complete` so steady-state
+// calls skip the work. This is what lets a late joiner become able to read
+// existing content as soon as any key-holder next touches the group.
 async function distribute(groupId, version, gckRaw, { force = false } = {}) {
   const tag = tagOf(groupId, version);
-  if (!force && distributed.has(tag)) return;
+  const state = distributed.get(tag);
+  if (!force && state?.complete) return;
+  if (!force && state && Date.now() - state.lastAt < REDISTRIBUTE_THROTTLE_MS) return;
+
   const { data: members } = await supabase.from('group_members').select('user_id').eq('group_id', groupId);
+  const list = members || [];
   const rows = [];
-  for (const m of members || []) {
+  let allPublished = list.length > 0;
+  for (const m of list) {
     const pub = await getMemberPublicKey(m.user_id);
-    if (!pub) continue; // member hasn't published an identity key yet — skip for now
+    if (!pub) { allPublished = false; continue; } // member hasn't published an identity key yet — retry later
     rows.push({ group_id: groupId, key_version: version, user_id: m.user_id, encrypted_group_key: await wrapGck(gckRaw, pub) });
   }
   if (rows.length) {
@@ -92,7 +114,7 @@ async function distribute(groupId, version, gckRaw, { force = false } = {}) {
       .from('group_member_keys')
       .upsert(rows, { onConflict: 'group_id,key_version,user_id', ignoreDuplicates: true });
   }
-  distributed.add(tag);
+  distributed.set(tag, { complete: allPublished, lastAt: Date.now() });
 }
 
 // Claim `version` for the group and become its key holder: generate a GCK, record

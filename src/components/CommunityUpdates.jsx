@@ -40,7 +40,11 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                 <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
                   {communityAuthor(u, userId, lang)}{' · '}{timeAgo(u.created_at, lang)}
                 </p>
-                <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
+                {u._locked ? (
+                  <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
+                ) : (
+                  <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
+                )}
               </div>
             </div>
           ))}

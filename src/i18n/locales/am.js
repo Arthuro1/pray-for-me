@@ -179,6 +179,7 @@ export default {
   "noTestimonies": "እስካሁን ምስክርነት የለም",
   "beFirst": "የመጀመሪያ አጋሪ ሁን",
   "memberUpdates": "የአባላት ቃላት",
+  "updateSyncing": "በማመሳሰል ላይ… ይህ ቃል በዚህ መሣሪያ ላይ ገና አልተገኘም።",
   "leaveGroup": "ቡድኑን ለቅቅ",
   "groupNotFound": "ቡድን አልተገኘም",
   "alreadyMember": "አስቀድሞ አባል ነዎት",

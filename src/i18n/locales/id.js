@@ -179,6 +179,7 @@ export default {
   "noTestimonies": "Belum ada kesaksian",
   "beFirst": "Jadilah yang pertama berbagi",
   "memberUpdates": "Kata-kata anggota",
+  "updateSyncing": "Menyinkronkan… kata ini belum tersedia di perangkat ini.",
   "leaveGroup": "Tinggalkan grup",
   "groupNotFound": "Grup tidak ditemukan",
   "alreadyMember": "Anda sudah menjadi anggota",
