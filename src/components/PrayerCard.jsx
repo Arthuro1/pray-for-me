@@ -77,9 +77,9 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
           <div className="flex-1 min-w-0">
             <h3
               className="text-sm font-semibold leading-snug mb-1.5"
-              style={{ color: 'rgba(255,255,255,0.95)', textDecoration: isAnswered ? 'line-through' : 'none' }}
+              style={{ color: 'rgba(255,255,255,0.95)', textDecoration: isAnswered ? 'line-through' : 'none', fontStyle: prayer._locked ? 'italic' : 'normal' }}
             >
-              {tr(prayer.title, lang)}
+              {prayer._locked ? t(lang, 'contentLocked') : tr(prayer.title, lang)}
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {prayerCategories.map((c) => (

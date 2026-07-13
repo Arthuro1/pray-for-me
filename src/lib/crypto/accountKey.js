@@ -19,32 +19,83 @@
 // could already read the in-memory key.
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import * as km from './keyManager';
+import { supabase } from '../supabase';
+import { regenerateIdentityKey } from './userKeys';
 
 const hasIDB = () => typeof indexedDB !== 'undefined';
 const slot = (userId) => `pfm_ak_${userId}`;
 
+// Outcomes of ensureAccountCryptoReady, so the app can render the right gate.
+export const CRYPTO_STATUS = {
+  READY: 'ready',       // a key is in memory (restored or freshly provisioned)
+  LOCKED: 'locked',     // a recovery record exists but isn't unlocked (VaultLockScreen)
+  ORPHANED: 'orphaned', // server has encrypted data but this device has no key and no recovery
+};
+
+// Whether the server already holds encryption for this user — an identity
+// keypair (groups / cross-device) or any personal prayer stored as ciphertext.
+// If so, minting a fresh account key here would ORPHAN that data, so we must not
+// do it silently. Fails soft to `false` (never block genuine first-use) on a
+// missing table or network error.
+async function hasServerEncryptionState(userId) {
+  if (!userId) return false;
+  try {
+    const { data: keyRow } = await supabase
+      .from('user_crypto_keys').select('user_id').eq('user_id', userId).maybeSingle();
+    if (keyRow) return true;
+    const { data: enc } = await supabase
+      .from('prayers').select('id').eq('user_id', userId)
+      .not('encrypted_payload', 'is', null).limit(1).maybeSingle();
+    return !!enc;
+  } catch {
+    return false;
+  }
+}
+
 // Ensure an account key is ready for the signed-in user. Idempotent; safe to
-// call on every boot. Order:
+// call on every boot. Returns a CRYPTO_STATUS so the caller can gate the UI.
+// Order:
 //   1. If a key is already in memory (session mirror / earlier call) → reuse it.
 //   2. Restore the transparent per-user key from IndexedDB.
-//   3. If a recovery record exists but no local key → a new/other device; leave
-//      it LOCKED so the recovery unlock UI (VaultLockScreen) can handle it.
-//   4. Otherwise this is first use → auto-provision the key transparently.
+//   3. If a recovery record exists but no local key → a new/other device; stay
+//      LOCKED so the recovery unlock UI (VaultLockScreen) can handle it.
+//   4. If the server shows this user already has encrypted data but we reach
+//      here with no local key and no recovery record → ORPHANED. Do NOT mint a
+//      new key (that would silently orphan the existing ciphertext); surface the
+//      recovery screen so the user makes an explicit choice.
+//   5. Otherwise this is genuine first use → auto-provision the key transparently.
 export async function ensureAccountCryptoReady(userId) {
   await km.hydrate();
-  if (km.isUnlocked()) { await rememberAccountKey(userId); return; }
+  if (km.isUnlocked()) { await rememberAccountKey(userId); return CRYPTO_STATUS.READY; }
 
   if (userId && hasIDB()) {
     try {
       const b64 = await idbGet(slot(userId));
-      if (b64 && (await km.importRawMasterKey(b64))) return;
+      if (b64 && (await km.importRawMasterKey(b64))) return CRYPTO_STATUS.READY;
     } catch { /* fall through to init / lock */ }
   }
 
-  if (km.isVaultInitialized()) return; // recovery-protected key elsewhere → stay locked
+  if (km.isVaultInitialized()) return CRYPTO_STATUS.LOCKED; // recovery-protected key elsewhere
+
+  if (await hasServerEncryptionState(userId)) return CRYPTO_STATUS.ORPHANED;
 
   await km.autoInitAccountKey();
   await rememberAccountKey(userId);
+  return CRYPTO_STATUS.READY;
+}
+
+// Explicit, user-confirmed reset for the ORPHANED case: accept that the previous
+// encrypted prayers can't be recovered on this device, mint a fresh account key,
+// and re-publish a new identity keypair under it (the old one was wrapped by the
+// lost key and can't be unwrapped). New content encrypts cleanly from here;
+// old ciphertext stays locked. Returns true on success.
+export async function startFreshEncryption(userId) {
+  await km.autoInitAccountKey();
+  await rememberAccountKey(userId);
+  try {
+    await regenerateIdentityKey(userId); // overwrite the orphaned identity key under the new ACK
+  } catch { /* group content will re-provision lazily; personal encryption already works */ }
+  return km.isUnlocked();
 }
 
 // Persist the current (unlocked) account key for transparent access on this

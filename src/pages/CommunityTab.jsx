@@ -18,6 +18,7 @@ import PrayerForm from '../components/PrayerForm';
 import PrayerListSkeleton from '../components/Skeleton';
 import Avatar from '../components/Avatar';
 import ConfirmDialog from '../components/ConfirmDialog';
+import LockedNotice from '../components/LockedNotice';
 import ShareButtons from '../components/ShareButtons';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -886,8 +887,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>{p.title}</p>
-                    {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{p.description}</p>}
+                    {p._locked ? (
+                      <p className="text-sm font-medium mb-2"><LockedNotice lang={lang} inline /></p>
+                    ) : (
+                      <>
+                        <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>{p.title}</p>
+                        {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{p.description}</p>}
+                      </>
+                    )}
                     <div className="flex items-center gap-3">
                       <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={SUBTLE_BTN}>
                         <HandHeart size={13} /> {p.prayer_reactions?.[0]?.count ?? 0}
@@ -943,7 +950,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                             ))}
                           </div>
                         )}
-                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>🎉 "{testimony.content}"</p>
+                        {testimony._locked
+                          ? <LockedNotice lang={lang} inline />
+                          : <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>🎉 "{testimony.content}"</p>}
                       </button>
                     );
                   })}

@@ -33,6 +33,7 @@ import CommunityUpdates from '../components/CommunityUpdates';
 import CommunityTestimonies from '../components/CommunityTestimonies';
 import AnonymousToggle from '../components/AnonymousToggle';
 import ConfirmDialog from '../components/ConfirmDialog';
+import LockedNotice from '../components/LockedNotice';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
@@ -362,7 +363,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   // Inline title edit — own personal prayers only (community has its own edit;
   // a saved copy follows the author's title).
-  const canEditTitle = !isCommunity && !savedCopy;
+  const canEditTitle = !isCommunity && !savedCopy && !livePrayer._locked;
   const startEditTitle = () => { setTitleDraft(livePrayer.title || ''); titleCancelRef.current = false; setEditingTitle(true); };
   const saveTitle = () => {
     if (titleCancelRef.current) { titleCancelRef.current = false; setEditingTitle(false); return; }
@@ -480,7 +481,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               className={`text-base font-semibold text-white truncate flex items-center gap-1.5 ${canEditTitle ? 'cursor-text' : ''}`}
               style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
             >
-              <span className="truncate">{loc(livePrayer.title)}</span>
+              <span className="truncate">{livePrayer._locked ? t(lang, 'contentLocked') : loc(livePrayer.title)}</span>
               {canEditTitle && <Edit2 size={12} className="shrink-0 opacity-50" />}
             </h1>
           )}
@@ -649,8 +650,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* Description */}
-        {livePrayer.description && (
+        {/* Description — or an honest placeholder when this row couldn't be
+            decrypted on this device (blank redacted columns would look like loss). */}
+        {livePrayer._locked ? (
+          <LockedNotice lang={lang} />
+        ) : livePrayer.description && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'details')}</p>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)', lineHeight: 1.7 }}>

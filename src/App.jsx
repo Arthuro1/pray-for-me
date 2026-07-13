@@ -10,6 +10,7 @@ import ConfirmHost from './components/ConfirmHost';
 import OfflineBanner from './components/OfflineBanner';
 import SyncIndicator from './components/SyncIndicator';
 import Onboarding from './components/Onboarding';
+import RecoveryPromptBanner from './components/RecoveryPromptBanner';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
@@ -32,8 +33,9 @@ import useCommunityStore from './store/communityStore';
 import useNotificationStore from './store/notificationStore';
 import useVaultStore from './store/vaultStore';
 import VaultLockScreen from './components/VaultLockScreen';
+import AccountKeyRecoveryScreen from './components/AccountKeyRecoveryScreen';
 import { pullVaultRecord } from './lib/vaultSync';
-import { ensureAccountCryptoReady, rememberAccountKey } from './lib/crypto/accountKey';
+import { ensureAccountCryptoReady, rememberAccountKey, CRYPTO_STATUS } from './lib/crypto/accountKey';
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
@@ -147,6 +149,7 @@ export default function App() {
   const navigate = useNavigate();
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
   const [vaultChecked, setVaultChecked] = useState(false);
+  const [cryptoStatus, setCryptoStatus] = useState(null);
 
   const openAdd = () => { setEditPrayer(null); setFormPrefill(null); setShowForm(true); };
   const openEdit = (p) => { setEditPrayer(p); setFormPrefill(null); setShowForm(true); };
@@ -218,12 +221,13 @@ export default function App() {
   // a recovery-protected key exists elsewhere (new device → VaultLockScreen).
   // Gates the splash until the crypto state is known.
   useEffect(() => {
-    if (!user?.id) { setVaultChecked(false); return undefined; }
+    if (!user?.id) { setVaultChecked(false); setCryptoStatus(null); return undefined; }
     let cancelled = false;
     (async () => {
       await pullVaultRecord();
-      await ensureAccountCryptoReady(user.id);
+      const status = await ensureAccountCryptoReady(user.id);
       if (cancelled) return;
+      setCryptoStatus(status);
       useVaultStore.getState().refresh();
       setVaultChecked(true);
     })();
@@ -300,9 +304,19 @@ export default function App() {
     return <VaultLockScreen lang={lang} />;
   }
 
+  // Hard gate: the server holds encrypted data but this device has no key and no
+  // recovery record. We refused to silently mint a new key (which would orphan
+  // that data); let the user recover on their original device or start fresh.
+  if (cryptoStatus === CRYPTO_STATUS.ORPHANED) {
+    // startFreshEncryption unlocks the key, which flips vaultUnlocked → the
+    // reload-on-unlock effect re-decrypts; here we just drop the gate.
+    return <AccountKeyRecoveryScreen lang={lang} onResolved={() => setCryptoStatus(CRYPTO_STATUS.READY)} />;
+  }
+
   return (
     <>
       <Layout onAddPrayer={openAdd}>
+        <RecoveryPromptBanner lang={lang} />
         <ErrorBoundary lang={lang} resetKey={location.pathname}>
           <Suspense fallback={<PageLoader />}>
             <Routes>

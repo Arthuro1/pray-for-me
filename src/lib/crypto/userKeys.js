@@ -71,6 +71,16 @@ export async function ensureUserPublicKey(userId) {
   }
 
   // No row yet → generate and publish a fresh keypair.
+  return publishNewKeypair(userId);
+}
+
+// Generate a fresh RSA identity keypair, wrap its private key under the CURRENT
+// account key, and upsert it (overwriting any existing row for this user).
+// Caches the unwrapped private key for the session. Returns the public JWK, or
+// null if the account key is locked or the write fails. Requires the vault
+// unlocked (getMasterKey throws otherwise).
+async function publishNewKeypair(userId) {
+  if (!isUnlocked()) return null;
   const kp = await crypto.subtle.generateKey(RSA_PARAMS, true, ['encrypt', 'decrypt']);
   const publicJwk = await crypto.subtle.exportKey('jwk', kp.publicKey);
   const pkcs8 = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
@@ -85,6 +95,17 @@ export async function ensureUserPublicKey(userId) {
   }
   cache = { userId, publicJwk, privateKey: kp.privateKey };
   return publicJwk;
+}
+
+// Force-replace this user's identity keypair. Used by the "start fresh" recovery
+// path when the previous account key (and thus the previous private key) is lost:
+// the orphaned row can't be unwrapped, and ensureUserPublicKey deliberately won't
+// regenerate over an existing row, so this provides the explicit override. Any
+// group keys wrapped to the OLD public key become unusable (that content is
+// already lost); new group keys re-provision lazily under the new identity.
+export async function regenerateIdentityKey(userId) {
+  clearUserKeyCache();
+  return publishNewKeypair(userId);
 }
 
 // The current session's unwrapped private key (for unwrapping group keys wrapped

@@ -59,7 +59,7 @@ function PrimaryButton({ onClick, disabled, busy, children }) {
 // like VaultLockScreen can place it inside its own friendlier layout while still
 // reusing the unlock + recovery-code logic here.
 export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false }) {
-  const { createVault, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode } = useVaultStore();
+  const { createVault, setUpRecovery, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode, unlocked } = useVaultStore();
   const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change | rotate
   const [pass, setPass] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -86,8 +86,13 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     if (pass.length < MIN_PASSPHRASE) return setError(t(lang, 'vaultPassTooShort'));
     if (pass !== confirm) return setError(t(lang, 'vaultPassMismatch'));
     setBusy(true);
-    const rc = await createVault(pass);
+    // If a key is already in memory (the default auto-provisioned state), wrap
+    // THAT key under the passphrase — never mint a new one, which would orphan
+    // every prayer already encrypted under the current key. createVault is only
+    // for the (rare) case where no key exists yet.
+    const rc = unlocked ? await setUpRecovery(pass) : await createVault(pass);
     setBusy(false);
+    if (!rc) return setError(t(lang, 'errorGeneric'));
     setRecoveryCode(rc);
     setPass(''); setConfirm('');
     setMode('recovery');

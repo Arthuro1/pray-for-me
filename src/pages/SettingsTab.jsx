@@ -351,7 +351,7 @@ export default function SettingsTab() {
               style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
             >
               <Shield size={14} />
-              {t(lang, 'vaultSetup')}
+              {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
             </button>
           )}
 
