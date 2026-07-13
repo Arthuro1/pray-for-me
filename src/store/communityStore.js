@@ -722,12 +722,30 @@ const useCommunityStore = create((set, get) => ({
     return { members: (data || []).map(m => ({ ...m, name: nameOf(m.user_id) })) };
   },
 
+  // Promote a member to admin or demote a non-owner admin back to member.
+  // All authorization is enforced inside the set_group_member_role RPC
+  // (SECURITY DEFINER): the acting user is auth.uid() server-side — we never
+  // send the current user id as authorization data, and never optimistically
+  // mutate the role client-side for this security-sensitive change. The RPC
+  // returns stable single-token error messages the UI maps to localized copy.
+  setMemberRole: async (groupId, memberId, role) => {
+    const { data, error } = await supabase.rpc('set_group_member_role', {
+      p_group_id: groupId,
+      p_target_user_id: memberId,
+      p_role: role,
+    });
+    if (error) return toError(error);
+    return { membership: data };
+  },
+
+  // Remove another member from a group. Guarded by the remove_group_member RPC,
+  // which refuses to remove the creator, the caller themselves (that is "leave
+  // group"), or the final remaining admin — so a promoted admin can't abuse it.
   removeMember: async (groupId, memberId) => {
-    const { error } = await supabase
-      .from('group_members')
-      .delete()
-      .eq('group_id', groupId)
-      .eq('user_id', memberId);
+    const { error } = await supabase.rpc('remove_group_member', {
+      p_group_id: groupId,
+      p_target_user_id: memberId,
+    });
     return error ? toError(error) : {};
   },
 

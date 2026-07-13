@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/OverflowMenu';
 import EmptyState from '../components/EmptyState';
@@ -416,15 +416,31 @@ function AddFriendModal({ lang, userId, onClose }) {
   );
 }
 
+// Maps the stable single-token error messages raised by the role-management
+// RPCs (set_group_member_role / remove_group_member) to localized copy. Unknown
+// messages fall back to a generic role-change failure.
+const ROLE_ERROR_KEYS = {
+  cannot_change_own_role: 'cannotChangeOwnRole',
+  creator_cannot_be_demoted: 'creatorCannotBeDemoted',
+  creator_cannot_be_removed: 'creatorCannotBeRemoved',
+  must_retain_admin: 'groupMustRetainAdmin',
+  not_group_admin: 'notAuthorizedAdmins',
+};
+function roleErrorKey(message = '') {
+  const hit = Object.keys(ROLE_ERROR_KEYS).find((tok) => message.includes(tok));
+  return hit ? ROLE_ERROR_KEYS[hit] : 'roleChangeFailed';
+}
+
 // ── Group Admin Modal (invite friends + manage members) ──────────────────────
-function GroupAdminModal({ lang, userId, group, onClose }) {
-  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, renameGroup } = useCommunityStore(
+export function GroupAdminModal({ lang, userId, group, onClose }) {
+  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, setMemberRole, renameGroup } = useCommunityStore(
     useShallow((s) => ({
       fetchFriends: s.fetchFriends,
       fetchGroupMembers: s.fetchGroupMembers,
       fetchGroupInvitees: s.fetchGroupInvitees,
       inviteToGroup: s.inviteToGroup,
       removeMember: s.removeMember,
+      setMemberRole: s.setMemberRole,
       renameGroup: s.renameGroup,
     }))
   );
@@ -433,6 +449,8 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
   const [busyId, setBusyId] = useState(null);
   const [invited, setInvited] = useState({});
   const [confirmRemove, setConfirmRemove] = useState(null);
+  // { member, nextRole } for the promote/demote confirmation dialog.
+  const [confirmRole, setConfirmRole] = useState(null);
   const [name, setName] = useState(group.name);
   const [renaming, setRenaming] = useState(false);
 
@@ -470,10 +488,29 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
   const handleRemove = async (memberId) => {
     setBusyId(memberId);
     const res = await removeMember(group.id, memberId);
-    if (res?.error) toast.error(t(lang, 'errorGeneric'));
-    await load();
+    if (res?.error) {
+      toast.error(t(lang, roleErrorKey(res.error)));
+    } else {
+      await load();
+    }
     setBusyId(null);
     setConfirmRemove(null);
+  };
+
+  // Promote a member to admin / demote a non-owner admin. Authorization is
+  // enforced server-side by the RPC; we only reflect the outcome. No optimistic
+  // update — we refetch the member list so the badge matches the DB.
+  const handleSetRole = async (member, nextRole) => {
+    setBusyId(member.user_id);
+    const res = await setMemberRole(group.id, member.user_id, nextRole);
+    if (res?.error) {
+      toast.error(t(lang, roleErrorKey(res.error)));
+    } else {
+      toast.success(t(lang, nextRole === 'admin' ? 'memberPromoted' : 'adminRemoved'));
+      await load();
+    }
+    setBusyId(null);
+    setConfirmRole(null);
   };
 
   return (
@@ -487,6 +524,18 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
           loading={busyId === confirmRemove.user_id}
           onConfirm={() => handleRemove(confirmRemove.user_id)}
           onCancel={() => setConfirmRemove(null)}
+        />
+      )}
+      {confirmRole && (
+        <ConfirmDialog
+          title={t(lang, confirmRole.nextRole === 'admin' ? 'promoteConfirmTitle' : 'demoteConfirmTitle')}
+          message={`${confirmRole.member.name} — ${t(lang, confirmRole.nextRole === 'admin' ? 'promoteConfirmDesc' : 'demoteConfirmDesc')}`}
+          confirmLabel={t(lang, confirmRole.nextRole === 'admin' ? 'makeAdmin' : 'removeAdminRole')}
+          cancelLabel={t(lang, 'cancel')}
+          danger={confirmRole.nextRole === 'member'}
+          loading={busyId === confirmRole.member.user_id}
+          onConfirm={() => handleSetRole(confirmRole.member, confirmRole.nextRole)}
+          onCancel={() => setConfirmRole(null)}
         />
       )}
       <div className="max-h-[60vh] overflow-y-auto">
@@ -522,22 +571,41 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
 
         <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'members')} ({members.length})</p>
         <div className="space-y-2">
-          {members.map(m => (
-            <div key={m.user_id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
-              <div className="flex items-center gap-2.5 min-w-0">
-                <Avatar name={m.name} size={30} />
-                <div className="min-w-0">
-                  <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
-                  {m.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
+          {members.map(m => {
+            const isSelf = m.user_id === userId;
+            const isOwner = m.user_id === group.created_by;
+            const isMemberAdmin = m.role === 'admin';
+            // Owner and self are never managed here; everyone else gets a
+            // single labelled overflow menu (not a row of bare icon buttons).
+            const roleItem = isMemberAdmin
+              ? { key: 'demote', icon: ShieldOff, label: t(lang, 'removeAdminRole'), onClick: () => setConfirmRole({ member: m, nextRole: 'member' }) }
+              : { key: 'promote', icon: ShieldCheck, label: t(lang, 'makeAdmin'), onClick: () => setConfirmRole({ member: m, nextRole: 'admin' }) };
+            const menuItems = (isSelf || isOwner) ? [] : [
+              roleItem,
+              { key: 'remove', icon: Trash2, label: t(lang, 'removeFromGroup'), danger: true, onClick: () => setConfirmRemove(m) },
+            ];
+            return (
+              <div key={m.user_id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Avatar name={m.name} size={30} />
+                  <div className="min-w-0">
+                    <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{isSelf ? ` (${t(lang, 'you')})` : ''}</p>
+                    {isOwner
+                      ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'owner')}</p>
+                      : isMemberAdmin
+                        ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>
+                        : null}
+                  </div>
                 </div>
+                {menuItems.length > 0 && (
+                  busyId === m.user_id
+                    ? <Loader2 size={16} className="animate-spin shrink-0" style={{ color: 'var(--text-3)' }} />
+                    : <OverflowMenu lang={lang} ariaLabel={t(lang, 'memberActions')} items={menuItems}
+                        triggerClassName="p-1.5 rounded-lg shrink-0 flex items-center justify-center" triggerStyle={SUBTLE_BTN} />
+                )}
               </div>
-              {m.user_id !== userId && (
-                <button onClick={() => setConfirmRemove(m)} disabled={busyId === m.user_id} aria-label={t(lang, 'remove')} className="p-1.5 rounded-lg disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
-                  <Trash2 size={14} />
-                </button>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </Modal>
@@ -545,7 +613,7 @@ function GroupAdminModal({ lang, userId, group, onClose }) {
 }
 
 // Read-only member list, available to every group member.
-function MembersModal({ lang, group, userId, onClose }) {
+export function MembersModal({ lang, group, userId, onClose }) {
   const fetchGroupMembers = useCommunityStore((s) => s.fetchGroupMembers);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -593,7 +661,11 @@ function MembersModal({ lang, group, userId, onClose }) {
               <Avatar name={m.name} size={32} />
               <div className="min-w-0">
                 <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
-                {m.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
+                {m.user_id === group.created_by
+                  ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'owner')}</p>
+                  : m.role === 'admin'
+                    ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>
+                    : null}
               </div>
             </div>
           ))}
