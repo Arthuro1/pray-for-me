@@ -1,0 +1,57 @@
+{
+  "hope-behind-prayer": {
+    "title": "Tumaini lililo nyuma ya sala",
+    "summary": "Sala ni zaidi ya kutuma maombi kwenye lisilojulikana. Mgundue Mungu ambaye Wakristo humwomba na tumaini analotoa kupitia Yesu.",
+    "respondHeading": "Je, ungependa kumjibu Mungu?",
+    "respondBody": "Kuwa Mkristo si kuhusu kusema maneno kamili au kubonyeza kitufe. Ni kumgeukia Mungu kwa unyoofu na kumtumaini Yesu. Waweza kuzungumza naye kwa maneno yako mwenyewe, au kutumia sala hii kama mwongozo.",
+    "guidedPrayer": "Mungu, najua ninakuhitaji. Nimetenda dhambi na siwezi kujirejesha kwako mwenyewe. Asante kwa kuwa Yesu alikufa kwa ajili ya dhambi zangu na akafufuka. Nageuka kutoka njia yangu ya zamani ya maisha na kuweka tumaini langu kwa Yesu. Tafadhali nisamehe, unifanye mpya, na unifundishe kukufuata. Amina.",
+    "formulaDisclaimer": "Sala hii si kanuni ya kichawi, na kusema maneno haya hakununui wokovu. Kinachohesabika ni toba ya kweli na imani kwa Yesu Kristo.",
+    "starterPrompt": "Mungu, nisaidie kuelewa Yesu ni nani na kukujibu kwa unyoofu.",
+    "sections": [
+      {
+        "heading": "Waweza kuja kwa unyoofu",
+        "body": "Huhitaji maneno kamili, sala za kuvutia, wala malezi ya kidini ili kuzungumza na Mungu kwa unyoofu. Wakristo huamini kwamba Mungu tayari huona hofu zetu, maswali yetu, mateso yetu, hatia yetu, na mahitaji yetu ya ndani kabisa — na bado hutualika tuje kwake kama tulivyo. Sala si tuzo kwa wale walio na kila kitu sawa; ni mlango uliofunguliwa kwa waliochoka. (Hii haimaanishi kila ombi litajibiwa jinsi tunavyotumaini — bali inamaanisha tunasikiwa kweli.)"
+      },
+      {
+        "heading": "Tuliumbwa ili kumjua Mungu",
+        "body": "Sala ni ya kiuhusiano, si njia tu ya kuomba msaada. Biblia hufundisha kwamba Mungu alituumba — kwa kusudi, kwa mfano wake mwenyewe — ili tumjue, tumpende, na tuishi katika uhusiano naye. Yeye si nguvu ya mbali inayohitaji kudhibitiwa, bali ni Nafsi iliyo karibu na kila mmoja wetu. Tunaposali, tunamjibu Mungu aliyetuumba na aliyetupenda kwanza."
+      },
+      {
+        "heading": "Uhusiano wetu na Mungu umevunjika",
+        "body": "Ikiwa Mungu yu karibu hivyo, kwa nini mara nyingi huonekana yu mbali? Biblia hujibu kwa unyoofu: sisi sote tumegeuka kutoka mahali panapomstahili Mungu katika maisha yetu — katika mawazo yetu, tamaa zetu, maneno yetu, na matendo yetu. Hivi ndivyo Biblia inavyoita dhambi. Si tu madhara tunayotendeana; ni mvunjiko halisi katika uhusiano wetu na Mungu. Dhambi hututenganisha naye, hutujeruhi sisi na wengine, na ni jambo tusiloweza kulirekebisha kwa kujitahidi zaidi tu au kwa kuwa wema wa kutosha."
+      },
+      {
+        "heading": "Mungu alikaribia katika Yesu",
+        "body": "Mungu hakubaki mbali na uvunjifu wetu. Katika Yesu Kristo, Mungu mwenyewe aliingia ulimwenguni: alimdhihirisha Baba, aliishi maisha bila dhambi, aliwakaribisha hasa wale ambao wengine waliwasukuma mbali, na akaingia katika mateso halisi ya wanadamu. Yesu si mwalimu mwenye hekima tu au mfano mwema mmojawapo — yeye ni Mungu pamoja nasi, aliyekuja kutafuta na kuokoa waliopotea. Kumwona Yesu ni kuona jinsi Mungu alivyo kweli."
+      },
+      {
+        "heading": "Yesu alikufa na akafufuka",
+        "body": "Hapa ndipo kiini chake. Yesu alikufa kwa hiari kwa ajili ya wenye dhambi — alichukua juu yake hukumu ambayo dhambi yetu ilistahili, akifa mahali petu. Alizikwa, na siku ya tatu alifufuka kimwili kutoka kwa wafu. Ufufuo wake si ishara wala hadithi; ni msingi wa tumaini la Kikristo, ahadi ya Mungu kwamba mauti na dhambi havina neno la mwisho. Kwa sababu Yesu yu hai, msamaha na upatanisho na Mungu vinawezekana kweli kupitia yeye."
+      },
+      {
+        "heading": "Mungu anakualika ujibu",
+        "body": "Mungu anamwalika kila mmoja wetu kugeuka kutoka dhambini na kuweka tumaini letu kwa Yesu — hivi ndivyo Biblia inavyomaanisha toba na imani. Msamaha si kitu tunachochuma kwa matendo mema, jitihada za kidini, au sala kamili. Ni zawadi ya Mungu, itolewayo bure, ipokewayo kwa kumtumaini Kristo tu. Kuamini si kukubali tu kwamba Yesu alikuwepo, bali ni kujikabidhi mzima kwake kama Bwana — yeye aliyekufa na kufufuka kwa ajili yako."
+      }
+    ],
+    "questions": [
+      {
+        "heading": "Yesu ni nani?"
+      },
+      {
+        "heading": "Kwa nini Yesu ilibidi afe?"
+      },
+      {
+        "heading": "Je, Mungu anaweza kunisamehe?"
+      },
+      {
+        "heading": "Itakuwaje ikiwa bado nina shaka?"
+      },
+      {
+        "heading": "Nianzeje kusoma Biblia?"
+      },
+      {
+        "heading": "Kumfuata Yesu kunamaanisha nini?"
+      }
+    ]
+  }
+}

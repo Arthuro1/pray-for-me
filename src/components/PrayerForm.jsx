@@ -32,8 +32,14 @@ function CheckboxToggle({ checked, onChange, label }) {
   );
 }
 
-function initialForm(editPrayer) {
-  if (!editPrayer) return { title: '', description: '', categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft() };
+function initialForm(editPrayer, prefill) {
+  // A new prayer may be seeded with an optional, fully-editable prefill (e.g. a
+  // starter prompt from the gospel journey). Editing always wins over prefill.
+  if (!editPrayer) return {
+    title: prefill?.title || '',
+    description: prefill?.description || '',
+    categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft(),
+  };
   return {
     title: editPrayer.title || '',
     description: editPrayer.description || '',
@@ -53,7 +59,7 @@ function hasSchedule(editPrayer) {
 }
 
 // communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
-export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit }) {
+export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit, prefill }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
@@ -67,7 +73,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
 
-  const [form, setForm] = useState(() => initialForm(editPrayer));
+  const [form, setForm] = useState(() => initialForm(editPrayer, prefill));
   const [created, setCreated] = useState(null);
   // "More options" reveals the recurrence schedule; a new prayer opens with it
   // collapsed, and editing a prayer that already has a schedule opens expanded.

@@ -1,4 +1,4 @@
-import { X, BookOpen, ArrowLeft } from 'lucide-react';
+import { X, BookOpen, ArrowLeft, Sunrise, ChevronRight } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -9,9 +9,15 @@ import VerseAccordion from './VerseAccordion';
 // followed by the Scripture references it rests on — rendered as links so the
 // reader can open and weigh God's Word for themselves. Teaching points to the
 // Bible; it never replaces it.
-export default function ArticleReader({ article, lang, onClose }) {
+//
+// Its generic read-only purpose is intact: the only optional addition is a single,
+// subtle related-content card at the very bottom, shown ONLY for articles that
+// explicitly opt in (article.relatedJourneyId + article.journeyInviteKey) and only
+// when the caller provides onOpenJourney. It never pops up or interrupts reading.
+export default function ArticleReader({ article, lang, onClose, onOpenJourney }) {
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
+  const showJourneyInvite = !!(article.relatedJourneyId && article.journeyInviteKey && onOpenJourney);
 
   return (
     <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
@@ -59,6 +65,25 @@ export default function ArticleReader({ article, lang, onClose }) {
               </div>
             ))}
           </div>
+
+          {/* Optional, easy-to-ignore invitation to the gospel journey — only for
+              articles that opt in. At most one, at the very bottom, never a popup. */}
+          {showJourneyInvite && (
+            <button
+              onClick={() => onOpenJourney(article.relatedJourneyId)}
+              className="w-full text-left rounded-2xl p-4 mt-9 flex items-center gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)', outlineColor: 'var(--accent)' }}
+            >
+              <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent)' }}>
+                <Sunrise size={16} className="text-white" aria-hidden="true" />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-xs font-semibold mb-0.5" style={{ color: 'var(--accent)' }}>{t(lang, 'gospelInviteLabel')}</span>
+                <span className="block text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, article.journeyInviteKey)}</span>
+              </span>
+              <ChevronRight size={16} className="shrink-0" style={{ color: 'var(--text-3)' }} aria-hidden="true" />
+            </button>
+          )}
 
           <p className="text-xs text-center mt-10 mb-2 leading-relaxed" style={{ color: 'var(--text-3)' }}>
             {t(lang, 'growScriptureNote')}

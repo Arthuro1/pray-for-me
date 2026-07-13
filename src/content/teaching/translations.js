@@ -14,14 +14,20 @@
 // Overlay shapes, keyed by item id:
 //   theology: { "<id>": { title, summary, sections: [{ heading, body }, ...] } }
 //   guides:   { "<id>": { title, summary, intro, steps: [{ title, prompt }, ...] } }
-// Sub-arrays (sections / steps) are matched to the authored item BY POSITION — keep
-// them in the same order and count as the source file.
+//   gospel:   { "<journey-id>": { title, summary, respondHeading, respondBody,
+//                guidedPrayer, formulaDisclaimer, starterPrompt,
+//                sections: [{ heading, body }, ...], questions: [{ heading }, ...] } }
+// Sub-arrays (sections / steps / questions) are matched to the authored item BY
+// POSITION — keep them in the same order and count as the source file. Stable ids
+// (section/question ids, refs, articleIds) stay in the source and are NEVER
+// translated, so navigation and Scripture never drift across languages.
 
 // import.meta.glob gives Vite a static view of each directory so every language
 // becomes its own on-demand chunk. The literal glob strings are required — Vite
 // resolves them at build time.
 const articleLoaders = import.meta.glob('./translations/theology/*.json');
 const guideLoaders = import.meta.glob('./translations/guides/*.json');
+const journeyLoaders = import.meta.glob('./translations/gospel/*.json');
 
 // Build a memoized on-demand loader for one overlay directory. Resolves to null
 // when a language has no overlay (e.g. en/fr, which need none) so callers fall
@@ -46,6 +52,7 @@ function makeTranslationLoader(loaders, dir) {
 
 export const loadArticleTranslations = makeTranslationLoader(articleLoaders, 'theology');
 export const loadGuideTranslations = makeTranslationLoader(guideLoaders, 'guides');
+export const loadJourneyTranslations = makeTranslationLoader(journeyLoaders, 'gospel');
 
 // Add a language to a localized field ({ en, fr, ... }) without dropping the
 // authored fallbacks. An empty/missing value leaves the field untouched.
@@ -75,6 +82,37 @@ export function mergeArticles(articles, overlay, lang) {
       }),
     };
   });
+}
+
+// Fold a language overlay into the authored gospel journey so pick(field, lang)
+// resolves to the translation. Returns a NEW object; the source is never mutated.
+// The overlay is keyed by the journey id (mirroring the theology/guide overlays).
+// Every id, Scripture reference and articleId stays in the source — only prose is
+// translated — so the six-section structure and its links are identical in every
+// language. Any missing field simply keeps its en/fr fallback through pick().
+export function mergeJourney(journey, overlay, lang) {
+  const tr = overlay?.[journey.id];
+  if (!tr) return journey;
+  return {
+    ...journey,
+    title: withLang(journey.title, tr.title, lang),
+    summary: withLang(journey.summary, tr.summary, lang),
+    respondHeading: withLang(journey.respondHeading, tr.respondHeading, lang),
+    respondBody: withLang(journey.respondBody, tr.respondBody, lang),
+    guidedPrayer: withLang(journey.guidedPrayer, tr.guidedPrayer, lang),
+    formulaDisclaimer: withLang(journey.formulaDisclaimer, tr.formulaDisclaimer, lang),
+    starterPrompt: withLang(journey.starterPrompt, tr.starterPrompt, lang),
+    sections: (journey.sections || []).map((s, i) => {
+      const st = tr.sections?.[i];
+      if (!st) return s;
+      return { ...s, heading: withLang(s.heading, st.heading, lang), body: withLang(s.body, st.body, lang) };
+    }),
+    questions: (journey.questions || []).map((q, i) => {
+      const qt = tr.questions?.[i];
+      if (!qt) return q;
+      return { ...q, heading: withLang(q.heading, qt.heading, lang) };
+    }),
+  };
 }
 
 // Fold a language overlay into the authored prayer guides so pick(field, lang)

@@ -9,6 +9,8 @@
 const articles = [
   {
     id: 'why-pray',
+    relatedJourneyId: 'hope-behind-prayer',
+    journeyInviteKey: 'gospelInviteWhyPray',
     emoji: '🤔',
     theme: 'foundations',
     title: { en: 'Why Christians pray', fr: 'Pourquoi les chrétiens prient' },
@@ -178,6 +180,8 @@ const articles = [
 
   {
     id: 'repentance',
+    relatedJourneyId: 'hope-behind-prayer',
+    journeyInviteKey: 'gospelInviteRepentance',
     emoji: '🔄',
     theme: 'practices',
     title: { en: 'Repentance', fr: 'La repentance' },
@@ -265,6 +269,8 @@ const articles = [
 
   {
     id: 'faith',
+    relatedJourneyId: 'hope-behind-prayer',
+    journeyInviteKey: 'gospelInviteFaith',
     emoji: '⚓',
     theme: 'virtues',
     title: { en: 'Faith', fr: 'La foi' },
@@ -352,6 +358,8 @@ const articles = [
 
   {
     id: 'grace',
+    relatedJourneyId: 'hope-behind-prayer',
+    journeyInviteKey: 'gospelInviteGrace',
     emoji: '🎁',
     theme: 'virtues',
     title: { en: 'Grace', fr: 'La grâce' },
@@ -468,6 +476,8 @@ const articles = [
 
   {
     id: 'suffering-life',
+    relatedJourneyId: 'hope-behind-prayer',
+    journeyInviteKey: 'gospelInviteSuffering',
     emoji: '🌷',
     theme: 'hard-questions',
     title: { en: 'How suffering fits the Christian life', fr: 'La place de la souffrance dans la vie chrétienne' },

@@ -1,0 +1,57 @@
+{
+  "hope-behind-prayer": {
+    "title": "Die Hoffnung hinter dem Gebet",
+    "summary": "Gebet ist mehr, als Bitten ins Ungewisse zu senden. Entdecke den Gott, zu dem Christen beten, und die Hoffnung, die er durch Jesus schenkt.",
+    "respondHeading": "Möchtest du Gott antworten?",
+    "respondBody": "Christ zu werden bedeutet nicht, perfekte Worte zu sprechen oder einen Knopf zu drücken. Es bedeutet, sich ehrlich Gott zuzuwenden und Jesus zu vertrauen. Du kannst mit deinen eigenen Worten zu ihm sprechen oder dieses Gebet als Hilfe nutzen.",
+    "guidedPrayer": "Gott, ich weiß, dass ich dich brauche. Ich habe gesündigt und kann mich nicht selbst zu dir zurückbringen. Danke, dass Jesus für meine Sünden gestorben und auferstanden ist. Ich wende mich von meinem alten Leben ab und setze mein Vertrauen auf Jesus. Bitte vergib mir, mache mich neu und lehre mich, dir zu folgen. Amen.",
+    "formulaDisclaimer": "Dieses Gebet ist keine Formel, und diese Worte auszusprechen verdient nicht das Heil. Worauf es ankommt, ist aufrichtige Umkehr und der Glaube an Jesus Christus.",
+    "starterPrompt": "Gott, hilf mir zu verstehen, wer Jesus ist, und dir ehrlich zu antworten.",
+    "sections": [
+      {
+        "heading": "Du darfst ehrlich kommen",
+        "body": "Du brauchst keine perfekten Worte, keine beeindruckenden Gebete und keinen religiösen Hintergrund, um ehrlich mit Gott zu sprechen. Christen glauben, dass Gott unsere Ängste, unsere Fragen, unser Leid, unsere Schuld und unsere tiefsten Bedürfnisse bereits sieht — und uns dennoch einlädt, so zu ihm zu kommen, wie wir sind. Gebet ist keine Belohnung für die, die alles im Griff haben; es ist eine Tür, die den Müden geöffnet ist. (Das heißt nicht, dass jede Bitte so beantwortet wird, wie wir hoffen — aber es heißt, dass wir wirklich gehört werden.)"
+      },
+      {
+        "heading": "Wir sind geschaffen, um Gott zu kennen",
+        "body": "Gebet ist Beziehung, nicht bloß eine Art, um Hilfe zu bitten. Die Bibel lehrt, dass Gott uns geschaffen hat — mit Absicht, nach seinem Bild — damit wir ihn kennen, ihn lieben und in Beziehung zu ihm leben. Er ist keine ferne Kraft, die man verwalten muss, sondern eine Person, die jedem von uns nahe ist. Wenn wir beten, antworten wir dem Gott, der uns gemacht und zuerst geliebt hat."
+      },
+      {
+        "heading": "Unsere Beziehung zu Gott ist zerbrochen",
+        "body": "Wenn Gott so nahe ist, warum fühlt er sich oft so fern an? Die Bibel antwortet ehrlich: Wir alle haben uns von dem Platz abgewandt, der Gott in unserem Leben zusteht — in unseren Gedanken, Wünschen, Worten und Taten. Das nennt die Bibel Sünde. Es ist nicht nur der Schaden, den wir einander zufügen; es ist ein wirklicher Bruch in unserer Beziehung zu Gott. Sünde trennt uns von ihm, verletzt uns und andere und ist etwas, das wir nicht dadurch reparieren können, dass wir uns einfach mehr anstrengen oder gut genug sind."
+      },
+      {
+        "heading": "Gott kam nahe in Jesus",
+        "body": "Gott blieb unserem Zerbruch nicht fern. In Jesus Christus trat Gott selbst in die Welt: Er machte den Vater bekannt, lebte ein Leben ohne Sünde, nahm gerade die Menschen an, die andere wegstießen, und trat in echtes menschliches Leid ein. Jesus ist nicht einfach ein weiser Lehrer oder ein gutes Vorbild unter vielen — er ist Gott mit uns, gekommen, um das Verlorene zu suchen und zu retten. Jesus zu sehen heißt zu sehen, wie Gott wirklich ist."
+      },
+      {
+        "heading": "Jesus starb und stand wieder auf",
+        "body": "Hier ist das Herzstück. Jesus starb freiwillig für Sünder — er nahm das Gericht auf sich, das unsere Sünde verdiente, und starb an unserer Stelle. Er wurde begraben und stand am dritten Tag leiblich von den Toten auf. Seine Auferstehung ist kein Symbol und keine Legende; sie ist das Fundament der christlichen Hoffnung, Gottes Zusage, dass Tod und Sünde nicht das letzte Wort haben. Weil Jesus lebt, sind Vergebung und Versöhnung mit Gott durch ihn wirklich möglich."
+      },
+      {
+        "heading": "Gott lädt dich ein zu antworten",
+        "body": "Gott lädt jeden von uns ein, sich von der Sünde abzuwenden und sein Vertrauen auf Jesus zu setzen — das meint die Bibel mit Umkehr und Glaube. Vergebung verdienen wir nicht durch gute Werke, religiöse Anstrengung oder perfekte Gebete. Sie ist Gottes Geschenk, frei gegeben, empfangen einfach dadurch, dass wir Christus vertrauen. Zu glauben heißt nicht bloß zuzustimmen, dass Jesus existierte, sondern dich ganz ihm als Herrn anzuvertrauen — dem, der für dich starb und auferstand."
+      }
+    ],
+    "questions": [
+      {
+        "heading": "Wer ist Jesus?"
+      },
+      {
+        "heading": "Warum musste Jesus sterben?"
+      },
+      {
+        "heading": "Kann Gott mir vergeben?"
+      },
+      {
+        "heading": "Was, wenn ich noch zweifle?"
+      },
+      {
+        "heading": "Wie fange ich an, die Bibel zu lesen?"
+      },
+      {
+        "heading": "Was bedeutet es, Jesus nachzufolgen?"
+      }
+    ]
+  }
+}

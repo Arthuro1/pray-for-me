@@ -126,6 +126,7 @@ function PersonalPrayerPage({ onEdit }) {
 export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [editPrayer, setEditPrayer] = useState(null);
+  const [formPrefill, setFormPrefill] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -147,8 +148,13 @@ export default function App() {
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
   const [vaultChecked, setVaultChecked] = useState(false);
 
-  const openAdd = () => { setEditPrayer(null); setShowForm(true); };
-  const openEdit = (p) => { setEditPrayer(p); setShowForm(true); };
+  const openAdd = () => { setEditPrayer(null); setFormPrefill(null); setShowForm(true); };
+  const openEdit = (p) => { setEditPrayer(p); setFormPrefill(null); setShowForm(true); };
+  // Open the existing prayer-creation flow seeded with an optional, fully-editable
+  // prefill (used by the gospel journey's "Create a private prayer" next step).
+  // Personal prayers are private by default, so no extra visibility handling is
+  // needed — this just reuses the same form/store/validation.
+  const openCreatePrayer = (prefill) => { setEditPrayer(null); setFormPrefill(prefill || null); setShowForm(true); };
 
   // Load the active language's strings (French is always bundled as fallback).
   useEffect(() => {
@@ -310,7 +316,7 @@ export default function App() {
               <Route path="/community/group/:groupId" element={<CommunityTab />} />
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
               <Route path="/plan" element={<PlanTab />} />
-              <Route path="/grow" element={<GrowTab />} />
+              <Route path="/grow" element={<GrowTab onCreatePrayer={openCreatePrayer} />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/settings" element={<SettingsTab />} />
               <Route path="*" element={<Navigate to="/" replace />} />
@@ -319,7 +325,7 @@ export default function App() {
         </ErrorBoundary>
       </Layout>
       {showForm && (
-        <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); }} editPrayer={editPrayer} />
+        <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); setFormPrefill(null); }} editPrayer={editPrayer} prefill={formPrefill} />
       )}
       {showOnboarding && (
         <Onboarding lang={lang} onFinish={finishOnboarding} onAddPrayer={openAdd} />

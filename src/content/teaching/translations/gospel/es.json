@@ -1,0 +1,57 @@
+{
+  "hope-behind-prayer": {
+    "title": "La esperanza detrás de la oración",
+    "summary": "Orar es más que enviar peticiones a lo desconocido. Descubre al Dios a quien oran los cristianos y la esperanza que ofrece por medio de Jesús.",
+    "respondHeading": "¿Te gustaría responder a Dios?",
+    "respondBody": "Ser cristiano no consiste en decir palabras perfectas ni en pulsar un botón. Significa volverse sinceramente a Dios y confiar en Jesús. Puedes hablarle con tus propias palabras, o usar esta oración como guía.",
+    "guidedPrayer": "Dios, sé que te necesito. He pecado y no puedo restaurarme a ti por mí mismo. Gracias porque Jesús murió por mis pecados y resucitó. Me aparto de mi antigua manera de vivir y pongo mi confianza en Jesús. Perdóname, hazme nuevo y enséñame a seguirte. Amén.",
+    "formulaDisclaimer": "Esta oración no es una fórmula, y decir estas palabras no gana la salvación. Lo que importa es el arrepentimiento sincero y la fe en Jesucristo.",
+    "starterPrompt": "Dios, ayúdame a entender quién es Jesús y a responderte con sinceridad.",
+    "sections": [
+      {
+        "heading": "Puedes venir con sinceridad",
+        "body": "No necesitas palabras perfectas, oraciones impresionantes ni un trasfondo religioso para hablar con sinceridad a Dios. Los cristianos creen que Dios ya ve nuestros temores, nuestras preguntas, nuestro sufrimiento, nuestra culpa y nuestras necesidades más profundas — y aun así nos invita a venir a él tal como somos. La oración no es un premio para quienes lo tienen todo resuelto; es una puerta abierta a los cansados. (Esto no significa que toda petición se responderá como esperamos — pero sí que somos verdaderamente escuchados.)"
+      },
+      {
+        "heading": "Fuimos hechos para conocer a Dios",
+        "body": "La oración es relacional, no solo una manera de pedir ayuda. La Biblia enseña que Dios nos hizo — a propósito, a su propia imagen — para conocerlo, amarlo y vivir en relación con él. No es una fuerza distante que hay que manejar, sino una Persona cercana a cada uno de nosotros. Cuando oramos, respondemos al Dios que nos hizo y nos amó primero."
+      },
+      {
+        "heading": "Nuestra relación con Dios está rota",
+        "body": "Si Dios está tan cerca, ¿por qué a menudo se siente tan lejos? La Biblia responde con sinceridad: todos nos hemos apartado del lugar que le corresponde a Dios en nuestra vida — en nuestros pensamientos, deseos, palabras y acciones. Esto es lo que la Biblia llama pecado. No es solo el daño que nos hacemos unos a otros; es una ruptura real en nuestra relación con Dios. El pecado nos separa de él, nos hiere a nosotros y a los demás, y es algo que no podemos reparar simplemente esforzándonos más o siendo lo bastante buenos."
+      },
+      {
+        "heading": "Dios se acercó en Jesús",
+        "body": "Dios no se quedó lejos de nuestro quebranto. En Jesucristo, Dios mismo entró en el mundo: dio a conocer al Padre, vivió una vida sin pecado, acogió precisamente a los que otros apartaban y entró en el verdadero sufrimiento humano. Jesús no es simplemente un maestro sabio o un buen ejemplo entre muchos — es Dios con nosotros, venido a buscar y a salvar lo que se había perdido. Ver a Jesús es ver cómo es Dios en verdad."
+      },
+      {
+        "heading": "Jesús murió y resucitó",
+        "body": "Aquí está el corazón de todo. Jesús murió voluntariamente por los pecadores — tomó sobre sí el juicio que nuestro pecado merecía, muriendo en nuestro lugar. Fue sepultado y al tercer día resucitó corporalmente de entre los muertos. Su resurrección no es un símbolo ni una leyenda; es el fundamento de la esperanza cristiana, la promesa de Dios de que la muerte y el pecado no tienen la última palabra. Porque Jesús vive, el perdón y la reconciliación con Dios son verdaderamente posibles por medio de él."
+      },
+      {
+        "heading": "Dios te invita a responder",
+        "body": "Dios invita a cada uno de nosotros a apartarnos del pecado y a poner nuestra confianza en Jesús — esto es lo que la Biblia entiende por arrepentimiento y fe. El perdón no es algo que ganamos por buenas obras, esfuerzo religioso u oraciones perfectas. Es el don de Dios, dado gratuitamente, recibido simplemente al confiar en Cristo. Creer no es solo estar de acuerdo en que Jesús existió, sino entregarte por completo a él como Señor — el que murió y resucitó por ti."
+      }
+    ],
+    "questions": [
+      {
+        "heading": "¿Quién es Jesús?"
+      },
+      {
+        "heading": "¿Por qué tuvo que morir Jesús?"
+      },
+      {
+        "heading": "¿Puede Dios perdonarme?"
+      },
+      {
+        "heading": "¿Y si todavía tengo dudas?"
+      },
+      {
+        "heading": "¿Cómo empiezo a leer la Biblia?"
+      },
+      {
+        "heading": "¿Qué significa seguir a Jesús?"
+      }
+    ]
+  }
+}

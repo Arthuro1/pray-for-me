@@ -3,9 +3,10 @@
 // callers. Lookups are id-based so routes/state can reference a stable id.
 import guides from './prayerGuides';
 import articles from './theology';
+import gospelJourney from './gospelJourney';
 
 export { pick, localizeRef } from './pick';
-export { guides, articles };
+export { guides, articles, gospelJourney };
 
 export function getGuide(id) {
   return guides.find((g) => g.id === id) || null;
@@ -13,4 +14,10 @@ export function getGuide(id) {
 
 export function getArticle(id) {
   return articles.find((a) => a.id === id) || null;
+}
+
+// The gospel journey is a single authored object (not a list); look it up by its
+// stable id so routes/state can reference it the same way as guides/articles.
+export function getJourney(id) {
+  return gospelJourney.id === id ? gospelJourney : null;
 }
