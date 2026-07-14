@@ -9,7 +9,7 @@ import PrayerListSkeleton from '../components/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/SwipeableRow';
 import EmptyState from '../components/EmptyState';
-import { Search, SlidersHorizontal, Plus } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, CheckCircle } from 'lucide-react';
 import { t } from '../i18n';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
@@ -68,7 +68,18 @@ export default function PrayersTab({ onAdd }) {
     <div>
       <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'var(--header)' }}>
         <div className="max-w-2xl mx-auto">
-        <h2 className="text-xl font-semibold mb-4 text-white">{t(lang, 'myPrayers')}</h2>
+        {/* Persistent entry point to the answered-prayer gallery (otherwise only
+            reachable from the Home "Answered" stat tile). */}
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h2 className="text-xl font-semibold text-white">{t(lang, 'myPrayers')}</h2>
+          <button
+            onClick={() => navigate('/answered')}
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium shrink-0"
+            style={{ background: 'rgba(255,255,255,0.14)', color: '#fff', border: '0.5px solid rgba(255,255,255,0.2)' }}
+          >
+            <CheckCircle size={13} /> {t(lang, 'answeredTitle')}
+          </button>
+        </div>
 
         <div className="relative">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.5)' }} />

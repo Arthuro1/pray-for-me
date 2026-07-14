@@ -339,15 +339,16 @@ export default function HomeTab({ onAdd }) {
         <div ref={listRef} className="flex items-center justify-between mb-3 scroll-mt-4">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'todaysPrayers')}</h3>
           <div className="flex items-center gap-2">
-            {/* Plan/calendar is folded out of the primary nav — reachable here. */}
+            {/* Plan/calendar is folded out of the primary nav — surfaced here as a
+                clear accent affordance (not a muted chip) so this headline feature
+                stays findable without competing for a top-level tab. */}
             <button
               onClick={() => navigate('/plan')}
               title={t(lang, 'plan')}
-              aria-label={t(lang, 'plan')}
-              className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-xl font-medium"
-              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl font-medium"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
             >
-              <CalendarDays size={12} /> {t(lang, 'plan')}
+              <CalendarDays size={13} /> {t(lang, 'plan')}
             </button>
             {todayCategories.length > 0 && (
               <button

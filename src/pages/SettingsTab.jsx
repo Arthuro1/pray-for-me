@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
@@ -54,6 +54,34 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
       </div>
       {children}
     </div>
+  );
+}
+
+// A collapsible, labelled group of settings cards. Progressive disclosure: the
+// header stays visible so nothing is hidden from discovery, and the panel is
+// `hidden` when collapsed so its controls drop out of the tab order too. The
+// `id` doubles as the deep-link anchor (e.g. /settings#notifications).
+function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
+  return (
+    <section id={id} className="scroll-mt-16 mb-4">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={`${id}-panel`}
+        className="w-full flex items-center gap-2.5 px-1 py-2 mb-1.5"
+      >
+        <Icon size={16} style={{ color: 'var(--accent)' }} />
+        <h2 className="text-sm font-bold flex-1 text-left" style={{ color: 'var(--text-1)' }}>{title}</h2>
+        <ChevronDown
+          size={16}
+          style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+        />
+      </button>
+      <div id={`${id}-panel`} hidden={!open}>
+        {children}
+      </div>
+    </section>
   );
 }
 
@@ -120,6 +148,12 @@ export default function SettingsTab() {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
+  // Frequently-used sections start open; advanced/support collapse to keep the
+  // first view calm. A deep-link (below) force-opens whatever it targets.
+  const [openSections, setOpenSections] = useState({
+    account: true, notifications: true, appearance: true, data: false, support: false,
+  });
+  const toggleSection = (key) => setOpenSections((s) => ({ ...s, [key]: !s[key] }));
 
   const lang = settings.language || 'fr';
   // Derived from synced settings so consent granted/revoked anywhere (another
@@ -135,12 +169,17 @@ export default function SettingsTab() {
     return () => { cancelled = true; };
   }, [settings.followUpEnabled, user?.id]);
 
-  // Deep-link into a section (e.g. /settings#notifications from the inbox).
+  // Deep-link into a section (e.g. /settings#notifications from the inbox):
+  // expand the matching section first, then scroll it into view next frame.
   useEffect(() => {
     const hash = window.location.hash?.slice(1);
     if (!hash) return;
-    const el = document.getElementById(hash);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setOpenSections((s) => (hash in s ? { ...s, [hash]: true } : s));
+    const raf = requestAnimationFrame(() => {
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const handleLockVault = () => {
@@ -305,323 +344,123 @@ export default function SettingsTab() {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 pt-4 pb-6">
-        <div className="md:grid md:grid-cols-2 md:gap-4 md:items-start">
-        {/* Account info */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'account')}</p>
-          <div className="space-y-2.5 mb-4">
-            <div className="flex items-center gap-2.5">
-              <Mail size={14} style={{ color: 'var(--text-3)' }} />
-              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{user?.email}</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <Shield size={14} style={{ color: 'var(--text-3)' }} />
-              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
-            </div>
-          </div>
-          <button
-            onClick={signOut}
-            title={t(lang, 'tipSignOut')}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
-          >
-            <LogOut size={14} />
-            {t(lang, 'signOut')}
-          </button>
-        </div>
+      <div className="px-4 md:px-8 pt-4 pb-6 max-w-2xl mx-auto">
 
-        {/* Prayer Vault */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            {vaultInitialized && !vaultUnlocked ? <Lock size={16} style={{ color: 'var(--accent)' }} /> : <Shield size={16} style={{ color: 'var(--accent)' }} />}
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'vaultTitle')}</h3>
-            {vaultInitialized && (
-              <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
-              </span>
-            )}
-          </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultManageSub')}</p>
-
-          {!vaultInitialized && (
+        {/* ── Account & privacy ── */}
+        <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={Shield} open={openSections.account} onToggle={() => toggleSection('account')}>
+          {/* Account info */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'account')}</p>
+            <div className="space-y-2.5 mb-4">
+              <div className="flex items-center gap-2.5">
+                <Mail size={14} style={{ color: 'var(--text-3)' }} />
+                <span className="text-sm" style={{ color: 'var(--text-2)' }}>{user?.email}</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Shield size={14} style={{ color: 'var(--text-3)' }} />
+                <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
+              </div>
+            </div>
             <button
-              onClick={() => setVaultMode('setup')}
+              onClick={signOut}
+              title={t(lang, 'tipSignOut')}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
+            >
+              <LogOut size={14} />
+              {t(lang, 'signOut')}
+            </button>
+          </div>
+
+          {/* Privacy Center — plain-language explanation of storage & sharing.
+              Basic privacy is free for everyone; this is never gated. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'privacyCenterTitle')}</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'privacyCenterSub')}</p>
+            <button
+              onClick={() => setShowPrivacy(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
               style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
             >
-              <Shield size={14} />
-              {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
+              <ShieldCheck size={14} />
+              {t(lang, 'privacyCenterBtn')}
             </button>
-          )}
-
-          {vaultInitialized && !vaultUnlocked && (
-            <button
-              onClick={() => setVaultMode('unlock')}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-            >
-              <Unlock size={14} />
-              {t(lang, 'vaultUnlock')}
-            </button>
-          )}
-
-          {vaultInitialized && vaultUnlocked && (
-            <>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={handleLockVault}
-                  className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                >
-                  <Lock size={14} />
-                  {t(lang, 'vaultLockNow')}
-                </button>
-                <button
-                  onClick={() => setVaultMode('change')}
-                  className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                >
-                  <KeyRound size={14} />
-                  {t(lang, 'vaultChangePass')}
-                </button>
-                <button
-                  onClick={() => setVaultMode('rotate')}
-                  className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                >
-                  <RefreshCw size={14} />
-                  {t(lang, 'vaultRotateCode')}
-                </button>
-              </div>
-              <VaultMigrationStatus lang={lang} />
-            </>
-          )}
-        </div>
-
-        {/* Theme */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-3">
-            {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'appearance')}</h3>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }].map(({ value, icon: Icon, labelKey }) => (
-              <button
-                key={value}
-                onClick={() => updateSettings({ theme: value })}
-                className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all"
-                style={settings.theme === value
-                  ? { background: 'var(--accent)', color: '#fff' }
-                  : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <Icon size={15} />
-                {t(lang, labelKey)}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Language */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
-            </div>
-            <LanguageDropdown
-              lang={lang}
-              onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
-            />
-          </div>
-        </div>
-
-        {/* AI assistance */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Sparkles size={16} style={{ color: 'var(--accent)' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiAboutTitle')}</h3>
-          </div>
-          <AiDisclaimer lang={lang} variant="full" className="my-3" />
-          {aiOn ? (
-            <button
-              onClick={handleRevokeAi}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-            >
-              <Sparkles size={14} />
-              {t(lang, 'aiRevoke')}
-            </button>
-          ) : (
-            <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
-          )}
-        </div>
-
-        {/* Notifications */}
-        <div id="notifications" className="rounded-2xl p-4 mb-3 scroll-mt-16" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-4">
-            <Bell size={16} style={{ color: '#7c5cfc' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifications')}</h3>
           </div>
 
-          <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
-            {settings.dailyReminderEnabled && (
-              <div className="mt-3">
-                <div className="flex items-center gap-2">
-                  <Clock size={13} style={{ color: 'var(--text-3)' }} />
-                  <input
-                    type="time"
-                    value={settings.dailyReminderTime}
-                    onChange={(e) => handleReminderTimeChange(e.target.value)}
-                    className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                  />
-                </div>
-                {(() => {
-                  const r = nextReminder(settings.dailyReminderTime);
-                  return (
-                    <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
-                      {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
-                    </p>
-                  );
-                })()}
-              </div>
-            )}
-          </Row>
-
-          <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-            <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
-              {settings.followUpEnabled && (
-                <div className="mt-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <select
-                      value={settings.followUpDays}
-                      onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
-                      className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                      style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                    >
-                      <option value={3}>{t(lang, 'every3days')}</option>
-                      <option value={7}>{t(lang, 'everyWeek')}</option>
-                      <option value={14}>{t(lang, 'every2weeks')}</option>
-                      <option value={30}>{t(lang, 'everyMonth')}</option>
-                    </select>
-                    <div className="flex items-center gap-2">
-                      <Clock size={13} style={{ color: 'var(--text-3)' }} />
-                      <input
-                        type="time"
-                        value={settings.followUpTime || '07:00'}
-                        onChange={(e) => handleFollowUpTimeChange(e.target.value)}
-                        className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                      />
-                    </div>
-                  </div>
-                  {(() => {
-                    const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.followUpTime);
-                    const dayLabel = nf.daysAhead === 0
-                      ? t(lang, 'today')
-                      : nf.daysAhead === 1
-                        ? t(lang, 'tomorrow')
-                        : nf.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
-                    return (
-                      <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
-                        {t(lang, 'nextReminder')} · {dayLabel} {nf.time}
-                      </p>
-                    );
-                  })()}
-                </div>
+          {/* Prayer Vault */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              {vaultInitialized && !vaultUnlocked ? <Lock size={16} style={{ color: 'var(--accent)' }} /> : <Shield size={16} style={{ color: 'var(--accent)' }} />}
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'vaultTitle')}</h3>
+              {vaultInitialized && (
+                <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                  {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
+                </span>
               )}
-            </Row>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultManageSub')}</p>
+
+            {!vaultInitialized && (
+              <button
+                onClick={() => setVaultMode('setup')}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                <Shield size={14} />
+                {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
+              </button>
+            )}
+
+            {vaultInitialized && !vaultUnlocked && (
+              <button
+                onClick={() => setVaultMode('unlock')}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                <Unlock size={14} />
+                {t(lang, 'vaultUnlock')}
+              </button>
+            )}
+
+            {vaultInitialized && vaultUnlocked && (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={handleLockVault}
+                    className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    <Lock size={14} />
+                    {t(lang, 'vaultLockNow')}
+                  </button>
+                  <button
+                    onClick={() => setVaultMode('change')}
+                    className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    <KeyRound size={14} />
+                    {t(lang, 'vaultChangePass')}
+                  </button>
+                  <button
+                    onClick={() => setVaultMode('rotate')}
+                    className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    <RefreshCw size={14} />
+                    {t(lang, 'vaultRotateCode')}
+                  </button>
+                </div>
+                <VaultMigrationStatus lang={lang} />
+              </>
+            )}
           </div>
 
-          {settings.notificationsGranted && (
-            <button
-              onClick={() => new Notification('Pray4Me 🙏', { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
-              title={t(lang, 'tipTestNotif')}
-              className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-            >
-              {t(lang, 'testNotif')}
-            </button>
-          )}
-        </div>
-
-        {/* Community notification preferences (in-app inbox + push per type) */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Bell size={16} style={{ color: '#7c5cfc' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPrefsTitle')}</h3>
-          </div>
-          <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPrefsSub')}</p>
-          <NotificationPreferences />
-        </div>
-
-        </div>{/* end md:grid */}
-
-        {/* Privacy Center — plain-language explanation of storage & sharing.
-            Basic privacy is free for everyone; this is never gated. */}
-        <div className="rounded-2xl p-4 mb-3 mt-1" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'privacyCenterTitle')}</h3>
-          </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'privacyCenterSub')}</p>
-          <button
-            onClick={() => setShowPrivacy(true)}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-          >
-            <ShieldCheck size={14} />
-            {t(lang, 'privacyCenterBtn')}
-          </button>
-        </div>
-
-        {/* Feedback */}
-        <div className="rounded-2xl p-4 mb-3 mt-1" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <MessageSquare size={16} style={{ color: 'var(--accent)' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackTitle')}</h3>
-          </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'feedbackSub')}</p>
-          <button
-            onClick={() => setShowFeedback(true)}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-          >
-            <MessageSquare size={14} />
-            {t(lang, 'feedbackBtn')}
-          </button>
-          {/* Replay the welcome intro — reassuring for anyone who skipped it or
-              wants a refresher. App listens for this event and reopens onboarding. */}
-          <button
-            onClick={() => window.dispatchEvent(new Event('pfm:replay-onboarding'))}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 mt-2 text-sm font-medium"
-            style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-          >
-            <Sparkles size={14} />
-            {t(lang, 'replayIntro')}
-          </button>
-        </div>
-
-        {/* Data export */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Download size={16} style={{ color: 'var(--accent)' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'dataTitle')}</h3>
-          </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
-          <button
-            onClick={handleExport}
-            disabled={prayers.length === 0}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-40"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-          >
-            <Download size={14} />
-            {t(lang, 'exportData')}
-          </button>
-
-          {/* Danger zone — irreversible account deletion (right to erasure) */}
-          <div className="mt-4 pt-4" style={{ borderTop: '0.5px solid var(--border-soft)' }}>
+          {/* Danger zone — irreversible account deletion (right to erasure), kept
+              apart at the bottom of the section and gated by ConfirmDialog. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid #f0d0d0' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#c04040' }}>{t(lang, 'dangerZone')}</p>
             <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'deleteAccountSub')}</p>
             <button
@@ -633,25 +472,239 @@ export default function SettingsTab() {
               {t(lang, 'deleteAccount')}
             </button>
           </div>
-        </div>
+        </SettingsSection>
 
-        {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
-            never unlocks features and the whole app works without it. */}
-        <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Heart size={16} style={{ color: '#16a34a' }} />
-            <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
+        {/* ── Notifications ── */}
+        <SettingsSection id="notifications" title={t(lang, 'notifications')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
+          {/* Daily + follow-up reminders */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-4">
+              <Bell size={16} style={{ color: '#7c5cfc' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'remindersTitle')}</h3>
+            </div>
+
+            <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
+              {settings.dailyReminderEnabled && (
+                <div className="mt-3">
+                  <div className="flex items-center gap-2">
+                    <Clock size={13} style={{ color: 'var(--text-3)' }} />
+                    <input
+                      type="time"
+                      value={settings.dailyReminderTime}
+                      onChange={(e) => handleReminderTimeChange(e.target.value)}
+                      className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                      style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                    />
+                  </div>
+                  {(() => {
+                    const r = nextReminder(settings.dailyReminderTime);
+                    return (
+                      <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+                        {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
+                      </p>
+                    );
+                  })()}
+                </div>
+              )}
+            </Row>
+
+            <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
+              <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
+                {settings.followUpEnabled && (
+                  <div className="mt-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <select
+                        value={settings.followUpDays}
+                        onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
+                        className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                      >
+                        <option value={3}>{t(lang, 'every3days')}</option>
+                        <option value={7}>{t(lang, 'everyWeek')}</option>
+                        <option value={14}>{t(lang, 'every2weeks')}</option>
+                        <option value={30}>{t(lang, 'everyMonth')}</option>
+                      </select>
+                      <div className="flex items-center gap-2">
+                        <Clock size={13} style={{ color: 'var(--text-3)' }} />
+                        <input
+                          type="time"
+                          value={settings.followUpTime || '07:00'}
+                          onChange={(e) => handleFollowUpTimeChange(e.target.value)}
+                          className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
+                          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                        />
+                      </div>
+                    </div>
+                    {(() => {
+                      const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.followUpTime);
+                      const dayLabel = nf.daysAhead === 0
+                        ? t(lang, 'today')
+                        : nf.daysAhead === 1
+                          ? t(lang, 'tomorrow')
+                          : nf.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
+                      return (
+                        <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+                          {t(lang, 'nextReminder')} · {dayLabel} {nf.time}
+                        </p>
+                      );
+                    })()}
+                  </div>
+                )}
+              </Row>
+            </div>
+
+            {settings.notificationsGranted && (
+              <button
+                onClick={() => new Notification('Pray4Me 🙏', { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
+                title={t(lang, 'tipTestNotif')}
+                className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                {t(lang, 'testNotif')}
+              </button>
+            )}
           </div>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
-          <button
-            onClick={() => setShowDonate(true)}
-            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-            style={{ background: '#f0fdf4', color: '#16a34a', border: '0.5px solid #bbf7d0' }}
-          >
-            <Heart size={14} />
-            {t(lang, 'donateBtn')}
-          </button>
-        </div>
+
+          {/* Community notification preferences (in-app inbox + push per type) */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Bell size={16} style={{ color: '#7c5cfc' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPrefsTitle')}</h3>
+            </div>
+            <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPrefsSub')}</p>
+            <NotificationPreferences />
+          </div>
+        </SettingsSection>
+
+        {/* ── Appearance & language ── */}
+        <SettingsSection id="appearance" title={t(lang, 'settingsSecAppearance')} icon={Sun} open={openSections.appearance} onToggle={() => toggleSection('appearance')}>
+          {/* Theme */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-3">
+              {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'appearance')}</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }].map(({ value, icon: Icon, labelKey }) => (
+                <button
+                  key={value}
+                  onClick={() => updateSettings({ theme: value })}
+                  className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all"
+                  style={settings.theme === value
+                    ? { background: 'var(--accent)', color: '#fff' }
+                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <Icon size={15} />
+                  {t(lang, labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Language */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Globe size={16} style={{ color: 'var(--accent)' }} />
+                <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
+              </div>
+              <LanguageDropdown
+                lang={lang}
+                onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
+              />
+            </div>
+          </div>
+        </SettingsSection>
+
+        {/* ── Data & advanced ── */}
+        <SettingsSection id="data" title={t(lang, 'settingsSecData')} icon={Download} open={openSections.data} onToggle={() => toggleSection('data')}>
+          {/* Data export */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Download size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'dataTitle')}</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
+            <button
+              onClick={handleExport}
+              disabled={prayers.length === 0}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-40"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <Download size={14} />
+              {t(lang, 'exportData')}
+            </button>
+          </div>
+
+          {/* AI assistance */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiAboutTitle')}</h3>
+            </div>
+            <AiDisclaimer lang={lang} variant="full" className="my-3" />
+            {aiOn ? (
+              <button
+                onClick={handleRevokeAi}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                <Sparkles size={14} />
+                {t(lang, 'aiRevoke')}
+              </button>
+            ) : (
+              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
+            )}
+          </div>
+        </SettingsSection>
+
+        {/* ── Support & feedback ── */}
+        <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
+          {/* Feedback */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <MessageSquare size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackTitle')}</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'feedbackSub')}</p>
+            <button
+              onClick={() => setShowFeedback(true)}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <MessageSquare size={14} />
+              {t(lang, 'feedbackBtn')}
+            </button>
+            {/* Replay the welcome intro — reassuring for anyone who skipped it or
+                wants a refresher. App listens for this event and reopens onboarding. */}
+            <button
+              onClick={() => window.dispatchEvent(new Event('pfm:replay-onboarding'))}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 mt-2 text-sm font-medium"
+              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+            >
+              <Sparkles size={14} />
+              {t(lang, 'replayIntro')}
+            </button>
+          </div>
+
+          {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
+              never unlocks features and the whole app works without it. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Heart size={16} style={{ color: '#16a34a' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
+            <button
+              onClick={() => setShowDonate(true)}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              style={{ background: '#f0fdf4', color: '#16a34a', border: '0.5px solid #bbf7d0' }}
+            >
+              <Heart size={14} />
+              {t(lang, 'donateBtn')}
+            </button>
+          </div>
+        </SettingsSection>
 
         <div className="rounded-2xl px-6 py-5 mt-2 text-center" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
           <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>

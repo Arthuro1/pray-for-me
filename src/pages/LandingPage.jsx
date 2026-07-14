@@ -50,6 +50,120 @@ const STATS_SAMPLE = {
   fa: 'نمونه — داده‌های نمایشی، نه آمار واقعی',
 };
 
+// The three things Pray4Me does, surfaced right under the hero. Icons/colours are
+// language-independent (defined once); the copy lives in one shared map — like
+// STATS_SAMPLE — with an English fallback, so all 16 languages keep working even
+// where the per-language CONTENT below is still an abbreviated placeholder.
+const BENEFIT_META = [
+  { icon: BookOpen, color: '#7c5cfc' },
+  { icon: Calendar, color: '#059669' },
+  { icon: CheckCircle, color: '#0891b2' },
+];
+
+const CORE_BENEFITS = {
+  en: [
+    { title: 'Remember every prayer', desc: 'Keep who and what you pray for in one private place — and never lose track again.' },
+    { title: 'Know what to pray today', desc: 'A gentle weekly plan brings the right people and needs to you each day.' },
+    { title: 'Record every answer', desc: "Mark prayers answered and watch a gallery of God's faithfulness grow." },
+  ],
+  fr: [
+    { title: 'Retenez chaque prière', desc: 'Gardez qui et quoi vous priez en un seul endroit privé — sans jamais rien oublier.' },
+    { title: "Sachez quoi prier aujourd'hui", desc: 'Un plan hebdomadaire tout doux vous présente les bonnes personnes et besoins chaque jour.' },
+    { title: 'Consignez chaque réponse', desc: 'Marquez les prières exaucées et voyez grandir une galerie de la fidélité de Dieu.' },
+  ],
+  de: [
+    { title: 'Jedes Gebet behalten', desc: 'Behalte an einem privaten Ort, für wen und was du betest — und verliere nie den Überblick.' },
+    { title: 'Wissen, was heute zu beten ist', desc: 'Ein sanfter Wochenplan bringt dir täglich die richtigen Menschen und Anliegen.' },
+    { title: 'Jede Antwort festhalten', desc: 'Markiere erhörte Gebete und sieh eine Galerie von Gottes Treue wachsen.' },
+  ],
+  pt: [
+    { title: 'Lembre cada oração', desc: 'Guarde por quem e pelo que você ora num só lugar privado — sem nunca esquecer.' },
+    { title: 'Saiba o que orar hoje', desc: 'Um plano semanal suave traz as pessoas e necessidades certas a cada dia.' },
+    { title: 'Registre cada resposta', desc: 'Marque orações respondidas e veja crescer uma galeria da fidelidade de Deus.' },
+  ],
+  es: [
+    { title: 'Recuerda cada oración', desc: 'Guarda por quién y por qué oras en un lugar privado — sin olvidar nada.' },
+    { title: 'Sabe qué orar hoy', desc: 'Un plan semanal sencillo te trae cada día las personas y necesidades correctas.' },
+    { title: 'Registra cada respuesta', desc: 'Marca oraciones respondidas y ve crecer una galería de la fidelidad de Dios.' },
+  ],
+  zh: [
+    { title: '记住每个祷告', desc: '把你为谁、为何祷告都存放在一个私密之处——再也不会遗忘。' },
+    { title: '知道今天该为何祷告', desc: '温和的每周计划每天为你呈现合适的人和需要。' },
+    { title: '记录每次应允', desc: '标记已蒙应允的祷告，见证神信实的画廊不断增长。' },
+  ],
+  hi: [
+    { title: 'हर प्रार्थना याद रखें', desc: 'आप किसके लिए और किसलिए प्रार्थना करते हैं, सब एक निजी जगह पर रखें — कभी न भूलें।' },
+    { title: 'जानें आज क्या प्रार्थना करें', desc: 'एक सरल साप्ताहिक योजना हर दिन सही लोग और ज़रूरतें सामने लाती है।' },
+    { title: 'हर उत्तर दर्ज करें', desc: 'उत्तरित प्रार्थनाओं को चिह्नित करें और परमेश्वर की विश्वासयोग्यता की गैलरी बढ़ते देखें।' },
+  ],
+  ja: [
+    { title: 'すべての祈りを覚えておく', desc: '誰のために何を祈るかを一つの安全な場所に——もう見失いません。' },
+    { title: '今日祈ることが分かる', desc: '穏やかな週間プランが、毎日ふさわしい人と願いを届けます。' },
+    { title: 'すべての答えを記録する', desc: '祈りが答えられたら印を付け、神の真実の記録が増えていくのを見ましょう。' },
+  ],
+  sw: [
+    { title: 'Kumbuka kila ombi', desc: 'Weka unayemwombea na unachokiombea mahali pamoja pa faragha — bila kusahau.' },
+    { title: 'Jua la kuombea leo', desc: 'Mpango wa juma kwa upole hukuletea watu na mahitaji sahihi kila siku.' },
+    { title: 'Andika kila jibu', desc: 'Weka alama maombi yaliyojibiwa na uone ghala la uaminifu wa Mungu likikua.' },
+  ],
+  am: [
+    { title: 'እያንዳንዱን ጸሎት አስታውሱ', desc: 'ለማን እና ለምን እንደሚጸልዩ በአንድ የግል ቦታ ያኑሩ — ሳይረሱ።' },
+    { title: 'ዛሬ ምን እንደሚጸልዩ እወቁ', desc: 'ረጋ ያለ ሳምንታዊ እቅድ በየቀኑ ትክክለኛ ሰዎችን እና ፍላጎቶችን ያቀርባል።' },
+    { title: 'እያንዳንዱን መልስ መዝግቡ', desc: 'የተመለሱ ጸሎቶችን ምልክት ያድርጉ እና የእግዚአብሔርን ታማኝነት ማዕከል ሲያድግ ይመልከቱ።' },
+  ],
+  id: [
+    { title: 'Ingat setiap doa', desc: 'Simpan siapa dan apa yang Anda doakan di satu tempat pribadi — tanpa pernah lupa.' },
+    { title: 'Tahu apa yang didoakan hari ini', desc: 'Rencana mingguan yang lembut menghadirkan orang dan kebutuhan yang tepat setiap hari.' },
+    { title: 'Catat setiap jawaban', desc: 'Tandai doa yang dijawab dan lihat galeri kesetiaan Tuhan bertumbuh.' },
+  ],
+  tl: [
+    { title: 'Tandaan ang bawat panalangin', desc: 'Itago kung sino at ano ang ipinapanalangin mo sa isang pribadong lugar — hindi na malilimutan.' },
+    { title: 'Alamin kung ano ang ipapanalangin ngayon', desc: 'Isang banayad na lingguhang plano ang naghahatid ng tamang tao at pangangailangan araw-araw.' },
+    { title: 'Itala ang bawat sagot', desc: 'Markahan ang mga nasagot na panalangin at masdan ang lumalagong galerya ng katapatan ng Diyos.' },
+  ],
+  ko: [
+    { title: '모든 기도를 기억하세요', desc: '누구를 위해 무엇을 기도하는지 한 곳에 안전하게 — 다시는 놓치지 마세요.' },
+    { title: '오늘 무엇을 기도할지 아세요', desc: '부드러운 주간 계획이 매일 알맞은 사람과 필요를 전해 줍니다.' },
+    { title: '모든 응답을 기록하세요', desc: '응답된 기도를 표시하고 하나님의 신실하심의 갤러리가 자라는 것을 보세요.' },
+  ],
+  ru: [
+    { title: 'Помните каждую молитву', desc: 'Храните, за кого и о чём молитесь, в одном личном месте — и ничего не забывайте.' },
+    { title: 'Знайте, о чём молиться сегодня', desc: 'Спокойный недельный план каждый день приносит нужных людей и нужды.' },
+    { title: 'Записывайте каждый ответ', desc: 'Отмечайте отвеченные молитвы и наблюдайте, как растёт галерея Божьей верности.' },
+  ],
+  ar: [
+    { title: 'تذكّر كل صلاة', desc: 'احفظ لمن ولماذا تصلّي في مكان خاص واحد — دون أن تنسى أبدًا.' },
+    { title: 'اعرف بماذا تصلّي اليوم', desc: 'خطة أسبوعية لطيفة تقدّم لك الأشخاص والاحتياجات المناسبة كل يوم.' },
+    { title: 'سجّل كل استجابة', desc: 'ضع علامة على الصلوات المستجابة وشاهد معرض أمانة الله ينمو.' },
+  ],
+  fa: [
+    { title: 'هر دعا را به یاد بسپارید', desc: 'اینکه برای چه کسی و برای چه دعا می‌کنید را در یک جای خصوصی نگه دارید — بدون فراموشی.' },
+    { title: 'بدانید امروز برای چه دعا کنید', desc: 'یک برنامهٔ هفتگی ملایم هر روز افراد و نیازهای درست را به شما می‌رساند.' },
+    { title: 'هر پاسخ را ثبت کنید', desc: 'دعاهای مستجاب‌شده را علامت بزنید و رشد گالری وفاداری خدا را ببینید.' },
+  ],
+};
+
+// Label for the toggle that folds the full feature grid away. Shared map, English
+// fallback — same pattern as CORE_BENEFITS.
+const EXPLORE_LABELS = {
+  en: { more: 'Explore all features', less: 'Show fewer' },
+  fr: { more: 'Découvrir toutes les fonctionnalités', less: 'Afficher moins' },
+  de: { more: 'Alle Funktionen entdecken', less: 'Weniger anzeigen' },
+  pt: { more: 'Explorar todos os recursos', less: 'Mostrar menos' },
+  es: { more: 'Explorar todas las funciones', less: 'Mostrar menos' },
+  zh: { more: '探索全部功能', less: '收起' },
+  hi: { more: 'सभी सुविधाएँ देखें', less: 'कम दिखाएँ' },
+  ja: { more: 'すべての機能を見る', less: '表示を減らす' },
+  sw: { more: 'Chunguza vipengele vyote', less: 'Onyesha kidogo' },
+  am: { more: 'ሁሉንም ባህሪያት ያስሱ', less: 'ያነሰ አሳይ' },
+  id: { more: 'Jelajahi semua fitur', less: 'Tampilkan lebih sedikit' },
+  tl: { more: 'Tuklasin ang lahat ng feature', less: 'Magpakita ng mas kaunti' },
+  ko: { more: '모든 기능 살펴보기', less: '간략히 보기' },
+  ru: { more: 'Все возможности', less: 'Свернуть' },
+  ar: { more: 'استكشف كل الميزات', less: 'عرض أقل' },
+  fa: { more: 'همهٔ امکانات را ببینید', less: 'نمایش کمتر' },
+};
+
 function detectLang() {
   const saved = localStorage.getItem('pfm_language');
   if (saved && ALL_CODES.includes(saved)) return saved;
@@ -1032,8 +1146,13 @@ export default function LandingPage({ onGetStarted }) {
   // Dark is the landing's native look; light kicks in when the visitor picked
   // it here before, or in the app (both share the pfm_theme key).
   const [theme, setTheme] = useState(() => (localStorage.getItem('pfm_theme') === 'light' ? 'light' : 'dark'));
+  // The nine-card feature grid is folded away by default so the hero + three core
+  // benefits carry the first impression; visitors opt in to the full list.
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
   const c = CONTENT[lang];
   const T = THEMES[theme];
+  const benefits = CORE_BENEFITS[lang] || CORE_BENEFITS.en;
+  const explore = EXPLORE_LABELS[lang] || EXPLORE_LABELS.en;
   const activeLang = LANGS.find(l => l.code === lang);
 
   // Reflect the visitor's language on <html> so screen readers pronounce the
@@ -1168,6 +1287,25 @@ export default function LandingPage({ onGetStarted }) {
         </div>
       </section>
 
+      {/* Core benefits — the three things Pray4Me does, up front, before the
+          longer feature list. Centered so it reads cleanly in RTL too. */}
+      <section className="px-6 max-w-5xl mx-auto mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {benefits.map(({ title, desc }, i) => {
+            const { icon: Icon, color } = BENEFIT_META[i];
+            return (
+              <div key={title} className="rounded-2xl p-6 text-center" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 mx-auto" style={{ backgroundColor: color + '22' }}>
+                  <Icon size={20} style={{ color }} />
+                </div>
+                <h3 className="text-base font-bold mb-1.5" style={{ color: T.text }}>{title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       {/* Stats strip */}
       <section className="px-6 max-w-4xl mx-auto mb-24">
         <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-4" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
@@ -1185,23 +1323,49 @@ export default function LandingPage({ onGetStarted }) {
         </p>
       </section>
 
-      {/* Features */}
+      {/* Features — the full grid is folded behind "Explore all features" so the
+          landing leads with the three core benefits above, not a wall of cards. */}
       <section className="px-6 max-w-5xl mx-auto mb-24">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
           <p className="text-sm" style={{ color: T.textFaint }}>{c.featuresSub}</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {c.features.map(({ icon: Icon, color, title, desc }) => (
-            <div key={title} className="rounded-2xl p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: color + '22' }}>
-                <Icon size={18} style={{ color }} />
-              </div>
-              <h3 className="text-sm font-semibold mb-1.5" style={{ color: T.text }}>{title}</h3>
-              <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
+        {!showAllFeatures ? (
+          <div className="text-center">
+            <button
+              onClick={() => setShowAllFeatures(true)}
+              aria-expanded={false}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium"
+              style={{ background: T.surfaceStrong, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
+            >
+              {explore.more} <ChevronDown size={15} />
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {c.features.map(({ icon: Icon, color, title, desc }) => (
+                <div key={title} className="rounded-2xl p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: color + '22' }}>
+                    <Icon size={18} style={{ color }} />
+                  </div>
+                  <h3 className="text-sm font-semibold mb-1.5" style={{ color: T.text }}>{title}</h3>
+                  <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+            <div className="text-center mt-6">
+              <button
+                onClick={() => setShowAllFeatures(false)}
+                aria-expanded
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium"
+                style={{ background: T.surfaceStrong, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
+              >
+                {explore.less} <ChevronUp size={15} />
+              </button>
+            </div>
+          </>
+        )}
       </section>
 
       {/* How it works */}
