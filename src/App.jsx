@@ -246,6 +246,14 @@ export default function App() {
     setShowOnboarding(false);
   };
 
+  // Let the user replay the welcome intro on demand (e.g. from Settings). Decoupled
+  // via a window event so Settings needn't reach into App's onboarding state.
+  useEffect(() => {
+    const replay = () => setShowOnboarding(true);
+    window.addEventListener('pfm:replay-onboarding', replay);
+    return () => window.removeEventListener('pfm:replay-onboarding', replay);
+  }, []);
+
   // Keep the community nav badge live (incoming friend requests / invitations).
   useEffect(() => {
     if (!user?.id) return;
@@ -292,7 +300,7 @@ export default function App() {
   if (!user) {
     return (
       <Suspense fallback={<PageLoader />}>
-        {showAuth ? <AuthPage /> : <LandingPage onGetStarted={() => setShowAuth(true)} />}
+        {showAuth ? <AuthPage onBack={() => setShowAuth(false)} /> : <LandingPage onGetStarted={() => setShowAuth(true)} />}
       </Suspense>
     );
   }

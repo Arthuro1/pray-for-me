@@ -96,6 +96,14 @@ export default function Layout({ children, onAddPrayer }) {
           </div>
         </div>
 
+        {/* Collapsed sidebar still needs the inbox: render the bell on its own
+            centered row so a collapsed power-user never loses access to it. */}
+        {collapsed && (
+          <div className="flex justify-center mb-3">
+            <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-3)' }} />
+          </div>
+        )}
+
         <nav className="flex flex-col gap-1 flex-1 px-2">
           {tabs.map(({ id, path, label, icon: Icon, badge }) => {
             const active = isActive(path);

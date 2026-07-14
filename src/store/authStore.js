@@ -44,6 +44,26 @@ const useAuthStore = create((set) => ({
     return { user: data?.user, error };
   },
 
+  // Send a password-reset link. The redirect returns the user to the app (the
+  // same target as sign-in) so they land back where they started after resetting.
+  resetPassword: async (email) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: authRedirectTarget(),
+    });
+    return { error };
+  },
+
+  // Re-send the sign-up confirmation email for an unverified account (e.g. the
+  // first one was missed or expired). Uses the same deep-link-preserving target.
+  resendConfirmation: async (email) => {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: authRedirectTarget() },
+    });
+    return { error };
+  },
+
   // Clear local traces (prayer cache, mutation queue, wrapped recovery record)
   // so a leftover record can't block login on a different account here. The
   // transparent per-user account key is DELIBERATELY kept: for a user who never

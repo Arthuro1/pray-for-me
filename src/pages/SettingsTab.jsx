@@ -278,11 +278,11 @@ export default function SettingsTab() {
     });
   };
   const provider = user?.app_metadata?.provider;
-  const providerLabel = provider === 'google' ? 'Google' : 'Email / Mot de passe';
+  const providerLabel = provider === 'google' ? 'Google' : t(lang, 'providerEmail');
   const avatarUrl = user?.user_metadata?.avatar_url;
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
   const memberSince = user?.created_at
-    ? new Date(user.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    ? new Date(user.created_at).toLocaleDateString(lang, { month: 'long', year: 'numeric' })
     : null;
 
   return (
@@ -590,6 +590,16 @@ export default function SettingsTab() {
           >
             <MessageSquare size={14} />
             {t(lang, 'feedbackBtn')}
+          </button>
+          {/* Replay the welcome intro — reassuring for anyone who skipped it or
+              wants a refresher. App listens for this event and reopens onboarding. */}
+          <button
+            onClick={() => window.dispatchEvent(new Event('pfm:replay-onboarding'))}
+            className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 mt-2 text-sm font-medium"
+            style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+          >
+            <Sparkles size={14} />
+            {t(lang, 'replayIntro')}
           </button>
         </div>
 

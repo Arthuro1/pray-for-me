@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Sun, Moon, Users, Sprout, Bell, Smartphone } from 'lucide-react';
 import { dirFor } from '../i18n';
+import usePrayerStore from '../store/prayerStore';
 
 // `complete: false` marks languages whose landing-page copy (FAQs, feature
 // blurbs) is still an abbreviated placeholder rather than the full translation
@@ -25,6 +26,29 @@ const LANGS = [
 ];
 
 const ALL_CODES = LANGS.map(l => l.code);
+
+// The stats strip below shows illustrative numbers, NOT live platform metrics.
+// This caption makes that explicit in every language so the sample can never be
+// mistaken for real usage data. Kept in one place (rather than per-language
+// CONTENT) so it stays easy to audit.
+const STATS_SAMPLE = {
+  fr: 'Exemple — données de démonstration, pas des statistiques réelles',
+  en: 'Sample — illustrative data, not real platform statistics',
+  de: 'Beispiel — zur Veranschaulichung, keine echten Statistiken',
+  pt: 'Exemplo — dados ilustrativos, não estatísticas reais',
+  es: 'Ejemplo — datos ilustrativos, no estadísticas reales',
+  zh: '示例——仅供说明，非真实平台数据',
+  hi: 'उदाहरण — केवल दर्शाने के लिए, वास्तविक आँकड़े नहीं',
+  ja: 'サンプル — 説明用のデータであり、実際の統計ではありません',
+  sw: 'Mfano — data ya kuonyesha, si takwimu halisi',
+  am: 'ምሳሌ — ለማሳያ የቀረበ እንጂ ትክክለኛ ስታቲስቲክስ አይደለም',
+  id: 'Contoh — data ilustrasi, bukan statistik asli',
+  tl: 'Halimbawa — datos na panlarawan, hindi tunay na estadistika',
+  ko: '예시 — 설명용 데이터이며 실제 통계가 아닙니다',
+  ru: 'Пример — иллюстративные данные, не реальная статистика',
+  ar: 'مثال — بيانات توضيحية وليست إحصاءات حقيقية',
+  fa: 'نمونه — داده‌های نمایشی، نه آمار واقعی',
+};
 
 function detectLang() {
   const saved = localStorage.getItem('pfm_language');
@@ -1023,7 +1047,10 @@ export default function LandingPage({ onGetStarted }) {
   const handleLang = (code) => {
     setLang(code);
     setLangOpen(false);
-    localStorage.setItem('pfm_language', code);
+    // Persist to the shared settings store (which also writes pfm_language), so
+    // the choice carries into the auth page and the app after sign-in. No server
+    // sync happens while logged out — updateSettings only syncs with a userId.
+    usePrayerStore.getState().updateSettings({ language: code });
   };
 
   const toggleTheme = () => {
@@ -1153,6 +1180,9 @@ export default function LandingPage({ onGetStarted }) {
             </div>
           ))}
         </div>
+        <p className="text-center text-xs mt-4 italic" style={{ color: T.textDim }}>
+          {STATS_SAMPLE[lang] || STATS_SAMPLE.en}
+        </p>
       </section>
 
       {/* Features */}

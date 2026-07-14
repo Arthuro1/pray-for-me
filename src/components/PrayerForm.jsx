@@ -9,7 +9,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import { toast } from '../store/toastStore';
 import { canEncrypt } from '../lib/crypto/prayerCrypto';
-import ScriptureFirstStep from './ScriptureFirstStep';
+import PrayerSavedStep from './PrayerSavedStep';
 import ScheduleEditor from './ScheduleEditor';
 import CategorySelector from './CategorySelector';
 import { emptyDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
@@ -102,9 +102,10 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       notifySaved();
       onClose();
     } else {
-      // New personal prayer: create it, then invite the user into Scripture
-      // before they pray (Step 2). The prayer already exists by then, so
-      // closing the Scripture step at any point keeps the prayer.
+      // New personal prayer: create it, then show a compact "Saved privately"
+      // confirmation. Scripture, reminders and sharing are offered there as
+      // OPTIONAL next steps — the user is never forced through them before
+      // praying. The prayer already exists, so closing at any point keeps it.
       const id = await addPrayer({ ...form, schedule: scheduleFromDraft(form.scheduleDraft) });
       if (id) {
         // Record the language this prayer was written in, so we don't later pay
@@ -118,7 +119,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
 
   if (created) {
     return (
-      <ScriptureFirstStep
+      <PrayerSavedStep
         prayerId={created.id}
         title={created.title}
         description={created.description}
@@ -209,7 +210,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
                 <div>
                   <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'personName')}</label>
                   <input type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
-                    placeholder="Prénom Nom" className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none" style={INPUT_STYLE} />
+                    placeholder={t(lang, 'personNamePlaceholder')} className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none" style={INPUT_STYLE} />
                 </div>
               </div>
             )}
