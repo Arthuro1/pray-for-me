@@ -8,13 +8,13 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
 // Keep the store deterministic and the crypto/VaultModal import chain out.
-vi.mock('../store/vaultStore', () => ({
+vi.mock('../../store/vaultStore', () => ({
   default: () => ({ initialized: false, unlocked: true }),
 }));
-vi.mock('./VaultModal', () => ({ default: () => null }));
+vi.mock('../VaultModal', () => ({ default: () => null }));
 
-import RecoveryPromptBanner from './RecoveryPromptBanner';
-import { t } from '../i18n';
+import RecoveryPromptBanner from '../RecoveryPromptBanner';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 const DISMISS_KEY = 'pfm_recovery_prompt_dismissed';

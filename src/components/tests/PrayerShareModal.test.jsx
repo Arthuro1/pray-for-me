@@ -11,13 +11,13 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/re
 // Analytics is a privacy choke point that ships to Vercel; stub it so we can
 // assert the share event fired without a real provider.
 const { trackSpy } = vi.hoisted(() => ({ trackSpy: vi.fn() }));
-vi.mock('../lib/analytics', () => ({
+vi.mock('../../lib/analytics', () => ({
   track: trackSpy,
   EVENTS: { PRAYER_SHARED: 'prayer_shared' },
 }));
 
-import PrayerShareModal from './PrayerShareModal';
-import { t } from '../i18n';
+import PrayerShareModal from '../PrayerShareModal';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 const groups = [{ id: 'g1', name: 'Family' }, { id: 'g2', name: 'Church' }];

@@ -7,11 +7,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
-vi.mock('../lib/verseText', () => ({
+vi.mock('../../lib/verseText', () => ({
   fetchScriptureText: vi.fn(async () => ({ text: '' })),
   fetchVerseText: vi.fn(async () => ({ data: null, error: null })),
 }));
-vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
+vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 
 import ArticleReader from '../ArticleReader';
 import { getArticle, pick } from '../../content/teaching';

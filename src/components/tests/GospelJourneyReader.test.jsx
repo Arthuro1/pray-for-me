@@ -9,20 +9,20 @@ import { render, screen, fireEvent, cleanup, within } from '@testing-library/rea
 
 // The Scripture reader fetches passage text on expand; keep tests offline and
 // prove no AI text is invented (reference-only fallback).
-vi.mock('../lib/verseText', () => ({
+vi.mock('../../lib/verseText', () => ({
   fetchScriptureText: vi.fn(async () => ({ text: '' })),
   fetchVerseText: vi.fn(async () => ({ data: null, error: null })),
 }));
-vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
+vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 
 // Guard: rendering/using the journey must NEVER emit analytics.
 const track = vi.fn();
-vi.mock('../lib/analytics', () => ({ track: (...a) => track(...a), EVENTS: {} }));
+vi.mock('../../lib/analytics', () => ({ track: (...a) => track(...a), EVENTS: {} }));
 
-import GospelJourneyReader from './GospelJourneyReader';
-import gospelJourney from '../content/teaching/gospelJourney';
-import { pick, localizeRef } from '../content/teaching';
-import { t } from '../i18n';
+import GospelJourneyReader from '../GospelJourneyReader';
+import gospelJourney from '../../content/teaching/gospelJourney';
+import { pick, localizeRef } from '../../content/teaching';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 const heading = (i) => pick(gospelJourney.sections[i].heading, lang);

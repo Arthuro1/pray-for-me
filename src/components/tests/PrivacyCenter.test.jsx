@@ -6,14 +6,14 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 
-vi.mock('../lib/analytics', async (importOriginal) => {
+vi.mock('../../lib/analytics', async (importOriginal) => {
   const actual = await importOriginal();
   return { ...actual, track: vi.fn() };
 });
 
-import PrivacyCenter from './PrivacyCenter';
-import { track, EVENTS } from '../lib/analytics';
-import { t } from '../i18n';
+import PrivacyCenter from '../PrivacyCenter';
+import { track, EVENTS } from '../../lib/analytics';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

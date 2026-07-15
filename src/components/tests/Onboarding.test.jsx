@@ -5,8 +5,8 @@
 // introduced later, once the first prayer exists.
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import Onboarding from './Onboarding';
-import { t } from '../i18n';
+import Onboarding from '../Onboarding';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

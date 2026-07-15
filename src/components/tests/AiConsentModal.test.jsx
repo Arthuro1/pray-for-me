@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
-vi.mock('../lib/supabase', () => {
+vi.mock('../../lib/supabase', () => {
   const chain = {
     upsert: () => Promise.resolve({ data: null, error: null }),
     select: () => chain,
@@ -15,16 +15,16 @@ vi.mock('../lib/supabase', () => {
   };
   return { supabase: { auth: { getUser: async () => ({ data: { user: null } }) }, from: () => chain } };
 });
-vi.mock('../lib/analytics', async (importOriginal) => {
+vi.mock('../../lib/analytics', async (importOriginal) => {
   const actual = await importOriginal();
   return { ...actual, track: vi.fn() };
 });
 
-import AiConsentModal from './AiConsentModal';
-import { grantAiConsent, revokeAiConsent, hasAiConsent } from '../lib/aiConsent';
-import usePrayerStore from '../store/prayerStore';
-import { track, EVENTS } from '../lib/analytics';
-import { t } from '../i18n';
+import AiConsentModal from '../AiConsentModal';
+import { grantAiConsent, revokeAiConsent, hasAiConsent } from '../../lib/aiConsent';
+import usePrayerStore from '../../store/prayerStore';
+import { track, EVENTS } from '../../lib/analytics';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

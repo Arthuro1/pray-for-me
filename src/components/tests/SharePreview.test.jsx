@@ -7,8 +7,8 @@
 // t() so they verify the show/hide LOGIC rather than pinning exact copy.
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
-import SharePreview from './SharePreview';
-import { t } from '../i18n';
+import SharePreview from '../SharePreview';
+import { t } from '../../i18n';
 
 afterEach(cleanup);
 

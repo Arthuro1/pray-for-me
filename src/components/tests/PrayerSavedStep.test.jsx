@@ -8,7 +8,7 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 // Stub Supabase so the ScriptureFirstStep import chain (via the prayer store) is safe.
-vi.mock('../lib/supabase', () => {
+vi.mock('../../lib/supabase', () => {
   const chain = {
     upsert: () => Promise.resolve({ data: null, error: null }),
     insert: () => Promise.resolve({ data: null, error: null }),
@@ -19,8 +19,8 @@ vi.mock('../lib/supabase', () => {
   return { supabase: { auth: { getUser: async () => ({ data: { user: null } }) }, from: () => chain } };
 });
 
-import PrayerSavedStep from './PrayerSavedStep';
-import { t } from '../i18n';
+import PrayerSavedStep from '../PrayerSavedStep';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

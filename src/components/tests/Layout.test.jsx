@@ -9,12 +9,12 @@ import { MemoryRouter } from 'react-router-dom';
 
 // NotificationBell subscribes to realtime on mount; stub it so the nav renders
 // in isolation.
-vi.mock('./NotificationBell', () => ({ default: () => null }));
+vi.mock('../NotificationBell', () => ({ default: () => null }));
 
-import Layout from './Layout';
-import usePrayerStore from '../store/prayerStore';
-import useCommunityStore from '../store/communityStore';
-import { t } from '../i18n';
+import Layout from '../Layout';
+import usePrayerStore from '../../store/prayerStore';
+import useCommunityStore from '../../store/communityStore';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

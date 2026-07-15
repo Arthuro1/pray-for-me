@@ -6,15 +6,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
-vi.mock('../lib/verseText', () => ({
+vi.mock('../../lib/verseText', () => ({
   fetchScriptureText: vi.fn(),
   fetchVerseText: vi.fn(),
 }));
-vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
+vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 
-import VerseAccordion from './VerseAccordion';
-import { fetchScriptureText, fetchVerseText } from '../lib/verseText';
-import { t } from '../i18n';
+import VerseAccordion from '../VerseAccordion';
+import { fetchScriptureText, fetchVerseText } from '../../lib/verseText';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 const trigger = ({ toggle }) => <button onClick={toggle}>{t(lang, 'openInBible')}</button>;

@@ -9,7 +9,7 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
 // Supabase builds its realtime layer at construct time (throws on older Node in
 // CI); the form only needs the store shape, so stub the client to no-ops.
-vi.mock('../lib/supabase', () => {
+vi.mock('../../lib/supabase', () => {
   const chain = {
     upsert: () => Promise.resolve({ data: null, error: null }),
     insert: () => Promise.resolve({ data: null, error: null }),
@@ -20,9 +20,9 @@ vi.mock('../lib/supabase', () => {
   return { supabase: { auth: { getUser: async () => ({ data: { user: null } }) }, from: () => chain } };
 });
 
-import PrayerForm from './PrayerForm';
-import usePrayerStore from '../store/prayerStore';
-import { t } from '../i18n';
+import PrayerForm from '../PrayerForm';
+import usePrayerStore from '../../store/prayerStore';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);
