@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "회원님의 기도는 이 기기에만 보관된 키로 암호화되어 있습니다. 브라우저를 바꾸거나 데이터를 지워도 접근 권한을 잃지 않도록 복구를 설정하세요.",
   "backupKeyCta": "복구 설정",
   "backupKeyDismiss": "나중에",
+  "backupKeyWarn": "백업이 없으면 저희를 포함해 누구도 기도를 복구할 수 없습니다.",
+  "backupKeyDismissForever": "다시 표시 안 함",
   "activePrayers": "진행 중",
   "answeredPrayers": "응답됨",
   "todayPrayers": "오늘",

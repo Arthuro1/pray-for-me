@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "あなたの祈りは、このデバイスにのみ保存された鍵で暗号化されています。ブラウザを変更したりデータを消去したりしてもアクセスを失わないよう、リカバリーを設定してください。",
   "backupKeyCta": "リカバリーを設定",
   "backupKeyDismiss": "後で",
+  "backupKeyWarn": "バックアップがないと、私たちでさえあなたの祈りを復元できません。",
+  "backupKeyDismissForever": "今後表示しない",
   "activePrayers": "進行中",
   "answeredPrayers": "答えられた",
   "todayPrayers": "今日",

@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "Tus oraciones están cifradas con una clave guardada solo en este dispositivo. Configura la recuperación para no perder el acceso si cambias de navegador o borras tus datos.",
   "backupKeyCta": "Configurar recuperación",
   "backupKeyDismiss": "Ahora no",
+  "backupKeyWarn": "Sin una copia de seguridad, nadie —ni siquiera nosotros— puede recuperar tus oraciones.",
+  "backupKeyDismissForever": "No volver a mostrar",
   "activePrayers": "Activas",
   "answeredPrayers": "Respondidas",
   "todayPrayers": "Hoy",

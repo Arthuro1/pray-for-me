@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "Doa Anda dienkripsi dengan kunci yang hanya disimpan di perangkat ini. Siapkan pemulihan agar Anda tidak kehilangan akses jika berganti browser atau menghapus data Anda.",
   "backupKeyCta": "Siapkan pemulihan",
   "backupKeyDismiss": "Nanti saja",
+  "backupKeyWarn": "Tanpa cadangan, tidak ada seorang pun — bahkan kami — yang bisa memulihkan doa Anda.",
+  "backupKeyDismissForever": "Jangan tampilkan lagi",
   "activePrayers": "Aktif",
   "answeredPrayers": "Terjawab",
   "todayPrayers": "Hari ini",

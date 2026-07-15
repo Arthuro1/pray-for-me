@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "Maombi yako yamesimbwa kwa ufunguo uliohifadhiwa kwenye kifaa hiki pekee. Weka urejeshaji ili usipoteze ufikiaji ukibadilisha kivinjari au ukifuta data yako.",
   "backupKeyCta": "Weka urejeshaji",
   "backupKeyDismiss": "Sio sasa",
+  "backupKeyWarn": "Bila hakuna nakala rudufu, hakuna yeyote — hata sisi — anayeweza kurejesha maombi yako.",
+  "backupKeyDismissForever": "Usionyeshe tena",
   "activePrayers": "Yanayoendelea",
   "answeredPrayers": "Yaliyojibiwa",
   "todayPrayers": "Leo",

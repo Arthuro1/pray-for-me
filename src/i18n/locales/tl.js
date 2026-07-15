@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "Ang iyong mga panalangin ay naka-encrypt gamit ang susing nasa device na ito lang. Mag-set up ng recovery para hindi mawala ang access mo kapag nagpalit ka ng browser o nag-clear ng data.",
   "backupKeyCta": "Mag-set up ng recovery",
   "backupKeyDismiss": "Hindi muna",
+  "backupKeyWarn": "Kung walang backup, walang sinuman — kahit kami — ang makakabawi ng iyong mga panalangin.",
+  "backupKeyDismissForever": "Huwag nang ipakita",
   "activePrayers": "Aktibo",
   "answeredPrayers": "Nasagot",
   "todayPrayers": "Ngayon",

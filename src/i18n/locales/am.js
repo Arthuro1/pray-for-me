@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "ጸሎቶችዎ በዚህ መሣሪያ ላይ ብቻ በተቀመጠ ቁልፍ የተመሰጠሩ ናቸው። አሳሽ ሲቀይሩ ወይም ውሂብዎን ሲያጸዱ መዳረሻ እንዳያጡ መልሶ ማግኛን ያዋቅሩ።",
   "backupKeyCta": "መልሶ ማግኛን ያዋቅሩ",
   "backupKeyDismiss": "አሁን አይደለም",
+  "backupKeyWarn": "ያለ ምትኬ ማንም — እኛም እንኳ — ጸሎቶችህን መመለስ አይችልም።",
+  "backupKeyDismissForever": "ዳግመኛ አታሳይ",
   "activePrayers": "ንቁ",
   "answeredPrayers": "የተመለሱ",
   "todayPrayers": "ዛሬ",

@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "你的祷告使用仅保存在此设备上的密钥加密。请设置恢复，以免在更换浏览器或清除数据时失去访问权限。",
   "backupKeyCta": "设置恢复",
   "backupKeyDismiss": "以后再说",
+  "backupKeyWarn": "没有备份，任何人（包括我们）都无法恢复你的祷告。",
+  "backupKeyDismissForever": "不再显示",
   "activePrayers": "进行中",
   "answeredPrayers": "已应允",
   "todayPrayers": "今天",

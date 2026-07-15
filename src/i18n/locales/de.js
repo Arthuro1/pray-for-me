@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "Deine Gebete sind mit einem Schlüssel verschlüsselt, der nur auf diesem Gerät gespeichert ist. Richte die Wiederherstellung ein, damit du den Zugriff nicht verlierst, wenn du den Browser wechselst oder deine Daten löschst.",
   "backupKeyCta": "Wiederherstellung einrichten",
   "backupKeyDismiss": "Später",
+  "backupKeyWarn": "Ohne Backup kann niemand — auch wir nicht — deine Gebete wiederherstellen.",
+  "backupKeyDismissForever": "Nicht mehr anzeigen",
   "activePrayers": "Aktiv",
   "answeredPrayers": "Erhört",
   "todayPrayers": "Heute",

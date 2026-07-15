@@ -158,6 +158,8 @@ export default {
   "backupKeyBody": "Your prayers are encrypted with a key kept only on this device. Set up recovery so you don't lose access if you switch browsers or clear your data.",
   "backupKeyCta": "Set up recovery",
   "backupKeyDismiss": "Not now",
+  "backupKeyWarn": "Without a backup, no one — not even we — can recover your prayers.",
+  "backupKeyDismissForever": "Don't show again",
   "activePrayers": "Active",
   "answeredPrayers": "Answered",
   "todayPrayers": "Today",

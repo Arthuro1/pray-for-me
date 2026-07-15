@@ -193,6 +193,8 @@ export default {
   "backupKeyBody": "صلواتك مشفّرة بمفتاح محفوظ على هذا الجهاز فقط. أعدّ الاسترداد حتى لا تفقد الوصول إذا غيّرت المتصفح أو مسحت بياناتك.",
   "backupKeyCta": "إعداد الاسترداد",
   "backupKeyDismiss": "ليس الآن",
+  "backupKeyWarn": "بدون نسخة احتياطية، لا أحد — ولا حتى نحن — يمكنه استعادة صلواتك.",
+  "backupKeyDismissForever": "عدم الإظهار مرة أخرى",
   "activePrayers": "نشطة",
   "answeredPrayers": "مستجابة",
   "todayPrayers": "اليوم",

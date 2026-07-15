@@ -158,6 +158,8 @@ export default {
   "backupKeyBody": "Vos prières sont chiffrées avec une clé conservée uniquement sur cet appareil. Configurez la récupération pour ne pas perdre l'accès si vous changez de navigateur ou effacez vos données.",
   "backupKeyCta": "Configurer la récupération",
   "backupKeyDismiss": "Plus tard",
+  "backupKeyWarn": "Sans sauvegarde, personne — pas même nous — ne peut récupérer tes prières.",
+  "backupKeyDismissForever": "Ne plus afficher",
   "activePrayers": "Actives",
   "answeredPrayers": "Exaucées",
   "todayPrayers": "Aujourd'hui",
