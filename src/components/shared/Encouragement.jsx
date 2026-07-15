@@ -1,4 +1,4 @@
-import { dailyEncouragement } from '../content/encouragements';
+import { dailyEncouragement } from '../../content/encouragements';
 
 // A tiny, muted Christ-centered word shown at gentle moments (session done,
 // empty states). Deliberately understated so Scripture stays the star.

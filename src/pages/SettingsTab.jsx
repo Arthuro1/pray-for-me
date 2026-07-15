@@ -15,7 +15,7 @@ import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
 import VaultMigrationStatus from '../components/VaultMigrationStatus';
-import AiDisclaimer from '../components/AiDisclaimer';
+import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';

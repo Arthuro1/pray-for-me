@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Loader2, CloudOff } from 'lucide-react';
-import usePrayerStore from '../store/prayerStore';
-import { subscribeQueue, pendingCount } from '../lib/mutationQueue';
-import { t } from '../i18n';
+import usePrayerStore from '../../store/prayerStore';
+import { subscribeQueue, pendingCount } from '../../lib/mutationQueue';
+import { t } from '../../i18n';
 
 // Small status pill: shows queued offline writes ("n waiting") and, once back
 // online, that they're syncing. Hidden when the queue is empty.

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { KeyRound, ShieldCheck } from 'lucide-react';
 import useAuthStore from '../store/authStore';
-import ConfirmDialog from './ConfirmDialog';
+import ConfirmDialog from './shared/ConfirmDialog';
 import { startFreshEncryption } from '../lib/crypto/accountKey';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';

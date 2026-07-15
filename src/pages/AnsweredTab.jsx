@@ -12,11 +12,11 @@ import { testimonyList } from '../utils/prayer';
 import { originAuthor, getAuthorName } from '../utils/user';
 import { faithfulnessPassage } from '../lib/prayerMovements';
 import { t } from '../i18n';
-import Avatar from '../components/Avatar';
+import Avatar from '../components/shared/Avatar';
 import VerseAccordion from '../components/VerseAccordion';
-import SwipeableRow from '../components/SwipeableRow';
-import EmptyState from '../components/EmptyState';
-import Encouragement from '../components/Encouragement';
+import SwipeableRow from '../components/shared/SwipeableRow';
+import EmptyState from '../components/shared/EmptyState';
+import Encouragement from '../components/shared/Encouragement';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // A reflective "God's faithfulness" view of all answered prayers.

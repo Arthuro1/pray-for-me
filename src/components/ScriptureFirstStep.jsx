@@ -6,7 +6,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import AiConsentModal from './AiConsentModal';
 import { hasAiConsent } from '../lib/aiConsent';
-import AiDisclaimer from './AiDisclaimer';
+import AiDisclaimer from './shared/AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
 import VerseAccordion from './VerseAccordion';
 

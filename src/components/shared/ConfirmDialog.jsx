@@ -1,6 +1,6 @@
 import { Loader2 } from 'lucide-react';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 // Reusable confirmation dialog for destructive actions. Caller passes already
 // localised strings so this component stays i18n-agnostic.

@@ -1,4 +1,4 @@
-import Avatar from './Avatar';
+import Avatar from './shared/Avatar';
 import { communityAuthor } from '../utils/user';
 import { t } from '../i18n';
 

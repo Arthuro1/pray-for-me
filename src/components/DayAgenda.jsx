@@ -8,7 +8,7 @@ import { planDayContent } from '../content/prayerPlans';
 import { pick } from '../content/teaching';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { DOT_COLORS } from '../lib/monthCalendar';
-import OverflowMenu from './OverflowMenu';
+import OverflowMenu from './shared/OverflowMenu';
 
 // Agenda for one selected day: planned prayers grouped by prayer-time slot,
 // with per-occurrence actions (mark prayed, skip, move, restore) and any group

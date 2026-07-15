@@ -1,8 +1,8 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MoreVertical } from 'lucide-react';
-import { t } from '../i18n';
-import { useEscapeKey } from '../hooks/useEscapeKey';
+import { t } from '../../i18n';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 // A reusable "⋮" overflow menu. Pass `items` as
 //   [{ key, icon, label, onClick, danger?, hidden? }]

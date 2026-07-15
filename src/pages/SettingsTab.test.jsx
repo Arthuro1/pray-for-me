@@ -19,7 +19,7 @@ vi.mock('../push', () => ({
 vi.mock('../lib/analytics', () => ({ track: vi.fn(), EVENTS: new Proxy({}, { get: (_, k) => String(k) }) }));
 vi.mock('../components/NotificationPreferences', () => ({ default: () => null }));
 vi.mock('../components/VaultMigrationStatus', () => ({ default: () => null }));
-vi.mock('../components/AiDisclaimer', () => ({ default: () => null }));
+vi.mock('../components/shared/AiDisclaimer', () => ({ default: () => null }));
 vi.mock('../components/FeedbackModal', () => ({ default: () => null }));
 vi.mock('../components/DonateModal', () => ({ default: () => null }));
 vi.mock('../components/PrivacyCenter', () => ({ default: () => null }));

@@ -6,8 +6,8 @@
 // French is the always-loaded locale, so assertions go through t().
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import ErrorBoundary from './ErrorBoundary';
-import { t } from '../i18n';
+import ErrorBoundary from '../ErrorBoundary';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

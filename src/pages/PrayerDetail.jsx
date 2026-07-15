@@ -14,7 +14,7 @@ import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import AiConsentModal from '../components/AiConsentModal';
 import { hasAiConsent } from '../lib/aiConsent';
-import AiDisclaimer from '../components/AiDisclaimer';
+import AiDisclaimer from '../components/shared/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
 import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
@@ -32,12 +32,12 @@ import VerseAccordion from '../components/VerseAccordion';
 import CommunityUpdates from '../components/CommunityUpdates';
 import CommunityTestimonies from '../components/CommunityTestimonies';
 import AnonymousToggle from '../components/AnonymousToggle';
-import ConfirmDialog from '../components/ConfirmDialog';
+import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
-import OverflowMenu from '../components/OverflowMenu';
+import OverflowMenu from '../components/shared/OverflowMenu';
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {

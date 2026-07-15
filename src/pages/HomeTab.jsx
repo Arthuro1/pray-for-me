@@ -9,13 +9,13 @@ import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Sparkles, Loader2, Plus, HandHeart, Share2, ExternalLink, ChevronRight } from 'lucide-react';
-import Encouragement from '../components/Encouragement';
+import Encouragement from '../components/shared/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
-import PrayerListSkeleton from '../components/Skeleton';
+import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
-import SwipeableRow from '../components/SwipeableRow';
+import SwipeableRow from '../components/shared/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { weeklyRecap } from '../utils/recap';
@@ -29,7 +29,7 @@ import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
 import AiConsentModal from '../components/AiConsentModal';
 import { hasAiConsent } from '../lib/aiConsent';
-import AiDisclaimer from '../components/AiDisclaimer';
+import AiDisclaimer from '../components/shared/AiDisclaimer';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],

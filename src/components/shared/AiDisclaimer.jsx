@@ -1,5 +1,5 @@
 import { Sparkles } from 'lucide-react';
-import { t } from '../i18n';
+import { t } from '../../i18n';
 
 // Single source of truth for how the app frames its AI to the user: a humble
 // study companion that points to Scripture and never speaks for God. Rendered

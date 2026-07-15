@@ -1,5 +1,5 @@
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
-import useToastStore from '../store/toastStore';
+import useToastStore from '../../store/toastStore';
 
 const ICONS = { success: CheckCircle, error: AlertCircle, info: Info };
 const COLORS = { success: 'var(--success)', error: '#e53e3e', info: 'var(--accent)' };

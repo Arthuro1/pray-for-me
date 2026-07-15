@@ -2,7 +2,7 @@ import { Users, EyeOff, HandHeart, Pin } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
-import Avatar from './Avatar';
+import Avatar from './shared/Avatar';
 
 const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
 

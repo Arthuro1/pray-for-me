@@ -3,7 +3,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { grantAiConsent } from '../lib/aiConsent';
-import AiDisclaimer from './AiDisclaimer';
+import AiDisclaimer from './shared/AiDisclaimer';
 
 // The consent read/grant/revoke helpers (hasAiConsent, grantAiConsent,
 // hasAnyAiConsent, revokeAiConsent) live in lib/aiConsent.js.

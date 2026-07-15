@@ -13,9 +13,9 @@ vi.mock('../lib/verseText', () => ({
 }));
 vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 
-import ArticleReader from './ArticleReader';
-import { getArticle, pick } from '../content/teaching';
-import { t } from '../i18n';
+import ArticleReader from '../ArticleReader';
+import { getArticle, pick } from '../../content/teaching';
+import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);

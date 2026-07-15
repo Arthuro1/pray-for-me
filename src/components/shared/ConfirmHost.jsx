@@ -1,4 +1,4 @@
-import useConfirmStore from '../store/confirmStore';
+import useConfirmStore from '../../store/confirmStore';
 import ConfirmDialog from './ConfirmDialog';
 
 // Renders the single app-wide confirmation dialog (see confirmStore). Mounted

@@ -1,5 +1,5 @@
 import { Mail } from 'lucide-react';
-import { toast } from '../store/toastStore';
+import { toast } from '../../store/toastStore';
 
 // Brand glyphs (Simple Icons paths, 24x24) so we don't pull in an icon library.
 const BRAND = {

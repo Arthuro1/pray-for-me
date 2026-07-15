@@ -4,7 +4,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { movementPassage } from '../lib/prayerMovements';
-import Encouragement from './Encouragement';
+import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
 
 // "Pray now" meets the user where they are, then gently invites them deeper:

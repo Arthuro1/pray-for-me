@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Loader2, Send } from 'lucide-react';
-import Avatar from './Avatar';
+import Avatar from './shared/Avatar';
 import AnonymousToggle from './AnonymousToggle';
-import EmptyState from './EmptyState';
+import EmptyState from './shared/EmptyState';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';

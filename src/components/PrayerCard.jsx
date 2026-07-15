@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { getAIRecommendations } from '../aiRecommendations';
-import AiDisclaimer from './AiDisclaimer';
+import AiDisclaimer from './shared/AiDisclaimer';
 import VerseAccordion from './VerseAccordion';
 import { t } from '../i18n';
 import useTranslationStore from '../store/translationStore';

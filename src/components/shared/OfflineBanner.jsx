@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WifiOff } from 'lucide-react';
-import usePrayerStore from '../store/prayerStore';
-import { t } from '../i18n';
+import usePrayerStore from '../../store/prayerStore';
+import { t } from '../../i18n';
 
 export default function OfflineBanner() {
   const lang = usePrayerStore(s => s.settings.language) || 'fr';

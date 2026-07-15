@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { HandHeart, Loader2 } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
-import Avatar from './Avatar';
+import Avatar from './shared/Avatar';
 
 // The primary "pray together" affordance on a community prayer: a prominent
 // "I'm praying" action, a presence row that shows who else is praying (reusing
