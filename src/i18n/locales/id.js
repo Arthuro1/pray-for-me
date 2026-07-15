@@ -266,6 +266,8 @@ export default {
   "beFirst": "Jadilah yang pertama berbagi",
   "memberUpdates": "Kata-kata anggota",
   "updateSyncing": "Menyinkronkan… kata ini belum tersedia di perangkat ini.",
+  "deleteWord": "Hapus kata",
+  "wordDeleted": "Kata dihapus",
   "leaveGroup": "Tinggalkan grup",
   "groupNotFound": "Grup tidak ditemukan",
   "alreadyMember": "Anda sudah menjadi anggota",

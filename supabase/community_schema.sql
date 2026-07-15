@@ -178,6 +178,15 @@ create policy "Group members can add updates" on community_updates
     )
     and user_id = auth.uid()
   );
+-- Authors (and group admins) can delete a word — get_my_admin_group_ids is
+-- defined earlier and is SECURITY DEFINER, so it won't recurse on RLS.
+create policy "Authors and admins can delete updates" on community_updates
+  for delete using (
+    user_id = auth.uid()
+    or community_prayer_id in (
+      select id from community_prayers where group_id in (select get_my_admin_group_ids())
+    )
+  );
 
 -- prayer_reactions: group members only
 create policy "Group members can see reactions" on prayer_reactions

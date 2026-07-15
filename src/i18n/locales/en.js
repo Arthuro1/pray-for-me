@@ -231,6 +231,8 @@ export default {
   "beFirst": "Be the first to share",
   "memberUpdates": "Member updates",
   "updateSyncing": "Syncing… this word isn't available on this device yet.",
+  "deleteWord": "Delete word",
+  "wordDeleted": "Word deleted",
   "leaveGroup": "Leave group",
   "groupNotFound": "Group not found",
   "alreadyMember": "You're already a member",

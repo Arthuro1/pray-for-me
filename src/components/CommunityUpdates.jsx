@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Loader2, Send } from 'lucide-react';
+import { Loader2, Send, Trash2 } from 'lucide-react';
 import Avatar from './shared/Avatar';
 import AnonymousToggle from './AnonymousToggle';
 import EmptyState from './shared/EmptyState';
+import ConfirmDialog from './shared/ConfirmDialog';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';
@@ -10,10 +11,13 @@ import { t } from '../i18n';
 // Member updates on a community prayer — encouragements, verses, words. The list
 // lives in the parent (which also feeds it to the translation toggle); posting a
 // word is delegated through onSend so the parent stays the source of truth.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, onSend }) {
+// A word can be removed by its author or a group admin (isAdmin) via onDelete.
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete }) {
   const [text, setText] = useState('');
   const [anon, setAnon] = useState(false);
   const [sending, setSending] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const send = async () => {
     if (!text.trim() || sending) return;
@@ -23,9 +27,31 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
     setSending(false);
   };
 
+  const canDelete = (u) => !!onDelete && !u._locked && (u.user_id === userId || isAdmin);
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDelete) return;
+    setDeleting(true);
+    await onDelete(confirmDelete.id);
+    setDeleting(false);
+    setConfirmDelete(null);
+  };
+
   return (
     <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
       <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'memberUpdates')}</p>
+
+      {confirmDelete && (
+        <ConfirmDialog
+          title={t(lang, 'deleteWord')}
+          message={t(lang, 'deleteWarning')}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          loading={deleting}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setConfirmDelete(null)}
+        />
+      )}
 
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
@@ -34,9 +60,9 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
       ) : (
         <div className="space-y-3 mb-3">
           {updates.map((u) => (
-            <div key={u.id} className="flex gap-2.5">
+            <div key={u.id} className="group flex gap-2.5">
               <Avatar name={u.is_anonymous ? '?' : u.author_name} size={28} anonymous={u.is_anonymous} />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
                   {communityAuthor(u, userId, lang)}{' · '}{timeAgo(u.created_at, lang)}
                 </p>
@@ -46,6 +72,17 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                   <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
                 )}
               </div>
+              {canDelete(u) && (
+                <button
+                  onClick={() => setConfirmDelete(u)}
+                  title={t(lang, 'deleteWord')}
+                  aria-label={t(lang, 'deleteWord')}
+                  className="shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity self-start mt-0.5"
+                  style={{ color: 'var(--text-3)' }}
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
             </div>
           ))}
         </div>

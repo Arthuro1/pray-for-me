@@ -106,7 +106,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       activeGroupId: s.activeGroupId,
@@ -116,6 +116,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       fetchUserReactions: s.fetchUserReactions,
       fetchPrayerUpdates: s.fetchPrayerUpdates,
       addUpdate: s.addUpdate,
+      deleteCommunityUpdate: s.deleteCommunityUpdate,
       addTestimony: s.addTestimony,
       updatePrayer: s.updatePrayer,
       deleteCommunityPrayer: s.deleteCommunityPrayer,
@@ -167,6 +168,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous });
     // Re-fetch so the timeline reflects the (possibly synced) update.
     setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
+  };
+
+  const handleDeleteWord = async (updateId) => {
+    // Optimistically drop it so the row disappears without waiting on the refetch.
+    setCommunityUpdates((prev) => prev.filter((u) => u.id !== updateId));
+    const res = await deleteCommunityUpdate(updateId, communityPrayer.id);
+    if (res?.error) {
+      toast.error(t(lang, 'errorGeneric'));
+      setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
+      return;
+    }
+    toast.success(t(lang, 'wordDeleted'));
   };
 
   const handlePostCommunityTestimony = async () => {
@@ -663,72 +676,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-
-        {/* ── Per-prayer follow-up reminder (own personal prayers only) ── */}
-        {!isCommunity && !savedCopy && !isAnswered && (
-          <FollowUpBanner
-            prayer={livePrayer}
-            lang={lang}
-            onAddUpdate={() => {
-              const el = document.getElementById('pd-updates');
-              el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el?.querySelector('input')?.focus();
-            }}
-            onMarkAnswered={handleMarkAnswered}
-          />
-        )}
-
-        {/* ── Saved-from-community: read-only follow indicator ── */}
-        {savedCopy && (
-          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
-            <Users size={12} style={{ color: 'var(--accent)' }} /> {t(lang, 'followsGroup')}
-          </p>
-        )}
-
-        {/* ── Community mode: pray-together (primary action + who's praying) ── */}
-        {isCommunity && (
-          <PrayTogetherCard
-            communityPrayer={communityPrayer}
-            count={communityReactionCount}
-            hasReacted={communityHasReacted}
-            busy={togglingPraying}
-            lang={lang}
-            user={user}
-            onTogglePraying={handleTogglePraying}
-          />
-        )}
-
-        {/* Follow this prayer for update / answered / testimony notifications.
-            Reversible surface for the auto-follow that happens on "I'm praying". */}
-        {isCommunity && user?.id && (
-          <div className="flex items-center justify-end mb-4">
-            <FollowPrayerButton userId={user.id} prayerId={communityPrayer.id} lang={lang} />
-          </div>
-        )}
-
-        {/* ── Community mode: prayer-chain calendar (claim a day) ── */}
-        {isCommunity && (
-          <GroupPrayerCalendar
-            communityPrayer={communityPrayer}
-            groupId={communityPrayer.group_id}
-            lang={lang}
-            user={user}
-          />
-        )}
-
-        {/* ── Community mode: member updates ── */}
-        {isCommunity && (
-          <CommunityUpdates
-            updates={communityUpdates}
-            loading={loadingUpdates}
-            loc={loc}
-            lang={lang}
-            userId={user?.id}
-            onSend={handleSendWord}
-          />
-        )}
-
-        {/* ── Prayer points + AI suggestions (both modes) ── */}
+        {/* ── Prayer points + AI suggestions (both modes) — kept directly after
+            the request details so the "how to pray" points read right off the
+            description, before the pray-together / updates / calendar sections. ── */}
         <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
@@ -948,6 +898,72 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )
           )}
         </div>
+
+        {/* ── Per-prayer follow-up reminder (own personal prayers only) ── */}
+        {!isCommunity && !savedCopy && !isAnswered && (
+          <FollowUpBanner
+            prayer={livePrayer}
+            lang={lang}
+            onAddUpdate={() => {
+              const el = document.getElementById('pd-updates');
+              el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el?.querySelector('input')?.focus();
+            }}
+            onMarkAnswered={handleMarkAnswered}
+          />
+        )}
+
+        {/* ── Saved-from-community: read-only follow indicator ── */}
+        {savedCopy && (
+          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
+            <Users size={12} style={{ color: 'var(--accent)' }} /> {t(lang, 'followsGroup')}
+          </p>
+        )}
+
+        {/* ── Community mode: pray-together (primary action + who's praying) ── */}
+        {isCommunity && (
+          <PrayTogetherCard
+            communityPrayer={communityPrayer}
+            count={communityReactionCount}
+            hasReacted={communityHasReacted}
+            busy={togglingPraying}
+            lang={lang}
+            user={user}
+            onTogglePraying={handleTogglePraying}
+          />
+        )}
+
+        {/* Follow this prayer for update / answered / testimony notifications.
+            Reversible surface for the auto-follow that happens on "I'm praying". */}
+        {isCommunity && user?.id && (
+          <div className="flex items-center justify-end mb-4">
+            <FollowPrayerButton userId={user.id} prayerId={communityPrayer.id} lang={lang} />
+          </div>
+        )}
+
+        {/* ── Community mode: prayer-chain calendar (claim a day) ── */}
+        {isCommunity && (
+          <GroupPrayerCalendar
+            communityPrayer={communityPrayer}
+            groupId={communityPrayer.group_id}
+            lang={lang}
+            user={user}
+          />
+        )}
+
+        {/* ── Community mode: member updates ── */}
+        {isCommunity && (
+          <CommunityUpdates
+            updates={communityUpdates}
+            loading={loadingUpdates}
+            loc={loc}
+            lang={lang}
+            userId={user?.id}
+            isAdmin={isGroupAdmin}
+            onSend={handleSendWord}
+            onDelete={handleDeleteWord}
+          />
+        )}
 
         {/* ── Community mode: testimonies posted for this prayer ── */}
         {isCommunity && (

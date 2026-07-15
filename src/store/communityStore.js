@@ -457,6 +457,18 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
+  // Delete a member's word. RLS lets the update's author or a group admin remove
+  // it; passing prayerId lets us refresh the prayer's update count afterwards.
+  deleteCommunityUpdate: async (updateId, prayerId) => {
+    const { error } = await supabase.from('community_updates').delete().eq('id', updateId);
+    if (error) return toError(error);
+    if (prayerId) {
+      const updated = await fetchPrayerWithCounts(prayerId);
+      if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
+    }
+    return {};
+  },
+
   fetchTestimonies: async (groupId) => {
     const { data } = await supabase
       .from('testimonies')

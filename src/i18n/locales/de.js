@@ -267,6 +267,8 @@ export default {
   "beFirst": "Sei der Erste, der teilt",
   "memberUpdates": "Mitglieder-Updates",
   "updateSyncing": "Wird synchronisiert… dieses Wort ist auf diesem Gerät noch nicht verfügbar.",
+  "deleteWord": "Wort löschen",
+  "wordDeleted": "Wort gelöscht",
   "leaveGroup": "Gruppe verlassen",
   "groupNotFound": "Gruppe nicht gefunden",
   "alreadyMember": "Du bist bereits Mitglied",

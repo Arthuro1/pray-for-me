@@ -266,6 +266,8 @@ export default {
   "beFirst": "첫 번째로 나눠보세요",
   "memberUpdates": "멤버들의 말씀",
   "updateSyncing": "동기화 중… 이 말씀은 아직 이 기기에서 볼 수 없습니다.",
+  "deleteWord": "한마디 삭제",
+  "wordDeleted": "한마디가 삭제되었습니다",
   "leaveGroup": "그룹 나가기",
   "groupNotFound": "그룹을 찾을 수 없습니다",
   "alreadyMember": "이미 멤버입니다",

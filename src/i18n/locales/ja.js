@@ -267,6 +267,8 @@ export default {
   "beFirst": "最初に共有する",
   "memberUpdates": "メンバーの言葉",
   "updateSyncing": "同期中… この言葉はまだこの端末で表示できません。",
+  "deleteWord": "言葉を削除",
+  "wordDeleted": "言葉を削除しました",
   "leaveGroup": "グループを退出",
   "groupNotFound": "グループが見つかりません",
   "alreadyMember": "すでにメンバーです",

@@ -266,6 +266,8 @@ export default {
   "beFirst": "Будьте первым, кто поделится",
   "memberUpdates": "Слова членов",
   "updateSyncing": "Синхронизация… это слово пока недоступно на этом устройстве.",
+  "deleteWord": "Удалить слово",
+  "wordDeleted": "Слово удалено",
   "leaveGroup": "Покинуть группу",
   "groupNotFound": "Группа не найдена",
   "alreadyMember": "Вы уже являетесь членом",

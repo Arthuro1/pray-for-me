@@ -266,6 +266,8 @@ export default {
   "beFirst": "የመጀመሪያ አጋሪ ሁን",
   "memberUpdates": "የአባላት ቃላት",
   "updateSyncing": "በማመሳሰል ላይ… ይህ ቃል በዚህ መሣሪያ ላይ ገና አልተገኘም።",
+  "deleteWord": "ቃል ሰርዝ",
+  "wordDeleted": "ቃል ተሰርዟል",
   "leaveGroup": "ቡድኑን ለቅቅ",
   "groupNotFound": "ቡድን አልተገኘም",
   "alreadyMember": "አስቀድሞ አባል ነዎት",

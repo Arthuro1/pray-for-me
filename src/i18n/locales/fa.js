@@ -266,6 +266,8 @@ export default {
   "beFirst": "اولین نفر باش که به اشتراک می‌گذارد",
   "memberUpdates": "کلمات اعضا",
   "updateSyncing": "در حال همگام‌سازی… این پیام هنوز روی این دستگاه در دسترس نیست.",
+  "deleteWord": "حذف کلمه",
+  "wordDeleted": "کلمه حذف شد",
   "leaveGroup": "ترک گروه",
   "groupNotFound": "گروه پیدا نشد",
   "alreadyMember": "شما در حال حاضر عضو هستید",
