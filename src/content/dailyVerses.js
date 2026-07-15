@@ -55,6 +55,27 @@ export const BOOK_NAMES = {
   '1CH': { fr: '1 Chroniques', en: '1 Chronicles', de: '1. Chronik', pt: '1 Crônicas', zh: '历代志上', es: '1 Crónicas', hi: '1 इतिहास', ja: '歴代誌第一', sw: '1 Nyakati', am: '1ኛ ዜና መዋዕል', id: '1 Tawarikh', tl: '1 Cronica', ko: '역대상', ru: '1 Паралипоменон', ar: '1 أخبار الأيام', fa: 'اول تواریخ' },
   NEH: { fr: 'Néhémie', en: 'Nehemiah', de: 'Nehemia', pt: 'Neemias', zh: '尼希米记', es: 'Nehemías', hi: 'नहेमायाह', ja: 'ネヘミヤ記', sw: 'Nehemia', am: 'ነህምያ', id: 'Nehemia', tl: 'Nehemias', ko: '느헤미야', ru: 'Неемия', ar: 'نحميا', fa: 'نحمیا' },
   ZEP: { fr: 'Sophonie', en: 'Zephaniah', de: 'Zefanja', pt: 'Sofonias', zh: '西番雅书', es: 'Sofonías', hi: 'सपन्याह', ja: 'ゼパニヤ書', sw: 'Sefania', am: 'ሶፎንያስ', id: 'Zefanya', tl: 'Zefanias', ko: '스바냐', ru: 'Софония', ar: 'صفنيا', fa: 'صفنیا' },
+  // Books referenced by the authored prayer plans and Grow-tab teaching content
+  // (localizeRef in teaching/pick.js). Extending BOOK_NAMES — the single source of
+  // localized book names — lets those references render in every language, not just
+  // English/French. Non-en/fr names follow the same conventions as the rows above
+  // (German Pentateuch "N. Mose", Persian spelled-out ordinals, Russian Synodal
+  // numbering where 1 Kings = 3 Царств); AI-drafted, pending native review.
+  GEN: { fr: 'Genèse', en: 'Genesis', de: '1. Mose', pt: 'Gênesis', zh: '创世记', es: 'Génesis', hi: 'उत्पत्ति', ja: '創世記', sw: 'Mwanzo', am: 'ዘፍጥረት', id: 'Kejadian', tl: 'Genesis', ko: '창세기', ru: 'Бытие', ar: 'تكوين', fa: 'پیدایش' },
+  EXO: { fr: 'Exode', en: 'Exodus', de: '2. Mose', pt: 'Êxodo', zh: '出埃及记', es: 'Éxodo', hi: 'निर्गमन', ja: '出エジプト記', sw: 'Kutoka', am: 'ዘጸአት', id: 'Keluaran', tl: 'Exodo', ko: '출애굽기', ru: 'Исход', ar: 'خروج', fa: 'خروج' },
+  LEV: { fr: 'Lévitique', en: 'Leviticus', de: '3. Mose', pt: 'Levítico', zh: '利未记', es: 'Levítico', hi: 'लैव्यव्यवस्था', ja: 'レビ記', sw: 'Mambo ya Walawi', am: 'ዘሌዋውያን', id: 'Imamat', tl: 'Levitico', ko: '레위기', ru: 'Левит', ar: 'اللاويين', fa: 'لاویان' },
+  NUM: { fr: 'Nombres', en: 'Numbers', de: '4. Mose', pt: 'Números', zh: '民数记', es: 'Números', hi: 'गिनती', ja: '民数記', sw: 'Hesabu', am: 'ዘኍልቍ', id: 'Bilangan', tl: 'Mga Bilang', ko: '민수기', ru: 'Числа', ar: 'العدد', fa: 'اعداد' },
+  '1KI': { fr: '1 Rois', en: '1 Kings', de: '1. Könige', pt: '1 Reis', zh: '列王纪上', es: '1 Reyes', hi: '1 राजा', ja: '列王記第一', sw: '1 Wafalme', am: '1ኛ ነገሥት', id: '1 Raja-raja', tl: '1 Mga Hari', ko: '열왕기상', ru: '3 Царств', ar: '1 ملوك', fa: 'اول پادشاهان' },
+  '2CH': { fr: '2 Chroniques', en: '2 Chronicles', de: '2. Chronik', pt: '2 Crônicas', zh: '历代志下', es: '2 Crónicas', hi: '2 इतिहास', ja: '歴代誌第二', sw: '2 Nyakati', am: '2ኛ ዜና መዋዕል', id: '2 Tawarikh', tl: '2 Cronica', ko: '역대하', ru: '2 Паралипоменон', ar: '2 أخبار الأيام', fa: 'دوم تواریخ' },
+  EST: { fr: 'Esther', en: 'Esther', de: 'Ester', pt: 'Ester', zh: '以斯帖记', es: 'Ester', hi: 'एस्तेर', ja: 'エステル記', sw: 'Esta', am: 'አስቴር', id: 'Ester', tl: 'Ester', ko: '에스더', ru: 'Есфирь', ar: 'أستير', fa: 'استر' },
+  JOB: { fr: 'Job', en: 'Job', de: 'Hiob', pt: 'Jó', zh: '约伯记', es: 'Job', hi: 'अय्यूब', ja: 'ヨブ記', sw: 'Ayubu', am: 'ኢዮብ', id: 'Ayub', tl: 'Job', ko: '욥기', ru: 'Иов', ar: 'أيوب', fa: 'ایوب' },
+  ECC: { fr: 'Ecclésiaste', en: 'Ecclesiastes', de: 'Prediger', pt: 'Eclesiastes', zh: '传道书', es: 'Eclesiastés', hi: 'सभोपदेशक', ja: '伝道者の書', sw: 'Mhubiri', am: 'መክብብ', id: 'Pengkhotbah', tl: 'Mangangaral', ko: '전도서', ru: 'Екклесиаст', ar: 'الجامعة', fa: 'جامعه' },
+  JOL: { fr: 'Joël', en: 'Joel', de: 'Joel', pt: 'Joel', zh: '约珥书', es: 'Joel', hi: 'योएल', ja: 'ヨエル書', sw: 'Yoeli', am: 'ኢዮኤል', id: 'Yoël', tl: 'Joel', ko: '요엘', ru: 'Иоиль', ar: 'يوئيل', fa: 'یوئیل' },
+  HAB: { fr: 'Habacuc', en: 'Habakkuk', de: 'Habakuk', pt: 'Habacuque', zh: '哈巴谷书', es: 'Habacuc', hi: 'हबक्कूक', ja: 'ハバクク書', sw: 'Habakuki', am: 'ዕንባቆም', id: 'Habakuk', tl: 'Habacuc', ko: '하박국', ru: 'Аввакум', ar: 'حبقوق', fa: 'حبقوق' },
+  DAN: { fr: 'Daniel', en: 'Daniel', de: 'Daniel', pt: 'Daniel', zh: '但以理书', es: 'Daniel', hi: 'दानिय्येल', ja: 'ダニエル書', sw: 'Danieli', am: 'ዳንኤል', id: 'Daniel', tl: 'Daniel', ko: '다니엘', ru: 'Даниил', ar: 'دانيال', fa: 'دانیال' },
+  ACT: { fr: 'Actes', en: 'Acts', de: 'Apostelgeschichte', pt: 'Atos', zh: '使徒行传', es: 'Hechos', hi: 'प्रेरितों के काम', ja: '使徒の働き', sw: 'Matendo', am: 'የሐዋርያት ሥራ', id: 'Kisah Para Rasul', tl: 'Mga Gawa', ko: '사도행전', ru: 'Деяния', ar: 'أعمال الرسل', fa: 'اعمال رسولان' },
+  '2PE': { fr: '2 Pierre', en: '2 Peter', de: '2. Petrus', pt: '2 Pedro', zh: '彼得后书', es: '2 Pedro', hi: '2 पतरस', ja: '2ペテロ', sw: '2 Petro', am: '2ኛ ጴጥሮስ', id: '2 Petrus', tl: '2 Pedro', ko: '베드로후서', ru: '2 Петра', ar: '2 بطرس', fa: 'دوم پطرس' },
+  REV: { fr: 'Apocalypse', en: 'Revelation', de: 'Offenbarung', pt: 'Apocalipse', zh: '启示录', es: 'Apocalipsis', hi: 'प्रकाशितवाक्य', ja: '黙示録', sw: 'Ufunuo', am: 'ራእይ', id: 'Wahyu', tl: 'Pahayag', ko: '요한계시록', ru: 'Откровение', ar: 'رؤيا', fa: 'مکاشفه' },
 };
 
 // Vetted, prayer/faith/trust/thanksgiving-themed references grouped by book so

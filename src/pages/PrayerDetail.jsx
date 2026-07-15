@@ -22,7 +22,7 @@ import { scheduleSummary } from '../lib/scheduleDraft';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { planDayContent } from '../content/prayerPlans';
-import { pick } from '../content/teaching';
+import { pick, localizeRef } from '../content/teaching';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
@@ -596,14 +596,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 {t(lang, 'planDayOf', { n, total: livePrayer.schedule.end?.count || '' })}
               </p>
               <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(content.theme, lang)}</p>
-              <VerseAccordion reference={content.ref} lang={lang}>
+              <VerseAccordion reference={localizeRef(content.ref, lang)} lang={lang}>
                 {({ toggle }) => (
                   <button
                     onClick={toggle}
                     className="text-xs flex items-center gap-1.5"
                     style={{ color: 'var(--accent)' }}
                   >
-                    <BookOpen size={12} /> {content.ref}
+                    <BookOpen size={12} /> {localizeRef(content.ref, lang)}
                   </button>
                 )}
               </VerseAccordion>

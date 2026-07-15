@@ -6,6 +6,7 @@
 // to English/French so the teaching is never shown blank or half-translated. We
 // deliberately keep doctrine out of the AI translation pipeline — sound teaching is
 // authored and reviewed, not generated at runtime.
+import { BOOK_NAMES } from '../dailyVerses';
 
 // Resolve a localized field of shape { en, fr } to the active language, falling
 // back to English, then to whatever is present. Accepts plain strings too.
@@ -15,32 +16,32 @@ export function pick(field, lang) {
   return field[lang] ?? field.en ?? field.fr ?? '';
 }
 
-// Bible book names, English → French. Only the languages we author in need a
-// mapping; all other languages read the English reference (still a valid link).
-const FR_BOOKS = {
-  Genesis: 'Genèse', Exodus: 'Exode', Leviticus: 'Lévitique', Numbers: 'Nombres',
-  Deuteronomy: 'Deutéronome', Joshua: 'Josué', Judges: 'Juges', Ruth: 'Ruth',
-  Samuel: 'Samuel', Kings: 'Rois', Chronicles: 'Chroniques', Ezra: 'Esdras',
-  Nehemiah: 'Néhémie', Esther: 'Esther', Job: 'Job', Psalm: 'Psaume',
-  Psalms: 'Psaumes', Proverbs: 'Proverbes', Ecclesiastes: 'Ecclésiaste',
-  Isaiah: 'Ésaïe', Jeremiah: 'Jérémie', Lamentations: 'Lamentations',
-  Ezekiel: 'Ézéchiel', Daniel: 'Daniel', Hosea: 'Osée', Joel: 'Joël',
-  Amos: 'Amos', Jonah: 'Jonas', Micah: 'Michée', Habakkuk: 'Habacuc',
-  Zechariah: 'Zacharie', Malachi: 'Malachie', Matthew: 'Matthieu', Mark: 'Marc',
-  Luke: 'Luc', John: 'Jean', Acts: 'Actes', Romans: 'Romains',
-  Corinthians: 'Corinthiens', Galatians: 'Galates', Ephesians: 'Éphésiens',
-  Philippians: 'Philippiens', Colossians: 'Colossiens', Thessalonians: 'Thessaloniciens',
-  Timothy: 'Timothée', Titus: 'Tite', Philemon: 'Philémon', Hebrews: 'Hébreux',
-  James: 'Jacques', Peter: 'Pierre', Jude: 'Jude', Revelation: 'Apocalypse',
-};
+// English book name → USFM code, built from BOOK_NAMES (the single source of
+// localized book names, shared with the daily-verse pipeline). Teaching and plan
+// references are authored in English, so this reverse index is all we need to look
+// up a localized name for any of the 16 supported languages.
+const CODE_BY_EN = (() => {
+  const idx = {};
+  for (const [code, names] of Object.entries(BOOK_NAMES)) {
+    if (names.en) idx[names.en] = code;
+  }
+  // "Psalms" is a common alternate spelling of the authored "Psalm".
+  if (idx.Psalm) idx.Psalms = idx.Psalm;
+  return idx;
+})();
 
-// Localize a reference's book name, keeping the chapter:verse part intact.
-// "1 Corinthians 13:4-7" → "1 Corinthiens 13:4-7" (fr). English/other: unchanged.
+// Localize a reference's book name into the active language, keeping the
+// chapter:verse part intact: "1 Corinthians 13:4-7" → "1 Corinthiens 13:4-7" (fr),
+// "哥林多前书 13:4-7" (zh), "고린도전서 13:4-7" (ko). Falls back to the original
+// (English) reference when the book isn't in BOOK_NAMES or the language lacks a
+// name for it — still a valid citation and Bible.com link.
 export function localizeRef(ref, lang) {
-  if (!ref || lang !== 'fr') return ref || '';
-  const m = ref.match(/^(\d\s)?([A-Za-z]+(?:\s[A-Za-z]+)*)\s+(\d.*)$/);
+  if (!ref) return '';
+  if (!lang || lang === 'en') return ref;
+  const m = /^\s*(.+?)\s+(\d.*)$/.exec(ref);
   if (!m) return ref;
-  const [, prefix = '', book, rest] = m;
-  const fr = FR_BOOKS[book];
-  return fr ? `${prefix}${fr} ${rest}` : ref;
+  const [, book, rest] = m;
+  const code = CODE_BY_EN[book];
+  const name = code && BOOK_NAMES[code]?.[lang];
+  return name ? `${name} ${rest}` : ref;
 }
