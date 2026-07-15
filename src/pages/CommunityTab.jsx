@@ -304,20 +304,29 @@ function AddFriendModal({ lang, userId, onClose }) {
   const sendFriendRequest = useCommunityStore((s) => s.sendFriendRequest);
   const sendFriendRequestToId = useCommunityStore((s) => s.sendFriendRequestToId);
   const fetchFriendSuggestions = useCommunityStore((s) => s.fetchFriendSuggestions);
+  const fetchSentFriendRequests = useCommunityStore((s) => s.fetchSentFriendRequests);
+  const rejectFriendRequest = useCommunityStore((s) => s.rejectFriendRequest);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [done, setDone] = useState(false);
   const [suggestions, setSuggestions] = useState(null); // null = loading
+  const [sent, setSent] = useState([]); // outgoing requests still awaiting a response
   const [addedIds, setAddedIds] = useState(new Set());
   const [busyId, setBusyId] = useState(null);
+  const [cancelingId, setCancelingId] = useState(null);
   const [showQR, setShowQR] = useState(false);
 
   const friendUrl = `${window.location.origin}/community/add-friend/${userId}`;
 
+  const loadSent = useCallback(
+    () => fetchSentFriendRequests(userId).then((r) => setSent(r.requests || [])),
+    [fetchSentFriendRequests, userId],
+  );
+
   useEffect(() => {
     fetchFriendSuggestions(userId).then((r) => setSuggestions(r.suggestions || []));
-  }, [userId]);
+    loadSent();
+  }, [userId, loadSent]);
 
   const errorText = {
     notFound: t(lang, 'userNotFound'),
@@ -334,7 +343,9 @@ function AddFriendModal({ lang, userId, onClose }) {
     const { error: err } = await sendFriendRequest(value, userId);
     setLoading(false);
     if (err) { setError(errorText[err] || err); return; }
-    setDone(true);
+    setEmail('');
+    loadSent();
+    toast.success(t(lang, 'requestSent'));
   };
 
   const handleAddSuggestion = async (id) => {
@@ -343,18 +354,22 @@ function AddFriendModal({ lang, userId, onClose }) {
     setBusyId(null);
     if (err) { toast.error(errorText[err] || t(lang, 'errorGeneric')); return; }
     setAddedIds((prev) => new Set([...prev, id]));
+    loadSent();
     toast.success(t(lang, 'requestSent'));
+  };
+
+  const handleCancel = async (req) => {
+    setCancelingId(req.id);
+    const { error: err } = await rejectFriendRequest(req.id);
+    setCancelingId(null);
+    if (err) { toast.error(t(lang, 'errorGeneric')); return; }
+    setSent((prev) => prev.filter((r) => r.id !== req.id));
+    toast.success(t(lang, 'requestCanceled'));
   };
 
   return (
     <Modal title={t(lang, 'addFriend')} lang={lang} onClose={onClose}>
-      {done ? (
-        <div className="text-center py-4">
-          <p className="text-sm mb-4" style={{ color: 'var(--text-1)' }}>{t(lang, 'requestSent')}</p>
-          <button onClick={onClose} className="px-5 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>{t(lang, 'close')}</button>
-        </div>
-      ) : (
-        <div className="space-y-4">
+      <div className="space-y-4">
           {/* Suggestions from shared groups */}
           {suggestions && suggestions.length > 0 && (
             <div>
@@ -376,6 +391,30 @@ function AddFriendModal({ lang, userId, onClose }) {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {/* Pending requests you've sent that haven't been accepted yet */}
+          {sent.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'sentRequests')}</p>
+              <div className="space-y-2 max-h-44 overflow-y-auto">
+                {sent.map((r) => (
+                  <div key={r.id} className="flex items-center justify-between gap-3 p-2 rounded-xl" style={CARD_STYLE}>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar name={r.toName} size={32} />
+                      <div className="min-w-0">
+                        <span className="block text-sm truncate" style={{ color: 'var(--text-1)' }}>{r.toName}</span>
+                        <span className="block text-xs truncate" style={{ color: 'var(--text-3)' }}>{t(lang, 'awaitingResponse')}</span>
+                      </div>
+                    </div>
+                    <button onClick={() => handleCancel(r)} disabled={cancelingId === r.id}
+                      className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50" style={SUBTLE_BTN}>
+                      {cancelingId === r.id ? <Loader2 size={13} className="animate-spin" /> : t(lang, 'cancel')}
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -411,8 +450,7 @@ function AddFriendModal({ lang, userId, onClose }) {
               </div>
             )}
           </div>
-        </div>
-      )}
+      </div>
     </Modal>
   );
 }

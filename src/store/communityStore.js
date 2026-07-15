@@ -645,6 +645,19 @@ const useCommunityStore = create((set, get) => ({
     return { requests: (data || []).map(r => ({ ...r, fromName: nameOf(r.from_user_id) })) };
   },
 
+  // Outgoing requests the user has sent that haven't been accepted yet,
+  // enriched with the recipient's display name. Cancel one by deleting it
+  // with rejectFriendRequest (the sender is allowed to delete by RLS).
+  fetchSentFriendRequests: async (userId) => {
+    const { data, error } = await supabase
+      .from('friend_requests')
+      .select('*')
+      .eq('from_user_id', userId);
+    if (error) return { error: error.message };
+    const nameOf = await resolveNames((data || []).map(r => r.to_user_id));
+    return { requests: (data || []).map(r => ({ ...r, toName: nameOf(r.to_user_id) })) };
+  },
+
   // Idempotent: re-inviting someone who already has a pending invitation is a
   // no-op instead of a 409 conflict on the (group_id, invited_user_id) unique key.
   inviteToGroup: async (groupId, friendId, invitedBy) => {
