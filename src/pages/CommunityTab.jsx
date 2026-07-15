@@ -247,12 +247,12 @@ function Modal({ title, onClose, lang, children }) {
   const trapRef = useFocusTrap();
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
-      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl p-5" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-4">
+      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl flex flex-col max-h-[85vh]" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-5 pb-4 shrink-0">
           <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{title}</h3>
           <button onClick={onClose} aria-label={t(lang, 'close')} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
         </div>
-        {children}
+        <div className="px-5 pb-5 overflow-y-auto">{children}</div>
       </div>
     </div>
   );
