@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "Открыть надежду Иисуса",
   "gospelStart": "Начать путь",
   "gospelBack": "Назад",
+  "backBtn": "Назад",
   "gospelStep": "Шаг {n} из {total}",
   "gospelCompleted": "Путь пройден",
   "gospelUsePrayer": "Воспользоваться молитвой-образцом",

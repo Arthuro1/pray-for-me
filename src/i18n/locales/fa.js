@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "کشف امید در عیسی",
   "gospelStart": "آغاز سفر",
   "gospelBack": "بازگشت",
+  "backBtn": "بازگشت",
   "gospelStep": "گام {n} از {total}",
   "gospelCompleted": "سفر به پایان رسید",
   "gospelUsePrayer": "استفاده از دعای راهنما",

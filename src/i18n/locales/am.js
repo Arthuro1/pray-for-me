@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "በኢየሱስ ያለውን ተስፋ ያስሱ",
   "gospelStart": "ጉዞ ጀምር",
   "gospelBack": "ተመለስ",
+  "backBtn": "ተመለስ",
   "gospelStep": "ደረጃ {n} ከ{total}",
   "gospelCompleted": "ጉዞ ተጠናቀቀ",
   "gospelUsePrayer": "የመመሪያ ጸሎት ተጠቀም",

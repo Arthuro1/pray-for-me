@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "Menjelajahi pengharapan dalam Yesus",
   "gospelStart": "Mulai perjalanan",
   "gospelBack": "Kembali",
+  "backBtn": "Kembali",
   "gospelStep": "Langkah {n} dari {total}",
   "gospelCompleted": "Perjalanan selesai",
   "gospelUsePrayer": "Gunakan doa panduan",

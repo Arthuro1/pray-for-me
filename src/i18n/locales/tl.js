@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "Tuklasin ang pag-asa kay Jesus",
   "gospelStart": "Simulan ang paglalakbay",
   "gospelBack": "Bumalik",
+  "backBtn": "Bumalik",
   "gospelStep": "Hakbang {n} ng {total}",
   "gospelCompleted": "Natapos ang paglalakbay",
   "gospelUsePrayer": "Gumamit ng gabay na panalangin",

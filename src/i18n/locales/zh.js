@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "探索耶稣里的盼望",
   "gospelStart": "开始旅程",
   "gospelBack": "返回",
+  "backBtn": "返回",
   "gospelStep": "第 {n} 步，共 {total} 步",
   "gospelCompleted": "旅程完成",
   "gospelUsePrayer": "使用祷告范例",

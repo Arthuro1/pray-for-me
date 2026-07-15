@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Check, ChevronRight, BookOpen } from 'lucide-react';
+import { X, Check, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -63,6 +63,21 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     }
   };
 
+  // Step back through the same path `advance` walks forward. From the very first
+  // step this returns to the path picker so the whole session stays reversible.
+  // Re-entering a supplication stage lands on its LAST prayer, mirroring advance.
+  const back = () => {
+    if (currentStep <= 1) {
+      setMode(null);
+    } else if (stage === 'requests' && prayerIndex > 0) {
+      setPrayerIndex(prayerIndex - 1);
+    } else {
+      const prevStage = stages[stageIndex - 1];
+      setStageIndex(stageIndex - 1);
+      setPrayerIndex(prevStage === 'requests' ? total - 1 : 0);
+    }
+  };
+
   const overlay = (children) => (
     <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
@@ -86,6 +101,20 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     >
       {isLastStep ? <><Check size={16} /> {t(lang, 'amenBtn')}</> : <>{t(lang, 'continueBtn')} <ChevronRight size={16} /></>}
     </button>
+  );
+
+  // Footer paired with a Back control, shared by the movement and supplication views.
+  const footer = (
+    <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+      <button
+        onClick={back}
+        className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
+        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+      >
+        <ChevronLeft size={16} /> {t(lang, 'backBtn')}
+      </button>
+      {advanceButton}
+    </div>
   );
 
   // Entry: receive the burden first, then gently offer the deeper paths.
@@ -184,9 +213,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
             </VerseAccordion>
           )}
         </div>
-        <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
-          {advanceButton}
-        </div>
+        {footer}
       </>
     );
   }
@@ -258,9 +285,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         )}
       </div>
 
-      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
-        {advanceButton}
-      </div>
+      {footer}
     </>
   );
 }

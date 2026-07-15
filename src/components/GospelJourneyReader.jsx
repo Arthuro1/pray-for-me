@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, ArrowLeft, ChevronRight, ChevronDown, BookOpen, Sunrise, HandHeart, HelpCircle } from 'lucide-react';
+import { X, ArrowLeft, ChevronRight, ChevronLeft, ChevronDown, BookOpen, Sunrise, HandHeart, HelpCircle } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -277,9 +277,6 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
     <>
       <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--header)' }}>
         <div className="flex items-center justify-between mb-3">
-          <button onClick={goBack} className="flex items-center gap-2 text-sm font-medium min-h-11 pr-2" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            <ArrowLeft size={16} /> {t(lang, 'gospelBack')}
-          </button>
           <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {t(lang, 'gospelStep', { n: stepNo, total })}
           </span>
@@ -298,10 +295,17 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
         <RefPills refs={section.refs} />
       </div>
 
-      <div className="shrink-0 px-6 py-4 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <button
+          onClick={goBack}
+          className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
+          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+        >
+          <ChevronLeft size={16} /> {t(lang, 'backBtn')}
+        </button>
         <button
           onClick={goNext}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
+          className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
           style={{ background: 'var(--accent)' }}
         >
           {t(lang, 'continueBtn')} <ChevronRight size={16} />

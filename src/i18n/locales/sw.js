@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "Chunguza tumaini lililo katika Yesu",
   "gospelStart": "Anza safari",
   "gospelBack": "Rudi",
+  "backBtn": "Rudi",
   "gospelStep": "Hatua {n} kati ya {total}",
   "gospelCompleted": "Safari imekamilika",
   "gospelUsePrayer": "Tumia sala ya mwongozo",

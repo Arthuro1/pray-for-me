@@ -583,6 +583,7 @@ export default {
   "growSeekerCta": "Explorer l'espérance de Jésus",
   "gospelStart": "Commencer le parcours",
   "gospelBack": "Retour",
+  "backBtn": "Retour",
   "gospelStep": "Étape {n} sur {total}",
   "gospelCompleted": "Parcours terminé",
   "gospelUsePrayer": "Utiliser une prière guidée",

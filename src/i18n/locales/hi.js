@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "यीशु की आशा को खोजें",
   "gospelStart": "यात्रा शुरू करें",
   "gospelBack": "वापस",
+  "backBtn": "वापस",
   "gospelStep": "चरण {n}/{total}",
   "gospelCompleted": "यात्रा पूरी हुई",
   "gospelUsePrayer": "मार्गदर्शक प्रार्थना का उपयोग करें",

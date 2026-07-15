@@ -66,6 +66,18 @@ describe('GospelJourneyReader', () => {
     }
   });
 
+  it('steps back a section from the footer, and to the intro from section 1', () => {
+    setup();
+    start(); // section 1
+    cont();  // section 2
+    expect(screen.getByText(heading(1))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'backBtn')));
+    expect(screen.getByText(heading(0))).toBeTruthy(); // back on section 1
+    fireEvent.click(screen.getByText(t(lang, 'backBtn')));
+    // From section 1, Back returns to the intro (its Start button reappears).
+    expect(screen.getByText(t(lang, 'gospelStart'))).toBeTruthy();
+  });
+
   it('renders each section\'s Scripture references through the verse component', async () => {
     setup();
     start();

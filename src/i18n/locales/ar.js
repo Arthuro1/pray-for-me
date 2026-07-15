@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "استكشف الرجاء في يسوع",
   "gospelStart": "ابدأ الرحلة",
   "gospelBack": "رجوع",
+  "backBtn": "رجوع",
   "gospelStep": "الخطوة {n} من {total}",
   "gospelCompleted": "اكتملت الرحلة",
   "gospelUsePrayer": "استخدم صلاة إرشادية",

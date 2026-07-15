@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "イエスにある希望を探る",
   "gospelStart": "旅を始める",
   "gospelBack": "戻る",
+  "backBtn": "戻る",
   "gospelStep": "ステップ {n} / {total}",
   "gospelCompleted": "旅を終えました",
   "gospelUsePrayer": "祈りの例を使う",

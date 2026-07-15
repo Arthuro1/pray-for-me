@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "예수님 안의 소망 탐구하기",
   "gospelStart": "여정 시작하기",
   "gospelBack": "뒤로",
+  "backBtn": "뒤로",
   "gospelStep": "{total}단계 중 {n}단계",
   "gospelCompleted": "여정을 마쳤습니다",
   "gospelUsePrayer": "기도 예문 사용하기",

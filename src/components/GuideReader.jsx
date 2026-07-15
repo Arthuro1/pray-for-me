@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Check, ChevronRight, BookOpen } from 'lucide-react';
+import { X, Check, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -24,6 +24,9 @@ export default function GuideReader({ guide, lang, onClose }) {
   const isLastStep = index === total - 1;
 
   const advance = () => setIndex((i) => i + 1);
+  // Step back to the previous slide — from the first step this returns to the
+  // intro so the whole guide stays re-readable in either direction.
+  const back = () => setIndex((i) => i - 1);
 
   const overlay = (children) => (
     <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
@@ -46,6 +49,16 @@ export default function GuideReader({ guide, lang, onClose }) {
       style={{ background: 'var(--accent)' }}
     >
       {last ? <><Check size={16} /> {t(lang, 'amenBtn')}</> : <>{label} <ChevronRight size={16} /></>}
+    </button>
+  );
+
+  const backButton = (
+    <button
+      onClick={back}
+      className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
+      style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+    >
+      <ChevronLeft size={16} /> {t(lang, 'backBtn')}
     </button>
   );
 
@@ -119,6 +132,7 @@ export default function GuideReader({ guide, lang, onClose }) {
       </div>
 
       <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+        {backButton}
         {advanceButton(t(lang, 'continueBtn'), isLastStep)}
       </div>
     </>

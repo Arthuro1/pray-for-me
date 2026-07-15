@@ -41,6 +41,7 @@ export default {
   "growSeekerCta": "Explorar la esperanza de Jesús",
   "gospelStart": "Comenzar el recorrido",
   "gospelBack": "Atrás",
+  "backBtn": "Atrás",
   "gospelStep": "Paso {n} de {total}",
   "gospelCompleted": "Recorrido completado",
   "gospelUsePrayer": "Usar una oración guiada",
