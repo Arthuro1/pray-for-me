@@ -7,11 +7,11 @@
 // and we forward to the pinned upstream passages endpoint, returning plain text.
 const UPSTREAM = 'https://api.youversion.com/v1';
 
-// USFM passage ids look like "JHN.3.16", "1TH.5.17", "PSA.145.18" (3-char book
-// code, then chapter and optional verse). Validate before forwarding so the
-// proxy can never be pointed at an arbitrary upstream path.
+// USFM passage ids look like "JHN.3.16" (verse), "PHP.1.3-11" (range within a
+// chapter), or "PSA.100" (whole chapter — no verse). Validate before forwarding so
+// the proxy can never be pointed at an arbitrary upstream path.
 const VERSION_RE = /^\d{1,7}$/;
-const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3})?$/;
+const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3}(-\d{1,3})?)?$/;
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

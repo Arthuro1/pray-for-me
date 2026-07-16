@@ -20,15 +20,28 @@ describe('usfmFromReference — deterministic citation mapping', () => {
     expect(usfmFromReference('1 Peter 5:7')).toBe('1PE.5.7');
   });
 
-  it('uses the first verse of a range (proxy serves single verses only)', () => {
-    expect(usfmFromReference('Psalm 103:1-5')).toBe('PSA.103.1');
-    expect(usfmFromReference('Ephesians 2:8-9')).toBe('EPH.2.8');
-    expect(usfmFromReference('Esther 4:15-16')).toBe('EST.4.15');
+  it('preserves a verse range as BOOK.CH.START-END (whole passage, not just v1)', () => {
+    expect(usfmFromReference('Philippians 1:3-11')).toBe('PHP.1.3-11');
+    expect(usfmFromReference('Psalm 103:1-5')).toBe('PSA.103.1-5');
+    expect(usfmFromReference('Ephesians 2:8-9')).toBe('EPH.2.8-9');
+    expect(usfmFromReference('Esther 4:15-16')).toBe('EST.4.15-16');
+  });
+
+  it('accepts an en/em dash and stray whitespace in a range', () => {
+    expect(usfmFromReference('Philippians 1:3–11')).toBe('PHP.1.3-11'); // en dash
+    expect(usfmFromReference('Psalm 103:1 - 5')).toBe('PSA.103.1-5');
+  });
+
+  it('maps a chapter-only reference to the whole chapter (BOOK.CH)', () => {
+    expect(usfmFromReference('Psalm 100')).toBe('PSA.100');
+    expect(usfmFromReference('Psalms 23')).toBe('PSA.23');
+    expect(usfmFromReference('1 Corinthians 13')).toBe('1CO.13');
+    expect(usfmFromReference('诗篇 100')).toBe('PSA.100'); // zh, chapter only
   });
 
   it('accepts "Psalm"/"Psalms" and other common aliases', () => {
     expect(usfmFromReference('Psalms 100:4')).toBe('PSA.100.4');
-    expect(usfmFromReference('Psalm 116:1-2')).toBe('PSA.116.1');
+    expect(usfmFromReference('Psalm 116:1-2')).toBe('PSA.116.1-2');
   });
 
   it('resolves localized book names shipped in BOOK_NAMES', () => {

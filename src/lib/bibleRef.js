@@ -31,8 +31,9 @@ export function versionForLang(lang) {
   return LANG_VERSION[lang] || null;
 }
 
-// USFM passage ids: 3-char book code, chapter, optional verse — "1TH.5.17".
-const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3})?$/;
+// USFM passage ids: 3-char book code, chapter, optional verse, optional range end
+// — "1TH.5.17" (verse), "PHP.1.3-11" (range), "PSA.100" (whole chapter).
+const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3}(-\d{1,3})?)?$/;
 const cacheKey = (reference) => `usfm:${reference}`;
 
 const MODEL = 'claude-haiku-4-5-20251001';
@@ -83,15 +84,24 @@ const bookIndex = (() => {
   return idx;
 })();
 
-// Deterministically map "<Book> <chapter>:<verse>" (with optional range) to a USFM
-// passage id, or null if the book name isn't recognized. Uses the first verse of a
-// range, matching the AI fallback (the proxy serves single verses only). Anchored
-// so a trailing range like "1-5" is accepted but only its start verse is used.
+// Deterministically map a reference to a USFM passage id, PRESERVING the passage's
+// extent so the reader gets the whole thing rather than just its first verse:
+//   "Philippians 1:3-11" → "PHP.1.3-11"  (verse range within a chapter)
+//   "Philippians 4:6"    → "PHP.4.6"      (single verse)
+//   "Psalm 100"          → "PSA.100"      (whole chapter — no verse given)
+// Returns null if the book name isn't recognized. The range and chapter forms are
+// exactly what the YouVersion passages endpoint accepts (BOOK.CH.START-END and
+// BOOK.CH), so the passage resolves in full instead of collapsing to verse 1.
+// Anchored, and tolerant of an en/em dash and surrounding whitespace in the range.
 export function usfmFromReference(reference) {
-  const m = /^\s*(.+?)\s+(\d{1,3}):(\d{1,3})(?:\s*[-–]\s*\d{1,3})?\s*$/.exec(String(reference || ''));
+  const m = /^\s*(.+?)\s+(\d{1,3})(?::(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?)?\s*$/.exec(String(reference || ''));
   if (!m) return null;
   const code = bookIndex.get(normalizeBook(m[1]));
-  return code ? `${code}.${Number(m[2])}.${Number(m[3])}` : null;
+  if (!code) return null;
+  const [, , chapter, verse, verseEnd] = m;
+  if (!verse) return `${code}.${Number(chapter)}`;                                  // whole chapter
+  if (verseEnd) return `${code}.${Number(chapter)}.${Number(verse)}-${Number(verseEnd)}`; // range
+  return `${code}.${Number(chapter)}.${Number(verse)}`;                             // single verse
 }
 
 // Convert a (possibly localized) reference into a USFM passage id. This is a
@@ -118,7 +128,7 @@ export async function referenceToUsfm(reference) {
     return local;
   }
 
-  const prompt = `Convert this Bible reference to a USFM passage id of the form BOOK.CHAPTER.VERSE, using the standard 3-letter USFM book code (Genesis=GEN, Psalms=PSA, Matthew=MAT, John=JHN, Philippians=PHP, 1 Thessalonians=1TH, James=JAS). The reference may be written in any language. For a verse range, use the first verse. Reference: "${reference}". Respond ONLY with JSON: {"usfm":"<CODE.CH.V>"}`;
+  const prompt = `Convert this Bible reference to a USFM passage id using the standard 3-letter USFM book code (Genesis=GEN, Psalms=PSA, Matthew=MAT, John=JHN, Philippians=PHP, 1 Thessalonians=1TH, James=JAS). Preserve the passage's extent: use BOOK.CHAPTER.VERSE for a single verse, BOOK.CHAPTER.STARTVERSE-ENDVERSE for a verse range, and BOOK.CHAPTER (no verse) for a whole chapter. The reference may be written in any language. Reference: "${reference}". Respond ONLY with JSON: {"usfm":"<CODE.CH.V>"}`;
 
   let res;
   try {

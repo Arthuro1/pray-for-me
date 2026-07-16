@@ -54,10 +54,13 @@ function bookCode(lang, name) {
   return idx.get(name) || null;
 }
 
-// "PHP.4.6" → "PHP 4:6". Returns null for anything that isn't a single verse id.
+// "PHP.4.6" → "PHP 4:6". Returns null for anything that isn't a single verse id —
+// a whole chapter ("PSA.100") or a range ("PHP.1.3-11") deliberately does NOT map,
+// so it falls through to the runtime path that returns the full passage rather than
+// the bundle serving only one verse.
 function keyFromUsfm(usfm) {
   const p = String(usfm).split('.');
-  if (p.length < 3) return null;
+  if (p.length !== 3 || !/^\d+$/.test(p[2])) return null;
   return `${p[0]} ${Number(p[1])}:${Number(p[2])}`;
 }
 

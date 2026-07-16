@@ -26,6 +26,13 @@ describe('getBundledVerse — offline curated verse text', () => {
     expect(hit).toBeNull();
   });
 
+  it('does not match a range or whole-chapter USFM id (full-passage runtime path)', async () => {
+    // Even when the caller supplies a USFM id, a range/chapter must fall through so
+    // the reader gets the full passage instead of one bundled verse.
+    expect(await getBundledVerse({ reference: 'Philippians 1:3-11', lang: 'en', usfm: 'PHP.1.3-11' })).toBeNull();
+    expect(await getBundledVerse({ reference: 'Psalm 100', lang: 'en', usfm: 'PSA.100' })).toBeNull();
+  });
+
   it('excludes Russian Psalms (Synodal uses Septuagint numbering — unsafe)', async () => {
     // Must fall through rather than serve a wrongly-numbered verse.
     const hit = await getBundledVerse({ reference: 'Псалтирь 23:1', lang: 'ru' });
