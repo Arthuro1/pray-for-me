@@ -3,6 +3,7 @@ import { X, Check, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
 import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
@@ -30,6 +31,38 @@ const MODE_OPTIONS = [
   { mode: 'guided', titleKey: 'modeGuided', descKey: 'modeGuidedDesc' },
   { mode: 'acts', titleKey: 'modeActs', descKey: 'modeActsDesc' },
 ];
+
+// A single Scripture citation on a prayer point, shown in the reader's language.
+// Verses are stored in the language the prayer was created in; useLocalizedVerse
+// swaps in authoritative text + a localized reference for the current language when
+// one is available (offline bundle / YouVersion — never AI-translated), otherwise
+// it returns null and we keep the stored reference and wording together, so the two
+// are always one consistent pair rather than a localized ref beside stale text.
+function SessionVerse({ verse, lang }) {
+  const resolved = useLocalizedVerse(verse.ref, lang);
+  const ref = resolved?.ref ?? verse.ref;
+  const text = resolved?.text ?? verse.text;
+
+  return (
+    <div className="mt-2 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
+      {text && <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-2)' }}>"{text}"</p>}
+      {ref && (
+        <VerseAccordion reference={ref} lang={lang} initialText={text}>
+          {({ toggle }) => (
+            <button
+              onClick={toggle}
+              title={t(lang, 'readInApp')}
+              className="text-xs mt-1 flex items-center gap-1"
+              style={{ color: 'var(--accent)' }}
+            >
+              <BookOpen size={11} /> {ref}
+            </button>
+          )}
+        </VerseAccordion>
+      )}
+    </div>
+  );
+}
 
 export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete }) {
   const [mode, setMode] = useState(null);
@@ -261,23 +294,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               <div key={pp.id || i} className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
                 <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{tr(pp.title, lang)}</p>
                 {(pp.verses || []).map((v, vi) => (
-                  <div key={vi} className="mt-2 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
-                    {v.text && <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-2)' }}>"{v.text}"</p>}
-                    {v.ref && (
-                      <VerseAccordion reference={v.ref} lang={lang} initialText={v.text}>
-                        {({ toggle }) => (
-                          <button
-                            onClick={toggle}
-                            title={t(lang, 'readInApp')}
-                            className="text-xs mt-1 flex items-center gap-1"
-                            style={{ color: 'var(--accent)' }}
-                          >
-                            <BookOpen size={11} /> {v.ref}
-                          </button>
-                        )}
-                      </VerseAccordion>
-                    )}
-                  </div>
+                  <SessionVerse key={pp.id ? `${pp.id}-${vi}` : vi} verse={v} lang={lang} />
                 ))}
               </div>
             ))}

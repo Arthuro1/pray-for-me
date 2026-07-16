@@ -44,6 +44,17 @@ describe('localizeRef — book-name localization', () => {
     expect(localizeRef(undefined, undefined)).toBe('');
   });
 
+  // Prayer verses are authored in the language active at creation, so a reference
+  // may arrive in any language and still needs re-localizing to the reader's — not
+  // only English → other (the teaching-content case above).
+  it('re-localizes a reference authored in a non-English language', () => {
+    expect(localizeRef('Jean 3:16', 'en')).toBe('John 3:16');
+    expect(localizeRef('Jean 3:16', 'es')).toBe('Juan 3:16');
+    expect(localizeRef('Salmos 23:1', 'en')).toBe('Psalm 23:1');
+    expect(localizeRef('1 Corinthiens 13:4-7', 'ko')).toBe('고린도전서 13:4-7');
+    expect(localizeRef('창세기 1:1', 'fr')).toBe('Genèse 1:1');
+  });
+
   it('falls back to the original reference for an unknown book', () => {
     expect(localizeRef('Nostrabook 1:1', 'zh')).toBe('Nostrabook 1:1');
   });

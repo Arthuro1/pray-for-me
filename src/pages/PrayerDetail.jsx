@@ -37,7 +37,43 @@ import LockedNotice from '../components/LockedNotice';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
+import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import OverflowMenu from '../components/shared/OverflowMenu';
+
+// One verse pill in the point list. Verses are stored in the prayer's creation
+// language; useLocalizedVerse swaps in authoritative text + a localized reference
+// for the current language when one exists (offline bundle / YouVersion, never
+// AI-translated), else we keep the stored reference and wording together so the
+// citation always matches the text it labels. `loc` still governs the fallback
+// text so community prayers honour the "see translation" toggle; removal keeps the
+// ORIGINAL reference the row was stored with.
+function PrayerDetailVerse({ verse, lang, loc, canRemove, onRemove }) {
+  const resolved = useLocalizedVerse(verse.ref, lang);
+  const ref = resolved?.ref ?? verse.ref;
+  const text = resolved?.text ?? loc(verse.text);
+
+  return (
+    <div className="group/verse inline-flex items-start gap-1">
+      <VerseAccordion reference={ref} lang={lang} initialText={text} panelStyle={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
+        {({ toggle }) => (
+          <button
+            onClick={toggle}
+            title={t(lang, 'tipVerseToggle')}
+            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
+            style={{ background: '#f5e8a0', color: '#7a5e00' }}
+          >
+            <BookOpen size={9} /> {ref}
+          </button>
+        )}
+      </VerseAccordion>
+      {canRemove && (
+        <button onClick={onRemove} title={t(lang, 'tipRemoveVerse')} className="opacity-0 group-hover/verse:opacity-100 transition-opacity mt-1.5 shrink-0" style={{ color: '#c04040' }}>
+          <Trash2 size={11} />
+        </button>
+      )}
+    </div>
+  );
+}
 
 // communityPrayer prop switches the component to community mode
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
@@ -723,25 +759,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {verses.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {verses.map((v, i) => (
-                        <div key={i} className="group/verse inline-flex items-start gap-1">
-                          <VerseAccordion reference={v.ref} lang={lang} initialText={loc(v.text)} panelStyle={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
-                            {({ toggle }) => (
-                              <button
-                                onClick={toggle}
-                                title={t(lang, 'tipVerseToggle')}
-                                className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-                                style={{ background: '#f5e8a0', color: '#7a5e00' }}
-                              >
-                                <BookOpen size={9} /> {v.ref}
-                              </button>
-                            )}
-                          </VerseAccordion>
-                          {canRemoveContent && (
-                            <button onClick={() => handleRemoveVerse(pp.id, v.ref)} title={t(lang, 'tipRemoveVerse')} className="opacity-0 group-hover/verse:opacity-100 transition-opacity mt-1.5 shrink-0" style={{ color: '#c04040' }}>
-                              <Trash2 size={11} />
-                            </button>
-                          )}
-                        </div>
+                        <PrayerDetailVerse
+                          key={i}
+                          verse={v}
+                          lang={lang}
+                          loc={loc}
+                          canRemove={canRemoveContent}
+                          onRemove={() => handleRemoveVerse(pp.id, v.ref)}
+                        />
                       ))}
                     </div>
                   )}

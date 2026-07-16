@@ -83,6 +83,21 @@ function buildTestimonyRow(prayerId, content, created_at) {
   return { id: crypto.randomUUID(), prayer_id: prayerId, content, author_name: '', created_at };
 }
 
+// Re-attach any locally-held testimonies a freshly-fetched server prayer doesn't
+// yet include — an optimistic row (e.g. one written while marking a prayer
+// answered) whose `addTestimonyRow` write is still queued offline or mid-flush.
+// Keyed by id and append-only, so a row already persisted server-side is never
+// duplicated. Used by loadData so making server data authoritative never blanks
+// a just-written testimony from its answered prayer — mirrors the completions
+// union in loadData.
+function mergePendingTestimonies(serverPrayer, localRows) {
+  if (!localRows?.length) return serverPrayer;
+  const onServer = new Set((serverPrayer.prayer_testimonies || []).map((tm) => tm.id));
+  const pending = localRows.filter((tm) => tm.id && !onServer.has(tm.id));
+  if (pending.length === 0) return serverPrayer;
+  return { ...serverPrayer, prayer_testimonies: [...(serverPrayer.prayer_testimonies || []), ...pending] };
+}
+
 // Re-encrypts the whole SENSITIVE_FIELDS/SENSITIVE_JSON_FIELDS bundle from
 // `merged` (the prayer's current in-memory values with any pending edits
 // applied) into a single encrypted_payload, redacting every plaintext column
@@ -288,8 +303,15 @@ const usePrayerStore = create((set, get) => ({
     serverPrayers = await decryptPrayers(serverPrayers);
     const serverIds = new Set(serverPrayers.map((p) => p.id));
     const creating = pendingPrayerIds();
-    const pendingLocal = get().prayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
-    const mergedPrayers = [...pendingLocal, ...serverPrayers];
+    const localPrayers = get().prayers;
+    const pendingLocal = localPrayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
+    // Re-attach optimistic testimonies whose server write is still queued, so a
+    // just-written testimony survives this server-authoritative reconcile instead
+    // of vanishing from the reopened answered prayer (mirrors the completions
+    // union below). The hydrated snapshot carries them across a fresh session.
+    const localTestimonies = new Map(localPrayers.map((p) => [p.id, p.prayer_testimonies || []]));
+    const reconciled = serverPrayers.map((p) => mergePendingTestimonies(p, localTestimonies.get(p.id)));
+    const mergedPrayers = [...pendingLocal, ...reconciled];
 
     // Recent per-prayer completions (catch-up + rotation fairness). Best-effort:
     // offline keeps the snapshot's copy, and pending queued completions replay.
