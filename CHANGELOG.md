@@ -3,7 +3,32 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/). This project uses date-based entries.
 
-## [Unreleased] — 2026-07-06
+## [Unreleased] — 2026-07-16
+
+UX simplification pass around one goal: **first prayer within 60 seconds of registration, daily prayer within one tap.**
+
+### Changed
+- **Onboarding IS the first prayer** — the intro carousel was replaced by a single capture screen ("What would you like to pray about?", private-and-encrypted reassurance) whose primary action saves the prayer and opens a real prayer session on it immediately; "I'll do this later" skips. Reminders, AI, groups and planning now introduce themselves later, in context (`src/components/Onboarding.jsx`).
+- **Pray now starts instantly** — no upfront mode picker. Sessions open in the last-used format (requests, for a new user) and a small **Prayer format** control inside the session offers Guided and ACTS. Each prayer is recorded as prayed the moment you advance past it, so leaving a session halfway keeps the progress already made (`src/components/PrayerSession.jsx`).
+- **Today is ordered around praying** — compact greeting → "Today · N prayers" → one large Pray now → today's list → add prayer. Catch-up moved *after* the list and starts collapsed (grace, not guilt); the daily verse became a small closing card. The statistics tiles moved to the Journal; the non-interactive category chips and the persistent AI-suggest control were removed (Scripture/AI help stays available inside each prayer). After the first completed session, a one-time toast gently offers a reminder — no permission asks during onboarding (`src/pages/HomeTab.jsx`).
+- **Add prayer is one question** — "Who or what would you like to pray for?". A note and all organization (person, categories, prayer rhythm) wait behind collapsed "Add a note" / "Organize" expanders, and the button reads **Save prayer**. The rhythm question offers four everyday answers — Flexible / Daily / Weekly / Occasionally — with **Custom** opening the full recurrence editor (`src/components/PrayerForm.jsx`, `src/lib/scheduleDraft.js`).
+- **Saved screen has one decision** — "Saved privately" with exactly two actions: **Pray now** (opens a real session on the prayer just written) and Done. Scripture, reminders and sharing are surfaced from the prayer detail page instead (`src/components/PrayerSavedStep.jsx`).
+- **Four-destination navigation** — Today · Journal · Community · **More**. Grow, Plan, Notifications, Settings, data export and support live inside the new More page; Settings no longer occupies bottom-navigation space (`src/components/Layout.jsx`, `src/pages/MoreTab.jsx`).
+- **Journal = two segments** — Active | Answered, plus the at-a-glance stats that used to sit on Home. The Answered segment *is* the remembrance gallery: the standalone `/answered` page was folded in (extracted to `src/components/AnsweredGallery.jsx`; old links redirect), removing the shortcut/filter/page triplication.
+- **Settings reads as a short list** — every section starts collapsed; deep-links (`/settings#data` etc.) still force-open their target.
+- **Community leads with joining** — an empty community account now sees **Join a group** first (a new modal accepting a pasted invite link or code, reusing the same join flow as invite links), then Create group (`src/pages/CommunityTab.jsx`).
+- **Grow puts the believer's content first** — the gospel-journey invitation moved below the prayer guides as a smaller card.
+- **Signup name is explicitly optional** — the register field now reads "Display name (optional)" in all 16 languages (it was never enforced; now it says so).
+
+### Removed
+- **Default weekday categories** — new accounts no longer receive six pre-scheduled categories. An uncategorized, unscheduled prayer simply shows up daily (planner fallback), and structure arrives only when the user creates it.
+- **Example statistics on the public landing page** — the fake stats strip and its "illustrative data" caption were deleted outright.
+- The Home day-plan AI suggestion feature (`getDayPlanSuggestions`) and 28 orphaned locale keys, across all 16 languages.
+
+### i18n
+- 20 new keys × 16 languages (AI-authored, pending native review); `authNamePlaceholder` reworded in every language.
+
+## 2026-07-06
 
 ### Removed
 - **Free vs Supporter product model** — all plan-based feature gating, the Supporter membership surface (modal + Settings card), the `src/lib/plan.js` tier scaffold, the soft "Supporter" feature tags, and the supporter/feature-gate analytics events (`supporter_prompt_viewed`, `supporter_prompt_clicked`, `feature_gate_seen`) were removed from `dev`. The app now has **no active paid feature gating** — every feature is available to everyone. This work is preserved on the `feature/supporter-model-staged` branch for possible future use.
