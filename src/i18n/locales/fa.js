@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "امروز · {n} باقی مانده",
+  "todayCompleteTitle": "دعای امروز کامل شد.",
+  "prayAgain": "دوباره دعا کنید",
+  "prayedTodayLabel": "امروز دعا شده",
+  "rhythmPlanHint": "از برنامهٔ هفتگی دسته‌بندی‌های شما پیروی می‌کند — بدون دسته‌بندی هر روز بازمی‌گردد.",
+  "answeredThisWeek": "{n} پاسخ داده شده در این هفته",
+  "prayWithOthers": "با دیگران دعا کنید",
+  "communityEmptyDesc": "با پیوند یا کد دعوت به یک گروه دعا بپیوندید.",
+  "inbox": "صندوق ورودی",
+  "prayerReminders": "یادآورهای دعا",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "دوست دارید برای چه دعا کنید؟",
   "onboardCapturePlaceholder": "دعا برای سلامتی خواهرم…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "سازمان‌دهی",
   "savePrayer": "ذخیره دعا",
   "rhythmLabel": "هر چند وقت یک‌بار بازگردد؟",
-  "rhythmFlexible": "انعطاف‌پذیر",
+  "rhythmFlexible": "برنامهٔ هفتگی",
   "rhythmOccasionally": "گاه‌به‌گاه",
   "rhythmCustom": "سفارشی",
   "doneBtn": "انجام شد",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "هنوز اعلانی نیست",
   "notifEmptySub": "به‌روزرسانی‌های گروه‌ها و دوستانتان اینجا نمایش داده می‌شود.",
   "notifError": "بارگذاری اعلان‌ها ممکن نشد.",
-  "notifUnreadLabel": "اعلان‌ها ({n} خوانده‌نشده)",
+  "notifUnreadLabel": "صندوق ورودی ({n} خوانده‌نشده)",
   "notifFriendRequest": "یک درخواست دوستی جدید دارید",
   "notifGroupInvitation": "به یک گروه دعا دعوت شده‌اید",
   "notifCommunityUpdate": "دعایی که دنبال می‌کنید به‌روزرسانی شده است",

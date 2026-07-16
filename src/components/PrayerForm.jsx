@@ -12,7 +12,7 @@ import { canEncrypt } from '../lib/crypto/prayerCrypto';
 import PrayerSavedStep from './PrayerSavedStep';
 import ScheduleEditor from './ScheduleEditor';
 import CategorySelector from './CategorySelector';
-import { emptyDraft, draftFromSchedule, scheduleFromDraft, scheduleSummary, rhythmOf, draftForRhythm, RHYTHM_PRESETS } from '../lib/scheduleDraft';
+import { defaultNewDraft, draftFromSchedule, scheduleFromDraft, scheduleSummary, rhythmOf, draftForRhythm, RHYTHM_PRESETS } from '../lib/scheduleDraft';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -24,32 +24,50 @@ const RHYTHM_LABEL_KEYS = {
   occasionally: 'rhythmOccasionally',
 };
 
-function CheckboxToggle({ checked, onChange, label }) {
+// A real, keyboard- and screen-reader-operable checkbox: the native input is
+// invisible but present (focus, Space, labels all work); the styled box beside
+// it only mirrors its state and carries the visible focus ring.
+function CheckboxToggle({ id, checked, onChange, label }) {
   return (
-    <label className="flex items-center gap-2.5 cursor-pointer">
-      <div
-        className="w-5 h-5 rounded-md flex items-center justify-center shrink-0"
-        style={{ background: checked ? 'var(--accent)' : 'var(--input-bg)', border: checked ? 'none' : '0.5px solid var(--input-border)' }}
-        onClick={onChange}
-      >
-        {checked && <span className="text-white text-xs font-bold">✓</span>}
-      </div>
+    <label htmlFor={id} className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1.5">
+      <span className="relative w-5 h-5 shrink-0 flex items-center justify-center">
+        <input
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={onChange}
+          className="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <span
+          aria-hidden="true"
+          className="w-5 h-5 rounded-md flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
+          style={{ background: checked ? 'var(--accent)' : 'var(--input-bg)', border: checked ? 'none' : '0.5px solid var(--input-border)' }}
+        >
+          {checked && <span className="text-white text-xs font-bold">✓</span>}
+        </span>
+      </span>
       <span className="text-sm" style={{ color: 'var(--text-2)' }}>{label}</span>
     </label>
   );
 }
 
-// A quiet inline expander ("Add a note", "Organize") — one small tap target
-// that reveals an optional part of the form without ever demanding it.
-function Expander({ label, onOpen, icon: Icon = Plus }) {
+// A quiet inline expander ("Add a note", "Organize") — a comfortably tappable
+// full-width row that reveals an optional part of the form and can fold it away
+// again. Entered values live in the form state, so collapsing never loses them.
+function SectionToggle({ label, open, onToggle, controlsId, icon: Icon = Plus }) {
   return (
     <button
       type="button"
-      onClick={onOpen}
-      className="flex items-center gap-1.5 text-xs font-semibold"
+      onClick={onToggle}
+      aria-expanded={open}
+      aria-controls={controlsId}
+      className="w-full min-h-[44px] flex items-center justify-between gap-1.5 py-2 text-xs font-semibold"
       style={{ color: 'var(--accent)' }}
     >
-      <Icon size={14} /> {label}
+      <span className="flex items-center gap-1.5">
+        <Icon size={14} /> {label}
+      </span>
+      <ChevronDown size={14} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
     </button>
   );
 }
@@ -57,10 +75,13 @@ function Expander({ label, onOpen, icon: Icon = Plus }) {
 function initialForm(editPrayer, prefill) {
   // A new prayer may be seeded with an optional, fully-editable prefill (e.g. a
   // starter prompt from the gospel journey). Editing always wins over prefill.
+  // New prayers default to the bounded weekly rhythm (visible under Organize);
+  // an edited prayer keeps exactly the schedule it already has — including the
+  // legacy "no schedule" (weekly category plan), which is never migrated.
   if (!editPrayer) return {
     title: prefill?.title || '',
     description: prefill?.description || '',
-    categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: emptyDraft(),
+    categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: defaultNewDraft(),
   };
   return {
     title: editPrayer.title || '',
@@ -107,12 +128,16 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   const [organizeOpen, setOrganizeOpen] = useState(() => usesOrganize(editPrayer));
   // The full schedule editor appears only for rhythms the presets can't express.
   const [customRhythm, setCustomRhythm] = useState(() => rhythmOf(initialForm(editPrayer, prefill).scheduleDraft) === 'custom');
+  // Only prayers that ALREADY follow the legacy weekly category plan keep its
+  // chip; new prayers are never offered an unbounded default.
+  const [legacyPlan, setLegacyPlan] = useState(() => rhythmOf(initialForm(editPrayer, prefill).scheduleDraft) === 'flexible');
   useEffect(() => {
     if (editPrayer) {
       setForm(initialForm(editPrayer));
       setNoteOpen(communityMode || hasNote(editPrayer));
       setOrganizeOpen(usesOrganize(editPrayer));
       setCustomRhythm(rhythmOf(draftFromSchedule(editPrayer.schedule)) === 'custom');
+      setLegacyPlan(rhythmOf(draftFromSchedule(editPrayer.schedule)) === 'flexible');
     }
   }, [editPrayer]);
 
@@ -127,6 +152,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
     setCustomRhythm(false);
     patch('scheduleDraft', draftForRhythm(r, form.scheduleDraft));
   };
+  const rhythmChips = legacyPlan ? ['flexible', ...RHYTHM_PRESETS] : RHYTHM_PRESETS;
   const schedulePreview = scheduleFromDraft(form.scheduleDraft);
 
   // Subtle, non-technical reassurance after a personal prayer is saved. Encryption
@@ -192,47 +218,64 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
 
         <div className="flex items-center justify-between px-5 py-3">
           <h2 className="font-semibold text-lg" style={{ color: 'var(--text-1)' }}>{title}</h2>
-          <button onClick={onClose} title={t(lang, 'tipCloseForm')} className="p-1.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-            <X size={16} />
+          <button
+            onClick={onClose}
+            aria-label={t(lang, 'close')}
+            title={t(lang, 'tipCloseForm')}
+            className="w-11 h-11 -mr-2 flex items-center justify-center rounded-full"
+            style={{ color: 'var(--accent)' }}
+          >
+            <span className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
+              <X size={16} />
+            </span>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-5 pb-8 space-y-4">
+        <form onSubmit={handleSubmit} className="px-5 pb-8 space-y-3">
           <div>
-            <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>
+            <label htmlFor="prayer-title" className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>
               {t(lang, communityMode ? 'prayerSubject' : 'prayerFieldLabel')}
             </label>
             <input
+              id="prayer-title"
               type="text"
               required
               autoFocus
               value={form.title}
               onChange={e => patch('title', e.target.value)}
               placeholder={t(lang, 'prayerSubjectPlaceholder')}
-              className="w-full text-sm rounded-xl px-4 py-3 focus:outline-none"
+              className="w-full text-sm rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2"
               style={INPUT_STYLE}
             />
           </div>
 
-          {noteOpen ? (
-            <div>
-              <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'details')}</label>
-              <textarea
-                value={form.description}
-                onChange={e => patch('description', e.target.value)}
-                placeholder={t(lang, 'detailsPlaceholder')}
-                className="w-full text-sm rounded-xl px-4 py-3 resize-none focus:outline-none"
-                style={INPUT_STYLE}
-                rows={3}
-              />
-            </div>
-          ) : (
-            <Expander label={t(lang, 'addNote')} onOpen={() => setNoteOpen(true)} />
-          )}
+          <div>
+            <SectionToggle
+              label={t(lang, 'addNote')}
+              open={noteOpen}
+              onToggle={() => setNoteOpen((v) => !v)}
+              controlsId="prayer-note-section"
+            />
+            {noteOpen && (
+              <div id="prayer-note-section">
+                <label htmlFor="prayer-note" className="sr-only">{t(lang, 'details')}</label>
+                <textarea
+                  id="prayer-note"
+                  value={form.description}
+                  onChange={e => patch('description', e.target.value)}
+                  placeholder={t(lang, 'detailsPlaceholder')}
+                  className="w-full text-sm rounded-xl px-4 py-3 resize-none focus:outline-none focus-visible:ring-2"
+                  style={INPUT_STYLE}
+                  rows={3}
+                />
+              </div>
+            )}
+          </div>
 
           {communityMode && (
             <>
               <CheckboxToggle
+                id="prayer-anonymous"
                 checked={form.isAnonymous}
                 onChange={() => patch('isAnonymous', !form.isAnonymous)}
                 label={t(lang, 'anonymous')}
@@ -250,87 +293,100 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
           {/* Organization is OPTIONAL: person, categories and the prayer rhythm
               all wait behind one quiet "Organize" expander, so writing a request
               and saving stays a single-field act. */}
-          {!communityMode && !organizeOpen && (
-            <Expander label={t(lang, 'organizeLabel')} onOpen={() => setOrganizeOpen(true)} icon={ChevronDown} />
-          )}
-
-          {!communityMode && organizeOpen && (
-            <div className="space-y-4 rounded-2xl p-4" style={{ background: 'var(--input-bg)' }}>
-              <CheckboxToggle
-                checked={form.forOther}
-                onChange={() => patch('forOther', !form.forOther)}
-                label={t(lang, 'forOther')}
+          {!communityMode && (
+            <div>
+              <SectionToggle
+                label={t(lang, 'organizeLabel')}
+                open={organizeOpen}
+                onToggle={() => setOrganizeOpen((v) => !v)}
+                controlsId="prayer-organize-section"
+                icon={ChevronDown}
               />
+              {organizeOpen && (
+                <div id="prayer-organize-section" className="space-y-4 rounded-2xl p-4" style={{ background: 'var(--input-bg)' }}>
+                  <CheckboxToggle
+                    id="prayer-for-other"
+                    checked={form.forOther}
+                    onChange={() => patch('forOther', !form.forOther)}
+                    label={t(lang, 'forOther')}
+                  />
 
-              {form.forOther && (
-                <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
+                  {form.forOther && (
+                    <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
+                      <div>
+                        <label htmlFor="prayer-person" className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'personName')}</label>
+                        <input id="prayer-person" type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
+                          placeholder={t(lang, 'personNamePlaceholder')} className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none focus-visible:ring-2"
+                          style={{ ...INPUT_STYLE, background: 'var(--surface)' }} />
+                      </div>
+                    </div>
+                  )}
+
+                  <CategorySelector
+                    categories={categories}
+                    selectedIds={form.categoryIds}
+                    onToggle={toggleCategory}
+                    tr={tr}
+                    lang={lang}
+                  />
+
                   <div>
-                    <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'personName')}</label>
-                    <input type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
-                      placeholder={t(lang, 'personNamePlaceholder')} className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none"
-                      style={{ ...INPUT_STYLE, background: 'var(--surface)' }} />
+                    <p className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'rhythmLabel')}</p>
+                    <div className="flex flex-wrap gap-2" role="group" aria-label={t(lang, 'rhythmLabel')}>
+                      {rhythmChips.map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => pickRhythm(r)}
+                          aria-pressed={rhythm === r}
+                          className="min-h-[44px] px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:ring-2"
+                          style={rhythm === r
+                            ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
+                            : { background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                        >
+                          {t(lang, RHYTHM_LABEL_KEYS[r])}
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setCustomRhythm(true)}
+                        aria-pressed={rhythm === 'custom'}
+                        className="min-h-[44px] px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:ring-2"
+                        style={rhythm === 'custom'
+                          ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
+                          : { background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      >
+                        {t(lang, 'rhythmCustom')}
+                      </button>
+                    </div>
+                    {rhythm !== 'custom' && schedulePreview && (
+                      <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>{scheduleSummary(schedulePreview, lang)}</p>
+                    )}
+                    {rhythm === 'flexible' && (
+                      <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'rhythmPlanHint')}</p>
+                    )}
                   </div>
+
+                  {rhythm === 'custom' && (
+                    <ScheduleEditor
+                      draft={form.scheduleDraft}
+                      onChange={(d) => patch('scheduleDraft', d)}
+                      lang={lang}
+                    />
+                  )}
                 </div>
-              )}
-
-              <CategorySelector
-                categories={categories}
-                selectedIds={form.categoryIds}
-                onToggle={toggleCategory}
-                tr={tr}
-                lang={lang}
-              />
-
-              <div>
-                <label className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'rhythmLabel')}</label>
-                <div className="flex flex-wrap gap-2">
-                  {RHYTHM_PRESETS.map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => pickRhythm(r)}
-                      className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-                      style={rhythm === r
-                        ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                        : { background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                    >
-                      {t(lang, RHYTHM_LABEL_KEYS[r])}
-                    </button>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => setCustomRhythm(true)}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-                    style={rhythm === 'custom'
-                      ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                      : { background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                  >
-                    {t(lang, 'rhythmCustom')}
-                  </button>
-                </div>
-                {rhythm !== 'custom' && schedulePreview && (
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>{scheduleSummary(schedulePreview, lang)}</p>
-                )}
-              </div>
-
-              {rhythm === 'custom' && (
-                <ScheduleEditor
-                  draft={form.scheduleDraft}
-                  onChange={(d) => patch('scheduleDraft', d)}
-                  lang={lang}
-                />
               )}
             </div>
           )}
 
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} title={t(lang, 'tipDiscard')}
-              className="flex-1 rounded-xl py-3 text-sm font-medium"
+              className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-medium focus-visible:ring-2"
               style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}>
               {t(lang, 'cancel')}
             </button>
             <button type="submit" title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
-              className="flex-1 rounded-xl py-3 text-sm font-semibold text-white"
+              className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-semibold text-white focus-visible:ring-2"
               style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
               {editPrayer || communityMode ? t(lang, editPrayer ? 'save' : 'add') : t(lang, 'savePrayer')}
             </button>

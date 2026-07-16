@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Aujourd'hui · encore {n}",
+  "todayCompleteTitle": "La prière d'aujourd'hui est terminée.",
+  "prayAgain": "Prier à nouveau",
+  "prayedTodayLabel": "Priées aujourd’hui",
+  "rhythmPlanHint": "Suit votre plan hebdomadaire par catégories — sans catégorie, revient chaque jour.",
+  "answeredThisWeek": "{n} exaucées cette semaine",
+  "prayWithOthers": "Priez avec d'autres",
+  "communityEmptyDesc": "Rejoignez un groupe de prière avec un lien ou un code d'invitation.",
+  "inbox": "Boîte de réception",
+  "prayerReminders": "Rappels de prière",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "Pour quoi aimeriez-vous prier ?",
   "onboardCapturePlaceholder": "Prier pour la santé de ma sœur…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Organiser",
   "savePrayer": "Enregistrer la prière",
   "rhythmLabel": "À quelle fréquence revenir ?",
-  "rhythmFlexible": "Souple",
+  "rhythmFlexible": "Plan hebdomadaire",
   "rhythmOccasionally": "De temps en temps",
   "rhythmCustom": "Personnalisé",
   "doneBtn": "Terminé",
@@ -62,7 +73,7 @@ export default {
   "notifEmpty": "Aucune notification pour l'instant",
   "notifEmptySub": "Les nouveautés de vos groupes et amis apparaîtront ici.",
   "notifError": "Impossible de charger les notifications.",
-  "notifUnreadLabel": "Notifications ({n} non lues)",
+  "notifUnreadLabel": "Boîte de réception ({n} non lues)",
   "notifFriendRequest": "Vous avez une nouvelle demande d'ami",
   "notifGroupInvitation": "Vous avez été invité à un groupe de prière",
   "notifCommunityUpdate": "Il y a une mise à jour sur une prière que vous suivez",

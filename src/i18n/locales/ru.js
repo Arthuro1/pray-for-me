@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Сегодня · осталось {n}",
+  "todayCompleteTitle": "Молитва на сегодня завершена.",
+  "prayAgain": "Помолиться ещё раз",
+  "prayedTodayLabel": "Помолились сегодня",
+  "rhythmPlanHint": "Следует вашему недельному плану по категориям — без категорий возвращается каждый день.",
+  "answeredThisWeek": "{n} отвечено на этой неделе",
+  "prayWithOthers": "Молитесь вместе с другими",
+  "communityEmptyDesc": "Присоединитесь к молитвенной группе по ссылке или коду приглашения.",
+  "inbox": "Входящие",
+  "prayerReminders": "Напоминания о молитве",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "О чём вы хотели бы помолиться?",
   "onboardCapturePlaceholder": "Молиться о здоровье сестры…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Организовать",
   "savePrayer": "Сохранить молитву",
   "rhythmLabel": "Как часто возвращаться к ней?",
-  "rhythmFlexible": "Гибко",
+  "rhythmFlexible": "Недельный план",
   "rhythmOccasionally": "Время от времени",
   "rhythmCustom": "Свой вариант",
   "doneBtn": "Готово",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "Пока нет уведомлений",
   "notifEmptySub": "Новости из ваших групп и от друзей появятся здесь.",
   "notifError": "Не удалось загрузить уведомления.",
-  "notifUnreadLabel": "Уведомления ({n} непрочитанных)",
+  "notifUnreadLabel": "Входящие ({n} непрочит.)",
   "notifFriendRequest": "У вас новый запрос в друзья",
   "notifGroupInvitation": "Вас пригласили в молитвенную группу",
   "notifCommunityUpdate": "Есть обновление по молитве, за которой вы следите",

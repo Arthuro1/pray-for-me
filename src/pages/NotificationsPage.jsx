@@ -8,8 +8,8 @@ import { notificationRoute } from '../lib/notificationRoutes';
 import { t } from '../i18n';
 import NotificationRow from '../components/NotificationRow';
 
-// Full notification inbox at /notifications — the panel's "see all" target, with
-// keyset pagination for older notifications.
+// The Inbox at /notifications — the bell's full destination, with keyset
+// pagination for older notifications. (Route unchanged for deep links.)
 export default function NotificationsPage() {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const { user } = useAuthStore();
@@ -33,7 +33,7 @@ export default function NotificationsPage() {
       <div className="px-5 md:px-8 py-6 max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-            <Bell size={22} /> {t(lang, 'notifications')}
+            <Bell size={22} /> {t(lang, 'inbox')}
           </h1>
           <div className="flex items-center gap-1">
             {unreadCount > 0 && (

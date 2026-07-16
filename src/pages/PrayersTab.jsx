@@ -10,17 +10,19 @@ import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
-import { Search, SlidersHorizontal, Plus } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, X } from 'lucide-react';
 import { t } from '../i18n';
+import { useSuppressFab } from '../store/layoutStore';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
 import { weeklyRecap } from '../utils/recap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // The Journal: every request and its history, in two simple segments — Active
-// and Answered. The answered segment IS the remembrance gallery (no separate
-// page, no duplicate shortcuts), and the at-a-glance stats moved here from Home
-// so Today stays purely about praying.
+// and Answered — each carrying its own count, so nothing is stated twice. The
+// answered segment IS the remembrance gallery (no separate page, no duplicate
+// shortcuts); search hides behind an icon and the category filter only exists
+// once categories do, so the list itself starts high on the screen.
 export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
   const { prayers, categories, settings, loading } = usePrayerStore(
@@ -35,20 +37,23 @@ export default function PrayersTab({ onAdd }) {
   const location = useLocation();
 
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
-  // Opened from a shortcut (e.g. Home once linked here) with a preset segment.
+  // Opened from a shortcut (e.g. the /answered redirect) with a preset segment.
   const [segment, setSegment] = useState(location.state?.filter === 'answered' ? 'answered' : 'active');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  // Search is folded behind an icon; its text (and the category filter) survive
+  // segment switches so coming back to Active resumes exactly where Grace was.
   const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-
-  const SEGMENTS = [
-    { id: 'active', label: t(lang, 'active') },
-    { id: 'answered', label: t(lang, 'answered') },
-  ];
 
   const activeCount = prayers.filter((p) => p.status === 'active').length;
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const recap = weeklyRecap(prayers, new Date());
+
+  const SEGMENTS = [
+    { id: 'active', label: t(lang, 'active'), count: activeCount },
+    { id: 'answered', label: t(lang, 'answered'), count: answeredCount },
+  ];
 
   const filtered = prayers.filter((p) => {
     if (p.status !== 'active') return false;
@@ -70,61 +75,87 @@ export default function PrayersTab({ onAdd }) {
     return prayerPriority(a, orderById) - prayerPriority(b, orderById);
   });
 
+  // The Active empty state below carries its own prominent Add CTA — hide the
+  // floating Add button while it's what the visitor sees.
+  useSuppressFab(segment === 'active' && sorted.length === 0);
+
+  const iconBtnStyle = { background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.85)' };
+
   return (
     <div>
-      <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'var(--header)' }}>
+      <div className="px-4 md:px-8 pt-8 pb-4" style={{ background: 'var(--header)' }}>
         <div className="max-w-2xl mx-auto">
-        <h2 className="text-xl font-semibold text-white mb-4">{t(lang, 'journal')}</h2>
+        <h2 className="text-xl font-semibold text-white mb-3">{t(lang, 'journal')}</h2>
 
-        {/* At-a-glance stats (moved here from Home): active / answered / +this week */}
-        <div className="grid grid-cols-3 gap-2.5 mb-4">
-          {[
-            { value: activeCount, label: t(lang, 'activePrayers'), onClick: () => setSegment('active') },
-            { value: answeredCount, label: t(lang, 'answeredPrayers'), onClick: () => setSegment('answered') },
-            { value: `+${recap.answered}`, label: t(lang, 'thisWeek'), onClick: () => setSegment('answered') },
-          ].map(({ value, label, onClick }) => (
-            <button
-              key={label}
-              onClick={onClick}
-              className="rounded-2xl p-3 flex flex-col items-center justify-center text-center transition-all active:scale-95"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)' }}
-            >
-              <p className="text-xl font-semibold text-white">{value}</p>
-              <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.7)' }}>{label}</p>
-            </button>
-          ))}
+        {/* ONE segmented control carries the counts (no separate stat cards),
+            with search and the category filter folded behind small icons. */}
+        <div className="flex items-center gap-2">
+          <div className="flex flex-1 gap-1 p-1 rounded-2xl" style={{ background: 'rgba(255,255,255,0.1)' }}>
+            {SEGMENTS.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => setSegment(s.id)}
+                aria-pressed={segment === s.id}
+                className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
+                style={segment === s.id
+                  ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
+                  : { color: 'rgba(255,255,255,0.7)' }}
+              >
+                {s.label} <span style={{ opacity: 0.65 }}>{s.count}</span>
+              </button>
+            ))}
+          </div>
+          {segment === 'active' && (
+            <>
+              <button
+                onClick={() => setSearchOpen((v) => !v)}
+                aria-expanded={searchOpen || !!search}
+                aria-label={t(lang, 'search')}
+                className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center"
+                style={iconBtnStyle}
+              >
+                <Search size={16} />
+              </button>
+              {categories.length > 0 && (
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  aria-expanded={showFilters}
+                  aria-label={t(lang, 'allCategories')}
+                  className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center"
+                  style={iconBtnStyle}
+                >
+                  <SlidersHorizontal size={16} />
+                </button>
+              )}
+            </>
+          )}
         </div>
 
-        {/* Two simple segments: Active | Answered */}
-        <div className="flex gap-1 p-1 rounded-2xl mb-3" style={{ background: 'rgba(255,255,255,0.1)' }}>
-          {SEGMENTS.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => setSegment(s.id)}
-              className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
-              style={segment === s.id
-                ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
-                : { color: 'rgba(255,255,255,0.7)' }}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-
-        {segment === 'active' && (
-          <div className="relative">
+        {/* The search field only takes space once asked for; text is preserved
+            while it (or the segment) is toggled. */}
+        {segment === 'active' && (searchOpen || !!search) && (
+          <div className="relative mt-2">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.5)' }} />
             <input
               type="text"
+              autoFocus
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t(lang, 'search')}
+              aria-label={t(lang, 'search')}
               className="w-full text-sm rounded-xl pl-9 pr-10 py-2.5 focus:outline-none"
               style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)', color: '#fff' }}
             />
-            <button onClick={() => setShowFilters(!showFilters)} className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              <SlidersHorizontal size={15} />
-            </button>
+            {!!search && (
+              <button
+                onClick={() => { setSearch(''); setSearchOpen(false); }}
+                aria-label={t(lang, 'close')}
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+                style={{ color: 'rgba(255,255,255,0.6)' }}
+              >
+                <X size={15} />
+              </button>
+            )}
           </div>
         )}
         </div>
@@ -132,7 +163,16 @@ export default function PrayersTab({ onAdd }) {
 
       <div className="px-4 md:px-8 pt-4 max-w-2xl mx-auto">
         {segment === 'answered' ? (
-          <AnsweredGallery />
+          <>
+            {/* Quiet context, not a statistic card — only when there is
+                something to give thanks for. */}
+            {recap.answered > 0 && (
+              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
+                {t(lang, 'answeredThisWeek', { n: recap.answered })}
+              </p>
+            )}
+            <AnsweredGallery />
+          </>
         ) : (
           <>
             {showFilters && categories.length > 0 && (

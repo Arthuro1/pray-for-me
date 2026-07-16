@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "اليوم · بقي {n}",
+  "todayCompleteTitle": "اكتملت صلاة اليوم.",
+  "prayAgain": "صلِّ مرة أخرى",
+  "prayedTodayLabel": "صُلّي لأجلها اليوم",
+  "rhythmPlanHint": "تتبع خطتك الأسبوعية حسب الفئات — وبدون فئات تعود كل يوم.",
+  "answeredThisWeek": "{n} استُجيبت هذا الأسبوع",
+  "prayWithOthers": "صلِّ مع الآخرين",
+  "communityEmptyDesc": "انضم إلى مجموعة صلاة عبر رابط أو رمز دعوة.",
+  "inbox": "الوارد",
+  "prayerReminders": "تذكيرات الصلاة",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "ما الذي تودّ الصلاة من أجله؟",
   "onboardCapturePlaceholder": "الصلاة من أجل صحة أختي…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "تنظيم",
   "savePrayer": "حفظ الصلاة",
   "rhythmLabel": "كم مرة تعود هذه الصلاة؟",
-  "rhythmFlexible": "مرن",
+  "rhythmFlexible": "الخطة الأسبوعية",
   "rhythmOccasionally": "من حين لآخر",
   "rhythmCustom": "مخصص",
   "doneBtn": "تم",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "لا توجد إشعارات بعد",
   "notifEmptySub": "ستظهر هنا تحديثات مجموعاتك وأصدقائك.",
   "notifError": "تعذّر تحميل الإشعارات.",
-  "notifUnreadLabel": "الإشعارات ({n} غير مقروءة)",
+  "notifUnreadLabel": "الوارد ({n} غير مقروءة)",
   "notifFriendRequest": "لديك طلب صداقة جديد",
   "notifGroupInvitation": "تمت دعوتك إلى مجموعة صلاة",
   "notifCommunityUpdate": "هناك تحديث على صلاة تتابعها",

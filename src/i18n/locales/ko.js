@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "오늘 · {n}개 남음",
+  "todayCompleteTitle": "오늘의 기도를 마쳤어요.",
+  "prayAgain": "다시 기도하기",
+  "prayedTodayLabel": "오늘 기도함",
+  "rhythmPlanHint": "주간 카테고리 계획을 따릅니다 — 카테고리가 없으면 매일 돌아옵니다.",
+  "answeredThisWeek": "이번 주 {n}개 응답됨",
+  "prayWithOthers": "함께 기도하기",
+  "communityEmptyDesc": "초대 링크나 코드로 기도 모임에 참여하세요.",
+  "inbox": "수신함",
+  "prayerReminders": "기도 알림",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "무엇을 위해 기도하고 싶으신가요?",
   "onboardCapturePlaceholder": "언니의 건강을 위해 기도…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "정리하기",
   "savePrayer": "기도 저장",
   "rhythmLabel": "얼마나 자주 돌아올까요?",
-  "rhythmFlexible": "유연하게",
+  "rhythmFlexible": "주간 계획",
   "rhythmOccasionally": "가끔",
   "rhythmCustom": "사용자 지정",
   "doneBtn": "완료",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "아직 알림이 없습니다",
   "notifEmptySub": "그룹과 친구의 소식이 여기에 표시됩니다.",
   "notifError": "알림을 불러오지 못했습니다.",
-  "notifUnreadLabel": "알림 (읽지 않음 {n}개)",
+  "notifUnreadLabel": "수신함 (읽지 않음 {n})",
   "notifFriendRequest": "새로운 친구 요청이 있습니다",
   "notifGroupInvitation": "기도 그룹에 초대되었습니다",
   "notifCommunityUpdate": "팔로우한 기도에 업데이트가 있습니다",

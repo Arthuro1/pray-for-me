@@ -7,6 +7,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import { todayKey } from '../lib/prayedLog';
+import { defaultNewSchedule } from '../lib/scheduleDraft';
 import PrayerSession from './PrayerSession';
 
 // First run = first prayer. Instead of a carousel about the app, one screen asks
@@ -26,7 +27,9 @@ export default function Onboarding({ lang = 'en', onFinish }) {
     const title = text.trim();
     if (!title || saving) return;
     setSaving(true);
-    const id = await usePrayerStore.getState().addPrayer({ title });
+    // Same bounded default rhythm as the main form: show today, return weekly
+    // on this weekday — a quick capture never becomes a silent daily item.
+    const id = await usePrayerStore.getState().addPrayer({ title, schedule: defaultNewSchedule() });
     setSaving(false);
     // Record the language this prayer was written in (same as the main form).
     if (id) { setContentLang(lang); setPrayingId(id); }

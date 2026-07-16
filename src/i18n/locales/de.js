@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Heute · noch {n}",
+  "todayCompleteTitle": "Das heutige Gebet ist vollendet.",
+  "prayAgain": "Noch einmal beten",
+  "prayedTodayLabel": "Heute gebetet",
+  "rhythmPlanHint": "Folgt deinem wöchentlichen Kategorienplan — ohne Kategorien kehrt es täglich zurück.",
+  "answeredThisWeek": "{n} diese Woche erhört",
+  "prayWithOthers": "Mit anderen beten",
+  "communityEmptyDesc": "Tritt einer Gebetsgruppe mit einem Einladungslink oder -code bei.",
+  "inbox": "Posteingang",
+  "prayerReminders": "Gebetserinnerungen",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "Wofür möchten Sie beten?",
   "onboardCapturePlaceholder": "Für die Gesundheit meiner Schwester beten…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Organisieren",
   "savePrayer": "Gebet speichern",
   "rhythmLabel": "Wie oft soll es wiederkehren?",
-  "rhythmFlexible": "Flexibel",
+  "rhythmFlexible": "Wochenplan",
   "rhythmOccasionally": "Gelegentlich",
   "rhythmCustom": "Benutzerdefiniert",
   "doneBtn": "Fertig",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "Noch keine Benachrichtigungen",
   "notifEmptySub": "Neuigkeiten aus deinen Gruppen und von Freunden erscheinen hier.",
   "notifError": "Benachrichtigungen konnten nicht geladen werden.",
-  "notifUnreadLabel": "Benachrichtigungen ({n} ungelesen)",
+  "notifUnreadLabel": "Posteingang ({n} ungelesen)",
   "notifFriendRequest": "Du hast eine neue Freundschaftsanfrage",
   "notifGroupInvitation": "Du wurdest in eine Gebetsgruppe eingeladen",
   "notifCommunityUpdate": "Es gibt eine Aktualisierung zu einem Gebet, dem du folgst",

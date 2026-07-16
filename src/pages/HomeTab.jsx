@@ -18,7 +18,8 @@ import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
 import PrayerSession from '../components/PrayerSession';
 import { usePrayerActions } from '../hooks/usePrayerActions';
-import { getPrayedDays, markPrayedToday, todayKey } from '../lib/prayedLog';
+import { useSuppressFab } from '../store/layoutStore';
+import { todayKey } from '../lib/prayedLog';
 import { nextReminder } from '../utils/reminder';
 import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { parseKey } from '../lib/schedule';
@@ -35,18 +36,20 @@ const DAY_NAMES = {
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR, zh: enUS, es: enUS, hi: enUS, ja: enUS, sw: enUS, am: enUS, id: enUS, tl: enUS, ko: enUS, ru: enUS, ar: enUS, fa: enUS };
 
-// Today is built for one thing: praying. Compact greeting → today's count →
-// one large "Pray now" → the list itself → add. Catch-up sits AFTER the list,
-// collapsed (grace, not guilt), and the daily verse closes the page as a small
-// card. Statistics live in the Journal; planning and everything else in More.
+// Today is built for one thing: praying. Compact greeting → what REMAINS today
+// → one large "Pray now" → the list itself → add. Completed prayers fold into a
+// quiet "Prayed today" row, catch-up sits AFTER the list, collapsed (grace, not
+// guilt), and the daily verse closes the page as a small card. Statistics live
+// in the Journal; planning and everything else in More.
 export default function HomeTab({ onAdd }) {
   const navigate = useNavigate();
-  const { getTodaysPrayers, getEntriesForDay, getCatchUp, markPrayedOn, categories, prayers, settings, loading } = usePrayerStore(
+  const { getEntriesForDay, getCompletedPrayersForDay, getCatchUp, markPrayedOn, completions, categories, prayers, settings, loading } = usePrayerStore(
     useShallow((s) => ({
-      getTodaysPrayers: s.getTodaysPrayers,
       getEntriesForDay: s.getEntriesForDay,
+      getCompletedPrayersForDay: s.getCompletedPrayersForDay,
       getCatchUp: s.getCatchUp,
       markPrayedOn: s.markPrayedOn,
+      completions: s.completions,
       categories: s.categories,
       prayers: s.prayers,
       settings: s.settings,
@@ -61,22 +64,37 @@ export default function HomeTab({ onAdd }) {
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
   const [verse, setVerse] = useState(null);
   const [verseResolving, setVerseResolving] = useState(false);
-  const [showSession, setShowSession] = useState(false);
+  // The open session's prayer list, snapshotted when it starts: completions
+  // recorded while praying must not reshuffle the walk mid-session. null = no
+  // session open.
+  const [session, setSession] = useState(null);
   const [catchUpOpen, setCatchUpOpen] = useState(false);
-  const [prayedDays, setPrayedDays] = useState(getPrayedDays);
+  const [prayedOpen, setPrayedOpen] = useState(false);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
   const { swipeActions } = usePrayerActions(lang);
 
-  const todaysPrayers = getTodaysPrayers();
-  const todayEntries = getEntriesForDay(todayKey());
-  const slotGroups = groupBySlot(todayEntries);
-  const useSlots = todayEntries.some((e) => e.slot); // headers only once slots are in use
+  // Completion state drives everything on this page: what remains, what's been
+  // prayed, and whether the day is complete — all derived from the per-prayer
+  // completion records (there is no separate day-level flag to disagree with).
+  const dayKey = todayKey();
+  const todayEntries = getEntriesForDay(dayKey);
+  const isDoneToday = (id) => (completions[id] || []).includes(dayKey);
+  const remainingEntries = todayEntries.filter((e) => !isDoneToday(e.prayer.id));
+  const remainingPrayers = remainingEntries.map((e) => e.prayer);
+  const completedToday = getCompletedPrayersForDay(dayKey);
+  const dayComplete = remainingPrayers.length === 0 && completedToday.length > 0;
+  const dayEmpty = todayEntries.length === 0 && completedToday.length === 0;
+  const slotGroups = groupBySlot(remainingEntries);
+  const useSlots = remainingEntries.some((e) => e.slot); // headers only once slots are in use
   const catchUp = getCatchUp();
   const today = new Date();
   const dayIndex = today.getDay();
-  const prayedToday = prayedDays.includes(todayKey());
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
+
+  // The empty state below carries its own prominent Add CTA — hide the floating
+  // Add button while it's what the visitor sees, so there's exactly one.
+  useSuppressFab(dayEmpty);
 
   // Verse of the day: a curated, deterministic pick that's the same for everyone
   // on a given day, shown in full immediately (no tap needed). Core verses ship
@@ -139,19 +157,19 @@ export default function HomeTab({ onAdd }) {
 
   return (
     <div>
-      {showSession && todaysPrayers.length > 0 && (
+      {session && session.length > 0 && (
         <PrayerSession
-          prayers={todaysPrayers}
+          prayers={session}
           categories={categories}
           lang={lang}
           tr={tr}
-          onClose={() => setShowSession(false)}
+          onClose={() => setSession(null)}
           // Per-prayer completion is logged as the user advances PAST each
-          // prayer (feeds catch-up, calendar history and rotation fairness), so
-          // leaving halfway never loses genuine progress. The day itself counts
-          // as prayed once the whole session finishes.
-          onPrayed={(id) => markPrayedOn(id, todayKey())}
-          onComplete={() => { setPrayedDays(markPrayedToday()); maybeSuggestReminder(); }}
+          // prayer (feeds Home's remaining count, catch-up, calendar history
+          // and rotation fairness), so leaving halfway never loses genuine
+          // progress — reopening resumes with the first unfinished request.
+          onPrayed={(id) => markPrayedOn(id, dayKey)}
+          onComplete={maybeSuggestReminder}
         />
       )}
 
@@ -168,26 +186,41 @@ export default function HomeTab({ onAdd }) {
       </div>
 
       <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
-        {/* Today · N prayers */}
-        {!loading || prayers.length > 0 ? (
+        {/* Today · N remaining — the count Grace actually needs */}
+        {remainingPrayers.length > 0 && (!loading || prayers.length > 0) && (
           <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-1)' }}>
-            {t(lang, 'today')} · {todaysPrayers.length} {todaysPrayers.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
+            {t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
           </p>
-        ) : null}
+        )}
 
-        {/* Single primary action — reflects whether today's prayer has been done */}
-        {todaysPrayers.length > 0 && (
+        {/* Single primary action — opens only what's still to pray */}
+        {remainingPrayers.length > 0 && (
           <button
-            onClick={() => setShowSession(true)}
+            onClick={() => setSession(remainingPrayers)}
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-base font-semibold mb-2 transition-all active:scale-95"
-            style={prayedToday
-              ? { background: 'var(--surface)', color: 'var(--success)', border: '0.5px solid var(--border)' }
-              : { background: 'var(--accent)', color: '#fff' }}
+            style={{ background: 'var(--accent)', color: '#fff' }}
           >
-            {prayedToday
-              ? <><Check size={18} /> {t(lang, 'prayedOnDay')}</>
-              : <><HandHeart size={19} /> {t(lang, 'prayNow')}</>}
+            <HandHeart size={19} /> {t(lang, 'prayNow')}
           </button>
+        )}
+
+        {/* All of today prayed: a clear status (not a button), with "Pray again"
+            as an explicit, secondary way to walk the whole day once more. */}
+        {dayComplete && (
+          <div className="rounded-2xl p-5 mb-2 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-sm font-semibold flex items-center justify-center gap-2 mb-3" style={{ color: 'var(--success)' }} role="status">
+              <Check size={17} /> {t(lang, 'todayCompleteTitle')}
+            </p>
+            {todayEntries.length > 0 && (
+              <button
+                onClick={() => setSession(todayEntries.map((e) => e.prayer))}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}
+              >
+                <HandHeart size={15} /> {t(lang, 'prayAgain')}
+              </button>
+            )}
+          </div>
         )}
 
         {reminder && (
@@ -200,7 +233,7 @@ export default function HomeTab({ onAdd }) {
           <div className="mb-4"><PrayerListSkeleton count={3} /></div>
         )}
 
-        {!loading && todaysPrayers.length === 0 && (
+        {!loading && dayEmpty && (
           <div className="rounded-2xl p-6 mb-4 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-4xl mb-3">🕊️</p>
             <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'emptyEncourage')}</p>
@@ -216,12 +249,12 @@ export default function HomeTab({ onAdd }) {
           </div>
         )}
 
-        {/* Today's prayer list */}
-        {todaysPrayers.length > 0 && (
+        {/* What remains to pray today (completed prayers fold away below) */}
+        {remainingEntries.length > 0 && (
           <div className="flex flex-col gap-3 mb-3 mt-2">
             {/* Grouped by prayer-time slot once any prayer uses one; flat list otherwise */}
             {(useSlots ? SLOT_ORDER : ['anytime']).map((slot) => {
-              const slotEntries = useSlots ? slotGroups[slot] : todayEntries;
+              const slotEntries = useSlots ? slotGroups[slot] : remainingEntries;
               if (!slotEntries || slotEntries.length === 0) return null;
               const SlotIcon = { morning: Sunrise, midday: Sun, evening: Moon, anytime: Clock }[slot];
               return (
@@ -250,8 +283,40 @@ export default function HomeTab({ onAdd }) {
           </div>
         )}
 
+        {/* Prayed today — completed prayers fold into one quiet, collapsed row
+            so the main list only ever shows what remains. */}
+        {completedToday.length > 0 && (
+          <div className="rounded-2xl mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <button
+              onClick={() => setPrayedOpen((v) => !v)}
+              aria-expanded={prayedOpen}
+              className="w-full flex items-center justify-between gap-2 p-4 text-left"
+            >
+              <span className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-2)' }}>
+                <Check size={15} style={{ color: 'var(--success)' }} /> {t(lang, 'prayedTodayLabel')} · {completedToday.length}
+              </span>
+              <ChevronDown size={15} style={{ color: 'var(--text-3)', transform: prayedOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+            </button>
+            {prayedOpen && (
+              <div className="px-4 pb-4 space-y-1.5">
+                {completedToday.map((prayer) => (
+                  <button
+                    key={prayer.id}
+                    onClick={() => navigate(`/prayers/${prayer.id}`)}
+                    className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-left"
+                    style={{ background: 'var(--input-bg)' }}
+                  >
+                    <Check size={13} className="shrink-0" style={{ color: 'var(--success)' }} />
+                    <span className="flex-1 min-w-0 text-sm truncate" style={{ color: 'var(--text-2)' }}>{tr(prayer.title, lang)}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Add a prayer — always one tap from the list itself */}
-        {todaysPrayers.length > 0 && (
+        {!dayEmpty && (
           <button
             onClick={onAdd}
             className="w-full flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-medium mb-4"

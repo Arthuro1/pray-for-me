@@ -108,3 +108,67 @@ describe('PrayerSession — immediate start & format control', () => {
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('PrayerSession — format change protects progress', () => {
+  const two = [prayer, { ...prayer, id: 'p2', title: 'Pour un ami', prayer_points: [] }];
+  const openTwo = (props = {}) =>
+    render(<PrayerSession prayers={two} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} {...props} />);
+  const pickFormat = (modeKey) => {
+    fireEvent.click(screen.getByTitle(t(lang, 'prayerFormat')));
+    fireEvent.click(screen.getByText(t(lang, modeKey)));
+  };
+
+  it('before any progress, switching restarts freely', () => {
+    openTwo();
+    pickFormat('modeActs');
+    expect(screen.getByText(t(lang, 'stageAdoration'))).toBeTruthy();
+    pickFormat('modeRequests');
+    expect(screen.getByText('Pour ma famille')).toBeTruthy(); // back at prayer 1
+  });
+
+  it('after advancing, the new format resumes the requests — completed prayers are not repeated', () => {
+    const onPrayed = vi.fn();
+    openTwo({ onPrayed });
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past p1
+    expect(onPrayed).toHaveBeenCalledWith('p1');
+
+    pickFormat('modeGuided'); // guided = adoration → requests → thanksgiving
+    expect(screen.getByText(t(lang, 'stageAdoration'))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past adoration
+    // The requests stage resumes at the SECOND prayer — p1 is never repeated.
+    expect(screen.getByText('Pour un ami')).toBeTruthy();
+    expect(screen.queryByText('Pour ma famille')).toBeNull();
+    expect(onPrayed).toHaveBeenCalledTimes(1);
+  });
+
+  it('switching to requests-only when every request is prayed completes the session', () => {
+    const onComplete = vi.fn();
+    localStorage.setItem('pfm_prayer_mode', 'guided');
+    openTwo({ onComplete });
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past adoration
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past p1
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past p2 → thanksgiving
+    expect(screen.getByText(t(lang, 'stageThanksgiving'))).toBeTruthy();
+
+    pickFormat('modeRequests'); // nothing left to pray in a requests-only walk
+    expect(screen.getByText(t(lang, 'sessionDoneTitle'))).toBeTruthy();
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('a movements-first format skips an already-finished requests stage', () => {
+    localStorage.setItem('pfm_prayer_mode', 'guided');
+    openTwo();
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past adoration
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past p1
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past p2 → thanksgiving
+
+    pickFormat('modeActs'); // adoration → confession → thanksgiving → requests
+    expect(screen.getByText(t(lang, 'stageAdoration'))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // confession
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // thanksgiving
+    // The final requests stage has nothing left → advancing finishes, no repeats.
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
+    expect(screen.getByText(t(lang, 'sessionDoneTitle'))).toBeTruthy();
+    expect(screen.queryByText('Pour ma famille')).toBeNull();
+  });
+});

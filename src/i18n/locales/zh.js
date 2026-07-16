@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "今天 · 还剩 {n} 项",
+  "todayCompleteTitle": "今天的祷告已完成。",
+  "prayAgain": "再次祷告",
+  "prayedTodayLabel": "今天已祷告",
+  "rhythmPlanHint": "跟随你的每周分类计划——没有分类时每天出现。",
+  "answeredThisWeek": "本周应允 {n} 项",
+  "prayWithOthers": "与他人一起祷告",
+  "communityEmptyDesc": "使用邀请链接或邀请码加入祷告小组。",
+  "inbox": "收件箱",
+  "prayerReminders": "祷告提醒",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "您想为什么祷告？",
   "onboardCapturePlaceholder": "为姐姐的健康祷告……",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "整理",
   "savePrayer": "保存祷告",
   "rhythmLabel": "多久回到这条祷告？",
-  "rhythmFlexible": "灵活",
+  "rhythmFlexible": "每周计划",
   "rhythmOccasionally": "偶尔",
   "rhythmCustom": "自定义",
   "doneBtn": "完成",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "暂无通知",
   "notifEmptySub": "来自你的群组和好友的动态会显示在这里。",
   "notifError": "无法加载通知。",
-  "notifUnreadLabel": "通知（{n} 条未读）",
+  "notifUnreadLabel": "收件箱（{n} 条未读）",
   "notifFriendRequest": "你有一个新的好友请求",
   "notifGroupInvitation": "你被邀请加入一个祷告群组",
   "notifCommunityUpdate": "你关注的一个祷告有新的更新",

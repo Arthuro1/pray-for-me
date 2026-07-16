@@ -18,7 +18,7 @@ export default function NotificationBell({ className = '', style = {} }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label={unreadCount > 0 ? t(lang, 'notifUnreadLabel', { n: unreadCount }) : t(lang, 'notifications')}
+        aria-label={unreadCount > 0 ? t(lang, 'notifUnreadLabel', { n: unreadCount }) : t(lang, 'inbox')}
         className={`relative flex items-center justify-center rounded-lg transition-colors ${className}`}
         style={style}
       >

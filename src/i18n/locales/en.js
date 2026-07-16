@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Today · {n} remaining",
+  "todayCompleteTitle": "Today's prayer is complete.",
+  "prayAgain": "Pray again",
+  "prayedTodayLabel": "Prayed today",
+  "rhythmPlanHint": "Follows your weekly category plan — without categories it returns every day.",
+  "answeredThisWeek": "{n} answered this week",
+  "prayWithOthers": "Pray with others",
+  "communityEmptyDesc": "Join a prayer group using an invitation link or code.",
+  "inbox": "Inbox",
+  "prayerReminders": "Prayer reminders",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "What would you like to pray about?",
   "onboardCapturePlaceholder": "Pray for my sister's health…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Organize",
   "savePrayer": "Save prayer",
   "rhythmLabel": "How often should this return?",
-  "rhythmFlexible": "Flexible",
+  "rhythmFlexible": "Weekly plan",
   "rhythmOccasionally": "Occasionally",
   "rhythmCustom": "Custom",
   "doneBtn": "Done",
@@ -62,7 +73,7 @@ export default {
   "notifEmpty": "No notifications yet",
   "notifEmptySub": "Updates from your groups and friends will appear here.",
   "notifError": "Couldn't load notifications.",
-  "notifUnreadLabel": "Notifications ({n} unread)",
+  "notifUnreadLabel": "Inbox ({n} unread)",
   "notifFriendRequest": "You have a new friend request",
   "notifGroupInvitation": "You've been invited to a prayer group",
   "notifCommunityUpdate": "There's an update on a prayer you follow",

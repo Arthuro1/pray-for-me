@@ -17,16 +17,18 @@ export function presetOf(d) {
 
 // ── Simple rhythm presets ────────────────────────────────────────────────────
 // The Add-prayer form asks ONE question — "How often should this return?" —
-// with four everyday answers plus Custom for the full editor. Each preset is a
+// with three everyday answers plus Custom for the full editor. Each preset is a
 // plain mapping onto the draft, so the two views never disagree:
-//   flexible     — no fixed schedule (follows the weekly plan / shows regularly)
 //   daily        — recurring, every day
 //   weekly       — recurring, once a week (seeded on today's weekday)
 //   occasionally — recurring, about every two weeks
 //   custom       — anything the presets can't express (dates, months, slots…)
+// 'flexible' (no schedule → the legacy category plan, daily when uncategorized)
+// is no longer offered to new prayers: it made every quick capture silently
+// daily. It remains selectable while EDITING a prayer that already uses it.
 const OCCASIONALLY_DAYS = 14;
 
-export const RHYTHM_PRESETS = ['flexible', 'daily', 'weekly', 'occasionally'];
+export const RHYTHM_PRESETS = ['daily', 'weekly', 'occasionally'];
 
 export function rhythmOf(d) {
   if (!d || d.mode === 'plan') return 'flexible';
@@ -48,6 +50,21 @@ export function draftForRhythm(rhythm, d) {
     case 'occasionally': return { ...d, mode: 'recurring', freq: 'interval', interval: OCCASIONALLY_DAYS };
     default: return d;
   }
+}
+
+// Default draft for a NEW personal prayer: weekly, on the weekday it was
+// written. The prayer shows up today and returns every week on this day — a
+// bounded rhythm, so quick captures never silently join an ever-growing daily
+// list. Grace can widen or narrow it under Organize (the default is visible
+// there as "Every <weekday>").
+export function defaultNewDraft() {
+  return draftForRhythm('weekly', emptyDraft());
+}
+
+// The same default as a persisted schedule, for flows that create a prayer
+// without the form (onboarding's one-field capture).
+export function defaultNewSchedule() {
+  return scheduleFromDraft(defaultNewDraft());
 }
 
 export function emptyDraft() {

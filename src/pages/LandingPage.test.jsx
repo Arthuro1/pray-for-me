@@ -40,3 +40,30 @@ describe('LandingPage — simplified hero', () => {
     expect(screen.queryByText('Active prayers')).toBeNull();
   });
 });
+
+describe('LandingPage — simplified product story', () => {
+  it('explains the product in three steps (capture → pray today → remember)', () => {
+    render(<LandingPage onGetStarted={() => {}} />);
+    expect(screen.getByText('Capture a prayer')).toBeTruthy();
+    expect(screen.getByText('Pray what matters today')).toBeTruthy();
+    expect(screen.getByText("Remember God's faithfulness")).toBeTruthy();
+    // The old category/weekly-plan setup steps are gone.
+    expect(screen.queryByText('Set your plan')).toBeNull();
+    expect(screen.queryByText(/assign a category/i)).toBeNull();
+    expect(screen.queryByText('Step 4')).toBeNull();
+  });
+
+  it('uses an outcome-focused CTA', () => {
+    render(<LandingPage onGetStarted={() => {}} />);
+    expect(screen.getAllByText('Start your private prayer journal').length).toBeGreaterThan(0);
+  });
+
+  it('localizes the example Bible references (no English books inside French)', () => {
+    localStorage.setItem('pfm_language', 'fr');
+    render(<LandingPage onGetStarted={() => {}} />);
+    expect(screen.getByText(/Philippiens 4:7/)).toBeTruthy();
+    expect(screen.getByText(/Ésaïe 40:31/)).toBeTruthy();
+    expect(screen.queryByText(/Philippians/)).toBeNull();
+    expect(screen.queryByText(/Isaiah/)).toBeNull();
+  });
+});

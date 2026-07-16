@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Ngayon · {n} na natitira",
+  "todayCompleteTitle": "Tapos na ang panalangin ngayon.",
+  "prayAgain": "Manalangin muli",
+  "prayedTodayLabel": "Naipanalangin na ngayon",
+  "rhythmPlanHint": "Sumusunod sa iyong lingguhang plano ng kategorya — kung walang kategorya, babalik araw-araw.",
+  "answeredThisWeek": "{n} ang nasagot ngayong linggo",
+  "prayWithOthers": "Manalangin kasama ang iba",
+  "communityEmptyDesc": "Sumali sa isang prayer group gamit ang invitation link o code.",
+  "inbox": "Inbox",
+  "prayerReminders": "Mga paalala sa panalangin",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "Ano ang nais mong ipanalangin?",
   "onboardCapturePlaceholder": "Ipanalangin ang kalusugan ng aking kapatid…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Ayusin",
   "savePrayer": "I-save ang panalangin",
   "rhythmLabel": "Gaano kadalas itong babalik?",
-  "rhythmFlexible": "Flexible",
+  "rhythmFlexible": "Lingguhang plano",
   "rhythmOccasionally": "Paminsan-minsan",
   "rhythmCustom": "Custom",
   "doneBtn": "Tapos na",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "Wala pang abiso",
   "notifEmptySub": "Lalabas dito ang mga update mula sa iyong mga grupo at kaibigan.",
   "notifError": "Hindi ma-load ang mga abiso.",
-  "notifUnreadLabel": "Mga abiso ({n} hindi pa nabasa)",
+  "notifUnreadLabel": "Inbox ({n} hindi pa nababasa)",
   "notifFriendRequest": "May bago kang friend request",
   "notifGroupInvitation": "Inimbitahan ka sa isang prayer group",
   "notifCommunityUpdate": "May update sa isang panalanging sinusundan mo",

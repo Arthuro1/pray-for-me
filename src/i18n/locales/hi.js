@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "आज · {n} बाकी",
+  "todayCompleteTitle": "आज की प्रार्थना पूरी हुई।",
+  "prayAgain": "फिर से प्रार्थना करें",
+  "prayedTodayLabel": "आज प्रार्थना की गई",
+  "rhythmPlanHint": "आपकी साप्ताहिक श्रेणी योजना का पालन करती है — बिना श्रेणी के हर दिन लौटती है।",
+  "answeredThisWeek": "इस सप्ताह {n} उत्तरित",
+  "prayWithOthers": "दूसरों के साथ प्रार्थना करें",
+  "communityEmptyDesc": "आमंत्रण लिंक या कोड से किसी प्रार्थना समूह में शामिल हों।",
+  "inbox": "इनबॉक्स",
+  "prayerReminders": "प्रार्थना अनुस्मारक",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "आप किस बात के लिए प्रार्थना करना चाहेंगे?",
   "onboardCapturePlaceholder": "मेरी बहन की सेहत के लिए प्रार्थना…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "व्यवस्थित करें",
   "savePrayer": "प्रार्थना सहेजें",
   "rhythmLabel": "यह कितनी बार लौटे?",
-  "rhythmFlexible": "लचीला",
+  "rhythmFlexible": "साप्ताहिक योजना",
   "rhythmOccasionally": "कभी-कभी",
   "rhythmCustom": "कस्टम",
   "doneBtn": "हो गया",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "अभी कोई सूचना नहीं",
   "notifEmptySub": "आपके समूहों और मित्रों की नई गतिविधियाँ यहाँ दिखेंगी।",
   "notifError": "सूचनाएँ लोड नहीं हो सकीं।",
-  "notifUnreadLabel": "सूचनाएँ ({n} अपठित)",
+  "notifUnreadLabel": "इनबॉक्स ({n} अपठित)",
   "notifFriendRequest": "आपके पास एक नया मित्र अनुरोध है",
   "notifGroupInvitation": "आपको एक प्रार्थना समूह में आमंत्रित किया गया है",
   "notifCommunityUpdate": "आप जिस प्रार्थना का अनुसरण करते हैं उसमें एक अपडेट है",

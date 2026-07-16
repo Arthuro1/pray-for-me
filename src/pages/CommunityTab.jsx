@@ -3,7 +3,6 @@ import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
-import EmptyState from '../components/shared/EmptyState';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -147,30 +146,50 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   return (
     <div style={{ background: 'var(--bg)' }} className="min-h-screen">
       <div className="px-5 md:px-8 py-6 max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-1)' }}>{t(lang, 'community')}</h1>
+        {/* Once groups exist they lead the page; creating another group or adding
+            a friend become small header actions instead of a second button row. */}
+        <div className="flex items-center justify-between gap-3 mb-6">
+          <h1 className="text-2xl font-bold" style={{ color: 'var(--text-1)' }}>{t(lang, 'community')}</h1>
+          {groups.length > 0 && (
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setShowCreateGroup(true)}
+                aria-label={t(lang, 'createGroup')}
+                title={t(lang, 'createGroup')}
+                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={SUBTLE_BTN}
+              >
+                <Plus size={16} />
+              </button>
+              <button
+                onClick={() => setShowAddFriend(true)}
+                aria-label={t(lang, 'addFriend')}
+                title={t(lang, 'addFriend')}
+                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={SUBTLE_BTN}
+              >
+                <UserPlus size={16} />
+              </button>
+            </div>
+          )}
+        </div>
 
-        {/* An empty community account leads with JOINING (most believers are
-            invited into an existing group); creating one comes second. Once the
-            user belongs somewhere, creating is promoted back to the front. */}
-        {groups.length === 0 ? (
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            <button onClick={() => setShowJoinGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+        {/* An empty community account gets ONE onboarding card — join first
+            (most believers are invited into an existing group), create second,
+            add-a-friend as a quiet text link. No second empty state below. */}
+        {groups.length === 0 && (
+          <div className="rounded-2xl p-6 mb-8 text-center max-w-md mx-auto" style={CARD_STYLE}>
+            <p className="text-4xl mb-3">🤝</p>
+            <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayWithOthers')}</h2>
+            <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'communityEmptyDesc')}</p>
+            <button onClick={() => setShowJoinGroup(true)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white mb-2.5" style={{ background: 'var(--accent)' }}>
               <Users size={16} /> {t(lang, 'joinGroupCta')}
             </button>
-            <button onClick={() => setShowCreateGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
+            <button onClick={() => setShowCreateGroup(true)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium mb-3" style={SUBTLE_BTN}>
               <Plus size={16} /> {t(lang, 'createGroup')}
             </button>
-            <button onClick={() => setShowAddFriend(true)} className="col-span-2 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
-              <UserPlus size={16} /> {t(lang, 'addFriend')}
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            <button onClick={() => setShowCreateGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
-              <Plus size={16} /> {t(lang, 'createGroup')}
-            </button>
-            <button onClick={() => setShowAddFriend(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
-              <UserPlus size={16} /> {t(lang, 'addFriend')}
+            <button onClick={() => setShowAddFriend(true)} className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+              <UserPlus size={13} /> {t(lang, 'addFriend')}
             </button>
           </div>
         )}
@@ -201,16 +220,10 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           </Section>
         )}
 
-        <Section title={t(lang, 'myGroups')}>
-          {groups.length === 0 ? (
-            <EmptyState
-              emoji="👥"
-              title={t(lang, 'noGroups')}
-              actionLabel={t(lang, 'joinGroupCta')}
-              actionIcon={Users}
-              onAction={() => setShowJoinGroup(true)}
-            />
-          ) : (
+        {/* The onboarding card above IS the empty state — no second "My groups"
+            empty section with another Join button. */}
+        {groups.length > 0 && (
+          <Section title={t(lang, 'myGroups')}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {groups.map(g => (
                 <button key={g.id} onClick={() => onViewGroup(g.id)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.02]" style={CARD_STYLE}>
@@ -231,8 +244,8 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 </button>
               ))}
             </div>
-          )}
-        </Section>
+          </Section>
+        )}
 
         {friends.length > 0 && (
           <Section title={`${t(lang, 'friends')} (${friends.length})`}>

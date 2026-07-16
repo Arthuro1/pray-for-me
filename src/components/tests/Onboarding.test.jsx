@@ -73,7 +73,12 @@ describe('Onboarding', () => {
     });
     fireEvent.click(screen.getByText(t(lang, 'onboardSaveAndPray')));
 
-    expect(addPrayer).toHaveBeenCalledWith({ title: 'La santé de ma sœur' });
+    // Same bounded weekly default as the main form — the first prayer shows
+    // today and returns weekly, not silently every day.
+    expect(addPrayer).toHaveBeenCalledWith({
+      title: 'La santé de ma sœur',
+      schedule: expect.objectContaining({ type: 'recurring', freq: 'weekly' }),
+    });
     // The prayer session opens on the prayer that was just written…
     expect(await screen.findByText('La santé de ma sœur')).toBeTruthy();
     // …and finishing it (Amen) completes onboarding.

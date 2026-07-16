@@ -678,6 +678,31 @@ const usePrayerStore = create((set, get) => ({
     return sortEntries(prayersForDay(prayers, categories, dayKey), categories);
   },
 
+  // ─── Day completion (single source of truth: per-prayer completions) ──
+  // What's left to pray on a day: scheduled for it, active, and not yet marked
+  // prayed on it. Home's count, list and "Pray now" all derive from this.
+  getRemainingPrayersForDay: (dayKey) => {
+    const { completions } = get();
+    return get()
+      .getEntriesForDay(dayKey)
+      .map((e) => e.prayer)
+      .filter((p) => !(completions[p.id] || []).includes(dayKey));
+  },
+
+  // Every prayer marked prayed on the day — regardless of current status or
+  // schedule, so a prayer answered mid-session still counts as prayed today.
+  getCompletedPrayersForDay: (dayKey) => {
+    const { prayers, completions } = get();
+    return prayers.filter((p) => (completions[p.id] || []).includes(dayKey));
+  },
+
+  // The day is complete when something was prayed and nothing remains. Derived,
+  // never stored — adding a new prayer immediately re-opens the day, and there
+  // is no separate day-level flag that could disagree with the per-prayer log.
+  isDayComplete: (dayKey) =>
+    get().getRemainingPrayersForDay(dayKey).length === 0 &&
+    get().getCompletedPrayersForDay(dayKey).length > 0,
+
   // Missed prayers from the last few days (not completed, not on today's list).
   getCatchUp: (windowDays = 3) => {
     const { prayers, categories } = get();

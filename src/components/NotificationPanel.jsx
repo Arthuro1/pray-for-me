@@ -48,14 +48,14 @@ export default function NotificationPanel({ onClose }) {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={t(lang, 'notifications')}
+        aria-label={t(lang, 'inbox')}
         className="w-full md:w-96 rounded-t-2xl md:rounded-2xl max-h-[80vh] md:max-h-[70vh] flex flex-col"
         style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
           <h2 className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-            <Bell size={16} /> {t(lang, 'notifications')}
+            <Bell size={16} /> {t(lang, 'inbox')}
           </h2>
           <div className="flex items-center gap-1">
             {unreadCount > 0 && (

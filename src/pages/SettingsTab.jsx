@@ -474,8 +474,8 @@ export default function SettingsTab() {
           </div>
         </SettingsSection>
 
-        {/* ── Notifications ── */}
-        <SettingsSection id="notifications" title={t(lang, 'notifications')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
+        {/* ── Prayer reminders (deep-link id stays `notifications`) ── */}
+        <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
           {/* Daily + follow-up reminders */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-4">

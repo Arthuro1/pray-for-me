@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Hoy · aún {n}",
+  "todayCompleteTitle": "La oración de hoy está completa.",
+  "prayAgain": "Orar de nuevo",
+  "prayedTodayLabel": "Oradas hoy",
+  "rhythmPlanHint": "Sigue tu plan semanal por categorías — sin categorías, vuelve cada día.",
+  "answeredThisWeek": "{n} respondidas esta semana",
+  "prayWithOthers": "Ora con otros",
+  "communityEmptyDesc": "Únete a un grupo de oración con un enlace o código de invitación.",
+  "inbox": "Bandeja de entrada",
+  "prayerReminders": "Recordatorios de oración",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "¿Por qué te gustaría orar?",
   "onboardCapturePlaceholder": "Orar por la salud de mi hermana…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Organizar",
   "savePrayer": "Guardar oración",
   "rhythmLabel": "¿Con qué frecuencia debe volver?",
-  "rhythmFlexible": "Flexible",
+  "rhythmFlexible": "Plan semanal",
   "rhythmOccasionally": "De vez en cuando",
   "rhythmCustom": "Personalizado",
   "doneBtn": "Listo",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "Aún no hay notificaciones",
   "notifEmptySub": "Las novedades de tus grupos y amigos aparecerán aquí.",
   "notifError": "No se pudieron cargar las notificaciones.",
-  "notifUnreadLabel": "Notificaciones ({n} sin leer)",
+  "notifUnreadLabel": "Bandeja de entrada ({n} sin leer)",
   "notifFriendRequest": "Tienes una nueva solicitud de amistad",
   "notifGroupInvitation": "Te han invitado a un grupo de oración",
   "notifCommunityUpdate": "Hay una actualización en una oración que sigues",

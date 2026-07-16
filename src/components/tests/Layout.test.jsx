@@ -14,6 +14,7 @@ vi.mock('../NotificationBell', () => ({ default: () => null }));
 import Layout from '../Layout';
 import usePrayerStore from '../../store/prayerStore';
 import useCommunityStore from '../../store/communityStore';
+import useLayoutStore from '../../store/layoutStore';
 import { t } from '../../i18n';
 
 const lang = 'fr';
@@ -21,6 +22,7 @@ afterEach(cleanup);
 beforeEach(() => {
   usePrayerStore.setState({ settings: { language: lang } });
   useCommunityStore.setState({ pendingCount: 0 });
+  useLayoutStore.setState({ fabSuppressed: false });
 });
 
 const renderNav = () =>
@@ -46,5 +48,20 @@ describe('Layout — primary navigation', () => {
     // Grow and Settings moved inside More — off the prime navigation.
     expect(screen.queryByText(t(lang, 'grow'))).toBeNull();
     expect(screen.queryByText(t(lang, 'settings'))).toBeNull();
+  });
+});
+
+describe('Layout — floating Add button suppression', () => {
+  it('shows the FAB by default', () => {
+    renderNav();
+    expect(screen.getAllByRole('button', { name: t(lang, 'tipAddPrayer') }).length).toBeGreaterThan(0);
+  });
+
+  it('hides the FAB while a page declares its own prominent Add CTA', () => {
+    useLayoutStore.setState({ fabSuppressed: true });
+    renderNav();
+    // Only the sidebar "New prayer" button remains; the mobile FAB
+    // (aria-label = tipAddPrayer) is gone.
+    expect(screen.queryByRole('button', { name: t(lang, 'tipAddPrayer') })).toBeNull();
   });
 });

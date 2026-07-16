@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Hari ini · {n} tersisa",
+  "todayCompleteTitle": "Doa hari ini sudah selesai.",
+  "prayAgain": "Berdoa lagi",
+  "prayedTodayLabel": "Sudah didoakan hari ini",
+  "rhythmPlanHint": "Mengikuti rencana mingguan per kategori — tanpa kategori, kembali setiap hari.",
+  "answeredThisWeek": "{n} dijawab minggu ini",
+  "prayWithOthers": "Berdoa bersama orang lain",
+  "communityEmptyDesc": "Bergabunglah dengan kelompok doa lewat tautan atau kode undangan.",
+  "inbox": "Kotak masuk",
+  "prayerReminders": "Pengingat doa",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "Apa yang ingin Anda doakan?",
   "onboardCapturePlaceholder": "Mendoakan kesehatan kakak saya…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Atur",
   "savePrayer": "Simpan doa",
   "rhythmLabel": "Seberapa sering doa ini kembali?",
-  "rhythmFlexible": "Fleksibel",
+  "rhythmFlexible": "Rencana mingguan",
   "rhythmOccasionally": "Sesekali",
   "rhythmCustom": "Kustom",
   "doneBtn": "Selesai",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "Belum ada notifikasi",
   "notifEmptySub": "Pembaruan dari grup dan teman Anda akan muncul di sini.",
   "notifError": "Tidak dapat memuat notifikasi.",
-  "notifUnreadLabel": "Notifikasi ({n} belum dibaca)",
+  "notifUnreadLabel": "Kotak masuk ({n} belum dibaca)",
   "notifFriendRequest": "Anda punya permintaan pertemanan baru",
   "notifGroupInvitation": "Anda diundang ke grup doa",
   "notifCommunityUpdate": "Ada pembaruan pada doa yang Anda ikuti",

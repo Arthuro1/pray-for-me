@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
+import useLayoutStore from '../store/layoutStore';
 import NotificationBell from './NotificationBell';
 import { t } from '../i18n';
 
@@ -25,6 +26,7 @@ const MD_BREAKPOINT = 768;
 export default function Layout({ children, onAddPrayer }) {
   const settings = usePrayerStore((s) => s.settings);
   const pendingCount = useCommunityStore((s) => s.pendingCount);
+  const fabSuppressed = useLayoutStore((s) => s.fabSuppressed);
   const lang = settings.language || 'en';
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -181,21 +183,26 @@ export default function Layout({ children, onAddPrayer }) {
         {children}
       </main>
 
-      {/* ── FAB (mobile only) ── */}
-      <button
-        onClick={onAddPrayer}
-        title={t(lang, "tipAddPrayer")}
-        className="md:hidden fixed z-20 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95"
-        style={{
-          bottom: '72px',
-          right: '20px',
-          width: '52px',
-          height: '52px',
-          background: 'var(--header)',
-        }}
-      >
-        <Plus size={24} color="white" strokeWidth={2.5} />
-      </button>
+      {/* ── FAB (mobile only) ── Pages showing their own prominent Add CTA
+          (empty Today / empty Journal) suppress it via useSuppressFab, so only
+          one Add action is prominent per viewport. */}
+      {!fabSuppressed && (
+        <button
+          onClick={onAddPrayer}
+          title={t(lang, "tipAddPrayer")}
+          aria-label={t(lang, "tipAddPrayer")}
+          className="md:hidden fixed z-20 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95"
+          style={{
+            bottom: '72px',
+            right: '20px',
+            width: '52px',
+            height: '52px',
+            background: 'var(--header)',
+          }}
+        >
+          <Plus size={24} color="white" strokeWidth={2.5} />
+        </button>
+      )}
 
       {/* ── Bottom nav (mobile only) ── */}
       <nav

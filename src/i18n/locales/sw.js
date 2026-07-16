@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "Leo · bado {n}",
+  "todayCompleteTitle": "Maombi ya leo yamekamilika.",
+  "prayAgain": "Omba tena",
+  "prayedTodayLabel": "Yaliyoombwa leo",
+  "rhythmPlanHint": "Hufuata mpango wako wa juma wa makundi — bila makundi, hurudi kila siku.",
+  "answeredThisWeek": "{n} zimejibiwa wiki hii",
+  "prayWithOthers": "Omba na wengine",
+  "communityEmptyDesc": "Jiunge na kikundi cha maombi kwa kiungo au msimbo wa mwaliko.",
+  "inbox": "Kikasha",
+  "prayerReminders": "Vikumbusho vya maombi",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "Ungependa kuomba kwa ajili ya nini?",
   "onboardCapturePlaceholder": "Kuombea afya ya dada yangu…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "Panga",
   "savePrayer": "Hifadhi ombi",
   "rhythmLabel": "Lirudi mara ngapi?",
-  "rhythmFlexible": "Huru",
+  "rhythmFlexible": "Mpango wa juma",
   "rhythmOccasionally": "Mara chache",
   "rhythmCustom": "Maalum",
   "doneBtn": "Imekamilika",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "Bado hakuna arifa",
   "notifEmptySub": "Habari kutoka vikundi na marafiki zako zitaonekana hapa.",
   "notifError": "Imeshindwa kupakia arifa.",
-  "notifUnreadLabel": "Arifa ({n} hazijasomwa)",
+  "notifUnreadLabel": "Kikasha ({n} hazijasomwa)",
   "notifFriendRequest": "Una ombi jipya la urafiki",
   "notifGroupInvitation": "Umealikwa kwenye kikundi cha maombi",
   "notifCommunityUpdate": "Kuna sasisho kwenye ombi unalofuatilia",

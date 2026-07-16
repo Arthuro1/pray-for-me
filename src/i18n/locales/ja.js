@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "今日 · あと {n} 件",
+  "todayCompleteTitle": "今日の祈りは完了しました。",
+  "prayAgain": "もう一度祈る",
+  "prayedTodayLabel": "今日祈った",
+  "rhythmPlanHint": "週間カテゴリープランに従います——カテゴリーがない場合は毎日表示されます。",
+  "answeredThisWeek": "今週 {n} 件の応答",
+  "prayWithOthers": "みんなで祈る",
+  "communityEmptyDesc": "招待リンクまたはコードで祈りのグループに参加しましょう。",
+  "inbox": "受信箱",
+  "prayerReminders": "祈りのリマインダー",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "何のために祈りたいですか？",
   "onboardCapturePlaceholder": "姉の健康のために祈る…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "整理する",
   "savePrayer": "祈りを保存",
   "rhythmLabel": "どのくらいの頻度で戻しますか？",
-  "rhythmFlexible": "柔軟に",
+  "rhythmFlexible": "週間プラン",
   "rhythmOccasionally": "ときどき",
   "rhythmCustom": "カスタム",
   "doneBtn": "完了",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "通知はまだありません",
   "notifEmptySub": "グループや友だちの新着がここに表示されます。",
   "notifError": "通知を読み込めませんでした。",
-  "notifUnreadLabel": "通知（未読 {n} 件）",
+  "notifUnreadLabel": "受信箱（未読 {n} 件）",
   "notifFriendRequest": "新しい友達リクエストがあります",
   "notifGroupInvitation": "祈りのグループに招待されました",
   "notifCommunityUpdate": "フォロー中の祈りに更新があります",

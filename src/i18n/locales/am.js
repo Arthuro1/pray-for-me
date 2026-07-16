@@ -1,4 +1,15 @@
 export default {
+  // ── Completion-driven Today, Journal header, Inbox & community onboarding (AI-authored — pending native review) ──
+  "todayRemainingLabel": "ዛሬ · የቀሩ {n}",
+  "todayCompleteTitle": "የዛሬ ጸሎት ተጠናቅቋል።",
+  "prayAgain": "እንደገና ይጸልዩ",
+  "prayedTodayLabel": "ዛሬ የተጸለዩ",
+  "rhythmPlanHint": "የሳምንታዊ ምድብ እቅድዎን ይከተላል — ያለ ምድብ በየቀኑ ይመለሳል።",
+  "answeredThisWeek": "በዚህ ሳምንት {n} ተመልሰዋል",
+  "prayWithOthers": "ከሌሎች ጋር ይጸልዩ",
+  "communityEmptyDesc": "በግብዣ አገናኝ ወይም ኮድ የጸሎት ቡድን ይቀላቀሉ።",
+  "inbox": "የገቢ መልዕክት ሳጥን",
+  "prayerReminders": "የጸሎት ማስታወሻዎች",
   // ── First-prayer onboarding, quick add & 4-tab nav (AI-authored — pending native review) ──
   "onboardCaptureTitle": "ስለ ምን መጸለይ ይፈልጋሉ?",
   "onboardCapturePlaceholder": "ለእህቴ ጤና መጸለይ…",
@@ -11,7 +22,7 @@ export default {
   "organizeLabel": "አደራጅ",
   "savePrayer": "ጸሎት አስቀምጥ",
   "rhythmLabel": "በምን ያህል ጊዜ ይመለስ?",
-  "rhythmFlexible": "ተለዋዋጭ",
+  "rhythmFlexible": "ሳምንታዊ እቅድ",
   "rhythmOccasionally": "አልፎ አልፎ",
   "rhythmCustom": "ብጁ",
   "doneBtn": "ተጠናቋል",
@@ -89,7 +100,7 @@ export default {
   "notifEmpty": "እስካሁን ማሳወቂያ የለም",
   "notifEmptySub": "ከቡድኖችዎ እና ከጓደኞችዎ ዜናዎች እዚህ ይታያሉ።",
   "notifError": "ማሳወቂያዎችን መጫን አልተቻለም።",
-  "notifUnreadLabel": "ማሳወቂያዎች ({n} ያልተነበቡ)",
+  "notifUnreadLabel": "የገቢ መልዕክት ሳጥን ({n} ያልተነበቡ)",
   "notifFriendRequest": "አዲስ የጓደኝነት ጥያቄ አለዎት",
   "notifGroupInvitation": "ወደ የጸሎት ቡድን ተጋብዘዋል",
   "notifCommunityUpdate": "የሚከታተሉት ጸሎት ላይ ዝማኔ አለ",

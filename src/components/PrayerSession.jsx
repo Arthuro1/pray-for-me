@@ -77,6 +77,9 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const [mode, setMode] = useState(initialMode);
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
+  // How many requests have been prayed THIS session (advanced past). Switching
+  // format mid-session resumes the requests from here instead of repeating them.
+  const [requestsCompleted, setRequestsCompleted] = useState(0);
   const [done, setDone] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   const trapRef = useFocusTrap(true);
@@ -86,16 +89,6 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const stage = stages[stageIndex];
   const total = prayers.length;
 
-  // Switching format restarts the walk from its first step (an occasional,
-  // deliberate act) and becomes the default for the next session.
-  const pickFormat = (m) => {
-    localStorage.setItem(MODE_STORAGE_KEY, m);
-    setMode(m);
-    setStageIndex(0);
-    setPrayerIndex(0);
-    setShowFormats(false);
-  };
-
   // Overall progress across every step of the chosen path (movements + each prayer).
   const stepsIn = (s) => (s === 'requests' ? total : 1);
   const totalSteps = stages.reduce((sum, s) => sum + stepsIn(s), 0);
@@ -104,15 +97,48 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     (stage === 'requests' ? prayerIndex + 1 : 1);
   const isLastStep = currentStep >= totalSteps;
 
+  // Switching format becomes the default for the next session. Before any
+  // progress the walk simply restarts in the new shape; once Grace has advanced,
+  // the REMAINING session adapts instead — prayers she already prayed are never
+  // repeated (the new format's Scripture movements still open it).
+  const pickFormat = (m) => {
+    localStorage.setItem(MODE_STORAGE_KEY, m);
+    setShowFormats(false);
+    if (m === mode) return;
+    setMode(m);
+    const hasProgress = currentStep > 1 || requestsCompleted > 0;
+    if (hasProgress && requestsCompleted >= total && MODE_STAGES[m].length === 1) {
+      // Nothing left in a requests-only walk — the session is complete.
+      setDone(true);
+      onComplete?.();
+      return;
+    }
+    setStageIndex(0);
+    setPrayerIndex(hasProgress && MODE_STAGES[m][0] === 'requests'
+      ? Math.min(requestsCompleted, total - 1)
+      : 0);
+  };
+
   const advance = () => {
     // Record each prayer as prayed the moment the user moves PAST it, so leaving
     // a session halfway still keeps the genuine progress already made.
-    if (stage === 'requests') onPrayed?.(prayers[prayerIndex].id);
-    if (stage === 'requests' && prayerIndex + 1 < total) {
-      setPrayerIndex(prayerIndex + 1);
-    } else if (stageIndex + 1 < stages.length) {
-      setStageIndex(stageIndex + 1);
-      setPrayerIndex(0);
+    let completed = requestsCompleted;
+    if (stage === 'requests') {
+      onPrayed?.(prayers[prayerIndex].id);
+      completed = Math.max(completed, prayerIndex + 1);
+      setRequestsCompleted(completed);
+      if (prayerIndex + 1 < total) {
+        setPrayerIndex(prayerIndex + 1);
+        return;
+      }
+    }
+    // Next stage. After a mid-session format change, a requests stage with
+    // nothing left is skipped rather than repeating prayers already prayed.
+    let next = stageIndex + 1;
+    while (next < stages.length && stages[next] === 'requests' && completed >= total) next++;
+    if (next < stages.length) {
+      setStageIndex(next);
+      setPrayerIndex(stages[next] === 'requests' ? Math.min(completed, total - 1) : 0);
     } else {
       setDone(true);
       onComplete?.();

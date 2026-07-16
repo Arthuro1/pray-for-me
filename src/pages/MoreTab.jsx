@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Sprout, CalendarDays, Settings, Bell, Download, Heart, ChevronRight } from 'lucide-react';
+import { Sprout, CalendarDays, Settings, Download, Heart, ChevronRight } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 
 // Everything that matters but isn't daily: Grow, planning, settings, data and
 // support live here so the bottom navigation stays about Today / Journal /
-// Community. Each row is a plain destination — no state, no logic.
+// Community. Each row is a plain destination — no state, no logic. The inbox is
+// NOT duplicated here: the bell in the header is its one way in.
 export default function MoreTab() {
   const navigate = useNavigate();
   const settings = usePrayerStore((s) => s.settings);
@@ -14,7 +15,6 @@ export default function MoreTab() {
   const items = [
     { key: 'grow', icon: Sprout, label: t(lang, 'grow'), to: '/grow' },
     { key: 'plan', icon: CalendarDays, label: t(lang, 'plan'), to: '/plan' },
-    { key: 'notifications', icon: Bell, label: t(lang, 'notifications'), to: '/notifications' },
     { key: 'settings', icon: Settings, label: t(lang, 'settings'), to: '/settings' },
     // Deep links force-open their Settings section (see SettingsTab hash effect).
     { key: 'export', icon: Download, label: t(lang, 'exportData'), to: '/settings#data' },
