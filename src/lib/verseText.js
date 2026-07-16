@@ -22,11 +22,24 @@
 // text. AI may still offer a devotional REFLECTION elsewhere (behind consent),
 // but it must not produce the verse text itself.
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
-import { versionForLang, referenceToUsfm } from './bibleRef';
+import { versionForLang, referenceToUsfm, usfmFromReference } from './bibleRef';
 import { getBundledVerse } from './verseBundle';
 import { supabase } from './supabase';
 
 const cacheKey = (lang, reference) => `verseText:${lang}:${reference}`;
+
+// The key every cache (localStorage AND the shared verse_cache table) is stored
+// under: the extent-precise USFM passage id — "PHP.1.3-11" for a range, "PSA.100"
+// for a whole chapter, "PHP.4.6" for a verse — rather than the free-form reference
+// string. This does two things: it dedups the many spellings of one passage across
+// languages, and — crucially — it sidesteps rows written by an older build that
+// stored only the FIRST verse of a range/chapter under the range's reference string
+// ("Psalm 103:1-5" → just verse 1). Keyed by passage id, those truncated rows are
+// never read again, so the full passage resolves. An unrecognized book name has no
+// id; it falls back to the reference string (unchanged, pre-existing behavior).
+function cacheKeyRef(reference, usfm) {
+  return usfm || usfmFromReference(reference) || reference;
+}
 
 // Return a previously-fetched passage for this reference + language, or null.
 export function getCachedVerseText(lang, reference) {
@@ -115,23 +128,27 @@ async function fromYouVersion(reference, lang, knownUsfm) {
 export async function fetchScriptureText({ reference, lang, usfm }) {
   if (!reference) return null;
 
+  const key = cacheKeyRef(reference, usfm);
+
   // Offline bundle first: no network, no AI, no cost. Covers the curated pool.
-  const bundled = await getBundledVerse({ reference, lang, usfm });
+  const bundled = await getBundledVerse({ reference, lang, usfm: usfm || key });
   if (bundled) return bundled;
 
-  const cached = getCachedVerseText(lang, reference);
+  const cached = getCachedVerseText(lang, key);
   if (cached?.text) return cached;
 
   // Reuse authoritative text another user already resolved. Restricted to
   // 'youversion' entries so any legacy AI-sourced row in the shared cache can
   // never resurface as Scripture — no path in this module produces verse text
   // with AI.
-  const shared = await getSharedVerse(lang, reference, { authoritativeOnly: true });
-  if (shared) { cache(lang, reference, shared); return shared; }
+  const shared = await getSharedVerse(lang, key, { authoritativeOnly: true });
+  if (shared) { cache(lang, key, shared); return shared; }
 
   if (!youVersionEnabled()) return null;
-  const yv = await fromYouVersion(reference, lang, usfm);
-  if (yv) { cache(lang, reference, yv); putSharedVerse(lang, reference, yv); }
+  // Pass the resolved passage id as the known USFM so YouVersion fetches the full
+  // extent AND we skip referenceToUsfm's own (possibly stale) localStorage cache.
+  const yv = await fromYouVersion(reference, lang, key !== reference ? key : undefined);
+  if (yv) { cache(lang, key, yv); putSharedVerse(lang, key, yv); }
   return yv;
 }
 
@@ -142,24 +159,26 @@ export async function fetchScriptureText({ reference, lang, usfm }) {
 export async function fetchVerseText({ reference, lang, usfm }) {
   if (!reference) return { data: null, error: null };
 
+  const key = cacheKeyRef(reference, usfm);
+
   // Offline bundle first: no network, no AI, no cost. Covers the curated pool.
-  const bundled = await getBundledVerse({ reference, lang, usfm });
+  const bundled = await getBundledVerse({ reference, lang, usfm: usfm || key });
   if (bundled) return { data: bundled, error: null };
 
-  const cached = getCachedVerseText(lang, reference);
+  const cached = getCachedVerseText(lang, key);
   if (cached?.text) return { data: cached, error: null };
 
   // Reuse authoritative text already resolved by another user/device before
   // spending a live API call. Restricted to 'youversion' rows so no legacy
   // AI-sourced entry can resurface as authoritative Scripture.
-  const shared = await getSharedVerse(lang, reference, { authoritativeOnly: true });
-  if (shared) { cache(lang, reference, shared); return { data: shared, error: null }; }
+  const shared = await getSharedVerse(lang, key, { authoritativeOnly: true });
+  if (shared) { cache(lang, key, shared); return { data: shared, error: null }; }
 
   if (youVersionEnabled()) {
-    const yv = await fromYouVersion(reference, lang);
+    const yv = await fromYouVersion(reference, lang, key !== reference ? key : undefined);
     if (yv) {
-      cache(lang, reference, yv);
-      putSharedVerse(lang, reference, yv);
+      cache(lang, key, yv);
+      putSharedVerse(lang, key, yv);
       return { data: yv, error: null };
     }
   }

@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Records the value of every `.eq('reference', …)` the shared-cache query makes, so
+// a test can assert WHAT key the cache is looked up under (the passage id, not the
+// free-form reference string).
+const spy = vi.hoisted(() => ({ refQueries: [] }));
+
 // Mock every external source so the tests exercise ONLY the fallback ordering
 // and the "no AI-generated Scripture" guarantee — no network, no storage.
 vi.mock('./youversion', () => ({
@@ -9,12 +14,13 @@ vi.mock('./youversion', () => ({
 vi.mock('./bibleRef', () => ({
   versionForLang: vi.fn(() => 111),
   referenceToUsfm: vi.fn(async () => 'JHN.3.16'),
+  usfmFromReference: vi.fn(() => null),
 }));
 vi.mock('./supabase', () => {
   // Chainable stub: verse_cache lookups always miss; upsert is a no-op.
   const chain = {
     select() { return this; },
-    eq() { return this; },
+    eq(col, val) { if (col === 'reference') spy.refQueries.push(val); return this; },
     maybeSingle: async () => ({ data: null }),
     upsert() { return { then: (resolve) => resolve({}) }; },
   };
@@ -22,13 +28,26 @@ vi.mock('./supabase', () => {
 });
 
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
+import { usfmFromReference } from './bibleRef';
 import { fetchVerseText } from './verseText';
 
 describe('fetchVerseText — authoritative-only Scripture', () => {
   beforeEach(() => {
     vi.mocked(youVersionEnabled).mockReturnValue(false);
     vi.mocked(fetchYouVersionPassage).mockResolvedValue({ data: null });
+    vi.mocked(usfmFromReference).mockReturnValue(null);
+    spy.refQueries.length = 0;
     try { localStorage.clear?.(); } catch { /* no storage in node env */ }
+  });
+
+  it('keys the shared cache by the USFM passage id, not the reference string', async () => {
+    // A range reference must be looked up under its extent-precise passage id, so
+    // it can never read a row an older build wrote (single-verse text stored under
+    // the range's reference string). This is what un-masks the full-passage fix.
+    vi.mocked(usfmFromReference).mockReturnValue('PHP.1.3-11');
+    await fetchVerseText({ reference: 'Philippians 1:3-11', lang: 'en' });
+    expect(spy.refQueries).toContain('PHP.1.3-11');
+    expect(spy.refQueries).not.toContain('Philippians 1:3-11');
   });
 
   it('returns reference-only (no text, no error) when no authoritative source is available', async () => {
