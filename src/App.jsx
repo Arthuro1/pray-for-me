@@ -18,7 +18,7 @@ import useAuthStore from './store/authStore';
 // Route components are code-split so each page loads as its own chunk.
 const HomeTab = lazy(() => import('./pages/HomeTab'));
 const PrayersTab = lazy(() => import('./pages/PrayersTab'));
-const AnsweredTab = lazy(() => import('./pages/AnsweredTab'));
+const MoreTab = lazy(() => import('./pages/MoreTab'));
 const PlanTab = lazy(() => import('./pages/PlanTab'));
 const GrowTab = lazy(() => import('./pages/GrowTab'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
@@ -331,7 +331,10 @@ export default function App() {
               <Route path="/" element={<HomeTab onAdd={openAdd} />} />
               <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
               <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
-              <Route path="/answered" element={<AnsweredTab />} />
+              {/* The answered gallery is the Journal's second segment now; the
+                  old standalone page redirects there so saved links keep working. */}
+              <Route path="/answered" element={<Navigate to="/prayers" state={{ filter: 'answered' }} replace />} />
+              <Route path="/more" element={<MoreTab />} />
               <Route path="/community" element={<CommunityTab />} />
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
@@ -350,7 +353,7 @@ export default function App() {
         <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); setFormPrefill(null); }} editPrayer={editPrayer} prefill={formPrefill} />
       )}
       {showOnboarding && (
-        <Onboarding lang={lang} onFinish={finishOnboarding} onAddPrayer={openAdd} />
+        <Onboarding lang={lang} onFinish={finishOnboarding} />
       )}
       <OfflineBanner />
       <SyncIndicator />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Check, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
+import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -8,7 +8,9 @@ import { movementPassage } from '../lib/prayerMovements';
 import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
 
-// "Pray now" meets the user where they are, then gently invites them deeper:
+// "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
+// straight into the last-used format (requests, for a new user) and a small
+// "Prayer format" control inside the session offers the deeper paths:
 //   requests — pray straight through today's burdens (the default)
 //   guided   — open in adoration, pray the requests, close in thanksgiving
 //   acts     — Adoration → Confession → Thanksgiving → Supplication (the requests)
@@ -27,10 +29,17 @@ const MOVEMENT_META = {
 };
 
 const MODE_OPTIONS = [
-  { mode: 'requests', titleKey: 'modeRequests', descKey: 'modeRequestsDesc', primary: true },
+  { mode: 'requests', titleKey: 'modeRequests', descKey: 'modeRequestsDesc' },
   { mode: 'guided', titleKey: 'modeGuided', descKey: 'modeGuidedDesc' },
   { mode: 'acts', titleKey: 'modeActs', descKey: 'modeActsDesc' },
 ];
+
+const MODE_STORAGE_KEY = 'pfm_prayer_mode';
+
+function initialMode() {
+  const saved = localStorage.getItem(MODE_STORAGE_KEY);
+  return MODE_STAGES[saved] ? saved : 'requests';
+}
 
 // A single Scripture citation on a prayer point, shown in the reader's language.
 // Verses are stored in the language the prayer was created in; useLocalizedVerse
@@ -64,17 +73,28 @@ function SessionVerse({ verse, lang }) {
   );
 }
 
-export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete }) {
-  const [mode, setMode] = useState(null);
+export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed }) {
+  const [mode, setMode] = useState(initialMode);
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
   const [done, setDone] = useState(false);
+  const [showFormats, setShowFormats] = useState(false);
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
-  const stages = mode ? MODE_STAGES[mode] : [];
+  const stages = MODE_STAGES[mode];
   const stage = stages[stageIndex];
   const total = prayers.length;
+
+  // Switching format restarts the walk from its first step (an occasional,
+  // deliberate act) and becomes the default for the next session.
+  const pickFormat = (m) => {
+    localStorage.setItem(MODE_STORAGE_KEY, m);
+    setMode(m);
+    setStageIndex(0);
+    setPrayerIndex(0);
+    setShowFormats(false);
+  };
 
   // Overall progress across every step of the chosen path (movements + each prayer).
   const stepsIn = (s) => (s === 'requests' ? total : 1);
@@ -85,6 +105,9 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const isLastStep = currentStep >= totalSteps;
 
   const advance = () => {
+    // Record each prayer as prayed the moment the user moves PAST it, so leaving
+    // a session halfway still keeps the genuine progress already made.
+    if (stage === 'requests') onPrayed?.(prayers[prayerIndex].id);
     if (stage === 'requests' && prayerIndex + 1 < total) {
       setPrayerIndex(prayerIndex + 1);
     } else if (stageIndex + 1 < stages.length) {
@@ -96,12 +119,11 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     }
   };
 
-  // Step back through the same path `advance` walks forward. From the very first
-  // step this returns to the path picker so the whole session stays reversible.
-  // Re-entering a supplication stage lands on its LAST prayer, mirroring advance.
+  // Step back through the same path `advance` walks forward. Re-entering a
+  // supplication stage lands on its LAST prayer, mirroring advance.
   const back = () => {
     if (currentStep <= 1) {
-      setMode(null);
+      return;
     } else if (stage === 'requests' && prayerIndex > 0) {
       setPrayerIndex(prayerIndex - 1);
     } else {
@@ -136,54 +158,22 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     </button>
   );
 
-  // Footer paired with a Back control, shared by the movement and supplication views.
+  // Footer paired with a Back control, shared by the movement and supplication
+  // views. Back hides on the very first step — there is no picker to return to.
   const footer = (
     <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
-      <button
-        onClick={back}
-        className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
-      >
-        <ChevronLeft size={16} /> {t(lang, 'backBtn')}
-      </button>
+      {currentStep > 1 && (
+        <button
+          onClick={back}
+          className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
+          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+        >
+          <ChevronLeft size={16} /> {t(lang, 'backBtn')}
+        </button>
+      )}
       {advanceButton}
     </div>
   );
-
-  // Entry: receive the burden first, then gently offer the deeper paths.
-  if (!mode) {
-    return overlay(
-      <>
-        <div className="shrink-0 px-5 pt-4 flex justify-end">{closeButton}</div>
-        <div className="flex-1 overflow-y-auto px-6 pb-8 max-w-xl mx-auto w-full">
-          <div className="text-center mb-7">
-            <div className="text-5xl mb-3">🙏</div>
-            <h2 className="text-xl font-semibold mb-1.5" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayNowIntroTitle')}</h2>
-            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'prayNowIntroSub', { n: total })}</p>
-          </div>
-          <div className="space-y-3">
-            {MODE_OPTIONS.map(({ mode: m, titleKey, descKey, primary }) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                className="w-full text-left rounded-2xl px-4 py-3.5"
-                style={primary
-                  ? { background: 'var(--accent)', color: '#fff' }
-                  : { background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-1)' }}
-              >
-                <p className="text-sm font-semibold flex items-center justify-between gap-2">
-                  {t(lang, titleKey)} <ChevronRight size={16} className="shrink-0 opacity-70" />
-                </p>
-                <p className="text-xs mt-0.5" style={{ color: primary ? 'rgba(255,255,255,0.85)' : 'var(--text-3)' }}>
-                  {t(lang, descKey)}
-                </p>
-              </button>
-            ))}
-          </div>
-        </div>
-      </>
-    );
-  }
 
   if (done) {
     return overlay(
@@ -203,15 +193,48 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     );
   }
 
-  // Shared header: overall progress + close.
+  // Shared header: overall progress, the format control, and close. The format
+  // control is a small, quiet affordance — the session already started, and the
+  // deeper paths (guided / ACTS) live one tap beneath it.
   const header = (
     <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--header)' }}>
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between gap-2 mb-3">
         <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.7)' }}>
           {currentStep} / {totalSteps}
         </span>
-        {closeButton}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowFormats((v) => !v)}
+            aria-expanded={showFormats}
+            title={t(lang, 'prayerFormat')}
+            className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-full font-medium"
+            style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
+          >
+            {t(lang, MODE_OPTIONS.find((o) => o.mode === mode).titleKey)}
+            <ChevronDown size={12} style={{ transform: showFormats ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+          </button>
+          {closeButton}
+        </div>
       </div>
+      {showFormats && (
+        <div className="rounded-2xl p-1.5 mb-3 space-y-1" style={{ background: 'rgba(255,255,255,0.1)' }} role="radiogroup" aria-label={t(lang, 'prayerFormat')}>
+          {MODE_OPTIONS.map(({ mode: m, titleKey, descKey }) => (
+            <button
+              key={m}
+              role="radio"
+              aria-checked={m === mode}
+              onClick={() => pickFormat(m)}
+              className="w-full text-left rounded-xl px-3 py-2"
+              style={m === mode ? { background: 'rgba(255,255,255,0.2)' } : {}}
+            >
+              <p className="text-xs font-semibold flex items-center gap-1.5 text-white">
+                {m === mode && <Check size={12} />} {t(lang, titleKey)}
+              </p>
+              <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>{t(lang, descKey)}</p>
+            </button>
+          ))}
+        </div>
+      )}
       <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.2)' }}>
         <div className="h-full rounded-full transition-all duration-300" style={{ width: `${(currentStep / totalSteps) * 100}%`, background: '#fff' }} />
       </div>

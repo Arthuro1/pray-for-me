@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, BookOpen, Settings, Plus, ChevronLeft, ChevronRight, Users, Sprout } from 'lucide-react';
+import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import NotificationBell from './NotificationBell';
@@ -46,21 +46,26 @@ export default function Layout({ children, onAddPrayer }) {
     }
   }, [sidebarWidth, isMd]);
 
-  // Primary navigation is kept to the five most-used spiritual areas so the
-  // daily prayer rhythm stays front-and-centre. "Plan" (the scheduling calendar)
-  // is folded into Today — its /plan route stays reachable from the Home header,
-  // it's just no longer a top-level tab competing for attention.
+  // Four destinations, so the daily prayer rhythm stays front-and-centre:
+  // Today, Journal, Community and More. Grow, Plan, Settings, data export and
+  // support all live inside More — Settings no longer occupies prime
+  // bottom-navigation space.
   const tabs = [
     { id: 'home', path: '/', label: t(lang, 'today'), icon: Home },
     // Label reads "Journal" (all requests + history); route/id stay `prayers`.
     { id: 'prayers', path: '/prayers', label: t(lang, 'journal'), icon: BookOpen },
     { id: 'community', path: '/community', label: t(lang, 'community'), icon: Users, badge: pendingCount },
-    { id: 'grow', path: '/grow', label: t(lang, 'grow'), icon: Sprout },
-    { id: 'settings', path: '/settings', label: t(lang, 'settings'), icon: Settings },
+    { id: 'more', path: '/more', label: t(lang, 'moreTab'), icon: MoreHorizontal },
   ];
 
-  // A tab is active when the path matches (home is exact; others by prefix).
-  const isActive = (path) => path === '/' ? pathname === '/' : pathname.startsWith(path);
+  // Destinations reached THROUGH More keep the More tab lit, so the user always
+  // knows the way back to them.
+  const MORE_PATHS = ['/more', '/grow', '/plan', '/settings', '/notifications'];
+  const isActive = (path) => {
+    if (path === '/') return pathname === '/';
+    if (path === '/more') return MORE_PATHS.some((p) => pathname.startsWith(p));
+    return pathname.startsWith(path);
+  };
 
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>

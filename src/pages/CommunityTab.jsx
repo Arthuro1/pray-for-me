@@ -97,6 +97,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [showJoinGroup, setShowJoinGroup] = useState(false);
   const [showAddFriend, setShowAddFriend] = useState(false);
 
   const load = useCallback(async () => {
@@ -148,14 +149,31 @@ function CommunityHub({ lang, userId, onViewGroup }) {
       <div className="px-5 md:px-8 py-6 max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--text-1)' }}>{t(lang, 'community')}</h1>
 
-        <div className="grid grid-cols-2 gap-3 mb-8">
-          <button onClick={() => setShowCreateGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
-            <Plus size={16} /> {t(lang, 'createGroup')}
-          </button>
-          <button onClick={() => setShowAddFriend(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
-            <UserPlus size={16} /> {t(lang, 'addFriend')}
-          </button>
-        </div>
+        {/* An empty community account leads with JOINING (most believers are
+            invited into an existing group); creating one comes second. Once the
+            user belongs somewhere, creating is promoted back to the front. */}
+        {groups.length === 0 ? (
+          <div className="grid grid-cols-2 gap-3 mb-8">
+            <button onClick={() => setShowJoinGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+              <Users size={16} /> {t(lang, 'joinGroupCta')}
+            </button>
+            <button onClick={() => setShowCreateGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
+              <Plus size={16} /> {t(lang, 'createGroup')}
+            </button>
+            <button onClick={() => setShowAddFriend(true)} className="col-span-2 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
+              <UserPlus size={16} /> {t(lang, 'addFriend')}
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 mb-8">
+            <button onClick={() => setShowCreateGroup(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+              <Plus size={16} /> {t(lang, 'createGroup')}
+            </button>
+            <button onClick={() => setShowAddFriend(true)} className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium" style={SUBTLE_BTN}>
+              <UserPlus size={16} /> {t(lang, 'addFriend')}
+            </button>
+          </div>
+        )}
 
         {friendRequests.length > 0 && (
           <Section title={`${t(lang, 'friendRequests')} (${friendRequests.length})`} icon={<Mail size={18} />}>
@@ -188,9 +206,9 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             <EmptyState
               emoji="👥"
               title={t(lang, 'noGroups')}
-              actionLabel={t(lang, 'createGroup')}
-              actionIcon={Plus}
-              onAction={() => setShowCreateGroup(true)}
+              actionLabel={t(lang, 'joinGroupCta')}
+              actionIcon={Users}
+              onAction={() => setShowJoinGroup(true)}
             />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -235,6 +253,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         )}
 
         {showCreateGroup && <CreateGroupModal lang={lang} userId={userId} onClose={() => setShowCreateGroup(false)} onDone={() => { setShowCreateGroup(false); }} />}
+        {showJoinGroup && <JoinGroupModal lang={lang} userId={userId} onClose={() => setShowJoinGroup(false)} onJoined={(groupId) => { setShowJoinGroup(false); onViewGroup(groupId); }} />}
         {showAddFriend && <AddFriendModal lang={lang} userId={userId} onClose={() => setShowAddFriend(false)} />}
       </div>
     </div>
@@ -293,6 +312,44 @@ function CreateGroupModal({ lang, userId, onClose, onDone }) {
       {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
       <ModalActions lang={lang} onCancel={onClose} onSubmit={handleCreate}
         disabled={!name.trim() || loading} loading={loading} submitLabel={t(lang, 'createGroup')} />
+    </Modal>
+  );
+}
+
+// ── Join Group Modal ────────────────────────────────────────────────────────
+// Joining happens through an invite link or code shared by a member; this modal
+// accepts either (a full URL just contributes its last path segment) and reuses
+// the same joinGroup flow as the /community/join/:code deep link.
+function JoinGroupModal({ lang, userId, onClose, onJoined }) {
+  const joinGroup = useCommunityStore((s) => s.joinGroup);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const code = input.trim().split(/[/\s]+/).filter(Boolean).pop() || '';
+
+  const handleJoin = async () => {
+    if (!code || loading) return;
+    setLoading(true);
+    const res = await joinGroup(code, userId);
+    setLoading(false);
+    if (res.group) {
+      toast.success(t(lang, 'joinedGroup'));
+      onJoined(res.group.id);
+    } else {
+      setError(t(lang, res.error === 'alreadyMember' ? 'alreadyMember' : 'groupNotFound'));
+    }
+  };
+
+  return (
+    <Modal title={t(lang, 'joinGroupCta')} lang={lang} onClose={onClose}>
+      <p className="text-xs mb-3 leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'joinGroupHint')}</p>
+      <input autoFocus value={input} onChange={e => { setInput(e.target.value); setError(''); }}
+        placeholder={t(lang, 'joinGroupPlaceholder')}
+        className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
+      {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
+      <ModalActions lang={lang} onCancel={onClose} onSubmit={handleJoin}
+        disabled={!code || loading} loading={loading} submitLabel={t(lang, 'join')} />
     </Modal>
   );
 }

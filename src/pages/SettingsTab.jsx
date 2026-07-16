@@ -148,10 +148,10 @@ export default function SettingsTab() {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
-  // Frequently-used sections start open; advanced/support collapse to keep the
-  // first view calm. A deep-link (below) force-opens whatever it targets.
+  // Settings reads as a short list of destinations: every section starts
+  // collapsed and opens on demand. A deep-link (below) force-opens its target.
   const [openSections, setOpenSections] = useState({
-    account: true, notifications: true, appearance: true, data: false, support: false,
+    account: false, notifications: false, appearance: false, data: false, support: false,
   });
   const toggleSection = (key) => setOpenSections((s) => ({ ...s, [key]: !s[key] }));
 

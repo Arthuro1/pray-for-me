@@ -32,41 +32,6 @@ import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
 const pendingDeletes = new Map();
 const UNDO_WINDOW_MS = 6000;
 
-const DEFAULT_CATEGORIES = {
-  fr: [
-    { name: 'Famille', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
-    { name: 'Santé', color: '#059669', emoji: '🙏', week_days: [2] },
-    { name: 'Travail & Études', color: '#d97706', emoji: '💼', week_days: [3] },
-    { name: 'Église', color: '#7c3aed', emoji: '⛪', week_days: [4] },
-    { name: 'Nations & Gouvernements', color: '#dc2626', emoji: '🌍', week_days: [5] },
-    { name: 'Personnel & Spirituel', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
-  ],
-  en: [
-    { name: 'Family', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
-    { name: 'Health', color: '#059669', emoji: '🙏', week_days: [2] },
-    { name: 'Work & Studies', color: '#d97706', emoji: '💼', week_days: [3] },
-    { name: 'Church', color: '#7c3aed', emoji: '⛪', week_days: [4] },
-    { name: 'Nations & Governments', color: '#dc2626', emoji: '🌍', week_days: [5] },
-    { name: 'Personal & Spiritual', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
-  ],
-  de: [
-    { name: 'Familie', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
-    { name: 'Gesundheit', color: '#059669', emoji: '🙏', week_days: [2] },
-    { name: 'Arbeit & Studium', color: '#d97706', emoji: '💼', week_days: [3] },
-    { name: 'Kirche', color: '#7c3aed', emoji: '⛪', week_days: [4] },
-    { name: 'Nationen & Regierungen', color: '#dc2626', emoji: '🌍', week_days: [5] },
-    { name: 'Persönlich & Geistlich', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
-  ],
-  pt: [
-    { name: 'Família', color: '#4f46e5', emoji: '👨‍👩‍👧‍👦', week_days: [1] },
-    { name: 'Saúde', color: '#059669', emoji: '🙏', week_days: [2] },
-    { name: 'Trabalho & Estudos', color: '#d97706', emoji: '💼', week_days: [3] },
-    { name: 'Igreja', color: '#7c3aed', emoji: '⛪', week_days: [4] },
-    { name: 'Nações & Governos', color: '#dc2626', emoji: '🌍', week_days: [5] },
-    { name: 'Pessoal & Espiritual', color: '#0891b2', emoji: '✨', week_days: [0, 6] },
-  ],
-};
-
 // A prayer's NESTED content (updates / points / testimonies) is encrypted at rest
 // under the account key exactly when the prayer itself is (canEncrypt). Sharing no
 // longer forces the child rows to stay plaintext: a shared prayer's community copy
@@ -265,20 +230,10 @@ const usePrayerStore = create((set, get) => ({
       return;
     }
 
-    if (!cats || cats.length === 0) {
-      const lang = get().settings.language || 'fr';
-      const defaults = DEFAULT_CATEGORIES[lang] || DEFAULT_CATEGORIES.fr;
-      const { data: newCats } = await supabase
-        .from('categories')
-        .upsert(
-          defaults.map((c) => ({ ...c, user_id: userId })),
-          { onConflict: 'user_id,name', ignoreDuplicates: true }
-        )
-        .select();
-      cats = newCats && newCats.length > 0 ? newCats : (
-        (await supabase.from('categories').select('*').eq('user_id', userId).order('created_at')).data || []
-      );
-    }
+    // New accounts start with NO categories: an uncategorized, unscheduled
+    // prayer simply shows up daily (see lib/planner.js), so structure is never
+    // imposed before there are enough prayers to need it. Users create their
+    // own categories when organizing starts to matter to them.
 
     let serverPrayers;
     try {

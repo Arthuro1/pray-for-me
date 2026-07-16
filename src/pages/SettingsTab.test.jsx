@@ -72,12 +72,12 @@ describe('SettingsTab — grouped sections', () => {
     expect(screen.getByText(t(lang, 'remindersTitle'))).toBeTruthy();
   });
 
-  it('starts advanced/support sections collapsed but their headers reachable', () => {
+  it('starts EVERY section collapsed — Settings reads as a short list of destinations', () => {
     render(<SettingsTab />);
     // Panels are present in the DOM; collapsed ones carry the `hidden` attribute.
-    expect(document.getElementById('data-panel').hidden).toBe(true);
-    expect(document.getElementById('support-panel').hidden).toBe(true);
-    expect(document.getElementById('notifications-panel').hidden).toBe(false);
+    for (const id of ['account-panel', 'notifications-panel', 'appearance-panel', 'data-panel', 'support-panel']) {
+      expect(document.getElementById(id).hidden, `${id} should start collapsed`).toBe(true);
+    }
   });
 
   it('expands the section named by a /settings#<id> deep-link', () => {

@@ -27,33 +27,10 @@ const LANGS = [
 
 const ALL_CODES = LANGS.map(l => l.code);
 
-// The stats strip below shows illustrative numbers, NOT live platform metrics.
-// This caption makes that explicit in every language so the sample can never be
-// mistaken for real usage data. Kept in one place (rather than per-language
-// CONTENT) so it stays easy to audit.
-const STATS_SAMPLE = {
-  fr: 'Exemple — données de démonstration, pas des statistiques réelles',
-  en: 'Sample — illustrative data, not real platform statistics',
-  de: 'Beispiel — zur Veranschaulichung, keine echten Statistiken',
-  pt: 'Exemplo — dados ilustrativos, não estatísticas reais',
-  es: 'Ejemplo — datos ilustrativos, no estadísticas reales',
-  zh: '示例——仅供说明，非真实平台数据',
-  hi: 'उदाहरण — केवल दर्शाने के लिए, वास्तविक आँकड़े नहीं',
-  ja: 'サンプル — 説明用のデータであり、実際の統計ではありません',
-  sw: 'Mfano — data ya kuonyesha, si takwimu halisi',
-  am: 'ምሳሌ — ለማሳያ የቀረበ እንጂ ትክክለኛ ስታቲስቲክስ አይደለም',
-  id: 'Contoh — data ilustrasi, bukan statistik asli',
-  tl: 'Halimbawa — datos na panlarawan, hindi tunay na estadistika',
-  ko: '예시 — 설명용 데이터이며 실제 통계가 아닙니다',
-  ru: 'Пример — иллюстративные данные, не реальная статистика',
-  ar: 'مثال — بيانات توضيحية وليست إحصاءات حقيقية',
-  fa: 'نمونه — داده‌های نمایشی، نه آمار واقعی',
-};
-
 // The three things Pray4Me does, surfaced right under the hero. Icons/colours are
-// language-independent (defined once); the copy lives in one shared map — like
-// STATS_SAMPLE — with an English fallback, so all 16 languages keep working even
-// where the per-language CONTENT below is still an abbreviated placeholder.
+// language-independent (defined once); the copy lives in one shared map with an
+// English fallback, so all 16 languages keep working even where the per-language
+// CONTENT below is still an abbreviated placeholder.
 const BENEFIT_META = [
   { icon: BookOpen, color: '#7c5cfc' },
   { icon: Calendar, color: '#059669' },
@@ -181,11 +158,6 @@ const CONTENT = {
     cta: 'Commencer — c\'est gratuit',
     howItWorks: 'Voir comment ça marche',
     verse: '"La prière fervante du juste est d\'une grande efficacité." — Jacques 5:16',
-    stats: [
-      { emoji: '📋', label: 'Prières actives', value: '12', sub: 'en intercession' },
-      { emoji: '✅', label: 'Prières exaucées', value: '34', sub: 'témoignages enregistrés' },
-      { emoji: '📅', label: 'Jours couverts', value: '7/7', sub: 'plan hebdomadaire' },
-    ],
     featuresTitle: 'Tout ce dont votre vie de prière a besoin',
     featuresSub: 'Conçu pour les chrétiens qui veulent prier avec intention et suivre la fidélité de Dieu.',
     features: [
@@ -236,11 +208,6 @@ const CONTENT = {
     cta: 'Get started — it\'s free',
     howItWorks: 'See how it works',
     verse: '"The prayer of a righteous person is powerful and effective." — James 5:16',
-    stats: [
-      { emoji: '📋', label: 'Active prayers', value: '12', sub: 'being prayed for' },
-      { emoji: '✅', label: 'Answered prayers', value: '34', sub: 'testimonies recorded' },
-      { emoji: '📅', label: 'Days covered', value: '7/7', sub: 'weekly plan set' },
-    ],
     featuresTitle: 'Everything your prayer life needs',
     featuresSub: 'Built for Christians who want to pray with intention and track God\'s faithfulness.',
     features: [
@@ -291,11 +258,6 @@ const CONTENT = {
     cta: 'Loslegen — kostenlos',
     howItWorks: 'Wie es funktioniert',
     verse: '"Das Gebet eines Gerechten vermag viel." — Jakobus 5:16',
-    stats: [
-      { emoji: '📋', label: 'Aktive Gebete', value: '12', sub: 'werden gebetet' },
-      { emoji: '✅', label: 'Erhörte Gebete', value: '34', sub: 'Zeugnisse aufgezeichnet' },
-      { emoji: '📅', label: 'Tage abgedeckt', value: '7/7', sub: 'Wochenplan gesetzt' },
-    ],
     featuresTitle: 'Alles, was dein Gebetsleben braucht',
     featuresSub: 'Für Christen, die bewusst beten und Gottes Treue festhalten möchten.',
     features: [
@@ -346,11 +308,6 @@ const CONTENT = {
     cta: 'Começar — é grátis',
     howItWorks: 'Ver como funciona',
     verse: '"A oração fervorosa do justo é poderosa e eficaz." — Tiago 5:16',
-    stats: [
-      { emoji: '📋', label: 'Orações ativas', value: '12', sub: 'sendo intercedidas' },
-      { emoji: '✅', label: 'Orações respondidas', value: '34', sub: 'testemunhos registrados' },
-      { emoji: '📅', label: 'Dias cobertos', value: '7/7', sub: 'plano semanal definido' },
-    ],
     featuresTitle: 'Tudo que sua vida de oração precisa',
     featuresSub: 'Criado para cristãos que querem orar com intenção e registrar a fidelidade de Deus.',
     features: [
@@ -402,11 +359,6 @@ const CONTENT = {
     cta: '無料で始める',
     howItWorks: '使い方を見る',
     verse: '"義人の祈りは大いに力があり、効果があります。" — ヤコブ 5:16',
-    stats: [
-      { emoji: '📋', label: '進行中の祈り', value: '12', sub: '執り成し中' },
-      { emoji: '✅', label: '答えられた祈り', value: '34', sub: '証し記録済み' },
-      { emoji: '📅', label: 'カバーされた日数', value: '7/7', sub: '週間プラン' },
-    ],
     featuresTitle: '祈りの生活に必要なすべて',
     featuresSub: '意図を持って祈り、神の誠実さを記録したいクリスチャンのために作られました。',
     features: [
@@ -458,11 +410,6 @@ const CONTENT = {
     cta: 'Anza — ni bure',
     howItWorks: 'Angalia jinsi inavyofanya kazi',
     verse: '"Maombi ya mtu mwenye haki yana nguvu nyingi." — Yakobo 5:16',
-    stats: [
-      { emoji: '📋', label: 'Maombi yanayoendelea', value: '12', sub: 'katika uombezi' },
-      { emoji: '✅', label: 'Maombi yaliyojibiwa', value: '34', sub: 'ushuhuda umerekodiwa' },
-      { emoji: '📅', label: 'Siku zilizofunikwa', value: '7/7', sub: 'mpango wa wiki' },
-    ],
     featuresTitle: 'Kila kitu maisha yako ya maombi yanahitaji',
     featuresSub: 'Imeundwa kwa Wakristo wanaotaka kuomba kwa makusudi na kufuatilia uaminifu wa Mungu.',
     features: [
@@ -512,11 +459,6 @@ const CONTENT = {
     cta: 'ይጀምሩ — ነፃ ነው',
     howItWorks: 'እንዴት እንደሚሰራ ይመልከቱ',
     verse: '"የጻድቅ ሰው ጸሎት ብዙ ያደርጋል።" — ያዕቆብ 5:16',
-    stats: [
-      { emoji: '📋', label: 'ንቁ ጸሎቶች', value: '12', sub: 'በምልጃ' },
-      { emoji: '✅', label: 'የተመለሱ ጸሎቶች', value: '34', sub: 'ምስክርነቶች ተዘጋጅቷል' },
-      { emoji: '📅', label: 'የተሸፈኑ ቀናት', value: '7/7', sub: 'የሳምንት እቅድ' },
-    ],
     featuresTitle: 'የጸሎት ሕይወትዎ የሚያስፈልገው ሁሉ',
     featuresSub: 'ዓላማ ይዘው ለሚጸልዩ እና የእግዚአብሔርን ታማኝነት ለሚከታተሉ ክርስቲያኖች የተዘጋጀ።',
     features: [
@@ -566,11 +508,6 @@ const CONTENT = {
     cta: 'Mulai — gratis',
     howItWorks: 'Lihat cara kerjanya',
     verse: '"Doa orang yang benar, bila dengan yakin didoakan, sangat besar kuasanya." — Yakobus 5:16',
-    stats: [
-      { emoji: '📋', label: 'Doa aktif', value: '12', sub: 'dalam syafaat' },
-      { emoji: '✅', label: 'Doa terjawab', value: '34', sub: 'kesaksian tercatat' },
-      { emoji: '📅', label: 'Hari tercakup', value: '7/7', sub: 'rencana mingguan' },
-    ],
     featuresTitle: 'Semua yang dibutuhkan kehidupan doa Anda',
     featuresSub: 'Dirancang untuk orang Kristen yang ingin berdoa dengan niat dan melacak kesetiaan Tuhan.',
     features: [
@@ -620,11 +557,6 @@ const CONTENT = {
     cta: 'Magsimula — libre',
     howItWorks: 'Tingnan kung paano gumagana',
     verse: '"Ang taimtim na panalangin ng taong matuwid ay may malaking kapangyarihan." — Santiago 5:16',
-    stats: [
-      { emoji: '📋', label: 'Aktibong panalangin', value: '12', sub: 'sa pamamagitan ng panalangin' },
-      { emoji: '✅', label: 'Nasagot na panalangin', value: '34', sub: 'naitala na patotoo' },
-      { emoji: '📅', label: 'Mga araw na sakop', value: '7/7', sub: 'lingguhang plano' },
-    ],
     featuresTitle: 'Lahat ng kailangan ng iyong buhay-panalangin',
     featuresSub: 'Ginawa para sa mga Kristiyano na gustong manalangin nang may layunin at subaybayan ang katapatan ng Diyos.',
     features: [
@@ -674,11 +606,6 @@ const CONTENT = {
     cta: '시작하기 — 무료',
     howItWorks: '어떻게 작동하는지 보기',
     verse: '"의인의 간구는 역사하는 힘이 큼이니라." — 야고보서 5:16',
-    stats: [
-      { emoji: '📋', label: '진행 중인 기도', value: '12', sub: '중보기도 중' },
-      { emoji: '✅', label: '응답된 기도', value: '34', sub: '간증 기록됨' },
-      { emoji: '📅', label: '커버된 일수', value: '7/7', sub: '주간 계획' },
-    ],
     featuresTitle: '기도 생활에 필요한 모든 것',
     featuresSub: '의도적으로 기도하고 하나님의 신실하심을 기록하고 싶은 그리스도인을 위해 만들어졌습니다.',
     features: [
@@ -728,11 +655,6 @@ const CONTENT = {
     cta: 'Начать — бесплатно',
     howItWorks: 'Посмотреть, как работает',
     verse: '"Много может усиленная молитва праведного." — Иакова 5:16',
-    stats: [
-      { emoji: '📋', label: 'Активные молитвы', value: '12', sub: 'в ходатайстве' },
-      { emoji: '✅', label: 'Отвеченные молитвы', value: '34', sub: 'свидетельств записано' },
-      { emoji: '📅', label: 'Охваченных дней', value: '7/7', sub: 'недельный план' },
-    ],
     featuresTitle: 'Всё для вашей молитвенной жизни',
     featuresSub: 'Создано для христиан, которые хотят молиться осознанно и отслеживать верность Бога.',
     features: [
@@ -782,11 +704,6 @@ const CONTENT = {
     cta: 'ابدأ — مجاناً',
     howItWorks: 'اطلع على طريقة العمل',
     verse: '"صلاة البار تقتدر كثيراً في فعلها." — يعقوب 5:16',
-    stats: [
-      { emoji: '📋', label: 'الصلوات النشطة', value: '12', sub: 'في الشفاعة' },
-      { emoji: '✅', label: 'الصلوات المستجابة', value: '34', sub: 'شهادات مسجلة' },
-      { emoji: '📅', label: 'الأيام المشمولة', value: '7/7', sub: 'الخطة الأسبوعية' },
-    ],
     featuresTitle: 'كل ما يحتاجه حياتك الصلاتية',
     featuresSub: 'صُمِّم للمسيحيين الذين يريدون الصلاة بنية وتتبع أمانة الله.',
     features: [
@@ -836,11 +753,6 @@ const CONTENT = {
     cta: 'شروع کنید — رایگان',
     howItWorks: 'ببینید چطور کار می‌کند',
     verse: '"دعای مرد عادل تأثیر عظیمی دارد." — یعقوب ۵:۱۶',
-    stats: [
-      { emoji: '📋', label: 'دعاهای فعال', value: '12', sub: 'در شفاعت' },
-      { emoji: '✅', label: 'دعاهای مستجاب', value: '34', sub: 'شهادت ثبت شده' },
-      { emoji: '📅', label: 'روزهای پوشش‌داده', value: '7/7', sub: 'برنامه هفتگی' },
-    ],
     featuresTitle: 'همه چیزی که زندگی دعایی شما نیاز دارد',
     featuresSub: 'برای مسیحیانی ساخته شده که می‌خواهند با هدف دعا کنند و وفاداری خدا را پیگیری کنند.',
     features: [
@@ -890,11 +802,6 @@ const CONTENT = {
     cta: '免费开始',
     howItWorks: '查看如何使用',
     verse: '"义人祈祷所发的力量是大有功效的。" — 雅各书 5:16',
-    stats: [
-      { emoji: '📋', label: '活跃祷告', value: '12', sub: '正在代祷' },
-      { emoji: '✅', label: '已应允祷告', value: '34', sub: '见证已记录' },
-      { emoji: '📅', label: '覆盖天数', value: '7/7', sub: '每周计划' },
-    ],
     featuresTitle: '您祷告生活所需的一切',
     featuresSub: '专为希望有意识地祷告并追踪上帝信实的基督徒设计。',
     features: [
@@ -946,11 +853,6 @@ const CONTENT = {
     cta: 'Comenzar — es gratis',
     howItWorks: 'Ver cómo funciona',
     verse: '"La oración ferviente del justo puede mucho." — Santiago 5:16',
-    stats: [
-      { emoji: '📋', label: 'Oraciones activas', value: '12', sub: 'en intercesión' },
-      { emoji: '✅', label: 'Oraciones respondidas', value: '34', sub: 'testimonios registrados' },
-      { emoji: '📅', label: 'Días cubiertos', value: '7/7', sub: 'plan semanal' },
-    ],
     featuresTitle: 'Todo lo que tu vida de oración necesita',
     featuresSub: 'Diseñado para cristianos que quieren orar con intención y registrar la fidelidad de Dios.',
     features: [
@@ -1002,11 +904,6 @@ const CONTENT = {
     cta: 'शुरू करें — यह मुफ्त है',
     howItWorks: 'देखें यह कैसे काम करता है',
     verse: '"धर्मी जन की प्रार्थना के प्रभाव से बहुत कुछ हो सकता है।" — याकूब 5:16',
-    stats: [
-      { emoji: '📋', label: 'सक्रिय प्रार्थनाएँ', value: '12', sub: 'मध्यस्थता में' },
-      { emoji: '✅', label: 'उत्तर मिली प्रार्थनाएँ', value: '34', sub: 'गवाहियाँ दर्ज' },
-      { emoji: '📅', label: 'दिन कवर किए', value: '7/7', sub: 'साप्ताहिक योजना' },
-    ],
     featuresTitle: 'आपके प्रार्थना जीवन की सब कुछ ज़रूरतें',
     featuresSub: 'उन मसीहियों के लिए बनाया गया जो उद्देश्य से प्रार्थना करना और परमेश्वर की विश्वसनीयता को ट्रैक करना चाहते हैं।',
     features: [
@@ -1304,23 +1201,6 @@ export default function LandingPage({ onGetStarted }) {
             );
           })}
         </div>
-      </section>
-
-      {/* Stats strip */}
-      <section className="px-6 max-w-4xl mx-auto mb-24">
-        <div className="rounded-3xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-4" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
-          {c.stats.map(({ emoji, label, value, sub }) => (
-            <div key={label} className="text-center py-2">
-              <div className="text-3xl mb-2">{emoji}</div>
-              <div className="text-3xl font-bold mb-0.5" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{value}</div>
-              <div className="text-xs font-medium mb-0.5" style={{ color: T.text }}>{label}</div>
-              <div className="text-xs" style={{ color: T.textDim }}>{sub}</div>
-            </div>
-          ))}
-        </div>
-        <p className="text-center text-xs mt-4 italic" style={{ color: T.textDim }}>
-          {STATS_SAMPLE[lang] || STATS_SAMPLE.en}
-        </p>
       </section>
 
       {/* Features — the full grid is folded behind "Explore all features" so the

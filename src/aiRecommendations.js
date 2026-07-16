@@ -1,6 +1,7 @@
-// Optional AI assistance for prayer: suggested prayer points (with verses) and
-// day-plan topics. This is deliberately the LAST, opt-in step — Scripture comes
-// first (see scriptureGuidance.js). All calls run through aiCore, so they share
+// Optional AI assistance for prayer: suggested prayer points (with verses).
+// This is deliberately the LAST, opt-in step — Scripture comes first (see
+// scriptureGuidance.js), and it is offered INSIDE a prayer, never as a
+// persistent control on Today. All calls run through aiCore, so they share
 // the one theological guardrail system prompt and the one client-side cooldown.
 //
 // Prompts are written in English with the target language handled by the
@@ -21,16 +22,6 @@ const EXAMPLE = (n) =>
     ],
   }));
 
-const EXAMPLE_DAY = () =>
-  Array.from({ length: 3 }, () => ({ title: '...', description: '...' }));
-
-function dayPlanPrompt(categoryNames) {
-  return `A believer has no prayers planned for today. Today's prayer categories are: ${categoryNames}.
-Suggest 3 concrete, encouraging prayer topics for these categories — each a way to seek God, not a task to complete.
-Reply ONLY with a valid JSON array, no text before or after:
-${JSON.stringify(EXAMPLE_DAY())}`;
-}
-
 function pointsPrompt(title, description, isEvolution) {
   const intro = isEvolution
     ? `A believer is praying for: "${title}". They just added this update: "${description}".
@@ -41,24 +32,6 @@ Suggest 4 related or deeper prayer points.`;
 For each point, provide 2 relevant Bible references with the full text of the key verse(s), read in context.
 Reply ONLY with a valid JSON array, no text before or after:
 ${JSON.stringify(EXAMPLE(isEvolution ? 3 : 4))}`;
-}
-
-export async function getDayPlanSuggestions({ categoryNames, lang = 'fr' }) {
-  const cacheKey = `dayplan:${lang}:${categoryNames}`;
-  if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
-
-  const { data, error } = await callClaudeForJson({
-    prompt: dayPlanPrompt(categoryNames),
-    lang,
-    maxTokens: 600,
-    shape: 'array',
-    feature: 'dayplan',
-  });
-  if (error) return { recs: [], error: localizeAiError(error, lang) };
-
-  const recs = Array.isArray(data) ? data.filter((r) => r && r.title) : [];
-  if (recs.length > 0) cache.set(cacheKey, recs);
-  return { recs, error: null };
 }
 
 export async function getAIRecommendations({ title, description = '', type = 'new', lang = 'fr' }) {

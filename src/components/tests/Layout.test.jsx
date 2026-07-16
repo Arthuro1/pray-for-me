@@ -38,10 +38,13 @@ describe('Layout — primary navigation', () => {
     expect(screen.queryByText(t(lang, 'prayers'))).toBeNull();
   });
 
-  it('renders the five primary tabs (Today · Journal · Community · Grow · Settings)', () => {
+  it('renders the four primary tabs (Today · Journal · Community · More)', () => {
     renderNav();
-    for (const key of ['today', 'journal', 'community', 'grow', 'settings']) {
+    for (const key of ['today', 'journal', 'community', 'moreTab']) {
       expect(screen.getAllByText(t(lang, key)).length).toBeGreaterThan(0);
     }
+    // Grow and Settings moved inside More — off the prime navigation.
+    expect(screen.queryByText(t(lang, 'grow'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'settings'))).toBeNull();
   });
 });

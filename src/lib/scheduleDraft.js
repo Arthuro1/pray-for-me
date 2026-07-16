@@ -15,6 +15,41 @@ export function presetOf(d) {
   return d?.mode || 'plan';
 }
 
+// ── Simple rhythm presets ────────────────────────────────────────────────────
+// The Add-prayer form asks ONE question — "How often should this return?" —
+// with four everyday answers plus Custom for the full editor. Each preset is a
+// plain mapping onto the draft, so the two views never disagree:
+//   flexible     — no fixed schedule (follows the weekly plan / shows regularly)
+//   daily        — recurring, every day
+//   weekly       — recurring, once a week (seeded on today's weekday)
+//   occasionally — recurring, about every two weeks
+//   custom       — anything the presets can't express (dates, months, slots…)
+const OCCASIONALLY_DAYS = 14;
+
+export const RHYTHM_PRESETS = ['flexible', 'daily', 'weekly', 'occasionally'];
+
+export function rhythmOf(d) {
+  if (!d || d.mode === 'plan') return 'flexible';
+  if (d.mode !== 'recurring') return 'custom';
+  if (d.freq === 'daily') return 'daily';
+  if (d.freq === 'weekly') return 'weekly';
+  if (d.freq === 'interval' && d.interval === OCCASIONALLY_DAYS) return 'occasionally';
+  return 'custom';
+}
+
+export function draftForRhythm(rhythm, d) {
+  switch (rhythm) {
+    case 'flexible': return { ...d, mode: 'plan' };
+    case 'daily': return { ...d, mode: 'recurring', freq: 'daily' };
+    case 'weekly': return {
+      ...d, mode: 'recurring', freq: 'weekly',
+      weekDays: d.weekDays.length ? d.weekDays : [parseKey(todayKey()).getDay()],
+    };
+    case 'occasionally': return { ...d, mode: 'recurring', freq: 'interval', interval: OCCASIONALLY_DAYS };
+    default: return d;
+  }
+}
+
 export function emptyDraft() {
   return {
     mode: 'plan', // 'plan' (no schedule) | 'once' | 'recurring'

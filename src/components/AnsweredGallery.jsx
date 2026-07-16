@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Users, EyeOff, HandHeart, Pin, BookOpen } from 'lucide-react';
+import { Users, EyeOff, HandHeart, Pin, BookOpen } from 'lucide-react';
 import { format } from 'date-fns';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
@@ -12,15 +12,16 @@ import { testimonyList } from '../utils/prayer';
 import { originAuthor, getAuthorName } from '../utils/user';
 import { faithfulnessPassage } from '../lib/prayerMovements';
 import { t } from '../i18n';
-import Avatar from '../components/shared/Avatar';
-import VerseAccordion from '../components/VerseAccordion';
-import SwipeableRow from '../components/shared/SwipeableRow';
-import EmptyState from '../components/shared/EmptyState';
-import Encouragement from '../components/shared/Encouragement';
+import Avatar from './shared/Avatar';
+import VerseAccordion from './VerseAccordion';
+import SwipeableRow from './shared/SwipeableRow';
+import EmptyState from './shared/EmptyState';
+import Encouragement from './shared/Encouragement';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 
-// A reflective "God's faithfulness" view of all answered prayers.
-export default function AnsweredTab() {
+// A reflective "God's faithfulness" view of all answered prayers. Rendered as
+// the Journal's "Answered" segment (it brings no page chrome of its own).
+export default function AnsweredGallery() {
   const navigate = useNavigate();
   const { prayers, categories, settings } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings }))
@@ -119,67 +120,57 @@ export default function AnsweredTab() {
     );
   };
 
+  if (answered.length === 0) {
+    return (
+      <>
+        <EmptyState
+          emoji="🙏"
+          title={t(lang, 'noAnsweredYet')}
+          subtitle={t(lang, 'noAnsweredSub')}
+          actionLabel={t(lang, 'today')}
+          onAction={() => navigate('/')}
+        />
+        <Encouragement lang={lang} className="text-center mt-4" />
+      </>
+    );
+  }
+
   return (
-    <div>
-      <div className="px-4 md:px-8 pt-8 pb-6" style={{ background: 'var(--header)' }}>
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-sm font-medium mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
-          <ArrowLeft size={16} /> {t(lang, 'today')}
-        </button>
-        <h2 className="text-xl font-semibold text-white">🎉 {t(lang, 'answeredTitle')}</h2>
-        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.65)' }}>{t(lang, 'faithfulness')}</p>
-      </div>
+    <>
+      {/* Remembrance: a Psalm of God's faithfulness. Tap to read the passage
+          in place (authoritative text, no AI); the whole-chapter link lives
+          inside the expanded panel — same as every other verse in the app. */}
+      {faithfulnessRef && (
+        <VerseAccordion reference={faithfulnessRef} lang={lang} className="mb-4">
+          {({ toggle }) => (
+            <button
+              onClick={toggle}
+              className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
+              style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
+                <BookOpen size={15} /> {faithfulnessRef}
+              </span>
+              <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readFullPassage')}</span>
+            </button>
+          )}
+        </VerseAccordion>
+      )}
 
-      <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
-        {answered.length === 0 ? (
-          <>
-            <EmptyState
-              emoji="🙏"
-              title={t(lang, 'noAnsweredYet')}
-              subtitle={t(lang, 'noAnsweredSub')}
-              actionLabel={t(lang, 'today')}
-              onAction={() => navigate('/')}
-            />
-            <Encouragement lang={lang} className="text-center mt-4" />
-          </>
-        ) : (
-          <>
-            {/* Remembrance: a Psalm of God's faithfulness. Tap to read the passage
-                in place (authoritative text, no AI); the whole-chapter link lives
-                inside the expanded panel — same as every other verse in the app. */}
-            {faithfulnessRef && (
-              <VerseAccordion reference={faithfulnessRef} lang={lang} className="mb-4">
-                {({ toggle }) => (
-                  <button
-                    onClick={toggle}
-                    className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
-                    style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
-                  >
-                    <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
-                      <BookOpen size={15} /> {faithfulnessRef}
-                    </span>
-                    <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readFullPassage')}</span>
-                  </button>
-                )}
-              </VerseAccordion>
-            )}
+      <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>
+        {answered.length} {answered.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
+      </p>
 
-            <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>
-              {answered.length} {answered.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
-            </p>
-
-            {groups.map(g => (
-              <div key={g.key} className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
-                  {t(lang, g.key)}
-                </p>
-                <div className="flex flex-col gap-3">
-                  {g.items.map(renderCard)}
-                </div>
-              </div>
-            ))}
-          </>
-        )}
-      </div>
-    </div>
+      {groups.map(g => (
+        <div key={g.key} className="mb-5">
+          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+            {t(lang, g.key)}
+          </p>
+          <div className="flex flex-col gap-3">
+            {g.items.map(renderCard)}
+          </div>
+        </div>
+      ))}
+    </>
   );
 }

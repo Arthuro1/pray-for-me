@@ -33,8 +33,10 @@ describe('LandingPage — simplified hero', () => {
     expect(screen.queryByText('16 languages')).toBeNull();
   });
 
-  it('keeps the illustrative sample-stats caption', () => {
+  it('shows no example statistics at all (strip removed entirely)', () => {
     render(<LandingPage onGetStarted={() => {}} />);
-    expect(screen.getByText(/illustrative data, not real platform statistics/i)).toBeTruthy();
+    // Neither the fake numbers nor their "illustrative data" caption render.
+    expect(screen.queryByText(/illustrative data/i)).toBeNull();
+    expect(screen.queryByText('Active prayers')).toBeNull();
   });
 });

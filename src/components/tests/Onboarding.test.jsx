@@ -1,15 +1,38 @@
 // @vitest-environment jsdom
 //
-// Onboarding is deliberately short and warm, ending on "add your first prayer".
-// It must NEVER surface a Supporter prompt — advanced tools and giving are
-// introduced later, once the first prayer exists.
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+// Onboarding IS the first prayer: one screen asks what to pray about, saves it
+// and goes straight into a prayer session. It must NEVER surface a Supporter
+// prompt or gate prayer behind any setup — reminders, AI, groups and planning
+// introduce themselves later, in context.
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+
+// Stub Supabase so the prayer-store import chain is safe in jsdom.
+vi.mock('../../lib/supabase', () => {
+  const chain = {
+    upsert: () => Promise.resolve({ data: null, error: null }),
+    insert: () => Promise.resolve({ data: null, error: null }),
+    select: () => chain,
+    eq: () => chain,
+    maybeSingle: () => Promise.resolve({ data: null, error: null }),
+  };
+  return { supabase: { auth: { getUser: async () => ({ data: { user: null } }) }, from: () => chain } };
+});
+vi.mock('../../lib/verseText', () => ({
+  fetchScriptureText: vi.fn(async () => null),
+  fetchVerseText: vi.fn(async () => ({ data: null, error: null })),
+}));
+
 import Onboarding from '../Onboarding';
+import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);
+beforeEach(() => {
+  localStorage.clear();
+  usePrayerStore.setState({ prayers: [], categories: [], settings: { language: lang } });
+});
 
 // Onboarding must never mention Supporter/Free/Premium/pricing/donations, in any
 // language — assert on the rendered text, not on (now-removed) supporter keys.
@@ -17,40 +40,46 @@ const expectNoSupporterPrompt = () => {
   expect(document.body.textContent).not.toMatch(/supporter|premium|abonnement/i);
 };
 
-// Steps between the first and the last CTA. Advancing through all of them and
-// landing on "add your first prayer" proves onboarding never GATES prayer
-// creation behind vault/recovery setup (acceptance criterion #12/onboarding).
-const NEXT_CLICKS = 3; // Welcome → Pray → Privacy → Remind (last)
-
 describe('Onboarding', () => {
-  it('walks to "add your first prayer" with no Supporter prompt and no setup gate', () => {
-    const onFinish = vi.fn();
-    const onAddPrayer = vi.fn();
-    render(<Onboarding lang={lang} onFinish={onFinish} onAddPrayer={onAddPrayer} />);
-
-    expect(screen.getByText(t(lang, 'onboardWelcomeTitle'))).toBeTruthy();
+  it('is a single prayer-capture screen with a private-by-default reassurance', () => {
+    render(<Onboarding lang={lang} onFinish={vi.fn()} />);
+    expect(screen.getByText(t(lang, 'onboardCaptureTitle'))).toBeTruthy();
+    expect(screen.getByPlaceholderText(t(lang, 'onboardCapturePlaceholder'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'onboardPrivateNote'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'onboardSaveAndPray'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'onboardLater'))).toBeTruthy();
     expectNoSupporterPrompt();
-
-    for (let i = 0; i < NEXT_CLICKS; i++) {
-      fireEvent.click(screen.getByText(t(lang, 'onboardNext')));
-      expectNoSupporterPrompt();
-    }
-
-    // Final step: the primary CTA is adding a prayer, not setting up encryption.
-    const addFirst = screen.getByText(t(lang, 'onboardAddFirst'));
-    expect(addFirst).toBeTruthy();
-    fireEvent.click(addFirst);
-    expect(onFinish).toHaveBeenCalled();
-    expect(onAddPrayer).toHaveBeenCalled();
   });
 
-  it('reassures that prayers are encrypted by default (recovery is optional/later)', () => {
-    render(<Onboarding lang={lang} onFinish={vi.fn()} onAddPrayer={vi.fn()} />);
-    fireEvent.click(screen.getByText(t(lang, 'onboardNext'))); // → Pray
-    fireEvent.click(screen.getByText(t(lang, 'onboardNext'))); // → Privacy
-    expect(screen.getByText(t(lang, 'onboardPrivacyTitle'))).toBeTruthy();
-    // Honest framing: encrypted by default, recovery is a "later" option.
-    expect(t(lang, 'onboardPrivacyBody').toLowerCase()).toContain('par défaut');
-    expect(t(lang, 'onboardPrivacyBody').toLowerCase()).toContain('récupération');
+  it('"I\'ll do this later" finishes without demanding anything', () => {
+    const onFinish = vi.fn();
+    render(<Onboarding lang={lang} onFinish={onFinish} />);
+    fireEvent.click(screen.getByText(t(lang, 'onboardLater')));
+    expect(onFinish).toHaveBeenCalled();
+  });
+
+  it('saves the first prayer and goes straight into praying it', async () => {
+    const addPrayer = vi.fn(async ({ title }) => {
+      const prayer = { id: 'p1', title, prayer_categories: [], prayer_points: [] };
+      usePrayerStore.setState((s) => ({ prayers: [prayer, ...s.prayers] }));
+      return 'p1';
+    });
+    usePrayerStore.setState({ addPrayer });
+    const onFinish = vi.fn();
+    render(<Onboarding lang={lang} onFinish={onFinish} />);
+
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'onboardCapturePlaceholder')), {
+      target: { value: 'La santé de ma sœur' },
+    });
+    fireEvent.click(screen.getByText(t(lang, 'onboardSaveAndPray')));
+
+    expect(addPrayer).toHaveBeenCalledWith({ title: 'La santé de ma sœur' });
+    // The prayer session opens on the prayer that was just written…
+    expect(await screen.findByText('La santé de ma sœur')).toBeTruthy();
+    // …and finishing it (Amen) completes onboarding.
+    fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
+    await waitFor(() => expect(screen.getByText(t(lang, 'close'))).toBeTruthy());
+    fireEvent.click(screen.getByText(t(lang, 'close')));
+    expect(onFinish).toHaveBeenCalled();
   });
 });

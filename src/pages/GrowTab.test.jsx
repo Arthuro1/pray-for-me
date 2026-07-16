@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 //
 // The Grow tab carries one gentle, optional invitation to the gospel journey. It
-// must sit above the Pray/Learn selector, never open automatically, never block
-// the existing Pray/Learn sections, and hand off to the EXISTING prayer-creation
-// flow. Related Learn articles may point to it; unrelated ones must not.
+// sits BELOW the guides (an established believer's content comes first), never
+// opens automatically, never blocks the existing Pray/Learn sections, and hands
+// off to the EXISTING prayer-creation flow. Related Learn articles may point to
+// it; unrelated ones must not.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -34,18 +35,18 @@ afterEach(cleanup);
 beforeEach(() => usePrayerStore.setState({ settings: { language: lang } }));
 
 const openJourneyToEnd = () => {
-  fireEvent.click(screen.getByText(t(lang, 'growSeekerCta')));
+  fireEvent.click(screen.getByText(t(lang, 'growSeekerTitle')));
   fireEvent.click(screen.getByText(t(lang, 'gospelStart')));
   for (let i = 0; i < 6; i++) fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
 };
 
 describe('GrowTab — seeker card', () => {
-  it('renders the seeker card above the Pray/Learn selector', () => {
+  it('renders the seeker card below the guides, not above the selector', () => {
     render(<GrowTab />);
     const card = screen.getByText(t(lang, 'growSeekerTitle'));
     const selector = screen.getByText(t(lang, 'growPray'));
-    // The card appears before the segmented selector in document order.
-    expect(card.compareDocumentPosition(selector) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // The segmented selector appears before the card in document order.
+    expect(selector.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('does not open the journey automatically', () => {
@@ -55,7 +56,7 @@ describe('GrowTab — seeker card', () => {
 
   it('opens the journey only when the card is selected', () => {
     render(<GrowTab />);
-    fireEvent.click(screen.getByText(t(lang, 'growSeekerCta')));
+    fireEvent.click(screen.getByText(t(lang, 'growSeekerTitle')));
     const dialog = screen.getByRole('dialog');
     expect(dialog.getAttribute('aria-label')).toBe(pick(gospelJourney.title, lang));
   });
@@ -71,7 +72,7 @@ describe('GrowTab — seeker card', () => {
 
   it('returns focus to the card after the journey closes', () => {
     render(<GrowTab />);
-    const card = screen.getByText(t(lang, 'growSeekerCta')).closest('button');
+    const card = screen.getByText(t(lang, 'growSeekerTitle')).closest('button');
     card.focus();
     fireEvent.click(card);
     expect(screen.getByRole('dialog')).toBeTruthy();

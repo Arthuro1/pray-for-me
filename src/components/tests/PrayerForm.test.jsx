@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 //
-// Quick Add: a brand-new personal prayer surfaces categories and "for someone
-// else" directly, and tucks only the recurrence schedule behind More options.
+// Quick Add asks ONE question — who or what to pray for. A note and all
+// organization (person, categories, prayer rhythm) are optional and collapsed.
 // French is the always-loaded locale, so assertions go through t() to verify the
 // show/hide LOGIC rather than pin copy.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -32,36 +32,57 @@ beforeEach(() => {
 });
 
 describe('PrayerForm — Quick Add', () => {
-  it('surfaces "for someone else" directly and keeps only scheduling behind More options', () => {
+  it('asks only who/what to pray for; note and organization are collapsed', () => {
     render(<PrayerForm onClose={() => {}} />);
+    expect(screen.getByText(t(lang, 'prayerFieldLabel'))).toBeTruthy();
     expect(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder'))).toBeTruthy();
-    expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeTruthy();
-    // "For someone else" is now visible up-front; only the schedule editor hides.
-    expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
-    expect(screen.queryByText(t(lang, 'scheduleHowOften'))).toBeNull();
-    expect(screen.getByText(t(lang, 'moreOptions'))).toBeTruthy();
+    // The note textarea and every organization field wait behind expanders.
+    expect(screen.queryByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'rhythmLabel'))).toBeNull();
+    expect(screen.getByText(t(lang, 'addNote'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'organizeLabel'))).toBeTruthy();
   });
 
-  it('"More options" reveals the recurrence schedule', () => {
+  it('"Add a note" reveals the note field', () => {
     render(<PrayerForm onClose={() => {}} />);
-    fireEvent.click(screen.getByText(t(lang, 'moreOptions')));
-    expect(screen.getByText(t(lang, 'scheduleHowOften'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'fewerOptions'))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'addNote')));
+    expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeTruthy();
   });
 
-  it('shows category chips directly, without opening More options', () => {
+  it('"Organize" reveals person, categories and the rhythm question', () => {
     usePrayerStore.setState({
       categories: [{ id: 'c1', name: 'Famille', emoji: '👨‍👩‍👧', color: '#7c5cfc' }],
       settings: { language: lang },
     });
     render(<PrayerForm onClose={() => {}} />);
-    // Category is present up-front; the schedule editor still hides.
+    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
+    expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
     expect(screen.getByText('Famille', { exact: false })).toBeTruthy();
+    expect(screen.getByText(t(lang, 'rhythmLabel'))).toBeTruthy();
+    // The full schedule editor only appears for Custom.
     expect(screen.queryByText(t(lang, 'scheduleHowOften'))).toBeNull();
+    fireEvent.click(screen.getByText(t(lang, 'rhythmCustom')));
+    expect(screen.getByText(t(lang, 'scheduleHowOften'))).toBeTruthy();
+  });
+
+  it('a rhythm preset maps onto a real schedule (daily) without the full editor', () => {
+    const addPrayer = vi.fn(async () => null);
+    usePrayerStore.setState({ addPrayer });
+    render(<PrayerForm onClose={() => {}} />);
+    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
+    fireEvent.click(screen.getByText(t(lang, 'freqDaily')));
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder')), {
+      target: { value: 'Paix' },
+    });
+    fireEvent.click(screen.getByText(t(lang, 'savePrayer')));
+    expect(addPrayer.mock.calls[0][0].schedule).toEqual(
+      expect.objectContaining({ type: 'recurring', freq: 'daily' })
+    );
   });
 
   it('creates a minimal prayer (title only, no schedule) from the collapsed form', () => {
-    const addPrayer = vi.fn(async () => null); // null → the form just closes, no Scripture step
+    const addPrayer = vi.fn(async () => null); // null → the form just closes, no saved step
     const onClose = vi.fn();
     usePrayerStore.setState({ addPrayer });
     render(<PrayerForm onClose={onClose} />);
@@ -69,7 +90,7 @@ describe('PrayerForm — Quick Add', () => {
     fireEvent.change(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder')), {
       target: { value: 'Paix pour ma famille' },
     });
-    fireEvent.click(screen.getByText(t(lang, 'add')));
+    fireEvent.click(screen.getByText(t(lang, 'savePrayer')));
 
     expect(addPrayer).toHaveBeenCalledTimes(1);
     expect(addPrayer.mock.calls[0][0]).toEqual(

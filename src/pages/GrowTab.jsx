@@ -89,26 +89,6 @@ export default function GrowTab({ onCreatePrayer }) {
       </div>
 
       <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
-        {/* Gentle, optional invitation for those new to prayer or exploring faith.
-            Opens the gospel journey only when explicitly selected — it never
-            auto-opens and never diminishes the Pray/Learn options below. */}
-        <button
-          onClick={() => setOpenJourney(true)}
-          className="w-full text-left rounded-2xl p-4 mb-5 flex items-center gap-3.5 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)', outlineColor: 'var(--accent)' }}
-        >
-          <span className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent)' }}>
-            <Sunrise size={20} className="text-white" aria-hidden="true" />
-          </span>
-          <span className="flex-1 min-w-0">
-            <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'growSeekerTitle')}</span>
-            <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'growSeekerDesc')}</span>
-            <span className="inline-flex items-center gap-1 mt-2 text-xs font-semibold" style={{ color: 'var(--accent)' }}>
-              {t(lang, 'growSeekerCta')} <ChevronRight size={13} aria-hidden="true" />
-            </span>
-          </span>
-        </button>
-
         {/* Segmented toggle: pray through vs. learn */}
         <div className="flex gap-1 p-1 rounded-2xl mb-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           {[
@@ -135,7 +115,7 @@ export default function GrowTab({ onCreatePrayer }) {
           {t(lang, view === 'pray' ? 'growPrayIntro' : 'growLearnIntro')}
         </p>
 
-        <div className="flex flex-col gap-3 pb-8">
+        <div className="flex flex-col gap-3">
           {items.map((item) => (
             <ItemCard
               key={item.id}
@@ -144,6 +124,25 @@ export default function GrowTab({ onCreatePrayer }) {
             />
           ))}
         </div>
+
+        {/* Gentle, optional invitation for those new to prayer or exploring
+            faith — a quiet card BELOW the guides (an established believer's
+            content comes first). It never auto-opens and stays available after
+            it's been read or dismissed. */}
+        <button
+          onClick={() => setOpenJourney(true)}
+          className="w-full text-left rounded-2xl p-3.5 mt-5 mb-8 flex items-center gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)', outlineColor: 'var(--accent)' }}
+        >
+          <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent)' }}>
+            <Sunrise size={16} className="text-white" aria-hidden="true" />
+          </span>
+          <span className="flex-1 min-w-0">
+            <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'growSeekerTitle')}</span>
+            <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'growSeekerDesc')}</span>
+          </span>
+          <ChevronRight size={15} className="shrink-0 opacity-60" style={{ color: 'var(--accent)' }} aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

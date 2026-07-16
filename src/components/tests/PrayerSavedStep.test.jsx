@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 //
-// After saving a new prayer the user sees a compact "Saved privately" state.
-// Scripture, reminders and sharing are OPTIONAL next steps — never forced. The
-// Scripture step only appears once the user explicitly opts in.
-import { describe, it, expect, vi, afterEach } from 'vitest';
+// After saving a new prayer the user sees a compact "Saved privately" state with
+// ONE decision: pray now (opens a real session on that prayer) or done. The old
+// decision-heavy screen (Scripture / reminder / sharing) is gone — those live on
+// the prayer detail page instead.
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 
-// Stub Supabase so the ScriptureFirstStep import chain (via the prayer store) is safe.
+// Stub Supabase so the prayer-store import chain is safe in jsdom.
 vi.mock('../../lib/supabase', () => {
   const chain = {
     upsert: () => Promise.resolve({ data: null, error: null }),
@@ -18,45 +18,60 @@ vi.mock('../../lib/supabase', () => {
   };
   return { supabase: { auth: { getUser: async () => ({ data: { user: null } }) }, from: () => chain } };
 });
+vi.mock('../../lib/verseText', () => ({
+  fetchScriptureText: vi.fn(async () => null),
+  fetchVerseText: vi.fn(async () => ({ data: null, error: null })),
+}));
 
 import PrayerSavedStep from '../PrayerSavedStep';
+import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
 
 const lang = 'fr';
 afterEach(cleanup);
+beforeEach(() => {
+  localStorage.clear();
+  usePrayerStore.setState({ prayers: [], categories: [], settings: { language: lang } });
+});
 
 const renderStep = (props = {}) =>
   render(
-    <MemoryRouter>
-      <PrayerSavedStep prayerId="p1" title="Ma prière" description="" lang={lang} onClose={props.onClose || (() => {})} />
-    </MemoryRouter>
+    <PrayerSavedStep prayerId="p1" title="Ma prière" description="" lang={lang} onClose={props.onClose || (() => {})} />
   );
 
 describe('PrayerSavedStep', () => {
-  it('shows a compact "saved privately" confirmation with optional next steps', () => {
+  it('confirms "saved privately" with just pray-now and done', () => {
     renderStep();
     expect(screen.getByText(t(lang, 'savedPrivately'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'savedOnToday'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'savedOptionalSteps'))).toBeTruthy();
-    // The three optional actions are offered…
-    expect(screen.getByText(t(lang, 'findScripture'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'setReminderCta'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'shareGroupCta'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'prayNowCta'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'doneBtn'))).toBeTruthy();
+    // The old optional-step rows are gone.
+    expect(screen.queryByText(t(lang, 'savedOptionalSteps'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'findScripture'))).toBeNull();
   });
 
-  it('does NOT force Scripture — it opens only when chosen', () => {
+  it('"pray now" actually opens a prayer session on the saved prayer', () => {
     renderStep();
-    // Not shown up-front.
-    expect(screen.queryByText(t(lang, 'scriptureFirstTitle'))).toBeNull();
-    // Opt in explicitly.
-    fireEvent.click(screen.getByText(t(lang, 'findScripture')));
-    expect(screen.getByText(t(lang, 'scriptureFirstTitle'))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'prayNowCta')));
+    // The session shows the prayer itself, ready to close with Amen.
+    expect(screen.getByText('Ma prière')).toBeTruthy();
+    expect(screen.getByText(t(lang, 'amenBtn'))).toBeTruthy();
   });
 
-  it('closes when the primary "pray now" action is taken', () => {
+  it('marks the prayer prayed when the session advances past it', () => {
+    const markPrayedOn = vi.fn();
+    usePrayerStore.setState({ markPrayedOn });
+    renderStep();
+    fireEvent.click(screen.getByText(t(lang, 'prayNowCta')));
+    fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
+    expect(markPrayedOn).toHaveBeenCalledWith('p1', expect.any(String));
+  });
+
+  it('closes when done', () => {
     const onClose = vi.fn();
     renderStep({ onClose });
-    fireEvent.click(screen.getByText(t(lang, 'prayNowCta')));
+    fireEvent.click(screen.getByText(t(lang, 'doneBtn')));
     expect(onClose).toHaveBeenCalled();
   });
 });
