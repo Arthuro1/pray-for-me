@@ -24,6 +24,7 @@
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
 import { versionForLang, referenceToUsfm, usfmFromReference } from './bibleRef';
 import { getBundledVerse } from './verseBundle';
+import { isLowDataMode } from './lowData';
 import { supabase } from './supabase';
 
 const cacheKey = (lang, reference) => `verseText:${lang}:${reference}`;
@@ -137,6 +138,11 @@ export async function fetchScriptureText({ reference, lang, usfm }) {
   const cached = getCachedVerseText(lang, key);
   if (cached?.text) return cached;
 
+  // Low data mode: verse text is nonessential enrichment, so anything not
+  // already bundled or cached on this device stays a reference (with a link to
+  // the user's Bible) instead of spending the network on it.
+  if (isLowDataMode()) return null;
+
   // Reuse authoritative text another user already resolved. Restricted to
   // 'youversion' entries so any legacy AI-sourced row in the shared cache can
   // never resurface as Scripture — no path in this module produces verse text
@@ -167,6 +173,9 @@ export async function fetchVerseText({ reference, lang, usfm }) {
 
   const cached = getCachedVerseText(lang, key);
   if (cached?.text) return { data: cached, error: null };
+
+  // Low data mode: defer the remote lookups — reference-only fallback.
+  if (isLowDataMode()) return { data: null, error: null };
 
   // Reuse authoritative text already resolved by another user/device before
   // spending a live API call. Restricted to 'youversion' rows so no legacy

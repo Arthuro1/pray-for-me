@@ -16,6 +16,9 @@ const COLUMNS = {
   followUpTime: 'follow_up_time',
   aiConsentPrayer: 'ai_consent_prayer',
   aiConsentHome: 'ai_consent_home',
+  // What a push notification may reveal ('generic' | 'count') — privacy choice,
+  // account-level so every device honours it (see supabase/notification_detail.sql).
+  notificationDetail: 'notification_detail',
 };
 
 // True when a settings patch touches anything that lives server-side.

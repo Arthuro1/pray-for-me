@@ -5,24 +5,28 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
+import useFollowUpStore, { followUpWhenLabel } from '../store/followUpStore';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
-import { Search, SlidersHorizontal, Plus, X } from 'lucide-react';
+import Avatar from '../components/shared/Avatar';
+import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight } from 'lucide-react';
 import { t } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
 import { weeklyRecap } from '../utils/recap';
+import { peopleFromPrayers, peopleViewAvailable } from '../lib/people';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // The Journal: every request and its history, in two simple segments — Active
-// and Answered — each carrying its own count, so nothing is stated twice. The
-// answered segment IS the remembrance gallery (no separate page, no duplicate
-// shortcuts); search hides behind an icon and the category filter only exists
-// once categories do, so the list itself starts high on the screen.
+// and Answered. Search hides behind an icon, the category filter only exists
+// once categories do, and an optional People view (for anyone praying over
+// many people by name — pastors, intercessors) appears only when the data
+// makes it useful. The count line shows ONLY while filters narrow the list
+// ("N results"); the segments already carry the real totals.
 export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
   const { prayers, categories, settings, loading } = usePrayerStore(
@@ -32,6 +36,7 @@ export default function PrayersTab({ onAdd }) {
   const { user } = useAuthStore();
   const prayerShares = useCommunityStore((s) => s.prayerShares);
   const fetchPrayerShares = useCommunityStore((s) => s.fetchPrayerShares);
+  const followUps = useFollowUpStore((s) => s.followUps);
   const lang = settings.language || 'fr';
   const { swipeActions } = usePrayerActions(lang);
   const location = useLocation();
@@ -45,15 +50,23 @@ export default function PrayersTab({ onAdd }) {
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  // People view: an OPTIONAL lens over the same prayers, grouped by who
+  // they're for. Only offered when enough person data exists.
+  const [peopleOpen, setPeopleOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
 
   const activeCount = prayers.filter((p) => p.status === 'active').length;
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
   const recap = weeklyRecap(prayers, new Date());
+  const peopleAvailable = peopleViewAvailable(prayers);
+  const people = peopleOpen ? peopleFromPrayers(prayers, followUps) : [];
 
   const SEGMENTS = [
     { id: 'active', label: t(lang, 'active'), count: activeCount },
     { id: 'answered', label: t(lang, 'answered'), count: answeredCount },
   ];
+
+  const filtersActive = !!search || categoryFilter !== 'all';
 
   const filtered = prayers.filter((p) => {
     if (p.status !== 'active') return false;
@@ -75,11 +88,34 @@ export default function PrayersTab({ onAdd }) {
     return prayerPriority(a, orderById) - prayerPriority(b, orderById);
   });
 
-  // The Active empty state below carries its own prominent Add CTA — hide the
-  // floating Add button while it's what the visitor sees.
-  useSuppressFab(segment === 'active' && sorted.length === 0);
+  // Truly empty (no active prayers at all) → the empty state carries the one
+  // prominent Add CTA and the floating button hides. A FILTERED zero keeps the
+  // FAB and offers "Clear filters" instead — never a nudge to add more.
+  const trulyEmpty = activeCount === 0;
+  useSuppressFab(segment === 'active' && !peopleOpen && trulyEmpty);
+
+  const clearFilters = () => { setSearch(''); setSearchOpen(false); setCategoryFilter('all'); setShowFilters(false); };
 
   const iconBtnStyle = { background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.85)' };
+
+  const renderPrayer = (prayer) => (
+    <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+      <PrayerListItem
+        prayer={prayer}
+        categories={categories}
+        lang={lang}
+        tr={tr}
+        shares={prayerShares[prayer.id]}
+        currentUserName={getAuthorName(user)}
+        onClick={() => navigate(`/prayers/${prayer.id}`)}
+      />
+    </SwipeableRow>
+  );
+
+  // ── People view (only reachable when the toggle is shown) ────────────────
+  const personDetail = selectedPerson
+    ? people.find((p) => p.name.toLowerCase() === selectedPerson.toLowerCase())
+    : null;
 
   return (
     <div>
@@ -88,16 +124,17 @@ export default function PrayersTab({ onAdd }) {
         <h2 className="text-xl font-semibold text-white mb-3">{t(lang, 'journal')}</h2>
 
         {/* ONE segmented control carries the counts (no separate stat cards),
-            with search and the category filter folded behind small icons. */}
+            with search, the category filter and — when useful — the People
+            lens folded behind small icons. */}
         <div className="flex items-center gap-2">
           <div className="flex flex-1 gap-1 p-1 rounded-2xl" style={{ background: 'rgba(255,255,255,0.1)' }}>
             {SEGMENTS.map((s) => (
               <button
                 key={s.id}
-                onClick={() => setSegment(s.id)}
-                aria-pressed={segment === s.id}
+                onClick={() => { setSegment(s.id); setPeopleOpen(false); setSelectedPerson(null); }}
+                aria-pressed={segment === s.id && !peopleOpen}
                 className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
-                style={segment === s.id
+                style={segment === s.id && !peopleOpen
                   ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
                   : { color: 'rgba(255,255,255,0.7)' }}
               >
@@ -105,13 +142,25 @@ export default function PrayersTab({ onAdd }) {
               </button>
             ))}
           </div>
-          {segment === 'active' && (
+          {peopleAvailable && (
+            <button
+              onClick={() => { setPeopleOpen((v) => !v); setSelectedPerson(null); }}
+              aria-pressed={peopleOpen}
+              aria-label={t(lang, 'peopleView')}
+              title={t(lang, 'peopleView')}
+              className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center"
+              style={peopleOpen ? { background: 'rgba(255,255,255,0.3)', color: '#fff' } : iconBtnStyle}
+            >
+              <Users size={16} />
+            </button>
+          )}
+          {segment === 'active' && !peopleOpen && (
             <>
               <button
                 onClick={() => setSearchOpen((v) => !v)}
                 aria-expanded={searchOpen || !!search}
                 aria-label={t(lang, 'search')}
-                className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center"
+                className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center"
                 style={iconBtnStyle}
               >
                 <Search size={16} />
@@ -121,7 +170,7 @@ export default function PrayersTab({ onAdd }) {
                   onClick={() => setShowFilters(!showFilters)}
                   aria-expanded={showFilters}
                   aria-label={t(lang, 'allCategories')}
-                  className="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center"
+                  className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center"
                   style={iconBtnStyle}
                 >
                   <SlidersHorizontal size={16} />
@@ -133,7 +182,7 @@ export default function PrayersTab({ onAdd }) {
 
         {/* The search field only takes space once asked for; text is preserved
             while it (or the segment) is toggled. */}
-        {segment === 'active' && (searchOpen || !!search) && (
+        {segment === 'active' && !peopleOpen && (searchOpen || !!search) && (
           <div className="relative mt-2">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.5)' }} />
             <input
@@ -150,7 +199,7 @@ export default function PrayersTab({ onAdd }) {
               <button
                 onClick={() => { setSearch(''); setSearchOpen(false); }}
                 aria-label={t(lang, 'close')}
-                className="absolute right-3 top-1/2 -translate-y-1/2"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
                 style={{ color: 'rgba(255,255,255,0.6)' }}
               >
                 <X size={15} />
@@ -162,7 +211,67 @@ export default function PrayersTab({ onAdd }) {
       </div>
 
       <div className="px-4 md:px-8 pt-4 max-w-2xl mx-auto">
-        {segment === 'answered' ? (
+        {peopleOpen ? (
+          personDetail ? (
+            // ── One person's related prayers — not a separate profile page ──
+            <>
+              <button
+                onClick={() => setSelectedPerson(null)}
+                className="flex items-center gap-2 min-h-[44px] text-sm font-medium mb-2"
+                style={{ color: 'var(--accent)' }}
+              >
+                <ArrowLeft size={15} /> {t(lang, 'peopleView')}
+              </button>
+              <div className="flex items-center gap-3 mb-4">
+                <Avatar name={personDetail.name} size={40} />
+                <div>
+                  <p className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{personDetail.name}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                    {personDetail.activeCount} {t(lang, 'active2')} · {personDetail.answeredCount} {t(lang, 'answered2')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 pb-6">
+                {[...personDetail.prayers]
+                  .sort((a, b) => (a.status === b.status ? 0 : a.status === 'active' ? -1 : 1))
+                  .map(renderPrayer)}
+              </div>
+            </>
+          ) : (
+            // ── People overview: name, open requests, latest news, follow-up ──
+            <div className="flex flex-col gap-3 pb-6">
+              {people.map((person) => (
+                <button
+                  key={person.name.toLowerCase()}
+                  onClick={() => setSelectedPerson(person.name)}
+                  className="w-full text-left p-4 rounded-2xl transition-all hover:scale-[1.01]"
+                  style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <Avatar name={person.name} size={36} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-1)' }}>{person.name}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                        {person.activeCount} {t(lang, 'active2')} · {person.answeredCount} {t(lang, 'answered2')}
+                      </p>
+                    </div>
+                    <ChevronRight size={15} className="shrink-0 opacity-50" style={{ color: 'var(--text-3)' }} aria-hidden="true" />
+                  </div>
+                  {person.latestUpdate?.text && (
+                    <p className="text-xs mt-2 line-clamp-1" style={{ color: 'var(--text-2)' }}>
+                      {tr(person.latestUpdate.text, lang)}
+                    </p>
+                  )}
+                  {person.nextFollowUp && (
+                    <p className="text-xs mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                      <Bell size={10} aria-hidden="true" /> {t(lang, 'followUpNext', { date: followUpWhenLabel(person.nextFollowUp, lang) })}
+                    </p>
+                  )}
+                </button>
+              ))}
+            </div>
+          )
+        ) : segment === 'answered' ? (
           <>
             {/* Quiet context, not a statistic card — only when there is
                 something to give thanks for. */}
@@ -197,38 +306,43 @@ export default function PrayersTab({ onAdd }) {
               </div>
             )}
 
-            {!(loading && prayers.length === 0) && (
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
-                {sorted.length} {sorted.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
+            {/* The segments already state the totals — a count line appears
+                only while filters narrow the list, as a result label. */}
+            {filtersActive && !(loading && prayers.length === 0) && (
+              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }} role="status">
+                {t(lang, 'resultsCount', { n: sorted.length })}
               </p>
             )}
 
             {loading && prayers.length === 0 ? (
               <PrayerListSkeleton count={5} />
             ) : sorted.length === 0 ? (
-              <EmptyState
-                emoji="🙏"
-                title={t(lang, 'noPrayersFound')}
-                subtitle={t(lang, 'noPrayersFoundSub')}
-                actionLabel={onAdd ? t(lang, 'emptyAddManual') : undefined}
-                actionIcon={Plus}
-                onAction={onAdd}
-              />
+              trulyEmpty ? (
+                <EmptyState
+                  emoji="🙏"
+                  title={t(lang, 'noPrayersFound')}
+                  subtitle={t(lang, 'noPrayersFoundSub')}
+                  actionLabel={onAdd ? t(lang, 'emptyAddManual') : undefined}
+                  actionIcon={Plus}
+                  onAction={onAdd}
+                />
+              ) : (
+                // Prayers exist but the filters hide them — offer to clear the
+                // filters, never to add another prayer.
+                <div className="text-center py-12">
+                  <p className="text-sm mb-4" style={{ color: 'var(--text-2)' }}>{t(lang, 'noMatch')}</p>
+                  <button
+                    onClick={clearFilters}
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium"
+                    style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                  >
+                    <X size={14} /> {t(lang, 'clearFiltersBtn')}
+                  </button>
+                </div>
+              )
             ) : (
               <div className="flex flex-col gap-3">
-                {sorted.map((prayer) => (
-                  <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
-                    <PrayerListItem
-                      prayer={prayer}
-                      categories={categories}
-                      lang={lang}
-                      tr={tr}
-                      shares={prayerShares[prayer.id]}
-                      currentUserName={getAuthorName(user)}
-                      onClick={() => navigate(`/prayers/${prayer.id}`)}
-                    />
-                  </SwipeableRow>
-                ))}
+                {sorted.map(renderPrayer)}
               </div>
             )}
           </>

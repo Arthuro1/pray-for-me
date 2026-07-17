@@ -236,6 +236,9 @@ export async function updatePushPrefs(userId, prefs = {}) {
   if (prefs.followUpEnabled !== undefined) patch.follow_up_enabled = prefs.followUpEnabled;
   if (prefs.followUpDays !== undefined) patch.follow_up_days = prefs.followUpDays;
   if (prefs.followUpTime) patch.follow_up_time = prefs.followUpTime;
+  // Notification privacy: what a push may reveal ('generic' | 'count'). Mirrored
+  // onto every device row so the schedulers read it per-send (notify.ts).
+  if (prefs.notificationDetail) patch.notification_detail = prefs.notificationDetail;
   // Cadence anchor — stamped when the user enables follow-ups so the first
   // one arrives a full follow_up_days later (the server otherwise stamps it
   // on its next pass; see send-follow-up-reminder).

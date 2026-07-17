@@ -3,7 +3,39 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/). This project uses date-based entries.
 
-## [Unreleased] — 2026-07-16
+## [Unreleased] — 2026-07-17
+
+Context-aware persona pass: the app now reveals group-leader, intercessor, learner, multilingual, privacy and pastoral capabilities **from existing behaviour** — no persona picker, no new navigation tab, and Grace's Today/first-prayer journeys unchanged.
+
+### Added
+- **First-group checklist** — creating a group now lands the leader *inside* it, where a dismissible three-step card waits: Invite people → Add the first prayer request → Begin praying. Each row is a shortcut to the page's real actions (invite opens the existing link/share/QR/code surface), steps tick themselves off from live data (members joined, requests added, "I'm praying" given), and the card retires itself when done (`src/components/GroupChecklist.jsx`, `src/lib/groupChecklist.js`).
+- **Intercession queue** — a Community section listing only requests the user *explicitly* took on: personal prayers marked for someone (`for_other`) and community requests saved to their list. One **Pray shared requests** action opens the ordinary `PrayerSession` over what's still unprayed today; leaving midway keeps progress (per-prayer completions) and reopening resumes at the first unfinished request. Source filters (All / Personal / Groups) appear only when both sources exist. Invisible to anyone who hasn't taken requests on (`src/components/IntercessionQueue.jsx`, `src/lib/intercession.js`).
+- **Grow next step** — Grow opens with ONE recommended step derived from on-device guide progress (continue an in-progress guide > first new guide > pray a favourite again); the rest of the library waits behind **Browse all guides** and completed guides fold into a collapsed **Completed** history (`src/lib/guideProgress.js`; `GuideReader` gained `onStarted`/`onCompleted`).
+- **Audience labels everywhere** — one compact audience model (Private / Private · Encrypted / Shared with X / Shared with N groups / From \<group\>) rendered by a single `AudienceBadge` in the prayer form, the saved confirmation, the prayer detail header area and the share preview; the share modal now also *names* the receiving groups and states that future updates sync (`src/lib/audience.js`, `src/components/shared/AudienceBadge.jsx`).
+- **Privacy & Security settings section** — one consolidated destination (reachable from More) containing the Privacy Center, the encrypted vault, **notification privacy** (what a push may reveal: generic vs. count — titles/names never; syncs account-wide into `user_settings.notification_detail` + `push_subscriptions`, which the reminder scheduler already reads), **Low data mode**, AI data use & consent, export, and the account-deletion danger zone. Legacy `/settings#data` deep-links alias to it.
+- **Low data mode** — device-local toggle that defers nonessential remote fetches: verse text not already bundled/cached shows as a reference with a link (no shared-cache or YouVersion calls); capture, Today, sessions and offline writes are untouched (`src/lib/lowData.js`, gate in `src/lib/verseText.js`). Saving while offline now says "Saved on this device — it will sync when you're back online."
+- **People view in the Journal** — an optional lens (icon next to search) that appears only once ≥2 distinct people are named in prayers: prayers grouped by person with active/answered counts, latest update and next pending follow-up date; selecting a person opens their related prayers — no separate contact database (`src/lib/people.js`).
+- **Pray now + follow-up on the prayer detail** — a personal prayer's detail page now leads with a real one-prayer session (same completion log as Today) and offers "Remind me to follow up" from the ⋯ menu (reusing `FollowUpField`/`followUpStore`).
+- **Session context for intercessors** — prayer sessions show the request's source (person chip, origin group chip) and its most recent update in a quiet one-line card.
+
+### Changed
+- **Community hub** — incoming friend requests and group invitations merged into one compact **Needs attention** section (rendered only when something actually awaits a decision); Join group stays reachable as a header action next to Create group and Add friend; groups continue to lead, friends stay secondary.
+- **Inside a group** — the principal actions sit side by side (Add request + Share invite); an empty group shows exactly ONE contextual Add-request action; members/settings/manage/leave stay in the overflow, with admin controls rendered only for admins.
+- **Translation control appears only on language mismatch** — community prayer detail shows "See translation" only when the content is plausibly in a different language than the interface (on-device script/stop-word hint, or an existing cached translation — no AI, no network; `src/lib/langHint.js`). Translated content carries a **Translated** label, "Show original" always returns, and the display choice is remembered **per group** (`src/lib/translationPrefs.js`).
+- **Journal counts & zero states** — the count line under the segmented control is gone; while filters narrow the list a "N results" label appears instead. A filtered zero offers **Clear filters** (never "add another prayer"); only a genuinely empty Journal keeps the Add-prayer call-to-action.
+- **Beginner-friendly prayer-format descriptions** (all 16 languages): Requests — pray through what is on your heart; Guided — a simple beginning, your requests and thanksgiving; ACTS — a structured biblical prayer pattern (no need to know the acronym).
+- **Grow layout** — `ItemCard`/`Disclosure` hoisted to top level so disclosure state changes keep DOM nodes (and keyboard focus) stable.
+
+### Accessibility
+- Undersized controls brought to ~44 px: prayer-session & guide-reader close buttons, Journal search/filter icons, Community hub header actions, group overflow trigger and back button, Inbox settings button, plus min-heights on new chips/disclosures. New disclosures carry `aria-expanded`/`aria-controls`; the notification-privacy choice uses native radios; state is never colour-only (icons + text).
+
+### i18n
+- 40 new keys + 3 reworded keys × 16 languages (AI-authored, pending native review). French remains the always-loaded fallback.
+
+### Tests
+- +69 focused tests (575 total green): intercession queue membership/filters/resume/optimistic completion, first-group checklist progression & dismissal, Grow recommendation & History, audience labels, language-mismatch hinting, low-data deferral (with bundle/cache still served), People grouping/counts/follow-ups, Journal filtered-zero vs. true-empty, Settings privacy consolidation incl. generic-by-default notification previews.
+
+## 2026-07-16
 
 UX simplification pass around one goal: **first prayer within 60 seconds of registration, daily prayer within one tap.**
 

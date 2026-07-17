@@ -9,6 +9,9 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import { toast } from '../store/toastStore';
 import { canEncrypt } from '../lib/crypto/prayerCrypto';
+import useCommunityStore from '../store/communityStore';
+import AudienceBadge from './shared/AudienceBadge';
+import { audienceOf } from '../lib/audience';
 import PrayerSavedStep from './PrayerSavedStep';
 import ScheduleEditor from './ScheduleEditor';
 import CategorySelector from './CategorySelector';
@@ -115,6 +118,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
     }))
   );
   const { tr } = useTranslationStore();
+  const prayerShares = useCommunityStore((s) => s.prayerShares);
   const lang = settings.language || 'fr';
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
@@ -158,7 +162,19 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   // Subtle, non-technical reassurance after a personal prayer is saved. Encryption
   // is automatic and invisible, so we only hint at it — "Saved privately" always,
   // with "Encrypted on this device" added when the account key is actually ready.
-  const notifySaved = () => toast.success(t(lang, canEncrypt({}) ? 'savedEncrypted' : 'savedPrivately'));
+  // Offline, say plainly where the prayer lives and that it will sync — the write
+  // is already queued, nothing is lost.
+  const notifySaved = () => {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      toast.success(t(lang, 'savedOffline'));
+      return;
+    }
+    toast.success(t(lang, canEncrypt({}) ? 'savedEncrypted' : 'savedPrivately'));
+  };
+
+  // The audience this prayer will have, stated in the form itself: a new
+  // personal prayer is always Private; an edited one shows its real shares.
+  const formAudience = communityMode ? null : audienceOf(editPrayer || {}, editPrayer ? (prayerShares[editPrayer.id] || []) : []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -376,6 +392,13 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Where this prayer will be visible — stated in the form, not after. */}
+          {formAudience && (
+            <div className="pt-1">
+              <AudienceBadge audience={formAudience} lang={lang} />
             </div>
           )}
 

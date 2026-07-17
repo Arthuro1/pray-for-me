@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown } from 'lucide-react';
+import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -150,8 +150,10 @@ export default function SettingsTab() {
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
   // Settings reads as a short list of destinations: every section starts
   // collapsed and opens on demand. A deep-link (below) force-opens its target.
+  // Privacy & Security is ONE consolidated section (visibility, vault,
+  // notification previews, AI consent, export, deletion) — reachable from More.
   const [openSections, setOpenSections] = useState({
-    account: false, notifications: false, appearance: false, data: false, support: false,
+    account: false, privacy: false, notifications: false, appearance: false, support: false,
   });
   const toggleSection = (key) => setOpenSections((s) => ({ ...s, [key]: !s[key] }));
 
@@ -174,9 +176,12 @@ export default function SettingsTab() {
   useEffect(() => {
     const hash = window.location.hash?.slice(1);
     if (!hash) return;
-    setOpenSections((s) => (hash in s ? { ...s, [hash]: true } : s));
+    // The old Data & advanced section merged into Privacy & Security — keep
+    // saved #data deep-links working.
+    const target = hash === 'data' ? 'privacy' : hash;
+    setOpenSections((s) => (target in s ? { ...s, [target]: true } : s));
     const raf = requestAnimationFrame(() => {
-      const el = document.getElementById(hash);
+      const el = document.getElementById(target);
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     return () => cancelAnimationFrame(raf);
@@ -371,7 +376,10 @@ export default function SettingsTab() {
               {t(lang, 'signOut')}
             </button>
           </div>
+        </SettingsSection>
 
+        {/* ── Privacy & Security — the ONE consolidated destination ── */}
+        <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
           {/* Privacy Center — plain-language explanation of storage & sharing.
               Basic privacy is free for everyone; this is never gated. */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -455,6 +463,87 @@ export default function SettingsTab() {
                 </div>
                 <VaultMigrationStatus lang={lang} />
               </>
+            )}
+          </div>
+
+          {/* Notification privacy — what a push may reveal. Native radios; the
+              choice syncs account-wide and every scheduler honours it. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Bell size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPreviewTitle')}</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPreviewSub')}</p>
+            <div role="radiogroup" aria-label={t(lang, 'notifPreviewTitle')} className="space-y-1.5">
+              {[
+                { value: 'generic', labelKey: 'notifPreviewGeneric' },
+                { value: 'count', labelKey: 'notifPreviewCount' },
+              ].map(({ value, labelKey }) => (
+                <label key={value} className="flex items-center gap-2.5 min-h-[44px] px-2 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)' }}>
+                  <input
+                    type="radio"
+                    name="notification-detail"
+                    value={value}
+                    checked={(settings.notificationDetail || 'generic') === value}
+                    onChange={() => {
+                      updateSettings({ notificationDetail: value });
+                      updatePushPrefs(user?.id, { notificationDetail: value }).catch(() => { /* best-effort */ });
+                    }}
+                  />
+                  <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, labelKey)}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Low data mode — device-local; defers nonessential fetches only. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <WifiOff size={16} className="shrink-0" style={{ color: 'var(--accent)' }} />
+                <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'lowDataTitle')}</h3>
+              </div>
+              <Toggle enabled={!!settings.lowDataMode} onToggle={() => updateSettings({ lowDataMode: !settings.lowDataMode })} />
+            </div>
+            <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'lowDataSub')}</p>
+          </div>
+
+          {/* Data export — your prayers belong to you. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Download size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'dataTitle')}</h3>
+            </div>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
+            <button
+              onClick={handleExport}
+              disabled={prayers.length === 0}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-40"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <Download size={14} />
+              {t(lang, 'exportData')}
+            </button>
+          </div>
+
+          {/* AI assistance — data use and consent. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles size={16} style={{ color: 'var(--accent)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiAboutTitle')}</h3>
+            </div>
+            <AiDisclaimer lang={lang} variant="full" className="my-3" />
+            {aiOn ? (
+              <button
+                onClick={handleRevokeAi}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                <Sparkles size={14} />
+                {t(lang, 'aiRevoke')}
+              </button>
+            ) : (
+              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
             )}
           </div>
 
@@ -613,48 +702,6 @@ export default function SettingsTab() {
                 onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
               />
             </div>
-          </div>
-        </SettingsSection>
-
-        {/* ── Data & advanced ── */}
-        <SettingsSection id="data" title={t(lang, 'settingsSecData')} icon={Download} open={openSections.data} onToggle={() => toggleSection('data')}>
-          {/* Data export */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Download size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'dataTitle')}</h3>
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
-            <button
-              onClick={handleExport}
-              disabled={prayers.length === 0}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-40"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-            >
-              <Download size={14} />
-              {t(lang, 'exportData')}
-            </button>
-          </div>
-
-          {/* AI assistance */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiAboutTitle')}</h3>
-            </div>
-            <AiDisclaimer lang={lang} variant="full" className="my-3" />
-            {aiOn ? (
-              <button
-                onClick={handleRevokeAi}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-              >
-                <Sparkles size={14} />
-                {t(lang, 'aiRevoke')}
-              </button>
-            ) : (
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
-            )}
           </div>
         </SettingsSection>
 

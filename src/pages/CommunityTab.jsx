@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, LogIn, Search, Share2, QrCode, ShieldCheck, ShieldOff } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -14,6 +14,9 @@ import { getAuthorName, communityAuthor } from '../utils/user';
 import { unreadCounts } from '../utils/community';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
+import IntercessionQueue from '../components/IntercessionQueue';
+import GroupChecklist from '../components/GroupChecklist';
+import { setChecklistFlag } from '../lib/groupChecklist';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import Avatar from '../components/shared/Avatar';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
@@ -146,17 +149,27 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   return (
     <div style={{ background: 'var(--bg)' }} className="min-h-screen">
       <div className="px-5 md:px-8 py-6 max-w-4xl mx-auto">
-        {/* Once groups exist they lead the page; creating another group or adding
-            a friend become small header actions instead of a second button row. */}
+        {/* Once groups exist they lead the page; joining another group, creating
+            one or adding a friend become small header actions instead of a
+            second button row. Join stays reachable — invitations arrive by code. */}
         <div className="flex items-center justify-between gap-3 mb-6">
           <h1 className="text-2xl font-bold" style={{ color: 'var(--text-1)' }}>{t(lang, 'community')}</h1>
           {groups.length > 0 && (
             <div className="flex items-center gap-2 shrink-0">
               <button
+                onClick={() => setShowJoinGroup(true)}
+                aria-label={t(lang, 'joinGroupCta')}
+                title={t(lang, 'joinGroupCta')}
+                className="w-11 h-11 rounded-xl flex items-center justify-center"
+                style={SUBTLE_BTN}
+              >
+                <LogIn size={16} />
+              </button>
+              <button
                 onClick={() => setShowCreateGroup(true)}
                 aria-label={t(lang, 'createGroup')}
                 title={t(lang, 'createGroup')}
-                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                className="w-11 h-11 rounded-xl flex items-center justify-center"
                 style={SUBTLE_BTN}
               >
                 <Plus size={16} />
@@ -165,7 +178,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 onClick={() => setShowAddFriend(true)}
                 aria-label={t(lang, 'addFriend')}
                 title={t(lang, 'addFriend')}
-                className="w-9 h-9 rounded-xl flex items-center justify-center"
+                className="w-11 h-11 rounded-xl flex items-center justify-center"
                 style={SUBTLE_BTN}
               >
                 <UserPlus size={16} />
@@ -194,19 +207,18 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           </div>
         )}
 
-        {friendRequests.length > 0 && (
-          <Section title={`${t(lang, 'friendRequests')} (${friendRequests.length})`} icon={<Mail size={18} />}>
+        {/* Needs attention: ONLY when something actually awaits a decision —
+            incoming friend requests and group invitations. Never a permanent
+            statistics block. */}
+        {(friendRequests.length > 0 || groupInvitations.length > 0) && (
+          <Section title={t(lang, 'needsAttention')} icon={<Mail size={18} />}>
             {friendRequests.map(req => (
-              <ActionRow key={req.id} label={req.fromName} avatarName={req.fromName} busy={busyId === req.id}
+              <ActionRow key={req.id} label={req.fromName} sublabel={t(lang, 'friendRequests')}
+                avatarName={req.fromName} busy={busyId === req.id}
                 primaryText={t(lang, 'accept')} secondaryText={t(lang, 'reject')}
                 onPrimary={() => handle(req.id, () => acceptFriendRequest(req.id))}
                 onSecondary={() => handle(req.id, () => rejectFriendRequest(req.id))} />
             ))}
-          </Section>
-        )}
-
-        {groupInvitations.length > 0 && (
-          <Section title={`${t(lang, 'groupInvitations')} (${groupInvitations.length})`} icon={<Mail size={18} />}>
             {groupInvitations.map(inv => (
               <ActionRow key={inv.id}
                 label={inv.groupName || t(lang, 'groupInviteFallbackTitle')}
@@ -219,6 +231,10 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             ))}
           </Section>
         )}
+
+        {/* Intercession queue — only for users who explicitly took requests on
+            (for someone, or saved from a group); invisible to everyone else. */}
+        <IntercessionQueue lang={lang} />
 
         {/* The onboarding card above IS the empty state — no second "My groups"
             empty section with another Join button. */}
@@ -265,7 +281,8 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           </Section>
         )}
 
-        {showCreateGroup && <CreateGroupModal lang={lang} userId={userId} onClose={() => setShowCreateGroup(false)} onDone={() => { setShowCreateGroup(false); }} />}
+        {showCreateGroup && <CreateGroupModal lang={lang} userId={userId} onClose={() => setShowCreateGroup(false)}
+          onDone={(groupId) => { setShowCreateGroup(false); if (groupId) onViewGroup(groupId); }} />}
         {showJoinGroup && <JoinGroupModal lang={lang} userId={userId} onClose={() => setShowJoinGroup(false)} onJoined={(groupId) => { setShowJoinGroup(false); onViewGroup(groupId); }} />}
         {showAddFriend && <AddFriendModal lang={lang} userId={userId} onClose={() => setShowAddFriend(false)} />}
       </div>
@@ -312,10 +329,12 @@ function CreateGroupModal({ lang, userId, onClose, onDone }) {
   const handleCreate = async () => {
     if (!name.trim()) return;
     setLoading(true);
-    const { error: err } = await createGroup(name.trim(), userId);
+    const { error: err, group } = await createGroup(name.trim(), userId);
     setLoading(false);
     if (err) { setError(err); return; }
-    onDone();
+    // Land the new leader inside their group, where the first-group checklist
+    // (invite → first request → pray) is waiting — no settings détour.
+    onDone(group?.id || null);
   };
 
   return (
@@ -795,7 +814,7 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup } = useCommunityStore(
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup, userReactions, fetchUserReactions } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       prayers: s.prayers,
@@ -806,6 +825,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       setGroupAutoAdd: s.setGroupAutoAdd,
       subscribeGroupPrayers: s.subscribeGroupPrayers,
       leaveGroup: s.leaveGroup,
+      userReactions: s.userReactions,
+      fetchUserReactions: s.fetchUserReactions,
     }))
   );
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
@@ -834,8 +855,15 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     return subscribeGroupPrayers(groupId);
   }, [groupId]);
 
+  // The leader checklist's "begin praying" step ticks itself off once the user
+  // has an "I'm praying" on any of this group's requests.
+  useEffect(() => {
+    if (groupId && user?.id) fetchUserReactions(groupId, user.id);
+  }, [groupId, user?.id]);
+
   const group = groups.find(g => g.id === groupId);
   const isAdmin = group?.role === 'admin';
+  const hasPrayedInGroup = prayers.some(p => userReactions.has(p.id));
 
   const filteredPrayers = prayers.filter(p => {
     if (reqFilter === 'active' && p.is_answered) return false;
@@ -884,13 +912,13 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   return (
     <div style={{ background: 'var(--bg)' }}>
       <div className="px-5 md:px-8 pt-4 pb-2 flex items-center justify-between max-w-4xl mx-auto">
-        <button onClick={onBack} className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+        <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           <ArrowLeft size={16} /> {t(lang, 'community')}
         </button>
         <OverflowMenu
           lang={lang}
           ariaLabel={t(lang, 'groupOptions')}
-          triggerClassName="flex items-center justify-center w-9 h-9 rounded-lg"
+          triggerClassName="flex items-center justify-center w-11 h-11 rounded-lg"
           triggerStyle={SUBTLE_BTN}
           items={[
             { key: 'members', icon: Users, label: t(lang, 'members'), onClick: () => setShowMembers(true) },
@@ -939,9 +967,28 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       <div className="px-5 md:px-8 py-4 max-w-4xl mx-auto">
         <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
 
+        {/* First-group checklist — leaders only, dismissible, retires itself as
+            the steps complete. Its rows are shortcuts to actions on this page. */}
+        {isAdmin && group && !loading && (
+          <GroupChecklist
+            lang={lang}
+            group={group}
+            requestCount={prayers.length}
+            hasPrayed={hasPrayedInGroup}
+            onInvite={() => setShowMembers(true)}
+            onAddRequest={() => setShowNewRequest(true)}
+            onPray={() => {
+              // Opening a request to pray over it is the honest "begin" —
+              // remember the step so the checklist doesn't nag afterwards.
+              setChecklistFlag(groupId, 'prayed');
+              if (prayers[0]) onOpenPrayer(prayers[0].id);
+            }}
+          />
+        )}
+
         <div className="flex gap-1 mb-5">
           {['requests', 'testimonies'].map(tab => (
-            <button key={tab} onClick={() => setSubTab(tab)} className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
+            <button key={tab} onClick={() => setSubTab(tab)} className="px-4 py-2 min-h-[44px] rounded-xl text-sm font-medium transition-all"
               style={{ background: subTab === tab ? 'var(--accent)' : 'var(--input-bg)', color: subTab === tab ? '#fff' : 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
               {tab === 'requests' ? t(lang, 'prayerRequests') : t(lang, 'testimonies')}
             </button>
@@ -950,9 +997,19 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
         {subTab === 'requests' && (
           <>
-            <button onClick={() => setShowNewRequest(true)} className="flex items-center gap-2 w-full py-3 rounded-xl text-sm font-medium mb-4 justify-center text-white" style={{ background: 'var(--accent)' }}>
-              <Plus size={16} /> {t(lang, 'newRequest')}
-            </button>
+            {/* Principal actions, side by side: add a request, share the invite.
+                Hidden while the group is empty — the empty state below carries
+                the single Add-request action then. */}
+            {prayers.length > 0 && (
+              <div className="flex gap-2 mb-4">
+                <button onClick={() => setShowNewRequest(true)} className="flex-1 flex items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--accent)' }}>
+                  <Plus size={16} /> {t(lang, 'newRequest')}
+                </button>
+                <button onClick={() => setShowMembers(true)} className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium justify-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+                  <Share2 size={15} /> {t(lang, 'shareInviteLink')}
+                </button>
+              </div>
+            )}
 
             {prayers.length > 0 && (
               <div className="mb-4 space-y-2.5">
@@ -975,7 +1032,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             {loading ? (
               <PrayerListSkeleton />
             ) : prayers.length === 0 ? (
-              <Empty lang={lang} title="noRequests" />
+              // ONE contextual action for an empty group — no competing buttons.
+              <div className="text-center py-12">
+                <p className="text-sm mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'noRequests')}</p>
+                <p className="text-xs mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
+                <button onClick={() => setShowNewRequest(true)} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+                  <Plus size={16} /> {t(lang, 'newRequest')}
+                </button>
+              </div>
             ) : filteredPrayers.length === 0 ? (
               <p className="text-center text-sm py-10" style={{ color: 'var(--text-3)' }}>{t(lang, 'noMatch')}</p>
             ) : (

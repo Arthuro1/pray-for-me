@@ -167,8 +167,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     </div>
   );
 
+  // Closing is the "pause" — progress is already recorded per prayer, so the
+  // session can be resumed later with the first unfinished request.
   const closeButton = (
-    <button onClick={onClose} aria-label={t(lang, 'close')} className="w-8 h-8 flex items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+    <button onClick={onClose} aria-label={t(lang, 'close')} className="w-11 h-11 flex items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
       <X size={16} />
     </button>
   );
@@ -306,6 +308,13 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const cats = categories.filter((c) => ids.includes(c.id));
   const points = prayer.prayer_points || [];
   const showSupplicationLabel = stages.length > 1; // only in guided / acts paths
+  // The most recent meaningful update — the freshest thing to pray from,
+  // especially for shared/intercession requests. Older updates stay on the
+  // prayer's detail page.
+  const updates = prayer.prayer_updates || [];
+  const latestUpdate = updates.length > 0
+    ? [...updates].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))[0]
+    : null;
 
   return overlay(
     <>
@@ -316,7 +325,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
             🤲 {t(lang, 'stageSupplication')}
           </p>
         )}
-        {(cats.length > 0 || (prayer.for_other && prayer.person_name)) && (
+        {(cats.length > 0 || (prayer.for_other && prayer.person_name) || prayer.origin_group_name) && (
           <div className="flex flex-wrap gap-1.5 mb-4">
             {cats.map((c) => (
               <span key={c.id} className="text-xs px-3 py-1 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
@@ -328,6 +337,12 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
                 👤 {prayer.person_name}
               </span>
             )}
+            {/* Source label — which group this shared request came from */}
+            {prayer.origin_group_name && (
+              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+                👥 {prayer.origin_group_name}
+              </span>
+            )}
           </div>
         )}
 
@@ -335,6 +350,16 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
 
         {prayer.description && (
           <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-2)' }}>{tr(prayer.description, lang)}</p>
+        )}
+
+        {/* Freshest news to pray from — one line, never the whole history */}
+        {latestUpdate?.text && (
+          <div className="rounded-2xl p-3.5 mb-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-[11px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-3)' }}>
+              {t(lang, 'latestUpdateLabel')}
+            </p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{tr(latestUpdate.text, lang)}</p>
+          </div>
         )}
 
         {points.length > 0 && (

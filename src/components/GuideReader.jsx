@@ -10,7 +10,7 @@ import VerseAccordion from './VerseAccordion';
 // Each step gives a heading and a gentle prompt, and (usually) points to a
 // passage to OPEN in the user's own Bible — we never put our words in place of
 // God's. The user prays each step themselves; this only paces and guides them.
-export default function GuideReader({ guide, lang, onClose }) {
+export default function GuideReader({ guide, lang, onClose, onStarted, onCompleted }) {
   // index -1 = intro screen; 0..n-1 = steps; n = done
   const [index, setIndex] = useState(-1);
   const trapRef = useFocusTrap(true);
@@ -23,7 +23,13 @@ export default function GuideReader({ guide, lang, onClose }) {
   const step = !onIntro && !done ? steps[index] : null;
   const isLastStep = index === total - 1;
 
-  const advance = () => setIndex((i) => i + 1);
+  // Progress signals for the Grow path: begun past the intro, completed on the
+  // final Amen. Both callbacks are optional and content-free.
+  const advance = () => {
+    if (onIntro) onStarted?.(guide.id);
+    if (index === total - 1) onCompleted?.(guide.id);
+    setIndex(index + 1);
+  };
   // Step back to the previous slide — from the first step this returns to the
   // intro so the whole guide stays re-readable in either direction.
   const back = () => setIndex((i) => i - 1);
@@ -37,7 +43,7 @@ export default function GuideReader({ guide, lang, onClose }) {
   );
 
   const closeButton = (
-    <button onClick={onClose} aria-label={t(lang, 'close')} className="w-8 h-8 flex items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+    <button onClick={onClose} aria-label={t(lang, 'close')} className="w-11 h-11 flex items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
       <X size={16} />
     </button>
   );

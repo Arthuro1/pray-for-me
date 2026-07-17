@@ -84,9 +84,22 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
           </p>
         )}
         {/* Live preview of the attribution group members will see — updates as
-            the anonymous toggle changes, so nothing is shared unseen. */}
+            the anonymous toggle changes, so nothing is shared unseen. Below it,
+            the audience is NAMED and the update-sync behaviour stated plainly. */}
         <div className="mb-4">
           <SharePreview authorName={authorName} isAnonymous={shareAnon} title={prayer.title} lang={lang} />
+          {shareGroupIds.size > 0 && (
+            <p className="text-xs mt-2 font-medium" style={{ color: 'var(--text-2)' }}>
+              {t(lang, 'sharePreviewAudience', {
+                names: groups.filter((g) => shareGroupIds.has(g.id)).map((g) => g.name).join(', '),
+              })}
+            </p>
+          )}
+          {shareGroupIds.size > 0 && (
+            <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>
+              {t(lang, 'sharePreviewSync')}
+            </p>
+          )}
         </div>
         <div className="flex gap-2">
           <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>

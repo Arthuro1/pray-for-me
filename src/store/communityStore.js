@@ -246,14 +246,19 @@ const useCommunityStore = create((set, get) => ({
 
   createGroup: async (name, userId) => {
     // RPC creates group + member atomically to bypass RLS chicken-and-egg
+    const code = generateCode();
     const { error } = await supabase.rpc('create_group_with_member', {
       p_name: name,
-      p_invite_code: generateCode(),
+      p_invite_code: code,
       p_user_id: userId,
     });
     if (error) return toError(error);
     await get().fetchGroups(userId);
-    return {};
+    // Hand the fresh group back (matched by the code we just generated) so the
+    // UI can open it directly — a new leader lands IN their group, where the
+    // invite / first-request checklist waits, instead of back on the hub.
+    const group = get().groups.find((g) => g.invite_code === code) || null;
+    return { group };
   },
 
   joinGroup: async (code, userId) => {

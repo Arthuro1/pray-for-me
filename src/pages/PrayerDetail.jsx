@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -34,6 +34,13 @@ import CommunityTestimonies from '../components/CommunityTestimonies';
 import AnonymousToggle from '../components/AnonymousToggle';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
+import AudienceBadge from '../components/shared/AudienceBadge';
+import PrayerSession from '../components/PrayerSession';
+import FollowUpField from '../components/FollowUpField';
+import useFollowUpStore from '../store/followUpStore';
+import { audienceOf } from '../lib/audience';
+import { needsTranslationControl } from '../lib/langHint';
+import { getTranslationPref, setTranslationPref } from '../lib/translationPrefs';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
@@ -101,6 +108,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showScripture, setShowScripture] = useState(false);
+  // "Pray now" on this one prayer — a real session, so completion is recorded
+  // through the same per-prayer completion log as Today's sessions.
+  const [showPraySession, setShowPraySession] = useState(false);
+  // Inline per-prayer follow-up editor (pastoral "check back on this" date).
+  const [showFollowUpEdit, setShowFollowUpEdit] = useState(false);
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -115,11 +127,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [togglingPraying, setTogglingPraying] = useState(false);
 
-  const { categories, markAnswered, markActive, addTestimony: addPersonalTestimony, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
+  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
       markAnswered: s.markAnswered,
       markActive: s.markActive,
+      markPrayedOn: s.markPrayedOn,
       addTestimony: s.addTestimony,
       addUpdate: s.addUpdate,
       addPrayerPoint: s.addPrayerPoint,
@@ -137,6 +150,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   );
   const { tr, translateTexts, translating } = useTranslationStore();
   const [showTranslated, setShowTranslated] = useState(false);
+  const { followUps, setFollowUp } = useFollowUpStore(
+    useShallow((s) => ({ followUps: s.followUps, setFollowUp: s.setFollowUp }))
+  );
   // Esc closes the delete overlay (the share modal handles its own Esc/focus
   // trap; ConfirmDialog handles its own).
   useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
@@ -335,7 +351,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   };
 
   const handleToggleTranslate = async () => {
-    if (showTranslated) { setShowTranslated(false); return; }
+    if (showTranslated) {
+      setShowTranslated(false);
+      setTranslationPref(communityPrayer?.group_id, 'original');
+      return;
+    }
     const texts = [livePrayer.title, livePrayer.description];
     (livePrayer.prayer_points || []).forEach(pp => {
       texts.push(pp.title, pp.verse_text);
@@ -345,7 +365,27 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     prayerTestimonies.forEach(tm => texts.push(tm.content));
     await translateTexts(texts.filter(Boolean), lang, user?.id, communityPrayer?.group_id);
     setShowTranslated(true);
+    setTranslationPref(communityPrayer?.group_id, 'translated');
   };
+
+  // The translation control appears only when the content is plausibly in a
+  // DIFFERENT language than the interface (on-device hint, or a translation of
+  // this title already exists) — a monolingual group never sees it. The
+  // original is never replaced: the toggle always goes back to it.
+  const translationRelevant = isCommunity && !livePrayer._locked && needsTranslationControl(
+    [livePrayer.title, livePrayer.description].filter(Boolean).join(' '),
+    lang,
+    { hasCachedTranslation: !!livePrayer.title && tr(livePrayer.title, lang) !== livePrayer.title }
+  );
+
+  // Apply the group's remembered display preference when opening a request in
+  // that group (cheap: earlier translations are already cached group-wide).
+  useEffect(() => {
+    if (!isCommunity || !translationRelevant || showTranslated) return;
+    if (getTranslationPref(communityPrayer.group_id) !== 'translated') return;
+    handleToggleTranslate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [communityPrayer?.id, lang, translationRelevant]);
 
   const handleAddUpdate = () => {
     if (!newUpdate.trim()) return;
@@ -433,6 +473,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           lang={lang}
           initialGuidance={livePrayer.scripture_guidance || null}
           onClose={() => setShowScripture(false)}
+        />
+      )}
+      {/* One-prayer session — same session, same per-prayer completion log as
+          Today, so praying from here counts everywhere. */}
+      {showPraySession && (
+        <PrayerSession
+          prayers={[livePrayer]}
+          categories={categories}
+          lang={lang}
+          tr={tr}
+          onClose={() => setShowPraySession(false)}
+          onPrayed={(id) => markPrayedOn(id, todayKey())}
         />
       )}
       {confirmRemovePoint && (
@@ -574,6 +626,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               items={[
                 { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
+                { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered },
                 { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 },
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },
                 { key: 'delete', icon: Trash2, label: t(lang, savedCopy ? 'removeFromList' : 'delete'), danger: true, onClick: handleDelete },
@@ -585,17 +638,32 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
       <div className="px-4 md:px-8 py-5 max-w-2xl mx-auto space-y-4">
 
-        {/* On-demand translation toggle (community content can be in any language) */}
-        {isCommunity && (
-          <button
-            onClick={handleToggleTranslate}
-            disabled={translating}
-            className="flex items-center gap-1.5 text-xs font-medium disabled:opacity-50"
-            style={{ color: 'var(--accent)' }}
-          >
-            {translating ? <Loader2 size={13} className="animate-spin" /> : <Languages size={13} />}
-            {showTranslated ? t(lang, 'showOriginal') : t(lang, 'seeTranslation')}
-          </button>
+        {/* On-demand translation toggle — only when the content's language
+            plausibly differs from the interface's. Translated content is
+            labelled, and the original always stays one tap away. */}
+        {translationRelevant && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleToggleTranslate}
+              disabled={translating}
+              className="flex items-center gap-1.5 min-h-[44px] text-xs font-medium disabled:opacity-50"
+              style={{ color: 'var(--accent)' }}
+            >
+              {translating ? <Loader2 size={13} className="animate-spin" /> : <Languages size={13} />}
+              {showTranslated ? t(lang, 'showOriginal') : t(lang, 'seeTranslation')}
+            </button>
+            {showTranslated && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                {t(lang, 'translatedLabel')}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Audience at a glance — Private / Encrypted / Shared with … — on the
+            user's own prayers, always visible (never buried in a menu). */}
+        {!isCommunity && !savedCopy && (
+          <AudienceBadge audience={audienceOf(livePrayer, sharedGroups)} lang={lang} />
         )}
 
         {/* Categories — read-only chips, except on a saved copy where you can
@@ -613,6 +681,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               </span>
             )}
           </div>
+        )}
+
+        {/* Pray now — the page's first action: a real one-prayer session. */}
+        {!isCommunity && !isAnswered && !livePrayer._locked && (
+          <button
+            onClick={() => setShowPraySession(true)}
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white transition-all active:scale-95"
+            style={{ background: 'var(--accent)' }}
+          >
+            <HandHeart size={17} /> {t(lang, 'prayNow')}
+          </button>
         )}
 
         {/* Prayer plan (recurrence) — editable inline on any active prayer in your
@@ -936,6 +1015,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             }}
             onMarkAnswered={handleMarkAnswered}
           />
+        )}
+
+        {/* Set / change this prayer's follow-up date (opened from the ⋯ menu). */}
+        {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && (
+          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <FollowUpField
+              value={followUps[livePrayer.id]?.date || null}
+              onChange={(date) => setFollowUp(livePrayer.id, date)}
+              lang={lang}
+            />
+          </div>
         )}
 
         {/* ── Saved-from-community: read-only follow indicator ── */}

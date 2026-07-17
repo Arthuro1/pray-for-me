@@ -48,7 +48,8 @@ export default function NotificationsPage() {
             <button
               onClick={() => navigate('/settings#notifications')}
               aria-label={t(lang, 'notifPrefsTitle')}
-              className="flex items-center justify-center w-9 h-9 rounded-xl"
+              title={t(lang, 'notifPrefsTitle')}
+              className="flex items-center justify-center w-11 h-11 rounded-xl"
               style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
             >
               <Settings size={16} />

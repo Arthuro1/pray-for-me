@@ -1,11 +1,13 @@
 // @vitest-environment jsdom
 //
-// Settings is grouped into five collapsible, labelled sections (Account & privacy,
-// Notifications, Appearance & language, Data & advanced, Support & feedback).
-// This verifies the restructure: every section header renders, the account
-// "danger zone" deletion still lives at the bottom of Account & privacy, and a
-// /settings#<section> deep-link expands that section. Only French is loaded in
-// unit tests, so t() resolves to French strings.
+// Settings is grouped into five collapsible, labelled sections (Account,
+// Privacy & Security, Notifications, Appearance & language, Support & feedback).
+// Privacy & Security is the ONE consolidated destination: Privacy Center, vault,
+// notification previews, low data mode, AI consent, export and account deletion
+// all live there. This verifies the structure, that deletion sits in the privacy
+// danger zone, and that /settings#<section> deep-links (including the legacy
+// #data alias) expand their section. Only French is loaded in unit tests, so
+// t() resolves to French strings.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 
@@ -54,17 +56,18 @@ beforeEach(() => {
 describe('SettingsTab — grouped sections', () => {
   it('renders all five section headers (reminders titled "Prayer reminders")', () => {
     render(<SettingsTab />);
-    for (const key of ['settingsSecAccount', 'prayerReminders', 'settingsSecAppearance', 'settingsSecData', 'settingsSecSupport']) {
+    for (const key of ['settingsSecAccount', 'privacySecurity', 'prayerReminders', 'settingsSecAppearance', 'settingsSecSupport']) {
       expect(screen.getAllByText(t(lang, key)).length).toBeGreaterThan(0);
     }
   });
 
-  it('keeps account deletion in a danger zone at the bottom of Account & privacy', () => {
+  it('consolidates privacy: vault, previews, low data, export and deletion in Privacy & Security', () => {
     render(<SettingsTab />);
-    const account = document.getElementById('account');
-    expect(account).toBeTruthy();
-    expect(account.textContent).toContain(t(lang, 'dangerZone'));
-    expect(account.textContent).toContain(t(lang, 'deleteAccount'));
+    const privacy = document.getElementById('privacy');
+    expect(privacy).toBeTruthy();
+    for (const key of ['privacyCenterTitle', 'vaultTitle', 'notifPreviewTitle', 'lowDataTitle', 'exportData', 'dangerZone', 'deleteAccount']) {
+      expect(privacy.textContent, `privacy section should contain ${key}`).toContain(t(lang, key));
+    }
   });
 
   it('relabels the reminders card so it does not duplicate the section title', () => {
@@ -75,14 +78,27 @@ describe('SettingsTab — grouped sections', () => {
   it('starts EVERY section collapsed — Settings reads as a short list of destinations', () => {
     render(<SettingsTab />);
     // Panels are present in the DOM; collapsed ones carry the `hidden` attribute.
-    for (const id of ['account-panel', 'notifications-panel', 'appearance-panel', 'data-panel', 'support-panel']) {
+    for (const id of ['account-panel', 'privacy-panel', 'notifications-panel', 'appearance-panel', 'support-panel']) {
       expect(document.getElementById(id).hidden, `${id} should start collapsed`).toBe(true);
     }
   });
 
   it('expands the section named by a /settings#<id> deep-link', () => {
+    window.location.hash = '#privacy';
+    render(<SettingsTab />);
+    expect(document.getElementById('privacy-panel').hidden).toBe(false);
+  });
+
+  it('keeps legacy #data deep-links working via the privacy alias', () => {
     window.location.hash = '#data';
     render(<SettingsTab />);
-    expect(document.getElementById('data-panel').hidden).toBe(false);
+    expect(document.getElementById('privacy-panel').hidden).toBe(false);
+  });
+
+  it('personal prayers stay private by default: the preview choice defaults to generic', () => {
+    window.location.hash = '#privacy'; // expand the section so the radios are visible
+    render(<SettingsTab />);
+    const generic = screen.getByRole('radio', { name: t(lang, 'notifPreviewGeneric') });
+    expect(generic.checked).toBe(true);
   });
 });
