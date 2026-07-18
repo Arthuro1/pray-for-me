@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "Modo de economia de dados",
   "privacyRowAi": "Assistência de IA e dados",
   "privacyRowExport": "Exportar meus dados",
+  "protWillEncrypt": "Será criptografado",
+  "protEncryptedLocked": "Criptografado · bloqueado aqui",
+  "checklistAddRequestFirst": "Adicione primeiro um pedido",
+  "sourceLangWrittenIn": "Escrito em {name}",
+  "sourceLangChange": "Alterar",
+  "sourceLangLabel": "Idioma desta oração",
+  "sourceLangLooksLike": "Parece {name} — usar?",
 };

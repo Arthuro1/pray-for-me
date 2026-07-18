@@ -72,9 +72,17 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
           </button>
         )}
       </VerseAccordion>
+      {/* Hover-revealed, but also revealed on keyboard focus — otherwise a
+          keyboard user tabs onto a control they cannot see. */}
       {canRemove && (
-        <button onClick={onRemove} title={t(lang, 'tipRemoveVerse')} className="opacity-0 group-hover/verse:opacity-100 transition-opacity mt-1.5 shrink-0" style={{ color: '#c04040' }}>
-          <Trash2 size={11} />
+        <button
+          onClick={onRemove}
+          aria-label={t(lang, 'tipRemoveVerse')}
+          title={t(lang, 'tipRemoveVerse')}
+          className="opacity-0 group-hover/verse:opacity-100 focus-visible:opacity-100 transition-opacity mt-1.5 shrink-0"
+          style={{ color: '#c04040' }}
+        >
+          <Trash2 size={11} aria-hidden="true" />
         </button>
       )}
     </div>
@@ -87,7 +95,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   // ── Personal mode state ──────────────────────────────────────────────────
   const [newUpdate, setNewUpdate] = useState('');
-  const [showTestimony, setShowTestimony] = useState(true);
+  // The answered flow is a DISCLOSURE opened by the "Mark answered" action, not
+  // a form standing permanently open — so the page shows one Mark answered
+  // control, and confirming happens inside the thing it opened.
+  const [showTestimony, setShowTestimony] = useState(false);
   const [testimony, setTestimony] = useState('');
   // Adding a word of thanks to an already-answered prayer (remembrance).
   const [showThanks, setShowThanks] = useState(false);
@@ -454,15 +465,32 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     toast.success(t(lang, 'thanksSaved'));
   };
 
-  const handleMarkAnswered = () => {
-    if (showTestimony) {
-      markAnswered(livePrayer.id, testimony);
-      setShowTestimony(false);
-      setTestimony('');
-    } else {
-      setShowTestimony(true);
-    }
+  // Two distinct steps of ONE workflow, so every entry point (the leading
+  // action, the follow-up banner) opens the same disclosure and only the
+  // disclosure's own button completes the prayer — the confirmation step is
+  // never skipped, and there is no second copy of the completion logic.
+  // Bring a section into view and put the cursor in it. Smooth scrolling is a
+  // nicety, not a requirement — it's optional-called so environments without it
+  // still land the focus, which is the part that matters.
+  const revealAndFocus = (sectionId, field) => {
+    const el = document.getElementById(sectionId);
+    el?.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+    el?.querySelector(field)?.focus({ preventScroll: true });
   };
+
+  const openAnswerFlow = () => {
+    setShowTestimony(true);
+    requestAnimationFrame(() => revealAndFocus('pd-answer', 'textarea'));
+  };
+
+  const closeAnswerFlow = () => { setShowTestimony(false); setTestimony(''); };
+
+  const confirmAnswered = () => {
+    markAnswered(livePrayer.id, testimony);
+    closeAnswerFlow();
+  };
+
+  const focusUpdateField = () => revealAndFocus('pd-updates', 'input');
 
   // Own prayer → warn first; saved copy → instant unfollow + Undo. Then navigate back.
   const handleDelete = () => removePrayer(livePrayer, onBack);
@@ -539,8 +567,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           communityMode
           editPrayer={communityPrayer}
           onClose={() => setShowCommunityEdit(false)}
-          onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
-            await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds });
+          onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds, contentLanguage }) => {
+            await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds, contentLanguage });
             // If the owner edits a shared prayer, sync categories back to personal + siblings.
             if (communityPrayer.source_prayer_id && communityPrayer.user_id === user?.id) {
               await syncCategoriesFromCommunity(communityPrayer.source_prayer_id, categoryIds);
@@ -572,11 +600,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       >
         <button
           onClick={onBack}
+          aria-label={t(lang, 'tipBack')}
           title={t(lang, 'tipBack')}
-          className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full transition-colors"
+          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full transition-colors focus-visible:ring-2"
           style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={18} aria-hidden="true" />
         </button>
         <div className="flex-1 min-w-0">
           {canEditTitle && editingTitle ? (
@@ -723,31 +752,27 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <HandHeart size={17} /> {t(lang, 'prayNow')}
             </button>
             {canManage && (
-              <div className="flex gap-2">
+              // Beside Pray now on any width that fits, stacked when the
+              // translated labels need the room — so the hierarchy stays
+              // readable instead of the labels overflowing.
+              <div className="flex flex-col min-[380px]:flex-row gap-2">
                 <button
-                  onClick={() => {
-                    const el = document.getElementById('pd-updates');
-                    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    el?.querySelector('input')?.focus({ preventScroll: true });
-                  }}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
+                  onClick={focusUpdateField}
+                  className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
                   style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
                 >
-                  <Plus size={13} aria-hidden="true" /> {t(lang, 'addUpdateBtn')}
+                  <Plus size={13} aria-hidden="true" className="shrink-0" />
+                  <span className="truncate">{t(lang, 'addUpdateBtn')}</span>
                 </button>
                 <button
-                  onClick={() => {
-                    setShowTestimony(true);
-                    requestAnimationFrame(() => {
-                      const el = document.getElementById('pd-answer');
-                      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      el?.querySelector('textarea')?.focus({ preventScroll: true });
-                    });
-                  }}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
+                  onClick={showTestimony ? closeAnswerFlow : openAnswerFlow}
+                  aria-expanded={showTestimony}
+                  aria-controls="pd-answer"
+                  className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
                   style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}
                 >
-                  <CheckCircle size={13} aria-hidden="true" /> {t(lang, 'markAnswered')}
+                  <CheckCircle size={13} aria-hidden="true" className="shrink-0" />
+                  <span className="truncate">{t(lang, 'markAnswered')}</span>
                 </button>
               </div>
             )}
@@ -888,8 +913,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <div className="flex items-start gap-2">
                     <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{loc(pp.title)}</p>
                     {canRemoveContent && (
-                      <button onClick={() => setConfirmRemovePoint(pp)} title={t(lang, 'tipRemovePoint')} className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: '#c4a020' }}>
-                        <Trash2 size={13} />
+                      <button
+                        onClick={() => setConfirmRemovePoint(pp)}
+                        aria-label={t(lang, 'tipRemovePoint')}
+                        title={t(lang, 'tipRemovePoint')}
+                        className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+                        style={{ color: '#c4a020' }}
+                      >
+                        <Trash2 size={13} aria-hidden="true" />
                       </button>
                     )}
                   </div>
@@ -1067,12 +1098,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <FollowUpBanner
             prayer={livePrayer}
             lang={lang}
-            onAddUpdate={() => {
-              const el = document.getElementById('pd-updates');
-              el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el?.querySelector('input')?.focus();
-            }}
-            onMarkAnswered={handleMarkAnswered}
+            onAddUpdate={focusUpdateField}
+            onMarkAnswered={openAnswerFlow}
           />
         )}
 
@@ -1242,8 +1269,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 onKeyDown={e => e.key === 'Enter' && handleAddUpdate()}
               />
-              <button onClick={handleAddUpdate} title={t(lang, "tipSaveUpdate")} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium" style={{ background: 'var(--accent)' }}>
-                <Plus size={16} />
+              <button
+                onClick={handleAddUpdate}
+                aria-label={t(lang, 'tipSaveUpdate')}
+                title={t(lang, 'tipSaveUpdate')}
+                className="rounded-xl px-4 min-w-[44px] min-h-[44px] flex items-center justify-center text-white text-sm font-medium"
+                style={{ background: 'var(--accent)' }}
+              >
+                <Plus size={16} aria-hidden="true" />
               </button>
             </div>
           )}
@@ -1303,7 +1336,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           )
         )}
 
-        {/* Testimony input (writing) */}
+        {/* The answered flow, opened by the leading Mark answered action: an
+            optional testimony and the confirm step, together in the disclosure
+            they belong to. Nothing is marked answered without this confirm. */}
         {!isAnswered && showTestimony && canManage && (
           <div id="pd-answer" className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
@@ -1316,23 +1351,25 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               rows={3}
               autoFocus
             />
+            <div className="flex gap-2 mt-3">
+              <button onClick={closeAnswerFlow} className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+                {t(lang, 'cancel')}
+              </button>
+              <button onClick={confirmAnswered} title={t(lang, 'tipConfirm')} className="flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-xl text-sm font-medium" style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}>
+                <CheckCircle size={15} aria-hidden="true" /> {t(lang, 'confirm')}
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Actions */}
-        <div className="flex gap-3 pb-6">
-          {!isAnswered && canManage && (
-            <button onClick={handleMarkAnswered} title={showTestimony ? t(lang, "tipConfirm") : t(lang, "tipMarkAnswered")} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}>
-              <CheckCircle size={15} />
-              {showTestimony ? t(lang, 'confirm') : t(lang, 'markAnswered')}
-            </button>
-          )}
-          {isAnswered && canManage && (
-            <button onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+        {/* An answered prayer's only remaining state action — reopening it. */}
+        {isAnswered && canManage && (
+          <div className="flex gap-3 pb-6">
+            <button onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-2 text-sm px-4 py-3 min-h-[44px] rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
               {t(lang, 'resumePrayer')}
             </button>
-          )}
-        </div>
+          </div>
+        )}
         </>}
       </div>
     </div>

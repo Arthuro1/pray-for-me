@@ -66,13 +66,26 @@ describe('GroupChecklist — progression', () => {
 });
 
 describe('GroupChecklist — valid sequencing', () => {
-  it('routes "Begin praying" to Add first request while the group has no request', async () => {
+  it('SAYS "Add a request first" while the group has no request — never an unusable Begin praying', async () => {
     const onPray = vi.fn();
     const onAddRequest = vi.fn();
     renderChecklist({ requestCount: 0, onPray, onAddRequest });
-    fireEvent.click(await screen.findByText(t(lang, 'checklistPray')));
+    const row = await screen.findByText(t(lang, 'checklistAddRequestFirst'));
+    expect(screen.queryByText(t(lang, 'checklistPray'))).toBeNull();
+    fireEvent.click(row);
     expect(onPray).not.toHaveBeenCalled();
     expect(onAddRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it('turns into "Begin praying" as soon as the first request exists', async () => {
+    const { rerender } = renderChecklist({ requestCount: 0 });
+    expect(await screen.findByText(t(lang, 'checklistAddRequestFirst'))).toBeTruthy();
+    rerender(
+      <GroupChecklist lang={lang} group={group} requestCount={1} hasPrayed={false}
+        onInvite={() => {}} onAddRequest={() => {}} onPray={() => {}} />
+    );
+    expect(screen.getByText(t(lang, 'checklistPray'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'checklistAddRequestFirst'))).toBeNull();
   });
 
   it('with a request present, "Begin praying" opens the pray action but does NOT complete the step by itself', async () => {
@@ -114,8 +127,75 @@ describe('MembersModal — invitation completion', () => {
   it('revealing the QR code records the invitation', async () => {
     const onInviteAction = vi.fn();
     render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} onInviteAction={onInviteAction} />);
-    fireEvent.click(await screen.findByTitle(t(lang, 'showQrCode')));
+    fireEvent.click(await screen.findByLabelText(t(lang, 'showQrCode')));
     expect(onInviteAction).toHaveBeenCalledTimes(1);
+  });
+
+  it('the QR control is a named, 44px disclosure — not an icon with only a tooltip', async () => {
+    render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} />);
+    const qr = await screen.findByRole('button', { name: t(lang, 'showQrCode') });
+    expect(qr.className).toMatch(/w-11/);
+    expect(qr.className).toMatch(/h-11/);
+    expect(qr.getAttribute('aria-expanded')).toBe('false');
+
+    fireEvent.click(qr);
+    expect(qr.getAttribute('aria-expanded')).toBe('true');
+    expect(document.getElementById(qr.getAttribute('aria-controls'))).toBeTruthy();
+  });
+
+  it('gives the modal close control a name and a 44px target', async () => {
+    render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} />);
+    const close = await screen.findByRole('button', { name: t(lang, 'close') });
+    expect(close.className).toMatch(/w-11/);
+    expect(close.className).toMatch(/h-11/);
+  });
+});
+
+// A member joining is a server event with no client trigger. Rather than poll,
+// the card re-checks when the app comes back to the foreground — the moment a
+// leader returns after sharing the link.
+describe('GroupChecklist — the Invite step reacts when a member joins', () => {
+  it('completes on app focus, in place, without remounting the page', async () => {
+    renderChecklist();
+    const invite = await screen.findByText(t(lang, 'checklistInvite'));
+    expect(invite.closest('button').disabled).toBe(false);
+
+    useCommunityStore.setState({ fetchGroupMembers: vi.fn(async () => ({ members: members(2) })) });
+    fireEvent(window, new Event('focus'));
+
+    await waitFor(() => expect(invite.closest('button').disabled).toBe(true));
+    expect(invite.isConnected).toBe(true); // updated, not re-created
+  });
+
+  it('does not poll — no timer, and no request until something happens', async () => {
+    vi.useFakeTimers();
+    try {
+      renderChecklist();
+      await vi.waitFor(() => expect(useCommunityStore.getState().fetchGroupMembers).toHaveBeenCalledTimes(1));
+      vi.advanceTimersByTime(5 * 60 * 1000);
+      expect(useCommunityStore.getState().fetchGroupMembers).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('stops listening once the step is done, so a live group (and Low data mode) costs nothing', async () => {
+    useCommunityStore.setState({ fetchGroupMembers: vi.fn(async () => ({ members: members(2) })) });
+    renderChecklist({ requestCount: 1 });
+    await screen.findByText(t(lang, 'checklistInvite'));
+    const calls = useCommunityStore.getState().fetchGroupMembers.mock.calls.length;
+
+    fireEvent(window, new Event('focus'));
+    await Promise.resolve();
+    expect(useCommunityStore.getState().fetchGroupMembers.mock.calls.length).toBe(calls);
+  });
+
+  it('a refresh that finds no new member leaves Invite open', async () => {
+    renderChecklist();
+    const invite = await screen.findByText(t(lang, 'checklistInvite'));
+    fireEvent(window, new Event('focus'));
+    await waitFor(() => expect(useCommunityStore.getState().fetchGroupMembers.mock.calls.length).toBeGreaterThan(1));
+    expect(invite.closest('button').disabled).toBe(false);
   });
 });
 

@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "Low data mode",
   "privacyRowAi": "Tulong ng AI at data",
   "privacyRowExport": "I-export ang aking data",
+  "protWillEncrypt": "Ie-encrypt",
+  "protEncryptedLocked": "Naka-encrypt · naka-lock dito",
+  "checklistAddRequestFirst": "Magdagdag muna ng kahilingan",
+  "sourceLangWrittenIn": "Nakasulat sa {name}",
+  "sourceLangChange": "Baguhin",
+  "sourceLangLabel": "Wika ng panalanging ito",
+  "sourceLangLooksLike": "Mukhang {name} — gamitin?",
 };

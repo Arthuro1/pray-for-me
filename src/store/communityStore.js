@@ -409,16 +409,23 @@ const useCommunityStore = create((set, get) => ({
     return { prayer: plaintext };
   },
 
-  updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds }) => {
+  updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds, contentLanguage }) => {
     const current = get().prayers.find((p) => p.id === prayerId);
     const gk = await ensureGroupKey(current?.group_id);
     // Title + description share the prayer's encrypted_payload with its points, so
     // re-encrypt the whole bundle from the current (plaintext, in-memory) state.
     const cols = await encPrayerCols(gk, { title, description: description || '', prayer_points: current?.prayer_points || [] });
     const persist = { ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [] };
+    // An author correcting the request's language: metadata beside the group
+    // envelope. Omitted entirely when the caller doesn't state one, so an edit
+    // never wipes an existing stamp.
+    if (contentLanguage !== undefined) persist.content_language = contentLanguage;
     const { error } = await supabase.from('community_prayers').update(persist).eq('id', prayerId);
     if (error) return toError(error);
-    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({ ...p, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [] })) }));
+    set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({
+      ...p, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [],
+      ...(contentLanguage !== undefined ? { content_language: contentLanguage } : {}),
+    })) }));
     return {};
   },
 

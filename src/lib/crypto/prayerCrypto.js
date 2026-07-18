@@ -48,6 +48,14 @@ export function canEncrypt(prayer) {
   return isUnlocked() && !!prayer && !prayer.community_origin_id;
 }
 
+// Will a personal prayer created RIGHT NOW be encrypted at rest? A statement
+// about the next write, for the form's "Will be encrypted" intent — never a
+// claim about any already-stored row (see protectionOf, which reads a prayer's
+// own encryption metadata instead).
+export function willEncryptNewPrayer() {
+  return isUnlocked();
+}
+
 // True once a prayer row carries an encrypted payload (server or cache).
 export function isPrayerEncrypted(row) {
   return !!row && isEncryptedPayload(row.encrypted_payload);

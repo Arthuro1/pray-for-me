@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "Hali ya data kidogo",
   "privacyRowAi": "Msaada wa AI na data",
   "privacyRowExport": "Hamisha data yangu",
+  "protWillEncrypt": "Itasimbwa",
+  "protEncryptedLocked": "Imesimbwa · imefungwa hapa",
+  "checklistAddRequestFirst": "Ongeza ombi kwanza",
+  "sourceLangWrittenIn": "Imeandikwa kwa {name}",
+  "sourceLangChange": "Badilisha",
+  "sourceLangLabel": "Lugha ya maombi haya",
+  "sourceLangLooksLike": "Inaonekana ni {name} — itumie?",
 };

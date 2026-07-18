@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "Mode hemat data",
   "privacyRowAi": "Bantuan AI & data",
   "privacyRowExport": "Ekspor data saya",
+  "protWillEncrypt": "Akan dienkripsi",
+  "protEncryptedLocked": "Terenkripsi · terkunci di sini",
+  "checklistAddRequestFirst": "Tambahkan permohonan dulu",
+  "sourceLangWrittenIn": "Ditulis dalam {name}",
+  "sourceLangChange": "Ubah",
+  "sourceLangLabel": "Bahasa doa ini",
+  "sourceLangLooksLike": "Sepertinya {name} — gunakan?",
 };

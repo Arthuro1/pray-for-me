@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "حالت مصرف کم داده",
   "privacyRowAi": "کمک هوش مصنوعی و داده‌ها",
   "privacyRowExport": "خروجی گرفتن از داده‌های من",
+  "protWillEncrypt": "رمزگذاری خواهد شد",
+  "protEncryptedLocked": "رمزگذاری‌شده · اینجا قفل است",
+  "checklistAddRequestFirst": "اول یک درخواست اضافه کنید",
+  "sourceLangWrittenIn": "نوشته‌شده به {name}",
+  "sourceLangChange": "تغییر",
+  "sourceLangLabel": "زبان این دعا",
+  "sourceLangLooksLike": "به نظر {name} می‌آید — استفاده شود؟",
 };

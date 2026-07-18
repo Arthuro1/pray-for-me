@@ -301,7 +301,14 @@ function Modal({ title, onClose, lang, children }) {
       <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl flex flex-col max-h-[85vh]" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 pb-4 shrink-0">
           <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{title}</h3>
-          <button onClick={onClose} aria-label={t(lang, 'close')} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
+          <button
+            onClick={onClose}
+            aria-label={t(lang, 'close')}
+            className="w-11 h-11 -m-2 shrink-0 flex items-center justify-center rounded-full focus-visible:ring-2"
+            style={{ color: 'var(--text-3)' }}
+          >
+            <X size={18} aria-hidden="true" />
+          </button>
         </div>
         <div className="px-5 pb-5 overflow-y-auto">{children}</div>
       </div>
@@ -779,15 +786,24 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
         <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
           <Share2 size={15} /> {t(lang, 'shareInviteLink')}
         </button>
-        <button onClick={revealQR} title={t(lang, 'showQrCode')} className="px-3 rounded-xl flex items-center justify-center" style={{ background: showQR ? 'var(--accent)' : 'var(--accent-soft)', color: showQR ? '#fff' : 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-          <QrCode size={16} />
+        {/* Icon-only, so it carries a real accessible name (not just a
+            tooltip), a full 44×44 target, and disclosure semantics. */}
+        <button
+          onClick={revealQR}
+          aria-label={t(lang, 'showQrCode')}
+          aria-expanded={showQR}
+          aria-controls="group-invite-qr"
+          className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center focus-visible:ring-2"
+          style={{ background: showQR ? 'var(--accent)' : 'var(--accent-soft)', color: showQR ? '#fff' : 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+        >
+          <QrCode size={16} aria-hidden="true" />
         </button>
       </div>
 
       <ShareButtons url={inviteUrl} text={`${t(lang, 'joinMyGroup')} "${group.name}"`} copiedLabel={t(lang, 'linkCopied')} onShared={onInviteAction} />
 
       {showQR && (
-        <div className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>
+        <div id="group-invite-qr" className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>
           <QRCodeSVG value={inviteUrl} size={170} bgColor="#ffffff" fgColor="#1a0a2e" level="M" />
           <p className="text-xs" style={{ color: '#475569' }}>{t(lang, 'scanToJoin')}</p>
           <p className="text-sm font-mono font-semibold tracking-wider" style={{ color: '#1a0a2e' }}>{group.invite_code}</p>
@@ -987,8 +1003,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       )}
 
       {showNewRequest && <PrayerForm communityMode onClose={() => setShowNewRequest(false)}
-        onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
-          await addPrayer({ groupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds, contentLanguage: lang });
+        onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds, contentLanguage }) => {
+          // The form's language field already defaults to the active language;
+          // an explicit correction arrives here and wins.
+          await addPrayer({ groupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds, contentLanguage: contentLanguage || lang });
         }} />}
 
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}

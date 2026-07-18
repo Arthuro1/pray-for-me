@@ -77,7 +77,7 @@ export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClass
         aria-label={ariaLabel || t(lang, 'options')}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={triggerClassName || 'flex items-center justify-center w-9 h-9 rounded-full'}
+        className={triggerClassName || 'flex items-center justify-center w-11 h-11 rounded-full focus-visible:ring-2'}
         style={triggerStyle}
       >
         <MoreVertical size={18} style={{ color: iconColor }} />

@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "低データモード",
   "privacyRowAi": "AI支援とデータ",
   "privacyRowExport": "データをエクスポート",
+  "protWillEncrypt": "暗号化されます",
+  "protEncryptedLocked": "暗号化済み · この端末ではロック中",
+  "checklistAddRequestFirst": "まず祈りの課題を追加",
+  "sourceLangWrittenIn": "{name}で記入",
+  "sourceLangChange": "変更",
+  "sourceLangLabel": "この祈りの言語",
+  "sourceLangLooksLike": "{name}のようです — 使いますか？",
 };

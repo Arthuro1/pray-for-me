@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "데이터 절약 모드",
   "privacyRowAi": "AI 지원 및 데이터",
   "privacyRowExport": "내 데이터 내보내기",
+  "protWillEncrypt": "암호화됩니다",
+  "protEncryptedLocked": "암호화됨 · 이 기기에서 잠김",
+  "checklistAddRequestFirst": "먼저 기도 제목을 추가하세요",
+  "sourceLangWrittenIn": "{name}(으)로 작성됨",
+  "sourceLangChange": "변경",
+  "sourceLangLabel": "이 기도의 언어",
+  "sourceLangLooksLike": "{name}인 것 같아요 — 사용할까요?",
 };

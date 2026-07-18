@@ -16,7 +16,7 @@ import PrayerSession from './PrayerSession';
 // prayer session on the prayer that was just written (not a mere modal close).
 // Scripture, reminders and sharing are surfaced later, from the prayer detail
 // page, so this moment stays about praying rather than configuring.
-export default function PrayerSavedStep({ prayerId, title, description, lang, onClose }) {
+export default function PrayerSavedStep({ prayerId, title, description, encrypted = false, lang, onClose }) {
   const [praying, setPraying] = useState(false);
   const { prayers, categories, markPrayedOn } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, categories: s.categories, markPrayedOn: s.markPrayedOn }))
@@ -26,10 +26,12 @@ export default function PrayerSavedStep({ prayerId, title, description, lang, on
   useEscapeKey(onClose);
 
   // The ACTUAL newly created prayer (optimistic store copy) — its audience and
-  // protection are computed from real stored facts, never from a placeholder.
-  // The literal fallback only guards a store race so the UI can't go blank.
+  // protection are computed from that row's real metadata, never from the
+  // device's vault state. The fallback (a store race) carries the caller's
+  // EXPLICIT record of whether this write was encrypted, so even then the
+  // status is a fact about this prayer rather than a guess.
   const savedPrayer = prayers.find((p) => p.id === prayerId)
-    || { id: prayerId, title, description, prayer_categories: [], prayer_points: [] };
+    || { id: prayerId, title, description, _encrypted: encrypted, prayer_categories: [], prayer_points: [] };
 
   if (praying) {
     const prayer = savedPrayer;
@@ -57,9 +59,18 @@ export default function PrayerSavedStep({ prayerId, title, description, lang, on
         style={{ background: 'var(--surface)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-end -mt-2 -mr-2 mb-1">
-          <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-            <X size={16} />
+        {/* Full 44×44 tap target: the button carries the size, the inner
+            circle only carries the look. */}
+        <div className="flex justify-end -mt-3 -mr-3 mb-1">
+          <button
+            onClick={onClose}
+            aria-label={t(lang, 'close')}
+            className="w-11 h-11 flex items-center justify-center rounded-full focus-visible:ring-2"
+            style={{ color: 'var(--accent)' }}
+          >
+            <span aria-hidden="true" className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
+              <X size={16} />
+            </span>
           </button>
         </div>
 
@@ -73,7 +84,7 @@ export default function PrayerSavedStep({ prayerId, title, description, lang, on
           {/* The prayer's audience and protection, computed from the ACTUAL
               saved prayer and stated the same way they read everywhere else —
               a new personal prayer is Private, with encryption shown as a
-              separate quiet status when the device key is ready. */}
+              separate quiet status only when THIS prayer was really encrypted. */}
           <div className="mt-2.5">
             <AudienceBadge audience={audienceOf(savedPrayer, [])} protection={protectionOf(savedPrayer)} lang={lang} />
           </div>

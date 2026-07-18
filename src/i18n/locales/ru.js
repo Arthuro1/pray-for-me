@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "Режим экономии данных",
   "privacyRowAi": "Помощь ИИ и данные",
   "privacyRowExport": "Экспорт моих данных",
+  "protWillEncrypt": "Будет зашифровано",
+  "protEncryptedLocked": "Зашифровано · заблокировано здесь",
+  "checklistAddRequestFirst": "Сначала добавьте просьбу",
+  "sourceLangWrittenIn": "Написано на: {name}",
+  "sourceLangChange": "Изменить",
+  "sourceLangLabel": "Язык этой молитвы",
+  "sourceLangLooksLike": "Похоже на {name} — выбрать?",
 };

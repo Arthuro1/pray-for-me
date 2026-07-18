@@ -92,6 +92,58 @@ describe('content_language — creation and offline replay', () => {
     await usePrayerStore.getState().addPrayer({ title: 'Oración', contentLanguage: 'es' });
     expect(usePrayerStore.getState().prayers[0].content_language).toBe('es');
   });
+
+  it('a CORRECTED language survives the queued (offline) create exactly like the default', async () => {
+    await usePrayerStore.getState().addPrayer({ title: 'Oración', contentLanguage: 'es' });
+    await drainQueue();
+    const insert = writesTo('prayers').find((w) => w.op === 'insert' || w.op === 'upsert');
+    expect(JSON.stringify(insert.payload)).toContain('"content_language":"es"');
+  });
+});
+
+describe('content_language — correcting it later', () => {
+  it('an edit writes the new language, in memory and through the queue', async () => {
+    await usePrayerStore.getState().addPrayer({ title: 'Oración' }); // stamped 'sw'
+    const id = usePrayerStore.getState().prayers[0].id;
+    rec.writes.length = 0;
+
+    await usePrayerStore.getState().updatePrayer(id, { contentLanguage: 'es' });
+    expect(usePrayerStore.getState().prayers[0].content_language).toBe('es');
+    await drainQueue();
+    const update = writesTo('prayers').find((w) => w.op === 'update' || w.op === 'upsert');
+    expect(JSON.stringify(update.payload)).toContain('"content_language":"es"');
+  });
+
+  it('an unrelated edit leaves the existing stamp alone', async () => {
+    await usePrayerStore.getState().addPrayer({ title: 'Oración', contentLanguage: 'es' });
+    const id = usePrayerStore.getState().prayers[0].id;
+    await usePrayerStore.getState().updatePrayer(id, { title: 'Oración por mamá' });
+    expect(usePrayerStore.getState().prayers[0].content_language).toBe('es');
+  });
+
+  it('a corrected personal prayer shares into the group under the corrected language', async () => {
+    await useCommunityStore.getState().setPrayerShares({
+      prayer: { id: 'p1', title: 'Oración', content_language: 'es', prayer_categories: [], prayer_points: [], prayer_updates: [] },
+      groupIds: ['g1'],
+      userId: 'user-1',
+      authorName: 'A',
+      isAnonymous: false,
+    });
+    expect(writesTo('community_prayers').find((w) => w.op === 'insert').payload.content_language).toBe('es');
+  });
+
+  it('editing a community request can correct its language, and omitting it never wipes the stamp', async () => {
+    useCommunityStore.setState({ prayers: [{ id: 'cp1', group_id: 'g1', title: 'T', description: '', prayer_points: [], content_language: 'ko' }] });
+
+    await useCommunityStore.getState().updatePrayer({ prayerId: 'cp1', title: 'T', description: '', isAnonymous: false, categoryIds: [], contentLanguage: 'es' });
+    expect(writesTo('community_prayers').find((w) => w.op === 'update').payload.content_language).toBe('es');
+    expect(useCommunityStore.getState().prayers[0].content_language).toBe('es');
+
+    rec.writes.length = 0;
+    await useCommunityStore.getState().updatePrayer({ prayerId: 'cp1', title: 'T2', description: '', isAnonymous: false, categoryIds: [] });
+    expect(writesTo('community_prayers').find((w) => w.op === 'update').payload).not.toHaveProperty('content_language');
+    expect(useCommunityStore.getState().prayers[0].content_language).toBe('es');
+  });
 });
 
 describe('content_language — sharing and saving preserve the source language', () => {

@@ -7,11 +7,13 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
+import { normalizeContentLang } from '../lib/langHint';
 import { toast } from '../store/toastStore';
-import { canEncrypt } from '../lib/crypto/prayerCrypto';
+import { willEncryptNewPrayer } from '../lib/crypto/prayerCrypto';
 import useCommunityStore from '../store/communityStore';
 import AudienceBadge from './shared/AudienceBadge';
-import { audienceOf, protectionOf } from '../lib/audience';
+import SourceLanguageField from './SourceLanguageField';
+import { audienceOf, protectionOf, plannedProtection } from '../lib/audience';
 import PrayerSavedStep from './PrayerSavedStep';
 import ScheduleEditor from './ScheduleEditor';
 import CategorySelector from './CategorySelector';
@@ -75,16 +77,20 @@ function SectionToggle({ label, open, onToggle, controlsId, icon: Icon = Plus })
   );
 }
 
-function initialForm(editPrayer, prefill) {
+function initialForm(editPrayer, prefill, lang) {
   // A new prayer may be seeded with an optional, fully-editable prefill (e.g. a
   // starter prompt from the gospel journey). Editing always wins over prefill.
   // New prayers default to the bounded weekly rhythm (visible under Organize);
   // an edited prayer keeps exactly the schedule it already has — including the
   // legacy "no schedule" (weekly category plan), which is never migrated.
+  // Source language DEFAULTS from the active interface/content language and is
+  // only ever overridden by an explicit choice — an edited prayer keeps the
+  // language it was stamped with (or falls back for legacy rows without any).
   if (!editPrayer) return {
     title: prefill?.title || '',
     description: prefill?.description || '',
     categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: defaultNewDraft(),
+    contentLanguage: lang,
   };
   return {
     title: editPrayer.title || '',
@@ -94,6 +100,7 @@ function initialForm(editPrayer, prefill) {
     personName: editPrayer.person_name || '',
     isAnonymous: editPrayer.is_anonymous || false,
     scheduleDraft: draftFromSchedule(editPrayer.schedule),
+    contentLanguage: normalizeContentLang(editPrayer.content_language) || lang,
   };
 }
 
@@ -123,7 +130,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
 
-  const [form, setForm] = useState(() => initialForm(editPrayer, prefill));
+  const [form, setForm] = useState(() => initialForm(editPrayer, prefill, lang));
   const [created, setCreated] = useState(null);
   // One required question — everything else is optional and collapsed: a note,
   // and "Organize" (person, categories, prayer rhythm). The community request
@@ -131,13 +138,13 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   const [noteOpen, setNoteOpen] = useState(() => communityMode || hasNote(editPrayer, prefill));
   const [organizeOpen, setOrganizeOpen] = useState(() => usesOrganize(editPrayer));
   // The full schedule editor appears only for rhythms the presets can't express.
-  const [customRhythm, setCustomRhythm] = useState(() => rhythmOf(initialForm(editPrayer, prefill).scheduleDraft) === 'custom');
+  const [customRhythm, setCustomRhythm] = useState(() => rhythmOf(initialForm(editPrayer, prefill, lang).scheduleDraft) === 'custom');
   // Only prayers that ALREADY follow the legacy weekly category plan keep its
   // chip; new prayers are never offered an unbounded default.
-  const [legacyPlan, setLegacyPlan] = useState(() => rhythmOf(initialForm(editPrayer, prefill).scheduleDraft) === 'flexible');
+  const [legacyPlan, setLegacyPlan] = useState(() => rhythmOf(initialForm(editPrayer, prefill, lang).scheduleDraft) === 'flexible');
   useEffect(() => {
     if (editPrayer) {
-      setForm(initialForm(editPrayer));
+      setForm(initialForm(editPrayer, null, lang));
       setNoteOpen(communityMode || hasNote(editPrayer));
       setOrganizeOpen(usesOrganize(editPrayer));
       setCustomRhythm(rhythmOf(draftFromSchedule(editPrayer.schedule)) === 'custom');
@@ -169,18 +176,25 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       toast.success(t(lang, 'savedOffline'));
       return;
     }
-    toast.success(t(lang, canEncrypt({}) ? 'savedEncrypted' : 'savedPrivately'));
+    toast.success(t(lang, willEncryptNewPrayer() ? 'savedEncrypted' : 'savedPrivately'));
   };
 
   // The audience this prayer will have, stated in the form itself: a new
   // personal prayer is always Private; an edited one shows its real shares.
-  const formAudience = communityMode ? null : audienceOf(editPrayer || {}, editPrayer ? (prayerShares[editPrayer.id] || []) : []);
+  // Protection differs by case, and never comes from a placeholder object:
+  // editing states the row's OWN stored protection, while a new prayer states
+  // the creation DECISION ("Will be encrypted") — a promise about the write,
+  // not a claim that something already encrypted exists.
+  const formAudience = communityMode
+    ? null
+    : (editPrayer ? audienceOf(editPrayer, prayerShares[editPrayer.id] || []) : { kind: 'private' });
+  const formProtection = editPrayer ? protectionOf(editPrayer) : plannedProtection(willEncryptNewPrayer());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
     if (communityMode) {
-      onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds });
+      onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds, contentLanguage: form.contentLanguage });
       onClose();
     } else if (editPrayer) {
       updatePrayer(editPrayer.id, { ...form, schedule: scheduleFromDraft(form.scheduleDraft, editPrayer.schedule) });
@@ -190,13 +204,17 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
       // New personal prayer: create it, then show a compact "Saved privately"
       // confirmation whose primary action actually starts praying. The prayer
       // already exists, so closing at any point keeps it.
+      // Recorded BEFORE the write, so the confirmation states what actually
+      // happened to this prayer rather than re-reading the vault later.
+      const encrypted = willEncryptNewPrayer();
       const id = await addPrayer({ ...form, schedule: scheduleFromDraft(form.scheduleDraft) });
       if (id) {
         // Record the language this prayer was written in, so we don't later pay
-        // to translate personal content into the language it's already in.
-        setContentLang(lang);
+        // to translate personal content into the language it's already in — the
+        // author's correction, when they made one, not just the interface.
+        setContentLang(form.contentLanguage || lang);
         notifySaved();
-        setCreated({ id, title: form.title.trim(), description: form.description.trim() });
+        setCreated({ id, title: form.title.trim(), description: form.description.trim(), encrypted });
       } else onClose();
     }
   };
@@ -207,6 +225,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
         prayerId={created.id}
         title={created.title}
         description={created.description}
+        encrypted={created.encrypted}
         lang={lang}
         onClose={onClose}
       />
@@ -303,6 +322,14 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
                 tr={tr}
                 lang={lang}
               />
+              {/* Group members read in many languages — stating the request's
+                  own language is what lets the right people see "Translate". */}
+              <SourceLanguageField
+                value={form.contentLanguage}
+                onChange={(code) => patch('contentLanguage', code)}
+                sampleText={`${form.title} ${form.description}`}
+                lang={lang}
+              />
             </>
           )}
 
@@ -390,6 +417,15 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
                       lang={lang}
                     />
                   )}
+
+                  {/* Source language — already answered, correctable in one tap.
+                      It sits inside Organize so the default form never grows. */}
+                  <SourceLanguageField
+                    value={form.contentLanguage}
+                    onChange={(code) => patch('contentLanguage', code)}
+                    sampleText={`${form.title} ${form.description}`}
+                    lang={lang}
+                  />
                 </div>
               )}
             </div>
@@ -399,7 +435,7 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
               Encryption shows as a quiet separate status, never as an audience. */}
           {formAudience && (
             <div className="pt-1">
-              <AudienceBadge audience={formAudience} protection={protectionOf(editPrayer || {})} lang={lang} />
+              <AudienceBadge audience={formAudience} protection={formProtection} lang={lang} />
             </div>
           )}
 

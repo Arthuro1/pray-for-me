@@ -39,11 +39,16 @@ export function dismissChecklist(groupId) {
 // group ("I'm praying" / Pray now on a request). The pray step can NEVER be
 // complete while the group has no request — praying requires something to pray
 // for, and a stale local flag must not fake the sequence.
+//
+// `blocked` says the same thing to the UI in advance: with nothing to pray for,
+// the row must not offer "Begin praying" as though it were available. It sends
+// the leader to add the first request instead, which is the honest next step.
 export function checklistSteps({ memberCount = 1, requestCount = 0, hasPrayed = false, flags = {} }) {
+  const hasRequest = requestCount > 0;
   return [
     { id: 'invite', done: memberCount >= 2 || !!flags.invited },
-    { id: 'request', done: requestCount > 0 },
-    { id: 'pray', done: requestCount > 0 && (hasPrayed || !!flags.prayed) },
+    { id: 'request', done: hasRequest },
+    { id: 'pray', done: hasRequest && (hasPrayed || !!flags.prayed), blocked: !hasRequest },
   ];
 }
 

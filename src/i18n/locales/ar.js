@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "وضع توفير البيانات",
   "privacyRowAi": "مساعدة الذكاء الاصطناعي والبيانات",
   "privacyRowExport": "تصدير بياناتي",
+  "protWillEncrypt": "سيتم تشفيره",
+  "protEncryptedLocked": "مشفَّر · مقفل هنا",
+  "checklistAddRequestFirst": "أضف طلبًا أولاً",
+  "sourceLangWrittenIn": "مكتوب بـ{name}",
+  "sourceLangChange": "تغيير",
+  "sourceLangLabel": "لغة هذه الصلاة",
+  "sourceLangLooksLike": "يبدو أنها {name} — هل تستخدمها؟",
 };

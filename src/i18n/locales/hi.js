@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "कम डेटा मोड",
   "privacyRowAi": "AI सहायता और डेटा",
   "privacyRowExport": "मेरा डेटा निर्यात करें",
+  "protWillEncrypt": "एन्क्रिप्ट किया जाएगा",
+  "protEncryptedLocked": "एन्क्रिप्टेड · यहाँ लॉक",
+  "checklistAddRequestFirst": "पहले एक प्रार्थना विषय जोड़ें",
+  "sourceLangWrittenIn": "{name} में लिखा गया",
+  "sourceLangChange": "बदलें",
+  "sourceLangLabel": "इस प्रार्थना की भाषा",
+  "sourceLangLooksLike": "यह {name} लगता है — इसे चुनें?",
 };

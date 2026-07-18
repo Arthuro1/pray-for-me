@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "Datensparmodus",
   "privacyRowAi": "KI-Hilfe & Daten",
   "privacyRowExport": "Meine Daten exportieren",
+  "protWillEncrypt": "Wird verschlüsselt",
+  "protEncryptedLocked": "Verschlüsselt · hier gesperrt",
+  "checklistAddRequestFirst": "Füge zuerst ein Anliegen hinzu",
+  "sourceLangWrittenIn": "Verfasst auf {name}",
+  "sourceLangChange": "Ändern",
+  "sourceLangLabel": "Sprache dieses Gebets",
+  "sourceLangLooksLike": "Sieht nach {name} aus — übernehmen?",
 };

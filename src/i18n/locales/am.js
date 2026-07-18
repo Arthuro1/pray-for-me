@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "አነስተኛ ዳታ ሁነታ",
   "privacyRowAi": "የAI እርዳታ እና ዳታ",
   "privacyRowExport": "ዳታዬን አውጣ",
+  "protWillEncrypt": "ይመሰጠራል",
+  "protEncryptedLocked": "የተመሰጠረ · እዚህ ተቆልፏል",
+  "checklistAddRequestFirst": "መጀመሪያ ጥያቄ ጨምር",
+  "sourceLangWrittenIn": "በ{name} ተጽፏል",
+  "sourceLangChange": "ቀይር",
+  "sourceLangLabel": "የዚህ ጸሎት ቋንቋ",
+  "sourceLangLooksLike": "{name} ይመስላል — ይጠቀሙበት?",
 };

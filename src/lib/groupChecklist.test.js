@@ -26,6 +26,16 @@ describe('checklistSteps', () => {
     expect(steps.find((s) => s.id === 'pray').done).toBe(true);
   });
 
+  it('marks the pray step BLOCKED while the group has no request, so the UI can say so up front', () => {
+    const empty = checklistSteps({ memberCount: 1, requestCount: 0, hasPrayed: false, flags: {} });
+    expect(empty.find((s) => s.id === 'pray').blocked).toBe(true);
+    // The moment a request exists it is a real, offerable action.
+    const ready = checklistSteps({ memberCount: 1, requestCount: 1, hasPrayed: false, flags: {} });
+    expect(ready.find((s) => s.id === 'pray').blocked).toBe(false);
+    // Only the pray step can be blocked — inviting and adding never depend on one.
+    expect(empty.filter((s) => s.blocked).map((s) => s.id)).toEqual(['pray']);
+  });
+
   it('the pray step can NEVER complete while the group has no request — even with a stale flag or reaction', () => {
     setChecklistFlag('g1', 'prayed');
     const withFlag = checklistSteps({ memberCount: 2, requestCount: 0, hasPrayed: false, flags: checklistFlags('g1') });

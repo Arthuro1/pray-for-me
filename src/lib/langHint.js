@@ -9,6 +9,10 @@
 // When neither is confident the content is treated as MATCHING (control hidden)
 // — the conservative choice, since a cached translation for the text is a third
 // signal callers can pass to force the control on.
+//
+// The heuristic is ALWAYS a fallback: an author who states their prayer's
+// language (content_language) overrules it, here and everywhere downstream.
+import { LANG_CODES } from '../i18n';
 
 const SCRIPTS = [
   { re: /[؀-ۿ]/, langs: ['ar', 'fa'] },
@@ -66,8 +70,40 @@ export function contentLangHint(text) {
 // translation for the text already exists (someone translated it before — a
 // mismatch by definition).
 export function needsTranslationControl(text, uiLang, { contentLanguage = null, hasCachedTranslation = false } = {}) {
-  if (contentLanguage) return contentLanguage !== uiLang;
+  const stated = normalizeContentLang(contentLanguage);
+  if (stated) return stated !== uiLang;
   if (hasCachedTranslation) return true;
   const hint = contentLangHint(text);
   return !!hint && !hint.includes(uiLang);
+}
+
+// Coerce a stored/incoming language tag to one of the app's supported codes
+// ('en-GB' → 'en'), or null when we don't ship it. Everything that writes or
+// reads content_language goes through this, so the metadata is always one of a
+// known, normalized set rather than whatever a tag happened to say.
+export function normalizeContentLang(code) {
+  if (!code) return null;
+  const base = String(code).toLowerCase().trim().split(/[-_]/)[0];
+  return LANG_CODES.includes(base) ? base : null;
+}
+
+// The single language to SHOW as this content's source: what the author stated,
+// else what the heuristic can confidently read, else null ("we don't know" — the
+// caller shows the active language as the default rather than inventing one).
+export function statedSourceLang(text, contentLanguage = null) {
+  const stated = normalizeContentLang(contentLanguage);
+  if (stated) return stated;
+  const hint = contentLangHint(text);
+  return hint && hint.length === 1 ? hint[0] : null;
+}
+
+// A confident heuristic reading that DISAGREES with the language currently
+// selected — the only case worth surfacing a quiet "looks like X?" confirmation
+// for. Returns null whenever the heuristic is unsure or already agrees, so the
+// suggestion stays rare. It is never applied automatically: the caller offers
+// it, the author decides.
+export function suggestedSourceLang(text, selected) {
+  const hint = contentLangHint(text);
+  if (!hint || hint.length !== 1) return null;
+  return hint[0] === selected ? null : hint[0];
 }

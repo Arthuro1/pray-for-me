@@ -460,6 +460,11 @@ const usePrayerStore = create((set, get) => ({
       content_language: prayer.contentLanguage || get().settings.language || null,
     };
 
+    // Decided ONCE, from this prayer's own encryptability, and recorded on the
+    // optimistic copy so the UI states a fact about this row rather than a
+    // guess from the vault.
+    const willEncrypt = canEncrypt(row);
+
     const optimistic = {
       ...row,
       created_at: new Date().toISOString(),
@@ -467,11 +472,16 @@ const usePrayerStore = create((set, get) => ({
       prayer_points: [],
       prayer_testimonies: [],
       prayer_categories: categoryIds.map((category_id) => ({ category_id })),
+      // Explicit per-prayer encryption metadata for the moment before the
+      // server row (which carries encryption_version) is read back. The saved
+      // confirmation reads THIS, never the global vault state — a prayer
+      // written while the key was unavailable must not claim to be encrypted.
+      _encrypted: willEncrypt,
     };
     set((state) => ({ prayers: [optimistic, ...state.prayers] }));
     // In-memory stays plaintext; only the persisted row is encrypted (if the
     // vault is unlocked). New prayers have no community_origin_id → encryptable.
-    const persistRow = canEncrypt(optimistic) ? await encryptPrayerForStorage(row) : row;
+    const persistRow = willEncrypt ? await encryptPrayerForStorage(row) : row;
     enqueue('createPrayer', { row: persistRow, categoryIds });
     if (isFirst) track(EVENTS.FIRST_PRAYER_CREATED);
     return id;
@@ -517,16 +527,22 @@ const usePrayerStore = create((set, get) => ({
     if (updates.pinned !== undefined) payload.pinned = updates.pinned;
     if (updates.schedule !== undefined) payload.schedule = updates.schedule; // null clears
     if (updates.scheduleOverrides !== undefined) payload.schedule_overrides = updates.scheduleOverrides;
+    // The author's correction of the source language — metadata beside the
+    // envelope, so it survives the offline queue exactly like scheduling.
+    if (updates.contentLanguage !== undefined) payload.content_language = updates.contentLanguage;
     payload.updated_at = new Date().toISOString();
 
     const current = get().prayers.find((p) => p.id === id);
+    // An edit re-encrypts a previously-plaintext row, so the in-memory copy
+    // records that this row is now encrypted instead of waiting for a reload.
+    const nowEncrypted = canEncrypt(current);
     set((state) => ({
       prayers: state.prayers.map((p) => {
         if (p.id !== id) return p;
         const prayer_categories = updates.categoryIds !== undefined
           ? updates.categoryIds.map((category_id) => ({ category_id }))
           : p.prayer_categories;
-        return { ...p, ...payload, prayer_categories };
+        return { ...p, ...payload, prayer_categories, ...(nowEncrypted ? { _encrypted: true } : {}) };
       }),
     }));
 
@@ -537,7 +553,7 @@ const usePrayerStore = create((set, get) => ({
     // snapshots encrypted under the group key, so pushing plaintext here would both
     // leak content and be unreadable under the wrong key.
     let persistPayload = payload;
-    if (canEncrypt(current)) {
+    if (nowEncrypted) {
       persistPayload = { ...payload, ...(await encryptedSensitiveFields({ ...current, ...payload })) };
     }
     enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds });

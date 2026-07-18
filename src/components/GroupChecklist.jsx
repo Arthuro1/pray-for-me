@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { X, Check, UserPlus, Plus, HandHeart, ChevronRight } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
@@ -19,22 +19,43 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
   const [memberCount, setMemberCount] = useState(null); // null = unknown yet
   const [, setVersion] = useState(0); // re-render after a dismissal/flag write
   const flags = checklistFlags(group.id);
+  const inviteDone = memberCount !== null && (memberCount >= 2 || !!flags.invited);
 
-  useEffect(() => {
+  const refreshMembers = useCallback(() => {
     let cancelled = false;
     fetchGroupMembers(group.id).then((r) => {
       if (!cancelled) setMemberCount((r.members || []).length || 1);
     });
     return () => { cancelled = true; };
-  }, [group.id]);
+  }, [group.id, fetchGroupMembers]);
+
+  useEffect(refreshMembers, [refreshMembers]);
+
+  // A member joining is a SERVER event with no client trigger, so the Invite
+  // step would otherwise stay open until the leader left and re-entered the
+  // group. Re-check when the app is brought back to the foreground — the moment
+  // a leader returns after sharing a link. Event-driven, not polling: no timer,
+  // one cheap request, and only while the step is still open (so a completed
+  // checklist and Low data mode cost nothing at all).
+  useEffect(() => {
+    if (inviteDone) return undefined;
+    const onFocus = () => { if (!document.hidden) refreshMembers(); };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onFocus);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onFocus);
+    };
+  }, [inviteDone, refreshMembers]);
 
   if (memberCount === null) return null; // don't flash a wrong state while loading
 
   const steps = checklistSteps({ memberCount, requestCount, hasPrayed, flags });
   if (!checklistVisible(group.id, steps)) return null;
 
-  // Valid sequencing: with no request yet there is nothing to pray over, so
-  // "Begin praying" routes to adding the first request instead of pretending.
+  // Valid sequencing: with no request yet there is nothing to pray over, so the
+  // row SAYS "Add a request first" and goes there — never an apparently
+  // available "Begin praying" that can't be honoured.
   const actions = {
     invite: onInvite,
     request: onAddRequest,
@@ -58,6 +79,8 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
       <div className="space-y-1">
         {steps.map((step) => {
           const { icon: Icon, labelKey } = STEP_META[step.id];
+          // A blocked step names the action that IS available right now.
+          const label = t(lang, step.blocked ? 'checklistAddRequestFirst' : labelKey);
           return (
             <button
               key={step.id}
@@ -70,7 +93,7 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
                 ? <Check size={15} className="shrink-0" style={{ color: 'var(--success)' }} aria-hidden="true" />
                 : <Icon size={15} className="shrink-0" style={{ color: 'var(--accent)' }} aria-hidden="true" />}
               <span className="flex-1" style={{ textDecoration: step.done ? 'line-through' : 'none' }}>
-                {t(lang, labelKey)}
+                {label}
               </span>
               {!step.done && <ChevronRight size={14} className="shrink-0 opacity-50" aria-hidden="true" />}
             </button>

@@ -818,4 +818,11 @@ export default {
   "privacyRowLowData": "省流量模式",
   "privacyRowAi": "AI 协助与数据",
   "privacyRowExport": "导出我的数据",
+  "protWillEncrypt": "将被加密",
+  "protEncryptedLocked": "已加密 · 此设备已锁定",
+  "checklistAddRequestFirst": "先添加一个代祷事项",
+  "sourceLangWrittenIn": "以{name}书写",
+  "sourceLangChange": "更改",
+  "sourceLangLabel": "这个祷告的语言",
+  "sourceLangLooksLike": "看起来像{name} — 要使用吗？",
 };

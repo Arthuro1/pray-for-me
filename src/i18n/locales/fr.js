@@ -819,4 +819,11 @@ export default {
   "privacyRowLowData": "Mode économie de données",
   "privacyRowAi": "Assistance IA et données",
   "privacyRowExport": "Exporter mes données",
+  "protWillEncrypt": "Sera chiffré",
+  "protEncryptedLocked": "Chiffré · verrouillé ici",
+  "checklistAddRequestFirst": "Ajoute d'abord une demande",
+  "sourceLangWrittenIn": "Écrit en {name}",
+  "sourceLangChange": "Modifier",
+  "sourceLangLabel": "Langue de cette prière",
+  "sourceLangLooksLike": "On dirait du {name} — l'utiliser ?",
 };
