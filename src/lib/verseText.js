@@ -22,7 +22,7 @@
 // text. AI may still offer a devotional REFLECTION elsewhere (behind consent),
 // but it must not produce the verse text itself.
 import { youVersionEnabled, fetchYouVersionPassage } from './youversion';
-import { versionForLang, referenceToUsfm, usfmFromReference } from './bibleRef';
+import { versionForLang, versionSupportsUsfm, referenceToUsfm, usfmFromReference } from './bibleRef';
 import { getBundledVerse } from './verseBundle';
 import { isLowDataMode } from './lowData';
 import { supabase } from './supabase';
@@ -113,6 +113,9 @@ async function fromYouVersion(reference, lang, knownUsfm) {
 
   const usfm = knownUsfm || await referenceToUsfm(reference);
   if (!usfm) return null;
+  // e.g. Russian Psalms: the mapped version numbers them differently than the
+  // app's references, so fetching would show the WRONG passage — reference-only.
+  if (!versionSupportsUsfm(lang, usfm)) return null;
 
   const { data } = await fetchYouVersionPassage({ versionId, usfm });
   if (!data?.text) return null;

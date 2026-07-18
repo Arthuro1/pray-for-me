@@ -2,7 +2,7 @@
 // (the dev Vite proxy or the /api/youversion serverless function) so the App Key
 // stays server-side. The feature is opt-in: it's only attempted when
 // VITE_YOUVERSION_ENABLED is set, so an unconfigured deploy never makes a wasted
-// round-trip and silently keeps using the AI fallback in verseText.js.
+// round-trip and silently falls back to reference-only in verseText.js.
 import { supabase } from './supabase';
 
 export function youVersionEnabled() {

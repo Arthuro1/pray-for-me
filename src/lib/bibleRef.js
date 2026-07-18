@@ -4,31 +4,47 @@
 import { anthropicFetch } from './anthropic';
 import { BOOK_NAMES } from '../content/dailyVerses';
 
-// Curated YouVersion version ids per UI language. Each is a public-domain (or
-// copyright-expired, freely served) translation, so the Platform API reliably
-// returns full text. Every id is the number in its bible.com URL —
-// e.g. bible.com/versions/51-delut-… → 51. Languages with no trustworthy
-// public-domain edition on YouVersion (Swahili, Amharic) are intentionally left
-// out and fall back to the AI text path in verseText.js.
+// Curated YouVersion version ids per UI language. The binding constraint is the
+// app's Platform API key: the upstream returns 403 "Access denied for <id>" for
+// any version the key isn't licensed to serve — even famous public-domain ones —
+// which the reader surfaces as "reference only" for EVERY non-bundled passage in
+// that language. So every id below MUST come from the key's own catalog
+// (GET /v1/bibles?language_ranges[]=<lang>) and was verified to return text for
+// all three passage shapes (verse, range, whole chapter). Every id is also the
+// number in its bible.com URL — e.g. bible.com/versions/51-delut-… → 51 — so
+// outbound "open in Bible" links stay on the same translation.
 export const LANG_VERSION = {
-  fr: 93,    // LSG    — Louis Segond 1910
-  en: 206,   // WEB    — World English Bible
-  de: 51,    // DELUT  — Lutherbibel 1912
-  es: 147,   // RVES   — Reina-Valera Antigua
-  pt: 215,   // ARC    — Almeida Revista e Corrigida
-  ru: 167,   // СИНОД  — Синодальный перевод (Synodal)
-  zh: 48,    // CUNPSS — 新标点和合本, 神版 (Chinese Union, simplified)
-  ja: 1820,  // 口語訳 — Colloquial Japanese 1955
-  ko: 88,    // KRV    — 개역한글 (Korean Revised)
-  ar: 13,    // AVD    — الكتاب المقدس، فان دايك (Smith & Van Dyke)
-  hi: 819,   // HHBD   — Hindi Holy Bible
-  fa: 136,   // POV    — Persian Old Version (Tarjumeh-ye Qadim)
-  id: 2861,  // LAI-TL — Alkitab Terjemahan Lama
-  tl: 2196,  // ABTAG  — Ang Biblia (1905/1982)
+  fr: 93,    // LSG   — Louis Segond 1910
+  en: 206,   // WEB   — World English Bible
+  de: 51,    // DELUT — Lutherbibel 1912
+  es: 147,   // RVES  — Reina-Valera Antigua
+  pt: 129,   // NVI   — Nova Versão Internacional
+  ru: 143,   // НРП   — Новый русский перевод (New Russian Translation)
+  zh: 36,    // CCB   — 当代译本 (Chinese Contemporary Bible, simplified)
+  ja: 81,    // 口語訳 — Colloquial Japanese 1955
+  ko: 86,    // KLB   — 현대인의 성경 (Korean Living Bible)
+  ar: 101,   // NAV   — كتاب الحياة (New Arabic Version)
+  hi: 819,   // HHBD  — Hindi Holy Bible
+  fa: 1619,  // PCB   — Persian Contemporary Bible 2022
+  id: 320,   // TSI   — Terjemahan Sederhana Indonesia (no Psalms upstream —
+             //         Psalm passages fall back to reference-only for id)
+  tl: 177,   // TLAB  — Ang Biblia
+  sw: 1627,  // NEN   — Kiswahili Contemporary Version (Neno)
+  am: 1260,  // NASV  — New Amharic Standard Version 2024
 };
 
 export function versionForLang(lang) {
   return LANG_VERSION[lang] || null;
+}
+
+// The Russian version above numbers the Psalms in the Russian/Septuagint
+// tradition — most psalms sit one chapter off the Western numbering the app's
+// references use (its PSA.22 is "The LORD is my shepherd", i.e. Western Psalm
+// 23), and superscriptions shift verse numbers inside many psalms too. Rather
+// than show the wrong psalm as Scripture, Psalms stay reference-only in Russian
+// (the offline bundle already excludes them for the same reason).
+export function versionSupportsUsfm(lang, usfm) {
+  return !(lang === 'ru' && String(usfm).startsWith('PSA.'));
 }
 
 // USFM passage ids: 3-char book code, chapter, optional verse, optional range end

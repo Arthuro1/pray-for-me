@@ -13,6 +13,7 @@ vi.mock('./youversion', () => ({
 }));
 vi.mock('./bibleRef', () => ({
   versionForLang: vi.fn(() => 111),
+  versionSupportsUsfm: vi.fn(() => true),
   referenceToUsfm: vi.fn(async () => 'JHN.3.16'),
   usfmFromReference: vi.fn(() => null),
 }));

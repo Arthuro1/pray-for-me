@@ -3,7 +3,7 @@
 // the fragile, cost-throttled AI round-trip that used to leave the reader stuck on
 // "reference only" (no text) for everything outside the offline bundle.
 import { describe, it, expect } from 'vitest';
-import { usfmFromReference } from './bibleRef';
+import { usfmFromReference, versionForLang, versionSupportsUsfm, LANG_VERSION } from './bibleRef';
 
 describe('usfmFromReference — deterministic citation mapping', () => {
   it('maps English single-verse references the plans author', () => {
@@ -53,5 +53,36 @@ describe('usfmFromReference — deterministic citation mapping', () => {
     expect(usfmFromReference('Nostrabook 1:1')).toBeNull();
     expect(usfmFromReference('not a reference')).toBeNull();
     expect(usfmFromReference('')).toBeNull();
+  });
+});
+
+// The version map is the licensed-catalog contract: an id the app's YouVersion
+// key can't serve gets a 403 upstream, which the reader shows as "reference
+// only" for EVERY non-bundled passage in that language. Guard the shape here so
+// a language can't silently drop out of the map again.
+describe('versionForLang — licensed version per language', () => {
+  it('maps every supported UI language, including Swahili and Amharic', () => {
+    const LANGS = ['en', 'fr', 'de', 'es', 'pt', 'ru', 'zh', 'ja', 'ko', 'ar', 'hi', 'fa', 'id', 'tl', 'sw', 'am'];
+    for (const lang of LANGS) {
+      expect(versionForLang(lang), `no YouVersion version mapped for "${lang}"`).toBeTruthy();
+    }
+    expect(Object.keys(LANG_VERSION)).toHaveLength(LANGS.length);
+  });
+
+  it('returns null for an unsupported language', () => {
+    expect(versionForLang('xx')).toBeNull();
+  });
+});
+
+describe('versionSupportsUsfm — Russian Psalms numbering guard', () => {
+  it('keeps Russian Psalms reference-only (Septuagint chapter numbering)', () => {
+    expect(versionSupportsUsfm('ru', 'PSA.23.1')).toBe(false);
+    expect(versionSupportsUsfm('ru', 'PSA.100')).toBe(false);
+  });
+
+  it('allows everything else', () => {
+    expect(versionSupportsUsfm('ru', 'JHN.3.16')).toBe(true);
+    expect(versionSupportsUsfm('en', 'PSA.23.1')).toBe(true);
+    expect(versionSupportsUsfm('fr', 'PSA.100')).toBe(true);
   });
 });
