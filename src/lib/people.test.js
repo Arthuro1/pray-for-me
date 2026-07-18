@@ -2,7 +2,7 @@
 // name, status, updates and per-prayer follow-ups — and hidden until there is
 // enough person data to be useful.
 import { describe, it, expect } from 'vitest';
-import { peopleFromPrayers, peopleViewAvailable, MIN_PEOPLE_FOR_VIEW } from './people';
+import { peopleFromPrayers, peopleViewAvailable, personSession, MIN_PEOPLE_FOR_VIEW } from './people';
 
 const prayer = (id, person, extra = {}) => ({
   id, title: `P ${id}`, status: 'active', person_name: person, prayer_updates: [], ...extra,
@@ -56,5 +56,39 @@ describe('peopleViewAvailable', () => {
     expect(peopleViewAvailable([])).toBe(false);
     expect(peopleViewAvailable([prayer('a', 'Marc'), prayer('b', 'marc')])).toBe(false);
     expect(peopleViewAvailable([prayer('a', 'Marc'), prayer('b', 'Julie')])).toBe(true);
+  });
+});
+
+describe('personSession — one person, the ordinary completion log', () => {
+  const person = {
+    name: 'Marc',
+    prayers: [
+      prayer('a', 'Marc'),
+      prayer('b', 'Marc'),
+      prayer('c', 'Marc', { status: 'answered' }),
+      prayer('d', 'Marc', { _locked: true }),
+    ],
+  };
+
+  it('covers only the person’s ACTIVE, unlocked prayers', () => {
+    const { active } = personSession(person, {}, '2026-07-17');
+    expect(active.map((p) => p.id)).toEqual(['a', 'b']);
+  });
+
+  it('starts with prayers not completed today and never repeats completed ones', () => {
+    const { remaining } = personSession(person, { a: ['2026-07-17'] }, '2026-07-17');
+    expect(remaining.map((p) => p.id)).toEqual(['b']);
+  });
+
+  it('a completion on another day does not count for today (partial exit resumes)', () => {
+    const { remaining } = personSession(person, { a: ['2026-07-16'] }, '2026-07-17');
+    expect(remaining.map((p) => p.id)).toEqual(['a', 'b']);
+  });
+
+  it('reports empty active and remaining accurately (empty & complete states)', () => {
+    expect(personSession({ name: 'X', prayers: [] }, {}, '2026-07-17')).toEqual({ active: [], remaining: [] });
+    const done = personSession(person, { a: ['2026-07-17'], b: ['2026-07-17'] }, '2026-07-17');
+    expect(done.active).toHaveLength(2);
+    expect(done.remaining).toHaveLength(0);
   });
 });

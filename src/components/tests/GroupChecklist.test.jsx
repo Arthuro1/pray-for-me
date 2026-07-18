@@ -7,8 +7,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 
 import GroupChecklist from '../GroupChecklist';
+import { MembersModal } from '../../pages/CommunityTab';
 import useCommunityStore from '../../store/communityStore';
-import { dismissChecklist } from '../../lib/groupChecklist';
+import { dismissChecklist, checklistFlags } from '../../lib/groupChecklist';
 import { t } from '../../i18n';
 
 const lang = 'fr';
@@ -61,6 +62,60 @@ describe('GroupChecklist — progression', () => {
     useCommunityStore.setState({ fetchGroupMembers: vi.fn(async () => ({ members: members(2) })) });
     const { container } = renderChecklist({ requestCount: 2, hasPrayed: true });
     await waitFor(() => expect(container.firstChild).toBeNull());
+  });
+});
+
+describe('GroupChecklist — valid sequencing', () => {
+  it('routes "Begin praying" to Add first request while the group has no request', async () => {
+    const onPray = vi.fn();
+    const onAddRequest = vi.fn();
+    renderChecklist({ requestCount: 0, onPray, onAddRequest });
+    fireEvent.click(await screen.findByText(t(lang, 'checklistPray')));
+    expect(onPray).not.toHaveBeenCalled();
+    expect(onAddRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it('with a request present, "Begin praying" opens the pray action but does NOT complete the step by itself', async () => {
+    const onPray = vi.fn();
+    renderChecklist({ requestCount: 1, onPray });
+    fireEvent.click(await screen.findByText(t(lang, 'checklistPray')));
+    expect(onPray).toHaveBeenCalledTimes(1);
+    // Merely acting (opening a detail page) records nothing — only a genuine
+    // prayer action (hasPrayed) or a member reaction completes the step.
+    expect(checklistFlags('g1').prayed).toBeUndefined();
+    expect(screen.getByText(t(lang, 'checklistPray')).closest('button').disabled).toBe(false);
+  });
+
+  it('a genuine prayer action (hasPrayed) completes the step', async () => {
+    renderChecklist({ requestCount: 1, hasPrayed: true });
+    const pray = (await screen.findByText(t(lang, 'checklistPray'))).closest('button');
+    expect(pray.disabled).toBe(true);
+  });
+});
+
+describe('MembersModal — invitation completion', () => {
+  const modalGroup = { ...group, invite_code: 'abc123', created_by: 'u0' };
+
+  it('merely opening the members modal fires no invite action', async () => {
+    const onInviteAction = vi.fn();
+    render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} onInviteAction={onInviteAction} />);
+    expect(await screen.findByText(t(lang, 'shareInviteLink'))).toBeTruthy();
+    expect(onInviteAction).not.toHaveBeenCalled();
+  });
+
+  it('copying/sharing the invite link records the invitation', async () => {
+    const onInviteAction = vi.fn();
+    Object.assign(navigator, { clipboard: { writeText: vi.fn(async () => {}) } });
+    render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} onInviteAction={onInviteAction} />);
+    fireEvent.click(await screen.findByText(t(lang, 'shareInviteLink')));
+    await waitFor(() => expect(onInviteAction).toHaveBeenCalled());
+  });
+
+  it('revealing the QR code records the invitation', async () => {
+    const onInviteAction = vi.fn();
+    render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} onInviteAction={onInviteAction} />);
+    fireEvent.click(await screen.findByTitle(t(lang, 'showQrCode')));
+    expect(onInviteAction).toHaveBeenCalledTimes(1);
   });
 });
 

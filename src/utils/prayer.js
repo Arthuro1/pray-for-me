@@ -51,6 +51,9 @@ export function communityToPersonalInsert(communityPrayer, groupName, userId) {
     origin_author_name: communityPrayer.is_anonymous ? null : communityPrayer.author_name,
     origin_is_anonymous: !!communityPrayer.is_anonymous,
     origin_group_name: groupName,
+    // The AUTHOR's source language rides along with the saved copy — the copy
+    // keeps the original wording, so it keeps the original language too.
+    content_language: communityPrayer.content_language || null,
   };
 }
 

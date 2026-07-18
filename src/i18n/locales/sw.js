@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Majaribio mengi mno. Tafadhali subiri kidogo kisha ujaribu tena.",
   "savedOnToday": "Ombi lako sasa liko katika \"Leo\".",
   "setReminderCta": "Weka kikumbusho",
-  "replayIntro": "Angalia utangulizi tena",
-  "replayIntroSub": "Ona ziara ya karibu tena.",
   "personNamePlaceholder": "Jina kamili",
   "providerEmail": "Barua pepe / Nenosiri",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Hii itafuta kabisa akaunti yako na maombi, ushuhuda na data yako yote. Kitendo hiki hakiwezi kutenduliwa.",
   "deleteAccountConfirm": "Futa akaunti",
   "deleteAccountDone": "Akaunti yako imefutwa",
-  "deleteAccountError": "Imeshindikana kufuta akaunti yako. Tafadhali jaribu tena.",
+  "deleteAccountError": "Imeshindikana kufuta akaunti yako. Tafadhali jaribu tena."
+,
   "grow": "Kua",
   "growTitle": "Kua katika maombi",
   "growSubtitle": "Jifunze kuomba kulingana na Neno la Mungu.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Ufuatiliaji · {date}",
   "resultsCount": "Matokeo {n}",
   "clearFiltersBtn": "Futa vichujio",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "Ya leo — kutoka kwa maombi unayobeba",
+  "intercessionNoneDue": "Hakuna lililopangwa leo — mpangilio wako unayashughulikia siku nyingine.",
+  "intercessionAllCarried": "Ona maombi yote ninayobeba · {n}",
+  "prayAllCarriedBtn": "Ombea yote yaliyosalia · {n}",
+  "prayAgainBtn": "Omba tena",
+  "prayForPerson": "Mwombee {name} · maombi {n} yanayoendelea",
+  "personPrayedToday": "Umemwombea {name} leo 🙏",
+  "aboutMinutes": "Takriban dakika {n}",
+  "whyThisStep": "Kwa nini hatua hii?",
+  "protEncrypted": "Imesimbwa",
+  "addUpdateBtn": "Ongeza habari",
+  "privacyRowOverview": "Kituo cha faragha",
+  "privacyRowVault": "Kasha la maombi",
+  "privacyRowNotif": "Faragha ya arifa",
+  "privacyRowLowData": "Hali ya data kidogo",
+  "privacyRowAi": "Msaada wa AI na data",
+  "privacyRowExport": "Hamisha data yangu",
 };

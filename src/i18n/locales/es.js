@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
   "savedOnToday": "Tu oración ya está en Hoy.",
   "setReminderCta": "Poner un recordatorio",
-  "replayIntro": "Ver la introducción de nuevo",
-  "replayIntroSub": "Ver el recorrido de bienvenida otra vez.",
   "personNamePlaceholder": "Nombre y apellido",
   "providerEmail": "Correo / Contraseña",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Esto elimina permanentemente tu cuenta y todas tus oraciones, testimonios y datos. No se puede deshacer.",
   "deleteAccountConfirm": "Eliminar cuenta",
   "deleteAccountDone": "Tu cuenta ha sido eliminada",
-  "deleteAccountError": "No se pudo eliminar tu cuenta. Inténtalo de nuevo.",
+  "deleteAccountError": "No se pudo eliminar tu cuenta. Inténtalo de nuevo."
+,
   "grow": "Crecer",
   "growTitle": "Crece en la oración",
   "growSubtitle": "Aprende a orar conforme a la Palabra de Dios.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Seguimiento · {date}",
   "resultsCount": "{n} resultados",
   "clearFiltersBtn": "Quitar filtros",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "Para hoy — de las peticiones que llevas",
+  "intercessionNoneDue": "No hay nada previsto hoy — tu ritmo cubre estas peticiones otros días.",
+  "intercessionAllCarried": "Ver todas las peticiones que llevo · {n}",
+  "prayAllCarriedBtn": "Orar por todas las restantes · {n}",
+  "prayAgainBtn": "Orar de nuevo",
+  "prayForPerson": "Orar por {name} · {n} peticiones activas",
+  "personPrayedToday": "Hoy oraste por {name} 🙏",
+  "aboutMinutes": "Unos {n} min",
+  "whyThisStep": "¿Por qué este paso?",
+  "protEncrypted": "Cifrado",
+  "addUpdateBtn": "Añadir novedad",
+  "privacyRowOverview": "Centro de privacidad",
+  "privacyRowVault": "Bóveda de oración",
+  "privacyRowNotif": "Privacidad de las notificaciones",
+  "privacyRowLowData": "Modo de ahorro de datos",
+  "privacyRowAi": "Asistencia de IA y datos",
+  "privacyRowExport": "Exportar mis datos",
 };

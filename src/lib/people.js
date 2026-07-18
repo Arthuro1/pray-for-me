@@ -47,6 +47,19 @@ export function peopleFromPrayers(prayers, followUps = {}) {
   return people.sort((a, b) => b.activeCount - a.activeCount || a.name.localeCompare(b.name));
 }
 
+// One person's prayable session, riding the SAME per-prayer completion log as
+// Today and the intercession queue (no new completion model):
+//   active    — the person's active, unlocked prayers (what the session covers)
+//   remaining — those not yet marked prayed on `dayKey`; the session starts
+//               here, so partial progress resumes with the first unfinished
+//               prayer and completed ones are never repeated.
+// `completions` is the store's { prayerId: [dayKey] } map.
+export function personSession(person, completions = {}, dayKey) {
+  const active = (person?.prayers || []).filter((p) => p.status === 'active' && !p._locked);
+  const remaining = active.filter((p) => !(completions[p.id] || []).includes(dayKey));
+  return { active, remaining };
+}
+
 // Reveal the People option only when there is enough person data to be useful.
 export function peopleViewAvailable(prayers) {
   const names = new Set();

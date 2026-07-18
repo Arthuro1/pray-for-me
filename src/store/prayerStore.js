@@ -43,9 +43,10 @@ function canEncryptNested(prayer) {
 
 // A fresh plaintext testimony row for the prayer_testimonies child table. The
 // in-memory form is always plaintext; _persistTestimony encrypts before it is
-// queued/written for private prayers.
-function buildTestimonyRow(prayerId, content, created_at) {
-  return { id: crypto.randomUUID(), prayer_id: prayerId, content, author_name: '', created_at };
+// queued/written for private prayers. `content_language` is metadata (outside
+// the E2EE payload), stamped from the writer's active language.
+function buildTestimonyRow(prayerId, content, created_at, contentLanguage = null) {
+  return { id: crypto.randomUUID(), prayer_id: prayerId, content, author_name: '', created_at, content_language: contentLanguage };
 }
 
 // Re-attach any locally-held testimonies a freshly-fetched server prayer doesn't
@@ -453,6 +454,10 @@ const usePrayerStore = create((set, get) => ({
       status: 'active',
       // Scheduling metadata stays outside the E2EE envelope (timing, not content).
       schedule: prayer.schedule || null,
+      // Source language of the content, defaulted from the active interface
+      // language — a language code, not content, so it travels beside the
+      // envelope and survives the offline queue unchanged.
+      content_language: prayer.contentLanguage || get().settings.language || null,
     };
 
     const optimistic = {
@@ -577,7 +582,7 @@ const usePrayerStore = create((set, get) => ({
     const prayer = get().prayers.find((p) => p.id === id);
     // One new testimony (if any), stored as its own row (Phase 3c) — appended
     // locally and server-side, never overwriting a concurrent sibling.
-    const row = trimmed ? buildTestimonyRow(id, trimmed, answered_at) : null;
+    const row = trimmed ? buildTestimonyRow(id, trimmed, answered_at, get().settings.language || null) : null;
     set((state) => ({
       prayers: state.prayers.map((p) => {
         if (p.id !== id) return p;
@@ -597,7 +602,7 @@ const usePrayerStore = create((set, get) => ({
     const trimmed = (content || '').trim();
     if (!trimmed) return;
     const prayer = get().prayers.find((p) => p.id === id);
-    const row = buildTestimonyRow(id, trimmed, new Date().toISOString());
+    const row = buildTestimonyRow(id, trimmed, new Date().toISOString(), get().settings.language || null);
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === id ? { ...p, prayer_testimonies: [...(p.prayer_testimonies || []), row] } : p
@@ -751,7 +756,7 @@ const usePrayerStore = create((set, get) => ({
   // community copies. For non-shared prayers it just writes prayer_updates.
   addUpdate: async (prayerId, text, authorName = '') => {
     const id = crypto.randomUUID();
-    const row = { id, prayer_id: prayerId, text, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString() };
+    const row = { id, prayer_id: prayerId, text, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString(), content_language: get().settings.language || null };
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === prayerId ? { ...p, prayer_updates: [...(p.prayer_updates || []), row] } : p

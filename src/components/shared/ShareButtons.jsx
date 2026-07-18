@@ -16,11 +16,13 @@ function BrandIcon({ name }) {
 
 // Direct web-intent share links — open the target app/site, no SDKs or tracking.
 // Slack has no prefill share intent, so it copies the message for pasting.
-export default function ShareButtons({ url, text, copiedLabel }) {
+// `onShared` (optional) fires when the user actually shares/copies through any
+// target — callers use it to record that an invitation really went out.
+export default function ShareButtons({ url, text, copiedLabel, onShared }) {
   const enc = encodeURIComponent;
   const msg = `${text} ${url}`;
   const copyForSlack = async () => {
-    try { await navigator.clipboard.writeText(msg); toast.success(copiedLabel); } catch { /* clipboard denied */ }
+    try { await navigator.clipboard.writeText(msg); toast.success(copiedLabel); onShared?.(); } catch { /* clipboard denied */ }
   };
   const targets = [
     { name: 'WhatsApp', color: '#25D366', href: `https://wa.me/?text=${enc(msg)}`, icon: <BrandIcon name="whatsapp" /> },
@@ -34,7 +36,7 @@ export default function ShareButtons({ url, text, copiedLabel }) {
   return (
     <div className="flex flex-wrap gap-2.5 justify-center mb-4">
       {targets.map(tg => tg.href ? (
-        <a key={tg.name} href={tg.href} target="_blank" rel="noopener noreferrer" title={tg.name} className={cls} style={{ background: tg.color }}>
+        <a key={tg.name} href={tg.href} target="_blank" rel="noopener noreferrer" title={tg.name} className={cls} style={{ background: tg.color }} onClick={() => onShared?.()}>
           {tg.icon}
         </a>
       ) : (

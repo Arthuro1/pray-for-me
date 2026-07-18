@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Too many attempts. Please wait a moment and try again.",
   "savedOnToday": "Your prayer is now on Today.",
   "setReminderCta": "Set a reminder",
-  "replayIntro": "Replay the intro",
-  "replayIntroSub": "See the welcome tour again.",
   "personNamePlaceholder": "First and last name",
   "providerEmail": "Email / Password",
 
@@ -800,4 +798,25 @@ export default {
   "followUpNext": "Follow-up · {date}",
   "resultsCount": "{n} results",
   "clearFiltersBtn": "Clear filters",
+
+  // Persona pass, second refinement (2026-07): due-today intercession, person
+  // sessions, Grow durations & why-steps, audience/protection split, schedule
+  // in overflow, compact Privacy & Security
+  "intercessionDueSub": "Due today — from the requests you carry",
+  "intercessionNoneDue": "Nothing is due today — your rhythm covers these on other days.",
+  "intercessionAllCarried": "View all requests I'm carrying · {n}",
+  "prayAllCarriedBtn": "Pray all remaining · {n}",
+  "prayAgainBtn": "Pray again",
+  "prayForPerson": "Pray for {name} · {n} active requests",
+  "personPrayedToday": "You prayed for {name} today 🙏",
+  "aboutMinutes": "About {n} min",
+  "whyThisStep": "Why this step?",
+  "protEncrypted": "Encrypted",
+  "addUpdateBtn": "Add update",
+  "privacyRowOverview": "Privacy Center",
+  "privacyRowVault": "Prayer Vault",
+  "privacyRowNotif": "Notification privacy",
+  "privacyRowLowData": "Low data mode",
+  "privacyRowAi": "AI assistance & data",
+  "privacyRowExport": "Export my data",
 };

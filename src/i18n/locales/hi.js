@@ -61,8 +61,6 @@ export default {
   "authErrRate": "बहुत अधिक प्रयास। कृपया थोड़ी देर प्रतीक्षा करें और फिर से प्रयास करें।",
   "savedOnToday": "आपकी प्रार्थना अब \"आज\" में है।",
   "setReminderCta": "रिमाइंडर सेट करें",
-  "replayIntro": "परिचय फिर से देखें",
-  "replayIntroSub": "स्वागत टूर फिर से देखें।",
   "personNamePlaceholder": "पूरा नाम",
   "providerEmail": "ईमेल / पासवर्ड",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "इससे आपका खाता और आपकी सभी प्रार्थनाएं, गवाहियां और डेटा स्थायी रूप से हट जाएंगे। इसे पूर्ववत नहीं किया जा सकता।",
   "deleteAccountConfirm": "खाता हटाएं",
   "deleteAccountDone": "आपका खाता हटा दिया गया है",
-  "deleteAccountError": "आपका खाता हटाया नहीं जा सका। कृपया पुनः प्रयास करें।",
+  "deleteAccountError": "आपका खाता हटाया नहीं जा सका। कृपया पुनः प्रयास करें।"
+,
   "grow": "बढ़ें",
   "growTitle": "प्रार्थना में बढ़ें",
   "growSubtitle": "परमेश्वर के वचन के अनुसार प्रार्थना करना सीखें।",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "फ़ॉलो-अप · {date}",
   "resultsCount": "{n} परिणाम",
   "clearFiltersBtn": "फ़िल्टर हटाएँ",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "आज के लिए — जो विनतियाँ आप उठाए हुए हैं उनमें से",
+  "intercessionNoneDue": "आज कुछ निर्धारित नहीं — आपकी लय इन विनतियों को अन्य दिनों में शामिल करती है।",
+  "intercessionAllCarried": "मेरी सभी विनतियाँ देखें · {n}",
+  "prayAllCarriedBtn": "शेष सभी के लिए प्रार्थना करें · {n}",
+  "prayAgainBtn": "फिर से प्रार्थना करें",
+  "prayForPerson": "{name} के लिए प्रार्थना करें · {n} सक्रिय विनतियाँ",
+  "personPrayedToday": "आपने आज {name} के लिए प्रार्थना की 🙏",
+  "aboutMinutes": "लगभग {n} मिनट",
+  "whyThisStep": "यह चरण क्यों?",
+  "protEncrypted": "एन्क्रिप्टेड",
+  "addUpdateBtn": "नई जानकारी जोड़ें",
+  "privacyRowOverview": "गोपनीयता केंद्र",
+  "privacyRowVault": "प्रार्थना तिजोरी",
+  "privacyRowNotif": "सूचनाओं की गोपनीयता",
+  "privacyRowLowData": "कम डेटा मोड",
+  "privacyRowAi": "AI सहायता और डेटा",
+  "privacyRowExport": "मेरा डेटा निर्यात करें",
 };

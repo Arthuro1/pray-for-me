@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
   "savedOnToday": "Doa Anda sekarang ada di \"Hari Ini\".",
   "setReminderCta": "Atur pengingat",
-  "replayIntro": "Putar ulang perkenalan",
-  "replayIntroSub": "Lihat kembali tur selamat datang.",
   "personNamePlaceholder": "Nama lengkap",
   "providerEmail": "Email / Kata sandi",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Ini akan menghapus akun dan semua doa, kesaksian, serta data Anda secara permanen. Tindakan ini tidak dapat dibatalkan.",
   "deleteAccountConfirm": "Hapus akun",
   "deleteAccountDone": "Akun Anda telah dihapus",
-  "deleteAccountError": "Tidak dapat menghapus akun Anda. Silakan coba lagi.",
+  "deleteAccountError": "Tidak dapat menghapus akun Anda. Silakan coba lagi."
+,
   "grow": "Bertumbuh",
   "growTitle": "Bertumbuh dalam doa",
   "growSubtitle": "Belajar berdoa sesuai dengan Firman Allah.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Tindak lanjut · {date}",
   "resultsCount": "{n} hasil",
   "clearFiltersBtn": "Hapus filter",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "Untuk hari ini — dari permohonan yang kamu bawa",
+  "intercessionNoneDue": "Tidak ada jadwal hari ini — ritmemu mencakup permohonan ini di hari lain.",
+  "intercessionAllCarried": "Lihat semua permohonan yang kubawa · {n}",
+  "prayAllCarriedBtn": "Doakan semua yang tersisa · {n}",
+  "prayAgainBtn": "Berdoa lagi",
+  "prayForPerson": "Doakan {name} · {n} permohonan aktif",
+  "personPrayedToday": "Kamu sudah mendoakan {name} hari ini 🙏",
+  "aboutMinutes": "Sekitar {n} menit",
+  "whyThisStep": "Mengapa langkah ini?",
+  "protEncrypted": "Terenkripsi",
+  "addUpdateBtn": "Tambah kabar",
+  "privacyRowOverview": "Pusat privasi",
+  "privacyRowVault": "Brankas doa",
+  "privacyRowNotif": "Privasi notifikasi",
+  "privacyRowLowData": "Mode hemat data",
+  "privacyRowAi": "Bantuan AI & data",
+  "privacyRowExport": "Ekspor data saya",
 };

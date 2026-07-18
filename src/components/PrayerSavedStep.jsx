@@ -4,7 +4,7 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { useShallow } from 'zustand/react/shallow';
 import AudienceBadge from './shared/AudienceBadge';
-import { audienceOf } from '../lib/audience';
+import { audienceOf, protectionOf } from '../lib/audience';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -25,11 +25,14 @@ export default function PrayerSavedStep({ prayerId, title, description, lang, on
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
+  // The ACTUAL newly created prayer (optimistic store copy) — its audience and
+  // protection are computed from real stored facts, never from a placeholder.
+  // The literal fallback only guards a store race so the UI can't go blank.
+  const savedPrayer = prayers.find((p) => p.id === prayerId)
+    || { id: prayerId, title, description, prayer_categories: [], prayer_points: [] };
+
   if (praying) {
-    // The optimistic store copy is already present; fall back to the values we
-    // were handed so the session can never open on an empty screen.
-    const prayer = prayers.find((p) => p.id === prayerId)
-      || { id: prayerId, title, description, prayer_categories: [], prayer_points: [] };
+    const prayer = savedPrayer;
     return (
       <PrayerSession
         prayers={[prayer]}
@@ -67,11 +70,12 @@ export default function PrayerSavedStep({ prayerId, title, description, lang, on
           </div>
           <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'savedPrivately')}</h2>
           <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'savedOnToday')}</p>
-          {/* The prayer's audience, stated the same way it will read everywhere
-              else — a new personal prayer is always Private (encrypted when the
-              device key is ready). */}
+          {/* The prayer's audience and protection, computed from the ACTUAL
+              saved prayer and stated the same way they read everywhere else —
+              a new personal prayer is Private, with encryption shown as a
+              separate quiet status when the device key is ready. */}
           <div className="mt-2.5">
-            <AudienceBadge audience={audienceOf({}, [])} lang={lang} />
+            <AudienceBadge audience={audienceOf(savedPrayer, [])} protection={protectionOf(savedPrayer)} lang={lang} />
           </div>
         </div>
 

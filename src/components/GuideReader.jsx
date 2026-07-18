@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { X, Check, ChevronRight, ChevronLeft, BookOpen } from 'lucide-react';
+import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { pick, localizeRef } from '../content/teaching';
+import { guideDurationMinutes } from '../lib/guideMeta';
 import VerseAccordion from './VerseAccordion';
 
 // A pray-through reader for a prayer guide: an intro, then one step at a time.
@@ -13,6 +14,8 @@ import VerseAccordion from './VerseAccordion';
 export default function GuideReader({ guide, lang, onClose, onStarted, onCompleted }) {
   // index -1 = intro screen; 0..n-1 = steps; n = done
   const [index, setIndex] = useState(-1);
+  // "Why this step?" disclosure — collapsed on every new step.
+  const [whyOpen, setWhyOpen] = useState(false);
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
@@ -22,17 +25,19 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
   const done = index >= total;
   const step = !onIntro && !done ? steps[index] : null;
   const isLastStep = index === total - 1;
+  const duration = guideDurationMinutes(guide);
 
   // Progress signals for the Grow path: begun past the intro, completed on the
   // final Amen. Both callbacks are optional and content-free.
   const advance = () => {
     if (onIntro) onStarted?.(guide.id);
     if (index === total - 1) onCompleted?.(guide.id);
+    setWhyOpen(false);
     setIndex(index + 1);
   };
   // Step back to the previous slide — from the first step this returns to the
   // intro so the whole guide stays re-readable in either direction.
-  const back = () => setIndex((i) => i - 1);
+  const back = () => { setWhyOpen(false); setIndex((i) => i - 1); };
 
   const overlay = (children) => (
     <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
@@ -77,6 +82,9 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
           <div className="text-center mb-6">
             <div className="text-5xl mb-3">{guide.emoji}</div>
             <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-1)' }}>{pick(guide.title, lang)}</h2>
+            {duration && (
+              <p className="text-xs font-medium" style={{ color: 'var(--text-3)' }}>{t(lang, 'aboutMinutes', { n: duration })}</p>
+            )}
           </div>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(guide.intro, lang)}</p>
         </div>
@@ -118,7 +126,32 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
 
       <div className="flex-1 overflow-y-auto px-6 py-8 max-w-xl mx-auto w-full">
         <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{pick(step.title, lang)}</h2>
-        <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-2)' }}>{pick(step.prompt, lang)}</p>
+        <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-2)' }}>{pick(step.prompt, lang)}</p>
+
+        {/* Optional authored "why this step" — a collapsed one-liner that never
+            blocks Continue and simply doesn't exist for unexplained steps.
+            Scripture below stays its own separate expandable. */}
+        {step.why && (
+          <div className="mb-6">
+            <button
+              type="button"
+              onClick={() => setWhyOpen((v) => !v)}
+              aria-expanded={whyOpen}
+              aria-controls="guide-step-why"
+              className="min-h-[44px] flex items-center gap-1.5 text-xs font-medium"
+              style={{ color: 'var(--accent)' }}
+            >
+              <ChevronDown size={13} aria-hidden="true" style={{ transform: whyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+              {t(lang, 'whyThisStep')}
+            </button>
+            {whyOpen && (
+              <p id="guide-step-why" className="text-xs leading-relaxed pl-5" style={{ color: 'var(--text-3)' }}>
+                {pick(step.why, lang)}
+              </p>
+            )}
+          </div>
+        )}
+
         {ref && (
           <VerseAccordion reference={ref} lang={lang}>
             {({ toggle }) => (

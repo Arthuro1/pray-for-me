@@ -132,6 +132,9 @@ const useCommunityStore = create((set, get) => ({
           source_prayer_id: prayer.id,
           is_anonymous: isAnonymous,
           is_answered: prayer.status === 'answered',
+          // The share keeps the original wording, so the source language of the
+          // personal prayer travels with it into every group copy.
+          content_language: prayer.content_language || null,
         }).select('id').single();
         if (error) return toError(error);
 
@@ -390,12 +393,12 @@ const useCommunityStore = create((set, get) => ({
     });
   },
 
-  addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds }) => {
+  addPrayer: async ({ groupId, userId, authorName, title, description, isAnonymous, categoryIds, contentLanguage = null }) => {
     const gk = await ensureGroupKey(groupId);
     const cols = await encPrayerCols(gk, { title, description: description || '', prayer_points: [] });
     const { data, error } = await supabase
       .from('community_prayers')
-      .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [] })
+      .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [], content_language: contentLanguage })
       .select()
       .single();
     if (error) return toError(error);
@@ -449,13 +452,13 @@ const useCommunityStore = create((set, get) => ({
   // a different key, and a member can't write the owner's row) — the owner sees it
   // read-only via the shared-activity view. `sourcePrayerId` is still accepted for
   // caller compatibility but no longer drives a server-side plaintext fan-out.
-  addUpdate: async ({ prayerId, userId, authorName, text, isAnonymous }) => {
+  addUpdate: async ({ prayerId, userId, authorName, text, isAnonymous, contentLanguage = null }) => {
     const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
     const gk = await ensureGroupKey(groupId);
     const cols = await encUpdateCols(gk, text);
     const { error } = await supabase
       .from('community_updates')
-      .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, is_anonymous: isAnonymous, ...cols });
+      .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, is_anonymous: isAnonymous, content_language: contentLanguage, ...cols });
     if (error) return toError(error);
     const updated = await fetchPrayerWithCounts(prayerId);
     if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
@@ -541,12 +544,12 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
-  addTestimony: async ({ groupId, userId, authorName, content, isAnonymous, communityPrayerId }) => {
+  addTestimony: async ({ groupId, userId, authorName, content, isAnonymous, communityPrayerId, contentLanguage = null }) => {
     const gk = await ensureGroupKey(groupId);
     const cols = await encTestimonyCols(gk, content);
     const { data, error } = await supabase
       .from('testimonies')
-      .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null })
+      .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null, content_language: contentLanguage })
       .select('*, community_prayers(title, category_ids)')
       .single();
     if (error) return toError(error);

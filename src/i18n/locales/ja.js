@@ -61,8 +61,6 @@ export default {
   "authErrRate": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
   "savedOnToday": "あなたの祈りは「今日」に追加されました。",
   "setReminderCta": "リマインダーを設定",
-  "replayIntro": "紹介をもう一度見る",
-  "replayIntroSub": "ようこそツアーをもう一度見る。",
   "personNamePlaceholder": "氏名",
   "providerEmail": "メール / パスワード",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "アカウントと、すべての祈り・証し・データが完全に削除されます。この操作は元に戻せません。",
   "deleteAccountConfirm": "アカウントを削除",
   "deleteAccountDone": "アカウントを削除しました",
-  "deleteAccountError": "アカウントを削除できませんでした。もう一度お試しください。",
+  "deleteAccountError": "アカウントを削除できませんでした。もう一度お試しください。"
+,
   "grow": "成長",
   "growTitle": "祈りにおいて成長する",
   "growSubtitle": "神の言葉に従って祈ることを学びましょう。",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "フォローアップ · {date}",
   "resultsCount": "{n}件",
   "clearFiltersBtn": "絞り込みを解除",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "今日の分 — あなたが担っている祈りの課題から",
+  "intercessionNoneDue": "今日は予定がありません — 他の日にこれらの課題を祈ります。",
+  "intercessionAllCarried": "担っている課題をすべて見る · {n}",
+  "prayAllCarriedBtn": "残りすべてを祈る · {n}",
+  "prayAgainBtn": "もう一度祈る",
+  "prayForPerson": "{name}のために祈る · 進行中の課題 {n}件",
+  "personPrayedToday": "今日は{name}のために祈りました 🙏",
+  "aboutMinutes": "約{n}分",
+  "whyThisStep": "なぜこのステップ？",
+  "protEncrypted": "暗号化済み",
+  "addUpdateBtn": "近況を追加",
+  "privacyRowOverview": "プライバシーセンター",
+  "privacyRowVault": "祈りの金庫",
+  "privacyRowNotif": "通知のプライバシー",
+  "privacyRowLowData": "低データモード",
+  "privacyRowAi": "AI支援とデータ",
+  "privacyRowExport": "データをエクスポート",
 };

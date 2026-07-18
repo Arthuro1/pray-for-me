@@ -61,8 +61,6 @@ export default {
   "authErrRate": "تلاش‌های بیش از حد. لطفاً کمی صبر کنید و دوباره تلاش کنید.",
   "savedOnToday": "دعای شما اکنون در «امروز» است.",
   "setReminderCta": "تنظیم یادآور",
-  "replayIntro": "دیدن دوباره معرفی",
-  "replayIntroSub": "تور خوش‌آمدگویی را دوباره ببینید.",
   "personNamePlaceholder": "نام و نام خانوادگی",
   "providerEmail": "ایمیل / رمز عبور",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "این کار حساب و همه دعاها، شهادت‌ها و داده‌های شما را برای همیشه حذف می‌کند. این عمل قابل بازگشت نیست.",
   "deleteAccountConfirm": "حذف حساب",
   "deleteAccountDone": "حساب شما حذف شد",
-  "deleteAccountError": "حذف حساب ممکن نشد. لطفاً دوباره تلاش کنید.",
+  "deleteAccountError": "حذف حساب ممکن نشد. لطفاً دوباره تلاش کنید."
+,
   "grow": "رشد",
   "growTitle": "رشد در دعا",
   "growSubtitle": "بیاموزید که مطابق کلام خدا دعا کنید.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "پیگیری · {date}",
   "resultsCount": "{n} نتیجه",
   "clearFiltersBtn": "پاک‌کردن فیلترها",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "برای امروز — از درخواست‌هایی که بر دوش داری",
+  "intercessionNoneDue": "امروز چیزی برنامه‌ریزی نشده — ریتم تو این درخواست‌ها را در روزهای دیگر پوشش می‌دهد.",
+  "intercessionAllCarried": "دیدن همهٔ درخواست‌هایی که بر دوش دارم · {n}",
+  "prayAllCarriedBtn": "دعا برای همهٔ باقی‌مانده‌ها · {n}",
+  "prayAgainBtn": "دوباره دعا کن",
+  "prayForPerson": "دعا برای {name} · {n} درخواست فعال",
+  "personPrayedToday": "امروز برای {name} دعا کردی 🙏",
+  "aboutMinutes": "حدود {n} دقیقه",
+  "whyThisStep": "چرا این مرحله؟",
+  "protEncrypted": "رمزگذاری‌شده",
+  "addUpdateBtn": "افزودن خبر",
+  "privacyRowOverview": "مرکز حریم خصوصی",
+  "privacyRowVault": "گاوصندوق دعا",
+  "privacyRowNotif": "حریم خصوصی اعلان‌ها",
+  "privacyRowLowData": "حالت مصرف کم داده",
+  "privacyRowAi": "کمک هوش مصنوعی و داده‌ها",
+  "privacyRowExport": "خروجی گرفتن از داده‌های من",
 };

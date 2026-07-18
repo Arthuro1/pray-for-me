@@ -6,7 +6,7 @@
 // befriending shrink into header actions.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import CommunityTab from './CommunityTab';
 import useCommunityStore from '../store/communityStore';
@@ -64,5 +64,55 @@ describe('CommunityTab — empty state consolidation', () => {
     expect(screen.queryByText(t(lang, 'prayWithOthers'))).toBeNull();
     expect(screen.getByRole('button', { name: t(lang, 'createGroup') })).toBeTruthy();
     expect(screen.getByRole('button', { name: t(lang, 'addFriend') })).toBeTruthy();
+  });
+});
+
+describe('GroupView — progressive list tools', () => {
+  const wallPrayer = (id, extra = {}) => ({
+    id, group_id: 'g1', user_id: 'other', author_name: 'A', is_anonymous: false,
+    title: `Sujet ${id}`, description: '', is_answered: false, created_at: '2026-07-01T00:00:00Z',
+    prayer_reactions: [{ count: 0 }], community_updates: [{ count: 0 }],
+    ...extra,
+  });
+
+  const stubGroupView = (prayers) => stubCommunity({
+    groups: [{ id: 'g1', name: 'Groupe', role: 'member' }],
+    prayers,
+    loading: false,
+    testimonies: [],
+    userReactions: new Set(),
+    setActiveGroup: vi.fn(),
+    subscribeGroupPrayers: vi.fn(() => () => {}),
+    fetchUserReactions: vi.fn(),
+  });
+
+  const renderGroup = () => render(
+    <MemoryRouter initialEntries={['/community/group/g1']}>
+      <Routes><Route path="/community/group/:groupId" element={<CommunityTab />} /></Routes>
+    </MemoryRouter>
+  );
+
+  it('a tiny all-active group shows neither search nor status filters', async () => {
+    stubGroupView([wallPrayer('a'), wallPrayer('b')]);
+    renderGroup();
+    expect(await screen.findByText('Sujet a')).toBeTruthy();
+    expect(screen.queryByPlaceholderText(t(lang, 'searchRequests'))).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'answered') })).toBeNull();
+  });
+
+  it('status filters appear once BOTH active and answered requests exist', async () => {
+    stubGroupView([wallPrayer('a'), wallPrayer('b', { is_answered: true })]);
+    renderGroup();
+    expect(await screen.findByText('Sujet a')).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'answered') })).toBeTruthy();
+    // Still too few requests for search.
+    expect(screen.queryByPlaceholderText(t(lang, 'searchRequests'))).toBeNull();
+  });
+
+  it('search appears once the wall is long enough to need it', async () => {
+    stubGroupView(Array.from({ length: 6 }, (_, i) => wallPrayer(String(i))));
+    renderGroup();
+    expect(await screen.findByText('Sujet 0')).toBeTruthy();
+    expect(screen.getByPlaceholderText(t(lang, 'searchRequests'))).toBeTruthy();
   });
 });

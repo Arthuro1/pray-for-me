@@ -21,10 +21,20 @@ describe('checklistSteps', () => {
   it('honours locally-recorded acts the server cannot see (invite shared, prayer begun)', () => {
     setChecklistFlag('g1', 'invited');
     setChecklistFlag('g1', 'prayed');
-    const steps = checklistSteps({ memberCount: 1, requestCount: 0, hasPrayed: false, flags: checklistFlags('g1') });
+    const steps = checklistSteps({ memberCount: 1, requestCount: 1, hasPrayed: false, flags: checklistFlags('g1') });
     expect(steps.find((s) => s.id === 'invite').done).toBe(true);
     expect(steps.find((s) => s.id === 'pray').done).toBe(true);
-    expect(steps.find((s) => s.id === 'request').done).toBe(false);
+  });
+
+  it('the pray step can NEVER complete while the group has no request — even with a stale flag or reaction', () => {
+    setChecklistFlag('g1', 'prayed');
+    const withFlag = checklistSteps({ memberCount: 2, requestCount: 0, hasPrayed: false, flags: checklistFlags('g1') });
+    expect(withFlag.find((s) => s.id === 'pray').done).toBe(false);
+    const withReaction = checklistSteps({ memberCount: 2, requestCount: 0, hasPrayed: true, flags: {} });
+    expect(withReaction.find((s) => s.id === 'pray').done).toBe(false);
+    // The moment a request exists, the same evidence counts.
+    const valid = checklistSteps({ memberCount: 2, requestCount: 1, hasPrayed: true, flags: {} });
+    expect(valid.find((s) => s.id === 'pray').done).toBe(true);
   });
 });
 

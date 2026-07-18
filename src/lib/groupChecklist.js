@@ -35,12 +35,15 @@ export function dismissChecklist(groupId) {
 }
 
 // The three steps with their live completion state. `memberCount` includes the
-// leader; `hasPrayed` is any "I'm praying" of the user's inside this group.
+// leader; `hasPrayed` is any confirmed prayer action of the user's inside this
+// group ("I'm praying" / Pray now on a request). The pray step can NEVER be
+// complete while the group has no request — praying requires something to pray
+// for, and a stale local flag must not fake the sequence.
 export function checklistSteps({ memberCount = 1, requestCount = 0, hasPrayed = false, flags = {} }) {
   return [
     { id: 'invite', done: memberCount >= 2 || !!flags.invited },
     { id: 'request', done: requestCount > 0 },
-    { id: 'pray', done: hasPrayed || !!flags.prayed },
+    { id: 'pray', done: requestCount > 0 && (hasPrayed || !!flags.prayed) },
   ];
 }
 

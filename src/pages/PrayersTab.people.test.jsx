@@ -9,12 +9,22 @@ import { MemoryRouter } from 'react-router-dom';
 
 const navigate = vi.fn();
 vi.mock('react-router-dom', async (orig) => ({ ...(await orig()), useNavigate: () => navigate }));
+vi.mock('../lib/verseText', () => ({
+  fetchScriptureText: vi.fn(async () => null),
+  fetchVerseText: vi.fn(async () => ({ data: null, error: null })),
+}));
+vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
+vi.mock('../lib/mutationQueue', () => ({
+  enqueue: vi.fn(),
+  pendingPrayerIds: () => new Set(),
+}));
 
 import PrayersTab from './PrayersTab';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useLayoutStore from '../store/layoutStore';
 import useFollowUpStore from '../store/followUpStore';
+import { todayKey } from '../lib/prayedLog';
 import { t } from '../i18n';
 
 const lang = 'fr';
@@ -32,6 +42,7 @@ beforeEach(() => {
   usePrayerStore.setState({
     prayers: [prayer('a1'), prayer('a2')],
     categories: [],
+    completions: {},
     settings: { language: lang },
     loading: false,
   });
@@ -123,5 +134,63 @@ describe('Journal — People view', () => {
     // The label carries the localized date; assert on its stable prefix.
     const label = t(lang, 'followUpNext', { date: '' }).trim();
     expect(screen.getByText((text) => text.startsWith(label))).toBeTruthy();
+  });
+});
+
+describe('Journal — Pray for [name]', () => {
+  const dayKey = todayKey();
+  const openJulie = () => {
+    usePrayerStore.setState({
+      prayers: [
+        prayer('j1', { for_other: true, person_name: 'Julie' }),
+        prayer('j2', { for_other: true, person_name: 'Julie' }),
+        prayer('j3', { for_other: true, person_name: 'Julie', status: 'answered' }),
+        prayer('m1', { for_other: true, person_name: 'Marc' }),
+      ],
+    });
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    fireEvent.click(screen.getByText('Julie'));
+  };
+
+  it('offers ONE contextual action counting only the person’s active, not-yet-prayed requests', () => {
+    openJulie();
+    expect(screen.getByText(t(lang, 'prayForPerson', { name: 'Julie', n: 2 }))).toBeTruthy();
+  });
+
+  it('the session walks only that person’s prayers and records ordinary completions', () => {
+    openJulie();
+    fireEvent.click(screen.getByText(t(lang, 'prayForPerson', { name: 'Julie', n: 2 })));
+    // First of Julie's prayers opens — never Marc's.
+    expect(screen.getAllByText('Prière j1').length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
+    expect(usePrayerStore.getState().completions.j1).toContain(dayKey);
+    // Leaving midway keeps progress; reopening resumes with the unfinished one.
+    fireEvent.click(screen.getByLabelText(t(lang, 'close')));
+    expect(screen.getByText(t(lang, 'prayForPerson', { name: 'Julie', n: 1 }))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'prayForPerson', { name: 'Julie', n: 1 })));
+    expect(screen.getAllByText('Prière j2').length).toBeGreaterThan(0);
+  });
+
+  it('shows a quiet complete state once every active request was prayed today', () => {
+    usePrayerStore.setState({ completions: { j1: [dayKey], j2: [dayKey] } });
+    openJulie();
+    expect(screen.getByText(t(lang, 'personPrayedToday', { name: 'Julie' }))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'prayForPerson', { name: 'Julie', n: 2 }))).toBeNull();
+    expect(screen.getByText(t(lang, 'prayAgainBtn'))).toBeTruthy();
+  });
+
+  it('no action renders for a person with no active prayers', () => {
+    usePrayerStore.setState({
+      prayers: [
+        prayer('j3', { for_other: true, person_name: 'Julie', status: 'answered' }),
+        prayer('m1', { for_other: true, person_name: 'Marc' }),
+      ],
+    });
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    fireEvent.click(screen.getByText('Julie'));
+    expect(screen.queryByText(t(lang, 'prayAgainBtn'))).toBeNull();
+    expect(screen.queryByText((text) => text.startsWith('Prier pour Julie'))).toBeNull();
   });
 });

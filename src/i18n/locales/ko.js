@@ -61,8 +61,6 @@ export default {
   "authErrRate": "시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.",
   "savedOnToday": "당신의 기도가 이제 \"오늘\"에 있습니다.",
   "setReminderCta": "알림 설정",
-  "replayIntro": "소개 다시 보기",
-  "replayIntroSub": "환영 투어를 다시 봅니다.",
   "personNamePlaceholder": "이름",
   "providerEmail": "이메일 / 비밀번호",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "계정과 모든 기도, 간증, 데이터가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
   "deleteAccountConfirm": "계정 삭제",
   "deleteAccountDone": "계정이 삭제되었습니다",
-  "deleteAccountError": "계정을 삭제할 수 없습니다. 다시 시도해 주세요.",
+  "deleteAccountError": "계정을 삭제할 수 없습니다. 다시 시도해 주세요."
+,
   "grow": "성장",
   "growTitle": "기도 안에서 자라가기",
   "growSubtitle": "하나님의 말씀을 따라 기도하는 법을 배우세요.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "후속 확인 · {date}",
   "resultsCount": "결과 {n}개",
   "clearFiltersBtn": "필터 지우기",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "오늘 기도할 것 — 내가 맡은 기도 제목 중에서",
+  "intercessionNoneDue": "오늘 예정된 것이 없어요 — 다른 날에 이 제목들을 기도합니다.",
+  "intercessionAllCarried": "내가 맡은 모든 기도 제목 보기 · {n}",
+  "prayAllCarriedBtn": "남은 모두를 위해 기도 · {n}",
+  "prayAgainBtn": "다시 기도하기",
+  "prayForPerson": "{name}을(를) 위해 기도 · 진행 중 {n}건",
+  "personPrayedToday": "오늘 {name}을(를) 위해 기도했어요 🙏",
+  "aboutMinutes": "약 {n}분",
+  "whyThisStep": "왜 이 단계인가요?",
+  "protEncrypted": "암호화됨",
+  "addUpdateBtn": "소식 추가",
+  "privacyRowOverview": "개인정보 센터",
+  "privacyRowVault": "기도 금고",
+  "privacyRowNotif": "알림 개인정보",
+  "privacyRowLowData": "데이터 절약 모드",
+  "privacyRowAi": "AI 지원 및 데이터",
+  "privacyRowExport": "내 데이터 내보내기",
 };

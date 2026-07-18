@@ -158,7 +158,9 @@ const useTranslationStore = create((set) => ({
       });
       (p.prayer_points || []).forEach((pp) => {
         if (pp.title && !langCache[pp.title]) toTranslate.add(pp.title);
-        if (pp.verse_text && !langCache[pp.verse_text]) toTranslate.add(pp.verse_text);
+        // Scripture text (pp.verse_text / verses) is NEVER sent through AI
+        // translation — authoritative verse text comes from the bundle /
+        // YouVersion via useLocalizedVerse, or stays in its original language.
       });
     });
 

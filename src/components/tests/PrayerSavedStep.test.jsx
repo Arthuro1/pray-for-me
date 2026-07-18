@@ -74,4 +74,24 @@ describe('PrayerSavedStep', () => {
     fireEvent.click(screen.getByText(t(lang, 'doneBtn')));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('computes audience and protection from the ACTUAL saved prayer, not a placeholder', () => {
+    // The optimistic store copy already carries ciphertext markers — the badge
+    // must read THIS row: Private audience + a separate Encrypted status.
+    usePrayerStore.setState({
+      prayers: [{ id: 'p1', title: 'Ma prière', encryption_version: 1, prayer_categories: [], prayer_points: [] }],
+    });
+    renderStep();
+    expect(screen.getByText(t(lang, 'audiencePrivate'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'protEncrypted'))).toBeTruthy();
+  });
+
+  it('a plaintext row on a keyless device shows Private WITHOUT claiming encryption', () => {
+    usePrayerStore.setState({
+      prayers: [{ id: 'p1', title: 'Ma prière', prayer_categories: [], prayer_points: [] }],
+    });
+    renderStep();
+    expect(screen.getByText(t(lang, 'audiencePrivate'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'protEncrypted'))).toBeNull();
+  });
 });

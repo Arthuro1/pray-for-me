@@ -61,8 +61,6 @@ export default {
   "authErrRate": "በጣም ብዙ ሙከራዎች። እባክዎ ትንሽ ቆይተው እንደገና ይሞክሩ።",
   "savedOnToday": "ጸሎትዎ አሁን በ\"ዛሬ\" ውስጥ ነው።",
   "setReminderCta": "አስታዋሽ አዘጋጅ",
-  "replayIntro": "መግቢያውን እንደገና ይመልከቱ",
-  "replayIntroSub": "የእንኳን ደህና መጡ ጉብኝቱን እንደገና ይመልከቱ።",
   "personNamePlaceholder": "ሙሉ ስም",
   "providerEmail": "ኢሜይል / የይለፍ ቃል",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "ይህ መለያዎንና ሁሉንም ጸሎቶችዎንና ምስክርነቶችዎንና ውሂብዎን በቋሚነት ይሰርዛል። ይህ እርምጃ ሊቀለበስ አይችልም።",
   "deleteAccountConfirm": "መለያ ሰርዝ",
   "deleteAccountDone": "መለያዎ ተሰርዟል",
-  "deleteAccountError": "መለያዎን መሰረዝ አልተቻለም። እባክዎ እንደገና ይሞክሩ።",
+  "deleteAccountError": "መለያዎን መሰረዝ አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
+,
   "grow": "እድገት",
   "growTitle": "በጸሎት ማደግ",
   "growSubtitle": "በእግዚአብሔር ቃል መሠረት መጸለይን ተማር።",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "ክትትል · {date}",
   "resultsCount": "{n} ውጤቶች",
   "clearFiltersBtn": "ማጣሪያዎችን አጽዳ",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "ለዛሬ — ከምትሸከማቸው ጸሎቶች",
+  "intercessionNoneDue": "ዛሬ የታቀደ የለም — ዜማህ እነዚህን በሌሎች ቀናት ይሸፍናል።",
+  "intercessionAllCarried": "የምሸከማቸውን ጸሎቶች ሁሉ ተመልከት · {n}",
+  "prayAllCarriedBtn": "የቀሩትን ሁሉ ጸልይ · {n}",
+  "prayAgainBtn": "እንደገና ጸልይ",
+  "prayForPerson": "ለ{name} ጸልይ · {n} ንቁ ጸሎቶች",
+  "personPrayedToday": "ዛሬ ለ{name} ጸልየሃል 🙏",
+  "aboutMinutes": "ወደ {n} ደቂቃ ገደማ",
+  "whyThisStep": "ይህ ደረጃ ለምን?",
+  "protEncrypted": "የተመሰጠረ",
+  "addUpdateBtn": "ዜና ጨምር",
+  "privacyRowOverview": "የግላዊነት ማዕከል",
+  "privacyRowVault": "የጸሎት ካዝና",
+  "privacyRowNotif": "የማሳወቂያ ግላዊነት",
+  "privacyRowLowData": "አነስተኛ ዳታ ሁነታ",
+  "privacyRowAi": "የAI እርዳታ እና ዳታ",
+  "privacyRowExport": "ዳታዬን አውጣ",
 };

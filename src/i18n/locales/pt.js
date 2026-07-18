@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Muitas tentativas. Aguarde um momento e tente novamente.",
   "savedOnToday": "Sua oração agora está em Hoje.",
   "setReminderCta": "Definir um lembrete",
-  "replayIntro": "Rever a introdução",
-  "replayIntroSub": "Ver o tour de boas-vindas novamente.",
   "personNamePlaceholder": "Nome e sobrenome",
   "providerEmail": "Email / Senha",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Isso exclui permanentemente sua conta e todas as suas orações, testemunhos e dados. Não pode ser desfeito.",
   "deleteAccountConfirm": "Excluir conta",
   "deleteAccountDone": "Sua conta foi excluída",
-  "deleteAccountError": "Não foi possível excluir sua conta. Tente novamente.",
+  "deleteAccountError": "Não foi possível excluir sua conta. Tente novamente."
+,
   "grow": "Crescer",
   "growTitle": "Cresça na oração",
   "growSubtitle": "Aprenda a orar segundo a Palavra de Deus.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Acompanhamento · {date}",
   "resultsCount": "{n} resultados",
   "clearFiltersBtn": "Limpar filtros",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "Para hoje — dos pedidos que você carrega",
+  "intercessionNoneDue": "Nada previsto para hoje — seu ritmo cobre esses pedidos em outros dias.",
+  "intercessionAllCarried": "Ver todos os pedidos que carrego · {n}",
+  "prayAllCarriedBtn": "Orar por todos os restantes · {n}",
+  "prayAgainBtn": "Orar de novo",
+  "prayForPerson": "Orar por {name} · {n} pedidos ativos",
+  "personPrayedToday": "Você orou por {name} hoje 🙏",
+  "aboutMinutes": "Cerca de {n} min",
+  "whyThisStep": "Por que este passo?",
+  "protEncrypted": "Criptografado",
+  "addUpdateBtn": "Adicionar novidade",
+  "privacyRowOverview": "Central de privacidade",
+  "privacyRowVault": "Cofre de oração",
+  "privacyRowNotif": "Privacidade das notificações",
+  "privacyRowLowData": "Modo de economia de dados",
+  "privacyRowAi": "Assistência de IA e dados",
+  "privacyRowExport": "Exportar meus dados",
 };

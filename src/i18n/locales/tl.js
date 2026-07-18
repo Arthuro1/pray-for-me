@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Masyadong maraming pagsubok. Maghintay saglit at subukang muli.",
   "savedOnToday": "Ang iyong panalangin ay nasa \"Ngayon\" na.",
   "setReminderCta": "Magtakda ng paalala",
-  "replayIntro": "Panoorin muli ang intro",
-  "replayIntroSub": "Tingnang muli ang welcome tour.",
   "personNamePlaceholder": "Buong pangalan",
   "providerEmail": "Email / Password",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Permanenteng buburahin nito ang iyong account at lahat ng iyong panalangin, testimonya at data. Hindi ito maibabalik.",
   "deleteAccountConfirm": "Burahin ang account",
   "deleteAccountDone": "Nabura na ang iyong account",
-  "deleteAccountError": "Hindi mabura ang iyong account. Pakisubukang muli.",
+  "deleteAccountError": "Hindi mabura ang iyong account. Pakisubukang muli."
+,
   "grow": "Lumago",
   "growTitle": "Lumago sa panalangin",
   "growSubtitle": "Matutong manalangin ayon sa Salita ng Diyos.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Follow-up · {date}",
   "resultsCount": "{n} resulta",
   "clearFiltersBtn": "Alisin ang mga filter",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "Para sa araw na ito — mula sa mga kahilingang dala mo",
+  "intercessionNoneDue": "Walang nakatakda ngayon — sakop ng iyong ritmo ang mga ito sa ibang araw.",
+  "intercessionAllCarried": "Tingnan ang lahat ng kahilingang dala ko · {n}",
+  "prayAllCarriedBtn": "Ipanalangin ang lahat ng natitira · {n}",
+  "prayAgainBtn": "Manalangin muli",
+  "prayForPerson": "Ipanalangin si {name} · {n} aktibong kahilingan",
+  "personPrayedToday": "Naipanalangin mo na si {name} ngayon 🙏",
+  "aboutMinutes": "Mga {n} minuto",
+  "whyThisStep": "Bakit ang hakbang na ito?",
+  "protEncrypted": "Naka-encrypt",
+  "addUpdateBtn": "Magdagdag ng balita",
+  "privacyRowOverview": "Sentro ng privacy",
+  "privacyRowVault": "Vault ng panalangin",
+  "privacyRowNotif": "Privacy ng notification",
+  "privacyRowLowData": "Low data mode",
+  "privacyRowAi": "Tulong ng AI at data",
+  "privacyRowExport": "I-export ang aking data",
 };

@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Zu viele Versuche. Bitte warte einen Moment und versuche es erneut.",
   "savedOnToday": "Dein Gebet ist jetzt in „Heute\".",
   "setReminderCta": "Erinnerung einrichten",
-  "replayIntro": "Einführung erneut ansehen",
-  "replayIntroSub": "Die Willkommenstour erneut ansehen.",
   "personNamePlaceholder": "Vor- und Nachname",
   "providerEmail": "E-Mail / Passwort",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Dadurch werden dein Konto und alle deine Gebete, Zeugnisse und Daten dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
   "deleteAccountConfirm": "Konto löschen",
   "deleteAccountDone": "Dein Konto wurde gelöscht",
-  "deleteAccountError": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
+  "deleteAccountError": "Konto konnte nicht gelöscht werden. Bitte versuche es erneut."
+,
   "grow": "Wachsen",
   "growTitle": "Im Gebet wachsen",
   "growSubtitle": "Lerne, nach Gottes Wort zu beten.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Nachfassen · {date}",
   "resultsCount": "{n} Treffer",
   "clearFiltersBtn": "Filter zurücksetzen",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "Heute dran — aus den Anliegen, die du trägst",
+  "intercessionNoneDue": "Heute steht nichts an — dein Rhythmus deckt diese Anliegen an anderen Tagen ab.",
+  "intercessionAllCarried": "Alle Anliegen ansehen, die ich trage · {n}",
+  "prayAllCarriedBtn": "Alle verbleibenden beten · {n}",
+  "prayAgainBtn": "Noch einmal beten",
+  "prayForPerson": "Für {name} beten · {n} aktive Anliegen",
+  "personPrayedToday": "Du hast heute für {name} gebetet 🙏",
+  "aboutMinutes": "Etwa {n} Min.",
+  "whyThisStep": "Warum dieser Schritt?",
+  "protEncrypted": "Verschlüsselt",
+  "addUpdateBtn": "Neuigkeit hinzufügen",
+  "privacyRowOverview": "Datenschutz-Center",
+  "privacyRowVault": "Gebetstresor",
+  "privacyRowNotif": "Privatsphäre der Benachrichtigungen",
+  "privacyRowLowData": "Datensparmodus",
+  "privacyRowAi": "KI-Hilfe & Daten",
+  "privacyRowExport": "Meine Daten exportieren",
 };

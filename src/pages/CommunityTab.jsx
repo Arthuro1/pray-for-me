@@ -17,11 +17,13 @@ import PrayerForm from '../components/PrayerForm';
 import IntercessionQueue from '../components/IntercessionQueue';
 import GroupChecklist from '../components/GroupChecklist';
 import { setChecklistFlag } from '../lib/groupChecklist';
+import { groupListControls } from '../lib/groupTools';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import Avatar from '../components/shared/Avatar';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import ShareButtons from '../components/shared/ShareButtons';
+import Switch from '../components/shared/Switch';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { QRCodeSVG } from 'qrcode.react';
@@ -560,7 +562,8 @@ function roleErrorKey(message = '') {
 }
 
 // ── Group Admin Modal (invite friends + manage members) ──────────────────────
-export function GroupAdminModal({ lang, userId, group, onClose }) {
+// `onInviteAction` (optional) fires when a friend invitation is actually sent.
+export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }) {
   const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, setMemberRole, renameGroup } = useCommunityStore(
     useShallow((s) => ({
       fetchFriends: s.fetchFriends,
@@ -611,6 +614,7 @@ export function GroupAdminModal({ lang, userId, group, onClose }) {
     if (error) { toast.error(t(lang, 'errorGeneric')); return; }
     setInvited(prev => ({ ...prev, [friendId]: true }));
     toast.success(t(lang, 'invited'));
+    onInviteAction?.();
   };
 
   const handleRemove = async (memberId) => {
@@ -740,8 +744,11 @@ export function GroupAdminModal({ lang, userId, group, onClose }) {
   );
 }
 
-// Read-only member list, available to every group member.
-export function MembersModal({ lang, group, userId, onClose }) {
+// Read-only member list, available to every group member. `onInviteAction`
+// (optional) fires when an invitation genuinely goes OUT — link shared/copied,
+// a share target used, or the QR code displayed — never on merely opening the
+// modal, so the leader checklist's Invite step can't tick itself off early.
+export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
   const fetchGroupMembers = useCommunityStore((s) => s.fetchGroupMembers);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -757,7 +764,13 @@ export function MembersModal({ lang, group, userId, onClose }) {
     try {
       if (navigator.share) await navigator.share({ title: group.name, text: group.name, url: inviteUrl });
       else { await navigator.clipboard.writeText(inviteUrl); toast.success(t(lang, 'linkCopied')); }
+      onInviteAction?.();
     } catch { /* share dismissed */ }
+  };
+
+  const revealQR = () => {
+    setShowQR(v => !v);
+    if (!showQR) onInviteAction?.(); // showing the code to scan IS the invitation
   };
 
   return (
@@ -766,12 +779,12 @@ export function MembersModal({ lang, group, userId, onClose }) {
         <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
           <Share2 size={15} /> {t(lang, 'shareInviteLink')}
         </button>
-        <button onClick={() => setShowQR(v => !v)} title={t(lang, 'showQrCode')} className="px-3 rounded-xl flex items-center justify-center" style={{ background: showQR ? 'var(--accent)' : 'var(--accent-soft)', color: showQR ? '#fff' : 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+        <button onClick={revealQR} title={t(lang, 'showQrCode')} className="px-3 rounded-xl flex items-center justify-center" style={{ background: showQR ? 'var(--accent)' : 'var(--accent-soft)', color: showQR ? '#fff' : 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
           <QrCode size={16} />
         </button>
       </div>
 
-      <ShareButtons url={inviteUrl} text={`${t(lang, 'joinMyGroup')} "${group.name}"`} copiedLabel={t(lang, 'linkCopied')} />
+      <ShareButtons url={inviteUrl} text={`${t(lang, 'joinMyGroup')} "${group.name}"`} copiedLabel={t(lang, 'linkCopied')} onShared={onInviteAction} />
 
       {showQR && (
         <div className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>
@@ -841,6 +854,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const [showSettings, setShowSettings] = useState(false);
   const [search, setSearch] = useState('');
   const [reqFilter, setReqFilter] = useState('all');
+  // Bumped when an invite action records a checklist flag, so the checklist
+  // behind an open modal re-derives its steps.
+  const [, setChecklistVersion] = useState(0);
   const reconciledRef = useRef(null);
 
   // Always (re)fetch on entering a group so freshly synced points/updates from
@@ -865,11 +881,24 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const isAdmin = group?.role === 'admin';
   const hasPrayedInGroup = prayers.some(p => userReactions.has(p.id));
 
+  // An invitation genuinely went out (link shared/copied, QR shown, friend
+  // invited) — only then does the checklist's Invite step record itself.
+  const recordInviteAction = () => {
+    setChecklistFlag(groupId, 'invited');
+    setChecklistVersion((v) => v + 1);
+  };
+
+  // Search and status filters appear only when the group's data earns them;
+  // a hidden control's state is inert so nothing filters invisibly.
+  const controls = groupListControls(prayers);
+  const effectiveFilter = controls.statusFilter ? reqFilter : 'all';
+  const effectiveSearch = controls.search ? search : '';
+
   const filteredPrayers = prayers.filter(p => {
-    if (reqFilter === 'active' && p.is_answered) return false;
-    if (reqFilter === 'answered' && !p.is_answered) return false;
-    if (search) {
-      const q = search.toLowerCase();
+    if (effectiveFilter === 'active' && p.is_answered) return false;
+    if (effectiveFilter === 'answered' && !p.is_answered) return false;
+    if (effectiveSearch) {
+      const q = effectiveSearch.toLowerCase();
       const hay = `${p.title} ${p.description || ''} ${p.is_anonymous ? '' : p.author_name || ''}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
@@ -929,19 +958,19 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         />
       </div>
 
-      {showMembers && group && <MembersModal lang={lang} group={group} userId={user.id} onClose={() => setShowMembers(false)} />}
+      {showMembers && group && <MembersModal lang={lang} group={group} userId={user.id} onClose={() => setShowMembers(false)} onInviteAction={recordInviteAction} />}
 
       {showSettings && (
         <Modal title={t(lang, 'groupSettings')} lang={lang} onClose={() => setShowSettings(false)}>
-          <button onClick={handleToggleAutoAdd} className="flex items-start justify-between gap-3 w-full p-3 rounded-xl text-left" style={CARD_STYLE}>
+          {/* Real switch semantics (role, checked state, label, keyboard) —
+              the description stays plain text beside it, never a fake knob. */}
+          <div className="flex items-start justify-between gap-3 w-full p-3 rounded-xl" style={CARD_STYLE}>
             <span className="min-w-0">
               <span className="block text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'autoAddRequests')}</span>
               <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'autoAddRequestsSub')}</span>
             </span>
-            <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors mt-0.5" style={{ background: group?.autoAdd ? 'var(--accent)' : 'var(--input-border)' }}>
-              <span className="block w-5 h-5 rounded-full bg-white transition-transform" style={{ transform: group?.autoAdd ? 'translateX(16px)' : 'translateX(0)' }} />
-            </span>
-          </button>
+            <Switch checked={!!group?.autoAdd} onChange={handleToggleAutoAdd} label={t(lang, 'autoAddRequests')} />
+          </div>
         </Modal>
       )}
 
@@ -959,10 +988,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
       {showNewRequest && <PrayerForm communityMode onClose={() => setShowNewRequest(false)}
         onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds }) => {
-          await addPrayer({ groupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds });
+          await addPrayer({ groupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds, contentLanguage: lang });
         }} />}
 
-      {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} />}
+      {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}
 
       <div className="px-5 md:px-8 py-4 max-w-4xl mx-auto">
         <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
@@ -978,9 +1007,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             onInvite={() => setShowMembers(true)}
             onAddRequest={() => setShowNewRequest(true)}
             onPray={() => {
-              // Opening a request to pray over it is the honest "begin" —
-              // remember the step so the checklist doesn't nag afterwards.
-              setChecklistFlag(groupId, 'prayed');
+              // Open the first request to pray over it. The step completes only
+              // through a genuine prayer action ("I'm praying" → hasPrayed) —
+              // never because a detail page was merely opened.
               if (prayers[0]) onOpenPrayer(prayers[0].id);
             }}
           />
@@ -1011,21 +1040,30 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
               </div>
             )}
 
-            {prayers.length > 0 && (
+            {/* List tools appear progressively: search once the wall is long
+                enough to need it, status filters once both states exist. A
+                small young group keeps a clean page. */}
+            {(controls.search || controls.statusFilter) && (
               <div className="mb-4 space-y-2.5">
-                <div className="relative">
-                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
-                  <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
-                    className="w-full text-sm rounded-xl pl-9 pr-3 py-2.5 focus:outline-none" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }} />
-                </div>
-                <div className="flex gap-2">
-                  {['all', 'active', 'answered'].map(f => (
-                    <button key={f} onClick={() => setReqFilter(f)} className="text-xs px-3 py-1.5 rounded-full font-medium"
-                      style={reqFilter === f ? { background: 'var(--accent)', color: '#fff' } : SUBTLE_BTN}>
-                      {t(lang, f === 'all' ? 'all' : f === 'active' ? 'active' : 'answered')}
-                    </button>
-                  ))}
-                </div>
+                {controls.search && (
+                  <div className="relative">
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+                    <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
+                      aria-label={t(lang, 'searchRequests')}
+                      className="w-full text-sm rounded-xl pl-9 pr-3 py-2.5 focus:outline-none" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }} />
+                  </div>
+                )}
+                {controls.statusFilter && (
+                  <div className="flex gap-2">
+                    {['all', 'active', 'answered'].map(f => (
+                      <button key={f} onClick={() => setReqFilter(f)} aria-pressed={reqFilter === f}
+                        className="min-h-[44px] text-xs px-3 py-1.5 rounded-full font-medium"
+                        style={reqFilter === f ? { background: 'var(--accent)', color: '#fff' } : SUBTLE_BTN}>
+                        {t(lang, f === 'all' ? 'all' : f === 'active' ? 'active' : 'answered')}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

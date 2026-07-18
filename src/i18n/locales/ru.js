@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Слишком много попыток. Подождите немного и попробуйте снова.",
   "savedOnToday": "Ваша молитва теперь в разделе «Сегодня».",
   "setReminderCta": "Установить напоминание",
-  "replayIntro": "Посмотреть введение снова",
-  "replayIntroSub": "Снова посмотреть приветственный тур.",
   "personNamePlaceholder": "Имя и фамилия",
   "providerEmail": "Почта / Пароль",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "Это безвозвратно удалит ваш аккаунт и все ваши молитвы, свидетельства и данные. Это действие нельзя отменить.",
   "deleteAccountConfirm": "Удалить аккаунт",
   "deleteAccountDone": "Ваш аккаунт удалён",
-  "deleteAccountError": "Не удалось удалить аккаунт. Попробуйте ещё раз.",
+  "deleteAccountError": "Не удалось удалить аккаунт. Попробуйте ещё раз."
+,
   "grow": "Рост",
   "growTitle": "Возрастать в молитве",
   "growSubtitle": "Учитесь молиться по Слову Божьему.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "Напоминание · {date}",
   "resultsCount": "Результатов: {n}",
   "clearFiltersBtn": "Сбросить фильтры",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "На сегодня — из просьб, которые ты несёшь",
+  "intercessionNoneDue": "На сегодня ничего не запланировано — твой ритм покрывает эти просьбы в другие дни.",
+  "intercessionAllCarried": "Все просьбы, которые я несу · {n}",
+  "prayAllCarriedBtn": "Помолиться обо всех оставшихся · {n}",
+  "prayAgainBtn": "Помолиться ещё раз",
+  "prayForPerson": "Молиться о {name} · активных просьб: {n}",
+  "personPrayedToday": "Сегодня ты молился о {name} 🙏",
+  "aboutMinutes": "Около {n} мин",
+  "whyThisStep": "Почему этот шаг?",
+  "protEncrypted": "Зашифровано",
+  "addUpdateBtn": "Добавить новость",
+  "privacyRowOverview": "Центр конфиденциальности",
+  "privacyRowVault": "Молитвенный сейф",
+  "privacyRowNotif": "Конфиденциальность уведомлений",
+  "privacyRowLowData": "Режим экономии данных",
+  "privacyRowAi": "Помощь ИИ и данные",
+  "privacyRowExport": "Экспорт моих данных",
 };

@@ -45,3 +45,29 @@ describe('needsTranslationControl', () => {
     expect(needsTranslationControl('Marc', 'en')).toBe(false);
   });
 });
+
+describe('needsTranslationControl — explicit content_language metadata', () => {
+  it('a short request the heuristic cannot read still exposes translation when stamped', () => {
+    // "Trabajo" alone is undetectable — the stored language decides.
+    expect(needsTranslationControl('Trabajo', 'en', { contentLanguage: 'es' })).toBe(true);
+  });
+
+  it('explicit metadata overrides an uncertain heuristic in BOTH directions', () => {
+    // Stamped as matching → hidden, even though the text is ambiguous.
+    expect(needsTranslationControl('Marc', 'fr', { contentLanguage: 'fr' })).toBe(false);
+    // Stamped as mismatching → shown, regardless of heuristic silence.
+    expect(needsTranslationControl('Marc', 'fr', { contentLanguage: 'pt' })).toBe(true);
+  });
+
+  it('explicit metadata outranks the heuristic when both exist', () => {
+    // Text reads as French, but the author stamped it French and the reader IS
+    // French → hidden; and a stamped mismatch wins even if the heuristic
+    // would have been unsure.
+    expect(needsTranslationControl('Priez pour la santé de mon père et de la famille', 'fr', { contentLanguage: 'fr' })).toBe(false);
+  });
+
+  it('legacy rows without metadata keep the heuristic fallback', () => {
+    expect(needsTranslationControl('Молитва за мою семью и работу', 'en', { contentLanguage: null })).toBe(true);
+    expect(needsTranslationControl('Marc', 'en', { contentLanguage: null })).toBe(false);
+  });
+});

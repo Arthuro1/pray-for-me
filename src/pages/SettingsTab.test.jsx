@@ -9,7 +9,7 @@
 // #data alias) expand their section. Only French is loaded in unit tests, so
 // t() resolves to French strings.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 
 // Heavy children / side-effecting modules are stubbed — this test is about the
 // section scaffolding, not each card's internals.
@@ -96,9 +96,37 @@ describe('SettingsTab — grouped sections', () => {
   });
 
   it('personal prayers stay private by default: the preview choice defaults to generic', () => {
-    window.location.hash = '#privacy'; // expand the section so the radios are visible
+    window.location.hash = '#privacy'; // expand the section
     render(<SettingsTab />);
+    // The notification-privacy content sits behind its compact row.
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowNotif') }));
     const generic = screen.getByRole('radio', { name: t(lang, 'notifPreviewGeneric') });
     expect(generic.checked).toBe(true);
+  });
+
+  it('Privacy & Security starts COMPACT: every internal row collapsed, deletion apart at the bottom', () => {
+    window.location.hash = '#privacy';
+    render(<SettingsTab />);
+    for (const key of ['privacyRowOverview', 'privacyRowVault', 'privacyRowNotif', 'privacyRowLowData', 'privacyRowAi', 'privacyRowExport']) {
+      const row = screen.getByRole('button', { name: t(lang, key) });
+      expect(row.getAttribute('aria-expanded'), `${key} should start collapsed`).toBe('false');
+      expect(row.getAttribute('aria-controls')).toBeTruthy();
+    }
+    // Delete account stays its own separated block, not a disclosure row.
+    expect(screen.getByText(t(lang, 'dangerZone'))).toBeTruthy();
+    // A row expands on demand.
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowExport') }));
+    expect(screen.getByRole('button', { name: t(lang, 'privacyRowExport') }).getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('the low-data switch exposes real switch semantics with a label and checked state', () => {
+    window.location.hash = '#privacy';
+    render(<SettingsTab />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowLowData') }));
+    const sw = screen.getByRole('switch', { name: t(lang, 'lowDataTitle') });
+    expect(sw.getAttribute('aria-checked')).toBe('false');
+    fireEvent.click(sw);
+    expect(screen.getByRole('switch', { name: t(lang, 'lowDataTitle') }).getAttribute('aria-checked')).toBe('true');
+    expect(usePrayerStore.getState().settings.lowDataMode).toBe(true);
   });
 });

@@ -25,6 +25,7 @@ import GrowTab from './GrowTab';
 import usePrayerStore from '../store/prayerStore';
 import { guides, pick } from '../content/teaching';
 import { markGuideStarted, markGuideCompleted } from '../lib/guideProgress';
+import { guideDurationMinutes } from '../lib/guideMeta';
 import { t } from '../i18n';
 
 const lang = 'fr';
@@ -65,6 +66,25 @@ describe('GrowTab — one recommended next step', () => {
     expect(screen.getByText(pick(guides[0].title, lang))).toBeTruthy();
     // The next new guide became the recommendation.
     expect(screen.getByText(pick(guides[1].title, lang))).toBeTruthy();
+  });
+});
+
+describe('GrowTab — recommendation lives in the Pray segment only', () => {
+  it('shows the next step in Pray and an authored duration with it', () => {
+    render(<GrowTab />);
+    expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'aboutMinutes', { n: guideDurationMinutes(guides[0]) }))).toBeTruthy();
+  });
+
+  it('switching to Learn removes the guide recommendation — learning content stands alone', () => {
+    render(<GrowTab />);
+    fireEvent.click(screen.getByText(t(lang, 'growLearn')));
+    expect(screen.queryByText(t(lang, 'growNextStep'))).toBeNull();
+    expect(screen.queryByText(pick(guides[0].title, lang))).toBeNull();
+    expect(screen.getByText(t(lang, 'growLearnIntro'))).toBeTruthy();
+    // Back to Pray, the recommendation returns.
+    fireEvent.click(screen.getByText(t(lang, 'growPray')));
+    expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
   });
 });
 

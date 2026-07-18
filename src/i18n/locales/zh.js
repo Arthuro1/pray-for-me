@@ -61,8 +61,6 @@ export default {
   "authErrRate": "尝试次数过多。请稍后再试。",
   "savedOnToday": "你的祷告已加入\"今天\"。",
   "setReminderCta": "设置提醒",
-  "replayIntro": "重新观看介绍",
-  "replayIntroSub": "再次查看欢迎导览。",
   "personNamePlaceholder": "姓名",
   "providerEmail": "邮箱 / 密码",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "这将永久删除您的账户以及所有祷告、见证和数据。此操作无法撤销。",
   "deleteAccountConfirm": "删除账户",
   "deleteAccountDone": "您的账户已删除",
-  "deleteAccountError": "无法删除您的账户，请重试。",
+  "deleteAccountError": "无法删除您的账户，请重试。"
+,
   "grow": "成长",
   "growTitle": "在祷告中成长",
   "growSubtitle": "学习按照神的话语祷告。",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "跟进 · {date}",
   "resultsCount": "{n} 条结果",
   "clearFiltersBtn": "清除筛选",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "今日待祷 — 来自你所承担的代祷",
+  "intercessionNoneDue": "今天没有安排 — 你的节奏会在其他日子涵盖这些代祷。",
+  "intercessionAllCarried": "查看我承担的全部代祷 · {n}",
+  "prayAllCarriedBtn": "为其余的一并祷告 · {n}",
+  "prayAgainBtn": "再祷告一次",
+  "prayForPerson": "为{name}祷告 · {n} 个进行中的代祷",
+  "personPrayedToday": "今天你已为{name}祷告 🙏",
+  "aboutMinutes": "约 {n} 分钟",
+  "whyThisStep": "为什么有这一步？",
+  "protEncrypted": "已加密",
+  "addUpdateBtn": "添加进展",
+  "privacyRowOverview": "隐私中心",
+  "privacyRowVault": "祷告保险库",
+  "privacyRowNotif": "通知隐私",
+  "privacyRowLowData": "省流量模式",
+  "privacyRowAi": "AI 协助与数据",
+  "privacyRowExport": "导出我的数据",
 };

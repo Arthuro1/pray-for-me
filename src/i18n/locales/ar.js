@@ -61,8 +61,6 @@ export default {
   "authErrRate": "محاولات كثيرة جدًا. يرجى الانتظار قليلاً والمحاولة مرة أخرى.",
   "savedOnToday": "صلاتك الآن في \"اليوم\".",
   "setReminderCta": "ضبط تذكير",
-  "replayIntro": "إعادة مشاهدة المقدمة",
-  "replayIntroSub": "شاهد جولة الترحيب مرة أخرى.",
   "personNamePlaceholder": "الاسم الكامل",
   "providerEmail": "البريد الإلكتروني / كلمة المرور",
 
@@ -610,7 +608,8 @@ export default {
   "deleteAccountWarning": "سيؤدي هذا إلى حذف حسابك وجميع صلواتك وشهاداتك وبياناتك نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
   "deleteAccountConfirm": "حذف الحساب",
   "deleteAccountDone": "تم حذف حسابك",
-  "deleteAccountError": "تعذّر حذف حسابك. يرجى المحاولة مرة أخرى.",
+  "deleteAccountError": "تعذّر حذف حسابك. يرجى المحاولة مرة أخرى."
+,
   "grow": "النمو",
   "growTitle": "انمُ في الصلاة",
   "growSubtitle": "تعلّم أن تصلّي بحسب كلمة الله.",
@@ -798,4 +797,25 @@ export default {
   "followUpNext": "متابعة · {date}",
   "resultsCount": "{n} نتائج",
   "clearFiltersBtn": "مسح عوامل التصفية",
+
+  // Persona pass, second refinement (2026-07, AI-authored — pending native review):
+  // due-today intercession, person sessions, Grow durations & why-steps,
+  // audience/protection split, compact Privacy & Security
+  "intercessionDueSub": "لهذا اليوم — من الطلبات التي تحملها",
+  "intercessionNoneDue": "لا شيء مقرَّرًا اليوم — إيقاعك يغطي هذه الطلبات في أيام أخرى.",
+  "intercessionAllCarried": "عرض كل الطلبات التي أحملها · {n}",
+  "prayAllCarriedBtn": "صلِّ لأجل كل المتبقي · {n}",
+  "prayAgainBtn": "صلِّ مرة أخرى",
+  "prayForPerson": "صلِّ لأجل {name} · {n} طلبات نشطة",
+  "personPrayedToday": "صليتَ لأجل {name} اليوم 🙏",
+  "aboutMinutes": "نحو {n} دقائق",
+  "whyThisStep": "لماذا هذه الخطوة؟",
+  "protEncrypted": "مشفَّر",
+  "addUpdateBtn": "أضف مستجدًّا",
+  "privacyRowOverview": "مركز الخصوصية",
+  "privacyRowVault": "خزنة الصلاة",
+  "privacyRowNotif": "خصوصية الإشعارات",
+  "privacyRowLowData": "وضع توفير البيانات",
+  "privacyRowAi": "مساعدة الذكاء الاصطناعي والبيانات",
+  "privacyRowExport": "تصدير بياناتي",
 };

@@ -17,27 +17,13 @@ import VaultModal from '../components/VaultModal';
 import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
+import Switch from '../components/shared/Switch';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
 const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '1.0.0';
-
-function Toggle({ enabled, onToggle }) {
-  return (
-    <button
-      onClick={onToggle}
-      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0"
-      style={{ background: enabled ? '#7c5cfc' : '#e0d8f0' }}
-    >
-      <span
-        className="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"
-        style={{ transform: enabled ? 'translateX(24px)' : 'translateX(4px)' }}
-      />
-    </button>
-  );
-}
 
 function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
   return (
@@ -50,9 +36,38 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
             {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{sub}</p>}
           </div>
         </div>
-        {onToggle !== undefined && <Toggle enabled={enabled} onToggle={onToggle} />}
+        {onToggle !== undefined && <Switch checked={!!enabled} onChange={onToggle} label={label} />}
       </div>
       {children}
+    </div>
+  );
+}
+
+// One compact row inside Privacy & Security: label + chevron, expanding to the
+// full card content on demand. Proper disclosure semantics (aria-expanded /
+// aria-controls) and a ≥44px row — the section reads as a short list instead
+// of a long card stack.
+function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
+  return (
+    <div style={{ borderBottom: '0.5px solid var(--border-soft)' }}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={`${id}-body`}
+        className="w-full min-h-[48px] flex items-center gap-2.5 px-1 py-2 text-start"
+      >
+        <Icon size={15} className="shrink-0" style={{ color: 'var(--accent)' }} aria-hidden="true" />
+        <span className="flex-1 text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</span>
+        <ChevronDown
+          size={14}
+          aria-hidden="true"
+          style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
+        />
+      </button>
+      <div id={`${id}-body`} hidden={!open} className="px-1 pb-3">
+        {children}
+      </div>
     </div>
   );
 }
@@ -156,6 +171,9 @@ export default function SettingsTab() {
     account: false, privacy: false, notifications: false, appearance: false, support: false,
   });
   const toggleSection = (key) => setOpenSections((s) => ({ ...s, [key]: !s[key] }));
+  // Privacy & Security's internal rows start compact too — each expands alone.
+  const [openPrivacyRows, setOpenPrivacyRows] = useState({});
+  const togglePrivacyRow = (key) => setOpenPrivacyRows((s) => ({ ...s, [key]: !s[key] }));
 
   const lang = settings.language || 'fr';
   // Derived from synced settings so consent granted/revoked anywhere (another
@@ -378,183 +396,171 @@ export default function SettingsTab() {
           </div>
         </SettingsSection>
 
-        {/* ── Privacy & Security — the ONE consolidated destination ── */}
+        {/* ── Privacy & Security — the ONE consolidated destination. Inside, a
+            compact list of disclosure ROWS instead of a long card stack; only
+            Delete account stays apart, at the bottom. ── */}
         <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
-          {/* Privacy Center — plain-language explanation of storage & sharing.
-              Basic privacy is free for everyone; this is never gated. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'privacyCenterTitle')}</h3>
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'privacyCenterSub')}</p>
-            <button
-              onClick={() => setShowPrivacy(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-            >
-              <ShieldCheck size={14} />
-              {t(lang, 'privacyCenterBtn')}
-            </button>
-          </div>
-
-          {/* Prayer Vault */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              {vaultInitialized && !vaultUnlocked ? <Lock size={16} style={{ color: 'var(--accent)' }} /> : <Shield size={16} style={{ color: 'var(--accent)' }} />}
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'vaultTitle')}</h3>
-              {vaultInitialized && (
-                <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                  {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
-                </span>
-              )}
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultManageSub')}</p>
-
-            {!vaultInitialized && (
+          <div className="rounded-2xl px-3 py-1 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            {/* Privacy Center — plain-language explanation of storage & sharing.
+                Basic privacy is free for everyone; this is never gated. */}
+            <PrivacyRow id="privacy-overview" icon={ShieldCheck} label={t(lang, 'privacyRowOverview')} open={!!openPrivacyRows.overview} onToggle={() => togglePrivacyRow('overview')}>
+              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'privacyCenterSub')}</p>
               <button
-                onClick={() => setVaultMode('setup')}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+                onClick={() => setShowPrivacy(true)}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
               >
-                <Shield size={14} />
-                {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
+                <ShieldCheck size={14} />
+                {t(lang, 'privacyCenterBtn')}
               </button>
-            )}
+            </PrivacyRow>
 
-            {vaultInitialized && !vaultUnlocked && (
-              <button
-                onClick={() => setVaultMode('unlock')}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-              >
-                <Unlock size={14} />
-                {t(lang, 'vaultUnlock')}
-              </button>
-            )}
-
-            {vaultInitialized && vaultUnlocked && (
-              <>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={handleLockVault}
-                    className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                  >
-                    <Lock size={14} />
-                    {t(lang, 'vaultLockNow')}
-                  </button>
-                  <button
-                    onClick={() => setVaultMode('change')}
-                    className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                  >
-                    <KeyRound size={14} />
-                    {t(lang, 'vaultChangePass')}
-                  </button>
-                  <button
-                    onClick={() => setVaultMode('rotate')}
-                    className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                  >
-                    <RefreshCw size={14} />
-                    {t(lang, 'vaultRotateCode')}
-                  </button>
-                </div>
-                <VaultMigrationStatus lang={lang} />
-              </>
-            )}
-          </div>
-
-          {/* Notification privacy — what a push may reveal. Native radios; the
-              choice syncs account-wide and every scheduler honours it. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Bell size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPreviewTitle')}</h3>
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPreviewSub')}</p>
-            <div role="radiogroup" aria-label={t(lang, 'notifPreviewTitle')} className="space-y-1.5">
-              {[
-                { value: 'generic', labelKey: 'notifPreviewGeneric' },
-                { value: 'count', labelKey: 'notifPreviewCount' },
-              ].map(({ value, labelKey }) => (
-                <label key={value} className="flex items-center gap-2.5 min-h-[44px] px-2 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)' }}>
-                  <input
-                    type="radio"
-                    name="notification-detail"
-                    value={value}
-                    checked={(settings.notificationDetail || 'generic') === value}
-                    onChange={() => {
-                      updateSettings({ notificationDetail: value });
-                      updatePushPrefs(user?.id, { notificationDetail: value }).catch(() => { /* best-effort */ });
-                    }}
-                  />
-                  <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, labelKey)}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Low data mode — device-local; defers nonessential fetches only. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 min-w-0">
-                <WifiOff size={16} className="shrink-0" style={{ color: 'var(--accent)' }} />
-                <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'lowDataTitle')}</h3>
+            {/* Prayer Vault */}
+            <PrivacyRow id="privacy-vault" icon={vaultInitialized && !vaultUnlocked ? Lock : Shield} label={t(lang, 'privacyRowVault')} open={!!openPrivacyRows.vault} onToggle={() => togglePrivacyRow('vault')}>
+              <div className="flex items-center gap-2 mb-2">
+                <p className="text-xs flex-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultManageSub')}</p>
+                {vaultInitialized && (
+                  <span className="text-xs px-2 py-0.5 rounded-full shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                    {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
+                  </span>
+                )}
               </div>
-              <Toggle enabled={!!settings.lowDataMode} onToggle={() => updateSettings({ lowDataMode: !settings.lowDataMode })} />
-            </div>
-            <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'lowDataSub')}</p>
-          </div>
 
-          {/* Data export — your prayers belong to you. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Download size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'dataTitle')}</h3>
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
-            <button
-              onClick={handleExport}
-              disabled={prayers.length === 0}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-40"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-            >
-              <Download size={14} />
-              {t(lang, 'exportData')}
-            </button>
-          </div>
+              {!vaultInitialized && (
+                <button
+                  onClick={() => setVaultMode('setup')}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
+                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                >
+                  <Shield size={14} />
+                  {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
+                </button>
+              )}
 
-          {/* AI assistance — data use and consent. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiAboutTitle')}</h3>
-            </div>
-            <AiDisclaimer lang={lang} variant="full" className="my-3" />
-            {aiOn ? (
+              {vaultInitialized && !vaultUnlocked && (
+                <button
+                  onClick={() => setVaultMode('unlock')}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
+                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                >
+                  <Unlock size={14} />
+                  {t(lang, 'vaultUnlock')}
+                </button>
+              )}
+
+              {vaultInitialized && vaultUnlocked && (
+                <>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={handleLockVault}
+                      className="flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
+                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    >
+                      <Lock size={14} />
+                      {t(lang, 'vaultLockNow')}
+                    </button>
+                    <button
+                      onClick={() => setVaultMode('change')}
+                      className="flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
+                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    >
+                      <KeyRound size={14} />
+                      {t(lang, 'vaultChangePass')}
+                    </button>
+                    <button
+                      onClick={() => setVaultMode('rotate')}
+                      className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
+                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    >
+                      <RefreshCw size={14} />
+                      {t(lang, 'vaultRotateCode')}
+                    </button>
+                  </div>
+                  <VaultMigrationStatus lang={lang} />
+                </>
+              )}
+            </PrivacyRow>
+
+            {/* Notification privacy — what a push may reveal. Native radios; the
+                choice syncs account-wide and every scheduler honours it. Generic
+                previews stay the safest default. */}
+            <PrivacyRow id="privacy-notif" icon={Bell} label={t(lang, 'privacyRowNotif')} open={!!openPrivacyRows.notif} onToggle={() => togglePrivacyRow('notif')}>
+              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPreviewSub')}</p>
+              <div role="radiogroup" aria-label={t(lang, 'notifPreviewTitle')} className="space-y-1.5">
+                {[
+                  { value: 'generic', labelKey: 'notifPreviewGeneric' },
+                  { value: 'count', labelKey: 'notifPreviewCount' },
+                ].map(({ value, labelKey }) => (
+                  <label key={value} className="flex items-center gap-2.5 min-h-[44px] px-2 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)' }}>
+                    <input
+                      type="radio"
+                      name="notification-detail"
+                      value={value}
+                      checked={(settings.notificationDetail || 'generic') === value}
+                      onChange={() => {
+                        updateSettings({ notificationDetail: value });
+                        updatePushPrefs(user?.id, { notificationDetail: value }).catch(() => { /* best-effort */ });
+                      }}
+                    />
+                    <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, labelKey)}</span>
+                  </label>
+                ))}
+              </div>
+            </PrivacyRow>
+
+            {/* Low data mode — device-local; defers nonessential fetches only. */}
+            <PrivacyRow id="privacy-lowdata" icon={WifiOff} label={t(lang, 'privacyRowLowData')} open={!!openPrivacyRows.lowdata} onToggle={() => togglePrivacyRow('lowdata')}>
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-xs flex-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'lowDataSub')}</p>
+                <Switch
+                  checked={!!settings.lowDataMode}
+                  onChange={() => updateSettings({ lowDataMode: !settings.lowDataMode })}
+                  label={t(lang, 'lowDataTitle')}
+                />
+              </div>
+            </PrivacyRow>
+
+            {/* AI assistance — data use and consent. */}
+            <PrivacyRow id="privacy-ai" icon={Sparkles} label={t(lang, 'privacyRowAi')} open={!!openPrivacyRows.ai} onToggle={() => togglePrivacyRow('ai')}>
+              <AiDisclaimer lang={lang} variant="full" className="mb-3" />
+              {aiOn ? (
+                <button
+                  onClick={handleRevokeAi}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <Sparkles size={14} />
+                  {t(lang, 'aiRevoke')}
+                </button>
+              ) : (
+                <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
+              )}
+            </PrivacyRow>
+
+            {/* Data export — your prayers belong to you. The ONE export surface
+                (More links here; no duplicate row elsewhere). */}
+            <PrivacyRow id="privacy-export" icon={Download} label={t(lang, 'privacyRowExport')} open={!!openPrivacyRows.export} onToggle={() => togglePrivacyRow('export')}>
+              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
               <button
-                onClick={handleRevokeAi}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                onClick={handleExport}
+                disabled={prayers.length === 0}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium disabled:opacity-40"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
               >
-                <Sparkles size={14} />
-                {t(lang, 'aiRevoke')}
+                <Download size={14} />
+                {t(lang, 'exportData')}
               </button>
-            ) : (
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
-            )}
+            </PrivacyRow>
           </div>
 
-          {/* Danger zone — irreversible account deletion (right to erasure), kept
-              apart at the bottom of the section and gated by ConfirmDialog. */}
+          {/* Danger zone — irreversible account deletion (right to erasure),
+              kept APART at the bottom of the section and gated by ConfirmDialog. */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid #f0d0d0' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#c04040' }}>{t(lang, 'dangerZone')}</p>
             <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'deleteAccountSub')}</p>
             <button
               onClick={handleDeleteAccount}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
               style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
             >
               <Trash2 size={14} />
@@ -721,16 +727,6 @@ export default function SettingsTab() {
             >
               <MessageSquare size={14} />
               {t(lang, 'feedbackBtn')}
-            </button>
-            {/* Replay the welcome intro — reassuring for anyone who skipped it or
-                wants a refresher. App listens for this event and reopens onboarding. */}
-            <button
-              onClick={() => window.dispatchEvent(new Event('pfm:replay-onboarding'))}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 mt-2 text-sm font-medium"
-              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-            >
-              <Sparkles size={14} />
-              {t(lang, 'replayIntro')}
             </button>
           </div>
 

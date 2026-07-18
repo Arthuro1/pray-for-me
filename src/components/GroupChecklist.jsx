@@ -33,7 +33,13 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
   const steps = checklistSteps({ memberCount, requestCount, hasPrayed, flags });
   if (!checklistVisible(group.id, steps)) return null;
 
-  const actions = { invite: onInvite, request: onAddRequest, pray: onPray };
+  // Valid sequencing: with no request yet there is nothing to pray over, so
+  // "Begin praying" routes to adding the first request instead of pretending.
+  const actions = {
+    invite: onInvite,
+    request: onAddRequest,
+    pray: requestCount > 0 ? onPray : onAddRequest,
+  };
 
   return (
     <div className="rounded-2xl p-4 mb-5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>

@@ -61,8 +61,6 @@ export default {
   "authErrRate": "Trop de tentatives. Patientez un instant avant de réessayer.",
   "savedOnToday": "Votre prière est maintenant dans Aujourd'hui.",
   "setReminderCta": "Définir un rappel",
-  "replayIntro": "Revoir l'introduction",
-  "replayIntroSub": "Revoir le tour de bienvenue.",
   "personNamePlaceholder": "Prénom et nom",
   "providerEmail": "Email / Mot de passe",
 
@@ -800,4 +798,25 @@ export default {
   "followUpNext": "Suivi · {date}",
   "resultsCount": "{n} résultats",
   "clearFiltersBtn": "Effacer les filtres",
+
+  // Persona pass, second refinement (2026-07): due-today intercession, person
+  // sessions, Grow durations & why-steps, audience/protection split, schedule
+  // in overflow, compact Privacy & Security
+  "intercessionDueSub": "À prier aujourd'hui — parmi les sujets que tu portes",
+  "intercessionNoneDue": "Rien n'est prévu aujourd'hui — ton rythme couvre ces sujets d'autres jours.",
+  "intercessionAllCarried": "Voir tous les sujets que je porte · {n}",
+  "prayAllCarriedBtn": "Prier tous les sujets restants · {n}",
+  "prayAgainBtn": "Prier encore",
+  "prayForPerson": "Prier pour {name} · {n} sujets actifs",
+  "personPrayedToday": "Tu as prié pour {name} aujourd'hui 🙏",
+  "aboutMinutes": "Environ {n} min",
+  "whyThisStep": "Pourquoi cette étape ?",
+  "protEncrypted": "Chiffré",
+  "addUpdateBtn": "Ajouter une nouvelle",
+  "privacyRowOverview": "Centre de confidentialité",
+  "privacyRowVault": "Coffre de prière",
+  "privacyRowNotif": "Confidentialité des notifications",
+  "privacyRowLowData": "Mode économie de données",
+  "privacyRowAi": "Assistance IA et données",
+  "privacyRowExport": "Exporter mes données",
 };

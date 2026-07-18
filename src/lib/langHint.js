@@ -60,9 +60,13 @@ export function contentLangHint(text) {
 }
 
 // Should the translation control be offered for this content in this UI
-// language? True on a confident mismatch, or when a translation for the text
-// already exists (someone translated it before — a mismatch by definition).
-export function needsTranslationControl(text, uiLang, { hasCachedTranslation = false } = {}) {
+// language? Explicit stored metadata (`contentLanguage`, stamped at creation)
+// is authoritative and decides even for the short requests the heuristic can't
+// read. Without it: true on a confident heuristic mismatch, or when a
+// translation for the text already exists (someone translated it before — a
+// mismatch by definition).
+export function needsTranslationControl(text, uiLang, { contentLanguage = null, hasCachedTranslation = false } = {}) {
+  if (contentLanguage) return contentLanguage !== uiLang;
   if (hasCachedTranslation) return true;
   const hint = contentLangHint(text);
   return !!hint && !hint.includes(uiLang);

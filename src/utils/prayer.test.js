@@ -8,6 +8,8 @@ describe('communityToPersonalInsert', () => {
       user_id: 'u1', title: 'Heal', description: 'd', status: 'active',
       community_origin_id: 'c1', origin_author_name: 'Marie',
       origin_is_anonymous: false, origin_group_name: 'Cell',
+      // Legacy rows carry no source-language metadata → null (heuristic fallback).
+      content_language: null,
     });
   });
   it('drops the author name when anonymous and defaults missing description', () => {

@@ -12,14 +12,16 @@ import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
 import Avatar from '../components/shared/Avatar';
-import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check } from 'lucide-react';
 import { t } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
 import { weeklyRecap } from '../utils/recap';
-import { peopleFromPrayers, peopleViewAvailable } from '../lib/people';
+import { peopleFromPrayers, peopleViewAvailable, personSession } from '../lib/people';
 import { usePrayerActions } from '../hooks/usePrayerActions';
+import { todayKey } from '../lib/prayedLog';
+import PrayerSession from '../components/PrayerSession';
 
 // The Journal: every request and its history, in two simple segments — Active
 // and Answered. Search hides behind an icon, the category filter only exists
@@ -29,8 +31,8 @@ import { usePrayerActions } from '../hooks/usePrayerActions';
 // ("N results"); the segments already carry the real totals.
 export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
-  const { prayers, categories, settings, loading } = usePrayerStore(
-    useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings, loading: s.loading }))
+  const { prayers, categories, settings, loading, completions, markPrayedOn } = usePrayerStore(
+    useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings, loading: s.loading, completions: s.completions, markPrayedOn: s.markPrayedOn }))
   );
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
@@ -54,6 +56,9 @@ export default function PrayersTab({ onAdd }) {
   // they're for. Only offered when enough person data exists.
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  // Snapshot of a person-scoped session, fixed when it starts — completions
+  // recorded mid-session must not reshuffle the walk.
+  const [personSessionPrayers, setPersonSessionPrayers] = useState(null);
 
   const activeCount = prayers.filter((p) => p.status === 'active').length;
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
@@ -215,6 +220,16 @@ export default function PrayersTab({ onAdd }) {
           personDetail ? (
             // ── One person's related prayers — not a separate profile page ──
             <>
+              {personSessionPrayers && personSessionPrayers.length > 0 && (
+                <PrayerSession
+                  prayers={personSessionPrayers}
+                  categories={categories}
+                  lang={lang}
+                  tr={tr}
+                  onClose={() => setPersonSessionPrayers(null)}
+                  onPrayed={(id) => markPrayedOn(id, todayKey())}
+                />
+              )}
               <button
                 onClick={() => setSelectedPerson(null)}
                 className="flex items-center gap-2 min-h-[44px] text-sm font-medium mb-2"
@@ -231,6 +246,42 @@ export default function PrayersTab({ onAdd }) {
                   </p>
                 </div>
               </div>
+
+              {/* ONE contextual action: pray for this person now, over their
+                  active prayers not yet prayed today. Same session, same
+                  per-prayer completion log as Today — leaving midway keeps
+                  progress and reopening resumes with the first unfinished. */}
+              {(() => {
+                const { active, remaining } = personSession(personDetail, completions, todayKey());
+                if (active.length === 0) return null;
+                if (remaining.length === 0) {
+                  return (
+                    <div className="flex items-center gap-3 rounded-2xl px-4 py-1 mb-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+                      <p className="flex-1 min-h-[44px] flex items-center gap-2 text-sm" style={{ color: 'var(--success)' }} role="status">
+                        <Check size={15} aria-hidden="true" /> {t(lang, 'personPrayedToday', { name: personDetail.name })}
+                      </p>
+                      <button
+                        onClick={() => setPersonSessionPrayers(active)}
+                        className="min-h-[44px] shrink-0 text-xs font-medium px-3 rounded-xl"
+                        style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      >
+                        {t(lang, 'prayAgainBtn')}
+                      </button>
+                    </div>
+                  );
+                }
+                return (
+                  <button
+                    onClick={() => setPersonSessionPrayers(remaining)}
+                    className="w-full flex items-center justify-center gap-2 py-3.5 mb-4 rounded-2xl text-sm font-semibold text-white transition-all active:scale-95"
+                    style={{ background: 'var(--accent)' }}
+                  >
+                    <HandHeart size={16} aria-hidden="true" />
+                    {t(lang, 'prayForPerson', { name: personDetail.name, n: remaining.length })}
+                  </button>
+                );
+              })()}
+
               <div className="flex flex-col gap-3 pb-6">
                 {[...personDetail.prayers]
                   .sort((a, b) => (a.status === b.status ? 0 : a.status === 'active' ? -1 : 1))

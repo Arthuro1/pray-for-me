@@ -7,6 +7,7 @@ import { useLocalizedArticles } from '../hooks/useLocalizedArticles';
 import { useLocalizedGuides } from '../hooks/useLocalizedGuides';
 import { useLocalizedJourney } from '../hooks/useLocalizedJourney';
 import { getGuideProgress, markGuideStarted, markGuideCompleted, recommendNext, completedGuides } from '../lib/guideProgress';
+import { guideDurationMinutes } from '../lib/guideMeta';
 import GuideReader from '../components/GuideReader';
 import ArticleReader from '../components/ArticleReader';
 import GospelJourneyReader from '../components/GospelJourneyReader';
@@ -14,7 +15,7 @@ import GospelJourneyReader from '../components/GospelJourneyReader';
 // A guide/article row. Top-level (not defined inside GrowTab) so React keeps
 // the DOM node across re-renders — an inline component type would remount on
 // every state change and drop keyboard focus.
-function ItemCard({ item, lang, onOpen, done }) {
+function ItemCard({ item, lang, onOpen, done, durationLabel }) {
   return (
     <button
       onClick={onOpen}
@@ -28,6 +29,9 @@ function ItemCard({ item, lang, onOpen, done }) {
           {done && <Check size={13} aria-hidden="true" style={{ color: 'var(--success)' }} />}
         </span>
         <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-3)' }}>{pick(item.summary, lang)}</span>
+        {durationLabel && (
+          <span className="block text-xs mt-1 font-medium" style={{ color: 'var(--accent)' }}>{durationLabel}</span>
+        )}
       </span>
       <ChevronRight size={16} className="shrink-0 mt-1 opacity-50" style={{ color: 'var(--text-3)' }} />
     </button>
@@ -142,32 +146,6 @@ export default function GrowTab({ onCreatePrayer }) {
       </div>
 
       <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
-        {/* ONE recommended next step, from existing progress — an in-progress
-            guide always outranks anything new. */}
-        {recommendation && (
-          <div className="mb-5">
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
-              {t(lang, 'growNextStep')}
-            </p>
-            <button
-              onClick={() => setOpenGuide(recommendation.guide)}
-              className="w-full text-left rounded-2xl p-4 flex items-start gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100"
-              style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
-            >
-              <span className="text-2xl shrink-0 leading-none mt-0.5">{recommendation.guide.emoji}</span>
-              <span className="flex-1 min-w-0">
-                <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
-                  {pick(recommendation.guide.title, lang)}
-                </span>
-                <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>
-                  {t(lang, REC_DESC_KEYS[recommendation.type])}
-                </span>
-              </span>
-              <ChevronRight size={16} className="shrink-0 mt-1" style={{ color: 'var(--accent)' }} />
-            </button>
-          </div>
-        )}
-
         {/* Segmented toggle: pray through vs. learn */}
         <div className="flex gap-1 p-1 rounded-2xl mb-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           {[
@@ -193,6 +171,38 @@ export default function GrowTab({ onCreatePrayer }) {
 
         {view === 'pray' ? (
           <>
+            {/* ONE recommended next step, from existing progress — an
+                in-progress guide always outranks anything new. It lives INSIDE
+                the Pray segment so Learn stays focused on learning content. */}
+            {recommendation && (
+              <div className="mb-5">
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+                  {t(lang, 'growNextStep')}
+                </p>
+                <button
+                  onClick={() => setOpenGuide(recommendation.guide)}
+                  className="w-full text-left rounded-2xl p-4 flex items-start gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100"
+                  style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
+                >
+                  <span className="text-2xl shrink-0 leading-none mt-0.5">{recommendation.guide.emoji}</span>
+                  <span className="flex-1 min-w-0">
+                    <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+                      {pick(recommendation.guide.title, lang)}
+                    </span>
+                    <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                      {t(lang, REC_DESC_KEYS[recommendation.type])}
+                    </span>
+                    {guideDurationMinutes(recommendation.guide) && (
+                      <span className="block text-xs mt-1 font-medium" style={{ color: 'var(--accent)' }}>
+                        {t(lang, 'aboutMinutes', { n: guideDurationMinutes(recommendation.guide) })}
+                      </span>
+                    )}
+                  </span>
+                  <ChevronRight size={16} className="shrink-0 mt-1" style={{ color: 'var(--accent)' }} />
+                </button>
+              </div>
+            )}
+
             {/* Browsing the whole library is the SECONDARY action; the next
                 step above already carries the primary invitation. */}
             {browsable.length > 0 && (
@@ -201,7 +211,8 @@ export default function GrowTab({ onCreatePrayer }) {
                 {browseOpen && (
                   <div id="grow-browse" className="flex flex-col gap-3 mb-2">
                     {browsable.map((item) => (
-                      <ItemCard key={item.id} item={item} lang={lang} onOpen={() => setOpenGuide(item)} />
+                      <ItemCard key={item.id} item={item} lang={lang} onOpen={() => setOpenGuide(item)}
+                        durationLabel={guideDurationMinutes(item) ? t(lang, 'aboutMinutes', { n: guideDurationMinutes(item) }) : null} />
                     ))}
                   </div>
                 )}

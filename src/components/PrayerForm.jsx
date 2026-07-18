@@ -11,7 +11,7 @@ import { toast } from '../store/toastStore';
 import { canEncrypt } from '../lib/crypto/prayerCrypto';
 import useCommunityStore from '../store/communityStore';
 import AudienceBadge from './shared/AudienceBadge';
-import { audienceOf } from '../lib/audience';
+import { audienceOf, protectionOf } from '../lib/audience';
 import PrayerSavedStep from './PrayerSavedStep';
 import ScheduleEditor from './ScheduleEditor';
 import CategorySelector from './CategorySelector';
@@ -395,10 +395,11 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
             </div>
           )}
 
-          {/* Where this prayer will be visible — stated in the form, not after. */}
+          {/* Where this prayer will be visible — stated in the form, not after.
+              Encryption shows as a quiet separate status, never as an audience. */}
           {formAudience && (
             <div className="pt-1">
-              <AudienceBadge audience={formAudience} lang={lang} />
+              <AudienceBadge audience={formAudience} protection={protectionOf(editPrayer || {})} lang={lang} />
             </div>
           )}
 

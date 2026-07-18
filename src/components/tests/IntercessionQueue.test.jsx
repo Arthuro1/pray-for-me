@@ -19,6 +19,7 @@ vi.mock('../../lib/mutationQueue', () => ({
 
 import IntercessionQueue from '../IntercessionQueue';
 import usePrayerStore from '../../store/prayerStore';
+import useCommunityStore from '../../store/communityStore';
 import { todayKey } from '../../lib/prayedLog';
 import { t } from '../../i18n';
 
@@ -36,7 +37,12 @@ afterEach(cleanup);
 beforeEach(() => {
   localStorage.clear();
   usePrayerStore.setState({ prayers: [], categories: [], completions: {}, userId: 'u1', settings: { language: lang } });
+  useCommunityStore.setState({ myCommitments: [] });
 });
+
+// A weekly schedule on a weekday other than today's — never due on dayKey.
+const notTodayWeekday = (new Date().getDay() + 3) % 7;
+const weeklyElsewhere = { type: 'recurring', freq: 'weekly', weekDays: [notTodayWeekday], startDate: '2026-01-01' };
 
 describe('IntercessionQueue — membership', () => {
   it('renders nothing when no request was explicitly taken on', () => {
@@ -88,10 +94,43 @@ describe('IntercessionQueue — session & resume', () => {
     expect(screen.queryByText('Sujet b')).toBeNull();
   });
 
-  it('shows a quiet done state when everything was prayed today', () => {
+  it('collapses to a compact status row when everything due was prayed today', () => {
     usePrayerStore.setState({ prayers: [forOther('b')], completions: { b: [dayKey] } });
     render(<IntercessionQueue lang={lang} />);
     expect(screen.getByText(t(lang, 'intercessionDone'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'praySharedBtn'))).toBeNull();
+    // The full dashboard card retires — no title, no subtitle — until expanded.
+    expect(screen.queryByText(t(lang, 'intercessionTitle'))).toBeNull();
+    fireEvent.click(screen.getByText(t(lang, 'intercessionDone')));
+    expect(screen.getByText(t(lang, 'intercessionTitle'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'prayAgainBtn'))).toBeTruthy();
+  });
+});
+
+describe('IntercessionQueue — schedule-aware default', () => {
+  it('excludes a weekly request not due today from the default queue but keeps it behind the disclosure', () => {
+    usePrayerStore.setState({ prayers: [forOther('b'), { ...saved('c'), schedule: weeklyElsewhere }] });
+    render(<IntercessionQueue lang={lang} />);
+    // Only the due (legacy daily) request counts toward today's session.
+    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+    const disclosure = screen.getByText(t(lang, 'intercessionAllCarried', { n: 2 }));
+    fireEvent.click(disclosure);
+    // Every carried request is listed, including the not-due one.
+    expect(screen.getByText('Sujet c')).toBeTruthy();
+    expect(screen.getByText('Sujet b')).toBeTruthy();
+  });
+
+  it('a prayer-chain claim for today pulls its saved copy into the due queue', () => {
+    usePrayerStore.setState({ prayers: [{ ...saved('c'), schedule: weeklyElsewhere }] });
+    useCommunityStore.setState({ myCommitments: [{ community_prayer_id: 'c-c', day: dayKey }] });
+    render(<IntercessionQueue lang={lang} />);
+    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+  });
+
+  it('renders nothing at all only when nothing is carried — a not-due-only queue still shows the disclosure', () => {
+    usePrayerStore.setState({ prayers: [{ ...saved('c'), schedule: weeklyElsewhere }] });
+    render(<IntercessionQueue lang={lang} />);
+    expect(screen.getByText(t(lang, 'intercessionAllCarried', { n: 1 }))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'praySharedBtn'))).toBeNull();
   });
 });

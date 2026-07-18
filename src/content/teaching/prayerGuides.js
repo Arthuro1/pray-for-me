@@ -10,6 +10,7 @@ const guides = [
   {
     id: 'acts',
     emoji: '🙌',
+    minutes: 8, // authored duration — shown as "About N min"
     theme: 'foundations',
     title: { en: 'The ACTS pattern', fr: 'Le modèle ACTS' },
     summary: {
@@ -27,6 +28,12 @@ const guides = [
           en: 'Praise God for who He is, not only what He gives. Read the psalm slowly and turn its words back to Him.',
           fr: 'Loue Dieu pour ce qu\'il est, pas seulement pour ce qu\'il donne. Lis lentement le psaume et renvoie-lui ses paroles.',
         },
+        // Authored "why this step" — one or two sentences, shown behind a
+        // collapsed disclosure in the reader. Optional per step.
+        why: {
+          en: 'Beginning with who God is lifts prayer above our worries and reminds us who we are speaking to. Scripture\'s prayers almost always start here.',
+          fr: 'Commencer par qui Dieu est élève la prière au-dessus de nos soucis et nous rappelle à qui nous parlons. Les prières de l\'Écriture commencent presque toujours ici.',
+        },
         passage: 'Psalm 145:1-7',
       },
       {
@@ -34,6 +41,10 @@ const guides = [
         prompt: {
           en: 'Agree with God about your sin honestly. He is faithful and just to forgive — confession is coming home, not earning love.',
           fr: 'Reconnais ton péché honnêtement devant Dieu. Il est fidèle et juste pour pardonner — la confession est un retour à la maison, non un mérite à gagner.',
+        },
+        why: {
+          en: 'Honesty about sin clears the way for everything that follows — we ask freely because we come forgiven, not hiding.',
+          fr: 'L\'honnêteté sur le péché ouvre le chemin de tout ce qui suit — nous demandons librement parce que nous venons pardonnés, sans rien cacher.',
         },
         passage: '1 John 1:8-9',
       },
@@ -43,6 +54,10 @@ const guides = [
           en: 'Name specific mercies from today and this week. Gratitude steadies the heart before it asks for anything.',
           fr: 'Nomme des grâces précises d\'aujourd\'hui et de cette semaine. La reconnaissance affermit le cœur avant même de demander quoi que ce soit.',
         },
+        why: {
+          en: 'Remembering what God has already done builds faith for what we are about to ask. Gratitude turns requests into trust.',
+          fr: 'Se souvenir de ce que Dieu a déjà fait fortifie la foi pour ce que nous allons demander. La reconnaissance transforme la demande en confiance.',
+        },
         passage: 'Psalm 103:1-5',
       },
       {
@@ -50,6 +65,10 @@ const guides = [
         prompt: {
           en: 'Now bring your requests — for yourself and others — with confidence, because of who He is. Pray through the burdens on your heart.',
           fr: 'Apporte maintenant tes demandes — pour toi et pour les autres — avec assurance, à cause de qui il est. Présente les fardeaux de ton cœur.',
+        },
+        why: {
+          en: 'Requests come last not because they matter least, but because hearts anchored in praise, honesty and gratitude ask more freely.',
+          fr: 'Les demandes viennent en dernier non parce qu\'elles comptent moins, mais parce qu\'un cœur ancré dans la louange, l\'honnêteté et la reconnaissance demande plus librement.',
         },
         passage: 'Philippians 4:6-7',
       },
@@ -59,6 +78,7 @@ const guides = [
   {
     id: 'psalms',
     emoji: '📖',
+    minutes: 6, // authored duration — shown as "About N min"
     theme: 'scripture',
     title: { en: 'Praying through the Psalms', fr: 'Prier à travers les Psaumes' },
     summary: {
@@ -75,6 +95,10 @@ const guides = [
         prompt: {
           en: 'Read the psalm once, slowly, just listening. Notice what the writer says to God and about God.',
           fr: 'Lis le psaume une fois, lentement, en écoutant simplement. Remarque ce que l\'auteur dit à Dieu et sur Dieu.',
+        },
+        why: {
+          en: 'Listening before speaking lets God set the tone of the prayer. The psalm gives us words we would not have found ourselves.',
+          fr: 'Écouter avant de parler laisse Dieu donner le ton de la prière. Le psaume nous offre des mots que nous n\'aurions pas trouvés seuls.',
         },
         passage: 'Psalm 27',
       },
@@ -98,6 +122,7 @@ const guides = [
   {
     id: 'scripture',
     emoji: '✍️',
+    minutes: 6, // authored duration — shown as "About N min"
     theme: 'scripture',
     title: { en: 'Praying Scripture', fr: 'Prier la Parole' },
     summary: {
@@ -137,6 +162,7 @@ const guides = [
   {
     id: 'promises',
     emoji: '🌿',
+    minutes: 6, // authored duration — shown as "About N min"
     theme: 'scripture',
     title: { en: 'Praying God\'s promises', fr: 'Prier les promesses de Dieu' },
     summary: {
@@ -177,6 +203,7 @@ const guides = [
   {
     id: 'wisdom',
     emoji: '🧭',
+    minutes: 5, // authored duration — shown as "About N min"
     theme: 'requests',
     title: { en: 'Praying for wisdom', fr: 'Prier pour la sagesse' },
     summary: {
@@ -218,6 +245,7 @@ const guides = [
   {
     id: 'enemies',
     emoji: '🕊️',
+    minutes: 5, // authored duration — shown as "About N min"
     theme: 'others',
     title: { en: 'Praying for enemies', fr: 'Prier pour ses ennemis' },
     summary: {
@@ -258,6 +286,7 @@ const guides = [
   {
     id: 'authorities',
     emoji: '🏛️',
+    minutes: 5, // authored duration — shown as "About N min"
     theme: 'others',
     title: { en: 'Praying for those in authority', fr: 'Prier pour les autorités' },
     summary: {
@@ -298,6 +327,7 @@ const guides = [
   {
     id: 'missionaries',
     emoji: '🌍',
+    minutes: 6, // authored duration — shown as "About N min"
     theme: 'others',
     title: { en: 'Praying for missionaries', fr: 'Prier pour les missionnaires' },
     summary: {
@@ -338,6 +368,7 @@ const guides = [
   {
     id: 'church',
     emoji: '⛪',
+    minutes: 6, // authored duration — shown as "About N min"
     theme: 'others',
     title: { en: 'Praying for your local church', fr: 'Prier pour ton Église locale' },
     summary: {
@@ -379,6 +410,7 @@ const guides = [
   {
     id: 'unbelievers',
     emoji: '💬',
+    minutes: 5, // authored duration — shown as "About N min"
     theme: 'others',
     title: { en: 'Praying for those who don\'t yet believe', fr: 'Prier pour ceux qui ne croient pas encore' },
     summary: {
@@ -419,6 +451,7 @@ const guides = [
   {
     id: 'suffering',
     emoji: '🌧️',
+    minutes: 6, // authored duration — shown as "About N min"
     theme: 'seasons',
     title: { en: 'Praying in suffering', fr: 'Prier dans la souffrance' },
     summary: {
@@ -460,6 +493,7 @@ const guides = [
   {
     id: 'temptation',
     emoji: '🛡️',
+    minutes: 5, // authored duration — shown as "About N min"
     theme: 'seasons',
     title: { en: 'Praying in temptation', fr: 'Prier dans la tentation' },
     summary: {

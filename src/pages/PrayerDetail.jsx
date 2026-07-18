@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -38,9 +38,9 @@ import AudienceBadge from '../components/shared/AudienceBadge';
 import PrayerSession from '../components/PrayerSession';
 import FollowUpField from '../components/FollowUpField';
 import useFollowUpStore from '../store/followUpStore';
-import { audienceOf } from '../lib/audience';
+import { audienceOf, protectionOf } from '../lib/audience';
 import { needsTranslationControl } from '../lib/langHint';
-import { getTranslationPref, setTranslationPref } from '../lib/translationPrefs';
+import { getTranslationPref, setTranslationPref, prayerScope } from '../lib/translationPrefs';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
@@ -50,14 +50,13 @@ import OverflowMenu from '../components/shared/OverflowMenu';
 // One verse pill in the point list. Verses are stored in the prayer's creation
 // language; useLocalizedVerse swaps in authoritative text + a localized reference
 // for the current language when one exists (offline bundle / YouVersion, never
-// AI-translated), else we keep the stored reference and wording together so the
-// citation always matches the text it labels. `loc` still governs the fallback
-// text so community prayers honour the "see translation" toggle; removal keeps the
-// ORIGINAL reference the row was stored with.
-function PrayerDetailVerse({ verse, lang, loc, canRemove, onRemove }) {
+// AI-translated). Otherwise the STORED reference and wording stay together as
+// one consistent pair — Scripture is never routed through the AI translation
+// toggle, so the citation always matches authoritative text.
+function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
   const resolved = useLocalizedVerse(verse.ref, lang);
   const ref = resolved?.ref ?? verse.ref;
-  const text = resolved?.text ?? loc(verse.text);
+  const text = resolved?.text ?? verse.text;
 
   return (
     <div className="group/verse inline-flex items-start gap-1">
@@ -113,6 +112,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showPraySession, setShowPraySession] = useState(false);
   // Inline per-prayer follow-up editor (pastoral "check back on this" date).
   const [showFollowUpEdit, setShowFollowUpEdit] = useState(false);
+  // Schedule editor, opened from the overflow menu — never a permanently
+  // expanded configuration card in the main flow.
+  const [showScheduleEdit, setShowScheduleEdit] = useState(false);
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -217,7 +219,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   }, [communityPrayer?.id, isCommunity]);
 
   const handleSendWord = async (text, isAnonymous) => {
-    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous });
+    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous, contentLanguage: lang });
     // Re-fetch so the timeline reflects the (possibly synced) update.
     setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
   };
@@ -237,7 +239,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handlePostCommunityTestimony = async () => {
     if (!communityTestimonyText.trim() || postingTestimony) return;
     setPostingTestimony(true);
-    await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: communityTestimonyText.trim(), isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id });
+    await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: communityTestimonyText.trim(), isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id, contentLanguage: lang });
     setTestimonySent(true);
     setPostingTestimony(false);
     setShowCommunityTestimony(false);
@@ -252,7 +254,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleConfirmCommunityAnswered = async () => {
     await setCommunityAnswered(communityPrayer.id, true);
     if (testimony.trim()) {
-      await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: testimony.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id });
+      await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: testimony.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id, contentLanguage: lang });
       setTestimony('');
       setTestimonySent(true);
     }
@@ -296,8 +298,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Clear pending AI suggestions when language changes so user can re-generate in new language
   useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
 
-  // Reset the community translation toggle when the prayer or language changes
-  useEffect(() => { setShowTranslated(false); }, [communityPrayer?.id, lang]);
+  // Reset the translation toggle when the prayer or language changes
+  useEffect(() => { setShowTranslated(false); }, [communityPrayer?.id, prayer?.id, lang]);
 
   // For a prayer saved from the community, pull the author's/group's latest
   // shared content into this copy on open (one-way follow).
@@ -342,50 +344,65 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // a saved-from-community copy is read-only (you follow the author's prayer).
   const canManage = !savedCopy;
 
-  // Personal content auto-translates; community content translates on demand
-  // (the "See translation" toggle) so members can read requests in any language.
+  // The translation control appears only on a KNOWN or probable language
+  // mismatch — explicit `content_language` metadata (stamped at creation, so
+  // even a three-word request is covered) decides first, the on-device
+  // heuristic and any already-cached translation are the fallback for legacy
+  // rows. Applies to BOTH community requests and personal prayers.
+  const translationRelevant = !livePrayer._locked && needsTranslationControl(
+    [livePrayer.title, livePrayer.description].filter(Boolean).join(' '),
+    lang,
+    {
+      contentLanguage: livePrayer.content_language || null,
+      hasCachedTranslation: !!livePrayer.title && tr(livePrayer.title, lang) !== livePrayer.title,
+    }
+  );
+
+  // Where the remembered display choice lives: per group for community
+  // requests, per prayer for personal ones.
+  const translationPrefScope = isCommunity ? communityPrayer?.group_id : prayerScope(prayer?.id);
+
+  // On a detected mismatch the ORIGINAL leads and translation is opt-in (and
+  // clearly labelled); the toggle always returns to the original. Without a
+  // mismatch, personal content keeps its cached-translation lookup (a no-op
+  // for same-language content) and community content shows as written.
   const loc = (text) => {
     if (!text) return text;
-    if (!isCommunity) return tr(text, lang);
-    return showTranslated ? tr(text, lang) : text;
+    if (translationRelevant) return showTranslated ? tr(text, lang) : text;
+    return isCommunity ? text : tr(text, lang);
   };
 
   const handleToggleTranslate = async () => {
     if (showTranslated) {
       setShowTranslated(false);
-      setTranslationPref(communityPrayer?.group_id, 'original');
+      setTranslationPref(translationPrefScope, 'original');
       return;
     }
+    // Scripture is EXCLUDED: verse text never goes through AI translation —
+    // authoritative verse text comes from useLocalizedVerse (bundle /
+    // YouVersion) or stays with its original reference.
     const texts = [livePrayer.title, livePrayer.description];
-    (livePrayer.prayer_points || []).forEach(pp => {
-      texts.push(pp.title, pp.verse_text);
-      (pp.verses || []).forEach(v => texts.push(v.text));
-    });
-    communityUpdates.forEach(u => texts.push(u.text));
-    prayerTestimonies.forEach(tm => texts.push(tm.content));
-    await translateTexts(texts.filter(Boolean), lang, user?.id, communityPrayer?.group_id);
+    (livePrayer.prayer_points || []).forEach(pp => texts.push(pp.title));
+    if (isCommunity) {
+      communityUpdates.forEach(u => texts.push(u.text));
+      prayerTestimonies.forEach(tm => texts.push(tm.content));
+    } else {
+      allUpdates.forEach(u => texts.push(u.text));
+      personalTestimonies.forEach(tm => texts.push(tm.content));
+    }
+    await translateTexts(texts.filter(Boolean), lang, user?.id, isCommunity ? communityPrayer?.group_id : null);
     setShowTranslated(true);
-    setTranslationPref(communityPrayer?.group_id, 'translated');
+    setTranslationPref(translationPrefScope, 'translated');
   };
 
-  // The translation control appears only when the content is plausibly in a
-  // DIFFERENT language than the interface (on-device hint, or a translation of
-  // this title already exists) — a monolingual group never sees it. The
-  // original is never replaced: the toggle always goes back to it.
-  const translationRelevant = isCommunity && !livePrayer._locked && needsTranslationControl(
-    [livePrayer.title, livePrayer.description].filter(Boolean).join(' '),
-    lang,
-    { hasCachedTranslation: !!livePrayer.title && tr(livePrayer.title, lang) !== livePrayer.title }
-  );
-
-  // Apply the group's remembered display preference when opening a request in
-  // that group (cheap: earlier translations are already cached group-wide).
+  // Apply the scope's remembered display preference on open (cheap: earlier
+  // translations are already cached — group-wide for community requests).
   useEffect(() => {
-    if (!isCommunity || !translationRelevant || showTranslated) return;
-    if (getTranslationPref(communityPrayer.group_id) !== 'translated') return;
+    if (!translationRelevant || showTranslated) return;
+    if (getTranslationPref(translationPrefScope) !== 'translated') return;
     handleToggleTranslate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [communityPrayer?.id, lang, translationRelevant]);
+  }, [communityPrayer?.id, prayer?.id, lang, translationRelevant]);
 
   const handleAddUpdate = () => {
     if (!newUpdate.trim()) return;
@@ -626,6 +643,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               items={[
                 { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
+                // Scheduling lives here, out of the main flow — selecting it
+                // opens the planner as a contextual disclosure below the
+                // actions. Saved copies keep it too: WHEN you pray for a
+                // carried request is personal.
+                { key: 'schedule', icon: CalendarClock, label: t(lang, livePrayer.schedule ? 'editSchedule' : 'addSchedule'), onClick: () => setShowScheduleEdit((v) => !v), hidden: isAnswered },
                 { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered },
                 { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 },
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },
@@ -660,10 +682,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* Audience at a glance — Private / Encrypted / Shared with … — on the
-            user's own prayers, always visible (never buried in a menu). */}
-        {!isCommunity && !savedCopy && (
-          <AudienceBadge audience={audienceOf(livePrayer, sharedGroups)} lang={lang} />
+        {/* Audience at a glance — Private / Shared with … / From [group] — on
+            every personal prayer, saved-from-community copies included, always
+            visible (never buried in a menu). Encryption renders as a smaller
+            separate protection status, never as a different audience. */}
+        {!isCommunity && (
+          <AudienceBadge
+            audience={audienceOf(livePrayer, sharedGroups)}
+            protection={protectionOf(livePrayer)}
+            lang={lang}
+          />
         )}
 
         {/* Categories — read-only chips, except on a saved copy where you can
@@ -683,26 +711,58 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* Pray now — the page's first action: a real one-prayer session. */}
+        {/* The page LEADS with prayer, not configuration: Pray now first, then
+            Add update and Mark answered as light secondary actions. */}
         {!isCommunity && !isAnswered && !livePrayer._locked && (
-          <button
-            onClick={() => setShowPraySession(true)}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white transition-all active:scale-95"
-            style={{ background: 'var(--accent)' }}
-          >
-            <HandHeart size={17} /> {t(lang, 'prayNow')}
-          </button>
+          <>
+            <button
+              onClick={() => setShowPraySession(true)}
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white transition-all active:scale-95"
+              style={{ background: 'var(--accent)' }}
+            >
+              <HandHeart size={17} /> {t(lang, 'prayNow')}
+            </button>
+            {canManage && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    const el = document.getElementById('pd-updates');
+                    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el?.querySelector('input')?.focus({ preventScroll: true });
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
+                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                >
+                  <Plus size={13} aria-hidden="true" /> {t(lang, 'addUpdateBtn')}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowTestimony(true);
+                    requestAnimationFrame(() => {
+                      const el = document.getElementById('pd-answer');
+                      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      el?.querySelector('textarea')?.focus({ preventScroll: true });
+                    });
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
+                  style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}
+                >
+                  <CheckCircle size={13} aria-hidden="true" /> {t(lang, 'markAnswered')}
+                </button>
+              </div>
+            )}
+          </>
         )}
 
-        {/* Prayer plan (recurrence) — editable inline on any active prayer in your
-            own list, so a plan can be added or changed after creation. This
-            includes prayers saved from the community: when you pray for them is
-            personal (stored on your copy) and independent of the author's content,
-            which the saved copy still follows read-only. */}
-        {!isCommunity && !isAnswered ? (
+        {/* Scheduling stays OUT of the main flow: the ⋯ menu's Schedule action
+            opens the planner here as a contextual disclosure; otherwise a set
+            schedule reads as one quiet summary line. */}
+        {!isCommunity && !isAnswered && showScheduleEdit ? (
           <SchedulePlanner
             schedule={livePrayer.schedule || null}
             lang={lang}
+            defaultEditing
+            onDone={() => setShowScheduleEdit(false)}
             onSave={(schedule) => updatePrayer(livePrayer.id, { schedule })}
           />
         ) : (
@@ -842,7 +902,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           key={i}
                           verse={v}
                           lang={lang}
-                          loc={loc}
                           canRemove={canRemoveContent}
                           onRemove={() => handleRemoveVerse(pp.id, v.ref)}
                         />
@@ -1163,7 +1222,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <div key={u.id} className="flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div>
-                  <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{tr(u.text, lang)}</p>
+                  <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
                   <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
                     {u.author_name ? `${u.is_anonymous ? t(lang, 'anonymous') : u.author_name} · ` : ''}{format(new Date(u.created_at), 'd MMM yy', { locale })}
                   </p>
@@ -1202,13 +1261,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {tm.created_at && (
                     <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
                   )}
-                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(tm.content, lang)}"</p>
+                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{loc(tm.content)}"</p>
                 </div>
               ))}
               {sharedActivity.testimonies.map(tm => (
                 <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                   <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
-                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{tr(tm.content, lang)}"</p>
+                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{loc(tm.content)}"</p>
                 </div>
               ))}
             </div>
@@ -1246,7 +1305,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* Testimony input (writing) */}
         {!isAnswered && showTestimony && canManage && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div id="pd-answer" className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
             <textarea
               value={testimony}

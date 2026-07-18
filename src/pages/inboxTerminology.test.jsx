@@ -19,14 +19,21 @@ beforeEach(() => {
   usePrayerStore.setState({ settings: { language: lang } });
 });
 
-describe('More — no duplicate notifications destination', () => {
-  it('lists Grow, Plan and Settings but no Notifications row', () => {
+describe('More — no duplicate destinations', () => {
+  it('lists exactly Grow, Plan, Privacy & Security, Settings, Support — no Notifications row', () => {
     render(<MemoryRouter><MoreTab /></MemoryRouter>);
     expect(screen.getByText(t(lang, 'grow'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'plan'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'privacySecurity'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'settings'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'settingsSecSupport'))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'notifications'))).toBeNull();
     expect(screen.queryByText(t(lang, 'inbox'))).toBeNull();
+  });
+
+  it('has NO Export row — Privacy & Security already contains Export', () => {
+    render(<MemoryRouter><MoreTab /></MemoryRouter>);
+    expect(screen.queryByText(t(lang, 'exportData'))).toBeNull();
   });
 });
 
