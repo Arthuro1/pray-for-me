@@ -154,10 +154,15 @@ describe('PrayerDetail — leads with prayer', () => {
     renderDetail(base());
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'options') }));
     fireEvent.click(screen.getByRole('menuitem', { name: t(lang, 'addSchedule') }));
-    // The editor opens directly (no second tap), with its Save/Cancel pair.
-    expect(screen.getByText(t(lang, 'save'))).toBeTruthy();
+    // The editor opens directly (no second tap), asking its one question and
+    // offering a specific primary action next to Cancel.
+    expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'schedUseRhythm'))).toBeTruthy();
+
     fireEvent.click(screen.getByText(t(lang, 'cancel')));
-    expect(screen.queryByText(t(lang, 'save'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'schedUseRhythm'))).toBeNull();
+    // Closing hands focus back to the ⋯ trigger it was opened from.
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: t(lang, 'options') }));
   });
 });
 

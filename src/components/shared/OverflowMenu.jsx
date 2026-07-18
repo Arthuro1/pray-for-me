@@ -28,10 +28,16 @@ function MenuItem({ icon: Icon, label, onClick, danger }) {
   );
 }
 
-export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClassName, triggerStyle, iconColor = 'currentColor', align = 'right' }) {
+// `triggerRef` (optional) also receives the trigger button, so a host that
+// opened a disclosure from one of these items can hand focus back to it.
+export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClassName, triggerStyle, iconColor = 'currentColor', align = 'right', triggerRef: externalTriggerRef }) {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState(null);
   const triggerRef = useRef(null);
+  const setTrigger = (node) => {
+    triggerRef.current = node;
+    if (externalTriggerRef) externalTriggerRef.current = node;
+  };
   const menuRef = useRef(null);
   useEscapeKey(open ? () => setOpen(false) : null);
 
@@ -72,7 +78,7 @@ export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClass
   return (
     <>
       <button
-        ref={triggerRef}
+        ref={setTrigger}
         onClick={() => setOpen((v) => !v)}
         aria-label={ariaLabel || t(lang, 'options')}
         aria-haspopup="menu"

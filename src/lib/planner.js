@@ -60,6 +60,23 @@ export function prayersForDay(prayers, categories, dayKey) {
   return entries;
 }
 
+// Which weekdays a plan-following (unscheduled) prayer actually lands on, read
+// from the SAME rules prayersForDay applies above: a per-prayer weekday
+// override wins, then the categories' weekly plan, and an uncategorized prayer
+// returns every day. Lets the scheduler SHOW what "follow my normal rhythm"
+// means instead of asking the user to remember their plan.
+//   null → every day        [] → no day at all (categories set, none planned)
+export function planWeekDays(categories = [], categoryIds = [], prayerWeekDays = null) {
+  if (prayerWeekDays?.length) return [...new Set(prayerWeekDays)].sort((a, b) => a - b);
+  if (!categoryIds.length) return null;
+  const ids = new Set(categoryIds);
+  const days = new Set();
+  for (const c of categories) {
+    if (ids.has(c.id)) (c.week_days || []).forEach((d) => days.add(d));
+  }
+  return [...days].sort((a, b) => a - b);
+}
+
 // Sorts entries the way the lists expect: pinned first, then category priority.
 export function sortEntries(entries, categories) {
   const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));

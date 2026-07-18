@@ -15,19 +15,13 @@ import AudienceBadge from './shared/AudienceBadge';
 import SourceLanguageField from './SourceLanguageField';
 import { audienceOf, protectionOf, plannedProtection } from '../lib/audience';
 import PrayerSavedStep from './PrayerSavedStep';
-import ScheduleEditor from './ScheduleEditor';
+import SchedulePicker from './SchedulePicker';
 import CategorySelector from './CategorySelector';
-import { defaultNewDraft, draftFromSchedule, scheduleFromDraft, scheduleSummary, rhythmOf, draftForRhythm, RHYTHM_PRESETS } from '../lib/scheduleDraft';
+import { planWeekDays } from '../lib/planner';
+import { defaultNewDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
-
-const RHYTHM_LABEL_KEYS = {
-  flexible: 'rhythmFlexible',
-  daily: 'freqDaily',
-  weekly: 'freqWeekly',
-  occasionally: 'rhythmOccasionally',
-};
 
 // A real, keyboard- and screen-reader-operable checkbox: the native input is
 // invisible but present (focus, Space, labels all work); the styled box beside
@@ -137,18 +131,11 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   // form keeps its note open (context for the group is the point there).
   const [noteOpen, setNoteOpen] = useState(() => communityMode || hasNote(editPrayer, prefill));
   const [organizeOpen, setOrganizeOpen] = useState(() => usesOrganize(editPrayer));
-  // The full schedule editor appears only for rhythms the presets can't express.
-  const [customRhythm, setCustomRhythm] = useState(() => rhythmOf(initialForm(editPrayer, prefill, lang).scheduleDraft) === 'custom');
-  // Only prayers that ALREADY follow the legacy weekly category plan keep its
-  // chip; new prayers are never offered an unbounded default.
-  const [legacyPlan, setLegacyPlan] = useState(() => rhythmOf(initialForm(editPrayer, prefill, lang).scheduleDraft) === 'flexible');
   useEffect(() => {
     if (editPrayer) {
       setForm(initialForm(editPrayer, null, lang));
       setNoteOpen(communityMode || hasNote(editPrayer));
       setOrganizeOpen(usesOrganize(editPrayer));
-      setCustomRhythm(rhythmOf(draftFromSchedule(editPrayer.schedule)) === 'custom');
-      setLegacyPlan(rhythmOf(draftFromSchedule(editPrayer.schedule)) === 'flexible');
     }
   }, [editPrayer]);
 
@@ -158,13 +145,10 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
     : [...form.categoryIds, id]
   );
 
-  const rhythm = customRhythm ? 'custom' : rhythmOf(form.scheduleDraft);
-  const pickRhythm = (r) => {
-    setCustomRhythm(false);
-    patch('scheduleDraft', draftForRhythm(r, form.scheduleDraft));
-  };
-  const rhythmChips = legacyPlan ? ['flexible', ...RHYTHM_PRESETS] : RHYTHM_PRESETS;
-  const schedulePreview = scheduleFromDraft(form.scheduleDraft);
+  // What "follow my normal rhythm" would actually mean for THIS prayer, from
+  // the same planner Today uses — so the choice can show its real days instead
+  // of asking the user to remember their weekly plan.
+  const planDays = planWeekDays(categories, form.categoryIds, editPrayer?.week_days);
 
   // Subtle, non-technical reassurance after a personal prayer is saved. Encryption
   // is automatic and invisible, so we only hint at it — "Saved privately" always,
@@ -373,50 +357,17 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
                     lang={lang}
                   />
 
-                  <div>
-                    <p className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'rhythmLabel')}</p>
-                    <div className="flex flex-wrap gap-2" role="group" aria-label={t(lang, 'rhythmLabel')}>
-                      {rhythmChips.map((r) => (
-                        <button
-                          key={r}
-                          type="button"
-                          onClick={() => pickRhythm(r)}
-                          aria-pressed={rhythm === r}
-                          className="min-h-[44px] px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:ring-2"
-                          style={rhythm === r
-                            ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                            : { background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                        >
-                          {t(lang, RHYTHM_LABEL_KEYS[r])}
-                        </button>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => setCustomRhythm(true)}
-                        aria-pressed={rhythm === 'custom'}
-                        className="min-h-[44px] px-3 py-1.5 rounded-full text-xs font-medium transition-all focus-visible:ring-2"
-                        style={rhythm === 'custom'
-                          ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                          : { background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                      >
-                        {t(lang, 'rhythmCustom')}
-                      </button>
-                    </div>
-                    {rhythm !== 'custom' && schedulePreview && (
-                      <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>{scheduleSummary(schedulePreview, lang)}</p>
-                    )}
-                    {rhythm === 'flexible' && (
-                      <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'rhythmPlanHint')}</p>
-                    )}
-                  </div>
-
-                  {rhythm === 'custom' && (
-                    <ScheduleEditor
-                      draft={form.scheduleDraft}
-                      onChange={(d) => patch('scheduleDraft', d)}
-                      lang={lang}
-                    />
-                  )}
+                  {/* The rhythm this prayer already has, in one line. A new
+                      prayer arrives with the bounded weekly default already
+                      chosen, so saving without opening this is a complete
+                      answer — the scheduler only exists after "Change". */}
+                  <SchedulePicker
+                    draft={form.scheduleDraft}
+                    onCommit={(d) => patch('scheduleDraft', d)}
+                    lang={lang}
+                    planDays={planDays}
+                    idPrefix="prayer-sched"
+                  />
 
                   {/* Source language — already answered, correctable in one tap.
                       It sits inside Organize so the default form never grows. */}

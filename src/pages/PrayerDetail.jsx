@@ -19,6 +19,7 @@ import PrayerForm from '../components/PrayerForm';
 import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
+import { planWeekDays } from '../lib/planner';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { planDayContent } from '../content/prayerPlans';
@@ -124,8 +125,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Inline per-prayer follow-up editor (pastoral "check back on this" date).
   const [showFollowUpEdit, setShowFollowUpEdit] = useState(false);
   // Schedule editor, opened from the overflow menu — never a permanently
-  // expanded configuration card in the main flow.
+  // expanded configuration card in the main flow. Closing it hands focus back
+  // to the ⋯ trigger it was opened from.
   const [showScheduleEdit, setShowScheduleEdit] = useState(false);
+  const scheduleTriggerRef = useRef(null);
 
   // ── Community mode state ─────────────────────────────────────────────────
   const [communityUpdates, setCommunityUpdates] = useState([]);
@@ -667,6 +670,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'options')}
+              triggerRef={scheduleTriggerRef}
               triggerStyle={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
               iconColor="#fff"
               items={[
@@ -786,8 +790,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <SchedulePlanner
             schedule={livePrayer.schedule || null}
             lang={lang}
+            planDays={planWeekDays(categories, prayerCategoryIds, livePrayer.week_days)}
             defaultEditing
-            onDone={() => setShowScheduleEdit(false)}
+            onDone={() => { setShowScheduleEdit(false); scheduleTriggerRef.current?.focus(); }}
             onSave={(schedule) => updatePrayer(livePrayer.id, { schedule })}
           />
         ) : (

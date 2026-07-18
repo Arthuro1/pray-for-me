@@ -5,7 +5,7 @@
 // French is the always-loaded locale, so assertions go through t() to verify the
 // show/hide LOGIC rather than pin copy.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 
 // Supabase builds its realtime layer at construct time (throws on older Node in
 // CI); the form only needs the store shape, so stub the client to no-ops.
@@ -29,6 +29,11 @@ import { t } from '../../i18n';
 const lang = 'fr';
 afterEach(cleanup);
 
+// Scheduling rows are named "<label> <sub-line>", so match from the start.
+const rhythmRadio = (key) => screen.getByRole('radio', {
+  name: new RegExp(`^${t(lang, key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`),
+});
+
 beforeEach(() => {
   usePrayerStore.setState({ categories: [], settings: { language: lang } });
 });
@@ -41,7 +46,7 @@ describe('PrayerForm — Quick Add', () => {
     // The note textarea and every organization field wait behind expanders.
     expect(screen.queryByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeNull();
     expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
-    expect(screen.queryByText(t(lang, 'rhythmLabel'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'schedRhythmLabel'))).toBeNull();
     expect(screen.getByText(t(lang, 'addNote'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'organizeLabel'))).toBeTruthy();
   });
@@ -52,7 +57,7 @@ describe('PrayerForm — Quick Add', () => {
     expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeTruthy();
   });
 
-  it('"Organize" reveals person, categories and the rhythm question', () => {
+  it('"Organize" reveals person, categories and the rhythm — as one compact line', () => {
     usePrayerStore.setState({
       categories: [{ id: 'c1', name: 'Famille', emoji: '👨‍👩‍👧', color: '#7c5cfc' }],
       settings: { language: lang },
@@ -61,25 +66,52 @@ describe('PrayerForm — Quick Add', () => {
     fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
     expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
     expect(screen.getByText('Famille', { exact: false })).toBeTruthy();
-    expect(screen.getByText(t(lang, 'rhythmLabel'))).toBeTruthy();
-    // The full schedule editor only appears for Custom.
-    expect(screen.queryByText(t(lang, 'scheduleHowOften'))).toBeNull();
-    fireEvent.click(screen.getByText(t(lang, 'rhythmCustom')));
-    expect(screen.getByText(t(lang, 'scheduleHowOften'))).toBeTruthy();
+    // The rhythm reads as a summary row; the scheduler itself waits behind it.
+    expect(screen.getByText(t(lang, 'schedRhythmLabel'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'schedChangeLater'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'schedWhenAppear'))).toBeNull();
+    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
   });
 
-  it('a rhythm preset maps onto a real schedule (daily) without the full editor', () => {
+  it('a rhythm chosen in the scheduler maps onto a real schedule (daily)', () => {
     const addPrayer = vi.fn(async () => null);
     usePrayerStore.setState({ addPrayer });
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
-    fireEvent.click(screen.getByText(t(lang, 'freqDaily')));
+    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    fireEvent.click(rhythmRadio('schedOtherRhythm'));
+    fireEvent.click(rhythmRadio('schedEveryDay'));
+    fireEvent.click(screen.getByText(t(lang, 'schedUseRhythm')));
     fireEvent.change(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder')), {
       target: { value: 'Paix' },
     });
     fireEvent.click(screen.getByText(t(lang, 'savePrayer')));
+    expect(addPrayer).toHaveBeenCalledTimes(1);
     expect(addPrayer.mock.calls[0][0].schedule).toEqual(
       expect.objectContaining({ type: 'recurring', freq: 'daily' })
+    );
+  });
+
+  it('Cancel in the scheduler leaves the prayer on its previous rhythm', () => {
+    const addPrayer = vi.fn(async () => null);
+    usePrayerStore.setState({ addPrayer });
+    render(<PrayerForm onClose={() => {}} />);
+    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
+    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    fireEvent.click(rhythmRadio('schedOtherRhythm'));
+    fireEvent.click(rhythmRadio('schedEveryDay'));
+    // The scheduler's own Cancel, not the form's.
+    const scheduler = screen.getByText(t(lang, 'schedUseRhythm')).closest('div');
+    fireEvent.click(within(scheduler).getByText(t(lang, 'cancel')));
+
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder')), {
+      target: { value: 'Paix' },
+    });
+    fireEvent.click(screen.getByText(t(lang, 'savePrayer')));
+    // The discarded draft never reached the prayer: still the bounded weekly.
+    expect(addPrayer.mock.calls[0][0].schedule).toEqual(
+      expect.objectContaining({ freq: 'weekly', weekDays: [parseKey(todayKey()).getDay()] })
     );
   });
 
@@ -109,13 +141,18 @@ describe('PrayerForm — Quick Add', () => {
     );
   });
 
-  it('the weekly default is visible (and selected) when Organize is opened', () => {
+  it('the weekly default is readable, in words, when Organize is opened', () => {
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
-    const weekly = screen.getByRole('button', { name: t(lang, 'freqWeekly') });
-    expect(weekly.getAttribute('aria-pressed')).toBe('true');
-    // The old unbounded "Flexible" preset is not offered on new prayers.
-    expect(screen.queryByText(t(lang, 'rhythmFlexible'))).toBeNull();
+    // The compact row states the rhythm this prayer already has — no chips, no
+    // decision to make, and the weekday it names is today's.
+    const row = screen.getByText(t(lang, 'schedRhythmLabel')).closest('button');
+    expect(row.textContent).toContain(t(lang, 'days')[parseKey(todayKey()).getDay()]);
+    expect(row.textContent).toContain(t(lang, 'slotAnytime'));
+    // Opening the scheduler does not preselect the unbounded plan-following mode.
+    fireEvent.click(row);
+    expect(rhythmRadio('schedUsePlan').checked).toBe(false);
+    expect(rhythmRadio('schedOtherRhythm').checked).toBe(true);
   });
 
   it('editing a legacy unscheduled prayer keeps its plan-based rhythm untouched', () => {
@@ -123,13 +160,32 @@ describe('PrayerForm — Quick Add', () => {
     usePrayerStore.setState({ updatePrayer });
     const legacy = { id: 'p1', title: 'Ancienne', schedule: null, prayer_categories: [{ category_id: 'c1' }] };
     render(<PrayerForm onClose={() => {}} editPrayer={legacy} />);
-    // Its rhythm chip is visible and selected, honestly labeled…
-    const chip = screen.getByRole('button', { name: t(lang, 'rhythmFlexible') });
-    expect(chip.getAttribute('aria-pressed')).toBe('true');
+    // Its rhythm is stated honestly, as the days it really produces…
+    expect(screen.getByText(t(lang, 'schedRhythmLabel'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'rhythmPlanHint'))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    expect(rhythmRadio('schedUsePlan').checked).toBe(true);
+    const scheduler = screen.getByText(t(lang, 'schedUseRhythm')).closest('div');
+    fireEvent.click(within(scheduler).getByText(t(lang, 'cancel')));
     // …and saving without touching it never migrates the null schedule.
     fireEvent.click(screen.getByText(t(lang, 'save')));
+    expect(updatePrayer).toHaveBeenCalledTimes(1);
     expect(updatePrayer).toHaveBeenCalledWith('p1', expect.objectContaining({ schedule: null }));
+  });
+
+  it('saves a prayer without the scheduler ever being opened', () => {
+    const addPrayer = vi.fn(async () => null);
+    usePrayerStore.setState({ addPrayer });
+    render(<PrayerForm onClose={() => {}} />);
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder')), {
+      target: { value: 'Sans décision' },
+    });
+    fireEvent.click(screen.getByText(t(lang, 'savePrayer')));
+    expect(screen.queryByText(t(lang, 'schedWhenAppear'))).toBeNull();
+    expect(addPrayer).toHaveBeenCalledTimes(1);
+    expect(addPrayer.mock.calls[0][0].schedule).toEqual(
+      expect.objectContaining({ type: 'recurring', freq: 'weekly' })
+    );
   });
 });
 
