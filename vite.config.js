@@ -45,13 +45,22 @@ export default defineConfig(({ mode }) => {
             src: '/icons/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'any',
           },
           {
             src: '/icons/icon-512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'any',
+          },
+          // Kept separate from the "any" icons: a maskable icon has its artwork
+          // inset into the safe zone, so reusing it for both purposes would leave
+          // the unmasked icon looking small and over-padded.
+          {
+            src: '/icons/icon-maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
           },
         ],
       },

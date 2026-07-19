@@ -37,7 +37,7 @@ module.exports = {
         'vite.config.js',
         'postcss.config.js',
         'tailwind.config.js',
-        'scripts/**/*.js',
+        'scripts/**/*.{js,mjs}',
       ],
       env: { node: true, browser: false },
     },
