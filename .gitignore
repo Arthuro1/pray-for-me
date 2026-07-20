@@ -38,3 +38,5 @@ android-twa/KEYSTORE_CREDENTIALS.txt
 *.njsproj
 *.sln
 *.sw?
+scripts/seed-demo-account.mjs
+public/screenshots/more.jpeg

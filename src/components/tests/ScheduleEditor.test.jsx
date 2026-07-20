@@ -155,11 +155,16 @@ describe('ScheduleEditor — what each choice saves', () => {
     fireEvent.click(radio('schedChooseDays'));
     const days = t(lang, 'days');
     const group = screen.getByRole('group', { name: t(lang, 'schedWeekdaysLabel') });
-    fireEvent.click(within(group).getByRole('button', { name: new RegExp(days[1]) })); // Monday
-    fireEvent.click(within(group).getByRole('button', { name: new RegExp(days[4]) })); // Thursday
+    // "Choose days" preselects TODAY's weekday — clicking it would toggle it
+    // off. Pick two days relative to today so this passes on any weekday.
+    const today = parseKey(todayKey()).getDay();
+    const picked = [(today + 1) % 7, (today + 3) % 7];
+    for (const d of picked) {
+      fireEvent.click(within(group).getByRole('button', { name: new RegExp(days[d]) }));
+    }
     const s = currentSchedule();
     expect(s.freq).toBe('weekly');
-    expect(s.weekDays).toEqual(expect.arrayContaining([1, 4]));
+    expect(s.weekDays).toEqual(expect.arrayContaining(picked));
   });
 
   it('still persists every-N-days, monthly and yearly from the disclosure', () => {

@@ -8,15 +8,18 @@ import { encryptJson, decryptJson, isEncryptedPayload } from './e2ee';
 export const COMMUNITY_ENCRYPTION_VERSION = 1;
 
 // Sensitive fields per community table, bundled into that row's encrypted_payload.
+// `attachments` metadata carries each media file's decryption key, so it is as
+// sensitive as the text it accompanies (the blobs themselves are separately
+// encrypted in storage — see lib/attachments.js).
 export const COMMUNITY_PRAYER_FIELDS = ['title', 'description', 'prayer_points'];
-export const COMMUNITY_UPDATE_FIELDS = ['text'];
-export const TESTIMONY_FIELDS = ['content'];
+export const COMMUNITY_UPDATE_FIELDS = ['text', 'attachments'];
+export const TESTIMONY_FIELDS = ['content', 'attachments'];
 
 // Empty/redacted value per field: scalars → '' (the columns are NOT NULL text),
 // prayer_points → [] (jsonb[]). Used both as the encrypt-time default (when the
 // field is absent) and the plaintext-column redaction once the real value is
 // safe inside encrypted_payload.
-const EMPTY = { title: '', description: '', prayer_points: [], text: '', content: '' };
+const EMPTY = { title: '', description: '', prayer_points: [], text: '', content: '', attachments: [] };
 
 // Bundle `fields` of `row` into encrypted_payload under the group key, redact the
 // plaintext columns, and stamp the encryption + key version so a later fetch can

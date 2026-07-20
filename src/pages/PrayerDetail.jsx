@@ -32,6 +32,9 @@ import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
 import CommunityUpdates from '../components/CommunityUpdates';
 import CommunityTestimonies from '../components/CommunityTestimonies';
+import UpdateComposer from '../components/rich/UpdateComposer';
+import RichText from '../components/rich/RichText';
+import AttachmentList from '../components/rich/AttachmentList';
 import AnonymousToggle from '../components/AnonymousToggle';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
@@ -95,16 +98,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
-  const [newUpdate, setNewUpdate] = useState('');
   // The answered flow is a DISCLOSURE opened by the "Mark answered" action, not
   // a form standing permanently open — so the page shows one Mark answered
-  // control, and confirming happens inside the thing it opened.
+  // control, and confirming happens inside the thing it opened. Its (optional)
+  // testimony text lives in the composer.
   const [showTestimony, setShowTestimony] = useState(false);
-  const [testimony, setTestimony] = useState('');
   // Adding a word of thanks to an already-answered prayer (remembrance).
   const [showThanks, setShowThanks] = useState(false);
-  const [thanksText, setThanksText] = useState('');
-  const [savingThanks, setSavingThanks] = useState(false);
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
@@ -134,9 +134,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [communityUpdates, setCommunityUpdates] = useState([]);
   const [loadingUpdates, setLoadingUpdates] = useState(false);
   const [showCommunityTestimony, setShowCommunityTestimony] = useState(false);
-  const [communityTestimonyText, setCommunityTestimonyText] = useState('');
   const [communityTestimonyAnon, setCommunityTestimonyAnon] = useState(false);
-  const [postingTestimony, setPostingTestimony] = useState(false);
   const [testimonySent, setTestimonySent] = useState(false);
   const [showCommunityEdit, setShowCommunityEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -232,8 +230,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     });
   }, [communityPrayer?.id, isCommunity]);
 
-  const handleSendWord = async (text, isAnonymous) => {
-    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous, contentLanguage: lang });
+  const handleSendWord = async (text, attachments, isAnonymous) => {
+    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous, contentLanguage: lang, attachments });
     // Re-fetch so the timeline reflects the (possibly synced) update.
     setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
   };
@@ -250,12 +248,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     toast.success(t(lang, 'wordDeleted'));
   };
 
-  const handlePostCommunityTestimony = async () => {
-    if (!communityTestimonyText.trim() || postingTestimony) return;
-    setPostingTestimony(true);
-    await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: communityTestimonyText.trim(), isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id, contentLanguage: lang });
+  const handlePostCommunityTestimony = async (text, attachments) => {
+    await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: text, isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
     setTestimonySent(true);
-    setPostingTestimony(false);
     setShowCommunityTestimony(false);
   };
 
@@ -265,11 +260,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     onBack();
   };
 
-  const handleConfirmCommunityAnswered = async () => {
+  const handleConfirmCommunityAnswered = async (text, attachments = []) => {
     await setCommunityAnswered(communityPrayer.id, true);
-    if (testimony.trim()) {
-      await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: testimony.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id, contentLanguage: lang });
-      setTestimony('');
+    if (text.trim() || attachments.length) {
+      await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: text.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
       setTestimonySent(true);
     }
   };
@@ -418,10 +412,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communityPrayer?.id, prayer?.id, lang, translationRelevant]);
 
-  const handleAddUpdate = () => {
-    if (!newUpdate.trim()) return;
-    addUpdate(livePrayer.id, newUpdate.trim(), authorName);
-    setNewUpdate('');
+  const handleAddUpdate = async (text, attachments) => {
+    await addUpdate(livePrayer.id, text, authorName, attachments);
     setUpdateRecs([]);
   };
 
@@ -457,13 +449,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setLoadingRecs(false);
   };
 
-  const handleAddThanks = async () => {
-    const text = thanksText.trim();
-    if (!text || savingThanks) return;
-    setSavingThanks(true);
-    await addPersonalTestimony(livePrayer.id, text);
-    setSavingThanks(false);
-    setThanksText('');
+  const handleAddThanks = async (text, attachments) => {
+    await addPersonalTestimony(livePrayer.id, text, attachments);
     setShowThanks(false);
     toast.success(t(lang, 'thanksSaved'));
   };
@@ -486,14 +473,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     requestAnimationFrame(() => revealAndFocus('pd-answer', 'textarea'));
   };
 
-  const closeAnswerFlow = () => { setShowTestimony(false); setTestimony(''); };
+  const closeAnswerFlow = () => setShowTestimony(false);
 
-  const confirmAnswered = () => {
-    markAnswered(livePrayer.id, testimony);
+  const confirmAnswered = (text, attachments) => {
+    markAnswered(livePrayer.id, text, attachments);
     closeAnswerFlow();
   };
 
-  const focusUpdateField = () => revealAndFocus('pd-updates', 'input');
+  const focusUpdateField = () => revealAndFocus('pd-updates', 'textarea');
 
   // Own prayer → warn first; saved copy → instant unfollow + Undo. Then navigate back.
   const handleDelete = () => removePrayer(livePrayer, onBack);
@@ -1178,32 +1165,27 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
         {isCommunity && canEditCommunityPrayer && (
-          <>
-            {!isAnswered && (
-              <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
-                <textarea
-                  value={testimony}
-                  onChange={e => setTestimony(e.target.value)}
-                  placeholder={t(lang, 'testimonyPlaceholder')}
-                  rows={3}
-                  className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none"
-                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                />
-              </div>
-            )}
-            <div className="flex gap-3">
-              {!isAnswered ? (
-                <button onClick={handleConfirmCommunityAnswered} title={t(lang, 'tipConfirm')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}>
-                  <CheckCircle size={15} /> {t(lang, 'confirm')}
-                </button>
-              ) : (
-                <button onClick={handleResumeCommunity} title={t(lang, 'tipResume')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                  {t(lang, 'resumePrayer')}
-                </button>
-              )}
+          !isAnswered ? (
+            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
+              {/* Confirm marks the request answered; the testimony (text and/or
+                  media) is optional, so allowEmpty keeps Confirm available. */}
+              <UpdateComposer
+                lang={lang}
+                rows={3}
+                allowEmpty
+                placeholder={t(lang, 'testimonyPlaceholder')}
+                sendLabel={t(lang, 'confirm')}
+                onSend={handleConfirmCommunityAnswered}
+              />
             </div>
-          </>
+          ) : (
+            <div className="flex gap-3">
+              <button onClick={handleResumeCommunity} title={t(lang, 'tipResume')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                {t(lang, 'resumePrayer')}
+              </button>
+            </div>
+          )
         )}
 
         {/* ── Community mode: testimony (members; author/admin use the answered flow) ── */}
@@ -1215,21 +1197,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           ) : showCommunityTestimony ? (
             <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'postTestimony')}</p>
-              <textarea
-                value={communityTestimonyText}
-                onChange={e => setCommunityTestimonyText(e.target.value)}
+              <UpdateComposer
+                lang={lang}
                 rows={3}
-                className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none mb-3"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 autoFocus
+                sendLabel={t(lang, 'postTestimony')}
+                onSend={handlePostCommunityTestimony}
               />
-              <AnonymousToggle checked={communityTestimonyAnon} onChange={setCommunityTestimonyAnon} lang={lang} className="mb-3" />
-              <div className="flex gap-2">
-                <button onClick={() => setShowCommunityTestimony(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
-                <button onClick={handlePostCommunityTestimony} disabled={!communityTestimonyText.trim() || postingTestimony} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-                  {postingTestimony ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'postTestimony')}
-                </button>
-              </div>
+              <AnonymousToggle checked={communityTestimonyAnon} onChange={setCommunityTestimonyAnon} lang={lang} className="mt-3 mb-3" />
+              <button onClick={() => setShowCommunityTestimony(false)} className="w-full py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
             </div>
           ) : (
             <button onClick={() => setShowCommunityTestimony(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
@@ -1253,8 +1229,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             {allUpdates.map(u => (
               <div key={u.id} className="flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
-                <div>
-                  <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
+                <div className="min-w-0 flex-1">
+                  {u.text && <RichText text={loc(u.text)} className="text-sm leading-snug" style={{ color: 'var(--text-1)' }} />}
+                  <AttachmentList attachments={u.attachments} lang={lang} className={u.text ? 'mt-1.5' : ''} />
                   <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
                     {u.author_name ? `${u.is_anonymous ? t(lang, 'anonymous') : u.author_name} · ` : ''}{format(new Date(u.created_at), 'd MMM yy', { locale })}
                   </p>
@@ -1264,26 +1241,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {!isAnswered && canManage && (
-            <div className="flex gap-2" id="pd-updates">
-              <input
-                type="text"
-                value={newUpdate}
-                onChange={e => setNewUpdate(e.target.value)}
-                placeholder={t(lang, 'newUpdate')}
-                className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                onKeyDown={e => e.key === 'Enter' && handleAddUpdate()}
-              />
-              <button
-                onClick={handleAddUpdate}
-                aria-label={t(lang, 'tipSaveUpdate')}
-                title={t(lang, 'tipSaveUpdate')}
-                className="rounded-xl px-4 min-w-[44px] min-h-[44px] flex items-center justify-center text-white text-sm font-medium"
-                style={{ background: 'var(--accent)' }}
-              >
-                <Plus size={16} aria-hidden="true" />
-              </button>
-            </div>
+            <UpdateComposer
+              inputId="pd-updates"
+              lang={lang}
+              rows={1}
+              placeholder={t(lang, 'newUpdate')}
+              onSend={handleAddUpdate}
+            />
           )}
         </div>
 
@@ -1299,13 +1263,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {tm.created_at && (
                     <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
                   )}
-                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{loc(tm.content)}"</p>
+                  {tm.content && <RichText text={loc(tm.content)} className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }} />}
+                  <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
                 </div>
               ))}
               {sharedActivity.testimonies.map(tm => (
                 <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                   <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
-                  <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }}>"{loc(tm.content)}"</p>
+                  {tm.content && <RichText text={loc(tm.content)} className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }} />}
+                  <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
                 </div>
               ))}
             </div>
@@ -1318,21 +1284,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           showThanks ? (
             <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
-              <textarea
-                value={thanksText}
-                onChange={e => setThanksText(e.target.value)}
-                placeholder={t(lang, 'testimonyPlaceholder')}
+              <UpdateComposer
+                lang={lang}
                 rows={3}
-                className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
                 autoFocus
+                placeholder={t(lang, 'testimonyPlaceholder')}
+                sendLabel={t(lang, 'addThanks')}
+                onSend={handleAddThanks}
               />
-              <div className="flex gap-2 mt-3">
-                <button onClick={() => { setShowThanks(false); setThanksText(''); }} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
-                <button onClick={handleAddThanks} disabled={!thanksText.trim() || savingThanks} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-                  {savingThanks ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'addThanks')}
-                </button>
-              </div>
+              <button onClick={() => setShowThanks(false)} className="w-full mt-2 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
             </div>
           ) : (
             <button onClick={() => setShowThanks(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
@@ -1347,23 +1307,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {!isAnswered && showTestimony && canManage && (
           <div id="pd-answer" className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
-            <textarea
-              value={testimony}
-              onChange={e => setTestimony(e.target.value)}
-              placeholder={t(lang, 'testimonyPlaceholder')}
-              className="w-full text-sm rounded-xl px-3 py-2.5 resize-none focus:outline-none"
-              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            {/* The testimony is OPTIONAL — allowEmpty keeps Confirm available
+                with nothing written, exactly like the old flow. */}
+            <UpdateComposer
+              lang={lang}
               rows={3}
               autoFocus
+              allowEmpty
+              placeholder={t(lang, 'testimonyPlaceholder')}
+              sendLabel={t(lang, 'confirm')}
+              onSend={confirmAnswered}
             />
-            <div className="flex gap-2 mt-3">
-              <button onClick={closeAnswerFlow} className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
-                {t(lang, 'cancel')}
-              </button>
-              <button onClick={confirmAnswered} title={t(lang, 'tipConfirm')} className="flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-xl text-sm font-medium" style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}>
-                <CheckCircle size={15} aria-hidden="true" /> {t(lang, 'confirm')}
-              </button>
-            </div>
+            <button onClick={closeAnswerFlow} className="w-full mt-2 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+              {t(lang, 'cancel')}
+            </button>
           </div>
         )}
 

@@ -1180,7 +1180,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         )}
                         {testimony._locked
                           ? <LockedNotice lang={lang} inline />
-                          : <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>🎉 "{testimony.content}"</p>}
+                          // Preview only — media plays on the prayer's page, so a
+                          // media-only testimony shows a 📎 count, not empty quotes.
+                          : <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>
+                              🎉 {testimony.content ? `"${testimony.content}"` : ''}
+                              {(testimony.attachments?.length ?? 0) > 0 && ` 📎 ${testimony.attachments.length}`}
+                            </p>}
                       </button>
                     );
                   })}

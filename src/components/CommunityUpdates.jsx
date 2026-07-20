@@ -1,37 +1,35 @@
 import { useState } from 'react';
-import { Loader2, Send, Trash2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 import Avatar from './shared/Avatar';
 import AnonymousToggle from './AnonymousToggle';
 import EmptyState from './shared/EmptyState';
 import ConfirmDialog from './shared/ConfirmDialog';
+import UpdateComposer from './rich/UpdateComposer';
+import RichText from './rich/RichText';
+import AttachmentList from './rich/AttachmentList';
+import { removeAttachmentFiles } from '../lib/attachments';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';
 
-// Member updates on a community prayer — encouragements, verses, words. The list
-// lives in the parent (which also feeds it to the translation toggle); posting a
-// word is delegated through onSend so the parent stays the source of truth.
-// A word can be removed by its author or a group admin (isAdmin) via onDelete.
+// Member updates on a community prayer — encouragements, verses, words, now
+// with light formatting and media (photos / voice notes / video / links). The
+// list lives in the parent (which also feeds it to the translation toggle);
+// posting a word is delegated through onSend(text, attachments, isAnonymous) so
+// the parent stays the source of truth. A word can be removed by its author or
+// a group admin (isAdmin) via onDelete.
 export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete }) {
-  const [text, setText] = useState('');
   const [anon, setAnon] = useState(false);
-  const [sending, setSending] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
-
-  const send = async () => {
-    if (!text.trim() || sending) return;
-    setSending(true);
-    await onSend(text.trim(), anon);
-    setText('');
-    setSending(false);
-  };
 
   const canDelete = (u) => !!onDelete && !u._locked && (u.user_id === userId || isAdmin);
 
   const handleConfirmDelete = async () => {
     if (!confirmDelete) return;
     setDeleting(true);
+    // Best-effort media cleanup — only the author owns the storage objects.
+    if (confirmDelete.user_id === userId) removeAttachmentFiles(confirmDelete.attachments);
     await onDelete(confirmDelete.id);
     setDeleting(false);
     setConfirmDelete(null);
@@ -69,7 +67,10 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                 {u._locked ? (
                   <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
                 ) : (
-                  <p className="text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(u.text)}</p>
+                  <>
+                    {u.text && <RichText text={loc(u.text)} className="text-sm leading-snug" style={{ color: 'var(--text-1)' }} />}
+                    <AttachmentList attachments={u.attachments} lang={lang} className={u.text ? 'mt-1.5' : ''} />
+                  </>
                 )}
               </div>
               {canDelete(u) && (
@@ -88,19 +89,13 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
         </div>
       )}
 
-      <div className="flex gap-2 mt-2">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
+      <div className="mt-2">
+        <UpdateComposer
+          lang={lang}
+          rows={1}
           placeholder={t(lang, 'wordPlaceholder')}
-          className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none"
-          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-          onKeyDown={(e) => e.key === 'Enter' && send()}
+          onSend={(text, attachments) => onSend(text, attachments, anon)}
         />
-        <button onClick={send} disabled={!text.trim() || sending} aria-label={t(lang, 'addWord')} className="rounded-xl px-4 flex items-center justify-center text-white text-sm font-medium disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-          {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-        </button>
       </div>
       <AnonymousToggle checked={anon} onChange={setAnon} lang={lang} className="mt-2" />
     </div>

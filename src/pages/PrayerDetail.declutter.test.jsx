@@ -116,13 +116,13 @@ describe('PrayerDetail — leads with prayer', () => {
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'markAnswered')) }));
     expect(markAnswered).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'confirm')) }));
-    expect(markAnswered).toHaveBeenCalledWith('p1', '');
+    expect(markAnswered).toHaveBeenCalledWith('p1', '', []);
   });
 
   it('Add update is immediately reachable — it focuses the real update field, no new form', () => {
     const { container } = renderDetail(base());
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'addUpdateBtn')) }));
-    expect(container.querySelector('#pd-updates input')).toBeTruthy();
+    expect(container.querySelector('#pd-updates textarea')).toBeTruthy();
   });
 
   it('an answered prayer offers Resume, never Mark answered', () => {

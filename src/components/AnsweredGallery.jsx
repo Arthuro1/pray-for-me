@@ -77,7 +77,13 @@ export default function AnsweredGallery() {
           </div>
           <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
           {lastTestimony && (
-            <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>"{tr(lastTestimony.content, lang)}"</p>
+            // Preview only — media renders in the detail page (players don't
+            // belong inside this clickable card), so a media-only testimony
+            // shows a 📎 count instead of empty quotes.
+            <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>
+              {lastTestimony.content ? `"${tr(lastTestimony.content, lang)}"` : ''}
+              {(lastTestimony.attachments?.length ?? 0) > 0 && ` 📎 ${lastTestimony.attachments.length}`}
+            </p>
           )}
           {/* Gentle gratitude nudge when no testimony has been recorded yet */}
           {testimonies.length === 0 && (

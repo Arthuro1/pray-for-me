@@ -1,3 +1,5 @@
+import RichText from './rich/RichText';
+import AttachmentList from './rich/AttachmentList';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';
@@ -15,7 +17,8 @@ export default function CommunityTestimonies({ items, loc, lang, userId }) {
             <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>
               🎉 {communityAuthor(tm, userId, lang)} · {timeAgo(tm.created_at, lang)}
             </p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{loc(tm.content)}</p>
+            {tm.content && <RichText text={loc(tm.content)} className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }} />}
+            <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
           </div>
         ))}
       </div>

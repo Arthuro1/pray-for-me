@@ -33,9 +33,12 @@ export const CACHE_NESTED_FIELDS = ['prayer_updates', 'prayer_points', 'prayer_t
 const SERVER_ENCRYPTED_COLLECTIONS = ['prayer_updates', 'prayer_points', 'prayer_testimonies'];
 
 // Sensitive columns per child table, bundled into that row's encrypted_payload.
-export const UPDATE_SENSITIVE_FIELDS = ['text'];
+// `attachments` metadata carries each media file's decryption key, so it is as
+// sensitive as the text it accompanies (the blobs themselves are separately
+// encrypted in storage — see lib/attachments.js).
+export const UPDATE_SENSITIVE_FIELDS = ['text', 'attachments'];
 export const POINT_SENSITIVE_FIELDS = ['title', 'verses'];
-export const TESTIMONY_SENSITIVE_FIELDS = ['content'];
+export const TESTIMONY_SENSITIVE_FIELDS = ['content', 'attachments'];
 
 // A prayer is encryptable when the account key is ready (isUnlocked) AND it is
 // the user's own prayer. Saved-from-community copies (community_origin_id) mirror

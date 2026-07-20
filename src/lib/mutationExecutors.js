@@ -94,8 +94,13 @@ registerMutation('removeCompletion', async ({ prayerId, day }) => {
 // Updates / points / verses route through the sync_* RPCs (which also fan out
 // to shared community copies). They take a client-supplied id so the optimistic
 // local row matches the server row, and are idempotent on replay.
-registerMutation('addUpdate', async ({ id, prayerId, text, authorName }) => {
-  const r = await supabase.rpc('sync_add_update', { p_id: id, p_source: prayerId, p_text: text, p_author: authorName || '', p_anon: false });
+registerMutation('addUpdate', async ({ id, prayerId, text, authorName, attachments }) => {
+  const params = { p_id: id, p_source: prayerId, p_text: text, p_author: authorName || '', p_anon: false };
+  // p_attachments only when there are any: it has a DEFAULT server-side, so the
+  // bare call still resolves — and keeps resolving against a prod that hasn't
+  // run rich_media_updates.sql yet (media itself needs that migration anyway).
+  if (attachments?.length) params.p_attachments = attachments;
+  const r = await supabase.rpc('sync_add_update', params);
   throwIf(r.error, r.status);
 });
 

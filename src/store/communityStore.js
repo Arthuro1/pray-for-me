@@ -30,16 +30,16 @@ async function encPrayerCols(gk, { title = '', description = '', prayer_points =
   };
 }
 
-async function encUpdateCols(gk, text) {
-  if (!gk) return { text };
-  const e = await encryptCommunityUpdate(gk, { text });
-  return { text: e.text, encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version };
+async function encUpdateCols(gk, text, attachments = []) {
+  if (!gk) return { text, attachments };
+  const e = await encryptCommunityUpdate(gk, { text, attachments });
+  return { text: e.text, attachments: e.attachments, encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version };
 }
 
-async function encTestimonyCols(gk, content) {
-  if (!gk) return { content };
-  const e = await encryptCommunityTestimony(gk, { content });
-  return { content: e.content, encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version };
+async function encTestimonyCols(gk, content, attachments = []) {
+  if (!gk) return { content, attachments };
+  const e = await encryptCommunityTestimony(gk, { content, attachments });
+  return { content: e.content, attachments: e.attachments, encrypted_payload: e.encrypted_payload, encryption_version: e.encryption_version, key_version: e.key_version };
 }
 
 function generateCode() {
@@ -459,10 +459,10 @@ const useCommunityStore = create((set, get) => ({
   // a different key, and a member can't write the owner's row) — the owner sees it
   // read-only via the shared-activity view. `sourcePrayerId` is still accepted for
   // caller compatibility but no longer drives a server-side plaintext fan-out.
-  addUpdate: async ({ prayerId, userId, authorName, text, isAnonymous, contentLanguage = null }) => {
+  addUpdate: async ({ prayerId, userId, authorName, text, isAnonymous, contentLanguage = null, attachments = [] }) => {
     const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
     const gk = await ensureGroupKey(groupId);
-    const cols = await encUpdateCols(gk, text);
+    const cols = await encUpdateCols(gk, text, attachments);
     const { error } = await supabase
       .from('community_updates')
       .insert({ community_prayer_id: prayerId, user_id: userId, author_name: authorName, is_anonymous: isAnonymous, content_language: contentLanguage, ...cols });
@@ -551,9 +551,9 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
-  addTestimony: async ({ groupId, userId, authorName, content, isAnonymous, communityPrayerId, contentLanguage = null }) => {
+  addTestimony: async ({ groupId, userId, authorName, content, isAnonymous, communityPrayerId, contentLanguage = null, attachments = [] }) => {
     const gk = await ensureGroupKey(groupId);
-    const cols = await encTestimonyCols(gk, content);
+    const cols = await encTestimonyCols(gk, content, attachments);
     const { data, error } = await supabase
       .from('testimonies')
       .insert({ group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null, content_language: contentLanguage })
@@ -561,7 +561,7 @@ const useCommunityStore = create((set, get) => ({
       .single();
     if (error) return toError(error);
     // Keep plaintext content in memory (the server row's content column is redacted).
-    const plaintext = { ...data, content };
+    const plaintext = { ...data, content, attachments };
     set(state => ({ testimonies: [plaintext, ...state.testimonies] }));
     return { testimony: plaintext };
   },
