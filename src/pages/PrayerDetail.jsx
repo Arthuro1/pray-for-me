@@ -862,9 +862,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         ) : livePrayer.description && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'details')}</p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)', lineHeight: 1.7 }}>
-              {loc(livePrayer.description)}
-            </p>
+            <RichText text={loc(livePrayer.description)} className="text-sm leading-relaxed" style={{ color: 'var(--text-2)', lineHeight: 1.7 }} />
           </div>
         )}
 

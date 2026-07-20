@@ -9,6 +9,7 @@ import { hasAiConsent } from '../lib/aiConsent';
 import AiDisclaimer from './shared/AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
 import VerseAccordion from './VerseAccordion';
+import RichText from './rich/RichText';
 
 // One suggested passage: reference, the key verse(s), why it speaks to the
 // request, an inline "read in app" expansion, and an opt-in "add as prayer point".
@@ -113,7 +114,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'scriptureFirstIntro')}</p>
           <div className="rounded-2xl px-4 py-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
             <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{title}</p>
-            {description && <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--text-3)' }}>{description}</p>}
+            {description && <RichText text={description} className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--text-3)' }} />}
           </div>
           <button
             onClick={fetchGuidance}

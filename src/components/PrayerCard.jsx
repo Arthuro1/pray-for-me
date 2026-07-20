@@ -9,6 +9,7 @@ import AiDisclaimer from './shared/AiDisclaimer';
 import VerseAccordion from './VerseAccordion';
 import { t } from '../i18n';
 import useTranslationStore from '../store/translationStore';
+import RichText, { plainText } from './rich/RichText';
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR };
 
@@ -106,19 +107,19 @@ export default function PrayerCard({ prayer, onEdit, lang = 'fr' }) {
       </div>
 
       {!expanded && prayer.description && (
-        <p className="text-xs px-4 py-2.5 line-clamp-1" style={{ color: 'var(--text-3)' }}>{tr(prayer.description, lang)}</p>
+        <p className="text-xs px-4 py-2.5 line-clamp-1" style={{ color: 'var(--text-3)' }}>{plainText(tr(prayer.description, lang))}</p>
       )}
 
       {expanded && (
         <div className="px-4 pb-4 pt-3">
           {prayer.description && (
-            <p className="text-sm mb-3" style={{ color: 'var(--text-2)', lineHeight: 1.6 }}>{tr(prayer.description, lang)}</p>
+            <RichText text={tr(prayer.description, lang)} className="text-sm mb-3" style={{ color: 'var(--text-2)', lineHeight: 1.6 }} />
           )}
 
           {isAnswered && prayer.testimony && (
             <div className="rounded-xl p-3 mb-3" style={{ background: '#e8f5ed', border: '0.5px solid #b8dfc8' }}>
               <p className="text-xs font-semibold mb-1" style={{ color: '#1a4a2e' }}>{t(lang, 'testimony')}</p>
-              <p className="text-xs" style={{ color: '#2a6040' }}>{tr(prayer.testimony, lang)}</p>
+              <RichText text={tr(prayer.testimony, lang)} className="text-xs" style={{ color: '#2a6040' }} />
             </div>
           )}
 

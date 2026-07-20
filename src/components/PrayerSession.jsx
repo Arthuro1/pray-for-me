@@ -7,6 +7,7 @@ import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
 import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
+import RichText from './rich/RichText';
 
 // "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
 // straight into the last-used format (requests, for a new user) and a small
@@ -349,7 +350,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</h2>
 
         {prayer.description && (
-          <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-2)' }}>{tr(prayer.description, lang)}</p>
+          <RichText text={tr(prayer.description, lang)} className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-2)' }} />
         )}
 
         {/* Freshest news to pray from — one line, never the whole history */}
@@ -358,7 +359,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
             <p className="text-[11px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-3)' }}>
               {t(lang, 'latestUpdateLabel')}
             </p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{tr(latestUpdate.text, lang)}</p>
+            <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }} />
           </div>
         )}
 

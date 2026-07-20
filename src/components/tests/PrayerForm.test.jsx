@@ -57,6 +57,16 @@ describe('PrayerForm — Quick Add', () => {
     expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeTruthy();
   });
 
+  it('the note field offers the same light formatting as updates', () => {
+    render(<PrayerForm onClose={() => {}} />);
+    fireEvent.click(screen.getByText(t(lang, 'addNote')));
+    const note = screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'));
+    fireEvent.change(note, { target: { value: 'important' } });
+    note.setSelectionRange(0, 9);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'formatBold') }));
+    expect(note.value).toBe('**important**');
+  });
+
   it('"Organize" reveals person, categories and the rhythm — as one compact line', () => {
     usePrayerStore.setState({
       categories: [{ id: 'c1', name: 'Famille', emoji: '👨‍👩‍👧', color: '#7c5cfc' }],

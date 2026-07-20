@@ -8,11 +8,13 @@
 // sends never touch the network here, so offline text updates keep working;
 // media picks while offline fail fast with an honest toast.
 import { useEffect, useRef, useState } from 'react';
-import { Bold, Camera, Film, Italic, Link2, List, Loader2, Mic, Music, Send, Square, X } from 'lucide-react';
+import { Camera, Film, Link2, Loader2, Mic, Music, Send, Square, X } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { uploadAttachment, linkAttachment, removeAttachmentFiles } from '../../lib/attachments';
 import { toast } from '../../store/toastStore';
 import { t } from '../../i18n';
+import FormatToolbar, { ToolbarButton } from './FormatToolbar';
+import { useMarkdownFormatting } from './formatting';
 
 // Preferred MediaRecorder container per browser (Safari lacks webm).
 function recorderMime() {
@@ -21,21 +23,6 @@ function recorderMime() {
     if (MediaRecorder.isTypeSupported(mime)) return mime;
   }
   return null;
-}
-
-function ToolbarButton({ icon: Icon, label, active, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      title={label}
-      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
-      style={{ color: active ? 'var(--accent)' : 'var(--text-3)', background: active ? 'var(--accent-soft)' : 'transparent' }}
-    >
-      <Icon size={14} aria-hidden="true" />
-    </button>
-  );
 }
 
 export default function UpdateComposer({
@@ -74,27 +61,7 @@ export default function UpdateComposer({
   const canSend = !sending && !uploading && !recording && (allowEmpty || text.trim() || ready.length > 0);
 
   // ── Formatting: wrap the selection (or insert markers) in the textarea ─────
-  const applyFormat = (kind) => {
-    const el = textareaRef.current;
-    if (!el) return;
-    const { selectionStart: start, selectionEnd: end } = el;
-    const selected = text.slice(start, end);
-    let next; let cursor;
-    if (kind === 'list') {
-      // Prefix each selected line (or the current line) with "- ".
-      const lineStart = text.lastIndexOf('\n', start - 1) + 1;
-      const block = text.slice(lineStart, end === start ? text.length : end);
-      const prefixed = block.split('\n').map((l) => (l.startsWith('- ') ? l : `- ${l}`)).join('\n');
-      next = text.slice(0, lineStart) + prefixed + text.slice(lineStart + block.length);
-      cursor = lineStart + prefixed.length;
-    } else {
-      const marker = kind === 'bold' ? '**' : '*';
-      next = text.slice(0, start) + marker + selected + marker + text.slice(end);
-      cursor = selected ? start + marker.length * 2 + selected.length : start + marker.length;
-    }
-    setText(next);
-    requestAnimationFrame(() => { el.focus(); el.setSelectionRange(cursor, cursor); });
-  };
+  const applyFormat = useMarkdownFormatting(textareaRef, text, setText);
 
   // ── Attachments ────────────────────────────────────────────────────────────
   const addFiles = async (files) => {
@@ -230,9 +197,7 @@ export default function UpdateComposer({
 
       {/* Toolbar */}
       <div className="flex items-center gap-0.5 px-1.5 pb-1.5">
-        <ToolbarButton icon={Bold} label={t(lang, 'formatBold')} onClick={() => applyFormat('bold')} />
-        <ToolbarButton icon={Italic} label={t(lang, 'formatItalic')} onClick={() => applyFormat('italic')} />
-        <ToolbarButton icon={List} label={t(lang, 'formatList')} onClick={() => applyFormat('list')} />
+        <FormatToolbar lang={lang} onFormat={applyFormat} />
         <span className="w-px h-4 mx-1" style={{ background: 'var(--input-border)' }} aria-hidden="true" />
         <ToolbarButton icon={Camera} label={t(lang, 'attachPhoto')} onClick={() => pickFile('image/*')} />
         <ToolbarButton icon={Film} label={t(lang, 'attachVideo')} onClick={() => pickFile('video/*')} />

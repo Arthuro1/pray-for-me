@@ -22,6 +22,7 @@ import PrayerListSkeleton from '../components/shared/Skeleton';
 import Avatar from '../components/shared/Avatar';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
+import { plainText } from '../components/rich/RichText';
 import ShareButtons from '../components/shared/ShareButtons';
 import Switch from '../components/shared/Switch';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -1120,7 +1121,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                     ) : (
                       <>
                         <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>{p.title}</p>
-                        {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{p.description}</p>}
+                        {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{plainText(p.description)}</p>}
                       </>
                     )}
                     <div className="flex items-center gap-3">

@@ -10,6 +10,22 @@ const URL_RE = /https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"]/g;
 // Inline emphasis over one line: longest marker first so ** wins over *.
 const INLINE_RE = /(\*\*([^*]+)\*\*|\*([^*]+)\*|_([^_]+)_)/;
 
+// Flatten markdown-lite to plain text for clamped one/two-line previews,
+// where raw markers would read as noise ("**Urgent**" in a card teaser) and
+// block elements would defeat the line-clamp.
+export function plainText(text) {
+  if (!text) return '';
+  return String(text)
+    .split('\n')
+    .map((line) => line.replace(/^\s*[-*]\s+/, ''))
+    .join(' ')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/_([^_]+)_/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function linkify(text, keyBase) {
   const nodes = [];
   let last = 0;

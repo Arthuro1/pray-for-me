@@ -4,7 +4,7 @@
 // URLs — and, critically, that user content is rendered as TEXT, never markup.
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
-import RichText from './RichText';
+import RichText, { plainText } from './RichText';
 
 afterEach(cleanup);
 
@@ -45,5 +45,20 @@ describe('RichText', () => {
   it('supports emphasis inside list items', () => {
     const { container } = render(<RichText text={'- **urgent**: surgery tomorrow'} />);
     expect(container.querySelector('li strong').textContent).toBe('urgent');
+  });
+});
+
+// Clamped card teasers flatten the same grammar to one readable line.
+describe('plainText', () => {
+  it('strips emphasis markers and bullet prefixes', () => {
+    expect(plainText('**Urgent**: pray for:\n- *healing*\n- peace')).toBe(
+      'Urgent: pray for: healing peace'
+    );
+  });
+
+  it('returns plain text unchanged and empty input as an empty string', () => {
+    expect(plainText('a simple note')).toBe('a simple note');
+    expect(plainText('')).toBe('');
+    expect(plainText(null)).toBe('');
   });
 });

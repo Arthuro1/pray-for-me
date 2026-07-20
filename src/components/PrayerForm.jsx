@@ -17,6 +17,7 @@ import { audienceOf, protectionOf, plannedProtection } from '../lib/audience';
 import PrayerSavedStep from './PrayerSavedStep';
 import SchedulePicker from './SchedulePicker';
 import CategorySelector from './CategorySelector';
+import FormattedTextarea from './rich/FormattedTextarea';
 import { planWeekDays } from '../lib/planner';
 import { defaultNewDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
 
@@ -278,13 +279,14 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
             {noteOpen && (
               <div id="prayer-note-section">
                 <label htmlFor="prayer-note" className="sr-only">{t(lang, 'details')}</label>
-                <textarea
+                {/* The note reads back through RichText, so it writes with the
+                    same light formatting the update composer offers. */}
+                <FormattedTextarea
                   id="prayer-note"
+                  lang={lang}
                   value={form.description}
-                  onChange={e => patch('description', e.target.value)}
+                  onChange={(v) => patch('description', v)}
                   placeholder={t(lang, 'detailsPlaceholder')}
-                  className="w-full text-sm rounded-xl px-4 py-3 resize-none focus:outline-none focus-visible:ring-2"
-                  style={INPUT_STYLE}
                   rows={3}
                 />
               </div>
