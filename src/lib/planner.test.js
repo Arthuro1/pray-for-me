@@ -84,6 +84,21 @@ describe('catchUpPrayers', () => {
     const missed = catchUpPrayers(prayers, [], completed, '2026-07-06');
     expect(missed).toEqual([{ prayer: prayers[0], day: '2026-07-05' }]);
   });
+
+  it('a completion on a later day counts as caught up (Pray now from detail)', () => {
+    const prayers = [base({ id: 'p', schedule: { type: 'once', date: '2026-07-05' } })];
+    // Prayed today via the detail page — logged on today, not the missed day.
+    const completed = new Map([['p', new Set(['2026-07-06'])]]);
+    expect(catchUpPrayers(prayers, [], completed, '2026-07-06')).toEqual([]);
+  });
+
+  it('a completion before the miss does not clear it', () => {
+    const prayers = [base({ id: 'p', schedule: { type: 'once', date: '2026-07-05' } })];
+    const completed = new Map([['p', new Set(['2026-07-03'])]]);
+    expect(catchUpPrayers(prayers, [], completed, '2026-07-06')).toEqual([
+      { prayer: prayers[0], day: '2026-07-05' },
+    ]);
+  });
 });
 
 describe('scheduleEnded / runningPlanIds', () => {

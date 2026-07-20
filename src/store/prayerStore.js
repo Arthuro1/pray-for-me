@@ -726,7 +726,7 @@ const usePrayerStore = create((set, get) => ({
     get().getRemainingPrayersForDay(dayKey).length === 0 &&
     get().getCompletedPrayersForDay(dayKey).length > 0,
 
-  // Missed prayers from the last few days (not completed, not on today's list).
+  // Missed prayers from the last few days (not prayed since, not on today's list).
   getCatchUp: (windowDays = 3) => {
     const { prayers, categories } = get();
     return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays);

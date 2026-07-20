@@ -114,19 +114,26 @@ export function groupBySlot(entries) {
   return groups;
 }
 
-// Missed prayers from the last `windowDays` days: scheduled then, not marked
-// prayed then, still active, and not already on today's list (those are simply
-// prayed today). completedDays: Map(prayerId -> Set('YYYY-MM-DD')).
+// Missed prayers from the last `windowDays` days: scheduled then, not prayed
+// since (a completion on the missed day OR any later day — e.g. Pray now from
+// the detail page today — counts as caught up), still active, and not already
+// on today's list (those are simply prayed today).
+// completedDays: Map(prayerId -> Set('YYYY-MM-DD')).
 // Returns [{ prayer, day }] oldest-first, one entry per prayer (earliest miss).
 export function catchUpPrayers(prayers, categories, completedDays, todayKey, windowDays = 3) {
   const todayIds = new Set(prayersForDay(prayers, categories, todayKey).map((e) => e.prayer.id));
+  // ISO day keys compare lexicographically, so `d >= day` is a date comparison.
+  const prayedSince = (id, day) => {
+    for (const d of completedDays.get(id) || []) if (d >= day) return true;
+    return false;
+  };
   const seen = new Set();
   const missed = [];
   for (let i = windowDays; i >= 1; i--) {
     const day = addDays(todayKey, -i);
     for (const { prayer } of prayersForDay(prayers, categories, day)) {
       if (seen.has(prayer.id) || todayIds.has(prayer.id)) continue;
-      if (completedDays.get(prayer.id)?.has(day)) continue;
+      if (prayedSince(prayer.id, day)) continue;
       seen.add(prayer.id);
       missed.push({ prayer, day });
     }
