@@ -2,6 +2,8 @@ import { Users, EyeOff, HandHeart, Pin } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
+import { scheduleEnded } from '../lib/planner';
+import { todayKey } from '../lib/prayedLog';
 import Avatar from './shared/Avatar';
 
 const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
@@ -10,6 +12,9 @@ const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)'
 // matching the look of the community prayer wall (author + date header first).
 export default function PrayerListItem({ prayer, categories, lang, tr, shares, currentUserName = '', onClick }) {
   const isAnswered = prayer.status === 'answered';
+  // A finished series reads "Series ended", never "Active" — the plan is over
+  // even though the prayer stays in the journal.
+  const isEnded = !isAnswered && scheduleEnded(prayer, todayKey());
   const pCatIds = (prayer.prayer_categories || []).map((pc) => pc.category_id);
   const pCats = categories.filter((c) => pCatIds.includes(c.id));
   const oa = originAuthor(prayer);
@@ -38,9 +43,13 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
           {prayer.pinned && <Pin size={13} fill="currentColor" style={{ color: 'var(--accent)' }} />}
           <span
             className="text-xs px-2.5 py-1 rounded-full font-medium"
-            style={{ background: isAnswered ? '#e8f5ed' : 'var(--accent-soft)', color: isAnswered ? '#059669' : 'var(--accent)' }}
+            style={isAnswered
+              ? { background: '#e8f5ed', color: '#059669' }
+              : isEnded
+                ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
+                : { background: 'var(--accent-soft)', color: 'var(--accent)' }}
           >
-            {isAnswered ? t(lang, 'answered2') : t(lang, 'active2')}
+            {t(lang, isAnswered ? 'answered2' : isEnded ? 'seriesEnded' : 'active2')}
           </span>
         </div>
       </div>

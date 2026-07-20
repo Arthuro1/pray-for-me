@@ -19,7 +19,7 @@ import PrayerForm from '../components/PrayerForm';
 import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
-import { planWeekDays } from '../lib/planner';
+import { planWeekDays, scheduleEnded } from '../lib/planner';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { planDayContent } from '../content/prayerPlans';
@@ -783,11 +783,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             onSave={(schedule) => updatePrayer(livePrayer.id, { schedule })}
           />
         ) : (
-          livePrayer.schedule && (
-            <p className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-              <Repeat size={12} className="shrink-0" /> {scheduleSummary(livePrayer.schedule, lang)}
-            </p>
-          )
+          livePrayer.schedule && (() => {
+            const ended = !isAnswered && scheduleEnded(livePrayer, todayKey());
+            return (
+              <p
+                className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
+                style={ended
+                  ? { background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }
+                  : { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                <Repeat size={12} className="shrink-0" /> {ended ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
+              </p>
+            );
+          })()
         )}
 
         {/* Guided plan: today's theme + passage (only on a plan day) */}

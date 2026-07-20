@@ -8,7 +8,7 @@ import { Plus, Trash2, X, Check, Sparkles, ChevronUp, ChevronDown, CalendarDays,
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { prayerOnDay } from '../utils/prayer';
-import { monthDots } from '../lib/planner';
+import { monthDots, runningPlanIds } from '../lib/planner';
 import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { buildICS } from '../utils/ics';
@@ -97,7 +97,9 @@ export default function PlanTab() {
 
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
-  const activePlanIds = new Set(prayers.filter((p) => p.status === 'active' && p.schedule?.plan?.id).map((p) => p.schedule.plan.id));
+  // Only a run whose series can still occur counts as running — a finished
+  // plan releases its card so the journey can be started again.
+  const activePlanIds = runningPlanIds(prayers, todayKey());
   const startPlan = async (plan, startDate) => {
     const start = startDate || todayKey();
     await addPrayer({

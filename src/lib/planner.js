@@ -2,7 +2,7 @@
 // the new per-prayer schedules (src/lib/schedule.js) and the legacy weekly
 // category plan (categories.week_days / prayers.week_days). Pure functions so
 // the store, Home, and the calendar all agree on what "today" means.
-import { occursOn, rotationForDay, addDays } from './schedule';
+import { occursOn, rotationForDay, addDays, seriesEnded } from './schedule';
 import { prayerPriority } from '../utils/prayer';
 
 // Every planned entry for a day:
@@ -58,6 +58,25 @@ export function prayersForDay(prayers, categories, dayKey) {
     if (visible) entries.push({ prayer: p, source: 'category', slot: null });
   }
   return entries;
+}
+
+// A recurring series that can produce no more occurrences (end date past, or
+// count consumed). One-time prayers are excluded on purpose: a past 'once'
+// date often stays a live request; only a configured series end means "this
+// plan is finished".
+export function scheduleEnded(prayer, dayKey) {
+  return prayer.schedule?.type === 'recurring' && seriesEnded(prayer.schedule, dayKey);
+}
+
+// Guided plans still running on `dayKey`: an active prayer references the plan
+// AND its series can still occur. A finished run releases the plan, so the
+// journey can be started again.
+export function runningPlanIds(prayers, dayKey) {
+  const ids = new Set();
+  for (const p of prayers) {
+    if (p.status === 'active' && p.schedule?.plan?.id && !scheduleEnded(p, dayKey)) ids.add(p.schedule.plan.id);
+  }
+  return ids;
 }
 
 // Which weekdays a plan-following (unscheduled) prayer actually lands on, read

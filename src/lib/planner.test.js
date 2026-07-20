@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { prayersForDay, groupBySlot, catchUpPrayers, monthDots } from './planner.js';
+import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds } from './planner.js';
 
 // 2026-07-06 is a Monday (weekday 1); 2026-07-07 a Tuesday (weekday 2).
 const cats = [
@@ -83,6 +83,47 @@ describe('catchUpPrayers', () => {
     const completed = new Map([['done', new Set(['2026-07-05'])]]);
     const missed = catchUpPrayers(prayers, [], completed, '2026-07-06');
     expect(missed).toEqual([{ prayer: prayers[0], day: '2026-07-05' }]);
+  });
+});
+
+describe('scheduleEnded / runningPlanIds', () => {
+  // A guided plan: daily from startDate, capped after `count` occurrences.
+  const planPrayer = (id, startDate, count, over = {}) => base({
+    id,
+    schedule: {
+      type: 'recurring', freq: 'daily', startDate,
+      end: { kind: 'count', count },
+      plan: { id: `plan-${id}`, startDate },
+    },
+    ...over,
+  });
+
+  it('a count-capped series ends only after its last day', () => {
+    const p = planPrayer('a', '2026-07-01', 7); // days 1–7 → last day 2026-07-07
+    expect(scheduleEnded(p, '2026-07-07')).toBe(false);
+    expect(scheduleEnded(p, '2026-07-08')).toBe(true);
+  });
+
+  it('a past one-time prayer is not "ended" — only recurring series are', () => {
+    const p = base({ id: 'o', schedule: { type: 'once', date: '2026-07-01' } });
+    expect(scheduleEnded(p, '2026-07-10')).toBe(false);
+  });
+
+  it('an until-answered series never ends on its own', () => {
+    const p = base({ id: 'u', schedule: { type: 'recurring', freq: 'daily', startDate: '2026-07-01', end: { kind: 'answered' } } });
+    expect(scheduleEnded(p, '2027-07-01')).toBe(false);
+  });
+
+  it('a finished plan releases its card; a running one stays claimed', () => {
+    const prayers = [planPrayer('a', '2026-07-01', 7), planPrayer('b', '2026-07-05', 21)];
+    const ids = runningPlanIds(prayers, '2026-07-10');
+    expect(ids.has('plan-a')).toBe(false);
+    expect(ids.has('plan-b')).toBe(true);
+  });
+
+  it('answered and unscheduled prayers never claim a plan', () => {
+    const prayers = [planPrayer('a', '2026-07-01', 21, { status: 'answered' }), base({ id: 'c' })];
+    expect(runningPlanIds(prayers, '2026-07-10').size).toBe(0);
   });
 });
 
