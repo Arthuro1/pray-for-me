@@ -133,6 +133,41 @@ registerMutation('updatePointEncrypted', async ({ pointId, row }) => {
   throwIf(r.error, r.status);
 });
 
+// Shrink a PLAINTEXT personal update's attachments after the author deletes
+// one. The RPC also cleans the update's fanned-out community mirrors (see
+// supabase/attachment_management.sql). Against a prod that hasn't run that
+// migration yet the RPC doesn't exist (PGRST202) — fall back to a direct
+// table update so the personal row is still fixed; only the mirror cleanup
+// waits for the migration.
+registerMutation('removeUpdateAttachment', async ({ updateId, attId, attachments }) => {
+  const r = await supabase.rpc('sync_remove_update_attachment', { p_update_id: updateId, p_att_id: attId });
+  if (r.error?.code === 'PGRST202') {
+    const u = await supabase.from('prayer_updates').update({ attachments }).eq('id', updateId);
+    throwIf(u.error, u.status);
+    return;
+  }
+  throwIf(r.error, r.status);
+});
+
+// Plaintext personal testimony rows never fan out — a direct update suffices.
+registerMutation('setTestimonyAttachments', async ({ testimonyId, attachments }) => {
+  const r = await supabase.from('prayer_testimonies').update({ attachments }).eq('id', testimonyId);
+  throwIf(r.error, r.status);
+});
+
+// Re-encrypt a private update/testimony in place after an attachment delete:
+// the attachment metadata lives inside encrypted_payload, so we overwrite the
+// blob and keep the plaintext columns redacted (mirrors updatePointEncrypted).
+registerMutation('updateUpdateEncrypted', async ({ updateId, row }) => {
+  const r = await supabase.from('prayer_updates').update(row).eq('id', updateId);
+  throwIf(r.error, r.status);
+});
+
+registerMutation('updateTestimonyEncrypted', async ({ testimonyId, row }) => {
+  const r = await supabase.from('prayer_testimonies').update(row).eq('id', testimonyId);
+  throwIf(r.error, r.status);
+});
+
 registerMutation('addVerse', async ({ prayerId, pointId, verse }) => {
   const r = await supabase.rpc('sync_add_verse', { p_source: prayerId, p_point_id: pointId, p_verse: verse });
   throwIf(r.error, r.status);

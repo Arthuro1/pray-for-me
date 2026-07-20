@@ -141,7 +141,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [togglingPraying, setTogglingPraying] = useState(false);
 
-  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
+  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeTestimonyAttachment, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
       markAnswered: s.markAnswered,
@@ -149,6 +149,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       markPrayedOn: s.markPrayedOn,
       addTestimony: s.addTestimony,
       addUpdate: s.addUpdate,
+      removeUpdateAttachment: s.removeUpdateAttachment,
+      removeTestimonyAttachment: s.removeTestimonyAttachment,
       addPrayerPoint: s.addPrayerPoint,
       addVerseToPoint: s.addVerseToPoint,
       removeVerseFromPoint: s.removeVerseFromPoint,
@@ -172,7 +174,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, removeCommunityUpdateAttachment, removeCommunityTestimonyAttachment, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       activeGroupId: s.activeGroupId,
@@ -183,6 +185,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       fetchPrayerUpdates: s.fetchPrayerUpdates,
       addUpdate: s.addUpdate,
       deleteCommunityUpdate: s.deleteCommunityUpdate,
+      removeCommunityUpdateAttachment: s.removeCommunityUpdateAttachment,
+      removeCommunityTestimonyAttachment: s.removeCommunityTestimonyAttachment,
       addTestimony: s.addTestimony,
       updatePrayer: s.updatePrayer,
       deleteCommunityPrayer: s.deleteCommunityPrayer,
@@ -246,6 +250,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       return;
     }
     toast.success(t(lang, 'wordDeleted'));
+  };
+
+  // Delete one attachment from the viewer's own word / testimony. The word
+  // list is component state, so patch it with the shrunk list the store
+  // returns; the testimonies list lives in the store and patches itself.
+  const handleRemoveWordAttachment = async (update, att) => {
+    const res = await removeCommunityUpdateAttachment(communityPrayer.id, update, att.id);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setCommunityUpdates((prev) => prev.map((u) => (u.id === update.id ? { ...u, attachments: res.attachments } : u)));
+  };
+
+  const handleRemoveCommunityTestimonyAttachment = async (tm, att) => {
+    const res = await removeCommunityTestimonyAttachment(tm, att.id);
+    if (res?.error) toast.error(t(lang, 'errorGeneric'));
   };
 
   const handlePostCommunityTestimony = async (text, attachments) => {
@@ -1161,12 +1179,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             isAdmin={isGroupAdmin}
             onSend={handleSendWord}
             onDelete={handleDeleteWord}
+            onRemoveAttachment={handleRemoveWordAttachment}
           />
         )}
 
         {/* ── Community mode: testimonies posted for this prayer ── */}
         {isCommunity && (
-          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} />
+          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} onRemoveAttachment={handleRemoveCommunityTestimonyAttachment} />
         )}
 
         {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
@@ -1237,7 +1256,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div className="min-w-0 flex-1">
                   {u.text && <RichText text={loc(u.text)} className="text-sm leading-snug" style={{ color: 'var(--text-1)' }} />}
-                  <AttachmentList attachments={u.attachments} lang={lang} className={u.text ? 'mt-1.5' : ''} />
+                  {/* canManage ⇒ not a saved copy ⇒ every row here is the owner's own prayer_updates row */}
+                  <AttachmentList
+                    attachments={u.attachments}
+                    lang={lang}
+                    className={u.text ? 'mt-1.5' : ''}
+                    onRemove={canManage ? (att) => removeUpdateAttachment(livePrayer.id, u.id, att.id) : null}
+                  />
                   <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
                     {u.author_name ? `${u.is_anonymous ? t(lang, 'anonymous') : u.author_name} · ` : ''}{format(new Date(u.created_at), 'd MMM yy', { locale })}
                   </p>
@@ -1270,7 +1295,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
                   )}
                   {tm.content && <RichText text={loc(tm.content)} className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }} />}
-                  <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
+                  <AttachmentList
+                    attachments={tm.attachments}
+                    lang={lang}
+                    className={tm.content ? 'mt-1.5' : ''}
+                    onRemove={canManage ? (att) => removeTestimonyAttachment(livePrayer.id, tm.id, att.id) : null}
+                  />
                 </div>
               ))}
               {sharedActivity.testimonies.map(tm => (

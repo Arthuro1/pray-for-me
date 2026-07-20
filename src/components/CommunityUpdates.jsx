@@ -17,8 +17,10 @@ import { t } from '../i18n';
 // list lives in the parent (which also feeds it to the translation toggle);
 // posting a word is delegated through onSend(text, attachments, isAnonymous) so
 // the parent stays the source of truth. A word can be removed by its author or
-// a group admin (isAdmin) via onDelete.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete }) {
+// a group admin (isAdmin) via onDelete; a single attachment on the viewer's
+// OWN word via onRemoveAttachment(update, att) — author-only, since removal
+// re-encrypts the row and deletes a storage object only the author owns.
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onRemoveAttachment }) {
   const [anon, setAnon] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -69,7 +71,12 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                 ) : (
                   <>
                     {u.text && <RichText text={loc(u.text)} className="text-sm leading-snug" style={{ color: 'var(--text-1)' }} />}
-                    <AttachmentList attachments={u.attachments} lang={lang} className={u.text ? 'mt-1.5' : ''} />
+                    <AttachmentList
+                      attachments={u.attachments}
+                      lang={lang}
+                      className={u.text ? 'mt-1.5' : ''}
+                      onRemove={onRemoveAttachment && u.user_id === userId ? (att) => onRemoveAttachment(u, att) : null}
+                    />
                   </>
                 )}
               </div>

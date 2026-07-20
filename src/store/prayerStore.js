@@ -5,6 +5,7 @@ import { prayersForDay, sortEntries, catchUpPrayers } from '../lib/planner';
 import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
+import { removeAttachmentFiles } from '../lib/attachments';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
 import { track, EVENTS } from '../lib/analytics';
@@ -640,6 +641,38 @@ const usePrayerStore = create((set, get) => ({
     enqueue('addTestimonyRow', { row: persistRow });
   },
 
+  // Delete one attachment from a posted testimony: optimistic local shrink,
+  // best-effort removal of the encrypted blob in storage (the owner authored
+  // every personal row, so the storage path is theirs), then persist the
+  // shrunk list — re-encrypted in place for private prayers, plain jsonb
+  // otherwise. Testimonies never fan out, so no mirror cleanup is needed.
+  removeTestimonyAttachment: async (prayerId, testimonyId, attId) => {
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
+    const removed = (row?.attachments || []).find((a) => a.id === attId);
+    if (!row || !removed) return;
+    // An encrypted row we can't re-encrypt (vault locked) can't persist the
+    // shrink — bail before touching local state or the stored blob.
+    if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
+    const attachments = row.attachments.filter((a) => a.id !== attId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_testimonies: p.prayer_testimonies.map((tm) => (tm.id === testimonyId ? { ...tm, attachments } : tm)) }
+          : p
+      ),
+    }));
+    removeAttachmentFiles([removed]);
+    if (canEncryptNested(prayer)) {
+      const enc = await encryptChildForStorage({ ...row, attachments }, TESTIMONY_SENSITIVE_FIELDS);
+      const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+      for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
+      enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
+    } else {
+      enqueue('setTestimonyAttachments', { testimonyId, attachments });
+    }
+  },
+
   markActive: async (id) => {
     set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
     enqueue('markActive', { id });
@@ -788,6 +821,42 @@ const usePrayerStore = create((set, get) => ({
       enqueue('addUpdateEncrypted', { row: encRow });
     } else {
       enqueue('addUpdate', { id, prayerId, text, authorName, attachments });
+    }
+  },
+
+  // Delete one attachment from a posted update — same shape as
+  // removeTestimonyAttachment, with one extra wrinkle: a PLAINTEXT update on a
+  // shared prayer was fanned out into community_updates mirrors by
+  // sync_add_update, so those rows must shrink too (the RPC handles both).
+  // E2EE rows never fanned out and carry their metadata inside
+  // encrypted_payload, so they are re-encrypted and updated in place; a row
+  // that is BOTH still plaintext on the server and encryptable now gets the
+  // RPC as well, so any pre-E2EE mirrors don't keep a dead attachment.
+  removeUpdateAttachment: async (prayerId, updateId, attId) => {
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
+    const removed = (row?.attachments || []).find((a) => a.id === attId);
+    if (!row || !removed) return;
+    // An encrypted row we can't re-encrypt (vault locked) can't persist the
+    // shrink — bail before touching local state or the stored blob.
+    if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
+    const attachments = row.attachments.filter((a) => a.id !== attId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_updates: p.prayer_updates.map((u) => (u.id === updateId ? { ...u, attachments } : u)) }
+          : p
+      ),
+    }));
+    removeAttachmentFiles([removed]);
+    if (!isRowEncrypted(row)) {
+      enqueue('removeUpdateAttachment', { updateId, attId, attachments });
+    }
+    if (canEncryptNested(prayer)) {
+      const enc = await encryptChildForStorage({ ...row, attachments }, UPDATE_SENSITIVE_FIELDS);
+      const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+      for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
+      enqueue('updateUpdateEncrypted', { updateId, row: patch });
     }
   },
 

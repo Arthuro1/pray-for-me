@@ -1,11 +1,13 @@
 // Renders an update/testimony's attachments in the timeline: image thumbnails
 // with a tap-to-open lightbox, inline audio/video players, and link cards.
 // Media is downloaded + decrypted lazily per attachment (useAttachmentUrl), so
-// opening a prayer never blocks on its media.
+// opening a prayer never blocks on its media. When the caller passes onRemove
+// (author-only), each attachment gets a delete badge behind a confirmation.
 import { useState } from 'react';
 import { ExternalLink, ImageOff, Loader2, X } from 'lucide-react';
 import { useAttachmentUrl } from '../../hooks/useAttachmentUrl';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
+import ConfirmDialog from '../shared/ConfirmDialog';
 import { t } from '../../i18n';
 
 function MediaFrame({ loading, error, lang, children }) {
@@ -90,14 +92,53 @@ function LinkAttachment({ att }) {
 
 const RENDERERS = { image: ImageAttachment, audio: AudioAttachment, video: VideoAttachment, link: LinkAttachment };
 
-export default function AttachmentList({ attachments, lang, className = '' }) {
+export default function AttachmentList({ attachments, lang, className = '', onRemove = null }) {
+  const [confirmAtt, setConfirmAtt] = useState(null);
+  const [removing, setRemoving] = useState(false);
   const items = (attachments || []).filter((a) => a && RENDERERS[a.type]);
   if (items.length === 0) return null;
+
+  const confirmRemove = async () => {
+    setRemoving(true);
+    try {
+      await onRemove(confirmAtt);
+    } finally {
+      setRemoving(false);
+      setConfirmAtt(null);
+    }
+  };
+
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
+      {confirmAtt && (
+        <ConfirmDialog
+          title={t(lang, 'attachRemove')}
+          message={t(lang, 'deleteWarning')}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          loading={removing}
+          onConfirm={confirmRemove}
+          onCancel={() => setConfirmAtt(null)}
+        />
+      )}
       {items.map((att) => {
         const Renderer = RENDERERS[att.type];
-        return <Renderer key={att.id} att={att} lang={lang} />;
+        if (!onRemove) return <Renderer key={att.id} att={att} lang={lang} />;
+        return (
+          <div key={att.id} className="relative max-w-full">
+            <Renderer att={att} lang={lang} />
+            <button
+              type="button"
+              onClick={() => setConfirmAtt(att)}
+              aria-label={t(lang, 'attachRemove')}
+              title={t(lang, 'attachRemove')}
+              className="absolute -top-1.5 -end-1.5 w-6 h-6 flex items-center justify-center rounded-full shadow-sm"
+              style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--border)' }}
+            >
+              <X size={12} aria-hidden="true" />
+            </button>
+          </div>
+        );
       })}
     </div>
   );

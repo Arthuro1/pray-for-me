@@ -4,6 +4,7 @@ import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../uti
 import { devError } from '../lib/logger';
 import { track, EVENTS } from '../lib/analytics';
 import { ensureGroupKey, groupKeyResolver } from '../lib/crypto/groupKeys';
+import { removeAttachmentFiles } from '../lib/attachments';
 import { autoFollowOnReaction } from '../lib/prayerFollow';
 import {
   encryptCommunityPrayer,
@@ -482,6 +483,40 @@ const useCommunityStore = create((set, get) => ({
       if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
     }
     return {};
+  },
+
+  // Delete one attachment from the viewer's OWN word, re-encrypting the row's
+  // payload under the group key (RLS: "Authors can update their updates" —
+  // see supabase/attachment_management.sql). Returns the shrunk list so the
+  // caller can patch its local copy; the encrypted storage blob is removed
+  // best-effort (the author owns the object path).
+  removeCommunityUpdateAttachment: async (prayerId, update, attId) => {
+    const removed = (update.attachments || []).find((a) => a.id === attId);
+    if (!removed) return {};
+    const attachments = update.attachments.filter((a) => a.id !== attId);
+    const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
+    const gk = await ensureGroupKey(groupId);
+    const cols = await encUpdateCols(gk, update.text || '', attachments);
+    const { error } = await supabase.from('community_updates').update(cols).eq('id', update.id);
+    if (error) return toError(error);
+    removeAttachmentFiles([removed]);
+    return { attachments };
+  },
+
+  // Same for the viewer's own testimony (RLS: "Authors can update their
+  // testimonies"). The testimonies list lives in this store, so it is patched
+  // here directly.
+  removeCommunityTestimonyAttachment: async (testimony, attId) => {
+    const removed = (testimony.attachments || []).find((a) => a.id === attId);
+    if (!removed) return {};
+    const attachments = testimony.attachments.filter((a) => a.id !== attId);
+    const gk = await ensureGroupKey(testimony.group_id);
+    const cols = await encTestimonyCols(gk, testimony.content || '', attachments);
+    const { error } = await supabase.from('testimonies').update(cols).eq('id', testimony.id);
+    if (error) return toError(error);
+    removeAttachmentFiles([removed]);
+    set(state => ({ testimonies: state.testimonies.map(tm => (tm.id === testimony.id ? { ...tm, attachments } : tm)) }));
+    return { attachments };
   },
 
   fetchTestimonies: async (groupId) => {
