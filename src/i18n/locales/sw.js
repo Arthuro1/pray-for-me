@@ -874,6 +874,7 @@ export default {
   "recordVoice": "Rekodi ujumbe wa sauti",
   "stopRecording": "Simamisha kurekodi",
   "attachRemove": "Ondoa kiambatisho",
+  "textRemove": "Ondoa maandishi",
   "linkPlaceholder": "Bandika kiungo (https://…)",
   "linkInvalid": "Kiungo hiki si sahihi",
   "attachTooLarge": "Faili hii ni kubwa mno",

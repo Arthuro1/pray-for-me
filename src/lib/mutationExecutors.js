@@ -149,9 +149,43 @@ registerMutation('removeUpdateAttachment', async ({ updateId, attId, attachments
   throwIf(r.error, r.status);
 });
 
+// Blank a PLAINTEXT personal update's text. Mirror-aware RPC with the same
+// pre-migration fallback as removeUpdateAttachment above.
+registerMutation('removeUpdateText', async ({ updateId }) => {
+  const r = await supabase.rpc('sync_remove_update_text', { p_update_id: updateId });
+  if (r.error?.code === 'PGRST202') {
+    const u = await supabase.from('prayer_updates').update({ text: '' }).eq('id', updateId);
+    throwIf(u.error, u.status);
+    return;
+  }
+  throwIf(r.error, r.status);
+});
+
+// Delete a whole personal update. The RPC also drops its fanned-out community
+// mirrors; pre-migration, at least the personal row goes.
+registerMutation('deleteUpdate', async ({ updateId }) => {
+  const r = await supabase.rpc('sync_delete_update', { p_update_id: updateId });
+  if (r.error?.code === 'PGRST202') {
+    const u = await supabase.from('prayer_updates').delete().eq('id', updateId);
+    throwIf(u.error, u.status);
+    return;
+  }
+  throwIf(r.error, r.status);
+});
+
 // Plaintext personal testimony rows never fan out — a direct update suffices.
 registerMutation('setTestimonyAttachments', async ({ testimonyId, attachments }) => {
   const r = await supabase.from('prayer_testimonies').update({ attachments }).eq('id', testimonyId);
+  throwIf(r.error, r.status);
+});
+
+registerMutation('setTestimonyContent', async ({ testimonyId, content }) => {
+  const r = await supabase.from('prayer_testimonies').update({ content }).eq('id', testimonyId);
+  throwIf(r.error, r.status);
+});
+
+registerMutation('deleteTestimony', async ({ testimonyId }) => {
+  const r = await supabase.from('prayer_testimonies').delete().eq('id', testimonyId);
   throwIf(r.error, r.status);
 });
 

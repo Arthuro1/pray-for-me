@@ -874,6 +874,7 @@ export default {
   "recordVoice": "Grabar una nota de voz",
   "stopRecording": "Detener grabación",
   "attachRemove": "Quitar adjunto",
+  "textRemove": "Quitar el texto",
   "linkPlaceholder": "Pega un enlace (https://…)",
   "linkInvalid": "Este enlace no es válido",
   "attachTooLarge": "Este archivo es demasiado grande",

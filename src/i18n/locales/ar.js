@@ -874,6 +874,7 @@ export default {
   "recordVoice": "تسجيل رسالة صوتية",
   "stopRecording": "إيقاف التسجيل",
   "attachRemove": "إزالة المرفق",
+  "textRemove": "إزالة النص",
   "linkPlaceholder": "الصق رابطًا (https://…)",
   "linkInvalid": "هذا الرابط غير صالح",
   "attachTooLarge": "هذا الملف كبير جدًا",

@@ -5,7 +5,7 @@ import AnonymousToggle from './AnonymousToggle';
 import EmptyState from './shared/EmptyState';
 import ConfirmDialog from './shared/ConfirmDialog';
 import UpdateComposer from './rich/UpdateComposer';
-import RichText from './rich/RichText';
+import RemovableText from './rich/RemovableText';
 import AttachmentList from './rich/AttachmentList';
 import { removeAttachmentFiles } from '../lib/attachments';
 import { communityAuthor } from '../utils/user';
@@ -17,10 +17,11 @@ import { t } from '../i18n';
 // list lives in the parent (which also feeds it to the translation toggle);
 // posting a word is delegated through onSend(text, attachments, isAnonymous) so
 // the parent stays the source of truth. A word can be removed by its author or
-// a group admin (isAdmin) via onDelete; a single attachment on the viewer's
-// OWN word via onRemoveAttachment(update, att) — author-only, since removal
-// re-encrypts the row and deletes a storage object only the author owns.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onRemoveAttachment }) {
+// a group admin (isAdmin) via onDelete; a single attachment or the text on the
+// viewer's OWN word via onRemoveAttachment(update, att) / onRemoveText(update)
+// — author-only, since removal re-encrypts the row and deletes storage objects
+// only the author owns.
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onRemoveAttachment, onRemoveText }) {
   const [anon, setAnon] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
@@ -70,7 +71,13 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                   <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
                 ) : (
                   <>
-                    {u.text && <RichText text={loc(u.text)} className="text-sm leading-snug" style={{ color: 'var(--text-1)' }} />}
+                    <RemovableText
+                      text={loc(u.text)}
+                      lang={lang}
+                      className="text-sm leading-snug"
+                      style={{ color: 'var(--text-1)' }}
+                      onRemove={onRemoveText && u.user_id === userId ? () => onRemoveText(u) : null}
+                    />
                     <AttachmentList
                       attachments={u.attachments}
                       lang={lang}

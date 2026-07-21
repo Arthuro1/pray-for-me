@@ -874,6 +874,7 @@ export default {
   "recordVoice": "Записать голосовое сообщение",
   "stopRecording": "Остановить запись",
   "attachRemove": "Убрать вложение",
+  "textRemove": "Убрать текст",
   "linkPlaceholder": "Вставьте ссылку (https://…)",
   "linkInvalid": "Эта ссылка недействительна",
   "attachTooLarge": "Файл слишком большой",

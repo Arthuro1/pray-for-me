@@ -494,6 +494,14 @@ const useCommunityStore = create((set, get) => ({
     const removed = (update.attachments || []).find((a) => a.id === attId);
     if (!removed) return {};
     const attachments = update.attachments.filter((a) => a.id !== attId);
+    // Removing the last content deletes the whole word — an empty row would
+    // otherwise linger as a bare author+date shell.
+    if (!attachments.length && !update.text) {
+      const res = await get().deleteCommunityUpdate(update.id, prayerId);
+      if (res?.error) return res;
+      removeAttachmentFiles([removed]);
+      return { deleted: true };
+    }
     const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
     const gk = await ensureGroupKey(groupId);
     const cols = await encUpdateCols(gk, update.text || '', attachments);
@@ -503,6 +511,22 @@ const useCommunityStore = create((set, get) => ({
     return { attachments };
   },
 
+  // Blank the text of the viewer's own word; deletes the whole word instead
+  // when it has no attachments left to justify the row.
+  removeCommunityUpdateText: async (prayerId, update) => {
+    if (!update.text) return {};
+    if (!(update.attachments || []).length) {
+      const res = await get().deleteCommunityUpdate(update.id, prayerId);
+      return res?.error ? res : { deleted: true };
+    }
+    const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
+    const gk = await ensureGroupKey(groupId);
+    const cols = await encUpdateCols(gk, '', update.attachments);
+    const { error } = await supabase.from('community_updates').update(cols).eq('id', update.id);
+    if (error) return toError(error);
+    return { text: '' };
+  },
+
   // Same for the viewer's own testimony (RLS: "Authors can update their
   // testimonies"). The testimonies list lives in this store, so it is patched
   // here directly.
@@ -510,6 +534,12 @@ const useCommunityStore = create((set, get) => ({
     const removed = (testimony.attachments || []).find((a) => a.id === attId);
     if (!removed) return {};
     const attachments = testimony.attachments.filter((a) => a.id !== attId);
+    if (!attachments.length && !testimony.content) {
+      const res = await get().deleteCommunityTestimony(testimony.id);
+      if (res?.error) return res;
+      removeAttachmentFiles([removed]);
+      return { deleted: true };
+    }
     const gk = await ensureGroupKey(testimony.group_id);
     const cols = await encTestimonyCols(gk, testimony.content || '', attachments);
     const { error } = await supabase.from('testimonies').update(cols).eq('id', testimony.id);
@@ -517,6 +547,32 @@ const useCommunityStore = create((set, get) => ({
     removeAttachmentFiles([removed]);
     set(state => ({ testimonies: state.testimonies.map(tm => (tm.id === testimony.id ? { ...tm, attachments } : tm)) }));
     return { attachments };
+  },
+
+  // Blank the text of the viewer's own testimony; deletes the whole row when
+  // no attachments remain (same cascade as words above).
+  removeCommunityTestimonyText: async (testimony) => {
+    if (!testimony.content) return {};
+    if (!(testimony.attachments || []).length) {
+      const res = await get().deleteCommunityTestimony(testimony.id);
+      return res?.error ? res : { deleted: true };
+    }
+    const gk = await ensureGroupKey(testimony.group_id);
+    const cols = await encTestimonyCols(gk, '', testimony.attachments);
+    const { error } = await supabase.from('testimonies').update(cols).eq('id', testimony.id);
+    if (error) return toError(error);
+    set(state => ({ testimonies: state.testimonies.map(tm => (tm.id === testimony.id ? { ...tm, content: '' } : tm)) }));
+    return { content: '' };
+  },
+
+  // Author-only whole-row delete (RLS: "Authors can delete their testimonies"
+  // — supabase/attachment_management.sql). Media cleanup stays with callers,
+  // which know whether files remain.
+  deleteCommunityTestimony: async (testimonyId) => {
+    const { error } = await supabase.from('testimonies').delete().eq('id', testimonyId);
+    if (error) return toError(error);
+    set(state => ({ testimonies: state.testimonies.filter(tm => tm.id !== testimonyId) }));
+    return {};
   },
 
   fetchTestimonies: async (groupId) => {

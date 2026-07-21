@@ -874,6 +874,7 @@ export default {
   "recordVoice": "ضبط پیام صوتی",
   "stopRecording": "توقف ضبط",
   "attachRemove": "حذف پیوست",
+  "textRemove": "حذف متن",
   "linkPlaceholder": "پیوند را بچسبانید (https://…)",
   "linkInvalid": "این پیوند معتبر نیست",
   "attachTooLarge": "این فایل خیلی بزرگ است",

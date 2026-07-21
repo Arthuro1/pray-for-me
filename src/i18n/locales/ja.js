@@ -874,6 +874,7 @@ export default {
   "recordVoice": "ボイスメモを録音",
   "stopRecording": "録音を停止",
   "attachRemove": "添付を削除",
+  "textRemove": "テキストを削除",
   "linkPlaceholder": "リンクを貼り付け（https://…）",
   "linkInvalid": "このリンクは無効です",
   "attachTooLarge": "ファイルが大きすぎます",

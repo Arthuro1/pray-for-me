@@ -874,6 +874,7 @@ export default {
   "recordVoice": "वॉयस नोट रिकॉर्ड करें",
   "stopRecording": "रिकॉर्डिंग रोकें",
   "attachRemove": "अटैचमेंट हटाएँ",
+  "textRemove": "टेक्स्ट हटाएँ",
   "linkPlaceholder": "लिंक पेस्ट करें (https://…)",
   "linkInvalid": "यह लिंक मान्य नहीं है",
   "attachTooLarge": "यह फ़ाइल बहुत बड़ी है",

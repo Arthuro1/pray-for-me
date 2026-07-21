@@ -874,6 +874,7 @@ export default {
   "recordVoice": "录制语音",
   "stopRecording": "停止录音",
   "attachRemove": "移除附件",
+  "textRemove": "移除文字",
   "linkPlaceholder": "粘贴链接（https://…）",
   "linkInvalid": "链接无效",
   "attachTooLarge": "文件过大",

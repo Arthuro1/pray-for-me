@@ -125,7 +125,9 @@ export default function AttachmentList({ attachments, lang, className = '', onRe
         const Renderer = RENDERERS[att.type];
         if (!onRemove) return <Renderer key={att.id} att={att} lang={lang} />;
         return (
-          <div key={att.id} className="relative max-w-full">
+          // The audio player sizes itself with w-full, which resolves to 0 in a
+          // shrink-to-fit wrapper — the wrapper must own the width for it.
+          <div key={att.id} className={att.type === 'audio' ? 'relative w-full max-w-xs' : 'relative max-w-full'}>
             <Renderer att={att} lang={lang} />
             <button
               type="button"

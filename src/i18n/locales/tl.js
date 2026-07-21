@@ -874,6 +874,7 @@ export default {
   "recordVoice": "Mag-record ng voice note",
   "stopRecording": "Itigil ang pagre-record",
   "attachRemove": "Alisin ang attachment",
+  "textRemove": "Alisin ang teksto",
   "linkPlaceholder": "I-paste ang link (https://…)",
   "linkInvalid": "Hindi wasto ang link na ito",
   "attachTooLarge": "Masyadong malaki ang file na ito",

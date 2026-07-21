@@ -874,6 +874,7 @@ export default {
   "recordVoice": "Rekam pesan suara",
   "stopRecording": "Hentikan rekaman",
   "attachRemove": "Hapus lampiran",
+  "textRemove": "Hapus teks",
   "linkPlaceholder": "Tempel tautan (https://…)",
   "linkInvalid": "Tautan ini tidak valid",
   "attachTooLarge": "Berkas ini terlalu besar",

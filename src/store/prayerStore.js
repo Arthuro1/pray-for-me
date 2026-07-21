@@ -655,6 +655,9 @@ const usePrayerStore = create((set, get) => ({
     // shrink — bail before touching local state or the stored blob.
     if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
     const attachments = row.attachments.filter((a) => a.id !== attId);
+    // Removing the last content deletes the whole row — an empty testimony
+    // would otherwise linger as a bare date shell.
+    if (!attachments.length && !row.content) return get().deleteTestimony(prayerId, testimonyId);
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === prayerId
@@ -671,6 +674,49 @@ const usePrayerStore = create((set, get) => ({
     } else {
       enqueue('setTestimonyAttachments', { testimonyId, attachments });
     }
+  },
+
+  // Blank a posted testimony's text; when no attachments remain either, the
+  // whole row is deleted instead. Same encryption split as the attachment
+  // shrink above.
+  removeTestimonyText: async (prayerId, testimonyId) => {
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
+    if (!row || !row.content) return;
+    if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
+    if (!(row.attachments || []).length) return get().deleteTestimony(prayerId, testimonyId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_testimonies: p.prayer_testimonies.map((tm) => (tm.id === testimonyId ? { ...tm, content: '' } : tm)) }
+          : p
+      ),
+    }));
+    if (canEncryptNested(prayer)) {
+      const enc = await encryptChildForStorage({ ...row, content: '' }, TESTIMONY_SENSITIVE_FIELDS);
+      const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+      for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
+      enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
+    } else {
+      enqueue('setTestimonyContent', { testimonyId, content: '' });
+    }
+  },
+
+  // Delete a whole testimony row (its media too). Testimonies never fan out,
+  // so a direct row delete is enough; no re-encryption needed either.
+  deleteTestimony: async (prayerId, testimonyId) => {
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
+    if (!row) return;
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_testimonies: p.prayer_testimonies.filter((tm) => tm.id !== testimonyId) }
+          : p
+      ),
+    }));
+    removeAttachmentFiles(row.attachments || []);
+    enqueue('deleteTestimony', { testimonyId });
   },
 
   markActive: async (id) => {
@@ -841,6 +887,9 @@ const usePrayerStore = create((set, get) => ({
     // shrink — bail before touching local state or the stored blob.
     if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
     const attachments = row.attachments.filter((a) => a.id !== attId);
+    // Removing the last content deletes the whole row — an empty update would
+    // otherwise linger as a bare author+date shell in the timeline.
+    if (!attachments.length && !row.text) return get().deleteUpdate(prayerId, updateId);
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === prayerId
@@ -858,6 +907,52 @@ const usePrayerStore = create((set, get) => ({
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateUpdateEncrypted', { updateId, row: patch });
     }
+  },
+
+  // Blank a posted update's text; when no attachments remain either, the whole
+  // row is deleted instead. Same encryption/fan-out split as
+  // removeUpdateAttachment: plaintext rows go through an RPC that also blanks
+  // the fanned-out community mirrors, E2EE rows are re-encrypted in place.
+  removeUpdateText: async (prayerId, updateId) => {
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
+    if (!row || !row.text) return;
+    if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
+    if (!(row.attachments || []).length) return get().deleteUpdate(prayerId, updateId);
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_updates: p.prayer_updates.map((u) => (u.id === updateId ? { ...u, text: '' } : u)) }
+          : p
+      ),
+    }));
+    if (!isRowEncrypted(row)) {
+      enqueue('removeUpdateText', { updateId });
+    }
+    if (canEncryptNested(prayer)) {
+      const enc = await encryptChildForStorage({ ...row, text: '' }, UPDATE_SENSITIVE_FIELDS);
+      const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+      for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
+      enqueue('updateUpdateEncrypted', { updateId, row: patch });
+    }
+  },
+
+  // Delete a whole posted update (text, media, and the row itself). The
+  // executor's RPC also drops the update's fanned-out community mirrors; a
+  // plain row delete needs no re-encryption, so no vault guard here.
+  deleteUpdate: async (prayerId, updateId) => {
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
+    if (!row) return;
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_updates: p.prayer_updates.filter((u) => u.id !== updateId) }
+          : p
+      ),
+    }));
+    removeAttachmentFiles(row.attachments || []);
+    enqueue('deleteUpdate', { updateId });
   },
 
   // ─── Prayer Points ────────────────────────────────────────────

@@ -874,6 +874,7 @@ export default {
   "recordVoice": "음성 메모 녹음",
   "stopRecording": "녹음 중지",
   "attachRemove": "첨부 삭제",
+  "textRemove": "텍스트 삭제",
   "linkPlaceholder": "링크 붙여넣기 (https://…)",
   "linkInvalid": "유효하지 않은 링크입니다",
   "attachTooLarge": "파일이 너무 큽니다",

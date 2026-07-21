@@ -874,6 +874,7 @@ export default {
   "recordVoice": "የድምፅ ማስታወሻ ቅዳ",
   "stopRecording": "ቅጂውን አቁም",
   "attachRemove": "አባሪውን አስወግድ",
+  "textRemove": "ጽሑፉን አስወግድ",
   "linkPlaceholder": "አገናኝ ለጥፍ (https://…)",
   "linkInvalid": "ይህ አገናኝ ትክክል አይደለም",
   "attachTooLarge": "ይህ ፋይል በጣም ትልቅ ነው",

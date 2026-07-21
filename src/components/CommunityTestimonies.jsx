@@ -1,4 +1,4 @@
-import RichText from './rich/RichText';
+import RemovableText from './rich/RemovableText';
 import AttachmentList from './rich/AttachmentList';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
@@ -6,10 +6,11 @@ import { t } from '../i18n';
 
 // List of testimonies posted for a community prayer. `loc` localizes each
 // testimony on demand via the parent's "See translation" toggle. The viewer
-// can delete an attachment from their OWN testimony via
-// onRemoveAttachment(testimony, att) — author-only, since removal re-encrypts
-// the row and deletes a storage object only the author owns.
-export default function CommunityTestimonies({ items, loc, lang, userId, onRemoveAttachment }) {
+// can delete an attachment or the text from their OWN testimony via
+// onRemoveAttachment(testimony, att) / onRemoveText(testimony) — author-only,
+// since removal re-encrypts the row and deletes storage objects only the
+// author owns.
+export default function CommunityTestimonies({ items, loc, lang, userId, onRemoveAttachment, onRemoveText }) {
   if (!items.length) return null;
   return (
     <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -20,7 +21,13 @@ export default function CommunityTestimonies({ items, loc, lang, userId, onRemov
             <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>
               🎉 {communityAuthor(tm, userId, lang)} · {timeAgo(tm.created_at, lang)}
             </p>
-            {tm.content && <RichText text={loc(tm.content)} className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }} />}
+            <RemovableText
+              text={loc(tm.content)}
+              lang={lang}
+              className="text-sm leading-relaxed"
+              style={{ color: 'var(--text-1)' }}
+              onRemove={onRemoveText && tm.user_id === userId && !tm._locked ? () => onRemoveText(tm) : null}
+            />
             <AttachmentList
               attachments={tm.attachments}
               lang={lang}
