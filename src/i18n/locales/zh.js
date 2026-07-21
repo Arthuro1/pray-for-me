@@ -291,6 +291,8 @@ export default {
   "memberUpdates": "成员话语",
   "updateSyncing": "同步中…… 此消息尚未在此设备上可用。",
   "deleteWord": "删除话语",
+  "deleteUpdate": "删除更新",
+  "deleteTestimony": "删除见证",
   "wordDeleted": "话语已删除",
   "leaveGroup": "离开群组",
   "groupNotFound": "未找到群组",

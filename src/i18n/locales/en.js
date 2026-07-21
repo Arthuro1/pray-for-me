@@ -258,6 +258,8 @@ export default {
   "memberUpdates": "Member updates",
   "updateSyncing": "Syncing… this word isn't available on this device yet.",
   "deleteWord": "Delete word",
+  "deleteUpdate": "Delete update",
+  "deleteTestimony": "Delete testimony",
   "wordDeleted": "Word deleted",
   "leaveGroup": "Leave group",
   "groupNotFound": "Group not found",

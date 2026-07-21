@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "کلمات اعضا",
   "updateSyncing": "در حال همگام‌سازی… این پیام هنوز روی این دستگاه در دسترس نیست.",
   "deleteWord": "حذف کلمه",
+  "deleteUpdate": "حذف به‌روزرسانی",
+  "deleteTestimony": "حذف شهادت",
   "wordDeleted": "کلمه حذف شد",
   "leaveGroup": "ترک گروه",
   "groupNotFound": "گروه پیدا نشد",

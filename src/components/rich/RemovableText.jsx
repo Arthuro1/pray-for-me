@@ -4,7 +4,7 @@
 // that leaves the entry empty into deleting the whole row, so no author+date
 // shell lingers in the timeline.
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import RichText from './RichText';
 import ConfirmDialog from '../shared/ConfirmDialog';
 import { t } from '../../i18n';
@@ -28,27 +28,9 @@ export default function RemovableText({ text, lang, className = '', style, onRem
   return (
     <div className="flex items-start gap-2">
       <RichText text={text} className={`flex-1 min-w-0 ${className}`} style={style} />
-      {confirming && (
-        <ConfirmDialog
-          title={t(lang, 'textRemove')}
-          message={t(lang, 'deleteWarning')}
-          confirmLabel={t(lang, 'delete')}
-          cancelLabel={t(lang, 'cancel')}
-          loading={removing}
-          onConfirm={confirmRemove}
-          onCancel={() => setConfirming(false)}
-        />
-      )}
-      <button
-        type="button"
-        onClick={() => setConfirming(true)}
-        aria-label={t(lang, 'textRemove')}
-        title={t(lang, 'textRemove')}
-        className="shrink-0 mt-0.5"
-        style={{ color: 'var(--text-3)' }}
-      >
-        <X size={13} aria-hidden="true" />
-      </button>
+      
+      
     </div>
+    
   );
 }

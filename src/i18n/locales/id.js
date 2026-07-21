@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "Kata-kata anggota",
   "updateSyncing": "Menyinkronkan… kata ini belum tersedia di perangkat ini.",
   "deleteWord": "Hapus kata",
+  "deleteUpdate": "Hapus pembaruan",
+  "deleteTestimony": "Hapus kesaksian",
   "wordDeleted": "Kata dihapus",
   "leaveGroup": "Tinggalkan grup",
   "groupNotFound": "Grup tidak ditemukan",

@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "የአባላት ቃላት",
   "updateSyncing": "በማመሳሰል ላይ… ይህ ቃል በዚህ መሣሪያ ላይ ገና አልተገኘም።",
   "deleteWord": "ቃል ሰርዝ",
+  "deleteUpdate": "ዝማኔ ሰርዝ",
+  "deleteTestimony": "ምስክርነት ሰርዝ",
   "wordDeleted": "ቃል ተሰርዟል",
   "leaveGroup": "ቡድኑን ለቅቅ",
   "groupNotFound": "ቡድን አልተገኘም",

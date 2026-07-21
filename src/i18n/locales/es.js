@@ -291,6 +291,8 @@ export default {
   "memberUpdates": "Palabras de los miembros",
   "updateSyncing": "Sincronizando… esta palabra aún no está disponible en este dispositivo.",
   "deleteWord": "Eliminar palabra",
+  "deleteUpdate": "Eliminar actualización",
+  "deleteTestimony": "Eliminar testimonio",
   "wordDeleted": "Palabra eliminada",
   "leaveGroup": "Salir del grupo",
   "groupNotFound": "Grupo no encontrado",

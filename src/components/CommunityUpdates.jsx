@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Avatar from './shared/Avatar';
 import AnonymousToggle from './AnonymousToggle';
 import EmptyState from './shared/EmptyState';
-import ConfirmDialog from './shared/ConfirmDialog';
 import UpdateComposer from './rich/UpdateComposer';
 import RemovableText from './rich/RemovableText';
 import AttachmentList from './rich/AttachmentList';
+import DeleteButton from './rich/DeleteButton';
 import { removeAttachmentFiles } from '../lib/attachments';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
@@ -16,43 +16,28 @@ import { t } from '../i18n';
 // with light formatting and media (photos / voice notes / video / links). The
 // list lives in the parent (which also feeds it to the translation toggle);
 // posting a word is delegated through onSend(text, attachments, isAnonymous) so
-// the parent stays the source of truth. A word can be removed by its author or
-// a group admin (isAdmin) via onDelete; a single attachment or the text on the
-// viewer's OWN word via onRemoveAttachment(update, att) / onRemoveText(update)
-// — author-only, since removal re-encrypts the row and deletes storage objects
-// only the author owns.
+// the parent stays the source of truth. A word can be removed as a whole by its
+// author or a group admin (isAdmin) via onDelete — the same trash affordance
+// used on prayer points; a single attachment or the text on the viewer's OWN
+// word via onRemoveAttachment(update, att) / onRemoveText(update) — author-only,
+// since removal re-encrypts the row and deletes storage objects only the
+// author owns.
 export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onRemoveAttachment, onRemoveText }) {
   const [anon, setAnon] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(null);
-  const [deleting, setDeleting] = useState(false);
 
   const canDelete = (u) => !!onDelete && !u._locked && (u.user_id === userId || isAdmin);
 
-  const handleConfirmDelete = async () => {
-    if (!confirmDelete) return;
-    setDeleting(true);
-    // Best-effort media cleanup — only the author owns the storage objects.
-    if (confirmDelete.user_id === userId) removeAttachmentFiles(confirmDelete.attachments);
-    await onDelete(confirmDelete.id);
-    setDeleting(false);
-    setConfirmDelete(null);
+  // Best-effort media cleanup runs only for the author (storage objects belong
+  // to them; an admin moderating someone else's word can't remove their blobs);
+  // the id then goes to the parent, which owns the store call + optimistic list.
+  const handleDelete = (u) => {
+    if (u.user_id === userId) removeAttachmentFiles(u.attachments);
+    return onDelete(u.id);
   };
 
   return (
     <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
       <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'memberUpdates')}</p>
-
-      {confirmDelete && (
-        <ConfirmDialog
-          title={t(lang, 'deleteWord')}
-          message={t(lang, 'deleteWarning')}
-          confirmLabel={t(lang, 'delete')}
-          cancelLabel={t(lang, 'cancel')}
-          loading={deleting}
-          onConfirm={handleConfirmDelete}
-          onCancel={() => setConfirmDelete(null)}
-        />
-      )}
 
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
@@ -88,15 +73,12 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                 )}
               </div>
               {canDelete(u) && (
-                <button
-                  onClick={() => setConfirmDelete(u)}
-                  title={t(lang, 'deleteWord')}
-                  aria-label={t(lang, 'deleteWord')}
-                  className="shrink-0 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity self-start mt-0.5"
-                  style={{ color: 'var(--text-3)' }}
-                >
-                  <Trash2 size={13} />
-                </button>
+                <DeleteButton
+                  onDelete={() => handleDelete(u)}
+                  lang={lang}
+                  label={t(lang, 'deleteWord')}
+                  className="self-start mt-0.5"
+                />
               )}
             </div>
           ))}

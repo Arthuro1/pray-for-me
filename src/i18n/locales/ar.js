@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "كلمات الأعضاء",
   "updateSyncing": "جارٍ المزامنة… هذه الكلمة غير متاحة على هذا الجهاز بعد.",
   "deleteWord": "حذف الكلمة",
+  "deleteUpdate": "حذف التحديث",
+  "deleteTestimony": "حذف الشهادة",
   "wordDeleted": "تم حذف الكلمة",
   "leaveGroup": "مغادرة المجموعة",
   "groupNotFound": "المجموعة غير موجودة",

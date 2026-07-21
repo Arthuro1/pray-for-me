@@ -36,6 +36,7 @@ import UpdateComposer from '../components/rich/UpdateComposer';
 import RichText from '../components/rich/RichText';
 import RemovableText from '../components/rich/RemovableText';
 import AttachmentList from '../components/rich/AttachmentList';
+import DeleteButton from '../components/rich/DeleteButton';
 import AnonymousToggle from '../components/AnonymousToggle';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
@@ -142,7 +143,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [togglingPraying, setTogglingPraying] = useState(false);
 
-  const { categories, markAnswered, markActive, markPrayedOn, softDeletePrayer, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, removeTestimonyAttachment, removeTestimonyText, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
+  const { categories, markAnswered, markActive, markPrayedOn, softDeletePrayer, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
       markAnswered: s.markAnswered,
@@ -153,8 +154,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       addUpdate: s.addUpdate,
       removeUpdateAttachment: s.removeUpdateAttachment,
       removeUpdateText: s.removeUpdateText,
+      deleteUpdate: s.deleteUpdate,
       removeTestimonyAttachment: s.removeTestimonyAttachment,
       removeTestimonyText: s.removeTestimonyText,
+      deleteTestimony: s.deleteTestimony,
       addPrayerPoint: s.addPrayerPoint,
       addVerseToPoint: s.addVerseToPoint,
       removeVerseFromPoint: s.removeVerseFromPoint,
@@ -178,7 +181,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, removeCommunityUpdateAttachment, removeCommunityUpdateText, removeCommunityTestimonyAttachment, removeCommunityTestimonyText, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, removeCommunityUpdateAttachment, removeCommunityUpdateText, removeCommunityTestimonyAttachment, removeCommunityTestimonyText, deleteCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       activeGroupId: s.activeGroupId,
@@ -193,6 +196,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       removeCommunityUpdateText: s.removeCommunityUpdateText,
       removeCommunityTestimonyAttachment: s.removeCommunityTestimonyAttachment,
       removeCommunityTestimonyText: s.removeCommunityTestimonyText,
+      deleteCommunityTestimony: s.deleteCommunityTestimony,
       addTestimony: s.addTestimony,
       updatePrayer: s.updatePrayer,
       deleteCommunityPrayer: s.deleteCommunityPrayer,
@@ -285,6 +289,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   const handleRemoveCommunityTestimonyText = async (tm) => {
     const res = await removeCommunityTestimonyText(tm);
+    if (res?.error) toast.error(t(lang, 'errorGeneric'));
+  };
+
+  // Whole-testimony delete (author or group admin). The store drops it from the
+  // testimonies list; CommunityTestimonies handles the author-only media cleanup.
+  const handleDeleteCommunityTestimony = async (testimonyId) => {
+    const res = await deleteCommunityTestimony(testimonyId);
     if (res?.error) toast.error(t(lang, 'errorGeneric'));
   };
 
@@ -1248,7 +1259,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* ── Community mode: testimonies posted for this prayer ── */}
         {isCommunity && (
-          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} onRemoveAttachment={handleRemoveCommunityTestimonyAttachment} onRemoveText={handleRemoveCommunityTestimonyText} />
+          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} isAdmin={isGroupAdmin} onDelete={handleDeleteCommunityTestimony} onRemoveAttachment={handleRemoveCommunityTestimonyAttachment} onRemoveText={handleRemoveCommunityTestimonyText} />
         )}
 
         {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
@@ -1315,7 +1326,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
           <div className="space-y-3 mb-3">
             {allUpdates.map(u => (
-              <div key={u.id} className="flex gap-3">
+              <div key={u.id} className="group flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div className="min-w-0 flex-1">
                   {u._locked ? (
@@ -1342,6 +1353,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     {u.author_name ? `${u.is_anonymous ? t(lang, 'anonymous') : u.author_name} · ` : ''}{format(new Date(u.created_at), 'd MMM yy', { locale })}
                   </p>
                 </div>
+                {canManage && !u._locked && (
+                  <DeleteButton
+                    onDelete={() => deleteUpdate(livePrayer.id, u.id)}
+                    lang={lang}
+                    label={t(lang, 'deleteUpdate')}
+                    className="mt-1.5"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -1368,10 +1387,22 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 // Legacy jsonb testimonies surface in the list without being
                 // prayer_testimonies rows — nothing to delete server-side.
                 const isRow = (livePrayer.prayer_testimonies || []).some(r => r.id === tm.id);
+                const showDelete = canManage && isRow && !tm._locked;
                 return (
-                <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                  {tm.created_at && (
-                    <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
+                <div key={tm.id} className="group rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                  {(tm.created_at || showDelete) && (
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      {tm.created_at
+                        ? <p className="text-xs" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
+                        : <span />}
+                      {showDelete && (
+                        <DeleteButton
+                          onDelete={() => deleteTestimony(livePrayer.id, tm.id)}
+                          lang={lang}
+                          label={t(lang, 'deleteTestimony')}
+                        />
+                      )}
+                    </div>
                   )}
                   <RemovableText
                     text={loc(tm.content)}

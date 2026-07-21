@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "Maneno ya wanachama",
   "updateSyncing": "Inasawazisha… neno hili bado halipatikani kwenye kifaa hiki.",
   "deleteWord": "Futa neno",
+  "deleteUpdate": "Futa badiliko",
+  "deleteTestimony": "Futa ushuhuda",
   "wordDeleted": "Neno limefutwa",
   "leaveGroup": "Acha kikundi",
   "groupNotFound": "Kikundi hakipatikani",

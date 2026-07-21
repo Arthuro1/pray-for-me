@@ -11,8 +11,9 @@
 --     authors — admins moderate by deleting the whole word, and could not
 --     re-encrypt someone else's E2EE payload anyway) may now UPDATE their own
 --     rows; the client re-encrypts the payload under the group key and
---     rewrites the row. Authors may also DELETE their own testimonies (words
---     already have a delete policy in community_update_delete.sql).
+--     rewrites the row. Authors — and group admins (moderation) — may DELETE
+--     whole testimonies; words got the same author-or-admin delete policy in
+--     community_update_delete.sql.
 --   • sync_remove_update_attachment() / sync_remove_update_text() remove one
 --     attachment (matched by its json id) or blank the text of a PLAINTEXT
 --     personal update AND of that update's fanned-out community mirrors
@@ -32,9 +33,17 @@ drop policy if exists "Authors can update their testimonies" on testimonies;
 create policy "Authors can update their testimonies" on testimonies
   for update using (user_id = auth.uid()) with check (user_id = auth.uid());
 
+-- A testimony can be deleted by its author OR a group admin (moderation),
+-- mirroring the words policy in community_update_delete.sql and the
+-- community_prayers "Authors and admins can delete prayers" policy.
+-- get_my_admin_group_ids() is SECURITY DEFINER, so it doesn't recurse on RLS.
 drop policy if exists "Authors can delete their testimonies" on testimonies;
-create policy "Authors can delete their testimonies" on testimonies
-  for delete using (user_id = auth.uid());
+drop policy if exists "Authors and admins can delete testimonies" on testimonies;
+create policy "Authors and admins can delete testimonies" on testimonies
+  for delete using (
+    user_id = auth.uid()
+    or group_id in (select get_my_admin_group_ids())
+  );
 
 -- ── 2. Remove one attachment from a personal update + its mirrors ─────────
 create or replace function sync_remove_update_attachment(p_update_id uuid, p_att_id text)

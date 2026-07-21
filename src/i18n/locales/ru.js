@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "Слова членов",
   "updateSyncing": "Синхронизация… это слово пока недоступно на этом устройстве.",
   "deleteWord": "Удалить слово",
+  "deleteUpdate": "Удалить обновление",
+  "deleteTestimony": "Удалить свидетельство",
   "wordDeleted": "Слово удалено",
   "leaveGroup": "Покинуть группу",
   "groupNotFound": "Группа не найдена",

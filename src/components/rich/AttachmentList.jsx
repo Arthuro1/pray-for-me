@@ -4,7 +4,7 @@
 // opening a prayer never blocks on its media. When the caller passes onRemove
 // (author-only), each attachment gets a delete badge behind a confirmation.
 import { useState } from 'react';
-import { ExternalLink, ImageOff, Loader2, X } from 'lucide-react';
+import { ExternalLink, ImageOff, Loader2, Trash2, X } from 'lucide-react';
 import { useAttachmentUrl } from '../../hooks/useAttachmentUrl';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import ConfirmDialog from '../shared/ConfirmDialog';
@@ -129,16 +129,7 @@ export default function AttachmentList({ attachments, lang, className = '', onRe
           // shrink-to-fit wrapper — the wrapper must own the width for it.
           <div key={att.id} className={att.type === 'audio' ? 'relative w-full max-w-xs' : 'relative max-w-full'}>
             <Renderer att={att} lang={lang} />
-            <button
-              type="button"
-              onClick={() => setConfirmAtt(att)}
-              aria-label={t(lang, 'attachRemove')}
-              title={t(lang, 'attachRemove')}
-              className="absolute -top-1.5 -end-1.5 w-6 h-6 flex items-center justify-center rounded-full shadow-sm"
-              style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--border)' }}
-            >
-              <X size={12} aria-hidden="true" />
-            </button>
+
           </div>
         );
       })}

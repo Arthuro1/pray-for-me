@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "सदस्यों के शब्द",
   "updateSyncing": "सिंक हो रहा है… यह संदेश अभी इस डिवाइस पर उपलब्ध नहीं है।",
   "deleteWord": "शब्द हटाएं",
+  "deleteUpdate": "अपडेट हटाएं",
+  "deleteTestimony": "गवाही हटाएं",
   "wordDeleted": "शब्द हटाया गया",
   "leaveGroup": "समूह छोड़ें",
   "groupNotFound": "समूह नहीं मिला",

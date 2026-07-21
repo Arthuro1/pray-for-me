@@ -290,6 +290,8 @@ export default {
   "memberUpdates": "Mga salita ng miyembro",
   "updateSyncing": "Nagsi-sync… hindi pa available ang salitang ito sa device na ito.",
   "deleteWord": "Burahin ang salita",
+  "deleteUpdate": "Burahin ang update",
+  "deleteTestimony": "Burahin ang patotoo",
   "wordDeleted": "Nabura ang salita",
   "leaveGroup": "Umalis sa grupo",
   "groupNotFound": "Hindi nahanap ang grupo",
