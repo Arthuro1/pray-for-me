@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { communityToPersonalInsert, sortByOrder } from '../utils/prayer';
+import { communityToPersonalInsert, mirrorSavedCopy, sortByOrder } from '../utils/prayer';
 import { prayersForDay, sortEntries, catchUpPrayers } from '../lib/planner';
 import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
@@ -311,16 +311,18 @@ const usePrayerStore = create((set, get) => ({
     }
   },
 
-  // Batch version of refreshFromCommunity: mirror the shared content of ALL
-  // saved-from-community prayers from their linked community prayers in one query.
-  // Run on load so saved copies reflect the current shared content (incl. edits
-  // synced from other members), without opening each one.
+  // Batch version of refreshFromCommunity: mirror the shared content AND the
+  // answered state of ALL saved-from-community prayers from their linked community
+  // prayers in one query. Run on load so saved copies reflect the current shared
+  // content (incl. edits synced from other members) and drop off the active list
+  // once the group request is answered — whoever answered it — without opening
+  // each one.
   refreshSavedCopies: async () => {
     const saved = get().prayers.filter((p) => p.community_origin_id);
     if (saved.length === 0) return;
     const { data } = await supabase
       .from('community_prayers')
-      .select('id, group_id, title, description, prayer_points, encrypted_payload, encryption_version, key_version')
+      .select('id, group_id, title, description, prayer_points, is_answered, encrypted_payload, encryption_version, key_version')
       .in('id', saved.map((p) => p.community_origin_id));
     if (!data) return;
     const decrypted = await Promise.all(data.map((c) => decryptCommunityRow(groupKeyResolver(c.group_id), c)));
@@ -329,12 +331,7 @@ const usePrayerStore = create((set, get) => ({
       prayers: state.prayers.map((p) => {
         const c = p.community_origin_id && byId[p.community_origin_id];
         if (!c) return p;
-        return {
-          ...p,
-          title: c.title ?? p.title,
-          description: c.description ?? p.description,
-          prayer_points: (c.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] })),
-        };
+        return { ...p, ...mirrorSavedCopy(p, c) };
       }),
     }));
   },
@@ -361,26 +358,22 @@ const usePrayerStore = create((set, get) => ({
   },
 
   // One-way pull for prayers saved from the community: refresh the saved copy's
-  // shared content (title, description, prayer points) from the linked community
-  // prayer so the owner sees the author's/group's latest. Personal fields
-  // (scheduling, categories, status, testimonies) are left untouched.
+  // shared content (title, description, prayer points) AND answered state from the
+  // linked community prayer, so the owner sees the author's/group's latest and an
+  // answered request drops off their active list. Other personal fields
+  // (scheduling, categories, testimonies) are left untouched (see mirrorSavedCopy).
   refreshFromCommunity: async (prayerId) => {
     const p = get().prayers.find((x) => x.id === prayerId);
     if (!p?.community_origin_id) return;
     const { data } = await supabase
       .from('community_prayers')
-      .select('group_id, title, description, prayer_points, encrypted_payload, encryption_version, key_version')
+      .select('group_id, title, description, prayer_points, is_answered, encrypted_payload, encryption_version, key_version')
       .eq('id', p.community_origin_id)
       .maybeSingle();
     if (!data) return; // not a member anymore / not found → keep the snapshot
     const c = await decryptCommunityRow(groupKeyResolver(data.group_id), data);
-    const points = (c.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] }));
     set((state) => ({
-      prayers: state.prayers.map((x) =>
-        x.id === prayerId
-          ? { ...x, title: c.title ?? x.title, description: c.description ?? x.description, prayer_points: points }
-          : x
-      ),
+      prayers: state.prayers.map((x) => (x.id === prayerId ? { ...x, ...mirrorSavedCopy(x, c) } : x)),
     }));
   },
 

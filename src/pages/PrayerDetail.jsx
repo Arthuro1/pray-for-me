@@ -142,12 +142,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [togglingPraying, setTogglingPraying] = useState(false);
 
-  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, removeTestimonyAttachment, removeTestimonyText, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
+  const { categories, markAnswered, markActive, markPrayedOn, softDeletePrayer, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, removeTestimonyAttachment, removeTestimonyText, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
       markAnswered: s.markAnswered,
       markActive: s.markActive,
       markPrayedOn: s.markPrayedOn,
+      softDeletePrayer: s.softDeletePrayer,
       addTestimony: s.addTestimony,
       addUpdate: s.addUpdate,
       removeUpdateAttachment: s.removeUpdateAttachment,
@@ -299,15 +300,43 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     onBack();
   };
 
+  // A community request can correspond to a prayer in the viewer's OWN list in
+  // two ways, and answering / resuming the group request must keep that personal
+  // copy in sync — otherwise an answered group request lingers as "active" on the
+  // Journal (and a "until answered" schedule never ends). markAnswered/markActive
+  // are idempotent and already fan back out to every shared copy.
+  const mirrorPersonalAnswered = async (answered) => {
+    const apply = async (pid) => {
+      const p = prayers.find((x) => x.id === pid);
+      if (p && (p.status === 'answered') === answered) return; // already in sync
+      if (answered) await markAnswered(pid);
+      else await markActive(pid);
+    };
+    // (1) Shared FROM the viewer's own prayer → keep that source in sync. Ownership
+    //     guard: a group admin toggling someone else's request must not touch a
+    //     stranger's list, so their action stays a community-only edit.
+    if (communityPrayer.source_prayer_id && communityPrayer.user_id === user?.id) {
+      await apply(communityPrayer.source_prayer_id);
+    }
+    // (2) SAVED to the viewer's list via "I'm praying" → complete/resume that copy
+    //     too. A saved copy is always the viewer's own, so it needs no guard.
+    const savedCopy = prayers.find((p) => p.community_origin_id === communityPrayer.id);
+    if (savedCopy) await apply(savedCopy.id);
+  };
+
   const handleConfirmCommunityAnswered = async (text, attachments = []) => {
     await setCommunityAnswered(communityPrayer.id, true);
+    await mirrorPersonalAnswered(true);
     if (text.trim() || attachments.length) {
       await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: text.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
       setTestimonySent(true);
     }
   };
 
-  const handleResumeCommunity = () => setCommunityAnswered(communityPrayer.id, false);
+  const handleResumeCommunity = async () => {
+    await setCommunityAnswered(communityPrayer.id, false);
+    await mirrorPersonalAnswered(false);
+  };
 
   // True when this community prayer is already in the user's personal list —
   // either saved as a copy, or it was originally shared from their own prayer.
@@ -316,8 +345,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     (communityPrayer.source_prayer_id && prayers.some(p => p.id === communityPrayer.source_prayer_id))
   );
 
-  // Tapping "I'm praying" toggles the reaction (praying count) and, when turning
-  // it on, also adds the prayer to the user's personal list (if not already there).
+  // Tapping "I'm praying" toggles the reaction (praying count) and mirrors it onto
+  // the user's personal list: turning it ON adds the prayer (if not already there),
+  // turning it OFF removes the saved copy that auto-add created — so the toggle is
+  // symmetric. Only a saved copy (community_origin_id) is ever removed here, never
+  // the user's own prayer that they merely shared to the group (source_prayer_id).
   const handleTogglePraying = async () => {
     if (togglingPraying) return;
     setTogglingPraying(true);
@@ -327,6 +359,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       const groupName = groups.find(g => g.id === communityPrayer.group_id)?.name || null;
       const res = await addFromCommunity(communityPrayer, groupName);
       if (!res?.error) toast.success(t(lang, 'addedToMyPrayers'));
+    } else if (wasReacted) {
+      const savedCopy = prayers.find(p => p.community_origin_id === communityPrayer.id);
+      if (savedCopy) {
+        softDeletePrayer(savedCopy.id);
+        toast.success(t(lang, 'removedFromList'));
+      }
     }
     setTogglingPraying(false);
   };

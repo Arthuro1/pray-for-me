@@ -1,5 +1,32 @@
 import { describe, it, expect } from 'vitest';
-import { testimonyList, prayerOnDay, prayerPriority, communityToPersonalInsert, sortByOrder } from './prayer.js';
+import { testimonyList, prayerOnDay, prayerPriority, communityToPersonalInsert, mirrorSavedCopy, sortByOrder } from './prayer.js';
+
+describe('mirrorSavedCopy', () => {
+  const saved = { id: 'sc1', community_origin_id: 'c1', title: 'old', description: 'old', status: 'active', answered_at: null };
+
+  it('mirrors shared content and drops to answered when the group request is answered', () => {
+    const c = { id: 'c1', title: 'new', description: 'newd', prayer_points: [{ id: 'pp1', title: 'p', verses: [] }], is_answered: true };
+    expect(mirrorSavedCopy(saved, c)).toEqual({
+      title: 'new', description: 'newd',
+      prayer_points: [{ id: 'pp1', title: 'p', verses: [] }],
+      status: 'answered', answered_at: null,
+    });
+  });
+
+  it('reactivates the copy when the group request is reopened', () => {
+    const answeredCopy = { ...saved, status: 'answered', answered_at: '2026-07-02T00:00:00Z' };
+    const c = { id: 'c1', title: 'new', description: 'newd', prayer_points: [], is_answered: false };
+    const out = mirrorSavedCopy(answeredCopy, c);
+    expect(out.status).toBe('active');
+    expect(out.answered_at).toBeNull();
+  });
+
+  it('keeps an existing answered_at when the copy is already answered', () => {
+    const answeredCopy = { ...saved, status: 'answered', answered_at: '2026-07-02T00:00:00Z' };
+    const c = { id: 'c1', title: 'new', description: 'newd', prayer_points: [], is_answered: true };
+    expect(mirrorSavedCopy(answeredCopy, c).answered_at).toBe('2026-07-02T00:00:00Z');
+  });
+});
 
 describe('communityToPersonalInsert', () => {
   it('maps a named community prayer to a personal insert payload', () => {
