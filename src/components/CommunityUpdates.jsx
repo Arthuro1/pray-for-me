@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import Avatar from './shared/Avatar';
 import AnonymousToggle from './AnonymousToggle';
-import EmptyState from './shared/EmptyState';
 import UpdateComposer from './rich/UpdateComposer';
 import RemovableText from './rich/RemovableText';
 import AttachmentList from './rich/AttachmentList';
