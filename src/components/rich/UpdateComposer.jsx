@@ -15,20 +15,7 @@ import { toast } from '../../store/toastStore';
 import { t } from '../../i18n';
 import FormatToolbar, { ToolbarButton } from './FormatToolbar';
 import { useMarkdownFormatting } from './formatting';
-
-// Preferred MediaRecorder container per browser. audio/mp4 (AAC) comes first:
-// Chromium's webm voice notes carry no duration metadata (crbug.com/642012),
-// which several players render as a broken/silent clip, and iOS Safari cannot
-// decode webm/opus at all — an mp4 note is the only one every member's device
-// plays back. webm stays as the fallback where mp4 recording is unsupported
-// (e.g. Firefox).
-function recorderMime() {
-  if (typeof MediaRecorder === 'undefined') return null;
-  for (const mime of ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm']) {
-    if (MediaRecorder.isTypeSupported(mime)) return mime;
-  }
-  return null;
-}
+import { recorderMime } from './recorderMime';
 
 export default function UpdateComposer({
   lang,

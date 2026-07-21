@@ -21,6 +21,7 @@ vi.mock('../../lib/supabase', () => {
 });
 
 import UpdateComposer from './UpdateComposer';
+import { recorderMime } from './recorderMime';
 import useAuthStore from '../../store/authStore';
 import { t } from '../../i18n';
 
@@ -85,5 +86,44 @@ describe('UpdateComposer', () => {
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }));
     // send() awaits onSend before clearing.
     await vi.waitFor(() => expect(textarea.value).toBe(''));
+  });
+});
+
+// The voice-note format ladder. Bare 'audio/mp4' is a trap: Chromium fills the
+// mp4 container with Opus, which iOS cannot decode — members hear silence. The
+// ladder must demand AAC explicitly and only trust bare mp4 on browsers that
+// cannot record Opus-in-mp4 (Safari).
+describe('recorderMime', () => {
+  const withRecorder = (supported) => {
+    globalThis.MediaRecorder = { isTypeSupported: (m) => supported.includes(m) };
+  };
+
+  afterEach(() => {
+    delete globalThis.MediaRecorder;
+  });
+
+  it('returns null when MediaRecorder is unavailable', () => {
+    expect(recorderMime()).toBe(null);
+  });
+
+  it('picks explicit AAC on Chromium with a platform AAC encoder', () => {
+    withRecorder(['audio/mp4;codecs=mp4a.40.2', 'audio/mp4', 'audio/mp4;codecs=opus', 'audio/webm;codecs=opus', 'audio/webm']);
+    expect(recorderMime()).toBe('audio/mp4;codecs=mp4a.40.2');
+  });
+
+  it('never picks bare mp4 when the browser would record Opus into it', () => {
+    // Chromium without AAC (e.g. Linux): bare mp4 would be silent on iOS.
+    withRecorder(['audio/mp4', 'audio/mp4;codecs=opus', 'audio/webm;codecs=opus', 'audio/webm']);
+    expect(recorderMime()).toBe('audio/webm;codecs=opus');
+  });
+
+  it('trusts bare mp4 on Safari, which records AAC and rejects codec params', () => {
+    withRecorder(['audio/mp4']);
+    expect(recorderMime()).toBe('audio/mp4');
+  });
+
+  it('falls back to webm/opus on Firefox', () => {
+    withRecorder(['audio/webm;codecs=opus', 'audio/webm']);
+    expect(recorderMime()).toBe('audio/webm;codecs=opus');
   });
 });
