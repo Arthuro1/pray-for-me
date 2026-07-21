@@ -39,8 +39,6 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
 
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
-      ) : updates.length === 0 ? (
-        <EmptyState compact emoji="💬" title={t(lang, 'beFirst')} />
       ) : (
         <div className="space-y-3 mb-3">
           {updates.map((u) => (
