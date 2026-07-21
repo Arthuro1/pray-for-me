@@ -9,12 +9,10 @@ import { t } from '../i18n';
 // List of testimonies posted for a community prayer. `loc` localizes each
 // testimony on demand via the parent's "See translation" toggle. A testimony
 // can be deleted as a whole by its author or a group admin (isAdmin) via
-// onDelete — the same trash affordance used on words and prayer points. The
-// viewer can also delete an attachment or the text from their OWN testimony via
-// onRemoveAttachment(testimony, att) / onRemoveText(testimony) — author-only,
-// since removal re-encrypts the row and deletes storage objects only the
-// author owns.
-export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin = false, onDelete, onRemoveAttachment, onRemoveText }) {
+// onDelete — the same trash affordance used on words and prayer points. Its
+// text and attachments render read-only; there is no per-attachment/per-text
+// removal.
+export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin = false, onDelete }) {
   if (!items.length) return null;
 
   const canDelete = (tm) => !!onDelete && !tm._locked && (tm.user_id === userId || isAdmin);
@@ -51,13 +49,11 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
               lang={lang}
               className="text-sm leading-relaxed"
               style={{ color: 'var(--text-1)' }}
-              onRemove={onRemoveText && tm.user_id === userId && !tm._locked ? () => onRemoveText(tm) : null}
             />
             <AttachmentList
               attachments={tm.attachments}
               lang={lang}
               className={tm.content ? 'mt-1.5' : ''}
-              onRemove={onRemoveAttachment && tm.user_id === userId && !tm._locked ? (att) => onRemoveAttachment(tm, att) : null}
             />
           </div>
         ))}

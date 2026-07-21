@@ -181,7 +181,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, removeCommunityUpdateAttachment, removeCommunityUpdateText, removeCommunityTestimonyAttachment, removeCommunityTestimonyText, deleteCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, deleteCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       activeGroupId: s.activeGroupId,
@@ -192,10 +192,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       fetchPrayerUpdates: s.fetchPrayerUpdates,
       addUpdate: s.addUpdate,
       deleteCommunityUpdate: s.deleteCommunityUpdate,
-      removeCommunityUpdateAttachment: s.removeCommunityUpdateAttachment,
-      removeCommunityUpdateText: s.removeCommunityUpdateText,
-      removeCommunityTestimonyAttachment: s.removeCommunityTestimonyAttachment,
-      removeCommunityTestimonyText: s.removeCommunityTestimonyText,
       deleteCommunityTestimony: s.deleteCommunityTestimony,
       addTestimony: s.addTestimony,
       updatePrayer: s.updatePrayer,
@@ -260,36 +256,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       return;
     }
     toast.success(t(lang, 'wordDeleted'));
-  };
-
-  // Delete one attachment or the text from the viewer's own word / testimony.
-  // The word list is component state, so patch it with what the store returns
-  // (removing the last content cascades into deleting the whole row); the
-  // testimonies list lives in the store and patches itself.
-  const handleRemoveWordAttachment = async (update, att) => {
-    const res = await removeCommunityUpdateAttachment(communityPrayer.id, update, att.id);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    setCommunityUpdates((prev) => res.deleted
-      ? prev.filter((u) => u.id !== update.id)
-      : prev.map((u) => (u.id === update.id ? { ...u, attachments: res.attachments } : u)));
-  };
-
-  const handleRemoveWordText = async (update) => {
-    const res = await removeCommunityUpdateText(communityPrayer.id, update);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    setCommunityUpdates((prev) => res.deleted
-      ? prev.filter((u) => u.id !== update.id)
-      : prev.map((u) => (u.id === update.id ? { ...u, text: '' } : u)));
-  };
-
-  const handleRemoveCommunityTestimonyAttachment = async (tm, att) => {
-    const res = await removeCommunityTestimonyAttachment(tm, att.id);
-    if (res?.error) toast.error(t(lang, 'errorGeneric'));
-  };
-
-  const handleRemoveCommunityTestimonyText = async (tm) => {
-    const res = await removeCommunityTestimonyText(tm);
-    if (res?.error) toast.error(t(lang, 'errorGeneric'));
   };
 
   // Whole-testimony delete (author or group admin). The store drops it from the
@@ -1252,14 +1218,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             isAdmin={isGroupAdmin}
             onSend={handleSendWord}
             onDelete={handleDeleteWord}
-            onRemoveAttachment={handleRemoveWordAttachment}
-            onRemoveText={handleRemoveWordText}
           />
         )}
 
         {/* ── Community mode: testimonies posted for this prayer ── */}
         {isCommunity && (
-          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} isAdmin={isGroupAdmin} onDelete={handleDeleteCommunityTestimony} onRemoveAttachment={handleRemoveCommunityTestimonyAttachment} onRemoveText={handleRemoveCommunityTestimonyText} />
+          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} isAdmin={isGroupAdmin} onDelete={handleDeleteCommunityTestimony} />
         )}
 
         {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}

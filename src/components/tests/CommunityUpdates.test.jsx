@@ -5,7 +5,7 @@
 // allowed to remove, must confirm before deleting, and must hand the update id
 // back to the parent (which owns the store call + optimistic list update).
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
 import CommunityUpdates from '../CommunityUpdates';
 import { t } from '../../i18n';
@@ -87,32 +87,15 @@ describe('CommunityUpdates delete affordance', () => {
   });
 });
 
-describe('CommunityUpdates attachment removal', () => {
+// Attachments and text render read-only in the timeline (AttachmentList /
+// RemovableText no longer expose a per-item remove control); only the whole
+// word can be deleted, covered by the block above.
+describe('CommunityUpdates attachments render read-only', () => {
   const att = { id: 'a1', type: 'link', url: 'https://example.com/a1' };
 
-  it('offers attachment removal on the viewer\'s own word', () => {
-    renderList({ onRemoveAttachment: vi.fn(), updates: [word({ attachments: [att] })] });
-    expect(screen.getByLabelText(t(lang, 'attachRemove'))).toBeTruthy();
-  });
-
-  it('never offers it on another member\'s word — even for admins', () => {
-    renderList({
-      onRemoveAttachment: vi.fn(),
-      isAdmin: true,
-      updates: [word({ id: 'u2', user_id: OTHER, author_name: 'Ana', attachments: [att] })],
-    });
+  it('shows the attachment but offers no per-attachment removal control', () => {
+    renderList({ updates: [word({ attachments: [att] })] });
+    expect(screen.getByText('example.com')).toBeTruthy();
     expect(screen.queryByLabelText(t(lang, 'attachRemove'))).toBeNull();
-  });
-
-  it('hands the word and the attachment back to the parent after confirmation', async () => {
-    const onRemoveAttachment = vi.fn().mockResolvedValue({});
-    renderList({ onRemoveAttachment, updates: [word({ attachments: [att] })] });
-    fireEvent.click(screen.getByLabelText(t(lang, 'attachRemove')));
-    fireEvent.click(screen.getByText(t(lang, 'delete')));
-    await waitFor(() =>
-      expect(onRemoveAttachment).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'u1' }),
-        expect.objectContaining({ id: 'a1' }),
-      ));
   });
 });

@@ -18,11 +18,9 @@ import { t } from '../i18n';
 // posting a word is delegated through onSend(text, attachments, isAnonymous) so
 // the parent stays the source of truth. A word can be removed as a whole by its
 // author or a group admin (isAdmin) via onDelete — the same trash affordance
-// used on prayer points; a single attachment or the text on the viewer's OWN
-// word via onRemoveAttachment(update, att) / onRemoveText(update) — author-only,
-// since removal re-encrypts the row and deletes storage objects only the
-// author owns.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onRemoveAttachment, onRemoveText }) {
+// used on prayer points. Its text and attachments render read-only; there is no
+// per-attachment/per-text removal.
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete }) {
   const [anon, setAnon] = useState(false);
 
   const canDelete = (u) => !!onDelete && !u._locked && (u.user_id === userId || isAdmin);
@@ -61,13 +59,11 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                       lang={lang}
                       className="text-sm leading-snug"
                       style={{ color: 'var(--text-1)' }}
-                      onRemove={onRemoveText && u.user_id === userId ? () => onRemoveText(u) : null}
                     />
                     <AttachmentList
                       attachments={u.attachments}
                       lang={lang}
                       className={u.text ? 'mt-1.5' : ''}
-                      onRemove={onRemoveAttachment && u.user_id === userId ? (att) => onRemoveAttachment(u, att) : null}
                     />
                   </>
                 )}
