@@ -202,7 +202,10 @@ export default function RichTextEditor({
         onInput={emit}
         onKeyDown={onKeyDown}
         onBlur={() => setToolbar(null)}
-        className={`w-full text-sm bg-transparent px-3.5 py-2.5 focus:outline-none overflow-y-auto whitespace-pre-wrap break-words ${className}`}
+        // The list button emits a real <ul>, but Tailwind's preflight resets
+        // list markers to none — so the bullet must be restyled here to show
+        // WHILE typing, matching RichText's read-only `list-disc ps-5`.
+        className={`w-full text-sm bg-transparent px-3.5 py-2.5 focus:outline-none overflow-y-auto whitespace-pre-wrap break-words [&_ul]:list-disc [&_ul]:ps-5 [&_ul]:my-0.5 ${className}`}
         style={{ color: 'var(--text-1)', minHeight, maxHeight }}
       />
       {toolbar && <SelectionToolbar pos={toolbar} lang={lang} onFormat={applyFormat} />}

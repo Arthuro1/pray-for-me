@@ -47,6 +47,13 @@ describe('htmlToMd', () => {
     expect(md('<ul><li>x</li><li>y</li></ul>')).toBe('- x\n- y');
   });
 
+  it('keeps bullets when the browser nests the list in a block', () => {
+    // execCommand('insertUnorderedList') wraps every non-first line this way.
+    expect(md('<div><ul><li>one</li></ul></div>')).toBe('- one');
+    expect(md('<div>one</div><div><ul><li>two</li></ul></div>')).toBe('one\n- two');
+    expect(md('<div><ul><li>one</li><li>two</li></ul></div>')).toBe('- one\n- two');
+  });
+
   it('handles the bare-first-line + <div> shape browsers produce', () => {
     expect(md('hello<div>world</div>')).toBe('hello\nworld');
   });
