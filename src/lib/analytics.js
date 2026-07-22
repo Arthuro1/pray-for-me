@@ -19,6 +19,13 @@ import { devError } from './logger';
 // Canonical event names. Reference these constants at call sites.
 export const EVENTS = Object.freeze({
   FIRST_PRAYER_CREATED: 'first_prayer_created',
+  // Pray-first guest funnel (value before signup). Content-free by construction —
+  // they record only THAT a step happened, never the prayer subject, the draft
+  // id, or a timestamp precise enough to identify content (see sanitizeProps).
+  GUEST_PRAYER_STARTED: 'guest_prayer_started',
+  GUEST_PRAYER_PRAYED: 'guest_prayer_prayed',
+  GUEST_PRAYER_SAVE_REQUESTED: 'guest_prayer_save_requested',
+  GUEST_PRAYER_IMPORTED: 'guest_prayer_imported',
   REMINDER_SET: 'reminder_set',
   PRAYER_PRAYED: 'prayer_prayed',
   PRAYER_UPDATED: 'prayer_updated',

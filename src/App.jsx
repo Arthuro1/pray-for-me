@@ -10,6 +10,7 @@ import ConfirmHost from './components/shared/ConfirmHost';
 import OfflineBanner from './components/shared/OfflineBanner';
 import SyncIndicator from './components/shared/SyncIndicator';
 import Onboarding from './components/Onboarding';
+import FirstPrayerFlow from './components/FirstPrayerFlow';
 import RecoveryPromptBanner from './components/RecoveryPromptBanner';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
@@ -40,6 +41,8 @@ import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
+import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
+import { importGuestPrayerOnce } from './lib/guestPrayerImport';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
 import { Loader2 } from 'lucide-react';
@@ -129,7 +132,11 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [editPrayer, setEditPrayer] = useState(null);
   const [formPrefill, setFormPrefill] = useState(null);
-  const [showAuth, setShowAuth] = useState(false);
+  // The unauthenticated experience: 'landing' → 'prayer' (pray-first guest flow) →
+  // 'auth'. `authIntent` distinguishes a direct sign-in from the save-your-prayer
+  // path so AuthPage can present the right (warm, contextual) copy.
+  const [guestView, setGuestView] = useState('landing');
+  const [authIntent, setAuthIntent] = useState('sign-in');
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const { user, loading: authLoading, init } = useAuthStore();
@@ -197,7 +204,10 @@ export default function App() {
       // monolingual user is never billed to "translate" content into its own
       // language. Refreshed to the real authoring language on the next prayer.
       ensureContentLang(lang);
-      if (!localStorage.getItem('pfm_onboarded')) setShowOnboarding(true);
+      // Don't show the standard first-run onboarding while a guest-prayer import
+      // is pending — that visitor already prayed and is about to have their prayer
+      // imported (see the import effect below). The sync marker avoids a flash.
+      if (!localStorage.getItem('pfm_onboarded') && !hasPendingGuestDraftSync()) setShowOnboarding(true);
     }
   }, [user?.id]);
 
@@ -240,6 +250,24 @@ export default function App() {
   useEffect(() => {
     if (user?.id && vaultUnlocked) { rememberAccountKey(user.id); loadData(user.id); }
   }, [vaultUnlocked]);
+
+  // Pray-first import: a visitor who prayed as a guest and chose "Save in my
+  // private journal" authenticates, and here — once the account key is READY and
+  // the vault is unlocked (never a plaintext write) — their one prayer is imported
+  // through the normal encrypted path, exactly once. The draft is device-local
+  // (IndexedDB), so it survives an OAuth / email-confirmation round-trip.
+  useEffect(() => {
+    if (!user?.id || !vaultChecked || !vaultUnlocked) return undefined;
+    if (!hasPendingGuestDraftSync()) return undefined;
+    let cancelled = false;
+    (async () => {
+      const res = await importGuestPrayerOnce();
+      if (cancelled || !res?.imported) return;
+      loadData(user.id);
+      toast.success(t(lang, 'savedPrivately'));
+    })();
+    return () => { cancelled = true; };
+  }, [user?.id, vaultChecked, vaultUnlocked]);
 
   const finishOnboarding = () => {
     localStorage.setItem('pfm_onboarded', '1');
@@ -298,9 +326,28 @@ export default function App() {
   }
 
   if (!user) {
+    // Pray-first guest flow. "Begin with a prayer" opens a real prayer moment
+    // (no account, no server writes); only "Save in my private journal" leads to
+    // authentication. Existing users keep a direct "Sign in" path, and invite
+    // links still fall through the landing → auth → pending-invite flow unchanged.
+    if (guestView === 'prayer') {
+      return (
+        <FirstPrayerFlow
+          mode="guest"
+          lang={lang}
+          onRequestSave={() => { setAuthIntent('save-prayer'); setGuestView('auth'); }}
+          onFinish={async () => { await clearGuestDraft(); setGuestView('landing'); }}
+        />
+      );
+    }
     return (
       <Suspense fallback={<PageLoader />}>
-        {showAuth ? <AuthPage onBack={() => setShowAuth(false)} /> : <LandingPage onGetStarted={() => setShowAuth(true)} />}
+        {guestView === 'auth'
+          ? <AuthPage intent={authIntent} onBack={() => setGuestView(authIntent === 'save-prayer' ? 'prayer' : 'landing')} />
+          : <LandingPage
+              onBeginPrayer={() => setGuestView('prayer')}
+              onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
+            />}
       </Suspense>
     );
   }

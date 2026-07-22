@@ -99,6 +99,28 @@ describe('AuthPage', () => {
     expect(useAuthStore.getState().signInWithEmail).not.toHaveBeenCalled();
   });
 
+  // Pray-first: the contextual auth that follows a guest prayer the visitor chose
+  // to keep. Registration leads (they have no account yet), the copy is warm and
+  // specific, and "I already have an account" stays one tap away.
+  it('save-prayer intent leads with registration and warm, specific copy', () => {
+    render(<AuthPage intent="save-prayer" onBack={() => {}} />);
+    expect(screen.getByText(t('fr', 'authSavePrayerTitle'))).toBeTruthy();
+    expect(screen.getByText(t('fr', 'authSavePrayerBody'))).toBeTruthy();
+    // Registration is the default view: the name field shows and the CTA is the
+    // save-specific "Continue to save privately", not a generic signup label.
+    expect(screen.getByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
+    expect(screen.getByRole('button', { name: t('fr', 'authSavePrayerCta') })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t('fr', 'authCreateAccount') })).toBeNull();
+    // The login tab remains available for existing users.
+    expect(screen.getByRole('button', { name: t('fr', 'authLogIn') })).toBeTruthy();
+  });
+
+  it('without the save-prayer intent it still defaults to log in (no contextual copy)', () => {
+    render(<AuthPage onBack={() => {}} />);
+    expect(screen.queryByText(t('fr', 'authSavePrayerTitle'))).toBeNull();
+    expect(screen.queryByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeNull();
+  });
+
   it('offers to resend the confirmation email after a successful sign-up', async () => {
     const { container } = render(<AuthPage />);
     fireEvent.click(screen.getByRole('button', { name: t('fr', 'authSignUp') }));

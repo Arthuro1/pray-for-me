@@ -142,6 +142,29 @@ const EXPLORE_LABELS = {
   fa: { more: 'همهٔ امکانات را ببینید', less: 'نمایش کمتر' },
 };
 
+// The primary hero CTA — "pray first, sign up only to save". Its own shared map
+// with an English fallback (same pattern as CORE_BENEFITS / EXPLORE_LABELS), so
+// every language keeps working even where the fuller landing copy is still an
+// abbreviated placeholder. This opens a real prayer moment, not the auth screen.
+const BEGIN_LABELS = {
+  en: 'Begin with a prayer',
+  fr: 'Commencez par une prière',
+  de: 'Mit einem Gebet beginnen',
+  pt: 'Comece com uma oração',
+  es: 'Comienza con una oración',
+  zh: '从一个祷告开始',
+  hi: 'एक प्रार्थना से शुरू करें',
+  ja: '祈りから始める',
+  sw: 'Anza kwa sala',
+  am: 'በጸሎት ይጀምሩ',
+  id: 'Mulai dengan doa',
+  tl: 'Magsimula sa panalangin',
+  ko: '기도로 시작하기',
+  ru: 'Начните с молитвы',
+  ar: 'ابدأ بصلاة',
+  fa: 'با یک دعا آغاز کنید',
+};
+
 function detectLang() {
   const saved = localStorage.getItem('pfm_language');
   if (saved && ALL_CODES.includes(saved)) return saved;
@@ -1022,7 +1045,10 @@ function FAQ({ q, a, T }) {
   );
 }
 
-export default function LandingPage({ onGetStarted }) {
+// `onBeginPrayer` opens the pray-first guest flow (the hero and journal CTAs);
+// `onSignIn` is the direct path to authentication (the nav + footer "Sign in"),
+// preserved for people who already have an account.
+export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
   const [langOpen, setLangOpen] = useState(false);
   // Dark is the landing's native look; light kicks in when the visitor picked
@@ -1035,6 +1061,7 @@ export default function LandingPage({ onGetStarted }) {
   const T = THEMES[theme];
   const benefits = CORE_BENEFITS[lang] || CORE_BENEFITS.en;
   const explore = EXPLORE_LABELS[lang] || EXPLORE_LABELS.en;
+  const beginLabel = BEGIN_LABELS[lang] || BEGIN_LABELS.en;
   const activeLang = LANGS.find(l => l.code === lang);
 
   // Reflect the visitor's language on <html> so screen readers pronounce the
@@ -1126,7 +1153,7 @@ export default function LandingPage({ onGetStarted }) {
           </div>
 
           <button
-            onClick={onGetStarted}
+            onClick={onSignIn}
             className="text-sm font-medium px-4 py-2 rounded-xl transition-all shrink-0"
             style={{ background: T.chipBg, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
           >
@@ -1151,11 +1178,11 @@ export default function LandingPage({ onGetStarted }) {
           <p className="text-base md:text-lg mb-8 max-w-xl mx-auto" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.subtitle}</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={onGetStarted}
+              onClick={onBeginPrayer}
               className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-semibold text-white"
               style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadow }}
             >
-              {c.cta}
+              {beginLabel}
             </button>
             <button
               onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
@@ -1269,7 +1296,7 @@ export default function LandingPage({ onGetStarted }) {
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
             <p className="text-sm mb-3" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.calloutDesc}</p>
             <p className="text-xs mb-5 italic" style={{ color: T.textDim, lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
-            <button onClick={onGetStarted} className="px-6 py-3 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
+            <button onClick={onBeginPrayer} className="px-6 py-3 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
               {c.calloutTry}
             </button>
           </div>
@@ -1309,7 +1336,7 @@ export default function LandingPage({ onGetStarted }) {
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
           <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
-          <button onClick={onGetStarted} className="px-8 py-4 rounded-2xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadowBig }}>
+          <button onClick={onBeginPrayer} className="px-8 py-4 rounded-2xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadowBig }}>
             {c.ctaBtn}
           </button>
           <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
@@ -1324,7 +1351,7 @@ export default function LandingPage({ onGetStarted }) {
             <span className="text-sm font-medium" style={{ color: T.text }}>Pray4Me</span>
           </div>
           <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
-          <button onClick={onGetStarted} className="text-xs font-medium px-4 py-2 rounded-xl" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>
+          <button onClick={onSignIn} className="text-xs font-medium px-4 py-2 rounded-xl" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>
             {c.signIn} →
           </button>
         </div>

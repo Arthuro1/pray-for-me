@@ -22,6 +22,14 @@ describe('isEventAllowed', () => {
     for (const name of required) expect(isEventAllowed(name)).toBe(true);
   });
 
+  // The pray-first guest funnel is measurable but content-free: only THAT each
+  // step happened, never the prayer subject.
+  it('allowlists the content-free guest funnel events', () => {
+    for (const name of ['guest_prayer_started', 'guest_prayer_prayed', 'guest_prayer_save_requested', 'guest_prayer_imported']) {
+      expect(isEventAllowed(name)).toBe(true);
+    }
+  });
+
   // No paid-plan gating ships in the app, so the Supporter/feature-gate events
   // must NOT exist — this guards against them being reintroduced.
   it('does not allow Supporter / feature-gate prompt events', () => {
@@ -52,6 +60,12 @@ describe('sanitizeProps — the privacy guard', () => {
       source: 'settings',
     };
     expect(sanitizeProps(dirty)).toEqual({ source: 'settings' });
+  });
+
+  // A guest event must never smuggle the prayer subject or the draft id — those
+  // keys aren't allowlisted, so nothing survives.
+  it('strips a guest prayer subject / draft id even if an event tried to carry them', () => {
+    expect(sanitizeProps({ title: 'pray for my brother', draftId: 'a1b2', personName: 'Jane' })).toBeUndefined();
   });
 
   it('drops non-scalar values even on allowlisted keys', () => {

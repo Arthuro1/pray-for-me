@@ -35,11 +35,16 @@ function friendlyAuthError(error) {
 
 const inputStyle = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 
-export default function AuthPage({ onBack }) {
+export default function AuthPage({ onBack, intent }) {
+  // `intent === 'save-prayer'` is the contextual auth that follows the pray-first
+  // guest flow: the visitor already prayed and chose to keep it, so registration
+  // leads (with "I already have an account" always one tap away via the tabs) and
+  // the copy is warm and specific about what they're doing — saving that prayer.
+  const savePrayerIntent = intent === 'save-prayer';
   // 'login' is the default view; 'register' is the secondary option; 'forgot' is
   // the password-reset sub-view. The selected app language (carried over from the
   // landing page via the shared settings store) drives every string here.
-  const [mode, setMode] = useState('login');
+  const [mode, setMode] = useState(savePrayerIntent ? 'register' : 'login');
   const [form, setForm] = useState({ email: '', password: '', fullName: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -195,6 +200,16 @@ export default function AuthPage({ onBack }) {
           </form>
         ) : (
           <>
+            {/* Pray-first contextual header: warm, specific about saving the prayer
+                the visitor just prayed. Purely additive — the tabs below still
+                offer "I already have an account". */}
+            {savePrayerIntent && (
+              <div className="mb-5 text-center">
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authSavePrayerTitle')}</h2>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authSavePrayerBody')}</p>
+              </div>
+            )}
+
             {/* Tabs — login first (default), register secondary */}
             <div className="flex rounded-xl p-1 mb-5" style={{ background: 'var(--input-bg)' }}>
               {['login', 'register'].map((m) => (
@@ -323,7 +338,9 @@ export default function AuthPage({ onBack }) {
                 style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
               >
                 {loading && <Loader2 size={14} className="animate-spin" />}
-                {mode === 'login' ? t(lang, 'authLogIn') : t(lang, 'authCreateAccount')}
+                {mode === 'login'
+                  ? t(lang, 'authLogIn')
+                  : t(lang, savePrayerIntent ? 'authSavePrayerCta' : 'authCreateAccount')}
               </button>
             </form>
           </>

@@ -17,6 +17,7 @@ dist-ssr
 !.env.example
 
 supabase/.temp/
+public/screenshots/
 
 # Android TWA (Play Store wrapper) — never commit the signing keystore or build output
 android-twa/*.keystore

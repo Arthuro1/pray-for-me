@@ -435,7 +435,11 @@ const usePrayerStore = create((set, get) => ({
     // just the fact that a first prayer was created. See lib/analytics.js.)
     const isFirst = get().prayers.length === 0;
 
-    const id = crypto.randomUUID();
+    // Accept an optional client-generated UUID so a caller that already owns an id
+    // (e.g. importing a device-local guest draft) keeps the local record and the
+    // eventual server row in sync; the createPrayer executor upserts on id, so a
+    // repeated import can't create a duplicate.
+    const id = prayer.id || crypto.randomUUID();
     const categoryIds = prayer.categoryIds || [];
     const row = {
       id,

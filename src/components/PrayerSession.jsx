@@ -74,8 +74,12 @@ function SessionVerse({ verse, lang }) {
   );
 }
 
-export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed }) {
-  const [mode, setMode] = useState(initialMode);
+// `allowFormats` gates the guided / ACTS paths behind the format switcher. It is
+// on by default; the guest first-prayer experience passes it false so the session
+// stays requests-only — the deeper paths open Scripture movements (verse lookups),
+// and a signed-out visitor's prayer must make no AI / YouVersion / network calls.
+export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed, allowFormats = true }) {
+  const [mode, setMode] = useState(() => (allowFormats ? initialMode() : 'requests'));
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
   // How many requests have been prayed THIS session (advanced past). Switching
@@ -232,20 +236,22 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           {currentStep} / {totalSteps}
         </span>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowFormats((v) => !v)}
-            aria-expanded={showFormats}
-            title={t(lang, 'prayerFormat')}
-            className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-full font-medium"
-            style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
-          >
-            {t(lang, MODE_OPTIONS.find((o) => o.mode === mode).titleKey)}
-            <ChevronDown size={12} style={{ transform: showFormats ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
-          </button>
+          {allowFormats && (
+            <button
+              onClick={() => setShowFormats((v) => !v)}
+              aria-expanded={showFormats}
+              title={t(lang, 'prayerFormat')}
+              className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-full font-medium"
+              style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
+            >
+              {t(lang, MODE_OPTIONS.find((o) => o.mode === mode).titleKey)}
+              <ChevronDown size={12} style={{ transform: showFormats ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+            </button>
+          )}
           {closeButton}
         </div>
       </div>
-      {showFormats && (
+      {allowFormats && showFormats && (
         <div className="rounded-2xl p-1.5 mb-3 space-y-1" style={{ background: 'rgba(255,255,255,0.1)' }} role="radiogroup" aria-label={t(lang, 'prayerFormat')}>
           {MODE_OPTIONS.map(({ mode: m, titleKey, descKey }) => (
             <button
