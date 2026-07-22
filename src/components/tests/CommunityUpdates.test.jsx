@@ -5,7 +5,7 @@
 // allowed to remove, must confirm before deleting, and must hand the update id
 // back to the parent (which owns the store call + optimistic list update).
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 
 import CommunityUpdates from '../CommunityUpdates';
 import { t } from '../../i18n';
@@ -84,6 +84,50 @@ describe('CommunityUpdates delete affordance', () => {
     fireEvent.click(screen.getByLabelText(t(lang, 'deleteWord')));
     fireEvent.click(screen.getByText(t(lang, 'cancel')));
     expect(onDelete).not.toHaveBeenCalled();
+  });
+});
+
+// A word's TEXT can be edited only by its author (the WhatsApp "edit message"
+// gesture). An admin moderates by deleting, never by rewriting someone else's
+// words — so edit is strictly author-scoped, unlike delete.
+describe('CommunityUpdates edit affordance (author only)', () => {
+  it("shows an edit control for the viewer's own word", () => {
+    renderList({ onEdit: vi.fn() });
+    expect(screen.getByLabelText(t(lang, 'editWord'))).toBeTruthy();
+  });
+
+  it("never offers edit on another member's word, even to an admin", () => {
+    renderList({ onEdit: vi.fn(), isAdmin: true, updates: [word({ id: 'u2', user_id: OTHER, author_name: 'Ana' })] });
+    expect(screen.queryByLabelText(t(lang, 'editWord'))).toBeNull();
+  });
+
+  it('never edits a locked (undecryptable) word', () => {
+    renderList({ onEdit: vi.fn(), updates: [word({ _locked: true })] });
+    expect(screen.queryByLabelText(t(lang, 'editWord'))).toBeNull();
+  });
+
+  it('offers no edit control when onEdit is not provided', () => {
+    renderList();
+    expect(screen.queryByLabelText(t(lang, 'editWord'))).toBeNull();
+  });
+
+  it('offers no edit on a media-only word (no text to edit)', () => {
+    renderList({ onEdit: vi.fn(), updates: [word({ text: '', attachments: [{ id: 'a1', type: 'link', url: 'https://x.co' }] })] });
+    expect(screen.queryByLabelText(t(lang, 'editWord'))).toBeNull();
+  });
+
+  it('opens an inline editor prefilled with the text and saves the new text', async () => {
+    const onEdit = vi.fn().mockResolvedValue({});
+    const { container } = renderList({ onEdit });
+    fireEvent.click(screen.getByLabelText(t(lang, 'editWord')));
+    // The editor's contentEditable field is the first in the tree (above the
+    // composer's own field); it renders the text as HTML, so read textContent.
+    const editor = container.querySelector('[contenteditable]');
+    expect(editor.textContent).toBe('Courage, je prie pour toi');
+    editor.textContent = 'Texte corrigé';
+    fireEvent.input(editor);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'save') }));
+    await waitFor(() => expect(onEdit).toHaveBeenCalledWith('u1', 'Texte corrigé'));
   });
 });
 

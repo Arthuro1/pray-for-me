@@ -6,6 +6,8 @@ import UpdateComposer from './rich/UpdateComposer';
 import RemovableText from './rich/RemovableText';
 import AttachmentList from './rich/AttachmentList';
 import DeleteButton from './rich/DeleteButton';
+import EditButton from './rich/EditButton';
+import MessageEditor from './rich/MessageEditor';
 import { removeAttachmentFiles } from '../lib/attachments';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
@@ -15,14 +17,18 @@ import { t } from '../i18n';
 // with light formatting and media (photos / voice notes / video / links). The
 // list lives in the parent (which also feeds it to the translation toggle);
 // posting a word is delegated through onSend(text, attachments, isAnonymous) so
-// the parent stays the source of truth. A word can be removed as a whole by its
-// author or a group admin (isAdmin) via onDelete — the same trash affordance
-// used on prayer points. Its text and attachments render read-only; there is no
-// per-attachment/per-text removal.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete }) {
+// the parent stays the source of truth. A word's TEXT can be edited only by its
+// author (onEdit) — the WhatsApp "edit message" gesture. A word can be removed
+// as a whole by its author or a group admin (isAdmin) via onDelete — the same
+// trash affordance used on prayer points. Attachments render read-only.
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onEdit }) {
   const [anon, setAnon] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   const canDelete = (u) => !!onDelete && !u._locked && (u.user_id === userId || isAdmin);
+  // Editing is strictly the author's own — an admin moderates by deleting, and
+  // could not re-encrypt someone else's word anyway. Only rows with text to edit.
+  const canEdit = (u) => !!onEdit && !u._locked && !!u.text && u.user_id === userId;
 
   // Best-effort media cleanup runs only for the author (storage objects belong
   // to them; an admin moderating someone else's word can't remove their blobs);
@@ -30,6 +36,11 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
   const handleDelete = (u) => {
     if (u.user_id === userId) removeAttachmentFiles(u.attachments);
     return onDelete(u.id);
+  };
+
+  const handleSaveEdit = async (u, text) => {
+    await onEdit(u.id, text);
+    setEditingId(null);
   };
 
   return (
@@ -49,6 +60,13 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                 </p>
                 {u._locked ? (
                   <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
+                ) : editingId === u.id ? (
+                  <MessageEditor
+                    initialText={u.text}
+                    onSave={(text) => handleSaveEdit(u, text)}
+                    onCancel={() => setEditingId(null)}
+                    lang={lang}
+                  />
                 ) : (
                   <>
                     <RemovableText
@@ -65,13 +83,15 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                   </>
                 )}
               </div>
-              {canDelete(u) && (
-                <DeleteButton
-                  onDelete={() => handleDelete(u)}
-                  lang={lang}
-                  label={t(lang, 'deleteWord')}
-                  className="self-start mt-0.5"
-                />
+              {editingId !== u.id && (canEdit(u) || canDelete(u)) && (
+                <div className="flex items-start gap-1.5 self-start mt-0.5">
+                  {canEdit(u) && (
+                    <EditButton onEdit={() => setEditingId(u.id)} label={t(lang, 'editWord')} />
+                  )}
+                  {canDelete(u) && (
+                    <DeleteButton onDelete={() => handleDelete(u)} lang={lang} label={t(lang, 'deleteWord')} />
+                  )}
+                </div>
               )}
             </div>
           ))}

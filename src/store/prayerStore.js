@@ -716,6 +716,34 @@ const usePrayerStore = create((set, get) => ({
     enqueue('deleteTestimony', { testimonyId });
   },
 
+  // Author-only text edit of a posted testimony (the WhatsApp "edit message"
+  // gesture) — every personal testimony is the owner's own. Optimistic local
+  // set; encrypted rows re-encrypt the payload in place, plaintext rows write
+  // the content column directly. Testimonies never fan out, so no mirror update.
+  // An empty or unchanged edit is a no-op (blank is a delete, not a save).
+  editTestimony: async (prayerId, testimonyId, content) => {
+    const next = (content || '').trim();
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
+    if (!row || !next || next === (row.content || '').trim()) return;
+    if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_testimonies: p.prayer_testimonies.map((tm) => (tm.id === testimonyId ? { ...tm, content: next } : tm)) }
+          : p
+      ),
+    }));
+    if (canEncryptNested(prayer)) {
+      const enc = await encryptChildForStorage({ ...row, content: next }, TESTIMONY_SENSITIVE_FIELDS);
+      const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+      for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
+      enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
+    } else {
+      enqueue('setTestimonyContent', { testimonyId, content: next });
+    }
+  },
+
   markActive: async (id) => {
     set((state) => ({ prayers: state.prayers.map((p) => p.id === id ? { ...p, status: 'active', answered_at: null } : p) }));
     enqueue('markActive', { id });
@@ -950,6 +978,34 @@ const usePrayerStore = create((set, get) => ({
     }));
     removeAttachmentFiles(row.attachments || []);
     enqueue('deleteUpdate', { updateId });
+  },
+
+  // Author-only text edit of a posted update. Optimistic local set; encrypted
+  // rows re-encrypt in place, plaintext rows go through sync_set_update_text so
+  // the edit also reaches any fanned-out community mirrors (direct-update
+  // fallback for a prod that predates the RPC — same split as removeUpdateText).
+  // An empty or unchanged edit is a no-op.
+  editUpdate: async (prayerId, updateId, text) => {
+    const next = (text || '').trim();
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
+    if (!row || !next || next === (row.text || '').trim()) return;
+    if (isRowEncrypted(row) && !canEncryptNested(prayer)) return;
+    set((state) => ({
+      prayers: state.prayers.map((p) =>
+        p.id === prayerId
+          ? { ...p, prayer_updates: p.prayer_updates.map((u) => (u.id === updateId ? { ...u, text: next } : u)) }
+          : p
+      ),
+    }));
+    if (canEncryptNested(prayer)) {
+      const enc = await encryptChildForStorage({ ...row, text: next }, UPDATE_SENSITIVE_FIELDS);
+      const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
+      for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
+      enqueue('updateUpdateEncrypted', { updateId, row: patch });
+    } else {
+      enqueue('setUpdateText', { updateId, text: next });
+    }
   },
 
   // ─── Prayer Points ────────────────────────────────────────────

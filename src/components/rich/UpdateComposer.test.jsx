@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 //
-// The shared composer: sending text, formatting insertion, link attachments,
-// and the allowEmpty contract the answered flow depends on.
+// The shared composer: sending text, WYSIWYG formatting (styled selections
+// serialize back to markdown), link attachments, and the allowEmpty contract
+// the answered flow depends on.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -32,42 +33,62 @@ beforeEach(() => {
   useAuthStore.setState({ user: { id: 'u1' } });
 });
 
+// The attach "+" menu holds the media pickers and the link action — open it
+// before reaching for either. (Formatting now lives on the selection toolbar.)
+const openMenu = () => fireEvent.click(screen.getByRole('button', { name: t(lang, 'attachMenu') }));
+
+// The composer field is a contentEditable WYSIWYG surface, not a <textarea>:
+// set its text and fire input so the markdown value flows back out via onChange.
+const typeInto = (el, text) => { el.textContent = text; fireEvent.input(el); };
+
 describe('UpdateComposer', () => {
   it('sends trimmed text with no attachments', async () => {
     const onSend = vi.fn(async () => {});
     const { container } = render(<UpdateComposer lang={lang} onSend={onSend} placeholder="..." />);
-    fireEvent.change(container.querySelector('textarea'), { target: { value: '  God answered!  ' } });
+    typeInto(container.querySelector('[contenteditable]'), '  God answered!  ');
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }));
     expect(onSend).toHaveBeenCalledWith('God answered!', []);
   });
 
-  it('disables send when empty — unless allowEmpty (answered flow)', () => {
-    const { container, unmount } = render(<UpdateComposer lang={lang} onSend={vi.fn()} />);
-    expect(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }).disabled).toBe(true);
-    unmount();
+  it('shows a mic when empty (chat style) and a send button once there is text', () => {
+    const { container } = render(<UpdateComposer lang={lang} onSend={vi.fn()} />);
+    // Empty: the right-hand action records a voice note, there is no send button.
+    expect(screen.getByRole('button', { name: t(lang, 'recordVoice') })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'tipSaveUpdate') })).toBeNull();
+    // Typing swaps the mic for an enabled send button.
+    typeInto(container.querySelector('[contenteditable]'), 'hi');
+    expect(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }).disabled).toBe(false);
+  });
+
+  it('keeps a labelled, enabled send button when allowEmpty (answered flow)', () => {
     render(<UpdateComposer lang={lang} onSend={vi.fn()} allowEmpty sendLabel="Confirm" />);
     expect(screen.getByRole('button', { name: 'Confirm' }).disabled).toBe(false);
-    expect(container).toBeTruthy();
   });
 
-  it('wraps the textarea content in bold markers via the toolbar', () => {
-    const { container } = render(<UpdateComposer lang={lang} onSend={vi.fn()} />);
-    const textarea = container.querySelector('textarea');
-    fireEvent.change(textarea, { target: { value: 'thanks' } });
-    textarea.setSelectionRange(0, 6);
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'formatBold') }));
-    expect(textarea.value).toBe('**thanks**');
-  });
-
-  it('attaches a validated link and sends it along with the text', async () => {
+  // The selection toolbar styles text in place (real <strong>, not "**"); what
+  // gets sent is the markdown serialization of that styled HTML. execCommand
+  // isn't available in jsdom, so assert the boundary that matters: styled HTML
+  // in the field → markers in the sent value.
+  it('serialises a styled (bold) span back to markdown on send', () => {
     const onSend = vi.fn(async () => {});
     const { container } = render(<UpdateComposer lang={lang} onSend={onSend} />);
+    const editor = container.querySelector('[contenteditable]');
+    editor.innerHTML = '<strong>thanks</strong>';
+    fireEvent.input(editor);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }));
+    expect(onSend).toHaveBeenCalledWith('**thanks**', []);
+  });
+
+  it('attaches a validated link from the menu and sends it along with the text', async () => {
+    const onSend = vi.fn(async () => {});
+    const { container } = render(<UpdateComposer lang={lang} onSend={onSend} />);
+    openMenu();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'attachLink') }));
     const urlInput = container.querySelector('input[type="url"]');
     fireEvent.change(urlInput, { target: { value: 'example.com/article' } });
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'addBtn') }));
 
-    fireEvent.change(container.querySelector('textarea'), { target: { value: 'see this' } });
+    typeInto(container.querySelector('[contenteditable]'), 'see this');
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }));
 
     expect(onSend).toHaveBeenCalledTimes(1);
@@ -81,11 +102,11 @@ describe('UpdateComposer', () => {
   it('clears text and attachments after a successful send', async () => {
     const onSend = vi.fn(async () => {});
     const { container } = render(<UpdateComposer lang={lang} onSend={onSend} />);
-    const textarea = container.querySelector('textarea');
-    fireEvent.change(textarea, { target: { value: 'first word' } });
+    const editor = container.querySelector('[contenteditable]');
+    typeInto(editor, 'first word');
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') }));
     // send() awaits onSend before clearing.
-    await vi.waitFor(() => expect(textarea.value).toBe(''));
+    await vi.waitFor(() => expect(editor.textContent).toBe(''));
   });
 });
 

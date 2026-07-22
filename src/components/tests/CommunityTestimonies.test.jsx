@@ -86,3 +86,39 @@ describe('CommunityTestimonies delete affordance', () => {
     expect(onDelete).not.toHaveBeenCalled();
   });
 });
+
+// A testimony's TEXT can be edited only by its author — an admin moderates by
+// deleting, never by rewriting someone else's testimony.
+describe('CommunityTestimonies edit affordance (author only)', () => {
+  it("shows an edit control for the viewer's own testimony", () => {
+    renderList({ onEdit: vi.fn() });
+    expect(screen.getByLabelText(t(lang, 'editTestimony'))).toBeTruthy();
+  });
+
+  it("never offers edit on another member's testimony, even to an admin", () => {
+    renderList({ onEdit: vi.fn(), isAdmin: true, items: [testimony({ id: 't2', user_id: OTHER, author_name: 'Ana' })] });
+    expect(screen.queryByLabelText(t(lang, 'editTestimony'))).toBeNull();
+  });
+
+  it('never edits a locked (undecryptable) testimony', () => {
+    renderList({ onEdit: vi.fn(), items: [testimony({ _locked: true })] });
+    expect(screen.queryByLabelText(t(lang, 'editTestimony'))).toBeNull();
+  });
+
+  it('offers no edit control when onEdit is not provided', () => {
+    renderList();
+    expect(screen.queryByLabelText(t(lang, 'editTestimony'))).toBeNull();
+  });
+
+  it('opens an inline editor prefilled with the content and saves the new text', async () => {
+    const onEdit = vi.fn().mockResolvedValue({});
+    const { container } = renderList({ onEdit });
+    fireEvent.click(screen.getByLabelText(t(lang, 'editTestimony')));
+    const editor = container.querySelector('[contenteditable]');
+    expect(editor.textContent).toBe('Dieu a répondu, gloire à lui');
+    editor.textContent = 'Gloire à Dieu !';
+    fireEvent.input(editor);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'save') }));
+    await waitFor(() => expect(onEdit).toHaveBeenCalledWith('t1', 'Gloire à Dieu !'));
+  });
+});

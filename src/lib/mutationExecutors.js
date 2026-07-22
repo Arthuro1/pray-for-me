@@ -161,6 +161,20 @@ registerMutation('removeUpdateText', async ({ updateId }) => {
   throwIf(r.error, r.status);
 });
 
+// Set the text of a PLAINTEXT personal update (author edit). Mirror-aware RPC
+// (sync_set_update_text, supabase/update_text_edit.sql) with the same
+// pre-migration fallback as removeUpdateText: against a prod without the RPC the
+// personal row is still corrected, only the mirror cleanup waits for it.
+registerMutation('setUpdateText', async ({ updateId, text }) => {
+  const r = await supabase.rpc('sync_set_update_text', { p_update_id: updateId, p_text: text });
+  if (r.error?.code === 'PGRST202') {
+    const u = await supabase.from('prayer_updates').update({ text }).eq('id', updateId);
+    throwIf(u.error, u.status);
+    return;
+  }
+  throwIf(r.error, r.status);
+});
+
 // Delete a whole personal update. The RPC also drops its fanned-out community
 // mirrors; pre-migration, at least the personal row goes.
 registerMutation('deleteUpdate', async ({ updateId }) => {

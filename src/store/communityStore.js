@@ -485,6 +485,21 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
+  // Author-only text edit of a member's word. Re-encrypts the row's payload
+  // (new text + the row's existing attachments, untouched) under the group key
+  // and rewrites it. RLS "Authors can update their updates" (attachment_
+  // management.sql) scopes this to the author — an admin can moderate by
+  // deleting, but never rewrite someone else's words. The updates list lives in
+  // the caller (PrayerDetail), so this returns the new text for it to patch.
+  editCommunityUpdate: async (prayerId, update, text) => {
+    const groupId = get().prayers.find((p) => p.id === prayerId)?.group_id || get().activeGroupId;
+    const gk = await ensureGroupKey(groupId);
+    const cols = await encUpdateCols(gk, text, update.attachments || []);
+    const { error } = await supabase.from('community_updates').update(cols).eq('id', update.id);
+    if (error) return toError(error);
+    return { text };
+  },
+
   // Delete one attachment from the viewer's OWN word, re-encrypting the row's
   // payload under the group key (RLS: "Authors can update their updates" —
   // see supabase/attachment_management.sql). Returns the shrunk list so the
@@ -573,6 +588,18 @@ const useCommunityStore = create((set, get) => ({
     if (error) return toError(error);
     set(state => ({ testimonies: state.testimonies.filter(tm => tm.id !== testimonyId) }));
     return {};
+  },
+
+  // Author-only text edit of a testimony (RLS: "Authors can update their
+  // testimonies"). Re-encrypts new content + the existing attachments under the
+  // group key. The testimonies list lives in this store, so it is patched here.
+  editCommunityTestimony: async (testimony, content) => {
+    const gk = await ensureGroupKey(testimony.group_id);
+    const cols = await encTestimonyCols(gk, content, testimony.attachments || []);
+    const { error } = await supabase.from('testimonies').update(cols).eq('id', testimony.id);
+    if (error) return toError(error);
+    set(state => ({ testimonies: state.testimonies.map(tm => (tm.id === testimony.id ? { ...tm, content } : tm)) }));
+    return { content };
   },
 
   fetchTestimonies: async (groupId) => {

@@ -77,11 +77,17 @@ describe('icon-only controls carry a real accessible name', () => {
   });
 
   it('names the update-submit control (not only via a tooltip)', () => {
-    renderDetail();
+    const { container } = renderDetail();
+    // Chat-style composer: an empty field shows a mic; the send button appears
+    // once there is text to send.
+    const field = container.querySelector('#pd-updates [contenteditable]');
+    field.textContent = 'God is good';
+    fireEvent.input(field);
     const submit = screen.getByRole('button', { name: t(lang, 'tipSaveUpdate') });
     // getByRole matched on the accessible name, so it is not title-only.
     expect(submit.getAttribute('aria-label')).toBe(t(lang, 'tipSaveUpdate'));
-    expect(submit.className).toMatch(/min-w-\[44px\]/);
+    // A 44px circular touch target (w-11 h-11), not below the minimum.
+    expect(submit.className).toMatch(/w-11/);
   });
 
   it('names the toast dismiss control in the user’s language', () => {

@@ -122,7 +122,7 @@ describe('PrayerDetail — leads with prayer', () => {
   it('Add update is immediately reachable — it focuses the real update field, no new form', () => {
     const { container } = renderDetail(base());
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'addUpdateBtn')) }));
-    expect(container.querySelector('#pd-updates textarea')).toBeTruthy();
+    expect(container.querySelector('#pd-updates [contenteditable]')).toBeTruthy();
   });
 
   it('an answered prayer offers Resume, never Mark answered', () => {
