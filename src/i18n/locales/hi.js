@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "कस्टम",
   "doneBtn": "हो गया",
   "moreTab": "और",
+  "primaryNav": "मुख्य नेविगेशन",
+  "navPending": "{count} लंबित",
   "joinGroupCta": "समूह से जुड़ें",
   "joinGroupHint": "समूह के किसी सदस्य द्वारा साझा किया गया आमंत्रण लिंक या कोड चिपकाएँ।",
   "joinGroupPlaceholder": "आमंत्रण लिंक या कोड",

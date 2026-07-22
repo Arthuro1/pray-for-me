@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "Custom",
   "doneBtn": "Tapos na",
   "moreTab": "Iba pa",
+  "primaryNav": "Pangunahing nabigasyon",
+  "navPending": "{count} nakabinbin",
   "joinGroupCta": "Sumali sa grupo",
   "joinGroupHint": "I-paste ang invite link o code na ibinahagi ng miyembro ng grupo.",
   "joinGroupPlaceholder": "Invite link o code",

@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "사용자 지정",
   "doneBtn": "완료",
   "moreTab": "더보기",
+  "primaryNav": "기본 탐색",
+  "navPending": "{count}건 대기 중",
   "joinGroupCta": "그룹 참여",
   "joinGroupHint": "그룹 멤버가 공유한 초대 링크나 코드를 붙여넣으세요.",
   "joinGroupPlaceholder": "초대 링크 또는 코드",

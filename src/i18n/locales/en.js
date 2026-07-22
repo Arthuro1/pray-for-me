@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "Custom",
   "doneBtn": "Done",
   "moreTab": "More",
+  "primaryNav": "Primary navigation",
+  "navPending": "{count} pending",
   "joinGroupCta": "Join a group",
   "joinGroupHint": "Paste an invite link or code shared by a group member.",
   "joinGroupPlaceholder": "Invite link or code",

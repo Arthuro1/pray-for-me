@@ -21,6 +21,13 @@
   --accent-border: #ddd5f8;
   --nav-active-bg: #ede8ff;
   --nav-active-color: #5a3fa0;
+  /* Informational count badge (pending invitations/requests): a calm brand
+     purple, never alarm red — the state is a warm nudge, not an error. */
+  --badge: #7c5cfc;
+  --badge-text: #ffffff;
+  /* Very subtle lift so the bottom nav stays distinguishable from content
+     scrolling underneath it. */
+  --nav-shadow: 0 -1px 4px rgba(26, 15, 46, 0.05);
   --input-bg: #f5f2ff;
   --input-border: #ddd5f0;
   --danger: #c04040;
@@ -49,6 +56,11 @@
   --accent-border: #2e2848;
   --nav-active-bg: #1e1a30;
   --nav-active-color: #b0a0ff;
+  /* Same brand purple: white digits keep ~4.3:1 contrast on it, and it reads
+     clearly against the dark surface. */
+  --badge: #7c5cfc;
+  --badge-text: #ffffff;
+  --nav-shadow: 0 -1px 4px rgba(0, 0, 0, 0.35);
   --input-bg: #1e1a2e;
   --input-border: #2e2848;
   --danger: #e06060;

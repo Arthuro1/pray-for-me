@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "カスタム",
   "doneBtn": "完了",
   "moreTab": "その他",
+  "primaryNav": "メインナビゲーション",
+  "navPending": "保留中 {count} 件",
   "joinGroupCta": "グループに参加",
   "joinGroupHint": "グループのメンバーから共有された招待リンクまたはコードを貼り付けてください。",
   "joinGroupPlaceholder": "招待リンクまたはコード",

@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "自定义",
   "doneBtn": "完成",
   "moreTab": "更多",
+  "primaryNav": "主导航",
+  "navPending": "{count} 个待处理",
   "joinGroupCta": "加入小组",
   "joinGroupHint": "粘贴小组成员分享的邀请链接或邀请码。",
   "joinGroupPlaceholder": "邀请链接或邀请码",

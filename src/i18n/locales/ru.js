@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "Свой вариант",
   "doneBtn": "Готово",
   "moreTab": "Ещё",
+  "primaryNav": "Основная навигация",
+  "navPending": "{count} в ожидании",
   "joinGroupCta": "Присоединиться к группе",
   "joinGroupHint": "Вставьте ссылку-приглашение или код от участника группы.",
   "joinGroupPlaceholder": "Ссылка или код приглашения",

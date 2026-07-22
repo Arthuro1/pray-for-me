@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "Kustom",
   "doneBtn": "Selesai",
   "moreTab": "Lainnya",
+  "primaryNav": "Navigasi utama",
+  "navPending": "{count} menunggu",
   "joinGroupCta": "Gabung grup",
   "joinGroupHint": "Tempel tautan atau kode undangan yang dibagikan anggota grup.",
   "joinGroupPlaceholder": "Tautan atau kode undangan",

@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "مخصص",
   "doneBtn": "تم",
   "moreTab": "المزيد",
+  "primaryNav": "التنقل الرئيسي",
+  "navPending": "{count} قيد الانتظار",
   "joinGroupCta": "الانضمام إلى مجموعة",
   "joinGroupHint": "الصق رابط الدعوة أو الرمز الذي شاركه أحد أعضاء المجموعة.",
   "joinGroupPlaceholder": "رابط أو رمز الدعوة",

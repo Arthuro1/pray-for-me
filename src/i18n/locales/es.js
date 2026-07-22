@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "Personalizado",
   "doneBtn": "Listo",
   "moreTab": "Más",
+  "primaryNav": "Navegación principal",
+  "navPending": "{count} pendientes",
   "joinGroupCta": "Unirse a un grupo",
   "joinGroupHint": "Pega un enlace o código de invitación compartido por un miembro del grupo.",
   "joinGroupPlaceholder": "Enlace o código de invitación",

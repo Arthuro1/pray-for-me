@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "Maalum",
   "doneBtn": "Imekamilika",
   "moreTab": "Zaidi",
+  "primaryNav": "Urambazaji mkuu",
+  "navPending": "{count} zinazosubiri",
   "joinGroupCta": "Jiunge na kikundi",
   "joinGroupHint": "Bandika kiungo au msimbo wa mwaliko uliopewa na mwanakikundi.",
   "joinGroupPlaceholder": "Kiungo au msimbo wa mwaliko",

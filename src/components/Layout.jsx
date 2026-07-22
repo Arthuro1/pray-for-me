@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
@@ -7,12 +7,17 @@ import useLayoutStore from '../store/layoutStore';
 import NotificationBell from './NotificationBell';
 import { t } from '../i18n';
 
+// A small count badge. The number itself is announced through the destination's
+// aria-label (e.g. "Community, 3 pending"), so the visual pill is aria-hidden to
+// avoid a screen reader reading the digits twice. Colour comes from the theme
+// `--badge` token — a calm brand purple, not an alarm red.
 function Badge({ count, className = '', style = {} }) {
   if (!count) return null;
   return (
     <span
-      className={`flex items-center justify-center text-[10px] font-bold text-white rounded-full ${className}`}
-      style={{ minWidth: 18, height: 18, padding: '0 5px', background: '#ef4444', ...style }}
+      aria-hidden="true"
+      className={`flex items-center justify-center text-[10px] font-bold rounded-full ${className}`}
+      style={{ minWidth: 18, height: 18, padding: '0 5px', background: 'var(--badge)', color: 'var(--badge-text)', ...style }}
     >
       {count > 9 ? '9+' : count}
     </span>
@@ -22,6 +27,10 @@ function Badge({ count, className = '', style = {} }) {
 const SIDEBAR_FULL = 220;
 const SIDEBAR_MINI = 64;
 const MD_BREAKPOINT = 768;
+// Usable height of one bottom-nav destination (also the minimum tap target).
+// Shared with the FAB and the main content's bottom padding so a single number
+// governs how much room the mobile navigation reserves.
+const BOTTOM_NAV_H = 56;
 
 export default function Layout({ children, onAddPrayer }) {
   const settings = usePrayerStore((s) => s.settings);
@@ -29,7 +38,6 @@ export default function Layout({ children, onAddPrayer }) {
   const fabSuppressed = useLayoutStore((s) => s.fabSuppressed);
   const lang = settings.language || 'en';
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [isMd, setIsMd] = useState(() => window.innerWidth >= MD_BREAKPOINT);
   const mainRef = useRef(null);
@@ -66,8 +74,15 @@ export default function Layout({ children, onAddPrayer }) {
   const isActive = (path) => {
     if (path === '/') return pathname === '/';
     if (path === '/more') return MORE_PATHS.some((p) => pathname.startsWith(p));
+    // startsWith keeps Community lit on its nested group and prayer routes.
     return pathname.startsWith(path);
   };
+
+  // A destination's accessible name. When it carries pending items we fold the
+  // count into the name ("Community, 3 pending") so a screen reader announces it
+  // once, in the reader's language; otherwise the visible label is the name.
+  const navLabel = (label, badge) =>
+    badge ? `${label}, ${t(lang, 'navPending', { count: badge })}` : undefined;
 
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
@@ -112,15 +127,17 @@ export default function Layout({ children, onAddPrayer }) {
           </div>
         )}
 
-        <nav className="flex flex-col gap-1 flex-1 px-2">
+        <nav className="flex flex-col gap-1 flex-1 px-2" aria-label={t(lang, 'primaryNav')}>
           {tabs.map(({ id, path, label, icon: Icon, badge }) => {
             const active = isActive(path);
             return (
-              <button
+              <Link
                 key={id}
-                onClick={() => navigate(path)}
+                to={path}
+                aria-current={active ? 'page' : undefined}
+                aria-label={navLabel(label, badge)}
                 title={collapsed ? label : undefined}
-                className="relative flex items-center rounded-xl text-sm font-medium transition-all"
+                className="relative flex items-center rounded-xl text-sm font-medium no-underline transition-all"
                 style={{
                   gap: collapsed ? 0 : 12,
                   padding: collapsed ? '10px 0' : '10px 12px',
@@ -132,11 +149,11 @@ export default function Layout({ children, onAddPrayer }) {
               >
                 <span className="relative flex items-center">
                   <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
-                  {collapsed && <Badge count={badge} className="absolute" style={{ top: -8, left: 10 }} />}
+                  {collapsed && <Badge count={badge} className="absolute" style={{ top: -8, insetInlineEnd: -8 }} />}
                 </span>
                 {!collapsed && <span>{label}</span>}
                 {!collapsed && <Badge count={badge} className="ml-auto" />}
-              </button>
+              </Link>
             );
           })}
         </nav>
@@ -159,10 +176,18 @@ export default function Layout({ children, onAddPrayer }) {
         </div>
       </aside>
 
-      {/* ── Mobile top bar (holds the notification bell; no sidebar on mobile) ── */}
+      {/* ── Mobile top bar (holds the notification bell; no sidebar on mobile) ──
+          In an installed (standalone) PWA the OS status bar can sit over the
+          top edge, so pad the bar down by the top safe-area inset — 0 on a
+          normal browser tab, the notch/status-bar height when installed. */}
       <header
-        className="md:hidden fixed top-0 left-0 right-0 h-12 z-30 flex items-center justify-between px-4"
-        style={{ background: 'var(--surface)', borderBottom: '0.5px solid var(--border)' }}
+        className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
+        style={{
+          height: 'calc(3rem + env(safe-area-inset-top))',
+          paddingTop: 'env(safe-area-inset-top)',
+          background: 'var(--surface)',
+          borderBottom: '0.5px solid var(--border)',
+        }}
       >
         <div className="flex items-center gap-2">
           <img src="/logo.svg" alt="Pray4Me" className="w-7 h-7 rounded-lg" />
@@ -171,12 +196,17 @@ export default function Layout({ children, onAddPrayer }) {
         <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
       </header>
 
-      {/* ── Main content ── */}
+      {/* ── Main content ──
+          Top padding clears the mobile bar (incl. its top safe-area inset);
+          bottom padding clears the bottom nav, the FAB and the bottom safe-area
+          inset, so the last card is never hidden behind them. */}
       <main
         ref={mainRef}
-        className="flex-1 overflow-y-auto pt-12 md:pt-0 pb-24 md:pb-8 w-full"
+        className="flex-1 overflow-y-auto w-full"
         style={{
           paddingLeft: isMd ? `${sidebarWidth}px` : '0px',
+          paddingTop: isMd ? 0 : 'calc(3rem + env(safe-area-inset-top))',
+          paddingBottom: isMd ? '2rem' : `calc(${BOTTOM_NAV_H + 20}px + env(safe-area-inset-bottom))`,
           transition: 'padding-left 0.2s ease',
         }}
       >
@@ -193,8 +223,10 @@ export default function Layout({ children, onAddPrayer }) {
           aria-label={t(lang, "tipAddPrayer")}
           className="md:hidden fixed z-20 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95"
           style={{
-            bottom: '72px',
-            right: '20px',
+            // Float clear of the nav bar AND the bottom safe-area inset.
+            // insetInlineEnd (not right) mirrors the FAB to the left in RTL.
+            bottom: `calc(${BOTTOM_NAV_H + 16}px + env(safe-area-inset-bottom))`,
+            insetInlineEnd: '20px',
             width: '52px',
             height: '52px',
             background: 'var(--header)',
@@ -204,26 +236,54 @@ export default function Layout({ children, onAddPrayer }) {
         </button>
       )}
 
-      {/* ── Bottom nav (mobile only) ── */}
+      {/* ── Bottom nav (mobile only) ──
+          paddingBottom = the bottom safe-area inset, so the surface fills down
+          to the very edge while the tappable row sits above the home indicator.
+          A soft top shadow (plus the hairline border) keeps it separate from
+          content scrolling underneath, in both light and dark themes. */}
       <nav
         className="md:hidden fixed bottom-0 left-0 right-0 flex z-10"
-        style={{ background: 'var(--surface)', borderTop: '0.5px solid var(--border)' }}
+        aria-label={t(lang, 'primaryNav')}
+        style={{
+          background: 'var(--surface)',
+          borderTop: '0.5px solid var(--border)',
+          boxShadow: 'var(--nav-shadow)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
       >
         {tabs.map(({ id, path, label, icon: Icon, badge }) => {
           const active = isActive(path);
           return (
-            <button
+            <Link
               key={id}
-              onClick={() => navigate(path)}
-              className="flex-1 flex flex-col items-center py-2.5 gap-0.5 transition-colors"
-              style={{ color: active ? 'var(--accent)' : 'var(--text-3)' }}
+              to={path}
+              aria-current={active ? 'page' : undefined}
+              aria-label={navLabel(label, badge)}
+              className="flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"
+              style={{ minHeight: BOTTOM_NAV_H, color: active ? 'var(--nav-active-color)' : 'var(--text-3)' }}
             >
-              <span className="relative flex items-center">
-                <Icon size={20} strokeWidth={active ? 2.5 : 1.8} />
-                <Badge count={badge} className="absolute" style={{ top: -8, left: 12 }} />
+              {/* A calm rounded pill sits behind the active icon — using the same
+                  --nav-active-bg token as the sidebar, no new bright colour. */}
+              <span
+                className="relative flex items-center justify-center"
+                style={{
+                  width: 44,
+                  height: 30,
+                  borderRadius: 999,
+                  background: active ? 'var(--nav-active-bg)' : 'transparent',
+                  transition: 'background 0.15s ease',
+                }}
+              >
+                <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                <Badge count={badge} className="absolute" style={{ top: -2, insetInlineEnd: 2 }} />
               </span>
-              <span className="text-xs" style={{ fontWeight: active ? 600 : 400 }}>{label}</span>
-            </button>
+              <span
+                className="truncate max-w-full text-center px-0.5"
+                style={{ fontSize: 11, lineHeight: 1.1, fontWeight: active ? 600 : 400 }}
+              >
+                {label}
+              </span>
+            </Link>
           );
         })}
       </nav>

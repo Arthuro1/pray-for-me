@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "ብጁ",
   "doneBtn": "ተጠናቋል",
   "moreTab": "ተጨማሪ",
+  "primaryNav": "ዋና ዳሰሳ",
+  "navPending": "{count} በመጠባበቅ ላይ",
   "joinGroupCta": "ቡድን ተቀላቀል",
   "joinGroupHint": "የቡድን አባል ያጋራውን የግብዣ አገናኝ ወይም ኮድ ይለጥፉ።",
   "joinGroupPlaceholder": "የግብዣ አገናኝ ወይም ኮድ",

@@ -37,6 +37,8 @@ export default {
   "rhythmCustom": "سفارشی",
   "doneBtn": "انجام شد",
   "moreTab": "بیشتر",
+  "primaryNav": "ناوبری اصلی",
+  "navPending": "{count} در انتظار",
   "joinGroupCta": "پیوستن به گروه",
   "joinGroupHint": "پیوند یا کد دعوتی را که یکی از اعضای گروه فرستاده است اینجا بچسبانید.",
   "joinGroupPlaceholder": "پیوند یا کد دعوت",
