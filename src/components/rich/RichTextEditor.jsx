@@ -6,9 +6,20 @@
 // convert at the edges), so storage, RichText rendering and translation are all
 // unchanged.
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Bold, Italic, List } from 'lucide-react';
 import { mdToHtml, htmlToMd } from './markdownHtml';
 import { t } from '../../i18n';
+
+// Rough size of the 3-button toolbar, used to decide which side of the
+// selection it fits on and to keep it inside the viewport. It never varies with
+// language (icon-only buttons), so a constant is enough — no measure pass.
+const TOOLBAR_H = 44; // height incl. padding
+const TOOLBAR_HALF_W = 66; // half its width, for horizontal clamping
+const GAP = 8; // clearance between the toolbar and the selection
+// Touch selections raise a draggable handle just below the selection end; drop
+// the toolbar a little further on coarse pointers so it clears that handle.
+const HANDLE_CLEARANCE = 24;
 
 // Place the caret at the very end of the editor (used on autoFocus so editing an
 // existing word lands ready to append, not at the start).
@@ -30,6 +41,11 @@ const exec = (cmd) => {
   } catch { return false; }
 };
 
+// Rendered through a portal with `position: fixed`, anchored to the selection's
+// on-screen rect — the same escape hatch OverflowMenu uses — so it is never
+// clipped by an `overflow-hidden` ancestor (e.g. the inline MessageEditor pill)
+// nor buried under the input's stacking context. `pos.below` flips it under the
+// selection, where it clears the OS cut/copy/paste bubble that always sits above.
 function SelectionToolbar({ pos, lang, onFormat }) {
   const btn = (icon, label, cmd) => {
     const Icon = icon;
@@ -48,15 +64,16 @@ function SelectionToolbar({ pos, lang, onFormat }) {
       </button>
     );
   };
-  return (
+  return createPortal(
     <div
       role="toolbar"
       aria-label={t(lang, 'formatBold')}
-      className="absolute z-30 flex items-center gap-0.5 rounded-xl p-1 shadow-lg"
+      className="fixed flex items-center gap-0.5 rounded-xl p-1 shadow-lg"
       style={{
         top: pos.top,
         left: pos.left,
-        transform: 'translate(-50%, -100%)',
+        transform: pos.below ? 'translate(-50%, 0)' : 'translate(-50%, -100%)',
+        zIndex: 61,
         background: 'var(--surface)',
         border: '0.5px solid var(--border)',
       }}
@@ -64,7 +81,8 @@ function SelectionToolbar({ pos, lang, onFormat }) {
       {btn(Bold, t(lang, 'formatBold'), 'bold')}
       {btn(Italic, t(lang, 'formatItalic'), 'italic')}
       {btn(List, t(lang, 'formatList'), 'insertUnorderedList')}
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -112,7 +130,8 @@ export default function RichTextEditor({
   };
 
   // Surface the toolbar over a live, non-empty selection that lives inside this
-  // editor; hide it otherwise. Runs on every selectionchange.
+  // editor; hide it otherwise. Coordinates are viewport-relative (the toolbar is
+  // `position: fixed`), so this also runs on scroll/resize to stay pinned.
   const syncToolbar = useCallback(() => {
     const el = ref.current;
     const sel = typeof window !== 'undefined' ? window.getSelection() : null;
@@ -120,14 +139,37 @@ export default function RichTextEditor({
     const range = sel.getRangeAt(0);
     if (!el.contains(range.commonAncestorContainer)) { setToolbar(null); return; }
     const rect = range.getBoundingClientRect();
-    const host = el.parentElement?.getBoundingClientRect();
-    if (!host || (rect.width === 0 && rect.height === 0)) { setToolbar(null); return; }
-    setToolbar({ top: rect.top - host.top - 6, left: rect.left - host.left + rect.width / 2 });
+    if (rect.width === 0 && rect.height === 0) { setToolbar(null); return; }
+
+    // A coarse pointer (touch) raises the OS cut/copy/paste bubble ABOVE the
+    // selection, so we drop our toolbar BELOW it; a mouse has no such bubble, so
+    // we float above where it reads best. Either side flips when it runs out of
+    // room against the viewport edge.
+    const coarse = typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)')?.matches;
+    const roomAbove = rect.top;
+    const roomBelow = window.innerHeight - rect.bottom;
+    let below = coarse;
+    if (below && roomBelow < TOOLBAR_H + GAP) below = false;
+    if (!below && roomAbove < TOOLBAR_H + GAP) below = true;
+
+    const left = Math.min(
+      Math.max(rect.left + rect.width / 2, TOOLBAR_HALF_W + GAP),
+      window.innerWidth - TOOLBAR_HALF_W - GAP,
+    );
+    const top = below ? rect.bottom + (coarse ? HANDLE_CLEARANCE : GAP) : rect.top - GAP;
+    setToolbar({ top, left, below });
   }, []);
 
   useEffect(() => {
     document.addEventListener('selectionchange', syncToolbar);
-    return () => document.removeEventListener('selectionchange', syncToolbar);
+    // Keep the fixed toolbar pinned to the selection as the page scrolls/resizes.
+    window.addEventListener('scroll', syncToolbar, true);
+    window.addEventListener('resize', syncToolbar);
+    return () => {
+      document.removeEventListener('selectionchange', syncToolbar);
+      window.removeEventListener('scroll', syncToolbar, true);
+      window.removeEventListener('resize', syncToolbar);
+    };
   }, [syncToolbar]);
 
   const applyFormat = (cmd) => {
