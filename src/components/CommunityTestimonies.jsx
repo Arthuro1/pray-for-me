@@ -39,17 +39,17 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
   };
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimonies')}</p>
-      <div className="space-y-3">
+    <div className="prayer-activity-panel">
+      <p className="prayer-activity-panel__title">{t(lang, 'testimonies')}</p>
+      <div className="prayer-activity-list">
         {items.map((tm) => (
-          <div key={tm.id} className="group rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-            <div className="flex items-start justify-between gap-2 mb-1">
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+          <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony group">
+            <div className="prayer-activity-item__header">
+              <p className="prayer-activity-item__meta">
                 🎉 {communityAuthor(tm, userId, lang)} · {timeAgo(tm.created_at, lang)}
               </p>
               {editingId !== tm.id && (canEdit(tm) || canDelete(tm)) && (
-                <div className="flex items-start gap-1.5 mt-0.5">
+                <div className="prayer-activity-item__actions flex items-start gap-1.5 mt-0.5">
                   {canEdit(tm) && (
                     <EditButton onEdit={() => setEditingId(tm.id)} label={t(lang, 'editTestimony')} />
                   )}

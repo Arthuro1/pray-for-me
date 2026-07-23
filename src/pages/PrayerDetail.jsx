@@ -976,7 +976,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* ── Prayer points + AI suggestions (both modes) — kept directly after
             the request details so the "how to pray" points read right off the
             description, before the pray-together / updates / calendar sections. ── */}
-        <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {(isCommunity || canAddContent) && (
@@ -1272,15 +1272,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
         {isCommunity && canEditCommunityPrayer && (
           !isAnswered ? (
-            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
+            <div className="prayer-activity-panel">
+              <p className="prayer-activity-panel__title">{t(lang, 'testimony')}</p>
               {/* Confirm marks the request answered; the testimony (text and/or
                   media) is optional, so allowEmpty keeps Confirm available. */}
               <UpdateComposer
                 lang={lang}
                 rows={3}
                 allowEmpty
-                placeholder={t(lang, 'testimonyPlaceholder')}
+                placeholder={`${t(lang, 'testimony')}…`}
                 sendLabel={t(lang, 'confirm')}
                 onSend={handleConfirmCommunityAnswered}
               />
@@ -1297,16 +1297,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* ── Community mode: testimony (members; author/admin use the answered flow) ── */}
         {isCommunity && !canEditCommunityPrayer && (
           testimonySent ? (
-            <div className="rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <div className="prayer-activity-action rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
               🎉 {t(lang, 'testimony')}
             </div>
           ) : showCommunityTestimony ? (
-            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'postTestimony')}</p>
+            <div className="prayer-activity-panel">
+              <p className="prayer-activity-panel__title">{t(lang, 'postTestimony')}</p>
               <UpdateComposer
                 lang={lang}
                 rows={3}
                 autoFocus
+                placeholder={`${t(lang, 'testimony')}…`}
                 sendLabel={t(lang, 'postTestimony')}
                 onSend={handlePostCommunityTestimony}
               />
@@ -1314,7 +1315,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <button onClick={() => setShowCommunityTestimony(false)} className="w-full py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
             </div>
           ) : (
-            <button onClick={() => setShowCommunityTestimony(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+            <button onClick={() => setShowCommunityTestimony(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
               🎉 {t(lang, 'postTestimony')}
             </button>
           )
@@ -1324,18 +1325,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             (recurrence) is edited via SchedulePlanner near the top; the old
             "prayer days" toggle here was redundant with it and has been removed. */}
         {!isCommunity && <>
-        <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'evolutions')}</p>
+        <div className="prayer-activity-panel">
+          <p className="prayer-activity-panel__title">{t(lang, 'evolutions')}</p>
 
           {allUpdates.length === 0 && (
             <p className="text-sm italic mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'noUpdate')}</p>
           )}
 
-          <div className="space-y-3 mb-3">
+          <div className="prayer-activity-list">
             {allUpdates.map(u => (
-              <div key={u.id} className="group flex gap-3">
+              <div key={u.id} className="prayer-activity-item prayer-activity-item--personal group flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
-                <div className="min-w-0 flex-1">
+                <div className="prayer-activity-item__body min-w-0 flex-1">
                   {u._locked ? (
                     <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
                   ) : editingUpdateId === u.id ? (
@@ -1364,7 +1365,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     </>
                   )}
                   {editingUpdateId !== u.id && (
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                    <p className="prayer-activity-item__meta mt-1">
                       {u.author_name ? `${u.is_anonymous ? t(lang, 'anonymous') : u.author_name} · ` : ''}{format(new Date(u.created_at), 'd MMM yy', { locale })}
                     </p>
                   )}
@@ -1372,7 +1373,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 {/* Author-only edit + delete cluster (own personal updates), hidden
                     while this row's inline editor is open. Edit needs text to edit. */}
                 {editingUpdateId !== u.id && canManage && !u._locked && (
-                  <div className="flex items-start gap-1.5 self-start mt-1.5">
+                  <div className="prayer-activity-item__actions flex items-start gap-1.5 self-start mt-1.5">
                     {!!u.text && (
                       <EditButton onEdit={() => setEditingUpdateId(u.id)} label={t(lang, 'editUpdate')} />
                     )}
@@ -1388,13 +1389,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {!isAnswered && canManage && (
-            <UpdateComposer
-              inputId="pd-updates"
-              lang={lang}
-              rows={1}
-              placeholder={t(lang, 'newUpdate')}
-              onSend={handleAddUpdate}
-            />
+            <div className="prayer-activity-composer">
+              <UpdateComposer
+                inputId="pd-updates"
+                lang={lang}
+                rows={1}
+                placeholder={t(lang, 'newUpdate')}
+                onSend={handleAddUpdate}
+              />
+            </div>
           )}
         </div>
 
@@ -1402,9 +1405,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* Testimonies — the prayer's own (preserved across resume) plus any posted
             on its community copies (read-only). Always above the write field. */}
         {(personalTestimonies.length > 0 || sharedActivity.testimonies.length > 0) && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimonies')}</p>
-            <div className="space-y-3">
+          <div className="prayer-activity-panel">
+            <p className="prayer-activity-panel__title">{t(lang, 'testimonies')}</p>
+            <div className="prayer-activity-list">
               {personalTestimonies.map(tm => {
                 // Legacy jsonb testimonies surface in the list without being
                 // prayer_testimonies rows — nothing to delete server-side.
@@ -1413,14 +1416,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 const canEditTm = showDelete && !!tm.content; // author-only text edit
                 const editing = editingTestimonyId === tm.id;
                 return (
-                <div key={tm.id} className="group rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony group">
                   {(tm.created_at || ((showDelete || canEditTm) && !editing)) && (
-                    <div className="flex items-start justify-between gap-2 mb-1">
+                    <div className="prayer-activity-item__header">
                       {tm.created_at
-                        ? <p className="text-xs" style={{ color: 'var(--text-3)' }}>🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
+                        ? <p className="prayer-activity-item__meta">🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
                         : <span />}
                       {!editing && (showDelete || canEditTm) && (
-                        <div className="flex items-start gap-1.5">
+                        <div className="prayer-activity-item__actions flex items-start gap-1.5">
                           {canEditTm && (
                             <EditButton onEdit={() => setEditingTestimonyId(tm.id)} label={t(lang, 'editTestimony')} />
                           )}
@@ -1447,7 +1450,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                       <RemovableText
                         text={loc(tm.content)}
                         lang={lang}
-                        className="text-sm italic leading-relaxed"
+                        className="text-sm leading-relaxed"
                         style={{ color: 'var(--text-1)' }}
                         onRemove={canManage && isRow ? () => removeTestimonyText(livePrayer.id, tm.id) : null}
                       />
@@ -1463,9 +1466,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 );
               })}
               {sharedActivity.testimonies.filter(hasContent).map(tm => (
-                <div key={tm.id} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                  <p className="text-xs mb-1" style={{ color: 'var(--text-3)' }}>🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
-                  {tm.content && <RichText text={loc(tm.content)} className="text-sm italic leading-relaxed" style={{ color: 'var(--text-1)' }} />}
+                <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony">
+                  <p className="prayer-activity-item__meta">🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
+                  {tm.content && <RichText text={loc(tm.content)} className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }} />}
                   <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
                 </div>
               ))}
@@ -1477,20 +1480,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             without changing the answered date */}
         {isAnswered && canManage && (
           showThanks ? (
-            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
+            <div className="prayer-activity-panel">
+              <p className="prayer-activity-panel__title">{t(lang, 'testimony')}</p>
               <UpdateComposer
                 lang={lang}
                 rows={3}
                 autoFocus
-                placeholder={t(lang, 'testimonyPlaceholder')}
+                placeholder={`${t(lang, 'testimony')}…`}
                 sendLabel={t(lang, 'addThanks')}
                 onSend={handleAddThanks}
               />
               <button onClick={() => setShowThanks(false)} className="w-full mt-2 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
             </div>
           ) : (
-            <button onClick={() => setShowThanks(true)} className="w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+            <button onClick={() => setShowThanks(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
               🙏 {t(lang, 'addThanks')}
             </button>
           )
@@ -1500,8 +1503,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             optional testimony and the confirm step, together in the disclosure
             they belong to. Nothing is marked answered without this confirm. */}
         {!isAnswered && showTestimony && canManage && (
-          <div id="pd-answer" className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'testimony')}</p>
+          <div id="pd-answer" className="prayer-activity-panel">
+            <p className="prayer-activity-panel__title">{t(lang, 'testimony')}</p>
             {/* The testimony is OPTIONAL — allowEmpty keeps Confirm available
                 with nothing written, exactly like the old flow. */}
             <UpdateComposer
@@ -1509,7 +1512,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               rows={3}
               autoFocus
               allowEmpty
-              placeholder={t(lang, 'testimonyPlaceholder')}
+              placeholder={`${t(lang, 'testimony')}…`}
               sendLabel={t(lang, 'confirm')}
               onSend={confirmAnswered}
             />

@@ -185,7 +185,7 @@ export default function RichTextEditor({
       {isEmpty && placeholder && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 pointer-events-none text-sm px-3.5 py-2.5 select-none"
+          className="absolute inset-0 pointer-events-none overflow-hidden text-ellipsis whitespace-nowrap text-sm px-3.5 py-2.5 select-none"
           style={{ color: 'var(--text-3)' }}
         >
           {placeholder}

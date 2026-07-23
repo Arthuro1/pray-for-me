@@ -550,9 +550,191 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .prayer-point-card {
+  padding: .7rem .8rem !important;
   background: color-mix(in srgb, var(--gold-soft) 76%, var(--surface));
   border-inline-start: 3px solid var(--gold);
   color: var(--ink);
+}
+
+.prayer-points-panel {
+  width: min(100%, 36rem);
+  margin-inline: auto;
+  padding: .9rem;
+}
+
+/* Prayer activity --------------------------------------------------------
+   Updates and testimonies share a readable, touch-safe layout. Panels stay
+   comfortably narrow on laptops and use the full available width on phones. */
+.prayer-activity-panel,
+.prayer-activity-action {
+  width: min(100%, 40rem);
+  margin-inline: auto;
+}
+
+.prayer-activity-panel {
+  padding: clamp(.8rem, 2.5vw, 1rem);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.prayer-activity-panel__title {
+  margin-block-end: .75rem;
+  color: var(--text-faint);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.prayer-activity-list {
+  display: grid;
+  gap: .65rem;
+}
+
+.prayer-activity-item {
+  min-width: 0;
+  padding: .75rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface-muted) 72%, var(--surface));
+  border: 1px solid var(--border);
+  border-radius: .85rem;
+}
+
+.prayer-activity-item--community,
+.prayer-activity-item--personal {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: .65rem;
+}
+
+.prayer-activity-item--testimony {
+  background: color-mix(in srgb, var(--accent-soft) 62%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent-border) 70%, var(--border));
+}
+
+.prayer-activity-item__body {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.prayer-activity-item__header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .6rem;
+  margin-block-end: .35rem;
+}
+
+.prayer-activity-item__meta {
+  min-width: 0;
+  margin: 0 0 .3rem;
+  color: var(--text-faint);
+  font-size: .72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.prayer-activity-item__header .prayer-activity-item__meta {
+  margin-block-end: 0;
+}
+
+.prayer-activity-item__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .2rem !important;
+}
+
+.prayer-activity-item__actions > button {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: .65rem;
+  opacity: 1;
+}
+
+.prayer-activity-composer {
+  margin-block-start: .75rem;
+  padding-block-start: .75rem;
+  border-block-start: 1px solid var(--border);
+}
+
+.update-composer,
+.update-composer__row,
+.update-composer__input {
+  min-width: 0;
+}
+
+.update-composer__input {
+  overflow: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .prayer-activity-item__actions > button {
+    opacity: 0;
+  }
+
+  .prayer-activity-item:hover .prayer-activity-item__actions > button,
+  .prayer-activity-item__actions > button:focus-visible {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  .prayer-activity-panel {
+    padding: .75rem;
+    border-radius: .95rem;
+  }
+
+  .prayer-activity-panel__title {
+    margin-block-end: .65rem;
+  }
+
+  .prayer-activity-item {
+    padding: .65rem;
+  }
+
+  .prayer-activity-item--community,
+  .prayer-activity-item--personal {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .55rem;
+  }
+
+  .prayer-activity-item--community > .prayer-activity-item__actions,
+  .prayer-activity-item--personal > .prayer-activity-item__actions {
+    grid-column: 2;
+    justify-self: end;
+    margin-block-start: .15rem !important;
+  }
+
+  .prayer-activity-item__header {
+    flex-wrap: wrap;
+  }
+
+  .prayer-activity-item__actions > button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .update-composer--labelled .update-composer__row {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .update-composer--labelled .update-composer__send {
+    grid-column: 1 / -1;
+    width: 100%;
+    border-radius: .75rem;
+  }
 }
 
 /* Community */

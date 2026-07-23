@@ -44,18 +44,18 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
   };
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'memberUpdates')}</p>
+    <div className="prayer-activity-panel">
+      <p className="prayer-activity-panel__title">{t(lang, 'memberUpdates')}</p>
 
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
       ) : (
-        <div className="space-y-3 mb-3">
+        <div className="prayer-activity-list">
           {updates.map((u) => (
-            <div key={u.id} className="group flex gap-2.5">
+            <div key={u.id} className="prayer-activity-item prayer-activity-item--community group flex gap-2.5">
               <Avatar name={u.is_anonymous ? '?' : u.author_name} size={28} anonymous={u.is_anonymous} />
-              <div className="min-w-0 flex-1">
-                <p className="text-xs mb-0.5 font-medium" style={{ color: 'var(--text-3)' }}>
+              <div className="prayer-activity-item__body min-w-0 flex-1">
+                <p className="prayer-activity-item__meta">
                   {communityAuthor(u, userId, lang)}{' · '}{timeAgo(u.created_at, lang)}
                 </p>
                 {u._locked ? (
@@ -84,7 +84,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                 )}
               </div>
               {editingId !== u.id && (canEdit(u) || canDelete(u)) && (
-                <div className="flex items-start gap-1.5 self-start mt-0.5">
+                <div className="prayer-activity-item__actions flex items-start gap-1.5 self-start mt-0.5">
                   {canEdit(u) && (
                     <EditButton onEdit={() => setEditingId(u.id)} label={t(lang, 'editWord')} />
                   )}
@@ -98,11 +98,11 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
         </div>
       )}
 
-      <div className="mt-2">
+      <div className="prayer-activity-composer">
         <UpdateComposer
           lang={lang}
           rows={1}
-          placeholder={t(lang, 'wordPlaceholder')}
+          placeholder={t(lang, 'newUpdate')}
           onSend={(text, attachments) => onSend(text, attachments, anon)}
         />
       </div>
