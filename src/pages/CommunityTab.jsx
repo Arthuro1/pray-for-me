@@ -79,8 +79,8 @@ function Section({ title, icon, children }) {
 }
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
-function CommunityHub({ lang, userId, onViewGroup, onOpenPrayer }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity, fetchCommunityFeed } = useCommunityStore(
+function CommunityHub({ lang, userId, onViewGroup }) {
+  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       fetchFriends: s.fetchFriends,
@@ -94,14 +94,12 @@ function CommunityHub({ lang, userId, onViewGroup, onOpenPrayer }) {
       addFriendship: s.addFriendship,
       fetchPendingCount: s.fetchPendingCount,
       fetchGroupActivity: s.fetchGroupActivity,
-      fetchCommunityFeed: s.fetchCommunityFeed,
     }))
   );
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [groupInvitations, setGroupInvitations] = useState([]);
   const [unread, setUnread] = useState({});
-  const [feed, setFeed] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -109,16 +107,14 @@ function CommunityHub({ lang, userId, onViewGroup, onOpenPrayer }) {
   const [showAddFriend, setShowAddFriend] = useState(false);
 
   const load = useCallback(async () => {
-    const [f, fr, gi, feedRows] = await Promise.all([
+    const [f, fr, gi] = await Promise.all([
       fetchFriends(userId),
       fetchFriendRequests(userId),
       fetchGroupInvitations(userId),
-      fetchCommunityFeed(),
     ]);
     setFriends(f.friends || []);
     setFriendRequests(fr.requests || []);
     setGroupInvitations(gi.invitations || []);
-    setFeed(feedRows || []);
     setLoading(false);
     fetchPendingCount(userId);
     fetchGroupActivity().then((rows) => setUnread(unreadCounts(rows, readSeen(), userId)));
@@ -276,31 +272,6 @@ function CommunityHub({ lang, userId, onViewGroup, onOpenPrayer }) {
                       </span>
                     )}
                   </div>
-                </button>
-              ))}
-            </div>
-          </Section>
-        )}
-
-        {feed.length > 0 && (
-          <Section title={t(lang, 'prayerRequests')}>
-            <div className="constellation-community-feed">
-              {feed.map((prayer) => (
-                <button
-                  key={prayer.id}
-                  onClick={() => onOpenPrayer(prayer.group_id, prayer.id)}
-                  className="constellation-community-feed__row"
-                >
-                  <Star size={19} strokeWidth={1.65} aria-hidden="true" />
-                  <span className="constellation-community-feed__body">
-                    <span className="constellation-community-feed__title">{prayer.title}</span>
-                    <span className="constellation-community-feed__meta">
-                      {communityAuthor(prayer, userId, lang)} · {timeAgo(prayer.created_at, lang)}
-                    </span>
-                  </span>
-                  <span className="constellation-community-feed__count">
-                    {prayer.prayer_reactions?.[0]?.count ?? 0} {t(lang, 'prayingCount')}
-                  </span>
                 </button>
               ))}
             </div>
@@ -1297,7 +1268,6 @@ export default function CommunityTab() {
       lang={lang}
       userId={user.id}
       onViewGroup={(gid) => navigate(`/community/group/${gid}`)}
-      onOpenPrayer={(gid, pid) => navigate(`/community/group/${gid}/prayer/${pid}`)}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -89,12 +89,22 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const [requestsCompleted, setRequestsCompleted] = useState(0);
   const [done, setDone] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
+  const requestScrollRef = useRef(null);
   const trapRef = useFocusTrap(true);
   useEscapeKey(onClose);
 
   const stages = MODE_STAGES[mode];
   const stage = stages[stageIndex];
   const total = prayers.length;
+
+  // The same scroll container is reused as the session advances. Reset it for
+  // each request so a long previous prayer can never leave the next title above
+  // the laptop viewport.
+  useEffect(() => {
+    if (stage === 'requests' && requestScrollRef.current) {
+      requestScrollRef.current.scrollTop = 0;
+    }
+  }, [stage, prayerIndex]);
 
   // Overall progress across every step of the chosen path (movements + each prayer).
   const stepsIn = (s) => (s === 'requests' ? total : 1);
@@ -341,7 +351,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   return overlay(
     <>
       {header}
-      <div className="constellation-session__request mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
+      <div
+        ref={requestScrollRef}
+        className="constellation-session__request mx-auto min-h-0 w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12"
+      >
         {showSupplicationLabel && (
           <SectionLabel className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
         )}

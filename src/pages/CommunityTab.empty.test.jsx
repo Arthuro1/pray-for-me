@@ -66,6 +66,26 @@ describe('CommunityTab — empty state consolidation', () => {
     expect(screen.getByRole('button', { name: t(lang, 'createGroup') })).toBeTruthy();
     expect(screen.getByRole('button', { name: t(lang, 'addFriend') })).toBeTruthy();
   });
+
+  it('does not load or render a prayer-request feed on the Community hub', async () => {
+    const fetchCommunityFeed = vi.fn().mockResolvedValue([{
+      id: 'p1',
+      group_id: 'g1',
+      title: 'Hidden hub request',
+      created_at: '2026-07-01T00:00:00Z',
+      prayer_reactions: [{ count: 2 }],
+    }]);
+    stubCommunity({
+      groups: [{ id: 'g1', name: 'Groupe Familial', role: 'member' }],
+      fetchCommunityFeed,
+    });
+    renderCommunity();
+
+    expect(await screen.findByText('Groupe Familial')).toBeTruthy();
+    expect(fetchCommunityFeed).not.toHaveBeenCalled();
+    expect(screen.queryByText(t(lang, 'prayerRequests'))).toBeNull();
+    expect(screen.queryByText('Hidden hub request')).toBeNull();
+  });
 });
 
 describe('GroupView — progressive list tools', () => {

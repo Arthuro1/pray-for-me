@@ -739,6 +739,10 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   overflow: hidden;
 }
 
+.update-composer--labelled .update-composer__input {
+  min-height: 44px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .prayer-activity-item__actions > button {
     opacity: 0;
@@ -1667,6 +1671,44 @@ html.constellation-app body {
   box-shadow: none;
 }
 
+@media (min-width: 768px) {
+  .constellation-detail__hero-copy,
+  .constellation-detail .detail-page__content {
+    width: min(100%, 42rem);
+  }
+
+  .constellation-detail__hero-copy {
+    margin-inline: auto;
+    text-align: start;
+  }
+
+  .constellation-detail__title,
+  .constellation-detail__title-input {
+    text-align: start;
+  }
+
+  .constellation-detail__title {
+    justify-content: flex-start;
+  }
+
+  .constellation-detail__description {
+    margin-inline: 0;
+  }
+
+  .constellation-detail__meta {
+    justify-content: flex-start;
+  }
+
+  .constellation-detail .detail-page__content > *,
+  .constellation-detail__secondary-actions,
+  .constellation-detail .prayer-points-panel,
+  .constellation-detail .prayer-activity-panel,
+  .constellation-detail .prayer-activity-action {
+    width: 100%;
+    max-width: none;
+  }
+}
+
 /* Pray now — under the stars ---------------------------------------------- */
 .constellation-session {
   background-color: var(--background) !important;
@@ -1702,9 +1744,18 @@ html.constellation-app body {
 
 .constellation-session__request {
   display: flex;
+  min-height: 0;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
+}
+
+.constellation-session__request > :first-child {
+  margin-block-start: auto;
+}
+
+.constellation-session__request > :last-child {
+  margin-block-end: auto;
 }
 
 .constellation-session__request > .flex,

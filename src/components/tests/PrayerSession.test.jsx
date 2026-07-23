@@ -109,6 +109,20 @@ describe('PrayerSession — immediate start & format control', () => {
     expect(onComplete).toHaveBeenCalledTimes(1);
     expect(readActivationProgress().signals).toContain('session_completed');
   });
+
+  it('returns the scroll area to the title when advancing to another request', () => {
+    const two = [prayer, { ...prayer, id: 'p2', title: 'Pour un ami', prayer_points: [] }];
+    const { container } = render(
+      <PrayerSession prayers={two} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />,
+    );
+    const scrollArea = container.querySelector('.constellation-session__request');
+    scrollArea.scrollTop = 320;
+
+    fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
+
+    expect(screen.getByText('Pour un ami')).toBeTruthy();
+    expect(scrollArea.scrollTop).toBe(0);
+  });
 });
 
 describe('PrayerSession — format change protects progress', () => {

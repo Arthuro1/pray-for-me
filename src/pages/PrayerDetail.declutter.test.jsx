@@ -119,6 +119,18 @@ describe('PrayerDetail — leads with prayer', () => {
     expect(markAnswered).toHaveBeenCalledWith('p1', '', []);
   });
 
+  it('opens the optional testimony field at the same initial height as Confirm', () => {
+    renderDetail(base());
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'markAnswered')) }));
+
+    const testimony = screen.getByRole('textbox', { name: new RegExp(t(lang, 'testimony')) });
+    const confirm = screen.getByRole('button', { name: new RegExp(t(lang, 'confirm')) });
+
+    expect(testimony.style.minHeight).toBe('24px');
+    expect(confirm.className).toMatch(/min-h-\[44px\]/);
+    expect(testimony.closest('.update-composer__input')?.className).toContain('update-composer__input');
+  });
+
   it('Add update is immediately reachable — it focuses the real update field, no new form', () => {
     const { container } = renderDetail(base());
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'addUpdateBtn')) }));

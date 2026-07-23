@@ -1300,7 +1300,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   media) is optional, so allowEmpty keeps Confirm available. */}
               <UpdateComposer
                 lang={lang}
-                rows={3}
+                rows={1}
                 allowEmpty
                 placeholder={`${t(lang, 'testimony')}…`}
                 sendLabel={t(lang, 'confirm')}
@@ -1531,7 +1531,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 with nothing written, exactly like the old flow. */}
             <UpdateComposer
               lang={lang}
-              rows={3}
+              rows={1}
               autoFocus
               allowEmpty
               placeholder={`${t(lang, 'testimony')}…`}
