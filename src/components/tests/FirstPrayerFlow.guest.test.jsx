@@ -10,8 +10,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 
 // Recording Supabase double — any write here would be a privacy failure.
-const rec = vi.hoisted(() => ({ writes: [] }));
+const rec = vi.hoisted(() => ({ writes: [], supabaseLoaded: false }));
 vi.mock('../../lib/supabase', () => {
+  rec.supabaseLoaded = true;
   const chain = {
     upsert: (p) => { rec.writes.push({ op: 'upsert', p }); return chain; },
     insert: (p) => { rec.writes.push({ op: 'insert', p }); return chain; },
@@ -50,7 +51,7 @@ vi.mock('../../lib/guestPrayerDraft', () => ({
   __resetMemoryForTests: vi.fn(() => { draftMem.current = null; }),
 }));
 
-import FirstPrayerFlow from '../FirstPrayerFlow';
+import GuestPrayerFlow from '../GuestPrayerFlow';
 import { saveGuestDraft, markGuestDraftPrayed } from '../../lib/guestPrayerDraft';
 import { t } from '../../i18n';
 
@@ -78,9 +79,9 @@ async function prayAsGuest() {
   await screen.findByText(t(lang, 'firstPrayerSaveTitle'));
 }
 
-describe('FirstPrayerFlow (guest)', () => {
+describe('GuestPrayerFlow', () => {
   it('asks the one question with an honest device-local reassurance', () => {
-    render(<FirstPrayerFlow mode="guest" lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
     expect(screen.getByText(t(lang, 'firstPrayerQuestion'))).toBeTruthy();
     // Device-local, NOT a claim that account E2EE already happened.
     expect(screen.getByText(t(lang, 'firstPrayerDeviceNote'))).toBeTruthy();
@@ -89,7 +90,7 @@ describe('FirstPrayerFlow (guest)', () => {
 
   it('lets the visitor pray, then asks to save — with NO server writes', async () => {
     const onRequestSave = vi.fn();
-    render(<FirstPrayerFlow mode="guest" lang={lang} onFinish={vi.fn()} onRequestSave={onRequestSave} />);
+    render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={onRequestSave} />);
     await prayAsGuest();
 
     // The prayer was saved only to the device, and its completion was recorded.
@@ -106,11 +107,12 @@ describe('FirstPrayerFlow (guest)', () => {
 
     // Nothing about the prayer ever reached Supabase before authentication.
     expect(rec.writes).toHaveLength(0);
+    expect(rec.supabaseLoaded).toBe(false);
   });
 
   it('"Finish without saving" leaves without saving anything', async () => {
     const onFinish = vi.fn();
-    render(<FirstPrayerFlow mode="guest" lang={lang} onFinish={onFinish} onRequestSave={vi.fn()} />);
+    render(<GuestPrayerFlow lang={lang} onFinish={onFinish} onRequestSave={vi.fn()} />);
     await prayAsGuest();
     fireEvent.click(screen.getByText(t(lang, 'firstPrayerFinishBtn')));
     expect(onFinish).toHaveBeenCalled();
@@ -120,7 +122,7 @@ describe('FirstPrayerFlow (guest)', () => {
   it('resumes at the save decision if a draft already exists (e.g. auth cancelled)', () => {
     // A draft is already present (as after returning from a cancelled auth)…
     draftMem.current = { id: 'guest-1', title: 'Un souci', completed: false, contentLanguage: 'fr' };
-    render(<FirstPrayerFlow mode="guest" lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
     // …so we land on the decision, never a blank capture screen — the draft is
     // never quietly lost.
     expect(screen.getByText(t(lang, 'firstPrayerSaveTitle'))).toBeTruthy();

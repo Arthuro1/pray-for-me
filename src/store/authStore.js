@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { clearLocalData } from '../lib/dataCache';
 import { forgetAccountKey } from '../lib/crypto/accountKey';
 import { authRedirectTarget } from '../lib/pendingInvite';
+import { setAuthSessionHint } from '../lib/authSessionHint';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -10,9 +11,11 @@ const useAuthStore = create((set) => ({
 
   init: async () => {
     const { data: { session } } = await supabase.auth.getSession();
+    setAuthSessionHint(!!session);
     set({ user: session?.user ?? null, loading: false });
 
     supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthSessionHint(!!session);
       set({ user: session?.user ?? null });
     });
   },
@@ -29,6 +32,7 @@ const useAuthStore = create((set) => ({
 
   signInWithEmail: async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (data?.session) setAuthSessionHint(true);
     return { user: data?.user, error };
   },
 
@@ -41,6 +45,7 @@ const useAuthStore = create((set) => ({
       password,
       options: { data: { full_name: fullName }, emailRedirectTo: authRedirectTarget() },
     });
+    if (data?.session) setAuthSessionHint(true);
     return { user: data?.user, error };
   },
 
@@ -74,6 +79,7 @@ const useAuthStore = create((set) => ({
     const { data: { user } } = await supabase.auth.getUser();
     await clearLocalData(user?.id);
     await supabase.auth.signOut();
+    setAuthSessionHint(false);
     set({ user: null });
   },
 
@@ -86,6 +92,7 @@ const useAuthStore = create((set) => ({
     await clearLocalData(user?.id);
     await forgetAccountKey(user?.id); // the account is gone — remove the local key too
     await supabase.auth.signOut();
+    setAuthSessionHint(false);
     set({ user: null });
     return { error: null };
   },

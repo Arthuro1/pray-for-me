@@ -38,6 +38,9 @@ export default defineConfig(({ mode }) => {
         // (~450 KB) forces every user to download 15 languages they'll never use,
         // re-fetched on each deploy. They're served from cache after first use via
         // the runtimeCaching rule below. (French ships in the main bundle.)
+        // The much smaller `landing-<lang>` marketing chunks are intentionally
+        // named differently and remain precached so every landing language works
+        // offline immediately after installation.
         globIgnores: ['**/assets/{ar,de,es,fa,hi,id,ja,ko,pt,ru,sw,tl,zh,am,en}-*.js'],
         // Pull our Web Push handlers into the generated service worker.
         importScripts: ['push-sw.js'],
