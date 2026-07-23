@@ -829,6 +829,8 @@ export default {
   "followUpNext": "ክትትል · {date}",
   "resultsCount": "{n} ውጤቶች",
   "clearFiltersBtn": "ማጣሪያዎችን አጽዳ",
+  "journalFilters": "የጸሎት ማስታወሻ ማጣሪያዎች",
+  "journalSource": "ምንጭ ወይም ቡድን",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

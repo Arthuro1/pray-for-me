@@ -22,6 +22,7 @@ vi.mock('../lib/mutationQueue', () => ({
 import PrayersTab from './PrayersTab';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
+import useCommunityStore from '../store/communityStore';
 import useLayoutStore from '../store/layoutStore';
 import useFollowUpStore from '../store/followUpStore';
 import { todayKey } from '../lib/prayedLog';
@@ -38,6 +39,7 @@ beforeEach(() => {
   localStorage.clear();
   navigate.mockClear();
   useLayoutStore.setState({ fabSuppressed: false });
+  useCommunityStore.setState({ prayerShares: {} });
   useFollowUpStore.setState({ followUps: {} });
   usePrayerStore.setState({
     prayers: [prayer('a1'), prayer('a2')],
@@ -62,7 +64,7 @@ describe('Journal — counts & zero states', () => {
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
     fireEvent.change(screen.getByPlaceholderText(t(lang, 'search')), { target: { value: 'a1' } });
-    expect(screen.getByText(t(lang, 'resultsCount', { n: 1 }))).toBeTruthy();
+    expect(screen.getByText(`1 ${t(lang, 'prayer')}`)).toBeTruthy();
   });
 
   it('a filtered zero offers Clear filters — never another Add prayer nudge', () => {

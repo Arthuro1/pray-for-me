@@ -829,6 +829,8 @@ export default {
   "followUpNext": "متابعة · {date}",
   "resultsCount": "{n} نتائج",
   "clearFiltersBtn": "مسح عوامل التصفية",
+  "journalFilters": "عوامل تصفية سجل الصلاة",
+  "journalSource": "المصدر أو المجموعة",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

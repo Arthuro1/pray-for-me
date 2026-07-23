@@ -829,6 +829,8 @@ export default {
   "followUpNext": "Tindak lanjut · {date}",
   "resultsCount": "{n} hasil",
   "clearFiltersBtn": "Hapus filter",
+  "journalFilters": "Filter jurnal",
+  "journalSource": "Sumber atau grup",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

@@ -829,6 +829,8 @@ export default {
   "followUpNext": "フォローアップ · {date}",
   "resultsCount": "{n}件",
   "clearFiltersBtn": "絞り込みを解除",
+  "journalFilters": "祈りの日記の絞り込み",
+  "journalSource": "出典またはグループ",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

@@ -829,6 +829,8 @@ export default {
   "followUpNext": "Ufuatiliaji · {date}",
   "resultsCount": "Matokeo {n}",
   "clearFiltersBtn": "Futa vichujio",
+  "journalFilters": "Vichujio vya shajara",
+  "journalSource": "Chanzo au kikundi",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

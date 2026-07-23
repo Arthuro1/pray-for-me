@@ -829,6 +829,8 @@ export default {
   "followUpNext": "پیگیری · {date}",
   "resultsCount": "{n} نتیجه",
   "clearFiltersBtn": "پاک‌کردن فیلترها",
+  "journalFilters": "فیلترهای دفتر دعا",
+  "journalSource": "منبع یا گروه",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

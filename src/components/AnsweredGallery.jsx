@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, EyeOff, HandHeart, Pin, BookOpen } from 'lucide-react';
+import { Users, EyeOff, HandHeart, Pin, BookOpen, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
@@ -21,9 +21,14 @@ import { usePrayerActions } from '../hooks/usePrayerActions';
 
 // A reflective "God's faithfulness" view of all answered prayers. Rendered as
 // the Journal's "Answered" segment (it brings no page chrome of its own).
-export default function AnsweredGallery() {
+export default function AnsweredGallery({
+  prayers: providedPrayers,
+  searchMatches = {},
+  showCount = true,
+  showReflection = true,
+} = {}) {
   const navigate = useNavigate();
-  const { prayers, categories, settings } = usePrayerStore(
+  const { prayers: storedPrayers, categories, settings } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings }))
   );
   const { tr } = useTranslationStore();
@@ -35,9 +40,9 @@ export default function AnsweredGallery() {
   const currentUserName = getAuthorName(user);
   const { swipeActions } = usePrayerActions(lang);
 
-  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
+  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id, fetchPrayerShares]);
 
-  const answered = prayers
+  const answered = (providedPrayers ?? storedPrayers)
     .filter(p => p.status === 'answered')
     .sort((a, b) => {
       const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
@@ -56,6 +61,12 @@ export default function AnsweredGallery() {
     const pCats = categories.filter(c => pCatIds.includes(c.id));
     const testimonies = testimonyList(prayer);
     const lastTestimony = testimonies.slice(-1)[0];
+    const searchMatch = searchMatches[prayer.id];
+    const showSearchMatch = (
+      searchMatch?.text
+      && !['title', 'person'].includes(searchMatch.field)
+      && !(searchMatch.field === 'testimony' && lastTestimony?.content === searchMatch.text)
+    );
     const oa = originAuthor(prayer);
     const authorName = oa ? (oa.anonymous ? '?' : oa.name) : currentUserName;
     const authorLabel = oa ? (oa.anonymous ? t(lang, 'anonymous') : oa.name) : t(lang, 'meAuthor');
@@ -76,6 +87,12 @@ export default function AnsweredGallery() {
             {prayer.pinned && <Pin size={13} fill="currentColor" className="shrink-0" style={{ color: 'var(--accent)' }} />}
           </div>
           <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
+          {showSearchMatch && (
+            <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+              <Search size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
+              <span className="line-clamp-2">{tr(searchMatch.text, lang)}</span>
+            </p>
+          )}
           {lastTestimony && (
             // Preview only — media renders in the detail page (players don't
             // belong inside this clickable card), so a media-only testimony
@@ -146,7 +163,7 @@ export default function AnsweredGallery() {
       {/* Remembrance: a Psalm of God's faithfulness. Tap to read the passage
           in place (authoritative text, no AI); the whole-chapter link lives
           inside the expanded panel — same as every other verse in the app. */}
-      {faithfulnessRef && (
+      {showReflection && faithfulnessRef && (
         <VerseAccordion reference={faithfulnessRef} lang={lang} className="mb-4">
           {({ toggle }) => (
             <button
@@ -163,9 +180,11 @@ export default function AnsweredGallery() {
         </VerseAccordion>
       )}
 
-      <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>
-        {answered.length} {answered.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
-      </p>
+      {showCount && (
+        <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>
+          {answered.length} {answered.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
+        </p>
+      )}
 
       {groups.map(g => (
         <div key={g.key} className="mb-5">

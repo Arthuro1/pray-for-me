@@ -829,6 +829,8 @@ export default {
   "followUpNext": "후속 확인 · {date}",
   "resultsCount": "결과 {n}개",
   "clearFiltersBtn": "필터 지우기",
+  "journalFilters": "기도 일지 필터",
+  "journalSource": "출처 또는 그룹",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

@@ -830,6 +830,8 @@ export default {
   "followUpNext": "Follow-up · {date}",
   "resultsCount": "{n} results",
   "clearFiltersBtn": "Clear filters",
+  "journalFilters": "Journal filters",
+  "journalSource": "Source or group",
 
   // Persona pass, second refinement (2026-07): due-today intercession, person
   // sessions, Grow durations & why-steps, audience/protection split, schedule

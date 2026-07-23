@@ -14,6 +14,7 @@ import PrayersTab from './PrayersTab';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useLayoutStore from '../store/layoutStore';
+import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
 
 const lang = 'fr';
@@ -26,6 +27,7 @@ afterEach(cleanup);
 beforeEach(() => {
   navigate.mockClear();
   useLayoutStore.setState({ fabSuppressed: false });
+  useCommunityStore.setState({ prayerShares: {} });
   usePrayerStore.setState({
     prayers: [prayer('a1'), prayer('a2'), prayer('x1', { status: 'answered', answered_at: new Date().toISOString() })],
     categories: [],
@@ -66,13 +68,14 @@ describe('PrayersTab — simplified header', () => {
     expect(screen.queryByText('Prière a2')).toBeNull();
   });
 
-  it('hides the category filter control when no categories exist', () => {
+  it('reveals journal filters only when a useful active-prayer option exists', () => {
     renderJournal();
-    expect(screen.queryByRole('button', { name: t(lang, 'allCategories') })).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'journalFilters') })).toBeNull();
     usePrayerStore.setState({ categories: [{ id: 'c1', name: 'Famille', emoji: '👪', color: '#7c5cfc' }] });
     cleanup();
     renderJournal();
-    expect(screen.getByRole('button', { name: t(lang, 'allCategories') })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    expect(screen.getByRole('combobox', { name: t(lang, 'allCategories') })).toBeTruthy();
   });
 
   it('shows "answered this week" as quiet text inside the Answered segment', () => {

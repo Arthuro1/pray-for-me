@@ -829,6 +829,8 @@ export default {
   "followUpNext": "Nachfassen · {date}",
   "resultsCount": "{n} Treffer",
   "clearFiltersBtn": "Filter zurücksetzen",
+  "journalFilters": "Tagebuchfilter",
+  "journalSource": "Quelle oder Gruppe",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

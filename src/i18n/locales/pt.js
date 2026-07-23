@@ -829,6 +829,8 @@ export default {
   "followUpNext": "Acompanhamento · {date}",
   "resultsCount": "{n} resultados",
   "clearFiltersBtn": "Limpar filtros",
+  "journalFilters": "Filtros do diário",
+  "journalSource": "Origem ou grupo",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

@@ -829,6 +829,8 @@ export default {
   "followUpNext": "跟进 · {date}",
   "resultsCount": "{n} 条结果",
   "clearFiltersBtn": "清除筛选",
+  "journalFilters": "祷告日记筛选",
+  "journalSource": "来源或小组",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

@@ -829,6 +829,8 @@ export default {
   "followUpNext": "फ़ॉलो-अप · {date}",
   "resultsCount": "{n} परिणाम",
   "clearFiltersBtn": "फ़िल्टर हटाएँ",
+  "journalFilters": "प्रार्थना डायरी फ़िल्टर",
+  "journalSource": "स्रोत या समूह",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

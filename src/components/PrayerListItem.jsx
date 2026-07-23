@@ -1,4 +1,4 @@
-import { Users, EyeOff, HandHeart, Pin } from 'lucide-react';
+import { Users, EyeOff, HandHeart, Pin, Search } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
@@ -10,7 +10,7 @@ const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)'
 
 // Spacious prayer card used by the personal My Prayers and Home lists,
 // matching the look of the community prayer wall (author + date header first).
-export default function PrayerListItem({ prayer, categories, lang, tr, shares, currentUserName = '', onClick, variant = 'card' }) {
+export default function PrayerListItem({ prayer, categories, lang, tr, shares, currentUserName = '', onClick, variant = 'card', searchMatch = null }) {
   const isAnswered = prayer.status === 'answered';
   // A finished series reads "Series ended", never "Active" — the plan is over
   // even though the prayer stays in the journal.
@@ -83,6 +83,13 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
       >
         {tr(prayer.title, lang)}
       </p>
+
+      {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
+        <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+          <Search size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
+          <span className="line-clamp-2">{tr(searchMatch.text, lang)}</span>
+        </p>
+      )}
 
       {pCats.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-2">

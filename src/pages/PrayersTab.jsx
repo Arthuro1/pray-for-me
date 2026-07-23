@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
@@ -11,6 +11,7 @@ import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
+import JournalFilters from '../components/JournalFilters';
 import Avatar from '../components/shared/Avatar';
 import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check } from 'lucide-react';
 import { t } from '../i18n';
@@ -23,10 +24,16 @@ import { usePrayerActions } from '../hooks/usePrayerActions';
 import { todayKey } from '../lib/prayedLog';
 import PrayerSession from '../components/PrayerSession';
 import { PageHeader, SegmentedControl } from '../components/shared/Primitives';
+import {
+  EMPTY_JOURNAL_FILTERS,
+  filterJournalPrayers,
+  journalFilterOptions,
+  journalFiltersActive,
+} from '../lib/journalSearch';
 
 // The Journal: every request and its history, in two simple segments — Active
-// and Answered. Search hides behind an icon, the category filter only exists
-// once categories do, and an optional People view (for anyone praying over
+// and Answered. Search and useful retrieval filters hide behind icons, while
+// an optional People view (for anyone praying over
 // many people by name — pastors, intercessors) appears only when the data
 // makes it useful. The count line shows ONLY while filters narrow the list
 // ("N results"); the segments already carry the real totals.
@@ -44,12 +51,12 @@ export default function PrayersTab({ onAdd }) {
   const { swipeActions } = usePrayerActions(lang);
   const location = useLocation();
 
-  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
+  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id, fetchPrayerShares]);
   // Opened from a shortcut (e.g. the /answered redirect) with a preset segment.
   const [segment, setSegment] = useState(location.state?.filter === 'answered' ? 'answered' : 'active');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  // Search is folded behind an icon; its text (and the category filter) survive
-  // segment switches so coming back to Active resumes exactly where Grace was.
+  const [filters, setFilters] = useState({ ...EMPTY_JOURNAL_FILTERS });
+  // Search is folded behind an icon; its text and filters survive segment
+  // switches so coming back to Active resumes exactly where Grace was.
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -66,33 +73,47 @@ export default function PrayersTab({ onAdd }) {
   const recap = weeklyRecap(prayers, new Date());
   const peopleAvailable = peopleViewAvailable(prayers);
   const people = peopleOpen ? peopleFromPrayers(prayers, followUps) : [];
+  const filterOptions = useMemo(
+    () => journalFilterOptions(prayers, prayerShares),
+    [prayers, prayerShares]
+  );
 
   const SEGMENTS = [
     { id: 'active', label: t(lang, 'active'), count: activeCount },
     { id: 'answered', label: t(lang, 'answered'), count: answeredCount },
   ];
 
-  const filtersActive = !!search || categoryFilter !== 'all';
-
-  const filtered = prayers.filter((p) => {
-    if (p.status !== 'active') return false;
-    if (categoryFilter !== 'all') {
-      const pCatIds = (p.prayer_categories || []).map((pc) => pc.category_id);
-      if (!pCatIds.includes(categoryFilter)) return false;
-    }
-    if (search) {
-      const q = search.toLowerCase();
-      if (!p.title.toLowerCase().includes(q) && !(p.description || '').toLowerCase().includes(q) && !(p.person_name || '').toLowerCase().includes(q)) return false;
-    }
-    return true;
-  });
+  const normalizedSearch = search.trim();
+  const structuredFiltersActive = journalFiltersActive(filters, segment);
+  const filtersActive = !!normalizedSearch || structuredFiltersActive;
+  const filteredEntries = useMemo(
+    () => filterJournalPrayers({
+      prayers,
+      status: segment,
+      query: normalizedSearch,
+      filters,
+      prayerShares,
+      translate: (text) => tr(text, lang),
+    }),
+    [prayers, segment, normalizedSearch, filters, prayerShares, tr, lang]
+  );
 
   const orderById = Object.fromEntries(categories.map((c, i) => [c.id, i]));
-  const sorted = [...filtered].sort((a, b) => {
-    const byPin = (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0);
+  const sortedEntries = [...filteredEntries].sort((a, b) => {
+    const byPin = (b.prayer.pinned ? 1 : 0) - (a.prayer.pinned ? 1 : 0);
     if (byPin !== 0) return byPin;
-    return prayerPriority(a, orderById) - prayerPriority(b, orderById);
+    return prayerPriority(a.prayer, orderById) - prayerPriority(b.prayer, orderById);
   });
+  const searchMatches = Object.fromEntries(filteredEntries.map(({ prayer, match }) => [prayer.id, match]));
+  const hasFilterControls = (
+    categories.length > 0
+    || filterOptions.people.length > 0
+    || filterOptions.groups.length > 0
+    || (segment === 'answered' && answeredCount > 0)
+  );
+  const resultsLabel = (count) => count === 1
+    ? `1 ${t(lang, 'prayer')}`
+    : t(lang, 'resultsCount', { n: count });
 
   // Truly empty (no active prayers at all) → the empty state carries the one
   // prominent Add CTA and the floating button hides. A FILTERED zero keeps the
@@ -100,9 +121,14 @@ export default function PrayersTab({ onAdd }) {
   const trulyEmpty = activeCount === 0;
   useSuppressFab(segment === 'active' && !peopleOpen && trulyEmpty);
 
-  const clearFilters = () => { setSearch(''); setSearchOpen(false); setCategoryFilter('all'); setShowFilters(false); };
+  const clearFilters = () => {
+    setSearch('');
+    setSearchOpen(false);
+    setFilters({ ...EMPTY_JOURNAL_FILTERS });
+    setShowFilters(false);
+  };
 
-  const renderPrayer = (prayer) => (
+  const renderPrayer = (prayer, match = searchMatches[prayer.id]) => (
     <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
       <PrayerListItem
         prayer={prayer}
@@ -111,6 +137,7 @@ export default function PrayersTab({ onAdd }) {
         tr={tr}
         shares={prayerShares[prayer.id]}
         currentUserName={getAuthorName(user)}
+        searchMatch={normalizedSearch ? match : null}
         onClick={() => navigate(`/prayers/${prayer.id}`)}
       />
     </SwipeableRow>
@@ -149,7 +176,7 @@ export default function PrayersTab({ onAdd }) {
               <Users size={16} />
             </button>
           )}
-          {segment === 'active' && !peopleOpen && (
+          {!peopleOpen && (
             <>
               <button
                 onClick={() => setSearchOpen((v) => !v)}
@@ -159,12 +186,14 @@ export default function PrayersTab({ onAdd }) {
               >
                 <Search size={16} />
               </button>
-              {categories.length > 0 && (
+              {hasFilterControls && (
                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   aria-expanded={showFilters}
-                  aria-label={t(lang, 'allCategories')}
+                  aria-haspopup="dialog"
+                  aria-label={t(lang, 'journalFilters')}
                   className="phase-icon-button shrink-0"
+                  style={structuredFiltersActive ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
                 >
                   <SlidersHorizontal size={16} />
                 </button>
@@ -175,7 +204,7 @@ export default function PrayersTab({ onAdd }) {
 
         {/* The search field only takes space once asked for; text is preserved
             while it (or the segment) is toggled. */}
-        {segment === 'active' && !peopleOpen && (searchOpen || !!search) && (
+        {!peopleOpen && (searchOpen || !!search) && (
           <div className="journal-search">
             <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)', insetInlineStart: '0.9rem' }} />
             <input
@@ -198,6 +227,22 @@ export default function PrayersTab({ onAdd }) {
               </button>
             )}
           </div>
+        )}
+        {!peopleOpen && showFilters && hasFilterControls && (
+          <JournalFilters
+            segment={segment}
+            filters={filters}
+            categories={categories}
+            people={filterOptions.people}
+            groups={filterOptions.groups}
+            hasPersonal={filterOptions.hasPersonal}
+            lang={lang}
+            tr={tr}
+            active={structuredFiltersActive}
+            onChange={setFilters}
+            onClear={() => setFilters({ ...EMPTY_JOURNAL_FILTERS })}
+            onClose={() => setShowFilters(false)}
+          />
         )}
         </div>
       </div>
@@ -311,48 +356,49 @@ export default function PrayersTab({ onAdd }) {
           <>
             {/* Quiet context, not a statistic card — only when there is
                 something to give thanks for. */}
-            {recap.answered > 0 && (
+            {!filtersActive && recap.answered > 0 && (
               <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
                 {t(lang, 'answeredThisWeek', { n: recap.answered })}
               </p>
             )}
-            <AnsweredGallery />
+            {filtersActive && answeredCount > 0 && (
+              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }} role="status">
+                {resultsLabel(filteredEntries.length)}
+              </p>
+            )}
+            {filtersActive && answeredCount > 0 && filteredEntries.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-sm mb-4" style={{ color: 'var(--text-2)' }}>{t(lang, 'noMatch')}</p>
+                <button
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium"
+                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                >
+                  <X size={14} /> {t(lang, 'clearFiltersBtn')}
+                </button>
+              </div>
+            ) : (
+              <AnsweredGallery
+                prayers={filteredEntries.map(({ prayer }) => prayer)}
+                searchMatches={searchMatches}
+                showCount={!filtersActive}
+                showReflection={!filtersActive}
+              />
+            )}
           </>
         ) : (
           <>
-            {showFilters && categories.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto pb-2 mb-3" style={{ scrollbarWidth: 'none' }}>
-                <button
-                  onClick={() => setCategoryFilter('all')}
-                  className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
-                  style={categoryFilter === 'all' ? { background: 'var(--plum)', color: '#fff' } : { background: 'var(--surface)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
-                >
-                  {t(lang, 'allCategories')}
-                </button>
-                {categories.map((c) => (
-                  <button
-                    key={c.id}
-                    onClick={() => setCategoryFilter(c.id)}
-                    className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
-                    style={categoryFilter === c.id ? { backgroundColor: c.color, color: '#fff' } : { background: 'var(--surface)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
-                  >
-                    {c.emoji} {tr(c.name, lang)}
-                  </button>
-                ))}
-              </div>
-            )}
-
             {/* The segments already state the totals — a count line appears
                 only while filters narrow the list, as a result label. */}
             {filtersActive && !(loading && prayers.length === 0) && (
               <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }} role="status">
-                {t(lang, 'resultsCount', { n: sorted.length })}
+                {resultsLabel(sortedEntries.length)}
               </p>
             )}
 
             {loading && prayers.length === 0 ? (
               <PrayerListSkeleton count={5} />
-            ) : sorted.length === 0 ? (
+            ) : sortedEntries.length === 0 ? (
               trulyEmpty ? (
                 <EmptyState
                   emoji="🙏"
@@ -378,7 +424,7 @@ export default function PrayersTab({ onAdd }) {
               )
             ) : (
               <div className="flex flex-col gap-3">
-                {sorted.map(renderPrayer)}
+                {sortedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
               </div>
             )}
           </>

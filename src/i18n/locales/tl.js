@@ -829,6 +829,8 @@ export default {
   "followUpNext": "Follow-up · {date}",
   "resultsCount": "{n} resulta",
   "clearFiltersBtn": "Alisin ang mga filter",
+  "journalFilters": "Mga filter ng journal",
+  "journalSource": "Pinagmulan o grupo",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

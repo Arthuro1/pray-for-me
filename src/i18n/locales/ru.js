@@ -829,6 +829,8 @@ export default {
   "followUpNext": "Напоминание · {date}",
   "resultsCount": "Результатов: {n}",
   "clearFiltersBtn": "Сбросить фильтры",
+  "journalFilters": "Фильтры дневника",
+  "journalSource": "Источник или группа",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
