@@ -810,6 +810,10 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   box-shadow: var(--shadow-md);
 }
 
+[data-theme="night"] .community-empty {
+  background: linear-gradient(150deg, #1b2340, #2b2a52);
+}
+
 .community-empty::after {
   position: absolute;
   inset: auto -4rem -6rem auto;
@@ -1113,6 +1117,23 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   border-radius: 50%;
   background: var(--accent-2);
   box-shadow: 0 0 0 3px var(--accent-soft), 0 0 8px color-mix(in srgb, var(--accent-2) 70%, transparent);
+}
+
+[data-theme="night"] .prayer-card .prayer-card__title {
+  position: relative;
+  padding-inline-start: 1.2rem;
+}
+
+[data-theme="night"] .prayer-card .prayer-card__title::before {
+  position: absolute;
+  inset-block-start: .4em;
+  inset-inline-start: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 8px color-mix(in srgb, var(--accent-2) 70%, transparent);
+  content: "";
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -50,7 +50,7 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
   return (
     <button
       onClick={onClick}
-      className="w-full text-left p-4 rounded-2xl transition-all hover:scale-[1.01]"
+      className="prayer-card w-full text-left p-4 rounded-2xl transition-all hover:scale-[1.01]"
       style={CARD}
     >
       {/* Author + creation date header (matches community cards) */}
@@ -78,7 +78,7 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
       </div>
 
       <p
-        className="text-[15px] font-medium leading-snug mb-2"
+        className="prayer-card__title text-[15px] font-medium leading-snug mb-2"
         style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}
       >
         {tr(prayer.title, lang)}

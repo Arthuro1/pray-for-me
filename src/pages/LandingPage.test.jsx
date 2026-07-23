@@ -11,6 +11,8 @@ import LandingPage from './LandingPage';
 afterEach(cleanup);
 beforeEach(() => {
   localStorage.setItem('pfm_language', 'en');
+  localStorage.removeItem('pfm_theme');
+  document.documentElement.removeAttribute('data-theme');
 });
 
 describe('LandingPage — simplified hero', () => {
@@ -78,5 +80,20 @@ describe('LandingPage — simplified product story', () => {
     expect(screen.getByText(/Ésaïe 40:31/)).toBeTruthy();
     expect(screen.queryByText(/Philippians/)).toBeNull();
     expect(screen.queryByText(/Isaiah/)).toBeNull();
+  });
+});
+
+describe('LandingPage saved Night theme', () => {
+  it('preserves Night before sign-in and offers a clear return to Light', async () => {
+    localStorage.setItem('pfm_theme', 'night');
+    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
+
+    await screen.findByText('Begin with a prayer');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('night');
+    expect(localStorage.getItem('pfm_theme')).toBe('night');
+
+    fireEvent.click(screen.getByTitle('Light mode'));
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    expect(localStorage.getItem('pfm_theme')).toBe('light');
   });
 });

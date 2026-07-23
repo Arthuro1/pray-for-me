@@ -86,6 +86,12 @@ const THEMES = {
     previewBg: '#1b1620',
     previewItemBg: '#2a2330',
     gold: '#d2aa6d',
+    primaryBg: '#60457b',
+    prayerPreviewBg: 'linear-gradient(145deg,#30213f,#4b3560)',
+    prayerPreviewButtonBg: '#f7efe3',
+    prayerPreviewButtonText: '#30213f',
+    peaceBg: '#24332a',
+    peaceText: '#9bc4a3',
     ctaShadow: '0 12px 32px rgba(0,0,0,0.28)',
     ctaShadowBig: '0 18px 44px rgba(0,0,0,0.34)',
   },
@@ -116,8 +122,51 @@ const THEMES = {
     previewBg: '#fffdf9',
     previewItemBg: '#f4ead7',
     gold: '#a97938',
+    primaryBg: '#60457b',
+    prayerPreviewBg: 'linear-gradient(145deg,#30213f,#4b3560)',
+    prayerPreviewButtonBg: '#f7efe3',
+    prayerPreviewButtonText: '#30213f',
+    peaceBg: '#e7eee6',
+    peaceText: '#5f7865',
     ctaShadow: '0 12px 30px rgba(48,33,63,0.18)',
     ctaShadowBig: '0 18px 42px rgba(48,33,63,0.22)',
+  },
+  night: {
+    bg: '#0f1322',
+    text: '#e8ecfb',
+    textSoft: '#c6d0ff',
+    textMuted: '#a7afce',
+    textFaint: '#969fc2',
+    textDim: '#8992b5',
+    textGhost: '#8992b5',
+    surface: '#191f34',
+    surfaceStrong: '#1f2740',
+    chipBg: 'rgba(255,255,255,0.055)',
+    border: '#2a3350',
+    borderStrong: '#3a4470',
+    menuBg: '#191f34',
+    menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
+    accentText: '#c6d0ff',
+    accentSoftBg: '#20264a',
+    accentChipBg: '#292e58',
+    accentActiveBg: '#343a68',
+    accentBorder: '#3a4470',
+    heroGlow: 'rgba(159,176,255,0.16)',
+    ctaGlow: 'rgba(180,166,255,0.14)',
+    calloutBg: 'linear-gradient(145deg, #1b2340, #2b2a52)',
+    calloutBorder: '#3a4470',
+    previewBg: '#171d30',
+    previewItemBg: '#1f2740',
+    gold: '#b4a6ff',
+    primaryBg: '#6b76d6',
+    prayerPreviewBg: 'linear-gradient(145deg,#1b2340,#34407a)',
+    prayerPreviewButtonBg: '#c6d0ff',
+    prayerPreviewButtonText: '#101736',
+    peaceBg: '#16302a',
+    peaceText: '#6fcdb8',
+    benefitColors: ['#b4a6ff', '#8f9cff', '#6fcdb8'],
+    ctaShadow: '0 12px 32px rgba(0,0,0,0.3)',
+    ctaShadowBig: '0 18px 44px rgba(0,0,0,0.38)',
   },
 };
 
@@ -152,9 +201,12 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
   const [copyState, setCopyState] = useState(null);
   const [langOpen, setLangOpen] = useState(false);
-  // Warm parchment is the native devotional surface. A saved dark preference
-  // keeps the same plum, gold and sage character rather than changing brands.
-  const [theme, setTheme] = useState(() => (localStorage.getItem('pfm_theme') === 'dark' ? 'dark' : 'light'));
+  // Warm parchment is the native devotional surface. Preserve any recognized
+  // saved preference so a Night user never flashes back to Light before sign-in.
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('pfm_theme');
+    return Object.hasOwn(THEMES, saved) ? saved : 'light';
+  });
   // The nine-card feature grid is folded away by default so the hero + three core
   // benefits carry the first impression; visitors opt in to the full list.
   const [showAllFeatures, setShowAllFeatures] = useState(false);
@@ -191,7 +243,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   };
 
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
+    // The compact pre-auth control stays a day/night toggle. Night, like Dark,
+    // returns to Light; the full three-way choice remains available in Settings.
+    const next = theme === 'light' ? 'dark' : 'light';
     setTheme(next);
     // Same key + attribute the app reads, so the choice follows the visitor
     // through sign-in.
@@ -246,11 +300,11 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            title={theme === 'light' ? 'Dark mode' : 'Light mode'}
             className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all"
             style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
           >
-            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+            {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
           </button>
 
           {/* Language dropdown */}
@@ -322,7 +376,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             <button
               onClick={onBeginPrayer}
               className="pressable min-h-[52px] rounded-xl px-7 text-sm font-bold text-white"
-              style={{ background: '#60457b', boxShadow: T.ctaShadow }}
+              style={{ background: T.primaryBg, boxShadow: T.ctaShadow }}
             >
               {beginLabel}
             </button>
@@ -351,10 +405,14 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
             </div>
-            <div className="rounded-[1.35rem] p-5 sm:p-6" style={{ background: 'linear-gradient(145deg,#30213f,#4b3560)', color: '#fff' }}>
+            <div className="rounded-[1.35rem] p-5 sm:p-6" style={{ background: T.prayerPreviewBg, color: '#fff' }}>
               <p className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.54)' }}>{benefits[1].title}</p>
               <p className="editorial mt-5 text-2xl leading-snug">{samplePrayerTitle}</p>
-              <button className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f7efe3] px-4 text-sm font-bold text-[#30213f]" tabIndex={-1}>
+              <button
+                className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold"
+                style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}
+                tabIndex={-1}
+              >
                 <HandHeart size={16} /> {prayNowLabel}
               </button>
             </div>
@@ -363,8 +421,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
                 <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.gold }}>{c.calloutPreviewLabel}</p>
                 <p className="editorial mt-3 text-sm leading-relaxed" style={{ color: T.text }}>{c.verse}</p>
               </div>
-              <div className="min-h-24 p-4" style={{ background: theme === 'dark' ? '#24332a' : '#e7eee6' }}>
-                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: theme === 'dark' ? '#9bc4a3' : '#5f7865' }}>{benefits[2].title}</p>
+              <div className="min-h-24 p-4" style={{ background: T.peaceBg }}>
+                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.peaceText }}>{benefits[2].title}</p>
                 <p className="mt-3 text-sm leading-relaxed" style={{ color: T.textMuted }}>{c.steps[2]?.desc}</p>
               </div>
             </div>
@@ -377,7 +435,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <section className="mx-auto mb-28 max-w-6xl px-6">
         <div className="grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
           {benefits.map(({ title, desc }, i) => {
-            const { icon: Icon, color } = BENEFIT_META[i];
+            const { icon: Icon, color: defaultColor } = BENEFIT_META[i];
+            const color = T.benefitColors?.[i] || defaultColor;
             return (
               <div key={title} className="px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
                 <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: color + '18', border: `1px solid ${color}35` }}>
@@ -477,7 +536,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
             <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.76)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
             <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.52)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
-            <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: '#f7efe3', color: '#30213f' }}>
+            <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}>
               {calloutBegin}
             </button>
           </div>
@@ -516,7 +575,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
           <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
-          <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: '#60457b', boxShadow: T.ctaShadowBig }}>
+          <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
             {c.ctaBtn}
           </button>
           <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>

@@ -25,6 +25,13 @@ const renderItem = (schedule) => render(
 );
 
 describe('PrayerListItem status pill', () => {
+  it('exposes the stable card hooks used by the Night-only constellation marker', () => {
+    renderItem({ type: 'recurring', freq: 'daily', startDate: '2024-01-01', end: { kind: 'never' } });
+    const card = screen.getByRole('button');
+    expect(card.classList.contains('prayer-card')).toBe(true);
+    expect(card.querySelector('.prayer-card__title')?.textContent).toBe('Semaine de gratitude');
+  });
+
   it('shows "Series ended" once a count-capped plan is finished', () => {
     renderItem({
       type: 'recurring', freq: 'daily', startDate: '2024-01-01',
