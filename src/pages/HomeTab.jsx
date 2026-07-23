@@ -8,7 +8,7 @@ import useCommunityStore from '../store/communityStore';
 import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Loader2, Plus, HandHeart, Share2, ExternalLink, ChevronDown } from 'lucide-react';
+import { Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
 import Encouragement from '../components/shared/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
 import { toast } from '../store/toastStore';
@@ -26,6 +26,8 @@ import { parseKey } from '../lib/schedule';
 import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
+import EmptyState from '../components/shared/EmptyState';
+import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -126,8 +128,6 @@ export default function HomeTab({ onAdd }) {
 
   const hour = today.getHours();
   const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
-  const greetingEmoji = hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌙';
-
   // After a completed session, offer a reminder ONCE — in context, never during
   // onboarding, and only while reminders are off. A quiet toast with an action,
   // not a permission prompt.
@@ -173,57 +173,64 @@ export default function HomeTab({ onAdd }) {
         />
       )}
 
-      {/* Compact greeting */}
-      <div className="px-5 md:px-8 pt-8 pb-6" style={{ background: 'var(--header)' }}>
-        <div className="max-w-2xl mx-auto">
-          <p className="text-xs mb-1 uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            {DAY_NAMES[lang]?.[dayIndex]} · {format(today, 'd MMMM yyyy', { locale: dateLocale })}
-          </p>
-          <h2 className="text-xl font-semibold text-white">
-            {greeting}{displayName ? `, ${displayName}` : ''} {greetingEmoji}
-          </h2>
-        </div>
-      </div>
+      <div className="mx-auto max-w-3xl px-5 md:px-8">
+        <PageHeader
+          eyebrow={`${DAY_NAMES[lang]?.[dayIndex]} · ${format(today, 'd MMMM yyyy', { locale: dateLocale })}`}
+          title={`${greeting}${displayName ? `, ${displayName}` : ''}`}
+        />
 
-      <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
-        {/* Today · N remaining — the count Grace actually needs */}
+        {/* One clear doorway into prayer. The first request gives the card a
+            human focus; schedules and community metadata wait below. */}
         {remainingPrayers.length > 0 && (!loading || prayers.length > 0) && (
-          <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-1)' }}>
-            {t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
-          </p>
-        )}
-
-        {/* Single primary action — opens only what's still to pray */}
-        {remainingPrayers.length > 0 && (
-          <button
-            onClick={() => setSession(remainingPrayers)}
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-base font-semibold mb-2 transition-all active:scale-95"
-            style={{ background: 'var(--accent)', color: '#fff' }}
-          >
-            <HandHeart size={19} /> {t(lang, 'prayNow')}
-          </button>
+          <PrayerSurface tone="focus" className="mb-6 p-6 sm:p-8">
+            <div className="relative z-10">
+              <p className="mb-5 text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.6)' }}>
+                {t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
+              </p>
+              <p className="editorial max-w-xl text-2xl leading-snug sm:text-3xl" style={{ color: '#fff' }}>
+                {tr(remainingPrayers[0].title, lang)}
+              </p>
+              {remainingPrayers.length > 1 && (
+                <p className="mt-2 text-xs" style={{ color: 'rgba(255,255,255,.5)' }}>
+                  + {remainingPrayers.length - 1}
+                </p>
+              )}
+              <PrimaryButton
+                onClick={() => setSession(remainingPrayers)}
+                icon={HandHeart}
+                className="first-prayer-primary mt-8 w-full sm:w-auto sm:min-w-44"
+              >
+                {t(lang, 'prayNow')}
+              </PrimaryButton>
+              {reminder && (
+                <p className="mt-5 flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,.48)' }}>
+                  <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
+                </p>
+              )}
+            </div>
+          </PrayerSurface>
         )}
 
         {/* All of today prayed: a clear status (not a button), with "Pray again"
             as an explicit, secondary way to walk the whole day once more. */}
         {dayComplete && (
-          <div className="rounded-2xl p-5 mb-2 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-sm font-semibold flex items-center justify-center gap-2 mb-3" style={{ color: 'var(--success)' }} role="status">
-              <Check size={17} /> {t(lang, 'todayCompleteTitle')}
-            </p>
+          <PrayerSurface tone="answered" className="mb-6 p-6 text-center">
+            <StatusPill tone="answered" icon={Check} className="mb-3" role="status">
+              {t(lang, 'todayCompleteTitle')}
+            </StatusPill>
+            <p className="editorial-heading mb-4 text-2xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</p>
             {todayEntries.length > 0 && (
-              <button
+              <QuietButton
                 onClick={() => setSession(todayEntries.map((e) => e.prayer))}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}
+                icon={HandHeart}
               >
-                <HandHeart size={15} /> {t(lang, 'prayAgain')}
-              </button>
+                {t(lang, 'prayAgain')}
+              </QuietButton>
             )}
-          </div>
+          </PrayerSurface>
         )}
 
-        {reminder && (
+        {reminder && remainingPrayers.length === 0 && (
           <p className="text-xs text-center mb-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--text-3)' }}>
             <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
           </p>
@@ -234,33 +241,34 @@ export default function HomeTab({ onAdd }) {
         )}
 
         {!loading && dayEmpty && (
-          <div className="rounded-2xl p-6 mb-4 text-center" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-4xl mb-3">🕊️</p>
-            <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'emptyEncourage')}</p>
-            <p className="text-xs mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'noPrayersToday')}</p>
-            <button
-              onClick={onAdd}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white"
-              style={{ background: 'var(--accent)' }}
-            >
-              <Plus size={15} /> {t(lang, 'emptyAddManual')}
-            </button>
-            <Encouragement lang={lang} className="mt-5" />
-          </div>
+          <PrayerSurface className="mb-6">
+            <EmptyState
+              emoji="🕊️"
+              title={t(lang, 'emptyEncourage')}
+              subtitle={t(lang, 'noPrayersToday')}
+              actionLabel={t(lang, 'emptyAddManual')}
+              onAction={onAdd}
+              actionIcon={Plus}
+              secondaryLabel={t(lang, 'growTitle')}
+              onSecondary={() => navigate('/grow')}
+            />
+            <Encouragement lang={lang} className="mx-auto mb-7 max-w-sm px-6 text-center" />
+          </PrayerSurface>
         )}
 
         {/* What remains to pray today (completed prayers fold away below) */}
         {remainingEntries.length > 0 && (
-          <div className="flex flex-col gap-3 mb-3 mt-2">
+          <section className="mb-7">
+            <SectionLabel className="mb-2">{t(lang, 'today')}</SectionLabel>
             {/* Grouped by prayer-time slot once any prayer uses one; flat list otherwise */}
             {(useSlots ? SLOT_ORDER : ['anytime']).map((slot) => {
               const slotEntries = useSlots ? slotGroups[slot] : remainingEntries;
               if (!slotEntries || slotEntries.length === 0) return null;
               const SlotIcon = { morning: Sunrise, midday: Sun, evening: Moon, anytime: Clock }[slot];
               return (
-                <div key={slot} className="flex flex-col gap-3">
+                <div key={slot}>
                   {useSlots && (
-                    <p className="text-xs font-semibold uppercase tracking-widest flex items-center gap-1.5 mt-1" style={{ color: 'var(--text-3)' }}>
+                    <p className="mt-5 flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--text-3)' }}>
                       <SlotIcon size={12} /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
                     </p>
                   )}
@@ -274,30 +282,28 @@ export default function HomeTab({ onAdd }) {
                         shares={prayerShares[prayer.id]}
                         currentUserName={getAuthorName(user)}
                         onClick={() => navigate(`/prayers/${prayer.id}`)}
+                        variant="journal"
                       />
                     </SwipeableRow>
                   ))}
                 </div>
               );
             })}
-          </div>
+          </section>
         )}
 
         {/* Prayed today — completed prayers fold into one quiet, collapsed row
             so the main list only ever shows what remains. */}
         {completedToday.length > 0 && (
-          <div className="rounded-2xl mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <button
-              onClick={() => setPrayedOpen((v) => !v)}
-              aria-expanded={prayedOpen}
-              className="w-full flex items-center justify-between gap-2 p-4 text-left"
+          <div className="mb-5 border-block" style={{ borderColor: 'var(--border)' }}>
+            <Disclosure
+              id="today-prayed"
+              label={t(lang, 'prayedTodayLabel')}
+              count={completedToday.length}
+              open={prayedOpen}
+              onToggle={() => setPrayedOpen((v) => !v)}
+              className="py-1"
             >
-              <span className="text-sm font-semibold flex items-center gap-2" style={{ color: 'var(--text-2)' }}>
-                <Check size={15} style={{ color: 'var(--success)' }} /> {t(lang, 'prayedTodayLabel')} · {completedToday.length}
-              </span>
-              <ChevronDown size={15} style={{ color: 'var(--text-3)', transform: prayedOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
-            </button>
-            {prayedOpen && (
               <div className="px-4 pb-4 space-y-1.5">
                 {completedToday.map((prayer) => (
                   <button
@@ -311,37 +317,30 @@ export default function HomeTab({ onAdd }) {
                   </button>
                 ))}
               </div>
-            )}
+            </Disclosure>
           </div>
         )}
 
         {/* Add a prayer — always one tap from the list itself */}
         {!dayEmpty && (
-          <button
-            onClick={onAdd}
-            className="w-full flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-medium mb-4"
-            style={{ background: 'var(--surface)', border: '1px dashed var(--input-border)', color: 'var(--text-2)' }}
-          >
-            <Plus size={15} /> {t(lang, 'emptyAddManual')}
-          </button>
+          <QuietButton onClick={onAdd} icon={Plus} className="mb-6 w-full border-dashed">
+            {t(lang, 'emptyAddManual')}
+          </QuietButton>
         )}
 
         {/* Catch up — prayers missed the last few days, AFTER today's list and
             collapsed by default. Grace, not guilt: one tap marks them prayed,
             or they quietly age out of the window. */}
         {catchUp.length > 0 && (
-          <div className="rounded-2xl mb-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <button
-              onClick={() => setCatchUpOpen((v) => !v)}
-              aria-expanded={catchUpOpen}
-              className="w-full flex items-center justify-between gap-2 p-4 text-left"
+          <div className="mb-6 border-block" style={{ borderColor: 'var(--border)' }}>
+            <Disclosure
+              id="today-catch-up"
+              label={`🌿 ${t(lang, 'catchUpTitle')}`}
+              count={catchUp.length}
+              open={catchUpOpen}
+              onToggle={() => setCatchUpOpen((v) => !v)}
+              className="py-1"
             >
-              <span className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
-                🌿 {t(lang, 'catchUpTitle')} · {catchUp.length}
-              </span>
-              <ChevronDown size={15} style={{ color: 'var(--text-3)', transform: catchUpOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
-            </button>
-            {catchUpOpen && (
               <div className="px-4 pb-4">
                 <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'catchUpSub')}</p>
                 <div className="space-y-1.5">
@@ -357,7 +356,7 @@ export default function HomeTab({ onAdd }) {
                         onClick={() => markPrayedOn(prayer.id, day)}
                         title={t(lang, 'markPrayed')}
                         aria-label={t(lang, 'markPrayed')}
-                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                        className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
                         style={{ background: 'var(--surface)', border: '1.5px solid var(--input-border)', color: 'var(--text-3)' }}
                       >
                         <Check size={13} />
@@ -366,12 +365,12 @@ export default function HomeTab({ onAdd }) {
                   ))}
                 </div>
               </div>
-            )}
+            </Disclosure>
           </div>
         )}
 
         {/* Verse of the day — a small closing card, not the headline */}
-        <div className="rounded-2xl p-4 mb-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        <section className="scripture-block mb-6">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
               {t(lang, 'verseOfDay')}
@@ -381,7 +380,7 @@ export default function HomeTab({ onAdd }) {
                 onClick={handleShareVerse}
                 aria-label={t(lang, 'shareVerse')}
                 title={t(lang, 'shareVerse')}
-                className="shrink-0 w-7 h-7 flex items-center justify-center rounded-full transition-colors"
+                className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
               >
                 <Share2 size={13} />
@@ -391,7 +390,7 @@ export default function HomeTab({ onAdd }) {
           {verse ? (
             <div>
               {verse.text
-                ? <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-2)' }}>"{verse.text}"</p>
+                ? <p className="scripture-text text-lg leading-relaxed" style={{ color: 'var(--text-1)' }}>“{verse.text}”</p>
                 : verseResolving
                   ? (
                     <div className="flex items-center gap-2" style={{ color: 'var(--text-3)' }}>
@@ -417,7 +416,7 @@ export default function HomeTab({ onAdd }) {
               <span className="text-xs">...</span>
             </div>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Lock, HandHeart, Loader2 } from 'lucide-react';
+import { Lock, HandHeart, Loader2, X, Feather } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
@@ -11,6 +11,7 @@ import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { saveGuestDraft, markGuestDraftPrayed, hasPendingGuestDraftSync } from '../lib/guestPrayerDraft';
 import { track, EVENTS } from '../lib/analytics';
 import PrayerSession from './PrayerSession';
+import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
 
 // The first prayer, in two modes:
 //
@@ -40,7 +41,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
 
   // Re-focus the active panel when the phase changes. During 'pray' the ref is
   // attached to nothing (PrayerSession owns its own trap), so this stays inert.
-  const trapRef = useFocusTrap(phase);
+  const trapRef = useFocusTrap(phase, phase === 'capture' ? 'textarea' : null);
   // Esc dismisses only the capture screen (no draft yet, nothing destroyed). The
   // decide screen deliberately has NO Esc-to-leave, so a stray keypress can't drop
   // a saved draft; PrayerSession handles its own Esc during 'pray'.
@@ -103,37 +104,33 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
   // the prayer is still device-local here; account encryption happens on save.
   if (phase === 'decide') {
     return (
-      <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)' }}>
+      <div className="first-prayer-experience">
         <div
           ref={trapRef}
           tabIndex={-1}
           role="dialog"
           aria-modal="true"
           aria-label={t(lang, 'firstPrayerSaveTitle')}
-          className="w-full max-w-sm rounded-3xl p-6"
-          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+          className="first-prayer-panel items-center justify-center text-center"
         >
-          <div className="text-4xl mb-3 text-center">🙏</div>
-          <h2 className="text-lg font-semibold mb-2 text-center" style={{ color: 'var(--text-1)' }}>
+          <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,.08)', color: 'var(--gold)', border: '1px solid rgba(255,255,255,.12)' }}>
+            <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
+          </div>
+          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Pray4Me</SectionLabel>
+          <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
-          <p className="text-xs flex items-center justify-center gap-1.5 mb-5 text-center" style={{ color: 'var(--text-3)' }}>
-            <Lock size={11} /> {t(lang, 'firstPrayerDeviceNote')}
+          <p className="mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,.62)' }}>
+            <Lock size={14} aria-hidden="true" /> {t(lang, 'firstPrayerDeviceNote')}
           </p>
-          <button
-            onClick={requestSave}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white mb-2.5"
-            style={{ background: 'var(--accent)' }}
-          >
-            <HandHeart size={16} /> {t(lang, 'firstPrayerSaveBtn')}
-          </button>
-          <button
-            onClick={onFinish}
-            className="w-full py-3 rounded-xl text-sm font-medium"
-            style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-          >
-            {t(lang, 'firstPrayerFinishBtn')}
-          </button>
+          <div className="mt-10 w-full max-w-sm space-y-3">
+            <PrimaryButton onClick={requestSave} icon={HandHeart} className="first-prayer-primary w-full min-h-[52px]">
+              {t(lang, 'firstPrayerSaveBtn')}
+            </PrimaryButton>
+            <QuietButton onClick={onFinish} className="first-prayer-quiet w-full">
+              {t(lang, 'firstPrayerFinishBtn')}
+            </QuietButton>
+          </div>
         </div>
       </div>
     );
@@ -141,53 +138,71 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
 
   // Capture: the single question that matters.
   return (
-    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.6)' }}>
+    <div className="first-prayer-experience">
       <form
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
         onSubmit={submitCapture}
-        className="w-full max-w-sm rounded-3xl p-6"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+        className="first-prayer-panel"
       >
-        <div className="text-4xl mb-3 text-center">🙏</div>
-        <h2 className="text-xl font-semibold mb-4 text-center" style={{ color: 'var(--text-1)' }}>
-          {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
-        </h2>
+        <header className="flex min-h-11 items-center justify-between">
+          <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
+            <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
+            Pray4Me
+          </div>
+          <button
+            type="button"
+            onClick={onFinish}
+            aria-label={t(lang, 'close')}
+            className="pressable flex h-11 w-11 items-center justify-center rounded-full"
+            style={{ background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.76)' }}
+          >
+            <X size={18} aria-hidden="true" />
+          </button>
+        </header>
 
-        <textarea
-          autoFocus
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder={t(lang, 'onboardCapturePlaceholder')}
-          aria-label={t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
-          rows={3}
-          className="w-full text-sm rounded-xl px-4 py-3 resize-none focus:outline-none mb-2"
-          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-        />
+        <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
+          <SectionLabel className="mb-4">Pray4Me</SectionLabel>
+          <h2 className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+            {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
+          </h2>
 
-        <p className="text-xs flex items-center justify-center gap-1.5 mb-5" style={{ color: 'var(--text-3)' }}>
-          <Lock size={11} /> {t(lang, isGuest ? 'firstPrayerDeviceNote' : 'onboardPrivateNote')}
-        </p>
+          <textarea
+            autoFocus
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={t(lang, 'onboardCapturePlaceholder')}
+            aria-label={t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
+            rows={4}
+            className="first-prayer-journal mt-7"
+          />
 
-        <button
-          type="submit"
-          disabled={!text.trim() || saving}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white disabled:opacity-50 mb-2.5"
-          style={{ background: 'var(--accent)' }}
-        >
-          {saving ? <Loader2 size={16} className="animate-spin" /> : <HandHeart size={16} />}
-          {t(lang, isGuest ? 'firstPrayerPrayCta' : 'onboardSaveAndPray')}
-        </button>
-        <button
-          type="button"
-          onClick={onFinish}
-          className="w-full py-3 rounded-xl text-sm font-medium"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-        >
-          {t(lang, isGuest ? 'authBackHome' : 'onboardLater')}
-        </button>
+          <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm" style={{ color: 'rgba(255,255,255,.58)' }}>
+            <Lock size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+            {t(lang, isGuest ? 'firstPrayerDeviceNote' : 'onboardPrivateNote')}
+          </p>
+        </div>
+
+        <div className="w-full space-y-3">
+          <PrimaryButton
+            type="submit"
+            disabled={!text.trim() || saving}
+            className="first-prayer-primary w-full min-h-[54px]"
+          >
+            {saving ? <Loader2 size={17} className="animate-spin" aria-hidden="true" /> : <HandHeart size={17} aria-hidden="true" />}
+            {t(lang, isGuest ? 'firstPrayerPrayCta' : 'onboardSaveAndPray')}
+          </PrimaryButton>
+          <button
+            type="button"
+            onClick={onFinish}
+            className="pressable min-h-11 w-full text-sm font-semibold"
+            style={{ color: 'rgba(255,255,255,.6)' }}
+          >
+            {t(lang, isGuest ? 'authBackHome' : 'onboardLater')}
+          </button>
+        </div>
       </form>
     </div>
   );

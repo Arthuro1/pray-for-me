@@ -8,6 +8,7 @@ import { movementPassage } from '../lib/prayerMovements';
 import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
+import { PrimaryButton, QuietButton, SectionLabel, StatusPill } from './shared/Primitives';
 
 // "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
 // straight into the last-used format (requests, for a new user) and a small
@@ -54,16 +55,16 @@ function SessionVerse({ verse, lang }) {
   const text = resolved?.text ?? verse.text;
 
   return (
-    <div className="mt-2 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
-      {text && <p className="text-sm italic leading-relaxed" style={{ color: 'var(--text-2)' }}>"{text}"</p>}
+    <div className="scripture-block mt-4">
+      {text && <p className="scripture-text text-lg leading-relaxed" style={{ color: 'var(--text-1)' }}>“{text}”</p>}
       {ref && (
         <VerseAccordion reference={ref} lang={lang} initialText={text}>
           {({ toggle }) => (
             <button
               onClick={toggle}
               title={t(lang, 'readInApp')}
-              className="text-xs mt-1 flex items-center gap-1"
-              style={{ color: 'var(--accent)' }}
+              className="pressable mt-2 flex min-h-11 items-center gap-1.5 text-xs font-semibold"
+              style={{ color: 'var(--gold)' }}
             >
               <BookOpen size={11} /> {ref}
             </button>
@@ -165,7 +166,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   };
 
   const overlay = (children) => (
-    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div
+      className="fixed inset-0 z-[70] flex flex-col"
+      style={{ background: 'var(--background)' }}
+    >
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
         {children}
       </div>
@@ -175,53 +179,54 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // Closing is the "pause" — progress is already recorded per prayer, so the
   // session can be resumed later with the first unfinished request.
   const closeButton = (
-    <button onClick={onClose} aria-label={t(lang, 'close')} className="w-11 h-11 flex items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+    <button onClick={onClose} aria-label={t(lang, 'close')} className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}>
       <X size={16} />
     </button>
   );
 
   // Single advancing action — "Continue" until the last step, then "Amen".
   const advanceButton = (
-    <button
+    <PrimaryButton
       onClick={advance}
-      className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-      style={{ background: 'var(--accent)' }}
+      className="min-h-[52px] flex-1"
     >
-      {isLastStep ? <><Check size={16} /> {t(lang, 'amenBtn')}</> : <>{t(lang, 'continueBtn')} <ChevronRight size={16} /></>}
-    </button>
+      {isLastStep
+        ? <span className="inline-flex items-center gap-2"><Check size={16} /> {t(lang, 'amenBtn')}</span>
+        : <span className="inline-flex items-center gap-2">{t(lang, 'continueBtn')} <ChevronRight className="rtl-mirror" size={16} /></span>}
+    </PrimaryButton>
   );
 
   // Footer paired with a Back control, shared by the movement and supplication
   // views. Back hides on the very first step — there is no picker to return to.
   const footer = (
-    <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+    <div className="session-safe-footer shrink-0 px-5 pt-3 flex items-center gap-3 w-full">
+      <div className="mx-auto flex w-full max-w-2xl items-center gap-3">
       {currentStep > 1 && (
-        <button
+        <QuietButton
           onClick={back}
-          className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
-          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+          className="min-h-[52px] shrink-0"
         >
-          <ChevronLeft size={16} /> {t(lang, 'backBtn')}
-        </button>
+          <ChevronLeft className="rtl-mirror" size={16} /> {t(lang, 'backBtn')}
+        </QuietButton>
       )}
       {advanceButton}
+      </div>
     </div>
   );
 
   if (done) {
     return overlay(
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-3">
-        <div className="text-6xl mb-1">🙏</div>
-        <h2 className="text-xl font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
-        <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'sessionDoneSub', { n: total })}</p>
-        <Encouragement lang={lang} className="max-w-xs" />
-        <button
-          onClick={onClose}
-          className="mt-4 px-6 py-3 rounded-xl text-sm font-medium text-white"
-          style={{ background: 'var(--accent)' }}
-        >
+      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+        <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'var(--sage-soft)', color: 'var(--success)', border: '1px solid var(--success-border)' }}>
+          <Check size={22} strokeWidth={1.7} aria-hidden="true" />
+        </div>
+        <SectionLabel className="mb-3">Amen</SectionLabel>
+        <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
+        <Encouragement lang={lang} className="mt-4 max-w-sm text-sm" />
+        <p className="mt-5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'sessionDoneSub', { n: total })}</p>
+        <PrimaryButton onClick={onClose} className="mt-9 min-w-36">
           {t(lang, 'close')}
-        </button>
+        </PrimaryButton>
       </div>
     );
   }
@@ -230,19 +235,21 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // control is a small, quiet affordance — the session already started, and the
   // deeper paths (guided / ACTS) live one tap beneath it.
   const header = (
-    <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--header)' }}>
-      <div className="flex items-center justify-between gap-2 mb-3">
-        <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.7)' }}>
-          {currentStep} / {totalSteps}
-        </span>
+    <div className="shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3" style={{ background: 'var(--plum-deep)' }}>
+      <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <span>Pray4Me · </span><span>{currentStep} / {totalSteps}</span>
+          </p>
+        </div>
         <div className="flex items-center gap-2">
           {allowFormats && (
             <button
               onClick={() => setShowFormats((v) => !v)}
               aria-expanded={showFormats}
               title={t(lang, 'prayerFormat')}
-              className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-full font-medium"
-              style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
+              className="pressable flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-semibold"
+              style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
             >
               {t(lang, MODE_OPTIONS.find((o) => o.mode === mode).titleKey)}
               <ChevronDown size={12} style={{ transform: showFormats ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
@@ -252,15 +259,15 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         </div>
       </div>
       {allowFormats && showFormats && (
-        <div className="rounded-2xl p-1.5 mb-3 space-y-1" style={{ background: 'rgba(255,255,255,0.1)' }} role="radiogroup" aria-label={t(lang, 'prayerFormat')}>
+        <div className="mx-auto mb-3 max-w-2xl space-y-1 rounded-xl p-1.5" style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,.09)' }} role="radiogroup" aria-label={t(lang, 'prayerFormat')}>
           {MODE_OPTIONS.map(({ mode: m, titleKey, descKey }) => (
             <button
               key={m}
               role="radio"
               aria-checked={m === mode}
               onClick={() => pickFormat(m)}
-              className="w-full text-left rounded-xl px-3 py-2"
-              style={m === mode ? { background: 'rgba(255,255,255,0.2)' } : {}}
+              className="pressable min-h-11 w-full rounded-lg px-3 py-2 text-left"
+              style={m === mode ? { background: 'rgba(255,255,255,0.12)' } : {}}
             >
               <p className="text-xs font-semibold flex items-center gap-1.5 text-white">
                 {m === mode && <Check size={12} />} {t(lang, titleKey)}
@@ -270,8 +277,8 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           ))}
         </div>
       )}
-      <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.2)' }}>
-        <div className="h-full rounded-full transition-all duration-300" style={{ width: `${(currentStep / totalSteps) * 100}%`, background: '#fff' }} />
+      <div className="mx-auto h-px max-w-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.14)' }}>
+        <div className="h-full transition-all" style={{ width: `${(currentStep / totalSteps) * 100}%`, background: 'var(--gold)', transitionDuration: 'var(--motion)' }} />
       </div>
     </div>
   );
@@ -283,22 +290,22 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     return overlay(
       <>
         {header}
-        <div className="flex-1 overflow-y-auto px-6 py-8 max-w-xl mx-auto w-full">
-          <div className="text-4xl mb-3">{meta.emoji}</div>
-          <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{t(lang, meta.titleKey)}</h2>
-          <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-2)' }}>{t(lang, meta.promptKey)}</p>
+        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center overflow-y-auto px-6 py-10 sm:px-10">
+          <div className="mb-5 text-3xl" aria-hidden="true">{meta.emoji}</div>
+          <SectionLabel className="mb-3">{t(lang, 'prayerFormat')}</SectionLabel>
+          <h2 className="editorial-heading mb-4 text-4xl leading-tight sm:text-5xl" style={{ color: 'var(--text-1)' }}>{t(lang, meta.titleKey)}</h2>
+          <p className="mb-9 max-w-xl text-base leading-8" style={{ color: 'var(--text-2)' }}>{t(lang, meta.promptKey)}</p>
           {ref && (
             <VerseAccordion reference={ref} lang={lang}>
               {({ toggle }) => (
                 <button
                   onClick={toggle}
-                  className="w-full flex items-center justify-between gap-3 rounded-2xl p-4 text-left"
-                  style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                  className="scripture-block pressable flex min-h-16 w-full items-center justify-between gap-3 text-left"
                 >
-                  <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-                    <BookOpen size={15} style={{ color: 'var(--accent)' }} /> {ref}
+                  <span className="scripture-text flex items-center gap-2 text-lg" style={{ color: 'var(--text-1)' }}>
+                    <BookOpen size={16} style={{ color: 'var(--gold)' }} /> {ref}
                   </span>
-                  <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readInApp')}</span>
+                  <span className="shrink-0 text-xs font-semibold" style={{ color: 'var(--gold)' }}>{t(lang, 'readInApp')}</span>
                 </button>
               )}
             </VerseAccordion>
@@ -326,54 +333,48 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   return overlay(
     <>
       {header}
-      <div className="flex-1 overflow-y-auto px-6 py-7 max-w-xl mx-auto w-full">
+      <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
         {showSupplicationLabel && (
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--accent)' }}>
-            🤲 {t(lang, 'stageSupplication')}
-          </p>
+          <SectionLabel className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
         )}
         {(cats.length > 0 || (prayer.for_other && prayer.person_name) || prayer.origin_group_name) && (
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="mb-5 flex flex-wrap gap-1.5">
             {cats.map((c) => (
-              <span key={c.id} className="text-xs px-3 py-1 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
+              <StatusPill key={c.id} style={{ borderColor: c.color }}>
                 {c.emoji} {tr(c.name, lang)}
-              </span>
+              </StatusPill>
             ))}
             {prayer.for_other && prayer.person_name && (
-              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-                👤 {prayer.person_name}
-              </span>
+              <StatusPill>👤 {prayer.person_name}</StatusPill>
             )}
             {/* Source label — which group this shared request came from */}
             {prayer.origin_group_name && (
-              <span className="text-xs px-3 py-1 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-                👥 {prayer.origin_group_name}
-              </span>
+              <StatusPill>👥 {prayer.origin_group_name}</StatusPill>
             )}
           </div>
         )}
 
-        <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</h2>
+        <h2 className="editorial-heading mb-5 text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</h2>
 
         {prayer.description && (
-          <RichText text={tr(prayer.description, lang)} className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-2)' }} />
+          <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--text-2)' }} />
         )}
 
         {/* Freshest news to pray from — one line, never the whole history */}
         {latestUpdate?.text && (
-          <div className="rounded-2xl p-3.5 mb-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-[11px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-3)' }}>
+          <aside className="mb-8 border-inline-start-2 py-1 ps-4" style={{ borderColor: 'var(--sage)' }}>
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--success)' }}>
               {t(lang, 'latestUpdateLabel')}
             </p>
-            <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }} />
-          </div>
+            <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-6" style={{ color: 'var(--text-2)' }} />
+          </aside>
         )}
 
         {points.length > 0 && (
-          <div className="space-y-3">
+          <div className="border-block-start" style={{ borderColor: 'var(--border)' }}>
             {points.map((pp, i) => (
-              <div key={pp.id || i} className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-                <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{tr(pp.title, lang)}</p>
+              <div key={pp.id || i} className="py-6" style={{ borderBlockEnd: '1px solid var(--border)' }}>
+                <p className="text-base font-semibold leading-7" style={{ color: 'var(--text-1)' }}>{tr(pp.title, lang)}</p>
                 {(pp.verses || []).map((v, vi) => (
                   <SessionVerse key={pp.id ? `${pp.id}-${vi}` : vi} verse={v} lang={lang} />
                 ))}

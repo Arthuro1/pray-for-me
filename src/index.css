@@ -5,81 +5,142 @@
 * { box-sizing: border-box; }
 
 :root {
-  --bg: #f0eeff;
-  --surface: #ffffff;
-  --surface-2: #f8f6ff;
-  --border: #e8e0f8;
-  --border-soft: #f0ebff;
-  --header: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --header-answered: linear-gradient(135deg, #059669 0%, #34d399 100%);
-  --text-1: #1a0f2e;
-  --text-2: #5a4a7a;
-  --text-3: #a896c8;
-  --accent: #7c5cfc;
-  --accent-2: #9b7fff;
-  --accent-soft: #f0ebff;
-  --accent-border: #ddd5f8;
-  --nav-active-bg: #ede8ff;
-  --nav-active-color: #5a3fa0;
-  /* Informational count badge (pending invitations/requests): a calm brand
-     purple, never alarm red — the state is a warm nudge, not an error. */
-  --badge: #7c5cfc;
+  color-scheme: light;
+  --background: #f6f1e8;
+  --surface: #fffdf9;
+  --surface-muted: #eee7dc;
+  --surface-raised: #ffffff;
+  --ink: #241b2f;
+  --text-muted: #746a7d;
+  --text-faint: #94899a;
+  --plum: #60457b;
+  --plum-dark: #30213f;
+  --plum-deep: #24182f;
+  --gold: #a97938;
+  --gold-soft: #f4ead7;
+  --sage: #5f7865;
+  --sage-soft: #e7eee6;
+  --border: #e4dbcf;
+  --border-strong: #d4c7b7;
+  --overlay: rgba(35, 25, 44, 0.64);
+  --shadow-sm: 0 1px 2px rgba(43, 30, 47, 0.05), 0 8px 24px rgba(43, 30, 47, 0.04);
+  --shadow-md: 0 18px 54px rgba(43, 30, 47, 0.12);
+  --font-ui: 'Twemoji Country Flags', 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Noto Sans Ethiopic', 'Noto Sans CJK SC', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-editorial: 'Iowan Old Style', 'Palatino Linotype', 'Noto Serif', 'Noto Naskh Arabic', 'Noto Serif Devanagari', 'Noto Serif Ethiopic', Georgia, serif;
+  --motion: 200ms;
+  --ease: cubic-bezier(.2, .75, .3, 1);
+
+  /* Compatibility tokens used throughout the established product. */
+  --bg: var(--background);
+  --surface-2: var(--surface-muted);
+  --border-soft: #ece5db;
+  --header: linear-gradient(145deg, var(--plum-dark) 0%, #49345f 100%);
+  --header-answered: linear-gradient(145deg, #49604f 0%, var(--sage) 100%);
+  --text-1: var(--ink);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-faint);
+  --accent: var(--plum);
+  --accent-2: #81649c;
+  --accent-soft: #eee7f2;
+  --accent-border: #d8cadf;
+  --nav-active-bg: #eee7f2;
+  --nav-active-color: #52386d;
+  --badge: #6f5585;
   --badge-text: #ffffff;
-  /* Very subtle lift so the bottom nav stays distinguishable from content
-     scrolling underneath it. */
-  --nav-shadow: 0 -1px 4px rgba(26, 15, 46, 0.05);
-  --input-bg: #f5f2ff;
-  --input-border: #ddd5f0;
-  --danger: #c04040;
-  --danger-bg: #fdf0f0;
-  --success: #1a6b42;
-  --success-bg: #e8f5ed;
-  --success-border: #b8dfc8;
-  --card-answered-bg: #e8f5ed;
-  --card-answered-border: #b8dfc8;
+  --nav-shadow: 0 -8px 30px rgba(48, 33, 63, 0.07);
+  --input-bg: #fbf7f0;
+  --input-border: #d9cec0;
+  --danger: #a13d3d;
+  --danger-bg: #fbebea;
+  --success: #4f6c56;
+  --success-bg: var(--sage-soft);
+  --success-border: #bdd0c0;
+  --card-answered-bg: var(--sage-soft);
+  --card-answered-border: #bdd0c0;
 }
 
 [data-theme="dark"] {
-  --bg: #0d0d14;
-  --surface: #16161f;
-  --surface-2: #1e1e2a;
-  --border: #2a2a3a;
-  --border-soft: #222230;
-  --header: linear-gradient(135deg, #4a3aaa 0%, #6b3a9a 100%);
-  --header-answered: linear-gradient(135deg, #065f46 0%, #059669 100%);
-  --text-1: #f0eeff;
-  --text-2: #a89fd4;
-  --text-3: #5a5278;
-  --accent: #9b7fff;
-  --accent-2: #c4b0ff;
-  --accent-soft: #1e1a30;
-  --accent-border: #2e2848;
-  --nav-active-bg: #1e1a30;
-  --nav-active-color: #b0a0ff;
-  /* Same brand purple: white digits keep ~4.3:1 contrast on it, and it reads
-     clearly against the dark surface. */
-  --badge: #7c5cfc;
+  color-scheme: dark;
+  --background: #17131c;
+  --surface: #211b27;
+  --surface-muted: #2a2330;
+  --surface-raised: #2d2534;
+  --ink: #f4eee5;
+  --text-muted: #c5bac9;
+  --text-faint: #9d91a3;
+  --plum: #b294c7;
+  --plum-dark: #2b1d38;
+  --plum-deep: #1b1224;
+  --gold: #d2aa6d;
+  --gold-soft: #3a3023;
+  --sage: #94ad98;
+  --sage-soft: #24332a;
+  --border: #3c3342;
+  --border-strong: #514558;
+  --overlay: rgba(10, 7, 12, 0.76);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 30px rgba(0, 0, 0, 0.16);
+  --shadow-md: 0 22px 64px rgba(0, 0, 0, 0.34);
+
+  --bg: var(--background);
+  --surface-2: var(--surface-muted);
+  --border-soft: #332b39;
+  --header: linear-gradient(145deg, #21162c 0%, #3a294a 100%);
+  --header-answered: linear-gradient(145deg, #243329 0%, #405947 100%);
+  --text-1: var(--ink);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-faint);
+  --accent: var(--plum);
+  --accent-2: #c8add9;
+  --accent-soft: #33283c;
+  --accent-border: #50405b;
+  --nav-active-bg: #33283c;
+  --nav-active-color: #d4bde1;
+  --badge: #8f71a4;
   --badge-text: #ffffff;
-  --nav-shadow: 0 -1px 4px rgba(0, 0, 0, 0.35);
-  --input-bg: #1e1a2e;
-  --input-border: #2e2848;
-  --danger: #e06060;
-  --danger-bg: #2a1414;
-  --success: #4ade80;
-  --success-bg: #0d2818;
-  --success-border: #1a4a30;
-  --card-answered-bg: #0d2818;
-  --card-answered-border: #1a4a30;
+  --nav-shadow: 0 -8px 30px rgba(0, 0, 0, 0.32);
+  --input-bg: #28212e;
+  --input-border: #4a3d51;
+  --danger: #ef8f8f;
+  --danger-bg: #391e21;
+  --success: #9bc4a3;
+  --success-bg: var(--sage-soft);
+  --success-border: #405d47;
+  --card-answered-bg: var(--sage-soft);
+  --card-answered-border: #405d47;
+}
+
+html {
+  background: var(--background);
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  min-width: 320px;
+  min-height: 100vh;
   margin: 0;
-  /* "Twemoji Country Flags" (injected by the polyfill) only contains flag glyphs,
-     so all other text falls through to the normal stack. */
-  font-family: 'Twemoji Country Flags', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background-color: var(--bg);
-  color: var(--text-1);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  font-family: var(--font-ui);
+  background:
+    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--gold) 7%, transparent), transparent 28rem),
+    var(--background);
+  color: var(--ink);
+  transition: background-color var(--motion) var(--ease), color var(--motion) var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, textarea, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+.editorial,
+.editorial-heading,
+.scripture-text {
+  font-family: var(--font-editorial);
+  text-wrap: balance;
+}
+
+.editorial-heading {
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
@@ -87,29 +148,331 @@ body {
 
 input, textarea, select {
   background: var(--input-bg);
-  border: 0.5px solid var(--input-border);
-  color: var(--text-1);
+  border: 1px solid var(--input-border);
+  color: var(--ink);
 }
 
-input::placeholder, textarea::placeholder { color: var(--text-3); }
+input::placeholder, textarea::placeholder { color: var(--text-faint); }
 
-/* Keyboard focus is visible EVERYWHERE by default. Most controls here are
-   styled with inline `style`, so a utility ring class can't be relied on to
-   land — this makes the indicator a property of the app rather than of each
-   component, and it can't be lost by refactoring one. */
+::selection {
+  background: color-mix(in srgb, var(--plum) 25%, transparent);
+  color: var(--ink);
+}
+
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: 2px solid var(--plum);
+  outline-offset: 3px;
   border-radius: 8px;
 }
 
-/* Make the focus trap's initial (programmatic) focus visible inside dialogs,
-   since browsers only draw :focus-visible for keyboard-initiated focus. */
 [role="dialog"] :focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: 2px solid var(--plum);
+  outline-offset: 3px;
   border-radius: 8px;
 }
+
 [role="dialog"] :focus:not(:focus-visible) {
-  outline-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-color: color-mix(in srgb, var(--plum) 55%, transparent);
+}
+
+.page-header {
+  padding-block: clamp(2rem, 5vw, 3.75rem) 1.5rem;
+}
+
+.page-header__eyebrow,
+.section-label {
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.page-header__title {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.page-header__subtitle {
+  max-width: 42rem;
+  margin-block-start: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.prayer-surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.15rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.prayer-surface--quiet {
+  background: transparent;
+  border-color: var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.prayer-surface--focus {
+  position: relative;
+  overflow: hidden;
+  background: var(--header);
+  border-color: color-mix(in srgb, var(--plum) 35%, transparent);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.prayer-surface--focus::after {
+  position: absolute;
+  inset: auto -15% -45% 35%;
+  width: 20rem;
+  height: 20rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.prayer-surface--answered {
+  background: var(--sage-soft);
+  border-color: var(--success-border);
+}
+
+.primary-button,
+.quiet-button {
+  min-height: 44px;
+  border-radius: 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: transform var(--motion) var(--ease), background-color var(--motion) var(--ease), border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
+}
+
+.primary-button {
+  background: var(--plum);
+  color: #fff;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--plum) 22%, transparent);
+}
+
+.primary-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--plum) 88%, #000);
+}
+
+.quiet-button {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+}
+
+.quiet-button:hover:not(:disabled) {
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+.primary-button:active:not(:disabled),
+.quiet-button:active:not(:disabled),
+button.pressable:active:not(:disabled) { transform: scale(.98); }
+
+.primary-button:disabled,
+.quiet-button:disabled { cursor: not-allowed; opacity: .48; }
+
+.segmented-control {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.22rem;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+}
+
+.segmented-control button {
+  min-height: 38px;
+  padding-inline: 0.9rem;
+  border-radius: 0.68rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.segmented-control button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 1px 4px rgba(35, 25, 44, 0.08);
+}
+
+.status-pill {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 0.35rem;
+  padding-inline: 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.status-pill--answered {
+  background: var(--sage-soft);
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.status-pill--scripture {
+  background: var(--gold-soft);
+  border-color: color-mix(in srgb, var(--gold) 30%, var(--border));
+  color: var(--gold);
+}
+
+.bottom-sheet-backdrop {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--overlay);
+  backdrop-filter: blur(10px);
+}
+
+.bottom-sheet {
+  width: 100%;
+  max-width: 34rem;
+  max-height: min(92dvh, 52rem);
+  overflow-y: auto;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.journal-row {
+  border-block-end: 1px solid var(--border);
+  transition: background-color var(--motion) var(--ease), transform var(--motion) var(--ease);
+}
+
+.journal-row:hover { background: color-mix(in srgb, var(--surface) 72%, transparent); }
+
+.scripture-block {
+  padding-block: 1.25rem;
+  padding-inline: clamp(1rem, 4vw, 1.5rem);
+  border-inline-start: 2px solid var(--gold);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-soft) 75%, transparent), transparent 70%);
+}
+
+.session-safe-footer {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+}
+
+.app-sidebar,
+.app-mobile-bar,
+.app-bottom-nav {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(20px) saturate(115%);
+}
+
+.app-sidebar { box-shadow: 10px 0 30px rgba(43, 30, 47, 0.025); }
+.app-mobile-bar { box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 70%, transparent); }
+
+.first-prayer-experience {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(183, 138, 74, 0.17), transparent 34rem),
+    linear-gradient(155deg, var(--plum-deep), var(--plum-dark));
+  color: #fff;
+}
+
+.first-prayer-experience::before {
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 100% 34px;
+  content: '';
+  mask-image: linear-gradient(to bottom, #000, transparent 80%);
+  pointer-events: none;
+}
+
+.first-prayer-panel {
+  position: relative;
+  display: flex;
+  width: min(100%, 44rem);
+  min-height: 100dvh;
+  flex-direction: column;
+  margin-inline: auto;
+  padding: max(1.25rem, env(safe-area-inset-top)) clamp(1.25rem, 6vw, 3.5rem) max(1.5rem, env(safe-area-inset-bottom));
+}
+
+.first-prayer-journal {
+  width: 100%;
+  min-height: 9rem;
+  max-height: 38dvh;
+  padding: 1.15rem 0;
+  resize: none;
+  border: 0;
+  border-block-end: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  line-height: 1.55;
+  caret-color: var(--gold);
+}
+
+.first-prayer-journal::placeholder { color: rgba(255, 255, 255, 0.42); }
+.first-prayer-journal:focus { outline: 0; border-block-end-color: var(--gold); }
+
+.first-prayer-primary {
+  background: #f7efe3;
+  color: var(--plum-dark);
+  box-shadow: 0 14px 34px rgba(11, 7, 14, 0.24);
+}
+
+.first-prayer-primary:hover:not(:disabled) { background: #fffaf3; }
+
+.first-prayer-quiet {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.first-prayer-quiet:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+@media (min-width: 640px) {
+  .bottom-sheet-backdrop { align-items: center; }
+}
+
+[dir="rtl"] .rtl-mirror { transform: scaleX(-1); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

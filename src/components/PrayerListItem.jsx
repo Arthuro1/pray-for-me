@@ -10,7 +10,7 @@ const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)'
 
 // Spacious prayer card used by the personal My Prayers and Home lists,
 // matching the look of the community prayer wall (author + date header first).
-export default function PrayerListItem({ prayer, categories, lang, tr, shares, currentUserName = '', onClick }) {
+export default function PrayerListItem({ prayer, categories, lang, tr, shares, currentUserName = '', onClick, variant = 'card' }) {
   const isAnswered = prayer.status === 'answered';
   // A finished series reads "Series ended", never "Active" — the plan is over
   // even though the prayer stays in the journal.
@@ -23,6 +23,29 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
   const authorName = oa ? (oa.anonymous ? '?' : oa.name) : currentUserName;
   const authorLabel = oa ? (oa.anonymous ? t(lang, 'anonymous') : oa.name) : t(lang, 'meAuthor');
   const totalPraying = groupShares.reduce((n, s) => n + (s.prayingCount || 0), 0);
+
+  // Today uses a journal row: title first, only the person/source when useful.
+  // Full authorship, schedule and sharing metadata remain available in Journal
+  // and on the detail page, where that context belongs.
+  if (variant === 'journal') {
+    const context = prayer.for_other && prayer.person_name
+      ? prayer.person_name
+      : prayer.origin_group_name || '';
+    return (
+      <button
+        onClick={onClick}
+        className="journal-row pressable flex min-h-[68px] w-full items-center gap-4 px-1 py-4 text-left"
+      >
+        <span className="min-w-0 flex-1">
+          <span className="editorial block text-lg leading-snug" style={{ color: 'var(--text-1)' }}>
+            {tr(prayer.title, lang)}
+          </span>
+          {context && <span className="mt-1 block truncate text-xs" style={{ color: 'var(--text-3)' }}>{context}</span>}
+        </span>
+        <span aria-hidden="true" className="text-xl" style={{ color: 'var(--text-3)' }}>›</span>
+      </button>
+    );
+  }
 
   return (
     <button

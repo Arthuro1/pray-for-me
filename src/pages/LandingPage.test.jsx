@@ -17,9 +17,11 @@ beforeEach(() => {
 describe('LandingPage — simplified hero', () => {
   it('surfaces the three core benefits up front', () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    expect(screen.getByText('Remember every prayer')).toBeTruthy();
-    expect(screen.getByText('Know what to pray today')).toBeTruthy();
-    expect(screen.getByText('Record every answer')).toBeTruthy();
+    expect(screen.getByText('Capture what is on your heart')).toBeTruthy();
+    expect(screen.getAllByText('Know what to pray today').length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Remember God's faithfulness").length).toBeGreaterThan(0);
+    expect(screen.getByText('Bring what is on your heart.')).toBeTruthy();
+    expect(screen.getByText('Pray faithfully. Remember God’s faithfulness.')).toBeTruthy();
   });
 
   it('folds the full feature grid behind an "Explore all features" toggle', () => {
@@ -46,7 +48,7 @@ describe('LandingPage — simplified product story', () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
     expect(screen.getByText('Capture a prayer')).toBeTruthy();
     expect(screen.getByText('Pray what matters today')).toBeTruthy();
-    expect(screen.getByText("Remember God's faithfulness")).toBeTruthy();
+    expect(screen.getAllByText("Remember God's faithfulness").length).toBeGreaterThan(0);
     // The old category/weekly-plan setup steps are gone.
     expect(screen.queryByText('Set your plan')).toBeNull();
     expect(screen.queryByText(/assign a category/i)).toBeNull();

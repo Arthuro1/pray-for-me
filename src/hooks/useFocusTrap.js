@@ -6,7 +6,9 @@ const FOCUSABLE = 'a[href], button:not([disabled]), textarea:not([disabled]), in
 // cycles Tab/Shift+Tab within the dialog, and restores focus to the previously
 // focused element on close. Returns a ref to attach to the modal container.
 // Pass `active` so it engages only while the modal is actually mounted/open.
-export function useFocusTrap(active = true) {
+// An optional selector lets immersive capture flows put the cursor directly in
+// the writing field while ordinary dialogs keep focusing their first control.
+export function useFocusTrap(active = true, initialFocusSelector = null) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -15,7 +17,8 @@ export function useFocusTrap(active = true) {
 
     const previouslyFocused = document.activeElement;
     const focusables = () => Array.from(node.querySelectorAll(FOCUSABLE)).filter((el) => el.offsetParent !== null);
-    (focusables()[0] || node).focus();
+    const preferred = initialFocusSelector ? node.querySelector(initialFocusSelector) : null;
+    (preferred || focusables()[0] || node).focus();
 
     const onKeyDown = (e) => {
       if (e.key !== 'Tab') return;
@@ -32,7 +35,7 @@ export function useFocusTrap(active = true) {
       node.removeEventListener('keydown', onKeyDown);
       if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus();
     };
-  }, [active]);
+  }, [active, initialFocusSelector]);
 
   return ref;
 }

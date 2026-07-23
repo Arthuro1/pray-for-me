@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
-import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sparkles, Sun, Moon, Users, Sprout, Bell, Smartphone } from 'lucide-react';
-import { dirFor } from '../i18n';
+import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather } from 'lucide-react';
+import { dirFor, t } from '../i18n';
 import usePrayerStore from '../store/prayerStore';
 import { localizeRef } from '../content/teaching/pick';
 
@@ -33,16 +33,16 @@ const ALL_CODES = LANGS.map(l => l.code);
 // English fallback, so all 16 languages keep working even where the per-language
 // CONTENT below is still an abbreviated placeholder.
 const BENEFIT_META = [
-  { icon: BookOpen, color: '#7c5cfc' },
-  { icon: Calendar, color: '#059669' },
-  { icon: CheckCircle, color: '#0891b2' },
+  { icon: Feather, color: '#a97938' },
+  { icon: Calendar, color: '#60457b' },
+  { icon: CheckCircle, color: '#5f7865' },
 ];
 
 const CORE_BENEFITS = {
   en: [
-    { title: 'Remember every prayer', desc: 'Keep who and what you pray for in one private place — and never lose track again.' },
+    { title: 'Capture what is on your heart', desc: 'Write a request simply and privately, without needing to organize everything first.' },
     { title: 'Know what to pray today', desc: "Open the app and today's prayers are ready — begin with one tap." },
-    { title: 'Record every answer', desc: "Mark prayers answered and watch a gallery of God's faithfulness grow." },
+    { title: "Remember God's faithfulness", desc: 'Keep answered prayers and testimonies as a quiet record of what God has done.' },
   ],
   fr: [
     { title: 'Retenez chaque prière', desc: 'Gardez qui et quoi vous priez en un seul endroit privé — sans jamais rien oublier.' },
@@ -179,6 +179,97 @@ const HERO_REASSURANCE = {
   zh: '无需账户。除非您选择保存，否则任何内容都不会离开此设备。',
   hi: 'किसी खाते की ज़रूरत नहीं। जब तक आप सहेजना न चुनें, कुछ भी इस डिवाइस से बाहर नहीं जाता।',
   ja: 'アカウント不要。保存を選ぶまで、何もこの端末の外には出ません。',
+  sw: 'Hakuna akaunti inayohitajika. Hakuna kinachoondoka kwenye kifaa hiki hadi uchague kukihifadhi.',
+  am: 'መለያ አያስፈልግም። ለማስቀመጥ እስኪመርጡ ድረስ ምንም ነገር ከዚህ መሣሪያ አይወጣም።',
+  id: 'Tidak perlu akun. Tidak ada yang meninggalkan perangkat ini sampai Anda memilih untuk menyimpannya.',
+  tl: 'Walang account na kailangan. Walang lalabas sa device na ito hanggang piliin mong i-save ito.',
+  ko: '계정이 필요하지 않습니다. 저장을 선택하기 전까지 어떤 내용도 이 기기를 떠나지 않습니다.',
+  ru: 'Аккаунт не нужен. Ничего не покинет это устройство, пока вы не решите сохранить молитву.',
+  ar: 'لا تحتاج إلى حساب. لا يغادر أي شيء هذا الجهاز إلا إذا اخترت حفظه.',
+  fa: 'نیازی به حساب نیست. تا زمانی که ذخیره‌کردن را انتخاب نکنید، چیزی از این دستگاه خارج نمی‌شود.',
+};
+
+// The opening speaks to the lived prayer moment. Locales not listed here keep
+// their established headline and subtitle, so all 16 languages remain usable.
+const EDITORIAL_HERO = {
+  en: {
+    title: 'Bring what is on your heart.',
+    promise: 'Pray faithfully. Remember God’s faithfulness.',
+    subtitle: 'A private prayer journal that brings the right requests back at the right time.',
+  },
+  fr: {
+    title: 'Apportez ce que vous avez sur le cœur.',
+    promise: 'Priez fidèlement. Souvenez-vous de la fidélité de Dieu.',
+    subtitle: 'Un journal de prière privé qui fait revenir les bonnes demandes au bon moment.',
+  },
+  de: {
+    title: 'Bring vor Gott, was dir am Herzen liegt.',
+    promise: 'Bete treu. Erinnere dich an Gottes Treue.',
+    subtitle: 'Ein privates Gebetstagebuch, das die richtigen Anliegen zur richtigen Zeit zurückbringt.',
+  },
+  pt: {
+    title: 'Traga o que está no seu coração.',
+    promise: 'Ore com fidelidade. Lembre-se da fidelidade de Deus.',
+    subtitle: 'Um diário de oração privado que traz os pedidos certos na hora certa.',
+  },
+  es: {
+    title: 'Trae lo que llevas en el corazón.',
+    promise: 'Ora con fidelidad. Recuerda la fidelidad de Dios.',
+    subtitle: 'Un diario privado que trae las peticiones adecuadas en el momento adecuado.',
+  },
+  zh: {
+    title: '把心里的事带到神面前。',
+    promise: '忠心祷告，记念神的信实。',
+    subtitle: '一本私密祷告日记，在合适的时间带回合适的代祷事项。',
+  },
+  hi: {
+    title: 'जो आपके मन में है उसे परमेश्वर के सामने लाएँ।',
+    promise: 'विश्वासयोग्यता से प्रार्थना करें। परमेश्वर की विश्वासयोग्यता याद रखें।',
+    subtitle: 'एक निजी प्रार्थना डायरी जो सही समय पर सही निवेदनों को फिर सामने लाती है।',
+  },
+  ja: {
+    title: '心にあることを、神の前へ。',
+    promise: '忠実に祈り、神の真実を覚える。',
+    subtitle: 'ふさわしい時に、ふさわしい祈りを思い出させる非公開の祈りの日記です。',
+  },
+  ar: {
+    title: 'قدّم لله ما في قلبك.',
+    promise: 'صلِّ بأمانة. وتذكّر أمانة الله.',
+    subtitle: 'دفتر صلاة خاص يعيد إليك الطلبات المناسبة في الوقت المناسب.',
+  },
+  fa: {
+    title: 'آنچه در دل دارید نزد خدا بیاورید.',
+    promise: 'با وفاداری دعا کنید. وفاداری خدا را به یاد آورید.',
+    subtitle: 'دفتر دعایی خصوصی که درخواست‌های مناسب را در زمان مناسب به یاد شما می‌آورد.',
+  },
+};
+
+const SAMPLE_PRAYER_TITLES = {
+  en: 'Peace for our family', fr: 'La paix pour notre famille', de: 'Frieden für unsere Familie', pt: 'Paz para nossa família',
+  es: 'Paz para nuestra familia', zh: '为家中的平安祷告', hi: 'हमारे परिवार में शांति', ja: '家族に平安がありますように',
+  sw: 'Amani kwa familia yetu', am: 'ለቤተሰባችን ሰላም', id: 'Kedamaian bagi keluarga kami', tl: 'Kapayapaan para sa aming pamilya',
+  ko: '우리 가정의 평안을 위해', ru: 'О мире в нашей семье', ar: 'السلام لعائلتنا', fa: 'آرامش برای خانواده‌مان',
+};
+
+// One source of truth for the privacy promise shown in every landing locale.
+// It distinguishes default account encryption from the optional recovery layer.
+const PRIVACY_FAQ_COPY = {
+  en: 'Yes. Private prayers are end-to-end encrypted by default. You can optionally add a passphrase and one-time recovery code to unlock a new device.',
+  fr: 'Oui. Les prières privées sont chiffrées de bout en bout par défaut. Vous pouvez ajouter une phrase secrète et un code de récupération à usage unique pour ouvrir un nouvel appareil.',
+  de: 'Ja. Private Gebete sind standardmäßig Ende-zu-Ende-verschlüsselt. Optional kannst du eine Passphrase und einen einmaligen Wiederherstellungscode für ein neues Gerät hinzufügen.',
+  pt: 'Sim. Orações privadas são criptografadas de ponta a ponta por padrão. Opcionalmente, adicione uma frase secreta e um código de recuperação único para abrir um novo dispositivo.',
+  es: 'Sí. Las oraciones privadas están cifradas de extremo a extremo de forma predeterminada. Opcionalmente puedes añadir una frase secreta y un código de recuperación de un solo uso para abrir un dispositivo nuevo.',
+  zh: '是的。私人祷告默认采用端到端加密。你也可以选择添加密码短语和一次性恢复码，以便在新设备上解锁。',
+  hi: 'हाँ। निजी प्रार्थनाएँ डिफ़ॉल्ट रूप से एंड-टू-एंड एन्क्रिप्टेड हैं। नए डिवाइस को खोलने के लिए आप वैकल्पिक पासफ़्रेज़ और एक बार उपयोग होने वाला रिकवरी कोड जोड़ सकते हैं।',
+  ja: 'はい。非公開の祈りは初めからエンドツーエンドで暗号化されます。新しい端末で開くために、任意でパスフレーズと一回限りの復旧コードを追加できます。',
+  sw: 'Ndiyo. Maombi ya faragha husimbwa kutoka mwanzo hadi mwisho kwa chaguo-msingi. Unaweza kuongeza kaulisiri na msimbo wa urejeshaji wa mara moja kwa kifaa kipya.',
+  am: 'አዎ። የግል ጸሎቶች በነባሪ ከጫፍ እስከ ጫፍ ይመሰጠራሉ። አዲስ መሣሪያ ለመክፈት አማራጭ የይለፍ ሐረግ እና የአንድ ጊዜ መልሶ ማግኛ ኮድ ማከል ይችላሉ።',
+  id: 'Ya. Doa pribadi dienkripsi end-to-end secara default. Anda dapat menambahkan frasa sandi dan kode pemulihan sekali pakai secara opsional untuk membuka perangkat baru.',
+  tl: 'Oo. Naka-end-to-end encryption ang mga pribadong panalangin bilang default. Maaari kang magdagdag ng opsyonal na passphrase at one-time recovery code para sa bagong device.',
+  ko: '예. 비공개 기도는 기본적으로 종단 간 암호화됩니다. 새 기기에서 열 수 있도록 선택적으로 암호문구와 일회용 복구 코드를 추가할 수 있습니다.',
+  ru: 'Да. Личные молитвы по умолчанию защищены сквозным шифрованием. При желании можно добавить парольную фразу и одноразовый код восстановления для нового устройства.',
+  ar: 'نعم. تُشفَّر الصلوات الخاصة من طرف إلى طرف افتراضيًا. ويمكنك اختياريًا إضافة عبارة مرور ورمز استرداد يُستخدم مرة واحدة لفتح جهاز جديد.',
+  fa: 'بله. دعاهای خصوصی به‌طور پیش‌فرض با رمزگذاری سرتاسری محافظت می‌شوند. می‌توانید برای بازکردن دستگاه جدید، عبارت عبور و کد بازیابی یک‌بارمصرف اختیاری اضافه کنید.',
 };
 
 // The Scripture-finder callout's button opens the same guest prayer moment as the
@@ -196,6 +287,25 @@ const CALLOUT_BEGIN_LABELS = {
   zh: '开始一个祷告',
   hi: 'एक प्रार्थना शुरू करें',
   ja: '祈りを始める',
+};
+
+const SCRIPTURE_PREVIEW_POINTS = {
+  en: ['Peace that surpasses understanding', "Trust in God's timing"],
+  fr: ['La paix qui surpasse tout entendement', 'Faire confiance au temps de Dieu'],
+  de: ['Friede, der allen Verstand übersteigt', 'Gottes Timing vertrauen'],
+  pt: ['A paz que excede todo entendimento', 'Confiar no tempo de Deus'],
+  es: ['La paz que supera todo entendimiento', 'Confiar en el tiempo de Dios'],
+  zh: ['超越一切理解的平安', '信靠神的时间'],
+  hi: ['समझ से परे शांति', 'परमेश्वर के समय पर भरोसा'],
+  ja: ['すべての理解を超える平安', '神の時を信頼する'],
+  sw: ['Amani ipitayo ufahamu wote', 'Amini wakati wa Mungu'],
+  am: ['ከማስተዋል ሁሉ በላይ የሆነ ሰላም', 'የእግዚአብሔርን ጊዜ ማመን'],
+  id: ['Damai yang melampaui segala pengertian', 'Percaya pada waktu Tuhan'],
+  tl: ['Kapayapaang higit sa lahat ng pagkaunawa', 'Magtiwala sa panahon ng Diyos'],
+  ko: ['모든 이해를 뛰어넘는 평안', '하나님의 때를 신뢰하기'],
+  ru: ['Мир, превосходящий всякое понимание', 'Доверять Божьему времени'],
+  ar: ['سلام يفوق كل فهم', 'الثقة في توقيت الله'],
+  fa: ['آرامشی فراتر از هر فهم', 'اعتماد به زمان‌بندی خدا'],
 };
 
 function detectLang() {
@@ -290,7 +400,7 @@ const CONTENT = {
     calloutPreviewLabel: 'Scripture suggestions',
     faqTitle: 'Questions',
     faqs: [
-      { q: 'Is my data private?', a: 'Yes. Every prayer is stored in your own account with Row Level Security — no one else can read your data, not even us.' },
+      { q: 'Is my data private?', a: 'Yes. Private prayers are end-to-end encrypted by default. You can optionally add a passphrase and one-time recovery code to unlock a new device.' },
       { q: 'Do I need an account?', a: 'No — you can pray a first prayer with no account, and it stays on your device. A free account is only needed to save prayers and sync them across your devices; sign up with Google in one tap or use email/password.' },
       { q: 'How does the Scripture finder work?', a: 'You enter the title of your prayer and the app surfaces relevant Bible verses with their full text. You choose which ones resonate with your situation.' },
       { q: 'What languages are supported?', a: '16 languages: French, English, German, Portuguese, Chinese, Spanish, Hindi, Japanese, Swahili, Amharic, Indonesian, Tagalog, Korean, Russian, Arabic, and Persian.' },
@@ -978,84 +1088,85 @@ const CONTENT = {
 // page and the app continue with the visitor's choice after sign-in.
 const THEMES = {
   dark: {
-    bg: '#0d0a1e',
-    text: '#ffffff',
-    textSoft: 'rgba(255,255,255,0.75)',
-    textMuted: 'rgba(255,255,255,0.6)',
-    textFaint: 'rgba(255,255,255,0.5)',
-    textDim: 'rgba(255,255,255,0.4)',
-    textGhost: 'rgba(255,255,255,0.3)',
-    surface: 'rgba(255,255,255,0.04)',
-    surfaceStrong: 'rgba(255,255,255,0.06)',
-    chipBg: 'rgba(255,255,255,0.07)',
-    border: 'rgba(255,255,255,0.08)',
-    borderStrong: 'rgba(255,255,255,0.12)',
-    menuBg: '#1a1630',
+    bg: '#17131c',
+    text: '#f4eee5',
+    textSoft: '#d8ceda',
+    textMuted: '#c5bac9',
+    textFaint: '#a99eae',
+    textDim: '#8f8395',
+    textGhost: '#7c7182',
+    surface: '#211b27',
+    surfaceStrong: '#2a2330',
+    chipBg: 'rgba(255,255,255,0.055)',
+    border: '#3c3342',
+    borderStrong: '#514558',
+    menuBg: '#211b27',
     menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
-    accentText: '#a78bfa',
-    accentSoftBg: 'rgba(124,92,252,0.15)',
-    accentChipBg: 'rgba(124,92,252,0.2)',
-    accentActiveBg: 'rgba(124,92,252,0.25)',
-    accentBorder: 'rgba(124,92,252,0.3)',
-    heroGlow: 'rgba(124,92,252,0.35)',
-    ctaGlow: 'rgba(124,92,252,0.25)',
-    calloutBg: 'linear-gradient(135deg, rgba(124,92,252,0.2), rgba(167,139,250,0.08))',
-    calloutBorder: 'rgba(124,92,252,0.25)',
-    previewBg: 'rgba(0,0,0,0.3)',
-    previewItemBg: 'rgba(255,255,255,0.05)',
-    gold: '#f5c842',
-    ctaShadow: '0 0 30px rgba(124,92,252,0.4)',
-    ctaShadowBig: '0 0 40px rgba(124,92,252,0.45)',
+    accentText: '#d1b8df',
+    accentSoftBg: '#33283c',
+    accentChipBg: '#3b2e45',
+    accentActiveBg: '#463551',
+    accentBorder: '#5a4665',
+    heroGlow: 'rgba(210,170,109,0.12)',
+    ctaGlow: 'rgba(178,148,199,0.14)',
+    calloutBg: 'linear-gradient(145deg, #2b2034, #211b27)',
+    calloutBorder: '#50405b',
+    previewBg: '#1b1620',
+    previewItemBg: '#2a2330',
+    gold: '#d2aa6d',
+    ctaShadow: '0 12px 32px rgba(0,0,0,0.28)',
+    ctaShadowBig: '0 18px 44px rgba(0,0,0,0.34)',
   },
   light: {
-    bg: '#f7f5fc',
-    text: '#1a1630',
-    textSoft: 'rgba(26,22,48,0.78)',
-    textMuted: 'rgba(26,22,48,0.65)',
-    textFaint: 'rgba(26,22,48,0.55)',
-    textDim: 'rgba(26,22,48,0.45)',
-    textGhost: 'rgba(26,22,48,0.38)',
-    surface: '#ffffff',
-    surfaceStrong: '#ffffff',
-    chipBg: 'rgba(26,22,48,0.05)',
-    border: 'rgba(26,22,48,0.08)',
-    borderStrong: 'rgba(26,22,48,0.14)',
-    menuBg: '#ffffff',
+    bg: '#f6f1e8',
+    text: '#241b2f',
+    textSoft: '#4d4057',
+    textMuted: '#746a7d',
+    textFaint: '#857a8c',
+    textDim: '#94899a',
+    textGhost: '#766c7d',
+    surface: '#fffdf9',
+    surfaceStrong: '#eee7dc',
+    chipBg: 'rgba(255,253,249,0.72)',
+    border: '#e4dbcf',
+    borderStrong: '#d4c7b7',
+    menuBg: '#fffdf9',
     menuShadow: '0 8px 24px rgba(26,22,48,0.14)',
-    accentText: '#6d4df0',
-    accentSoftBg: 'rgba(124,92,252,0.1)',
-    accentChipBg: 'rgba(124,92,252,0.12)',
-    accentActiveBg: 'rgba(124,92,252,0.14)',
-    accentBorder: 'rgba(124,92,252,0.3)',
-    heroGlow: 'rgba(124,92,252,0.16)',
-    ctaGlow: 'rgba(124,92,252,0.12)',
-    calloutBg: 'linear-gradient(135deg, rgba(124,92,252,0.12), rgba(167,139,250,0.05))',
-    calloutBorder: 'rgba(124,92,252,0.25)',
-    previewBg: '#ffffff',
-    previewItemBg: 'rgba(124,92,252,0.06)',
-    gold: '#b45309',
-    ctaShadow: '0 10px 25px rgba(124,92,252,0.35)',
-    ctaShadowBig: '0 12px 32px rgba(124,92,252,0.35)',
+    accentText: '#60457b',
+    accentSoftBg: '#eee7f2',
+    accentChipBg: '#e8ddec',
+    accentActiveBg: '#dfd2e5',
+    accentBorder: '#d8cadf',
+    heroGlow: 'rgba(169,121,56,0.13)',
+    ctaGlow: 'rgba(96,69,123,0.1)',
+    calloutBg: 'linear-gradient(145deg, #30213f, #49345f)',
+    calloutBorder: '#60457b',
+    previewBg: '#fffdf9',
+    previewItemBg: '#f4ead7',
+    gold: '#a97938',
+    ctaShadow: '0 12px 30px rgba(48,33,63,0.18)',
+    ctaShadowBig: '0 18px 42px rgba(48,33,63,0.22)',
   },
 };
 
 function FAQ({ q, a, T }) {
   const [open, setOpen] = useState(false);
   return (
-    <div
-      className="rounded-2xl overflow-hidden cursor-pointer"
-      style={{ background: T.surfaceStrong, border: `0.5px solid ${T.border}` }}
-      onClick={() => setOpen(o => !o)}
-    >
-      <div className="flex items-center justify-between px-5 py-4">
-        <p className="text-sm font-medium pr-4" style={{ color: T.text }}>{q}</p>
+    <div className="overflow-hidden" style={{ borderBlockEnd: `1px solid ${T.border}` }}>
+      <button
+        type="button"
+        aria-expanded={open}
+        className="pressable flex min-h-14 w-full items-center justify-between gap-4 px-1 py-4 text-left"
+        onClick={() => setOpen(o => !o)}
+      >
+        <span className="editorial text-lg" style={{ color: T.text }}>{q}</span>
         {open
           ? <ChevronUp size={16} style={{ color: T.textFaint }} />
           : <ChevronDown size={16} style={{ color: T.textFaint }} />}
-      </div>
+      </button>
       {open && (
-        <div className="px-5 pb-4">
-          <p className="text-sm" style={{ color: T.textMuted, lineHeight: 1.7 }}>{a}</p>
+        <div className="pb-5 pe-8">
+          <p className="text-sm" style={{ color: T.textMuted, lineHeight: 1.8 }}>{a}</p>
         </div>
       )}
     </div>
@@ -1068,9 +1179,9 @@ function FAQ({ q, a, T }) {
 export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
   const [langOpen, setLangOpen] = useState(false);
-  // Dark is the landing's native look; light kicks in when the visitor picked
-  // it here before, or in the app (both share the pfm_theme key).
-  const [theme, setTheme] = useState(() => (localStorage.getItem('pfm_theme') === 'light' ? 'light' : 'dark'));
+  // Warm parchment is the native devotional surface. A saved dark preference
+  // keeps the same plum, gold and sage character rather than changing brands.
+  const [theme, setTheme] = useState(() => (localStorage.getItem('pfm_theme') === 'dark' ? 'dark' : 'light'));
   // The nine-card feature grid is folded away by default so the hero + three core
   // benefits carry the first impression; visitors opt in to the full list.
   const [showAllFeatures, setShowAllFeatures] = useState(false);
@@ -1080,8 +1191,11 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const explore = EXPLORE_LABELS[lang] || EXPLORE_LABELS.en;
   const beginLabel = BEGIN_LABELS[lang] || BEGIN_LABELS.en;
   const heroReassurance = HERO_REASSURANCE[lang] || HERO_REASSURANCE.en;
-  const calloutBegin = CALLOUT_BEGIN_LABELS[lang] || CALLOUT_BEGIN_LABELS.en;
+  const calloutBegin = CALLOUT_BEGIN_LABELS[lang] || BEGIN_LABELS[lang] || CALLOUT_BEGIN_LABELS.en;
   const activeLang = LANGS.find(l => l.code === lang);
+  const hero = EDITORIAL_HERO[lang] || { title: c.h1a, promise: c.h1b, subtitle: c.subtitle };
+  const samplePrayerTitle = SAMPLE_PRAYER_TITLES[lang] || SAMPLE_PRAYER_TITLES.en;
+  const scripturePreviewPoints = SCRIPTURE_PREVIEW_POINTS[lang] || SCRIPTURE_PREVIEW_POINTS.en;
 
   // Reflect the visitor's language on <html> so screen readers pronounce the
   // marketing copy correctly and Arabic/Persian render right-to-left. Mirrors the
@@ -1089,7 +1203,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = dirFor(lang);
-  }, [lang]);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [lang, theme]);
 
   const handleLang = (code) => {
     setLang(code);
@@ -1113,10 +1228,10 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     <div className="min-h-screen" style={{ background: T.bg, color: T.text }}>
 
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 max-w-6xl mx-auto gap-4">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
         <div className="flex items-center gap-2.5 shrink-0">
           <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
-          <span className="font-semibold text-lg tracking-tight">Pray4Me</span>
+          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Pray4Me</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -1124,7 +1239,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <button
             onClick={toggleTheme}
             title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all shrink-0"
+            className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all"
             style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
           >
             {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
@@ -1134,7 +1249,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <div className="relative">
             <button
               onClick={() => setLangOpen(o => !o)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all"
+              className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-all"
               style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
             >
               <span>{activeLang?.flag}</span>
@@ -1151,7 +1266,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
                   <button
                     key={code}
                     onClick={() => handleLang(code)}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors"
+                    className="pressable flex min-h-11 w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm transition-colors"
                     style={lang === code
                       ? { background: T.accentActiveBg, color: T.accentText }
                       : { color: T.textSoft }}
@@ -1173,7 +1288,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
           <button
             onClick={onSignIn}
-            className="text-sm font-medium px-4 py-2 rounded-xl transition-all shrink-0"
+            className="pressable min-h-11 max-w-28 shrink-0 truncate rounded-xl px-3 py-2 text-sm font-medium transition-all sm:px-4"
             style={{ background: T.chipBg, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
           >
             {c.signIn}
@@ -1181,55 +1296,86 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="relative text-center px-6 pt-16 pb-24 max-w-3xl mx-auto">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${T.heroGlow} 0%, transparent 70%)` }} />
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-6" style={{ background: T.accentSoftBg, color: T.accentText, border: `0.5px solid ${T.accentBorder}` }}>
-            <Sparkles size={11} /> {c.badge}
+      {/* Hero: lived prayer experience first, product preview second. */}
+      <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
+        <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(ellipse 55% 60% at 12% 10%, ${T.heroGlow} 0%, transparent 72%)` }} />
+        <div className="relative min-w-0">
+          <div className="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em]" style={{ color: T.gold }}>
+            <Feather size={14} strokeWidth={1.7} /> {c.badge}
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-5 leading-tight">
-            {c.h1a}<br />
-            <span style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              {c.h1b}
-            </span>
+          <h1 className="editorial-heading text-5xl leading-[1.02] sm:text-6xl lg:text-7xl" style={{ color: T.text }}>
+            {hero.title}
           </h1>
-          <p className="text-base md:text-lg mb-8 max-w-xl mx-auto" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.subtitle}</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <p className="editorial mt-5 max-w-xl text-2xl leading-snug" style={{ color: T.accentText }}>
+            {hero.promise}
+          </p>
+          <p className="mt-5 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
+          <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
             <button
               onClick={onBeginPrayer}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-semibold text-white"
-              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadow }}
+              className="pressable min-h-[52px] rounded-xl px-7 text-sm font-bold text-white"
+              style={{ background: '#60457b', boxShadow: T.ctaShadow }}
             >
               {beginLabel}
             </button>
             <button
               onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-              className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-medium"
-              style={{ background: T.surfaceStrong, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
+              className="pressable min-h-[52px] rounded-xl px-6 text-sm font-semibold"
+              style={{ color: T.textSoft, border: `1px solid ${T.borderStrong}` }}
             >
               {c.howItWorks}
             </button>
           </div>
-          <p className="text-xs mt-4 flex items-center justify-center gap-1.5" style={{ color: T.textFaint }}>
-            <Lock size={11} /> {heroReassurance}
+          <p className="mt-5 flex max-w-lg items-start gap-2 text-xs" style={{ color: T.textFaint, lineHeight: 1.65 }}>
+            <Lock size={13} className="mt-0.5 shrink-0" /> {heroReassurance}
           </p>
-          <p className="text-xs mt-3 italic" style={{ color: T.textGhost }}>{c.verse}</p>
+        </div>
+
+        {/* A truthful, decorative preview of the actual journey: Today →
+            focused prayer → remembrance. No fabricated usage statistics. */}
+        <div className="relative mx-auto w-full max-w-lg" aria-label="Pray4Me product preview">
+          <div className="absolute -inset-6 rounded-[2.5rem] opacity-60 blur-3xl" style={{ background: T.heroGlow }} />
+          <div className="relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
+            <div className="flex items-center justify-between px-2 py-2">
+              <div className="flex items-center gap-2.5">
+                <img src="/logo.svg" alt="" className="h-7 w-7 rounded-lg" />
+                <span className="text-xs font-bold" style={{ color: T.text }}>Pray4Me</span>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{t(lang, 'today')}</span>
+            </div>
+            <div className="rounded-[1.35rem] p-5 sm:p-6" style={{ background: 'linear-gradient(145deg,#30213f,#4b3560)', color: '#fff' }}>
+              <p className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.54)' }}>{benefits[1].title}</p>
+              <p className="editorial mt-5 text-2xl leading-snug">{samplePrayerTitle}</p>
+              <button className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#f7efe3] px-4 text-sm font-bold text-[#30213f]" tabIndex={-1}>
+                <HandHeart size={16} /> {t(lang, 'prayNow')}
+              </button>
+            </div>
+            <div className="grid gap-2 p-2 pt-3 sm:grid-cols-2">
+              <div className="min-h-24 p-4" style={{ borderInlineStart: `2px solid ${T.gold}`, background: T.previewItemBg }}>
+                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.gold }}>{c.calloutPreviewLabel}</p>
+                <p className="editorial mt-3 text-sm leading-relaxed" style={{ color: T.text }}>{c.verse}</p>
+              </div>
+              <div className="min-h-24 p-4" style={{ background: theme === 'dark' ? '#24332a' : '#e7eee6' }}>
+                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: theme === 'dark' ? '#9bc4a3' : '#5f7865' }}>{benefits[2].title}</p>
+                <p className="mt-3 text-sm leading-relaxed" style={{ color: T.textMuted }}>{c.steps[2]?.desc}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Core benefits — the three things Pray4Me does, up front, before the
           longer feature list. Centered so it reads cleanly in RTL too. */}
-      <section className="px-6 max-w-5xl mx-auto mb-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section className="mx-auto mb-28 max-w-6xl px-6">
+        <div className="grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
           {benefits.map(({ title, desc }, i) => {
             const { icon: Icon, color } = BENEFIT_META[i];
             return (
-              <div key={title} className="rounded-2xl p-6 text-center" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 mx-auto" style={{ backgroundColor: color + '22' }}>
+              <div key={title} className="px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
+                <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: color + '18', border: `1px solid ${color}35` }}>
                   <Icon size={20} style={{ color }} />
                 </div>
-                <h3 className="text-base font-bold mb-1.5" style={{ color: T.text }}>{title}</h3>
+                <h3 className="editorial text-xl mb-2" style={{ color: T.text }}>{title}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
               </div>
             );
@@ -1288,37 +1434,39 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
           <p className="text-sm" style={{ color: T.textFaint }}>{c.stepsSub}</p>
         </div>
-        <div className="space-y-4">
-          {c.steps.map(({ emoji, title, desc }, i) => (
-            <div key={title} className="flex items-start gap-5 rounded-2xl p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: T.accentSoftBg, border: `0.5px solid ${T.accentBorder}` }}>
-                {emoji}
+        <div className="border-block" style={{ borderColor: T.border }}>
+          {c.steps.map(({ title, desc }, i) => {
+            const StepIcon = [Feather, HandHeart, CheckCircle][i];
+            return (
+            <div key={title} className="flex items-start gap-5 py-6" style={{ borderBlockEnd: i < c.steps.length - 1 ? `1px solid ${T.border}` : undefined }}>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, border: `1px solid ${T.accentBorder}`, color: T.accentText }}>
+                <StepIcon size={18} />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: T.accentChipBg, color: T.accentText }}>
                     {lang === 'de' ? `Schritt ${i + 1}` : lang === 'fr' ? `Étape ${i + 1}` : lang === 'pt' ? `Passo ${i + 1}` : `Step ${i + 1}`}
                   </span>
-                  <h3 className="text-sm font-semibold" style={{ color: T.text }}>{title}</h3>
+                  <h3 className="editorial text-lg" style={{ color: T.text }}>{title}</h3>
                 </div>
                 <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
               </div>
             </div>
-          ))}
+          );})}
         </div>
       </section>
 
       {/* Scripture finder callout */}
       <section className="px-6 max-w-5xl mx-auto mb-24">
-        <div className="rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `0.5px solid ${T.calloutBorder}` }}>
+        <div className="rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: '#fff', boxShadow: T.ctaShadow }}>
           <div className="flex-1">
             <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4" style={{ background: T.accentChipBg, color: T.accentText }}>
               <BookOpen size={11} /> {c.calloutBadge}
             </div>
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
-            <p className="text-sm mb-3" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.calloutDesc}</p>
-            <p className="text-xs mb-5 italic" style={{ color: T.textDim, lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
-            <button onClick={onBeginPrayer} className="px-6 py-3 rounded-xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
+            <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.76)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
+            <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.52)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
+            <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: '#f7efe3', color: '#30213f' }}>
               {calloutBegin}
             </button>
           </div>
@@ -1327,8 +1475,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             {/* Example references use the visitor's localized book names —
                 never an English "Philippians" inside another language. */}
             {[
-              { point: lang === 'fr' ? 'La paix qui surpasse tout entendement' : lang === 'de' ? 'Friede, der allen Verstand übersteigt' : lang === 'pt' ? 'A paz que excede todo entendimento' : 'Peace that surpasses understanding', verse: localizeRef('Philippians 4:7', lang) },
-              { point: lang === 'fr' ? 'Faire confiance au temps de Dieu' : lang === 'de' ? 'Gottes Timing vertrauen' : lang === 'pt' ? 'Confiar no tempo de Deus' : 'Trust in God\'s timing', verse: localizeRef('Isaiah 40:31', lang) },
+              { point: scripturePreviewPoints[0], verse: localizeRef('Philippians 4:7', lang) },
+              { point: scripturePreviewPoints[1], verse: localizeRef('Isaiah 40:31', lang) },
             ].map(({ point, verse }) => (
               <div key={verse} className="rounded-xl p-3 mb-2" style={{ background: T.previewItemBg, borderLeft: `3px solid ${T.gold}` }}>
                 <p className="text-xs mb-1" style={{ color: T.text }}>{point}</p>
@@ -1347,7 +1495,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <h2 className="text-3xl font-bold mb-3">{c.faqTitle}</h2>
         </div>
         <div className="space-y-2">
-          {c.faqs.map(faq => <FAQ key={faq.q} {...faq} T={T} />)}
+          {c.faqs.map((faq, i) => (
+            <FAQ key={faq.q} {...faq} a={i === 0 ? (PRIVACY_FAQ_COPY[lang] || faq.a) : faq.a} T={T} />
+          ))}
         </div>
       </section>
 
@@ -1358,7 +1508,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
           <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
-          <button onClick={onBeginPrayer} className="px-8 py-4 rounded-2xl text-sm font-semibold text-white" style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)', boxShadow: T.ctaShadowBig }}>
+          <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: '#60457b', boxShadow: T.ctaShadowBig }}>
             {c.ctaBtn}
           </button>
           <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
@@ -1373,7 +1523,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             <span className="text-sm font-medium" style={{ color: T.text }}>Pray4Me</span>
           </div>
           <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
-          <button onClick={onSignIn} className="text-xs font-medium px-4 py-2 rounded-xl" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>
+          <button onClick={onSignIn} className="pressable min-h-11 rounded-xl px-4 py-2 text-xs font-medium" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>
             {c.signIn} →
           </button>
         </div>

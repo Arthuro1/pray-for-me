@@ -52,7 +52,7 @@ export default function Layout({ children, onAddPrayer }) {
 
   useEffect(() => {
     if (mainRef.current) {
-      mainRef.current.style.paddingLeft = isMd ? `${sidebarWidth}px` : '0px';
+      mainRef.current.style.paddingInlineStart = isMd ? `${sidebarWidth}px` : '0px';
     }
   }, [sidebarWidth, isMd]);
 
@@ -85,17 +85,17 @@ export default function Layout({ children, onAddPrayer }) {
     badge ? `${label}, ${t(lang, 'navPending', { count: badge })}` : undefined;
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen flex" style={{ background: 'transparent' }}>
 
       {/* ── Sidebar (md+) ── */}
       <aside
-        className="hidden md:flex flex-col fixed top-0 left-0 h-full z-20 py-6"
+        className="app-sidebar hidden md:flex flex-col fixed top-0 h-full z-20 py-6"
         style={{
           width: `${sidebarWidth}px`,
-          background: 'var(--surface)',
-          borderRight: '0.5px solid var(--border)',
+          insetInlineStart: 0,
+          borderInlineEnd: '1px solid color-mix(in srgb, var(--border) 75%, transparent)',
           overflow: 'hidden',
-          transition: 'width 0.2s ease',
+          transition: 'width var(--motion) var(--ease)',
         }}
       >
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
@@ -110,11 +110,11 @@ export default function Layout({ children, onAddPrayer }) {
             {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--text-3)' }} />}
             <button
               onClick={() => setCollapsed(!collapsed)}
-              className="rounded-lg p-1 transition-colors"
+              className="pressable flex h-11 w-11 items-center justify-center rounded-full transition-colors"
               style={{ color: 'var(--text-3)', marginLeft: collapsed ? 0 : 4 }}
               title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
             >
-              {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+              {collapsed ? <ChevronRight className="rtl-mirror" size={16} /> : <ChevronLeft className="rtl-mirror" size={16} />}
             </button>
           </div>
         </div>
@@ -137,13 +137,13 @@ export default function Layout({ children, onAddPrayer }) {
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 title={collapsed ? label : undefined}
-                className="relative flex items-center rounded-xl text-sm font-medium no-underline transition-all"
+                className="pressable relative flex min-h-11 items-center rounded-xl text-sm font-semibold no-underline transition-all"
                 style={{
                   gap: collapsed ? 0 : 12,
                   padding: collapsed ? '10px 0' : '10px 12px',
                   justifyContent: collapsed ? 'center' : 'flex-start',
                   ...(active
-                    ? { background: 'var(--nav-active-bg)', color: 'var(--nav-active-color)' }
+                    ? { background: 'var(--nav-active-bg)', color: 'var(--nav-active-color)', boxShadow: 'inset 0 -2px 0 var(--gold)' }
                     : { color: 'var(--text-3)' }),
                 }}
               >
@@ -162,12 +162,12 @@ export default function Layout({ children, onAddPrayer }) {
           <button
             onClick={onAddPrayer}
             title={t(lang, "tipAddPrayer")}
-            className="w-full flex items-center rounded-xl text-sm font-semibold text-white transition-all active:scale-95"
+            className="primary-button pressable w-full flex min-h-12 items-center rounded-xl text-sm font-semibold text-white transition-all"
             style={{
               gap: collapsed ? 0 : 10,
               padding: collapsed ? '12px 0' : '12px 14px',
               justifyContent: collapsed ? 'center' : 'flex-start',
-              background: 'var(--header)',
+              background: 'var(--plum)',
             }}
           >
             <Plus size={18} strokeWidth={2.5} />
@@ -181,12 +181,11 @@ export default function Layout({ children, onAddPrayer }) {
           top edge, so pad the bar down by the top safe-area inset — 0 on a
           normal browser tab, the notch/status-bar height when installed. */}
       <header
-        className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
+        className="app-mobile-bar md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
         style={{
           height: 'calc(3rem + env(safe-area-inset-top))',
           paddingTop: 'env(safe-area-inset-top)',
-          background: 'var(--surface)',
-          borderBottom: '0.5px solid var(--border)',
+          borderBottom: '1px solid color-mix(in srgb, var(--border) 70%, transparent)',
         }}
       >
         <div className="flex items-center gap-2">
@@ -204,10 +203,10 @@ export default function Layout({ children, onAddPrayer }) {
         ref={mainRef}
         className="flex-1 overflow-y-auto w-full"
         style={{
-          paddingLeft: isMd ? `${sidebarWidth}px` : '0px',
+          paddingInlineStart: isMd ? `${sidebarWidth}px` : '0px',
           paddingTop: isMd ? 0 : 'calc(3rem + env(safe-area-inset-top))',
           paddingBottom: isMd ? '2rem' : `calc(${BOTTOM_NAV_H + 20}px + env(safe-area-inset-bottom))`,
-          transition: 'padding-left 0.2s ease',
+          transition: 'padding-inline-start var(--motion) var(--ease)',
         }}
       >
         {children}
@@ -221,7 +220,7 @@ export default function Layout({ children, onAddPrayer }) {
           onClick={onAddPrayer}
           title={t(lang, "tipAddPrayer")}
           aria-label={t(lang, "tipAddPrayer")}
-          className="md:hidden fixed z-20 rounded-full flex items-center justify-center shadow-lg transition-transform active:scale-95"
+          className="pressable md:hidden fixed z-20 rounded-full flex items-center justify-center transition-transform"
           style={{
             // Float clear of the nav bar AND the bottom safe-area inset.
             // insetInlineEnd (not right) mirrors the FAB to the left in RTL.
@@ -229,7 +228,9 @@ export default function Layout({ children, onAddPrayer }) {
             insetInlineEnd: '20px',
             width: '52px',
             height: '52px',
-            background: 'var(--header)',
+            background: 'var(--plum)',
+            border: '3px solid var(--surface)',
+            boxShadow: '0 12px 30px color-mix(in srgb, var(--plum-dark) 25%, transparent)',
           }}
         >
           <Plus size={24} color="white" strokeWidth={2.5} />
@@ -242,11 +243,10 @@ export default function Layout({ children, onAddPrayer }) {
           A soft top shadow (plus the hairline border) keeps it separate from
           content scrolling underneath, in both light and dark themes. */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 flex z-10"
+        className="app-bottom-nav md:hidden fixed bottom-0 left-0 right-0 flex z-10"
         aria-label={t(lang, 'primaryNav')}
         style={{
-          background: 'var(--surface)',
-          borderTop: '0.5px solid var(--border)',
+          borderTop: '1px solid color-mix(in srgb, var(--border) 75%, transparent)',
           boxShadow: 'var(--nav-shadow)',
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
@@ -259,7 +259,7 @@ export default function Layout({ children, onAddPrayer }) {
               to={path}
               aria-current={active ? 'page' : undefined}
               aria-label={navLabel(label, badge)}
-              className="flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"
+              className="pressable flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"
               style={{ minHeight: BOTTOM_NAV_H, color: active ? 'var(--nav-active-color)' : 'var(--text-3)' }}
             >
               {/* A calm rounded pill sits behind the active icon — using the same
@@ -267,8 +267,8 @@ export default function Layout({ children, onAddPrayer }) {
               <span
                 className="relative flex items-center justify-center"
                 style={{
-                  width: 44,
-                  height: 30,
+                  width: 40,
+                  height: 28,
                   borderRadius: 999,
                   background: active ? 'var(--nav-active-bg)' : 'transparent',
                   transition: 'background 0.15s ease',
