@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "Не удалось загрузить, попробуйте ещё раз",
   "micUnavailable": "Микрофон недоступен",
   "mediaLoadError": "Не удалось загрузить это медиа",
+  "restUnderSky": "Отдохните под небом",
 };

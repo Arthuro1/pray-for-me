@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 // so it never navigates. On desktop (no touch) it's an inert pass-through.
 const ACTION_W = 74; // px revealed per action
 
-export default function SwipeableRow({ actions = [], children }) {
+export default function SwipeableRow({ actions = [], children, className = '' }) {
   const [dx, setDx] = useState(0);
   const [open, setOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -16,6 +16,7 @@ export default function SwipeableRow({ actions = [], children }) {
 
   if (actions.length === 0) return children;
   const reveal = actions.length * ACTION_W;
+  const actionsVisible = open || dx < 0;
   const close = () => { setOpen(false); setDx(0); };
 
   const onTouchStart = (e) => {
@@ -55,13 +56,21 @@ export default function SwipeableRow({ actions = [], children }) {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl">
-      <div className="absolute inset-y-0 right-0 flex">
+    <div className={`relative overflow-hidden rounded-2xl ${className}`.trim()}>
+      <div
+        className="absolute inset-y-0 right-0 flex"
+        aria-hidden={!open}
+        style={{
+          opacity: actionsVisible ? 1 : 0,
+          transition: dragging ? 'none' : 'opacity 0.15s ease',
+        }}
+      >
         {actions.map((a) => {
           const Icon = a.icon;
           return (
             <button
               key={a.key}
+              tabIndex={open ? 0 : -1}
               onClick={() => { a.onClick(); close(); }}
               className="flex flex-col items-center justify-center gap-1 px-1 text-[11px] font-medium text-white leading-tight text-center"
               style={{ width: ACTION_W, background: a.bg }}

@@ -74,6 +74,7 @@ describe('PrayersTab — simplified header', () => {
     usePrayerStore.setState({ categories: [{ id: 'c1', name: 'Famille', emoji: '👪', color: '#7c5cfc' }] });
     cleanup();
     renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
     expect(screen.getByRole('combobox', { name: t(lang, 'allCategories') })).toBeTruthy();
   });
@@ -92,8 +93,15 @@ describe('PrayersTab — simplified header', () => {
     expect(useLayoutStore.getState().fabSuppressed).toBe(true);
   });
 
-  it('a non-empty Journal releases the FAB', () => {
+  it('a non-empty Journal keeps one inline Add action and suppresses the FAB', () => {
     renderJournal();
-    expect(useLayoutStore.getState().fabSuppressed).toBe(false);
+    expect(screen.getByText(t(lang, 'emptyAddManual'))).toBeTruthy();
+    expect(useLayoutStore.getState().fabSuppressed).toBe(true);
+  });
+
+  it('previews the latest answered prayer beneath active prayers', () => {
+    renderJournal();
+    expect(screen.getByText(/x1$/)).toBeTruthy();
+    expect(screen.getAllByText(t(lang, 'answered')).length).toBeGreaterThan(1);
   });
 });

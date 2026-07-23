@@ -1,9 +1,10 @@
-import { Users, EyeOff, HandHeart, Pin, Search } from 'lucide-react';
+import { ChevronRight, EyeOff, HandHeart, Pin, Search, Sparkles, Users } from 'lucide-react';
 import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { scheduleEnded } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
+import { scheduleSummary } from '../lib/scheduleDraft';
 import Avatar from './shared/Avatar';
 
 const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
@@ -24,6 +25,56 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
   const authorLabel = oa ? (oa.anonymous ? t(lang, 'anonymous') : oa.name) : t(lang, 'meAuthor');
   const totalPraying = groupShares.reduce((n, s) => n + (s.prayingCount || 0), 0);
 
+  if (variant === 'constellation') {
+    const rhythm = isAnswered
+      ? t(lang, 'answered')
+      : isEnded
+        ? t(lang, 'seriesEnded')
+        : scheduleSummary(prayer.schedule, lang) || t(lang, 'sentDaily');
+
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className={`constellation-journal-row pressable ${isAnswered ? 'constellation-journal-row--answered' : ''}`}
+      >
+        <Sparkles
+          size={18}
+          strokeWidth={1.7}
+          aria-hidden="true"
+          className="constellation-journal-row__star"
+        />
+        <span className="constellation-journal-row__body">
+          <span className="constellation-journal-row__title">
+            {tr(prayer.title, lang)}
+          </span>
+          <span className="constellation-journal-row__meta">
+            <span className={isAnswered ? 'constellation-journal-row__answered' : ''}>
+              {rhythm}
+            </span>
+            {totalPraying > 0 && (
+              <span className="constellation-journal-row__shared">
+                {totalPraying} {t(lang, 'prayingCount')}
+              </span>
+            )}
+          </span>
+          {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
+            <span className="constellation-journal-row__match">
+              <Search size={12} aria-hidden="true" />
+              <span>{tr(searchMatch.text, lang)}</span>
+            </span>
+          )}
+        </span>
+        <ChevronRight
+          size={22}
+          strokeWidth={1.65}
+          aria-hidden="true"
+          className="constellation-journal-row__chevron"
+        />
+      </button>
+    );
+  }
+
   // Today uses a journal row: title first, only the person/source when useful.
   // Full authorship, schedule and sharing metadata remain available in Journal
   // and on the detail page, where that context belongs.
@@ -33,16 +84,23 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
       : prayer.origin_group_name || '';
     return (
       <button
+        type="button"
         onClick={onClick}
-        className="journal-row pressable flex min-h-[68px] w-full items-center gap-4 px-1 py-4 text-left"
+        className="journal-row constellation-today-row pressable flex min-h-[76px] w-full items-center gap-3 px-1 py-4 text-left"
       >
+        <Sparkles
+          size={16}
+          strokeWidth={1.7}
+          aria-hidden="true"
+          className="constellation-today-row__star shrink-0"
+        />
         <span className="min-w-0 flex-1">
           <span className="editorial block text-lg leading-snug" style={{ color: 'var(--text-1)' }}>
             {tr(prayer.title, lang)}
           </span>
           {context && <span className="mt-1 block truncate text-xs" style={{ color: 'var(--text-3)' }}>{context}</span>}
         </span>
-        <span aria-hidden="true" className="text-xl" style={{ color: 'var(--text-3)' }}>›</span>
+        <ChevronRight size={20} strokeWidth={1.65} aria-hidden="true" style={{ color: 'var(--text-3)' }} />
       </button>
     );
   }

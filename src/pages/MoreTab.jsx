@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sprout, CalendarDays, Settings, Heart, ChevronRight, ShieldCheck } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
+import { PageHeader } from '../components/shared/Primitives';
 
 // Everything that matters but isn't daily: Grow, planning, privacy & security,
 // settings and support live here so the bottom navigation stays about
@@ -31,18 +32,21 @@ export default function MoreTab() {
   };
 
   return (
-    <div>
-      <div className="px-4 md:px-8 pt-8 pb-6" style={{ background: 'var(--header)' }}>
-        <h2 className="text-xl font-semibold text-white">{t(lang, 'moreTab')}</h2>
+    <div className="phase-page constellation-more">
+      <div className="phase-page__shell">
+        <PageHeader
+          eyebrow={t(lang, 'moreTab')}
+          title={t(lang, 'moreTab')}
+        />
       </div>
 
-      <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
-        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+      <div className="phase-content max-w-2xl">
+        <div className="constellation-menu">
           {items.map(({ key, icon: Icon, label, to }, i) => (
             <button
               key={key}
               onClick={() => go(to)}
-              className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
+              className="constellation-menu__row w-full flex items-center gap-3 px-1 py-4 text-left transition-colors"
               style={i > 0 ? { borderTop: '0.5px solid var(--border)' } : {}}
             >
               <Icon size={18} style={{ color: 'var(--accent)' }} />

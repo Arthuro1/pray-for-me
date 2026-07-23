@@ -11,6 +11,7 @@ import { guideDurationMinutes } from '../lib/guideMeta';
 import GuideReader from '../components/GuideReader';
 import ArticleReader from '../components/ArticleReader';
 import GospelJourneyReader from '../components/GospelJourneyReader';
+import { PageHeader } from '../components/shared/Primitives';
 
 // A guide/article row. Top-level (not defined inside GrowTab) so React keeps
 // the DOM node across re-renders — an inline component type would remount on
@@ -111,7 +112,7 @@ export default function GrowTab({ onCreatePrayer }) {
   };
 
   return (
-    <div className="phase-page">
+    <div className="phase-page constellation-grow">
       {openGuide && (
         <GuideReader
           guide={openGuide}
@@ -140,9 +141,12 @@ export default function GrowTab({ onCreatePrayer }) {
         />
       )}
 
-      <div className="phase-page__shell page-header grow-phase-header">
-        <h2 className="text-xl font-semibold text-white">🌱 {t(lang, 'growTitle')}</h2>
-        <p className="page-header__subtitle">{t(lang, 'growSubtitle')}</p>
+      <div className="phase-page__shell">
+        <PageHeader
+          eyebrow={t(lang, 'grow')}
+          title={t(lang, 'growTitle')}
+          subtitle={t(lang, 'growSubtitle')}
+        />
       </div>
 
       <div className="phase-content max-w-2xl">

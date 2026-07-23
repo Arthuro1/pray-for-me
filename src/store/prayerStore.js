@@ -12,6 +12,7 @@ import { track, EVENTS } from '../lib/analytics';
 import { ensurePushSubscription } from '../push';
 import { isEventPushEnabled } from '../lib/notificationPrefs';
 import { resolveLanguage } from '../i18n';
+import { normalizeTheme } from '../utils/theme';
 import {
   canEncrypt,
   encryptPrayerForStorage,
@@ -202,7 +203,7 @@ const usePrayerStore = create((set, get) => ({
       ...base,
       ...saved,
       language: resolveLanguage(localStorage.getItem('pfm_language'), navigator.language || navigator.userLanguage),
-      theme: localStorage.getItem('pfm_theme') || 'light',
+      theme: normalizeTheme(localStorage.getItem('pfm_theme')),
     };
   })(),
   loading: true, // starts true so the first paint shows skeletons, not an empty flash
@@ -1138,6 +1139,7 @@ const usePrayerStore = create((set, get) => ({
   // it's a permission fact, not a preference).
   // `sync: false` is used when applying values that just came FROM the server.
   updateSettings: (updates, { sync = true } = {}) => {
+    if (updates.theme) updates = { ...updates, theme: normalizeTheme(updates.theme) };
     if (updates.language) localStorage.setItem('pfm_language', updates.language);
     if (updates.theme) {
       localStorage.setItem('pfm_theme', updates.theme);

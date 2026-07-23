@@ -64,9 +64,12 @@ describe('AuthPage', () => {
 
   it('defaults to login and exposes Google, forgot-password and back-to-home', () => {
     const onBack = vi.fn();
-    render(<AuthPage onBack={onBack} />);
+    const { container } = render(<AuthPage onBack={onBack} />);
     expect(screen.getByText(t('fr', 'authForgotPassword'))).toBeTruthy();
     expect(screen.getByText(t('fr', 'authContinueGoogle'))).toBeTruthy();
+    expect(container.querySelector('.constellation-auth__sky-image--light')).toBeTruthy();
+    expect(container.querySelector('.constellation-auth__sky-image--dark')).toBeTruthy();
+    expect(container.querySelector('img[src="/assets/google-g.png"]')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t('fr', 'authBackHome')));
     expect(onBack).toHaveBeenCalled();
   });

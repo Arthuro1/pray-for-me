@@ -920,4 +920,5 @@ export default {
   "uploadFailed": "Upload failed, please try again",
   "micUnavailable": "Microphone unavailable",
   "mediaLoadError": "Couldn't load this media",
+  "restUnderSky": "Rest under the sky",
 };

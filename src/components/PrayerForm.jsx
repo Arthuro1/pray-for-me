@@ -237,7 +237,7 @@ export default function PrayerForm({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        className="editorial-dialog w-full max-w-lg mx-auto max-h-[92vh] overflow-y-auto"
+        className="editorial-dialog constellation-prayer-form w-full max-w-lg mx-auto max-h-[92vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1">

@@ -13,6 +13,15 @@ import { track, EVENTS } from '../lib/analytics';
 import PrayerSession from './PrayerSession';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
 
+function ConstellationBackdrop() {
+  return (
+    <div className="constellation-onboarding__sky" aria-hidden="true">
+      <img src="/assets/constellation/community-sky-light-transparent.png" alt="" className="constellation-onboarding__sky-image constellation-onboarding__sky-image--light" />
+      <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-onboarding__sky-image constellation-onboarding__sky-image--dark" />
+    </div>
+  );
+}
+
 // The first prayer, in two modes:
 //
 //   member — the signed-in first-run experience (unchanged): one screen asks what
@@ -104,7 +113,8 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
   // the prayer is still device-local here; account encryption happens on save.
   if (phase === 'decide') {
     return (
-      <div className="first-prayer-experience">
+      <div className="first-prayer-experience constellation-onboarding">
+        <ConstellationBackdrop />
         <div
           ref={trapRef}
           tabIndex={-1}
@@ -113,14 +123,14 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           aria-label={t(lang, 'firstPrayerSaveTitle')}
           className="first-prayer-panel items-center justify-center text-center"
         >
-          <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,.08)', color: 'var(--gold)', border: '1px solid rgba(255,255,255,.12)' }}>
+          <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
           <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Pray4Me</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
-          <p className="mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,.62)' }}>
+          <p className="constellation-onboarding__note mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed">
             <Lock size={14} aria-hidden="true" /> {t(lang, 'firstPrayerDeviceNote')}
           </p>
           <div className="mt-10 w-full max-w-sm space-y-3">
@@ -138,7 +148,8 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
 
   // Capture: the single question that matters.
   return (
-    <div className="first-prayer-experience">
+    <div className="first-prayer-experience constellation-onboarding">
+      <ConstellationBackdrop />
       <form
         ref={trapRef}
         tabIndex={-1}
@@ -156,8 +167,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
             type="button"
             onClick={onFinish}
             aria-label={t(lang, 'close')}
-            className="pressable flex h-11 w-11 items-center justify-center rounded-full"
-            style={{ background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.76)' }}
+            className="constellation-onboarding__close pressable flex h-11 w-11 items-center justify-center rounded-full"
           >
             <X size={18} aria-hidden="true" />
           </button>
@@ -179,7 +189,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
             className="first-prayer-journal mt-7"
           />
 
-          <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm" style={{ color: 'rgba(255,255,255,.58)' }}>
+          <p className="constellation-onboarding__note mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm">
             <Lock size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
             {t(lang, isGuest ? 'firstPrayerDeviceNote' : 'onboardPrivateNote')}
           </p>
@@ -197,8 +207,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           <button
             type="button"
             onClick={onFinish}
-            className="pressable min-h-11 w-full text-sm font-semibold"
-            style={{ color: 'rgba(255,255,255,.6)' }}
+            className="constellation-onboarding__later pressable min-h-11 w-full text-sm font-semibold"
           >
             {t(lang, isGuest ? 'authBackHome' : 'onboardLater')}
           </button>

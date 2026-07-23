@@ -7,7 +7,7 @@ import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
-import { getAuthorName, originAuthor, communityAuthor } from '../utils/user';
+import { getAuthorName, communityAuthor } from '../utils/user';
 import { testimonyList } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
@@ -426,6 +426,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityHasReacted = isCommunity && userReactions.has(communityPrayer.id);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
+  const constellationPrayerCount = isCommunity
+    ? communityReactionCount
+    : sharedGroups.reduce((total, share) => total + (share.prayingCount || 0), 0);
 
   // ── Shared (saved-from-community) prayer flags ───────────────────────────
   // A saved copy follows the shared content read-only: it pulls the author's/
@@ -602,7 +605,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
 
   return (
-    <div className="detail-page phase-page">
+    <div className="detail-page phase-page constellation-detail">
       {showScripture && (
         <ScriptureFirstStep
           prayerId={livePrayer.id}
@@ -686,7 +689,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
       )}
 
-      {/* Sticky header */}
+      {/* The request itself has room to breathe in the constellation hero
+          below; this sticky bar stays a quiet navigation rail. */}
       <div className="detail-header">
         <button
           onClick={onBack}
@@ -696,45 +700,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         >
           <ArrowLeft size={18} aria-hidden="true" />
         </button>
-        <div className="flex-1 min-w-0">
-          {canEditTitle && editingTitle ? (
-            <input
-              autoFocus
-              value={titleDraft}
-              onChange={(e) => setTitleDraft(e.target.value)}
-              onBlur={saveTitle}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
-                else if (e.key === 'Escape') { titleCancelRef.current = true; e.currentTarget.blur(); }
-              }}
-              aria-label={t(lang, 'tipEditPrayer')}
-              className="w-full text-base font-semibold bg-transparent border-b outline-none"
-              style={{ color: 'var(--text-1)', borderColor: 'var(--border-strong)' }}
-            />
-          ) : (
-            <h1
-              onClick={canEditTitle ? startEditTitle : undefined}
-              className={`detail-header__title truncate flex items-center gap-1.5 ${canEditTitle ? 'cursor-text' : ''}`}
-              style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
-            >
-              <span className="truncate">{livePrayer._locked ? t(lang, 'contentLocked') : loc(livePrayer.title)}</span>
-              {canEditTitle && <Edit2 size={12} className="shrink-0 opacity-50" />}
-            </h1>
-          )}
-          <p className="detail-header__meta text-xs">
-            {isCommunity
-              ? communityAuthor(livePrayer, user?.id, lang) + ' · ' + timeAgo(livePrayer.created_at, lang)
-              : (() => {
-                  const oa = originAuthor(livePrayer);
-                  const author = oa ? `${oa.anonymous ? t(lang, 'anonymous') : oa.name} · ` : '';
-                  const group = livePrayer.origin_group_name ? `👥 ${livePrayer.origin_group_name} · ` : '';
-                  const date = format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale });
-                  const answered = livePrayer.answered_at ? ` · ${t(lang, 'answeredOn')} ${format(new Date(livePrayer.answered_at), 'd MMM yyyy', { locale })}` : '';
-                  return author + group + date + answered;
-                })()
-            }
-          </p>
-        </div>
+        <p className="constellation-detail__screen-title flex-1 min-w-0 text-center">
+          {t(lang, 'prayer')}
+        </p>
         <div className="flex items-center gap-2 shrink-0">
           {isCommunity ? (
             // Author/admin management only; the primary "I'm praying" action now
@@ -776,6 +744,81 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           )}
         </div>
       </div>
+
+      <section className="constellation-detail__hero">
+        <div className="constellation-detail__sky" aria-hidden="true">
+          <img
+            src="/assets/constellation/detail-sky-light-transparent.png"
+            alt=""
+            className="constellation-detail__sky-image constellation-detail__sky-image--light"
+          />
+          <img
+            src="/assets/constellation/detail-sky-dark-transparent.png"
+            alt=""
+            className="constellation-detail__sky-image constellation-detail__sky-image--dark"
+          />
+        </div>
+
+        <div className="constellation-detail__hero-copy">
+          {canEditTitle && editingTitle ? (
+            <input
+              autoFocus
+              value={titleDraft}
+              onChange={(e) => setTitleDraft(e.target.value)}
+              onBlur={saveTitle}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
+                else if (e.key === 'Escape') { titleCancelRef.current = true; e.currentTarget.blur(); }
+              }}
+              aria-label={t(lang, 'tipEditPrayer')}
+              className="constellation-detail__title-input"
+            />
+          ) : (
+            <h1
+              onClick={canEditTitle ? startEditTitle : undefined}
+              className={`constellation-detail__title ${canEditTitle ? 'cursor-text' : ''}`}
+              style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
+            >
+              <span>{livePrayer._locked ? t(lang, 'contentLocked') : loc(livePrayer.title)}</span>
+              {canEditTitle && <Edit2 size={15} className="shrink-0 opacity-40" aria-hidden="true" />}
+            </h1>
+          )}
+
+          {livePrayer._locked ? (
+            <LockedNotice lang={lang} />
+          ) : livePrayer.description ? (
+            <RichText text={loc(livePrayer.description)} className="constellation-detail__description" />
+          ) : null}
+
+          <div className="constellation-detail__meta">
+            <span>
+              {isCommunity
+                ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
+                : livePrayer.schedule
+                  ? scheduleSummary(livePrayer.schedule, lang)
+                  : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale })}
+            </span>
+            {constellationPrayerCount > 0 && (
+              <span className="constellation-detail__praying">
+                <Users size={13} aria-hidden="true" />
+                {constellationPrayerCount} {t(lang, 'prayingCount')}
+              </span>
+            )}
+          </div>
+
+          {!isCommunity && !isAnswered && !livePrayer._locked && (
+            <>
+              <button
+                onClick={() => setShowPraySession(true)}
+                className="constellation-detail__pray primary-button"
+              >
+                <HandHeart size={18} aria-hidden="true" /> {t(lang, 'prayNow')}
+              </button>
+              <p className="constellation-detail__quiet-label">{t(lang, 'restUnderSky')}</p>
+            </>
+          )}
+        </div>
+      </section>
 
       <div className="detail-page__content space-y-4">
 
@@ -830,22 +873,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* The page LEADS with prayer, not configuration: Pray now first, then
-            Add update and Mark answered as light secondary actions. */}
+        {/* The hero leads with prayer. Management stays secondary here. */}
         {!isCommunity && !isAnswered && !livePrayer._locked && (
-          <>
-            <button
-              onClick={() => setShowPraySession(true)}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold text-white transition-all active:scale-95"
-              style={{ background: 'var(--accent)' }}
-            >
-              <HandHeart size={17} /> {t(lang, 'prayNow')}
-            </button>
-            {canManage && (
+          canManage && (
               // Beside Pray now on any width that fits, stacked when the
               // translated labels need the room — so the hierarchy stays
               // readable instead of the labels overflowing.
-              <div className="flex flex-col min-[380px]:flex-row gap-2">
+              <div className="constellation-detail__secondary-actions flex flex-col min-[380px]:flex-row gap-2">
                 <button
                   onClick={focusUpdateField}
                   className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
@@ -865,8 +899,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <span className="truncate">{t(lang, 'markAnswered')}</span>
                 </button>
               </div>
-            )}
-          </>
+          )
         )}
 
         {/* Scheduling stays OUT of the main flow: the ⋯ menu's Schedule action
@@ -959,17 +992,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 ))}
               </div>
             )}
-          </div>
-        )}
-
-        {/* Description — or an honest placeholder when this row couldn't be
-            decrypted on this device (blank redacted columns would look like loss). */}
-        {livePrayer._locked ? (
-          <LockedNotice lang={lang} />
-        ) : livePrayer.description && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'details')}</p>
-            <RichText text={loc(livePrayer.description)} className="text-sm leading-relaxed" style={{ color: 'var(--text-2)', lineHeight: 1.7 }} />
           </div>
         )}
 

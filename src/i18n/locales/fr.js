@@ -920,4 +920,5 @@ export default {
   "uploadFailed": "L'envoi a échoué, réessayez",
   "micUnavailable": "Micro indisponible",
   "mediaLoadError": "Impossible de charger ce média",
+  "restUnderSky": "Reposez-vous sous le ciel",
 };

@@ -182,7 +182,7 @@ export default function PlanTab() {
   };
 
   return (
-    <div className="phase-page">
+    <div className="phase-page constellation-plan">
       {detailPlan && (
         <PlanDetailModal
           plan={detailPlan}

@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "上传失败，请重试",
   "micUnavailable": "麦克风不可用",
   "mediaLoadError": "无法加载此媒体",
+  "restUnderSky": "在星空下安歇",
 };

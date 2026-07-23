@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "Falha no envio, tente novamente",
   "micUnavailable": "Microfone indisponível",
   "mediaLoadError": "Não foi possível carregar esta mídia",
+  "restUnderSky": "Descanse sob o céu",
 };

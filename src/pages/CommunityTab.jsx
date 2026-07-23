@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, LogIn, Search, Share2, QrCode, ShieldCheck, ShieldOff } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, LogIn, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -79,8 +79,8 @@ function Section({ title, icon, children }) {
 }
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
-function CommunityHub({ lang, userId, onViewGroup }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity } = useCommunityStore(
+function CommunityHub({ lang, userId, onViewGroup, onOpenPrayer }) {
+  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity, fetchCommunityFeed } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       fetchFriends: s.fetchFriends,
@@ -94,12 +94,14 @@ function CommunityHub({ lang, userId, onViewGroup }) {
       addFriendship: s.addFriendship,
       fetchPendingCount: s.fetchPendingCount,
       fetchGroupActivity: s.fetchGroupActivity,
+      fetchCommunityFeed: s.fetchCommunityFeed,
     }))
   );
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [groupInvitations, setGroupInvitations] = useState([]);
   const [unread, setUnread] = useState({});
+  const [feed, setFeed] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -107,14 +109,16 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   const [showAddFriend, setShowAddFriend] = useState(false);
 
   const load = useCallback(async () => {
-    const [f, fr, gi] = await Promise.all([
+    const [f, fr, gi, feedRows] = await Promise.all([
       fetchFriends(userId),
       fetchFriendRequests(userId),
       fetchGroupInvitations(userId),
+      fetchCommunityFeed(),
     ]);
     setFriends(f.friends || []);
     setFriendRequests(fr.requests || []);
     setGroupInvitations(gi.invitations || []);
+    setFeed(feedRows || []);
     setLoading(false);
     fetchPendingCount(userId);
     fetchGroupActivity().then((rows) => setUnread(unreadCounts(rows, readSeen(), userId)));
@@ -151,12 +155,13 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   }
 
   return (
-    <div className="phase-page min-h-screen">
+    <div className="phase-page constellation-community min-h-screen">
       <div className="phase-page__shell">
         {/* Once groups exist they lead the page; joining another group, creating
             one or adding a friend become small header actions instead of a
             second button row. Join stays reachable — invitations arrive by code. */}
         <PageHeader
+          className="constellation-community__header"
           title={t(lang, 'community')}
           aside={groups.length > 0 ? (
             <div className="flex items-center gap-2 shrink-0">
@@ -188,12 +193,25 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           ) : undefined}
         />
 
+        {groups.length > 0 && (
+          <div className="constellation-community__hero">
+            <div className="constellation-community__hero-copy">
+              <h2>{t(lang, 'fromYourGroups')}</h2>
+              <p>{t(lang, 'communityEmptyDesc')}</p>
+            </div>
+            <span className="constellation-community__hero-art" aria-hidden="true">
+              <img src="/assets/constellation/community-sky-light-transparent.png" alt="" className="constellation-community__hero-image constellation-community__hero-image--light" />
+              <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-community__hero-image constellation-community__hero-image--dark" />
+            </span>
+          </div>
+        )}
+
         {/* An empty community account gets ONE onboarding card — join first
             (most believers are invited into an existing group), create second,
             add-a-friend as a quiet text link. No second empty state below. */}
         {groups.length === 0 && (
           <div className="phase-card community-empty mb-8 text-center max-w-lg mx-auto">
-            <p className="text-4xl mb-3">🤝</p>
+            <Users size={34} className="mx-auto mb-3" aria-hidden="true" />
             <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayWithOthers')}</h2>
             <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'communityEmptyDesc')}</p>
             <button onClick={() => setShowJoinGroup(true)} className="community-empty__primary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-semibold mb-2.5">
@@ -258,6 +276,31 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                       </span>
                     )}
                   </div>
+                </button>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {feed.length > 0 && (
+          <Section title={t(lang, 'prayerRequests')}>
+            <div className="constellation-community-feed">
+              {feed.map((prayer) => (
+                <button
+                  key={prayer.id}
+                  onClick={() => onOpenPrayer(prayer.group_id, prayer.id)}
+                  className="constellation-community-feed__row"
+                >
+                  <Star size={19} strokeWidth={1.65} aria-hidden="true" />
+                  <span className="constellation-community-feed__body">
+                    <span className="constellation-community-feed__title">{prayer.title}</span>
+                    <span className="constellation-community-feed__meta">
+                      {communityAuthor(prayer, userId, lang)} · {timeAgo(prayer.created_at, lang)}
+                    </span>
+                  </span>
+                  <span className="constellation-community-feed__count">
+                    {prayer.prayer_reactions?.[0]?.count ?? 0} {t(lang, 'prayingCount')}
+                  </span>
                 </button>
               ))}
             </div>
@@ -954,7 +997,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   };
 
   return (
-    <div className="phase-page min-h-screen">
+    <div className="phase-page constellation-community constellation-community-group min-h-screen">
       <div className="phase-page__shell pt-3 flex items-center justify-between">
         <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           <ArrowLeft size={16} /> {t(lang, 'community')}
@@ -1050,7 +1093,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 Hidden while the group is empty — the empty state below carries
                 the single Add-request action then. */}
             {prayers.length > 0 && (
-              <div className="flex gap-2 mb-4">
+              <div className="constellation-community-group__actions flex gap-2 mb-4">
                 <button onClick={() => setShowNewRequest(true)} className="flex-1 flex items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--accent)' }}>
                   <Plus size={16} /> {t(lang, 'newRequest')}
                 </button>
@@ -1103,7 +1146,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             ) : (
               <div className="flex flex-col gap-3">
                 {filteredPrayers.map(p => (
-                  <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="phase-card community-card p-4 text-left">
+                  <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="phase-card community-card constellation-community-prayer p-4 text-left">
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <div className="flex items-center gap-2 min-w-0">
                         <Avatar name={p.is_anonymous ? '?' : p.author_name} size={26} anonymous={p.is_anonymous} />
@@ -1121,7 +1164,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                       <p className="text-sm font-medium mb-2"><LockedNotice lang={lang} inline /></p>
                     ) : (
                       <>
-                        <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>{p.title}</p>
+                        <p className="constellation-community-prayer__title text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>
+                          <Star size={17} strokeWidth={1.7} aria-hidden="true" />
+                          <span>{p.title}</span>
+                        </p>
                         {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{plainText(p.description)}</p>}
                       </>
                     )}
@@ -1246,5 +1292,12 @@ export default function CommunityTab() {
       onBack={() => navigate('/community')}
       onOpenPrayer={(pid) => navigate(`/community/group/${groupId}/prayer/${pid}`)} />;
   }
-  return <CommunityHub lang={lang} userId={user.id} onViewGroup={(gid) => navigate(`/community/group/${gid}`)} />;
+  return (
+    <CommunityHub
+      lang={lang}
+      userId={user.id}
+      onViewGroup={(gid) => navigate(`/community/group/${gid}`)}
+      onOpenPrayer={(gid, pid) => navigate(`/community/group/${gid}/prayer/${pid}`)}
+    />
+  );
 }

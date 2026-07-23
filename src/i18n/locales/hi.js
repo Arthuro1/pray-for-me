@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "अपलोड विफल रहा, फिर से कोशिश करें",
   "micUnavailable": "माइक्रोफ़ोन उपलब्ध नहीं है",
   "mediaLoadError": "यह मीडिया लोड नहीं हो सका",
+  "restUnderSky": "आकाश के नीचे विश्राम करें",
 };

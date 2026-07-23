@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "アップロードに失敗しました。もう一度お試しください",
   "micUnavailable": "マイクを利用できません",
   "mediaLoadError": "このメディアを読み込めませんでした",
+  "restUnderSky": "空の下で安らぐ",
 };

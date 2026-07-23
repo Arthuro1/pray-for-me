@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "بارگذاری ناموفق بود، دوباره تلاش کنید",
   "micUnavailable": "میکروفون در دسترس نیست",
   "mediaLoadError": "این رسانه بارگیری نشد",
+  "restUnderSky": "زیر آسمان آرام بگیر",
 };

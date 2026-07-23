@@ -7,6 +7,7 @@ import useNotificationStore from '../store/notificationStore';
 import { notificationRoute } from '../lib/notificationRoutes';
 import { t } from '../i18n';
 import NotificationRow from '../components/NotificationRow';
+import { PageHeader } from '../components/shared/Primitives';
 
 // The Inbox at /notifications — the bell's full destination, with keyset
 // pagination for older notifications. (Route unchanged for deep links.)
@@ -29,13 +30,13 @@ export default function NotificationsPage() {
   };
 
   return (
-    <div style={{ background: 'var(--bg)' }} className="min-h-screen">
-      <div className="px-5 md:px-8 py-6 max-w-2xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-            <Bell size={22} /> {t(lang, 'inbox')}
-          </h1>
-          <div className="flex items-center gap-1">
+    <div className="phase-page constellation-notifications">
+      <div className="phase-page__shell">
+        <PageHeader
+          eyebrow={t(lang, 'inbox')}
+          title={t(lang, 'inbox')}
+          aside={(
+            <div className="flex items-center gap-1">
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
@@ -54,9 +55,12 @@ export default function NotificationsPage() {
             >
               <Settings size={16} />
             </button>
-          </div>
-        </div>
+            </div>
+          )}
+        />
+      </div>
 
+      <div className="phase-content max-w-2xl">
         {loading && notifications.length === 0 ? (
           <div className="flex justify-center py-16">
             <Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} />

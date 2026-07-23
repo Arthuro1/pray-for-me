@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "Upakiaji umeshindikana, jaribu tena",
   "micUnavailable": "Maikrofoni haipatikani",
   "mediaLoadError": "Imeshindwa kupakia media hii",
+  "restUnderSky": "Pumzika chini ya anga",
 };

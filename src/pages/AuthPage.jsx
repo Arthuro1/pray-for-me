@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -54,6 +54,11 @@ export default function AuthPage({ onBack, intent }) {
 
   const lang = usePrayerStore((s) => s.settings.language) || 'en';
   const { signInWithEmail, signUpWithEmail, signInWithGoogle, resetPassword, resendConfirmation } = useAuthStore();
+
+  useEffect(() => {
+    document.documentElement.classList.add('constellation-auth-root');
+    return () => document.documentElement.classList.remove('constellation-auth-root');
+  }, []);
 
   const patch = (updates) => setForm((f) => ({ ...f, ...updates }));
 
@@ -120,7 +125,11 @@ export default function AuthPage({ onBack, intent }) {
   };
 
   return (
-    <div className="auth-experience">
+    <div className="auth-experience constellation-auth">
+      <div className="constellation-auth__sky" aria-hidden="true">
+        <img src="/assets/constellation/detail-sky-light-transparent.png" alt="" className="constellation-auth__sky-image constellation-auth__sky-image--light" />
+        <img src="/assets/constellation/detail-sky-dark-transparent.png" alt="" className="constellation-auth__sky-image constellation-auth__sky-image--dark" />
+      </div>
 
       {/* Back to landing page */}
       {onBack && (
@@ -136,7 +145,7 @@ export default function AuthPage({ onBack, intent }) {
 
       {/* Logo */}
       <div className="auth-brand">
-        <img src="/logo.svg" alt="Pray4Me" className="w-14 h-14 mb-3 rounded-2xl" />
+        <img src="/logo.svg" alt="Pray4Me" className="w-12 h-12 mb-3 rounded-xl" />
         <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray4Me</h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'authTagline')}</p>
       </div>
@@ -219,12 +228,7 @@ export default function AuthPage({ onBack, intent }) {
               className="w-full flex items-center justify-center gap-3 rounded-xl py-3 text-sm font-medium mb-4 transition-colors disabled:opacity-50"
               style={{ border: '0.5px solid var(--border)', color: 'var(--text-2)', background: 'var(--surface-2)' }}
             >
-              <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
-                <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-                <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-                <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-                <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
-              </svg>
+              <img src="/assets/google-g.png" alt="" className="h-[18px] w-[18px]" aria-hidden="true" />
               {t(lang, 'authContinueGoogle')}
             </button>
 

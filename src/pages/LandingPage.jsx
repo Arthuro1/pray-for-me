@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2 } from 'lucide-react';
 import { dirFor } from '../i18n';
+import { normalizeTheme } from '../utils/theme';
 import { loadLandingCopy } from './landing/copy';
 
 // `complete: false` marks languages whose landing-page copy (FAQs, feature
@@ -60,113 +61,74 @@ function detectLang() {
 
 const THEMES = {
   dark: {
-    bg: '#17131c',
-    text: '#f4eee5',
-    textSoft: '#d8ceda',
-    textMuted: '#c5bac9',
-    textFaint: '#a99eae',
-    textDim: '#8f8395',
-    textGhost: '#7c7182',
-    surface: '#211b27',
-    surfaceStrong: '#2a2330',
-    chipBg: 'rgba(255,255,255,0.055)',
-    border: '#3c3342',
-    borderStrong: '#514558',
-    menuBg: '#211b27',
+    bg: '#120f1b',
+    text: '#f8f5ff',
+    textSoft: '#d6ccec',
+    textMuted: '#b4a8c9',
+    textFaint: '#8d82a2',
+    textDim: '#817491',
+    textGhost: '#766a85',
+    surface: '#171423',
+    surfaceStrong: '#211c31',
+    chipBg: '#171423',
+    border: '#373047',
+    borderStrong: '#4b415f',
+    menuBg: '#171423',
     menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
-    accentText: '#d1b8df',
-    accentSoftBg: '#33283c',
-    accentChipBg: '#3b2e45',
-    accentActiveBg: '#463551',
-    accentBorder: '#5a4665',
-    heroGlow: 'rgba(210,170,109,0.12)',
-    ctaGlow: 'rgba(178,148,199,0.14)',
-    calloutBg: 'linear-gradient(145deg, #2b2034, #211b27)',
-    calloutBorder: '#50405b',
-    previewBg: '#1b1620',
-    previewItemBg: '#2a2330',
-    gold: '#d2aa6d',
-    primaryBg: '#60457b',
-    prayerPreviewBg: 'linear-gradient(145deg,#30213f,#4b3560)',
-    prayerPreviewButtonBg: '#f7efe3',
-    prayerPreviewButtonText: '#30213f',
-    peaceBg: '#24332a',
-    peaceText: '#9bc4a3',
+    accentText: '#b19aeb',
+    accentSoftBg: '#28203d',
+    accentChipBg: '#28203d',
+    accentActiveBg: '#33294a',
+    accentBorder: '#493b68',
+    calloutBg: '#1c1730',
+    calloutBorder: '#493b68',
+    previewBg: '#120f1b',
+    previewItemBg: '#211c31',
+    gold: '#9a7ce0',
+    primaryBg: '#7457b8',
+    prayerPreviewBg: '#30215e',
+    prayerPreviewButtonBg: '#f8f5ff',
+    prayerPreviewButtonText: '#30215e',
+    peaceBg: '#173331',
+    peaceText: '#63d1cb',
+    benefitColors: ['#9a7ce0', '#b19aeb', '#63d1cb'],
     ctaShadow: '0 12px 32px rgba(0,0,0,0.28)',
     ctaShadowBig: '0 18px 44px rgba(0,0,0,0.34)',
   },
   light: {
-    bg: '#f6f1e8',
-    text: '#241b2f',
-    textSoft: '#4d4057',
-    textMuted: '#746a7d',
-    textFaint: '#857a8c',
-    textDim: '#94899a',
-    textGhost: '#766c7d',
-    surface: '#fffdf9',
-    surfaceStrong: '#eee7dc',
-    chipBg: 'rgba(255,253,249,0.72)',
-    border: '#e4dbcf',
-    borderStrong: '#d4c7b7',
-    menuBg: '#fffdf9',
+    bg: '#f8f7fd',
+    text: '#251e35',
+    textSoft: '#4b405f',
+    textMuted: '#74628f',
+    textFaint: '#8d82a2',
+    textDim: '#8d82a2',
+    textGhost: '#817491',
+    surface: '#ffffff',
+    surfaceStrong: '#f0ecf8',
+    chipBg: '#ffffff',
+    border: '#ded8ee',
+    borderStrong: '#c9bfe2',
+    menuBg: '#ffffff',
     menuShadow: '0 8px 24px rgba(26,22,48,0.14)',
-    accentText: '#60457b',
-    accentSoftBg: '#eee7f2',
-    accentChipBg: '#e8ddec',
-    accentActiveBg: '#dfd2e5',
-    accentBorder: '#d8cadf',
-    heroGlow: 'rgba(169,121,56,0.13)',
-    ctaGlow: 'rgba(96,69,123,0.1)',
-    calloutBg: 'linear-gradient(145deg, #30213f, #49345f)',
-    calloutBorder: '#60457b',
-    previewBg: '#fffdf9',
-    previewItemBg: '#f4ead7',
-    gold: '#a97938',
-    primaryBg: '#60457b',
-    prayerPreviewBg: 'linear-gradient(145deg,#30213f,#4b3560)',
-    prayerPreviewButtonBg: '#f7efe3',
-    prayerPreviewButtonText: '#30213f',
-    peaceBg: '#e7eee6',
-    peaceText: '#5f7865',
+    accentText: '#7457b8',
+    accentSoftBg: '#eeebfa',
+    accentChipBg: '#eeebfa',
+    accentActiveBg: '#e6e0f5',
+    accentBorder: '#d8cfee',
+    calloutBg: '#30215e',
+    calloutBorder: '#5d43a7',
+    previewBg: '#ffffff',
+    previewItemBg: '#f0ecfb',
+    gold: '#7457b8',
+    primaryBg: '#7457b8',
+    prayerPreviewBg: '#30215e',
+    prayerPreviewButtonBg: '#ffffff',
+    prayerPreviewButtonText: '#30215e',
+    peaceBg: '#e7f7f5',
+    peaceText: '#249e98',
+    benefitColors: ['#7457b8', '#8c76c9', '#249e98'],
     ctaShadow: '0 12px 30px rgba(48,33,63,0.18)',
     ctaShadowBig: '0 18px 42px rgba(48,33,63,0.22)',
-  },
-  night: {
-    bg: '#0f1322',
-    text: '#e8ecfb',
-    textSoft: '#c6d0ff',
-    textMuted: '#a7afce',
-    textFaint: '#969fc2',
-    textDim: '#8992b5',
-    textGhost: '#8992b5',
-    surface: '#191f34',
-    surfaceStrong: '#1f2740',
-    chipBg: 'rgba(255,255,255,0.055)',
-    border: '#2a3350',
-    borderStrong: '#3a4470',
-    menuBg: '#191f34',
-    menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
-    accentText: '#c6d0ff',
-    accentSoftBg: '#20264a',
-    accentChipBg: '#292e58',
-    accentActiveBg: '#343a68',
-    accentBorder: '#3a4470',
-    heroGlow: 'rgba(159,176,255,0.16)',
-    ctaGlow: 'rgba(180,166,255,0.14)',
-    calloutBg: 'linear-gradient(145deg, #1b2340, #2b2a52)',
-    calloutBorder: '#3a4470',
-    previewBg: '#171d30',
-    previewItemBg: '#1f2740',
-    gold: '#b4a6ff',
-    primaryBg: '#6b76d6',
-    prayerPreviewBg: 'linear-gradient(145deg,#1b2340,#34407a)',
-    prayerPreviewButtonBg: '#c6d0ff',
-    prayerPreviewButtonText: '#101736',
-    peaceBg: '#16302a',
-    peaceText: '#6fcdb8',
-    benefitColors: ['#b4a6ff', '#8f9cff', '#6fcdb8'],
-    ctaShadow: '0 12px 32px rgba(0,0,0,0.3)',
-    ctaShadowBig: '0 18px 44px rgba(0,0,0,0.38)',
   },
 };
 
@@ -201,11 +163,10 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
   const [copyState, setCopyState] = useState(null);
   const [langOpen, setLangOpen] = useState(false);
-  // Warm parchment is the native devotional surface. Preserve any recognized
-  // saved preference so a Night user never flashes back to Light before sign-in.
+  // Public and signed-in surfaces share one Light/Dark choice. A legacy Night
+  // value is folded into Dark so returning visitors never see a broken state.
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('pfm_theme');
-    return Object.hasOwn(THEMES, saved) ? saved : 'light';
+    return normalizeTheme(localStorage.getItem('pfm_theme'));
   });
   // The nine-card feature grid is folded away by default so the hero + three core
   // benefits carry the first impression; visitors opt in to the full list.
@@ -230,6 +191,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     document.documentElement.lang = lang;
     document.documentElement.dir = dirFor(lang);
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.add('constellation-landing-root');
+    localStorage.setItem('pfm_theme', theme);
+    return () => document.documentElement.classList.remove('constellation-landing-root');
   }, [lang, theme]);
 
   const handleLang = (code) => {
@@ -243,8 +207,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   };
 
   const toggleTheme = () => {
-    // The compact pre-auth control stays a day/night toggle. Night, like Dark,
-    // returns to Light; the full three-way choice remains available in Settings.
+    // The compact public control and Settings now expose the same two choices.
     const next = theme === 'light' ? 'dark' : 'light';
     setTheme(next);
     // Same key + attribute the app reads, so the choice follows the visitor
@@ -287,10 +250,10 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   } = copy;
 
   return (
-    <div className="min-h-screen" style={{ background: T.bg, color: T.text }}>
+    <div className={`constellation-landing constellation-landing--${theme} min-h-screen`} style={{ background: T.bg, color: T.text }}>
 
       {/* Nav */}
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
+      <nav className="constellation-landing__nav mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
         <div className="flex items-center gap-2.5 shrink-0">
           <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
           <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Pray4Me</span>
@@ -359,9 +322,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </nav>
 
       {/* Hero: lived prayer experience first, product preview second. */}
-      <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
-        <div className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(ellipse 55% 60% at 12% 10%, ${T.heroGlow} 0%, transparent 72%)` }} />
-        <div className="relative min-w-0">
+      <section className="constellation-landing__hero relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
+        <div className="constellation-landing__hero-copy relative min-w-0">
           <div className="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em]" style={{ color: T.gold }}>
             <Feather size={14} strokeWidth={1.7} /> {c.badge}
           </div>
@@ -395,9 +357,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
         {/* A truthful, decorative preview of the actual journey: Today →
             focused prayer → remembrance. No fabricated usage statistics. */}
-        <div className="relative mx-auto w-full max-w-lg" aria-label="Pray4Me product preview">
-          <div className="absolute -inset-6 rounded-[2.5rem] opacity-60 blur-3xl" style={{ background: T.heroGlow }} />
-          <div className="relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
+        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Pray4Me product preview">
+          <div className="constellation-landing__preview-frame relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
             <div className="flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2.5">
                 <img src="/logo.svg" alt="" className="h-7 w-7 rounded-lg" />
@@ -405,11 +366,14 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
             </div>
-            <div className="rounded-[1.35rem] p-5 sm:p-6" style={{ background: T.prayerPreviewBg, color: '#fff' }}>
-              <p className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.54)' }}>{benefits[1].title}</p>
-              <p className="editorial mt-5 text-2xl leading-snug">{samplePrayerTitle}</p>
+            <div className="constellation-landing__preview-focus relative overflow-hidden rounded-[1.35rem] p-5 sm:p-6" style={{ background: T.prayerPreviewBg, color: '#fff' }}>
+              <span className="constellation-landing__preview-art" aria-hidden="true">
+                <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" />
+              </span>
+              <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.62)' }}>{benefits[1].title}</p>
+              <p className="editorial relative mt-5 max-w-[18rem] text-2xl leading-snug">{samplePrayerTitle}</p>
               <button
-                className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold"
+                className="relative mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold"
                 style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}
                 tabIndex={-1}
               >
@@ -432,13 +396,13 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
       {/* Core benefits — the three things Pray4Me does, up front, before the
           longer feature list. Centered so it reads cleanly in RTL too. */}
-      <section className="mx-auto mb-28 max-w-6xl px-6">
-        <div className="grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
+      <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6">
+        <div className="constellation-landing__benefits grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
           {benefits.map(({ title, desc }, i) => {
             const { icon: Icon, color: defaultColor } = BENEFIT_META[i];
             const color = T.benefitColors?.[i] || defaultColor;
             return (
-              <div key={title} className="px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
+              <div key={title} className="constellation-landing__benefit px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
                 <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: color + '18', border: `1px solid ${color}35` }}>
                   <Icon size={20} style={{ color }} />
                 </div>
@@ -452,8 +416,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
       {/* Features — the full grid is folded behind "Explore all features" so the
           landing leads with the three core benefits above, not a wall of cards. */}
-      <section className="px-6 max-w-5xl mx-auto mb-24">
-        <div className="text-center mb-8">
+      <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
+        <div className="constellation-landing__section-heading text-center mb-8">
           <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
           <p className="text-sm" style={{ color: T.textFaint }}>{c.featuresSub}</p>
         </div>
@@ -474,7 +438,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               {c.features.map(({ icon, color, title, desc }) => {
                 const Icon = FEATURE_ICONS[icon] || Feather;
                 return (
-                  <div key={title} className="rounded-2xl p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
+                  <div key={title} className="constellation-landing__feature p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: color + '22' }}>
                       <Icon size={18} style={{ color }} />
                     </div>
@@ -499,8 +463,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="px-6 max-w-3xl mx-auto mb-24">
-        <div className="text-center mb-12">
+      <section id="how-it-works" className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24">
+        <div className="constellation-landing__section-heading text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
           <p className="text-sm" style={{ color: T.textFaint }}>{c.stepsSub}</p>
         </div>
@@ -508,7 +472,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           {c.steps.map(({ title, desc }, i) => {
             const StepIcon = [Feather, HandHeart, CheckCircle][i];
             return (
-            <div key={title} className="flex items-start gap-5 py-6" style={{ borderBlockEnd: i < c.steps.length - 1 ? `1px solid ${T.border}` : undefined }}>
+            <div key={title} className="constellation-landing__step flex items-start gap-5 py-6" style={{ borderBlockEnd: i < c.steps.length - 1 ? `1px solid ${T.border}` : undefined }}>
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, border: `1px solid ${T.accentBorder}`, color: T.accentText }}>
                 <StepIcon size={18} />
               </div>
@@ -527,8 +491,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </section>
 
       {/* Scripture finder callout */}
-      <section className="px-6 max-w-5xl mx-auto mb-24">
-        <div className="rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: '#fff', boxShadow: T.ctaShadow }}>
+      <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
+        <div className="constellation-landing__callout relative overflow-hidden p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: '#fff', boxShadow: T.ctaShadow }}>
+          <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-landing__callout-art" aria-hidden="true" />
           <div className="flex-1">
             <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4" style={{ background: T.accentChipBg, color: T.accentText }}>
               <BookOpen size={11} /> {c.calloutBadge}
@@ -557,8 +522,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </section>
 
       {/* FAQ */}
-      <section className="px-6 max-w-2xl mx-auto mb-24">
-        <div className="text-center mb-10">
+      <section className="constellation-landing__section px-6 max-w-2xl mx-auto mb-24">
+        <div className="constellation-landing__section-heading text-center mb-10">
           <h2 className="text-3xl font-bold mb-3">{c.faqTitle}</h2>
         </div>
         <div className="space-y-2">
@@ -569,8 +534,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </section>
 
       {/* Final CTA */}
-      <section className="relative px-6 py-20 text-center overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 70% 80% at 50% 50%, ${T.ctaGlow} 0%, transparent 70%)` }} />
+      <section className="constellation-landing__final relative px-6 py-20 text-center overflow-hidden">
         <div className="relative max-w-xl mx-auto">
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
@@ -583,7 +547,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: T.border }}>
+      <footer className="constellation-landing__footer px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: T.border }}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />

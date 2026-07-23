@@ -95,6 +95,14 @@ describe('SettingsTab — grouped sections', () => {
     expect(document.getElementById('privacy-panel').hidden).toBe(false);
   });
 
+  it('offers only Light and Dark in Appearance', () => {
+    window.location.hash = '#appearance';
+    render(<SettingsTab />);
+    expect(screen.getByRole('button', { name: t(lang, 'themeLight') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'themeDark') })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'themeNight') })).toBeNull();
+  });
+
   it('personal prayers stay private by default: the preview choice defaults to generic', () => {
     window.location.hash = '#privacy'; // expand the section
     render(<SettingsTab />);

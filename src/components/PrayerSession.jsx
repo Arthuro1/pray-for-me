@@ -175,7 +175,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
 
   const overlay = (children) => (
     <div
-      className="fixed inset-0 z-[70] flex flex-col"
+      className="prayer-session constellation-session fixed inset-0 z-[70] flex flex-col"
       style={{ background: 'var(--background)' }}
     >
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
@@ -207,7 +207,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // Footer paired with a Back control, shared by the movement and supplication
   // views. Back hides on the very first step — there is no picker to return to.
   const footer = (
-    <div className="session-safe-footer shrink-0 px-5 pt-3 flex items-center gap-3 w-full">
+    <div className="constellation-session__footer session-safe-footer shrink-0 px-5 pt-3 flex items-center gap-3 w-full">
       <div className="mx-auto flex w-full max-w-2xl items-center gap-3">
       {currentStep > 1 && (
         <QuietButton
@@ -224,7 +224,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
 
   if (done) {
     return overlay(
-      <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+      <div className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center">
         <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'var(--sage-soft)', color: 'var(--success)', border: '1px solid var(--success-border)' }}>
           <Check size={22} strokeWidth={1.7} aria-hidden="true" />
         </div>
@@ -243,7 +243,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // control is a small, quiet affordance — the session already started, and the
   // deeper paths (guided / ACTS) live one tap beneath it.
   const header = (
-    <div className="shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3" style={{ background: 'var(--plum-deep)' }}>
+    <div className="constellation-session__header shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3" style={{ background: 'var(--plum-deep)' }}>
       <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
@@ -298,7 +298,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     return overlay(
       <>
         {header}
-        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center overflow-y-auto px-6 py-10 sm:px-10">
+        <div className="constellation-session__movement mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center overflow-y-auto px-6 py-10 sm:px-10">
           <div className="mb-5 text-3xl" aria-hidden="true">{meta.emoji}</div>
           <SectionLabel className="mb-3">{t(lang, 'prayerFormat')}</SectionLabel>
           <h2 className="editorial-heading mb-4 text-4xl leading-tight sm:text-5xl" style={{ color: 'var(--text-1)' }}>{t(lang, meta.titleKey)}</h2>
@@ -341,7 +341,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   return overlay(
     <>
       {header}
-      <div className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
+      <div className="constellation-session__request mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
         {showSupplicationLabel && (
           <SectionLabel className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
         )}
@@ -362,7 +362,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           </div>
         )}
 
-        <h2 className="editorial-heading mb-5 text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</h2>
+        <h2 className="constellation-session__title editorial-heading mb-5 text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</h2>
 
         {prayer.description && (
           <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--text-2)' }} />

@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "Error al subir, inténtalo de nuevo",
   "micUnavailable": "Micrófono no disponible",
   "mediaLoadError": "No se pudo cargar este archivo",
+  "restUnderSky": "Descansa bajo el cielo",
 };

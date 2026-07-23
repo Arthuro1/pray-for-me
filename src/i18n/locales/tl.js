@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "Nabigo ang pag-upload, subukang muli",
   "micUnavailable": "Hindi available ang mikropono",
   "mediaLoadError": "Hindi ma-load ang media na ito",
+  "restUnderSky": "Magpahinga sa ilalim ng langit",
 };

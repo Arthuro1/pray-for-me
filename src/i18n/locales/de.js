@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "Hochladen fehlgeschlagen, bitte erneut versuchen",
   "micUnavailable": "Mikrofon nicht verfügbar",
   "mediaLoadError": "Medium konnte nicht geladen werden",
+  "restUnderSky": "Ruhe unter dem Himmel",
 };

@@ -23,7 +23,7 @@ import { peopleFromPrayers, peopleViewAvailable, personSession } from '../lib/pe
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { todayKey } from '../lib/prayedLog';
 import PrayerSession from '../components/PrayerSession';
-import { PageHeader, SegmentedControl } from '../components/shared/Primitives';
+import { SegmentedControl } from '../components/shared/Primitives';
 import {
   EMPTY_JOURNAL_FILTERS,
   filterJournalPrayers,
@@ -70,6 +70,12 @@ export default function PrayersTab({ onAdd }) {
 
   const activeCount = prayers.filter((p) => p.status === 'active').length;
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
+  const latestAnsweredPrayer = useMemo(
+    () => prayers
+      .filter((p) => p.status === 'answered')
+      .sort((a, b) => new Date(b.answered_at || b.updated_at || 0) - new Date(a.answered_at || a.updated_at || 0))[0] || null,
+    [prayers]
+  );
   const recap = weeklyRecap(prayers, new Date());
   const peopleAvailable = peopleViewAvailable(prayers);
   const people = peopleOpen ? peopleFromPrayers(prayers, followUps) : [];
@@ -119,7 +125,7 @@ export default function PrayersTab({ onAdd }) {
   // prominent Add CTA and the floating button hides. A FILTERED zero keeps the
   // FAB and offers "Clear filters" instead — never a nudge to add more.
   const trulyEmpty = activeCount === 0;
-  useSuppressFab(segment === 'active' && !peopleOpen && trulyEmpty);
+  useSuppressFab(true);
 
   const clearFilters = () => {
     setSearch('');
@@ -129,7 +135,11 @@ export default function PrayersTab({ onAdd }) {
   };
 
   const renderPrayer = (prayer, match = searchMatches[prayer.id]) => (
-    <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+    <SwipeableRow
+      key={prayer.id}
+      actions={swipeActions(prayer)}
+      className="constellation-journal__swipe-row"
+    >
       <PrayerListItem
         prayer={prayer}
         categories={categories}
@@ -138,6 +148,7 @@ export default function PrayersTab({ onAdd }) {
         shares={prayerShares[prayer.id]}
         currentUserName={getAuthorName(user)}
         searchMatch={normalizedSearch ? match : null}
+        variant="constellation"
         onClick={() => navigate(`/prayers/${prayer.id}`)}
       />
     </SwipeableRow>
@@ -149,45 +160,115 @@ export default function PrayersTab({ onAdd }) {
     : null;
 
   return (
-    <div className="phase-page">
-      <div className="phase-page__shell journal-page-header">
-        <PageHeader eyebrow={t(lang, 'prayers')} title={t(lang, 'journal')} />
+    <div className="phase-page constellation-journal">
+      <div className="phase-page__shell journal-page-header constellation-journal__header">
+        <div className="constellation-journal__title-row">
+          <h1 className="constellation-journal__title">{t(lang, 'journal')}</h1>
+          <span className="constellation-journal__art" aria-hidden="true">
+            <img
+              src="/assets/constellation/journal-light-transparent.png"
+              alt=""
+              className="constellation-journal__art-image constellation-journal__art-image--light"
+            />
+            <img
+              src="/assets/constellation/journal-dark-transparent.png"
+              alt=""
+              className="constellation-journal__art-image constellation-journal__art-image--dark"
+            />
+          </span>
+          <span className="constellation-journal__actions">
+            <button
+              type="button"
+              onClick={() => {
+                setSearchOpen((value) => !value);
+                if (peopleOpen) setPeopleOpen(false);
+              }}
+              aria-expanded={searchOpen || !!search}
+              aria-label={t(lang, 'search')}
+              className="phase-icon-button constellation-journal__icon-button"
+            >
+              <Search size={24} strokeWidth={1.8} />
+            </button>
+            {onAdd && (
+              <button
+                type="button"
+                onClick={onAdd}
+                aria-label={t(lang, 'emptyAddManual')}
+                className="phase-icon-button constellation-journal__icon-button"
+              >
+                <Plus size={27} strokeWidth={1.7} />
+              </button>
+            )}
+          </span>
+        </div>
         <div>
 
         {/* ONE segmented control carries the counts (no separate stat cards),
             with search, the category filter and — when useful — the People
             lens folded behind small icons. */}
-        <div className="journal-toolbar">
+        <div className="journal-toolbar constellation-journal__toolbar">
           <SegmentedControl
             label={t(lang, 'journal')}
             value={peopleOpen ? 'people' : segment}
-            options={SEGMENTS.map((s) => ({ value: s.id, label: `${s.label} ${s.count}` }))}
+            options={SEGMENTS.map((s) => ({
+              value: s.id,
+              label: (
+                <span>
+                  <span aria-hidden="true">{s.label}</span>
+                  <span className="sr-only">{`${s.label} ${s.count}`}</span>
+                </span>
+              ),
+            }))}
             onChange={(value) => { setSegment(value); setPeopleOpen(false); setSelectedPerson(null); }}
           />
-          {peopleAvailable && (
-            <button
-              onClick={() => { setPeopleOpen((v) => !v); setSelectedPerson(null); }}
-              aria-pressed={peopleOpen}
-              aria-label={t(lang, 'peopleView')}
-              title={t(lang, 'peopleView')}
-              className="phase-icon-button shrink-0"
-              style={peopleOpen ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
-            >
-              <Users size={16} />
-            </button>
-          )}
-          {!peopleOpen && (
-            <>
-              <button
-                onClick={() => setSearchOpen((v) => !v)}
-                aria-expanded={searchOpen || !!search}
-                aria-label={t(lang, 'search')}
-                className="phase-icon-button shrink-0"
-              >
-                <Search size={16} />
-              </button>
-              {hasFilterControls && (
+        </div>
+
+        {/* The search field only takes space once asked for; text is preserved
+            while it (or the segment) is toggled. */}
+        {(searchOpen || !!search || peopleOpen) && (
+          <div className="constellation-journal__utility-panel">
+            {!peopleOpen && (
+              <div className="journal-search">
+                <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)', insetInlineStart: '0.9rem' }} />
+                <input
+                  type="text"
+                  autoFocus
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={t(lang, 'search')}
+                  aria-label={t(lang, 'search')}
+                  className="w-full text-sm focus:outline-none"
+                />
+                {!!search && (
+                  <button
+                    type="button"
+                    onClick={() => { setSearch(''); setSearchOpen(false); }}
+                    aria-label={t(lang, 'close')}
+                    className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
+                    style={{ color: 'var(--text-3)', insetInlineEnd: 0 }}
+                  >
+                    <X size={15} />
+                  </button>
+                )}
+              </div>
+            )}
+            <div className="constellation-journal__utility-actions">
+              {peopleAvailable && (
                 <button
+                  type="button"
+                  onClick={() => { setPeopleOpen((value) => !value); setSelectedPerson(null); }}
+                  aria-pressed={peopleOpen}
+                  aria-label={t(lang, 'peopleView')}
+                  title={t(lang, 'peopleView')}
+                  className="phase-icon-button shrink-0"
+                  style={peopleOpen ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
+                >
+                  <Users size={16} />
+                </button>
+              )}
+              {!peopleOpen && hasFilterControls && (
+                <button
+                  type="button"
                   onClick={() => setShowFilters(!showFilters)}
                   aria-expanded={showFilters}
                   aria-haspopup="dialog"
@@ -198,34 +279,17 @@ export default function PrayersTab({ onAdd }) {
                   <SlidersHorizontal size={16} />
                 </button>
               )}
-            </>
-          )}
-        </div>
-
-        {/* The search field only takes space once asked for; text is preserved
-            while it (or the segment) is toggled. */}
-        {!peopleOpen && (searchOpen || !!search) && (
-          <div className="journal-search">
-            <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)', insetInlineStart: '0.9rem' }} />
-            <input
-              type="text"
-              autoFocus
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t(lang, 'search')}
-              aria-label={t(lang, 'search')}
-              className="w-full text-sm focus:outline-none"
-            />
-            {!!search && (
-              <button
-                onClick={() => { setSearch(''); setSearchOpen(false); }}
-                aria-label={t(lang, 'close')}
-                className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
-                style={{ color: 'var(--text-3)', insetInlineEnd: 0 }}
-              >
-                <X size={15} />
-              </button>
-            )}
+              {peopleOpen && (
+                <button
+                  type="button"
+                  onClick={() => setPeopleOpen(false)}
+                  className="constellation-journal__people-label"
+                >
+                  <ArrowLeft size={15} />
+                  {t(lang, 'peopleView')}
+                </button>
+              )}
+            </div>
           </div>
         )}
         {!peopleOpen && showFilters && hasFilterControls && (
@@ -247,7 +311,7 @@ export default function PrayersTab({ onAdd }) {
         </div>
       </div>
 
-      <div className="phase-content pt-5 max-w-2xl">
+      <div className="phase-content constellation-journal__content">
         {peopleOpen ? (
           personDetail ? (
             // ── One person's related prayers — not a separate profile page ──
@@ -366,7 +430,9 @@ export default function PrayersTab({ onAdd }) {
                 {resultsLabel(filteredEntries.length)}
               </p>
             )}
-            {filtersActive && answeredCount > 0 && filteredEntries.length === 0 ? (
+            {answeredCount === 0 && !filtersActive ? (
+              <AnsweredGallery prayers={[]} showCount={false} showReflection={false} />
+            ) : filtersActive && answeredCount > 0 && filteredEntries.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-sm mb-4" style={{ color: 'var(--text-2)' }}>{t(lang, 'noMatch')}</p>
                 <button
@@ -378,12 +444,9 @@ export default function PrayersTab({ onAdd }) {
                 </button>
               </div>
             ) : (
-              <AnsweredGallery
-                prayers={filteredEntries.map(({ prayer }) => prayer)}
-                searchMatches={searchMatches}
-                showCount={!filtersActive}
-                showReflection={!filtersActive}
-              />
+              <div className="constellation-journal__list">
+                {filteredEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
+              </div>
             )}
           </>
         ) : (
@@ -423,9 +486,20 @@ export default function PrayersTab({ onAdd }) {
                 </div>
               )
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className="constellation-journal__list">
                 {sortedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
+                {!filtersActive && latestAnsweredPrayer && renderPrayer(latestAnsweredPrayer)}
               </div>
+            )}
+            {onAdd && sortedEntries.length > 0 && (
+              <button
+                type="button"
+                onClick={onAdd}
+                className="constellation-journal__add"
+              >
+                <Plus size={20} aria-hidden="true" />
+                {t(lang, 'emptyAddManual')}
+              </button>
             )}
           </>
         )}

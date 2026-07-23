@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "فشل الرفع، حاول مرة أخرى",
   "micUnavailable": "الميكروفون غير متاح",
   "mediaLoadError": "تعذّر تحميل هذه الوسائط",
+  "restUnderSky": "استرح تحت السماء",
 };

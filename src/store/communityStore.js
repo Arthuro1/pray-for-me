@@ -100,6 +100,20 @@ const useCommunityStore = create((set, get) => ({
     return data || [];
   },
 
+  // A compact cross-group wall for the Community home. RLS keeps this limited
+  // to groups the member belongs to; each row is decrypted with its own group
+  // key before it reaches the UI.
+  fetchCommunityFeed: async () => {
+    const { data } = await supabase
+      .from('community_prayers')
+      .select('*, community_updates(count), prayer_reactions(count)')
+      .order('created_at', { ascending: false })
+      .limit(8);
+    return Promise.all((data || []).map((row) => (
+      decryptCommunityRow(groupKeyResolver(row.group_id), row)
+    )));
+  },
+
   // Reconciles which groups a personal prayer is shared to: inserts community
   // copies for newly selected groups, removes copies for deselected ones.
   setPrayerShares: async ({ prayer, groupIds, userId, authorName, isAnonymous = false }) => {

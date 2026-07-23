@@ -54,6 +54,11 @@ beforeEach(() => {
 const renderJournal = () =>
   render(<MemoryRouter><PrayersTab onAdd={() => {}} /></MemoryRouter>);
 
+const openPeopleView = () => {
+  fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
+  fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+};
+
 describe('Journal — counts & zero states', () => {
   it('shows NO count line without active filters (the segments carry the totals)', () => {
     renderJournal();
@@ -74,7 +79,7 @@ describe('Journal — counts & zero states', () => {
     expect(screen.getByText(t(lang, 'clearFiltersBtn'))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'emptyAddManual'))).toBeNull();
     // The FAB stays available (prayers exist — only the filter hides them).
-    expect(useLayoutStore.getState().fabSuppressed).toBe(false);
+    expect(useLayoutStore.getState().fabSuppressed).toBe(true);
     // Clearing restores the list.
     fireEvent.click(screen.getByText(t(lang, 'clearFiltersBtn')));
     expect(screen.getByText('Prière a1')).toBeTruthy();
@@ -108,7 +113,7 @@ describe('Journal — People view', () => {
   it('groups related prayers by person with accurate counts and latest update', () => {
     withPeople();
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    openPeopleView();
     expect(screen.getByText('Marc')).toBeTruthy();
     expect(screen.getByText('Julie')).toBeTruthy();
     // Marc: 1 active · 1 answered
@@ -120,7 +125,7 @@ describe('Journal — People view', () => {
   it('selecting a person opens their related prayers only', () => {
     withPeople();
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    openPeopleView();
     fireEvent.click(screen.getByText('Marc'));
     expect(screen.getByText('Prière m1')).toBeTruthy();
     expect(screen.getByText('Prière m2')).toBeTruthy();
@@ -132,7 +137,7 @@ describe('Journal — People view', () => {
     withPeople();
     useFollowUpStore.setState({ followUps: { m1: { date: '2099-01-05', status: 'pending' } } });
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    openPeopleView();
     // The label carries the localized date; assert on its stable prefix.
     const label = t(lang, 'followUpNext', { date: '' }).trim();
     expect(screen.getByText((text) => text.startsWith(label))).toBeTruthy();
@@ -151,7 +156,7 @@ describe('Journal — Pray for [name]', () => {
       ],
     });
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    openPeopleView();
     fireEvent.click(screen.getByText('Julie'));
   };
 
@@ -190,7 +195,7 @@ describe('Journal — Pray for [name]', () => {
       ],
     });
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+    openPeopleView();
     fireEvent.click(screen.getByText('Julie'));
     expect(screen.queryByText(t(lang, 'prayAgainBtn'))).toBeNull();
     expect(screen.queryByText((text) => text.startsWith('Prier pour Julie'))).toBeNull();

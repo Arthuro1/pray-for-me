@@ -154,7 +154,7 @@ export default function HomeTab({ onAdd, onEdit }) {
   };
 
   return (
-    <div>
+    <div className="phase-page constellation-home">
       {session && session.length > 0 && (
         <PrayerSession
           prayers={session}
@@ -170,7 +170,7 @@ export default function HomeTab({ onAdd, onEdit }) {
         />
       )}
 
-      <div className="mx-auto max-w-3xl px-5 md:px-8">
+      <div className="constellation-home__shell mx-auto max-w-3xl px-5 md:px-8">
         <PageHeader
           eyebrow={`${DAY_NAMES[lang]?.[dayIndex]} · ${format(today, 'd MMMM yyyy', { locale: dateLocale })}`}
           title={`${greeting}${displayName ? `, ${displayName}` : ''}`}
@@ -179,7 +179,7 @@ export default function HomeTab({ onAdd, onEdit }) {
         {/* One clear doorway into prayer. The first request gives the card a
             human focus; schedules and community metadata wait below. */}
         {remainingPrayers.length > 0 && (!loading || prayers.length > 0) && (
-          <PrayerSurface tone="focus" className="mb-6 p-6 sm:p-8">
+          <PrayerSurface tone="focus" className="constellation-home__focus mb-6 p-6 sm:p-8">
             <div className="relative z-10">
               <p className="mb-5 text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.6)' }}>
                 {t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
@@ -268,7 +268,7 @@ export default function HomeTab({ onAdd, onEdit }) {
 
         {/* What remains to pray today (completed prayers fold away below) */}
         {remainingEntries.length > 0 && (
-          <section className="mb-7">
+          <section className="constellation-home__today mb-7">
             <SectionLabel className="mb-2">{t(lang, 'today')}</SectionLabel>
             {/* Grouped by prayer-time slot once any prayer uses one; flat list otherwise */}
             {(useSlots ? SLOT_ORDER : ['anytime']).map((slot) => {

@@ -43,6 +43,7 @@ import { initQueue, onMutationDropped } from './lib/mutationQueue';
 import { resolvePwaShortcut } from './lib/pwaInstall';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
+import { normalizeTheme } from './utils/theme';
 import { importGuestPrayerOnce } from './lib/guestPrayerImport';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
@@ -200,9 +201,18 @@ export default function AuthenticatedApp({
     document.documentElement.dir = dirFor(lang);
   }, [lang]);
 
+  // The signed-in product uses the approved Constellation visual system. Keep
+  // the class on <html> so sheets, dialogs and prayer sessions rendered beside
+  // Layout inherit the same tokens; remove it for the public landing/auth flow.
+  useEffect(() => {
+    document.documentElement.classList.toggle('constellation-app', !!user);
+    return () => document.documentElement.classList.remove('constellation-app');
+  }, [user]);
+
   useEffect(() => {
     init();
-    const saved = localStorage.getItem('pfm_theme') || 'light';
+    const saved = normalizeTheme(localStorage.getItem('pfm_theme'));
+    localStorage.setItem('pfm_theme', saved);
     document.documentElement.setAttribute('data-theme', saved);
     // Replay any writes queued offline. If a mutation fails permanently, tell
     // the user and reconcile local state back to server truth (rolls back the

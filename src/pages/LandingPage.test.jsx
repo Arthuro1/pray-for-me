@@ -83,14 +83,14 @@ describe('LandingPage — simplified product story', () => {
   });
 });
 
-describe('LandingPage saved Night theme', () => {
-  it('preserves Night before sign-in and offers a clear return to Light', async () => {
+describe('LandingPage legacy Night theme', () => {
+  it('migrates Night to Dark and keeps the public toggle binary', async () => {
     localStorage.setItem('pfm_theme', 'night');
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
 
     await screen.findByText('Begin with a prayer');
-    expect(document.documentElement.getAttribute('data-theme')).toBe('night');
-    expect(localStorage.getItem('pfm_theme')).toBe('night');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(localStorage.getItem('pfm_theme')).toBe('dark');
 
     fireEvent.click(screen.getByTitle('Light mode'));
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');

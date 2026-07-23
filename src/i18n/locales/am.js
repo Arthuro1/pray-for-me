@@ -919,4 +919,5 @@ export default {
   "uploadFailed": "መስቀል አልተሳካም፣ እንደገና ይሞክሩ",
   "micUnavailable": "ማይክሮፎን አይገኝም",
   "mediaLoadError": "ይህን ሚዲያ መጫን አልተቻለም",
+  "restUnderSky": "ከሰማይ በታች ዕረፍት",
 };

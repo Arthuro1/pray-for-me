@@ -42,12 +42,14 @@ const expectNoSupporterPrompt = () => {
 
 describe('Onboarding', () => {
   it('is a single prayer-capture screen with a private-by-default reassurance', () => {
-    render(<Onboarding lang={lang} onFinish={vi.fn()} />);
+    const { container } = render(<Onboarding lang={lang} onFinish={vi.fn()} />);
     expect(screen.getByText(t(lang, 'onboardCaptureTitle'))).toBeTruthy();
     expect(screen.getByPlaceholderText(t(lang, 'onboardCapturePlaceholder'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'onboardPrivateNote'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'onboardSaveAndPray'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'onboardLater'))).toBeTruthy();
+    expect(container.querySelector('.constellation-onboarding__sky-image--light')).toBeTruthy();
+    expect(container.querySelector('.constellation-onboarding__sky-image--dark')).toBeTruthy();
     expectNoSupporterPrompt();
   });
 

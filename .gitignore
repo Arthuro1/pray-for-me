@@ -18,6 +18,8 @@ dist-ssr
 
 supabase/.temp/
 public/screenshots/
+design-qa
+design-qa.md
 
 # Android TWA (Play Store wrapper) — never commit the signing keystore or build output
 android-twa/*.keystore

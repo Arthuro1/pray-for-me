@@ -349,7 +349,7 @@ export default function SettingsTab() {
     : null;
 
   return (
-    <div className="phase-page">
+    <div className="phase-page constellation-settings">
       {/* Header */}
       <div className="phase-page__shell">
         <PageHeader
@@ -683,11 +683,11 @@ export default function SettingsTab() {
           {/* Theme */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-3">
-              {settings.theme === 'night' ? <Sparkles size={16} style={{ color: 'var(--accent)' }} /> : settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
+              {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
               <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'appearance')}</h3>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }, { value: 'night', icon: Sparkles, labelKey: 'themeNight' }].map(({ value, icon: Icon, labelKey }) => (
+            <div className="grid grid-cols-2 gap-2">
+              {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }].map(({ value, icon: Icon, labelKey }) => (
                 <button
                   key={value}
                   onClick={() => updateSettings({ theme: value })}
