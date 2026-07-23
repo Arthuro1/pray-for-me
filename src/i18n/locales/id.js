@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Permudah meninjau jurnal yang terus bertumbuh",
   "activationOrganizeBody": "Tambahkan seseorang atau kategori ke satu doa. Pengaturan tambahan hanya muncul saat berguna.",
   "activationOrganizeCta": "Atur sebuah doa",
+  "pwaInstallTitle": "Simpan Pray4Me dekat Anda",
+  "pwaInstallBody": "Buka doa hari ini dengan satu ketukan dan tetap gunakan aplikasi saat koneksi tidak stabil.",
+  "pwaInstallCta": "Instal Pray4Me",
+  "pwaInstallLater": "Nanti saja",
+  "pwaIosTitle": "Tambahkan Pray4Me ke Layar Utama",
+  "pwaIosBody": "Di browser, ketuk Bagikan, lalu pilih Tambahkan ke Layar Utama.",
+  "pwaIosAddAction": "Tambahkan ke Layar Utama",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Masuk",

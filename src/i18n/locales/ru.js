@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Сделайте растущий дневник удобнее для возвращения",
   "activationOrganizeBody": "Добавьте к одной молитве человека или категорию. Дополнительная организация появляется только тогда, когда она полезна.",
   "activationOrganizeCta": "Организовать молитву",
+  "pwaInstallTitle": "Держите Pray4Me под рукой",
+  "pwaInstallBody": "Открывайте сегодняшние молитвы одним касанием и пользуйтесь приложением при нестабильной связи.",
+  "pwaInstallCta": "Установить Pray4Me",
+  "pwaInstallLater": "Не сейчас",
+  "pwaIosTitle": "Добавить Pray4Me на экран «Домой»",
+  "pwaIosBody": "В браузере нажмите «Поделиться», затем выберите «На экран Домой».",
+  "pwaIosAddAction": "На экран «Домой»",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Войти",

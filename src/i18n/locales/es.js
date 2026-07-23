@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Haz que un diario en crecimiento sea más fácil de consultar",
   "activationOrganizeBody": "Añade una persona o categoría a una oración. La organización adicional aparece solo cuando resulta útil.",
   "activationOrganizeCta": "Organizar una oración",
+  "pwaInstallTitle": "Ten Pray4Me a mano",
+  "pwaInstallBody": "Abre las oraciones de hoy con un toque y mantén la app disponible aunque la conexión sea inestable.",
+  "pwaInstallCta": "Instalar Pray4Me",
+  "pwaInstallLater": "Ahora no",
+  "pwaIosTitle": "Añadir Pray4Me a la pantalla de inicio",
+  "pwaIosBody": "En el navegador, toca Compartir y luego Añadir a la pantalla de inicio.",
+  "pwaIosAddAction": "Añadir a inicio",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Iniciar sesión",

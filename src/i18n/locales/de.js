@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Finde dich in einem wachsenden Gebetstagebuch leichter zurecht",
   "activationOrganizeBody": "Ordne einem Gebet eine Person oder Kategorie zu. Mehr Organisation erscheint nur, wenn sie nützlich wird.",
   "activationOrganizeCta": "Gebet organisieren",
+  "pwaInstallTitle": "Pray4Me griffbereit halten",
+  "pwaInstallBody": "Öffne die heutigen Gebete mit einem Tippen und nutze die App auch bei instabiler Verbindung.",
+  "pwaInstallCta": "Pray4Me installieren",
+  "pwaInstallLater": "Nicht jetzt",
+  "pwaIosTitle": "Pray4Me zum Home-Bildschirm hinzufügen",
+  "pwaIosBody": "Tippe im Browser auf Teilen und dann auf Zum Home-Bildschirm.",
+  "pwaIosAddAction": "Zum Home-Bildschirm",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Anmelden",

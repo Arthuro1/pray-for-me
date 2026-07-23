@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Bell, CalendarClock, FolderHeart, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Bell, CalendarClock, FolderHeart } from 'lucide-react';
 import { t } from '../i18n';
 import {
   ACTIVATION_STEPS,
@@ -8,6 +8,8 @@ import {
   nextActivationStep,
   readActivationProgress,
 } from '../lib/activationProgress';
+import { markContextualPromptShownForVisit } from '../lib/pwaInstall';
+import ContextualNudgeCard from './shared/ContextualNudgeCard';
 
 const COPY = {
   [ACTIVATION_STEPS.RHYTHM]: {
@@ -48,6 +50,10 @@ export default function ActivationNudge({
     progress,
   });
 
+  useEffect(() => {
+    if (step) markContextualPromptShownForVisit();
+  }, [step]);
+
   if (!step || hiddenForVisit) return null;
   const { icon: Icon, title, body, action } = COPY[step];
 
@@ -66,47 +72,16 @@ export default function ActivationNudge({
   };
 
   return (
-    <section
-      className="mb-6 rounded-2xl p-4 sm:flex sm:items-center sm:gap-4"
-      style={{ background: 'var(--gold-soft)', border: '1px solid color-mix(in srgb, var(--gold) 24%, var(--border))' }}
-      aria-labelledby={`activation-${step}-title`}
+    <ContextualNudgeCard
+      icon={Icon}
+      title={t(lang, title)}
+      body={t(lang, body)}
+      actionLabel={t(lang, action)}
+      onAction={act}
+      dismissLabel={t(lang, 'onboardLater')}
+      onDismiss={finish}
+      titleId={`activation-${step}-title`}
       data-activation-step={step}
-    >
-      <div
-        className="mb-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:mb-0"
-        style={{ background: 'var(--surface)', color: 'var(--gold)' }}
-        aria-hidden="true"
-      >
-        <Icon size={18} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <h2 id={`activation-${step}-title`} className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
-          {t(lang, title)}
-        </h2>
-        <p className="mt-1 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
-          {t(lang, body)}
-        </p>
-      </div>
-      <div className="mt-4 flex items-center gap-2 sm:mt-0 sm:shrink-0">
-        <button
-          type="button"
-          onClick={act}
-          className="min-h-11 flex-1 rounded-xl px-4 text-xs font-semibold sm:flex-none"
-          style={{ background: 'var(--surface)', border: '1px solid var(--border-strong)', color: 'var(--accent)' }}
-        >
-          {t(lang, action)}
-        </button>
-        <button
-          type="button"
-          onClick={finish}
-          aria-label={t(lang, 'onboardLater')}
-          title={t(lang, 'onboardLater')}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-          style={{ color: 'var(--text-3)' }}
-        >
-          <X size={16} />
-        </button>
-      </div>
-    </section>
+    />
   );
 }

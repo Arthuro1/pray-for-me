@@ -1,12 +1,12 @@
 {
   "name": "Pray4Me",
   "short_name": "Pray4Me",
-  "description": "Your personal prayer companion — journal, weekly plan, and Bible verses.",
+  "id": "/",
+  "description": "A private, Scripture-first prayer journal that works offline.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#6d28d9",
-  "theme_color": "#6d28d9",
-  "orientation": "portrait",
+  "background_color": "#30213f",
+  "theme_color": "#30213f",
   "scope": "/",
   "lang": "en",
   "icons": [
@@ -29,6 +29,49 @@
       "purpose": "maskable"
     }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/screenshots/1.jpg",
+      "sizes": "694x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Pray through today's requests"
+    },
+    {
+      "src": "/screenshots/4_2_2.jpg",
+      "sizes": "717x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Open a Scripture-grounded prayer plan"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pray today",
+      "short_name": "Pray today",
+      "description": "Open today's prayers",
+      "url": "/?source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Add prayer",
+      "short_name": "Add prayer",
+      "description": "Add a private prayer",
+      "url": "/?action=add-prayer",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
   "categories": ["lifestyle", "religion"]
 }

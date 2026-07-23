@@ -29,6 +29,8 @@ import { fetchScriptureText } from '../lib/verseText';
 import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
 import ActivationNudge from '../components/ActivationNudge';
+import PwaInstallNudge from '../components/PwaInstallNudge';
+import { nextActivationStep, readActivationProgress } from '../lib/activationProgress';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -94,6 +96,11 @@ export default function HomeTab({ onAdd, onEdit }) {
   const today = new Date();
   const dayIndex = today.getDay();
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
+  const activationStep = nextActivationStep({
+    prayers,
+    dailyReminderEnabled: !!settings.dailyReminderEnabled,
+    progress: readActivationProgress(),
+  });
 
   // The empty state below carries its own prominent Add CTA — hide the floating
   // Add button while it's what the visitor sees, so there's exactly one.
@@ -227,13 +234,16 @@ export default function HomeTab({ onAdd, onEdit }) {
         )}
 
         {!loading && prayers.length > 0 && (
-          <ActivationNudge
-            prayers={prayers}
-            settings={settings}
-            lang={lang}
-            onEditPrayer={onEdit}
-            onOpenReminders={() => navigate('/settings#notifications')}
-          />
+          <>
+            <ActivationNudge
+              prayers={prayers}
+              settings={settings}
+              lang={lang}
+              onEditPrayer={onEdit}
+              onOpenReminders={() => navigate('/settings#notifications')}
+            />
+            {!activationStep && <PwaInstallNudge lang={lang} />}
+          </>
         )}
 
         {loading && prayers.length === 0 && (

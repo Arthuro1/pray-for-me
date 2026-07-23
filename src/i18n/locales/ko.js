@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "늘어나는 기도 일기를 더 쉽게 돌아보세요",
   "activationOrganizeBody": "한 기도에 사람이나 카테고리를 추가하세요. 더 많은 정리 기능은 필요할 때만 나타납니다.",
   "activationOrganizeCta": "기도 정리",
+  "pwaInstallTitle": "Pray4Me를 가까이 두세요",
+  "pwaInstallBody": "오늘의 기도를 한 번의 탭으로 열고 연결이 불안정할 때도 앱을 사용하세요.",
+  "pwaInstallCta": "Pray4Me 설치",
+  "pwaInstallLater": "나중에",
+  "pwaIosTitle": "Pray4Me를 홈 화면에 추가",
+  "pwaIosBody": "브라우저에서 공유를 누른 다음 홈 화면에 추가를 선택하세요.",
+  "pwaIosAddAction": "홈 화면에 추가",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "로그인",

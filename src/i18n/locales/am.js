@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "እያደገ ያለውን የጸሎት ማስታወሻ ለመመልከት ቀላል ያድርጉ",
   "activationOrganizeBody": "ለአንድ ጸሎት ሰው ወይም ምድብ ያክሉ። ተጨማሪ አደረጃጀት ጠቃሚ ሲሆን ብቻ ይታያል።",
   "activationOrganizeCta": "ጸሎትን ያደራጁ",
+  "pwaInstallTitle": "Pray4Meን በቅርብ ያቆዩ",
+  "pwaInstallBody": "የዛሬን ጸሎቶች በአንድ ንክኪ ይክፈቱ፤ ግንኙነቱ ሲዳከምም መተግበሪያውን ይጠቀሙ።",
+  "pwaInstallCta": "Pray4Meን ጫን",
+  "pwaInstallLater": "አሁን አይደለም",
+  "pwaIosTitle": "Pray4Meን ወደ መነሻ ማያ ገጽ ያክሉ",
+  "pwaIosBody": "በአሳሹ ውስጥ ማጋራትን ይንኩ፣ ከዚያ ወደ መነሻ ማያ ገጽ አክልን ይምረጡ።",
+  "pwaIosAddAction": "ወደ መነሻ ማያ ገጽ አክል",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "ግባ",

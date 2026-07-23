@@ -5,7 +5,13 @@ import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill'
 import { registerSW } from 'virtual:pwa-register'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import { initPwaInstallCapture, recordPwaVisit } from './lib/pwaInstall.js'
 import './index.css'
+
+// Capture installability before lazy app routes mount, and count this browsing
+// session as one content-free visit. Neither action touches prayer content.
+initPwaInstallCapture()
+recordPwaVisit()
 
 // Register the PWA service worker and re-check for a new one hourly. The
 // precached index.html is served WITH the response headers captured at

@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "让不断增长的祷告日记更容易回顾",
   "activationOrganizeBody": "为一条祷告添加人物或分类。只有在真正有用时，更多整理功能才会出现。",
   "activationOrganizeCta": "整理一条祷告",
+  "pwaInstallTitle": "让 Pray4Me 随手可用",
+  "pwaInstallBody": "轻点即可打开今天的祷告，即使网络不稳定也能继续使用。",
+  "pwaInstallCta": "安装 Pray4Me",
+  "pwaInstallLater": "暂时不要",
+  "pwaIosTitle": "将 Pray4Me 添加到主屏幕",
+  "pwaIosBody": "在浏览器中点按“分享”，然后选择“添加到主屏幕”。",
+  "pwaIosAddAction": "添加到主屏幕",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "登录",

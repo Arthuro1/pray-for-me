@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "増えていく祈りの日記を振り返りやすくする",
   "activationOrganizeBody": "一つの祈りに人やカテゴリーを追加しましょう。必要になったときだけ整理機能が現れます。",
   "activationOrganizeCta": "祈りを整理",
+  "pwaInstallTitle": "Pray4Meをすぐそばに",
+  "pwaInstallBody": "今日の祈りをワンタップで開き、通信が不安定な時もアプリを使えます。",
+  "pwaInstallCta": "Pray4Meをインストール",
+  "pwaInstallLater": "今はしない",
+  "pwaIosTitle": "Pray4Meをホーム画面に追加",
+  "pwaIosBody": "ブラウザで共有をタップし、ホーム画面に追加を選んでください。",
+  "pwaIosAddAction": "ホーム画面に追加",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "ログイン",

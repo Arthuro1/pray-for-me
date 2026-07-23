@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Make a growing journal easier to revisit",
   "activationOrganizeBody": "Add a person or category to one prayer. More organization appears only when it becomes useful.",
   "activationOrganizeCta": "Organize a prayer",
+  "pwaInstallTitle": "Keep Pray4Me close",
+  "pwaInstallBody": "Open today's prayers in one tap and keep the app available when your connection is unsteady.",
+  "pwaInstallCta": "Install Pray4Me",
+  "pwaInstallLater": "Not now",
+  "pwaIosTitle": "Add Pray4Me to your Home Screen",
+  "pwaIosBody": "In your browser, tap Share, then choose Add to Home Screen.",
+  "pwaIosAddAction": "Add to Home Screen",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Log in",

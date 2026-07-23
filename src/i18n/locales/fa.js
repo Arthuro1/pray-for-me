@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "مرور دفتر دعای در حال رشد را آسان‌تر کنید",
   "activationOrganizeBody": "به یک دعا شخص یا دسته‌ای اضافه کنید. سازمان‌دهی بیشتر فقط زمانی ظاهر می‌شود که مفید باشد.",
   "activationOrganizeCta": "سازمان‌دهی یک دعا",
+  "pwaInstallTitle": "Pray4Me را در دسترس نگه دارید",
+  "pwaInstallBody": "دعای امروز را با یک لمس باز کنید و هنگام ناپایداری اینترنت هم از برنامه استفاده کنید.",
+  "pwaInstallCta": "نصب Pray4Me",
+  "pwaInstallLater": "فعلاً نه",
+  "pwaIosTitle": "افزودن Pray4Me به صفحهٔ اصلی",
+  "pwaIosBody": "در مرورگر روی اشتراک‌گذاری بزنید، سپس افزودن به صفحهٔ اصلی را انتخاب کنید.",
+  "pwaIosAddAction": "افزودن به صفحهٔ اصلی",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "ورود",

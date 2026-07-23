@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Rahisisha kurejea shajara inayokua",
   "activationOrganizeBody": "Ongeza mtu au kategoria kwenye ombi moja. Mpangilio zaidi huonekana pale tu unapokuwa na manufaa.",
   "activationOrganizeCta": "Panga ombi",
+  "pwaInstallTitle": "Weka Pray4Me karibu",
+  "pwaInstallBody": "Fungua maombi ya leo kwa mguso mmoja na utumie programu hata muunganisho unapokuwa dhaifu.",
+  "pwaInstallCta": "Sakinisha Pray4Me",
+  "pwaInstallLater": "Si sasa",
+  "pwaIosTitle": "Ongeza Pray4Me kwenye Skrini ya Mwanzo",
+  "pwaIosBody": "Kwenye kivinjari, gusa Shiriki, kisha uchague Ongeza kwenye Skrini ya Mwanzo.",
+  "pwaIosAddAction": "Ongeza kwenye Skrini ya Mwanzo",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Ingia",

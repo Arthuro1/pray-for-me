@@ -28,42 +28,9 @@ export default defineConfig(({ mode }) => {
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.svg', 'icons/*.png'],
-      manifest: {
-        name: 'Pray4Me',
-        short_name: 'Pray4Me',
-        description: 'Your personal prayer companion — journal, weekly plan, and Bible verses.',
-        theme_color: '#6d28d9',
-        background_color: '#6d28d9',
-        display: 'standalone',
-        orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
-        lang: 'en',
-        categories: ['lifestyle', 'religion'],
-        icons: [
-          {
-            src: '/icons/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any',
-          },
-          {
-            src: '/icons/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any',
-          },
-          // Kept separate from the "any" icons: a maskable icon has its artwork
-          // inset into the safe zone, so reusing it for both purposes would leave
-          // the unmasked icon looking small and over-padded.
-          {
-            src: '/icons/icon-maskable-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
+      // /public/manifest.json is also consumed by the Android TWA wrapper. Keep
+      // one manifest instead of injecting a second, drifting webmanifest link.
+      manifest: false,
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         // Keep the install-time precache to the shell. The 15 non-French locale

@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "Gawing mas madaling balikan ang lumalaking journal",
   "activationOrganizeBody": "Magdagdag ng tao o kategorya sa isang panalangin. Lalabas lamang ang dagdag na pag-aayos kapag kapaki-pakinabang.",
   "activationOrganizeCta": "Ayusin ang panalangin",
+  "pwaInstallTitle": "Panatilihing malapit ang Pray4Me",
+  "pwaInstallBody": "Buksan ang mga panalangin ngayon sa isang tap at gamitin ang app kahit mahina ang koneksyon.",
+  "pwaInstallCta": "I-install ang Pray4Me",
+  "pwaInstallLater": "Hindi muna",
+  "pwaIosTitle": "Idagdag ang Pray4Me sa Home Screen",
+  "pwaIosBody": "Sa browser, i-tap ang Share, pagkatapos piliin ang Add to Home Screen.",
+  "pwaIosAddAction": "Idagdag sa Home Screen",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Mag-log in",

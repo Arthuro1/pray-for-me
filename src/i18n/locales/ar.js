@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "اجعل الرجوع إلى دفتر الصلاة المتنامي أسهل",
   "activationOrganizeBody": "أضف شخصًا أو فئة إلى صلاة واحدة. لا يظهر المزيد من التنظيم إلا عندما يصبح مفيدًا.",
   "activationOrganizeCta": "تنظيم صلاة",
+  "pwaInstallTitle": "اجعل Pray4Me قريبًا منك",
+  "pwaInstallBody": "افتح صلوات اليوم بلمسة واحدة واستخدم التطبيق حتى عند ضعف الاتصال.",
+  "pwaInstallCta": "تثبيت Pray4Me",
+  "pwaInstallLater": "ليس الآن",
+  "pwaIosTitle": "إضافة Pray4Me إلى الشاشة الرئيسية",
+  "pwaIosBody": "في المتصفح، اضغط مشاركة، ثم اختر إضافة إلى الشاشة الرئيسية.",
+  "pwaIosAddAction": "إضافة إلى الشاشة الرئيسية",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "تسجيل الدخول",

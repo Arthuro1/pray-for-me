@@ -51,6 +51,13 @@ export default {
   "activationOrganizeTitle": "बढ़ती प्रार्थना डायरी को फिर देखना आसान बनाएँ",
   "activationOrganizeBody": "किसी प्रार्थना में व्यक्ति या श्रेणी जोड़ें। अधिक व्यवस्था तभी दिखाई देगी जब वह उपयोगी हो।",
   "activationOrganizeCta": "प्रार्थना व्यवस्थित करें",
+  "pwaInstallTitle": "Pray4Me को पास रखें",
+  "pwaInstallBody": "आज की प्रार्थनाएँ एक टैप में खोलें और कमजोर कनेक्शन में भी ऐप उपलब्ध रखें।",
+  "pwaInstallCta": "Pray4Me इंस्टॉल करें",
+  "pwaInstallLater": "अभी नहीं",
+  "pwaIosTitle": "Pray4Me को होम स्क्रीन पर जोड़ें",
+  "pwaIosBody": "ब्राउज़र में शेयर पर टैप करें, फिर होम स्क्रीन पर जोड़ें चुनें।",
+  "pwaIosAddAction": "होम स्क्रीन पर जोड़ें",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "लॉग इन करें",

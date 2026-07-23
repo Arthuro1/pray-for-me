@@ -40,6 +40,7 @@ import { ensureAccountCryptoReady, rememberAccountKey, CRYPTO_STATUS } from './l
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
+import { resolvePwaShortcut } from './lib/pwaInstall';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
 import { importGuestPrayerOnce } from './lib/guestPrayerImport';
@@ -210,6 +211,31 @@ export default function App() {
     });
     initQueue();
   }, []);
+
+  // Manifest shortcut: signed-out visitors enter the existing private guest
+  // prayer flow; signed-in users get the ordinary encrypted prayer form. Consume
+  // the query immediately so an auth/import round-trip cannot replay it later.
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+    const shortcut = resolvePwaShortcut({
+      search: location.search,
+      authLoading,
+      userId: user?.id,
+      vaultChecked,
+      vaultUnlocked,
+    });
+    if (!shortcut || shortcut === 'wait') return;
+    if (shortcut === 'guest-prayer') {
+      setGuestView('prayer');
+      navigate('/', { replace: true });
+      return;
+    }
+    setEditPrayer(null);
+    setFormPrefill(null);
+    setFormOptions(null);
+    setShowForm(true);
+    navigate('/', { replace: true });
+  }, [location.pathname, location.search, authLoading, user?.id, vaultChecked, vaultUnlocked, navigate]);
 
   useEffect(() => {
     if (user?.id) {
