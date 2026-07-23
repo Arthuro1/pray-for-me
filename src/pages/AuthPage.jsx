@@ -120,45 +120,29 @@ export default function AuthPage({ onBack, intent }) {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-end md:items-center justify-center p-0 md:p-8"
-      style={{ background: 'var(--bg)' }}
-    >
-      {/* Background image */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=800&q=50')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.07,
-        }}
-      />
+    <div className="auth-experience">
 
       {/* Back to landing page */}
       {onBack && (
         <button
           onClick={onBack}
           aria-label={t(lang, 'authBackHome')}
-          className="fixed top-4 left-4 z-10 flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-xl transition-colors"
-          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+          className="phase-icon-button fixed top-4 z-10 flex items-center gap-1.5 text-sm font-medium px-3"
+          style={{ insetInlineStart: '1rem', width: 'auto' }}
         >
           <ArrowLeft size={16} /> <span className="hidden sm:inline">{t(lang, 'authBackHome')}</span>
         </button>
       )}
 
       {/* Logo */}
-      <div className="fixed top-0 left-0 right-0 flex flex-col items-center pt-16 pb-6 pointer-events-none">
-        <img src="/logo.svg" alt="Pray4Me" className="w-16 h-16 mb-3 rounded-2xl" />
+      <div className="auth-brand">
+        <img src="/logo.svg" alt="Pray4Me" className="w-14 h-14 mb-3 rounded-2xl" />
         <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray4Me</h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'authTagline')}</p>
       </div>
 
       {/* Bottom sheet */}
-      <div
-        className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
-        style={{ background: 'var(--surface)' }}
-      >
+      <div className="auth-sheet">
         {mode === 'forgot' ? (
           <form onSubmit={handleForgot} noValidate className="space-y-4">
             <div>
@@ -166,7 +150,7 @@ export default function AuthPage({ onBack, intent }) {
               <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authResetIntro')}</p>
             </div>
             <div className="relative">
-              <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+              <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
               <input
                 type="email"
                 autoFocus
@@ -174,17 +158,16 @@ export default function AuthPage({ onBack, intent }) {
                 value={form.email}
                 onChange={(e) => patch({ email: e.target.value })}
                 placeholder={t(lang, 'authEmail')}
-                className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
+                className="auth-field w-full rounded-xl text-sm focus:outline-none"
                 style={inputStyle}
               />
             </div>
-            {error && <p role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: '#c04040', background: '#fdf0f0' }}>{error}</p>}
-            {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: '#2a7a4e', background: '#e8f5ed' }}>{success}</p>}
+            {error && <p role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
+            {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
-              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
+              className="auth-primary w-full rounded-xl px-5 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               {t(lang, 'authResetSend')}
@@ -254,41 +237,41 @@ export default function AuthPage({ onBack, intent }) {
             <form onSubmit={handleSubmit} noValidate className="space-y-3">
               {mode === 'register' && (
                 <div className="relative">
-                  <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+                  <User size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
                   <input
                     type="text"
                     aria-label={t(lang, 'authNamePlaceholder')}
                     value={form.fullName}
                     onChange={(e) => patch({ fullName: e.target.value })}
                     placeholder={t(lang, 'authNamePlaceholder')}
-                    className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
+                    className="auth-field w-full rounded-xl text-sm focus:outline-none"
                     style={inputStyle}
                   />
                 </div>
               )}
 
               <div className="relative">
-                <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+                <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
                 <input
                   type="email"
                   aria-label={t(lang, 'authEmail')}
                   value={form.email}
                   onChange={(e) => patch({ email: e.target.value })}
                   placeholder={t(lang, 'authEmail')}
-                  className="w-full rounded-xl pl-9 pr-3 py-3 text-sm focus:outline-none"
+                  className="auth-field w-full rounded-xl text-sm focus:outline-none"
                   style={inputStyle}
                 />
               </div>
 
               <div className="relative">
-                <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+                <Lock size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   aria-label={t(lang, 'authPassword')}
                   value={form.password}
                   onChange={(e) => patch({ password: e.target.value })}
                   placeholder={t(lang, 'authPassword')}
-                  className="w-full rounded-xl pl-9 pr-10 py-3 text-sm focus:outline-none"
+                  className="auth-field w-full rounded-xl text-sm focus:outline-none"
                   style={inputStyle}
                 />
                 <button
@@ -296,7 +279,7 @@ export default function AuthPage({ onBack, intent }) {
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={t(lang, 'authPassword')}
                   aria-pressed={showPassword}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="auth-password-toggle"
                   style={{ color: 'var(--text-3)' }}
                 >
                   {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
@@ -316,8 +299,8 @@ export default function AuthPage({ onBack, intent }) {
                 </div>
               )}
 
-              {error && <p role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: '#c04040', background: '#fdf0f0' }}>{error}</p>}
-              {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: '#2a7a4e', background: '#e8f5ed' }}>{success}</p>}
+              {error && <p role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
+              {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
 
               {canResend && (
                 <button
@@ -334,8 +317,7 @@ export default function AuthPage({ onBack, intent }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
+                className="auth-primary w-full rounded-xl px-5 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading && <Loader2 size={14} className="animate-spin" />}
                 {mode === 'login'

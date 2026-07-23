@@ -22,6 +22,7 @@ import { peopleFromPrayers, peopleViewAvailable, personSession } from '../lib/pe
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { todayKey } from '../lib/prayedLog';
 import PrayerSession from '../components/PrayerSession';
+import { PageHeader, SegmentedControl } from '../components/shared/Primitives';
 
 // The Journal: every request and its history, in two simple segments — Active
 // and Answered. Search hides behind an icon, the category filter only exists
@@ -101,8 +102,6 @@ export default function PrayersTab({ onAdd }) {
 
   const clearFilters = () => { setSearch(''); setSearchOpen(false); setCategoryFilter('all'); setShowFilters(false); };
 
-  const iconBtnStyle = { background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.85)' };
-
   const renderPrayer = (prayer) => (
     <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
       <PrayerListItem
@@ -123,38 +122,29 @@ export default function PrayersTab({ onAdd }) {
     : null;
 
   return (
-    <div>
-      <div className="px-4 md:px-8 pt-8 pb-4" style={{ background: 'var(--header)' }}>
-        <div className="max-w-2xl mx-auto">
-        <h2 className="text-xl font-semibold text-white mb-3">{t(lang, 'journal')}</h2>
+    <div className="phase-page">
+      <div className="phase-page__shell journal-page-header">
+        <PageHeader eyebrow={t(lang, 'prayers')} title={t(lang, 'journal')} />
+        <div>
 
         {/* ONE segmented control carries the counts (no separate stat cards),
             with search, the category filter and — when useful — the People
             lens folded behind small icons. */}
-        <div className="flex items-center gap-2">
-          <div className="flex flex-1 gap-1 p-1 rounded-2xl" style={{ background: 'rgba(255,255,255,0.1)' }}>
-            {SEGMENTS.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => { setSegment(s.id); setPeopleOpen(false); setSelectedPerson(null); }}
-                aria-pressed={segment === s.id && !peopleOpen}
-                className="flex-1 py-2 rounded-xl text-sm font-medium transition-all"
-                style={segment === s.id && !peopleOpen
-                  ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
-                  : { color: 'rgba(255,255,255,0.7)' }}
-              >
-                {s.label} <span style={{ opacity: 0.65 }}>{s.count}</span>
-              </button>
-            ))}
-          </div>
+        <div className="journal-toolbar">
+          <SegmentedControl
+            label={t(lang, 'journal')}
+            value={peopleOpen ? 'people' : segment}
+            options={SEGMENTS.map((s) => ({ value: s.id, label: `${s.label} ${s.count}` }))}
+            onChange={(value) => { setSegment(value); setPeopleOpen(false); setSelectedPerson(null); }}
+          />
           {peopleAvailable && (
             <button
               onClick={() => { setPeopleOpen((v) => !v); setSelectedPerson(null); }}
               aria-pressed={peopleOpen}
               aria-label={t(lang, 'peopleView')}
               title={t(lang, 'peopleView')}
-              className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center"
-              style={peopleOpen ? { background: 'rgba(255,255,255,0.3)', color: '#fff' } : iconBtnStyle}
+              className="phase-icon-button shrink-0"
+              style={peopleOpen ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
             >
               <Users size={16} />
             </button>
@@ -165,8 +155,7 @@ export default function PrayersTab({ onAdd }) {
                 onClick={() => setSearchOpen((v) => !v)}
                 aria-expanded={searchOpen || !!search}
                 aria-label={t(lang, 'search')}
-                className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center"
-                style={iconBtnStyle}
+                className="phase-icon-button shrink-0"
               >
                 <Search size={16} />
               </button>
@@ -175,8 +164,7 @@ export default function PrayersTab({ onAdd }) {
                   onClick={() => setShowFilters(!showFilters)}
                   aria-expanded={showFilters}
                   aria-label={t(lang, 'allCategories')}
-                  className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center"
-                  style={iconBtnStyle}
+                  className="phase-icon-button shrink-0"
                 >
                   <SlidersHorizontal size={16} />
                 </button>
@@ -188,8 +176,8 @@ export default function PrayersTab({ onAdd }) {
         {/* The search field only takes space once asked for; text is preserved
             while it (or the segment) is toggled. */}
         {segment === 'active' && !peopleOpen && (searchOpen || !!search) && (
-          <div className="relative mt-2">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.5)' }} />
+          <div className="journal-search">
+            <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)', insetInlineStart: '0.9rem' }} />
             <input
               type="text"
               autoFocus
@@ -197,15 +185,14 @@ export default function PrayersTab({ onAdd }) {
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t(lang, 'search')}
               aria-label={t(lang, 'search')}
-              className="w-full text-sm rounded-xl pl-9 pr-10 py-2.5 focus:outline-none"
-              style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.2)', color: '#fff' }}
+              className="w-full text-sm focus:outline-none"
             />
             {!!search && (
               <button
                 onClick={() => { setSearch(''); setSearchOpen(false); }}
                 aria-label={t(lang, 'close')}
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
-                style={{ color: 'rgba(255,255,255,0.6)' }}
+                className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
+                style={{ color: 'var(--text-3)', insetInlineEnd: 0 }}
               >
                 <X size={15} />
               </button>
@@ -215,7 +202,7 @@ export default function PrayersTab({ onAdd }) {
         </div>
       </div>
 
-      <div className="px-4 md:px-8 pt-4 max-w-2xl mx-auto">
+      <div className="phase-content pt-5 max-w-2xl">
         {peopleOpen ? (
           personDetail ? (
             // ── One person's related prayers — not a separate profile page ──
@@ -273,8 +260,7 @@ export default function PrayersTab({ onAdd }) {
                 return (
                   <button
                     onClick={() => setPersonSessionPrayers(remaining)}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 mb-4 rounded-2xl text-sm font-semibold text-white transition-all active:scale-95"
-                    style={{ background: 'var(--accent)' }}
+                    className="primary-button w-full flex items-center justify-center gap-2 px-5 mb-4 text-sm font-semibold text-white"
                   >
                     <HandHeart size={16} aria-hidden="true" />
                     {t(lang, 'prayForPerson', { name: personDetail.name, n: remaining.length })}
@@ -295,8 +281,7 @@ export default function PrayersTab({ onAdd }) {
                 <button
                   key={person.name.toLowerCase()}
                   onClick={() => setSelectedPerson(person.name)}
-                  className="w-full text-left p-4 rounded-2xl transition-all hover:scale-[1.01]"
-                  style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                  className="phase-card journal-person-card w-full text-left p-4"
                 >
                   <div className="flex items-center gap-3">
                     <Avatar name={person.name} size={36} />
@@ -340,7 +325,7 @@ export default function PrayersTab({ onAdd }) {
                 <button
                   onClick={() => setCategoryFilter('all')}
                   className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
-                  style={categoryFilter === 'all' ? { background: '#2d1b5e', color: '#fff' } : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }}
+                  style={categoryFilter === 'all' ? { background: 'var(--plum)', color: '#fff' } : { background: 'var(--surface)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
                 >
                   {t(lang, 'allCategories')}
                 </button>
@@ -349,7 +334,7 @@ export default function PrayersTab({ onAdd }) {
                     key={c.id}
                     onClick={() => setCategoryFilter(c.id)}
                     className="shrink-0 text-xs px-3 py-1.5 rounded-full font-medium"
-                    style={categoryFilter === c.id ? { backgroundColor: c.color, color: '#fff' } : { background: '#fff', color: '#6b5b8a', border: '0.5px solid #ede8f5' }}
+                    style={categoryFilter === c.id ? { backgroundColor: c.color, color: '#fff' } : { background: 'var(--surface)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
                   >
                     {c.emoji} {tr(c.name, lang)}
                   </button>

@@ -38,8 +38,7 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onClose 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-      style={{ background: 'rgba(0,0,0,0.5)' }}
+      className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
       onClick={onClose}
     >
       <div
@@ -48,8 +47,7 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onClose 
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, plan.titleKey)}
-        className="w-full max-w-md rounded-2xl max-h-[85vh] overflow-y-auto"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+        className="editorial-dialog w-full max-w-md max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -61,7 +59,7 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onClose 
             <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</h3>
             <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}</p>
           </div>
-          <button onClick={onClose} aria-label={t(lang, 'close')} className="shrink-0" style={{ color: 'var(--text-3)' }}><X size={18} /></button>
+          <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 
         <div className="p-5 space-y-5">

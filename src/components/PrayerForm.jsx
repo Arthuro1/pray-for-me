@@ -222,14 +222,13 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
     : (editPrayer ? t(lang, 'editPrayer') : t(lang, 'newPrayer'));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6" onClick={onClose}>
       <div
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        className="w-full max-w-lg mx-auto rounded-t-3xl md:rounded-3xl max-h-[92vh] overflow-y-auto md:shadow-2xl"
-        style={{ background: 'var(--surface)' }}
+        className="editorial-dialog w-full max-w-lg mx-auto max-h-[92vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1">

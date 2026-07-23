@@ -4,7 +4,7 @@ import { ChevronDown } from 'lucide-react';
 export function PageHeader({ eyebrow, title, subtitle, aside, className = '' }) {
   return (
     <header className={`page-header ${className}`}>
-      <div className="flex items-end justify-between gap-6">
+      <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="min-w-0">
           {eyebrow && <p className="page-header__eyebrow mb-2">{eyebrow}</p>}
           <h1 className="page-header__title">{title}</h1>

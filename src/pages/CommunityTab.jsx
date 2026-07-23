@@ -28,6 +28,7 @@ import Switch from '../components/shared/Switch';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { QRCodeSVG } from 'qrcode.react';
+import { PageHeader } from '../components/shared/Primitives';
 
 const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
@@ -46,7 +47,7 @@ const markGroupSeen = (groupId) => {
 
 function ActionRow({ label, sublabel, avatarName, primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
-    <div className="flex items-center justify-between p-3 rounded-xl gap-3" style={CARD_STYLE}>
+    <div className="phase-card phase-card--quiet flex items-center justify-between p-3 gap-3">
       <div className="flex items-center gap-3 min-w-0">
         {avatarName && <Avatar name={avatarName} size={36} />}
         <div className="min-w-0">
@@ -69,7 +70,7 @@ function ActionRow({ label, sublabel, avatarName, primaryText, onPrimary, onSeco
 function Section({ title, icon, children }) {
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
+      <h2 className="phase-section-heading flex items-center gap-2">
         {icon} {title}
       </h2>
       <div className="space-y-2">{children}</div>
@@ -150,21 +151,20 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   }
 
   return (
-    <div style={{ background: 'var(--bg)' }} className="min-h-screen">
-      <div className="px-5 md:px-8 py-6 max-w-4xl mx-auto">
+    <div className="phase-page min-h-screen">
+      <div className="phase-page__shell">
         {/* Once groups exist they lead the page; joining another group, creating
             one or adding a friend become small header actions instead of a
             second button row. Join stays reachable — invitations arrive by code. */}
-        <div className="flex items-center justify-between gap-3 mb-6">
-          <h1 className="text-2xl font-bold" style={{ color: 'var(--text-1)' }}>{t(lang, 'community')}</h1>
-          {groups.length > 0 && (
+        <PageHeader
+          title={t(lang, 'community')}
+          aside={groups.length > 0 ? (
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => setShowJoinGroup(true)}
                 aria-label={t(lang, 'joinGroupCta')}
                 title={t(lang, 'joinGroupCta')}
-                className="w-11 h-11 rounded-xl flex items-center justify-center"
-                style={SUBTLE_BTN}
+                className="phase-icon-button"
               >
                 <LogIn size={16} />
               </button>
@@ -172,8 +172,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 onClick={() => setShowCreateGroup(true)}
                 aria-label={t(lang, 'createGroup')}
                 title={t(lang, 'createGroup')}
-                className="w-11 h-11 rounded-xl flex items-center justify-center"
-                style={SUBTLE_BTN}
+                className="phase-icon-button"
               >
                 <Plus size={16} />
               </button>
@@ -181,30 +180,29 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 onClick={() => setShowAddFriend(true)}
                 aria-label={t(lang, 'addFriend')}
                 title={t(lang, 'addFriend')}
-                className="w-11 h-11 rounded-xl flex items-center justify-center"
-                style={SUBTLE_BTN}
+                className="phase-icon-button"
               >
                 <UserPlus size={16} />
               </button>
             </div>
-          )}
-        </div>
+          ) : undefined}
+        />
 
         {/* An empty community account gets ONE onboarding card — join first
             (most believers are invited into an existing group), create second,
             add-a-friend as a quiet text link. No second empty state below. */}
         {groups.length === 0 && (
-          <div className="rounded-2xl p-6 mb-8 text-center max-w-md mx-auto" style={CARD_STYLE}>
+          <div className="phase-card community-empty mb-8 text-center max-w-lg mx-auto">
             <p className="text-4xl mb-3">🤝</p>
             <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayWithOthers')}</h2>
             <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'communityEmptyDesc')}</p>
-            <button onClick={() => setShowJoinGroup(true)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white mb-2.5" style={{ background: 'var(--accent)' }}>
+            <button onClick={() => setShowJoinGroup(true)} className="community-empty__primary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-semibold mb-2.5">
               <Users size={16} /> {t(lang, 'joinGroupCta')}
             </button>
-            <button onClick={() => setShowCreateGroup(true)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium mb-3" style={SUBTLE_BTN}>
+            <button onClick={() => setShowCreateGroup(true)} className="community-empty__secondary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-medium mb-3">
               <Plus size={16} /> {t(lang, 'createGroup')}
             </button>
-            <button onClick={() => setShowAddFriend(true)} className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+            <button onClick={() => setShowAddFriend(true)} className="inline-flex items-center gap-1.5 px-3 text-xs font-medium" style={{ color: 'rgba(255,255,255,.8)' }}>
               <UserPlus size={13} /> {t(lang, 'addFriend')}
             </button>
           </div>
@@ -245,7 +243,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           <Section title={t(lang, 'myGroups')}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {groups.map(g => (
-                <button key={g.id} onClick={() => onViewGroup(g.id)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.02]" style={CARD_STYLE}>
+                <button key={g.id} onClick={() => onViewGroup(g.id)} className="phase-card community-card p-4 text-left">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
                       <Users size={18} />
@@ -270,7 +268,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           <Section title={`${t(lang, 'friends')} (${friends.length})`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {friends.map(f => (
-                <div key={f.id} className="flex items-center justify-between gap-3 p-3 rounded-xl" style={CARD_STYLE}>
+                <div key={f.id} className="phase-card phase-card--quiet flex items-center justify-between gap-3 p-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <Avatar name={f.name} size={36} />
                     <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
@@ -298,8 +296,8 @@ function Modal({ title, onClose, lang, children }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
-      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-2xl flex flex-col max-h-[85vh]" style={CARD_STYLE} onClick={e => e.stopPropagation()}>
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" onClick={onClose}>
+      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="editorial-dialog w-full max-w-md flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-5 pb-4 shrink-0">
           <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{title}</h3>
           <button
@@ -524,7 +522,7 @@ function AddFriendModal({ lang, userId, onClose }) {
               onKeyDown={e => e.key === 'Enter' && handleSendEmail()}
               className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
             {error && (
-              <p className="text-xs mb-3" style={{ color: '#e53e3e' }}>
+              <p className="text-xs mb-3" style={{ color: 'var(--danger)' }}>
                 {error}
                 {error === t(lang, 'userNotFound') && <> — {t(lang, 'friendLinkHint')}</>}
               </p>
@@ -956,8 +954,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   };
 
   return (
-    <div style={{ background: 'var(--bg)' }}>
-      <div className="px-5 md:px-8 pt-4 pb-2 flex items-center justify-between max-w-4xl mx-auto">
+    <div className="phase-page min-h-screen">
+      <div className="phase-page__shell pt-3 flex items-center justify-between">
         <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           <ArrowLeft size={16} /> {t(lang, 'community')}
         </button>
@@ -996,7 +994,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           <p className="text-sm mb-5" style={{ color: 'var(--text-2)' }}>{t(lang, 'leaveGroupConfirm')}</p>
           <div className="flex gap-2">
             <button onClick={() => setShowLeave(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={SUBTLE_BTN}>{t(lang, 'cancel')}</button>
-            <button onClick={handleLeave} disabled={leaving} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: '#e53e3e' }}>
+            <button onClick={handleLeave} disabled={leaving} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--danger)' }}>
               {leaving ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'leaveGroup')}
             </button>
           </div>
@@ -1012,8 +1010,11 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}
 
-      <div className="px-5 md:px-8 py-4 max-w-4xl mx-auto">
-        <h2 className="text-xl font-semibold mb-5" style={{ color: 'var(--text-1)' }}>{group?.name}</h2>
+      <div className="phase-content max-w-4xl">
+        <div className="group-header mb-5">
+          <p className="section-label mb-2">{t(lang, 'community')}</p>
+          <h1 className="page-header__title" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)' }}>{group?.name}</h1>
+        </div>
 
         {/* First-group checklist — leaders only, dismissible, retires itself as
             the steps complete. Its rows are shortcuts to actions on this page. */}
@@ -1102,7 +1103,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             ) : (
               <div className="flex flex-col gap-3">
                 {filteredPrayers.map(p => (
-                  <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style={CARD_STYLE}>
+                  <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="phase-card community-card p-4 text-left">
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <div className="flex items-center gap-2 min-w-0">
                         <Avatar name={p.is_anonymous ? '?' : p.author_name} size={26} anonymous={p.is_anonymous} />
@@ -1111,7 +1112,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         </p>
                       </div>
                       {p.is_answered && (
-                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: '#e8f5ed', color: '#059669' }}>
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: 'var(--success-bg)', color: 'var(--success)' }}>
                           <Check size={11} /> {t(lang, 'answered2')}
                         </span>
                       )}
@@ -1158,8 +1159,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                       <button
                         key={testimony.id}
                         onClick={() => onOpenPrayer(testimony.community_prayer_id)}
-                        className="w-full text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
-                        style={{ ...CARD_STYLE, borderLeft: '3px solid var(--success)' }}
+                        className="phase-card community-card w-full text-left p-4"
+                        style={{ borderInlineStart: '3px solid var(--success)' }}
                       >
                         <div className="flex items-center gap-2 mb-1.5 min-w-0">
                           <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} size={26} anonymous={testimony.is_anonymous} />

@@ -30,8 +30,7 @@ export default function DonateModal({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
-      style={{ background: 'rgba(0,0,0,0.45)' }}
+      className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
@@ -39,21 +38,20 @@ export default function DonateModal({ onClose }) {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8"
-        style={{ background: 'var(--surface)' }}
+        className="editorial-dialog relative w-full max-w-md px-6 pt-6 pb-8"
       >
         <button
           onClick={onClose}
           aria-label={t(lang, 'close')}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}
+          className="phase-icon-button absolute top-4 flex items-center justify-center rounded-full"
+          style={{ insetInlineEnd: '1rem' }}
         >
           <X size={15} />
         </button>
 
         {/* Header */}
         <div className="flex items-center gap-2 mb-3">
-          <Heart size={18} style={{ color: '#16a34a' }} />
+          <Heart size={18} style={{ color: 'var(--success)' }} />
           <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>
             {t(lang, 'donateTitle')}
           </h2>

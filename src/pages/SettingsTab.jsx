@@ -20,6 +20,7 @@ import NotificationPreferences from '../components/NotificationPreferences';
 import Switch from '../components/shared/Switch';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
+import { PageHeader } from '../components/shared/Primitives';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
@@ -27,7 +28,7 @@ const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '
 
 function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
   return (
-    <div style={{ borderBottom: '0.5px solid var(--border-soft)', paddingBottom: '14px', marginBottom: '14px' }}>
+    <div className="settings-row" style={{ borderBottom: '0.5px solid var(--border-soft)', paddingBottom: '14px', marginBottom: '14px' }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           {Icon && <Icon size={15} style={{ color: 'var(--text-3)' }} />}
@@ -78,13 +79,13 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
 // `id` doubles as the deep-link anchor (e.g. /settings#notifications).
 function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
   return (
-    <section id={id} className="scroll-mt-16 mb-4">
+    <section id={id} className="settings-section">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={`${id}-panel`}
-        className="w-full flex items-center gap-2.5 px-1 py-2 mb-1.5"
+        className="settings-section__trigger flex items-center gap-2.5"
       >
         <Icon size={16} style={{ color: 'var(--accent)' }} />
         <h2 className="text-sm font-bold flex-1 text-left" style={{ color: 'var(--text-1)' }}>{title}</h2>
@@ -93,7 +94,7 @@ function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
           style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
         />
       </button>
-      <div id={`${id}-panel`} hidden={!open}>
+      <div id={`${id}-panel`} hidden={!open} className="settings-section__panel">
         {children}
       </div>
     </section>
@@ -348,26 +349,32 @@ export default function SettingsTab() {
     : null;
 
   return (
-    <div>
+    <div className="phase-page">
       {/* Header */}
-      <div className="px-4 md:px-8 pt-8 pb-5" style={{ background: 'var(--header)' }}>
-        {/* Profile */}
-        <div className="flex items-center gap-3 mb-4">
+      <div className="phase-page__shell">
+        <PageHeader
+          eyebrow={t(lang, 'settingsSecAccount')}
+          title={t(lang, 'settings')}
+          subtitle={memberSince ? `${t(lang, 'memberSince')} ${memberSince}` : undefined}
+          aside={(
+            <div className="settings-avatar">
           {avatarUrl ? (
-            <img src={avatarUrl} alt="avatar" className="w-14 h-14 rounded-full object-cover" style={{ border: '2px solid rgba(255,255,255,0.3)' }} />
+              <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
           ) : (
-            <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)' }}>
-              <User size={24} color="rgba(255,255,255,0.9)" />
+              <User size={24} aria-hidden="true" />
+          )}
             </div>
           )}
-          <div>
-            <p className="font-semibold text-white">{displayName}</p>
-            {memberSince && <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{t(lang, 'memberSince')} {memberSince}</p>}
+        />
+        <div className="settings-profile phase-card phase-card--quiet px-4 py-3 mb-5">
+          <div className="min-w-0">
+            <p className="font-semibold truncate" style={{ color: 'var(--text-1)' }}>{displayName}</p>
+            <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>{user?.email}</p>
           </div>
         </div>
       </div>
 
-      <div className="px-4 md:px-8 pt-4 pb-6 max-w-2xl mx-auto">
+      <div className="phase-content max-w-3xl">
 
         {/* ── Account & privacy ── */}
         <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={Shield} open={openSections.account} onToggle={() => toggleSection('account')}>
@@ -388,7 +395,7 @@ export default function SettingsTab() {
               onClick={signOut}
               title={t(lang, 'tipSignOut')}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
+              style={{ border: '1px solid color-mix(in srgb, var(--danger) 28%, var(--border))', color: 'var(--danger)', background: 'var(--danger-bg)' }}
             >
               <LogOut size={14} />
               {t(lang, 'signOut')}
@@ -555,13 +562,13 @@ export default function SettingsTab() {
 
           {/* Danger zone — irreversible account deletion (right to erasure),
               kept APART at the bottom of the section and gated by ConfirmDialog. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid #f0d0d0' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#c04040' }}>{t(lang, 'dangerZone')}</p>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '1px solid color-mix(in srgb, var(--danger) 28%, var(--border))' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--danger)' }}>{t(lang, 'dangerZone')}</p>
             <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'deleteAccountSub')}</p>
             <button
               onClick={handleDeleteAccount}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-              style={{ border: '0.5px solid #f5c8c8', color: '#c04040', background: '#fdf8f8' }}
+              style={{ border: '1px solid color-mix(in srgb, var(--danger) 28%, var(--border))', color: 'var(--danger)', background: 'var(--danger-bg)' }}
             >
               <Trash2 size={14} />
               {t(lang, 'deleteAccount')}
@@ -574,7 +581,7 @@ export default function SettingsTab() {
           {/* Daily + follow-up reminders */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-4">
-              <Bell size={16} style={{ color: '#7c5cfc' }} />
+              <Bell size={16} style={{ color: 'var(--accent)' }} />
               <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'remindersTitle')}</h3>
             </div>
 
@@ -663,7 +670,7 @@ export default function SettingsTab() {
           {/* Community notification preferences (in-app inbox + push per type) */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-1">
-              <Bell size={16} style={{ color: '#7c5cfc' }} />
+              <Bell size={16} style={{ color: 'var(--accent)' }} />
               <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPrefsTitle')}</h3>
             </div>
             <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPrefsSub')}</p>
@@ -734,14 +741,14 @@ export default function SettingsTab() {
               never unlocks features and the whole app works without it. */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-1">
-              <Heart size={16} style={{ color: '#16a34a' }} />
+              <Heart size={16} style={{ color: 'var(--success)' }} />
               <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
             </div>
             <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
             <button
               onClick={() => setShowDonate(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: '#f0fdf4', color: '#16a34a', border: '0.5px solid #bbf7d0' }}
+              style={{ background: 'var(--success-bg)', color: 'var(--success)', border: '1px solid var(--success-border)' }}
             >
               <Heart size={14} />
               {t(lang, 'donateBtn')}

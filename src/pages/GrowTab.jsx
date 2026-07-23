@@ -19,8 +19,8 @@ function ItemCard({ item, lang, onOpen, done, durationLabel }) {
   return (
     <button
       onClick={onOpen}
-      className="w-full text-left rounded-2xl p-4 flex items-start gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100"
-      style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', opacity: done ? 0.8 : 1 }}
+      className="phase-card grow-card w-full text-left p-4 flex items-start gap-3"
+      style={{ opacity: done ? 0.76 : 1 }}
     >
       <span className="text-2xl shrink-0 leading-none mt-0.5">{item.emoji}</span>
       <span className="flex-1 min-w-0">
@@ -111,7 +111,7 @@ export default function GrowTab({ onCreatePrayer }) {
   };
 
   return (
-    <div>
+    <div className="phase-page">
       {openGuide && (
         <GuideReader
           guide={openGuide}
@@ -140,14 +140,14 @@ export default function GrowTab({ onCreatePrayer }) {
         />
       )}
 
-      <div className="px-4 md:px-8 pt-8 pb-6" style={{ background: 'var(--header)' }}>
+      <div className="phase-page__shell page-header grow-phase-header">
         <h2 className="text-xl font-semibold text-white">🌱 {t(lang, 'growTitle')}</h2>
-        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{t(lang, 'growSubtitle')}</p>
+        <p className="page-header__subtitle">{t(lang, 'growSubtitle')}</p>
       </div>
 
-      <div className="px-4 md:px-8 pt-5 max-w-2xl mx-auto">
+      <div className="phase-content max-w-2xl">
         {/* Segmented toggle: pray through vs. learn */}
-        <div className="flex gap-1 p-1 rounded-2xl mb-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        <div className="segmented-control flex w-full mb-6">
           {[
             { id: 'pray', label: t(lang, 'growPray'), icon: HandHeart },
             { id: 'learn', label: t(lang, 'growLearn'), icon: BookOpen },
@@ -158,9 +158,9 @@ export default function GrowTab({ onCreatePrayer }) {
                 key={id}
                 onClick={() => setView(id)}
                 aria-pressed={active}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 min-h-[44px] rounded-xl text-sm font-medium transition-all motion-reduce:transition-none"
+                className="flex-1 flex items-center justify-center gap-2 px-3 text-sm font-medium"
                 style={active
-                  ? { background: 'var(--accent)', color: '#fff' }
+                  ? { background: 'var(--surface)', color: 'var(--text-1)' }
                   : { color: 'var(--text-3)' }}
               >
                 <Icon size={15} /> {label}
@@ -176,13 +176,12 @@ export default function GrowTab({ onCreatePrayer }) {
                 the Pray segment so Learn stays focused on learning content. */}
             {recommendation && (
               <div className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+                <p className="section-label mb-2">
                   {t(lang, 'growNextStep')}
                 </p>
                 <button
                   onClick={() => setOpenGuide(recommendation.guide)}
-                  className="w-full text-left rounded-2xl p-4 flex items-start gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100"
-                  style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
+                  className="grow-next-card grow-card w-full text-left flex items-start gap-3"
                 >
                   <span className="text-2xl shrink-0 leading-none mt-0.5">{recommendation.guide.emoji}</span>
                   <span className="flex-1 min-w-0">
@@ -252,8 +251,7 @@ export default function GrowTab({ onCreatePrayer }) {
             it's been read or dismissed. */}
         <button
           onClick={() => setOpenJourney(true)}
-          className="w-full text-left rounded-2xl p-3.5 mt-5 mb-8 flex items-center gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)', outlineColor: 'var(--accent)' }}
+          className="phase-card phase-card--quiet grow-card w-full text-left p-4 mt-6 mb-8 flex items-center gap-3"
         >
           <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent)' }}>
             <Sunrise size={16} className="text-white" aria-hidden="true" />

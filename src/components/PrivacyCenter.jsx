@@ -33,8 +33,7 @@ export default function PrivacyCenter({ lang = 'en', onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
-      style={{ background: 'rgba(0,0,0,0.45)' }}
+      className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
@@ -43,14 +42,13 @@ export default function PrivacyCenter({ lang = 'en', onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, 'privacyCenterTitle')}
-        className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 max-h-[88vh] overflow-y-auto"
-        style={{ background: 'var(--surface)' }}
+        className="editorial-dialog relative w-full max-w-md px-6 pt-6 pb-8 max-h-[88vh] overflow-y-auto"
       >
         <button
           onClick={onClose}
           aria-label={t(lang, 'close')}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}
+          className="phase-icon-button absolute top-4 flex items-center justify-center rounded-full"
+          style={{ insetInlineEnd: '1rem' }}
         >
           <X size={15} />
         </button>

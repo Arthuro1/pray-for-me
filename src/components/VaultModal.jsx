@@ -158,7 +158,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
       : Shield;
 
   const card = (
-    <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
+    <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="editorial-dialog w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
@@ -166,7 +166,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
             </div>
             <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, titleKey)}</h3>
           </div>
-          {dismissable && <button onClick={onClose} aria-label={t(lang, 'close')}><X size={18} style={{ color: 'var(--text-3)' }} /></button>}
+          {dismissable && <button className="phase-icon-button" onClick={onClose} aria-label={t(lang, 'close')}><X size={18} /></button>}
         </div>
 
         {/* ─── Setup ─── */}
@@ -175,7 +175,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultSetupIntro')}</p>
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultPassphrase')} autoFocus />
             <PassField value={confirm} onChange={setConfirm} placeholder={t(lang, 'vaultConfirmPassphrase')} />
-            {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleCreate} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultCreate')}</PrimaryButton>
           </div>
         )}
@@ -199,7 +199,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
           <div className="space-y-3">
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultUnlockIntro')}</p>
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultPassphrase')} autoFocus />
-            {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleUnlock} busy={busy} disabled={!pass}>{t(lang, 'vaultUnlock')}</PrimaryButton>
             <button onClick={() => { setError(''); setMode('reset'); }} className="w-full text-center text-xs" style={{ color: 'var(--accent)' }}>
               {t(lang, 'vaultForgot')}
@@ -222,7 +222,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
               style={inputStyle}
             />
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
-            {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleReset} busy={busy} disabled={!code || !pass}>{t(lang, 'vaultReset')}</PrimaryButton>
           </div>
         )}
@@ -232,7 +232,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
           <div className="space-y-3">
             <PassField value={confirm} onChange={setConfirm} placeholder={t(lang, 'vaultCurrentPassphrase')} autoFocus />
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
-            {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleChange} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultChangeSave')}</PrimaryButton>
           </div>
         )}
@@ -241,7 +241,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {mode === 'rotate' && (
           <div className="space-y-3">
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultRotateIntro')}</p>
-            {error && <p className="text-xs" style={{ color: '#e53e3e' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleRotate} busy={busy}>{t(lang, 'vaultRotateGenerate')}</PrimaryButton>
           </div>
         )}
@@ -251,7 +251,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   if (embedded) return card;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.55)' }} onClick={dismissable ? onClose : undefined}>
+    <div className="dialog-backdrop fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-4" onClick={dismissable ? onClose : undefined}>
       {card}
     </div>
   );

@@ -4,7 +4,7 @@ import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
-import { Plus, Trash2, X, Check, Sparkles, ChevronUp, ChevronDown, CalendarDays, LayoutGrid, Download } from 'lucide-react';
+import { Plus, Trash2, X, Check, Sparkles, ChevronUp, ChevronDown, Download } from 'lucide-react';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { prayerOnDay } from '../utils/prayer';
@@ -21,6 +21,7 @@ import DayAgenda from '../components/DayAgenda';
 import PlanDetailModal from '../components/PlanDetailModal';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { PageHeader, SegmentedControl } from '../components/shared/Primitives';
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
 const COLORS = ['#7c5cfc', '#059669', '#d97706', '#dc2626', '#0891b2', '#db2777', '#ea580c', '#16a34a', '#2d1b5e'];
 
@@ -181,7 +182,7 @@ export default function PlanTab() {
   };
 
   return (
-    <div>
+    <div className="phase-page">
       {detailPlan && (
         <PlanDetailModal
           plan={detailPlan}
@@ -205,11 +206,11 @@ export default function PlanTab() {
 
       {/* Day-centric editor: tap a day to toggle which categories you pray that day */}
       {selectedDay !== null && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={() => setSelectedDay(null)}>
-          <div ref={dayTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={DAYS[selectedDay]} className="w-full max-w-md rounded-2xl p-5 max-h-[80vh] overflow-y-auto" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={(e) => e.stopPropagation()}>
+        <div className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setSelectedDay(null)}>
+          <div ref={dayTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={DAYS[selectedDay]} className="editorial-dialog w-full max-w-md p-5 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-1">
               <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{DAYS[selectedDay]}</h3>
-              <button onClick={() => setSelectedDay(null)} aria-label={t(lang, 'close')} style={{ color: 'var(--text-3)' }}><X size={18} /></button>
+              <button className="phase-icon-button" onClick={() => setSelectedDay(null)} aria-label={t(lang, 'close')}><X size={18} /></button>
             </div>
             <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayHint')}</p>
             {categories.length === 0 ? (
@@ -237,44 +238,37 @@ export default function PlanTab() {
       )}
 
       {/* Header */}
-      <div
-        className="px-4 md:px-8 pt-8 pb-5"
-        style={{ background: 'var(--header)' }}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-semibold mb-1 text-white">{t(lang, view === 'month' ? 'calendarTitle' : 'weeklyPlan')}</h2>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{t(lang, view === 'month' ? 'calendarSub' : 'weeklyPlanSub')}</p>
-          </div>
-          {/* View switcher: calendar (day-by-day) vs weekly category plan */}
-          <div className="flex rounded-xl overflow-hidden shrink-0" style={{ border: '1px solid rgba(255,255,255,0.25)' }}>
-            {[['month', CalendarDays, 'monthView'], ['week', LayoutGrid, 'weekView']].map(([v, Icon, key]) => (
-              <button
-                key={v}
-                onClick={() => setView(v)}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 font-medium"
-                style={view === v ? { background: 'rgba(255,255,255,0.22)', color: '#fff' } : { color: 'rgba(255,255,255,0.6)' }}
-              >
-                <Icon size={12} /> {t(lang, key)}
-              </button>
-            ))}
-          </div>
-        </div>
+      <div className="phase-page__shell">
+        <PageHeader
+          eyebrow={t(lang, 'plan')}
+          title={t(lang, view === 'month' ? 'calendarTitle' : 'weeklyPlan')}
+          subtitle={t(lang, view === 'month' ? 'calendarSub' : 'weeklyPlanSub')}
+          aside={(
+            <SegmentedControl
+              label={t(lang, 'plan')}
+              value={view}
+              options={[
+                { value: 'month', label: t(lang, 'monthView') },
+                { value: 'week', label: t(lang, 'weekView') },
+              ]}
+              onChange={setView}
+            />
+          )}
+        />
 
         {/* Weekly overview — tap a day to edit what you pray that day */}
         {view === 'week' && (
-        <div className="mt-4 grid grid-cols-7 gap-1">
+        <div className="plan-week-overview grid grid-cols-7 gap-1 mb-5">
           {DAYS.map((day, idx) => {
             const dayCats = categories.filter((c) => (c.week_days || []).includes(idx));
             const count = countForDay(idx);
             const isToday = idx === todayIdx;
             return (
-              <button key={idx} onClick={() => setSelectedDay(idx)} className="text-center rounded-lg p-1 transition-colors"
-                style={isToday ? { background: 'rgba(255,255,255,0.16)' } : {}}>
-                <p className="text-xs font-medium mb-1" style={{ color: isToday ? '#fff' : 'rgba(255,255,255,0.6)' }}>{day}</p>
+              <button key={idx} onClick={() => setSelectedDay(idx)} aria-current={isToday ? 'date' : undefined} className="plan-week-day text-center rounded-lg p-1 transition-colors">
+                <p className="text-xs font-medium mb-1">{day}</p>
                 <div className="space-y-0.5">
                   {dayCats.length === 0 ? (
-                    <div className="h-6 rounded-lg" style={{ background: 'rgba(255,255,255,0.07)' }} />
+                    <div className="h-6 rounded-lg" style={{ background: 'var(--surface-muted)' }} />
                   ) : (
                     dayCats.map((c) => (
                       <div key={c.id} className="h-6 rounded-lg flex items-center justify-center text-xs" style={{ backgroundColor: c.color }}>
@@ -283,7 +277,7 @@ export default function PlanTab() {
                     ))
                   )}
                 </div>
-                <p className="text-[10px] mt-1" style={{ color: count > 0 ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.35)' }}>{count}</p>
+                <p className="text-[10px] mt-1" style={{ color: count > 0 ? 'var(--text-2)' : 'var(--text-3)' }}>{count}</p>
               </button>
             );
           })}
@@ -293,7 +287,7 @@ export default function PlanTab() {
 
       {/* Month calendar + day agenda */}
       {view === 'month' && (
-        <div className="px-4 md:px-8 pt-4 pb-6 space-y-3">
+        <div className="phase-content max-w-4xl space-y-4">
           <MonthCalendar
             monthDate={monthDate}
             dots={dots}
@@ -327,8 +321,7 @@ export default function PlanTab() {
                   <button
                     key={plan.id}
                     onClick={() => setDetailPlan(plan)}
-                    className="rounded-2xl p-4 flex items-start gap-3 text-left w-full transition-colors hover:brightness-[0.98]"
-                    style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                    className="phase-card plan-card p-4 flex items-start gap-3 text-left w-full"
                   >
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
                       {plan.emoji}
@@ -361,7 +354,7 @@ export default function PlanTab() {
       )}
 
       {view === 'week' && (
-      <div className="px-4 md:px-8 pt-4">
+      <div className="phase-content max-w-4xl">
         {/* Planning hints — unscheduled categories and/or empty days */}
         {(unassigned.length > 0 || emptyDays.length > 0) && (
           <div className="rounded-2xl p-3.5 mb-4 flex items-start gap-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
@@ -393,7 +386,7 @@ export default function PlanTab() {
             onClick={() => { setShowAddForm(true); setEditId(null); setForm({ name: '', emoji: '🙏', color: '#7c5cfc', weekDays: [] }); }}
             title={t(lang, 'tipCreateCategory')}
             className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium"
-            style={{ background: '#7c5cfc', color: '#fff' }}
+            style={{ background: 'var(--plum)', color: '#fff' }}
           >
             <Plus size={13} /> {t(lang, 'addCategory')}
           </button>
@@ -475,7 +468,7 @@ export default function PlanTab() {
               <button
                 onClick={handleAdd}
                 className="w-full text-white rounded-xl py-2.5 text-sm font-semibold"
-                style={{ background: '#7c5cfc' }}
+                style={{ background: 'var(--plum)' }}
               >
                 {editId ? t(lang, 'saveBtn') : t(lang, 'addBtn')}
               </button>
@@ -496,7 +489,7 @@ export default function PlanTab() {
         ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-4">
           {categories.map((cat) => (
-            <div key={cat.id} className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div key={cat.id} className="phase-card plan-card p-4">
               <div className="flex items-center gap-2 mb-3">
                 <div
                   className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"

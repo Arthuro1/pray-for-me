@@ -390,6 +390,390 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .app-sidebar { box-shadow: 10px 0 30px rgba(43, 30, 47, 0.025); }
 .app-mobile-bar { box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 70%, transparent); }
 
+/* Phase 2 surfaces -------------------------------------------------------
+   The Journal, Community, Grow, Plan and Settings pages share one quieter
+   editorial canvas. Product-specific components keep their state and data
+   contracts; these classes only establish hierarchy, rhythm and touch size. */
+.phase-page {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 92% 0%, color-mix(in srgb, var(--gold) 6%, transparent), transparent 24rem),
+    var(--background);
+}
+
+.phase-page__shell,
+.phase-content {
+  width: min(100%, 62rem);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+.phase-content { padding-block-end: 2rem; }
+
+.phase-page button,
+.editorial-dialog button,
+.auth-experience button {
+  min-height: 44px;
+}
+
+.phase-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.15rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.phase-card--quiet {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: none;
+}
+
+.phase-card--gold {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--gold-soft) 84%, var(--surface)), var(--surface));
+  border-color: color-mix(in srgb, var(--gold) 28%, var(--border));
+}
+
+.phase-icon-button {
+  display: inline-flex;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: .85rem;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--text-muted);
+  transition: background-color var(--motion) var(--ease), color var(--motion) var(--ease), transform var(--motion) var(--ease);
+}
+
+.phase-icon-button:hover { background: var(--surface-muted); color: var(--ink); }
+
+.phase-section-heading {
+  margin-block-end: .8rem;
+  color: var(--ink);
+  font-family: var(--font-editorial);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -.015em;
+}
+
+/* Journal */
+.journal-page-header {
+  display: grid;
+  gap: 1.25rem;
+  padding-block-end: 1.2rem;
+  border-block-end: 1px solid var(--border);
+}
+
+.journal-toolbar {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+
+.journal-toolbar .segmented-control { flex: 1; }
+.journal-toolbar .segmented-control button { flex: 1; min-height: 44px; }
+
+.journal-search {
+  position: relative;
+  margin-block-start: .75rem;
+}
+
+.journal-search input {
+  min-height: 48px;
+  padding-inline: 2.75rem;
+  border-radius: .9rem;
+}
+
+.journal-person-card,
+.community-card,
+.plan-card,
+.grow-card {
+  transition: border-color var(--motion) var(--ease), background-color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
+}
+
+.journal-person-card:hover,
+.community-card:hover,
+.plan-card:hover,
+.grow-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* Prayer detail */
+.detail-page { min-height: 100vh; background: var(--background); }
+
+.detail-header {
+  position: sticky;
+  z-index: 20;
+  inset-block-start: 0;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: max(.75rem, env(safe-area-inset-top)) clamp(1rem, 4vw, 2rem) .75rem;
+  background: color-mix(in srgb, var(--surface) 91%, transparent);
+  border-block-end: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  box-shadow: 0 8px 30px rgba(43, 30, 47, .035);
+  backdrop-filter: blur(20px) saturate(115%);
+}
+
+.detail-header__title {
+  overflow: hidden;
+  color: var(--ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: -.015em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detail-header__meta { color: var(--text-faint); }
+
+.detail-header__icon {
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.detail-page__content {
+  width: min(100%, 46rem);
+  margin-inline: auto;
+  padding: 1.25rem clamp(1rem, 4vw, 2rem) 3rem;
+}
+
+.detail-page__content > .rounded-2xl {
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.prayer-point-card {
+  background: color-mix(in srgb, var(--gold-soft) 76%, var(--surface));
+  border-inline-start: 3px solid var(--gold);
+  color: var(--ink);
+}
+
+/* Community */
+.community-empty {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  background: linear-gradient(150deg, var(--plum-dark), #4b3860);
+  border-color: color-mix(in srgb, var(--plum) 45%, transparent);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.community-empty::after {
+  position: absolute;
+  inset: auto -4rem -6rem auto;
+  width: 14rem;
+  height: 14rem;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.community-empty h2,
+.community-empty p { color: #fff !important; }
+.community-empty p { opacity: .72; }
+
+.community-empty__primary {
+  background: #f8f1e6 !important;
+  color: var(--plum-dark) !important;
+}
+
+.community-empty__secondary {
+  background: rgba(255,255,255,.08) !important;
+  border-color: rgba(255,255,255,.22) !important;
+  color: #fff !important;
+}
+
+.group-header {
+  padding-block: 1.2rem 1rem;
+  border-block-end: 1px solid var(--border);
+}
+
+/* Grow and Plan */
+.grow-next-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.15rem, 4vw, 1.5rem);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--gold-soft) 76%, var(--surface)), var(--surface));
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, var(--border));
+  border-radius: 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.grow-phase-header h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: 1.04;
+}
+
+.plan-week-overview {
+  padding: .85rem;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+.plan-week-day {
+  min-width: 0;
+  color: var(--text-muted);
+}
+
+.plan-week-day[aria-current="date"] {
+  background: var(--gold-soft);
+  color: var(--ink);
+}
+
+/* Settings */
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.settings-avatar {
+  display: flex;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  border-radius: 50%;
+  color: var(--plum);
+}
+
+.settings-section {
+  margin-block-end: .8rem;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+  scroll-margin-block-start: 5rem;
+}
+
+.settings-section__trigger {
+  width: 100%;
+  padding: .8rem 1rem;
+  color: var(--ink);
+}
+
+.settings-section__trigger h2 {
+  font-family: var(--font-editorial);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.settings-section__panel { padding: 0 .75rem .75rem; }
+
+.settings-section__panel > .rounded-2xl {
+  border-radius: .9rem;
+  box-shadow: none;
+}
+
+.settings-row { padding-block: .2rem; }
+
+/* Auth and modal language */
+.auth-experience {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: end center;
+  overflow: hidden;
+  padding: 7.5rem 0 0;
+  background:
+    radial-gradient(circle at 50% 6%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 22rem),
+    linear-gradient(155deg, var(--background), color-mix(in srgb, var(--accent-soft) 42%, var(--background)));
+}
+
+.auth-experience::before {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(color-mix(in srgb, var(--ink) 2%, transparent) 1px, transparent 1px);
+  background-size: 100% 34px;
+  content: '';
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
+  pointer-events: none;
+}
+
+.auth-brand {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: max(3.25rem, env(safe-area-inset-top));
+  inset-inline: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.auth-brand h1 { font-family: var(--font-editorial); letter-spacing: -.025em; }
+
+.auth-sheet {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 30rem);
+  padding: 1.5rem clamp(1.25rem, 6vw, 2rem) max(2rem, env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border: 1px solid var(--border);
+  border-block-end: 0;
+  border-radius: 1.6rem 1.6rem 0 0;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(18px);
+}
+
+.auth-sheet h2 { font-family: var(--font-editorial); font-size: 1.4rem; }
+.auth-field-icon { position: absolute; inset-inline-start: .8rem; top: 50%; transform: translateY(-50%); }
+.auth-field { min-height: 48px; padding-inline: 2.5rem .8rem; }
+.auth-password-toggle { position: absolute; inset-inline-end: .25rem; top: 50%; width: 44px; transform: translateY(-50%); }
+.auth-primary { background: var(--plum) !important; box-shadow: 0 8px 24px color-mix(in srgb, var(--plum) 20%, transparent); }
+
+.dialog-backdrop {
+  background: var(--overlay) !important;
+  backdrop-filter: blur(10px);
+}
+
+.editorial-dialog {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 1.4rem !important;
+  box-shadow: var(--shadow-md);
+}
+
+.editorial-dialog h2,
+.editorial-dialog h3 {
+  font-family: var(--font-editorial);
+  letter-spacing: -.015em;
+}
+
+@media (min-width: 640px) {
+  .auth-experience { place-items: center; padding: 8rem 1.5rem 1.5rem; }
+  .auth-sheet { border-block-end: 1px solid var(--border); border-radius: 1.6rem; }
+  .journal-page-header { grid-template-columns: minmax(0, 1fr) minmax(20rem, .72fr); align-items: end; }
+}
+
+@media (max-width: 420px) {
+  .phase-page__shell,
+  .phase-content,
+  .detail-page__content { padding-inline: .9rem; }
+  .journal-toolbar { flex-wrap: wrap; }
+  .journal-toolbar .segmented-control { flex-basis: calc(100% - 6.5rem); }
+  .page-header__title { font-size: 2.1rem; }
+}
+
 .first-prayer-experience {
   position: fixed;
   z-index: 60;

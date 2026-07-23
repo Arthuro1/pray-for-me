@@ -56,8 +56,7 @@ export default function FeedbackModal({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
-      style={{ background: 'rgba(0,0,0,0.45)' }}
+      className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
@@ -65,21 +64,20 @@ export default function FeedbackModal({ onClose }) {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        className="relative w-full max-w-md rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8"
-        style={{ background: 'var(--surface)' }}
+        className="editorial-dialog relative w-full max-w-md px-6 pt-6 pb-8"
       >
         <button
           onClick={onClose}
           aria-label={t(lang, 'close')}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}
+          className="phase-icon-button absolute top-4 flex items-center justify-center rounded-full"
+          style={{ insetInlineEnd: '1rem' }}
         >
           <X size={15} />
         </button>
 
         {done ? (
           <div className="flex flex-col items-center py-8 text-center">
-            <CheckCircle size={44} style={{ color: '#2a7a4e' }} className="mb-3" />
+            <CheckCircle size={44} style={{ color: 'var(--success)' }} className="mb-3" />
             <p className="font-semibold text-lg mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackThanks')}</p>
             <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'feedbackThanksub')}</p>
             <button

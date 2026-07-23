@@ -68,13 +68,13 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 
   return (
     <div className="group/verse inline-flex items-start gap-1">
-      <VerseAccordion reference={ref} lang={lang} initialText={text} panelStyle={{ background: '#fffbf0', border: '0.5px solid #f0dfa0' }}>
+      <VerseAccordion reference={ref} lang={lang} initialText={text} panelStyle={{ background: 'var(--gold-soft)', border: '1px solid color-mix(in srgb, var(--gold) 28%, var(--border))' }}>
         {({ toggle }) => (
           <button
             onClick={toggle}
             title={t(lang, 'tipVerseToggle')}
             className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-            style={{ background: '#f5e8a0', color: '#7a5e00' }}
+            style={{ background: 'var(--gold-soft)', color: 'var(--gold)' }}
           >
             <BookOpen size={9} /> {ref}
           </button>
@@ -602,7 +602,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+    <div className="detail-page phase-page">
       {showScripture && (
         <ScriptureFirstStep
           prayerId={livePrayer.id}
@@ -672,13 +672,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
       {/* Community delete confirm */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={() => setShowDeleteConfirm(false)}>
-          <div ref={deleteTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'tipDeletePrayer')} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }} onClick={e => e.stopPropagation()}>
+        <div className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowDeleteConfirm(false)}>
+          <div ref={deleteTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'tipDeletePrayer')} className="editorial-dialog w-full max-w-sm p-5" onClick={e => e.stopPropagation()}>
             <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--text-1)' }}>{t(lang, 'tipDeletePrayer')}</h3>
             <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
             <div className="flex gap-2">
               <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
-              <button onClick={handleDeleteCommunity} disabled={deleting} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: '#e53e3e' }}>
+              <button onClick={handleDeleteCommunity} disabled={deleting} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--danger)' }}>
                 {deleting ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'tipDeletePrayer')}
               </button>
             </div>
@@ -687,16 +687,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       )}
 
       {/* Sticky header */}
-      <div
-        className="sticky top-0 z-10 px-4 md:px-8 py-4 flex items-center gap-3"
-        style={{ background: isAnswered ? 'var(--header-answered)' : 'var(--header)', backdropFilter: 'blur(12px)' }}
-      >
+      <div className="detail-header">
         <button
           onClick={onBack}
           aria-label={t(lang, 'tipBack')}
           title={t(lang, 'tipBack')}
-          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full transition-colors focus-visible:ring-2"
-          style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
+          className="detail-header__icon shrink-0 w-11 h-11 flex items-center justify-center rounded-full transition-colors"
         >
           <ArrowLeft size={18} aria-hidden="true" />
         </button>
@@ -713,19 +709,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               }}
               aria-label={t(lang, 'tipEditPrayer')}
               className="w-full text-base font-semibold bg-transparent border-b outline-none"
-              style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.6)' }}
+              style={{ color: 'var(--text-1)', borderColor: 'var(--border-strong)' }}
             />
           ) : (
             <h1
               onClick={canEditTitle ? startEditTitle : undefined}
-              className={`text-base font-semibold text-white truncate flex items-center gap-1.5 ${canEditTitle ? 'cursor-text' : ''}`}
+              className={`detail-header__title truncate flex items-center gap-1.5 ${canEditTitle ? 'cursor-text' : ''}`}
               style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
             >
               <span className="truncate">{livePrayer._locked ? t(lang, 'contentLocked') : loc(livePrayer.title)}</span>
               {canEditTitle && <Edit2 size={12} className="shrink-0 opacity-50" />}
             </h1>
           )}
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <p className="detail-header__meta text-xs">
             {isCommunity
               ? communityAuthor(livePrayer, user?.id, lang) + ' · ' + timeAgo(livePrayer.created_at, lang)
               : (() => {
@@ -746,8 +742,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'options')}
-              triggerStyle={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
-              iconColor="#fff"
+              triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
+              iconColor="var(--text-2)"
               items={[
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => setShowCommunityEdit(true), hidden: !canEditCommunityPrayer },
                 { key: 'delete', icon: Trash2, label: t(lang, 'delete'), danger: true, onClick: () => setShowDeleteConfirm(true), hidden: !canEditCommunityPrayer },
@@ -761,8 +757,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               lang={lang}
               ariaLabel={t(lang, 'options')}
               triggerRef={scheduleTriggerRef}
-              triggerStyle={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}
-              iconColor="#fff"
+              triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
+              iconColor="var(--text-2)"
               items={[
                 { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
@@ -781,7 +777,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
       </div>
 
-      <div className="px-4 md:px-8 py-5 max-w-2xl mx-auto space-y-4">
+      <div className="detail-page__content space-y-4">
 
         {/* On-demand translation toggle — only when the content's language
             plausibly differs from the interface's. Translated content is
@@ -1010,16 +1006,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 ? pp.verses
                 : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
               return (
-                <div key={pp.id} className="group rounded-xl p-3" style={{ background: '#fff8e6', borderLeft: '3px solid #f5c842' }}>
+                <div key={pp.id} className="prayer-point-card group rounded-xl p-3">
                   <div className="flex items-start gap-2">
-                    <p className="flex-1 text-sm leading-snug" style={{ color: '#5a4500' }}>{loc(pp.title)}</p>
+                    <p className="flex-1 text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(pp.title)}</p>
                     {canRemoveContent && (
                       <button
                         onClick={() => setConfirmRemovePoint(pp)}
                         aria-label={t(lang, 'tipRemovePoint')}
                         title={t(lang, 'tipRemovePoint')}
                         className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
-                        style={{ color: '#c4a020' }}
+                        style={{ color: 'var(--gold)' }}
                       >
                         <Trash2 size={13} aria-hidden="true" />
                       </button>
@@ -1051,7 +1047,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           onChange={e => setNewVerse(v => ({ ...v, ref: e.target.value }))}
                           placeholder={t(lang, 'verseRefPlaceholder')}
                           className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
-                          style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0', color: '#5a4500' }}
+                          style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-1)' }}
                           autoFocus
                         />
                         <input
@@ -1060,10 +1056,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           onChange={e => setNewVerse(v => ({ ...v, text: e.target.value }))}
                           placeholder={t(lang, 'verseTextPlaceholder')}
                           className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
-                          style={{ background: '#fffbf0', border: '0.5px solid #f0dfa0', color: '#5a4500' }}
+                          style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-1)' }}
                         />
                         <div className="flex gap-1.5">
-                          <button onClick={() => { setAddingVerseTo(null); setNewVerse({ ref: '', text: '' }); }} className="flex-1 text-xs rounded-lg py-1.5" style={{ background: '#f5e8a0', color: '#7a5e00' }}>{t(lang, 'cancel')}</button>
+                          <button onClick={() => { setAddingVerseTo(null); setNewVerse({ ref: '', text: '' }); }} className="flex-1 text-xs rounded-lg py-1.5" style={{ background: 'var(--gold-soft)', color: 'var(--gold)' }}>{t(lang, 'cancel')}</button>
                           <button
                             onClick={() => {
                               if (!newVerse.ref.trim()) return;
@@ -1073,7 +1069,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                             }}
                             title={t(lang, 'tipSaveVerse')}
                             className="flex-1 text-xs rounded-lg py-1.5 font-medium"
-                            style={{ background: '#f5c842', color: '#5a4500' }}
+                            style={{ background: 'var(--gold)', color: 'var(--surface)' }}
                           >
                             {t(lang, 'addVerse')}
                           </button>
@@ -1084,7 +1080,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         onClick={() => { setAddingVerseTo(pp.id); setNewVerse({ ref: '', text: '' }); }}
                         title={t(lang, 'tipAddVerse')}
                         className="mt-1.5 flex items-center gap-1 text-xs"
-                        style={{ color: '#c4a020' }}
+                        style={{ color: 'var(--gold)' }}
                       >
                         <Plus size={11} /> {t(lang, 'addVerse')}
                       </button>
@@ -1095,7 +1091,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             })}
           </div>
 
-          {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: '#a07010', background: '#fff8e0' }}>{recsError}</p>}
+          {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: 'var(--gold)', background: 'var(--gold-soft)' }}>{recsError}</p>}
 
           <div className="space-y-2 mt-2">
             {updateRecs.map(rec => (
