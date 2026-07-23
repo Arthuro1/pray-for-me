@@ -457,6 +457,7 @@ export default {
   "appearance": "ظاهر",
   "themeLight": "روشن",
   "themeDark": "تیره",
+  "themeNight": "شب",
   "continueGoogle": "ادامه با Google",
   "login": "ورود",
   "register": "ثبت نام",

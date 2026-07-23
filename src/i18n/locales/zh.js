@@ -458,6 +458,7 @@ export default {
   "appearance": "外观",
   "themeLight": "亮色",
   "themeDark": "暗色",
+  "themeNight": "夜间",
   "continueGoogle": "使用 Google 继续",
   "login": "登录",
   "register": "注册",

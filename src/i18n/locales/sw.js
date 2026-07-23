@@ -457,6 +457,7 @@ export default {
   "appearance": "Muonekano",
   "themeLight": "Mwanga",
   "themeDark": "Giza",
+  "themeNight": "Usiku",
   "continueGoogle": "Endelea na Google",
   "login": "Ingia",
   "register": "Jisajili",

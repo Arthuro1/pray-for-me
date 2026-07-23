@@ -457,6 +457,7 @@ export default {
   "appearance": "المظهر",
   "themeLight": "فاتح",
   "themeDark": "داكن",
+  "themeNight": "ليلي",
   "continueGoogle": "المتابعة مع Google",
   "login": "تسجيل الدخول",
   "register": "إنشاء حساب",

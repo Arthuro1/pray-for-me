@@ -458,6 +458,7 @@ export default {
   "appearance": "Apariencia",
   "themeLight": "Claro",
   "themeDark": "Oscuro",
+  "themeNight": "Noche",
   "continueGoogle": "Continuar con Google",
   "login": "Iniciar sesión",
   "register": "Registrarse",

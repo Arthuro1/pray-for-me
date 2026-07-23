@@ -457,6 +457,7 @@ export default {
   "appearance": "Tampilan",
   "themeLight": "Terang",
   "themeDark": "Gelap",
+  "themeNight": "Malam",
   "continueGoogle": "Lanjutkan dengan Google",
   "login": "Masuk",
   "register": "Daftar",

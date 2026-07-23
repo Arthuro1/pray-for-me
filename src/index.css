@@ -57,6 +57,10 @@
   --success-border: #bdd0c0;
   --card-answered-bg: var(--sage-soft);
   --card-answered-border: #bdd0c0;
+  /* Answered-status pill kept as tokens so each theme can retint it. Light and
+     Dark keep the established green; Night maps it to its teal of peace. */
+  --answered-pill-bg: #e8f5ed;
+  --answered-pill-text: #059669;
 }
 
 [data-theme="dark"] {
@@ -107,6 +111,64 @@
   --success-border: #405d47;
   --card-answered-bg: var(--sage-soft);
   --card-answered-border: #405d47;
+}
+
+/* ── Night ────────────────────────────────────────────────────────────────
+   The nocturnal "Vigil-led blend": a deep indigo ground with a luminous
+   periwinkle accent (in --plum's role), violet as the "Constellation" note
+   (in --gold's role: labels, Scripture), and a calm teal-mint for peace and
+   answered prayer (in --sage's role). No metal — the color itself leads.
+   Everything reads through these tokens, so this one block re-skins the app. */
+[data-theme="night"] {
+  color-scheme: dark;
+  --background: #0f1322;
+  --surface: #191f34;
+  --surface-muted: #1f2740;
+  --surface-raised: #232b42;
+  --ink: #e8ecfb;
+  --text-muted: #a7afce;
+  --text-faint: #737a9c;
+  --plum: #6b76d6;
+  --plum-dark: #2b3566;
+  --plum-deep: #101736;
+  --gold: #b4a6ff;
+  --gold-soft: #221f44;
+  --sage: #6fcdb8;
+  --sage-soft: #16302a;
+  --border: #232a44;
+  --border-strong: #333c5c;
+  --overlay: rgba(7, 9, 22, 0.78);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 12px 30px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 22px 64px rgba(0, 0, 0, 0.44);
+
+  --bg: var(--background);
+  --surface-2: var(--surface-muted);
+  --border-soft: #2a3350;
+  --header: linear-gradient(150deg, #1b2340 0%, #34407a 100%);
+  --header-answered: linear-gradient(150deg, #163027 0%, #2f5a4e 100%);
+  --text-1: var(--ink);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-faint);
+  --accent: var(--plum);
+  --accent-2: #b4a6ff;
+  --accent-soft: #20264a;
+  --accent-border: #3a4470;
+  --nav-active-bg: #20264a;
+  --nav-active-color: #c6d0ff;
+  --badge: #6a5cc0;
+  --badge-text: #ffffff;
+  --nav-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
+  --input-bg: #171d30;
+  --input-border: #2f3856;
+  --danger: #ef8f8f;
+  --danger-bg: #3a1e22;
+  --success: #6fcdb8;
+  --success-bg: var(--sage-soft);
+  --success-border: #2f5a4e;
+  --card-answered-bg: var(--sage-soft);
+  --card-answered-border: #2f5a4e;
+  --answered-pill-bg: #16302a;
+  --answered-pill-text: #6fcdb8;
 }
 
 html {
@@ -1033,6 +1095,25 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 [dir="rtl"] .rtl-mirror { transform: scaleX(-1); }
+
+/* ── Night-theme signatures — scoped so Light and Dark stay untouched ──────
+   The immersive first-prayer moment keeps a deep-indigo, cool-lit night sky,
+   and each request on Today carries a small "constellation" point of light. */
+[data-theme="night"] .first-prayer-experience {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(159, 176, 255, 0.16), transparent 34rem),
+    linear-gradient(155deg, var(--plum-deep), #1b2340);
+}
+
+[data-theme="night"] .journal-row::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 8px color-mix(in srgb, var(--accent-2) 70%, transparent);
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

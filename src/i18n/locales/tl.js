@@ -457,6 +457,7 @@ export default {
   "appearance": "Hitsura",
   "themeLight": "Maliwanag",
   "themeDark": "Madilim",
+  "themeNight": "Gabi",
   "continueGoogle": "Magpatuloy sa Google",
   "login": "Mag-login",
   "register": "Mag-register",

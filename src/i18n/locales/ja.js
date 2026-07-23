@@ -458,6 +458,7 @@ export default {
   "appearance": "外観",
   "themeLight": "ライト",
   "themeDark": "ダーク",
+  "themeNight": "ナイト",
   "continueGoogle": "Google で続ける",
   "login": "ログイン",
   "register": "登録",

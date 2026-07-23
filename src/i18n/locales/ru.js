@@ -457,6 +457,7 @@ export default {
   "appearance": "Внешний вид",
   "themeLight": "Светлая",
   "themeDark": "Тёмная",
+  "themeNight": "Ночная",
   "continueGoogle": "Продолжить с Google",
   "login": "Войти",
   "register": "Регистрация",

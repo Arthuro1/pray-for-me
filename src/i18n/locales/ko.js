@@ -457,6 +457,7 @@ export default {
   "appearance": "외관",
   "themeLight": "밝음",
   "themeDark": "어두움",
+  "themeNight": "야간",
   "continueGoogle": "Google로 계속",
   "login": "로그인",
   "register": "회원가입",

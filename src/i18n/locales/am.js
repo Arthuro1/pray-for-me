@@ -457,6 +457,7 @@ export default {
   "appearance": "መልክ",
   "themeLight": "ብርሃን",
   "themeDark": "ጨለማ",
+  "themeNight": "ሌሊት",
   "continueGoogle": "በGoogle ቀጥል",
   "login": "ግባ",
   "register": "ተመዝገብ",

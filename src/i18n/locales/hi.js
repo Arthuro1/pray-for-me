@@ -457,6 +457,7 @@ export default {
   "appearance": "दिखावट",
   "themeLight": "हल्का",
   "themeDark": "गहरा",
+  "themeNight": "रात",
   "continueGoogle": "Google से जारी रखें",
   "login": "लॉग इन",
   "register": "पंजीकरण",

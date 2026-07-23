@@ -427,6 +427,7 @@ export default {
   "appearance": "Apparence",
   "themeLight": "Clair",
   "themeDark": "Sombre",
+  "themeNight": "Nuit",
   "continueGoogle": "Continuer avec Google",
   "login": "Connexion",
   "register": "Inscription",

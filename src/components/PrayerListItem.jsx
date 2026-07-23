@@ -67,7 +67,7 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
           <span
             className="text-xs px-2.5 py-1 rounded-full font-medium"
             style={isAnswered
-              ? { background: '#e8f5ed', color: '#059669' }
+              ? { background: 'var(--answered-pill-bg)', color: 'var(--answered-pill-text)' }
               : isEnded
                 ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
                 : { background: 'var(--accent-soft)', color: 'var(--accent)' }}
