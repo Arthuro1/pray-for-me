@@ -38,6 +38,26 @@ export function isWithinReminderWindow(
 export const json = (obj: unknown, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
 
+// Only an internal/server caller (pg_cron, a DB webhook) may invoke these
+// functions. They're deployed with --no-verify-jwt so pg_net can reach them,
+// so gate on a shared secret explicitly instead. Accepts EITHER the platform
+// service-role key OR a dedicated NOTIFY_FN_SECRET — the latter is
+// rotation-proof and set by you (`supabase secrets set NOTIFY_FN_SECRET=...`),
+// so auth doesn't depend on the caller reproducing the exact injected
+// service-role string. The bearer is normalized (prefix stripped + trimmed) so
+// a stray newline or space in a cron header can't cause a false 401.
+// Returns a 401 Response to return immediately, or null when authorized.
+export function requireInternalAuth(req: Request): Response | null {
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const fnSecret = Deno.env.get('NOTIFY_FN_SECRET');
+  const bearer = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  const allowed = [serviceKey, fnSecret].filter((k): k is string => !!k);
+  if (allowed.length === 0 || !allowed.includes(bearer)) {
+    return json({ error: 'unauthorized' }, 401);
+  }
+  return null;
+}
+
 // Reads/validates the env this function needs and returns a ready Supabase
 // client, or a Response to return immediately when something's missing —
 // surfaces a clear reason instead of a blank 500.

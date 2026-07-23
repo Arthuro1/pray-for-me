@@ -18,7 +18,7 @@
 // Deploy:  supabase functions deploy send-event-notifications --no-verify-jwt
 // Secrets: (already set for the reminder functions)
 //   supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
-import { initReminderEnv, sendPush, json } from '../_shared/reminders.ts';
+import { initReminderEnv, requireInternalAuth, sendPush, json } from '../_shared/reminders.ts';
 import { eventPayload, digestPayload } from '../_shared/eventNotify.ts';
 
 type Notification = {
@@ -172,25 +172,14 @@ async function runDigest(supabase: any, limit: number) {
 
 Deno.serve(async (req) => {
   try {
+    // Only an internal/server caller may drive delivery — see requireInternalAuth
+    // in _shared/reminders.ts for why (--no-verify-jwt deploy, shared-secret gate).
+    const unauthorized = requireInternalAuth(req);
+    if (unauthorized) return unauthorized;
+
     const init = initReminderEnv();
     if ('error' in init) return init.error;
     const { supabase } = init;
-
-    // Only an internal/server caller may drive delivery. The function is
-    // deployed with --no-verify-jwt (so pg_net / the webhook can reach it), so
-    // gate on a shared secret explicitly. Accept EITHER the platform service-role
-    // key OR a dedicated NOTIFY_FN_SECRET — the latter is rotation-proof and set
-    // by you (`supabase secrets set NOTIFY_FN_SECRET=...`), so delivery no longer
-    // depends on the caller reproducing the exact injected service-role string.
-    // The bearer is normalised (prefix stripped + trimmed) so a stray newline or
-    // space in a cron/webhook header can't cause a false 401.
-    const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    const fnSecret = Deno.env.get('NOTIFY_FN_SECRET');
-    const bearer = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
-    const allowed = [serviceKey, fnSecret].filter((k): k is string => !!k);
-    if (allowed.length === 0 || !allowed.includes(bearer)) {
-      return json({ error: 'unauthorized' }, 401);
-    }
 
     const body = await req.json().catch(() => ({} as any));
 

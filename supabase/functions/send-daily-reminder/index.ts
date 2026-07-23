@@ -10,6 +10,7 @@
 import {
   isWithinReminderWindow,
   initReminderEnv,
+  requireInternalAuth,
   sendPush,
   json,
 } from '../_shared/reminders.ts';
@@ -24,8 +25,11 @@ function localDayKey(now: Date, tzOffsetMin: number): string {
   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
 }
 
-Deno.serve(async () => {
+Deno.serve(async (req) => {
   try {
+    const unauthorized = requireInternalAuth(req);
+    if (unauthorized) return unauthorized;
+
     const init = initReminderEnv();
     if ('error' in init) return init.error;
     const { supabase } = init;

@@ -12,13 +12,17 @@ import {
   followUpDue,
   isWithinReminderWindow,
   initReminderEnv,
+  requireInternalAuth,
   sendPush,
   json,
 } from '../_shared/reminders.ts';
 import { followUpPayload } from '../_shared/notify.ts';
 
-Deno.serve(async () => {
+Deno.serve(async (req) => {
   try {
+    const unauthorized = requireInternalAuth(req);
+    if (unauthorized) return unauthorized;
+
     const init = initReminderEnv();
     if ('error' in init) return init.error;
     const { supabase } = init;
