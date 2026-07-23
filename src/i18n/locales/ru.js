@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "Сбросить фильтры",
   "journalFilters": "Фильтры дневника",
   "journalSource": "Источник или группа",
+  "faithfulnessRecapTitle": "Ежемесячное размышление",
+  "faithfulnessRecapIntro": "Остановитесь и вспомните Божью верность в {month}.",
+  "faithfulnessRecapPrivate": "Это размышление видно только вам. Ничего не покинет его без вашего выбора.",
+  "faithfulnessRecapOpen": "Вспомнить {month}",
+  "faithfulnessPrepareShare": "Подготовить публикацию",
+  "faithfulnessShareNote": "По умолчанию ничего не выбрано. Точно укажите, какие названия молитв или свидетельства включить.",
+  "faithfulnessPreviewAction": "Просмотреть выбор",
+  "faithfulnessPreviewTitle": "Предпросмотр публикации",
+  "faithfulnessShareHeading": "Вспоминая Божью верность в {month}",
+  "faithfulnessShareAction": "Поделиться размышлением",
+  "faithfulnessCopyAction": "Копировать размышление",
+  "faithfulnessCopied": "Размышление скопировано",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

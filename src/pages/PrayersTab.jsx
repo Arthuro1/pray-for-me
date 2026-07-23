@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
@@ -30,6 +30,8 @@ import {
   journalFilterOptions,
   journalFiltersActive,
 } from '../lib/journalSearch';
+
+const FaithfulnessRecap = lazy(() => import('../components/FaithfulnessRecap'));
 
 // The Journal: every request and its history, in two simple segments — Active
 // and Answered. Search and useful retrieval filters hide behind icons, while
@@ -361,6 +363,11 @@ export default function PrayersTab({ onAdd }) {
                 {t(lang, 'answeredThisWeek', { n: recap.answered })}
               </p>
             )}
+            {!filtersActive && (
+              <Suspense fallback={null}>
+                <FaithfulnessRecap prayers={prayers} lang={lang} tr={tr} />
+              </Suspense>
+            )}
             {filtersActive && answeredCount > 0 && (
               <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }} role="status">
                 {resultsLabel(filteredEntries.length)}
@@ -382,7 +389,7 @@ export default function PrayersTab({ onAdd }) {
                 prayers={filteredEntries.map(({ prayer }) => prayer)}
                 searchMatches={searchMatches}
                 showCount={!filtersActive}
-                showReflection={!filtersActive}
+                showReflection={false}
               />
             )}
           </>

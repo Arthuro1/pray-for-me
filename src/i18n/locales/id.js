@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "Hapus filter",
   "journalFilters": "Filter jurnal",
   "journalSource": "Sumber atau grup",
+  "faithfulnessRecapTitle": "Refleksi bulanan",
+  "faithfulnessRecapIntro": "Berhentilah sejenak dan ingat kesetiaan Tuhan pada {month}.",
+  "faithfulnessRecapPrivate": "Refleksi ini hanya untuk Anda. Tidak ada yang keluar dari sini kecuali Anda memilihnya.",
+  "faithfulnessRecapOpen": "Renungkan {month}",
+  "faithfulnessPrepareShare": "Siapkan untuk dibagikan",
+  "faithfulnessShareNote": "Tidak ada yang dipilih secara otomatis. Pilih dengan jelas judul doa atau kesaksian yang ingin disertakan.",
+  "faithfulnessPreviewAction": "Pratinjau pilihan",
+  "faithfulnessPreviewTitle": "Pratinjau berbagi",
+  "faithfulnessShareHeading": "Mengingat kesetiaan Tuhan pada {month}",
+  "faithfulnessShareAction": "Bagikan refleksi",
+  "faithfulnessCopyAction": "Salin refleksi",
+  "faithfulnessCopied": "Refleksi disalin",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

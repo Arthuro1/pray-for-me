@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "Futa vichujio",
   "journalFilters": "Vichujio vya shajara",
   "journalSource": "Chanzo au kikundi",
+  "faithfulnessRecapTitle": "Tafakari ya kila mwezi",
+  "faithfulnessRecapIntro": "Tulia na ukumbuke uaminifu wa Mungu katika {month}.",
+  "faithfulnessRecapPrivate": "Tafakari hii ni yako binafsi. Hakuna kinachoondoka hapa bila wewe kuchagua.",
+  "faithfulnessRecapOpen": "Tafakari kuhusu {month}",
+  "faithfulnessPrepareShare": "Andaa kushiriki",
+  "faithfulnessShareNote": "Hakuna kilichochaguliwa kwa chaguo-msingi. Chagua hasa vichwa vya maombi au ushuhuda wa kujumuisha.",
+  "faithfulnessPreviewAction": "Hakiki yaliyochaguliwa",
+  "faithfulnessPreviewTitle": "Hakiki ya kushiriki",
+  "faithfulnessShareHeading": "Kukumbuka uaminifu wa Mungu katika {month}",
+  "faithfulnessShareAction": "Shiriki tafakari",
+  "faithfulnessCopyAction": "Nakili tafakari",
+  "faithfulnessCopied": "Tafakari imenakiliwa",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

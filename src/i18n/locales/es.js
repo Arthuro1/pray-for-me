@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "Quitar filtros",
   "journalFilters": "Filtros del diario",
   "journalSource": "Origen o grupo",
+  "faithfulnessRecapTitle": "Reflexión mensual",
+  "faithfulnessRecapIntro": "Haz una pausa y recuerda la fidelidad de Dios en {month}.",
+  "faithfulnessRecapPrivate": "Esta reflexión es privada. Nada sale de aquí a menos que tú lo elijas.",
+  "faithfulnessRecapOpen": "Reflexionar sobre {month}",
+  "faithfulnessPrepareShare": "Preparar para compartir",
+  "faithfulnessShareNote": "No hay nada seleccionado de forma predeterminada. Elige exactamente qué títulos de oración o testimonios incluir.",
+  "faithfulnessPreviewAction": "Previsualizar selección",
+  "faithfulnessPreviewTitle": "Vista previa para compartir",
+  "faithfulnessShareHeading": "Recordando la fidelidad de Dios en {month}",
+  "faithfulnessShareAction": "Compartir reflexión",
+  "faithfulnessCopyAction": "Copiar reflexión",
+  "faithfulnessCopied": "Reflexión copiada",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

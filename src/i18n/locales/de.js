@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "Filter zurücksetzen",
   "journalFilters": "Tagebuchfilter",
   "journalSource": "Quelle oder Gruppe",
+  "faithfulnessRecapTitle": "Monatlicher Rückblick",
+  "faithfulnessRecapIntro": "Halte inne und erinnere dich an Gottes Treue im {month}.",
+  "faithfulnessRecapPrivate": "Dieser Rückblick ist nur für dich. Nichts wird weitergegeben, solange du es nicht auswählst.",
+  "faithfulnessRecapOpen": "{month} betrachten",
+  "faithfulnessPrepareShare": "Teilen vorbereiten",
+  "faithfulnessShareNote": "Standardmäßig ist nichts ausgewählt. Wähle genau die Gebetstitel oder Zeugnisse aus, die du einbeziehen möchtest.",
+  "faithfulnessPreviewAction": "Auswahl ansehen",
+  "faithfulnessPreviewTitle": "Vorschau zum Teilen",
+  "faithfulnessShareHeading": "Erinnerung an Gottes Treue im {month}",
+  "faithfulnessShareAction": "Rückblick teilen",
+  "faithfulnessCopyAction": "Rückblick kopieren",
+  "faithfulnessCopied": "Rückblick kopiert",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

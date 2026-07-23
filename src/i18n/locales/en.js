@@ -832,6 +832,18 @@ export default {
   "clearFiltersBtn": "Clear filters",
   "journalFilters": "Journal filters",
   "journalSource": "Source or group",
+  "faithfulnessRecapTitle": "Monthly reflection",
+  "faithfulnessRecapIntro": "Pause and remember God's faithfulness in {month}.",
+  "faithfulnessRecapPrivate": "Private to you. Nothing leaves this reflection unless you choose it.",
+  "faithfulnessRecapOpen": "Reflect on {month}",
+  "faithfulnessPrepareShare": "Prepare to share",
+  "faithfulnessShareNote": "Nothing is selected by default. Choose exactly which prayer titles or testimonies to include.",
+  "faithfulnessPreviewAction": "Preview selection",
+  "faithfulnessPreviewTitle": "Sharing preview",
+  "faithfulnessShareHeading": "Remembering God's faithfulness in {month}",
+  "faithfulnessShareAction": "Share reflection",
+  "faithfulnessCopyAction": "Copy reflection",
+  "faithfulnessCopied": "Reflection copied",
 
   // Persona pass, second refinement (2026-07): due-today intercession, person
   // sessions, Grow durations & why-steps, audience/protection split, schedule

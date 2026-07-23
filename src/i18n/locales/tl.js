@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "Alisin ang mga filter",
   "journalFilters": "Mga filter ng journal",
   "journalSource": "Pinagmulan o grupo",
+  "faithfulnessRecapTitle": "Buwanang pagninilay",
+  "faithfulnessRecapIntro": "Huminto sandali at alalahanin ang katapatan ng Diyos noong {month}.",
+  "faithfulnessRecapPrivate": "Pribado para sa iyo ang pagninilay na ito. Walang lalabas dito maliban kung pipiliin mo.",
+  "faithfulnessRecapOpen": "Magnilay tungkol sa {month}",
+  "faithfulnessPrepareShare": "Maghanda upang ibahagi",
+  "faithfulnessShareNote": "Walang awtomatikong napili. Piliin nang malinaw ang mga pamagat ng panalangin o patotoong isasama.",
+  "faithfulnessPreviewAction": "Tingnan ang napili",
+  "faithfulnessPreviewTitle": "Preview ng ibabahagi",
+  "faithfulnessShareHeading": "Pag-alala sa katapatan ng Diyos noong {month}",
+  "faithfulnessShareAction": "Ibahagi ang pagninilay",
+  "faithfulnessCopyAction": "Kopyahin ang pagninilay",
+  "faithfulnessCopied": "Nakopya ang pagninilay",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

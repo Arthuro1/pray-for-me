@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "ማጣሪያዎችን አጽዳ",
   "journalFilters": "የጸሎት ማስታወሻ ማጣሪያዎች",
   "journalSource": "ምንጭ ወይም ቡድን",
+  "faithfulnessRecapTitle": "ወርሃዊ ማሰላሰል",
+  "faithfulnessRecapIntro": "ቆም ብለው በ{month} የእግዚአብሔርን ታማኝነት ያስቡ።",
+  "faithfulnessRecapPrivate": "ይህ ማሰላሰል ለእርስዎ ብቻ ነው። ካልመረጡት በስተቀር ምንም ነገር ከዚህ አይወጣም።",
+  "faithfulnessRecapOpen": "ስለ {month} ያሰላስሉ",
+  "faithfulnessPrepareShare": "ለማጋራት ያዘጋጁ",
+  "faithfulnessShareNote": "በነባሪ ምንም አልተመረጠም። የሚካተቱትን የጸሎት ርዕሶች ወይም ምስክርነቶች በግልጽ ይምረጡ።",
+  "faithfulnessPreviewAction": "ምርጫውን ይመልከቱ",
+  "faithfulnessPreviewTitle": "የማጋራት ቅድመ ዕይታ",
+  "faithfulnessShareHeading": "በ{month} የእግዚአብሔርን ታማኝነት ማስታወስ",
+  "faithfulnessShareAction": "ማሰላሰሉን ያጋሩ",
+  "faithfulnessCopyAction": "ማሰላሰሉን ይቅዱ",
+  "faithfulnessCopied": "ማሰላሰሉ ተቀድቷል",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

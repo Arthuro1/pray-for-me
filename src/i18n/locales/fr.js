@@ -832,6 +832,18 @@ export default {
   "clearFiltersBtn": "Effacer les filtres",
   "journalFilters": "Filtres du journal",
   "journalSource": "Source ou groupe",
+  "faithfulnessRecapTitle": "Réflexion mensuelle",
+  "faithfulnessRecapIntro": "Prenez un moment pour vous souvenir de la fidélité de Dieu en {month}.",
+  "faithfulnessRecapPrivate": "Cette réflexion reste privée. Rien n'en sort sans votre choix.",
+  "faithfulnessRecapOpen": "Revoir {month}",
+  "faithfulnessPrepareShare": "Préparer le partage",
+  "faithfulnessShareNote": "Rien n'est sélectionné par défaut. Choisissez exactement les titres de prières ou les témoignages à inclure.",
+  "faithfulnessPreviewAction": "Aperçu de la sélection",
+  "faithfulnessPreviewTitle": "Aperçu du partage",
+  "faithfulnessShareHeading": "Se souvenir de la fidélité de Dieu en {month}",
+  "faithfulnessShareAction": "Partager la réflexion",
+  "faithfulnessCopyAction": "Copier la réflexion",
+  "faithfulnessCopied": "Réflexion copiée",
 
   // Persona pass, second refinement (2026-07): due-today intercession, person
   // sessions, Grow durations & why-steps, audience/protection split, schedule

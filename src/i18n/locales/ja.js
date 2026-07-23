@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "絞り込みを解除",
   "journalFilters": "祈りの日記の絞り込み",
   "journalSource": "出典またはグループ",
+  "faithfulnessRecapTitle": "月ごとの振り返り",
+  "faithfulnessRecapIntro": "立ち止まり、{month}に示された神の真実を覚えましょう。",
+  "faithfulnessRecapPrivate": "この振り返りはあなただけのものです。選ばない限り、内容が外に出ることはありません。",
+  "faithfulnessRecapOpen": "{month}を振り返る",
+  "faithfulnessPrepareShare": "共有の準備",
+  "faithfulnessShareNote": "初期状態では何も選択されていません。含める祈りの題名や証しを一つずつ選んでください。",
+  "faithfulnessPreviewAction": "選択内容を確認",
+  "faithfulnessPreviewTitle": "共有プレビュー",
+  "faithfulnessShareHeading": "{month}に示された神の真実を覚えて",
+  "faithfulnessShareAction": "振り返りを共有",
+  "faithfulnessCopyAction": "振り返りをコピー",
+  "faithfulnessCopied": "振り返りをコピーしました",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

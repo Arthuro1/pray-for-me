@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "清除筛选",
   "journalFilters": "祷告日记筛选",
   "journalSource": "来源或小组",
+  "faithfulnessRecapTitle": "每月默想",
+  "faithfulnessRecapIntro": "安静片刻，回想上帝在{month}的信实。",
+  "faithfulnessRecapPrivate": "这份默想仅你可见。除非你主动选择，否则任何内容都不会离开这里。",
+  "faithfulnessRecapOpen": "回顾{month}",
+  "faithfulnessPrepareShare": "准备分享",
+  "faithfulnessShareNote": "默认不选择任何内容。请明确选择要包含的祷告标题或见证。",
+  "faithfulnessPreviewAction": "预览所选内容",
+  "faithfulnessPreviewTitle": "分享预览",
+  "faithfulnessShareHeading": "纪念上帝在{month}的信实",
+  "faithfulnessShareAction": "分享默想",
+  "faithfulnessCopyAction": "复制默想",
+  "faithfulnessCopied": "默想已复制",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

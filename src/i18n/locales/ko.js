@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "필터 지우기",
   "journalFilters": "기도 일지 필터",
   "journalSource": "출처 또는 그룹",
+  "faithfulnessRecapTitle": "월간 묵상",
+  "faithfulnessRecapIntro": "잠시 멈추어 {month}에 베푸신 하나님의 신실하심을 기억해 보세요.",
+  "faithfulnessRecapPrivate": "이 묵상은 나만 볼 수 있습니다. 직접 선택하지 않으면 어떤 내용도 밖으로 나가지 않습니다.",
+  "faithfulnessRecapOpen": "{month} 돌아보기",
+  "faithfulnessPrepareShare": "공유 준비",
+  "faithfulnessShareNote": "기본으로 선택된 내용은 없습니다. 포함할 기도 제목이나 간증을 정확히 선택하세요.",
+  "faithfulnessPreviewAction": "선택 내용 미리보기",
+  "faithfulnessPreviewTitle": "공유 미리보기",
+  "faithfulnessShareHeading": "{month}에 베푸신 하나님의 신실하심을 기억하며",
+  "faithfulnessShareAction": "묵상 공유",
+  "faithfulnessCopyAction": "묵상 복사",
+  "faithfulnessCopied": "묵상을 복사했습니다",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

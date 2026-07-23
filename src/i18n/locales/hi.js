@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "फ़िल्टर हटाएँ",
   "journalFilters": "प्रार्थना डायरी फ़िल्टर",
   "journalSource": "स्रोत या समूह",
+  "faithfulnessRecapTitle": "मासिक मनन",
+  "faithfulnessRecapIntro": "ठहरें और {month} में परमेश्वर की विश्वासयोग्यता को याद करें।",
+  "faithfulnessRecapPrivate": "यह मनन केवल आपके लिए है। आपकी पसंद के बिना यहाँ से कुछ भी बाहर नहीं जाता।",
+  "faithfulnessRecapOpen": "{month} पर मनन करें",
+  "faithfulnessPrepareShare": "साझा करने की तैयारी करें",
+  "faithfulnessShareNote": "पहले से कुछ भी चुना नहीं गया है। केवल वही प्रार्थना शीर्षक या गवाहियाँ चुनें जिन्हें शामिल करना है।",
+  "faithfulnessPreviewAction": "चयन का पूर्वावलोकन",
+  "faithfulnessPreviewTitle": "साझा करने का पूर्वावलोकन",
+  "faithfulnessShareHeading": "{month} में परमेश्वर की विश्वासयोग्यता का स्मरण",
+  "faithfulnessShareAction": "मनन साझा करें",
+  "faithfulnessCopyAction": "मनन कॉपी करें",
+  "faithfulnessCopied": "मनन कॉपी हो गया",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

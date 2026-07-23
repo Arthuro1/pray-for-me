@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "مسح عوامل التصفية",
   "journalFilters": "عوامل تصفية سجل الصلاة",
   "journalSource": "المصدر أو المجموعة",
+  "faithfulnessRecapTitle": "تأمل شهري",
+  "faithfulnessRecapIntro": "توقّف قليلًا وتذكّر أمانة الله في {month}.",
+  "faithfulnessRecapPrivate": "هذا التأمل خاص بك. لا يخرج منه شيء ما لم تختره بنفسك.",
+  "faithfulnessRecapOpen": "تأمل في {month}",
+  "faithfulnessPrepareShare": "التحضير للمشاركة",
+  "faithfulnessShareNote": "لا يتم تحديد أي شيء افتراضيًا. اختر بدقة عناوين الصلوات أو الشهادات التي تريد تضمينها.",
+  "faithfulnessPreviewAction": "معاينة الاختيار",
+  "faithfulnessPreviewTitle": "معاينة المشاركة",
+  "faithfulnessShareHeading": "تذكّر أمانة الله في {month}",
+  "faithfulnessShareAction": "مشاركة التأمل",
+  "faithfulnessCopyAction": "نسخ التأمل",
+  "faithfulnessCopied": "تم نسخ التأمل",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

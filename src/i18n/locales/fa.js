@@ -831,6 +831,18 @@ export default {
   "clearFiltersBtn": "پاک‌کردن فیلترها",
   "journalFilters": "فیلترهای دفتر دعا",
   "journalSource": "منبع یا گروه",
+  "faithfulnessRecapTitle": "تأمل ماهانه",
+  "faithfulnessRecapIntro": "لحظه‌ای مکث کنید و وفاداری خدا را در {month} به یاد آورید.",
+  "faithfulnessRecapPrivate": "این تأمل فقط برای شماست. تا خودتان انتخاب نکنید، چیزی از آن بیرون نمی‌رود.",
+  "faithfulnessRecapOpen": "تأمل دربارهٔ {month}",
+  "faithfulnessPrepareShare": "آماده‌سازی برای اشتراک",
+  "faithfulnessShareNote": "به‌طور پیش‌فرض چیزی انتخاب نشده است. دقیقاً عنوان دعاها یا شهادت‌هایی را که می‌خواهید بگنجانید انتخاب کنید.",
+  "faithfulnessPreviewAction": "پیش‌نمایش انتخاب",
+  "faithfulnessPreviewTitle": "پیش‌نمایش اشتراک",
+  "faithfulnessShareHeading": "یادآوری وفاداری خدا در {month}",
+  "faithfulnessShareAction": "اشتراک تأمل",
+  "faithfulnessCopyAction": "رونوشت تأمل",
+  "faithfulnessCopied": "تأمل رونوشت شد",
 
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,

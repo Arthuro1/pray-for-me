@@ -85,6 +85,15 @@ beforeEach(() => {
 });
 
 describe('Journal retrieval', () => {
+  it('reveals the monthly reflection contextually in the answered journal', async () => {
+    renderJournal();
+    expect(screen.queryByRole('button', { name: new RegExp(t(lang, 'faithfulnessRecapTitle'), 'i') })).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 2` }));
+
+    expect(await screen.findByRole('button', { name: new RegExp(t(lang, 'faithfulnessRecapTitle'), 'i') })).toBeTruthy();
+  });
+
   it('opens filters as a modal overlay and closes it with Escape', () => {
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
