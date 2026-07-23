@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "پیوند یا کد دعوتی را که یکی از اعضای گروه فرستاده است اینجا بچسبانید.",
   "joinGroupPlaceholder": "پیوند یا کد دعوت",
   "reminderNudge": "آیا یادآوری ملایمی برای فردا کمک می‌کند؟",
+  "activationRhythmTitle": "زمان بازگشت این دعا را انتخاب کنید",
+  "activationRhythmBody": "هر دعا می‌تواند ریتم خودش را داشته باشد. زمان بازگشت این دعا را بررسی کنید تا با زندگی شما هماهنگ باشد.",
+  "activationRhythmCta": "بررسی ریتم",
+  "activationReminderTitle": "آیا یک یادآوری ملایم کمک می‌کند؟",
+  "activationReminderBody": "زمانی را انتخاب کنید تا Pray4Me دعاهای امروز را دوباره به شما یادآوری کند.",
+  "activationOrganizeTitle": "مرور دفتر دعای در حال رشد را آسان‌تر کنید",
+  "activationOrganizeBody": "به یک دعا شخص یا دسته‌ای اضافه کنید. سازمان‌دهی بیشتر فقط زمانی ظاهر می‌شود که مفید باشد.",
+  "activationOrganizeCta": "سازمان‌دهی یک دعا",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "ورود",

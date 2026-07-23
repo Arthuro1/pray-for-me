@@ -132,6 +132,7 @@ export default function App() {
   const [showForm, setShowForm] = useState(false);
   const [editPrayer, setEditPrayer] = useState(null);
   const [formPrefill, setFormPrefill] = useState(null);
+  const [formOptions, setFormOptions] = useState(null);
   // The unauthenticated experience: 'landing' → 'prayer' (pray-first guest flow) →
   // 'auth'. `authIntent` distinguishes a direct sign-in from the save-your-prayer
   // path so AuthPage can present the right (warm, contextual) copy.
@@ -158,13 +159,28 @@ export default function App() {
   const [vaultChecked, setVaultChecked] = useState(false);
   const [cryptoStatus, setCryptoStatus] = useState(null);
 
-  const openAdd = () => { setEditPrayer(null); setFormPrefill(null); setShowForm(true); };
-  const openEdit = (p) => { setEditPrayer(p); setFormPrefill(null); setShowForm(true); };
+  const openAdd = () => {
+    setEditPrayer(null);
+    setFormPrefill(null);
+    setFormOptions(null);
+    setShowForm(true);
+  };
+  const openEdit = (p, options = null) => {
+    setEditPrayer(p);
+    setFormPrefill(null);
+    setFormOptions(options);
+    setShowForm(true);
+  };
   // Open the existing prayer-creation flow seeded with an optional, fully-editable
   // prefill (used by the gospel journey's "Create a private prayer" next step).
   // Personal prayers are private by default, so no extra visibility handling is
   // needed — this just reuses the same form/store/validation.
-  const openCreatePrayer = (prefill) => { setEditPrayer(null); setFormPrefill(prefill || null); setShowForm(true); };
+  const openCreatePrayer = (prefill) => {
+    setEditPrayer(null);
+    setFormPrefill(prefill || null);
+    setFormOptions(null);
+    setShowForm(true);
+  };
 
   // Load the active language's strings (French is always bundled as fallback).
   useEffect(() => {
@@ -375,7 +391,7 @@ export default function App() {
         <ErrorBoundary lang={lang} resetKey={location.pathname}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<HomeTab onAdd={openAdd} />} />
+              <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} />} />
               <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
               <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
               {/* The answered gallery is the Journal's second segment now; the
@@ -397,7 +413,17 @@ export default function App() {
         </ErrorBoundary>
       </Layout>
       {showForm && (
-        <PrayerForm onClose={() => { setShowForm(false); setEditPrayer(null); setFormPrefill(null); }} editPrayer={editPrayer} prefill={formPrefill} />
+        <PrayerForm
+          onClose={() => {
+            setShowForm(false);
+            setEditPrayer(null);
+            setFormPrefill(null);
+            setFormOptions(null);
+          }}
+          editPrayer={editPrayer}
+          prefill={formPrefill}
+          initialOrganizeOpen={!!formOptions?.openOrganize}
+        />
       )}
       {showOnboarding && (
         <Onboarding lang={lang} onFinish={finishOnboarding} />

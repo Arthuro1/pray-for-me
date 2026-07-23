@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "グループのメンバーから共有された招待リンクまたはコードを貼り付けてください。",
   "joinGroupPlaceholder": "招待リンクまたはコード",
   "reminderNudge": "明日、やさしいリマインダーはいかがですか？",
+  "activationRhythmTitle": "この祈りが戻るタイミングを選ぶ",
+  "activationRhythmBody": "祈りごとに異なるリズムを持てます。生活に合うよう、この祈りが戻るタイミングを確認しましょう。",
+  "activationRhythmCta": "リズムを確認",
+  "activationReminderTitle": "やさしいリマインダーはいかがですか？",
+  "activationReminderBody": "時間を選ぶと、Pray4Me が今日の祈りをもう一度お知らせします。",
+  "activationOrganizeTitle": "増えていく祈りの日記を振り返りやすくする",
+  "activationOrganizeBody": "一つの祈りに人やカテゴリーを追加しましょう。必要になったときだけ整理機能が現れます。",
+  "activationOrganizeCta": "祈りを整理",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "ログイン",

@@ -109,8 +109,17 @@ function usesOrganize(editPrayer) {
     || (editPrayer.prayer_categories || []).length > 0 || (editPrayer.category_ids || []).length > 0));
 }
 
-// communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore
-export default function PrayerForm({ onClose, editPrayer, communityMode, onCommunitySubmit, prefill }) {
+// communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore.
+// initialOrganizeOpen is used by a contextual next-step card after sign-in; the
+// normal quick-add experience remains collapsed.
+export default function PrayerForm({
+  onClose,
+  editPrayer,
+  communityMode,
+  onCommunitySubmit,
+  prefill,
+  initialOrganizeOpen = false,
+}) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
@@ -131,14 +140,14 @@ export default function PrayerForm({ onClose, editPrayer, communityMode, onCommu
   // and "Organize" (person, categories, prayer rhythm). The community request
   // form keeps its note open (context for the group is the point there).
   const [noteOpen, setNoteOpen] = useState(() => communityMode || hasNote(editPrayer, prefill));
-  const [organizeOpen, setOrganizeOpen] = useState(() => usesOrganize(editPrayer));
+  const [organizeOpen, setOrganizeOpen] = useState(() => initialOrganizeOpen || usesOrganize(editPrayer));
   useEffect(() => {
     if (editPrayer) {
       setForm(initialForm(editPrayer, null, lang));
       setNoteOpen(communityMode || hasNote(editPrayer));
-      setOrganizeOpen(usesOrganize(editPrayer));
+      setOrganizeOpen(initialOrganizeOpen || usesOrganize(editPrayer));
     }
-  }, [editPrayer]);
+  }, [communityMode, editPrayer, initialOrganizeOpen, lang]);
 
   const patch = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const toggleCategory = (id) => patch('categoryIds', form.categoryIds.includes(id)

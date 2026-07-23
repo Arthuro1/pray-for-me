@@ -183,7 +183,7 @@ export default function UpdateComposer({
       disabled={!canSend}
       aria-label={sendLabel || t(lang, 'tipSaveUpdate')}
       title={sendLabel || t(lang, 'tipSaveUpdate')}
-      className={`flex items-center justify-center gap-1.5 min-h-[44px] shrink-0 text-white text-xs font-medium disabled:opacity-40 ${sendLabel ? 'px-3.5 rounded-lg' : 'w-11 rounded-full'}`}
+      className={`update-composer__send flex items-center justify-center gap-1.5 min-h-[44px] shrink-0 text-white text-xs font-medium disabled:opacity-40 ${sendLabel ? 'px-3.5 rounded-lg' : 'w-11 rounded-full'}`}
       style={{ background: 'var(--accent)' }}
     >
       {sending || uploading ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <Send size={16} aria-hidden="true" />}
@@ -192,7 +192,7 @@ export default function UpdateComposer({
   );
 
   return (
-    <div id={inputId} className="space-y-1.5">
+    <div id={inputId} className={`update-composer space-y-1.5 ${sendLabel ? 'update-composer--labelled' : 'update-composer--compact'}`}>
       {/* Pending attachment chips */}
       {pending.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
@@ -242,7 +242,7 @@ export default function UpdateComposer({
           </button>
         </div>
       ) : (
-        <div className="flex items-end gap-1.5">
+        <div className="update-composer__row flex items-end gap-1.5">
           {/* Attach "+" menu */}
           <div className="relative shrink-0" ref={menuRef}>
             <button
@@ -273,7 +273,7 @@ export default function UpdateComposer({
 
           {/* Input pill — a WYSIWYG field: selecting text raises a bold / italic /
               list toolbar and the styling shows inline, never as raw markers. */}
-          <div className="flex-1 min-w-0 rounded-3xl flex items-center" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <div className="update-composer__input flex-1 min-w-0 rounded-3xl flex items-center" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
             <RichTextEditor
               value={text}
               onChange={setText}

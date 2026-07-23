@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "Tempel tautan atau kode undangan yang dibagikan anggota grup.",
   "joinGroupPlaceholder": "Tautan atau kode undangan",
   "reminderNudge": "Apakah pengingat lembut besok akan membantu?",
+  "activationRhythmTitle": "Pilih kapan doa ini kembali",
+  "activationRhythmBody": "Setiap doa dapat memiliki ritmenya sendiri. Tinjau kapan doa ini kembali agar sesuai dengan hidup Anda.",
+  "activationRhythmCta": "Tinjau ritme",
+  "activationReminderTitle": "Apakah pengingat lembut akan membantu?",
+  "activationReminderBody": "Pilih waktu dan Pray4Me dapat menghadirkan kembali doa hari ini.",
+  "activationOrganizeTitle": "Permudah meninjau jurnal yang terus bertumbuh",
+  "activationOrganizeBody": "Tambahkan seseorang atau kategori ke satu doa. Pengaturan tambahan hanya muncul saat berguna.",
+  "activationOrganizeCta": "Atur sebuah doa",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Masuk",

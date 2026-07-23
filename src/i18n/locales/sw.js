@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "Bandika kiungo au msimbo wa mwaliko uliopewa na mwanakikundi.",
   "joinGroupPlaceholder": "Kiungo au msimbo wa mwaliko",
   "reminderNudge": "Je, kikumbusho cha upole kesho kitasaidia?",
+  "activationRhythmTitle": "Chagua ombi hili lirudi lini",
+  "activationRhythmBody": "Kila ombi linaweza kuwa na mpangilio wake. Kagua lirudi lini ili liendane na maisha yako.",
+  "activationRhythmCta": "Kagua mpangilio",
+  "activationReminderTitle": "Je, kikumbusho cha upole kitasaidia?",
+  "activationReminderBody": "Chagua muda na Pray4Me inaweza kukurudishia maombi ya leo.",
+  "activationOrganizeTitle": "Rahisisha kurejea shajara inayokua",
+  "activationOrganizeBody": "Ongeza mtu au kategoria kwenye ombi moja. Mpangilio zaidi huonekana pale tu unapokuwa na manufaa.",
+  "activationOrganizeCta": "Panga ombi",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Ingia",

@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "الصق رابط الدعوة أو الرمز الذي شاركه أحد أعضاء المجموعة.",
   "joinGroupPlaceholder": "رابط أو رمز الدعوة",
   "reminderNudge": "هل يساعدك تذكير لطيف غدًا؟",
+  "activationRhythmTitle": "اختر متى تعود هذه الصلاة",
+  "activationRhythmBody": "يمكن أن يكون لكل صلاة إيقاعها الخاص. راجع متى تعود هذه الصلاة لتناسب حياتك.",
+  "activationRhythmCta": "مراجعة الإيقاع",
+  "activationReminderTitle": "هل يساعدك تذكير لطيف؟",
+  "activationReminderBody": "اختر وقتًا ويمكن لتطبيق Pray4Me أن يعيد إليك صلوات اليوم.",
+  "activationOrganizeTitle": "اجعل الرجوع إلى دفتر الصلاة المتنامي أسهل",
+  "activationOrganizeBody": "أضف شخصًا أو فئة إلى صلاة واحدة. لا يظهر المزيد من التنظيم إلا عندما يصبح مفيدًا.",
+  "activationOrganizeCta": "تنظيم صلاة",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "تسجيل الدخول",

@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "የቡድን አባል ያጋራውን የግብዣ አገናኝ ወይም ኮድ ይለጥፉ።",
   "joinGroupPlaceholder": "የግብዣ አገናኝ ወይም ኮድ",
   "reminderNudge": "ነገ ለስላሳ ማስታወሻ ይረዳል?",
+  "activationRhythmTitle": "ይህ ጸሎት መቼ እንደሚመለስ ይምረጡ",
+  "activationRhythmBody": "እያንዳንዱ ጸሎት የራሱ ልማድ ሊኖረው ይችላል። ይህ ጸሎት ከሕይወትዎ ጋር እንዲስማማ መቼ እንደሚመለስ ይመልከቱ።",
+  "activationRhythmCta": "ልማዱን ይመልከቱ",
+  "activationReminderTitle": "ለስላሳ ማስታወሻ ይረዳል?",
+  "activationReminderBody": "ሰዓት ይምረጡ፣ Pray4Me የዛሬን ጸሎቶች እንደገና ያቀርብልዎታል።",
+  "activationOrganizeTitle": "እያደገ ያለውን የጸሎት ማስታወሻ ለመመልከት ቀላል ያድርጉ",
+  "activationOrganizeBody": "ለአንድ ጸሎት ሰው ወይም ምድብ ያክሉ። ተጨማሪ አደረጃጀት ጠቃሚ ሲሆን ብቻ ይታያል።",
+  "activationOrganizeCta": "ጸሎትን ያደራጁ",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "ግባ",

@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "Fügen Sie einen Einladungslink oder -code von einem Gruppenmitglied ein.",
   "joinGroupPlaceholder": "Einladungslink oder -code",
   "reminderNudge": "Würde eine sanfte Erinnerung morgen helfen?",
+  "activationRhythmTitle": "Wähle, wann dieses Gebet wiederkehrt",
+  "activationRhythmBody": "Jedes Gebet kann seinen eigenen Rhythmus haben. Prüfe, wann dieses wiederkehren soll, damit es zu deinem Alltag passt.",
+  "activationRhythmCta": "Rhythmus ansehen",
+  "activationReminderTitle": "Würde eine sanfte Erinnerung helfen?",
+  "activationReminderBody": "Wähle eine Uhrzeit, dann kann Pray4Me dir die Gebete des Tages wieder zeigen.",
+  "activationOrganizeTitle": "Finde dich in einem wachsenden Gebetstagebuch leichter zurecht",
+  "activationOrganizeBody": "Ordne einem Gebet eine Person oder Kategorie zu. Mehr Organisation erscheint nur, wenn sie nützlich wird.",
+  "activationOrganizeCta": "Gebet organisieren",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Anmelden",

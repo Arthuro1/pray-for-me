@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "Вставьте ссылку-приглашение или код от участника группы.",
   "joinGroupPlaceholder": "Ссылка или код приглашения",
   "reminderNudge": "Поможет ли мягкое напоминание завтра?",
+  "activationRhythmTitle": "Выберите, когда возвращаться к этой молитве",
+  "activationRhythmBody": "У каждой молитвы может быть свой ритм. Проверьте, когда возвращаться к этой, чтобы она подходила вашей жизни.",
+  "activationRhythmCta": "Проверить ритм",
+  "activationReminderTitle": "Поможет ли мягкое напоминание?",
+  "activationReminderBody": "Выберите время, и Pray4Me напомнит вам о сегодняшних молитвах.",
+  "activationOrganizeTitle": "Сделайте растущий дневник удобнее для возвращения",
+  "activationOrganizeBody": "Добавьте к одной молитве человека или категорию. Дополнительная организация появляется только тогда, когда она полезна.",
+  "activationOrganizeCta": "Организовать молитву",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Войти",

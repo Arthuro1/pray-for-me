@@ -28,6 +28,7 @@ import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
 import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
+import ActivationNudge from '../components/ActivationNudge';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -43,7 +44,7 @@ const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR, zh: enUS, es: enUS, hi: enUS,
 // quiet "Prayed today" row, catch-up sits AFTER the list, collapsed (grace, not
 // guilt), and the daily verse closes the page as a small card. Statistics live
 // in the Journal; planning and everything else in More.
-export default function HomeTab({ onAdd }) {
+export default function HomeTab({ onAdd, onEdit }) {
   const navigate = useNavigate();
   const { getEntriesForDay, getCompletedPrayersForDay, getCatchUp, markPrayedOn, completions, categories, prayers, settings, loading } = usePrayerStore(
     useShallow((s) => ({
@@ -63,7 +64,7 @@ export default function HomeTab({ onAdd }) {
   const prayerShares = useCommunityStore((s) => s.prayerShares);
   const fetchPrayerShares = useCommunityStore((s) => s.fetchPrayerShares);
 
-  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id]);
+  useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [fetchPrayerShares, user?.id]);
   const [verse, setVerse] = useState(null);
   const [verseResolving, setVerseResolving] = useState(false);
   // The open session's prayer list, snapshotted when it starts: completions
@@ -105,7 +106,7 @@ export default function HomeTab({ onAdd }) {
   // forever after the first view, so the daily verse stays zero-cost and works
   // offline thereafter. This never touches the AI path.
   useEffect(() => {
-    const v = verseOfDay(lang, today);
+    const v = verseOfDay(lang, parseKey(dayKey));
     setVerse(v);
     if (v.text) { setVerseResolving(false); return undefined; }
     let cancelled = false;
@@ -120,7 +121,7 @@ export default function HomeTab({ onAdd }) {
       setVerseResolving(false);
     });
     return () => { cancelled = true; };
-  }, [lang]);
+  }, [dayKey, lang]);
 
   const displayName = user?.user_metadata?.full_name?.split(' ')[0]
     || user?.email?.split('@')[0]
@@ -129,16 +130,6 @@ export default function HomeTab({ onAdd }) {
   const hour = today.getHours();
   const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
   // After a completed session, offer a reminder ONCE — in context, never during
-  // onboarding, and only while reminders are off. A quiet toast with an action,
-  // not a permission prompt.
-  const maybeSuggestReminder = () => {
-    if (settings.dailyReminderEnabled || localStorage.getItem('pfm_reminder_suggested')) return;
-    localStorage.setItem('pfm_reminder_suggested', '1');
-    toast.success(t(lang, 'reminderNudge'), {
-      action: { label: t(lang, 'setReminderCta'), onClick: () => navigate('/settings#notifications') },
-    });
-  };
-
   // Share the verse of the day via the native share sheet, or copy it as a fallback.
   const handleShareVerse = async () => {
     if (!verse) return;
@@ -169,7 +160,6 @@ export default function HomeTab({ onAdd }) {
           // and rotation fairness), so leaving halfway never loses genuine
           // progress — reopening resumes with the first unfinished request.
           onPrayed={(id) => markPrayedOn(id, dayKey)}
-          onComplete={maybeSuggestReminder}
         />
       )}
 
@@ -234,6 +224,16 @@ export default function HomeTab({ onAdd }) {
           <p className="text-xs text-center mb-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--text-3)' }}>
             <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
           </p>
+        )}
+
+        {!loading && prayers.length > 0 && (
+          <ActivationNudge
+            prayers={prayers}
+            settings={settings}
+            lang={lang}
+            onEditPrayer={onEdit}
+            onOpenReminders={() => navigate('/settings#notifications')}
+          />
         )}
 
         {loading && prayers.length === 0 && (

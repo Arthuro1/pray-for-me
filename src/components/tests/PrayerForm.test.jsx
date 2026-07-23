@@ -51,6 +51,13 @@ describe('PrayerForm — Quick Add', () => {
     expect(screen.getByText(t(lang, 'organizeLabel'))).toBeTruthy();
   });
 
+  it('can open Organize directly from a contextual activation invitation', () => {
+    const legacy = { id: 'p1', title: 'Ancienne', schedule: null, prayer_categories: [] };
+    render(<PrayerForm onClose={() => {}} editPrayer={legacy} initialOrganizeOpen />);
+    expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'schedRhythmLabel'))).toBeTruthy();
+  });
+
   it('"Add a note" reveals the note field', () => {
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.click(screen.getByText(t(lang, 'addNote')));

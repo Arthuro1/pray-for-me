@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "그룹 멤버가 공유한 초대 링크나 코드를 붙여넣으세요.",
   "joinGroupPlaceholder": "초대 링크 또는 코드",
   "reminderNudge": "내일 부드러운 알림이 도움이 될까요?",
+  "activationRhythmTitle": "이 기도가 다시 나타날 때를 선택하세요",
+  "activationRhythmBody": "기도마다 자신만의 리듬을 가질 수 있습니다. 생활에 맞도록 이 기도가 다시 나타날 때를 확인하세요.",
+  "activationRhythmCta": "리듬 확인",
+  "activationReminderTitle": "부드러운 알림이 도움이 될까요?",
+  "activationReminderBody": "시간을 선택하면 Pray4Me가 오늘의 기도를 다시 알려 드립니다.",
+  "activationOrganizeTitle": "늘어나는 기도 일기를 더 쉽게 돌아보세요",
+  "activationOrganizeBody": "한 기도에 사람이나 카테고리를 추가하세요. 더 많은 정리 기능은 필요할 때만 나타납니다.",
+  "activationOrganizeCta": "기도 정리",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "로그인",

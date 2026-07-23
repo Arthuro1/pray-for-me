@@ -26,6 +26,7 @@ vi.mock('../../lib/verseText', () => ({
 import PrayerSavedStep from '../PrayerSavedStep';
 import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
+import { readActivationProgress } from '../../lib/activationProgress';
 
 const lang = 'fr';
 afterEach(cleanup);
@@ -66,6 +67,7 @@ describe('PrayerSavedStep', () => {
     fireEvent.click(screen.getByText(t(lang, 'prayNowCta')));
     fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
     expect(markPrayedOn).toHaveBeenCalledWith('p1', expect.any(String));
+    expect(readActivationProgress().signals).toContain('session_completed');
   });
 
   it('closes when done', () => {

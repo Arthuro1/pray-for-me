@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "समूह के किसी सदस्य द्वारा साझा किया गया आमंत्रण लिंक या कोड चिपकाएँ।",
   "joinGroupPlaceholder": "आमंत्रण लिंक या कोड",
   "reminderNudge": "क्या कल एक कोमल अनुस्मारक मदद करेगा?",
+  "activationRhythmTitle": "चुनें कि यह प्रार्थना कब लौटे",
+  "activationRhythmBody": "हर प्रार्थना की अपनी लय हो सकती है। देखें कि यह कब लौटे ताकि यह आपके जीवन के अनुकूल हो।",
+  "activationRhythmCta": "लय देखें",
+  "activationReminderTitle": "क्या एक कोमल अनुस्मारक मदद करेगा?",
+  "activationReminderBody": "एक समय चुनें और Pray4Me आज की प्रार्थनाएँ फिर आपके सामने ला सकता है।",
+  "activationOrganizeTitle": "बढ़ती प्रार्थना डायरी को फिर देखना आसान बनाएँ",
+  "activationOrganizeBody": "किसी प्रार्थना में व्यक्ति या श्रेणी जोड़ें। अधिक व्यवस्था तभी दिखाई देगी जब वह उपयोगी हो।",
+  "activationOrganizeCta": "प्रार्थना व्यवस्थित करें",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "लॉग इन करें",

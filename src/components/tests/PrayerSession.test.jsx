@@ -16,6 +16,7 @@ vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.co
 
 import PrayerSession from '../PrayerSession';
 import { fetchScriptureText, fetchVerseText } from '../../lib/verseText';
+import { readActivationProgress } from '../../lib/activationProgress';
 import { t } from '../../i18n';
 
 const lang = 'en';
@@ -106,6 +107,7 @@ describe('PrayerSession — immediate start & format control', () => {
     fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
     expect(onPrayed).toHaveBeenCalledWith('p2');
     expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(readActivationProgress().signals).toContain('session_completed');
   });
 });
 

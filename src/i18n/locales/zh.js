@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "粘贴小组成员分享的邀请链接或邀请码。",
   "joinGroupPlaceholder": "邀请链接或邀请码",
   "reminderNudge": "明天来一个温柔的提醒好吗？",
+  "activationRhythmTitle": "选择何时再次看到这条祷告",
+  "activationRhythmBody": "每条祷告都可以有自己的节奏。查看这条祷告何时再次出现，让它更适合你的生活。",
+  "activationRhythmCta": "查看节奏",
+  "activationReminderTitle": "温柔的提醒会有帮助吗？",
+  "activationReminderBody": "选择一个时间，Pray4Me 就能把今天的祷告带回给你。",
+  "activationOrganizeTitle": "让不断增长的祷告日记更容易回顾",
+  "activationOrganizeBody": "为一条祷告添加人物或分类。只有在真正有用时，更多整理功能才会出现。",
+  "activationOrganizeCta": "整理一条祷告",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "登录",

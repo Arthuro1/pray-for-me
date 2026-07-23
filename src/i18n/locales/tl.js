@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "I-paste ang invite link o code na ibinahagi ng miyembro ng grupo.",
   "joinGroupPlaceholder": "Invite link o code",
   "reminderNudge": "Makakatulong ba ang banayad na paalala bukas?",
+  "activationRhythmTitle": "Piliin kung kailan babalik ang panalanging ito",
+  "activationRhythmBody": "Maaaring magkaroon ng sariling ritmo ang bawat panalangin. Suriin kung kailan ito babalik upang umangkop sa iyong buhay.",
+  "activationRhythmCta": "Suriin ang ritmo",
+  "activationReminderTitle": "Makakatulong ba ang banayad na paalala?",
+  "activationReminderBody": "Pumili ng oras at maibabalik ng Pray4Me ang mga panalangin ngayong araw.",
+  "activationOrganizeTitle": "Gawing mas madaling balikan ang lumalaking journal",
+  "activationOrganizeBody": "Magdagdag ng tao o kategorya sa isang panalangin. Lalabas lamang ang dagdag na pag-aayos kapag kapaki-pakinabang.",
+  "activationOrganizeCta": "Ayusin ang panalangin",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Mag-log in",

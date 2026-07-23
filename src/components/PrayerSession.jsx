@@ -5,6 +5,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
+import { markActivationSessionCompleted } from '../lib/activationProgress';
 import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
@@ -103,6 +104,13 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     (stage === 'requests' ? prayerIndex + 1 : 1);
   const isLastStep = currentStep >= totalSteps;
 
+  // All session entry points share this component. Keep the content-free
+  // activation signal here so completion from any surface counts consistently.
+  const completeSession = () => {
+    markActivationSessionCompleted();
+    onComplete?.();
+  };
+
   // Switching format becomes the default for the next session. Before any
   // progress the walk simply restarts in the new shape; once Grace has advanced,
   // the REMAINING session adapts instead — prayers she already prayed are never
@@ -116,7 +124,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     if (hasProgress && requestsCompleted >= total && MODE_STAGES[m].length === 1) {
       // Nothing left in a requests-only walk — the session is complete.
       setDone(true);
-      onComplete?.();
+      completeSession();
       return;
     }
     setStageIndex(0);
@@ -147,7 +155,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       setPrayerIndex(stages[next] === 'requests' ? Math.min(completed, total - 1) : 0);
     } else {
       setDone(true);
-      onComplete?.();
+      completeSession();
     }
   };
 

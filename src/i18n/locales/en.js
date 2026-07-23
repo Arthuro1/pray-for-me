@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "Paste an invite link or code shared by a group member.",
   "joinGroupPlaceholder": "Invite link or code",
   "reminderNudge": "Would a gentle reminder tomorrow help?",
+  "activationRhythmTitle": "Choose how this prayer returns",
+  "activationRhythmBody": "Every prayer can have its own rhythm. Review when this one should return so it fits your life.",
+  "activationRhythmCta": "Review rhythm",
+  "activationReminderTitle": "Would a gentle reminder help?",
+  "activationReminderBody": "Choose a time and Pray4Me can bring today's prayers back to you.",
+  "activationOrganizeTitle": "Make a growing journal easier to revisit",
+  "activationOrganizeBody": "Add a person or category to one prayer. More organization appears only when it becomes useful.",
+  "activationOrganizeCta": "Organize a prayer",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Log in",

@@ -43,6 +43,14 @@ export default {
   "joinGroupHint": "Pega un enlace o código de invitación compartido por un miembro del grupo.",
   "joinGroupPlaceholder": "Enlace o código de invitación",
   "reminderNudge": "¿Te ayudaría un recordatorio suave mañana?",
+  "activationRhythmTitle": "Elige cuándo volverá esta oración",
+  "activationRhythmBody": "Cada oración puede tener su propio ritmo. Revisa cuándo debe volver esta para adaptarla a tu vida.",
+  "activationRhythmCta": "Revisar el ritmo",
+  "activationReminderTitle": "¿Te ayudaría un recordatorio suave?",
+  "activationReminderBody": "Elige una hora y Pray4Me podrá traerte de nuevo las oraciones de hoy.",
+  "activationOrganizeTitle": "Haz que un diario en crecimiento sea más fácil de consultar",
+  "activationOrganizeBody": "Añade una persona o categoría a una oración. La organización adicional aparece solo cuando resulta útil.",
+  "activationOrganizeCta": "Organizar una oración",
 
   // ── Auth, first-prayer & onboarding UX (AI-authored — pending native review) ──
   "authLogIn": "Iniciar sesión",
