@@ -44,6 +44,7 @@ import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import AudienceBadge from '../components/shared/AudienceBadge';
 import PrayerSession from '../components/PrayerSession';
+import { PrimaryButton } from '../components/shared/Primitives';
 import FollowUpField from '../components/FollowUpField';
 import useFollowUpStore from '../store/followUpStore';
 import { audienceOf, protectionOf } from '../lib/audience';
@@ -794,7 +795,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <span>
               {isCommunity
                 ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
-                : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale })}
+                : timeAgo(livePrayer.created_at, lang)}
             </span>
             {constellationPrayerCount > 0 && (
               <span className="constellation-detail__praying">
@@ -805,12 +806,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {!isCommunity && !isAnswered && !livePrayer._locked && (
-            <button
+            <PrimaryButton
               onClick={() => setShowPraySession(true)}
-              className="constellation-detail__pray primary-button"
+              icon={HandHeart}
+              className="constellation-detail__pray mt-8 w-full sm:w-auto sm:min-w-44"
             >
-              <HandHeart size={20} aria-hidden="true" /> {t(lang, 'prayNow')}
-            </button>
+              {t(lang, 'prayNow')}
+            </PrimaryButton>
           )}
         </div>
       </section>

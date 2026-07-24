@@ -46,6 +46,7 @@ import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import useFollowUpStore from '../store/followUpStore';
 import { t } from '../i18n';
+import { timeAgo } from '../utils/date';
 
 const lang = 'fr';
 
@@ -92,8 +93,17 @@ describe('PrayerDetail — leads with prayer', () => {
     }));
     const hero = container.querySelector('.constellation-detail__hero');
     expect(hero.textContent).not.toContain(t(lang, 'restUnderSky'));
-    expect(hero.querySelector('.constellation-detail__meta').textContent).toMatch(/2026/);
+    expect(hero.querySelector('.constellation-detail__meta').textContent).toBe(timeAgo('2026-07-01T00:00:00Z', lang));
     expect(hero.querySelector('.constellation-detail__pray')).toBeTruthy();
+  });
+
+  it('uses the same responsive primary-button sizing as Today', () => {
+    renderDetail(base());
+    const prayNow = screen.getByRole('button', { name: t(lang, 'prayNow') });
+    expect(prayNow.className).toContain('primary-button');
+    expect(prayNow.className).toContain('w-full');
+    expect(prayNow.className).toContain('sm:w-auto');
+    expect(prayNow.className).toContain('sm:min-w-44');
   });
 
   it('orders the hierarchy Pray now → Add update → Mark answered in the document', () => {

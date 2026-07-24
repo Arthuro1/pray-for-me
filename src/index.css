@@ -1670,20 +1670,6 @@ html.constellation-app body {
   color: var(--success);
 }
 
-.constellation-detail__pray {
-  display: flex;
-  width: min(100%, 24rem);
-  min-height: 3.5rem;
-  align-items: center;
-  justify-content: center;
-  gap: .55rem;
-  margin-block-start: 1.35rem;
-  margin-inline: auto;
-  padding: .95rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
 .constellation-detail .detail-page__content {
   padding-block-start: .75rem;
 }
