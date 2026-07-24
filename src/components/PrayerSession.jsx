@@ -97,6 +97,32 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const stage = stages[stageIndex];
   const total = prayers.length;
 
+  // This is a full-screen, transient prayer surface. Keep scroll gestures inside
+  // it so reaching the top/bottom cannot chain into the document (or trigger a
+  // mobile/PWA pull-to-refresh that remounts the app on Today).
+  useEffect(() => {
+    const body = document.body;
+    const root = document.documentElement;
+    const previous = {
+      bodyOverflow: body.style.overflow,
+      bodyOverscroll: body.style.overscrollBehavior,
+      rootOverflow: root.style.overflow,
+      rootOverscroll: root.style.overscrollBehavior,
+    };
+
+    body.style.overflow = 'hidden';
+    body.style.overscrollBehavior = 'none';
+    root.style.overflow = 'hidden';
+    root.style.overscrollBehavior = 'none';
+
+    return () => {
+      body.style.overflow = previous.bodyOverflow;
+      body.style.overscrollBehavior = previous.bodyOverscroll;
+      root.style.overflow = previous.rootOverflow;
+      root.style.overscrollBehavior = previous.rootOverscroll;
+    };
+  }, []);
+
   // The same scroll container is reused as the session advances. Reset it for
   // each request so a long previous prayer can never leave the next title above
   // the laptop viewport.

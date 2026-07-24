@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, UserPlus, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, LogIn, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -34,6 +34,22 @@ const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--bo
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const MODAL_INPUT_CLASS = 'w-full px-4 py-3 rounded-xl text-sm focus:outline-none mb-3';
+const COMMUNITY_ACTION_ICONS = {
+  join: '/assets/community-actions/join-group.png',
+  create: '/assets/community-actions/create-group.png',
+  friend: '/assets/community-actions/add-friend.png',
+};
+
+function CommunityActionIcon({ action, compact = false }) {
+  return (
+    <img
+      src={COMMUNITY_ACTION_ICONS[action]}
+      alt=""
+      aria-hidden="true"
+      className={`community-action-icon ${compact ? 'community-action-icon--compact' : ''}`}
+    />
+  );
+}
 
 // ── Reusable request/invitation row ──────────────────────────────────────────
 // Per-group "last visited" timestamps, kept locally to compute unread badges.
@@ -167,7 +183,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 title={t(lang, 'joinGroupCta')}
                 className="phase-icon-button"
               >
-                <LogIn size={16} />
+                <CommunityActionIcon action="join" />
               </button>
               <button
                 onClick={() => setShowCreateGroup(true)}
@@ -175,7 +191,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 title={t(lang, 'createGroup')}
                 className="phase-icon-button"
               >
-                <Plus size={16} />
+                <CommunityActionIcon action="create" />
               </button>
               <button
                 onClick={() => setShowAddFriend(true)}
@@ -183,7 +199,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 title={t(lang, 'addFriend')}
                 className="phase-icon-button"
               >
-                <UserPlus size={16} />
+                <CommunityActionIcon action="friend" />
               </button>
             </div>
           ) : undefined}
@@ -211,13 +227,13 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayWithOthers')}</h2>
             <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'communityEmptyDesc')}</p>
             <button onClick={() => setShowJoinGroup(true)} className="community-empty__primary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-semibold mb-2.5">
-              <Users size={16} /> {t(lang, 'joinGroupCta')}
+              <CommunityActionIcon action="join" compact /> {t(lang, 'joinGroupCta')}
             </button>
             <button onClick={() => setShowCreateGroup(true)} className="community-empty__secondary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-medium mb-3">
-              <Plus size={16} /> {t(lang, 'createGroup')}
+              <CommunityActionIcon action="create" compact /> {t(lang, 'createGroup')}
             </button>
             <button onClick={() => setShowAddFriend(true)} className="inline-flex items-center gap-1.5 px-3 text-xs font-medium" style={{ color: 'rgba(255,255,255,.8)' }}>
-              <UserPlus size={13} /> {t(lang, 'addFriend')}
+              <CommunityActionIcon action="friend" compact /> {t(lang, 'addFriend')}
             </button>
           </div>
         )}

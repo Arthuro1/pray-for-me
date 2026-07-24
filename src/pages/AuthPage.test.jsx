@@ -4,7 +4,7 @@
 // preserve the language chosen earlier, and expose forgot-password / resend /
 // back-to-home with friendly, specific validation.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor, within } from '@testing-library/react';
 
 // Supabase builds realtime at construct time; stub it so the stores import cleanly.
 vi.mock('../lib/supabase', () => {
@@ -69,14 +69,25 @@ describe('AuthPage', () => {
     expect(screen.getByText(t('fr', 'authContinueGoogle'))).toBeTruthy();
     expect(container.querySelector('.constellation-auth__sky-image--light')).toBeTruthy();
     expect(container.querySelector('.constellation-auth__sky-image--dark')).toBeTruthy();
+    expect(container.querySelector('img[src="/logo-constellation.svg"]')).toBeTruthy();
     expect(container.querySelector('img[src="/assets/google-g.png"]')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t('fr', 'authBackHome')));
     expect(onBack).toHaveBeenCalled();
   });
 
   it('presents registration as a secondary option (name field + create account)', () => {
-    render(<AuthPage />);
-    fireEvent.click(screen.getByRole('button', { name: t('fr', 'authSignUp') }));
+    const { container } = render(<AuthPage />);
+    const switcher = container.querySelector('.auth-mode-switch');
+    const login = within(switcher).getByRole('button', { name: t('fr', 'authLogIn') });
+    const signUp = within(switcher).getByRole('button', { name: t('fr', 'authSignUp') });
+    expect(login.getAttribute('aria-pressed')).toBe('true');
+    expect(signUp.getAttribute('aria-pressed')).toBe('false');
+    expect(login.closest('.auth-mode-switch')).toBeTruthy();
+
+    fireEvent.click(signUp);
+
+    expect(login.getAttribute('aria-pressed')).toBe('false');
+    expect(signUp.getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
     expect(screen.getByRole('button', { name: t('fr', 'authCreateAccount') })).toBeTruthy();
     // Forgot-password belongs to the login view only.

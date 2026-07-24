@@ -794,9 +794,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <span>
               {isCommunity
                 ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
-                : livePrayer.schedule
-                  ? scheduleSummary(livePrayer.schedule, lang)
-                  : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale })}
+                : format(new Date(livePrayer.created_at), 'd MMMM yyyy', { locale })}
             </span>
             {constellationPrayerCount > 0 && (
               <span className="constellation-detail__praying">
@@ -807,15 +805,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {!isCommunity && !isAnswered && !livePrayer._locked && (
-            <>
-              <button
-                onClick={() => setShowPraySession(true)}
-                className="constellation-detail__pray primary-button"
-              >
-                <HandHeart size={18} aria-hidden="true" /> {t(lang, 'prayNow')}
-              </button>
-              <p className="constellation-detail__quiet-label">{t(lang, 'restUnderSky')}</p>
-            </>
+            <button
+              onClick={() => setShowPraySession(true)}
+              className="constellation-detail__pray primary-button"
+            >
+              <HandHeart size={20} aria-hidden="true" /> {t(lang, 'prayNow')}
+            </button>
           )}
         </div>
       </section>
@@ -999,7 +994,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             the request details so the "how to pray" points read right off the
             description, before the pray-together / updates / calendar sections. ── */}
         <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <div className="flex items-center justify-between mb-3">
+          <div className="prayer-points-panel__header flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
             {(isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
@@ -1021,14 +1016,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <p className="text-sm italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPlaceholder')}</p>
           )}
 
-          <div className="space-y-2">
+          <div className="prayer-points-panel__list">
             {(livePrayer.prayer_points || []).map(pp => {
               // Support both new `verses` array and legacy `verse`/`verse_text` fields
               const verses = pp.verses?.length
                 ? pp.verses
                 : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
               return (
-                <div key={pp.id} className="prayer-point-card group rounded-xl p-3">
+                <div key={pp.id} className="prayer-point-card group rounded-xl">
                   <div className="flex items-start gap-2">
                     <p className="flex-1 text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(pp.title)}</p>
                     {canRemoveContent && (
@@ -1046,7 +1041,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
                   {/* Verse pills */}
                   {verses.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-2">
+                    <div className="prayer-point-card__verses flex flex-wrap gap-1.5">
                       {verses.map((v, i) => (
                         <PrayerDetailVerse
                           key={i}
@@ -1101,7 +1096,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                       <button
                         onClick={() => { setAddingVerseTo(pp.id); setNewVerse({ ref: '', text: '' }); }}
                         title={t(lang, 'tipAddVerse')}
-                        className="mt-1.5 flex items-center gap-1 text-xs"
+                        className="prayer-point-card__add-verse flex items-center gap-1 text-xs"
                         style={{ color: 'var(--gold)' }}
                       >
                         <Plus size={11} /> {t(lang, 'addVerse')}

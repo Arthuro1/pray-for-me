@@ -73,6 +73,18 @@ describe('LandingPage — simplified product story', () => {
     expect(screen.getAllByText('Start your private prayer journal').length).toBeGreaterThan(0);
   });
 
+  it('starts the guest prayer flow from the product-preview Pray now button', async () => {
+    const onBeginPrayer = vi.fn();
+    render(<LandingPage onBeginPrayer={onBeginPrayer} onSignIn={() => {}} />);
+
+    const prayNow = await screen.findByRole('button', { name: 'Pray now' });
+    expect(prayNow.getAttribute('tabindex')).toBeNull();
+
+    fireEvent.click(prayNow);
+
+    expect(onBeginPrayer).toHaveBeenCalledTimes(1);
+  });
+
   it('localizes the example Bible references (no English books inside French)', async () => {
     localStorage.setItem('pfm_language', 'fr');
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);

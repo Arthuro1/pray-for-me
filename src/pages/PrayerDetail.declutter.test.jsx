@@ -77,10 +77,23 @@ const renderDetail = (prayer) => {
 
 describe('PrayerDetail — leads with prayer', () => {
   it('shows Pray now, Add update and Mark answered as the leading actions', () => {
-    renderDetail(base());
-    expect(screen.getByText(t(lang, 'prayNow'))).toBeTruthy();
+    const { container } = renderDetail(base());
+    const prayNow = screen.getByRole('button', { name: t(lang, 'prayNow') });
+    expect(prayNow).toBeTruthy();
+    expect(prayNow.className).toContain('constellation-detail__pray');
+    expect(container.querySelector('.constellation-detail__hero')?.contains(prayNow)).toBe(true);
     expect(screen.getByText(t(lang, 'addUpdateBtn'))).toBeTruthy();
     expect(screen.getAllByText(t(lang, 'markAnswered')).length).toBeGreaterThan(0);
+  });
+
+  it('keeps the hero focused on prayer without the rest caption or schedule', () => {
+    const { container } = renderDetail(base({
+      schedule: { type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-01-01' },
+    }));
+    const hero = container.querySelector('.constellation-detail__hero');
+    expect(hero.textContent).not.toContain(t(lang, 'restUnderSky'));
+    expect(hero.querySelector('.constellation-detail__meta').textContent).toMatch(/2026/);
+    expect(hero.querySelector('.constellation-detail__pray')).toBeTruthy();
   });
 
   it('orders the hierarchy Pray now → Add update → Mark answered in the document', () => {

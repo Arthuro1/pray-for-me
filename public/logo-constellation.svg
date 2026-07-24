@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Vibrant violet chat plus app icon</title>
+  <desc id="desc">A near-white speech bubble and violet plus symbol on a luminous violet gradient.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4F2BD0"/>
+      <stop offset="0.48" stop-color="#713FDF"/>
+      <stop offset="1" stop-color="#A95BF2"/>
+    </linearGradient>
+    <radialGradient id="lowerGlow" cx="88%" cy="87%" r="70%">
+      <stop offset="0" stop-color="#C56EFA" stop-opacity="0.95"/>
+      <stop offset="0.48" stop-color="#A45AF1" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#A45AF1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="upperGlow" cx="76%" cy="14%" r="58%">
+      <stop offset="0" stop-color="#8950EA" stop-opacity="0.52"/>
+      <stop offset="1" stop-color="#8950EA" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="iconMask">
+      <rect width="512" height="512" rx="94"/>
+    </clipPath>
+    <filter id="bubbleShadow" x="-20%" y="-20%" width="140%" height="155%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="9" result="blur"/>
+      <feOffset in="blur" dx="0" dy="8" result="offsetBlur"/>
+      <feFlood flood-color="#35128A" flood-opacity="0.25" result="shadowColor"/>
+      <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g clip-path="url(#iconMask)">
+    <rect width="512" height="512" fill="url(#background)"/>
+    <rect width="512" height="512" fill="url(#upperGlow)"/>
+    <rect width="512" height="512" fill="url(#lowerGlow)"/>
+  </g>
+
+  <path
+    d="M137 130H375C399.3 130 419 149.7 419 174V320C419 344.3 399.3 364 375 364H294L236 422V364H137C112.7 364 93 344.3 93 320V174C93 149.7 112.7 130 137 130Z"
+    fill="#FCF9FD"
+    filter="url(#bubbleShadow)"
+  />
+
+  <g fill="#6635CE">
+    <rect x="181" y="219" width="150" height="37" rx="18.5"/>
+    <rect x="237.5" y="173" width="37" height="150" rx="18.5"/>
+  </g>
+</svg>

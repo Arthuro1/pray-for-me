@@ -29,7 +29,7 @@ export default function AccountKeyRecoveryScreen({ lang = 'fr', onResolved }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10" style={{ background: 'var(--bg)' }}>
       <div className="w-full max-w-sm flex flex-col items-center">
-        <img src="/logo.svg" alt="Pray4Me" className="w-12 h-12 rounded-2xl mb-6" />
+        <img src="/logo-constellation.svg" alt="Pray4Me" className="w-12 h-12 rounded-2xl mb-6" />
 
         <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ background: 'var(--accent-soft)' }}>
           <KeyRound size={24} style={{ color: 'var(--accent)' }} />

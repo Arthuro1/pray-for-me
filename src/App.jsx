@@ -17,7 +17,7 @@ function AppLoader() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-indigo-700">
       <div className="text-center text-white">
-        <img src="/logo.svg" alt="Pray4Me" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
+        <img src="/logo-constellation.svg" alt="Pray4Me" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
         <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
       </div>
     </div>

@@ -612,7 +612,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .prayer-point-card {
-  padding: .7rem .8rem !important;
+  padding: .55rem .7rem !important;
   background: color-mix(in srgb, var(--gold-soft) 76%, var(--surface));
   border-inline-start: 3px solid var(--gold);
   color: var(--ink);
@@ -621,7 +621,24 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .prayer-points-panel {
   width: min(100%, 36rem);
   margin-inline: auto;
-  padding: .9rem;
+  padding: .75rem;
+}
+
+.prayer-points-panel__header {
+  margin-block-end: .5rem;
+}
+
+.prayer-points-panel__list {
+  display: grid;
+  gap: .4rem;
+}
+
+.prayer-point-card__verses {
+  margin-block-start: .35rem;
+}
+
+.prayer-point-card__add-verse {
+  margin-block-start: .25rem;
 }
 
 /* Prayer activity --------------------------------------------------------
@@ -1369,6 +1386,19 @@ html.constellation-app body {
   height: 40px;
 }
 
+.community-action-icon {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.community-action-icon--compact {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
 .constellation-community__hero {
   position: relative;
   min-height: 10rem;
@@ -1641,19 +1671,17 @@ html.constellation-app body {
 }
 
 .constellation-detail__pray {
-  display: inline-flex;
-  min-width: 12rem;
+  display: flex;
+  width: min(100%, 24rem);
+  min-height: 3.5rem;
   align-items: center;
   justify-content: center;
   gap: .55rem;
   margin-block-start: 1.35rem;
-}
-
-.constellation-detail__quiet-label {
-  margin-block-start: .85rem;
-  color: var(--accent);
-  font-size: .85rem;
-  font-weight: 500;
+  margin-inline: auto;
+  padding: .95rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .constellation-detail .detail-page__content {
@@ -1711,16 +1739,42 @@ html.constellation-app body {
 
 /* Pray now — under the stars ---------------------------------------------- */
 .constellation-session {
+  position: fixed;
+  isolation: isolate;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
   background-color: var(--background) !important;
-  background-image: url('/assets/constellation/detail-sky-light-transparent.png') !important;
+  background-image: none !important;
+}
+
+.constellation-session::before {
+  position: absolute;
+  z-index: 0;
+  inset: -1.25rem;
+  background-image: url('/assets/constellation/detail-sky-light-transparent.png');
   background-repeat: no-repeat !important;
   background-position: center top !important;
   background-size: min(62rem, 150vw) auto !important;
+  content: '';
+  filter: blur(5px);
+  opacity: .78;
+  pointer-events: none;
+  transform: scale(1.025);
 }
 
-[data-theme="dark"] .constellation-session,
-[data-theme="night"] .constellation-session {
-  background-image: url('/assets/constellation/detail-sky-dark-transparent.png') !important;
+[data-theme="dark"] .constellation-session::before,
+[data-theme="night"] .constellation-session::before {
+  background-image: url('/assets/constellation/detail-sky-dark-transparent.png');
+  opacity: .72;
+}
+
+.constellation-session > [role="dialog"] {
+  position: relative;
+  z-index: 1;
 }
 
 .constellation-session__header {
@@ -1747,7 +1801,16 @@ html.constellation-app body {
   min-height: 0;
   flex-direction: column;
   justify-content: flex-start;
+  overscroll-behavior-y: contain;
   text-align: center;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.constellation-session__movement {
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .constellation-session__request > :first-child {
@@ -2496,13 +2559,56 @@ html.constellation-auth-root[data-theme="dark"] body {
   box-shadow: none;
 }
 
+.constellation-auth .auth-mode-switch {
+  display: flex;
+  gap: .3rem;
+  padding: .3rem;
+  background: var(--surface-muted);
+  border: 1px solid var(--border-strong);
+  border-radius: .9rem;
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ink) 7%, transparent);
+}
+
+.constellation-auth .auth-mode-switch__option {
+  position: relative;
+  min-height: 2.8rem;
+  flex: 1;
+  padding-inline: .8rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: .65rem;
+  color: var(--text-muted);
+  font-size: .875rem;
+  font-weight: 650;
+  transition:
+    background-color var(--motion) var(--ease),
+    border-color var(--motion) var(--ease),
+    color var(--motion) var(--ease),
+    box-shadow var(--motion) var(--ease);
+}
+
+.constellation-auth .auth-mode-switch__option[aria-pressed="true"] {
+  background: var(--plum-dark);
+  border-color: color-mix(in srgb, var(--plum-dark) 72%, #fff);
+  color: #fff;
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--plum-dark) 24%, transparent) !important;
+  font-weight: 750;
+}
+
+.constellation-auth .auth-mode-switch__option[aria-pressed="false"]:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.constellation-auth .auth-mode-switch__option:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  outline-offset: 2px;
+}
+
 .constellation-auth .auth-sheet > .flex:first-of-type,
 .constellation-auth .auth-sheet form + p {
   border-color: var(--border);
-}
-
-.constellation-auth .auth-sheet button[aria-pressed="true"] {
-  box-shadow: none !important;
 }
 
 .constellation-auth .phase-icon-button {

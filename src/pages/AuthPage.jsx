@@ -145,7 +145,7 @@ export default function AuthPage({ onBack, intent }) {
 
       {/* Logo */}
       <div className="auth-brand">
-        <img src="/logo.svg" alt="Pray4Me" className="w-12 h-12 mb-3 rounded-xl" />
+        <img src="/logo-constellation.svg" alt="Pray4Me" className="w-12 h-12 mb-3 rounded-xl" />
         <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Pray4Me</h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'authTagline')}</p>
       </div>
@@ -203,17 +203,17 @@ export default function AuthPage({ onBack, intent }) {
             )}
 
             {/* Tabs — login first (default), register secondary */}
-            <div className="flex rounded-xl p-1 mb-5" style={{ background: 'var(--input-bg)' }}>
+            <div
+              className="auth-mode-switch mb-5"
+              aria-label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
+            >
               {['login', 'register'].map((m) => (
                 <button
                   key={m}
                   type="button"
                   onClick={() => switchMode(m)}
                   aria-pressed={mode === m}
-                  className="flex-1 text-sm py-2 rounded-lg font-medium transition-colors"
-                  style={mode === m
-                    ? { background: 'var(--surface)', color: 'var(--accent)', boxShadow: '0 1px 4px rgba(124,92,252,0.12)' }
-                    : { color: 'var(--text-3)' }}
+                  className="auth-mode-switch__option"
                 >
                   {m === 'login' ? t(lang, 'authLogIn') : t(lang, 'authSignUp')}
                 </button>

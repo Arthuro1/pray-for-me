@@ -7,6 +7,7 @@
 // reference paired with stale, differently-languaged text.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
 
 vi.mock('../../lib/verseText', () => ({
   fetchScriptureText: vi.fn(),
@@ -122,6 +123,39 @@ describe('PrayerSession — immediate start & format control', () => {
 
     expect(screen.getByText('Pour un ami')).toBeTruthy();
     expect(scrollArea.scrollTop).toBe(0);
+  });
+
+  it('contains session scrolling and restores the page after the session closes', () => {
+    document.body.style.overflow = 'auto';
+    document.body.style.overscrollBehavior = 'auto';
+    document.documentElement.style.overflow = 'visible';
+    document.documentElement.style.overscrollBehavior = 'auto';
+
+    const { unmount } = render(
+      <PrayerSession prayers={[prayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />,
+    );
+
+    expect(document.body.style.overflow).toBe('hidden');
+    expect(document.body.style.overscrollBehavior).toBe('none');
+    expect(document.documentElement.style.overflow).toBe('hidden');
+    expect(document.documentElement.style.overscrollBehavior).toBe('none');
+
+    unmount();
+
+    expect(document.body.style.overflow).toBe('auto');
+    expect(document.body.style.overscrollBehavior).toBe('auto');
+    expect(document.documentElement.style.overflow).toBe('visible');
+    expect(document.documentElement.style.overscrollBehavior).toBe('auto');
+  });
+
+  it('keeps the session fixed to the viewport instead of flowing into Today', () => {
+    const css = readFileSync('src/index.css', 'utf8');
+    const sessionRule = css.match(/\.constellation-session\s*\{([^}]*)\}/)?.[1] || '';
+
+    expect(sessionRule).toMatch(/position:\s*fixed/);
+    expect(sessionRule).toMatch(/inset:\s*0/);
+    expect(sessionRule).toMatch(/height:\s*100dvh/);
+    expect(sessionRule).toMatch(/overscroll-behavior:\s*none/);
   });
 });
 

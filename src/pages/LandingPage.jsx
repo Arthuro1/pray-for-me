@@ -225,7 +225,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         style={{ background: T.bg, color: T.text }}
       >
         <div className="text-center">
-          <img src="/logo.svg" alt="Pray4Me" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
+          <img src="/logo-constellation.svg" alt="Pray4Me" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
           <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
         </div>
       </div>
@@ -255,7 +255,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       {/* Nav */}
       <nav className="constellation-landing__nav mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
         <div className="flex items-center gap-2.5 shrink-0">
-          <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
+          <img src="/logo-constellation.svg" alt="" className="w-8 h-8 rounded-lg" />
           <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Pray4Me</span>
         </div>
 
@@ -355,13 +355,14 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           </p>
         </div>
 
-        {/* A truthful, decorative preview of the actual journey: Today →
-            focused prayer → remembrance. No fabricated usage statistics. */}
+        {/* A truthful preview of the actual journey: Today → focused prayer →
+            remembrance. Its Pray now action enters the same guest flow as the
+            primary CTA; no fabricated usage statistics. */}
         <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Pray4Me product preview">
           <div className="constellation-landing__preview-frame relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
             <div className="flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2.5">
-                <img src="/logo.svg" alt="" className="h-7 w-7 rounded-lg" />
+                <img src="/logo-constellation.svg" alt="" className="h-7 w-7 rounded-lg" />
                 <span className="text-xs font-bold" style={{ color: T.text }}>Pray4Me</span>
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
@@ -373,9 +374,10 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.62)' }}>{benefits[1].title}</p>
               <p className="editorial relative mt-5 max-w-[18rem] text-2xl leading-snug">{samplePrayerTitle}</p>
               <button
+                type="button"
+                onClick={onBeginPrayer}
                 className="relative mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold"
                 style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}
-                tabIndex={-1}
               >
                 <HandHeart size={16} /> {prayNowLabel}
               </button>
@@ -536,7 +538,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       {/* Final CTA */}
       <section className="constellation-landing__final relative px-6 py-20 text-center overflow-hidden">
         <div className="relative max-w-xl mx-auto">
-          <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
+          <img src="/logo-constellation.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
           <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
           <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
@@ -550,7 +552,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <footer className="constellation-landing__footer px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: T.border }}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />
+            <img src="/logo-constellation.svg" alt="" className="w-6 h-6 rounded-md" />
             <span className="text-sm font-medium" style={{ color: T.text }}>Pray4Me</span>
           </div>
           <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>

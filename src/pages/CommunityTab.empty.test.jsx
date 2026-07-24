@@ -53,6 +53,12 @@ describe('CommunityTab — empty state consolidation', () => {
     // Create group and Add friend are present, secondary and quiet.
     expect(screen.getAllByText(t(lang, 'createGroup'))).toHaveLength(1);
     expect(screen.getAllByText(t(lang, 'addFriend'))).toHaveLength(1);
+    expect(screen.getByRole('button', { name: t(lang, 'joinGroupCta') })
+      .querySelector('img')?.getAttribute('src')).toBe('/assets/community-actions/join-group.png');
+    expect(screen.getByRole('button', { name: t(lang, 'createGroup') })
+      .querySelector('img')?.getAttribute('src')).toBe('/assets/community-actions/create-group.png');
+    expect(screen.getByRole('button', { name: t(lang, 'addFriend') })
+      .querySelector('img')?.getAttribute('src')).toBe('/assets/community-actions/add-friend.png');
   });
 
   it('once groups exist, the list leads and create/add-friend shrink into header actions', async () => {
@@ -63,8 +69,12 @@ describe('CommunityTab — empty state consolidation', () => {
     // The onboarding card is gone; its big buttons are replaced by small
     // icon actions in the header.
     expect(screen.queryByText(t(lang, 'prayWithOthers'))).toBeNull();
-    expect(screen.getByRole('button', { name: t(lang, 'createGroup') })).toBeTruthy();
-    expect(screen.getByRole('button', { name: t(lang, 'addFriend') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'joinGroupCta') })
+      .querySelector('img')?.getAttribute('src')).toBe('/assets/community-actions/join-group.png');
+    expect(screen.getByRole('button', { name: t(lang, 'createGroup') })
+      .querySelector('img')?.getAttribute('src')).toBe('/assets/community-actions/create-group.png');
+    expect(screen.getByRole('button', { name: t(lang, 'addFriend') })
+      .querySelector('img')?.getAttribute('src')).toBe('/assets/community-actions/add-friend.png');
   });
 
   it('does not load or render a prayer-request feed on the Community hub', async () => {

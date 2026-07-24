@@ -120,11 +120,11 @@ export default function Layout({ children, onAddPrayer }) {
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
           {!collapsed && (
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <img src="/logo.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg shrink-0" />
+              <img src="/logo-constellation.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg shrink-0" />
               <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>Pray4Me</span>
             </div>
           )}
-          {collapsed && <img src="/logo.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg mx-auto" />}
+          {collapsed && <img src="/logo-constellation.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg mx-auto" />}
           <div className="flex items-center gap-1 shrink-0">
             {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--text-3)' }} />}
             <button
@@ -209,7 +209,7 @@ export default function Layout({ children, onAddPrayer }) {
           }}
         >
           <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Pray4Me" className="w-7 h-7 rounded-lg" />
+            <img src="/logo-constellation.svg" alt="Pray4Me" className="w-7 h-7 rounded-lg" />
             <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>Pray4Me</span>
           </div>
           <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
