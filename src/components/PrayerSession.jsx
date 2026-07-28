@@ -5,6 +5,10 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
+import { planDayNumber } from '../lib/schedule';
+import { planDayContent } from '../content/prayerPlans';
+import { pick, localizeRef } from '../content/teaching';
+import { todayKey } from '../lib/prayedLog';
 import { markActivationSessionCompleted } from '../lib/activationProgress';
 import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
@@ -366,6 +370,16 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const cats = categories.filter((c) => ids.includes(c.id));
   const points = prayer.prayer_points || [];
   const showSupplicationLabel = stages.length > 1; // only in guided / acts paths
+  // Guided plan: the day-specific theme + Scripture lead the session, so the
+  // walk shows what CHANGES each day (Day 3: "Pray the promises…") instead of
+  // the unchanging plan name on every day. Computed for today, matching the
+  // detail page; off a plan day (planDayNumber null) it falls back to normal.
+  const planContent = (() => {
+    if (!prayer.schedule?.plan) return null;
+    const n = planDayNumber(prayer.schedule, todayKey());
+    const content = n && planDayContent(prayer.schedule.plan.id, n);
+    return content ? { ...content, n, total: prayer.schedule.end?.count || '' } : null;
+  })();
   // The most recent meaningful update — the freshest thing to pray from,
   // especially for shared/intercession requests. Older updates stay on the
   // prayer's detail page.
@@ -381,9 +395,13 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         ref={requestScrollRef}
         className="constellation-session__request mx-auto min-h-0 w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12"
       >
-        {showSupplicationLabel && (
+        {planContent ? (
+          <SectionLabel className="mb-4">
+            {t(lang, 'planDayOf', { n: planContent.n, total: planContent.total })} · {tr(prayer.title, lang)}
+          </SectionLabel>
+        ) : showSupplicationLabel ? (
           <SectionLabel className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
-        )}
+        ) : null}
         {(cats.length > 0 || (prayer.for_other && prayer.person_name) || prayer.origin_group_name) && (
           <div className="mb-5 flex flex-wrap gap-1.5">
             {cats.map((c) => (
@@ -401,7 +419,29 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           </div>
         )}
 
-        <h2 className="constellation-session__title editorial-heading mb-5 text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</h2>
+        <h2 className="constellation-session__title editorial-heading mb-5 text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>
+          {planContent ? pick(planContent.theme, lang) : tr(prayer.title, lang)}
+        </h2>
+
+        {/* The day's Scripture — the passage to pray from, tappable to read in place */}
+        {planContent?.ref && (() => {
+          const planRef = localizeRef(planContent.ref, lang);
+          return (
+            <VerseAccordion reference={planRef} lang={lang}>
+              {({ toggle }) => (
+                <button
+                  onClick={toggle}
+                  className="scripture-block pressable mb-7 flex min-h-16 w-full items-center justify-between gap-3 text-left"
+                >
+                  <span className="scripture-text flex items-center gap-2 text-lg" style={{ color: 'var(--text-1)' }}>
+                    <BookOpen size={16} style={{ color: 'var(--gold)' }} /> {planRef}
+                  </span>
+                  <span className="shrink-0 text-xs font-semibold" style={{ color: 'var(--gold)' }}>{t(lang, 'readInApp')}</span>
+                </button>
+              )}
+            </VerseAccordion>
+          );
+        })()}
 
         {prayer.description && (
           <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--text-2)' }} />

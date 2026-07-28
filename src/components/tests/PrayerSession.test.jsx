@@ -18,6 +18,7 @@ vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.co
 import PrayerSession from '../PrayerSession';
 import { fetchScriptureText, fetchVerseText } from '../../lib/verseText';
 import { readActivationProgress } from '../../lib/activationProgress';
+import { todayKey } from '../../lib/prayedLog';
 import { t } from '../../i18n';
 
 const lang = 'en';
@@ -71,6 +72,35 @@ describe('PrayerSession — Scripture localization', () => {
     expect(await screen.findByText(/Car Dieu a tant aimé le monde/)).toBeTruthy();
     expect(screen.getByText(/Jean 3:16/)).toBeTruthy();
     expect(screen.queryByText(/John 3:16/)).toBeNull();
+  });
+});
+
+describe('PrayerSession — guided plan day content', () => {
+  // A running plan is ONE recurring prayer carrying schedule.plan; the session
+  // must lead with the day-specific theme + Scripture (what changes each day),
+  // not the unchanging plan name. Day 1 of the fast3 plan starts today.
+  const planPrayer = {
+    id: 'plan1',
+    title: 'Three-Day Fast',
+    description: 'A short, focused fast',
+    prayer_categories: [],
+    for_other: false,
+    prayer_points: [],
+    schedule: {
+      type: 'recurring', freq: 'daily', startDate: todayKey(),
+      end: { kind: 'count', count: 3 },
+      plan: { id: 'fast3', startDate: todayKey() },
+    },
+  };
+
+  it("leads with today's day counter, theme, and Scripture passage", () => {
+    render(<PrayerSession prayers={[planPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    // Eyebrow: the day counter (plan name rides alongside it, no longer the heading).
+    expect(screen.getByText(new RegExp(t(lang, 'planDayOf', { n: 1, total: 3 })))).toBeTruthy();
+    // Heading: day 1's theme, not the plan title.
+    expect(screen.getByText(/Consecrate the fast/)).toBeTruthy();
+    // The day's passage is offered to read in place.
+    expect(screen.getByText(/Joel 2:12/)).toBeTruthy();
   });
 });
 
