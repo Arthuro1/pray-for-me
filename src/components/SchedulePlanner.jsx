@@ -6,9 +6,10 @@ import { draftFromSchedule, scheduleFromDraft, scheduleSummary } from '../lib/sc
 
 // Prayer-plan (recurrence) editor for the prayer detail page, so a plan can be
 // added or changed AFTER a prayer is created — not only in the new-prayer form.
-// Wraps the shared ScheduleEditor and commits through onSave (updatePrayer),
-// which accepts null to clear the plan (the "follow my normal rhythm" mode), so
-// the user can also drop a plan they set earlier.
+// Wraps the shared ScheduleEditor and commits through onSave (updatePrayer).
+// Choosing "No fixed schedule" commits an explicit { type: 'none' } — the prayer
+// stays in the Journal but lands on no dated day — so a plan set earlier can be
+// dropped without falling back to a category-driven rhythm (labels don't schedule).
 //
 // `defaultEditing` opens straight into the editor (used when reached from the
 // overflow menu's Schedule action); `onDone` (optional) is called after a save

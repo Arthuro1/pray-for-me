@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -34,21 +34,14 @@ const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--bo
 const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const MODAL_INPUT_CLASS = 'w-full px-4 py-3 rounded-xl text-sm focus:outline-none mb-3';
-const COMMUNITY_ACTION_ICONS = {
-  join: '/assets/community-actions/join-group.png',
-  create: '/assets/community-actions/create-group.png',
-  friend: '/assets/community-actions/add-friend.png',
-};
+// Plain, recognisable line icons (currentColor, so they adapt to theme and to
+// the button they sit in): join = walk through a door, create = a circle of
+// people, add a friend = a person with a plus.
+const COMMUNITY_ACTION_ICONS = { join: DoorOpen, create: UsersRound, friend: UserPlus };
 
 function CommunityActionIcon({ action, compact = false }) {
-  return (
-    <img
-      src={COMMUNITY_ACTION_ICONS[action]}
-      alt=""
-      aria-hidden="true"
-      className={`community-action-icon ${compact ? 'community-action-icon--compact' : ''}`}
-    />
-  );
+  const Icon = COMMUNITY_ACTION_ICONS[action];
+  return <Icon size={compact ? 16 : 18} strokeWidth={1.9} aria-hidden="true" />;
 }
 
 // ── Reusable request/invitation row ──────────────────────────────────────────

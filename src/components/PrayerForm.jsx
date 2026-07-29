@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, ChevronDown, Plus } from 'lucide-react';
+import { X, ChevronDown, Plus, Clock } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { useShallow } from 'zustand/react/shallow';
 import useTranslationStore from '../store/translationStore';
@@ -19,7 +19,7 @@ import SchedulePicker from './SchedulePicker';
 import CategorySelector from './CategorySelector';
 import FormattedTextarea from './rich/FormattedTextarea';
 import { planWeekDays } from '../lib/planner';
-import { defaultNewDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
+import { defaultNewDraft, draftFromSchedule, scheduleFromDraft, modeOf } from '../lib/scheduleDraft';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -104,8 +104,11 @@ function initialForm(editPrayer, prefill, lang) {
 function hasNote(editPrayer, prefill) {
   return !!(editPrayer?.description || prefill?.description);
 }
+// The rhythm now lives OUTSIDE this section (it's a primary decision, shown under
+// the title), so "More options" only auto-opens for the genuinely optional extras
+// an edited prayer already uses: who it's for, and its labels.
 function usesOrganize(editPrayer) {
-  return !!(editPrayer && (editPrayer.schedule || editPrayer.for_other
+  return !!(editPrayer && (editPrayer.for_other
     || (editPrayer.prayer_categories || []).length > 0 || (editPrayer.category_ids || []).length > 0));
 }
 
@@ -159,6 +162,19 @@ export default function PrayerForm({
   // the same planner Today uses — so the choice can show its real days instead
   // of asking the user to remember their weekly plan.
   const planDays = planWeekDays(categories, form.categoryIds, editPrayer?.week_days);
+
+  // Close the loop between planning and follow-through: when this prayer has a
+  // real rhythm and the daily reminder is on, say when Grace will actually be
+  // nudged. "No fixed schedule" (mode 'plan') never appears on a day, so it gets
+  // no reminder line.
+  const rhythmMode = modeOf(form.scheduleDraft);
+  const reminderLine = !communityMode && rhythmMode !== 'plan' && settings.dailyReminderEnabled && settings.dailyReminderTime
+    ? (
+      <p className="flex items-center gap-1.5 px-1 text-[11px]" style={{ color: 'var(--text-3)' }}>
+        <Clock size={11} style={{ color: 'var(--accent-2)' }} /> {t(lang, 'formReminderAt', { time: settings.dailyReminderTime })}
+      </p>
+    )
+    : null;
 
   // Subtle, non-technical reassurance after a personal prayer is saved. Encryption
   // is automatic and invisible, so we only hint at it — "Saved privately" always,
@@ -277,6 +293,22 @@ export default function PrayerForm({
             />
           </div>
 
+          {/* Rhythm is a PRIMARY decision, so it sits in view under the title —
+              one glanceable line ("Every Tue · Anytime"), one tap to change.
+              Quick capture stays a single field: the default is already chosen. */}
+          {!communityMode && (
+            <div className="space-y-1">
+              <SchedulePicker
+                draft={form.scheduleDraft}
+                onCommit={(d) => patch('scheduleDraft', d)}
+                lang={lang}
+                planDays={planDays}
+                idPrefix="prayer-sched"
+              />
+              {reminderLine}
+            </div>
+          )}
+
           <div>
             <SectionToggle
               label={t(lang, 'addNote')}
@@ -333,7 +365,7 @@ export default function PrayerForm({
           {!communityMode && (
             <div>
               <SectionToggle
-                label={t(lang, 'organizeLabel')}
+                label={t(lang, 'moreOptionsLabel')}
                 open={organizeOpen}
                 onToggle={() => setOrganizeOpen((v) => !v)}
                 controlsId="prayer-organize-section"
@@ -367,20 +399,8 @@ export default function PrayerForm({
                     lang={lang}
                   />
 
-                  {/* The rhythm this prayer already has, in one line. A new
-                      prayer arrives with the bounded weekly default already
-                      chosen, so saving without opening this is a complete
-                      answer — the scheduler only exists after "Change". */}
-                  <SchedulePicker
-                    draft={form.scheduleDraft}
-                    onCommit={(d) => patch('scheduleDraft', d)}
-                    lang={lang}
-                    planDays={planDays}
-                    idPrefix="prayer-sched"
-                  />
-
                   {/* Source language — already answered, correctable in one tap.
-                      It sits inside Organize so the default form never grows. */}
+                      It sits inside More options so the default form never grows. */}
                   <SourceLanguageField
                     value={form.contentLanguage}
                     onChange={(code) => patch('contentLanguage', code)}

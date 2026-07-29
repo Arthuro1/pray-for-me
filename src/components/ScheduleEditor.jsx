@@ -9,7 +9,6 @@ import {
   draftForMode,
   draftForRecurrenceChoice,
   modeOf,
-  planSummary,
   recurrenceChoiceOf,
   scheduleFromDraft,
   scheduleSentence,
@@ -18,10 +17,11 @@ import {
 // Scheduling, asked the way a person would ask it: ONE question — "when would
 // you like this prayer to appear?" — with three answers.
 //
-//   Use my normal prayer rhythm   → no schedule at all (the weekly plan), shown
-//                                   as the days it ACTUALLY produces
-//   Pray once                     → a single date, revealed only when chosen
-//   Choose another rhythm         → a rhythm, asked as a second question
+//   Choose a rhythm     → a rhythm, asked as a second question (the default)
+//   Pray once           → a single date, revealed only when chosen
+//   No fixed schedule   → { type: 'none' }: stays in the Journal, never on a set
+//                         day (it does NOT inherit a category's weekdays — a
+//                         category is just a label now)
 //
 // The second question offers only the three rhythms nearly everyone wants
 // (every day / once a week / choose days). Every-N-days, monthly and yearly are
@@ -43,9 +43,9 @@ const FIELD_CLASS = 'w-full text-sm rounded-xl px-4 py-2.5 min-h-[44px] focus:ou
 const NUMBER_CLASS = 'w-20 text-sm rounded-xl px-3 py-2 min-h-[44px] text-center focus:outline-none';
 
 const MODE_ROWS = [
-  { value: 'plan', labelKey: 'schedUsePlan' },
-  { value: 'once', labelKey: 'schedPrayOnce', subKey: 'schedOnceSub' },
   { value: 'recurring', labelKey: 'schedOtherRhythm', subKey: 'schedOtherRhythmSub' },
+  { value: 'once', labelKey: 'schedPrayOnce', subKey: 'schedOnceSub' },
+  { value: 'plan', labelKey: 'schedNoFixed', subKey: 'schedNoFixedSub' },
 ];
 
 const RHYTHM_LABELS = {
@@ -137,7 +137,6 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
   };
 
   const slotLabel = d.slot ? t(lang, `slot_${d.slot}`) : t(lang, 'slotAnytime');
-  const planText = planSummary(planDays, lang);
 
   return (
     <div className="space-y-3" onKeyDown={blockImplicitSubmit}>
@@ -153,7 +152,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
               checked={mode === row.value}
               onChange={() => onChange(draftForMode(row.value, d))}
               label={t(lang, row.labelKey)}
-              sub={row.value === 'plan' ? planText : t(lang, row.subKey)}
+              sub={t(lang, row.subKey)}
             />
 
             {row.value === 'once' && mode === 'once' && (

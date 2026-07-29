@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { communityToPersonalInsert, mirrorSavedCopy, sortByOrder } from '../utils/prayer';
-import { prayersForDay, sortEntries, catchUpPrayers } from '../lib/planner';
+import { prayersForDay, sortEntries, catchUpPrayers, migrateLegacySchedules } from '../lib/planner';
+import { resolveCategoryColor } from '../lib/categoryColor';
 import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
@@ -33,6 +34,11 @@ import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
 // level so it survives store re-renders; an "Undo" toast clears the timer.
 const pendingDeletes = new Map();
 const UNDO_WINDOW_MS = 6000;
+
+// Snap every category's stored colour to the theme-safe palette on the way into
+// state, so a label saved with a legacy web colour still reads on both grounds
+// without a DB migration (src/lib/categoryColor.js).
+const withCatColors = (cats) => (cats || []).map((c) => ({ ...c, color: resolveCategoryColor(c.color) }));
 
 // A prayer's NESTED content (updates / points / testimonies) is encrypted at rest
 // under the account key exactly when the prayer itself is (canEncrypt). Sharing no
@@ -219,7 +225,7 @@ const usePrayerStore = create((set, get) => ({
     // 1. Hydrate instantly from the local snapshot (works offline and includes
     //    any prayers created offline that aren't on the server yet).
     const snap = await loadSnapshot(userId);
-    if (snap) set({ categories: snap.categories || [], prayers: snap.prayers || [], completions: snap.completions || {}, loading: false });
+    if (snap) set({ categories: withCatColors(snap.categories), prayers: snap.prayers || [], completions: snap.completions || {}, loading: false });
 
     // 2. Fetch authoritative data. If the network is unreachable, keep the
     //    hydrated snapshot rather than wiping it.
@@ -249,7 +255,7 @@ const usePrayerStore = create((set, get) => ({
       serverPrayers = res.data || [];
     } catch {
       // Categories loaded but prayers didn't — keep hydrated prayers.
-      const orderedCats = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
+      const orderedCats = withCatColors([...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity)));
       set({ categories: orderedCats, loading: false });
       return;
     }
@@ -290,9 +296,16 @@ const usePrayerStore = create((set, get) => ({
       }
     } catch { /* offline — snapshot completions stand */ }
 
-    const ordered = [...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity));
-    set({ categories: ordered, prayers: mergedPrayers, completions, loading: false });
-    saveSnapshot(userId, { categories: ordered, prayers: mergedPrayers, completions });
+    const ordered = withCatColors([...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity)));
+    // Decision B: convert legacy plan-following prayers to explicit schedules
+    // once, silently, so scheduling lives on each prayer (categories become
+    // labels). Idempotent — re-runs after the first are no-ops.
+    const { prayers: migratedPrayers, changed } = migrateLegacySchedules(mergedPrayers, ordered, todayKey());
+    set({ categories: ordered, prayers: migratedPrayers, completions, loading: false });
+    saveSnapshot(userId, { categories: ordered, prayers: migratedPrayers, completions });
+    // Persist only the schedule column (metadata, outside the E2EE envelope) —
+    // no re-encryption, offline-queued like any other write.
+    changed.forEach(({ id, schedule }) => enqueue('updatePrayer', { id, payload: { schedule, updated_at: new Date().toISOString() } }));
     // Mirror shared content of saved-from-community prayers (fully-shared sync).
     get().refreshSavedCopies();
   },
@@ -802,8 +815,8 @@ const usePrayerStore = create((set, get) => ({
 
   // All planned entries ({ prayer, source, slot }) for a local day, sorted.
   getEntriesForDay: (dayKey) => {
-    const { prayers, categories } = get();
-    return sortEntries(prayersForDay(prayers, categories, dayKey), categories);
+    const { prayers, categories, settings } = get();
+    return sortEntries(prayersForDay(prayers, categories, dayKey, { cap: settings.maxPerDay || 0 }), categories);
   },
 
   // ─── Day completion (single source of truth: per-prayer completions) ──
@@ -833,8 +846,8 @@ const usePrayerStore = create((set, get) => ({
 
   // Missed prayers from the last few days (not prayed since, not on today's list).
   getCatchUp: (windowDays = 3) => {
-    const { prayers, categories } = get();
-    return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays);
+    const { prayers, categories, settings } = get();
+    return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays, settings.maxPerDay || 0);
   },
 
   // Pin/unpin a prayer so it floats to the top of the lists (personal organisation).
@@ -1110,7 +1123,7 @@ const usePrayerStore = create((set, get) => ({
       .from('categories')
       .insert({ user_id: user.id, name: category.name, emoji: category.emoji, color: category.color, week_days: category.weekDays || [] })
       .select().single();
-    if (data) set((state) => ({ categories: [...state.categories, data] }));
+    if (data) set((state) => ({ categories: [...state.categories, { ...data, color: resolveCategoryColor(data.color) }] }));
   },
 
   updateCategory: async (id, updates) => {
@@ -1123,7 +1136,8 @@ const usePrayerStore = create((set, get) => ({
 
     const { data } = await supabase.from('categories').update(payload).eq('id', id).select().single();
     if (data) {
-      set((state) => ({ categories: state.categories.map((c) => c.id === id ? data : c) }));
+      const resolved = { ...data, color: resolveCategoryColor(data.color) };
+      set((state) => ({ categories: state.categories.map((c) => c.id === id ? resolved : c) }));
     }
   },
 
@@ -1188,8 +1202,8 @@ const usePrayerStore = create((set, get) => ({
   // Planner-backed: per-prayer schedules (one-time/recurring/slots/rotation)
   // and the legacy weekly category plan, merged and sorted.
   getTodaysPrayers: () => {
-    const { prayers, categories } = get();
-    return sortEntries(prayersForDay(prayers, categories, todayKey()), categories).map((e) => e.prayer);
+    const { prayers, categories, settings } = get();
+    return sortEntries(prayersForDay(prayers, categories, todayKey(), { cap: settings.maxPerDay || 0 }), categories).map((e) => e.prayer);
   },
 
   // Persist a new category order (array of ids → sort_order = index).

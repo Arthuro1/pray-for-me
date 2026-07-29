@@ -2,14 +2,19 @@
 // the new per-prayer schedules (src/lib/schedule.js) and the legacy weekly
 // category plan (categories.week_days / prayers.week_days). Pure functions so
 // the store, Home, and the calendar all agree on what "today" means.
-import { occursOn, rotationForDay, addDays, seriesEnded } from './schedule';
+import { occursOn, rotationForDay, addDays, seriesEnded, normalizeSchedule } from './schedule';
 import { prayerPriority } from '../utils/prayer';
 
 // Every planned entry for a day:
 //   { prayer, source: 'once'|'recurring'|'days'|'category', slot: string|null }
 // A prayer with its own `schedule` is governed ONLY by that schedule; legacy
 // week_days / category logic applies to the rest (full backward compat).
-export function prayersForDay(prayers, categories, dayKey) {
+//
+// `cap` (settings.maxPerDay, "show a few per day"): when the day's list is
+// longer than the cap, keep everything pinned or dated-once, and round-robin the
+// rest so a big list stays coverable without one overwhelming day. Uncapped by
+// default — Home and catch-up pass it, the month calendar shows the full plan.
+export function prayersForDay(prayers, categories, dayKey, { cap = 0 } = {}) {
   const weekday = ((d) => d.getDay())(new Date(
     parseInt(dayKey.slice(0, 4), 10), parseInt(dayKey.slice(5, 7), 10) - 1, parseInt(dayKey.slice(8, 10), 10)
   ));
@@ -32,6 +37,8 @@ export function prayersForDay(prayers, categories, dayKey) {
   const entries = [];
   for (const p of prayers) {
     if (p.status !== 'active') continue;
+    // "No fixed schedule": lives in the Journal, never lands on a set day.
+    if (p.schedule?.type === 'none') continue;
     if (p.schedule) {
       if (occursOn(p.schedule, dayKey, p.schedule_overrides || {})) {
         entries.push({ prayer: p, source: p.schedule.type === 'once' ? 'once' : 'recurring', slot: p.schedule.slot || null });
@@ -57,7 +64,49 @@ export function prayersForDay(prayers, categories, dayKey) {
     });
     if (visible) entries.push({ prayer: p, source: 'category', slot: null });
   }
+
+  // Global "a few per day" cap. Pinned and one-time-dated prayers are always
+  // kept (they're deliberate for today); the rest round-robin by creation order
+  // so coverage is fair and identical on every device for a given day.
+  if (cap > 0 && entries.length > cap) {
+    const keep = entries.filter((e) => e.source === 'once' || e.prayer.pinned);
+    const rest = entries.filter((e) => !(e.source === 'once' || e.prayer.pinned));
+    const slots = Math.max(0, cap - keep.length);
+    const orderedIds = [...rest]
+      .sort((a, b) => new Date(a.prayer.created_at || 0) - new Date(b.prayer.created_at || 0))
+      .map((e) => e.prayer.id);
+    const picked = new Set(rotationForDay(orderedIds, slots, dayKey));
+    return [...keep, ...rest.filter((e) => picked.has(e.prayer.id))];
+  }
   return entries;
+}
+
+// One-time client migration (Decision B): convert every legacy plan-following
+// prayer — one with no `schedule` of its own — into an EXPLICIT schedule, read
+// from the same rules the planner used to apply implicitly:
+//   • a per-prayer weekday override, or the categories' planned weekdays → weekly
+//   • uncategorized (no planned days anywhere) → daily (its old behaviour)
+//   • categorized but with no planned day → "No fixed schedule" ({ type:'none' })
+// Idempotent: a prayer that already has any schedule (including 'none') is left
+// alone, so it runs once and then no-ops. Returns the updated prayers plus the
+// list of { id, schedule } to persist.
+export function migrateLegacySchedules(prayers, categories, todayKeyStr) {
+  const changed = [];
+  const next = prayers.map((p) => {
+    if (p.schedule || p.status !== 'active') return p;
+    const days = planWeekDays(categories, (p.prayer_categories || []).map((pc) => pc.category_id), p.week_days);
+    let schedule;
+    if (days === null) {
+      schedule = normalizeSchedule({ type: 'recurring', freq: 'daily', end: { kind: 'never' } }, todayKeyStr);
+    } else if (days.length === 0) {
+      schedule = { type: 'none' };
+    } else {
+      schedule = normalizeSchedule({ type: 'recurring', freq: 'weekly', weekDays: days, end: { kind: 'never' } }, todayKeyStr);
+    }
+    changed.push({ id: p.id, schedule });
+    return { ...p, schedule };
+  });
+  return { prayers: next, changed };
 }
 
 // A recurring series that can produce no more occurrences (end date past, or
@@ -120,8 +169,8 @@ export function groupBySlot(entries) {
 // on today's list (those are simply prayed today).
 // completedDays: Map(prayerId -> Set('YYYY-MM-DD')).
 // Returns [{ prayer, day }] oldest-first, one entry per prayer (earliest miss).
-export function catchUpPrayers(prayers, categories, completedDays, todayKey, windowDays = 3) {
-  const todayIds = new Set(prayersForDay(prayers, categories, todayKey).map((e) => e.prayer.id));
+export function catchUpPrayers(prayers, categories, completedDays, todayKey, windowDays = 3, cap = 0) {
+  const todayIds = new Set(prayersForDay(prayers, categories, todayKey, { cap }).map((e) => e.prayer.id));
   // ISO day keys compare lexicographically, so `d >= day` is a date comparison.
   const prayedSince = (id, day) => {
     for (const d of completedDays.get(id) || []) if (d >= day) return true;
@@ -131,7 +180,7 @@ export function catchUpPrayers(prayers, categories, completedDays, todayKey, win
   const missed = [];
   for (let i = windowDays; i >= 1; i--) {
     const day = addDays(todayKey, -i);
-    for (const { prayer } of prayersForDay(prayers, categories, day)) {
+    for (const { prayer } of prayersForDay(prayers, categories, day, { cap })) {
       if (seen.has(prayer.id) || todayIds.has(prayer.id)) continue;
       if (prayedSince(prayer.id, day)) continue;
       seen.add(prayer.id);

@@ -44,13 +44,13 @@ describe('rhythm presets — no unbounded default on offer', () => {
     expect(RHYTHM_PRESETS).toEqual(['daily', 'weekly', 'occasionally']);
   });
 
-  it('still RECOGNISES a legacy null schedule as the plan-based rhythm', () => {
-    // Editing an existing unscheduled prayer must show (and keep) its rhythm.
-    const draft = draftFromSchedule(null);
-    expect(rhythmOf(draft)).toBe('flexible');
-    // Round-tripping without touching it keeps the schedule null — no silent
-    // migration of existing users' data.
-    expect(scheduleFromDraft(draft)).toBeNull();
+  it('treats a legacy null and an explicit no-fixed schedule the same', () => {
+    // Editing an existing unscheduled prayer opens it on the "no fixed" row…
+    expect(rhythmOf(draftFromSchedule(null))).toBe('flexible');
+    expect(rhythmOf(draftFromSchedule({ type: 'none' }))).toBe('flexible');
+    // …and saving it now writes an EXPLICIT { type: 'none' }, not null: categories
+    // are labels, so there is no weekly plan left to fall back to.
+    expect(scheduleFromDraft(draftFromSchedule(null))).toEqual({ type: 'none' });
   });
 });
 

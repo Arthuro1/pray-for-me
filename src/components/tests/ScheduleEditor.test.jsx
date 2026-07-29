@@ -44,7 +44,7 @@ describe('ScheduleEditor — progressive disclosure', () => {
   it('opens on exactly three primary choices, nothing else', () => {
     render(<Harness />);
     expect(screen.getAllByRole('radio')).toHaveLength(3);
-    expect(radio('schedUsePlan')).toBeTruthy();
+    expect(radio('schedNoFixed')).toBeTruthy();
     expect(radio('schedPrayOnce')).toBeTruthy();
     expect(radio('schedOtherRhythm')).toBeTruthy();
   });
@@ -115,13 +115,13 @@ describe('ScheduleEditor — progressive disclosure', () => {
 });
 
 describe('ScheduleEditor — what each choice saves', () => {
-  it('"use my normal rhythm" keeps the plan-following (null) schedule', () => {
+  it('"no fixed schedule" saves an explicit { type: "none" }', () => {
     render(<Harness />);
-    expect(currentSchedule()).toBeNull();
-    // …and returning to it after a detour still means "no schedule".
+    expect(currentSchedule()).toEqual({ type: 'none' });
+    // …and returning to it after a detour still means "no fixed schedule".
     fireEvent.click(radio('schedPrayOnce'));
-    fireEvent.click(radio('schedUsePlan'));
-    expect(currentSchedule()).toBeNull();
+    fireEvent.click(radio('schedNoFixed'));
+    expect(currentSchedule()).toEqual({ type: 'none' });
   });
 
   it('"pray once" defaults to today and persists a chosen date', () => {
@@ -251,11 +251,9 @@ describe('ScheduleEditor — existing schedules reopen unchanged', () => {
 });
 
 describe('ScheduleEditor — the confirmation sentence', () => {
-  it('describes a plan-following prayer by the days it really lands on', () => {
-    render(<Harness planDays={[1, 3]} />);
-    const sentence = screen.getByText(new RegExp(t(lang, 'schedWillFollowPlan', { days: '' }).slice(0, 20)));
-    expect(sentence.textContent).toContain('lundi');
-    expect(sentence.textContent).toContain('mercredi');
+  it('describes a "no fixed schedule" prayer as staying in the Journal', () => {
+    render(<Harness />);
+    expect(screen.getByText(t(lang, 'schedNoFixedSentence'))).toBeTruthy();
   });
 
   it('states the rhythm, the time and the ending of a recurring prayer', () => {
@@ -282,8 +280,8 @@ describe('ScheduleEditor — accessibility', () => {
   it('uses real radios in named groups', () => {
     render(<Harness />);
     expect(screen.getByRole('group', { name: t(lang, 'schedWhenAppear') })).toBeTruthy();
-    expect(radio('schedUsePlan').type).toBe('radio');
-    expect(radio('schedUsePlan').checked).toBe(true);
+    expect(radio('schedNoFixed').type).toBe('radio');
+    expect(radio('schedNoFixed').checked).toBe(true);
     expect(radio('schedPrayOnce').checked).toBe(false);
   });
 

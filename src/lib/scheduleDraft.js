@@ -88,6 +88,9 @@ export function emptyDraft() {
 export function draftFromSchedule(s) {
   const d = emptyDraft();
   if (!s) return d;
+  // "No fixed schedule" is an explicit choice, not the absence of one — it opens
+  // on the same 'plan' row a null schedule does.
+  if (s.type === 'none') return d;
   if (s.type === 'once') {
     return { ...d, mode: 'once', date: s.date, slot: s.slot || null };
   }
@@ -188,9 +191,12 @@ export function draftForEnd(endKind, d) {
   return { ...d, endKind, endExplicit: true };
 }
 
-// Draft → persisted schedule (null = no schedule, follow the weekly plan).
+// Draft → persisted schedule. The 'plan' row now means "No fixed schedule": an
+// explicit { type: 'none' } that keeps the prayer in the Journal but off every
+// dated day (it no longer inherits a category's weekdays — categories are labels).
 export function scheduleFromDraft(d, existing = null) {
-  if (!d || d.mode === 'plan') return null;
+  if (!d) return null;
+  if (d.mode === 'plan') return { type: 'none' };
   if (d.mode === 'once') {
     return normalizeSchedule({ type: 'once', date: d.date, slot: d.slot }, todayKey());
   }
@@ -300,6 +306,7 @@ function endPhrase(s, lang, sentence) {
 // unset slot, for the compact row that stands in for the whole editor.
 export function scheduleSummary(s, lang, { showAnytime = false } = {}) {
   if (!s) return '';
+  if (s.type === 'none') return t(lang, 'noFixedSchedule');
   const slot = slotPhrase(s, lang, false) || (showAnytime ? t(lang, 'slotAnytime') : '');
   return [rhythmPhrase(s, lang, false), slot, endPhrase(s, lang, false)].filter(Boolean).join(' · ');
 }
@@ -318,6 +325,7 @@ export function planSummary(planDays, lang) {
 // very schedule that will be saved — a null schedule is not "no rhythm", it is
 // the user's normal one, so it says which days that actually means.
 export function scheduleSentence(s, lang, { planDays } = {}) {
+  if (s && s.type === 'none') return t(lang, 'schedNoFixedSentence');
   if (!s) {
     const days = planDays === null || planDays === undefined
       ? t(lang, 'sentDaily')

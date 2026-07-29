@@ -52,9 +52,9 @@ describe('SchedulePicker — one line until asked', () => {
     expect(rhythmRow().textContent).toContain(t(lang, 'slotAnytime'));
   });
 
-  it('states a plan-following prayer by the days the planner really gives it', () => {
-    render(<PickerHarness initial={emptyDraft()} planDays={[1, 3]} />);
-    expect(rhythmRow().textContent).toContain('lundi');
+  it('states a "no fixed schedule" prayer as staying in the Journal', () => {
+    render(<PickerHarness initial={emptyDraft()} />);
+    expect(rhythmRow().textContent).toContain(t(lang, 'noFixedSchedule'));
     expect(screen.getByText(t(lang, 'rhythmPlanHint'))).toBeTruthy();
   });
 
@@ -125,13 +125,13 @@ describe('SchedulePlanner — Prayer Detail', () => {
     expect(screen.getByText(new RegExp(t(lang, 'days')[2]))).toBeTruthy();
   });
 
-  it('clears a schedule back to the plan-following rhythm', () => {
+  it('clears a schedule to "no fixed schedule"', () => {
     const onSave = vi.fn();
     const stored = { type: 'recurring', freq: 'daily', startDate: todayKey(), end: { kind: 'never' } };
     render(<SchedulePlanner schedule={stored} lang={lang} defaultEditing onSave={onSave} onDone={() => {}} />);
 
-    fireEvent.click(radio('schedUsePlan'));
+    fireEvent.click(radio('schedNoFixed'));
     fireEvent.click(screen.getByText(t(lang, 'schedUseRhythm')));
-    expect(onSave).toHaveBeenCalledWith(null);
+    expect(onSave).toHaveBeenCalledWith({ type: 'none' });
   });
 });
