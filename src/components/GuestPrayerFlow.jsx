@@ -41,7 +41,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
 
   return (
     <div
-      className="prayer-session constellation-session constellation-onboarding fixed inset-0 z-[70] flex flex-col"
+      className="prayer-session constellation-session constellation-onboarding constellation-guest-flow fixed inset-0 z-[70] flex flex-col"
       style={{ background: 'var(--background)' }}
     >
       <div
@@ -165,7 +165,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
 
   if (phase === 'decide') {
     return (
-      <div className="first-prayer-experience constellation-onboarding">
+      <div className="first-prayer-experience constellation-onboarding constellation-guest-flow">
         <ConstellationBackdrop />
         <div
           ref={trapRef}
@@ -199,7 +199,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
   }
 
   return (
-    <div className="first-prayer-experience constellation-onboarding">
+    <div className="first-prayer-experience constellation-onboarding constellation-guest-flow">
       <ConstellationBackdrop />
       <form
         ref={trapRef}

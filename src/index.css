@@ -2721,6 +2721,77 @@ html.constellation-auth-root[data-theme="dark"] body {
   color: var(--accent);
 }
 
+/* Public pray-first journey ------------------------------------------------
+   The landing page is rendered with inline theme tokens, then unmounts before
+   GuestPrayerFlow appears. Re-declare that same constellation palette here so
+   capture, prayer, Amen, and save-decision screens never fall back to the older
+   cream/gold application colors. */
+.constellation-guest-flow {
+  color-scheme: light;
+  --background: #f8f7fd;
+  --surface: #ffffff;
+  --surface-muted: #f0ecf8;
+  --surface-raised: #ffffff;
+  --surface-2: var(--surface-muted);
+  --ink: #251e35;
+  --text-muted: #74628f;
+  --text-faint: #6f637f;
+  --text-1: var(--ink);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-faint);
+  --plum: #7457b8;
+  --plum-dark: #5d449a;
+  --plum-deep: #30215e;
+  --gold: #8c76c9;
+  --gold-soft: #f0ecfb;
+  --sage: #249e98;
+  --sage-soft: #e7f7f5;
+  --accent: var(--plum);
+  --accent-2: #8c76c9;
+  --accent-soft: #eeebfa;
+  --accent-border: #d8cfee;
+  --border: #ded8ee;
+  --border-strong: #c9bfe2;
+  --input-bg: #ffffff;
+  --input-border: #d8d0e8;
+  --success: #249e98;
+  --success-bg: var(--sage-soft);
+  --success-border: #a9d8d4;
+}
+
+[data-theme="dark"] .constellation-guest-flow {
+  color-scheme: dark;
+  --background: #120f1b;
+  --surface: #171423;
+  --surface-muted: #211c31;
+  --surface-raised: #211c31;
+  --surface-2: var(--surface-muted);
+  --ink: #f8f5ff;
+  --text-muted: #b4a8c9;
+  --text-faint: #9b8fae;
+  --text-1: var(--ink);
+  --text-2: var(--text-muted);
+  --text-3: var(--text-faint);
+  --plum: #9a7ce0;
+  --plum-dark: #7457b8;
+  --plum-deep: #120f1b;
+  --gold: #9a7ce0;
+  --gold-soft: #211a36;
+  --sage: #63d1cb;
+  --sage-soft: #173331;
+  --accent: var(--plum);
+  --accent-2: #b19aeb;
+  --accent-soft: #28203d;
+  --accent-border: #493b68;
+  --border: #373047;
+  --border-strong: #4b415f;
+  --input-bg: #191523;
+  --input-border: #403650;
+  --success: #63d1cb;
+  --success-bg: var(--sage-soft);
+  --success-border: #285b57;
+}
+
 @media (max-width: 639px) {
   .constellation-auth.auth-experience {
     place-items: end center;
