@@ -59,16 +59,6 @@ function makeSource(element) {
         if (step >= steps) clearRamp();
       }, 50);
     },
-    pause() {
-      clearRamp();
-      try { element.pause(); } catch { /* best effort */ }
-    },
-    resume() {
-      try {
-        const result = element.play?.();
-        result?.catch?.(() => {});
-      } catch { /* best effort */ }
-    },
     stop() {
       clearRamp();
       try {
@@ -186,20 +176,6 @@ export async function startBackgroundInstrumental({
   source.setLevel(0);
   source.setLevel(baseVolume, FADE_IN_MS);
   return { started: true, trackId: track.id };
-}
-
-export function setBackgroundVolume(value) {
-  if (!current) return;
-  current.baseVolume = clamp01(value);
-  current.source.setLevel(current.baseVolume, 250);
-}
-
-export function pauseBackgroundAudio() {
-  current?.source.pause();
-}
-
-export function resumeBackgroundAudio() {
-  current?.source.resume();
 }
 
 export function isBackgroundPlaying() {

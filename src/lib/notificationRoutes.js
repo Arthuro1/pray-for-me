@@ -12,9 +12,6 @@
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export const isUuid = (v) => typeof v === 'string' && UUID_RE.test(v);
 
-// Route for the account-level notification settings screen.
-export const NOTIFICATION_SETTINGS_ROUTE = '/settings#notifications';
-
 export function notificationRoute(notification) {
   const type = notification?.type;
   const meta = notification?.metadata || {};

@@ -20,12 +20,6 @@ export function grantAiConsent(context = 'prayer') {
   track(EVENTS.AI_CONSENT_ENABLED, { source: context });
 }
 
-// True if the user has opted into AI for at least one context.
-export function hasAnyAiConsent() {
-  const { aiConsentPrayer, aiConsentHome } = usePrayerStore.getState().settings;
-  return !!(aiConsentPrayer || aiConsentHome);
-}
-
 // Withdraw consent everywhere — the next AI use will ask again.
 export function revokeAiConsent() {
   usePrayerStore.getState().updateSettings({ aiConsentPrayer: false, aiConsentHome: false });

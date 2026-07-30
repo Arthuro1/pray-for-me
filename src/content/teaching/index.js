@@ -8,10 +8,6 @@ import gospelJourney from './gospelJourney';
 export { pick, localizeRef } from './pick';
 export { guides, articles, gospelJourney };
 
-export function getGuide(id) {
-  return guides.find((g) => g.id === id) || null;
-}
-
 export function getArticle(id) {
   return articles.find((a) => a.id === id) || null;
 }

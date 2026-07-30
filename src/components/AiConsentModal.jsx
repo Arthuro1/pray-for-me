@@ -6,7 +6,7 @@ import { grantAiConsent } from '../lib/aiConsent';
 import AiDisclaimer from './shared/AiDisclaimer';
 
 // The consent read/grant/revoke helpers (hasAiConsent, grantAiConsent,
-// hasAnyAiConsent, revokeAiConsent) live in lib/aiConsent.js.
+// revokeAiConsent) live in lib/aiConsent.js.
 
 // context: 'prayer' = sends prayer title + last update, 'home' = sends category names
 export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {

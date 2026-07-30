@@ -8,13 +8,6 @@ import { t } from '../i18n';
 import { normalizeSchedule, parseKey } from './schedule';
 import { todayKey } from './prayedLog';
 
-// Which mode chip a draft matches (drives chip highlighting). The chips name the
-// MODE — "pray once" / "pray regularly" — not one of its values, so moving the
-// date off today or the frequency off daily can never orphan the highlight.
-export function presetOf(d) {
-  return d?.mode || 'plan';
-}
-
 // ── Simple rhythm presets ────────────────────────────────────────────────────
 // The Add-prayer form asks ONE question — "How often should this return?" —
 // with three everyday answers plus Custom for the full editor. Each preset is a

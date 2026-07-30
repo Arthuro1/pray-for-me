@@ -19,8 +19,6 @@ export const NOTIF_TYPES = [
   'testimony',
 ];
 
-export const DELIVERY_MODES = ['immediate', 'digest', 'off'];
-
 // Type-aware default delivery mode — mirrors default_delivery_mode() in
 // supabase/notifications.sql. The aggregated types default to a batched digest;
 // everything else is immediate. Used so the preferences UI shows the real
