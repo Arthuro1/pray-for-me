@@ -17,7 +17,7 @@ afterEach(async () => {
 
 describe('background prayer audio', () => {
   it('offers unique first-party tracks plus a first-class silence option', () => {
-    expect(DEFAULT_AUDIO_TRACK_ID).toBe('soft-piano');
+    expect(DEFAULT_AUDIO_TRACK_ID).toBe('silence');
     expect(AUDIO_TRACKS.at(-1)).toMatchObject({ id: 'silence', src: null });
     expect(new Set(AUDIO_TRACKS.map(({ id }) => id)).size).toBe(AUDIO_TRACKS.length);
     expect(AUDIO_TRACKS.filter(({ src }) => src).every(({ src }) => src.startsWith('/audio/'))).toBe(true);

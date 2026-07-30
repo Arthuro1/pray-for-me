@@ -1,30 +1,17 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2 } from 'lucide-react';
-import { dirFor } from '../i18n';
+import { dirFor, LANGUAGES } from '../i18n';
 import { normalizeTheme } from '../utils/theme';
 import { loadLandingCopy } from './landing/copy';
 
-// `complete: false` marks languages whose landing-page copy (FAQs, feature
-// blurbs) is still an abbreviated placeholder rather than the full translation
-// — shown with a small dot in the language dropdown so it doesn't look finished.
-const LANGS = [
-  { code: 'fr', flag: '🇫🇷', label: 'FR', complete: true },
-  { code: 'en', flag: '🇬🇧', label: 'EN', complete: true },
-  { code: 'de', flag: '🇩🇪', label: 'DE', complete: true },
-  { code: 'pt', flag: '🇧🇷', label: 'PT', complete: true },
-  { code: 'zh', flag: '🇨🇳', label: 'ZH', complete: true },
-  { code: 'es', flag: '🇪🇸', label: 'ES', complete: true },
-  { code: 'hi', flag: '🇮🇳', label: 'HI', complete: true },
-  { code: 'ja', flag: '🇯🇵', label: 'JA', complete: true },
-  { code: 'sw', flag: '🇰🇪', label: 'SW', complete: false },
-  { code: 'am', flag: '🇪🇹', label: 'AM', complete: false },
-  { code: 'id', flag: '🇮🇩', label: 'ID', complete: false },
-  { code: 'tl', flag: '🇵🇭', label: 'TL', complete: false },
-  { code: 'ko', flag: '🇰🇷', label: 'KO', complete: false },
-  { code: 'ru', flag: '🇷🇺', label: 'RU', complete: false },
-  { code: 'ar', flag: '🇸🇦', label: 'AR', complete: false },
-  { code: 'fa', flag: '🇮🇷', label: 'FA', complete: false },
-];
+// Keep native language names in the shared registry. Languages whose longer
+// marketing copy is still abbreviated show a clear, translated status label.
+const PARTIAL_LANDING_LANGS = new Set(['sw', 'am', 'id', 'tl', 'ko', 'ru', 'ar', 'fa']);
+const LANGS = LANGUAGES.map((language) => ({
+  ...language,
+  shortLabel: language.code.toUpperCase(),
+  complete: !PARTIAL_LANDING_LANGS.has(language.code),
+}));
 
 const ALL_CODES = LANGS.map(l => l.code);
 
@@ -65,9 +52,9 @@ const THEMES = {
     text: '#f8f5ff',
     textSoft: '#d6ccec',
     textMuted: '#b4a8c9',
-    textFaint: '#8d82a2',
-    textDim: '#817491',
-    textGhost: '#766a85',
+    textFaint: '#9b8fae',
+    textDim: '#9488a8',
+    textGhost: '#8d82a2',
     surface: '#171423',
     surfaceStrong: '#211c31',
     chipBg: '#171423',
@@ -100,9 +87,9 @@ const THEMES = {
     text: '#251e35',
     textSoft: '#4b405f',
     textMuted: '#74628f',
-    textFaint: '#8d82a2',
-    textDim: '#8d82a2',
-    textGhost: '#817491',
+    textFaint: '#6f637f',
+    textDim: '#6f637f',
+    textGhost: '#6f637f',
     surface: '#ffffff',
     surfaceStrong: '#f0ecf8',
     chipBg: '#ffffff',
@@ -163,6 +150,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
   const [copyState, setCopyState] = useState(null);
   const [langOpen, setLangOpen] = useState(false);
+  const langMenuRef = useRef(null);
+  const langButtonRef = useRef(null);
   // Public and signed-in surfaces share one Light/Dark choice. A legacy Night
   // value is folded into Dark so returning visitors never see a broken state.
   const [theme, setTheme] = useState(() => {
@@ -196,6 +185,26 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     return () => document.documentElement.classList.remove('constellation-landing-root');
   }, [lang, theme]);
 
+  useEffect(() => {
+    if (!langOpen) return undefined;
+
+    const closeOnOutsideClick = (event) => {
+      if (!langMenuRef.current?.contains(event.target)) setLangOpen(false);
+    };
+    const closeOnEscape = (event) => {
+      if (event.key !== 'Escape') return;
+      setLangOpen(false);
+      langButtonRef.current?.focus();
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [langOpen]);
+
   const handleLang = (code) => {
     setLang(code);
     setLangOpen(false);
@@ -204,6 +213,35 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     // startup. Keeping the anonymous write local avoids importing or initializing
     // the prayer/Supabase stack before the visitor asks to sign in.
     localStorage.setItem('pfm_language', code);
+    requestAnimationFrame(() => langButtonRef.current?.focus());
+  };
+
+  const focusLanguageOption = (direction) => {
+    const options = [...(langMenuRef.current?.querySelectorAll('[role="menuitemradio"]') || [])];
+    if (!options.length) return;
+    const currentIndex = options.indexOf(document.activeElement);
+    const nextIndex = direction === 'first'
+      ? 0
+      : direction === 'last'
+        ? options.length - 1
+        : (currentIndex + direction + options.length) % options.length;
+    options[nextIndex].focus();
+  };
+
+  const handleLanguageMenuKeyDown = (event) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      focusLanguageOption(1);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      focusLanguageOption(-1);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      focusLanguageOption('first');
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      focusLanguageOption('last');
+    }
   };
 
   const toggleTheme = () => {
@@ -247,6 +285,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     stepLabel,
     todayLabel,
     prayNowLabel,
+    languageMenuLabel,
+    translationInProgress,
   } = copy;
 
   return (
@@ -264,6 +304,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <button
             onClick={toggleTheme}
             title={theme === 'light' ? 'Dark mode' : 'Light mode'}
+            aria-label={theme === 'light' ? 'Dark mode' : 'Light mode'}
             className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all"
             style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
           >
@@ -271,27 +312,51 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           </button>
 
           {/* Language dropdown */}
-          <div className="relative">
+          <div ref={langMenuRef} className="relative">
             <button
+              ref={langButtonRef}
               onClick={() => setLangOpen(o => !o)}
+              onKeyDown={(event) => {
+                if (event.key !== 'ArrowDown') return;
+                event.preventDefault();
+                setLangOpen(true);
+                requestAnimationFrame(() => focusLanguageOption('first'));
+              }}
+              aria-expanded={langOpen}
+              aria-haspopup="menu"
+              aria-controls="landing-language-menu"
+              aria-label={`${languageMenuLabel}: ${activeLang?.label}`}
               className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-all"
               style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
             >
               <span>{activeLang?.flag}</span>
-              <span>{activeLang?.label}</span>
+              <span>{activeLang?.shortLabel}</span>
               <ChevronDown size={13} style={{ opacity: 0.6 }} />
             </button>
 
             {langOpen && (
               <div
-                className="absolute right-0 mt-1 rounded-xl overflow-hidden z-50"
-                style={{ background: T.menuBg, border: `0.5px solid ${T.borderStrong}`, minWidth: '130px', boxShadow: T.menuShadow }}
+                id="landing-language-menu"
+                role="menu"
+                aria-label={languageMenuLabel}
+                onKeyDown={handleLanguageMenuKeyDown}
+                className="absolute end-0 z-50 mt-1 overflow-y-auto rounded-xl"
+                style={{
+                  background: T.menuBg,
+                  border: `0.5px solid ${T.borderStrong}`,
+                  boxShadow: T.menuShadow,
+                  maxHeight: 'calc(100dvh - 5rem)',
+                  width: 'min(17rem, calc(100vw - 1.5rem))',
+                }}
               >
                 {LANGS.map(({ code, flag, label, complete }) => (
                   <button
                     key={code}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={lang === code}
                     onClick={() => handleLang(code)}
-                    className="pressable flex min-h-11 w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm transition-colors"
+                    className="pressable flex min-h-11 w-full items-center gap-2.5 px-4 py-2.5 text-start text-sm transition-colors"
                     style={lang === code
                       ? { background: T.accentActiveBg, color: T.accentText }
                       : { color: T.textSoft }}
@@ -299,11 +364,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
                     <span>{flag}</span>
                     <span className="flex-1">{label}</span>
                     {!complete && (
-                      <span
-                        title="Translation still in progress"
-                        className="w-1.5 h-1.5 rounded-full shrink-0"
-                        style={{ background: T.gold }}
-                      />
+                      <span className="max-w-[7rem] text-end text-[10px] leading-tight" style={{ color: T.textFaint }}>
+                        {translationInProgress}
+                      </span>
                     )}
                   </button>
                 ))}
@@ -334,7 +397,10 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             {hero.promise}
           </p>
           <p className="mt-5 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
-          <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+          <p className="mt-4 flex max-w-lg items-start gap-2 text-xs" style={{ color: T.textFaint, lineHeight: 1.65 }}>
+            <Lock size={13} className="mt-0.5 shrink-0" /> {heroReassurance}
+          </p>
+          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
             <button
               onClick={onBeginPrayer}
               className="pressable min-h-[52px] rounded-xl px-7 text-sm font-bold text-white"
@@ -350,9 +416,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               {c.howItWorks}
             </button>
           </div>
-          <p className="mt-5 flex max-w-lg items-start gap-2 text-xs" style={{ color: T.textFaint, lineHeight: 1.65 }}>
-            <Lock size={13} className="mt-0.5 shrink-0" /> {heroReassurance}
-          </p>
         </div>
 
         {/* A truthful preview of the actual journey: Today → focused prayer →

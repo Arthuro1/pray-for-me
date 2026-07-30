@@ -131,6 +131,8 @@ export default {
     "less": "ያነሰ አሳይ"
   },
   "beginLabel": "በጸሎት ይጀምሩ",
+  "languageMenuLabel": "ቋንቋ",
+  "translationInProgress": "ትርጉሙ በሂደት ላይ ነው",
   "heroReassurance": "መለያ አያስፈልግም። ለማስቀመጥ እስኪመርጡ ድረስ ምንም ነገር ከዚህ መሣሪያ አይወጣም።",
   "calloutBegin": "በጸሎት ይጀምሩ",
   "hero": {

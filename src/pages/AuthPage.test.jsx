@@ -89,6 +89,10 @@ describe('AuthPage', () => {
     expect(login.getAttribute('aria-pressed')).toBe('false');
     expect(signUp.getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
+    expect(screen.getByLabelText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
+    expect(screen.getByLabelText(t('fr', 'authEmail'))).toBeTruthy();
+    expect(container.querySelector('label[for="auth-password"]')?.textContent).toBe(t('fr', 'authPassword'));
+    expect(screen.getByText(t('fr', 'authErrWeakPass'))).toBeTruthy();
     expect(screen.getByRole('button', { name: t('fr', 'authCreateAccount') })).toBeTruthy();
     // Forgot-password belongs to the login view only.
     expect(screen.queryByText(t('fr', 'authForgotPassword'))).toBeNull();
@@ -110,7 +114,25 @@ describe('AuthPage', () => {
     fireEvent.change(screen.getByPlaceholderText(t('fr', 'authPassword')), { target: { value: 'secret1' } });
     submitForm(container);
     expect(screen.getByText(t('fr', 'authErrEmail'))).toBeTruthy();
+    const email = screen.getByPlaceholderText(t('fr', 'authEmail'));
+    expect(email.getAttribute('aria-invalid')).toBe('true');
+    expect(email.getAttribute('aria-describedby')).toBe('auth-form-error');
+    expect(document.activeElement).toBe(email);
     expect(useAuthStore.getState().signInWithEmail).not.toHaveBeenCalled();
+  });
+
+  it('focuses an invalid password and associates the error with the field', () => {
+    const { container } = render(<AuthPage />);
+    fireEvent.click(screen.getByRole('button', { name: t('fr', 'authSignUp') }));
+    fireEvent.change(screen.getByPlaceholderText(t('fr', 'authEmail')), { target: { value: 'new@user.com' } });
+    const password = screen.getByPlaceholderText(t('fr', 'authPassword'));
+    fireEvent.change(password, { target: { value: '123' } });
+    submitForm(container);
+
+    expect(password.getAttribute('aria-invalid')).toBe('true');
+    expect(password.getAttribute('aria-describedby')).toContain('auth-password-hint');
+    expect(password.getAttribute('aria-describedby')).toContain('auth-form-error');
+    expect(document.activeElement).toBe(password);
   });
 
   // Pray-first: the contextual auth that follows a guest prayer the visitor chose

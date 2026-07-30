@@ -139,6 +139,8 @@ export default {
     "less": "कम दिखाएँ"
   },
   "beginLabel": "एक प्रार्थना से शुरू करें",
+  "languageMenuLabel": "भाषा",
+  "translationInProgress": "अनुवाद जारी है",
   "heroReassurance": "किसी खाते की ज़रूरत नहीं। जब तक आप सहेजना न चुनें, कुछ भी इस डिवाइस से बाहर नहीं जाता।",
   "calloutBegin": "एक प्रार्थना शुरू करें",
   "hero": {

@@ -131,6 +131,8 @@ export default {
     "less": "Magpakita ng mas kaunti"
   },
   "beginLabel": "Magsimula sa panalangin",
+  "languageMenuLabel": "Wika",
+  "translationInProgress": "Isinasalin pa",
   "heroReassurance": "Walang account na kailangan. Walang lalabas sa device na ito hanggang piliin mong i-save ito.",
   "calloutBegin": "Magsimula sa panalangin",
   "hero": {

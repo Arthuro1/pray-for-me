@@ -628,6 +628,8 @@ export default {
   "amenBtn": "アーメン",
   "sessionDoneTitle": "神と過ごす時 🙏",
   "sessionDoneSub": "今日は{n}件のために祈りました。",
+  "sessionDoneSub_one": "今日は1件のために祈りました。",
+  "sessionDoneSub_other": "今日は{n}件のために祈りました。",
   "pin": "ピン留め",
   "unpin": "ピン解除",
   "resume": "再開",

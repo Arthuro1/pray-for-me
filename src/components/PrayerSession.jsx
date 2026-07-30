@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
@@ -276,7 +276,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         <SectionLabel className="mb-3">Amen</SectionLabel>
         <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
         <Encouragement lang={lang} className="mt-4 max-w-sm text-sm" />
-        <p className="mt-5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'sessionDoneSub', { n: total })}</p>
+        <p className="mt-5 text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'sessionDoneSub', total)}</p>
         <PrimaryButton onClick={handleClose} className="mt-9 min-w-36">
           {t(lang, 'close')}
         </PrimaryButton>

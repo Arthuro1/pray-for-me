@@ -47,7 +47,7 @@ vi.mock('../../lib/audio/backgroundAudio', () => ({
     { id: 'soft-pad', src: '/audio/soft-pad.mp3', labelKey: 'audioSoftPad' },
     { id: 'silence', src: null, labelKey: 'audioSilence' },
   ],
-  DEFAULT_AUDIO_TRACK_ID: 'soft-piano',
+  DEFAULT_AUDIO_TRACK_ID: 'silence',
   resolveTrack: (id) => ({
     'soft-piano': { id: 'soft-piano', labelKey: 'audioSoftPiano' },
     'ambient-pad': { id: 'ambient-pad', labelKey: 'audioAmbientPad' },
@@ -97,14 +97,15 @@ async function prayAsGuest() {
   expect(await screen.findByText('La paix dans notre foyer')).toBeTruthy();
   // Pray through it (single request → Amen), then close the done screen.
   fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
-  await waitFor(() => expect(screen.getByText(t(lang, 'close'))).toBeTruthy());
-  fireEvent.click(screen.getByText(t(lang, 'close')));
+  await waitFor(() => expect(screen.getByText(t(lang, 'continueBtn'))).toBeTruthy());
+  fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
   await screen.findByText(t(lang, 'firstPrayerSaveTitle'));
 }
 
 describe('GuestPrayerFlow', () => {
   it('asks the one question with an honest device-local reassurance', () => {
     render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    expect(screen.getByRole('dialog', { name: t(lang, 'firstPrayerQuestion') })).toBeTruthy();
     expect(screen.getByText(t(lang, 'firstPrayerQuestion'))).toBeTruthy();
     // Device-local, NOT a claim that account E2EE already happened.
     expect(screen.getByText(t(lang, 'firstPrayerDeviceNote'))).toBeTruthy();
@@ -119,6 +120,7 @@ describe('GuestPrayerFlow', () => {
     // The prayer was saved only to the device, and its completion was recorded.
     expect(saveGuestDraft).toHaveBeenCalled();
     expect(markGuestDraftPrayed).toHaveBeenCalled();
+    expect(guestAudio.start).not.toHaveBeenCalled();
 
     // The decision screen offers Save / Finish without saving.
     expect(screen.getByText(t(lang, 'firstPrayerSaveBtn'))).toBeTruthy();

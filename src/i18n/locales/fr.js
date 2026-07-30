@@ -598,6 +598,8 @@ export default {
   "amenBtn": "Amen",
   "sessionDoneTitle": "Un temps avec Dieu 🙏",
   "sessionDoneSub": "Vous avez prié pour {n} sujet(s) aujourd’hui.",
+  "sessionDoneSub_one": "Vous avez prié pour 1 sujet aujourd’hui.",
+  "sessionDoneSub_other": "Vous avez prié pour {n} sujets aujourd’hui.",
   "pin": "Épingler",
   "unpin": "Détacher",
   "resume": "Reprendre",

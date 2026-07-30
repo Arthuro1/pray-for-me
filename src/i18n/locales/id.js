@@ -628,6 +628,8 @@ export default {
   "amenBtn": "Amin",
   "sessionDoneTitle": "Waktu bersama Tuhan 🙏",
   "sessionDoneSub": "Hari ini Anda mendoakan {n} pokok doa.",
+  "sessionDoneSub_one": "Hari ini Anda mendoakan 1 pokok doa.",
+  "sessionDoneSub_other": "Hari ini Anda mendoakan {n} pokok doa.",
   "pin": "Sematkan",
   "unpin": "Lepas",
   "resume": "Aktifkan",

@@ -598,6 +598,8 @@ export default {
   "amenBtn": "Amen",
   "sessionDoneTitle": "Time with God 🙏",
   "sessionDoneSub": "You prayed through {n} subject(s) today.",
+  "sessionDoneSub_one": "You prayed through 1 subject today.",
+  "sessionDoneSub_other": "You prayed through {n} subjects today.",
   "pin": "Pin",
   "unpin": "Unpin",
   "resume": "Resume",

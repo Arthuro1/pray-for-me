@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Check, Feather, HandHeart, Loader2, Lock, X } from 'lucide-react';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
@@ -12,7 +12,17 @@ import {
 import { markActivationSessionCompleted } from '../lib/activationProgress';
 import { EVENTS, track } from '../lib/analytics';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
+import Encouragement from './shared/Encouragement';
 import PrayerMusicControl from './PrayerMusicControl';
+
+function ConstellationBackdrop() {
+  return (
+    <div className="constellation-onboarding__sky" aria-hidden="true">
+      <img src="/assets/constellation/community-sky-light-transparent.png" alt="" className="constellation-onboarding__sky-image constellation-onboarding__sky-image--light" />
+      <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-onboarding__sky-image constellation-onboarding__sky-image--dark" />
+    </div>
+  );
+}
 
 // The guest prayer moment intentionally has no imports from prayerStore,
 // Supabase, Scripture lookup, authenticated crypto, community, or reminders.
@@ -30,7 +40,10 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--background)' }}>
+    <div
+      className="prayer-session constellation-session constellation-onboarding fixed inset-0 z-[70] flex flex-col"
+      style={{ background: 'var(--background)' }}
+    >
       <div
         ref={trapRef}
         role="dialog"
@@ -40,7 +53,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
         className="flex h-full flex-col focus:outline-none"
       >
         {done ? (
-          <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+          <div className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center">
             <div
               className="mb-7 flex h-14 w-14 items-center justify-center rounded-full"
               style={{ background: 'var(--sage-soft)', color: 'var(--success)', border: '1px solid var(--success-border)' }}
@@ -51,16 +64,17 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
             <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>
               {t(lang, 'sessionDoneTitle')}
             </h2>
+            <Encouragement lang={lang} className="mt-4 max-w-sm" />
             <p className="mt-5 text-xs" style={{ color: 'var(--text-3)' }}>
-              {t(lang, 'sessionDoneSub', { n: 1 })}
+              {tp(lang, 'sessionDoneSub', 1)}
             </p>
             <PrimaryButton onClick={onClose} className="mt-9 min-w-36">
-              {t(lang, 'close')}
+              {t(lang, 'continueBtn')}
             </PrimaryButton>
           </div>
         ) : (
           <>
-            <header className="shrink-0 px-5 pb-3 pt-[max(1rem,env(safe-area-inset-top))]" style={{ background: 'var(--plum-deep)' }}>
+            <header className="constellation-session__header shrink-0 px-5 pb-3 pt-[max(1rem,env(safe-area-inset-top))]" style={{ background: 'var(--plum-deep)' }}>
               <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
                 <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
                   Pray4Me · 1 / 1
@@ -78,16 +92,18 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
                   </button>
                 </div>
               </div>
-              <div className="mx-auto h-px max-w-2xl" style={{ background: 'var(--gold)' }} />
+              <div className="mx-auto h-px max-w-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.14)' }}>
+                <div className="h-full w-full" style={{ background: 'var(--gold)' }} />
+              </div>
             </header>
 
-            <main className="mx-auto flex w-full max-w-2xl flex-1 items-center overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
-              <h2 className="editorial-heading text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>
+            <main className="constellation-session__request mx-auto min-h-0 w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
+              <h2 className="constellation-session__title editorial-heading text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--text-1)' }}>
                 {prayer.title}
               </h2>
             </main>
 
-            <footer className="session-safe-footer shrink-0 px-5 pt-3">
+            <footer className="constellation-session__footer session-safe-footer shrink-0 px-5 pt-3">
               <div className="mx-auto flex w-full max-w-2xl">
                 <PrimaryButton onClick={finishPrayer} className="min-h-[52px] flex-1">
                   <Check size={16} aria-hidden="true" /> {t(lang, 'amenBtn')}
@@ -149,7 +165,8 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
 
   if (phase === 'decide') {
     return (
-      <div className="first-prayer-experience">
+      <div className="first-prayer-experience constellation-onboarding">
+        <ConstellationBackdrop />
         <div
           ref={trapRef}
           tabIndex={-1}
@@ -158,17 +175,14 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
           aria-label={t(lang, 'firstPrayerSaveTitle')}
           className="first-prayer-panel items-center justify-center text-center"
         >
-          <div
-            className="mb-7 flex h-14 w-14 items-center justify-center rounded-full"
-            style={{ background: 'rgba(255,255,255,.08)', color: 'var(--gold)', border: '1px solid rgba(255,255,255,.12)' }}
-          >
+          <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
           <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Pray4Me</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
-          <p className="mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,.62)' }}>
+          <p className="constellation-onboarding__note mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed">
             <Lock size={14} aria-hidden="true" /> {t(lang, 'firstPrayerDeviceNote')}
           </p>
           <div className="mt-10 w-full max-w-sm space-y-3">
@@ -185,12 +199,14 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
   }
 
   return (
-    <div className="first-prayer-experience">
+    <div className="first-prayer-experience constellation-onboarding">
+      <ConstellationBackdrop />
       <form
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="guest-prayer-question"
         onSubmit={submitCapture}
         className="first-prayer-panel"
       >
@@ -203,8 +219,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
             type="button"
             onClick={onFinish}
             aria-label={t(lang, 'close')}
-            className="pressable flex h-11 w-11 items-center justify-center rounded-full"
-            style={{ background: 'rgba(255,255,255,.07)', color: 'rgba(255,255,255,.76)' }}
+            className="constellation-onboarding__close pressable flex h-11 w-11 items-center justify-center rounded-full"
           >
             <X size={18} aria-hidden="true" />
           </button>
@@ -212,7 +227,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
           <SectionLabel className="mb-4">Pray4Me</SectionLabel>
-          <h2 className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+          <h2 id="guest-prayer-question" className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, 'firstPrayerQuestion')}
           </h2>
 
@@ -226,7 +241,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
             className="first-prayer-journal mt-7"
           />
 
-          <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm" style={{ color: 'rgba(255,255,255,.58)' }}>
+          <p className="constellation-onboarding__note mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm">
             <Lock size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
             {t(lang, 'firstPrayerDeviceNote')}
           </p>
@@ -246,8 +261,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
           <button
             type="button"
             onClick={onFinish}
-            className="pressable min-h-11 w-full text-sm font-semibold"
-            style={{ color: 'rgba(255,255,255,.6)' }}
+            className="constellation-onboarding__later pressable min-h-11 w-full text-sm font-semibold"
           >
             {t(lang, 'authBackHome')}
           </button>

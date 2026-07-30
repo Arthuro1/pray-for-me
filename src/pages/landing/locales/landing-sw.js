@@ -131,6 +131,8 @@ export default {
     "less": "Onyesha kidogo"
   },
   "beginLabel": "Anza kwa sala",
+  "languageMenuLabel": "Lugha",
+  "translationInProgress": "Tafsiri inaendelea",
   "heroReassurance": "Hakuna akaunti inayohitajika. Hakuna kinachoondoka kwenye kifaa hiki hadi uchague kukihifadhi.",
   "calloutBegin": "Anza kwa sala",
   "hero": {

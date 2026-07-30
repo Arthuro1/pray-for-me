@@ -628,6 +628,8 @@ export default {
   "amenBtn": "आमीन",
   "sessionDoneTitle": "परमेश्वर के साथ समय 🙏",
   "sessionDoneSub": "आज आपने {n} विषय(ों) के लिए प्रार्थना की।",
+  "sessionDoneSub_one": "आज आपने 1 विषय के लिए प्रार्थना की।",
+  "sessionDoneSub_other": "आज आपने {n} विषयों के लिए प्रार्थना की।",
   "pin": "पिन करें",
   "unpin": "अनपिन",
   "resume": "फिर सक्रिय",

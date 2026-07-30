@@ -43,6 +43,14 @@ describe('LandingPage — simplified hero', () => {
     expect(screen.queryByText(/illustrative data/i)).toBeNull();
     expect(screen.queryByText('Active prayers')).toBeNull();
   });
+
+  it('puts the device-local reassurance before the primary action', async () => {
+    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
+    const reassurance = await screen.findByText('No account needed. Nothing leaves this device unless you choose to save it.');
+    const begin = screen.getByText('Begin with a prayer');
+
+    expect(reassurance.compareDocumentPosition(begin) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
 
 describe('LandingPage — simplified product story', () => {
@@ -107,5 +115,23 @@ describe('LandingPage legacy Night theme', () => {
     fireEvent.click(screen.getByTitle('Light mode'));
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     expect(localStorage.getItem('pfm_theme')).toBe('light');
+  });
+});
+
+describe('LandingPage language picker', () => {
+  it('uses native names, explains partial translations, and closes on Escape', async () => {
+    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
+    await screen.findByText('Begin with a prayer');
+
+    const toggle = screen.getByRole('button', { name: 'Language: English' });
+    fireEvent.click(toggle);
+
+    expect(screen.getByRole('menu', { name: 'Language' })).toBeTruthy();
+    expect(screen.getByRole('menuitemradio', { name: /Deutsch/ })).toBeTruthy();
+    expect(screen.getByRole('menuitemradio', { name: /Русский.*Translation in progress/ })).toBeTruthy();
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('menu', { name: 'Language' })).toBeNull();
+    expect(document.activeElement).toBe(toggle);
   });
 });

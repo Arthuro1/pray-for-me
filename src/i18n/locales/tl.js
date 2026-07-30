@@ -628,6 +628,8 @@ export default {
   "amenBtn": "Amen",
   "sessionDoneTitle": "Oras na kasama ang Diyos 🙏",
   "sessionDoneSub": "Ipinanalangin mo ang {n} paksa ngayon.",
+  "sessionDoneSub_one": "Ipinanalangin mo ang 1 paksa ngayon.",
+  "sessionDoneSub_other": "Ipinanalangin mo ang {n} paksa ngayon.",
   "pin": "I-pin",
   "unpin": "Alisin",
   "resume": "Ibalik",

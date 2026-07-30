@@ -139,6 +139,8 @@ export default {
     "less": "Weniger anzeigen"
   },
   "beginLabel": "Mit einem Gebet beginnen",
+  "languageMenuLabel": "Sprache",
+  "translationInProgress": "Übersetzung in Arbeit",
   "heroReassurance": "Kein Konto nötig. Nichts verlässt dieses Gerät, außer du entscheidest dich, es zu speichern.",
   "calloutBegin": "Ein Gebet beginnen",
   "hero": {

@@ -139,6 +139,8 @@ export default {
     "less": "表示を減らす"
   },
   "beginLabel": "祈りから始める",
+  "languageMenuLabel": "言語",
+  "translationInProgress": "翻訳作業中",
   "heroReassurance": "アカウント不要。保存を選ぶまで、何もこの端末の外には出ません。",
   "calloutBegin": "祈りを始める",
   "hero": {

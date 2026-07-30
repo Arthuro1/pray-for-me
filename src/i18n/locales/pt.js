@@ -628,6 +628,8 @@ export default {
   "amenBtn": "Amém",
   "sessionDoneTitle": "Tempo com Deus 🙏",
   "sessionDoneSub": "Você orou por {n} assunto(s) hoje.",
+  "sessionDoneSub_one": "Você orou por 1 assunto hoje.",
+  "sessionDoneSub_other": "Você orou por {n} assuntos hoje.",
   "pin": "Fixar",
   "unpin": "Desafixar",
   "resume": "Retomar",

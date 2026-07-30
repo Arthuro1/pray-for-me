@@ -12,7 +12,7 @@
   --surface-raised: #ffffff;
   --ink: #241b2f;
   --text-muted: #746a7d;
-  --text-faint: #94899a;
+  --text-faint: #6f6474;
   --plum: #60457b;
   --plum-dark: #30213f;
   --plum-deep: #24182f;
@@ -127,7 +127,7 @@
   --surface-raised: #232b42;
   --ink: #e8ecfb;
   --text-muted: #a7afce;
-  --text-faint: #737a9c;
+  --text-faint: #7c84a6;
   --plum: #6b76d6;
   --plum-dark: #2b3566;
   --plum-deep: #101736;
@@ -1170,7 +1170,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   --surface-raised: #ffffff;
   --ink: #251e35;
   --text-muted: #74628f;
-  --text-faint: #8d82a2;
+  --text-faint: #6f637f;
   --plum: #7457b8;
   --plum-dark: #5d449a;
   --plum-deep: #251e35;
@@ -2428,7 +2428,7 @@ html.constellation-auth-root[data-theme="dark"] body {
   --surface-2: var(--surface-muted);
   --ink: #251e35;
   --text-muted: #74628f;
-  --text-faint: #8d82a2;
+  --text-faint: #6f637f;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
@@ -2536,6 +2536,26 @@ html.constellation-auth-root[data-theme="dark"] body {
 
 .constellation-auth .auth-field {
   border-radius: .75rem !important;
+}
+
+.constellation-auth .auth-field-label {
+  display: block;
+  margin-block-end: .35rem;
+  color: var(--text-muted);
+  font-size: .75rem;
+  font-weight: 650;
+}
+
+.constellation-auth .auth-field-hint {
+  margin-block-start: .35rem;
+  color: var(--text-faint);
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+.constellation-auth .auth-field[aria-invalid="true"] {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger) 18%, transparent);
 }
 
 .constellation-auth .auth-primary {
@@ -2719,6 +2739,31 @@ html.constellation-auth-root[data-theme="dark"] body {
 
   .constellation-onboarding .first-prayer-panel h2 {
     font-size: 2.65rem;
+  }
+}
+
+@media (max-width: 639px) and (max-height: 720px) {
+  .constellation-auth.auth-experience {
+    place-items: start center;
+    padding-block-start: 6.5rem;
+  }
+
+  .constellation-auth .auth-brand {
+    inset-block-start: max(.75rem, env(safe-area-inset-top));
+  }
+
+  .constellation-auth .auth-brand img {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-block-end: .2rem;
+  }
+
+  .constellation-auth .auth-brand h1 {
+    font-size: 1.3rem;
+  }
+
+  .constellation-auth .auth-brand p {
+    margin-block-start: 0;
   }
 }
 

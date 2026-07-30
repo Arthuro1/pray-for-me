@@ -139,6 +139,8 @@ export default {
     "less": "Mostrar menos"
   },
   "beginLabel": "Comece com uma oração",
+  "languageMenuLabel": "Idioma",
+  "translationInProgress": "Tradução em andamento",
   "heroReassurance": "Nenhuma conta necessária. Nada sai deste dispositivo, a menos que você escolha salvar.",
   "calloutBegin": "Comece uma oração",
   "hero": {

@@ -628,6 +628,8 @@ export default {
   "amenBtn": "አሜን",
   "sessionDoneTitle": "ከእግዚአብሔር ጋር ጊዜ 🙏",
   "sessionDoneSub": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።",
+  "sessionDoneSub_one": "ዛሬ ለ1 ጉዳይ ጸልየሃል።",
+  "sessionDoneSub_other": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።",
   "pin": "ሰካ",
   "unpin": "አንሳ",
   "resume": "መልስ",

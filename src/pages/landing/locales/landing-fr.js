@@ -139,6 +139,8 @@ export default {
     "less": "Afficher moins"
   },
   "beginLabel": "Commencez par une prière",
+  "languageMenuLabel": "Langue",
+  "translationInProgress": "Traduction en cours",
   "heroReassurance": "Aucun compte requis. Rien ne quitte cet appareil, sauf si vous choisissez de l'enregistrer.",
   "calloutBegin": "Commencez une prière",
   "hero": {

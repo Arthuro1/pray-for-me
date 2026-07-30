@@ -155,6 +155,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
+        aria-labelledby="first-prayer-question"
         onSubmit={submitCapture}
         className="first-prayer-panel"
       >
@@ -175,7 +176,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
           <SectionLabel className="mb-4">Pray4Me</SectionLabel>
-          <h2 className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+          <h2 id="first-prayer-question" className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
           </h2>
 

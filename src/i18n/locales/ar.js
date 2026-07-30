@@ -628,6 +628,8 @@ export default {
   "amenBtn": "آمين",
   "sessionDoneTitle": "وقت مع الله 🙏",
   "sessionDoneSub": "صلّيت اليوم من أجل {n} موضوعًا.",
+  "sessionDoneSub_one": "صلّيت اليوم من أجل موضوع واحد.",
+  "sessionDoneSub_other": "صلّيت اليوم من أجل {n} موضوعًا.",
   "pin": "تثبيت",
   "unpin": "إلغاء التثبيت",
   "resume": "استئناف",

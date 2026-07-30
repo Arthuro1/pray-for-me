@@ -131,6 +131,8 @@ export default {
     "less": "Tampilkan lebih sedikit"
   },
   "beginLabel": "Mulai dengan doa",
+  "languageMenuLabel": "Bahasa",
+  "translationInProgress": "Terjemahan sedang berlangsung",
   "heroReassurance": "Tidak perlu akun. Tidak ada yang meninggalkan perangkat ini sampai Anda memilih untuk menyimpannya.",
   "calloutBegin": "Mulai dengan doa",
   "hero": {

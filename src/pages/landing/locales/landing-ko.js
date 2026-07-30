@@ -131,6 +131,8 @@ export default {
     "less": "간략히 보기"
   },
   "beginLabel": "기도로 시작하기",
+  "languageMenuLabel": "언어",
+  "translationInProgress": "번역 진행 중",
   "heroReassurance": "계정이 필요하지 않습니다. 저장을 선택하기 전까지 어떤 내용도 이 기기를 떠나지 않습니다.",
   "calloutBegin": "기도로 시작하기",
   "hero": {

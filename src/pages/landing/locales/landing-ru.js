@@ -131,6 +131,8 @@ export default {
     "less": "Свернуть"
   },
   "beginLabel": "Начните с молитвы",
+  "languageMenuLabel": "Язык",
+  "translationInProgress": "Перевод в процессе",
   "heroReassurance": "Аккаунт не нужен. Ничего не покинет это устройство, пока вы не решите сохранить молитву.",
   "calloutBegin": "Начните с молитвы",
   "hero": {

@@ -26,7 +26,7 @@ vi.mock('../../lib/audio/backgroundAudio', () => ({
     { id: 'soft-pad', src: '/audio/soft-pad.mp3', labelKey: 'audioSoftPad' },
     { id: 'silence', src: null, labelKey: 'audioSilence' },
   ],
-  DEFAULT_AUDIO_TRACK_ID: 'soft-piano',
+  DEFAULT_AUDIO_TRACK_ID: 'silence',
   resolveTrack: (id) => ({
     'soft-piano': { id: 'soft-piano', src: '/audio/piano-and-rain.mp3', labelKey: 'audioSoftPiano' },
     'ambient-pad': { id: 'ambient-pad', src: '/audio/ambient-pad.mp3', labelKey: 'audioAmbientPad' },
@@ -151,17 +151,18 @@ describe('PrayerSession — immediate start & format control', () => {
     expect(screen.getByText(t(lang, 'stageAdoration'))).toBeTruthy();
   });
 
-  it('starts remembered background music automatically and offers a silent session', async () => {
+  it('starts silently and only plays music after an explicit choice', async () => {
     openRequests();
+    expect(backgroundAudioMocks.start).not.toHaveBeenCalled();
+    expect(screen.getByText(t(lang, 'audioSilence'))).toBeTruthy();
+
+    fireEvent.click(screen.getByTitle(t(lang, 'prayerMusic')));
+    fireEvent.click(screen.getByText(t(lang, 'audioSoftPiano')));
+
+    expect(localStorage.getItem('pfm_prayer_audio_track')).toBe('soft-piano');
     await waitFor(() => {
       expect(backgroundAudioMocks.start).toHaveBeenCalledWith({ trackId: 'soft-piano', volume: 0.16 });
     });
-
-    fireEvent.click(screen.getByTitle(t(lang, 'prayerMusic')));
-    fireEvent.click(screen.getByText(t(lang, 'audioSilence')));
-
-    expect(localStorage.getItem('pfm_prayer_audio_track')).toBe('silence');
-    await waitFor(() => expect(backgroundAudioMocks.stop).toHaveBeenCalled());
   });
 
   it('remembers a changed atmosphere for the next prayer session', async () => {

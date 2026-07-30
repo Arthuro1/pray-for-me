@@ -628,6 +628,8 @@ export default {
   "amenBtn": "آمین",
   "sessionDoneTitle": "زمانی با خدا 🙏",
   "sessionDoneSub": "امروز برای {n} موضوع دعا کردید.",
+  "sessionDoneSub_one": "امروز برای یک موضوع دعا کردید.",
+  "sessionDoneSub_other": "امروز برای {n} موضوع دعا کردید.",
   "pin": "سنجاق",
   "unpin": "برداشتن سنجاق",
   "resume": "ازسرگیری",

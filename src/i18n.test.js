@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { t, LANGUAGES, isLocaleLoaded, resolveLanguage } from './i18n.js';
+import { t, tp, LANGUAGES, isLocaleLoaded, resolveLanguage } from './i18n.js';
 import fr from './i18n/locales/fr.js';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
@@ -53,6 +53,11 @@ describe('t()', () => {
 
   it('drops placeholders with no matching var', () => {
     expect(t('fr', '{a}-{b}', { a: 'x' })).toBe('x-');
+  });
+
+  it('chooses a natural singular or plural completion message', () => {
+    expect(tp('fr', 'sessionDoneSub', 1)).toBe('Vous avez prié pour 1 sujet aujourd’hui.');
+    expect(tp('fr', 'sessionDoneSub', 2)).toBe('Vous avez prié pour 2 sujets aujourd’hui.');
   });
 });
 

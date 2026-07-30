@@ -57,11 +57,11 @@ export default function PrayerMusicControl({ lang, active = true }) {
         aria-expanded={open}
         aria-label={`${t(lang, 'prayerMusic')}: ${t(lang, track.labelKey)}`}
         title={t(lang, 'prayerMusic')}
-        className="pressable flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-semibold"
+        className="pressable flex min-h-11 max-w-[8.5rem] items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold sm:max-w-none sm:px-3"
         style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
       >
         {trackId === 'silence' ? <VolumeX size={13} /> : <Music size={13} />}
-        <span className="hidden sm:inline">{t(lang, track.labelKey)}</span>
+        <span className="min-w-0 truncate">{t(lang, track.labelKey)}</span>
         <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
       </button>
 

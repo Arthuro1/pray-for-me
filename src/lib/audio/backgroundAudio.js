@@ -14,7 +14,9 @@ export const AUDIO_TRACKS = Object.freeze([
   { id: 'silence', src: null, labelKey: 'audioSilence' },
 ]);
 
-export const DEFAULT_AUDIO_TRACK_ID = 'soft-piano';
+// Prayer sessions begin quietly. A visitor can opt into music, and that choice
+// is remembered for later sessions, but we never start audio before consent.
+export const DEFAULT_AUDIO_TRACK_ID = 'silence';
 
 export function resolveTrack(id) {
   return AUDIO_TRACKS.find((track) => track.id === id) || null;

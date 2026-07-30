@@ -628,6 +628,8 @@ export default {
   "amenBtn": "阿们",
   "sessionDoneTitle": "与神同在的时光 🙏",
   "sessionDoneSub": "今天你为 {n} 个事项祷告了。",
+  "sessionDoneSub_one": "今天你为 1 个事项祷告了。",
+  "sessionDoneSub_other": "今天你为 {n} 个事项祷告了。",
   "pin": "置顶",
   "unpin": "取消置顶",
   "resume": "恢复",

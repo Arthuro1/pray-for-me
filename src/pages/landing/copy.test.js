@@ -29,6 +29,8 @@ describe('landing locale chunks', () => {
       expect(copy.privacyFaq, `${code}: privacy promise`).toEqual(expect.any(String));
       expect(copy.todayLabel, `${code}: today label`).toEqual(expect.any(String));
       expect(copy.prayNowLabel, `${code}: pray-now label`).toEqual(expect.any(String));
+      expect(copy.languageMenuLabel, `${code}: language menu label`).toEqual(expect.any(String));
+      expect(copy.translationInProgress, `${code}: translation status`).toEqual(expect.any(String));
     }
   });
 

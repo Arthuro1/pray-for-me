@@ -628,6 +628,8 @@ export default {
   "amenBtn": "Amen",
   "sessionDoneTitle": "Zeit mit Gott 🙏",
   "sessionDoneSub": "Du hast heute für {n} Anliegen gebetet.",
+  "sessionDoneSub_one": "Du hast heute für 1 Anliegen gebetet.",
+  "sessionDoneSub_other": "Du hast heute für {n} Anliegen gebetet.",
   "pin": "Anheften",
   "unpin": "Lösen",
   "resume": "Fortsetzen",

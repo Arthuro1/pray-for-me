@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
@@ -16,19 +16,19 @@ function friendlyAuthError(error) {
     return { key: 'authErrRate' };
   }
   if (msg.includes('not confirmed') || msg.includes('confirm your email') || msg.includes('email not confirmed')) {
-    return { key: 'authErrUnconfirmed', canResend: true };
+    return { key: 'authErrUnconfirmed', canResend: true, field: 'email' };
   }
   if (msg.includes('invalid login') || msg.includes('invalid credentials')) {
-    return { key: 'authErrInvalid' };
+    return { key: 'authErrInvalid', field: 'password' };
   }
   if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('already been registered')) {
-    return { key: 'authErrInUse' };
+    return { key: 'authErrInUse', field: 'email' };
   }
   if (msg.includes('password') && (msg.includes('6 characters') || msg.includes('at least') || msg.includes('weak') || msg.includes('should be'))) {
-    return { key: 'authErrWeakPass' };
+    return { key: 'authErrWeakPass', field: 'password' };
   }
   if (msg.includes('unable to validate email') || msg.includes('invalid format') || msg.includes('invalid email')) {
-    return { key: 'authErrEmail' };
+    return { key: 'authErrEmail', field: 'email' };
   }
   return { key: 'errorGeneric' };
 }
@@ -49,8 +49,11 @@ export default function AuthPage({ onBack, intent }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);       // localized string, already resolved
+  const [errorField, setErrorField] = useState(null);
   const [success, setSuccess] = useState(null);    // localized string
   const [canResend, setCanResend] = useState(false);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
 
   const lang = usePrayerStore((s) => s.settings.language) || 'en';
   const { signInWithEmail, signUpWithEmail, signInWithGoogle, resetPassword, resendConfirmation } = useAuthStore();
@@ -61,13 +64,39 @@ export default function AuthPage({ onBack, intent }) {
   }, []);
 
   const patch = (updates) => setForm((f) => ({ ...f, ...updates }));
+  const patchField = (field, value) => {
+    patch({ [field]: value });
+    if (errorField === field) {
+      setError(null);
+      setErrorField(null);
+      setCanResend(false);
+    }
+  };
 
-  const resetFeedback = () => { setError(null); setSuccess(null); setCanResend(false); };
+  const resetFeedback = () => {
+    setError(null);
+    setErrorField(null);
+    setSuccess(null);
+    setCanResend(false);
+  };
   const switchMode = (m) => { setMode(m); resetFeedback(); };
 
-  const showError = (error) => {
-    const { key, canResend: resend } = friendlyAuthError(error);
+  const focusField = (field) => {
+    const target = field === 'password' ? passwordRef : emailRef;
+    target.current?.focus();
+  };
+
+  const showFieldError = (field, key) => {
     setError(t(lang, key));
+    setErrorField(field);
+    focusField(field);
+  };
+
+  const showError = (error) => {
+    const { key, canResend: resend, field } = friendlyAuthError(error);
+    setError(t(lang, key));
+    setErrorField(field || null);
+    if (field) focusField(field);
     if (resend) setCanResend(true);
   };
 
@@ -77,9 +106,9 @@ export default function AuthPage({ onBack, intent }) {
     const email = form.email.trim();
 
     // Friendly, specific client-side validation before we hit the network.
-    if (!email || !EMAIL_RE.test(email)) { setError(t(lang, 'authErrEmail')); return; }
-    if (!form.password) { setError(t(lang, 'authErrInvalid')); return; }
-    if (mode === 'register' && form.password.length < 6) { setError(t(lang, 'authErrWeakPass')); return; }
+    if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
+    if (!form.password) { showFieldError('password', 'authErrInvalid'); return; }
+    if (mode === 'register' && form.password.length < 6) { showFieldError('password', 'authErrWeakPass'); return; }
 
     setLoading(true);
     if (mode === 'login') {
@@ -97,7 +126,7 @@ export default function AuthPage({ onBack, intent }) {
     e.preventDefault();
     resetFeedback();
     const email = form.email.trim();
-    if (!email || !EMAIL_RE.test(email)) { setError(t(lang, 'authErrEmail')); return; }
+    if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
     setLoading(true);
     const { error } = await resetPassword(email);
     // Don't reveal whether the address has an account — always confirm generically.
@@ -108,7 +137,7 @@ export default function AuthPage({ onBack, intent }) {
 
   const handleResend = async () => {
     const email = form.email.trim();
-    if (!email || !EMAIL_RE.test(email)) { setError(t(lang, 'authErrEmail')); return; }
+    if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
     resetFeedback();
     setLoading(true);
     const { error } = await resendConfirmation(email);
@@ -158,20 +187,26 @@ export default function AuthPage({ onBack, intent }) {
               <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authResetTitle')}</h2>
               <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authResetIntro')}</p>
             </div>
-            <div className="relative">
-              <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
-              <input
-                type="email"
-                autoFocus
-                aria-label={t(lang, 'authEmail')}
-                value={form.email}
-                onChange={(e) => patch({ email: e.target.value })}
-                placeholder={t(lang, 'authEmail')}
-                className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                style={inputStyle}
-              />
+            <div>
+              <label htmlFor="auth-reset-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
+              <div className="relative">
+                <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                <input
+                  ref={emailRef}
+                  id="auth-reset-email"
+                  type="email"
+                  autoFocus
+                  value={form.email}
+                  onChange={(e) => patchField('email', e.target.value)}
+                  placeholder={t(lang, 'authEmail')}
+                  aria-invalid={errorField === 'email'}
+                  aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
+                  className="auth-field w-full rounded-xl text-sm focus:outline-none"
+                  style={inputStyle}
+                />
+              </div>
             </div>
-            {error && <p role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
+            {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
             {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
             <button
               type="submit"
@@ -240,54 +275,75 @@ export default function AuthPage({ onBack, intent }) {
 
             <form onSubmit={handleSubmit} noValidate className="space-y-3">
               {mode === 'register' && (
+                <div>
+                  <label htmlFor="auth-name" className="auth-field-label">{t(lang, 'authNamePlaceholder')}</label>
+                  <div className="relative">
+                    <User size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                    <input
+                      id="auth-name"
+                      type="text"
+                      value={form.fullName}
+                      onChange={(e) => patchField('fullName', e.target.value)}
+                      placeholder={t(lang, 'authNamePlaceholder')}
+                      className="auth-field w-full rounded-xl text-sm focus:outline-none"
+                      style={inputStyle}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label htmlFor="auth-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
                 <div className="relative">
-                  <User size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                  <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
                   <input
-                    type="text"
-                    aria-label={t(lang, 'authNamePlaceholder')}
-                    value={form.fullName}
-                    onChange={(e) => patch({ fullName: e.target.value })}
-                    placeholder={t(lang, 'authNamePlaceholder')}
+                    ref={emailRef}
+                    id="auth-email"
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => patchField('email', e.target.value)}
+                    placeholder={t(lang, 'authEmail')}
+                    aria-invalid={errorField === 'email'}
+                    aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
                     className="auth-field w-full rounded-xl text-sm focus:outline-none"
                     style={inputStyle}
                   />
                 </div>
-              )}
-
-              <div className="relative">
-                <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
-                <input
-                  type="email"
-                  aria-label={t(lang, 'authEmail')}
-                  value={form.email}
-                  onChange={(e) => patch({ email: e.target.value })}
-                  placeholder={t(lang, 'authEmail')}
-                  className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                  style={inputStyle}
-                />
               </div>
 
-              <div className="relative">
-                <Lock size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  aria-label={t(lang, 'authPassword')}
-                  value={form.password}
-                  onChange={(e) => patch({ password: e.target.value })}
-                  placeholder={t(lang, 'authPassword')}
-                  className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                  style={inputStyle}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={t(lang, 'authPassword')}
-                  aria-pressed={showPassword}
-                  className="auth-password-toggle"
-                  style={{ color: 'var(--text-3)' }}
-                >
-                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
+              <div>
+                <label htmlFor="auth-password" className="auth-field-label">{t(lang, 'authPassword')}</label>
+                <div className="relative">
+                  <Lock size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                  <input
+                    ref={passwordRef}
+                    id="auth-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={form.password}
+                    onChange={(e) => patchField('password', e.target.value)}
+                    placeholder={t(lang, 'authPassword')}
+                    aria-invalid={errorField === 'password'}
+                    aria-describedby={[
+                      mode === 'register' ? 'auth-password-hint' : null,
+                      errorField === 'password' ? 'auth-form-error' : null,
+                    ].filter(Boolean).join(' ') || undefined}
+                    className="auth-field w-full rounded-xl text-sm focus:outline-none"
+                    style={inputStyle}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={t(lang, 'authPassword')}
+                    aria-pressed={showPassword}
+                    className="auth-password-toggle"
+                    style={{ color: 'var(--text-3)' }}
+                  >
+                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+                {mode === 'register' && (
+                  <p id="auth-password-hint" className="auth-field-hint">{t(lang, 'authErrWeakPass')}</p>
+                )}
               </div>
 
               {mode === 'login' && (
@@ -303,7 +359,7 @@ export default function AuthPage({ onBack, intent }) {
                 </div>
               )}
 
-              {error && <p role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
+              {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
               {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
 
               {canResend && (

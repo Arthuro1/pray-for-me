@@ -628,6 +628,8 @@ export default {
   "amenBtn": "Аминь",
   "sessionDoneTitle": "Время с Богом 🙏",
   "sessionDoneSub": "Сегодня вы помолились о {n} нуждах.",
+  "sessionDoneSub_one": "Сегодня вы помолились об одной нужде.",
+  "sessionDoneSub_other": "Сегодня вы помолились о {n} нуждах.",
   "pin": "Закрепить",
   "unpin": "Открепить",
   "resume": "Вернуть",

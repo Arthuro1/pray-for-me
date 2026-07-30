@@ -68,3 +68,11 @@ export function t(lang, key, vars = {}) {
   if (typeof val !== 'string') return val;
   return val.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 }
+
+// Use explicit singular/other strings instead of exposing grammatical
+// placeholders such as "subject(s)" to people. Languages with invariant nouns
+// can simply provide the same sentence for both variants.
+export function tp(lang, key, n, vars = {}) {
+  const suffix = Number(n) === 1 ? 'one' : 'other';
+  return t(lang, `${key}_${suffix}`, { ...vars, n });
+}

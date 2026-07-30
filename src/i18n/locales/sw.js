@@ -628,6 +628,8 @@ export default {
   "amenBtn": "Amina",
   "sessionDoneTitle": "Wakati na Mungu 🙏",
   "sessionDoneSub": "Umeomba kwa ajili ya mambo {n} leo.",
+  "sessionDoneSub_one": "Umeomba kwa ajili ya jambo 1 leo.",
+  "sessionDoneSub_other": "Umeomba kwa ajili ya mambo {n} leo.",
   "pin": "Bandika",
   "unpin": "Ondoa",
   "resume": "Rejesha",

@@ -131,6 +131,8 @@ export default {
     "less": "عرض أقل"
   },
   "beginLabel": "ابدأ بصلاة",
+  "languageMenuLabel": "اللغة",
+  "translationInProgress": "الترجمة قيد العمل",
   "heroReassurance": "لا تحتاج إلى حساب. لا يغادر أي شيء هذا الجهاز إلا إذا اخترت حفظه.",
   "calloutBegin": "ابدأ بصلاة",
   "hero": {

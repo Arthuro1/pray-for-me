@@ -139,6 +139,8 @@ export default {
     "less": "收起"
   },
   "beginLabel": "从一个祷告开始",
+  "languageMenuLabel": "语言",
+  "translationInProgress": "翻译进行中",
   "heroReassurance": "无需账户。除非您选择保存，否则任何内容都不会离开此设备。",
   "calloutBegin": "开始一个祷告",
   "hero": {

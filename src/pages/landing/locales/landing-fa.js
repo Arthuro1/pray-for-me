@@ -131,6 +131,8 @@ export default {
     "less": "نمایش کمتر"
   },
   "beginLabel": "با یک دعا آغاز کنید",
+  "languageMenuLabel": "زبان",
+  "translationInProgress": "ترجمه در حال انجام است",
   "heroReassurance": "نیازی به حساب نیست. تا زمانی که ذخیره‌کردن را انتخاب نکنید، چیزی از این دستگاه خارج نمی‌شود.",
   "calloutBegin": "با یک دعا آغاز کنید",
   "hero": {
