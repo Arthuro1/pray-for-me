@@ -12,6 +12,7 @@ import {
 import { markActivationSessionCompleted } from '../lib/activationProgress';
 import { EVENTS, track } from '../lib/analytics';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
+import PrayerMusicControl from './PrayerMusicControl';
 
 // The guest prayer moment intentionally has no imports from prayerStore,
 // Supabase, Scripture lookup, authenticated crypto, community, or reminders.
@@ -64,15 +65,18 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
                 <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
                   Pray4Me · 1 / 1
                 </p>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  aria-label={t(lang, 'close')}
-                  className="pressable flex h-11 w-11 items-center justify-center rounded-full"
-                  style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
-                >
-                  <X size={16} aria-hidden="true" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <PrayerMusicControl lang={lang} active />
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label={t(lang, 'close')}
+                    className="pressable flex h-11 w-11 items-center justify-center rounded-full"
+                    style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
+                  >
+                    <X size={16} aria-hidden="true" />
+                  </button>
+                </div>
               </div>
               <div className="mx-auto h-px max-w-2xl" style={{ background: 'var(--gold)' }} />
             </header>

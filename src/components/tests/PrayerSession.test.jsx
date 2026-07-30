@@ -6,7 +6,7 @@
 // text is available for it, otherwise the original — but never a localized
 // reference paired with stale, differently-languaged text.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 
 vi.mock('../../lib/verseText', () => ({
@@ -14,6 +14,29 @@ vi.mock('../../lib/verseText', () => ({
   fetchVerseText: vi.fn(),
 }));
 vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
+const backgroundAudioMocks = vi.hoisted(() => ({
+  start: vi.fn(async ({ trackId }) => ({ started: trackId !== 'silence', trackId })),
+  stop: vi.fn(async () => {}),
+}));
+vi.mock('../../lib/audio/backgroundAudio', () => ({
+  AUDIO_TRACKS: [
+    { id: 'soft-piano', src: '/audio/piano-and-rain.mp3', labelKey: 'audioSoftPiano' },
+    { id: 'ambient-pad', src: '/audio/ambient-pad.mp3', labelKey: 'audioAmbientPad' },
+    { id: 'nature', src: '/audio/nature.mp3', labelKey: 'audioNature' },
+    { id: 'soft-pad', src: '/audio/soft-pad.mp3', labelKey: 'audioSoftPad' },
+    { id: 'silence', src: null, labelKey: 'audioSilence' },
+  ],
+  DEFAULT_AUDIO_TRACK_ID: 'soft-piano',
+  resolveTrack: (id) => ({
+    'soft-piano': { id: 'soft-piano', src: '/audio/piano-and-rain.mp3', labelKey: 'audioSoftPiano' },
+    'ambient-pad': { id: 'ambient-pad', src: '/audio/ambient-pad.mp3', labelKey: 'audioAmbientPad' },
+    nature: { id: 'nature', src: '/audio/nature.mp3', labelKey: 'audioNature' },
+    'soft-pad': { id: 'soft-pad', src: '/audio/soft-pad.mp3', labelKey: 'audioSoftPad' },
+    silence: { id: 'silence', src: null, labelKey: 'audioSilence' },
+  }[id] || null),
+  startBackgroundInstrumental: backgroundAudioMocks.start,
+  stopBackgroundAudio: backgroundAudioMocks.stop,
+}));
 
 import PrayerSession from '../PrayerSession';
 import { fetchScriptureText, fetchVerseText } from '../../lib/verseText';
@@ -40,6 +63,8 @@ const prayer = {
 
 beforeEach(() => {
   localStorage.clear();
+  backgroundAudioMocks.start.mockClear();
+  backgroundAudioMocks.stop.mockClear();
   // Only the Psalm resolves to authoritative English text; everything else has
   // none, exercising the "keep the original pair" fallback.
   vi.mocked(fetchScriptureText).mockImplementation(async ({ reference }) =>
@@ -124,6 +149,35 @@ describe('PrayerSession — immediate start & format control', () => {
     // A new session reopens straight into the remembered format.
     openRequests();
     expect(screen.getByText(t(lang, 'stageAdoration'))).toBeTruthy();
+  });
+
+  it('starts remembered background music automatically and offers a silent session', async () => {
+    openRequests();
+    await waitFor(() => {
+      expect(backgroundAudioMocks.start).toHaveBeenCalledWith({ trackId: 'soft-piano', volume: 0.16 });
+    });
+
+    fireEvent.click(screen.getByTitle(t(lang, 'prayerMusic')));
+    fireEvent.click(screen.getByText(t(lang, 'audioSilence')));
+
+    expect(localStorage.getItem('pfm_prayer_audio_track')).toBe('silence');
+    await waitFor(() => expect(backgroundAudioMocks.stop).toHaveBeenCalled());
+  });
+
+  it('remembers a changed atmosphere for the next prayer session', async () => {
+    openRequests();
+    fireEvent.click(screen.getByTitle(t(lang, 'prayerMusic')));
+    fireEvent.click(screen.getByText(t(lang, 'audioNature')));
+    await waitFor(() => {
+      expect(backgroundAudioMocks.start).toHaveBeenLastCalledWith({ trackId: 'nature', volume: 0.16 });
+    });
+    cleanup();
+
+    backgroundAudioMocks.start.mockClear();
+    openRequests();
+    await waitFor(() => {
+      expect(backgroundAudioMocks.start).toHaveBeenCalledWith({ trackId: 'nature', volume: 0.16 });
+    });
   });
 
   it('records each prayer as prayed when the user advances past it', () => {

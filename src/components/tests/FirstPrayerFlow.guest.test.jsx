@@ -35,6 +35,29 @@ vi.mock('../../lib/supabase', () => {
 });
 // Keep analytics inert (and off the network) in jsdom.
 vi.mock('@vercel/analytics', () => ({ track: vi.fn() }));
+const guestAudio = vi.hoisted(() => ({
+  start: vi.fn(async ({ trackId }) => ({ started: true, trackId })),
+  stop: vi.fn(async () => {}),
+}));
+vi.mock('../../lib/audio/backgroundAudio', () => ({
+  AUDIO_TRACKS: [
+    { id: 'soft-piano', src: '/audio/piano-and-rain.mp3', labelKey: 'audioSoftPiano' },
+    { id: 'ambient-pad', src: '/audio/ambient-pad.mp3', labelKey: 'audioAmbientPad' },
+    { id: 'nature', src: '/audio/nature.mp3', labelKey: 'audioNature' },
+    { id: 'soft-pad', src: '/audio/soft-pad.mp3', labelKey: 'audioSoftPad' },
+    { id: 'silence', src: null, labelKey: 'audioSilence' },
+  ],
+  DEFAULT_AUDIO_TRACK_ID: 'soft-piano',
+  resolveTrack: (id) => ({
+    'soft-piano': { id: 'soft-piano', labelKey: 'audioSoftPiano' },
+    'ambient-pad': { id: 'ambient-pad', labelKey: 'audioAmbientPad' },
+    nature: { id: 'nature', labelKey: 'audioNature' },
+    'soft-pad': { id: 'soft-pad', labelKey: 'audioSoftPad' },
+    silence: { id: 'silence', labelKey: 'audioSilence' },
+  }[id] || null),
+  startBackgroundInstrumental: guestAudio.start,
+  stopBackgroundAudio: guestAudio.stop,
+}));
 
 // In-memory stand-in for the encrypted device-local draft.
 const draftMem = vi.hoisted(() => ({ current: null }));

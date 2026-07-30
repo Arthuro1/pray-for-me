@@ -14,6 +14,7 @@ import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
 import { PrimaryButton, QuietButton, SectionLabel, StatusPill } from './shared/Primitives';
+import PrayerMusicControl from './PrayerMusicControl';
 
 // "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
 // straight into the last-used format (requests, for a new user) and a small
@@ -95,7 +96,11 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const [showFormats, setShowFormats] = useState(false);
   const requestScrollRef = useRef(null);
   const trapRef = useFocusTrap(true);
-  useEscapeKey(onClose);
+
+  const handleClose = () => {
+    onClose?.();
+  };
+  useEscapeKey(handleClose);
 
   const stages = MODE_STAGES[mode];
   const stage = stages[stageIndex];
@@ -227,7 +232,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // Closing is the "pause" — progress is already recorded per prayer, so the
   // session can be resumed later with the first unfinished request.
   const closeButton = (
-    <button onClick={onClose} aria-label={t(lang, 'close')} className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}>
+    <button onClick={handleClose} aria-label={t(lang, 'close')} className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}>
       <X size={16} />
     </button>
   );
@@ -272,7 +277,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
         <Encouragement lang={lang} className="mt-4 max-w-sm text-sm" />
         <p className="mt-5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'sessionDoneSub', { n: total })}</p>
-        <PrimaryButton onClick={onClose} className="mt-9 min-w-36">
+        <PrimaryButton onClick={handleClose} className="mt-9 min-w-36">
           {t(lang, 'close')}
         </PrimaryButton>
       </div>
@@ -291,9 +296,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <PrayerMusicControl lang={lang} active={!done} />
           {allowFormats && (
             <button
-              onClick={() => setShowFormats((v) => !v)}
+              onClick={() => setShowFormats((value) => !value)}
               aria-expanded={showFormats}
               title={t(lang, 'prayerFormat')}
               className="pressable flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-semibold"
