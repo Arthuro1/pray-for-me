@@ -26,6 +26,8 @@ import { parseKey } from '../lib/schedule';
 import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
+import VerseVersion from '../components/VerseVersion';
+import { versionForSource } from '../lib/bibleVersions';
 import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
 import ActivationNudge from '../components/ActivationNudge';
@@ -121,7 +123,10 @@ export default function HomeTab({ onAdd, onEdit }) {
     fetchScriptureText({ reference: v.ref, lang, usfm: v.usfm }).then((res) => {
       if (cancelled) return;
       if (res?.text) {
-        setVerse((cur) => (cur && cur.ref === v.ref ? { ...cur, text: res.text } : cur));
+        // Keep the source so the verse can be attributed to its exact edition.
+        // (Embedded SEED text carries no source and stays unlabelled — its wording
+        // is hand-vetted, not from a single named edition.)
+        setVerse((cur) => (cur && cur.ref === v.ref ? { ...cur, text: res.text, source: res.source } : cur));
       }
       // Resolve either way — YouVersion being disabled, misconfigured, or
       // offline must not leave the placeholder spinning forever.
@@ -140,7 +145,11 @@ export default function HomeTab({ onAdd, onEdit }) {
   // Share the verse of the day via the native share sheet, or copy it as a fallback.
   const handleShareVerse = async () => {
     if (!verse) return;
-    const text = verse.text ? `"${verse.text}" — ${verse.ref}` : verse.ref;
+    // Cite the edition alongside the reference when we know it (never for the
+    // unlabelled embedded SEED wording), so the shared verse can be verified.
+    const version = verse.source ? versionForSource(verse.source, lang) : null;
+    const ref = version ? `${verse.ref} (${version.abbr})` : verse.ref;
+    const text = verse.text ? `"${verse.text}" — ${ref}` : ref;
     try {
       if (navigator.share) {
         await navigator.share({ title: t(lang, 'verseOfDay'), text, url: window.location.origin });
@@ -409,7 +418,10 @@ export default function HomeTab({ onAdd, onEdit }) {
                     </div>
                   )
                   : null}
-              <p className="text-xs text-right mt-2" style={{ color: 'var(--text-3)' }}>— {verse.ref}</p>
+              <p className="text-xs text-right mt-2" style={{ color: 'var(--text-3)' }}>
+                — {verse.ref}
+                {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
+              </p>
               <a
                 href={bibleLink(verse.ref, lang)}
                 target="_blank"
