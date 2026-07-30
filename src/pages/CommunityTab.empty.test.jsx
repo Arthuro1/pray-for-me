@@ -112,6 +112,8 @@ describe('GroupView — progressive list tools', () => {
     setActiveGroup: vi.fn(),
     subscribeGroupPrayers: vi.fn(() => () => {}),
     fetchUserReactions: vi.fn(),
+    fetchGroupPlans: vi.fn().mockResolvedValue({ plans: [] }),
+    subscribeGroupPlans: vi.fn(() => () => {}),
   });
 
   const renderGroup = () => render(
@@ -142,5 +144,49 @@ describe('GroupView — progressive list tools', () => {
     renderGroup();
     expect(await screen.findByText('Sujet 0')).toBeTruthy();
     expect(screen.getByPlaceholderText(t(lang, 'searchRequests'))).toBeTruthy();
+  });
+});
+
+describe('GroupView — praying together (group plans)', () => {
+  const stubWithPlans = (plans) => stubCommunity({
+    groups: [{ id: 'g1', name: 'Groupe', role: 'member', created_by: 'owner' }],
+    prayers: [],
+    loading: false,
+    testimonies: [],
+    userReactions: new Set(),
+    setActiveGroup: vi.fn(),
+    subscribeGroupPrayers: vi.fn(() => () => {}),
+    fetchUserReactions: vi.fn(),
+    fetchGroupPlans: vi.fn().mockResolvedValue({ plans }),
+    subscribeGroupPlans: vi.fn(() => () => {}),
+  });
+
+  const renderGroup = () => render(
+    <MemoryRouter initialEntries={['/community/group/g1']}>
+      <Routes><Route path="/community/group/:groupId" element={<CommunityTab />} /></Routes>
+    </MemoryRouter>
+  );
+
+  it('surfaces a shared plan with a Join CTA to members who have not joined', async () => {
+    stubWithPlans([{ id: 'gp1', plan_id: 'fast3', start_date: '2999-01-01', added_by: 'other', participantCount: 2, joinedByMe: false }]);
+    renderGroup();
+    expect(await screen.findByText(t(lang, 'groupPlansHeading'))).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'groupPlanJoinCta') })).toBeTruthy();
+  });
+
+  it('shows the joined state (no Join CTA) when the member is already praying it', async () => {
+    stubWithPlans([{ id: 'gp1', plan_id: 'fast3', start_date: '2999-01-01', added_by: 'other', participantCount: 3, joinedByMe: true }]);
+    renderGroup();
+    expect(await screen.findByText(t(lang, 'groupPlansHeading'))).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'groupPlanJoinCta') })).toBeNull();
+    expect(screen.getByText(t(lang, 'groupPlanJoinedBadge'))).toBeTruthy();
+  });
+
+  it('renders no praying-together section when the group has no shared plan', async () => {
+    stubWithPlans([]);
+    renderGroup();
+    // The requests empty state proves the view mounted; the section stays hidden.
+    expect(await screen.findByText(t(lang, 'noRequests'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'groupPlansHeading'))).toBeNull();
   });
 });

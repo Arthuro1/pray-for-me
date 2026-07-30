@@ -31,7 +31,11 @@ function VersePill({ reference, lang }) {
   );
 }
 
-export default function PlanDetailModal({ plan, lang, running, onStart, onInvite, onClose }) {
+// Optional props let the same modal drive the "adopt for the group" flow:
+//   ctaLabel     — overrides the primary "Start" label (e.g. "Start for the group")
+//   runningLabel — overrides the disabled/started label (e.g. "The group is already praying this")
+//   footnote     — a small line under the actions (e.g. what starting shares with the group)
+export default function PlanDetailModal({ plan, lang, running, onStart, onInvite, onClose, ctaLabel, runningLabel, footnote }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const [startDate, setStartDate] = useState(todayKey());
@@ -119,9 +123,10 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onInvite
               : { background: 'var(--accent)', color: '#fff' }}
           >
             {running
-              ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {t(lang, 'planRunning')}</span>
-              : `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`}
+              ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {runningLabel || t(lang, 'planRunning')}</span>
+              : (ctaLabel || `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`)}
           </button>
+          {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-3)' }}>{footnote}</p>}
           {/* Invite others to walk the plan with you — available whether or not
               you've started it yourself. */}
           {onInvite && (

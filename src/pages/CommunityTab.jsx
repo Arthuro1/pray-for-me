@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus, HeartHandshake, CalendarPlus } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -23,6 +23,9 @@ import Avatar from '../components/shared/Avatar';
 import { planById, buildGuidedPlanPrayer } from '../lib/guidedPlan';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
+import { PLANS } from '../content/prayerPlans';
+import PlanDetailModal from '../components/PlanDetailModal';
+import { groupPlanStatus, sortGroupPlans, prayingLabel } from '../lib/groupPlans';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import { plainText } from '../components/rich/RichText';
@@ -56,6 +59,16 @@ const markGroupSeen = (groupId) => {
   m[groupId] = new Date().toISOString();
   localStorage.setItem(SEEN_KEY, JSON.stringify(m));
 };
+
+// Formats an ISO 'YYYY-MM-DD' group-plan start day for display, parsing it as a
+// LOCAL date so it never shifts a day (new Date('2026-08-01') is UTC midnight).
+// Falls back to the raw key if it isn't a plain date.
+function formatPlanDate(key, lang) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || '');
+  if (!m) return key || '';
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  try { return d.toLocaleDateString(lang, { month: 'short', day: 'numeric' }); } catch { return key; }
+}
 
 function ActionRow({ label, sublabel, avatarName, primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
@@ -905,7 +918,7 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup, userReactions, fetchUserReactions } = useCommunityStore(
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup, userReactions, fetchUserReactions, fetchGroupPlans, startGroupPlan, joinGroupPlan, leaveGroupPlan, endGroupPlan, subscribeGroupPlans } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       prayers: s.prayers,
@@ -918,6 +931,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       leaveGroup: s.leaveGroup,
       userReactions: s.userReactions,
       fetchUserReactions: s.fetchUserReactions,
+      fetchGroupPlans: s.fetchGroupPlans,
+      startGroupPlan: s.startGroupPlan,
+      joinGroupPlan: s.joinGroupPlan,
+      leaveGroupPlan: s.leaveGroupPlan,
+      endGroupPlan: s.endGroupPlan,
+      subscribeGroupPlans: s.subscribeGroupPlans,
     }))
   );
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
@@ -936,6 +955,13 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // behind an open modal re-derives its steps.
   const [, setChecklistVersion] = useState(0);
   const reconciledRef = useRef(null);
+  // Group prayer plans — plans the whole group is walking through, visible to
+  // every member (including future ones) and joinable from here.
+  const [groupPlans, setGroupPlans] = useState([]);
+  const [showPlanPicker, setShowPlanPicker] = useState(false);
+  const [detailPlan, setDetailPlan] = useState(null); // plan chosen from the picker
+  const [busyPlanId, setBusyPlanId] = useState(null);
+  const [confirmEndPlan, setConfirmEndPlan] = useState(null);
 
   // Always (re)fetch on entering a group so freshly synced points/updates from
   // the personal side show up, even if this group was already the active one.
@@ -954,6 +980,19 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   useEffect(() => {
     if (groupId && user?.id) fetchUserReactions(groupId, user.id);
   }, [groupId, user?.id]);
+
+  // Load the group's shared plans; live-refresh when one is started/ended or a
+  // member joins (so the "who's praying" count stays current for everyone).
+  const loadGroupPlans = useCallback(async () => {
+    if (!groupId || !user?.id) return;
+    const { plans } = await fetchGroupPlans(groupId, user.id);
+    setGroupPlans(plans || []);
+  }, [groupId, user?.id, fetchGroupPlans]);
+  useEffect(() => { loadGroupPlans(); }, [loadGroupPlans]);
+  useEffect(() => {
+    if (!groupId) return;
+    return subscribeGroupPlans(groupId, loadGroupPlans);
+  }, [groupId, loadGroupPlans, subscribeGroupPlans]);
 
   const group = groups.find(g => g.id === groupId);
   const isAdmin = group?.role === 'admin';
@@ -1016,6 +1055,62 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     onBack();
   };
 
+  // Start the guided plan on MY own calendar (unless I'm already running it).
+  // Shared by "join a group plan" and "adopt a plan for the group".
+  const startPlanOnMyCalendar = async (plan, startDate) => {
+    const mine = usePrayerStore.getState().prayers;
+    if (plan && !runningPlanIds(mine, todayKey()).has(plan.id)) {
+      await usePrayerStore.getState().addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
+    }
+  };
+
+  // Join a plan the group is praying: it lands on my calendar and I'm counted
+  // among those praying it. Optimistically reflect the new joined state + count.
+  const handleJoinGroupPlan = async (gp) => {
+    setBusyPlanId(gp.id);
+    await startPlanOnMyCalendar(planById(gp.plan_id), gp.start_date);
+    const res = await joinGroupPlan(gp.id, groupId, user.id);
+    setBusyPlanId(null);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setGroupPlans((prev) => prev.map((p) => (p.id === gp.id && !p.joinedByMe)
+      ? { ...p, joinedByMe: true, participantCount: p.participantCount + 1 } : p));
+    toast.success(t(lang, 'planStarted'));
+  };
+
+  // Stop praying a group plan (removes only my participation; my calendar copy
+  // and everyone else's are untouched).
+  const handleLeaveGroupPlan = async (gp) => {
+    setBusyPlanId(gp.id);
+    const res = await leaveGroupPlan(gp.id, user.id);
+    setBusyPlanId(null);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setGroupPlans((prev) => prev.map((p) => (p.id === gp.id && p.joinedByMe)
+      ? { ...p, joinedByMe: false, participantCount: Math.max(0, p.participantCount - 1) } : p));
+  };
+
+  // End a shared plan for the whole group (starter or admin — enforced by RLS).
+  const handleEndGroupPlan = async (gp) => {
+    setBusyPlanId(gp.id);
+    const res = await endGroupPlan(gp.id);
+    setBusyPlanId(null);
+    setConfirmEndPlan(null);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setGroupPlans((prev) => prev.filter((p) => p.id !== gp.id));
+    toast.success(t(lang, 'groupPlanEndedToast'));
+  };
+
+  // Adopt a plan for the group (picker → PlanDetailModal): it becomes visible to
+  // everyone and also starts on the adopter's own calendar.
+  const handleAdoptGroupPlan = async (plan, startDate) => {
+    const res = await startGroupPlan({ groupId, planId: plan.id, startDate, userId: user.id });
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    await startPlanOnMyCalendar(plan, startDate);
+    await loadGroupPlans();
+    toast.success(t(lang, 'groupPlanStartedToast'));
+  };
+
+  const adoptedPlanIds = new Set(groupPlans.map((p) => p.plan_id));
+
   return (
     <div className="phase-page constellation-community constellation-community-group min-h-screen">
       <div className="phase-page__shell pt-3 flex items-center justify-between">
@@ -1073,6 +1168,61 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}
 
+      {/* Pick a plan to pray as a group. Plans the group already prays are shown
+          as such and can't be re-adopted. */}
+      {showPlanPicker && (
+        <Modal title={t(lang, 'groupPlanPickerTitle')} lang={lang} onClose={() => setShowPlanPicker(false)}>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupPlanPickerSub')}</p>
+          <div className="grid grid-cols-1 gap-2">
+            {PLANS.map((plan) => {
+              const adopted = adoptedPlanIds.has(plan.id);
+              return (
+                <button
+                  key={plan.id}
+                  disabled={adopted}
+                  onClick={() => { setShowPlanPicker(false); setDetailPlan(plan); }}
+                  className="phase-card plan-card p-3 flex items-start gap-3 text-left w-full disabled:opacity-50"
+                >
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--accent-soft)' }}>{plan.emoji}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                      {adopted ? t(lang, 'groupPlanAlreadyRunning') : `${t(lang, plan.subKey)} · ${t(lang, 'planDays', { n: plan.count })}`}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </Modal>
+      )}
+
+      {detailPlan && (
+        <PlanDetailModal
+          plan={detailPlan}
+          lang={lang}
+          running={adoptedPlanIds.has(detailPlan.id)}
+          runningLabel={t(lang, 'groupPlanAlreadyRunning')}
+          ctaLabel={t(lang, 'groupPlanAdoptCta')}
+          footnote={t(lang, 'groupPlanAdoptNote')}
+          onStart={handleAdoptGroupPlan}
+          onClose={() => setDetailPlan(null)}
+        />
+      )}
+
+      {confirmEndPlan && (
+        <ConfirmDialog
+          title={t(lang, 'groupPlanEnd')}
+          message={`${planById(confirmEndPlan.plan_id) ? t(lang, planById(confirmEndPlan.plan_id).titleKey) : ''} — ${t(lang, 'groupPlanEndConfirm')}`}
+          confirmLabel={t(lang, 'groupPlanEnd')}
+          cancelLabel={t(lang, 'cancel')}
+          danger
+          loading={busyPlanId === confirmEndPlan.id}
+          onConfirm={() => handleEndGroupPlan(confirmEndPlan)}
+          onCancel={() => setConfirmEndPlan(null)}
+        />
+      )}
+
       <div className="phase-content max-w-4xl">
         <div className="group-header mb-5">
           <p className="section-label mb-2">{t(lang, 'community')}</p>
@@ -1098,6 +1248,61 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           />
         )}
 
+        {/* Praying together — plans the whole group is walking through. Persistent
+            and shown to every member, so someone who joins the group later sees
+            it here and can join in. Placed above the tabs so it's not missed. */}
+        {groupPlans.length > 0 && (
+          <div className="mb-6">
+            <h2 className="phase-section-heading flex items-center gap-2">
+              <HeartHandshake size={18} style={{ color: 'var(--accent)' }} /> {t(lang, 'groupPlansHeading')}
+            </h2>
+            <div className="flex flex-col gap-2">
+              {sortGroupPlans(groupPlans, todayKey()).map((gp) => {
+                const plan = planById(gp.plan_id);
+                if (!plan) return null;
+                const status = groupPlanStatus(gp.start_date, todayKey());
+                const canEnd = gp.added_by === user.id || isAdmin;
+                const count = prayingLabel({ count: gp.participantCount, joinedByMe: gp.joinedByMe });
+                const menuItems = [];
+                if (gp.joinedByMe) menuItems.push({ key: 'leave', icon: LogOut, label: t(lang, 'groupPlanLeave'), onClick: () => handleLeaveGroupPlan(gp) });
+                if (canEnd) menuItems.push({ key: 'end', icon: Trash2, label: t(lang, 'groupPlanEnd'), danger: true, onClick: () => setConfirmEndPlan(gp) });
+                return (
+                  <div key={gp.id} className="phase-card community-card p-4 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
+                      {plan.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
+                      <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-3)' }}>
+                        {status === 'running' ? t(lang, 'groupPlanRunningNow') : t(lang, 'groupPlanStartsOn', { date: formatPlanDate(gp.start_date, lang) })}
+                        {' · '}{t(lang, count.key, count.vars)}
+                      </p>
+                    </div>
+                    {gp.joinedByMe ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                        <Check size={13} /> {t(lang, 'groupPlanJoinedBadge')}
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleJoinGroupPlan(gp)}
+                        disabled={busyPlanId === gp.id}
+                        className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40"
+                        style={{ background: 'var(--accent)' }}
+                      >
+                        {busyPlanId === gp.id ? <Loader2 size={13} className="animate-spin" /> : t(lang, 'groupPlanJoinCta')}
+                      </button>
+                    )}
+                    {menuItems.length > 0 && (
+                      <OverflowMenu lang={lang} ariaLabel={t(lang, 'groupPlansHeading')} items={menuItems}
+                        triggerClassName="p-1.5 rounded-lg shrink-0 flex items-center justify-center" triggerStyle={SUBTLE_BTN} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <div className="flex gap-1 mb-5">
           {['requests', 'testimonies'].map(tab => (
             <button key={tab} onClick={() => setSubTab(tab)} className="px-4 py-2 min-h-[44px] rounded-xl text-sm font-medium transition-all"
@@ -1121,6 +1326,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                   <Share2 size={15} /> {t(lang, 'shareInviteLink')}
                 </button>
               </div>
+            )}
+
+            {/* Any member can start a plan the whole group prays together; it then
+                shows in the "Praying together" section above for everyone. */}
+            {prayers.length > 0 && (
+              <button onClick={() => setShowPlanPicker(true)} className="w-full flex items-center gap-2 py-2.5 mb-4 rounded-xl text-sm font-medium justify-center" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+                <CalendarPlus size={15} style={{ color: 'var(--accent)' }} /> {t(lang, 'groupPlanStartCta')}
+              </button>
             )}
 
             {/* List tools appear progressively: search once the wall is long

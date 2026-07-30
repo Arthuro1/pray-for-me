@@ -897,7 +897,17 @@ const useCommunityStore = create((set, get) => ({
   // a selected group carry that group's id for context ("…and the rest of
   // <group>"); friend-only recipients keep a null group. Re-inviting is a no-op
   // (unique on plan_id,invited_by,invited_user_id).
+  //
+  // Selecting a whole group ALSO establishes a persistent group plan for it (see
+  // startGroupPlan), so the plan shows on the group page for everyone — including
+  // members who join the group later — not just the people invited right now.
   invitePlan: async ({ planId, startDate, friendIds = [], groupIds = [], invitedBy }) => {
+    // Best-effort: establishing the group-visible plan must never block the
+    // individual invitations (e.g. if the group_plans migration hasn't run yet).
+    for (const gid of groupIds) {
+      const res = await get().startGroupPlan({ groupId: gid, planId, startDate, userId: invitedBy });
+      if (res?.error) devError('invitePlan: startGroupPlan failed', res.error);
+    }
     const targets = new Map(); // userId -> group_id context (null for friends)
     for (const id of friendIds) if (id && id !== invitedBy) targets.set(id, null);
     if (groupIds.length > 0) {
@@ -978,6 +988,90 @@ const useCommunityStore = create((set, get) => ({
   declinePlanInvitation: async (inviteId) => {
     const { error } = await supabase.from('plan_invitations').delete().eq('id', inviteId);
     return error ? toError(error) : {};
+  },
+
+  // ── Group prayer plans ──────────────────────────────────────────────────────
+  // A plan a whole group walks through together. Unlike a plan invitation
+  // (transient, per-person, deleted on accept), a group plan is PERSISTENT and
+  // group-scoped, so it stays visible to everyone — including members who join
+  // the group later — who can then join in. See supabase/group_plans.sql.
+
+  // The group's shared plans, each enriched with how many members are praying it
+  // and whether the current user is one of them. One members query covers all
+  // plans in the group. Content-free: only the plan's content id + start date.
+  fetchGroupPlans: async (groupId, userId) => {
+    const { data: plans, error } = await supabase
+      .from('group_plans').select('*').eq('group_id', groupId);
+    if (error) return { plans: [] };
+    const ids = (plans || []).map((p) => p.id);
+    const byPlan = {};
+    if (ids.length > 0) {
+      const { data: members } = await supabase
+        .from('group_plan_members').select('group_plan_id, user_id').in('group_plan_id', ids);
+      for (const m of members || []) (byPlan[m.group_plan_id] ||= []).push(m.user_id);
+    }
+    return {
+      plans: (plans || []).map((p) => {
+        const parts = byPlan[p.id] || [];
+        return { ...p, participantCount: parts.length, joinedByMe: parts.includes(userId) };
+      }),
+    };
+  },
+
+  // Adopt a plan for a group (idempotent: never clobbers an existing adoption or
+  // its start date) and enroll the caller as a participant. Used both by the
+  // in-group "start a plan together" flow and by invitePlan when a whole group is
+  // invited. Returns { groupPlanId }.
+  startGroupPlan: async ({ groupId, planId, startDate, userId }) => {
+    const { error: insErr } = await supabase
+      .from('group_plans')
+      .upsert({ group_id: groupId, plan_id: planId, start_date: startDate, added_by: userId },
+        { onConflict: 'group_id,plan_id', ignoreDuplicates: true });
+    if (insErr) return toError(insErr);
+    // Resolve the row id whether it was just created or already existed.
+    const { data: row, error: selErr } = await supabase
+      .from('group_plans').select('id').eq('group_id', groupId).eq('plan_id', planId).single();
+    if (selErr) return toError(selErr);
+    const res = await get().joinGroupPlan(row.id, groupId, userId);
+    if (res?.error) return res;
+    return { groupPlanId: row.id };
+  },
+
+  // Record that the caller is praying a group plan (idempotent). Joining also
+  // starts the same guided plan on the member's own calendar — that happens in
+  // the caller (client-side, E2EE personal prayer), never here.
+  joinGroupPlan: async (groupPlanId, groupId, userId) => {
+    const { error } = await supabase
+      .from('group_plan_members')
+      .upsert({ group_plan_id: groupPlanId, group_id: groupId, user_id: userId },
+        { onConflict: 'group_plan_id,user_id', ignoreDuplicates: true });
+    return error ? toError(error) : {};
+  },
+
+  // Stop praying a group plan (removes only the caller's participation).
+  leaveGroupPlan: async (groupPlanId, userId) => {
+    const { error } = await supabase
+      .from('group_plan_members').delete().eq('group_plan_id', groupPlanId).eq('user_id', userId);
+    return error ? toError(error) : {};
+  },
+
+  // End a shared plan for the whole group (RLS: the starter or a group admin).
+  // Cascades to group_plan_members; each member's own calendar copy is untouched.
+  endGroupPlan: async (groupPlanId) => {
+    const { error } = await supabase.from('group_plans').delete().eq('id', groupPlanId);
+    return error ? toError(error) : {};
+  },
+
+  // Live group plans: refetch on any change to this group's shared plans or their
+  // participants. The caller supplies the refetch. Returns an unsubscribe fn.
+  subscribeGroupPlans: (groupId, onChange) => {
+    const channel = supabase.channel(`group-plans-${groupId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'group_plans', filter: `group_id=eq.${groupId}` },
+        () => onChange?.())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'group_plan_members', filter: `group_id=eq.${groupId}` },
+        () => onChange?.())
+      .subscribe();
+    return () => supabase.removeChannel(channel);
   },
 
   // ── Group admin ───────────────────────────────────────────────────────────
