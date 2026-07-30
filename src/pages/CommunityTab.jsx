@@ -20,6 +20,9 @@ import { setChecklistFlag } from '../lib/groupChecklist';
 import { groupListControls } from '../lib/groupTools';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import Avatar from '../components/shared/Avatar';
+import { planById, buildGuidedPlanPrayer } from '../lib/guidedPlan';
+import { runningPlanIds } from '../lib/planner';
+import { todayKey } from '../lib/prayedLog';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import { plainText } from '../components/rich/RichText';
@@ -89,7 +92,7 @@ function Section({ title, icon, children }) {
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
 function CommunityHub({ lang, userId, onViewGroup }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity } = useCommunityStore(
+  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity, fetchPlanInvitations, acceptPlanInvitation, declinePlanInvitation } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       fetchFriends: s.fetchFriends,
@@ -103,11 +106,16 @@ function CommunityHub({ lang, userId, onViewGroup }) {
       addFriendship: s.addFriendship,
       fetchPendingCount: s.fetchPendingCount,
       fetchGroupActivity: s.fetchGroupActivity,
+      fetchPlanInvitations: s.fetchPlanInvitations,
+      acceptPlanInvitation: s.acceptPlanInvitation,
+      declinePlanInvitation: s.declinePlanInvitation,
     }))
   );
+  const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
   const [groupInvitations, setGroupInvitations] = useState([]);
+  const [planInvitations, setPlanInvitations] = useState([]);
   const [unread, setUnread] = useState({});
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
@@ -116,20 +124,37 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   const [showAddFriend, setShowAddFriend] = useState(false);
 
   const load = useCallback(async () => {
-    const [f, fr, gi] = await Promise.all([
+    const [f, fr, gi, pi] = await Promise.all([
       fetchFriends(userId),
       fetchFriendRequests(userId),
       fetchGroupInvitations(userId),
+      fetchPlanInvitations(userId),
     ]);
     setFriends(f.friends || []);
     setFriendRequests(fr.requests || []);
     setGroupInvitations(gi.invitations || []);
+    setPlanInvitations(pi?.invitations || []);
     setLoading(false);
     fetchPendingCount(userId);
     fetchGroupActivity().then((rows) => setUnread(unreadCounts(rows, readSeen(), userId)));
   }, [userId]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Accept an invitation to pray a plan together: start the SAME guided plan on
+  // your own calendar (unless already running it) and jump to the Plan tab.
+  const acceptPlanInvite = async (inv) => {
+    const res = await acceptPlanInvitation(inv.id);
+    if (res?.error) return res;
+    const plan = planById(res.planId);
+    const personal = usePrayerStore.getState().prayers;
+    if (plan && !runningPlanIds(personal, todayKey()).has(plan.id)) {
+      await usePrayerStore.getState().addPrayer(buildGuidedPlanPrayer(plan, res.startDate, lang));
+    }
+    toast.success(t(lang, 'planStarted'));
+    navigate('/plan');
+    return {};
+  };
 
   const handle = async (id, fn) => {
     setBusyId(id);
@@ -234,7 +259,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         {/* Needs attention: ONLY when something actually awaits a decision —
             incoming friend requests and group invitations. Never a permanent
             statistics block. */}
-        {(friendRequests.length > 0 || groupInvitations.length > 0) && (
+        {(friendRequests.length > 0 || groupInvitations.length > 0 || planInvitations.length > 0) && (
           <Section title={t(lang, 'needsAttention')} icon={<Mail size={18} />}>
             {friendRequests.map(req => (
               <ActionRow key={req.id} label={req.fromName} sublabel={t(lang, 'friendRequests')}
@@ -253,6 +278,21 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 onPrimary={() => handle(inv.id, () => acceptGroupInvitation(inv.id, userId))}
                 onSecondary={() => handle(inv.id, () => rejectGroupInvitation(inv.id))} />
             ))}
+            {planInvitations.map(inv => {
+              const plan = planById(inv.plan_id);
+              const title = plan ? t(lang, plan.titleKey) : t(lang, 'planInviteTitle');
+              const from = inv.inviterName ? t(lang, 'planInvitationFrom', { name: inv.inviterName }) : t(lang, 'planInviteSub');
+              return (
+                <ActionRow key={inv.id}
+                  label={title}
+                  sublabel={inv.groupName ? `${from} · ${inv.groupName}` : from}
+                  avatarName={inv.inviterName || title}
+                  busy={busyId === inv.id}
+                  primaryText={t(lang, 'planInviteAccept')} secondaryText={t(lang, 'reject')}
+                  onPrimary={() => handle(inv.id, () => acceptPlanInvite(inv))}
+                  onSecondary={() => handle(inv.id, () => declinePlanInvitation(inv.id))} />
+              );
+            })}
           </Section>
         )}
 

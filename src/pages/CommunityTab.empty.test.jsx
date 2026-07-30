@@ -24,6 +24,7 @@ function stubCommunity(overrides = {}) {
     fetchFriends: vi.fn().mockResolvedValue({ friends: [] }),
     fetchFriendRequests: vi.fn().mockResolvedValue({ requests: [] }),
     fetchGroupInvitations: vi.fn().mockResolvedValue({ invitations: [] }),
+    fetchPlanInvitations: vi.fn().mockResolvedValue({ invitations: [] }),
     fetchPendingCount: vi.fn(),
     fetchGroupActivity: vi.fn().mockResolvedValue([]),
     fetchCommunityFeed: vi.fn().mockResolvedValue([]),

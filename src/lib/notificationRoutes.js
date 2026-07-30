@@ -36,6 +36,8 @@ export function notificationRoute(notification) {
     case 'friend_request':
     case 'group_invitation':
       return '/community';
+    case 'plan_invitation':
+      return '/plan';
     default:
       return '/community';
   }

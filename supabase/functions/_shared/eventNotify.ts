@@ -18,7 +18,8 @@ export type EventType =
   | 'group_prayer_added'
   | 'testimony'
   | 'membership_change'
-  | 'role_change';
+  | 'role_change'
+  | 'plan_invitation';
 
 type Copy = { title: string; body: string };
 
@@ -35,6 +36,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'New testimony',      body: 'A testimony was shared in your group.' },
     membership_change:{ title: 'Group update',       body: 'You were added to a prayer group.' },
     role_change:      { title: 'Group role updated', body: 'Your role in a group has changed.' },
+    plan_invitation:  { title: 'Prayer plan invitation', body: 'You were invited to pray a plan together.' },
   },
   fr: {
     friend_request:   { title: "Nouvelle demande d'ami", body: "Vous avez une nouvelle demande d'ami." },
@@ -46,6 +48,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Nouveau témoignage',    body: 'Un témoignage a été partagé dans votre groupe.' },
     membership_change:{ title: 'Mise à jour du groupe', body: 'Vous avez été ajouté à un groupe de prière.' },
     role_change:      { title: 'Rôle mis à jour',       body: 'Votre rôle dans un groupe a changé.' },
+    plan_invitation:  { title: 'Invitation à un plan de prière', body: 'Vous avez été invité à prier un plan ensemble.' },
   },
   de: {
     friend_request:   { title: 'Neue Freundschaftsanfrage', body: 'Du hast eine neue Freundschaftsanfrage.' },
@@ -57,6 +60,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Neues Zeugnis', body: 'In deiner Gruppe wurde ein Zeugnis geteilt.' },
     membership_change:{ title: 'Gruppen-Update', body: 'Du wurdest zu einer Gebetsgruppe hinzugefügt.' },
     role_change:      { title: 'Rolle aktualisiert', body: 'Deine Rolle in einer Gruppe hat sich geändert.' },
+    plan_invitation:  { title: 'Einladung zu einem Gebetsplan', body: 'Du wurdest eingeladen, einen Gebetsplan gemeinsam zu beten.' },
   },
   pt: {
     friend_request:   { title: 'Novo pedido de amizade', body: 'Você tem um novo pedido de amizade.' },
@@ -68,6 +72,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Novo testemunho', body: 'Um testemunho foi compartilhado no seu grupo.' },
     membership_change:{ title: 'Atualização do grupo', body: 'Você foi adicionado a um grupo de oração.' },
     role_change:      { title: 'Função atualizada', body: 'Sua função em um grupo foi alterada.' },
+    plan_invitation:  { title: 'Convite para plano de oração', body: 'Você foi convidado para orar um plano juntos.' },
   },
   es: {
     friend_request:   { title: 'Nueva solicitud de amistad', body: 'Tienes una nueva solicitud de amistad.' },
@@ -79,6 +84,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Nuevo testimonio', body: 'Se compartió un testimonio en tu grupo.' },
     membership_change:{ title: 'Actualización del grupo', body: 'Te han añadido a un grupo de oración.' },
     role_change:      { title: 'Rol actualizado', body: 'Tu rol en un grupo ha cambiado.' },
+    plan_invitation:  { title: 'Invitación a un plan de oración', body: 'Te invitaron a orar un plan juntos.' },
   },
   zh: {
     friend_request:   { title: '新的好友请求', body: '你有一个新的好友请求。' },
@@ -90,6 +96,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: '新的见证', body: '你的群组中分享了一个见证。' },
     membership_change:{ title: '群组更新', body: '你已被加入一个祷告群组。' },
     role_change:      { title: '角色已更新', body: '你在群组中的角色已更改。' },
+    plan_invitation:  { title: '祷告计划邀请', body: '你被邀请一起进行祷告计划。' },
   },
   ja: {
     friend_request:   { title: '新しい友達リクエスト', body: '新しい友達リクエストがあります。' },
@@ -101,6 +108,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: '新しい証し', body: 'グループで証しが共有されました。' },
     membership_change:{ title: 'グループの更新', body: '祈りのグループに追加されました。' },
     role_change:      { title: '役割が更新されました', body: 'グループでのあなたの役割が変わりました。' },
+    plan_invitation:  { title: '祈りのプランへの招待', body: '一緒に祈りのプランを行うよう招待されました。' },
   },
   ko: {
     friend_request:   { title: '새 친구 요청', body: '새로운 친구 요청이 있습니다.' },
@@ -112,6 +120,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: '새 간증', body: '그룹에 간증이 공유되었습니다.' },
     membership_change:{ title: '그룹 업데이트', body: '기도 그룹에 추가되었습니다.' },
     role_change:      { title: '역할 변경됨', body: '그룹에서의 역할이 변경되었습니다.' },
+    plan_invitation:  { title: '기도 계획 초대', body: '함께 기도 계획을 진행하도록 초대되었습니다.' },
   },
   ru: {
     friend_request:   { title: 'Новый запрос в друзья', body: 'У вас новый запрос в друзья.' },
@@ -123,6 +132,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Новое свидетельство', body: 'В вашей группе поделились свидетельством.' },
     membership_change:{ title: 'Обновление группы', body: 'Вас добавили в молитвенную группу.' },
     role_change:      { title: 'Роль обновлена', body: 'Ваша роль в группе изменилась.' },
+    plan_invitation:  { title: 'Приглашение к плану молитвы', body: 'Вас пригласили молиться по плану вместе.' },
   },
   ar: {
     friend_request:   { title: 'طلب صداقة جديد', body: 'لديك طلب صداقة جديد.' },
@@ -134,6 +144,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'شهادة جديدة', body: 'تمت مشاركة شهادة في مجموعتك.' },
     membership_change:{ title: 'تحديث المجموعة', body: 'تمت إضافتك إلى مجموعة صلاة.' },
     role_change:      { title: 'تم تحديث الدور', body: 'تغيّر دورك في إحدى المجموعات.' },
+    plan_invitation:  { title: 'دعوة إلى خطة صلاة', body: 'تمت دعوتك للصلاة وفق خطة معًا.' },
   },
   fa: {
     friend_request:   { title: 'درخواست دوستی جدید', body: 'یک درخواست دوستی جدید دارید.' },
@@ -145,6 +156,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'شهادت جدید', body: 'شهادتی در گروه شما به اشتراک گذاشته شد.' },
     membership_change:{ title: 'به‌روزرسانی گروه', body: 'به یک گروه دعا اضافه شدید.' },
     role_change:      { title: 'نقش به‌روزرسانی شد', body: 'نقش شما در یک گروه تغییر کرده است.' },
+    plan_invitation:  { title: 'دعوت به برنامهٔ دعا', body: 'شما دعوت شده‌اید تا برنامه‌ای را با هم دعا کنید.' },
   },
   hi: {
     friend_request:   { title: 'नया मित्र अनुरोध', body: 'आपके पास एक नया मित्र अनुरोध है।' },
@@ -156,6 +168,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'नई गवाही', body: 'आपके समूह में एक गवाही साझा की गई।' },
     membership_change:{ title: 'समूह अपडेट', body: 'आपको एक प्रार्थना समूह में जोड़ा गया।' },
     role_change:      { title: 'भूमिका अपडेट', body: 'किसी समूह में आपकी भूमिका बदल गई है।' },
+    plan_invitation:  { title: 'प्रार्थना योजना निमंत्रण', body: 'आपको साथ मिलकर एक प्रार्थना योजना करने के लिए आमंत्रित किया गया है।' },
   },
   sw: {
     friend_request:   { title: 'Ombi jipya la urafiki', body: 'Una ombi jipya la urafiki.' },
@@ -167,6 +180,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Ushuhuda mpya', body: 'Ushuhuda umeshirikiwa katika kikundi chako.' },
     membership_change:{ title: 'Sasisho la kikundi', body: 'Umeongezwa kwenye kikundi cha maombi.' },
     role_change:      { title: 'Jukumu limesasishwa', body: 'Jukumu lako katika kikundi limebadilika.' },
+    plan_invitation:  { title: 'Mwaliko wa mpango wa maombi', body: 'Umealikwa kuomba mpango pamoja.' },
   },
   am: {
     friend_request:   { title: 'አዲስ የጓደኝነት ጥያቄ', body: 'አዲስ የጓደኝነት ጥያቄ አለዎት።' },
@@ -178,6 +192,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'አዲስ ምስክርነት', body: 'በቡድንዎ ውስጥ ምስክርነት ተጋርቷል።' },
     membership_change:{ title: 'የቡድን ዝማኔ', body: 'ወደ የጸሎት ቡድን ተጨምረዋል።' },
     role_change:      { title: 'ሚና ተሻሽሏል', body: 'በቡድን ውስጥ ያለዎት ሚና ተቀይሯል።' },
+    plan_invitation:  { title: 'የጸሎት እቅድ ግብዣ', body: 'አብረው የጸሎት እቅድ እንድትጸልዩ ተጋብዘዋል።' },
   },
   id: {
     friend_request:   { title: 'Permintaan pertemanan baru', body: 'Anda punya permintaan pertemanan baru.' },
@@ -189,6 +204,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Kesaksian baru', body: 'Sebuah kesaksian dibagikan di grup Anda.' },
     membership_change:{ title: 'Pembaruan grup', body: 'Anda ditambahkan ke grup doa.' },
     role_change:      { title: 'Peran diperbarui', body: 'Peran Anda dalam grup telah berubah.' },
+    plan_invitation:  { title: 'Undangan rencana doa', body: 'Anda diundang untuk mendoakan sebuah rencana bersama.' },
   },
   tl: {
     friend_request:   { title: 'Bagong friend request', body: 'May bago kang friend request.' },
@@ -200,6 +216,7 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
     testimony:        { title: 'Bagong testimonya', body: 'May testimonyang ibinahagi sa iyong grupo.' },
     membership_change:{ title: 'Update sa grupo', body: 'Idinagdag ka sa isang prayer group.' },
     role_change:      { title: 'Na-update na tungkulin', body: 'Nagbago ang iyong tungkulin sa isang grupo.' },
+    plan_invitation:  { title: 'Imbitasyon sa plano ng panalangin', body: 'Inimbitahan ka na magdasal ng isang plano nang sama-sama.' },
   },
 };
 
@@ -265,6 +282,8 @@ export function eventUrl(type: string, meta: Record<string, unknown> = {}): stri
     case 'friend_request':
     case 'group_invitation':
       return '/community';
+    case 'plan_invitation':
+      return '/plan';
     default:
       return '/community';
   }

@@ -181,13 +181,15 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
-  // Count of incoming friend requests + group invitations (drives the nav badge).
+  // Count of incoming friend requests + group invitations + plan invitations
+  // (drives the nav badge).
   fetchPendingCount: async (userId) => {
-    const [fr, gi] = await Promise.all([
+    const [fr, gi, pi] = await Promise.all([
       supabase.from('friend_requests').select('*', { count: 'exact', head: true }).eq('to_user_id', userId),
       supabase.from('group_invitations').select('*', { count: 'exact', head: true }).eq('invited_user_id', userId),
+      supabase.from('plan_invitations').select('*', { count: 'exact', head: true }).eq('invited_user_id', userId),
     ]);
-    set({ pendingCount: (fr.count || 0) + (gi.count || 0) });
+    set({ pendingCount: (fr.count || 0) + (gi.count || 0) + (pi.count || 0) });
   },
 
   // ── Realtime ────────────────────────────────────────────────────────────────
@@ -198,6 +200,8 @@ const useCommunityStore = create((set, get) => ({
       .on('postgres_changes', { event: '*', schema: 'public', table: 'friend_requests', filter: `to_user_id=eq.${userId}` },
         () => get().fetchPendingCount(userId))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'group_invitations', filter: `invited_user_id=eq.${userId}` },
+        () => get().fetchPendingCount(userId))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'plan_invitations', filter: `invited_user_id=eq.${userId}` },
         () => get().fetchPendingCount(userId))
       .subscribe();
     return () => supabase.removeChannel(channel);
@@ -880,6 +884,99 @@ const useCommunityStore = create((set, get) => ({
 
   rejectGroupInvitation: async (inviteId) => {
     const { error } = await supabase.from('group_invitations').delete().eq('id', inviteId);
+    return error ? toError(error) : {};
+  },
+
+  // ── Prayer plan invitations ─────────────────────────────────────────────────
+  // Invite friends and/or whole groups to walk a guided plan together. A plan
+  // lives client-side (src/content/prayerPlans.js), so an invitation carries
+  // only the plan's content id + a proposed start date — never any content.
+
+  // Expand the chosen groups to their members, union with the chosen friends,
+  // drop self + duplicates, and upsert one invitation per recipient. Members of
+  // a selected group carry that group's id for context ("…and the rest of
+  // <group>"); friend-only recipients keep a null group. Re-inviting is a no-op
+  // (unique on plan_id,invited_by,invited_user_id).
+  invitePlan: async ({ planId, startDate, friendIds = [], groupIds = [], invitedBy }) => {
+    const targets = new Map(); // userId -> group_id context (null for friends)
+    for (const id of friendIds) if (id && id !== invitedBy) targets.set(id, null);
+    if (groupIds.length > 0) {
+      const { data: members, error } = await supabase
+        .from('group_members').select('user_id, group_id').in('group_id', groupIds);
+      if (error) return toError(error);
+      for (const m of members || []) {
+        if (m.user_id === invitedBy) continue;
+        if (!targets.get(m.user_id)) targets.set(m.user_id, m.group_id);
+      }
+    }
+    if (targets.size === 0) return { invited: 0 };
+    const rows = [...targets].map(([uid, gid]) => ({
+      plan_id: planId, start_date: startDate, invited_user_id: uid, invited_by: invitedBy, group_id: gid,
+    }));
+    const { error } = await supabase
+      .from('plan_invitations')
+      .upsert(rows, { onConflict: 'plan_id,invited_by,invited_user_id', ignoreDuplicates: true });
+    if (error) return toError(error);
+    return { invited: rows.length };
+  },
+
+  // User ids this user has already invited to a given plan (so the invite UI can
+  // mark them). Mirrors fetchGroupInvitees.
+  fetchPlanInvitees: async (planId, invitedBy) => {
+    const { data, error } = await supabase
+      .from('plan_invitations').select('invited_user_id').eq('plan_id', planId).eq('invited_by', invitedBy);
+    if (error) return { error: error.message };
+    return { inviteeIds: (data || []).map((r) => r.invited_user_id) };
+  },
+
+  // Incoming plan invitations for the current user, enriched with the inviter's
+  // name + the optional group's name. The plan's display title is resolved
+  // client-side from PLANS (planById), never stored server-side.
+  //
+  // Group names are resolved with a SEPARATE query (not a `groups(name)` embed):
+  // a PostgREST relationship embed on the nullable group_id FK can fail (e.g. a
+  // stale schema cache right after the migration), which would error the whole
+  // fetch and leave the invitee with no way to accept. Resolving names on the
+  // side keeps the invitation list working even if a group can't be read.
+  fetchPlanInvitations: async (userId) => {
+    const { data, error } = await supabase
+      .from('plan_invitations')
+      .select('*')
+      .eq('invited_user_id', userId)
+      .order('created_at', { ascending: false });
+    if (error) return { error: error.message };
+    const rows = data || [];
+    const nameOf = await resolveNames(rows.map((i) => i.invited_by));
+    const groupIds = [...new Set(rows.map((i) => i.group_id).filter(Boolean))];
+    let groupNameById = {};
+    if (groupIds.length > 0) {
+      const { data: gs } = await supabase.from('groups').select('id, name').in('id', groupIds);
+      groupNameById = Object.fromEntries((gs || []).map((g) => [g.id, g.name]));
+    }
+    const invitations = rows.map((i) => {
+      const inviter = nameOf(i.invited_by);
+      return {
+        ...i,
+        // Null (not "?") when unresolved so the UI can show meaningful fallback copy.
+        inviterName: inviter && inviter !== '?' ? inviter : null,
+        groupName: i.group_id ? (groupNameById[i.group_id] || null) : null,
+      };
+    });
+    return { invitations };
+  },
+
+  // Accept: hand the plan id + start date back to the caller (which starts the
+  // guided plan via prayerStore) then delete the invitation.
+  acceptPlanInvitation: async (inviteId) => {
+    const { data: invite, error } = await supabase
+      .from('plan_invitations').select('plan_id, start_date').eq('id', inviteId).single();
+    if (error) return toError(error);
+    await supabase.from('plan_invitations').delete().eq('id', inviteId);
+    return { planId: invite.plan_id, startDate: invite.start_date };
+  },
+
+  declinePlanInvitation: async (inviteId) => {
+    const { error } = await supabase.from('plan_invitations').delete().eq('id', inviteId);
     return error ? toError(error) : {};
   },
 

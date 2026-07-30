@@ -1,4 +1,4 @@
-import { UserPlus, Mail, MessageSquare, CheckCircle2, HandHeart, Plus, Sparkles, Users, Shield, Bell } from 'lucide-react';
+import { UserPlus, Mail, MessageSquare, CheckCircle2, HandHeart, Plus, Sparkles, Users, Shield, Bell, CalendarPlus } from 'lucide-react';
 import { t } from '../i18n';
 import { timeAgo } from '../utils/date';
 
@@ -15,6 +15,7 @@ const TYPE_META = {
   testimony:         { icon: Sparkles,      labelKey: 'notifTestimony' },
   membership_change: { icon: Users,         labelKey: 'notifMembership' },
   role_change:       { icon: Shield,        labelKey: 'notifRoleChange' },
+  plan_invitation:   { icon: CalendarPlus,  labelKey: 'notifPlanInvitation' },
 };
 
 function notificationLabel(notification, lang) {

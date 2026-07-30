@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
-import { Plus, Trash2, X, Check, Download, Tag } from 'lucide-react';
+import { Plus, Trash2, X, Check, Download, Tag, HeartHandshake, Loader2 } from 'lucide-react';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { monthDots, prayersForDay, sortEntries, runningPlanIds } from '../lib/planner';
@@ -12,6 +12,7 @@ import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { buildICS } from '../utils/ics';
 import { PLANS } from '../content/prayerPlans';
+import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
 import { CATEGORY_COLORS, categoryTint } from '../lib/categoryColor';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import EmptyState from '../components/shared/EmptyState';
@@ -19,6 +20,7 @@ import MonthCalendar from '../components/MonthCalendar';
 import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
 import PlanDetailModal from '../components/PlanDetailModal';
+import PlanInviteModal from '../components/PlanInviteModal';
 import { PageHeader } from '../components/shared/Primitives';
 
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
@@ -58,13 +60,31 @@ export default function PlanTab() {
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: CATEGORY_COLORS[0] });
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [detailPlan, setDetailPlan] = useState(null); // plan whose explanation modal is open
+  const [inviteTarget, setInviteTarget] = useState(null); // { plan, startDate } → invite modal
+  const [planInvitations, setPlanInvitations] = useState([]); // incoming "pray together" invites
+  const [busyInvite, setBusyInvite] = useState(null);
 
   const { user } = useAuthStore();
   const myCommitments = useCommunityStore((s) => s.myCommitments);
   const fetchMyCommitments = useCommunityStore((s) => s.fetchMyCommitments);
+  const { fetchPlanInvitations, acceptPlanInvitation, declinePlanInvitation, fetchPendingCount } = useCommunityStore(
+    useShallow((s) => ({
+      fetchPlanInvitations: s.fetchPlanInvitations,
+      acceptPlanInvitation: s.acceptPlanInvitation,
+      declinePlanInvitation: s.declinePlanInvitation,
+      fetchPendingCount: s.fetchPendingCount,
+    }))
+  );
   useEffect(() => {
     if (user?.id) fetchMyCommitments(user.id, addDays(todayKey(), -92));
   }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const loadInvitations = useCallback(async () => {
+    if (!user?.id) return;
+    const { invitations } = await fetchPlanInvitations(user.id);
+    setPlanInvitations(invitations || []);
+  }, [user?.id, fetchPlanInvitations]);
+  useEffect(() => { loadInvitations(); }, [loadInvitations]);
 
   const dots = monthDots(prayers, categories, monthDayKeys(monthDate));
   // Group prayer-chain claims appear on the personal calendar too.
@@ -94,18 +114,33 @@ export default function PlanTab() {
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
   const startPlan = async (plan, startDate) => {
-    const start = startDate || todayKey();
-    await addPrayer({
-      title: t(lang, plan.titleKey),
-      description: t(lang, plan.subKey),
-      categoryIds: [],
-      schedule: {
-        type: 'recurring', freq: 'daily', startDate: start,
-        end: { kind: 'count', count: plan.count },
-        plan: { id: plan.id, startDate: start },
-      },
-    });
+    await addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
     toast.success(t(lang, 'planStarted'));
+  };
+
+  // Accept an invitation to pray a plan together: start the SAME guided plan on
+  // your own calendar (unless you're already running it) and clear the invite.
+  const acceptInvitation = async (inv) => {
+    setBusyInvite(inv.id);
+    const res = await acceptPlanInvitation(inv.id);
+    if (res?.error) { setBusyInvite(null); toast.error(t(lang, 'errorGeneric')); return; }
+    const plan = planById(res.planId);
+    if (plan && !activePlanIds.has(plan.id)) {
+      await addPrayer(buildGuidedPlanPrayer(plan, res.startDate, lang));
+    }
+    setBusyInvite(null);
+    setPlanInvitations((prev) => prev.filter((x) => x.id !== inv.id));
+    if (user?.id) fetchPendingCount(user.id);
+    toast.success(t(lang, 'planStarted'));
+  };
+
+  const declineInvitation = async (inv) => {
+    setBusyInvite(inv.id);
+    const res = await declinePlanInvitation(inv.id);
+    setBusyInvite(null);
+    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setPlanInvitations((prev) => prev.filter((x) => x.id !== inv.id));
+    if (user?.id) fetchPendingCount(user.id);
   };
 
   const resetForm = () => setForm({ name: '', emoji: '🙏', color: CATEGORY_COLORS[0] });
@@ -136,7 +171,18 @@ export default function PlanTab() {
           lang={lang}
           running={activePlanIds.has(detailPlan.id)}
           onStart={startPlan}
+          onInvite={user?.id ? (plan, startDate) => { setDetailPlan(null); setInviteTarget({ plan, startDate }); } : undefined}
           onClose={() => setDetailPlan(null)}
+        />
+      )}
+
+      {inviteTarget && (
+        <PlanInviteModal
+          plan={inviteTarget.plan}
+          startDate={inviteTarget.startDate}
+          lang={lang}
+          userId={user.id}
+          onClose={() => setInviteTarget(null)}
         />
       )}
 
@@ -161,6 +207,49 @@ export default function PlanTab() {
       </div>
 
       <div className="phase-content max-w-4xl space-y-4">
+        {/* Invited to pray together — incoming plan invitations. Accepting starts
+            the same guided plan on your calendar; declining dismisses it. */}
+        {planInvitations.length > 0 && (
+          <div className="phase-card p-4 space-y-3">
+            <h3 className="font-semibold flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
+              <HeartHandshake size={16} style={{ color: 'var(--accent)' }} /> {t(lang, 'planInvitationsHeading')}
+            </h3>
+            {planInvitations.map((inv) => {
+              const plan = planById(inv.plan_id);
+              return (
+                <div key={inv.id} className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>
+                      {plan ? t(lang, plan.titleKey) : t(lang, 'planInviteTitle')}
+                    </p>
+                    <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                      {inv.inviterName ? t(lang, 'planInvitationFrom', { name: inv.inviterName }) : t(lang, 'planInviteSub')}
+                      {inv.groupName ? ` · ${inv.groupName}` : ''}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 shrink-0">
+                    <button
+                      onClick={() => acceptInvitation(inv)}
+                      disabled={busyInvite === inv.id}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40"
+                      style={{ background: 'var(--accent)' }}
+                    >
+                      {busyInvite === inv.id ? <Loader2 size={12} className="animate-spin" /> : t(lang, 'planInviteAccept')}
+                    </button>
+                    <button
+                      onClick={() => declineInvitation(inv)}
+                      disabled={busyInvite === inv.id}
+                      className="px-3 py-1.5 rounded-lg text-xs disabled:opacity-40"
+                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    >
+                      {t(lang, 'reject')}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
         <MonthCalendar
           monthDate={monthDate}
           dots={dots}

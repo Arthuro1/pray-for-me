@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, BookOpen, Check } from 'lucide-react';
+import { X, BookOpen, Check, HeartHandshake } from 'lucide-react';
 import { t } from '../i18n';
 import { pick, localizeRef } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
@@ -31,7 +31,7 @@ function VersePill({ reference, lang }) {
   );
 }
 
-export default function PlanDetailModal({ plan, lang, running, onStart, onClose }) {
+export default function PlanDetailModal({ plan, lang, running, onStart, onInvite, onClose }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const [startDate, setStartDate] = useState(todayKey());
@@ -122,6 +122,17 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onClose 
               ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {t(lang, 'planRunning')}</span>
               : `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`}
           </button>
+          {/* Invite others to walk the plan with you — available whether or not
+              you've started it yourself. */}
+          {onInvite && (
+            <button
+              onClick={() => onInvite(plan, startDate || todayKey())}
+              className="w-full text-sm font-semibold px-3 py-2.5 rounded-xl inline-flex items-center justify-center gap-2"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <HeartHandshake size={15} /> {t(lang, 'planInviteCta')}
+            </button>
+          )}
         </div>
       </div>
     </div>

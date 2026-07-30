@@ -19,6 +19,12 @@ describe('notificationRoute', () => {
     expect(notificationRoute({ type: 'group_invitation', metadata: { group_id: GROUP } })).toBe('/community');
   });
 
+  it('routes a plan invitation to the Plan tab', () => {
+    expect(notificationRoute({ type: 'plan_invitation', metadata: { plan_id: 'fast3' } })).toBe('/plan');
+    // A group-originated plan invitation still routes to the Plan tab, not the group.
+    expect(notificationRoute({ type: 'plan_invitation', metadata: { plan_id: 'fast3', group_id: GROUP } })).toBe('/plan');
+  });
+
   it('falls back safely for missing/forged ids', () => {
     expect(notificationRoute({ type: 'community_update', metadata: { group_id: 'x', community_prayer_id: 'y' } })).toBe('/community');
     expect(notificationRoute({ type: 'answered', metadata: {} })).toBe('/community');
@@ -43,6 +49,8 @@ describe('client / server route parity', () => {
     ['role_change', { group_id: GROUP }],
     ['friend_request', {}],
     ['group_invitation', { group_id: GROUP }],
+    ['plan_invitation', { plan_id: 'fast3' }],
+    ['plan_invitation', { plan_id: 'fast3', group_id: GROUP }],
     ['community_update', { group_id: 'bad', community_prayer_id: 'bad' }],
   ];
   it('notificationRoute(client) === eventUrl(server) for every case', () => {
