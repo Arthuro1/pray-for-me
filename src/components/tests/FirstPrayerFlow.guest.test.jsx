@@ -95,6 +95,8 @@ async function prayAsGuest() {
   fireEvent.click(screen.getByText(t(lang, 'firstPrayerPrayCta')));
   // The session opens on the just-typed prayer.
   expect(await screen.findByText('La paix dans notre foyer')).toBeTruthy();
+  expect(document.querySelector('.constellation-session')).toBeTruthy();
+  expect(document.querySelector('.constellation-session__title')).toBeTruthy();
   // Pray through it (single request → Amen), then close the done screen.
   fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
   await waitFor(() => expect(screen.getByText(t(lang, 'continueBtn'))).toBeTruthy());
@@ -104,8 +106,11 @@ async function prayAsGuest() {
 
 describe('GuestPrayerFlow', () => {
   it('asks the one question with an honest device-local reassurance', () => {
-    render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    const { container } = render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
     expect(screen.getByRole('dialog', { name: t(lang, 'firstPrayerQuestion') })).toBeTruthy();
+    expect(container.querySelector('.constellation-onboarding')).toBeTruthy();
+    expect(container.querySelector('.constellation-onboarding__sky-image--light')).toBeTruthy();
+    expect(container.querySelector('.constellation-onboarding__sky-image--dark')).toBeTruthy();
     expect(screen.getByText(t(lang, 'firstPrayerQuestion'))).toBeTruthy();
     // Device-local, NOT a claim that account E2EE already happened.
     expect(screen.getByText(t(lang, 'firstPrayerDeviceNote'))).toBeTruthy();
@@ -123,6 +128,7 @@ describe('GuestPrayerFlow', () => {
     expect(guestAudio.start).not.toHaveBeenCalled();
 
     // The decision screen offers Save / Finish without saving.
+    expect(document.querySelector('.constellation-onboarding__decision-icon')).toBeTruthy();
     expect(screen.getByText(t(lang, 'firstPrayerSaveBtn'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'firstPrayerFinishBtn'))).toBeTruthy();
 
