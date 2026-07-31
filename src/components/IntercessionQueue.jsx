@@ -47,9 +47,10 @@ export default function IntercessionQueue({ lang }) {
 
   // Claimed prayer-chain days feed the due queue. Best-effort: offline just
   // means claims can't ADD to today's queue; scheduled prayers still appear.
+  // fetchMyCommitments is a stable Zustand action.
   useEffect(() => {
     if (userId) fetchMyCommitments(userId, dayKey);
-  }, [userId, dayKey]);
+  }, [userId, dayKey, fetchMyCommitments]);
 
   const carried = intercessionQueue(prayers);
   if (carried.length === 0) return null;

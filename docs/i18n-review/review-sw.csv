@@ -1,0 +1,950 @@
+key,en,fr,sw
+todayRemainingLabel,Today · {n} remaining,Aujourd'hui · encore {n},Leo · bado {n}
+todayCompleteTitle,Today's prayer is complete.,La prière d'aujourd'hui est terminée.,Maombi ya leo yamekamilika.
+prayAgain,Pray again,Prier à nouveau,Omba tena
+prayedTodayLabel,Prayed today,Priées aujourd’hui,Yaliyoombwa leo
+rhythmPlanHint,"Stays in your Journal, with no set day.","Reste dans ton Journal, sans jour fixe.","Inabaki kwenye Jarida lako, bila siku maalum."
+answeredThisWeek,{n} answered this week,{n} exaucées cette semaine,{n} zimejibiwa wiki hii
+prayWithOthers,Pray with others,Priez avec d'autres,Omba na wengine
+communityEmptyDesc,Join a prayer group using an invitation link or code.,Rejoignez un groupe de prière avec un lien ou un code d'invitation.,Jiunge na kikundi cha maombi kwa kiungo au msimbo wa mwaliko.
+inbox,Inbox,Boîte de réception,Kikasha
+prayerReminders,Prayer reminders,Rappels de prière,Vikumbusho vya maombi
+onboardCaptureTitle,What would you like to pray about?,Pour quoi aimeriez-vous prier ?,Ungependa kuomba kwa ajili ya nini?
+onboardCapturePlaceholder,Pray for my sister's health…,Prier pour la santé de ma sœur…,Kuombea afya ya dada yangu…
+onboardPrivateNote,Private and encrypted by default.,Privé et chiffré par défaut.,Faragha na imesimbwa kwa chaguo-msingi.
+onboardSaveAndPray,Save and pray,Enregistrer et prier,Hifadhi na uombe
+onboardLater,I'll do this later,Je le ferai plus tard,Nitafanya baadaye
+firstPrayerQuestion,Who or what is on your heart?,Qui ou quoi avez-vous sur le cœur ?,Ni nani au nini kilicho moyoni mwako?
+firstPrayerDeviceNote,This stays on this device until you choose to save it.,Cela reste sur cet appareil jusqu'à ce que vous choisissiez de l'enregistrer.,Hii inabaki kwenye kifaa hiki hadi utakapochagua kuihifadhi.
+firstPrayerPrayCta,Pray now,Prier maintenant,Omba sasa
+firstPrayerSaveTitle,Would you like to keep this prayer in your private journal?,Souhaitez-vous garder cette prière dans votre journal privé ?,Ungependa kuweka ombi hili katika shajara yako ya faragha?
+firstPrayerSaveBtn,Save in my private journal,Enregistrer dans mon journal privé,Hifadhi katika shajara yangu ya faragha
+firstPrayerFinishBtn,Finish without saving,Terminer sans enregistrer,Maliza bila kuhifadhi
+authSavePrayerTitle,Save your prayer privately,Enregistrez votre prière en privé,Hifadhi ombi lako kwa faragha
+authSavePrayerBody,Create a free account to keep this prayer in your journal — only you can ever read it.,Créez un compte gratuit pour garder cette prière dans votre journal — vous seul pourrez la lire.,Fungua akaunti ya bure ili kuweka ombi hili katika shajara yako — ni wewe pekee unayeweza kulisoma.
+authSavePrayerCta,Continue to save privately,Continuer pour enregistrer en privé,Endelea ili kuhifadhi kwa faragha
+prayerFormat,Prayer format,Format de prière,Muundo wa maombi
+prayerMusic,Prayer atmosphere,Ambiance de prière,Mazingira ya maombi
+prayerMusicSub,Choose a gentle background for prayer. Silence is always welcome.,Choisissez un fond doux pour la prière. Le silence est toujours le bienvenu.,Chagua mandhari nyororo kwa maombi. Ukimya unakaribishwa daima.
+audioSilence,Silence,Silence,Ukimya
+audioSoftPiano,Soft piano,Piano doux,Kinanda nyororo
+audioAmbientPad,Ambient worship pad,Nappe de louange,Sauti ya kuabudu
+audioNature,Rain / nature,Pluie / nature,Mvua / maumbile
+audioSoftPad,Soft pad,Nappe douce,Sauti nyororo
+prayerFieldLabel,Who or what would you like to pray for?,Pour qui ou pour quoi voulez-vous prier ?,Ungependa kumwombea nani au nini?
+addNote,Add a note,Ajouter une note,Ongeza dokezo
+organizeLabel,Organize,Organiser,Panga
+savePrayer,Save prayer,Enregistrer la prière,Hifadhi ombi
+rhythmLabel,How often should this return?,À quelle fréquence revenir ?,Lirudi mara ngapi?
+rhythmFlexible,Weekly plan,Plan hebdomadaire,Mpango wa juma
+rhythmOccasionally,Occasionally,De temps en temps,Mara chache
+rhythmCustom,Custom,Personnalisé,Maalum
+doneBtn,Done,Terminé,Imekamilika
+moreTab,More,Plus,Zaidi
+primaryNav,Primary navigation,Navigation principale,Urambazaji mkuu
+navPending,{count} pending,{count} en attente,{count} zinazosubiri
+joinGroupCta,Join a group,Rejoindre un groupe,Jiunge na kikundi
+joinGroupHint,Paste an invite link or code shared by a group member.,Collez un lien ou un code d'invitation partagé par un membre du groupe.,Bandika kiungo au msimbo wa mwaliko uliopewa na mwanakikundi.
+joinGroupPlaceholder,Invite link or code,Lien ou code d'invitation,Kiungo au msimbo wa mwaliko
+reminderNudge,Would a gentle reminder tomorrow help?,Un doux rappel demain vous aiderait-il ?,"Je, kikumbusho cha upole kesho kitasaidia?"
+activationRhythmTitle,Choose how this prayer returns,Choisissez quand retrouver cette prière,Chagua ombi hili lirudi lini
+activationRhythmBody,Every prayer can have its own rhythm. Review when this one should return so it fits your life.,Chaque prière peut avoir son propre rythme. Choisissez quand retrouver celle-ci pour l'adapter à votre quotidien.,Kila ombi linaweza kuwa na mpangilio wake. Kagua lirudi lini ili liendane na maisha yako.
+activationRhythmCta,Review rhythm,Voir le rythme,Kagua mpangilio
+activationReminderTitle,Would a gentle reminder help?,Un doux rappel vous aiderait-il ?,"Je, kikumbusho cha upole kitasaidia?"
+activationReminderBody,Choose a time and Pray4Me can bring today's prayers back to you.,Choisissez une heure et Pray4Me pourra vous ramener aux prières du jour.,Chagua muda na Pray4Me inaweza kukurudishia maombi ya leo.
+activationOrganizeTitle,Make a growing journal easier to revisit,Retrouvez plus facilement un journal qui grandit,Rahisisha kurejea shajara inayokua
+activationOrganizeBody,Add a person or category to one prayer. More organization appears only when it becomes useful.,Ajoutez une personne ou une catégorie à une prière. L'organisation n'apparaît que lorsqu'elle devient utile.,Ongeza mtu au kategoria kwenye ombi moja. Mpangilio zaidi huonekana pale tu unapokuwa na manufaa.
+activationOrganizeCta,Organize a prayer,Organiser une prière,Panga ombi
+pwaInstallTitle,Keep Pray4Me close,Gardez Pray4Me à portée de main,Weka Pray4Me karibu
+pwaInstallBody,Open today's prayers in one tap and keep the app available when your connection is unsteady.,Ouvrez les prières du jour en un geste et gardez l’application disponible même avec une connexion instable.,Fungua maombi ya leo kwa mguso mmoja na utumie programu hata muunganisho unapokuwa dhaifu.
+pwaInstallCta,Install Pray4Me,Installer Pray4Me,Sakinisha Pray4Me
+pwaInstallLater,Not now,Pas maintenant,Si sasa
+pwaIosTitle,Add Pray4Me to your Home Screen,Ajouter Pray4Me à l’écran d’accueil,Ongeza Pray4Me kwenye Skrini ya Mwanzo
+pwaIosBody,"In your browser, tap Share, then choose Add to Home Screen.","Dans votre navigateur, touchez Partager, puis Ajouter à l’écran d’accueil.","Kwenye kivinjari, gusa Shiriki, kisha uchague Ongeza kwenye Skrini ya Mwanzo."
+pwaIosAddAction,Add to Home Screen,Ajouter à l’écran d’accueil,Ongeza kwenye Skrini ya Mwanzo
+authLogIn,Log in,Se connecter,Ingia
+authSignUp,Sign up,S'inscrire,Jisajili
+authCreateAccount,Create account,Créer un compte,Fungua akaunti
+authContinueGoogle,Continue with Google,Continuer avec Google,Endelea na Google
+authOr,or,ou,au
+authNamePlaceholder,Display name (optional),Nom d'affichage (facultatif),Jina la kuonyesha (hiari)
+authEmail,Email,Email,Barua pepe
+authPassword,Password,Mot de passe,Nenosiri
+authForgotPassword,Forgot password?,Mot de passe oublié ?,Umesahau nenosiri?
+authResend,Resend confirmation email,Renvoyer l'email de confirmation,Tuma tena barua pepe ya uthibitisho
+authBackHome,Back to home,Retour à l'accueil,Rudi mwanzo
+authBackToLogin,Back to log in,Retour à la connexion,Rudi kuingia
+authResetTitle,Reset your password,Réinitialiser le mot de passe,Weka upya nenosiri lako
+authResetIntro,Enter your email and we'll send you a link to reset your password.,Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.,Weka barua pepe yako nasi tutakutumia kiungo cha kuweka upya nenosiri lako.
+authResetSend,Send reset link,Envoyer le lien,Tuma kiungo
+authConfirmSent,Check your email to confirm your account.,Vérifiez votre email pour confirmer votre compte.,Angalia barua pepe yako ili kuthibitisha akaunti yako.
+authResendDone,Confirmation email sent — check your inbox.,Email de confirmation renvoyé — vérifiez votre boîte de réception.,Barua pepe ya uthibitisho imetumwa — angalia kisanduku chako.
+authResetSent,"If an account exists for that email, we've sent a reset link.","Si un compte existe pour cet email, nous avons envoyé un lien de réinitialisation.","Ikiwa akaunti ipo kwa barua pepe hiyo, tumetuma kiungo cha kuweka upya."
+authPrivacyNote,Your prayers are private and secure 🔒,Vos prières sont privées et sécurisées 🔒,Maombi yako ni ya faragha na salama 🔒
+authTagline,"""Pray without ceasing"" — 1 Thess. 5:17",« Priez sans cesse » — 1 Thess. 5:17,"""Ombeni bila kukoma"" — 1 Wathes. 5:17"
+authErrInvalid,"Email or password is incorrect. Try again, or reset your password.",Email ou mot de passe incorrect. Réessayez ou réinitialisez votre mot de passe.,"Barua pepe au nenosiri si sahihi. Jaribu tena, au weka upya nenosiri lako."
+authErrUnconfirmed,Please confirm your email first — you can resend the confirmation email below.,Veuillez d'abord confirmer votre email — vous pouvez renvoyer l'email de confirmation ci-dessous.,Tafadhali thibitisha barua pepe yako kwanza — unaweza kutuma tena barua pepe ya uthibitisho hapa chini.
+authErrInUse,An account already exists with this email. Try logging in instead.,Un compte existe déjà avec cet email. Essayez plutôt de vous connecter.,Akaunti tayari ipo kwa barua pepe hii. Jaribu kuingia badala yake.
+authErrWeakPass,Choose a password with at least 6 characters.,Choisissez un mot de passe d'au moins 6 caractères.,Chagua nenosiri lenye herufi angalau 6.
+authErrEmail,That email address doesn't look right.,Cette adresse email ne semble pas valide.,Anwani hii ya barua pepe haionekani sahihi.
+authErrRate,Too many attempts. Please wait a moment and try again.,Trop de tentatives. Patientez un instant avant de réessayer.,Majaribio mengi mno. Tafadhali subiri kidogo kisha ujaribu tena.
+savedOnToday,Your prayer is now on Today.,Votre prière est maintenant dans Aujourd'hui.,"Ombi lako sasa liko katika ""Leo""."
+setReminderCta,Set a reminder,Définir un rappel,Weka kikumbusho
+personNamePlaceholder,First and last name,Prénom et nom,Jina kamili
+providerEmail,Email / Password,Email / Mot de passe,Barua pepe / Nenosiri
+markAllRead,Mark all as read,Tout marquer comme lu,Weka zote kuwa zimesomwa
+loadMore,Load more,Voir plus,Pakia zaidi
+seeAllNotifications,See all notifications,Voir toutes les notifications,Ona arifa zote
+notifEmpty,No notifications yet,Aucune notification pour l'instant,Bado hakuna arifa
+notifEmptySub,Updates from your groups and friends will appear here.,Les nouveautés de vos groupes et amis apparaîtront ici.,Habari kutoka vikundi na marafiki zako zitaonekana hapa.
+notifError,Couldn't load notifications.,Impossible de charger les notifications.,Imeshindwa kupakia arifa.
+notifUnreadLabel,Inbox ({n} unread),Boîte de réception ({n} non lues),Kikasha ({n} hazijasomwa)
+notifFriendRequest,You have a new friend request,Vous avez une nouvelle demande d'ami,Una ombi jipya la urafiki
+notifGroupInvitation,You've been invited to a prayer group,Vous avez été invité à un groupe de prière,Umealikwa kwenye kikundi cha maombi
+notifCommunityUpdate,There's an update on a prayer you follow,Il y a une mise à jour sur une prière que vous suivez,Kuna sasisho kwenye ombi unalofuatilia
+notifAnswered,A prayer you follow was marked answered,Une prière que vous suivez a été marquée exaucée,Ombi unalofuatilia limewekwa alama kuwa limejibiwa
+notifReaction,Several people are praying with you,Plusieurs personnes prient avec vous,Watu kadhaa wanaomba pamoja nawe
+notifGroupPrayerAdded,A new prayer was shared in your group,Une nouvelle prière a été partagée dans votre groupe,Ombi jipya limeshirikiwa katika kikundi chako
+notifTestimony,A testimony was shared in your group,Un témoignage a été partagé dans votre groupe,Ushuhuda umeshirikiwa katika kikundi chako
+notifMembership,You were added to a prayer group,Vous avez été ajouté à un groupe de prière,Umeongezwa kwenye kikundi cha maombi
+notifRoleChange,Your role in a group has changed,Votre rôle dans un groupe a changé,Jukumu lako katika kikundi limebadilika
+notifGeneric,You have a new notification,Vous avez une nouvelle notification,Una arifa mpya
+notifPrefsTitle,Community notifications,Notifications de la communauté,Arifa za jamii
+notifPrefsSub,Choose what you're notified about and how.,Choisissez ce dont vous êtes notifié et comment.,Chagua unachoarifiwa na jinsi gani.
+notifInApp,In-app notifications,Notifications dans l'app,Arifa ndani ya programu
+notifInAppSub,Show notifications in the app inbox.,Afficher les notifications dans la boîte de réception.,Onyesha arifa kwenye kikasha cha programu.
+notifPush,Push notifications,Notifications push,Arifa za push
+notifPushSub,Send notifications to this device even when the app is closed.,Envoyer des notifications à cet appareil même quand l'app est fermée.,Tuma arifa kwenye kifaa hiki hata programu ikiwa imefungwa.
+quietHours,Quiet hours,Heures silencieuses,Saa za utulivu
+quietHoursSub,Pause push during these hours. In-app notifications still arrive.,Suspendre les push pendant ces heures. Les notifications dans l'app arrivent quand même.,Sitisha push katika saa hizi. Arifa za ndani ya programu bado zinafika.
+quietFrom,From,De,Kuanzia
+quietTo,To,À,Hadi
+timezone,Time zone,Fuseau horaire,Saa za eneo
+notifByType,By notification type,Par type de notification,Kwa aina ya arifa
+modeImmediate,Immediate,Immédiat,Mara moja
+modeDigest,Digest,Résumé,Muhtasari
+modeOff,Off,Désactivé,Zima
+followPrayer,Follow,Suivre,Fuatilia
+following,Following,Suivi,Unafuatilia
+followingPrayer,You'll be notified about this prayer,Vous serez notifié pour cette prière,Utaarifiwa kuhusu ombi hili
+unfollowedPrayer,You unfollowed this prayer,Vous ne suivez plus cette prière,Umeacha kufuatilia ombi hili
+prayTogether,Pray together,Prier ensemble,Ombeni pamoja
+beFirstToPray,Be the first to pray,Soyez le premier à prier,Kuwa wa kwanza kuomba
+andNMore,and {n} more,et {n} de plus,na wengine {n}
+testNotifBody,Here are today's prayers. Take a moment to pray 🙏,Voici vos prières du jour. Prenez un moment pour prier 🙏,Hizi ni sala zako za leo. Tumia muda kuomba 🙏
+addThanks,Add a word of thanks,Ajouter un mot de reconnaissance,Ongeza neno la shukrani
+thanksSaved,Your thanks is recorded 🙏,Votre reconnaissance est enregistrée 🙏,Shukrani yako imerekodiwa 🙏
+thanksPrompt,Pause and thank God for His answer,Prenez un instant pour remercier Dieu de sa réponse,Tulia na umshukuru Mungu kwa jibu lake
+answeredThisMonth,This month,Ce mois-ci,Mwezi huu
+answeredEarlier,Earlier,Auparavant,Awali
+vaultTitle,Prayer Vault,Coffre de prière,Sanduku la Maombi
+vaultManageSub,Encrypt your private prayers with a passphrase only you know.,Chiffrez vos prières privées avec une phrase secrète que vous seul connaissez.,Simba maombi yako ya faragha kwa neno-siri unalolijua wewe pekee.
+vaultStatusLocked,Locked,Verrouillé,Imefungwa
+vaultStatusUnlocked,Unlocked,Déverrouillé,Imefunguliwa
+vaultSetup,Set up vault,Configurer le coffre,Sanidi sanduku
+vaultSetupTitle,Set up your Prayer Vault,Configurer votre coffre de prière,Sanidi Sanduku lako la Maombi
+vaultSetupIntro,"Choose a passphrase to encrypt your private prayers end-to-end. We never see it — if you forget it, only your recovery code can restore access.","Choisissez une phrase secrète pour chiffrer vos prières privées de bout en bout. Nous ne la voyons jamais — si vous l’oubliez, seul votre code de récupération peut rétablir l’accès.","Chagua neno-siri ili kusimba maombi yako ya faragha kutoka mwanzo hadi mwisho. Hatuoni kamwe — ukilisahau, ni msimbo wako wa kurejesha pekee unaoweza kurudisha ufikiaji."
+vaultPassphrase,Passphrase,Phrase secrète,Neno-siri
+vaultConfirmPassphrase,Confirm passphrase,Confirmer la phrase secrète,Thibitisha neno-siri
+vaultCreate,Create vault,Créer le coffre,Tengeneza sanduku
+vaultPassTooShort,Use at least 8 characters.,Utilisez au moins 8 caractères.,Tumia angalau herufi 8.
+vaultPassMismatch,Passphrases don't match.,Les phrases secrètes ne correspondent pas.,Maneno-siri hayalingani.
+vaultRecoveryTitle,Save your recovery code,Enregistrez votre code de récupération,Hifadhi msimbo wako wa kurejesha
+vaultRecoveryIntro,This is the only way to recover your vault if you forget your passphrase. Store it somewhere safe — it won't be shown again.,C’est le seul moyen de récupérer votre coffre si vous oubliez votre phrase secrète. Conservez-le en lieu sûr — il ne sera plus affiché.,Hii ndiyo njia pekee ya kurejesha sanduku lako ukisahau neno-siri. Lihifadhi mahali salama — hautaonyeshwa tena.
+vaultCopyCode,Copy code,Copier le code,Nakili msimbo
+vaultCodeCopied,Recovery code copied,Code de récupération copié,Msimbo wa kurejesha umenakiliwa
+vaultRecoverySaved,I've saved my recovery code,J’ai enregistré mon code de récupération,Nimehifadhi msimbo wangu wa kurejesha
+vaultUnlockTitle,Unlock your Prayer Vault,Déverrouiller votre coffre de prière,Fungua Sanduku lako la Maombi
+vaultUnlockIntro,Enter your passphrase to read and edit your private prayers.,Saisissez votre phrase secrète pour lire et modifier vos prières privées.,Weka neno-siri lako ili kusoma na kuhariri maombi yako ya faragha.
+vaultUnlock,Unlock,Déverrouiller,Fungua
+vaultWrongPass,Incorrect passphrase.,Phrase secrète incorrecte.,Neno-siri si sahihi.
+vaultForgot,Forgot your passphrase?,Phrase secrète oubliée ?,Umesahau neno-siri lako?
+vaultResetTitle,Reset with recovery code,Réinitialiser avec le code de récupération,Weka upya kwa msimbo wa kurejesha
+vaultResetIntro,Enter your recovery code and choose a new passphrase.,Saisissez votre code de récupération et choisissez une nouvelle phrase secrète.,Weka msimbo wako wa kurejesha na uchague neno-siri jipya.
+vaultRecoveryCode,Recovery code,Code de récupération,Msimbo wa kurejesha
+vaultNewPassphrase,New passphrase,Nouvelle phrase secrète,Neno-siri jipya
+vaultReset,Reset passphrase,Réinitialiser la phrase secrète,Weka upya neno-siri
+vaultWrongCode,Invalid recovery code.,Code de récupération invalide.,Msimbo wa kurejesha si sahihi.
+vaultLockNow,Lock,Verrouiller,Funga
+vaultChangePass,Change,Modifier,Badilisha
+vaultChangeTitle,Change passphrase,Modifier la phrase secrète,Badilisha neno-siri
+vaultCurrentPassphrase,Current passphrase,Phrase secrète actuelle,Neno-siri la sasa
+vaultChangeSave,Save passphrase,Enregistrer la phrase secrète,Hifadhi neno-siri
+vaultUnlockedToast,Vault unlocked,Coffre déverrouillé,Sanduku limefunguliwa
+vaultLockedToast,Vault locked,Coffre verrouillé,Sanduku limefungwa
+vaultChangedToast,Passphrase changed,Phrase secrète modifiée,Neno-siri limebadilishwa
+vaultResetDoneToast,Passphrase reset,Phrase secrète réinitialisée,Neno-siri limewekwa upya
+vaultRotateCode,Rotate recovery code,Renouveler le code de récupération,Badilisha msimbo wa kurejesha
+vaultRotateTitle,Rotate recovery code,Renouveler le code de récupération,Badilisha msimbo wa kurejesha
+vaultRotateIntro,This generates a new recovery code and invalidates the old one. Your passphrase and encrypted prayers stay unchanged.,Cela génère un nouveau code de récupération et invalide l’ancien. Votre phrase secrète et vos prières chiffrées restent inchangées.,Hii hutengeneza msimbo mpya wa kurejesha na kuubatilisha wa zamani. Neno-siri lako na maombi yaliyosimbwa hubaki bila kubadilika.
+vaultRotateGenerate,Generate new code,Générer un nouveau code,Tengeneza msimbo mpya
+vaultMigratePending,Some prayers created before the vault aren't encrypted yet ({count}).,Certaines prières créées avant le coffre ne sont pas encore chiffrées ({count}).,Baadhi ya maombi yaliyoundwa kabla ya kasha bado hayajasimbwa ({count}).
+vaultMigrateNow,Encrypt them now,Les chiffrer maintenant,Yasimbe sasa
+vaultMigrating,Encrypting…,Chiffrement…,Inasimba…
+vaultMigrateDone,Your prayers are now encrypted,Vos prières sont maintenant chiffrées,Maombi yako sasa yamesimbwa
+vaultMigratePartial,Some prayers couldn't be encrypted. Please try again.,Certaines prières n'ont pas pu être chiffrées. Veuillez réessayer.,Baadhi ya maombi hayakuweza kusimbwa. Tafadhali jaribu tena.
+vaultAllProtected,All your private prayers are encrypted.,Toutes vos prières privées sont chiffrées.,Maombi yako yote ya faragha yamesimbwa.
+today,Today,Aujourd'hui,Leo
+prayers,Prayers,Prières,Maombi
+journal,Journal,Journal,Jarida
+plan,Plan,Plan,Mpango
+settings,Settings,Paramètres,Mipangilio
+settingsSecAccount,Account & privacy,Compte et confidentialité,Akaunti na faragha
+settingsSecAppearance,Appearance & language,Apparence et langue,Muonekano na lugha
+settingsSecData,Data & advanced,Données et options avancées,Data na mipangilio ya juu
+settingsSecSupport,Support & feedback,Assistance et retours,Msaada na maoni
+remindersTitle,Reminders,Rappels,Vikumbusho
+verseOfDay,Verse of the day,Verset du jour,Neno la leo
+tapToReadVerse,Tap to read today's verse,Touchez pour lire le verset du jour,Gusa kusoma neno la leo
+vaultLockedHeading,Your Prayer Vault is locked,Votre coffre de prière est verrouillé,Kasha lako la Maombi limefungwa
+vaultLockedBody,Your private prayers are end-to-end encrypted. Enter your passphrase to unlock them on this device.,Vos prières privées sont chiffrées de bout en bout. Saisissez votre phrase secrète pour les déverrouiller sur cet appareil.,Maombi yako ya faragha yamesimbwa kutoka mwanzo hadi mwisho. Weka kaulisiri yako ili kuyafungua kwenye kifaa hiki.
+vaultLockedReassure,Not even we can read them — only your passphrase opens the vault. Forgot it? Recover with your code below.,Même nous ne pouvons pas les lire — seule votre phrase secrète ouvre le coffre. Oubliée ? Récupérez-le avec votre code ci-dessous.,Hata sisi hatuwezi kuyasoma — ni kaulisiri yako pekee inayofungua kasha. Umeisahau? Irejeshe kwa msimbo wako wa kurejesha hapa chini.
+vaultLockedSignedInAs,Signed in as {email},Connecté en tant que {email},Umeingia kama {email}
+contentLocked,Unavailable on this device,Indisponible sur cet appareil,Haipatikani kwenye kifaa hiki
+contentLockedHint,"This prayer is end-to-end encrypted and can't be opened with this device's key. Open it where you first created it, or set up recovery to read it here.","Cette prière est chiffrée de bout en bout et ne peut pas être ouverte avec la clé de cet appareil. Ouvrez-la là où vous l'avez créée, ou configurez la récupération pour la lire ici.","Ombi hili limesimbwa mwanzo-hadi-mwisho na haliwezi kufunguliwa kwa ufunguo wa kifaa hiki. Lifungue pale ulipoliunda, au weka urejeshaji ili kulisoma hapa."
+keyMissingHeading,We can't unlock your prayers here,Impossible de déverrouiller vos prières ici,Hatuwezi kufungua maombi yako hapa
+keyMissingBody,"Your prayers are end-to-end encrypted with a key that isn't on this device, and no recovery code was set up. If you still have the device or browser where you created them, open Pray4Me there and set up recovery to bring them here.","Vos prières sont chiffrées de bout en bout avec une clé qui n'est pas sur cet appareil, et aucun code de récupération n'a été configuré. Si vous avez encore l'appareil ou le navigateur sur lequel vous les avez créées, ouvrez-y Pray4Me et configurez la récupération pour les retrouver ici.","Maombi yako yamesimbwa mwanzo-hadi-mwisho kwa ufunguo ambao haupo kwenye kifaa hiki, na hakuna nambari ya urejeshaji iliyowekwa. Ikiwa bado una kifaa au kivinjari ulichotumia kuyaunda, fungua Pray4Me hapo na uweke urejeshaji ili kuyaleta hapa."
+keyMissingReassure,Not even we can read your prayers — that's why only your device's key or your recovery code can open them.,Même nous ne pouvons pas lire vos prières — c'est pourquoi seule la clé de votre appareil ou votre code de récupération peut les ouvrir.,Hata sisi hatuwezi kusoma maombi yako — ndiyo maana ni ufunguo wa kifaa chako au nambari yako ya urejeshaji tu ndiyo inayoweza kuyafungua.
+keyMissingRetry,I'll use my original device,J'utiliserai mon appareil d'origine,Nitatumia kifaa changu cha awali
+keyMissingStartFresh,Start fresh on this device,Repartir de zéro sur cet appareil,Anza upya kwenye kifaa hiki
+keyMissingStartFreshTitle,Start fresh on this device?,Repartir de zéro sur cet appareil ?,Anza upya kwenye kifaa hiki?
+keyMissingStartFreshWarn,Your previous encrypted prayers will stay locked and can't be recovered. New prayers will be encrypted with a new key on this device.,Vos anciennes prières chiffrées resteront verrouillées et ne pourront pas être récupérées. Les nouvelles prières seront chiffrées avec une nouvelle clé sur cet appareil.,Maombi yako ya awali yaliyosimbwa yatabaki yamefungwa na hayawezi kurejeshwa. Maombi mapya yatasimbwa kwa ufunguo mpya kwenye kifaa hiki.
+keyMissingStartFreshConfirm,Start fresh,Repartir de zéro,Anza upya
+backupKeyTitle,Back up your encryption key,Sauvegardez votre clé de chiffrement,Hifadhi nakala ya ufunguo wako wa usimbaji
+backupKeyBody,Your prayers are encrypted with a key kept only on this device. Set up recovery so you don't lose access if you switch browsers or clear your data.,Vos prières sont chiffrées avec une clé conservée uniquement sur cet appareil. Configurez la récupération pour ne pas perdre l'accès si vous changez de navigateur ou effacez vos données.,Maombi yako yamesimbwa kwa ufunguo uliohifadhiwa kwenye kifaa hiki pekee. Weka urejeshaji ili usipoteze ufikiaji ukibadilisha kivinjari au ukifuta data yako.
+backupKeyCta,Set up recovery,Configurer la récupération,Weka urejeshaji
+backupKeyDismiss,Not now,Plus tard,Sio sasa
+backupKeyWarn,"Without a backup, no one — not even we — can recover your prayers.","Sans sauvegarde, personne — pas même nous — ne peut récupérer tes prières.","Bila hakuna nakala rudufu, hakuna yeyote — hata sisi — anayeweza kurejesha maombi yako."
+backupKeyDismissForever,Don't show again,Ne plus afficher,Usionyeshe tena
+activePrayers,Active,Actives,Yanayoendelea
+answeredPrayers,Answered,Exaucées,Yaliyojibiwa
+todaysPrayers,Today's prayers,Prières d'aujourd'hui,Maombi ya leo
+subjects,subjects,sujets,mambo
+noPrayersToday,No prayers scheduled for today,Aucune prière planifiée pour aujourd'hui,Hakuna maombi yaliyopangwa leo
+noPrayersSub,Add prayers or set up your weekly plan,Ajoutez des prières ou configurez votre plan,Ongeza maombi au weka mpango wako wa wiki
+greetingMorning,Good morning,Bonjour,Habari za asubuhi
+greetingAfternoon,Good afternoon,Bon après-midi,Habari za mchana
+greetingEvening,Good evening,Bonsoir,Habari za jioni
+search,Search...,Rechercher...,Tafuta...
+all,All,Toutes,Yote
+active,Active,Actives,Yanayoendelea
+answered,Answered,Exaucées,Yaliyojibiwa
+allCategories,All categories,Toutes catégories,Makundi yote
+noPrayersFound,No prayers found,Aucune prière trouvée,Hakuna maombi yaliyopatikana
+noPrayersFoundSub,Add your first prayer with the + button,Ajoutez votre première prière avec le bouton +,Ongeza ombi lako la kwanza kwa kitufe cha +
+prayer,prayer,prière,ombi
+prayers2,prayers,prières,maombi
+active2,Active,Actif,Inaendelea
+answered2,Answered ✓,Exaucé ✓,Ilijibiwa ✓
+noUpdate,No updates yet,Aucune évolution,Hakuna mabadiliko
+newUpdate,New update...,Nouvelle évolution...,Mabadiliko mapya...
+evolutions,Updates,Évolutions,Mabadiliko
+aiSubjects,Prayer Points,Points de Prière,Pointi za Maombi
+aiSuggest,Receive suggestions...,Recevoir des suggestions...,Pokea mapendekezo...
+aiPlaceholder,Tap to receive suggestions...,Appuyez pour recevoir des suggestions...,Gonga kupata mapendekezo...
+aiConsentTitle,AI Feature,Fonctionnalité IA,Kipengele cha AI
+aiConsentNoticePrayer,What we send: your prayer title and last update. Nothing else.,Ce que nous envoyons : le titre et la dernière mise à jour de votre prière. Rien d'autre.,Tunachotuma: kichwa cha ombi lako na sasisho la mwisho. Kitu kingine chochote.
+aiConsentBodyPrayer,"To generate prayer points and verse suggestions, we send your prayer title and last update to Claude AI (Anthropic). This data is not stored by Anthropic beyond the API call.","Pour générer des points de prière et suggestions de versets, nous envoyons le titre et la dernière mise à jour de votre prière à Claude AI (Anthropic). Ces données ne sont pas stockées par Anthropic au-delà de l'appel API.","Ili kuzalisha pointi za maombi na mapendekezo ya mistari, tunatuma kichwa na sasisho la mwisho la ombi lako kwa Claude AI (Anthropic). Data hii haihifadhiwi zaidi ya simu ya API."
+aiConsentNoticeHome,"What we send: your prayer category names for today (e.g. Family, Health). Nothing else.","Ce que nous envoyons : les noms de vos catégories de prière du jour (ex. Famille, Santé). Rien d'autre.","Tunachotuma: majina ya makundi yako ya maombi ya leo (mfano: Familia, Afya). Kitu kingine chochote."
+aiConsentBodyHome,"To suggest prayers for today, we send your day's category names to Claude AI (Anthropic). No personal prayer content is shared.","Pour suggérer des prières pour aujourd'hui, nous envoyons vos catégories du jour à Claude AI (Anthropic). Aucune prière personnelle n'est partagée.","Ili kupendekeza maombi ya leo, tunatuma makundi yako ya siku kwa Claude AI (Anthropic). Maudhui ya kibinafsi ya maombi hayashirikiwi."
+aiConsentAccept,I agree,J'accepte,Nakubali
+aiConsentDecline,No thanks,Non merci,"Hapana, asante"
+aiConsentFooter,This only applies to AI features. Your prayers remain private.,Ce choix ne s'applique qu'aux fonctionnalités IA. Vos prières restent privées.,Hii inatumika kwa vipengele vya AI peke yake. Maombi yako yanabaki ya siri.
+aiAboutTitle,AI assistance,Assistance IA,Usaidizi wa AI
+aiPostureFull,"The AI here is a study companion, not a pastor or prophet. It points you to Scripture but never speaks for God — always read the passage in your own Bible and weigh it in prayer.","L'IA ici est un compagnon d'étude, non un pasteur ni un prophète. Elle vous renvoie à l'Écriture mais ne parle jamais au nom de Dieu — lisez toujours le passage dans votre propre Bible et pesez-le dans la prière.","AI hapa ni mwenzi wa kujifunza, si mchungaji wala nabii. Inakuelekeza kwenye Maandiko lakini haisemi kamwe kwa niaba ya Mungu — soma fungu daima katika Biblia yako mwenyewe na ulipime katika maombi."
+aiRevoke,Turn off AI suggestions,Désactiver les suggestions IA,Zima mapendekezo ya AI
+aiRevoked,AI suggestions turned off.,Suggestions IA désactivées.,Mapendekezo ya AI yamezimwa.
+aiCurrentlyOff,AI suggestions are off. You'll be asked before anything is sent.,Les suggestions IA sont désactivées. On vous demandera avant tout envoi.,Mapendekezo ya AI yamezimwa. Utaulizwa kabla ya kutuma chochote.
+community,Community,Communauté,Jumuiya
+selectGroup,Select a group,Sélectionner un groupe,Chagua kikundi
+noGroups,No group yet,Aucun groupe pour l'instant,Bado hakuna kikundi
+noGroupsDesc,Create or join a group with an invite code,Créez un groupe ou rejoignez-en un avec un code d'invitation,Unda kikundi au jiunge na moja kwa kutumia nambari ya mwaliko
+createGroup,Create a group,Créer un groupe,Unda kikundi
+joinGroup,Join a group,Rejoindre un groupe,Jiunge na kikundi
+groupName,Group name,Nom du groupe,Jina la kikundi
+inviteCode,Invite code,Code d'invitation,Nambari ya mwaliko
+join,Join,Rejoindre,Jiunge
+prayerRequests,Requests,Requêtes,Maombi
+newRequest,New request,Nouvelle requête,Ombi jipya
+iAmPraying,I'm praying,Je prie,Ninakuombea
+prayingCount,praying,en prière,wanaoomba
+addWord,Add a word,Ajouter un mot,Ongeza neno
+wordPlaceholder,"A verse, an encouragement, an inspiration...","Un verset, une encouragement, une inspiration...","Mstari, moyo, msukumo..."
+postTestimony,Post a testimony,Partager un témoignage,Shiriki ushuhuda
+anonymous,Post anonymously,Publier anonymement,Chapisha bila jina
+anonymousAuthor,Anonymous,Anonyme,Bila jina
+shareWithGroup,Share with group,Partager avec le groupe,Shiriki na kikundi
+shareGroupInfo,This prayer will be readable by members of this group. Pray4Me stores the shared content encrypted.,Cette prière sera lisible par les membres de ce groupe. Pray4Me stocke le contenu partagé de façon chiffrée.,Maombi haya yataweza kusomwa na washiriki wa kikundi hiki. Pray4Me huhifadhi maudhui yaliyoshirikiwa yakiwa yamesimbwa kwa njia fiche.
+shareAnonNote,"Your name will be hidden from group members, but they can still read the prayer content.","Votre nom sera masqué pour les membres du groupe, mais ils pourront quand même lire le contenu de la prière.","Jina lako litafichwa kwa washiriki wa kikundi, lakini bado wanaweza kusoma maudhui ya maombi."
+sharePreviewLabel,Your group will see,Votre groupe verra,Kikundi chako kitaona
+groupCode,Group code,Code du groupe,Nambari ya kikundi
+codeCopied,Copied!,Copié !,Imenakiliwa!
+noRequests,No requests yet,Aucune requête pour l'instant,Bado hakuna maombi
+noTestimonies,No testimonies yet,Aucun témoignage pour l'instant,Bado hakuna ushuhuda
+beFirst,Be the first to share,Soyez le premier à partager,Kuwa wa kwanza kushiriki
+memberUpdates,Member updates,Mots des membres,Maneno ya wanachama
+updateSyncing,Syncing… this word isn't available on this device yet.,Synchronisation… ce mot n'est pas encore disponible sur cet appareil.,Inasawazisha… neno hili bado halipatikani kwenye kifaa hiki.
+deleteWord,Delete word,Supprimer le mot,Futa neno
+editWord,Edit word,Modifier le mot,Hariri neno
+editTestimony,Edit testimony,Modifier le témoignage,Hariri ushuhuda
+editUpdate,Edit update,Modifier l'évolution,Hariri badiliko
+deleteUpdate,Delete update,Supprimer l'évolution,Futa badiliko
+deleteTestimony,Delete testimony,Supprimer le témoignage,Futa ushuhuda
+wordDeleted,Word deleted,Mot supprimé,Neno limefutwa
+leaveGroup,Leave group,Quitter le groupe,Acha kikundi
+groupNotFound,Group not found,Groupe introuvable,Kikundi hakipatikani
+alreadyMember,You're already a member,Vous êtes déjà membre,Tayari wewe ni mwanachama
+wordSent,Word added,Mot ajouté,Neno limeongezwa
+testimony,🎉 Testimony,🎉 Témoignage,🎉 Ushuhuda
+myGroups,My Groups,Mes groupes,Vikundi Vyangu
+friends,Friends,Amis,Marafiki
+friendRequests,Friend Requests,Demandes d'amis,Maombi ya Urafiki
+groupInvitations,Group Invitations,Invitations aux groupes,Mialiko ya Vikundi
+addFriend,Add Friend,Ajouter un ami,Ongeza Rafiki
+accept,Accept,Accepter,Kubali
+reject,Reject,Refuser,Kataa
+send,Send,Envoyer,Tuma
+remove,Remove,Supprimer,Ondoa
+admin,Admin,Admin,Msimamizi
+owner,Owner,Propriétaire,Mmiliki
+makeAdmin,Make admin,Nommer administrateur,Fanya msimamizi
+removeAdminRole,Remove admin role,Retirer le rôle d'administrateur,Ondoa jukumu la msimamizi
+promoteConfirmTitle,Make this member an admin?,Nommer ce membre administrateur ?,Mfanye mwanachama huyu msimamizi?
+promoteConfirmDesc,"Admins can manage members, invitations, the group name, and other admin-controlled group content.","Les administrateurs peuvent gérer les membres, les invitations, le nom du groupe et les autres contenus du groupe réservés aux administrateurs.","Wasimamizi wanaweza kusimamia wanachama, mialiko, jina la kikundi, na maudhui mengine ya kikundi yanayodhibitiwa na wasimamizi."
+demoteConfirmTitle,Remove admin access?,Retirer l'accès administrateur ?,Ondoa ufikiaji wa msimamizi?
+demoteConfirmDesc,"This member will no longer be able to manage members, invitations, or the group.","Ce membre ne pourra plus gérer les membres, les invitations ni le groupe.","Mwanachama huyu hataweza tena kusimamia wanachama, mialiko, au kikundi."
+memberPromoted,Member promoted to admin,Membre promu administrateur,Mwanachama amepandishwa kuwa msimamizi
+adminRemoved,Admin access removed,Accès administrateur retiré,Ufikiaji wa msimamizi umeondolewa
+cannotChangeOwnRole,You can't change your own role,Vous ne pouvez pas changer votre propre rôle,Huwezi kubadilisha jukumu lako mwenyewe
+creatorCannotBeDemoted,The group creator can't be demoted,Le créateur du groupe ne peut pas être rétrogradé,Muundaji wa kikundi hawezi kushushwa
+creatorCannotBeRemoved,The group creator can't be removed,Le créateur du groupe ne peut pas être retiré,Muundaji wa kikundi hawezi kuondolewa
+groupMustRetainAdmin,The group must keep at least one admin,Le groupe doit conserver au moins un administrateur,Kikundi lazima kibaki na angalau msimamizi mmoja
+notAuthorizedAdmins,You're not authorized to manage administrators,Vous n'êtes pas autorisé à gérer les administrateurs,Huna ruhusa ya kusimamia wasimamizi
+roleChangeFailed,Couldn't change the role. Please try again.,Impossible de changer le rôle. Veuillez réessayer.,Imeshindwa kubadilisha jukumu. Tafadhali jaribu tena.
+removeFromGroup,Remove from group,Retirer du groupe,Ondoa kwenye kikundi
+memberActions,Member actions,Actions du membre,Vitendo vya mwanachama
+invitedBy,Invited by,Invité par,Amealikwa na
+groupInviteFallbackTitle,Prayer group invitation,Invitation à un groupe de prière,Mwaliko wa kikundi cha maombi
+groupInviteFallbackDesc,You've been invited to join and pray together,Vous êtes invité à rejoindre et à prier ensemble,Umealikwa kujiunga na kuomba pamoja
+userNotFound,No user with that email,Aucun utilisateur avec cet e-mail,Hakuna mtumiaji mwenye barua pepe hiyo
+cannotAddSelf,You can't add yourself,Vous ne pouvez pas vous ajouter vous-même,Huwezi kujiongeza mwenyewe
+requestExists,Request already sent,Demande déjà envoyée,Ombi tayari limetumwa
+requestSent,Friend request sent!,Demande d'ami envoyée !,Ombi la urafiki limetumwa!
+sentRequests,Sent Requests,Demandes envoyées,Maombi Yaliyotumwa
+awaitingResponse,Awaiting response,En attente de réponse,Inasubiri jibu
+requestCanceled,Request canceled,Demande annulée,Ombi limeghairiwa
+manageGroup,Manage group,Gérer le groupe,Simamia kikundi
+inviteFriends,Invite friends,Inviter des amis,Alika marafiki
+noFriendsToInvite,No friends to invite,Aucun ami à inviter,Hakuna marafiki wa kualika
+invite,Invite,Inviter,Alika
+invited,Invited,Invité,Amealikwa
+members,Members,Membres,Wanachama
+you,you,vous,wewe
+addToMyPrayers,Add to my prayers,Ajouter à mes prières,Ongeza kwenye maombi yangu
+addedToMyPrayers,Added to my prayers,Ajouté à mes prières,Imeongezwa kwenye maombi yangu
+autoAddRequests,Auto-add new requests to my prayers,Ajouter automatiquement les nouvelles requêtes à mes prières,Ongeza maombi mapya kiotomatiki kwenye maombi yangu
+addedOn,Added on,Ajouté le,Iliongezwa
+answeredOn,· Answered on,· Exaucé le,· Ilijibiwa
+markAnswered,Answered!,Exaucée!,Ilijibiwa!
+confirm,Confirm 🎉,Confirmer 🎉,Thibitisha 🎉
+resumePrayer,Resume prayer,Remettre en prière,Endelea kuomba
+openBible,Open in Bible.com,Ouvrir dans Bible.com,Fungua katika Bible.com
+scriptureFirstTitle,Begin with God's Word,Commencez par la Parole de Dieu,Anza na Neno la Mungu
+scriptureFirstIntro,"Before you pray, let Scripture shape how you pray for this.","Avant de prier, laissez l'Écriture façonner votre prière pour ce sujet.","Kabla ya kuomba, acha Maandiko yaongoze jinsi unavyoomba kuhusu hili."
+findScripture,Open the Word on this,Ouvrir la Parole sur ce sujet,Fungua Neno kuhusu hili
+scriptureFinding,Opening the Word…,Ouverture de la Parole…,Inafungua Neno…
+aiSuggestedLabel,Suggested by AI — always read it in your own Bible.,Suggéré par l'IA — lisez toujours le passage dans votre propre Bible.,Imependekezwa na AI — soma daima katika Biblia yako mwenyewe.
+readWholeChapter,Read the whole chapter,Lire tout le chapitre,Soma sura nzima
+readInApp,Read in the app,Lire dans l'application,Soma ndani ya programu
+readFullPassage,Read the full passage,Lire le passage complet,Soma fungu zima
+loadingVerse,Opening the passage…,Ouverture du passage…,Inafungua fungu…
+contextLabel,Context,Contexte,Muktadha
+biblicalThemes,Pray around these themes,Priez autour de ces thèmes,Omba kuhusu mada hizi
+reflectLabel,Reflect,Méditez,Tafakari
+addAsPoint,Add as prayer point,Ajouter comme sujet de prière,Ongeza kama hoja ya maombi
+addedPoint,Added,Ajouté,Imeongezwa
+prayNowCta,I'll pray now,Je vais prier,Nitaomba sasa
+viewScripture,View Scripture,Voir la Parole,Angalia Neno
+tipViewScripture,Revisit the Scripture opened for this prayer,Revoir la Parole ouverte pour cette prière,Angalia tena Neno lililofunguliwa kwa ajili ya ombi hili
+scriptureOffline,You're offline. Reconnect to open the Word on this — you can always add a passage yourself.,Vous êtes hors ligne. Reconnectez-vous pour ouvrir la Parole — vous pouvez toujours ajouter un passage vous-même.,Hauko mtandaoni. Unganisha tena ili kufungua Neno — unaweza kila wakati kuongeza fungu mwenyewe.
+scriptureNone,"No passage came back this time. Try again, or open your Bible and add your own.","Aucun passage cette fois. Réessayez, ou ouvrez votre Bible et ajoutez le vôtre.","Hakuna fungu lililopatikana wakati huu. Jaribu tena, au fungua Biblia yako na uongeze lako."
+retryScripture,Try again,Réessayer,Jaribu tena
+aiCooldown,Please wait {s}s before trying again.,Veuillez patienter {s}s avant de réessayer.,Tafadhali subiri sekunde {s} kabla ya kujaribu tena.
+aiBusy,The AI is busy right now. Please try again in a moment.,L'IA est occupée pour le moment. Veuillez réessayer dans un instant.,AI ina shughuli nyingi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi.
+aiError,Couldn't reach the AI. Please try again.,Impossible de joindre l'IA. Veuillez réessayer.,Imeshindwa kufikia AI. Tafadhali jaribu tena.
+testimonyPlaceholder,How did God answer this prayer? (optional),Comment Dieu a-t-il exaucé cette prière? (facultatif),Mungu alijibu vipi ombi hili? (hiari)
+newPrayer,New prayer,Nouvelle prière,Ombi jipya
+editPrayer,Edit prayer,Modifier la prière,Hariri ombi
+prayerSubject,Prayer subject *,Sujet de prière *,Mada ya ombi *
+prayerSubjectPlaceholder,e.g. Healing for my mother...,ex: Guérison de ma mère...,mf: Uponyaji wa mama yangu...
+details,Details (optional),Détails (facultatif),Maelezo (hiari)
+detailsPlaceholder,Describe your prayer request...,Décrivez votre sujet de prière...,Elezea ombi lako...
+categories,Categories,Catégories,Makundi
+multipleAllowed,(multiple allowed),(plusieurs possibles),(mengi yanawezekana)
+forOther,It's for someone else,C'est pour quelqu'un d'autre,Ni kwa mtu mwingine
+personName,Name,Nom,Jina
+cancel,Cancel,Annuler,Ghairi
+add,Add prayer 🙏,Ajouter 🙏,Ongeza ombi 🙏
+save,Save,Enregistrer,Hifadhi
+savedPrivately,Saved privately.,Enregistré en privé.,Imehifadhiwa faraghani.
+savedEncrypted,Saved privately · Encrypted on this device.,Enregistré en privé · Chiffré sur cet appareil.,Imehifadhiwa faraghani · Imesimbwa kwenye kifaa hiki.
+weeklyPlan,Weekly plan,Plan hebdomadaire,Mpango wa wiki
+weeklyPlanSub,Assign each category to days of the week,Assignez chaque catégorie à des jours de la semaine,Weka kila kundi kwa siku za wiki
+addCategory,Add,Ajouter,Ongeza
+addCategoryFull,Add a category,Ajouter une catégorie,Ongeza kategoria
+newCategory,New category,Nouvelle catégorie,Kundi jipya
+edit,Edit,Modifier,Hariri
+days,"Sun,Mon,Tue,Wed,Thu,Fri,Sat","Dim,Lun,Mar,Mer,Jeu,Ven,Sam","Jum,Juz,Izi,Tha,Ara,Iju,Jum"
+profile,Profile,Profil,Wasifu
+memberSince,Member since,Membre depuis,Mwanachama tangu
+account,Account,Compte,Akaunti
+via,Via,Via,Kupitia
+signOut,Sign out,Se déconnecter,Toka
+notifications,Notifications,Notifications,Arifa
+dailyReminder,Daily reminder,Rappel quotidien,Ukumbusho wa kila siku
+dailyReminderSub,Remind you to pray every day,Rappel pour prier chaque jour,Kukumbusha kuomba kila siku
+reminderTime,Reminder time,Heure du rappel,Wakati wa ukumbusho
+followUp,Prayer follow-up,Suivi des prières,Ufuatiliaji wa maombi
+followUpSub,Ask for prayer updates,Demander l'évolution des prières,Omba masasisho ya maombi
+followUpFreq,Follow-up frequency,Fréquence du suivi,Mara ngapi
+every3days,Every 3 days,Tous les 3 jours,Kila siku 3
+everyWeek,Every week,Chaque semaine,Kila wiki
+every2weeks,Every 2 weeks,Toutes les 2 semaines,Kila wiki 2
+everyMonth,Every month,Chaque mois,Kila mwezi
+testNotif,Test notification,Tester une notification,Jaribu arifa
+language,Language,Langue,Lugha
+languageSub,Interface language,Langue de l'interface,Lugha ya programu
+private,Your prayers are private and secure 🔒,Vos prières sont privées et sécurisées 🔒,Maombi yako ni ya siri na salama 🔒
+motto,"""The fervent prayer of a righteous person is powerful and effective""","""La prière fervante du juste est d'une grande efficacité""","""Maombi ya mtu mwenye haki yana nguvu nyingi"""
+appearance,Appearance,Apparence,Muonekano
+themeLight,Light,Clair,Mwanga
+themeDark,Dark,Sombre,Giza
+themeNight,Night,Nuit,Usiku
+continueGoogle,Continue with Google,Continuer avec Google,Endelea na Google
+login,Login,Connexion,Ingia
+register,Register,Inscription,Jisajili
+categoriesHeading,Categories,Catégories,Makundi
+newCategoryLabel,New category,Nouvelle catégorie,Kundi jipya
+editCategoryLabel,Edit category,Modifier la catégorie,Hariri kundi
+emojiLabel,Emoji,Emoji,Emoji
+colorLabel,Color,Couleur,Rangi
+prayerDays,Prayer days,Jours de prière,Siku za maombi
+addBtn,Add,Ajouter,Ongeza
+saveBtn,Save,Enregistrer,Hifadhi
+tipBack,Back to prayer list,Retour à la liste,Rudi kwenye orodha
+tipEditPrayer,Edit this prayer,Modifier cette prière,Hariri ombi hili
+tipDeletePrayer,Delete this prayer permanently,Supprimer définitivement cette prière,Futa ombi hili kabisa
+tipAiSuggest,Receive suggestions...,Recevoir des suggestions...,Pokea mapendekezo...
+tipVerseToggle,Show or hide the verse text,Afficher ou masquer le texte du verset,Onyesha au ficha maandiko ya aya
+tipRemovePoint,Remove this prayer point,Supprimer ce point de prière,Ondoa pointi hii ya maombi
+tipAddPoint,Add this prayer point to your prayer,Ajouter ce point de prière à votre prière,Ongeza pointi hii kwenye maombi yako
+tipSaveUpdate,Save this update,Enregistrer cette évolution,Hifadhi mabadiliko haya
+tipMarkAnswered,Mark this prayer as answered by God,Marquer cette prière comme exaucée,Weka alama ombi hili kama lililojibiwa
+tipConfirm,Confirm and save your testimony,Confirmer et enregistrer votre témoignage,Thibitisha na uhifadhi ushuhuda wako
+tipResume,Move this prayer back to active,Remettre cette prière en actif,Rudisha ombi hili kuwa amilifu
+tipExpandSidebar,Expand sidebar,Agrandir le menu,Panua menyu ya pembeni
+tipCollapseSidebar,Collapse sidebar,Réduire le menu,Funga menyu ya pembeni
+tipAddPrayer,Add a new prayer request,Ajouter une nouvelle prière,Ongeza ombi jipya
+tipCloseForm,Close without saving,Fermer sans enregistrer,Funga bila kuhifadhi
+tipDiscard,Discard changes and close,Annuler les modifications,Acha mabadiliko
+tipSavePrayer,Save your changes,Enregistrer les modifications,Hifadhi mabadiliko
+tipAddPrayerForm,Add this prayer to your list,Ajouter cette prière à la liste,Ongeza ombi hili kwenye orodha
+tipCreateCategory,Create a new prayer category,Créer une nouvelle catégorie,Unda kundi jipya la maombi
+tipEditCategory,Edit this category,Modifier cette catégorie,Hariri kundi hili
+tipDeleteCategory,Delete this category,Supprimer cette catégorie,Futa kundi hili
+tipToggleDay,Toggle {day} for this category,Activer/désactiver {day} pour cette catégorie,Geuza {day} kwa kundi hili
+tipSignOut,Sign out of your account,Se déconnecter du compte,Toka kwenye akaunti
+tipTestNotif,Send a test notification to verify they are working,Envoyer une notification test,Tuma arifa ya majaribio
+tipExpand,Expand details,Afficher les détails,Onyesha maelezo
+tipCollapse,Collapse,Réduire,Funga
+addPointManually,Add a prayer point,Ajouter un point de prière,Ongeza pointi ya maombi
+pointTitlePlaceholder,Prayer subject...,Sujet de prière...,Mada ya maombi...
+pointVersePlaceholder,Bible reference (optional),Référence biblique (facultatif),Rejeo la Biblia (hiari)
+tipAddManualPoint,Add this point to the list,Ajouter ce point à la liste,Ongeza pointi hii kwenye orodha
+addVerse,Add a verse,Ajouter un verset,Ongeza aya
+verseRefPlaceholder,e.g. John 3:16,ex : Jean 3:16,mf: Yohana 3:16
+verseTextPlaceholder,Verse text (optional),Texte du verset (facultatif),Maandiko ya aya (hiari)
+tipRemoveVerse,Remove this verse,Supprimer ce verset,Ondoa aya hii
+tipAddVerse,Add a verse to this point,Ajouter un verset à ce point,Ongeza aya kwenye pointi hii
+tipSaveVerse,Save this verse,Enregistrer ce verset,Hifadhi aya hii
+aiDayLoading,Finding verses...,Recherche de versets...,Inatafuta aya...
+aiDayNoCats,Set up your weekly plan to see suggestions,Configurez votre plan hebdomadaire pour voir des suggestions,Weka mpango wako wa wiki ili uone mapendekezo
+emptyAddManual,Add a prayer,Ajouter une prière,Ongeza ombi
+emptyEncourage,Start your prayer time,Commencez votre temps de prière,Anza wakati wako wa maombi
+feedbackTitle,Leave feedback,Laisser un avis,Toa maoni
+feedbackTypeGeneral,General,Général,Jumla
+feedbackTypeFeature,Idea,Idée,Wazo
+feedbackTypeBug,Bug,Bug,Hitilafu
+feedbackPlaceholder,"Share your feedback, ideas, or issues...","Partagez vos retours, suggestions ou problèmes...","Shiriki maoni, mawazo au matatizo yako..."
+feedbackAnon,Send anonymously,Envoyer anonymement,Tuma bila jina
+feedbackSubmit,Send,Envoyer,Tuma
+feedbackThanks,Thank you for your feedback!,Merci pour votre retour !,Asante kwa maoni yako!
+feedbackThanksub,Your message has been received. It helps us improve the app.,Votre message a bien été reçu. Il nous aide à améliorer l'app.,Ujumbe wako umepokelewa. Unatusaidia kuboresha programu.
+feedbackError,Error sending feedback. Please try again.,Erreur lors de l'envoi. Réessayez.,Hitilafu ya kutuma. Jaribu tena.
+feedbackBtn,Give feedback,Donner un avis,Toa maoni
+feedbackSub,Help us improve the app,Aidez-nous à améliorer l'application,Tusaidie kuboresha programu
+donateTitle,Support the app,Soutenir l'application,Saidia programu
+donateSub,"If this app blesses you, consider supporting its development.","Si cette app vous bénit, vous pouvez contribuer à son développement.","Kama programu hii inakubariki, fikiria kuisaidia."
+donateWhy,"This app is built alone, on my own time, for free — because I believe prayer changes things. Your donation, however small, helps keep the servers running, improve features, and keep the app free for everyone. Thank you from the bottom of my heart. 🙏","Cette application est développée seul, sur mon temps libre, gratuitement — parce que je crois que la prière change les choses. Votre don, même modeste, aide à maintenir les serveurs, améliorer les fonctionnalités et garder l'app accessible à tous. Merci du fond du cœur. 🙏","Programu hii imetengenezwa peke yangu, kwa muda wangu, bure — kwa sababu ninaamini maombi yanabadilisha mambo. Mchango wako, hata mdogo, husaidia kuendesha seva, kuboresha vipengele na kuifanya programu iwe bure kwa wote. Asante sana kutoka moyoni. 🙏"
+donateBtn,Support,Soutenir,Saidia
+donateChooseMethod,Choose a payment method,Choisir un moyen de paiement,Chagua njia ya malipo
+donateSelectBtn,Select,Choisir,Chagua
+donateComingSoon,Coming soon,Bientôt,Hivi karibuni
+donateThanks,Every contribution matters. God bless you. 🙏,Chaque contribution compte. Que Dieu vous bénisse. 🙏,Kila mchango unamaanisha. Mungu akubariki. 🙏
+close,Close,Fermer,Funga
+errorGeneric,Something went wrong. Please try again.,Une erreur est survenue. Réessayez.,Hitilafu imetokea. Tafadhali jaribu tena.
+errorBoundaryTitle,Something went wrong,Quelque chose s'est mal passé,Hitilafu imetokea
+errorBoundaryBody,An unexpected error occurred. Your prayers are safe. You can try again or reload the app.,Une erreur inattendue s'est produite. Vos prières sont en sécurité. Vous pouvez réessayer ou recharger l'application.,Hitilafu isiyotarajiwa imetokea. Maombi yako ni salama. Unaweza kujaribu tena au kupakia upya programu.
+errorBoundaryReload,Reload the app,Recharger l'application,Pakia upya programu
+retry,Try again,Réessayer,Jaribu tena
+leaveGroupConfirm,Are you sure you want to leave this group?,Êtes-vous sûr de vouloir quitter ce groupe ?,Una uhakika unataka kuondoka kwenye kikundi hiki?
+searchRequests,Search a request...,Rechercher une requête...,Tafuta ombi...
+noMatch,No results,Aucun résultat,Hakuna matokeo
+offline,You're offline,Vous êtes hors ligne,Hauko mtandaoni
+shareInviteLink,Share invite link,Partager le lien d'invitation,Shiriki kiungo cha mwaliko
+linkCopied,Link copied!,Lien copié !,Kiungo kimenakiliwa!
+joinedGroup,You joined the group,Vous avez rejoint le groupe,Umejiunga na kikundi
+undo,Undo,Annuler,Tendua
+friendRemoved,Friend removed,Ami supprimé,Rafiki ameondolewa
+delete,Delete,Supprimer,Futa
+deleteWarning,This action can't be undone.,Cette action est irréversible.,Kitendo hiki hakiwezi kutenduliwa.
+deleteCategoryConfirm,Delete this category?,Supprimer cette catégorie ?,Futa kategoria hii?
+removeMemberConfirm,Remove this member from the group?,Retirer ce membre du groupe ?,Ondoa mwanachama huyu kwenye kikundi?
+showQrCode,QR code,Code QR,Msimbo wa QR
+scanToJoin,Scan to join the group,Scannez pour rejoindre le groupe,Changanua ili kujiunga na kikundi
+joinMyGroup,Join my prayer group,Rejoignez mon groupe de prière,Jiunge na kikundi changu cha maombi
+planDayHint,Choose which categories to pray on this day,Choisissez les catégories à prier ce jour,Chagua kategoria za kuombea siku hii
+planEmptyDays,These days have nothing planned:,Ces jours n'ont rien de prévu :,Siku hizi hazina mpango:
+categoryNotScheduled,Not scheduled,Non planifiée,Haijapangwa
+unassignedCategories,{count} category(ies) not scheduled,{count} catégorie(s) non planifiée(s),Kategoria {count} hazijapangwa
+autoSchedule,Schedule automatically,Planifier automatiquement,Panga kiotomatiki
+categoriesScheduled,Categories scheduled,Catégories planifiées,Kategoria zimepangwa
+meAuthor,Me,Moi,Mimi
+moveUp,Move up,Monter,Sogeza juu
+moveDown,Move down,Descendre,Sogeza chini
+prayerDaysHint,"If no day is chosen, follows your category plan","Si aucun jour n'est choisi, suit le plan des catégories","Ikiwa hakuna siku iliyochaguliwa, hufuata mpango wa kategoria"
+prayerDaysCustom,Custom days (overrides category plan),Jours personnalisés (remplace le plan des catégories),Siku maalum (hubadilisha mpango wa kategoria)
+noCategoriesYet,No categories yet,Aucune catégorie pour l'instant,Bado hakuna kategoria
+categoryNamePlaceholder,Category name,Nom de la catégorie,Jina la kategoria
+faithfulness,Remember God's faithfulness,Souvenez-vous de la fidélité de Dieu,Kumbuka uaminifu wa Mungu
+noAnsweredYet,No answered prayers yet,Aucune prière exaucée pour l'instant,Bado hakuna maombi yaliyojibiwa
+noAnsweredSub,"When a prayer is answered, mark it and its testimony will appear here.","Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici.","Ombi linapojibiwa, liweke alama na ushuhuda wake utaonekana hapa."
+seeTranslation,See translation,Voir la traduction,Ona tafsiri
+showOriginal,See original,Voir l'original,Ona asili
+pushUnsupported,Your browser does not support notifications.,Votre navigateur ne prend pas en charge les notifications.,Kivinjari chako hakitumii arifa.
+pushDenied,Notifications were denied. Enable them in your browser settings.,Notifications refusées. Activez-les dans les réglages du navigateur.,Arifa zimekataliwa. Ziwashe katika mipangilio ya kivinjari.
+remindersOn,Reminders enabled 🙏,Rappels activés 🙏,Vikumbusho vimewashwa 🙏
+onboardScriptureTitle,Pray God's Word,Priez la Parole de Dieu,Omba kwa Neno la Mungu
+onboardScriptureBody,"Tap the verse finder to surface Scripture for any request, and read the Bible right where you pray. Grow with guided plans through the Psalms, God's promises, and more.","Touchez le chercheur de versets pour trouver l’Écriture liée à chaque demande, et lisez la Bible là où vous priez. Grandissez avec des guides à travers les Psaumes, les promesses de Dieu, et plus encore.","Gusa kitafuta-mistari ili kupata Andiko linalohusiana na kila ombi, na usome Biblia pale unapoomba. Kua kwa miongozo kupitia Zaburi, ahadi za Mungu, na zaidi."
+onboardPlanTitle,Plan your prayers,Planifiez vos prières,Panga maombi yako
+onboardPlanBody,"Schedule any prayer — one time or recurring (daily, on chosen days), or even ""until answered."" A simple calendar shows what to pray today, with gentle catch-up when you miss a day.","Programmez chaque prière — ponctuelle ou récurrente (chaque jour, certains jours), ou même « jusqu’à la réponse ». Un calendrier simple montre quoi prier aujourd’hui, avec un rattrapage en douceur si vous manquez un jour.","Ratibu kila ombi — mara moja au la mara kwa mara (kila siku, siku ulizochagua), au hata ‘hadi lijibiwe’. Kalenda rahisi huonyesha la kuombea leo, na urejeshe kwa upole ukikosa siku."
+onboardCommunityTitle,Pray together,Priez ensemble,Ombeni pamoja
+onboardCommunityBody,"Join groups, share requests, and pray for one another.","Rejoignez des groupes, partagez des sujets et priez les uns pour les autres.","Jiunge na vikundi, shiriki maombi, na muombeane."
+onboardVaultTitle,Keep it private,Gardez le secret,Iweke ya faragha
+onboardVaultBody,"Lock your private prayers in an end-to-end encrypted vault — only your passphrase opens it, and not even we can read them.","Verrouillez vos prières privées dans un coffre chiffré de bout en bout — seule votre phrase secrète l'ouvre, et même nous ne pouvons pas les lire.","Funga maombi yako ya faragha katika sanduku lililosimbwa kutoka mwanzo hadi mwisho — neno lako la siri pekee linalifungua, hata sisi hatuwezi kuyasoma."
+onboardStart,Get started,Commencer,Anza
+dataTitle,Your data,Vos données,Data yako
+exportData,Export my prayers,Exporter mes prières,Hamisha maombi yangu
+exportDataSub,Download all your prayers and testimonies as a file.,Téléchargez toutes vos prières et témoignages en un fichier.,Pakua maombi na ushuhuda wako wote kama faili.
+exportDone,Export downloaded 🙏,Export téléchargé 🙏,Uhamishaji umepakuliwa 🙏
+thisWeek,this week,cette semaine,wiki hii
+newCount,{n} new,{n} nouveau,{n} mpya
+syncing,Syncing…,Synchronisation…,Inasawazisha…
+pendingChanges,{n} waiting,{n} en attente,{n} zinasubiri
+groupSettings,Group settings,Paramètres du groupe,Mipangilio ya kikundi
+autoAddRequestsSub,New requests from this group are added to your prayers automatically.,Les nouvelles demandes de ce groupe sont ajoutées automatiquement à vos prières.,Maombi mapya ya kikundi hiki yanaongezwa kwenye maombi yako kiotomatiki.
+fromYourGroups,From your groups,Depuis vos groupes,Kutoka vikundi vyako
+shareFriendLink,Share your friend link,Partagez votre lien d’ami,Shiriki kiungo chako cha rafiki
+friendLinkHint,Anyone who opens this link can send you a friend request,Quiconque ouvre ce lien peut vous envoyer une demande d’ami,Yeyote anayefungua kiungo hiki anaweza kukutumia ombi la urafiki
+addMeFriend,Add me as a prayer partner,Ajoute-moi comme partenaire de prière,Niongeze kama mshirika wa maombi
+invalidEmail,Please enter a valid email address,Veuillez saisir une adresse e-mail valide,Tafadhali weka anwani sahihi ya barua pepe
+alreadyFriends,You're already friends,Vous êtes déjà amis,Tayari ni marafiki
+renameGroup,Rename group,Renommer le groupe,Badilisha jina la kikundi
+groupRenamed,Group name updated,Nom du groupe mis à jour,Jina la kikundi limesasishwa
+followsGroup,Follows this shared prayer — edit it in Community to contribute,Suit cette prière partagée — modifiez-la dans la Communauté pour contribuer,Inafuata ombi hili lililoshirikiwa — lihariri katika Jumuiya ili kuchangia
+removeFromList,Remove from my list,Retirer de ma liste,Ondoa kwenye orodha yangu
+removeFromListConfirm,Removes it from your list and you'll no longer count among those praying. The request stays in the community.,Retiré de votre liste ; vous ne comptez plus parmi ceux qui prient. La demande reste dans la communauté.,Inaondolewa kwenye orodha yako na hutahesabiwa tena miongoni mwa wanaoomba. Ombi linabaki katika jumuiya.
+groupOptions,Group options,Options du groupe,Chaguo za kikundi
+prayNow,Pray now,Prier maintenant,Omba sasa
+modeRequests,Pray through them,Prier pour mes sujets,Omba kwa kila moja
+modeRequestsDesc,Pray through what is on your heart.,Prie pour ce qui est sur ton cœur.,Omba kwa yaliyo moyoni mwako.
+modeGuided,Guide me with Scripture,Me guider par l'Écriture,Niongoze kwa Maandiko
+modeGuidedDesc,"A simple beginning, your requests, and thanksgiving.","Un début tout simple, tes sujets, puis l'action de grâces.","Mwanzo rahisi, maombi yako, na shukrani."
+modeActs,Pray through ACTS,Prier selon ACTS,Omba kwa mtindo wa ACTS
+modeActsDesc,A structured biblical prayer pattern — step by step.,Un chemin de prière biblique structuré — pas à pas.,Muundo wa maombi wa kibiblia ulio na hatua — hatua kwa hatua.
+stageAdoration,Adoration,Adoration,Kuabudu
+stageAdorationPrompt,"Begin by adoring God for who He is — His holiness, His goodness, His steadfast love. Let this psalm lead you.","Commencez par adorer Dieu pour ce qu'Il est — sa sainteté, sa bonté, son amour fidèle. Laissez ce psaume vous guider.","Anza kwa kumwabudu Mungu kwa jinsi alivyo — utakatifu wake, wema wake, upendo wake wa uaminifu. Acha zaburi hii ikuongoze."
+stageConfession,Confession,Confession,Kuungama
+stageConfessionPrompt,"In His presence, quietly confess your sin and receive His mercy. He is faithful to forgive.","En sa présence, confessez doucement votre péché et recevez sa miséricorde. Il est fidèle pour pardonner.","Mbele zake, ungama dhambi yako kwa utulivu na upokee rehema yake. Yeye ni mwaminifu kusamehe."
+stageThanksgiving,Thanksgiving,Action de grâces,Shukrani
+stageThanksgivingPrompt,"Give thanks for who God is and what He has done — His faithfulness, His answered prayers.","Rendez grâce pour ce que Dieu est et ce qu'Il a fait — sa fidélité, ses prières exaucées.","Mshukuru Mungu kwa jinsi alivyo na kwa yale aliyoyatenda — uaminifu wake, maombi yake yaliyojibiwa."
+stageSupplication,Supplication,Supplication,Dua
+continueBtn,Continue,Continuer,Endelea
+amenBtn,Amen,Amen,Amina
+sessionDoneTitle,Time with God 🙏,Un temps avec Dieu 🙏,Wakati na Mungu 🙏
+sessionDoneSub,You prayed through {n} subject(s) today.,Vous avez prié pour {n} sujet(s) aujourd’hui.,Umeomba kwa ajili ya mambo {n} leo.
+sessionDoneSub_one,You prayed through 1 subject today.,Vous avez prié pour 1 sujet aujourd’hui.,Umeomba kwa ajili ya jambo 1 leo.
+sessionDoneSub_other,You prayed through {n} subjects today.,Vous avez prié pour {n} sujets aujourd’hui.,Umeomba kwa ajili ya mambo {n} leo.
+pin,Pin,Épingler,Bandika
+unpin,Unpin,Détacher,Ondoa
+resume,Resume,Reprendre,Rejesha
+prayerDeleted,Prayer deleted,Prière supprimée,Ombi limefutwa
+removedFromList,Removed from your list,Retiré de votre liste,Imeondolewa kwenye orodha yako
+testimonies,Testimonies,Témoignages,Ushuhuda
+options,Options,Options,Chaguo
+nextReminder,Next reminder,Prochain rappel,Kikumbusho kijacho
+tomorrow,tomorrow,demain,kesho
+notPrayedToday,You haven't prayed today,Vous n'avez pas encore prié aujourd'hui,Hujaomba leo
+pushUnavailable,Reminder on. Push notifications aren't available on this device.,Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil.,Kikumbusho kimewashwa. Arifa za push hazipatikani kwenye kifaa hiki.
+shareVerse,Share verse,Partager le verset,Shiriki andiko
+verseCopied,Verse copied!,Verset copié !,Andiko limenakiliwa!
+dangerZone,Danger zone,Zone sensible,Eneo hatari
+deleteAccount,Delete my account,Supprimer mon compte,Futa akaunti yangu
+deleteAccountSub,Permanently erase your account and all your data.,Effacez définitivement votre compte et toutes vos données.,Futa kabisa akaunti yako na data yako yote.
+deleteAccountWarning,"This permanently deletes your account and all your prayers, testimonies and data. This cannot be undone.","Cette action supprime définitivement votre compte et toutes vos prières, témoignages et données. Elle est irréversible.","Hii itafuta kabisa akaunti yako na maombi, ushuhuda na data yako yote. Kitendo hiki hakiwezi kutenduliwa."
+deleteAccountConfirm,Delete account,Supprimer le compte,Futa akaunti
+deleteAccountDone,Your account has been deleted,Votre compte a été supprimé,Akaunti yako imefutwa
+deleteAccountError,Could not delete your account. Please try again.,Impossible de supprimer votre compte. Veuillez réessayer.,Imeshindikana kufuta akaunti yako. Tafadhali jaribu tena.
+grow,Grow,Grandir,Kua
+growTitle,Grow in prayer,Grandir dans la prière,Kua katika maombi
+growSubtitle,Learn to pray according to God's Word.,Apprends à prier selon la Parole de Dieu.,Jifunze kuomba kulingana na Neno la Mungu.
+growPray,Pray through,Prier,Omba
+growLearn,Learn,Apprendre,Jifunze
+growPrayIntro,"Short, Scripture-first guides to pray through — in your own words, before God.","De courts guides bibliques à prier — avec tes mots, devant Dieu.","Miongozo mifupi yenye msingi wa Maandiko ya kuomba — kwa maneno yako mwenyewe, mbele za Mungu."
+growLearnIntro,"Short readings on prayer and the Christian life, each rooted in Scripture.","De courtes lectures sur la prière et la vie chrétienne, enracinées dans l'Écriture.","Masomo mafupi kuhusu maombi na maisha ya Kikristo, kila moja yenye mizizi katika Maandiko."
+guideBegin,Begin,Commencer,Anza
+guideDoneTitle,Amen,Amen,Amina
+guideDoneSub,He hears you. Carry this into your day.,Il t'entend. Emporte cela dans ta journée.,Anakusikia. Chukua haya katika siku yako.
+openInBible,Open in your Bible,Ouvre dans ta Bible,Fungua katika Biblia yako
+growScriptureNote,Don't take our word for it — open the Scriptures and see for yourself (Acts 17:11).,Ne nous crois pas sur parole — ouvre les Écritures et vois par toi-même (Actes 17:11).,Usiamini neno letu tu — fungua Maandiko ujionee mwenyewe (Matendo 17:11).
+growSeekerTitle,New to prayer or Christian faith?,Nouveau dans la prière ou la foi chrétienne ?,Mgeni katika sala au imani ya Kikristo?
+growSeekerDesc,"Discover who Christians pray to, why Jesus is at the center, and how you can come to God honestly.","Découvre à qui les chrétiens prient, pourquoi Jésus est au centre, et comment venir à Dieu honnêtement.","Gundua Wakristo wanamwomba nani, kwa nini Yesu yuko katikati, na jinsi unavyoweza kumjia Mungu kwa unyoofu."
+gospelStart,Start journey,Commencer le parcours,Anza safari
+gospelBack,Back,Retour,Rudi
+backBtn,Back,Retour,Rudi
+gospelStep,Step {n} of {total},Étape {n} sur {total},Hatua {n} kati ya {total}
+gospelCompleted,Journey completed,Parcours terminé,Safari imekamilika
+gospelUsePrayer,Use a guided prayer,Utiliser une prière guidée,Tumia sala ya mwongozo
+gospelHidePrayer,Hide guided prayer,Masquer la prière guidée,Ficha sala ya mwongozo
+gospelNextStepsHeading,Where would you like to go next?,Où souhaites-tu aller maintenant ?,Ungependa kwenda wapi sasa?
+gospelCreatePrayer,Create a private prayer,Créer une prière privée,Tengeneza sala ya faragha
+gospelContinueExploring,Continue exploring,Continuer à explorer,Endelea kuchunguza
+gospelMoreQuestions,I still have questions,J'ai encore des questions,Bado nina maswali
+gospelRelatedReading,Related reading,Lectures liées,Masomo yanayohusiana
+gospelReturnToGrow,Return to Grow,Revenir à Grandir,Rudi kwenye Kua
+gospelReadMore,Read more,Lire la suite,Soma zaidi
+gospelReadWhyPray,Read about why Christians pray,Lire « Pourquoi les chrétiens prient »,Soma: Kwa nini Wakristo huomba
+gospelReadGrace,Read about grace,Lire « La grâce »,Soma: Neema
+gospelReadFaith,Read about faith,Lire « La foi »,Soma: Imani
+gospelReadRepentance,Read about repentance,Lire « La repentance »,Soma: Toba
+gospelInviteWhyPray,Discover why Christians come to God through Jesus.,Découvre pourquoi les chrétiens viennent à Dieu par Jésus.,Gundua kwa nini Wakristo humjia Mungu kupitia Yesu.
+gospelInviteGrace,Explore the good news at the heart of God's grace.,Explore la bonne nouvelle au cœur de la grâce de Dieu.,Chunguza habari njema iliyo katikati ya neema ya Mungu.
+gospelInviteFaith,Learn what it means to place your trust in Jesus.,Apprends ce que signifie placer ta confiance en Jésus.,Jifunze maana ya kuweka tumaini lako kwa Yesu.
+gospelInviteRepentance,See how repentance and faith belong together.,Vois comment la repentance et la foi vont ensemble.,Ona jinsi toba na imani zinavyoenda pamoja.
+gospelInviteSuffering,Discover how Jesus entered human suffering and gives lasting hope.,Découvre comment Jésus est entré dans la souffrance humaine et donne une espérance durable.,Gundua jinsi Yesu alivyoingia katika mateso ya wanadamu na kutoa tumaini la kudumu.
+gospelInviteLabel,Exploring the Christian faith?,Tu explores la foi chrétienne ?,Unachunguza imani ya Kikristo?
+scheduleLabel,Schedule,Planification,Ratiba
+addSchedule,Add a schedule,Ajouter une planification,Ongeza ratiba
+editSchedule,Edit schedule,Modifier la planification,Hariri ratiba
+schedFollowPlan,Follows weekly plan,Suit le plan hebdo,Inafuata mpango wa wiki
+schedOnce,One-time,Une fois,Mara moja
+schedRecurring,Recurring,Récurrent,Inayojirudia
+scheduleHowOften,When would you like to pray?,Quand souhaites-tu prier ?,Ungependa kuomba lini?
+schedPrayOnce,Pray once,Prier une fois,Omba mara moja
+schedPrayRecurring,Pray regularly,Prier régulièrement,Omba mara kwa mara
+schedAdvanced,Advanced options,Options avancées,Chaguo za kina
+followUpTitle,Remind me to follow up,Me rappeler de faire un suivi,Remind me to follow up
+followUpHint,A one-time nudge to check back in on this prayer — separate from its schedule.,Un rappel unique pour revenir sur cette prière — indépendant de sa planification.,A one-time nudge to check back in on this prayer — separate from its schedule.
+followUpOff,Off,Aucun,Off
+followUpIn3Days,In 3 days,Dans 3 jours,In 3 days
+followUpIn1Week,In 1 week,Dans 1 semaine,In 1 week
+followUpIn2Weeks,In 2 weeks,Dans 2 semaines,In 2 weeks
+followUpPickDate,Pick a date,Choisir une date,Pick a date
+followUpDue,Time to follow up on this prayer,Il est temps de faire un suivi de cette prière,Time to follow up on this prayer
+followUpSetFor,Follow-up set for {date},Suivi prévu le {date},Follow-up set for {date}
+followUpAddUpdate,Add update,Ajouter une note,Add update
+followUpSnooze,Snooze,Reporter,Snooze
+followUpAnother,Set another,Reprogrammer,Set another
+followUpDismiss,Dismiss,Ignorer,Dismiss
+followUpSetToast,Follow-up reminder set,Rappel de suivi programmé,Follow-up reminder set
+followUpDoneToast,Follow-up cleared,Suivi effacé,Follow-up cleared
+freqDaily,Daily,Chaque jour,Kila siku
+freqWeekly,Weekly,Hebdomadaire,Kila wiki
+freqInterval,Every N days,Tous les N jours,Kila siku N
+freqMonthly,Monthly,Mensuel,Kila mwezi
+freqYearly,Yearly,Annuel,Kila mwaka
+intervalEvery,Every,Tous les,Kila
+intervalDays,days,jours,siku
+monthlyOnDay,On day,Le jour,Siku ya
+slotLabel,Prayer time,Moment de prière,Wakati wa maombi
+slotAnytime,Anytime,À tout moment,Wakati wowote
+slot_morning,Morning,Matin,Asubuhi
+slot_midday,Midday,Midi,Mchana
+slot_evening,Evening,Soir,Jioni
+endsLabel,Ends,Fin,Inaisha
+endNever,Never,Jamais,Kamwe
+endWhenAnswered,When answered,Quand exaucé,Ikijibiwa
+endOnDate,On a date,À une date,Tarehe fulani
+endAfterCount,After N times,Après N fois,Baada ya mara N
+endTimesSuffix,times,fois,mara
+schedDaily,Every day,Chaque jour,Kila siku
+schedWeekly,Every {days},Chaque {days},Kila {days}
+schedInterval,Every {n} days,Tous les {n} jours,Kila siku {n}
+schedMonthly,On day {d} of each month,Le {d} de chaque mois,Siku ya {d} kila mwezi
+schedYearly,Every year on {date},Chaque année le {date},Kila mwaka tarehe {date}
+schedUntilDate,until {date},jusqu'au {date},hadi {date}
+schedTimes,{n} times,{n} fois,mara {n}
+schedUntilAnswered,until answered,jusqu'à l'exaucement,hadi ijibiwe
+monthView,Month,Mois,Mwezi
+weekView,Week,Semaine,Wiki
+calendarTitle,Prayer calendar,Calendrier de prière,Kalenda ya maombi
+calendarSub,Plan one-time and recurring prayers day by day,Planifie des prières ponctuelles et récurrentes jour par jour,Panga maombi ya mara moja na yanayojirudia siku kwa siku
+legendRecurring,Recurring,Récurrent,Inayojirudia
+legendOnce,One-time,Une fois,Mara moja
+legendPlan,Weekly plan,Plan hebdo,Mpango wa wiki
+legendGroup,Group,Groupe,Kikundi
+noPrayersThisDay,Nothing planned this day,Rien de prévu ce jour,Hakuna kilichopangwa siku hii
+prayedOnDay,Prayed,Prié,Umeomba
+markPrayed,Mark prayed,Marquer prié,Weka kama umeomba
+skipThisDay,Skip this day,Passer ce jour,Ruka siku hii
+moveThisDay,Move to another day,Déplacer à un autre jour,Hamisha hadi siku nyingine
+restoreOccurrence,Restore this day,Rétablir ce jour,Rejesha siku hii
+occurrenceSkipped,Skipped — this day only,Passé — ce jour uniquement,Imerukwa — siku hii tu
+occurrenceMoved,Moved to {date},Déplacé au {date},Imehamishwa hadi {date}
+endSeriesHere,End series before this day,Terminer la série avant ce jour,Maliza mfululizo kabla ya siku hii
+seriesEnded,Series ended,Série terminée,Mfululizo umeisha
+catchUpTitle,Catch up,Rattrapage,Fidia
+catchUpSub,"Missed these last days — no guilt, just grace","Manqués ces derniers jours — sans culpabilité, avec grâce","Yaliyokoswa siku za nyuma — bila hatia, kwa neema"
+missedOn,Missed {date},Manqué le {date},Ilikoswa {date}
+rotationLabel,Rotation,Rotation,Mzunguko
+rotationOffShort,Off,Non,Hapana
+rotationPerDay,{n} per day in rotation,{n} par jour en rotation,{n} kwa siku kwa mzunguko
+rotationHint,Pray through this list a few at a time — everyone gets covered across the cycle.,Prie cette liste quelques sujets à la fois — chacun est couvert au fil du cycle.,Omba orodha hii kidogo kidogo — kila mmoja anafikiwa katika mzunguko.
+plansTitle,Prayer plans,Plans de prière,Mipango ya maombi
+plansSub,Guided journeys with a theme and verse for each day,Des parcours guidés avec un thème et un verset chaque jour,"Safari zenye mwongozo, mada na mstari kila siku"
+perDayTitle,A few per day,Quelques-unes par jour,Chache kwa siku
+perDaySub,"Cap how many prayers Today asks of you, so a long list stays doable.","Limite le nombre de prières proposées chaque jour, pour qu'une longue liste reste tenable.","Punguza idadi ya sala ambazo Leo inakuomba, ili orodha ndefu ibaki rahisi kushika."
+perDayOff,All,Toutes,Zote
+labelsTitle,Labels,Étiquettes,Lebo
+labelsSub,Group and filter your prayers. The rhythm is set on each prayer.,Pour regrouper et filtrer tes prières. Le rythme se règle sur chaque prière.,Kupanga na kuchuja sala zako. Mdundo huwekwa kwa kila sala.
+addLabel,Add label,Ajouter une étiquette,Ongeza lebo
+editLabel,Edit label,Modifier l'étiquette,Hariri lebo
+newLabel,New label,Nouvelle étiquette,Lebo mpya
+labelNamePlaceholder,Label name,Nom de l'étiquette,Jina la lebo
+noLabelsYet,No labels yet,Pas encore d'étiquettes,Bado hakuna lebo
+planStart,Start plan,Commencer le plan,Anza mpango
+planStartDate,Start date,Date de début,Tarehe ya kuanza
+planStarted,Plan added to your prayers 🙏,Plan ajouté à tes prières 🙏,Mpango umeongezwa kwenye maombi yako 🙏
+planRunning,In progress,En cours,Unaendelea
+planInviteCta,Invite friends or a group,Inviter des amis ou un groupe,Alika marafiki au kikundi
+planInviteTitle,Pray this plan together,Priez ce plan ensemble,Ombeni mpango huu pamoja
+planInviteSub,Invite friends or a whole group to walk this plan with you. Each person accepts on their own and the plan starts on their calendar.,Invite des amis ou un groupe entier à suivre ce plan avec toi. Chacun accepte de son côté et le plan démarre sur son calendrier.,Alika marafiki au kikundi kizima kutembea mpango huu pamoja nawe. Kila mtu anakubali mwenyewe na mpango huanza kwenye kalenda yake.
+planInviteFriendsHeading,Friends,Amis,Marafiki
+planInviteGroupsHeading,Groups,Groupes,Vikundi
+planInviteEmpty,"Add a friend or join a group first, then you can invite them here.","Ajoute d'abord un ami ou rejoins un groupe, puis tu pourras les inviter ici.","Ongeza rafiki au jiunge na kikundi kwanza, kisha unaweza kuwaalika hapa."
+planInviteSend,Send invitations,Envoyer les invitations,Tuma mialiko
+planInviteSentToast,Invitations sent 🙏,Invitations envoyées 🙏,Mialiko imetumwa 🙏
+planInvitedBadge,Invited,Invité,Amealikwa
+planInvitationsHeading,Invited to pray together,Invité à prier ensemble,Umealikwa kuomba pamoja
+planInvitationFrom,{name} invited you,{name} t'a invité,{name} amekualika
+planInviteAccept,Pray along,Prier aussi,Omba pamoja
+groupPlansHeading,Praying together,Prier ensemble,Kuomba pamoja
+groupPlanStartCta,Pray a plan together,Prier un plan ensemble,Omba mpango pamoja
+groupPlanPickerTitle,Choose a plan for the group,Choisir un plan pour le groupe,Chagua mpango kwa ajili ya kikundi
+groupPlanPickerSub,Everyone in the group will see this plan and can join in.,Tout le groupe verra ce plan et pourra s'y joindre.,Kila mtu katika kikundi ataona mpango huu na anaweza kujiunga.
+groupPlanAdoptCta,Start for the group,Lancer pour le groupe,Anza kwa ajili ya kikundi
+groupPlanAdoptNote,Your whole group will see this plan and can pray it with you.,Tout ton groupe verra ce plan et pourra le prier avec toi.,Kikundi chako chote kitaona mpango huu na kinaweza kuuombea pamoja nawe.
+groupPlanAlreadyRunning,The group is already praying this,Le groupe prie déjà ce plan,Kikundi tayari kinaomba mpango huu
+groupPlanRunningNow,Praying now,En prière,Inaombwa sasa
+groupPlanStartsOn,Starts {date},Débute le {date},Huanza {date}
+groupPlanJoinCta,Pray this with us,Prier avec le groupe,Omba pamoja nasi
+groupPlanJoinedBadge,Praying,En prière,Unaomba
+groupPlanCountJustYou,just you,toi seul pour l'instant,wewe pekee kwa sasa
+groupPlanCountYouPlus,you and {n} more,toi et {n} autre(s),wewe na wengine {n}
+groupPlanCountNone,no one yet,personne encore,bado hakuna mtu
+groupPlanCountOthers,{n} praying,{n} en prière,{n} wanaomba
+groupPlanEnd,End for the group,Terminer pour le groupe,Maliza kwa kikundi
+groupPlanEndConfirm,"End this shared plan? It stays on your own calendar, and everyone keeps theirs.","Terminer ce plan partagé ? Il reste sur ton calendrier, et chacun garde le sien.","Kumaliza mpango huu wa pamoja? Utabaki kwenye kalenda yako mwenyewe, na kila mtu atabaki na wake."
+groupPlanLeave,Leave this plan,Quitter ce plan,Ondoka kwenye mpango huu
+groupPlanEndedToast,Shared plan ended,Plan partagé terminé,Mpango wa pamoja umemalizika
+groupPlanStartedToast,Started for the group 🙏,Lancé pour le groupe 🙏,Umeanzishwa kwa kikundi 🙏
+notifPlanInvitation,Prayer plan invitation,Invitation à un plan de prière,Mwaliko wa mpango wa maombi
+planDays,{n} days,{n} jours,siku {n}
+planDayOf,Day {n} of {total},Jour {n} sur {total},Siku ya {n} kati ya {total}
+planTheme21Title,21 days of breakthrough,21 jours de percée,Siku 21 za ushindi
+planTheme21Sub,Three weeks of persistent daily prayer,Trois semaines de prière quotidienne persévérante,Wiki tatu za maombi ya kila siku kwa bidii
+planUpperRoomTitle,The Upper Room — 10 days,La chambre haute — 10 jours,Chumba cha Juu — siku 10
+planUpperRoomSub,"Ten days of united prayer, waiting on the promised Spirit","Dix jours de prière unie, dans l'attente de l'Esprit promis","Siku kumi za maombi kwa nia moja, mkimngoja Roho aliyeahidiwa"
+planWeek7Title,7 days of gratitude,7 jours de gratitude,Siku 7 za shukrani
+planWeek7Sub,"A week of thanksgiving, one theme a day","Une semaine d'actions de grâces, un thème par jour","Wiki moja ya shukrani, mada moja kwa siku"
+planAltar7Title,Rekindle the altar — 7 days,Rallume l'autel — 7 jours,Washa upya madhabahu — Siku 7
+planAltar7Sub,A week to return to God's presence and stir fresh hunger for Him,Une semaine pour revenir à la présence de Dieu et raviver la faim de Lui,Wiki ya kurudi katika uwepo wa Mungu na kuamsha njaa mpya kwake
+plan30Title,30 days for others,30 jours pour les autres,Siku 30 kwa ajili ya wengine
+plan30Sub,A month of intercession for people around you,Un mois d'intercession pour ceux qui t'entourent,Mwezi mmoja wa maombezi kwa watu wanaokuzunguka
+groupCalendarTitle,Prayer calendar,Calendrier de prière,Kalenda ya maombi
+groupCalendarSub,Claim a day — the group covers this request together,Choisis un jour — le groupe couvre ce sujet ensemble,Chagua siku — kikundi kinabeba ombi hili pamoja
+commitToPray,I'll pray this day,Je prierai ce jour,Nitaomba siku hii
+commitmentAdded,Added to your calendar 🙏,Ajouté à ton calendrier 🙏,Imeongezwa kwenye kalenda yako 🙏
+commitmentRemoved,Commitment removed,Engagement retiré,Ahadi imeondolewa
+removeCommitmentBtn,Remove my commitment,Retirer mon engagement,Ondoa ahadi yangu
+noCommitmentsYet,No one has claimed a day yet — be the first,Personne n'a encore choisi de jour — sois le premier,Hakuna aliyechagua siku bado — kuwa wa kwanza
+myCommitments,Group commitments,Engagements de groupe,Ahadi za kikundi
+exportIcs,Export to calendar (.ics),Exporter vers un calendrier (.ics),Hamisha kwenye kalenda (.ics)
+exportIcsSub,"Import your prayer schedule into Google Calendar, Outlook or Apple Calendar","Importe ton planning de prière dans Google Calendar, Outlook ou Apple Calendar","Ingiza ratiba yako ya maombi kwenye Google Calendar, Outlook au Apple Calendar"
+scriptureRefOnly,The full text isn't available here. Open it in your Bible to read the whole passage.,Le texte complet n'est pas disponible ici. Ouvre-le dans ta Bible pour lire tout le passage.,Maandishi kamili hayapatikani hapa. Yafungue katika Biblia yako ili usome fungu zima.
+privacyCenterTitle,Privacy Center,Centre de confidentialité,Kituo cha Faragha
+privacyCenterSub,Understand exactly how your prayers are stored and shared — in plain language.,Comprends exactement comment tes prières sont stockées et partagées — en langage clair.,Elewa hasa jinsi sala zako zinavyohifadhiwa na kushirikiwa — kwa lugha rahisi.
+privacyCenterBtn,Open Privacy Center,Ouvrir le Centre de confidentialité,Fungua Kituo cha Faragha
+pcIntro,Here's what leaves your device — and what stays encrypted.,Voici ce qui quitte ton appareil — et ce qui reste chiffré.,Sala zako ni za kibinafsi. Hivi ndivyo zinavyoshughulikiwa — na kile kinachobaki kwako pekee.
+pcPrivateTitle,Private prayers,Prières privées,Sala za faragha
+pcPrivateBody,"Encrypted on your device before they're stored. Pray4Me keeps the encrypted content, not readable prayer text — so private prayers are encrypted for you.","Chiffrées sur ton appareil avant d'être stockées. Pray4Me conserve le contenu chiffré, pas le texte lisible de tes prières — tes prières privées sont chiffrées pour toi.",Sala unazoziweka kwako mwenyewe zinahifadhiwa katika akaunti yako na zinaonekana kwako pekee. Hazichapishwi kamwe kwenye kikundi isipokuwa uchague kuzishiriki.
+pcSharedTitle,Community prayers,Prières communautaires,Sala za pamoja na za kikundi
+pcSharedBody,"Encrypted before they're stored, and readable by the members of the group you share them with. Community prayers are encrypted for those group members — not for Pray4Me.","Chiffrées avant d'être stockées, et lisibles par les membres du groupe avec qui tu les partages. Les prières communautaires sont chiffrées pour ces membres — pas pour Pray4Me.","Sala unayoishiriki na kikundi inaonekana kwa kikundi hicho kwa kusudi — ndio moyo wa kusali pamoja. Chochote unachoshiriki kinatoka nje ya nafasi yako ya faragha, hivyo shiriki tu kile unachokubali wengine kukiona."
+pcAiTitle,AI guidance,Aide de l'IA,Mapendekezo yanayosaidiwa na AI
+pcAiBody,"Optional, and off until you turn it on. Only the information needed for that feature is sent, with your consent. The AI can suggest Bible references but never generates Scripture text — that always comes from a trusted source or a link to your own Bible.","Optionnelle, et désactivée tant que tu ne l'actives pas. Seules les informations nécessaires à la fonction sont envoyées, avec ton consentement. L'IA peut suggérer des références bibliques mais ne génère jamais le texte de l'Écriture — celui-ci provient toujours d'une source fiable ou d'un lien vers ta propre Bible.","Vipengele vya AI vinabaki vimezimwa hadi uvibonyeze. Hakuna chochote kuhusu sala kinachotumwa kwa AI bila idhini yako ya wazi, na AI haitengenezi kamwe maandishi ya mstari wa Biblia — Maandiko daima yanatoka chanzo cha kuaminika au kiungo cha Biblia yako mwenyewe."
+pcPushTitle,Prayer reminders,Rappels de prière,Vikumbusho vya arifa
+pcPushBody,"Generic by default — just a gentle nudge to pray. Prayer titles, details and names are never included in a notification unless you opt in.","Génériques par défaut — une simple invitation à prier. Les titres, détails et noms ne figurent jamais dans une notification, sauf si tu choisis de les inclure.",Vikumbusho vinapangwa kwa muda pekee. Arifa hazijumuishi kamwe maudhui ya sala zako — ni mwaliko mpole tu wa kuomba.
+pcRecoveryTitle,Recovery & other devices,Récupération et autres appareils,Urejeshaji na vifaa vingine
+pcRecoveryBody,"Your prayers are encrypted with a key kept on this device. Set up recovery if you want to open them on another device — without it, encrypted prayers can only be read here. If you lose your recovery code, encrypted prayers can't be recovered.","Tes prières sont chiffrées avec une clé conservée sur cet appareil. Configure la récupération si tu veux les ouvrir sur un autre appareil — sans elle, les prières chiffrées ne sont lisibles qu'ici. Si tu perds ton code de récupération, les prières chiffrées ne peuvent pas être récupérées.","Maombi yako husimbwa kwa njia fiche kwa ufunguo unaohifadhiwa kwenye kifaa hiki. Weka urejeshaji ikiwa unataka kuyafungua kwenye kifaa kingine — bila huo, maombi yaliyosimbwa yanaweza kusomwa hapa tu. Ukipoteza msimbo wako wa urejeshaji, maombi yaliyosimbwa hayawezi kurejeshwa."
+pcExportTitle,Exporting your data,Exporter tes données,Hamisha data yako
+pcExportBody,You can download all your prayers as a file at any time. Your data is yours.,Tu peux télécharger toutes tes prières dans un fichier à tout moment. Tes données t'appartiennent.,Unaweza kupakua sala zako zote kama faili wakati wowote. Data yako ni yako.
+pcDeleteTitle,Deleting your account,Supprimer ton compte,Futa akaunti yako
+pcDeleteBody,You can permanently delete your account and its data whenever you want. This can't be undone.,Tu peux supprimer définitivement ton compte et ses données quand tu le souhaites. Cette action est irréversible.,Unaweza kufuta akaunti yako na data yake kabisa wakati wowote. Hili haliwezi kutenduliwa.
+pcSecurityNote,"No app can promise perfect security, but Pray4Me is built to keep your prayers private by default.","Aucune application ne peut promettre une sécurité parfaite, mais Pray4Me est conçu pour garder tes prières privées par défaut.","Hakuna programu inayoweza kuahidi usalama kamili, lakini Pray4Me imejengwa kuweka sala zako za faragha kwa chaguo-msingi."
+planFast3Title,3 days of fasting & prayer,3 jours de jeûne et de prière,Siku 3 za kufunga na kuomba
+planFast3Sub,A biblical three-day fast to seek God,Un jeûne biblique de trois jours pour chercher Dieu,Mfungo wa siku tatu wa kibiblia wa kumtafuta Mungu
+planAbout,About this plan,À propos de ce plan,Kuhusu mpango huu
+planInBible,In the Bible,Dans la Bible,Katika Biblia
+planDayByDay,Day-by-day preview,Aperçu jour par jour,Muhtasari siku kwa siku
+planDayLabel,Day {n},Jour {n},Siku ya {n}
+planTapToPreview,Tap to preview & start,Touchez pour découvrir et commencer,Gusa ili kuona na kuanza
+needsAttention,Needs attention,À traiter,Inahitaji umakini wako
+checklistTitle,Get your group praying,Lance ton groupe dans la prière,Anzisha kikundi chako katika maombi
+checklistInvite,Invite people,Invite des personnes,Alika watu
+checklistRequest,Add the first prayer request,Ajoute le premier sujet de prière,Ongeza ombi la kwanza la maombi
+checklistPray,Begin praying,Commence à prier,Anza kuomba
+checklistDismiss,Hide this,Masquer,Ficha
+intercessionTitle,Praying for others,Prier pour les autres,Kuwaombea wengine
+intercessionSub,The requests you chose to carry — for people and groups,Les sujets que tu as choisi de porter — pour des personnes et des groupes,Maombi uliyochagua kubeba — kwa ajili ya watu na vikundi
+praySharedBtn,Pray shared requests,Prier les sujets partagés,Omba maombi yaliyoshirikiwa
+intercessionRemaining,{n} remaining today,{n} restants aujourd'hui,{n} zimebaki leo
+intercessionDone,All prayed for today 🙏,Tout a été prié aujourd'hui 🙏,Yote yameombewa leo 🙏
+srcPersonal,Personal,Personnels,Binafsi
+srcGroups,Groups,Groupes,Vikundi
+latestUpdateLabel,Latest update,Dernière nouvelle,Habari ya hivi punde
+growNextStep,Your next step,Ta prochaine étape,Hatua yako inayofuata
+growContinueDesc,Continue where you left off — a few quiet minutes of guided prayer,Reprends là où tu t'étais arrêté — quelques minutes de prière guidée,Endelea pale ulipoachia — dakika chache za maombi ya kuongozwa
+growNewDesc,Continue learning to pray — a five-minute guided prayer,Continue d'apprendre à prier — une prière guidée de cinq minutes,Endelea kujifunza kuomba — maombi ya kuongozwa ya dakika tano
+growAgainDesc,You've prayed them all — walk this one again,Tu les as tous priés — reprends celui-ci,Umeyaomba yote — pitia hili tena
+growHistory,Completed,Terminés,Zilizokamilika
+growBrowseAll,Browse all guides,Parcourir tous les guides,Vinjari miongozo yote
+lowDataTitle,Low data mode,Mode économie de données,Hali ya kuokoa data
+lowDataSub,"Fetch less over the network. Verse text loads from this device when already saved; otherwise you'll see the reference with a link. Prayer capture, Today and sessions keep working offline.","Réduit les téléchargements. Le texte des versets s'affiche s'il est déjà sur cet appareil ; sinon la référence avec un lien. La saisie, Aujourd'hui et les sessions continuent de fonctionner hors ligne.","Punguza upakuaji mtandaoni. Maandiko yataonekana yakiwa tayari kwenye kifaa hiki; la sivyo, rejeo na kiungo. Kuandika maombi, Leo na vipindi vinaendelea kufanya kazi nje ya mtandao."
+savedOffline,Saved on this device — it will sync when you're back online.,Enregistré sur cet appareil — la synchronisation se fera dès le retour de la connexion.,Imehifadhiwa kwenye kifaa hiki — itasawazishwa utakaporejea mtandaoni.
+translatedLabel,Translated,Traduit,Imetafsiriwa
+audiencePrivate,Private,Privé,Faragha
+audienceVault,Private · Encrypted,Privé · Chiffré,Faragha · Imesimbwa
+audienceSharedWith,Shared with {name},Partagé avec {name},Imeshirikiwa na {name}
+audienceSharedN,Shared with {n} groups,Partagé avec {n} groupes,Imeshirikiwa na vikundi {n}
+audienceFromGroup,From {name},De {name},Kutoka {name}
+privacySecurity,Privacy & Security,Confidentialité et sécurité,Faragha na usalama
+notifPreviewTitle,Notification privacy,Confidentialité des notifications,Faragha ya arifa
+notifPreviewSub,What a prayer reminder may show on your lock screen. Titles and names are never included.,Ce qu'un rappel de prière peut afficher sur ton écran verrouillé. Les titres et les noms ne sont jamais inclus.,Kikumbusho cha maombi kinaweza kuonyesha nini kwenye skrini yako iliyofungwa. Vichwa na majina havijumuishwi kamwe.
+notifPreviewGeneric,Just an invitation to pray — no details,Juste une invitation à prier — aucun détail,Mwaliko wa kuomba tu — hakuna maelezo
+notifPreviewCount,Include today's count — never titles or names,Indiquer le nombre du jour — jamais les titres ni les noms,Onyesha idadi ya leo — kamwe si vichwa wala majina
+sharePreviewAudience,Will be shared with: {names},Sera partagé avec : {names},Itashirikiwa na: {names}
+sharePreviewSync,Updates you add to this prayer will be shared too.,Les nouvelles que tu ajouteras à cette prière seront aussi partagées.,Habari utakazoongeza kwenye ombi hili pia zitashirikiwa.
+peopleView,People,Personnes,Watu
+followUpNext,Follow-up · {date},Suivi · {date},Ufuatiliaji · {date}
+resultsCount,{n} results,{n} résultats,Matokeo {n}
+clearFiltersBtn,Clear filters,Effacer les filtres,Futa vichujio
+journalFilters,Journal filters,Filtres du journal,Vichujio vya shajara
+journalSource,Source or group,Source ou groupe,Chanzo au kikundi
+intercessionDueSub,Due today — from the requests you carry,À prier aujourd'hui — parmi les sujets que tu portes,Ya leo — kutoka kwa maombi unayobeba
+intercessionNoneDue,Nothing is due today — your rhythm covers these on other days.,Rien n'est prévu aujourd'hui — ton rythme couvre ces sujets d'autres jours.,Hakuna lililopangwa leo — mpangilio wako unayashughulikia siku nyingine.
+intercessionAllCarried,View all requests I'm carrying · {n},Voir tous les sujets que je porte · {n},Ona maombi yote ninayobeba · {n}
+prayAllCarriedBtn,Pray all remaining · {n},Prier tous les sujets restants · {n},Ombea yote yaliyosalia · {n}
+prayAgainBtn,Pray again,Prier encore,Omba tena
+prayForPerson,Pray for {name} · {n} active requests,Prier pour {name} · {n} sujets actifs,Mwombee {name} · maombi {n} yanayoendelea
+personPrayedToday,You prayed for {name} today 🙏,Tu as prié pour {name} aujourd'hui 🙏,Umemwombea {name} leo 🙏
+aboutMinutes,About {n} min,Environ {n} min,Takriban dakika {n}
+whyThisStep,Why this step?,Pourquoi cette étape ?,Kwa nini hatua hii?
+protEncrypted,Encrypted,Chiffré,Imesimbwa
+addUpdateBtn,Add update,Ajouter une nouvelle,Ongeza habari
+privacyRowOverview,Privacy Center,Centre de confidentialité,Kituo cha faragha
+privacyRowVault,Prayer Vault,Coffre de prière,Kasha la maombi
+privacyRowNotif,Notification privacy,Confidentialité des notifications,Faragha ya arifa
+privacyRowLowData,Low data mode,Mode économie de données,Hali ya data kidogo
+privacyRowAi,AI assistance & data,Assistance IA et données,Msaada wa AI na data
+privacyRowExport,Export my data,Exporter mes données,Hamisha data yangu
+protWillEncrypt,Will be encrypted,Sera chiffré,Itasimbwa
+protEncryptedLocked,Encrypted · locked here,Chiffré · verrouillé ici,Imesimbwa · imefungwa hapa
+checklistAddRequestFirst,Add a request first,Ajoute d'abord une demande,Ongeza ombi kwanza
+sourceLangWrittenIn,Written in {name},Écrit en {name},Imeandikwa kwa {name}
+sourceLangChange,Change,Modifier,Badilisha
+sourceLangLabel,Language of this prayer,Langue de cette prière,Lugha ya maombi haya
+sourceLangLooksLike,Looks like {name} — use it?,On dirait du {name} — l'utiliser ?,Inaonekana ni {name} — itumie?
+schedRhythmLabel,Prayer rhythm,Rythme de prière,Mdundo wa maombi
+schedChange,Change,Modifier,Badilisha
+schedChangeLater,You can change this later.,Tu pourras changer plus tard.,Unaweza kubadilisha baadaye.
+schedWhenAppear,When would you like this prayer to appear?,Quand souhaites-tu voir cette prière apparaître ?,Ungependa ombi hili lionekane lini?
+schedUsePlan,Use my normal prayer rhythm,Suivre mon rythme habituel,Tumia mdundo wangu wa kawaida
+schedOnceSub,Choose a date,Choisir une date,Chagua tarehe
+schedOtherRhythm,Choose another rhythm,Choisir un autre rythme,Chagua mdundo mwingine
+schedOtherRhythmSub,"Daily, weekly or a custom pattern","Chaque jour, chaque semaine ou sur mesure","Kila siku, kila wiki au wako mwenyewe"
+schedNoFixed,No fixed schedule,Pas d'horaire fixe,Hakuna ratiba maalum
+schedNoFixedSub,"Stays in your Journal, never on a set day","Reste dans le Journal, jamais un jour précis","Inabaki kwenye Jarida, si siku maalum"
+schedNoFixedSentence,"This prayer stays in your Journal, with no set day.","Cette prière restera dans ton Journal, sans jour fixe.","Sala hii inabaki kwenye Jarida lako, bila siku maalum."
+noFixedSchedule,No fixed schedule,Pas d'horaire fixe,Hakuna ratiba maalum
+moreOptionsLabel,More options,Plus d'options,Chaguo zaidi
+formReminderAt,You'll be reminded around {time}.,Tu seras rappelé·e vers {time}.,Utakumbushwa karibu saa {time}.
+schedEveryDay,Every day,Chaque jour,Kila siku
+schedOnceAWeek,Once a week,Une fois par semaine,Mara moja kwa wiki
+schedChooseDays,Choose days,Choisir les jours,Chagua siku
+schedMoreOptions,More scheduling options,Plus d'options,Chaguo zaidi
+schedPreferredTime,Preferred time,Moment préféré,Wakati unaopendelea
+schedStopQuestion,When should this rhythm stop?,Quand ce rythme doit-il s'arrêter ?,Mdundo huu ukome lini?
+schedUseRhythm,Use this rhythm,Utiliser ce rythme,Tumia mdundo huu
+schedWeekdaysLabel,Days of the week,Jours de la semaine,Siku za wiki
+schedDateLabel,Date,Date,Tarehe
+schedEndDateLabel,End date,Date de fin,Tarehe ya mwisho
+schedEndCountLabel,Number of times,Nombre de fois,Idadi ya mara
+endMarkAnswered,When I mark it answered,Quand je la marque exaucée,Nitakapoliweka kuwa limejibiwa
+endNoAutoEnd,No automatic end,Pas de fin automatique,Hakuna mwisho wa kiotomatiki
+schedWillAppear,This prayer will appear {detail}.,Cette prière apparaîtra {detail}.,Ombi hili litaonekana {detail}.
+schedWillFollowPlan,This prayer will follow your normal rhythm: {days}.,Cette prière suivra ton rythme habituel : {days}.,Ombi hili litafuata mdundo wako wa kawaida: {days}.
+sentOnce,once on {date},une fois le {date},mara moja tarehe {date}
+sentDaily,every day,chaque jour,kila siku
+sentWeekly,every {days},chaque {days},kila {days}
+sentInterval,every {n} days,tous les {n} jours,kila siku {n}
+sentMonthly,on day {d} of each month,le {d} de chaque mois,siku ya {d} ya kila mwezi
+sentYearly,every year on {date},chaque année le {date},kila mwaka tarehe {date}
+sentAnytime,at any time,à tout moment,wakati wowote
+sentMorning,in the morning,le matin,asubuhi
+sentMidday,at midday,à midi,adhuhuri
+sentEvening,in the evening,le soir,jioni
+sentUntilAnswered,until you mark it answered,jusqu'à ce que tu la marques exaucée,hadi utakapoliweka kuwa limejibiwa
+sentUntilDate,until {date},jusqu'au {date},hadi {date}
+sentTimes,{n} times in total,{n} fois au total,mara {n} kwa jumla
+sentJoin,", ",", ",", "
+formatBold,Bold,Gras,Herufi nzito
+formatItalic,Italic,Italique,Italiki
+formatList,List,Liste,Orodha
+attachMenu,Attach,Joindre,Ambatisha
+attachPhoto,Photo,Photo,Picha
+attachVideo,Video,Vidéo,Video
+attachAudio,Audio,Audio,Sauti
+attachLink,Link,Lien,Kiungo
+recordVoice,Record a voice note,Enregistrer une note vocale,Rekodi ujumbe wa sauti
+stopRecording,Stop recording,Arrêter l'enregistrement,Simamisha kurekodi
+attachRemove,Remove attachment,Retirer la pièce jointe,Ondoa kiambatisho
+textRemove,Remove text,Retirer le texte,Ondoa maandishi
+linkPlaceholder,Paste a link (https://…),Coller un lien (https://…),Bandika kiungo (https://…)
+linkInvalid,This link is not valid,Ce lien n'est pas valide,Kiungo hiki si sahihi
+attachTooLarge,This file is too large,Ce fichier est trop volumineux,Faili hii ni kubwa mno
+attachUnsupported,Unsupported file type,Type de fichier non pris en charge,Aina ya faili haitumiki
+attachOffline,Adding media requires a connection,Ajouter un média nécessite une connexion internet,Kuongeza media kunahitaji muunganisho wa intaneti
+uploadFailed,"Upload failed, please try again","L'envoi a échoué, réessayez","Upakiaji umeshindikana, jaribu tena"
+micUnavailable,Microphone unavailable,Micro indisponible,Maikrofoni haipatikani
+mediaLoadError,Couldn't load this media,Impossible de charger ce média,Imeshindwa kupakia media hii
+restUnderSky,Rest under the sky,Reposez-vous sous le ciel,Pumzika chini ya anga

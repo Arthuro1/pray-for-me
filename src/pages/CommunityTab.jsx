@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, X, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus, HeartHandshake, CalendarPlus } from 'lucide-react';
+import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus, HeartHandshake, CalendarPlus } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -11,7 +11,6 @@ import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { timeAgo, groupByThisMonth } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
-import { unreadCounts } from '../utils/community';
 import PrayerDetail from './PrayerDetail';
 import PrayerForm from '../components/PrayerForm';
 import IntercessionQueue from '../components/IntercessionQueue';
@@ -31,15 +30,13 @@ import LockedNotice from '../components/LockedNotice';
 import { plainText } from '../components/rich/RichText';
 import ShareButtons from '../components/shared/ShareButtons';
 import Switch from '../components/shared/Switch';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
 import { QRCodeSVG } from 'qrcode.react';
 import { PageHeader } from '../components/shared/Primitives';
-
-const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
-const SUBTLE_BTN = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
-const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
-const MODAL_INPUT_CLASS = 'w-full px-4 py-3 rounded-xl text-sm focus:outline-none mb-3';
+import { Modal, CreateGroupModal, JoinGroupModal, AddFriendModal } from './community/GroupFriendModals';
+import { CARD_STYLE, SUBTLE_BTN, INPUT_STYLE } from './community/ui';
+import useCommunityHubData from './community/useCommunityHubData';
+import useGroupPlans from './community/useGroupPlans';
+import { markGroupSeen } from './community/seen';
 // Plain, recognisable line icons (currentColor, so they adapt to theme and to
 // the button they sit in): join = walk through a door, create = a circle of
 // people, add a friend = a person with a plus.
@@ -49,16 +46,6 @@ function CommunityActionIcon({ action, compact = false }) {
   const Icon = COMMUNITY_ACTION_ICONS[action];
   return <Icon size={compact ? 16 : 18} strokeWidth={1.9} aria-hidden="true" />;
 }
-
-// ── Reusable request/invitation row ──────────────────────────────────────────
-// Per-group "last visited" timestamps, kept locally to compute unread badges.
-const SEEN_KEY = 'pfm_group_seen';
-const readSeen = () => { try { return JSON.parse(localStorage.getItem(SEEN_KEY) || '{}'); } catch { return {}; } };
-const markGroupSeen = (groupId) => {
-  const m = readSeen();
-  m[groupId] = new Date().toISOString();
-  localStorage.setItem(SEEN_KEY, JSON.stringify(m));
-};
 
 // Formats an ISO 'YYYY-MM-DD' group-plan start day for display, parsing it as a
 // LOCAL date so it never shifts a day (new Date('2026-08-01') is UTC midnight).
@@ -105,54 +92,27 @@ function Section({ title, icon, children }) {
 
 // ── Community Hub Home ──────────────────────────────────────────────────────
 function CommunityHub({ lang, userId, onViewGroup }) {
-  const { groups, fetchFriends, fetchFriendRequests, fetchGroupInvitations, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, fetchPendingCount, fetchGroupActivity, fetchPlanInvitations, acceptPlanInvitation, declinePlanInvitation } = useCommunityStore(
+  const { groups, acceptFriendRequest, rejectFriendRequest, acceptGroupInvitation, rejectGroupInvitation, removeFriend, addFriendship, acceptPlanInvitation, declinePlanInvitation } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
-      fetchFriends: s.fetchFriends,
-      fetchFriendRequests: s.fetchFriendRequests,
-      fetchGroupInvitations: s.fetchGroupInvitations,
       acceptFriendRequest: s.acceptFriendRequest,
       rejectFriendRequest: s.rejectFriendRequest,
       acceptGroupInvitation: s.acceptGroupInvitation,
       rejectGroupInvitation: s.rejectGroupInvitation,
       removeFriend: s.removeFriend,
       addFriendship: s.addFriendship,
-      fetchPendingCount: s.fetchPendingCount,
-      fetchGroupActivity: s.fetchGroupActivity,
-      fetchPlanInvitations: s.fetchPlanInvitations,
       acceptPlanInvitation: s.acceptPlanInvitation,
       declinePlanInvitation: s.declinePlanInvitation,
     }))
   );
   const navigate = useNavigate();
-  const [friends, setFriends] = useState([]);
-  const [friendRequests, setFriendRequests] = useState([]);
-  const [groupInvitations, setGroupInvitations] = useState([]);
-  const [planInvitations, setPlanInvitations] = useState([]);
-  const [unread, setUnread] = useState({});
-  const [loading, setLoading] = useState(true);
+  // Read-model (friends, requests, invitations, unread badges) + its loader live
+  // in a dedicated hook; this component keeps the mutations and the layout.
+  const { friends, friendRequests, groupInvitations, planInvitations, unread, loading, reload } = useCommunityHubData(userId);
   const [busyId, setBusyId] = useState(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showJoinGroup, setShowJoinGroup] = useState(false);
   const [showAddFriend, setShowAddFriend] = useState(false);
-
-  const load = useCallback(async () => {
-    const [f, fr, gi, pi] = await Promise.all([
-      fetchFriends(userId),
-      fetchFriendRequests(userId),
-      fetchGroupInvitations(userId),
-      fetchPlanInvitations(userId),
-    ]);
-    setFriends(f.friends || []);
-    setFriendRequests(fr.requests || []);
-    setGroupInvitations(gi.invitations || []);
-    setPlanInvitations(pi?.invitations || []);
-    setLoading(false);
-    fetchPendingCount(userId);
-    fetchGroupActivity().then((rows) => setUnread(unreadCounts(rows, readSeen(), userId)));
-  }, [userId]);
-
-  useEffect(() => { load(); }, [load]);
 
   // Accept an invitation to pray a plan together: start the SAME guided plan on
   // your own calendar (unless already running it) and jump to the Plan tab.
@@ -173,7 +133,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
     setBusyId(id);
     const res = await fn();
     if (res?.error) toast.error(t(lang, 'errorGeneric'));
-    await load();
+    await reload();
     setBusyId(null);
   };
 
@@ -181,11 +141,11 @@ function CommunityHub({ lang, userId, onViewGroup }) {
   const handleRemoveFriend = async (friend) => {
     setBusyId(friend.id);
     const res = await removeFriend(userId, friend.id);
-    await load();
+    await reload();
     setBusyId(null);
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
     toast.success(t(lang, 'friendRemoved'), {
-      action: { label: t(lang, 'undo'), onClick: async () => { await addFriendship(userId, friend.id); load(); } },
+      action: { label: t(lang, 'undo'), onClick: async () => { await addFriendship(userId, friend.id); reload(); } },
     });
   };
 
@@ -364,267 +324,6 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         {showAddFriend && <AddFriendModal lang={lang} userId={userId} onClose={() => setShowAddFriend(false)} />}
       </div>
     </div>
-  );
-}
-
-// ── Modal shell ──────────────────────────────────────────────────────────────
-function Modal({ title, onClose, lang, children }) {
-  useEscapeKey(onClose);
-  const trapRef = useFocusTrap();
-  return (
-    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-4" onClick={onClose}>
-      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title} className="editorial-dialog w-full max-w-md flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between p-5 pb-4 shrink-0">
-          <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{title}</h3>
-          <button
-            onClick={onClose}
-            aria-label={t(lang, 'close')}
-            className="w-11 h-11 -m-2 shrink-0 flex items-center justify-center rounded-full focus-visible:ring-2"
-            style={{ color: 'var(--text-3)' }}
-          >
-            <X size={18} aria-hidden="true" />
-          </button>
-        </div>
-        <div className="px-5 pb-5 overflow-y-auto">{children}</div>
-      </div>
-    </div>
-  );
-}
-
-// Cancel + primary action footer shared by the form modals.
-function ModalActions({ lang, onCancel, onSubmit, disabled, loading, submitLabel }) {
-  return (
-    <div className="flex gap-2">
-      <button onClick={onCancel} className="flex-1 py-2.5 rounded-xl text-sm" style={SUBTLE_BTN}>{t(lang, 'cancel')}</button>
-      <button onClick={onSubmit} disabled={disabled} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-        {loading ? <Loader2 size={14} className="animate-spin mx-auto" /> : submitLabel}
-      </button>
-    </div>
-  );
-}
-
-// ── Create Group Modal ──────────────────────────────────────────────────────
-function CreateGroupModal({ lang, userId, onClose, onDone }) {
-  const createGroup = useCommunityStore((s) => s.createGroup);
-  const [name, setName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleCreate = async () => {
-    if (!name.trim()) return;
-    setLoading(true);
-    const { error: err, group } = await createGroup(name.trim(), userId);
-    setLoading(false);
-    if (err) { setError(err); return; }
-    // Land the new leader inside their group, where the first-group checklist
-    // (invite → first request → pray) is waiting — no settings détour.
-    onDone(group?.id || null);
-  };
-
-  return (
-    <Modal title={t(lang, 'createGroup')} lang={lang} onClose={onClose}>
-      <input autoFocus value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
-        className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
-      {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
-      <ModalActions lang={lang} onCancel={onClose} onSubmit={handleCreate}
-        disabled={!name.trim() || loading} loading={loading} submitLabel={t(lang, 'createGroup')} />
-    </Modal>
-  );
-}
-
-// ── Join Group Modal ────────────────────────────────────────────────────────
-// Joining happens through an invite link or code shared by a member; this modal
-// accepts either (a full URL just contributes its last path segment) and reuses
-// the same joinGroup flow as the /community/join/:code deep link.
-function JoinGroupModal({ lang, userId, onClose, onJoined }) {
-  const joinGroup = useCommunityStore((s) => s.joinGroup);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const code = input.trim().split(/[/\s]+/).filter(Boolean).pop() || '';
-
-  const handleJoin = async () => {
-    if (!code || loading) return;
-    setLoading(true);
-    const res = await joinGroup(code, userId);
-    setLoading(false);
-    if (res.group) {
-      toast.success(t(lang, 'joinedGroup'));
-      onJoined(res.group.id);
-    } else {
-      setError(t(lang, res.error === 'alreadyMember' ? 'alreadyMember' : 'groupNotFound'));
-    }
-  };
-
-  return (
-    <Modal title={t(lang, 'joinGroupCta')} lang={lang} onClose={onClose}>
-      <p className="text-xs mb-3 leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'joinGroupHint')}</p>
-      <input autoFocus value={input} onChange={e => { setInput(e.target.value); setError(''); }}
-        placeholder={t(lang, 'joinGroupPlaceholder')}
-        className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
-      {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
-      <ModalActions lang={lang} onCancel={onClose} onSubmit={handleJoin}
-        disabled={!code || loading} loading={loading} submitLabel={t(lang, 'join')} />
-    </Modal>
-  );
-}
-
-// ── Add Friend Modal ────────────────────────────────────────────────────────
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function AddFriendModal({ lang, userId, onClose }) {
-  const sendFriendRequest = useCommunityStore((s) => s.sendFriendRequest);
-  const sendFriendRequestToId = useCommunityStore((s) => s.sendFriendRequestToId);
-  const fetchFriendSuggestions = useCommunityStore((s) => s.fetchFriendSuggestions);
-  const fetchSentFriendRequests = useCommunityStore((s) => s.fetchSentFriendRequests);
-  const rejectFriendRequest = useCommunityStore((s) => s.rejectFriendRequest);
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [suggestions, setSuggestions] = useState(null); // null = loading
-  const [sent, setSent] = useState([]); // outgoing requests still awaiting a response
-  const [addedIds, setAddedIds] = useState(new Set());
-  const [busyId, setBusyId] = useState(null);
-  const [cancelingId, setCancelingId] = useState(null);
-  const [showQR, setShowQR] = useState(false);
-
-  const friendUrl = `${window.location.origin}/community/add-friend/${userId}`;
-
-  const loadSent = useCallback(
-    () => fetchSentFriendRequests(userId).then((r) => setSent(r.requests || [])),
-    [fetchSentFriendRequests, userId],
-  );
-
-  useEffect(() => {
-    fetchFriendSuggestions(userId).then((r) => setSuggestions(r.suggestions || []));
-    loadSent();
-  }, [userId, loadSent]);
-
-  const errorText = {
-    notFound: t(lang, 'userNotFound'),
-    self: t(lang, 'cannotAddSelf'),
-    exists: t(lang, 'requestExists'),
-    alreadyFriends: t(lang, 'alreadyFriends'),
-  };
-
-  const handleSendEmail = async () => {
-    const value = email.trim();
-    if (!EMAIL_RE.test(value)) { setError(t(lang, 'invalidEmail')); return; }
-    setLoading(true);
-    setError('');
-    const { error: err } = await sendFriendRequest(value, userId);
-    setLoading(false);
-    if (err) { setError(errorText[err] || err); return; }
-    setEmail('');
-    loadSent();
-    toast.success(t(lang, 'requestSent'));
-  };
-
-  const handleAddSuggestion = async (id) => {
-    setBusyId(id);
-    const { error: err } = await sendFriendRequestToId(id, userId);
-    setBusyId(null);
-    if (err) { toast.error(errorText[err] || t(lang, 'errorGeneric')); return; }
-    setAddedIds((prev) => new Set([...prev, id]));
-    loadSent();
-    toast.success(t(lang, 'requestSent'));
-  };
-
-  const handleCancel = async (req) => {
-    setCancelingId(req.id);
-    const { error: err } = await rejectFriendRequest(req.id);
-    setCancelingId(null);
-    if (err) { toast.error(t(lang, 'errorGeneric')); return; }
-    setSent((prev) => prev.filter((r) => r.id !== req.id));
-    toast.success(t(lang, 'requestCanceled'));
-  };
-
-  return (
-    <Modal title={t(lang, 'addFriend')} lang={lang} onClose={onClose}>
-      <div className="space-y-4">
-          {/* Suggestions from shared groups */}
-          {suggestions && suggestions.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'fromYourGroups')}</p>
-              <div className="space-y-2 max-h-44 overflow-y-auto">
-                {suggestions.map((s) => {
-                  const added = addedIds.has(s.id);
-                  return (
-                    <div key={s.id} className="flex items-center justify-between gap-3 p-2 rounded-xl" style={CARD_STYLE}>
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Avatar name={s.name} size={32} />
-                        <span className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{s.name}</span>
-                      </div>
-                      <button onClick={() => handleAddSuggestion(s.id)} disabled={added || busyId === s.id}
-                        className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
-                        style={added ? { background: 'var(--accent-soft)', color: 'var(--accent)' } : { background: 'var(--accent)', color: '#fff' }}>
-                        {busyId === s.id ? <Loader2 size={13} className="animate-spin" /> : added ? <Check size={13} /> : t(lang, 'addBtn')}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Pending requests you've sent that haven't been accepted yet */}
-          {sent.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'sentRequests')}</p>
-              <div className="space-y-2 max-h-44 overflow-y-auto">
-                {sent.map((r) => (
-                  <div key={r.id} className="flex items-center justify-between gap-3 p-2 rounded-xl" style={CARD_STYLE}>
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Avatar name={r.toName} size={32} />
-                      <div className="min-w-0">
-                        <span className="block text-sm truncate" style={{ color: 'var(--text-1)' }}>{r.toName}</span>
-                        <span className="block text-xs truncate" style={{ color: 'var(--text-3)' }}>{t(lang, 'awaitingResponse')}</span>
-                      </div>
-                    </div>
-                    <button onClick={() => handleCancel(r)} disabled={cancelingId === r.id}
-                      className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50" style={SUBTLE_BTN}>
-                      {cancelingId === r.id ? <Loader2 size={13} className="animate-spin" /> : t(lang, 'cancel')}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Add by email */}
-          <div>
-            <input value={email} onChange={e => { setEmail(e.target.value); setError(''); }} placeholder="email@example.com" type="email"
-              onKeyDown={e => e.key === 'Enter' && handleSendEmail()}
-              className={MODAL_INPUT_CLASS} style={INPUT_STYLE} />
-            {error && (
-              <p className="text-xs mb-3" style={{ color: 'var(--danger)' }}>
-                {error}
-                {error === t(lang, 'userNotFound') && <> — {t(lang, 'friendLinkHint')}</>}
-              </p>
-            )}
-            <button onClick={handleSendEmail} disabled={!email.trim() || loading}
-              className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
-              {loading ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'send')}
-            </button>
-          </div>
-
-          {/* Share your friend link */}
-          <div className="pt-1 border-t" style={{ borderColor: 'var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mt-3 mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'shareFriendLink')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'friendLinkHint')}</p>
-            <ShareButtons url={friendUrl} text={t(lang, 'addMeFriend')} copiedLabel={t(lang, 'linkCopied')} />
-            <button onClick={() => setShowQR(v => !v)} className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-              <QrCode size={14} /> {t(lang, 'showQrCode')}
-            </button>
-            {showQR && (
-              <div className="flex flex-col items-center gap-2 mt-3 p-4 rounded-xl bg-white">
-                <QRCodeSVG value={friendUrl} size={150} bgColor="#ffffff" fgColor="#1a0a2e" level="M" />
-              </div>
-            )}
-          </div>
-      </div>
-    </Modal>
   );
 }
 
@@ -918,7 +617,7 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup, userReactions, fetchUserReactions, fetchGroupPlans, startGroupPlan, joinGroupPlan, leaveGroupPlan, endGroupPlan, subscribeGroupPlans } = useCommunityStore(
+  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup, userReactions, fetchUserReactions } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       prayers: s.prayers,
@@ -931,12 +630,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       leaveGroup: s.leaveGroup,
       userReactions: s.userReactions,
       fetchUserReactions: s.fetchUserReactions,
-      fetchGroupPlans: s.fetchGroupPlans,
-      startGroupPlan: s.startGroupPlan,
-      joinGroupPlan: s.joinGroupPlan,
-      leaveGroupPlan: s.leaveGroupPlan,
-      endGroupPlan: s.endGroupPlan,
-      subscribeGroupPlans: s.subscribeGroupPlans,
     }))
   );
   const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
@@ -955,44 +648,36 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // behind an open modal re-derives its steps.
   const [, setChecklistVersion] = useState(0);
   const reconciledRef = useRef(null);
-  // Group prayer plans — plans the whole group is walking through, visible to
-  // every member (including future ones) and joinable from here.
-  const [groupPlans, setGroupPlans] = useState([]);
-  const [showPlanPicker, setShowPlanPicker] = useState(false);
-  const [detailPlan, setDetailPlan] = useState(null); // plan chosen from the picker
-  const [busyPlanId, setBusyPlanId] = useState(null);
-  const [confirmEndPlan, setConfirmEndPlan] = useState(null);
+  // Group prayer plans (read-model, subscription, join/leave/end/adopt) live in a
+  // dedicated hook; the picker/detail/confirm modals below consume its state.
+  const {
+    groupPlans, adoptedPlanIds,
+    showPlanPicker, setShowPlanPicker,
+    detailPlan, setDetailPlan,
+    confirmEndPlan, setConfirmEndPlan,
+    busyPlanId,
+    handleJoinGroupPlan, handleLeaveGroupPlan, handleEndGroupPlan, handleAdoptGroupPlan,
+  } = useGroupPlans({ groupId, user, lang });
 
   // Always (re)fetch on entering a group so freshly synced points/updates from
   // the personal side show up, even if this group was already the active one.
+  // (setActiveGroup, subscribeGroupPrayers, fetchUserReactions are stable Zustand
+  // actions — listing them satisfies exhaustive-deps without extra re-runs.)
   useEffect(() => {
     if (groupId) { setActiveGroup(groupId); markGroupSeen(groupId); }
-  }, [groupId]);
+  }, [groupId, setActiveGroup]);
 
   // Live prayer wall: reflect new/edited/answered requests from other members.
   useEffect(() => {
     if (!groupId) return;
     return subscribeGroupPrayers(groupId);
-  }, [groupId]);
+  }, [groupId, subscribeGroupPrayers]);
 
   // The leader checklist's "begin praying" step ticks itself off once the user
   // has an "I'm praying" on any of this group's requests.
   useEffect(() => {
     if (groupId && user?.id) fetchUserReactions(groupId, user.id);
-  }, [groupId, user?.id]);
-
-  // Load the group's shared plans; live-refresh when one is started/ended or a
-  // member joins (so the "who's praying" count stays current for everyone).
-  const loadGroupPlans = useCallback(async () => {
-    if (!groupId || !user?.id) return;
-    const { plans } = await fetchGroupPlans(groupId, user.id);
-    setGroupPlans(plans || []);
-  }, [groupId, user?.id, fetchGroupPlans]);
-  useEffect(() => { loadGroupPlans(); }, [loadGroupPlans]);
-  useEffect(() => {
-    if (!groupId) return;
-    return subscribeGroupPlans(groupId, loadGroupPlans);
-  }, [groupId, loadGroupPlans, subscribeGroupPlans]);
+  }, [groupId, user?.id, fetchUserReactions]);
 
   const group = groups.find(g => g.id === groupId);
   const isAdmin = group?.role === 'admin';
@@ -1054,62 +739,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
     onBack();
   };
-
-  // Start the guided plan on MY own calendar (unless I'm already running it).
-  // Shared by "join a group plan" and "adopt a plan for the group".
-  const startPlanOnMyCalendar = async (plan, startDate) => {
-    const mine = usePrayerStore.getState().prayers;
-    if (plan && !runningPlanIds(mine, todayKey()).has(plan.id)) {
-      await usePrayerStore.getState().addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
-    }
-  };
-
-  // Join a plan the group is praying: it lands on my calendar and I'm counted
-  // among those praying it. Optimistically reflect the new joined state + count.
-  const handleJoinGroupPlan = async (gp) => {
-    setBusyPlanId(gp.id);
-    await startPlanOnMyCalendar(planById(gp.plan_id), gp.start_date);
-    const res = await joinGroupPlan(gp.id, groupId, user.id);
-    setBusyPlanId(null);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    setGroupPlans((prev) => prev.map((p) => (p.id === gp.id && !p.joinedByMe)
-      ? { ...p, joinedByMe: true, participantCount: p.participantCount + 1 } : p));
-    toast.success(t(lang, 'planStarted'));
-  };
-
-  // Stop praying a group plan (removes only my participation; my calendar copy
-  // and everyone else's are untouched).
-  const handleLeaveGroupPlan = async (gp) => {
-    setBusyPlanId(gp.id);
-    const res = await leaveGroupPlan(gp.id, user.id);
-    setBusyPlanId(null);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    setGroupPlans((prev) => prev.map((p) => (p.id === gp.id && p.joinedByMe)
-      ? { ...p, joinedByMe: false, participantCount: Math.max(0, p.participantCount - 1) } : p));
-  };
-
-  // End a shared plan for the whole group (starter or admin — enforced by RLS).
-  const handleEndGroupPlan = async (gp) => {
-    setBusyPlanId(gp.id);
-    const res = await endGroupPlan(gp.id);
-    setBusyPlanId(null);
-    setConfirmEndPlan(null);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    setGroupPlans((prev) => prev.filter((p) => p.id !== gp.id));
-    toast.success(t(lang, 'groupPlanEndedToast'));
-  };
-
-  // Adopt a plan for the group (picker → PlanDetailModal): it becomes visible to
-  // everyone and also starts on the adopter's own calendar.
-  const handleAdoptGroupPlan = async (plan, startDate) => {
-    const res = await startGroupPlan({ groupId, planId: plan.id, startDate, userId: user.id });
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    await startPlanOnMyCalendar(plan, startDate);
-    await loadGroupPlans();
-    toast.success(t(lang, 'groupPlanStartedToast'));
-  };
-
-  const adoptedPlanIds = new Set(groupPlans.map((p) => p.plan_id));
 
   return (
     <div className="phase-page constellation-community constellation-community-group min-h-screen">

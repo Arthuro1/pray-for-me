@@ -20,9 +20,11 @@ export default function NotificationsPage() {
     fetchNotifications, fetchMoreNotifications, markRead, markAllRead,
   } = useNotificationStore();
 
+  // fetchNotifications is a stable Zustand action; listing it satisfies
+  // exhaustive-deps without re-running on every render.
   useEffect(() => {
     if (user?.id) fetchNotifications(user.id);
-  }, [user?.id]);
+  }, [user?.id, fetchNotifications]);
 
   const handleActivate = async (n) => {
     await markRead(n.id);

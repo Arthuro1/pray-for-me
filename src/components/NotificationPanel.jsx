@@ -24,10 +24,12 @@ export default function NotificationPanel({ onClose }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
 
-  // Refresh the latest page whenever the panel opens.
+  // Refresh the latest page whenever the panel opens. fetchNotifications is a
+  // stable Zustand action, so listing it satisfies exhaustive-deps without
+  // re-running on every render.
   useEffect(() => {
     if (user?.id) fetchNotifications(user.id);
-  }, [user?.id]);
+  }, [user?.id, fetchNotifications]);
 
   const recent = notifications.slice(0, 8);
 

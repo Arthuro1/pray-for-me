@@ -1,0 +1,950 @@
+key,en,fr,am
+todayRemainingLabel,Today · {n} remaining,Aujourd'hui · encore {n},ዛሬ · የቀሩ {n}
+todayCompleteTitle,Today's prayer is complete.,La prière d'aujourd'hui est terminée.,የዛሬ ጸሎት ተጠናቅቋል።
+prayAgain,Pray again,Prier à nouveau,እንደገና ይጸልዩ
+prayedTodayLabel,Prayed today,Priées aujourd’hui,ዛሬ የተጸለዩ
+rhythmPlanHint,"Stays in your Journal, with no set day.","Reste dans ton Journal, sans jour fixe.",በማስታወሻህ ውስጥ ይቆያል፣ በተወሰነ ቀን የለም።
+answeredThisWeek,{n} answered this week,{n} exaucées cette semaine,በዚህ ሳምንት {n} ተመልሰዋል
+prayWithOthers,Pray with others,Priez avec d'autres,ከሌሎች ጋር ይጸልዩ
+communityEmptyDesc,Join a prayer group using an invitation link or code.,Rejoignez un groupe de prière avec un lien ou un code d'invitation.,በግብዣ አገናኝ ወይም ኮድ የጸሎት ቡድን ይቀላቀሉ።
+inbox,Inbox,Boîte de réception,የገቢ መልዕክት ሳጥን
+prayerReminders,Prayer reminders,Rappels de prière,የጸሎት ማስታወሻዎች
+onboardCaptureTitle,What would you like to pray about?,Pour quoi aimeriez-vous prier ?,ስለ ምን መጸለይ ይፈልጋሉ?
+onboardCapturePlaceholder,Pray for my sister's health…,Prier pour la santé de ma sœur…,ለእህቴ ጤና መጸለይ…
+onboardPrivateNote,Private and encrypted by default.,Privé et chiffré par défaut.,በነባሪ የግል እና የተመሰጠረ ነው።
+onboardSaveAndPray,Save and pray,Enregistrer et prier,አስቀምጥ እና ጸልይ
+onboardLater,I'll do this later,Je le ferai plus tard,በኋላ አደርገዋለሁ
+firstPrayerQuestion,Who or what is on your heart?,Qui ou quoi avez-vous sur le cœur ?,በልብዎ ያለው ማን ወይም ምንድን ነው?
+firstPrayerDeviceNote,This stays on this device until you choose to save it.,Cela reste sur cet appareil jusqu'à ce que vous choisissiez de l'enregistrer.,እስኪያስቀምጡት ድረስ ይህ በዚህ መሣሪያ ላይ ብቻ ይቆያል።
+firstPrayerPrayCta,Pray now,Prier maintenant,አሁን ይጸልዩ
+firstPrayerSaveTitle,Would you like to keep this prayer in your private journal?,Souhaitez-vous garder cette prière dans votre journal privé ?,ይህን ጸሎት በግል ማስታወሻዎ ውስጥ ማስቀመጥ ይፈልጋሉ?
+firstPrayerSaveBtn,Save in my private journal,Enregistrer dans mon journal privé,በግል ማስታወሻዬ ውስጥ አስቀምጥ
+firstPrayerFinishBtn,Finish without saving,Terminer sans enregistrer,ሳያስቀምጡ ጨርስ
+authSavePrayerTitle,Save your prayer privately,Enregistrez votre prière en privé,ጸሎትዎን በግል ያስቀምጡ
+authSavePrayerBody,Create a free account to keep this prayer in your journal — only you can ever read it.,Créez un compte gratuit pour garder cette prière dans votre journal — vous seul pourrez la lire.,ይህን ጸሎት በማስታወሻዎ ውስጥ ለማስቀመጥ ነጻ መለያ ይፍጠሩ — እርስዎ ብቻ ሊያነቡት ይችላሉ።
+authSavePrayerCta,Continue to save privately,Continuer pour enregistrer en privé,በግል ለማስቀመጥ ይቀጥሉ
+prayerFormat,Prayer format,Format de prière,የጸሎት ቅርጸት
+prayerMusic,Prayer atmosphere,Ambiance de prière,የጸሎት ከባቢ
+prayerMusicSub,Choose a gentle background for prayer. Silence is always welcome.,Choisissez un fond doux pour la prière. Le silence est toujours le bienvenu.,ለጸሎት ለዘብተኛ ዳራ ይምረጡ። ጸጥታ ሁልጊዜ ተቀባይነት አለው።
+audioSilence,Silence,Silence,ጸጥታ
+audioSoftPiano,Soft piano,Piano doux,ለስላሳ ፒያኖ
+audioAmbientPad,Ambient worship pad,Nappe de louange,የአምልኮ ድምፅ
+audioNature,Rain / nature,Pluie / nature,ዝናብ / ተፈጥሮ
+audioSoftPad,Soft pad,Nappe douce,ለስላሳ ድምፅ
+prayerFieldLabel,Who or what would you like to pray for?,Pour qui ou pour quoi voulez-vous prier ?,ለማን ወይም ለምን መጸለይ ይፈልጋሉ?
+addNote,Add a note,Ajouter une note,ማስታወሻ ጨምር
+organizeLabel,Organize,Organiser,አደራጅ
+savePrayer,Save prayer,Enregistrer la prière,ጸሎት አስቀምጥ
+rhythmLabel,How often should this return?,À quelle fréquence revenir ?,በምን ያህል ጊዜ ይመለስ?
+rhythmFlexible,Weekly plan,Plan hebdomadaire,ሳምንታዊ እቅድ
+rhythmOccasionally,Occasionally,De temps en temps,አልፎ አልፎ
+rhythmCustom,Custom,Personnalisé,ብጁ
+doneBtn,Done,Terminé,ተጠናቋል
+moreTab,More,Plus,ተጨማሪ
+primaryNav,Primary navigation,Navigation principale,ዋና ዳሰሳ
+navPending,{count} pending,{count} en attente,{count} በመጠባበቅ ላይ
+joinGroupCta,Join a group,Rejoindre un groupe,ቡድን ተቀላቀል
+joinGroupHint,Paste an invite link or code shared by a group member.,Collez un lien ou un code d'invitation partagé par un membre du groupe.,የቡድን አባል ያጋራውን የግብዣ አገናኝ ወይም ኮድ ይለጥፉ።
+joinGroupPlaceholder,Invite link or code,Lien ou code d'invitation,የግብዣ አገናኝ ወይም ኮድ
+reminderNudge,Would a gentle reminder tomorrow help?,Un doux rappel demain vous aiderait-il ?,ነገ ለስላሳ ማስታወሻ ይረዳል?
+activationRhythmTitle,Choose how this prayer returns,Choisissez quand retrouver cette prière,ይህ ጸሎት መቼ እንደሚመለስ ይምረጡ
+activationRhythmBody,Every prayer can have its own rhythm. Review when this one should return so it fits your life.,Chaque prière peut avoir son propre rythme. Choisissez quand retrouver celle-ci pour l'adapter à votre quotidien.,እያንዳንዱ ጸሎት የራሱ ልማድ ሊኖረው ይችላል። ይህ ጸሎት ከሕይወትዎ ጋር እንዲስማማ መቼ እንደሚመለስ ይመልከቱ።
+activationRhythmCta,Review rhythm,Voir le rythme,ልማዱን ይመልከቱ
+activationReminderTitle,Would a gentle reminder help?,Un doux rappel vous aiderait-il ?,ለስላሳ ማስታወሻ ይረዳል?
+activationReminderBody,Choose a time and Pray4Me can bring today's prayers back to you.,Choisissez une heure et Pray4Me pourra vous ramener aux prières du jour.,ሰዓት ይምረጡ፣ Pray4Me የዛሬን ጸሎቶች እንደገና ያቀርብልዎታል።
+activationOrganizeTitle,Make a growing journal easier to revisit,Retrouvez plus facilement un journal qui grandit,እያደገ ያለውን የጸሎት ማስታወሻ ለመመልከት ቀላል ያድርጉ
+activationOrganizeBody,Add a person or category to one prayer. More organization appears only when it becomes useful.,Ajoutez une personne ou une catégorie à une prière. L'organisation n'apparaît que lorsqu'elle devient utile.,ለአንድ ጸሎት ሰው ወይም ምድብ ያክሉ። ተጨማሪ አደረጃጀት ጠቃሚ ሲሆን ብቻ ይታያል።
+activationOrganizeCta,Organize a prayer,Organiser une prière,ጸሎትን ያደራጁ
+pwaInstallTitle,Keep Pray4Me close,Gardez Pray4Me à portée de main,Pray4Meን በቅርብ ያቆዩ
+pwaInstallBody,Open today's prayers in one tap and keep the app available when your connection is unsteady.,Ouvrez les prières du jour en un geste et gardez l’application disponible même avec une connexion instable.,የዛሬን ጸሎቶች በአንድ ንክኪ ይክፈቱ፤ ግንኙነቱ ሲዳከምም መተግበሪያውን ይጠቀሙ።
+pwaInstallCta,Install Pray4Me,Installer Pray4Me,Pray4Meን ጫን
+pwaInstallLater,Not now,Pas maintenant,አሁን አይደለም
+pwaIosTitle,Add Pray4Me to your Home Screen,Ajouter Pray4Me à l’écran d’accueil,Pray4Meን ወደ መነሻ ማያ ገጽ ያክሉ
+pwaIosBody,"In your browser, tap Share, then choose Add to Home Screen.","Dans votre navigateur, touchez Partager, puis Ajouter à l’écran d’accueil.",በአሳሹ ውስጥ ማጋራትን ይንኩ፣ ከዚያ ወደ መነሻ ማያ ገጽ አክልን ይምረጡ።
+pwaIosAddAction,Add to Home Screen,Ajouter à l’écran d’accueil,ወደ መነሻ ማያ ገጽ አክል
+authLogIn,Log in,Se connecter,ግባ
+authSignUp,Sign up,S'inscrire,ተመዝገብ
+authCreateAccount,Create account,Créer un compte,መለያ ፍጠር
+authContinueGoogle,Continue with Google,Continuer avec Google,በGoogle ቀጥል
+authOr,or,ou,ወይም
+authNamePlaceholder,Display name (optional),Nom d'affichage (facultatif),የሚታይ ስም (አማራጭ)
+authEmail,Email,Email,ኢሜይል
+authPassword,Password,Mot de passe,የይለፍ ቃል
+authForgotPassword,Forgot password?,Mot de passe oublié ?,የይለፍ ቃል ረሱ?
+authResend,Resend confirmation email,Renvoyer l'email de confirmation,የማረጋገጫ ኢሜይል እንደገና ላክ
+authBackHome,Back to home,Retour à l'accueil,ወደ መነሻ ተመለስ
+authBackToLogin,Back to log in,Retour à la connexion,ወደ መግቢያ ተመለስ
+authResetTitle,Reset your password,Réinitialiser le mot de passe,የይለፍ ቃልዎን ዳግም ያስጀምሩ
+authResetIntro,Enter your email and we'll send you a link to reset your password.,Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.,ኢሜይልዎን ያስገቡ፣ የይለፍ ቃል ዳግም ለማስጀመር አገናኝ እንልክልዎታለን።
+authResetSend,Send reset link,Envoyer le lien,አገናኝ ላክ
+authConfirmSent,Check your email to confirm your account.,Vérifiez votre email pour confirmer votre compte.,መለያዎን ለማረጋገጥ ኢሜይልዎን ይመልከቱ።
+authResendDone,Confirmation email sent — check your inbox.,Email de confirmation renvoyé — vérifiez votre boîte de réception.,የማረጋገጫ ኢሜይል ተልኳል — የመልእክት ሳጥንዎን ይመልከቱ።
+authResetSent,"If an account exists for that email, we've sent a reset link.","Si un compte existe pour cet email, nous avons envoyé un lien de réinitialisation.",ለዚያ ኢሜይል መለያ ካለ፣ የዳግም ማስጀመሪያ አገናኝ ልከናል።
+authPrivacyNote,Your prayers are private and secure 🔒,Vos prières sont privées et sécurisées 🔒,ጸሎቶችዎ የግል እና ደህንነታቸው የተጠበቀ ናቸው 🔒
+authTagline,"""Pray without ceasing"" — 1 Thess. 5:17",« Priez sans cesse » — 1 Thess. 5:17,"""ሳታቋርጡ ጸልዩ"" — 1ኛ ተሰ. 5:17"
+authErrInvalid,"Email or password is incorrect. Try again, or reset your password.",Email ou mot de passe incorrect. Réessayez ou réinitialisez votre mot de passe.,ኢሜይል ወይም የይለፍ ቃል የተሳሳተ ነው። እንደገና ይሞክሩ ወይም የይለፍ ቃልዎን ዳግም ያስጀምሩ።
+authErrUnconfirmed,Please confirm your email first — you can resend the confirmation email below.,Veuillez d'abord confirmer votre email — vous pouvez renvoyer l'email de confirmation ci-dessous.,እባክዎ መጀመሪያ ኢሜይልዎን ያረጋግጡ — ከታች የማረጋገጫ ኢሜይሉን እንደገና መላክ ይችላሉ።
+authErrInUse,An account already exists with this email. Try logging in instead.,Un compte existe déjà avec cet email. Essayez plutôt de vous connecter.,በዚህ ኢሜይል መለያ አስቀድሞ አለ። እባክዎ ይግቡ።
+authErrWeakPass,Choose a password with at least 6 characters.,Choisissez un mot de passe d'au moins 6 caractères.,ቢያንስ 6 ቁምፊ ያለው የይለፍ ቃል ይምረጡ።
+authErrEmail,That email address doesn't look right.,Cette adresse email ne semble pas valide.,ይህ የኢሜይል አድራሻ ትክክል አይመስልም።
+authErrRate,Too many attempts. Please wait a moment and try again.,Trop de tentatives. Patientez un instant avant de réessayer.,በጣም ብዙ ሙከራዎች። እባክዎ ትንሽ ቆይተው እንደገና ይሞክሩ።
+savedOnToday,Your prayer is now on Today.,Votre prière est maintenant dans Aujourd'hui.,"ጸሎትዎ አሁን በ""ዛሬ"" ውስጥ ነው።"
+setReminderCta,Set a reminder,Définir un rappel,አስታዋሽ አዘጋጅ
+personNamePlaceholder,First and last name,Prénom et nom,ሙሉ ስም
+providerEmail,Email / Password,Email / Mot de passe,ኢሜይል / የይለፍ ቃል
+markAllRead,Mark all as read,Tout marquer comme lu,ሁሉንም እንደተነበበ ምልክት አድርግ
+loadMore,Load more,Voir plus,ተጨማሪ ጫን
+seeAllNotifications,See all notifications,Voir toutes les notifications,ሁሉንም ማሳወቂያዎች ይመልከቱ
+notifEmpty,No notifications yet,Aucune notification pour l'instant,እስካሁን ማሳወቂያ የለም
+notifEmptySub,Updates from your groups and friends will appear here.,Les nouveautés de vos groupes et amis apparaîtront ici.,ከቡድኖችዎ እና ከጓደኞችዎ ዜናዎች እዚህ ይታያሉ።
+notifError,Couldn't load notifications.,Impossible de charger les notifications.,ማሳወቂያዎችን መጫን አልተቻለም።
+notifUnreadLabel,Inbox ({n} unread),Boîte de réception ({n} non lues),የገቢ መልዕክት ሳጥን ({n} ያልተነበቡ)
+notifFriendRequest,You have a new friend request,Vous avez une nouvelle demande d'ami,አዲስ የጓደኝነት ጥያቄ አለዎት
+notifGroupInvitation,You've been invited to a prayer group,Vous avez été invité à un groupe de prière,ወደ የጸሎት ቡድን ተጋብዘዋል
+notifCommunityUpdate,There's an update on a prayer you follow,Il y a une mise à jour sur une prière que vous suivez,የሚከታተሉት ጸሎት ላይ ዝማኔ አለ
+notifAnswered,A prayer you follow was marked answered,Une prière que vous suivez a été marquée exaucée,የሚከታተሉት ጸሎት እንደተመለሰ ተመዝግቧል
+notifReaction,Several people are praying with you,Plusieurs personnes prient avec vous,ብዙ ሰዎች ከእርስዎ ጋር እየጸለዩ ናቸው
+notifGroupPrayerAdded,A new prayer was shared in your group,Une nouvelle prière a été partagée dans votre groupe,በቡድንዎ ውስጥ አዲስ ጸሎት ተጋርቷል
+notifTestimony,A testimony was shared in your group,Un témoignage a été partagé dans votre groupe,በቡድንዎ ውስጥ ምስክርነት ተጋርቷል
+notifMembership,You were added to a prayer group,Vous avez été ajouté à un groupe de prière,ወደ የጸሎት ቡድን ተጨምረዋል
+notifRoleChange,Your role in a group has changed,Votre rôle dans un groupe a changé,በቡድን ውስጥ ያለዎት ሚና ተቀይሯል
+notifGeneric,You have a new notification,Vous avez une nouvelle notification,አዲስ ማሳወቂያ አለዎት
+notifPrefsTitle,Community notifications,Notifications de la communauté,የማህበረሰብ ማሳወቂያዎች
+notifPrefsSub,Choose what you're notified about and how.,Choisissez ce dont vous êtes notifié et comment.,ስለ ምን እና እንዴት እንደሚያሳውቁ ይምረጡ።
+notifInApp,In-app notifications,Notifications dans l'app,በመተግበሪያ ውስጥ ማሳወቂያዎች
+notifInAppSub,Show notifications in the app inbox.,Afficher les notifications dans la boîte de réception.,ማሳወቂያዎችን በመተግበሪያ መልእክት ሳጥን ውስጥ አሳይ።
+notifPush,Push notifications,Notifications push,የግፋ ማሳወቂያዎች
+notifPushSub,Send notifications to this device even when the app is closed.,Envoyer des notifications à cet appareil même quand l'app est fermée.,መተግበሪያው ተዘግቶም ቢሆን ወደዚህ መሣሪያ ማሳወቂያ ላክ።
+quietHours,Quiet hours,Heures silencieuses,የጸጥታ ሰዓታት
+quietHoursSub,Pause push during these hours. In-app notifications still arrive.,Suspendre les push pendant ces heures. Les notifications dans l'app arrivent quand même.,በእነዚህ ሰዓታት ግፋን አቁም። በመተግበሪያ ውስጥ ማሳወቂያዎች አሁንም ይደርሳሉ።
+quietFrom,From,De,ከ
+quietTo,To,À,እስከ
+timezone,Time zone,Fuseau horaire,የሰዓት ክልል
+notifByType,By notification type,Par type de notification,በማሳወቂያ ዓይነት
+modeImmediate,Immediate,Immédiat,ወዲያውኑ
+modeDigest,Digest,Résumé,ማጠቃለያ
+modeOff,Off,Désactivé,ጠፍቷል
+followPrayer,Follow,Suivre,ተከተል
+following,Following,Suivi,እየተከተሉ
+followingPrayer,You'll be notified about this prayer,Vous serez notifié pour cette prière,ስለዚህ ጸሎት ይያሳወቁዎታል
+unfollowedPrayer,You unfollowed this prayer,Vous ne suivez plus cette prière,ይህን ጸሎት መከተል አቁመዋል
+prayTogether,Pray together,Prier ensemble,አብረን እንጸልይ
+beFirstToPray,Be the first to pray,Soyez le premier à prier,መጀመሪያ ሆነው ይጸልዩ
+andNMore,and {n} more,et {n} de plus,እና {n} ተጨማሪ
+testNotifBody,Here are today's prayers. Take a moment to pray 🙏,Voici vos prières du jour. Prenez un moment pour prier 🙏,የዛሬ ጸሎቶችዎ እነሆ። ለመጸለይ ጥቂት ጊዜ ይውሰዱ 🙏
+addThanks,Add a word of thanks,Ajouter un mot de reconnaissance,የምስጋና ቃል ይጨምሩ
+thanksSaved,Your thanks is recorded 🙏,Votre reconnaissance est enregistrée 🙏,ምስጋናዎ ተመዝግቧል 🙏
+thanksPrompt,Pause and thank God for His answer,Prenez un instant pour remercier Dieu de sa réponse,ቆም ብለው እግዚአብሔርን ስለ መልሱ ያመስግኑ
+answeredThisMonth,This month,Ce mois-ci,በዚህ ወር
+answeredEarlier,Earlier,Auparavant,ቀደም ብሎ
+vaultTitle,Prayer Vault,Coffre de prière,የጸሎት ካዝና
+vaultManageSub,Encrypt your private prayers with a passphrase only you know.,Chiffrez vos prières privées avec une phrase secrète que vous seul connaissez.,የግል ጸሎቶችዎን እርስዎ ብቻ በሚያውቁት የይለፍ ሐረግ ያመስጥሩ።
+vaultStatusLocked,Locked,Verrouillé,ተቆልፏል
+vaultStatusUnlocked,Unlocked,Déverrouillé,ተከፍቷል
+vaultSetup,Set up vault,Configurer le coffre,ካዝና አዘጋጅ
+vaultSetupTitle,Set up your Prayer Vault,Configurer votre coffre de prière,የጸሎት ካዝናዎን ያዘጋጁ
+vaultSetupIntro,"Choose a passphrase to encrypt your private prayers end-to-end. We never see it — if you forget it, only your recovery code can restore access.","Choisissez une phrase secrète pour chiffrer vos prières privées de bout en bout. Nous ne la voyons jamais — si vous l’oubliez, seul votre code de récupération peut rétablir l’accès.",የግል ጸሎቶችዎን ከጫፍ እስከ ጫፍ ለማመስጠር የይለፍ ሐረግ ይምረጡ። እኛ ፈጽሞ አናየውም — ቢረሱት፣ መዳረሻን መመለስ የሚችለው የመልሶ ማግኛ ኮድዎ ብቻ ነው።
+vaultPassphrase,Passphrase,Phrase secrète,የይለፍ ሐረግ
+vaultConfirmPassphrase,Confirm passphrase,Confirmer la phrase secrète,የይለፍ ሐረግ ያረጋግጡ
+vaultCreate,Create vault,Créer le coffre,ካዝና ፍጠር
+vaultPassTooShort,Use at least 8 characters.,Utilisez au moins 8 caractères.,ቢያንስ 8 ቁምፊዎችን ይጠቀሙ።
+vaultPassMismatch,Passphrases don't match.,Les phrases secrètes ne correspondent pas.,የይለፍ ሐረጎቹ አይዛመዱም።
+vaultRecoveryTitle,Save your recovery code,Enregistrez votre code de récupération,የመልሶ ማግኛ ኮድዎን ያስቀምጡ
+vaultRecoveryIntro,This is the only way to recover your vault if you forget your passphrase. Store it somewhere safe — it won't be shown again.,C’est le seul moyen de récupérer votre coffre si vous oubliez votre phrase secrète. Conservez-le en lieu sûr — il ne sera plus affiché.,የይለፍ ሐረግዎን ቢረሱ ካዝናዎን ለመመለስ ይህ ብቸኛው መንገድ ነው። በአስተማማኝ ቦታ ያስቀምጡት — ዳግመኛ አይታይም።
+vaultCopyCode,Copy code,Copier le code,ኮድ ቅዳ
+vaultCodeCopied,Recovery code copied,Code de récupération copié,የመልሶ ማግኛ ኮድ ተቀድቷል
+vaultRecoverySaved,I've saved my recovery code,J’ai enregistré mon code de récupération,የመልሶ ማግኛ ኮዴን አስቀምጫለሁ
+vaultUnlockTitle,Unlock your Prayer Vault,Déverrouiller votre coffre de prière,የጸሎት ካዝናዎን ይክፈቱ
+vaultUnlockIntro,Enter your passphrase to read and edit your private prayers.,Saisissez votre phrase secrète pour lire et modifier vos prières privées.,የግል ጸሎቶችዎን ለማንበብና ለማረም የይለፍ ሐረግዎን ያስገቡ።
+vaultUnlock,Unlock,Déverrouiller,ክፈት
+vaultWrongPass,Incorrect passphrase.,Phrase secrète incorrecte.,የተሳሳተ የይለፍ ሐረግ።
+vaultForgot,Forgot your passphrase?,Phrase secrète oubliée ?,የይለፍ ሐረግዎን ረሱ?
+vaultResetTitle,Reset with recovery code,Réinitialiser avec le code de récupération,በመልሶ ማግኛ ኮድ ዳግም አስጀምር
+vaultResetIntro,Enter your recovery code and choose a new passphrase.,Saisissez votre code de récupération et choisissez une nouvelle phrase secrète.,የመልሶ ማግኛ ኮድዎን ያስገቡና አዲስ የይለፍ ሐረግ ይምረጡ።
+vaultRecoveryCode,Recovery code,Code de récupération,የመልሶ ማግኛ ኮድ
+vaultNewPassphrase,New passphrase,Nouvelle phrase secrète,አዲስ የይለፍ ሐረግ
+vaultReset,Reset passphrase,Réinitialiser la phrase secrète,የይለፍ ሐረግ ዳግም አስጀምር
+vaultWrongCode,Invalid recovery code.,Code de récupération invalide.,ልክ ያልሆነ የመልሶ ማግኛ ኮድ።
+vaultLockNow,Lock,Verrouiller,ቆልፍ
+vaultChangePass,Change,Modifier,ቀይር
+vaultChangeTitle,Change passphrase,Modifier la phrase secrète,የይለፍ ሐረግ ቀይር
+vaultCurrentPassphrase,Current passphrase,Phrase secrète actuelle,የአሁኑ የይለፍ ሐረግ
+vaultChangeSave,Save passphrase,Enregistrer la phrase secrète,የይለፍ ሐረግ አስቀምጥ
+vaultUnlockedToast,Vault unlocked,Coffre déverrouillé,ካዝና ተከፍቷል
+vaultLockedToast,Vault locked,Coffre verrouillé,ካዝና ተቆልፏል
+vaultChangedToast,Passphrase changed,Phrase secrète modifiée,የይለፍ ሐረግ ተቀይሯል
+vaultResetDoneToast,Passphrase reset,Phrase secrète réinitialisée,የይለፍ ሐረግ ዳግም ተጀምሯል
+vaultRotateCode,Rotate recovery code,Renouveler le code de récupération,የመልሶ ማግኛ ኮድ አድስ
+vaultRotateTitle,Rotate recovery code,Renouveler le code de récupération,የመልሶ ማግኛ ኮድ አድስ
+vaultRotateIntro,This generates a new recovery code and invalidates the old one. Your passphrase and encrypted prayers stay unchanged.,Cela génère un nouveau code de récupération et invalide l’ancien. Votre phrase secrète et vos prières chiffrées restent inchangées.,ይህ አዲስ የመልሶ ማግኛ ኮድ ይፈጥራል አሮጌውንም ያቦዝናል። የይለፍ ሐረግዎ እና የተመሰጠሩ ጸሎቶችዎ ሳይለወጡ ይቆያሉ።
+vaultRotateGenerate,Generate new code,Générer un nouveau code,አዲስ ኮድ ፍጠር
+vaultMigratePending,Some prayers created before the vault aren't encrypted yet ({count}).,Certaines prières créées avant le coffre ne sont pas encore chiffrées ({count}).,ከካዝናው በፊት የተፈጠሩ አንዳንድ ጸሎቶች ገና አልተመሰጠሩም ({count})።
+vaultMigrateNow,Encrypt them now,Les chiffrer maintenant,አሁን አመስጥር
+vaultMigrating,Encrypting…,Chiffrement…,በማመስጠር ላይ…
+vaultMigrateDone,Your prayers are now encrypted,Vos prières sont maintenant chiffrées,ጸሎቶችዎ አሁን ተመስጥረዋል
+vaultMigratePartial,Some prayers couldn't be encrypted. Please try again.,Certaines prières n'ont pas pu être chiffrées. Veuillez réessayer.,አንዳንድ ጸሎቶችን ማመስጠር አልተቻለም። እባክዎ እንደገና ይሞክሩ።
+vaultAllProtected,All your private prayers are encrypted.,Toutes vos prières privées sont chiffrées.,ሁሉም የግል ጸሎቶችዎ ተመስጥረዋል።
+today,Today,Aujourd'hui,ዛሬ
+prayers,Prayers,Prières,ጸሎቶች
+journal,Journal,Journal,መዝገብ
+plan,Plan,Plan,እቅድ
+settings,Settings,Paramètres,ቅንብሮች
+settingsSecAccount,Account & privacy,Compte et confidentialité,መለያ እና ግላዊነት
+settingsSecAppearance,Appearance & language,Apparence et langue,መልክ እና ቋንቋ
+settingsSecData,Data & advanced,Données et options avancées,ውሂብ እና የላቀ
+settingsSecSupport,Support & feedback,Assistance et retours,ድጋፍ እና አስተያየት
+remindersTitle,Reminders,Rappels,አስታዋሾች
+verseOfDay,Verse of the day,Verset du jour,የዛሬ ቃል
+tapToReadVerse,Tap to read today's verse,Touchez pour lire le verset du jour,የዛሬን ቃል ለማንበብ ይንኩ
+vaultLockedHeading,Your Prayer Vault is locked,Votre coffre de prière est verrouillé,የጸሎት ማከማቻዎ ተቆልፏል
+vaultLockedBody,Your private prayers are end-to-end encrypted. Enter your passphrase to unlock them on this device.,Vos prières privées sont chiffrées de bout en bout. Saisissez votre phrase secrète pour les déverrouiller sur cet appareil.,የግል ጸሎቶችዎ ከጫፍ እስከ ጫፍ የተመሰጠሩ ናቸው። በዚህ መሣሪያ ላይ ለመክፈት የይለፍ ሐረግዎን ያስገቡ።
+vaultLockedReassure,Not even we can read them — only your passphrase opens the vault. Forgot it? Recover with your code below.,Même nous ne pouvons pas les lire — seule votre phrase secrète ouvre le coffre. Oubliée ? Récupérez-le avec votre code ci-dessous.,እኛም እንኳ ማንበብ አንችልም — ማከማቻውን የሚከፍተው የይለፍ ሐረግዎ ብቻ ነው። ረሱት? ከታች ባለው የመልሶ ማግኛ ኮድዎ ይመልሱት።
+vaultLockedSignedInAs,Signed in as {email},Connecté en tant que {email},እንደ {email} ገብተዋል
+contentLocked,Unavailable on this device,Indisponible sur cet appareil,በዚህ መሣሪያ ላይ አይገኝም
+contentLockedHint,"This prayer is end-to-end encrypted and can't be opened with this device's key. Open it where you first created it, or set up recovery to read it here.","Cette prière est chiffrée de bout en bout et ne peut pas être ouverte avec la clé de cet appareil. Ouvrez-la là où vous l'avez créée, ou configurez la récupération pour la lire ici.",ይህ ጸሎት ከጫፍ እስከ ጫፍ የተመሰጠረ ሲሆን በዚህ መሣሪያ ቁልፍ ሊከፈት አይችልም። በፈጠሩበት ቦታ ይክፈቱት፣ ወይም እዚህ ለማንበብ መልሶ ማግኛን ያዋቅሩ።
+keyMissingHeading,We can't unlock your prayers here,Impossible de déverrouiller vos prières ici,ጸሎቶችዎን እዚህ መክፈት አልቻልንም
+keyMissingBody,"Your prayers are end-to-end encrypted with a key that isn't on this device, and no recovery code was set up. If you still have the device or browser where you created them, open Pray4Me there and set up recovery to bring them here.","Vos prières sont chiffrées de bout en bout avec une clé qui n'est pas sur cet appareil, et aucun code de récupération n'a été configuré. Si vous avez encore l'appareil ou le navigateur sur lequel vous les avez créées, ouvrez-y Pray4Me et configurez la récupération pour les retrouver ici.",ጸሎቶችዎ በዚህ መሣሪያ ላይ በሌለ ቁልፍ ከጫፍ እስከ ጫፍ የተመሰጠሩ ናቸው፣ እና ምንም የመልሶ ማግኛ ኮድ አልተዋቀረም። የፈጠሩበት መሣሪያ ወይም አሳሽ አሁንም ካለዎት፣ Pray4Meን እዚያ ይክፈቱ እና እዚህ ለማምጣት መልሶ ማግኛን ያዋቅሩ።
+keyMissingReassure,Not even we can read your prayers — that's why only your device's key or your recovery code can open them.,Même nous ne pouvons pas lire vos prières — c'est pourquoi seule la clé de votre appareil ou votre code de récupération peut les ouvrir.,እኛም እንኳ ጸሎቶችዎን ማንበብ አንችልም — ለዚህ ነው የመሣሪያዎ ቁልፍ ወይም የመልሶ ማግኛ ኮድዎ ብቻ ሊከፍታቸው የሚችለው።
+keyMissingRetry,I'll use my original device,J'utiliserai mon appareil d'origine,የመጀመሪያ መሣሪያዬን እጠቀማለሁ
+keyMissingStartFresh,Start fresh on this device,Repartir de zéro sur cet appareil,በዚህ መሣሪያ ላይ አዲስ ጀምር
+keyMissingStartFreshTitle,Start fresh on this device?,Repartir de zéro sur cet appareil ?,በዚህ መሣሪያ ላይ አዲስ ይጀመር?
+keyMissingStartFreshWarn,Your previous encrypted prayers will stay locked and can't be recovered. New prayers will be encrypted with a new key on this device.,Vos anciennes prières chiffrées resteront verrouillées et ne pourront pas être récupérées. Les nouvelles prières seront chiffrées avec une nouvelle clé sur cet appareil.,ቀደም ሲል የተመሰጠሩ ጸሎቶችዎ ተቆልፈው ይቆያሉ እና ሊመለሱ አይችሉም። አዲስ ጸሎቶች በዚህ መሣሪያ ላይ በአዲስ ቁልፍ ይመሰጠራሉ።
+keyMissingStartFreshConfirm,Start fresh,Repartir de zéro,አዲስ ጀምር
+backupKeyTitle,Back up your encryption key,Sauvegardez votre clé de chiffrement,የምስጠራ ቁልፍዎን ያስቀምጡ
+backupKeyBody,Your prayers are encrypted with a key kept only on this device. Set up recovery so you don't lose access if you switch browsers or clear your data.,Vos prières sont chiffrées avec une clé conservée uniquement sur cet appareil. Configurez la récupération pour ne pas perdre l'accès si vous changez de navigateur ou effacez vos données.,ጸሎቶችዎ በዚህ መሣሪያ ላይ ብቻ በተቀመጠ ቁልፍ የተመሰጠሩ ናቸው። አሳሽ ሲቀይሩ ወይም ውሂብዎን ሲያጸዱ መዳረሻ እንዳያጡ መልሶ ማግኛን ያዋቅሩ።
+backupKeyCta,Set up recovery,Configurer la récupération,መልሶ ማግኛን ያዋቅሩ
+backupKeyDismiss,Not now,Plus tard,አሁን አይደለም
+backupKeyWarn,"Without a backup, no one — not even we — can recover your prayers.","Sans sauvegarde, personne — pas même nous — ne peut récupérer tes prières.",ያለ ምትኬ ማንም — እኛም እንኳ — ጸሎቶችህን መመለስ አይችልም።
+backupKeyDismissForever,Don't show again,Ne plus afficher,ዳግመኛ አታሳይ
+activePrayers,Active,Actives,ንቁ
+answeredPrayers,Answered,Exaucées,የተመለሱ
+todaysPrayers,Today's prayers,Prières d'aujourd'hui,የዛሬ ጸሎቶች
+subjects,subjects,sujets,ጉዳዮች
+noPrayersToday,No prayers scheduled for today,Aucune prière planifiée pour aujourd'hui,ለዛሬ የተያዘ ጸሎት የለም
+noPrayersSub,Add prayers or set up your weekly plan,Ajoutez des prières ou configurez votre plan,ጸሎቶችን ያክሉ ወይም የሳምንት እቅድዎን ያዘጋጁ
+greetingMorning,Good morning,Bonjour,እንደምን አደሩ
+greetingAfternoon,Good afternoon,Bon après-midi,እንደምን ዋሉ
+greetingEvening,Good evening,Bonsoir,እንደምን አመሹ
+search,Search...,Rechercher...,ፈልግ...
+all,All,Toutes,ሁሉም
+active,Active,Actives,ንቁ
+answered,Answered,Exaucées,የተመለሱ
+allCategories,All categories,Toutes catégories,ሁሉም ምድቦች
+noPrayersFound,No prayers found,Aucune prière trouvée,ጸሎት አልተገኘም
+noPrayersFoundSub,Add your first prayer with the + button,Ajoutez votre première prière avec le bouton +,በ + ቁልፍ የመጀመሪያ ጸሎትዎን ያክሉ
+prayer,prayer,prière,ጸሎት
+prayers2,prayers,prières,ጸሎቶች
+active2,Active,Actif,ንቁ
+answered2,Answered ✓,Exaucé ✓,ተመለሰ ✓
+noUpdate,No updates yet,Aucune évolution,ምንም ዝማኔ የለም
+newUpdate,New update...,Nouvelle évolution...,አዲስ ዝማኔ...
+evolutions,Updates,Évolutions,ዝማኔዎች
+aiSubjects,Prayer Points,Points de Prière,የጸሎት ነጥቦች
+aiSuggest,Receive suggestions...,Recevoir des suggestions...,ምክሮችን ይቀበሉ...
+aiPlaceholder,Tap to receive suggestions...,Appuyez pour recevoir des suggestions...,ምክሮችን ለማግኘት ይጫኑ...
+aiConsentTitle,AI Feature,Fonctionnalité IA,የAI ባህሪ
+aiConsentNoticePrayer,What we send: your prayer title and last update. Nothing else.,Ce que nous envoyons : le titre et la dernière mise à jour de votre prière. Rien d'autre.,የምንልከው: የጸሎትዎ ርዕስ እና የመጨረሻ ዝማኔ ብቻ።
+aiConsentBodyPrayer,"To generate prayer points and verse suggestions, we send your prayer title and last update to Claude AI (Anthropic). This data is not stored by Anthropic beyond the API call.","Pour générer des points de prière et suggestions de versets, nous envoyons le titre et la dernière mise à jour de votre prière à Claude AI (Anthropic). Ces données ne sont pas stockées par Anthropic au-delà de l'appel API.",የጸሎት ነጥቦችን እና የቁጥር ሃሳቦችን ለመፍጠር፣ የጸሎትዎን ርዕስ እና የመጨረሻ ዝማኔ ወደ Claude AI (Anthropic) እንልካለን። ይህ ውሂብ ከ API ጥሪ ባሻገር አይቀመጥም።
+aiConsentNoticeHome,"What we send: your prayer category names for today (e.g. Family, Health). Nothing else.","Ce que nous envoyons : les noms de vos catégories de prière du jour (ex. Famille, Santé). Rien d'autre.",የምንልከው: የዛሬዎቹ የጸሎት ምድቦች ስሞች (ለምሳሌ፡ ቤተሰብ፣ ጤና) ብቻ።
+aiConsentBodyHome,"To suggest prayers for today, we send your day's category names to Claude AI (Anthropic). No personal prayer content is shared.","Pour suggérer des prières pour aujourd'hui, nous envoyons vos catégories du jour à Claude AI (Anthropic). Aucune prière personnelle n'est partagée.",ለዛሬ ጸሎቶችን ለመጠቆም፣ የዕለቱን ምድቦች ወደ Claude AI (Anthropic) እንልካለን። ምንም ግላዊ የጸሎት ይዘት አይጋራም።
+aiConsentAccept,I agree,J'accepte,እቀበላለሁ
+aiConsentDecline,No thanks,Non merci,አይ፣ አመሰግናለሁ
+aiConsentFooter,This only applies to AI features. Your prayers remain private.,Ce choix ne s'applique qu'aux fonctionnalités IA. Vos prières restent privées.,ይህ ለAI ባህሪዎች ብቻ ይሠራል። ጸሎቶችዎ የግል ሆነው ይቆያሉ።
+aiAboutTitle,AI assistance,Assistance IA,የ AI ድጋፍ
+aiPostureFull,"The AI here is a study companion, not a pastor or prophet. It points you to Scripture but never speaks for God — always read the passage in your own Bible and weigh it in prayer.","L'IA ici est un compagnon d'étude, non un pasteur ni un prophète. Elle vous renvoie à l'Écriture mais ne parle jamais au nom de Dieu — lisez toujours le passage dans votre propre Bible et pesez-le dans la prière.",እዚህ ያለው AI የጥናት ጓደኛ ነው እንጂ ፓስተር ወይም ነቢይ አይደለም። ወደ ቅዱሳት መጻሕፍት ይመራሃል ግን ስለ እግዚአብሔር ፈጽሞ አይናገርም — ጥቅሱን ሁልጊዜ በራስህ መጽሐፍ ቅዱስ አንብብ በጸሎትም መዝነው።
+aiRevoke,Turn off AI suggestions,Désactiver les suggestions IA,የ AI ጥቆማዎችን አጥፋ
+aiRevoked,AI suggestions turned off.,Suggestions IA désactivées.,የ AI ጥቆማዎች ጠፍተዋል።
+aiCurrentlyOff,AI suggestions are off. You'll be asked before anything is sent.,Les suggestions IA sont désactivées. On vous demandera avant tout envoi.,የ AI ጥቆማዎች ጠፍተዋል። ማንኛውም ነገር ከመላኩ በፊት ይጠየቃሉ።
+community,Community,Communauté,ማህበረሰብ
+selectGroup,Select a group,Sélectionner un groupe,ቡድን ይምረጡ
+noGroups,No group yet,Aucun groupe pour l'instant,እስካሁን ቡድን የለም
+noGroupsDesc,Create or join a group with an invite code,Créez un groupe ou rejoignez-en un avec un code d'invitation,ቡድን ይፍጠሩ ወይም በጋበዘ ኮድ ይቀላቀሉ
+createGroup,Create a group,Créer un groupe,ቡድን ፍጠር
+joinGroup,Join a group,Rejoindre un groupe,ቡድን ተቀላቀል
+groupName,Group name,Nom du groupe,የቡድን ስም
+inviteCode,Invite code,Code d'invitation,የጋበዘ ኮድ
+join,Join,Rejoindre,ተቀላቀል
+prayerRequests,Requests,Requêtes,ጥያቄዎች
+newRequest,New request,Nouvelle requête,አዲስ ጥያቄ
+iAmPraying,I'm praying,Je prie,እጸልያለሁ
+prayingCount,praying,en prière,እየጸለዩ
+addWord,Add a word,Ajouter un mot,ቃል ጨምር
+wordPlaceholder,"A verse, an encouragement, an inspiration...","Un verset, une encouragement, une inspiration...",ቁጥር፣ ማበረታቻ፣ ጥበብ...
+postTestimony,Post a testimony,Partager un témoignage,ምስክርነት አጋራ
+anonymous,Post anonymously,Publier anonymement,ስም ሳይገልጽ ልጥፍ
+anonymousAuthor,Anonymous,Anonyme,ስም አልባ
+shareWithGroup,Share with group,Partager avec le groupe,ከቡድኑ ጋር አጋራ
+shareGroupInfo,This prayer will be readable by members of this group. Pray4Me stores the shared content encrypted.,Cette prière sera lisible par les membres de ce groupe. Pray4Me stocke le contenu partagé de façon chiffrée.,ይህ ጸሎት በዚህ ቡድን አባላት ሊነበብ ይችላል። Pray4Me የተጋራውን ይዘት ተመስጥሮ ያስቀምጣል።
+shareAnonNote,"Your name will be hidden from group members, but they can still read the prayer content.","Votre nom sera masqué pour les membres du groupe, mais ils pourront quand même lire le contenu de la prière.",ስምዎ ከቡድኑ አባላት ይደበቃል፣ ነገር ግን የጸሎቱን ይዘት አሁንም ማንበብ ይችላሉ።
+sharePreviewLabel,Your group will see,Votre groupe verra,ቡድንዎ የሚያዩት
+groupCode,Group code,Code du groupe,የቡድን ኮድ
+codeCopied,Copied!,Copié !,ተቀድቷል!
+noRequests,No requests yet,Aucune requête pour l'instant,እስካሁን ጥያቄ የለም
+noTestimonies,No testimonies yet,Aucun témoignage pour l'instant,እስካሁን ምስክርነት የለም
+beFirst,Be the first to share,Soyez le premier à partager,የመጀመሪያ አጋሪ ሁን
+memberUpdates,Member updates,Mots des membres,የአባላት ቃላት
+updateSyncing,Syncing… this word isn't available on this device yet.,Synchronisation… ce mot n'est pas encore disponible sur cet appareil.,በማመሳሰል ላይ… ይህ ቃል በዚህ መሣሪያ ላይ ገና አልተገኘም።
+deleteWord,Delete word,Supprimer le mot,ቃል ሰርዝ
+editWord,Edit word,Modifier le mot,ቃል አስተካክል
+editTestimony,Edit testimony,Modifier le témoignage,ምስክርነት አስተካክል
+editUpdate,Edit update,Modifier l'évolution,ዝማኔ አስተካክል
+deleteUpdate,Delete update,Supprimer l'évolution,ዝማኔ ሰርዝ
+deleteTestimony,Delete testimony,Supprimer le témoignage,ምስክርነት ሰርዝ
+wordDeleted,Word deleted,Mot supprimé,ቃል ተሰርዟል
+leaveGroup,Leave group,Quitter le groupe,ቡድኑን ለቅቅ
+groupNotFound,Group not found,Groupe introuvable,ቡድን አልተገኘም
+alreadyMember,You're already a member,Vous êtes déjà membre,አስቀድሞ አባል ነዎት
+wordSent,Word added,Mot ajouté,ቃል ተጨምሯል
+testimony,🎉 Testimony,🎉 Témoignage,🎉 ምስክርነት
+myGroups,My Groups,Mes groupes,የእኔ ቡድኖች
+friends,Friends,Amis,ጓደኞች
+friendRequests,Friend Requests,Demandes d'amis,የጓደኝነት ጥያቄዎች
+groupInvitations,Group Invitations,Invitations aux groupes,የቡድን ግብዣዎች
+addFriend,Add Friend,Ajouter un ami,ጓደኛ ጨምር
+accept,Accept,Accepter,ተቀበል
+reject,Reject,Refuser,አትቀበል
+send,Send,Envoyer,ላክ
+remove,Remove,Supprimer,አስወግድ
+admin,Admin,Admin,አስተዳዳሪ
+owner,Owner,Propriétaire,ባለቤት
+makeAdmin,Make admin,Nommer administrateur,አስተዳዳሪ አድርግ
+removeAdminRole,Remove admin role,Retirer le rôle d'administrateur,የአስተዳዳሪ ሚና አስወግድ
+promoteConfirmTitle,Make this member an admin?,Nommer ce membre administrateur ?,ይህን አባል አስተዳዳሪ ማድረግ?
+promoteConfirmDesc,"Admins can manage members, invitations, the group name, and other admin-controlled group content.","Les administrateurs peuvent gérer les membres, les invitations, le nom du groupe et les autres contenus du groupe réservés aux administrateurs.",አስተዳዳሪዎች አባላትን፣ ግብዣዎችን፣ የቡድኑን ስም እና ሌሎች በአስተዳዳሪ የሚተዳደሩ የቡድን ይዘቶችን ማስተዳደር ይችላሉ።
+demoteConfirmTitle,Remove admin access?,Retirer l'accès administrateur ?,የአስተዳዳሪ መዳረሻ ማስወገድ?
+demoteConfirmDesc,"This member will no longer be able to manage members, invitations, or the group.","Ce membre ne pourra plus gérer les membres, les invitations ni le groupe.",ይህ አባል ከእንግዲህ አባላትን፣ ግብዣዎችን ወይም ቡድኑን ማስተዳደር አይችልም።
+memberPromoted,Member promoted to admin,Membre promu administrateur,አባል ወደ አስተዳዳሪ ከፍ ተደርጓል
+adminRemoved,Admin access removed,Accès administrateur retiré,የአስተዳዳሪ መዳረሻ ተወግዷል
+cannotChangeOwnRole,You can't change your own role,Vous ne pouvez pas changer votre propre rôle,የራስዎን ሚና መቀየር አይችሉም
+creatorCannotBeDemoted,The group creator can't be demoted,Le créateur du groupe ne peut pas être rétrogradé,የቡድኑ ፈጣሪ ዝቅ ሊደረግ አይችልም
+creatorCannotBeRemoved,The group creator can't be removed,Le créateur du groupe ne peut pas être retiré,የቡድኑ ፈጣሪ ሊወገድ አይችልም
+groupMustRetainAdmin,The group must keep at least one admin,Le groupe doit conserver au moins un administrateur,ቡድኑ ቢያንስ አንድ አስተዳዳሪ መያዝ አለበት
+notAuthorizedAdmins,You're not authorized to manage administrators,Vous n'êtes pas autorisé à gérer les administrateurs,አስተዳዳሪዎችን ለማስተዳደር ፈቃድ የለዎትም
+roleChangeFailed,Couldn't change the role. Please try again.,Impossible de changer le rôle. Veuillez réessayer.,ሚናውን መቀየር አልተቻለም። እባክዎ እንደገና ይሞክሩ።
+removeFromGroup,Remove from group,Retirer du groupe,ከቡድን አስወግድ
+memberActions,Member actions,Actions du membre,የአባል እርምጃዎች
+invitedBy,Invited by,Invité par,የተጋበዘ በ
+groupInviteFallbackTitle,Prayer group invitation,Invitation à un groupe de prière,የጸሎት ቡድን ግብዣ
+groupInviteFallbackDesc,You've been invited to join and pray together,Vous êtes invité à rejoindre et à prier ensemble,እንዲቀላቀሉና በአንድነት እንዲጸልዩ ተጋብዘዋል
+userNotFound,No user with that email,Aucun utilisateur avec cet e-mail,በዚህ ኢሜይል ተጠቃሚ የለም
+cannotAddSelf,You can't add yourself,Vous ne pouvez pas vous ajouter vous-même,ራስዎን መጨመር አይችሉም
+requestExists,Request already sent,Demande déjà envoyée,ጥያቄ አስቀድሞ ተልኳል
+requestSent,Friend request sent!,Demande d'ami envoyée !,የጓደኝነት ጥያቄ ተልኳል!
+sentRequests,Sent Requests,Demandes envoyées,የተላኩ ጥያቄዎች
+awaitingResponse,Awaiting response,En attente de réponse,ምላሽ በመጠበቅ ላይ
+requestCanceled,Request canceled,Demande annulée,ጥያቄ ተሰርዟል
+manageGroup,Manage group,Gérer le groupe,ቡድን አስተዳድር
+inviteFriends,Invite friends,Inviter des amis,ጓደኞችን ጋብዝ
+noFriendsToInvite,No friends to invite,Aucun ami à inviter,የሚጋበዙ ጓደኞች የሉም
+invite,Invite,Inviter,ጋብዝ
+invited,Invited,Invité,ተጋብዟል
+members,Members,Membres,አባላት
+you,you,vous,እርስዎ
+addToMyPrayers,Add to my prayers,Ajouter à mes prières,ወደ ጸሎቶቼ ጨምር
+addedToMyPrayers,Added to my prayers,Ajouté à mes prières,ወደ ጸሎቶቼ ተጨምሯል
+autoAddRequests,Auto-add new requests to my prayers,Ajouter automatiquement les nouvelles requêtes à mes prières,አዲስ ጥያቄዎችን ወደ ጸሎቶቼ በራስ-ሰር ጨምር
+addedOn,Added on,Ajouté le,የተጨመረበት
+answeredOn,· Answered on,· Exaucé le,· የተመለሰበት
+markAnswered,Answered!,Exaucée!,ተመለሰ!
+confirm,Confirm 🎉,Confirmer 🎉,አረጋግጥ 🎉
+resumePrayer,Resume prayer,Remettre en prière,ጸሎትን ቀጥል
+openBible,Open in Bible.com,Ouvrir dans Bible.com,በ Bible.com ክፈት
+scriptureFirstTitle,Begin with God's Word,Commencez par la Parole de Dieu,በእግዚአብሔር ቃል ጀምር
+scriptureFirstIntro,"Before you pray, let Scripture shape how you pray for this.","Avant de prier, laissez l'Écriture façonner votre prière pour ce sujet.",ከመጸለይህ በፊት፣ ስለዚህ እንዴት እንደምትጸልይ መጽሐፍ ቅዱስ ይቅረጽ።
+findScripture,Open the Word on this,Ouvrir la Parole sur ce sujet,ስለዚህ ቃሉን ክፈት
+scriptureFinding,Opening the Word…,Ouverture de la Parole…,ቃሉን በመክፈት ላይ…
+aiSuggestedLabel,Suggested by AI — always read it in your own Bible.,Suggéré par l'IA — lisez toujours le passage dans votre propre Bible.,በ AI የተጠቆመ — ሁልጊዜ በራስህ መጽሐፍ ቅዱስ አንብበው።
+readWholeChapter,Read the whole chapter,Lire tout le chapitre,ሙሉ ምዕራፉን አንብብ
+readInApp,Read in the app,Lire dans l'application,በመተግበሪያው ውስጥ ያንብቡ
+readFullPassage,Read the full passage,Lire le passage complet,ሙሉውን ክፍል ያንብቡ
+loadingVerse,Opening the passage…,Ouverture du passage…,ክፍሉ እየተከፈተ ነው…
+contextLabel,Context,Contexte,ዐውድ
+biblicalThemes,Pray around these themes,Priez autour de ces thèmes,በእነዚህ ጭብጦች ዙሪያ ጸልይ
+reflectLabel,Reflect,Méditez,አሰላስል
+addAsPoint,Add as prayer point,Ajouter comme sujet de prière,እንደ የጸሎት ነጥብ ጨምር
+addedPoint,Added,Ajouté,ታክሏል
+prayNowCta,I'll pray now,Je vais prier,አሁን እጸልያለሁ
+viewScripture,View Scripture,Voir la Parole,ቃሉን ተመልከት
+tipViewScripture,Revisit the Scripture opened for this prayer,Revoir la Parole ouverte pour cette prière,ለዚህ ጸሎት የተከፈተውን ቃል እንደገና ተመልከት
+scriptureOffline,You're offline. Reconnect to open the Word on this — you can always add a passage yourself.,Vous êtes hors ligne. Reconnectez-vous pour ouvrir la Parole — vous pouvez toujours ajouter un passage vous-même.,ከመስመር ውጭ ነህ። ቃሉን ለመክፈት እንደገና ተገናኝ — ሁልጊዜ ራስህ ክፍል መጨመር ትችላለህ።
+scriptureNone,"No passage came back this time. Try again, or open your Bible and add your own.","Aucun passage cette fois. Réessayez, ou ouvrez votre Bible et ajoutez le vôtre.",በዚህ ጊዜ ምንም ክፍል አልተገኘም። እንደገና ሞክር፣ ወይም መጽሐፍ ቅዱስህን ከፍተህ የራስህን ጨምር።
+retryScripture,Try again,Réessayer,እንደገና ሞክር
+aiCooldown,Please wait {s}s before trying again.,Veuillez patienter {s}s avant de réessayer.,እንደገና ከመሞከርህ በፊት እባክህ {s}ሰ ጠብቅ።
+aiBusy,The AI is busy right now. Please try again in a moment.,L'IA est occupée pour le moment. Veuillez réessayer dans un instant.,AI አሁን ተጠምዷል። እባክህ ከጥቂት ጊዜ በኋላ እንደገና ሞክር።
+aiError,Couldn't reach the AI. Please try again.,Impossible de joindre l'IA. Veuillez réessayer.,AI ላይ መድረስ አልተቻለም። እባክህ እንደገና ሞክር።
+testimonyPlaceholder,How did God answer this prayer? (optional),Comment Dieu a-t-il exaucé cette prière? (facultatif),እግዚአብሔር ይህን ጸሎት እንዴት መለሰ? (አማራጭ)
+newPrayer,New prayer,Nouvelle prière,አዲስ ጸሎት
+editPrayer,Edit prayer,Modifier la prière,ጸሎትን አርትዕ
+prayerSubject,Prayer subject *,Sujet de prière *,የጸሎት ርዕስ *
+prayerSubjectPlaceholder,e.g. Healing for my mother...,ex: Guérison de ma mère...,ምሳሌ: ለእናቴ ፈውስ...
+details,Details (optional),Détails (facultatif),ዝርዝር (አማራጭ)
+detailsPlaceholder,Describe your prayer request...,Décrivez votre sujet de prière...,የጸሎት ጥያቄዎን ይግለጹ...
+categories,Categories,Catégories,ምድቦች
+multipleAllowed,(multiple allowed),(plusieurs possibles),(ብዙ ይቻላል)
+forOther,It's for someone else,C'est pour quelqu'un d'autre,ለሌላ ሰው ነው
+personName,Name,Nom,ስም
+cancel,Cancel,Annuler,ሰርዝ
+add,Add prayer 🙏,Ajouter 🙏,ጸሎት ያክሉ 🙏
+save,Save,Enregistrer,አስቀምጥ
+savedPrivately,Saved privately.,Enregistré en privé.,በግል ተቀምጧል።
+savedEncrypted,Saved privately · Encrypted on this device.,Enregistré en privé · Chiffré sur cet appareil.,በግል ተቀምጧል · በዚህ መሣሪያ ተመስጥሯል።
+weeklyPlan,Weekly plan,Plan hebdomadaire,የሳምንት እቅድ
+weeklyPlanSub,Assign each category to days of the week,Assignez chaque catégorie à des jours de la semaine,እያንዳንዱ ምድብ ለሳምንቱ ቀናት ይመድቡ
+addCategory,Add,Ajouter,ያክሉ
+addCategoryFull,Add a category,Ajouter une catégorie,ምድብ ያክሉ
+newCategory,New category,Nouvelle catégorie,አዲስ ምድብ
+edit,Edit,Modifier,አርትዕ
+days,"Sun,Mon,Tue,Wed,Thu,Fri,Sat","Dim,Lun,Mar,Mer,Jeu,Ven,Sam","እሁድ,ሰኞ,ማክሰ,ረቡ,ሐሙስ,ዓርብ,ቅዳሜ"
+profile,Profile,Profil,መገለጫ
+memberSince,Member since,Membre depuis,አባል ከ
+account,Account,Compte,መለያ
+via,Via,Via,በኩል
+signOut,Sign out,Se déconnecter,ውጣ
+notifications,Notifications,Notifications,ማሳወቂያዎች
+dailyReminder,Daily reminder,Rappel quotidien,የዕለት ማስታወሻ
+dailyReminderSub,Remind you to pray every day,Rappel pour prier chaque jour,ለጸሎት ዕለታዊ ማስታወሻ
+reminderTime,Reminder time,Heure du rappel,የማስታወሻ ሰዓት
+followUp,Prayer follow-up,Suivi des prières,ክትትል
+followUpSub,Ask for prayer updates,Demander l'évolution des prières,የጸሎት ዝማኔዎችን ይጠይቁ
+followUpFreq,Follow-up frequency,Fréquence du suivi,ድግግሞሽ
+every3days,Every 3 days,Tous les 3 jours,በ3 ቀን
+everyWeek,Every week,Chaque semaine,በሳምንት
+every2weeks,Every 2 weeks,Toutes les 2 semaines,በ2 ሳምንት
+everyMonth,Every month,Chaque mois,በወር
+testNotif,Test notification,Tester une notification,ማሳወቂያ ሙከራ
+language,Language,Langue,ቋንቋ
+languageSub,Interface language,Langue de l'interface,የበይነገጽ ቋንቋ
+private,Your prayers are private and secure 🔒,Vos prières sont privées et sécurisées 🔒,ጸሎቶችዎ የግል እና ደህንነቱ የተጠበቀ ነው 🔒
+motto,"""The fervent prayer of a righteous person is powerful and effective""","""La prière fervante du juste est d'une grande efficacité""","""የጻድቅ ሰው ጸሎት ብዙ ያደርጋል"""
+appearance,Appearance,Apparence,መልክ
+themeLight,Light,Clair,ብርሃን
+themeDark,Dark,Sombre,ጨለማ
+themeNight,Night,Nuit,ሌሊት
+continueGoogle,Continue with Google,Continuer avec Google,በGoogle ቀጥል
+login,Login,Connexion,ግባ
+register,Register,Inscription,ተመዝገብ
+categoriesHeading,Categories,Catégories,ምድቦች
+newCategoryLabel,New category,Nouvelle catégorie,አዲስ ምድብ
+editCategoryLabel,Edit category,Modifier la catégorie,ምድብ አርትዕ
+emojiLabel,Emoji,Emoji,ኢሞጂ
+colorLabel,Color,Couleur,ቀለም
+prayerDays,Prayer days,Jours de prière,የጸሎት ቀናት
+addBtn,Add,Ajouter,ያክሉ
+saveBtn,Save,Enregistrer,አስቀምጥ
+tipBack,Back to prayer list,Retour à la liste,ወደ ዝርዝር ተመለስ
+tipEditPrayer,Edit this prayer,Modifier cette prière,ይህን ጸሎት አርትዕ
+tipDeletePrayer,Delete this prayer permanently,Supprimer définitivement cette prière,ይህን ጸሎት ሙሉ በሙሉ ሰርዝ
+tipAiSuggest,Receive suggestions...,Recevoir des suggestions...,ምክሮችን ይቀበሉ...
+tipVerseToggle,Show or hide the verse text,Afficher ou masquer le texte du verset,የቁጥር ጽሑፍ አሳይ ወይም ደብቅ
+tipRemovePoint,Remove this prayer point,Supprimer ce point de prière,ይህን የጸሎት ነጥብ ያስወግዱ
+tipAddPoint,Add this prayer point to your prayer,Ajouter ce point de prière à votre prière,ይህን ነጥብ ወደ ጸሎት ያክሉ
+tipSaveUpdate,Save this update,Enregistrer cette évolution,ይህን ዝማኔ አስቀምጥ
+tipMarkAnswered,Mark this prayer as answered by God,Marquer cette prière comme exaucée,ይህን ጸሎት እንደ ተመለሰ ምልክት አድርግ
+tipConfirm,Confirm and save your testimony,Confirmer et enregistrer votre témoignage,ያረጋግጡ እና ምስክርነት ያስቀምጡ
+tipResume,Move this prayer back to active,Remettre cette prière en actif,ይህን ጸሎት ወደ ንቁ ይመልሱ
+tipExpandSidebar,Expand sidebar,Agrandir le menu,የጎን አሞሌ ዘርጋ
+tipCollapseSidebar,Collapse sidebar,Réduire le menu,የጎን አሞሌ ሰብሰብ
+tipAddPrayer,Add a new prayer request,Ajouter une nouvelle prière,አዲስ ጸሎት ያክሉ
+tipCloseForm,Close without saving,Fermer sans enregistrer,ሳያስቀምጡ ዝጋ
+tipDiscard,Discard changes and close,Annuler les modifications,ለውጦችን ሰርዝ
+tipSavePrayer,Save your changes,Enregistrer les modifications,ለውጦችን አስቀምጥ
+tipAddPrayerForm,Add this prayer to your list,Ajouter cette prière à la liste,ይህን ጸሎት ወደ ዝርዝር ያክሉ
+tipCreateCategory,Create a new prayer category,Créer une nouvelle catégorie,አዲስ የጸሎት ምድብ ፍጠር
+tipEditCategory,Edit this category,Modifier cette catégorie,ይህን ምድብ አርትዕ
+tipDeleteCategory,Delete this category,Supprimer cette catégorie,ይህን ምድብ ሰርዝ
+tipToggleDay,Toggle {day} for this category,Activer/désactiver {day} pour cette catégorie,ለዚህ ምድብ {day} ቀይር
+tipSignOut,Sign out of your account,Se déconnecter du compte,ከመለያ ውጣ
+tipTestNotif,Send a test notification to verify they are working,Envoyer une notification test,የሙከራ ማሳወቂያ ላክ
+tipExpand,Expand details,Afficher les détails,ዝርዝር አሳይ
+tipCollapse,Collapse,Réduire,ሰብሰብ
+addPointManually,Add a prayer point,Ajouter un point de prière,የጸሎት ነጥብ ያክሉ
+pointTitlePlaceholder,Prayer subject...,Sujet de prière...,የጸሎት ርዕስ...
+pointVersePlaceholder,Bible reference (optional),Référence biblique (facultatif),የመጽሐፍ ቅዱስ ማጣቀሻ (አማራጭ)
+tipAddManualPoint,Add this point to the list,Ajouter ce point à la liste,ይህን ነጥብ ወደ ዝርዝር ያክሉ
+addVerse,Add a verse,Ajouter un verset,ቁጥር ያክሉ
+verseRefPlaceholder,e.g. John 3:16,ex : Jean 3:16,ምሳሌ: ዮሐንስ 3:16
+verseTextPlaceholder,Verse text (optional),Texte du verset (facultatif),የቁጥር ጽሑፍ (አማራጭ)
+tipRemoveVerse,Remove this verse,Supprimer ce verset,ይህን ቁጥር ያስወግዱ
+tipAddVerse,Add a verse to this point,Ajouter un verset à ce point,ለዚህ ነጥብ ቁጥር ያክሉ
+tipSaveVerse,Save this verse,Enregistrer ce verset,ይህን ቁጥር አስቀምጥ
+aiDayLoading,Finding verses...,Recherche de versets...,ቁጥሮች እየተፈለጉ...
+aiDayNoCats,Set up your weekly plan to see suggestions,Configurez votre plan hebdomadaire pour voir des suggestions,ምክሮችን ለማየት የሳምንት እቅድዎን ያዘጋጁ
+emptyAddManual,Add a prayer,Ajouter une prière,ጸሎት ያክሉ
+emptyEncourage,Start your prayer time,Commencez votre temps de prière,የጸሎት ጊዜዎን ይጀምሩ
+feedbackTitle,Leave feedback,Laisser un avis,አስተያየት ይስጡ
+feedbackTypeGeneral,General,Général,አጠቃላይ
+feedbackTypeFeature,Idea,Idée,ሀሳብ
+feedbackTypeBug,Bug,Bug,ስህተት
+feedbackPlaceholder,"Share your feedback, ideas, or issues...","Partagez vos retours, suggestions ou problèmes...",አስተያየትዎን፣ ሀሳቦችዎን ወይም ችግሮችዎን ያጋሩ...
+feedbackAnon,Send anonymously,Envoyer anonymement,ስም ሳይጠቅሱ ላክ
+feedbackSubmit,Send,Envoyer,ላክ
+feedbackThanks,Thank you for your feedback!,Merci pour votre retour !,ለአስተያየትዎ እናመሰግናለን!
+feedbackThanksub,Your message has been received. It helps us improve the app.,Votre message a bien été reçu. Il nous aide à améliorer l'app.,መልዕክትዎ ተቀብለናል። ፕሮግራሙን ለማሻሻል ይረዳናል።
+feedbackError,Error sending feedback. Please try again.,Erreur lors de l'envoi. Réessayez.,የላክ ስህተት። እንደገና ይሞክሩ።
+feedbackBtn,Give feedback,Donner un avis,አስተያየት ይስጡ
+feedbackSub,Help us improve the app,Aidez-nous à améliorer l'application,ፕሮግራሙን ለማሻሻል ይርዱን
+donateTitle,Support the app,Soutenir l'application,ፕሮግራሙን ደግፉ
+donateSub,"If this app blesses you, consider supporting its development.","Si cette app vous bénit, vous pouvez contribuer à son développement.",ይህ ፕሮግራም ቢረዳዎ፣ ልማቱን ለመደገፍ ያስቡ።
+donateWhy,"This app is built alone, on my own time, for free — because I believe prayer changes things. Your donation, however small, helps keep the servers running, improve features, and keep the app free for everyone. Thank you from the bottom of my heart. 🙏","Cette application est développée seul, sur mon temps libre, gratuitement — parce que je crois que la prière change les choses. Votre don, même modeste, aide à maintenir les serveurs, améliorer les fonctionnalités et garder l'app accessible à tous. Merci du fond du cœur. 🙏",ይህ ፕሮግራም ብቸኛ ሆኜ፣ በነፃ ጊዜዬ፣ ያለ ክፍያ እሠራዋለሁ — ጸሎት ነገሮችን ይቀይራል ብዬ ስለማምን። ድጋፍዎ፣ ትንሽ ቢሆን እንኳ፣ አገልጋዮችን ለማሄድ፣ ባህሪያትን ለማሻሻል እና ፕሮግራሙን ለሁሉም ነፃ ለማድረግ ይረዳል። ከልብ አመሰግናለሁ። 🙏
+donateBtn,Support,Soutenir,ደግፍ
+donateChooseMethod,Choose a payment method,Choisir un moyen de paiement,የክፍያ ዘዴ ይምረጡ
+donateSelectBtn,Select,Choisir,ምረጥ
+donateComingSoon,Coming soon,Bientôt,በቅርቡ
+donateThanks,Every contribution matters. God bless you. 🙏,Chaque contribution compte. Que Dieu vous bénisse. 🙏,እያንዳንዱ አስተዋፅኦ ይቆጠራል። እግዚአብሔር ይባርክዎ። 🙏
+close,Close,Fermer,ዝጋ
+errorGeneric,Something went wrong. Please try again.,Une erreur est survenue. Réessayez.,የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።
+errorBoundaryTitle,Something went wrong,Quelque chose s'est mal passé,የሆነ ችግር ተፈጥሯል
+errorBoundaryBody,An unexpected error occurred. Your prayers are safe. You can try again or reload the app.,Une erreur inattendue s'est produite. Vos prières sont en sécurité. Vous pouvez réessayer ou recharger l'application.,ያልተጠበቀ ስህተት ተከስቷል። ጸሎቶችህ ደህና ናቸው። እንደገና መሞከር ወይም መተግበሪያውን እንደገና መጫን ትችላለህ።
+errorBoundaryReload,Reload the app,Recharger l'application,መተግበሪያውን እንደገና ጫን
+retry,Try again,Réessayer,እንደገና ሞክር
+leaveGroupConfirm,Are you sure you want to leave this group?,Êtes-vous sûr de vouloir quitter ce groupe ?,ይህን ቡድን መልቀቅ እንደሚፈልጉ እርግጠኛ ነዎት?
+searchRequests,Search a request...,Rechercher une requête...,ጥያቄ ይፈልጉ...
+noMatch,No results,Aucun résultat,ምንም ውጤት የለም
+offline,You're offline,Vous êtes hors ligne,ከመስመር ውጭ ነዎት
+shareInviteLink,Share invite link,Partager le lien d'invitation,የግብዣ ሊንክ ያጋሩ
+linkCopied,Link copied!,Lien copié !,ሊንክ ተቀድቷል!
+joinedGroup,You joined the group,Vous avez rejoint le groupe,ቡድኑን ተቀላቅለዋል
+undo,Undo,Annuler,ቀልብስ
+friendRemoved,Friend removed,Ami supprimé,ጓደኛ ተወግዷል
+delete,Delete,Supprimer,ሰርዝ
+deleteWarning,This action can't be undone.,Cette action est irréversible.,ይህ እርምጃ መቀልበስ አይቻልም።
+deleteCategoryConfirm,Delete this category?,Supprimer cette catégorie ?,ይህን ምድብ ይሰረዝ?
+removeMemberConfirm,Remove this member from the group?,Retirer ce membre du groupe ?,ይህን አባል ከቡድኑ ያስወግዱ?
+showQrCode,QR code,Code QR,QR ኮድ
+scanToJoin,Scan to join the group,Scannez pour rejoindre le groupe,ቡድኑን ለመቀላቀል ይቃኙ
+joinMyGroup,Join my prayer group,Rejoignez mon groupe de prière,የእኔን የጸሎት ቡድን ይቀላቀሉ
+planDayHint,Choose which categories to pray on this day,Choisissez les catégories à prier ce jour,በዚህ ቀን የሚጸልዩባቸውን ምድቦች ይምረጡ
+planEmptyDays,These days have nothing planned:,Ces jours n'ont rien de prévu :,እነዚህ ቀናት ምንም የታቀደ የላቸውም:
+categoryNotScheduled,Not scheduled,Non planifiée,አልተያዘም
+unassignedCategories,{count} category(ies) not scheduled,{count} catégorie(s) non planifiée(s),{count} ምድብ አልተያዘም
+autoSchedule,Schedule automatically,Planifier automatiquement,በራስ-ሰር አስይዝ
+categoriesScheduled,Categories scheduled,Catégories planifiées,ምድቦች ታቅደዋል
+meAuthor,Me,Moi,እኔ
+moveUp,Move up,Monter,ወደ ላይ
+moveDown,Move down,Descendre,ወደ ታች
+prayerDaysHint,"If no day is chosen, follows your category plan","Si aucun jour n'est choisi, suit le plan des catégories",ቀን ካልተመረጠ የምድብ እቅድን ይከተላል
+prayerDaysCustom,Custom days (overrides category plan),Jours personnalisés (remplace le plan des catégories),ብጁ ቀናት (የምድብ እቅድን ይተካል)
+noCategoriesYet,No categories yet,Aucune catégorie pour l'instant,እስካሁን ምድብ የለም
+categoryNamePlaceholder,Category name,Nom de la catégorie,የምድብ ስም
+faithfulness,Remember God's faithfulness,Souvenez-vous de la fidélité de Dieu,የእግዚአብሔርን ታማኝነት አስታውሱ
+noAnsweredYet,No answered prayers yet,Aucune prière exaucée pour l'instant,እስካሁን የተመለሰ ጸሎት የለም
+noAnsweredSub,"When a prayer is answered, mark it and its testimony will appear here.","Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici.",ጸሎት ሲመለስ ምልክት ያድርጉበት፥ ምስክርነቱም እዚህ ይታያል።
+seeTranslation,See translation,Voir la traduction,ትርጉም አሳይ
+showOriginal,See original,Voir l'original,ዋናውን አሳይ
+pushUnsupported,Your browser does not support notifications.,Votre navigateur ne prend pas en charge les notifications.,አሳሽዎ ማሳወቂያዎችን አይደግፍም።
+pushDenied,Notifications were denied. Enable them in your browser settings.,Notifications refusées. Activez-les dans les réglages du navigateur.,ማሳወቂያዎች ተከልክለዋል። በአሳሽ ቅንብሮች ውስጥ ያንቁ።
+remindersOn,Reminders enabled 🙏,Rappels activés 🙏,አስታዋሾች ነቅተዋል 🙏
+onboardScriptureTitle,Pray God's Word,Priez la Parole de Dieu,የእግዚአብሔርን ቃል ይጸልዩ
+onboardScriptureBody,"Tap the verse finder to surface Scripture for any request, and read the Bible right where you pray. Grow with guided plans through the Psalms, God's promises, and more.","Touchez le chercheur de versets pour trouver l’Écriture liée à chaque demande, et lisez la Bible là où vous priez. Grandissez avec des guides à travers les Psaumes, les promesses de Dieu, et plus encore.",ለእያንዳንዱ ልመና የተያያዘ ቅዱስ ጽሑፍ ለማግኘት የጥቅስ ፈላጊውን ይንኩ፣ በሚጸልዩበትም ስፍራ መጽሐፍ ቅዱስን ያንብቡ። በመዝሙረ ዳዊት፣ በእግዚአብሔር ተስፋዎችና በሌሎችም መመሪያዎች ያድጉ።
+onboardPlanTitle,Plan your prayers,Planifiez vos prières,ጸሎቶችዎን ያቅዱ
+onboardPlanBody,"Schedule any prayer — one time or recurring (daily, on chosen days), or even ""until answered."" A simple calendar shows what to pray today, with gentle catch-up when you miss a day.","Programmez chaque prière — ponctuelle ou récurrente (chaque jour, certains jours), ou même « jusqu’à la réponse ». Un calendrier simple montre quoi prier aujourd’hui, avec un rattrapage en douceur si vous manquez un jour.",እያንዳንዱን ጸሎት ያቅዱ — አንድ ጊዜ ወይም ተደጋጋሚ (በየቀኑ፣ በተመረጡ ቀናት)፣ ወይም እንዲያውም ‘እስኪመለስ ድረስ’። ቀላል የቀን መቁጠሪያ ዛሬ ምን መጸለይ እንዳለብዎ ያሳያል፣ ቀን ካመለጠዎትም በእርጋታ ማካካሻ ያደርጋሉ።
+onboardCommunityTitle,Pray together,Priez ensemble,በጋራ ይጸልዩ
+onboardCommunityBody,"Join groups, share requests, and pray for one another.","Rejoignez des groupes, partagez des sujets et priez les uns pour les autres.",ቡድኖችን ይቀላቀሉ፣ ርዕሶችን ያጋሩ፣ እርስ በርስ ይጸልዩ።
+onboardVaultTitle,Keep it private,Gardez le secret,በግል ይያዙ
+onboardVaultBody,"Lock your private prayers in an end-to-end encrypted vault — only your passphrase opens it, and not even we can read them.","Verrouillez vos prières privées dans un coffre chiffré de bout en bout — seule votre phrase secrète l'ouvre, et même nous ne pouvons pas les lire.",የግል ጸሎቶችዎን ከጫፍ እስከ ጫፍ በተመሰጠረ ካዝና ውስጥ ይቆልፉ — የሚስጥር ሐረግዎ ብቻ ይከፍተዋል፣ እኛም ልናነባቸው አንችልም።
+onboardStart,Get started,Commencer,ይጀምሩ
+dataTitle,Your data,Vos données,የእርስዎ መረጃ
+exportData,Export my prayers,Exporter mes prières,ጸሎቶቼን ላክ
+exportDataSub,Download all your prayers and testimonies as a file.,Téléchargez toutes vos prières et témoignages en un fichier.,ሁሉንም ጸሎቶችዎን እና ምስክርነቶችዎን እንደ ፋይል ያውርዱ።
+exportDone,Export downloaded 🙏,Export téléchargé 🙏,ወደ ውጭ መላክ ወርዷል 🙏
+thisWeek,this week,cette semaine,በዚህ ሳምንት
+newCount,{n} new,{n} nouveau,{n} አዲስ
+syncing,Syncing…,Synchronisation…,በማመሳሰል ላይ…
+pendingChanges,{n} waiting,{n} en attente,{n} በመጠባበቅ ላይ
+groupSettings,Group settings,Paramètres du groupe,የቡድን ቅንብሮች
+autoAddRequestsSub,New requests from this group are added to your prayers automatically.,Les nouvelles demandes de ce groupe sont ajoutées automatiquement à vos prières.,የዚህ ቡድን አዲስ ጥያቄዎች በራስ-ሰር ወደ ጸሎቶችዎ ይታከላሉ።
+fromYourGroups,From your groups,Depuis vos groupes,ከቡድኖችዎ
+shareFriendLink,Share your friend link,Partagez votre lien d’ami,የጓደኝነት ሊንክዎን ያጋሩ
+friendLinkHint,Anyone who opens this link can send you a friend request,Quiconque ouvre ce lien peut vous envoyer une demande d’ami,ይህን ሊንክ የሚከፍት ማንኛውም ሰው የጓደኝነት ጥያቄ ሊልክልዎ ይችላል
+addMeFriend,Add me as a prayer partner,Ajoute-moi comme partenaire de prière,እንደ የጸሎት አጋር ያክሉኝ
+invalidEmail,Please enter a valid email address,Veuillez saisir une adresse e-mail valide,እባክዎ ትክክለኛ ኢሜይል ያስገቡ
+alreadyFriends,You're already friends,Vous êtes déjà amis,አስቀድሞ ጓደኛሞች ናችሁ
+renameGroup,Rename group,Renommer le groupe,የቡድን ስም ቀይር
+groupRenamed,Group name updated,Nom du groupe mis à jour,የቡድን ስም ተዘምኗል
+followsGroup,Follows this shared prayer — edit it in Community to contribute,Suit cette prière partagée — modifiez-la dans la Communauté pour contribuer,ይህን የተጋራ ጸሎት ይከታተላል — ለማበርከት በማኅበረሰብ ውስጥ ያስተካክሉ
+removeFromList,Remove from my list,Retirer de ma liste,ከዝርዝሬ አስወግድ
+removeFromListConfirm,Removes it from your list and you'll no longer count among those praying. The request stays in the community.,Retiré de votre liste ; vous ne comptez plus parmi ceux qui prient. La demande reste dans la communauté.,ከዝርዝርዎ ይወገዳል እና ከሚጸልዩት መካከል አይቆጠሩም። ጥያቄው በማኅበረሰቡ ውስጥ ይቆያል።
+groupOptions,Group options,Options du groupe,የቡድን አማራጮች
+prayNow,Pray now,Prier maintenant,አሁን ጸልይ
+modeRequests,Pray through them,Prier pour mes sujets,አንድ በአንድ ጸልይ
+modeRequestsDesc,Pray through what is on your heart.,Prie pour ce qui est sur ton cœur.,በልብህ ያለውን ጸልይ።
+modeGuided,Guide me with Scripture,Me guider par l'Écriture,በቅዱሳት መጻሕፍት ምራኝ
+modeGuidedDesc,"A simple beginning, your requests, and thanksgiving.","Un début tout simple, tes sujets, puis l'action de grâces.",ቀላል መጀመሪያ፣ ጸሎቶችህ እና ምስጋና።
+modeActs,Pray through ACTS,Prier selon ACTS,በ ACTS ጸልይ
+modeActsDesc,A structured biblical prayer pattern — step by step.,Un chemin de prière biblique structuré — pas à pas.,በደረጃ የተዋቀረ መጽሐፍ ቅዱሳዊ የጸሎት መንገድ።
+stageAdoration,Adoration,Adoration,አምልኮ
+stageAdorationPrompt,"Begin by adoring God for who He is — His holiness, His goodness, His steadfast love. Let this psalm lead you.","Commencez par adorer Dieu pour ce qu'Il est — sa sainteté, sa bonté, son amour fidèle. Laissez ce psaume vous guider.",በመጀመሪያ እግዚአብሔርን እንደ ማንነቱ አምልከው — ቅድስናውን፣ ቸርነቱን፣ የታመነ ፍቅሩን። ይህ መዝሙር ይምራህ።
+stageConfession,Confession,Confession,ኑዛዜ
+stageConfessionPrompt,"In His presence, quietly confess your sin and receive His mercy. He is faithful to forgive.","En sa présence, confessez doucement votre péché et recevez sa miséricorde. Il est fidèle pour pardonner.",በፊቱ ኃጢአትህን በዝምታ ተናዘዝ ምሕረቱንም ተቀበል። እርሱ ይቅር ለማለት የታመነ ነው።
+stageThanksgiving,Thanksgiving,Action de grâces,ምስጋና
+stageThanksgivingPrompt,"Give thanks for who God is and what He has done — His faithfulness, His answered prayers.","Rendez grâce pour ce que Dieu est et ce qu'Il a fait — sa fidélité, ses prières exaucées.",እግዚአብሔር ስለ ማንነቱና ስላደረገው አመስግን — ታማኝነቱን፣ የተመለሱ ጸሎቶቹን።
+stageSupplication,Supplication,Supplication,ልመና
+continueBtn,Continue,Continuer,ቀጥል
+amenBtn,Amen,Amen,አሜን
+sessionDoneTitle,Time with God 🙏,Un temps avec Dieu 🙏,ከእግዚአብሔር ጋር ጊዜ 🙏
+sessionDoneSub,You prayed through {n} subject(s) today.,Vous avez prié pour {n} sujet(s) aujourd’hui.,ዛሬ ለ{n} ጉዳዮች ጸልየሃል።
+sessionDoneSub_one,You prayed through 1 subject today.,Vous avez prié pour 1 sujet aujourd’hui.,ዛሬ ለ1 ጉዳይ ጸልየሃል።
+sessionDoneSub_other,You prayed through {n} subjects today.,Vous avez prié pour {n} sujets aujourd’hui.,ዛሬ ለ{n} ጉዳዮች ጸልየሃል።
+pin,Pin,Épingler,ሰካ
+unpin,Unpin,Détacher,አንሳ
+resume,Resume,Reprendre,መልስ
+prayerDeleted,Prayer deleted,Prière supprimée,ጸሎት ተሰርዟል
+removedFromList,Removed from your list,Retiré de votre liste,ከዝርዝርዎ ተወግዷል
+testimonies,Testimonies,Témoignages,ምስክርነቶች
+options,Options,Options,አማራጮች
+nextReminder,Next reminder,Prochain rappel,ቀጣይ ማስታወሻ
+tomorrow,tomorrow,demain,ነገ
+notPrayedToday,You haven't prayed today,Vous n'avez pas encore prié aujourd'hui,ዛሬ ገና አልጸለይክም
+pushUnavailable,Reminder on. Push notifications aren't available on this device.,Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil.,ማስታወሻ በርቷል። በዚህ መሣሪያ ላይ የግፋ ማሳወቂያዎች አይገኙም።
+shareVerse,Share verse,Partager le verset,ጥቅሱን አጋራ
+verseCopied,Verse copied!,Verset copié !,ጥቅሱ ተቀድቷል!
+dangerZone,Danger zone,Zone sensible,አደገኛ ቦታ
+deleteAccount,Delete my account,Supprimer mon compte,መለያዬን ሰርዝ
+deleteAccountSub,Permanently erase your account and all your data.,Effacez définitivement votre compte et toutes vos données.,መለያዎንና ሁሉንም ውሂብዎን በቋሚነት ይሰርዙ።
+deleteAccountWarning,"This permanently deletes your account and all your prayers, testimonies and data. This cannot be undone.","Cette action supprime définitivement votre compte et toutes vos prières, témoignages et données. Elle est irréversible.",ይህ መለያዎንና ሁሉንም ጸሎቶችዎንና ምስክርነቶችዎንና ውሂብዎን በቋሚነት ይሰርዛል። ይህ እርምጃ ሊቀለበስ አይችልም።
+deleteAccountConfirm,Delete account,Supprimer le compte,መለያ ሰርዝ
+deleteAccountDone,Your account has been deleted,Votre compte a été supprimé,መለያዎ ተሰርዟል
+deleteAccountError,Could not delete your account. Please try again.,Impossible de supprimer votre compte. Veuillez réessayer.,መለያዎን መሰረዝ አልተቻለም። እባክዎ እንደገና ይሞክሩ።
+grow,Grow,Grandir,እድገት
+growTitle,Grow in prayer,Grandir dans la prière,በጸሎት ማደግ
+growSubtitle,Learn to pray according to God's Word.,Apprends à prier selon la Parole de Dieu.,በእግዚአብሔር ቃል መሠረት መጸለይን ተማር።
+growPray,Pray through,Prier,ጸልይ
+growLearn,Learn,Apprendre,ተማር
+growPrayIntro,"Short, Scripture-first guides to pray through — in your own words, before God.","De courts guides bibliques à prier — avec tes mots, devant Dieu.",በመጽሐፍ ቅዱስ ላይ የተመሠረቱ አጫጭር የጸሎት መመሪያዎች — በራስህ ቃላት፣ በእግዚአብሔር ፊት።
+growLearnIntro,"Short readings on prayer and the Christian life, each rooted in Scripture.","De courtes lectures sur la prière et la vie chrétienne, enracinées dans l'Écriture.",ስለ ጸሎትና ስለ ክርስቲያናዊ ሕይወት አጫጭር ንባቦች፣ እያንዳንዱ በመጽሐፍ ቅዱስ የተመሠረተ።
+guideBegin,Begin,Commencer,ጀምር
+guideDoneTitle,Amen,Amen,አሜን
+guideDoneSub,He hears you. Carry this into your day.,Il t'entend. Emporte cela dans ta journée.,ይሰማሃል። ይህን ወደ ቀንህ ይዘህ ሂድ።
+openInBible,Open in your Bible,Ouvre dans ta Bible,በመጽሐፍ ቅዱስህ ክፈት
+growScriptureNote,Don't take our word for it — open the Scriptures and see for yourself (Acts 17:11).,Ne nous crois pas sur parole — ouvre les Écritures et vois par toi-même (Actes 17:11).,በቃላችን ብቻ አትመን — መጽሐፍ ቅዱስን ከፍተህ ራስህ ተመልከት (የሐዋርያት ሥራ 17:11)።
+growSeekerTitle,New to prayer or Christian faith?,Nouveau dans la prière ou la foi chrétienne ?,በጸሎት ወይም በክርስቲያናዊ እምነት አዲስ ነዎት?
+growSeekerDesc,"Discover who Christians pray to, why Jesus is at the center, and how you can come to God honestly.","Découvre à qui les chrétiens prient, pourquoi Jésus est au centre, et comment venir à Dieu honnêtement.",ክርስቲያኖች ለማን እንደሚጸልዩ፣ ኢየሱስ ለምን መሃል እንደሆነ፣ እና ወደ እግዚአብሔር በቅንነት እንዴት መቅረብ እንደሚችሉ ይወቁ።
+gospelStart,Start journey,Commencer le parcours,ጉዞ ጀምር
+gospelBack,Back,Retour,ተመለስ
+backBtn,Back,Retour,ተመለስ
+gospelStep,Step {n} of {total},Étape {n} sur {total},ደረጃ {n} ከ{total}
+gospelCompleted,Journey completed,Parcours terminé,ጉዞ ተጠናቀቀ
+gospelUsePrayer,Use a guided prayer,Utiliser une prière guidée,የመመሪያ ጸሎት ተጠቀም
+gospelHidePrayer,Hide guided prayer,Masquer la prière guidée,የመመሪያ ጸሎት ደብቅ
+gospelNextStepsHeading,Where would you like to go next?,Où souhaites-tu aller maintenant ?,ቀጥሎ ወዴት መሄድ ይፈልጋሉ?
+gospelCreatePrayer,Create a private prayer,Créer une prière privée,የግል ጸሎት ፍጠር
+gospelContinueExploring,Continue exploring,Continuer à explorer,ማሰስ ቀጥል
+gospelMoreQuestions,I still have questions,J'ai encore des questions,አሁንም ጥያቄዎች አሉኝ
+gospelRelatedReading,Related reading,Lectures liées,ተዛማጅ ንባብ
+gospelReturnToGrow,Return to Grow,Revenir à Grandir,ወደ ማደግ ተመለስ
+gospelReadMore,Read more,Lire la suite,ተጨማሪ አንብብ
+gospelReadWhyPray,Read about why Christians pray,Lire « Pourquoi les chrétiens prient »,አንብብ፦ ክርስቲያኖች ለምን እንደሚጸልዩ
+gospelReadGrace,Read about grace,Lire « La grâce »,አንብብ፦ ጸጋ
+gospelReadFaith,Read about faith,Lire « La foi »,አንብብ፦ እምነት
+gospelReadRepentance,Read about repentance,Lire « La repentance »,አንብብ፦ ንስሐ
+gospelInviteWhyPray,Discover why Christians come to God through Jesus.,Découvre pourquoi les chrétiens viennent à Dieu par Jésus.,ክርስቲያኖች በኢየሱስ በኩል ወደ እግዚአብሔር ለምን እንደሚመጡ ይወቁ።
+gospelInviteGrace,Explore the good news at the heart of God's grace.,Explore la bonne nouvelle au cœur de la grâce de Dieu.,በእግዚአብሔር ጸጋ ልብ ውስጥ ያለውን ምስራች ያስሱ።
+gospelInviteFaith,Learn what it means to place your trust in Jesus.,Apprends ce que signifie placer ta confiance en Jésus.,በኢየሱስ መታመን ምን ማለት እንደሆነ ይማሩ።
+gospelInviteRepentance,See how repentance and faith belong together.,Vois comment la repentance et la foi vont ensemble.,ንስሐና እምነት እንዴት አብረው እንደሚሄዱ ይመልከቱ።
+gospelInviteSuffering,Discover how Jesus entered human suffering and gives lasting hope.,Découvre comment Jésus est entré dans la souffrance humaine et donne une espérance durable.,ኢየሱስ ወደ ሰው መከራ እንዴት እንደገባና ዘላቂ ተስፋ እንደሚሰጥ ይወቁ።
+gospelInviteLabel,Exploring the Christian faith?,Tu explores la foi chrétienne ?,የክርስቲያን እምነትን እያሰሱ ነው?
+scheduleLabel,Schedule,Planification,መርሐ ግብር
+addSchedule,Add a schedule,Ajouter une planification,መርሐ ግብር ጨምር
+editSchedule,Edit schedule,Modifier la planification,መርሐ ግብር አስተካክል
+schedFollowPlan,Follows weekly plan,Suit le plan hebdo,የሳምንቱን እቅድ ይከተላል
+schedOnce,One-time,Une fois,አንድ ጊዜ
+schedRecurring,Recurring,Récurrent,ተደጋጋሚ
+scheduleHowOften,When would you like to pray?,Quand souhaites-tu prier ?,መቼ መጸለይ ትፈልጋለህ?
+schedPrayOnce,Pray once,Prier une fois,አንድ ጊዜ ጸልይ
+schedPrayRecurring,Pray regularly,Prier régulièrement,በመደበኛነት ጸልይ
+schedAdvanced,Advanced options,Options avancées,የላቁ አማራጮች
+followUpTitle,Remind me to follow up,Me rappeler de faire un suivi,Remind me to follow up
+followUpHint,A one-time nudge to check back in on this prayer — separate from its schedule.,Un rappel unique pour revenir sur cette prière — indépendant de sa planification.,A one-time nudge to check back in on this prayer — separate from its schedule.
+followUpOff,Off,Aucun,Off
+followUpIn3Days,In 3 days,Dans 3 jours,In 3 days
+followUpIn1Week,In 1 week,Dans 1 semaine,In 1 week
+followUpIn2Weeks,In 2 weeks,Dans 2 semaines,In 2 weeks
+followUpPickDate,Pick a date,Choisir une date,Pick a date
+followUpDue,Time to follow up on this prayer,Il est temps de faire un suivi de cette prière,Time to follow up on this prayer
+followUpSetFor,Follow-up set for {date},Suivi prévu le {date},Follow-up set for {date}
+followUpAddUpdate,Add update,Ajouter une note,Add update
+followUpSnooze,Snooze,Reporter,Snooze
+followUpAnother,Set another,Reprogrammer,Set another
+followUpDismiss,Dismiss,Ignorer,Dismiss
+followUpSetToast,Follow-up reminder set,Rappel de suivi programmé,Follow-up reminder set
+followUpDoneToast,Follow-up cleared,Suivi effacé,Follow-up cleared
+freqDaily,Daily,Chaque jour,በየቀኑ
+freqWeekly,Weekly,Hebdomadaire,በየሳምንቱ
+freqInterval,Every N days,Tous les N jours,በየ N ቀን
+freqMonthly,Monthly,Mensuel,በየወሩ
+freqYearly,Yearly,Annuel,በየዓመቱ
+intervalEvery,Every,Tous les,በየ
+intervalDays,days,jours,ቀን
+monthlyOnDay,On day,Le jour,በቀን
+slotLabel,Prayer time,Moment de prière,የጸሎት ጊዜ
+slotAnytime,Anytime,À tout moment,በማንኛውም ጊዜ
+slot_morning,Morning,Matin,ጠዋት
+slot_midday,Midday,Midi,ቀትር
+slot_evening,Evening,Soir,ማታ
+endsLabel,Ends,Fin,ያበቃል
+endNever,Never,Jamais,በጭራሽ
+endWhenAnswered,When answered,Quand exaucé,ሲመለስ
+endOnDate,On a date,À une date,በተወሰነ ቀን
+endAfterCount,After N times,Après N fois,ከ N ጊዜ በኋላ
+endTimesSuffix,times,fois,ጊዜ
+schedDaily,Every day,Chaque jour,በየቀኑ
+schedWeekly,Every {days},Chaque {days},በየ {days}
+schedInterval,Every {n} days,Tous les {n} jours,በየ {n} ቀን
+schedMonthly,On day {d} of each month,Le {d} de chaque mois,በየወሩ በቀን {d}
+schedYearly,Every year on {date},Chaque année le {date},በየዓመቱ በ{date}
+schedUntilDate,until {date},jusqu'au {date},እስከ {date}
+schedTimes,{n} times,{n} fois,{n} ጊዜ
+schedUntilAnswered,until answered,jusqu'à l'exaucement,እስኪመለስ ድረስ
+monthView,Month,Mois,ወር
+weekView,Week,Semaine,ሳምንት
+calendarTitle,Prayer calendar,Calendrier de prière,የጸሎት ቀን መቁጠሪያ
+calendarSub,Plan one-time and recurring prayers day by day,Planifie des prières ponctuelles et récurrentes jour par jour,የአንድ ጊዜ እና ተደጋጋሚ ጸሎቶችን ቀን በቀን ያቅዱ
+legendRecurring,Recurring,Récurrent,ተደጋጋሚ
+legendOnce,One-time,Une fois,አንድ ጊዜ
+legendPlan,Weekly plan,Plan hebdo,የሳምንት እቅድ
+legendGroup,Group,Groupe,ቡድን
+noPrayersThisDay,Nothing planned this day,Rien de prévu ce jour,በዚህ ቀን የታቀደ ነገር የለም
+prayedOnDay,Prayed,Prié,ጸልያለሁ
+markPrayed,Mark prayed,Marquer prié,እንደ ጸለይኩ ምልክት አድርግ
+skipThisDay,Skip this day,Passer ce jour,ይህን ቀን ዝለል
+moveThisDay,Move to another day,Déplacer à un autre jour,ወደ ሌላ ቀን አዛውር
+restoreOccurrence,Restore this day,Rétablir ce jour,ይህን ቀን መልስ
+occurrenceSkipped,Skipped — this day only,Passé — ce jour uniquement,ተዘሏል — ይህ ቀን ብቻ
+occurrenceMoved,Moved to {date},Déplacé au {date},ወደ {date} ተዛውሯል
+endSeriesHere,End series before this day,Terminer la série avant ce jour,ከዚህ ቀን በፊት ተከታታዩን አብቃ
+seriesEnded,Series ended,Série terminée,ተከታታዩ አብቅቷል
+catchUpTitle,Catch up,Rattrapage,ማካካስ
+catchUpSub,"Missed these last days — no guilt, just grace","Manqués ces derniers jours — sans culpabilité, avec grâce",ባለፉት ቀናት የታለፉ — ያለ ጥፋተኝነት፣ በጸጋ
+missedOn,Missed {date},Manqué le {date},{date} ታልፏል
+rotationLabel,Rotation,Rotation,ተራ
+rotationOffShort,Off,Non,ጠፍቷል
+rotationPerDay,{n} per day in rotation,{n} par jour en rotation,በቀን {n} በተራ
+rotationHint,Pray through this list a few at a time — everyone gets covered across the cycle.,Prie cette liste quelques sujets à la fois — chacun est couvert au fil du cycle.,ይህን ዝርዝር ጥቂት ጥቂት አድርገው ይጸልዩ — በዙሩ ሁሉም ይሸፈናል።
+plansTitle,Prayer plans,Plans de prière,የጸሎት እቅዶች
+plansSub,Guided journeys with a theme and verse for each day,Des parcours guidés avec un thème et un verset chaque jour,በየቀኑ ጭብጥ እና ጥቅስ ያላቸው የሚመሩ ጉዞዎች
+perDayTitle,A few per day,Quelques-unes par jour,በቀን ጥቂት
+perDaySub,"Cap how many prayers Today asks of you, so a long list stays doable.","Limite le nombre de prières proposées chaque jour, pour qu'une longue liste reste tenable.",ዛሬ የሚጠይቅህን የጸሎት ብዛት ገድብ፣ ረጅም ዝርዝርም እንዲቻል።
+perDayOff,All,Toutes,ሁሉም
+labelsTitle,Labels,Étiquettes,መለያዎች
+labelsSub,Group and filter your prayers. The rhythm is set on each prayer.,Pour regrouper et filtrer tes prières. Le rythme se règle sur chaque prière.,ጸሎቶችህን ለመቧደንና ለማጣራት። ምት በእያንዳንዱ ጸሎት ላይ ይዘጋጃል።
+addLabel,Add label,Ajouter une étiquette,መለያ ጨምር
+editLabel,Edit label,Modifier l'étiquette,መለያ አስተካክል
+newLabel,New label,Nouvelle étiquette,አዲስ መለያ
+labelNamePlaceholder,Label name,Nom de l'étiquette,የመለያ ስም
+noLabelsYet,No labels yet,Pas encore d'étiquettes,እስካሁን መለያ የለም
+planStart,Start plan,Commencer le plan,እቅድ ጀምር
+planStartDate,Start date,Date de début,የመጀመሪያ ቀን
+planStarted,Plan added to your prayers 🙏,Plan ajouté à tes prières 🙏,እቅዱ ወደ ጸሎቶችህ ታክሏል 🙏
+planRunning,In progress,En cours,በሂደት ላይ
+planInviteCta,Invite friends or a group,Inviter des amis ou un groupe,ጓደኞችን ወይም ቡድን ጋብዝ
+planInviteTitle,Pray this plan together,Priez ce plan ensemble,ይህን እቅድ አብራችሁ ጸልዩ
+planInviteSub,Invite friends or a whole group to walk this plan with you. Each person accepts on their own and the plan starts on their calendar.,Invite des amis ou un groupe entier à suivre ce plan avec toi. Chacun accepte de son côté et le plan démarre sur son calendrier.,ጓደኞችህን ወይም ሙሉ ቡድን ይህን እቅድ ካንተ ጋር እንዲራመዱ ጋብዝ። እያንዳንዱ ራሱ ይቀበላል፣ እቅዱም በቀን መቁጠሪያው ይጀምራል።
+planInviteFriendsHeading,Friends,Amis,ጓደኞች
+planInviteGroupsHeading,Groups,Groupes,ቡድኖች
+planInviteEmpty,"Add a friend or join a group first, then you can invite them here.","Ajoute d'abord un ami ou rejoins un groupe, puis tu pourras les inviter ici.",መጀመሪያ ጓደኛ ጨምር ወይም ቡድን ተቀላቀል፣ ከዚያ እዚህ ልትጋብዛቸው ትችላለህ።
+planInviteSend,Send invitations,Envoyer les invitations,ግብዣዎችን ላክ
+planInviteSentToast,Invitations sent 🙏,Invitations envoyées 🙏,ግብዣዎች ተልከዋል 🙏
+planInvitedBadge,Invited,Invité,ተጋብዟል
+planInvitationsHeading,Invited to pray together,Invité à prier ensemble,አብረው ለመጸለይ ተጋብዘዋል
+planInvitationFrom,{name} invited you,{name} t'a invité,{name} ጋብዞሃል
+planInviteAccept,Pray along,Prier aussi,አብሬ እጸልያለሁ
+groupPlansHeading,Praying together,Prier ensemble,አብረን እንጸልይ
+groupPlanStartCta,Pray a plan together,Prier un plan ensemble,አንድ እቅድ አብረን እንጸልይ
+groupPlanPickerTitle,Choose a plan for the group,Choisir un plan pour le groupe,ለቡድኑ እቅድ ይምረጡ
+groupPlanPickerSub,Everyone in the group will see this plan and can join in.,Tout le groupe verra ce plan et pourra s'y joindre.,በቡድኑ ውስጥ ያሉ ሁሉ ይህን እቅድ ያያሉ፤ መቀላቀልም ይችላሉ።
+groupPlanAdoptCta,Start for the group,Lancer pour le groupe,ለቡድኑ ጀምር
+groupPlanAdoptNote,Your whole group will see this plan and can pray it with you.,Tout ton groupe verra ce plan et pourra le prier avec toi.,ቡድንህ ሁሉ ይህን እቅድ ያያል፤ ከአንተ ጋርም ሊጸልየው ይችላል።
+groupPlanAlreadyRunning,The group is already praying this,Le groupe prie déjà ce plan,ቡድኑ ይህን እቅድ አስቀድሞ እየጸለየ ነው
+groupPlanRunningNow,Praying now,En prière,አሁን በጸሎት ላይ
+groupPlanStartsOn,Starts {date},Débute le {date},{date} ይጀምራል
+groupPlanJoinCta,Pray this with us,Prier avec le groupe,ከእኛ ጋር ጸልይ
+groupPlanJoinedBadge,Praying,En prière,በጸሎት ላይ
+groupPlanCountJustYou,just you,toi seul pour l'instant,እስካሁን አንተ ብቻ
+groupPlanCountYouPlus,you and {n} more,toi et {n} autre(s),አንተና ሌሎች {n}
+groupPlanCountNone,no one yet,personne encore,እስካሁን ማንም የለም
+groupPlanCountOthers,{n} praying,{n} en prière,{n} እየጸለዩ ነው
+groupPlanEnd,End for the group,Terminer pour le groupe,ለቡድኑ አጠናቅቅ
+groupPlanEndConfirm,"End this shared plan? It stays on your own calendar, and everyone keeps theirs.","Terminer ce plan partagé ? Il reste sur ton calendrier, et chacun garde le sien.",ይህን የጋራ እቅድ ማጠናቀቅ? በራስህ ቀን መቁጠሪያ ላይ ይቀራል፤ እያንዳንዱም የራሱን ይይዛል።
+groupPlanLeave,Leave this plan,Quitter ce plan,ከዚህ እቅድ ውጣ
+groupPlanEndedToast,Shared plan ended,Plan partagé terminé,የጋራ እቅድ ተጠናቀቀ
+groupPlanStartedToast,Started for the group 🙏,Lancé pour le groupe 🙏,ለቡድኑ ተጀመረ 🙏
+notifPlanInvitation,Prayer plan invitation,Invitation à un plan de prière,የጸሎት እቅድ ግብዣ
+planDays,{n} days,{n} jours,{n} ቀናት
+planDayOf,Day {n} of {total},Jour {n} sur {total},ቀን {n} ከ{total}
+planTheme21Title,21 days of breakthrough,21 jours de percée,የ21 ቀናት ድል
+planTheme21Sub,Three weeks of persistent daily prayer,Trois semaines de prière quotidienne persévérante,ሦስት ሳምንታት ጽኑ ዕለታዊ ጸሎት
+planUpperRoomTitle,The Upper Room — 10 days,La chambre haute — 10 jours,ሰገነት — 10 ቀናት
+planUpperRoomSub,"Ten days of united prayer, waiting on the promised Spirit","Dix jours de prière unie, dans l'attente de l'Esprit promis",ቃል የተገባለትን መንፈስ በመጠባበቅ፣ አሥር ቀናት በአንድ ልብ የሚደረግ ጸሎት
+planWeek7Title,7 days of gratitude,7 jours de gratitude,የ7 ቀናት ምስጋና
+planWeek7Sub,"A week of thanksgiving, one theme a day","Une semaine d'actions de grâces, un thème par jour",አንድ ሳምንት ምስጋና፣ በቀን አንድ ጭብጥ
+planAltar7Title,Rekindle the altar — 7 days,Rallume l'autel — 7 jours,መሠዊያውን እንደ አዲስ አንድድ — 7 ቀናት
+planAltar7Sub,A week to return to God's presence and stir fresh hunger for Him,Une semaine pour revenir à la présence de Dieu et raviver la faim de Lui,ወደ እግዚአብሔር ሕልውና ለመመለስና ለእርሱ አዲስ ራብ ለማነሳሳት አንድ ሳምንት
+plan30Title,30 days for others,30 jours pour les autres,ለሌሎች 30 ቀናት
+plan30Sub,A month of intercession for people around you,Un mois d'intercession pour ceux qui t'entourent,በዙሪያህ ላሉ ሰዎች የአንድ ወር ማማለድ
+groupCalendarTitle,Prayer calendar,Calendrier de prière,የጸሎት ቀን መቁጠሪያ
+groupCalendarSub,Claim a day — the group covers this request together,Choisis un jour — le groupe couvre ce sujet ensemble,ቀን ምረጥ — ቡድኑ ይህን ልመና በአንድነት ይሸከማል
+commitToPray,I'll pray this day,Je prierai ce jour,በዚህ ቀን እጸልያለሁ
+commitmentAdded,Added to your calendar 🙏,Ajouté à ton calendrier 🙏,ወደ ቀን መቁጠሪያህ ታክሏል 🙏
+commitmentRemoved,Commitment removed,Engagement retiré,ቃል ኪዳን ተወግዷል
+removeCommitmentBtn,Remove my commitment,Retirer mon engagement,ቃል ኪዳኔን አስወግድ
+noCommitmentsYet,No one has claimed a day yet — be the first,Personne n'a encore choisi de jour — sois le premier,እስካሁን ማንም ቀን አልመረጠም — የመጀመሪያ ሁን
+myCommitments,Group commitments,Engagements de groupe,የቡድን ቃል ኪዳኖች
+exportIcs,Export to calendar (.ics),Exporter vers un calendrier (.ics),ወደ ቀን መቁጠሪያ ላክ (.ics)
+exportIcsSub,"Import your prayer schedule into Google Calendar, Outlook or Apple Calendar","Importe ton planning de prière dans Google Calendar, Outlook ou Apple Calendar",የጸሎት መርሐ ግብርህን ወደ Google Calendar፣ Outlook ወይም Apple Calendar አስገባ
+scriptureRefOnly,The full text isn't available here. Open it in your Bible to read the whole passage.,Le texte complet n'est pas disponible ici. Ouvre-le dans ta Bible pour lire tout le passage.,ሙሉ ጽሑፉ እዚህ አይገኝም። ሙሉውን ክፍል ለማንበብ በመጽሐፍ ቅዱስህ ክፈተው።
+privacyCenterTitle,Privacy Center,Centre de confidentialité,የግላዊነት ማዕከል
+privacyCenterSub,Understand exactly how your prayers are stored and shared — in plain language.,Comprends exactement comment tes prières sont stockées et partagées — en langage clair.,ጸሎቶችህ እንዴት እንደሚቀመጡና እንደሚጋሩ በቀላል ቋንቋ ተረዳ።
+privacyCenterBtn,Open Privacy Center,Ouvrir le Centre de confidentialité,የግላዊነት ማዕከልን ክፈት
+pcIntro,Here's what leaves your device — and what stays encrypted.,Voici ce qui quitte ton appareil — et ce qui reste chiffré.,ጸሎቶችህ የግልህ ናቸው። በእነሱ ላይ ምን እንደሚሆንና ለአንተ ብቻ ምን እንደሚቀር እነሆ።
+pcPrivateTitle,Private prayers,Prières privées,የግል ጸሎቶች
+pcPrivateBody,"Encrypted on your device before they're stored. Pray4Me keeps the encrypted content, not readable prayer text — so private prayers are encrypted for you.","Chiffrées sur ton appareil avant d'être stockées. Pray4Me conserve le contenu chiffré, pas le texte lisible de tes prières — tes prières privées sont chiffrées pour toi.",ለራስህ የምታስቀምጣቸው ጸሎቶች በመለያህ ውስጥ ተከማችተው ለአንተ ብቻ ይታያሉ። ካልመረጥህ በስተቀር በየትኛውም ቡድን ውስጥ ፈጽሞ አይለጠፉም።
+pcSharedTitle,Community prayers,Prières communautaires,የተጋሩና የቡድን ጸሎቶች
+pcSharedBody,"Encrypted before they're stored, and readable by the members of the group you share them with. Community prayers are encrypted for those group members — not for Pray4Me.","Chiffrées avant d'être stockées, et lisibles par les membres du groupe avec qui tu les partages. Les prières communautaires sont chiffrées pour ces membres — pas pour Pray4Me.",ለቡድን የምታጋራው ጸሎት በንድፉ ለዚያ ቡድን ይታያል — ይህ በአንድነት የመጸለይ ልብ ነው። የምታጋራው ማንኛውም ነገር ከግል ቦታህ ይወጣል፣ ስለዚህ ሌሎች ሲያዩት ሰላም የሚሰማህን ብቻ አጋራ።
+pcAiTitle,AI guidance,Aide de l'IA,በ AI የተደገፉ ጥቆማዎች
+pcAiBody,"Optional, and off until you turn it on. Only the information needed for that feature is sent, with your consent. The AI can suggest Bible references but never generates Scripture text — that always comes from a trusted source or a link to your own Bible.","Optionnelle, et désactivée tant que tu ne l'actives pas. Seules les informations nécessaires à la fonction sont envoyées, avec ton consentement. L'IA peut suggérer des références bibliques mais ne génère jamais le texte de l'Écriture — celui-ci provient toujours d'une source fiable ou d'un lien vers ta propre Bible.",የ AI ባህሪያት እስክታበራቸው ድረስ ጠፍተው ይቆያሉ። ያለ ግልጽ ፈቃድህ ስለ ጸሎት ምንም ነገር ወደ AI አይላክም፣ እና AI ፈጽሞ የመጽሐፍ ቅዱስ ጥቅስ ጽሑፍ አይፈጥርም — ቅዱሳት መጻሕፍት ሁልጊዜ ከታመነ ምንጭ ወይም ወደ ራስህ መጽሐፍ ቅዱስ ከሚወስድ አገናኝ ይመጣሉ።
+pcPushTitle,Prayer reminders,Rappels de prière,የግፋ ማስታወሻዎች
+pcPushBody,"Generic by default — just a gentle nudge to pray. Prayer titles, details and names are never included in a notification unless you opt in.","Génériques par défaut — une simple invitation à prier. Les titres, détails et noms ne figurent jamais dans une notification, sauf si tu choisis de les inclure.",ማስታወሻዎች የሚያዘጋጁት በሰዓት ብቻ ነው። ማሳወቂያዎች ፈጽሞ የጸሎትህን ይዘት አያካትቱም — ለመጸለይ ለስላሳ ማበረታቻ ብቻ ናቸው።
+pcRecoveryTitle,Recovery & other devices,Récupération et autres appareils,መልሶ ማግኛ እና ሌሎች መሣሪያዎች
+pcRecoveryBody,"Your prayers are encrypted with a key kept on this device. Set up recovery if you want to open them on another device — without it, encrypted prayers can only be read here. If you lose your recovery code, encrypted prayers can't be recovered.","Tes prières sont chiffrées avec une clé conservée sur cet appareil. Configure la récupération si tu veux les ouvrir sur un autre appareil — sans elle, les prières chiffrées ne sont lisibles qu'ici. Si tu perds ton code de récupération, les prières chiffrées ne peuvent pas être récupérées.",ጸሎቶችዎ በዚህ መሣሪያ ላይ በተቀመጠ ቁልፍ ተመስጥረዋል። በሌላ መሣሪያ ላይ ለመክፈት ከፈለጉ መልሶ ማግኛን ያዘጋጁ — ያለሱ ተመስጥረው ያሉ ጸሎቶች እዚህ ብቻ ሊነበቡ ይችላሉ። የመልሶ ማግኛ ኮድዎን ካጡ ተመስጥረው ያሉ ጸሎቶች ሊመለሱ አይችሉም።
+pcExportTitle,Exporting your data,Exporter tes données,ውሂብህን ላክ
+pcExportBody,You can download all your prayers as a file at any time. Your data is yours.,Tu peux télécharger toutes tes prières dans un fichier à tout moment. Tes données t'appartiennent.,ጸሎቶችህን ሁሉ በማንኛውም ጊዜ እንደ ፋይል ማውረድ ትችላለህ። ውሂብህ የአንተ ነው።
+pcDeleteTitle,Deleting your account,Supprimer ton compte,መለያህን ሰርዝ
+pcDeleteBody,You can permanently delete your account and its data whenever you want. This can't be undone.,Tu peux supprimer définitivement ton compte et ses données quand tu le souhaites. Cette action est irréversible.,መለያህንና ውሂቡን በፈለግህ ጊዜ ለዘላለም መሰረዝ ትችላለህ። ይህ መቀልበስ አይቻልም።
+pcSecurityNote,"No app can promise perfect security, but Pray4Me is built to keep your prayers private by default.","Aucune application ne peut promettre une sécurité parfaite, mais Pray4Me est conçu pour garder tes prières privées par défaut.",ማንም መተግበሪያ ፍጹም ደህንነትን ሊያረጋግጥ አይችልም፣ ነገር ግን Pray4Me ጸሎቶችህን በነባሪነት የግል አድርጎ ለማቆየት የተሠራ ነው።
+planFast3Title,3 days of fasting & prayer,3 jours de jeûne et de prière,የ3 ቀን ጾምና ጸሎት
+planFast3Sub,A biblical three-day fast to seek God,Un jeûne biblique de trois jours pour chercher Dieu,እግዚአብሔርን ለመፈለግ የሦስት ቀን መጽሐፍ ቅዱሳዊ ጾም
+planAbout,About this plan,À propos de ce plan,ስለዚህ ዕቅድ
+planInBible,In the Bible,Dans la Bible,በመጽሐፍ ቅዱስ ውስጥ
+planDayByDay,Day-by-day preview,Aperçu jour par jour,ቀን በቀን ቅድመ እይታ
+planDayLabel,Day {n},Jour {n},ቀን {n}
+planTapToPreview,Tap to preview & start,Touchez pour découvrir et commencer,ለማየትና ለመጀመር ንካ
+needsAttention,Needs attention,À traiter,ትኩረት የሚፈልግ
+checklistTitle,Get your group praying,Lance ton groupe dans la prière,ቡድንህን ወደ ጸሎት አስገባ
+checklistInvite,Invite people,Invite des personnes,ሰዎችን ጋብዝ
+checklistRequest,Add the first prayer request,Ajoute le premier sujet de prière,የመጀመሪያውን የጸሎት ርዕስ አክል
+checklistPray,Begin praying,Commence à prier,መጸለይ ጀምር
+checklistDismiss,Hide this,Masquer,ደብቅ
+intercessionTitle,Praying for others,Prier pour les autres,ለሌሎች መጸለይ
+intercessionSub,The requests you chose to carry — for people and groups,Les sujets que tu as choisi de porter — pour des personnes et des groupes,ለሰዎችና ለቡድኖች ልትሸከመው የመረጥከው ጸሎት
+praySharedBtn,Pray shared requests,Prier les sujets partagés,የተጋሩ ጸሎቶችን ጸልይ
+intercessionRemaining,{n} remaining today,{n} restants aujourd'hui,ዛሬ {n} ቀርተዋል
+intercessionDone,All prayed for today 🙏,Tout a été prié aujourd'hui 🙏,ዛሬ ሁሉም ተጸልዮአል 🙏
+srcPersonal,Personal,Personnels,የግል
+srcGroups,Groups,Groupes,ቡድኖች
+latestUpdateLabel,Latest update,Dernière nouvelle,የቅርብ ጊዜ ዜና
+growNextStep,Your next step,Ta prochaine étape,ቀጣዩ እርምጃህ
+growContinueDesc,Continue where you left off — a few quiet minutes of guided prayer,Reprends là où tu t'étais arrêté — quelques minutes de prière guidée,ካቆምክበት ቀጥል — ጥቂት ደቂቃ የተመራ ጸሎት
+growNewDesc,Continue learning to pray — a five-minute guided prayer,Continue d'apprendre à prier — une prière guidée de cinq minutes,መጸለይን መማር ቀጥል — የአምስት ደቂቃ የተመራ ጸሎት
+growAgainDesc,You've prayed them all — walk this one again,Tu les as tous priés — reprends celui-ci,ሁሉንም ጸልየሃል — ይህን እንደገና ጸልይ
+growHistory,Completed,Terminés,የተጠናቀቁ
+growBrowseAll,Browse all guides,Parcourir tous les guides,ሁሉንም መመሪያዎች ተመልከት
+lowDataTitle,Low data mode,Mode économie de données,ዳታ ቆጣቢ ሁነታ
+lowDataSub,"Fetch less over the network. Verse text loads from this device when already saved; otherwise you'll see the reference with a link. Prayer capture, Today and sessions keep working offline.","Réduit les téléchargements. Le texte des versets s'affiche s'il est déjà sur cet appareil ; sinon la référence avec un lien. La saisie, Aujourd'hui et les sessions continuent de fonctionner hors ligne.",ከአውታረ መረብ ጭነትን ይቀንሳል። የጥቅስ ጽሑፍ በዚህ መሣሪያ ላይ ካለ ይታያል፤ ካልሆነ ማጣቀሻና አገናኝ ይታያል። ጸሎት መያዝ፣ ዛሬ እና ክፍለ ጊዜዎች ከመስመር ውጭ ይሰራሉ።
+savedOffline,Saved on this device — it will sync when you're back online.,Enregistré sur cet appareil — la synchronisation se fera dès le retour de la connexion.,በዚህ መሣሪያ ላይ ተቀምጧል — መስመር ላይ ስትመለስ ይመሳሰላል።
+translatedLabel,Translated,Traduit,ተተርጉሟል
+audiencePrivate,Private,Privé,የግል
+audienceVault,Private · Encrypted,Privé · Chiffré,የግል · የተመሰጠረ
+audienceSharedWith,Shared with {name},Partagé avec {name},ከ{name} ጋር ተጋርቷል
+audienceSharedN,Shared with {n} groups,Partagé avec {n} groupes,ከ{n} ቡድኖች ጋር ተጋርቷል
+audienceFromGroup,From {name},De {name},ከ{name}
+privacySecurity,Privacy & Security,Confidentialité et sécurité,ግላዊነት እና ደህንነት
+notifPreviewTitle,Notification privacy,Confidentialité des notifications,የማሳወቂያ ግላዊነት
+notifPreviewSub,What a prayer reminder may show on your lock screen. Titles and names are never included.,Ce qu'un rappel de prière peut afficher sur ton écran verrouillé. Les titres et les noms ne sont jamais inclus.,የጸሎት ማስታወሻ በቆለፈ ማያ ላይ ምን ማሳየት እንደሚችል። ርዕሶችና ስሞች በፍጹም አይካተቱም።
+notifPreviewGeneric,Just an invitation to pray — no details,Juste une invitation à prier — aucun détail,ለጸሎት ግብዣ ብቻ — ዝርዝር የለም
+notifPreviewCount,Include today's count — never titles or names,Indiquer le nombre du jour — jamais les titres ni les noms,የዛሬን ብዛት አካትት — ርዕስም ስምም አይካተትም
+sharePreviewAudience,Will be shared with: {names},Sera partagé avec : {names},የሚጋራው ከ: {names}
+sharePreviewSync,Updates you add to this prayer will be shared too.,Les nouvelles que tu ajouteras à cette prière seront aussi partagées.,በዚህ ጸሎት ላይ የምትጨምራቸው ዜናዎችም ይጋራሉ።
+peopleView,People,Personnes,ሰዎች
+followUpNext,Follow-up · {date},Suivi · {date},ክትትል · {date}
+resultsCount,{n} results,{n} résultats,{n} ውጤቶች
+clearFiltersBtn,Clear filters,Effacer les filtres,ማጣሪያዎችን አጽዳ
+journalFilters,Journal filters,Filtres du journal,የጸሎት ማስታወሻ ማጣሪያዎች
+journalSource,Source or group,Source ou groupe,ምንጭ ወይም ቡድን
+intercessionDueSub,Due today — from the requests you carry,À prier aujourd'hui — parmi les sujets que tu portes,ለዛሬ — ከምትሸከማቸው ጸሎቶች
+intercessionNoneDue,Nothing is due today — your rhythm covers these on other days.,Rien n'est prévu aujourd'hui — ton rythme couvre ces sujets d'autres jours.,ዛሬ የታቀደ የለም — ዜማህ እነዚህን በሌሎች ቀናት ይሸፍናል።
+intercessionAllCarried,View all requests I'm carrying · {n},Voir tous les sujets que je porte · {n},የምሸከማቸውን ጸሎቶች ሁሉ ተመልከት · {n}
+prayAllCarriedBtn,Pray all remaining · {n},Prier tous les sujets restants · {n},የቀሩትን ሁሉ ጸልይ · {n}
+prayAgainBtn,Pray again,Prier encore,እንደገና ጸልይ
+prayForPerson,Pray for {name} · {n} active requests,Prier pour {name} · {n} sujets actifs,ለ{name} ጸልይ · {n} ንቁ ጸሎቶች
+personPrayedToday,You prayed for {name} today 🙏,Tu as prié pour {name} aujourd'hui 🙏,ዛሬ ለ{name} ጸልየሃል 🙏
+aboutMinutes,About {n} min,Environ {n} min,ወደ {n} ደቂቃ ገደማ
+whyThisStep,Why this step?,Pourquoi cette étape ?,ይህ ደረጃ ለምን?
+protEncrypted,Encrypted,Chiffré,የተመሰጠረ
+addUpdateBtn,Add update,Ajouter une nouvelle,ዜና ጨምር
+privacyRowOverview,Privacy Center,Centre de confidentialité,የግላዊነት ማዕከል
+privacyRowVault,Prayer Vault,Coffre de prière,የጸሎት ካዝና
+privacyRowNotif,Notification privacy,Confidentialité des notifications,የማሳወቂያ ግላዊነት
+privacyRowLowData,Low data mode,Mode économie de données,አነስተኛ ዳታ ሁነታ
+privacyRowAi,AI assistance & data,Assistance IA et données,የAI እርዳታ እና ዳታ
+privacyRowExport,Export my data,Exporter mes données,ዳታዬን አውጣ
+protWillEncrypt,Will be encrypted,Sera chiffré,ይመሰጠራል
+protEncryptedLocked,Encrypted · locked here,Chiffré · verrouillé ici,የተመሰጠረ · እዚህ ተቆልፏል
+checklistAddRequestFirst,Add a request first,Ajoute d'abord une demande,መጀመሪያ ጥያቄ ጨምር
+sourceLangWrittenIn,Written in {name},Écrit en {name},በ{name} ተጽፏል
+sourceLangChange,Change,Modifier,ቀይር
+sourceLangLabel,Language of this prayer,Langue de cette prière,የዚህ ጸሎት ቋንቋ
+sourceLangLooksLike,Looks like {name} — use it?,On dirait du {name} — l'utiliser ?,{name} ይመስላል — ይጠቀሙበት?
+schedRhythmLabel,Prayer rhythm,Rythme de prière,የጸሎት ምት
+schedChange,Change,Modifier,ቀይር
+schedChangeLater,You can change this later.,Tu pourras changer plus tard.,በኋላ መቀየር ትችላለህ።
+schedWhenAppear,When would you like this prayer to appear?,Quand souhaites-tu voir cette prière apparaître ?,ይህ ጸሎት መቼ እንዲታይ ትፈልጋለህ?
+schedUsePlan,Use my normal prayer rhythm,Suivre mon rythme habituel,የተለመደውን ምቴን ተጠቀም
+schedOnceSub,Choose a date,Choisir une date,ቀን ምረጥ
+schedOtherRhythm,Choose another rhythm,Choisir un autre rythme,ሌላ ምት ምረጥ
+schedOtherRhythmSub,"Daily, weekly or a custom pattern","Chaque jour, chaque semaine ou sur mesure",በየቀኑ፣ በየሳምንቱ ወይም በራስህ አኳኋን
+schedNoFixed,No fixed schedule,Pas d'horaire fixe,የተወሰነ ጊዜ የለም
+schedNoFixedSub,"Stays in your Journal, never on a set day","Reste dans le Journal, jamais un jour précis",በማስታወሻህ ውስጥ ይቆያል፣ በተወሰነ ቀን አይደለም
+schedNoFixedSentence,"This prayer stays in your Journal, with no set day.","Cette prière restera dans ton Journal, sans jour fixe.",ይህ ጸሎት የተወሰነ ቀን ሳይኖረው በማስታወሻህ ውስጥ ይቆያል።
+noFixedSchedule,No fixed schedule,Pas d'horaire fixe,የተወሰነ ጊዜ የለም
+moreOptionsLabel,More options,Plus d'options,ተጨማሪ አማራጮች
+formReminderAt,You'll be reminded around {time}.,Tu seras rappelé·e vers {time}.,በ{time} አካባቢ ይታወስሃል።
+schedEveryDay,Every day,Chaque jour,በየቀኑ
+schedOnceAWeek,Once a week,Une fois par semaine,በሳምንት አንድ ጊዜ
+schedChooseDays,Choose days,Choisir les jours,ቀናትን ምረጥ
+schedMoreOptions,More scheduling options,Plus d'options,ተጨማሪ አማራጮች
+schedPreferredTime,Preferred time,Moment préféré,የሚመረጥ ጊዜ
+schedStopQuestion,When should this rhythm stop?,Quand ce rythme doit-il s'arrêter ?,ይህ ምት መቼ ይቁም?
+schedUseRhythm,Use this rhythm,Utiliser ce rythme,ይህን ምት ተጠቀም
+schedWeekdaysLabel,Days of the week,Jours de la semaine,የሳምንቱ ቀናት
+schedDateLabel,Date,Date,ቀን
+schedEndDateLabel,End date,Date de fin,የመጨረሻ ቀን
+schedEndCountLabel,Number of times,Nombre de fois,የጊዜ ብዛት
+endMarkAnswered,When I mark it answered,Quand je la marque exaucée,መልስ አግኝቷል ብዬ ስመዘግብ
+endNoAutoEnd,No automatic end,Pas de fin automatique,በራሱ አይጨርስም
+schedWillAppear,This prayer will appear {detail}.,Cette prière apparaîtra {detail}.,ይህ ጸሎት {detail} ይታያል።
+schedWillFollowPlan,This prayer will follow your normal rhythm: {days}.,Cette prière suivra ton rythme habituel : {days}.,ይህ ጸሎት የተለመደውን ምትህን ይከተላል፦ {days}።
+sentOnce,once on {date},une fois le {date},በ{date} አንድ ጊዜ
+sentDaily,every day,chaque jour,በየቀኑ
+sentWeekly,every {days},chaque {days},በየ{days}
+sentInterval,every {n} days,tous les {n} jours,በየ{n} ቀኑ
+sentMonthly,on day {d} of each month,le {d} de chaque mois,በየወሩ {d} ቀን
+sentYearly,every year on {date},chaque année le {date},በየዓመቱ {date}
+sentAnytime,at any time,à tout moment,በማንኛውም ጊዜ
+sentMorning,in the morning,le matin,በጠዋት
+sentMidday,at midday,à midi,በቀትር
+sentEvening,in the evening,le soir,በማታ
+sentUntilAnswered,until you mark it answered,jusqu'à ce que tu la marques exaucée,መልስ አግኝቷል ብለህ እስክትመዘግብ ድረስ
+sentUntilDate,until {date},jusqu'au {date},እስከ {date} ድረስ
+sentTimes,{n} times in total,{n} fois au total,በጠቅላላ {n} ጊዜ
+sentJoin,", ",", ",፣ 
+formatBold,Bold,Gras,ደማቅ
+formatItalic,Italic,Italique,ዘንበል
+formatList,List,Liste,ዝርዝር
+attachMenu,Attach,Joindre,አያይዝ
+attachPhoto,Photo,Photo,ፎቶ
+attachVideo,Video,Vidéo,ቪዲዮ
+attachAudio,Audio,Audio,ድምፅ
+attachLink,Link,Lien,አገናኝ
+recordVoice,Record a voice note,Enregistrer une note vocale,የድምፅ ማስታወሻ ቅዳ
+stopRecording,Stop recording,Arrêter l'enregistrement,ቅጂውን አቁም
+attachRemove,Remove attachment,Retirer la pièce jointe,አባሪውን አስወግድ
+textRemove,Remove text,Retirer le texte,ጽሑፉን አስወግድ
+linkPlaceholder,Paste a link (https://…),Coller un lien (https://…),አገናኝ ለጥፍ (https://…)
+linkInvalid,This link is not valid,Ce lien n'est pas valide,ይህ አገናኝ ትክክል አይደለም
+attachTooLarge,This file is too large,Ce fichier est trop volumineux,ይህ ፋይል በጣም ትልቅ ነው
+attachUnsupported,Unsupported file type,Type de fichier non pris en charge,የፋይል አይነት አይደገፍም
+attachOffline,Adding media requires a connection,Ajouter un média nécessite une connexion internet,ሚዲያ ለመጨመር የበይነመረብ ግንኙነት ያስፈልጋል
+uploadFailed,"Upload failed, please try again","L'envoi a échoué, réessayez",መስቀል አልተሳካም፣ እንደገና ይሞክሩ
+micUnavailable,Microphone unavailable,Micro indisponible,ማይክሮፎን አይገኝም
+mediaLoadError,Couldn't load this media,Impossible de charger ce média,ይህን ሚዲያ መጫን አልተቻለም
+restUnderSky,Rest under the sky,Reposez-vous sous le ciel,ከሰማይ በታች ዕረፍት

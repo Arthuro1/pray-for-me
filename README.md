@@ -61,9 +61,11 @@ npm run dev            # http://localhost:5173
 ```
 
 ```bash
-npm run build    # production build → dist/
-npm test         # Vitest suite
-npm run lint     # ESLint
+npm run build          # production build → dist/
+npm test               # Vitest suite (jsdom)
+npm run test:browser   # real-browser E2E (Chromium) — see docs/TESTING.md
+npm run lint           # ESLint
+npm run check:locales  # i18n key + placeholder parity — see docs/I18N_REVIEW.md
 ```
 
 ### Run without optional integrations
@@ -104,6 +106,8 @@ The VAPID **private** key is used only by the reminder Edge Functions and lives 
 ## 🗄️ Database Setup
 
 Run these in the Supabase SQL editor. Each file is idempotent (safe to re-run), but apply the **Core** and **Encryption** groups first — the app encrypts by default and expects those tables. Apply the rest as you enable each area.
+
+> **Tracking what's live:** run [`_migrations_tracking.sql`](./supabase/_migrations_tracking.sql) first — it creates a `schema_migrations` table so prod state is queryable from the database instead of from memory. [`docs/DEPLOY.md`](./docs/DEPLOY.md) is the authoritative per-migration checklist with **ordering constraints and the 🔴 "run in DB before deploying the client" data-loss flags**.
 
 **Core schema**
 

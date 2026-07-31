@@ -26,8 +26,34 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Structural i18n check: fails on missing keys (which silently fall back to
+      # French for the user) or placeholder drift. Translation *quality* still
+      # needs a native pass; this only guards the mechanical invariants.
+      - name: Check locales
+        run: npm run check:locales
+
       - name: Test
         run: npm test
 
       - name: Build
         run: npm run build
+
+  # Real-browser E2E (Chromium via @vitest/browser-playwright). Separate job so a
+  # browser flake never blocks the fast unit/lint/build signal, and so the ~1min
+  # browser download is only paid when this runs. Secret-free: the guest prayer
+  # flow makes no network calls (see src/components/GuestPrayerFlow.browser.spec.jsx).
+  browser-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chrome for Playwright
+        run: npx playwright install --with-deps chrome
+      - name: Browser tests
+        run: npm run test:browser

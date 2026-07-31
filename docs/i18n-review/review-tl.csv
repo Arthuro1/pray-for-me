@@ -1,0 +1,950 @@
+key,en,fr,tl
+todayRemainingLabel,Today · {n} remaining,Aujourd'hui · encore {n},Ngayon · {n} na natitira
+todayCompleteTitle,Today's prayer is complete.,La prière d'aujourd'hui est terminée.,Tapos na ang panalangin ngayon.
+prayAgain,Pray again,Prier à nouveau,Manalangin muli
+prayedTodayLabel,Prayed today,Priées aujourd’hui,Naipanalangin na ngayon
+rhythmPlanHint,"Stays in your Journal, with no set day.","Reste dans ton Journal, sans jour fixe.","Nananatili sa iyong Journal, nang walang takdang araw."
+answeredThisWeek,{n} answered this week,{n} exaucées cette semaine,{n} ang nasagot ngayong linggo
+prayWithOthers,Pray with others,Priez avec d'autres,Manalangin kasama ang iba
+communityEmptyDesc,Join a prayer group using an invitation link or code.,Rejoignez un groupe de prière avec un lien ou un code d'invitation.,Sumali sa isang prayer group gamit ang invitation link o code.
+inbox,Inbox,Boîte de réception,Inbox
+prayerReminders,Prayer reminders,Rappels de prière,Mga paalala sa panalangin
+onboardCaptureTitle,What would you like to pray about?,Pour quoi aimeriez-vous prier ?,Ano ang nais mong ipanalangin?
+onboardCapturePlaceholder,Pray for my sister's health…,Prier pour la santé de ma sœur…,Ipanalangin ang kalusugan ng aking kapatid…
+onboardPrivateNote,Private and encrypted by default.,Privé et chiffré par défaut.,Pribado at naka-encrypt bilang default.
+onboardSaveAndPray,Save and pray,Enregistrer et prier,I-save at manalangin
+onboardLater,I'll do this later,Je le ferai plus tard,Gagawin ko mamaya
+firstPrayerQuestion,Who or what is on your heart?,Qui ou quoi avez-vous sur le cœur ?,Sino o ano ang nasa puso mo?
+firstPrayerDeviceNote,This stays on this device until you choose to save it.,Cela reste sur cet appareil jusqu'à ce que vous choisissiez de l'enregistrer.,Nananatili ito sa device na ito hanggang piliin mong i-save.
+firstPrayerPrayCta,Pray now,Prier maintenant,Manalangin ngayon
+firstPrayerSaveTitle,Would you like to keep this prayer in your private journal?,Souhaitez-vous garder cette prière dans votre journal privé ?,Gusto mo bang itago ang panalanging ito sa iyong pribadong talaarawan?
+firstPrayerSaveBtn,Save in my private journal,Enregistrer dans mon journal privé,I-save sa aking pribadong talaarawan
+firstPrayerFinishBtn,Finish without saving,Terminer sans enregistrer,Tapusin nang hindi nagse-save
+authSavePrayerTitle,Save your prayer privately,Enregistrez votre prière en privé,I-save ang iyong panalangin nang pribado
+authSavePrayerBody,Create a free account to keep this prayer in your journal — only you can ever read it.,Créez un compte gratuit pour garder cette prière dans votre journal — vous seul pourrez la lire.,Gumawa ng libreng account para itago ang panalanging ito sa iyong talaarawan — ikaw lang ang makakabasa nito.
+authSavePrayerCta,Continue to save privately,Continuer pour enregistrer en privé,Magpatuloy para i-save nang pribado
+prayerFormat,Prayer format,Format de prière,Anyo ng panalangin
+prayerMusic,Prayer atmosphere,Ambiance de prière,Himig ng panalangin
+prayerMusicSub,Choose a gentle background for prayer. Silence is always welcome.,Choisissez un fond doux pour la prière. Le silence est toujours le bienvenu.,Pumili ng banayad na saliw para sa panalangin. Malugod na tinatanggap ang katahimikan.
+audioSilence,Silence,Silence,Katahimikan
+audioSoftPiano,Soft piano,Piano doux,Banayad na piano
+audioAmbientPad,Ambient worship pad,Nappe de louange,Pad ng pagsamba
+audioNature,Rain / nature,Pluie / nature,Ulan / kalikasan
+audioSoftPad,Soft pad,Nappe douce,Banayad na pad
+prayerFieldLabel,Who or what would you like to pray for?,Pour qui ou pour quoi voulez-vous prier ?,Para kanino o para saan mo nais manalangin?
+addNote,Add a note,Ajouter une note,Magdagdag ng tala
+organizeLabel,Organize,Organiser,Ayusin
+savePrayer,Save prayer,Enregistrer la prière,I-save ang panalangin
+rhythmLabel,How often should this return?,À quelle fréquence revenir ?,Gaano kadalas itong babalik?
+rhythmFlexible,Weekly plan,Plan hebdomadaire,Lingguhang plano
+rhythmOccasionally,Occasionally,De temps en temps,Paminsan-minsan
+rhythmCustom,Custom,Personnalisé,Custom
+doneBtn,Done,Terminé,Tapos na
+moreTab,More,Plus,Iba pa
+primaryNav,Primary navigation,Navigation principale,Pangunahing nabigasyon
+navPending,{count} pending,{count} en attente,{count} nakabinbin
+joinGroupCta,Join a group,Rejoindre un groupe,Sumali sa grupo
+joinGroupHint,Paste an invite link or code shared by a group member.,Collez un lien ou un code d'invitation partagé par un membre du groupe.,I-paste ang invite link o code na ibinahagi ng miyembro ng grupo.
+joinGroupPlaceholder,Invite link or code,Lien ou code d'invitation,Invite link o code
+reminderNudge,Would a gentle reminder tomorrow help?,Un doux rappel demain vous aiderait-il ?,Makakatulong ba ang banayad na paalala bukas?
+activationRhythmTitle,Choose how this prayer returns,Choisissez quand retrouver cette prière,Piliin kung kailan babalik ang panalanging ito
+activationRhythmBody,Every prayer can have its own rhythm. Review when this one should return so it fits your life.,Chaque prière peut avoir son propre rythme. Choisissez quand retrouver celle-ci pour l'adapter à votre quotidien.,Maaaring magkaroon ng sariling ritmo ang bawat panalangin. Suriin kung kailan ito babalik upang umangkop sa iyong buhay.
+activationRhythmCta,Review rhythm,Voir le rythme,Suriin ang ritmo
+activationReminderTitle,Would a gentle reminder help?,Un doux rappel vous aiderait-il ?,Makakatulong ba ang banayad na paalala?
+activationReminderBody,Choose a time and Pray4Me can bring today's prayers back to you.,Choisissez une heure et Pray4Me pourra vous ramener aux prières du jour.,Pumili ng oras at maibabalik ng Pray4Me ang mga panalangin ngayong araw.
+activationOrganizeTitle,Make a growing journal easier to revisit,Retrouvez plus facilement un journal qui grandit,Gawing mas madaling balikan ang lumalaking journal
+activationOrganizeBody,Add a person or category to one prayer. More organization appears only when it becomes useful.,Ajoutez une personne ou une catégorie à une prière. L'organisation n'apparaît que lorsqu'elle devient utile.,Magdagdag ng tao o kategorya sa isang panalangin. Lalabas lamang ang dagdag na pag-aayos kapag kapaki-pakinabang.
+activationOrganizeCta,Organize a prayer,Organiser une prière,Ayusin ang panalangin
+pwaInstallTitle,Keep Pray4Me close,Gardez Pray4Me à portée de main,Panatilihing malapit ang Pray4Me
+pwaInstallBody,Open today's prayers in one tap and keep the app available when your connection is unsteady.,Ouvrez les prières du jour en un geste et gardez l’application disponible même avec une connexion instable.,Buksan ang mga panalangin ngayon sa isang tap at gamitin ang app kahit mahina ang koneksyon.
+pwaInstallCta,Install Pray4Me,Installer Pray4Me,I-install ang Pray4Me
+pwaInstallLater,Not now,Pas maintenant,Hindi muna
+pwaIosTitle,Add Pray4Me to your Home Screen,Ajouter Pray4Me à l’écran d’accueil,Idagdag ang Pray4Me sa Home Screen
+pwaIosBody,"In your browser, tap Share, then choose Add to Home Screen.","Dans votre navigateur, touchez Partager, puis Ajouter à l’écran d’accueil.","Sa browser, i-tap ang Share, pagkatapos piliin ang Add to Home Screen."
+pwaIosAddAction,Add to Home Screen,Ajouter à l’écran d’accueil,Idagdag sa Home Screen
+authLogIn,Log in,Se connecter,Mag-log in
+authSignUp,Sign up,S'inscrire,Mag-sign up
+authCreateAccount,Create account,Créer un compte,Gumawa ng account
+authContinueGoogle,Continue with Google,Continuer avec Google,Magpatuloy gamit ang Google
+authOr,or,ou,o
+authNamePlaceholder,Display name (optional),Nom d'affichage (facultatif),Pangalang ipapakita (opsyonal)
+authEmail,Email,Email,Email
+authPassword,Password,Mot de passe,Password
+authForgotPassword,Forgot password?,Mot de passe oublié ?,Nakalimutan ang password?
+authResend,Resend confirmation email,Renvoyer l'email de confirmation,Ipadalang muli ang confirmation email
+authBackHome,Back to home,Retour à l'accueil,Bumalik sa home
+authBackToLogin,Back to log in,Retour à la connexion,Bumalik sa pag-log in
+authResetTitle,Reset your password,Réinitialiser le mot de passe,I-reset ang iyong password
+authResetIntro,Enter your email and we'll send you a link to reset your password.,Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.,Ilagay ang iyong email at magpapadala kami ng link para i-reset ang iyong password.
+authResetSend,Send reset link,Envoyer le lien,Ipadala ang link
+authConfirmSent,Check your email to confirm your account.,Vérifiez votre email pour confirmer votre compte.,Tingnan ang iyong email para kumpirmahin ang iyong account.
+authResendDone,Confirmation email sent — check your inbox.,Email de confirmation renvoyé — vérifiez votre boîte de réception.,Naipadala ang confirmation email — tingnan ang iyong inbox.
+authResetSent,"If an account exists for that email, we've sent a reset link.","Si un compte existe pour cet email, nous avons envoyé un lien de réinitialisation.","Kung may account para sa email na iyon, nagpadala kami ng reset link."
+authPrivacyNote,Your prayers are private and secure 🔒,Vos prières sont privées et sécurisées 🔒,Ang iyong mga panalangin ay pribado at ligtas 🔒
+authTagline,"""Pray without ceasing"" — 1 Thess. 5:17",« Priez sans cesse » — 1 Thess. 5:17,"""Manalangin nang walang patid"" — 1 Tes. 5:17"
+authErrInvalid,"Email or password is incorrect. Try again, or reset your password.",Email ou mot de passe incorrect. Réessayez ou réinitialisez votre mot de passe.,"Mali ang email o password. Subukang muli, o i-reset ang iyong password."
+authErrUnconfirmed,Please confirm your email first — you can resend the confirmation email below.,Veuillez d'abord confirmer votre email — vous pouvez renvoyer l'email de confirmation ci-dessous.,Kumpirmahin muna ang iyong email — maaari mong ipadalang muli ang confirmation email sa ibaba.
+authErrInUse,An account already exists with this email. Try logging in instead.,Un compte existe déjà avec cet email. Essayez plutôt de vous connecter.,May account na para sa email na ito. Subukang mag-log in na lang.
+authErrWeakPass,Choose a password with at least 6 characters.,Choisissez un mot de passe d'au moins 6 caractères.,Pumili ng password na hindi bababa sa 6 na karakter.
+authErrEmail,That email address doesn't look right.,Cette adresse email ne semble pas valide.,Mukhang hindi wasto ang email address na iyan.
+authErrRate,Too many attempts. Please wait a moment and try again.,Trop de tentatives. Patientez un instant avant de réessayer.,Masyadong maraming pagsubok. Maghintay saglit at subukang muli.
+savedOnToday,Your prayer is now on Today.,Votre prière est maintenant dans Aujourd'hui.,"Ang iyong panalangin ay nasa ""Ngayon"" na."
+setReminderCta,Set a reminder,Définir un rappel,Magtakda ng paalala
+personNamePlaceholder,First and last name,Prénom et nom,Buong pangalan
+providerEmail,Email / Password,Email / Mot de passe,Email / Password
+markAllRead,Mark all as read,Tout marquer comme lu,Markahang lahat bilang nabasa na
+loadMore,Load more,Voir plus,Mag-load pa
+seeAllNotifications,See all notifications,Voir toutes les notifications,Tingnan ang lahat ng abiso
+notifEmpty,No notifications yet,Aucune notification pour l'instant,Wala pang abiso
+notifEmptySub,Updates from your groups and friends will appear here.,Les nouveautés de vos groupes et amis apparaîtront ici.,Lalabas dito ang mga update mula sa iyong mga grupo at kaibigan.
+notifError,Couldn't load notifications.,Impossible de charger les notifications.,Hindi ma-load ang mga abiso.
+notifUnreadLabel,Inbox ({n} unread),Boîte de réception ({n} non lues),Inbox ({n} hindi pa nababasa)
+notifFriendRequest,You have a new friend request,Vous avez une nouvelle demande d'ami,May bago kang friend request
+notifGroupInvitation,You've been invited to a prayer group,Vous avez été invité à un groupe de prière,Inimbitahan ka sa isang prayer group
+notifCommunityUpdate,There's an update on a prayer you follow,Il y a une mise à jour sur une prière que vous suivez,May update sa isang panalanging sinusundan mo
+notifAnswered,A prayer you follow was marked answered,Une prière que vous suivez a été marquée exaucée,Isang panalanging sinusundan mo ay minarkahang nasagot
+notifReaction,Several people are praying with you,Plusieurs personnes prient avec vous,Ilang tao ang nananalangin kasama mo
+notifGroupPrayerAdded,A new prayer was shared in your group,Une nouvelle prière a été partagée dans votre groupe,May bagong panalanging ibinahagi sa iyong grupo
+notifTestimony,A testimony was shared in your group,Un témoignage a été partagé dans votre groupe,May testimonyang ibinahagi sa iyong grupo
+notifMembership,You were added to a prayer group,Vous avez été ajouté à un groupe de prière,Idinagdag ka sa isang prayer group
+notifRoleChange,Your role in a group has changed,Votre rôle dans un groupe a changé,Nagbago ang iyong tungkulin sa isang grupo
+notifGeneric,You have a new notification,Vous avez une nouvelle notification,May bago kang abiso
+notifPrefsTitle,Community notifications,Notifications de la communauté,Mga abiso ng komunidad
+notifPrefsSub,Choose what you're notified about and how.,Choisissez ce dont vous êtes notifié et comment.,Piliin kung tungkol saan at paano ka aabisuhan.
+notifInApp,In-app notifications,Notifications dans l'app,Mga abiso sa app
+notifInAppSub,Show notifications in the app inbox.,Afficher les notifications dans la boîte de réception.,Ipakita ang mga abiso sa inbox ng app.
+notifPush,Push notifications,Notifications push,Push na mga abiso
+notifPushSub,Send notifications to this device even when the app is closed.,Envoyer des notifications à cet appareil même quand l'app est fermée.,Magpadala ng abiso sa device na ito kahit sarado ang app.
+quietHours,Quiet hours,Heures silencieuses,Tahimik na oras
+quietHoursSub,Pause push during these hours. In-app notifications still arrive.,Suspendre les push pendant ces heures. Les notifications dans l'app arrivent quand même.,I-pause ang push sa mga oras na ito. Dumarating pa rin ang mga abiso sa app.
+quietFrom,From,De,Mula
+quietTo,To,À,Hanggang
+timezone,Time zone,Fuseau horaire,Time zone
+notifByType,By notification type,Par type de notification,Ayon sa uri ng abiso
+modeImmediate,Immediate,Immédiat,Agad
+modeDigest,Digest,Résumé,Buod
+modeOff,Off,Désactivé,Naka-off
+followPrayer,Follow,Suivre,Sundan
+following,Following,Suivi,Sinusundan
+followingPrayer,You'll be notified about this prayer,Vous serez notifié pour cette prière,Aabisuhan ka tungkol sa panalanging ito
+unfollowedPrayer,You unfollowed this prayer,Vous ne suivez plus cette prière,Hindi mo na sinusundan ang panalanging ito
+prayTogether,Pray together,Prier ensemble,Manalangin nang sama-sama
+beFirstToPray,Be the first to pray,Soyez le premier à prier,Maging una sa pananalangin
+andNMore,and {n} more,et {n} de plus,at {n} pa
+testNotifBody,Here are today's prayers. Take a moment to pray 🙏,Voici vos prières du jour. Prenez un moment pour prier 🙏,Narito ang iyong mga panalangin ngayon. Maglaan ng sandali upang manalangin 🙏
+addThanks,Add a word of thanks,Ajouter un mot de reconnaissance,Magdagdag ng salita ng pasasalamat
+thanksSaved,Your thanks is recorded 🙏,Votre reconnaissance est enregistrée 🙏,Naitala ang iyong pasasalamat 🙏
+thanksPrompt,Pause and thank God for His answer,Prenez un instant pour remercier Dieu de sa réponse,Huminto at magpasalamat sa Diyos sa Kanyang sagot
+answeredThisMonth,This month,Ce mois-ci,Ngayong buwan
+answeredEarlier,Earlier,Auparavant,Mas maaga
+vaultTitle,Prayer Vault,Coffre de prière,Vault ng Panalangin
+vaultManageSub,Encrypt your private prayers with a passphrase only you know.,Chiffrez vos prières privées avec une phrase secrète que vous seul connaissez.,I-encrypt ang iyong mga pribadong panalangin gamit ang passphrase na ikaw lang ang nakakaalam.
+vaultStatusLocked,Locked,Verrouillé,Naka-lock
+vaultStatusUnlocked,Unlocked,Déverrouillé,Naka-unlock
+vaultSetup,Set up vault,Configurer le coffre,I-set up ang vault
+vaultSetupTitle,Set up your Prayer Vault,Configurer votre coffre de prière,I-set up ang iyong Vault ng Panalangin
+vaultSetupIntro,"Choose a passphrase to encrypt your private prayers end-to-end. We never see it — if you forget it, only your recovery code can restore access.","Choisissez une phrase secrète pour chiffrer vos prières privées de bout en bout. Nous ne la voyons jamais — si vous l’oubliez, seul votre code de récupération peut rétablir l’accès.","Pumili ng passphrase upang i-encrypt nang end-to-end ang iyong mga pribadong panalangin. Hindi namin ito nakikita — kapag nakalimutan mo ito, ang iyong recovery code lang ang makakapagbalik ng access."
+vaultPassphrase,Passphrase,Phrase secrète,Passphrase
+vaultConfirmPassphrase,Confirm passphrase,Confirmer la phrase secrète,Kumpirmahin ang passphrase
+vaultCreate,Create vault,Créer le coffre,Gumawa ng vault
+vaultPassTooShort,Use at least 8 characters.,Utilisez au moins 8 caractères.,Gumamit ng hindi bababa sa 8 character.
+vaultPassMismatch,Passphrases don't match.,Les phrases secrètes ne correspondent pas.,Hindi magkatugma ang mga passphrase.
+vaultRecoveryTitle,Save your recovery code,Enregistrez votre code de récupération,I-save ang iyong recovery code
+vaultRecoveryIntro,This is the only way to recover your vault if you forget your passphrase. Store it somewhere safe — it won't be shown again.,C’est le seul moyen de récupérer votre coffre si vous oubliez votre phrase secrète. Conservez-le en lieu sûr — il ne sera plus affiché.,Ito lang ang paraan para mabawi ang iyong vault kung makalimutan mo ang passphrase. Itago ito sa ligtas na lugar — hindi na ito ipapakita ulit.
+vaultCopyCode,Copy code,Copier le code,Kopyahin ang code
+vaultCodeCopied,Recovery code copied,Code de récupération copié,Nakopya ang recovery code
+vaultRecoverySaved,I've saved my recovery code,J’ai enregistré mon code de récupération,Na-save ko na ang aking recovery code
+vaultUnlockTitle,Unlock your Prayer Vault,Déverrouiller votre coffre de prière,I-unlock ang iyong Vault ng Panalangin
+vaultUnlockIntro,Enter your passphrase to read and edit your private prayers.,Saisissez votre phrase secrète pour lire et modifier vos prières privées.,Ilagay ang iyong passphrase para basahin at i-edit ang iyong mga pribadong panalangin.
+vaultUnlock,Unlock,Déverrouiller,I-unlock
+vaultWrongPass,Incorrect passphrase.,Phrase secrète incorrecte.,Maling passphrase.
+vaultForgot,Forgot your passphrase?,Phrase secrète oubliée ?,Nakalimutan ang passphrase?
+vaultResetTitle,Reset with recovery code,Réinitialiser avec le code de récupération,I-reset gamit ang recovery code
+vaultResetIntro,Enter your recovery code and choose a new passphrase.,Saisissez votre code de récupération et choisissez une nouvelle phrase secrète.,Ilagay ang iyong recovery code at pumili ng bagong passphrase.
+vaultRecoveryCode,Recovery code,Code de récupération,Recovery code
+vaultNewPassphrase,New passphrase,Nouvelle phrase secrète,Bagong passphrase
+vaultReset,Reset passphrase,Réinitialiser la phrase secrète,I-reset ang passphrase
+vaultWrongCode,Invalid recovery code.,Code de récupération invalide.,Di-wastong recovery code.
+vaultLockNow,Lock,Verrouiller,I-lock
+vaultChangePass,Change,Modifier,Palitan
+vaultChangeTitle,Change passphrase,Modifier la phrase secrète,Palitan ang passphrase
+vaultCurrentPassphrase,Current passphrase,Phrase secrète actuelle,Kasalukuyang passphrase
+vaultChangeSave,Save passphrase,Enregistrer la phrase secrète,I-save ang passphrase
+vaultUnlockedToast,Vault unlocked,Coffre déverrouillé,Na-unlock ang vault
+vaultLockedToast,Vault locked,Coffre verrouillé,Na-lock ang vault
+vaultChangedToast,Passphrase changed,Phrase secrète modifiée,Napalitan ang passphrase
+vaultResetDoneToast,Passphrase reset,Phrase secrète réinitialisée,Na-reset ang passphrase
+vaultRotateCode,Rotate recovery code,Renouveler le code de récupération,Palitan ang recovery code
+vaultRotateTitle,Rotate recovery code,Renouveler le code de récupération,Palitan ang recovery code
+vaultRotateIntro,This generates a new recovery code and invalidates the old one. Your passphrase and encrypted prayers stay unchanged.,Cela génère un nouveau code de récupération et invalide l’ancien. Votre phrase secrète et vos prières chiffrées restent inchangées.,Bubuo ito ng bagong recovery code at gagawing hindi na gumagana ang luma. Hindi magbabago ang iyong passphrase at mga naka-encrypt na panalangin.
+vaultRotateGenerate,Generate new code,Générer un nouveau code,Bumuo ng bagong code
+vaultMigratePending,Some prayers created before the vault aren't encrypted yet ({count}).,Certaines prières créées avant le coffre ne sont pas encore chiffrées ({count}).,May ilang panalangin na ginawa bago ang vault na hindi pa naka-encrypt ({count}).
+vaultMigrateNow,Encrypt them now,Les chiffrer maintenant,I-encrypt na ngayon
+vaultMigrating,Encrypting…,Chiffrement…,Ine-encrypt…
+vaultMigrateDone,Your prayers are now encrypted,Vos prières sont maintenant chiffrées,Naka-encrypt na ang iyong mga panalangin
+vaultMigratePartial,Some prayers couldn't be encrypted. Please try again.,Certaines prières n'ont pas pu être chiffrées. Veuillez réessayer.,May ilang panalangin na hindi na-encrypt. Pakisubukan muli.
+vaultAllProtected,All your private prayers are encrypted.,Toutes vos prières privées sont chiffrées.,Lahat ng iyong pribadong panalangin ay naka-encrypt.
+today,Today,Aujourd'hui,Ngayon
+prayers,Prayers,Prières,Mga Panalangin
+journal,Journal,Journal,Talaan
+plan,Plan,Plan,Plano
+settings,Settings,Paramètres,Mga Setting
+settingsSecAccount,Account & privacy,Compte et confidentialité,Account at privacy
+settingsSecAppearance,Appearance & language,Apparence et langue,Anyo at wika
+settingsSecData,Data & advanced,Données et options avancées,Data at advanced
+settingsSecSupport,Support & feedback,Assistance et retours,Suporta at feedback
+remindersTitle,Reminders,Rappels,Mga paalala
+verseOfDay,Verse of the day,Verset du jour,Talata ngayon
+tapToReadVerse,Tap to read today's verse,Touchez pour lire le verset du jour,I-tap para basahin ang talata ngayon
+vaultLockedHeading,Your Prayer Vault is locked,Votre coffre de prière est verrouillé,Naka-lock ang iyong Prayer Vault
+vaultLockedBody,Your private prayers are end-to-end encrypted. Enter your passphrase to unlock them on this device.,Vos prières privées sont chiffrées de bout en bout. Saisissez votre phrase secrète pour les déverrouiller sur cet appareil.,Ang iyong mga pribadong panalangin ay end-to-end na naka-encrypt. Ilagay ang iyong passphrase para i-unlock ang mga ito sa device na ito.
+vaultLockedReassure,Not even we can read them — only your passphrase opens the vault. Forgot it? Recover with your code below.,Même nous ne pouvons pas les lire — seule votre phrase secrète ouvre le coffre. Oubliée ? Récupérez-le avec votre code ci-dessous.,Kahit kami ay hindi makakabasa nito — ang iyong passphrase lang ang makakapagbukas ng vault. Nakalimutan? Bawiin gamit ang iyong recovery code sa ibaba.
+vaultLockedSignedInAs,Signed in as {email},Connecté en tant que {email},Naka-sign in bilang {email}
+contentLocked,Unavailable on this device,Indisponible sur cet appareil,Hindi available sa device na ito
+contentLockedHint,"This prayer is end-to-end encrypted and can't be opened with this device's key. Open it where you first created it, or set up recovery to read it here.","Cette prière est chiffrée de bout en bout et ne peut pas être ouverte avec la clé de cet appareil. Ouvrez-la là où vous l'avez créée, ou configurez la récupération pour la lire ici.","Ang panalanging ito ay end-to-end encrypted at hindi mabubuksan gamit ang susi ng device na ito. Buksan ito kung saan mo ito ginawa, o mag-set up ng recovery para mabasa ito rito."
+keyMissingHeading,We can't unlock your prayers here,Impossible de déverrouiller vos prières ici,Hindi namin ma-unlock ang iyong mga panalangin dito
+keyMissingBody,"Your prayers are end-to-end encrypted with a key that isn't on this device, and no recovery code was set up. If you still have the device or browser where you created them, open Pray4Me there and set up recovery to bring them here.","Vos prières sont chiffrées de bout en bout avec une clé qui n'est pas sur cet appareil, et aucun code de récupération n'a été configuré. Si vous avez encore l'appareil ou le navigateur sur lequel vous les avez créées, ouvrez-y Pray4Me et configurez la récupération pour les retrouver ici.","Ang iyong mga panalangin ay end-to-end encrypted gamit ang susing wala sa device na ito, at walang recovery code na na-set up. Kung nasa iyo pa rin ang device o browser kung saan mo ginawa ang mga ito, buksan ang Pray4Me doon at mag-set up ng recovery para madala ang mga ito rito."
+keyMissingReassure,Not even we can read your prayers — that's why only your device's key or your recovery code can open them.,Même nous ne pouvons pas lire vos prières — c'est pourquoi seule la clé de votre appareil ou votre code de récupération peut les ouvrir.,Kahit kami ay hindi mababasa ang iyong mga panalangin — kaya naman ang susi lamang ng iyong device o ang iyong recovery code ang makakabukas sa mga ito.
+keyMissingRetry,I'll use my original device,J'utiliserai mon appareil d'origine,Gagamitin ko ang orihinal kong device
+keyMissingStartFresh,Start fresh on this device,Repartir de zéro sur cet appareil,Magsimula muli sa device na ito
+keyMissingStartFreshTitle,Start fresh on this device?,Repartir de zéro sur cet appareil ?,Magsimula muli sa device na ito?
+keyMissingStartFreshWarn,Your previous encrypted prayers will stay locked and can't be recovered. New prayers will be encrypted with a new key on this device.,Vos anciennes prières chiffrées resteront verrouillées et ne pourront pas être récupérées. Les nouvelles prières seront chiffrées avec une nouvelle clé sur cet appareil.,Mananatiling naka-lock ang iyong dating naka-encrypt na mga panalangin at hindi na mababawi. Ang mga bagong panalangin ay ie-encrypt gamit ang bagong susi sa device na ito.
+keyMissingStartFreshConfirm,Start fresh,Repartir de zéro,Magsimula muli
+backupKeyTitle,Back up your encryption key,Sauvegardez votre clé de chiffrement,I-back up ang iyong encryption key
+backupKeyBody,Your prayers are encrypted with a key kept only on this device. Set up recovery so you don't lose access if you switch browsers or clear your data.,Vos prières sont chiffrées avec une clé conservée uniquement sur cet appareil. Configurez la récupération pour ne pas perdre l'accès si vous changez de navigateur ou effacez vos données.,Ang iyong mga panalangin ay naka-encrypt gamit ang susing nasa device na ito lang. Mag-set up ng recovery para hindi mawala ang access mo kapag nagpalit ka ng browser o nag-clear ng data.
+backupKeyCta,Set up recovery,Configurer la récupération,Mag-set up ng recovery
+backupKeyDismiss,Not now,Plus tard,Hindi muna
+backupKeyWarn,"Without a backup, no one — not even we — can recover your prayers.","Sans sauvegarde, personne — pas même nous — ne peut récupérer tes prières.","Kung walang backup, walang sinuman — kahit kami — ang makakabawi ng iyong mga panalangin."
+backupKeyDismissForever,Don't show again,Ne plus afficher,Huwag nang ipakita
+activePrayers,Active,Actives,Aktibo
+answeredPrayers,Answered,Exaucées,Nasagot
+todaysPrayers,Today's prayers,Prières d'aujourd'hui,Mga panalangin ngayon
+subjects,subjects,sujets,paksa
+noPrayersToday,No prayers scheduled for today,Aucune prière planifiée pour aujourd'hui,Walang panalangin na nakatakda ngayon
+noPrayersSub,Add prayers or set up your weekly plan,Ajoutez des prières ou configurez votre plan,Magdagdag ng mga panalangin o itakda ang iyong lingguhang plano
+greetingMorning,Good morning,Bonjour,Magandang umaga
+greetingAfternoon,Good afternoon,Bon après-midi,Magandang tanghali
+greetingEvening,Good evening,Bonsoir,Magandang gabi
+search,Search...,Rechercher...,Hanapin...
+all,All,Toutes,Lahat
+active,Active,Actives,Aktibo
+answered,Answered,Exaucées,Nasagot
+allCategories,All categories,Toutes catégories,Lahat ng kategorya
+noPrayersFound,No prayers found,Aucune prière trouvée,Walang nahanap na panalangin
+noPrayersFoundSub,Add your first prayer with the + button,Ajoutez votre première prière avec le bouton +,Idagdag ang iyong unang panalangin gamit ang + button
+prayer,prayer,prière,panalangin
+prayers2,prayers,prières,mga panalangin
+active2,Active,Actif,Aktibo
+answered2,Answered ✓,Exaucé ✓,Nasagot ✓
+noUpdate,No updates yet,Aucune évolution,Walang update
+newUpdate,New update...,Nouvelle évolution...,Bagong update...
+evolutions,Updates,Évolutions,Mga update
+aiSubjects,Prayer Points,Points de Prière,Mga Punto ng Panalangin
+aiSuggest,Receive suggestions...,Recevoir des suggestions...,Tumanggap ng mga mungkahi...
+aiPlaceholder,Tap to receive suggestions...,Appuyez pour recevoir des suggestions...,I-tap para makatanggap ng mga mungkahi...
+aiConsentTitle,AI Feature,Fonctionnalité IA,Tampok ng AI
+aiConsentNoticePrayer,What we send: your prayer title and last update. Nothing else.,Ce que nous envoyons : le titre et la dernière mise à jour de votre prière. Rien d'autre.,Ano ang ipinapadala namin: ang pamagat ng iyong panalangin at ang pinakabagong update. Wala nang iba.
+aiConsentBodyPrayer,"To generate prayer points and verse suggestions, we send your prayer title and last update to Claude AI (Anthropic). This data is not stored by Anthropic beyond the API call.","Pour générer des points de prière et suggestions de versets, nous envoyons le titre et la dernière mise à jour de votre prière à Claude AI (Anthropic). Ces données ne sont pas stockées par Anthropic au-delà de l'appel API.","Para makabuo ng mga punto ng panalangin at mungkahi ng talata, ipinapadala namin ang pamagat at pinakabagong update ng iyong panalangin sa Claude AI (Anthropic). Ang data ay hindi inimbak lampas sa API call."
+aiConsentNoticeHome,"What we send: your prayer category names for today (e.g. Family, Health). Nothing else.","Ce que nous envoyons : les noms de vos catégories de prière du jour (ex. Famille, Santé). Rien d'autre.","Ano ang ipinapadala namin: ang mga pangalan ng iyong mga kategorya ng panalangin ngayon (hal. Pamilya, Kalusugan). Wala nang iba."
+aiConsentBodyHome,"To suggest prayers for today, we send your day's category names to Claude AI (Anthropic). No personal prayer content is shared.","Pour suggérer des prières pour aujourd'hui, nous envoyons vos catégories du jour à Claude AI (Anthropic). Aucune prière personnelle n'est partagée.","Para magmungkahi ng mga panalangin ngayon, ipinapadala namin ang iyong mga kategorya ng araw sa Claude AI (Anthropic). Walang personal na nilalaman ng panalangin ang ibinabahagi."
+aiConsentAccept,I agree,J'accepte,Sumasang-ayon ako
+aiConsentDecline,No thanks,Non merci,"Hindi, salamat"
+aiConsentFooter,This only applies to AI features. Your prayers remain private.,Ce choix ne s'applique qu'aux fonctionnalités IA. Vos prières restent privées.,Ito ay nalalapat lamang sa mga tampok ng AI. Ang iyong mga panalangin ay nananatiling pribado.
+aiAboutTitle,AI assistance,Assistance IA,Tulong ng AI
+aiPostureFull,"The AI here is a study companion, not a pastor or prophet. It points you to Scripture but never speaks for God — always read the passage in your own Bible and weigh it in prayer.","L'IA ici est un compagnon d'étude, non un pasteur ni un prophète. Elle vous renvoie à l'Écriture mais ne parle jamais au nom de Dieu — lisez toujours le passage dans votre propre Bible et pesez-le dans la prière.","Ang AI dito ay kasama mo sa pag-aaral, hindi pastor o propeta. Itinuturo ka nito sa Kasulatan ngunit hindi kailanman nagsasalita para sa Diyos — laging basahin ang talata sa sarili mong Bibliya at timbangin sa panalangin."
+aiRevoke,Turn off AI suggestions,Désactiver les suggestions IA,I-off ang mga mungkahi ng AI
+aiRevoked,AI suggestions turned off.,Suggestions IA désactivées.,Na-off ang mga mungkahi ng AI.
+aiCurrentlyOff,AI suggestions are off. You'll be asked before anything is sent.,Les suggestions IA sont désactivées. On vous demandera avant tout envoi.,Naka-off ang mga mungkahi ng AI. Tatanungin ka muna bago may ipadala.
+community,Community,Communauté,Komunidad
+selectGroup,Select a group,Sélectionner un groupe,Pumili ng grupo
+noGroups,No group yet,Aucun groupe pour l'instant,Wala pang grupo
+noGroupsDesc,Create or join a group with an invite code,Créez un groupe ou rejoignez-en un avec un code d'invitation,Lumikha ng grupo o sumali gamit ang invite code
+createGroup,Create a group,Créer un groupe,Lumikha ng grupo
+joinGroup,Join a group,Rejoindre un groupe,Sumali sa grupo
+groupName,Group name,Nom du groupe,Pangalan ng grupo
+inviteCode,Invite code,Code d'invitation,Invite code
+join,Join,Rejoindre,Sumali
+prayerRequests,Requests,Requêtes,Mga kahilingan
+newRequest,New request,Nouvelle requête,Bagong kahilingan
+iAmPraying,I'm praying,Je prie,Nananalangin ako
+prayingCount,praying,en prière,nanalangin
+addWord,Add a word,Ajouter un mot,Magdagdag ng salita
+wordPlaceholder,"A verse, an encouragement, an inspiration...","Un verset, une encouragement, une inspiration...","Isang talata, pagpapalakas ng loob, inspirasyon..."
+postTestimony,Post a testimony,Partager un témoignage,Mag-post ng patotoo
+anonymous,Post anonymously,Publier anonymement,I-post nang walang pangalan
+anonymousAuthor,Anonymous,Anonyme,Walang pangalan
+shareWithGroup,Share with group,Partager avec le groupe,Ibahagi sa grupo
+shareGroupInfo,This prayer will be readable by members of this group. Pray4Me stores the shared content encrypted.,Cette prière sera lisible par les membres de ce groupe. Pray4Me stocke le contenu partagé de façon chiffrée.,Mababasa ng mga miyembro ng grupong ito ang panalanging ito. Iniimbak ng Pray4Me ang ibinahaging nilalaman nang naka-encrypt.
+shareAnonNote,"Your name will be hidden from group members, but they can still read the prayer content.","Votre nom sera masqué pour les membres du groupe, mais ils pourront quand même lire le contenu de la prière.","Itatago ang iyong pangalan sa mga miyembro ng grupo, ngunit mababasa pa rin nila ang nilalaman ng panalangin."
+sharePreviewLabel,Your group will see,Votre groupe verra,Makikita ng iyong grupo
+groupCode,Group code,Code du groupe,Code ng grupo
+codeCopied,Copied!,Copié !,Nakopya!
+noRequests,No requests yet,Aucune requête pour l'instant,Wala pang kahilingan
+noTestimonies,No testimonies yet,Aucun témoignage pour l'instant,Wala pang patotoo
+beFirst,Be the first to share,Soyez le premier à partager,Maging una sa pagbabahagi
+memberUpdates,Member updates,Mots des membres,Mga salita ng miyembro
+updateSyncing,Syncing… this word isn't available on this device yet.,Synchronisation… ce mot n'est pas encore disponible sur cet appareil.,Nagsi-sync… hindi pa available ang salitang ito sa device na ito.
+deleteWord,Delete word,Supprimer le mot,Burahin ang salita
+editWord,Edit word,Modifier le mot,I-edit ang salita
+editTestimony,Edit testimony,Modifier le témoignage,I-edit ang patotoo
+editUpdate,Edit update,Modifier l'évolution,I-edit ang update
+deleteUpdate,Delete update,Supprimer l'évolution,Burahin ang update
+deleteTestimony,Delete testimony,Supprimer le témoignage,Burahin ang patotoo
+wordDeleted,Word deleted,Mot supprimé,Nabura ang salita
+leaveGroup,Leave group,Quitter le groupe,Umalis sa grupo
+groupNotFound,Group not found,Groupe introuvable,Hindi nahanap ang grupo
+alreadyMember,You're already a member,Vous êtes déjà membre,Miyembro ka na
+wordSent,Word added,Mot ajouté,Salita naidagdag
+testimony,🎉 Testimony,🎉 Témoignage,🎉 Patotoo
+myGroups,My Groups,Mes groupes,Aking mga Grupo
+friends,Friends,Amis,Mga Kaibigan
+friendRequests,Friend Requests,Demandes d'amis,Mga Hiling sa Pagkakaibigan
+groupInvitations,Group Invitations,Invitations aux groupes,Mga Imbitasyon sa Grupo
+addFriend,Add Friend,Ajouter un ami,Magdagdag ng Kaibigan
+accept,Accept,Accepter,Tanggapin
+reject,Reject,Refuser,Tanggihan
+send,Send,Envoyer,Ipadala
+remove,Remove,Supprimer,Alisin
+admin,Admin,Admin,Admin
+owner,Owner,Propriétaire,May-ari
+makeAdmin,Make admin,Nommer administrateur,Gawing admin
+removeAdminRole,Remove admin role,Retirer le rôle d'administrateur,Alisin ang tungkuling admin
+promoteConfirmTitle,Make this member an admin?,Nommer ce membre administrateur ?,Gawing admin ang miyembrong ito?
+promoteConfirmDesc,"Admins can manage members, invitations, the group name, and other admin-controlled group content.","Les administrateurs peuvent gérer les membres, les invitations, le nom du groupe et les autres contenus du groupe réservés aux administrateurs.","Kaya ng mga admin na pamahalaan ang mga miyembro, imbitasyon, pangalan ng grupo, at iba pang nilalaman ng grupo na kontrolado ng admin."
+demoteConfirmTitle,Remove admin access?,Retirer l'accès administrateur ?,Alisin ang access ng admin?
+demoteConfirmDesc,"This member will no longer be able to manage members, invitations, or the group.","Ce membre ne pourra plus gérer les membres, les invitations ni le groupe.","Hindi na mapapamahalaan ng miyembrong ito ang mga miyembro, imbitasyon, o ang grupo."
+memberPromoted,Member promoted to admin,Membre promu administrateur,Na-promote ang miyembro bilang admin
+adminRemoved,Admin access removed,Accès administrateur retiré,Inalis ang access ng admin
+cannotChangeOwnRole,You can't change your own role,Vous ne pouvez pas changer votre propre rôle,Hindi mo mababago ang sarili mong tungkulin
+creatorCannotBeDemoted,The group creator can't be demoted,Le créateur du groupe ne peut pas être rétrogradé,Hindi maaaring i-demote ang gumawa ng grupo
+creatorCannotBeRemoved,The group creator can't be removed,Le créateur du groupe ne peut pas être retiré,Hindi maaaring alisin ang gumawa ng grupo
+groupMustRetainAdmin,The group must keep at least one admin,Le groupe doit conserver au moins un administrateur,Dapat may kahit isang admin ang grupo
+notAuthorizedAdmins,You're not authorized to manage administrators,Vous n'êtes pas autorisé à gérer les administrateurs,Wala kang awtorisasyon na pamahalaan ang mga administrador
+roleChangeFailed,Couldn't change the role. Please try again.,Impossible de changer le rôle. Veuillez réessayer.,Hindi mabago ang tungkulin. Pakisubukang muli.
+removeFromGroup,Remove from group,Retirer du groupe,Alisin sa grupo
+memberActions,Member actions,Actions du membre,Mga aksyon sa miyembro
+invitedBy,Invited by,Invité par,Inimbitahan ni
+groupInviteFallbackTitle,Prayer group invitation,Invitation à un groupe de prière,Imbitasyon sa grupo ng panalangin
+groupInviteFallbackDesc,You've been invited to join and pray together,Vous êtes invité à rejoindre et à prier ensemble,Inaanyayahan kang sumali at manalangin nang magkasama
+userNotFound,No user with that email,Aucun utilisateur avec cet e-mail,Walang user na may email na iyon
+cannotAddSelf,You can't add yourself,Vous ne pouvez pas vous ajouter vous-même,Hindi mo maidaragdag ang sarili mo
+requestExists,Request already sent,Demande déjà envoyée,Naipadala na ang hiling
+requestSent,Friend request sent!,Demande d'ami envoyée !,Naipadala ang hiling sa pagkakaibigan!
+sentRequests,Sent Requests,Demandes envoyées,Mga Ipinadalang Hiling
+awaitingResponse,Awaiting response,En attente de réponse,Naghihintay ng tugon
+requestCanceled,Request canceled,Demande annulée,Kinansela ang hiling
+manageGroup,Manage group,Gérer le groupe,Pamahalaan ang grupo
+inviteFriends,Invite friends,Inviter des amis,Mag-imbita ng mga kaibigan
+noFriendsToInvite,No friends to invite,Aucun ami à inviter,Walang kaibigang maiimbita
+invite,Invite,Inviter,Imbitahan
+invited,Invited,Invité,Naimbitahan
+members,Members,Membres,Mga Miyembro
+you,you,vous,ikaw
+addToMyPrayers,Add to my prayers,Ajouter à mes prières,Idagdag sa aking mga panalangin
+addedToMyPrayers,Added to my prayers,Ajouté à mes prières,Naidagdag sa aking mga panalangin
+autoAddRequests,Auto-add new requests to my prayers,Ajouter automatiquement les nouvelles requêtes à mes prières,Awtomatikong idagdag ang mga bagong kahilingan sa aking mga panalangin
+addedOn,Added on,Ajouté le,Idinagdag noong
+answeredOn,· Answered on,· Exaucé le,· Nasagot noong
+markAnswered,Answered!,Exaucée!,Nasagot na!
+confirm,Confirm 🎉,Confirmer 🎉,Kumpirmahin 🎉
+resumePrayer,Resume prayer,Remettre en prière,Ipagpatuloy ang panalangin
+openBible,Open in Bible.com,Ouvrir dans Bible.com,Buksan sa Bible.com
+scriptureFirstTitle,Begin with God's Word,Commencez par la Parole de Dieu,Magsimula sa Salita ng Diyos
+scriptureFirstIntro,"Before you pray, let Scripture shape how you pray for this.","Avant de prier, laissez l'Écriture façonner votre prière pour ce sujet.","Bago manalangin, hayaang hubugin ng Kasulatan kung paano ka mananalangin para dito."
+findScripture,Open the Word on this,Ouvrir la Parole sur ce sujet,Buksan ang Salita tungkol dito
+scriptureFinding,Opening the Word…,Ouverture de la Parole…,Binubuksan ang Salita…
+aiSuggestedLabel,Suggested by AI — always read it in your own Bible.,Suggéré par l'IA — lisez toujours le passage dans votre propre Bible.,Iminungkahi ng AI — palaging basahin ito sa sarili mong Bibliya.
+readWholeChapter,Read the whole chapter,Lire tout le chapitre,Basahin ang buong kabanata
+readInApp,Read in the app,Lire dans l'application,Basahin sa app
+readFullPassage,Read the full passage,Lire le passage complet,Basahin ang buong sipi
+loadingVerse,Opening the passage…,Ouverture du passage…,Binubuksan ang sipi…
+contextLabel,Context,Contexte,Konteksto
+biblicalThemes,Pray around these themes,Priez autour de ces thèmes,Manalangin sa mga temang ito
+reflectLabel,Reflect,Méditez,Pagnilayan
+addAsPoint,Add as prayer point,Ajouter comme sujet de prière,Idagdag bilang panalangin
+addedPoint,Added,Ajouté,Naidagdag
+prayNowCta,I'll pray now,Je vais prier,Mananalangin na ako
+viewScripture,View Scripture,Voir la Parole,Tingnan ang Kasulatan
+tipViewScripture,Revisit the Scripture opened for this prayer,Revoir la Parole ouverte pour cette prière,Muling tingnan ang Salitang binuksan para sa panalanging ito
+scriptureOffline,You're offline. Reconnect to open the Word on this — you can always add a passage yourself.,Vous êtes hors ligne. Reconnectez-vous pour ouvrir la Parole — vous pouvez toujours ajouter un passage vous-même.,Offline ka. Kumonekta muli para buksan ang Salita — maaari kang palaging magdagdag ng talata nang ikaw mismo.
+scriptureNone,"No passage came back this time. Try again, or open your Bible and add your own.","Aucun passage cette fois. Réessayez, ou ouvrez votre Bible et ajoutez le vôtre.","Walang talata sa pagkakataong ito. Subukan muli, o buksan ang iyong Bibliya at magdagdag ng sarili mo."
+retryScripture,Try again,Réessayer,Subukan muli
+aiCooldown,Please wait {s}s before trying again.,Veuillez patienter {s}s avant de réessayer.,Mangyaring maghintay ng {s}s bago muling subukan.
+aiBusy,The AI is busy right now. Please try again in a moment.,L'IA est occupée pour le moment. Veuillez réessayer dans un instant.,Abala ang AI ngayon. Pakisubukan muli mamaya.
+aiError,Couldn't reach the AI. Please try again.,Impossible de joindre l'IA. Veuillez réessayer.,Hindi maabot ang AI. Pakisubukan muli.
+testimonyPlaceholder,How did God answer this prayer? (optional),Comment Dieu a-t-il exaucé cette prière? (facultatif),Paano sinagot ng Diyos ang panalanging ito? (opsyonal)
+newPrayer,New prayer,Nouvelle prière,Bagong panalangin
+editPrayer,Edit prayer,Modifier la prière,I-edit ang panalangin
+prayerSubject,Prayer subject *,Sujet de prière *,Paksa ng panalangin *
+prayerSubjectPlaceholder,e.g. Healing for my mother...,ex: Guérison de ma mère...,hal: Kagalingan ng aking ina...
+details,Details (optional),Détails (facultatif),Mga detalye (opsyonal)
+detailsPlaceholder,Describe your prayer request...,Décrivez votre sujet de prière...,Ilarawan ang iyong kahilingan sa panalangin...
+categories,Categories,Catégories,Mga kategorya
+multipleAllowed,(multiple allowed),(plusieurs possibles),(marami ang maaari)
+forOther,It's for someone else,C'est pour quelqu'un d'autre,Ito ay para sa ibang tao
+personName,Name,Nom,Pangalan
+cancel,Cancel,Annuler,Kanselahin
+add,Add prayer 🙏,Ajouter 🙏,Idagdag ang panalangin 🙏
+save,Save,Enregistrer,I-save
+savedPrivately,Saved privately.,Enregistré en privé.,Naka-save nang pribado.
+savedEncrypted,Saved privately · Encrypted on this device.,Enregistré en privé · Chiffré sur cet appareil.,Naka-save nang pribado · Naka-encrypt sa device na ito.
+weeklyPlan,Weekly plan,Plan hebdomadaire,Lingguhang plano
+weeklyPlanSub,Assign each category to days of the week,Assignez chaque catégorie à des jours de la semaine,Italaga ang bawat kategorya sa mga araw ng linggo
+addCategory,Add,Ajouter,Idagdag
+addCategoryFull,Add a category,Ajouter une catégorie,Magdagdag ng kategorya
+newCategory,New category,Nouvelle catégorie,Bagong kategorya
+edit,Edit,Modifier,I-edit
+days,"Sun,Mon,Tue,Wed,Thu,Fri,Sat","Dim,Lun,Mar,Mer,Jeu,Ven,Sam","Lin,Lun,Mar,Miy,Huw,Biy,Sab"
+profile,Profile,Profil,Profile
+memberSince,Member since,Membre depuis,Miyembro mula
+account,Account,Compte,Account
+via,Via,Via,Sa pamamagitan ng
+signOut,Sign out,Se déconnecter,Mag-sign out
+notifications,Notifications,Notifications,Mga notification
+dailyReminder,Daily reminder,Rappel quotidien,Araw-araw na paalala
+dailyReminderSub,Remind you to pray every day,Rappel pour prier chaque jour,Ipaalala ang pagdarasal araw-araw
+reminderTime,Reminder time,Heure du rappel,Oras ng paalala
+followUp,Prayer follow-up,Suivi des prières,Follow-up ng panalangin
+followUpSub,Ask for prayer updates,Demander l'évolution des prières,Humingi ng mga update sa panalangin
+followUpFreq,Follow-up frequency,Fréquence du suivi,Dalas
+every3days,Every 3 days,Tous les 3 jours,Bawat 3 araw
+everyWeek,Every week,Chaque semaine,Bawat linggo
+every2weeks,Every 2 weeks,Toutes les 2 semaines,Bawat 2 linggo
+everyMonth,Every month,Chaque mois,Bawat buwan
+testNotif,Test notification,Tester une notification,Subukan ang notification
+language,Language,Langue,Wika
+languageSub,Interface language,Langue de l'interface,Wika ng interface
+private,Your prayers are private and secure 🔒,Vos prières sont privées et sécurisées 🔒,Ang iyong mga panalangin ay pribado at ligtas 🔒
+motto,"""The fervent prayer of a righteous person is powerful and effective""","""La prière fervante du juste est d'une grande efficacité""","""Ang taimtim na panalangin ng taong matuwid ay may malaking kapangyarihan"""
+appearance,Appearance,Apparence,Hitsura
+themeLight,Light,Clair,Maliwanag
+themeDark,Dark,Sombre,Madilim
+themeNight,Night,Nuit,Gabi
+continueGoogle,Continue with Google,Continuer avec Google,Magpatuloy sa Google
+login,Login,Connexion,Mag-login
+register,Register,Inscription,Mag-register
+categoriesHeading,Categories,Catégories,Mga kategorya
+newCategoryLabel,New category,Nouvelle catégorie,Bagong kategorya
+editCategoryLabel,Edit category,Modifier la catégorie,I-edit ang kategorya
+emojiLabel,Emoji,Emoji,Emoji
+colorLabel,Color,Couleur,Kulay
+prayerDays,Prayer days,Jours de prière,Mga araw ng panalangin
+addBtn,Add,Ajouter,Idagdag
+saveBtn,Save,Enregistrer,I-save
+tipBack,Back to prayer list,Retour à la liste,Bumalik sa listahan
+tipEditPrayer,Edit this prayer,Modifier cette prière,I-edit ang panalanging ito
+tipDeletePrayer,Delete this prayer permanently,Supprimer définitivement cette prière,Permanenteng burahin ang panalanging ito
+tipAiSuggest,Receive suggestions...,Recevoir des suggestions...,Tumanggap ng mga mungkahi...
+tipVerseToggle,Show or hide the verse text,Afficher ou masquer le texte du verset,Ipakita o itago ang teksto ng talata
+tipRemovePoint,Remove this prayer point,Supprimer ce point de prière,Alisin ang puntong ito ng panalangin
+tipAddPoint,Add this prayer point to your prayer,Ajouter ce point de prière à votre prière,Idagdag ang puntong ito sa panalangin mo
+tipSaveUpdate,Save this update,Enregistrer cette évolution,I-save ang update na ito
+tipMarkAnswered,Mark this prayer as answered by God,Marquer cette prière comme exaucée,Markahan ang panalanging ito bilang nasagot
+tipConfirm,Confirm and save your testimony,Confirmer et enregistrer votre témoignage,Kumpirmahin at i-save ang iyong patotoo
+tipResume,Move this prayer back to active,Remettre cette prière en actif,Ibalik ang panalanging ito sa aktibo
+tipExpandSidebar,Expand sidebar,Agrandir le menu,Palawakin ang sidebar
+tipCollapseSidebar,Collapse sidebar,Réduire le menu,Bawasan ang sidebar
+tipAddPrayer,Add a new prayer request,Ajouter une nouvelle prière,Magdagdag ng bagong kahilingan sa panalangin
+tipCloseForm,Close without saving,Fermer sans enregistrer,Isara nang hindi sine-save
+tipDiscard,Discard changes and close,Annuler les modifications,Itapon ang mga pagbabago
+tipSavePrayer,Save your changes,Enregistrer les modifications,I-save ang mga pagbabago
+tipAddPrayerForm,Add this prayer to your list,Ajouter cette prière à la liste,Idagdag ang panalanging ito sa listahan
+tipCreateCategory,Create a new prayer category,Créer une nouvelle catégorie,Lumikha ng bagong kategorya ng panalangin
+tipEditCategory,Edit this category,Modifier cette catégorie,I-edit ang kategoryang ito
+tipDeleteCategory,Delete this category,Supprimer cette catégorie,Burahin ang kategoryang ito
+tipToggleDay,Toggle {day} for this category,Activer/désactiver {day} pour cette catégorie,I-toggle ang {day} para sa kategoryang ito
+tipSignOut,Sign out of your account,Se déconnecter du compte,Mag-sign out sa account
+tipTestNotif,Send a test notification to verify they are working,Envoyer une notification test,Magpadala ng test notification
+tipExpand,Expand details,Afficher les détails,Palawakin ang mga detalye
+tipCollapse,Collapse,Réduire,Bawasan
+addPointManually,Add a prayer point,Ajouter un point de prière,Magdagdag ng punto ng panalangin
+pointTitlePlaceholder,Prayer subject...,Sujet de prière...,Paksa ng panalangin...
+pointVersePlaceholder,Bible reference (optional),Référence biblique (facultatif),Sanggunian sa Bibliya (opsyonal)
+tipAddManualPoint,Add this point to the list,Ajouter ce point à la liste,Idagdag ang puntong ito sa listahan
+addVerse,Add a verse,Ajouter un verset,Magdagdag ng talata
+verseRefPlaceholder,e.g. John 3:16,ex : Jean 3:16,hal: Juan 3:16
+verseTextPlaceholder,Verse text (optional),Texte du verset (facultatif),Teksto ng talata (opsyonal)
+tipRemoveVerse,Remove this verse,Supprimer ce verset,Alisin ang talatang ito
+tipAddVerse,Add a verse to this point,Ajouter un verset à ce point,Magdagdag ng talata sa puntong ito
+tipSaveVerse,Save this verse,Enregistrer ce verset,I-save ang talatang ito
+aiDayLoading,Finding verses...,Recherche de versets...,Naghahanap ng mga talata...
+aiDayNoCats,Set up your weekly plan to see suggestions,Configurez votre plan hebdomadaire pour voir des suggestions,Itakda ang iyong lingguhang plano para makita ang mga mungkahi
+emptyAddManual,Add a prayer,Ajouter une prière,Magdagdag ng panalangin
+emptyEncourage,Start your prayer time,Commencez votre temps de prière,Simulan ang iyong oras ng panalangin
+feedbackTitle,Leave feedback,Laisser un avis,Mag-iwan ng feedback
+feedbackTypeGeneral,General,Général,Pangkalahatan
+feedbackTypeFeature,Idea,Idée,Ideya
+feedbackTypeBug,Bug,Bug,Bug
+feedbackPlaceholder,"Share your feedback, ideas, or issues...","Partagez vos retours, suggestions ou problèmes...","Ibahagi ang iyong feedback, ideya, o mga isyu..."
+feedbackAnon,Send anonymously,Envoyer anonymement,Ipadala nang walang pangalan
+feedbackSubmit,Send,Envoyer,Ipadala
+feedbackThanks,Thank you for your feedback!,Merci pour votre retour !,Salamat sa iyong feedback!
+feedbackThanksub,Your message has been received. It helps us improve the app.,Votre message a bien été reçu. Il nous aide à améliorer l'app.,Natanggap na ang iyong mensahe. Nakakatulong ito sa aming pagpapabuti ng app.
+feedbackError,Error sending feedback. Please try again.,Erreur lors de l'envoi. Réessayez.,Error sa pagpapadala. Subukan muli.
+feedbackBtn,Give feedback,Donner un avis,Magbigay ng feedback
+feedbackSub,Help us improve the app,Aidez-nous à améliorer l'application,Tulungan kaming mapabuti ang app
+donateTitle,Support the app,Soutenir l'application,Suportahan ang app
+donateSub,"If this app blesses you, consider supporting its development.","Si cette app vous bénit, vous pouvez contribuer à son développement.","Kung pinagpala ka ng app na ito, isaalang-alang ang pagsuporta sa pagpapaunlad nito."
+donateWhy,"This app is built alone, on my own time, for free — because I believe prayer changes things. Your donation, however small, helps keep the servers running, improve features, and keep the app free for everyone. Thank you from the bottom of my heart. 🙏","Cette application est développée seul, sur mon temps libre, gratuitement — parce que je crois que la prière change les choses. Votre don, même modeste, aide à maintenir les serveurs, améliorer les fonctionnalités et garder l'app accessible à tous. Merci du fond du cœur. 🙏","Ang app na ito ay ginawa ko nang mag-isa, sa aking sariling oras, nang libre — dahil naniniwala ako na binabago ng panalangin ang mga bagay. Ang iyong donasyon, kahit maliit, ay tumutulong sa pagpapanatili ng mga server, pagpapabuti ng mga feature, at pagpapanatili ng app na libre para sa lahat. Salamat mula sa kaibuturan ng aking puso. 🙏"
+donateBtn,Support,Soutenir,Suportahan
+donateChooseMethod,Choose a payment method,Choisir un moyen de paiement,Pumili ng paraan ng pagbabayad
+donateSelectBtn,Select,Choisir,Pumili
+donateComingSoon,Coming soon,Bientôt,Malapit na
+donateThanks,Every contribution matters. God bless you. 🙏,Chaque contribution compte. Que Dieu vous bénisse. 🙏,Ang bawat kontribusyon ay mahalaga. Pagpalain ka ng Diyos. 🙏
+close,Close,Fermer,Isara
+errorGeneric,Something went wrong. Please try again.,Une erreur est survenue. Réessayez.,May nangyaring mali. Pakisubukang muli.
+errorBoundaryTitle,Something went wrong,Quelque chose s'est mal passé,May nangyaring mali
+errorBoundaryBody,An unexpected error occurred. Your prayers are safe. You can try again or reload the app.,Une erreur inattendue s'est produite. Vos prières sont en sécurité. Vous pouvez réessayer ou recharger l'application.,May hindi inaasahang error na naganap. Ligtas ang iyong mga panalangin. Maaari kang subukang muli o i-reload ang app.
+errorBoundaryReload,Reload the app,Recharger l'application,I-reload ang app
+retry,Try again,Réessayer,Subukang muli
+leaveGroupConfirm,Are you sure you want to leave this group?,Êtes-vous sûr de vouloir quitter ce groupe ?,Sigurado ka bang gusto mong umalis sa grupong ito?
+searchRequests,Search a request...,Rechercher une requête...,Maghanap ng kahilingan...
+noMatch,No results,Aucun résultat,Walang resulta
+offline,You're offline,Vous êtes hors ligne,Offline ka
+shareInviteLink,Share invite link,Partager le lien d'invitation,Ibahagi ang link ng imbitasyon
+linkCopied,Link copied!,Lien copié !,Nakopya ang link!
+joinedGroup,You joined the group,Vous avez rejoint le groupe,Sumali ka sa grupo
+undo,Undo,Annuler,I-undo
+friendRemoved,Friend removed,Ami supprimé,Inalis ang kaibigan
+delete,Delete,Supprimer,Tanggalin
+deleteWarning,This action can't be undone.,Cette action est irréversible.,Hindi na mababawi ang aksyong ito.
+deleteCategoryConfirm,Delete this category?,Supprimer cette catégorie ?,Tanggalin ang kategoryang ito?
+removeMemberConfirm,Remove this member from the group?,Retirer ce membre du groupe ?,Alisin ang miyembrong ito sa grupo?
+showQrCode,QR code,Code QR,QR code
+scanToJoin,Scan to join the group,Scannez pour rejoindre le groupe,I-scan para sumali sa grupo
+joinMyGroup,Join my prayer group,Rejoignez mon groupe de prière,Sumali sa aking grupo ng panalangin
+planDayHint,Choose which categories to pray on this day,Choisissez les catégories à prier ce jour,Piliin kung aling mga kategorya ang ipananalangin sa araw na ito
+planEmptyDays,These days have nothing planned:,Ces jours n'ont rien de prévu :,Walang nakaplano sa mga araw na ito:
+categoryNotScheduled,Not scheduled,Non planifiée,Hindi naka-iskedyul
+unassignedCategories,{count} category(ies) not scheduled,{count} catégorie(s) non planifiée(s),{count} kategorya na hindi naka-iskedyul
+autoSchedule,Schedule automatically,Planifier automatiquement,Awtomatikong i-iskedyul
+categoriesScheduled,Categories scheduled,Catégories planifiées,Naka-iskedyul ang mga kategorya
+meAuthor,Me,Moi,Ako
+moveUp,Move up,Monter,Ilipat pataas
+moveDown,Move down,Descendre,Ilipat pababa
+prayerDaysHint,"If no day is chosen, follows your category plan","Si aucun jour n'est choisi, suit le plan des catégories","Kung walang araw na pinili, susundin ang plano ng kategorya"
+prayerDaysCustom,Custom days (overrides category plan),Jours personnalisés (remplace le plan des catégories),Pasadyang mga araw (pinapalitan ang plano ng kategorya)
+noCategoriesYet,No categories yet,Aucune catégorie pour l'instant,Wala pang kategorya
+categoryNamePlaceholder,Category name,Nom de la catégorie,Pangalan ng kategorya
+faithfulness,Remember God's faithfulness,Souvenez-vous de la fidélité de Dieu,Alalahanin ang katapatan ng Diyos
+noAnsweredYet,No answered prayers yet,Aucune prière exaucée pour l'instant,Wala pang sinagot na panalangin
+noAnsweredSub,"When a prayer is answered, mark it and its testimony will appear here.","Quand une prière est exaucée, marquez-la et son témoignage apparaîtra ici.","Kapag nasagot ang isang panalangin, markahan ito at lalabas dito ang patotoo nito."
+seeTranslation,See translation,Voir la traduction,Tingnan ang salin
+showOriginal,See original,Voir l'original,Tingnan ang orihinal
+pushUnsupported,Your browser does not support notifications.,Votre navigateur ne prend pas en charge les notifications.,Hindi sinusuportahan ng iyong browser ang mga notification.
+pushDenied,Notifications were denied. Enable them in your browser settings.,Notifications refusées. Activez-les dans les réglages du navigateur.,Tinanggihan ang mga notification. I-enable sa browser settings.
+remindersOn,Reminders enabled 🙏,Rappels activés 🙏,Naka-on ang mga paalala 🙏
+onboardScriptureTitle,Pray God's Word,Priez la Parole de Dieu,Ipanalangin ang Salita ng Diyos
+onboardScriptureBody,"Tap the verse finder to surface Scripture for any request, and read the Bible right where you pray. Grow with guided plans through the Psalms, God's promises, and more.","Touchez le chercheur de versets pour trouver l’Écriture liée à chaque demande, et lisez la Bible là où vous priez. Grandissez avec des guides à travers les Psaumes, les promesses de Dieu, et plus encore.","I-tap ang verse finder upang makita ang Kasulatang nauugnay sa bawat kahilingan, at basahin ang Bibliya mismo sa lugar kung saan ka nananalangin. Lumago sa gabay sa mga Awit, mga pangako ng Diyos, at higit pa."
+onboardPlanTitle,Plan your prayers,Planifiez vos prières,Planuhin ang iyong mga panalangin
+onboardPlanBody,"Schedule any prayer — one time or recurring (daily, on chosen days), or even ""until answered."" A simple calendar shows what to pray today, with gentle catch-up when you miss a day.","Programmez chaque prière — ponctuelle ou récurrente (chaque jour, certains jours), ou même « jusqu’à la réponse ». Un calendrier simple montre quoi prier aujourd’hui, avec un rattrapage en douceur si vous manquez un jour.","Iiskedyul ang bawat panalangin — minsanan o paulit-ulit (araw-araw, sa piniling mga araw), o kahit ‘hanggang masagot’. Ipinapakita ng simpleng kalendaryo kung ano ang ipagdarasal ngayon, na may banayad na paghabol kapag may araw na nalaktawan."
+onboardCommunityTitle,Pray together,Priez ensemble,Magdasal nang sama-sama
+onboardCommunityBody,"Join groups, share requests, and pray for one another.","Rejoignez des groupes, partagez des sujets et priez les uns pour les autres.","Sumali sa mga grupo, magbahagi ng kahilingan, at magdasal para sa isa’t isa."
+onboardVaultTitle,Keep it private,Gardez le secret,Panatilihing pribado
+onboardVaultBody,"Lock your private prayers in an end-to-end encrypted vault — only your passphrase opens it, and not even we can read them.","Verrouillez vos prières privées dans un coffre chiffré de bout en bout — seule votre phrase secrète l'ouvre, et même nous ne pouvons pas les lire.","I-lock ang iyong mga pribadong panalangin sa isang end-to-end encrypted na vault — tanging ang iyong passphrase lang ang makakapagbukas, hindi rin namin ito mababasa."
+onboardStart,Get started,Commencer,Magsimula
+dataTitle,Your data,Vos données,Ang iyong data
+exportData,Export my prayers,Exporter mes prières,I-export ang aking mga panalangin
+exportDataSub,Download all your prayers and testimonies as a file.,Téléchargez toutes vos prières et témoignages en un fichier.,I-download ang lahat ng iyong panalangin at patotoo bilang file.
+exportDone,Export downloaded 🙏,Export téléchargé 🙏,Na-download ang export 🙏
+thisWeek,this week,cette semaine,ngayong linggo
+newCount,{n} new,{n} nouveau,{n} bago
+syncing,Syncing…,Synchronisation…,Sini-sync…
+pendingChanges,{n} waiting,{n} en attente,{n} naghihintay
+groupSettings,Group settings,Paramètres du groupe,Mga setting ng grupo
+autoAddRequestsSub,New requests from this group are added to your prayers automatically.,Les nouvelles demandes de ce groupe sont ajoutées automatiquement à vos prières.,Ang mga bagong kahilingan mula sa grupong ito ay awtomatikong idinaragdag sa iyong mga panalangin.
+fromYourGroups,From your groups,Depuis vos groupes,Mula sa iyong mga grupo
+shareFriendLink,Share your friend link,Partagez votre lien d’ami,Ibahagi ang iyong friend link
+friendLinkHint,Anyone who opens this link can send you a friend request,Quiconque ouvre ce lien peut vous envoyer une demande d’ami,Sinumang magbukas ng link na ito ay maaaring magpadala sa iyo ng friend request
+addMeFriend,Add me as a prayer partner,Ajoute-moi comme partenaire de prière,Idagdag mo ako bilang kapartner sa panalangin
+invalidEmail,Please enter a valid email address,Veuillez saisir une adresse e-mail valide,Maglagay ng wastong email address
+alreadyFriends,You're already friends,Vous êtes déjà amis,Magkaibigan na kayo
+renameGroup,Rename group,Renommer le groupe,Palitan ang pangalan ng grupo
+groupRenamed,Group name updated,Nom du groupe mis à jour,Na-update ang pangalan ng grupo
+followsGroup,Follows this shared prayer — edit it in Community to contribute,Suit cette prière partagée — modifiez-la dans la Communauté pour contribuer,Sinusundan ang ibinahaging panalanging ito — i-edit sa Community para mag-ambag
+removeFromList,Remove from my list,Retirer de ma liste,Alisin sa listahan ko
+removeFromListConfirm,Removes it from your list and you'll no longer count among those praying. The request stays in the community.,Retiré de votre liste ; vous ne comptez plus parmi ceux qui prient. La demande reste dans la communauté.,Inaalis ito sa iyong listahan at hindi ka na mabibilang sa mga nagdarasal. Nananatili ang kahilingan sa komunidad.
+groupOptions,Group options,Options du groupe,Mga opsyon ng grupo
+prayNow,Pray now,Prier maintenant,Manalangin ngayon
+modeRequests,Pray through them,Prier pour mes sujets,Ipanalangin ang bawat isa
+modeRequestsDesc,Pray through what is on your heart.,Prie pour ce qui est sur ton cœur.,Ipanalangin ang nasa puso mo.
+modeGuided,Guide me with Scripture,Me guider par l'Écriture,Gabayan ako ng Kasulatan
+modeGuidedDesc,"A simple beginning, your requests, and thanksgiving.","Un début tout simple, tes sujets, puis l'action de grâces.","Simpleng simula, ang mga kahilingan mo, at pasasalamat."
+modeActs,Pray through ACTS,Prier selon ACTS,Manalangin ayon sa ACTS
+modeActsDesc,A structured biblical prayer pattern — step by step.,Un chemin de prière biblique structuré — pas à pas.,Isang maayos na huwarang panalangin mula sa Bibliya — hakbang-hakbang.
+stageAdoration,Adoration,Adoration,Pagsamba
+stageAdorationPrompt,"Begin by adoring God for who He is — His holiness, His goodness, His steadfast love. Let this psalm lead you.","Commencez par adorer Dieu pour ce qu'Il est — sa sainteté, sa bonté, son amour fidèle. Laissez ce psaume vous guider.","Magsimula sa pagsamba sa Diyos para sa kung sino Siya — ang Kanyang kabanalan, kabutihan, at tapat na pag-ibig. Hayaang gabayan ka ng awit na ito."
+stageConfession,Confession,Confession,Pagtatapat
+stageConfessionPrompt,"In His presence, quietly confess your sin and receive His mercy. He is faithful to forgive.","En sa présence, confessez doucement votre péché et recevez sa miséricorde. Il est fidèle pour pardonner.","Sa Kanyang harapan, tahimik na ipagtapat ang iyong kasalanan at tanggapin ang Kanyang awa. Tapat Siyang magpatawad."
+stageThanksgiving,Thanksgiving,Action de grâces,Pasasalamat
+stageThanksgivingPrompt,"Give thanks for who God is and what He has done — His faithfulness, His answered prayers.","Rendez grâce pour ce que Dieu est et ce qu'Il a fait — sa fidélité, ses prières exaucées.","Magpasalamat para sa kung sino ang Diyos at sa Kanyang ginawa — ang Kanyang katapatan, ang mga sinagot Niyang panalangin."
+stageSupplication,Supplication,Supplication,Pagsamo
+continueBtn,Continue,Continuer,Magpatuloy
+amenBtn,Amen,Amen,Amen
+sessionDoneTitle,Time with God 🙏,Un temps avec Dieu 🙏,Oras na kasama ang Diyos 🙏
+sessionDoneSub,You prayed through {n} subject(s) today.,Vous avez prié pour {n} sujet(s) aujourd’hui.,Ipinanalangin mo ang {n} paksa ngayon.
+sessionDoneSub_one,You prayed through 1 subject today.,Vous avez prié pour 1 sujet aujourd’hui.,Ipinanalangin mo ang 1 paksa ngayon.
+sessionDoneSub_other,You prayed through {n} subjects today.,Vous avez prié pour {n} sujets aujourd’hui.,Ipinanalangin mo ang {n} paksa ngayon.
+pin,Pin,Épingler,I-pin
+unpin,Unpin,Détacher,Alisin
+resume,Resume,Reprendre,Ibalik
+prayerDeleted,Prayer deleted,Prière supprimée,Tinanggal ang panalangin
+removedFromList,Removed from your list,Retiré de votre liste,Inalis sa iyong listahan
+testimonies,Testimonies,Témoignages,Mga patotoo
+options,Options,Options,Mga opsyon
+nextReminder,Next reminder,Prochain rappel,Susunod na paalala
+tomorrow,tomorrow,demain,bukas
+notPrayedToday,You haven't prayed today,Vous n'avez pas encore prié aujourd'hui,Hindi ka pa nananalangin ngayon
+pushUnavailable,Reminder on. Push notifications aren't available on this device.,Rappel activé. Les notifications push ne sont pas disponibles sur cet appareil.,Naka-on ang paalala. Hindi available ang push notifications sa device na ito.
+shareVerse,Share verse,Partager le verset,Ibahagi ang talata
+verseCopied,Verse copied!,Verset copié !,Nakopya ang talata!
+dangerZone,Danger zone,Zone sensible,Mapanganib na bahagi
+deleteAccount,Delete my account,Supprimer mon compte,Burahin ang aking account
+deleteAccountSub,Permanently erase your account and all your data.,Effacez définitivement votre compte et toutes vos données.,Permanenteng burahin ang iyong account at lahat ng iyong data.
+deleteAccountWarning,"This permanently deletes your account and all your prayers, testimonies and data. This cannot be undone.","Cette action supprime définitivement votre compte et toutes vos prières, témoignages et données. Elle est irréversible.","Permanenteng buburahin nito ang iyong account at lahat ng iyong panalangin, testimonya at data. Hindi ito maibabalik."
+deleteAccountConfirm,Delete account,Supprimer le compte,Burahin ang account
+deleteAccountDone,Your account has been deleted,Votre compte a été supprimé,Nabura na ang iyong account
+deleteAccountError,Could not delete your account. Please try again.,Impossible de supprimer votre compte. Veuillez réessayer.,Hindi mabura ang iyong account. Pakisubukang muli.
+grow,Grow,Grandir,Lumago
+growTitle,Grow in prayer,Grandir dans la prière,Lumago sa panalangin
+growSubtitle,Learn to pray according to God's Word.,Apprends à prier selon la Parole de Dieu.,Matutong manalangin ayon sa Salita ng Diyos.
+growPray,Pray through,Prier,Manalangin
+growLearn,Learn,Apprendre,Matuto
+growPrayIntro,"Short, Scripture-first guides to pray through — in your own words, before God.","De courts guides bibliques à prier — avec tes mots, devant Dieu.","Maiikling gabay na nakabatay sa Kasulatan na maipapanalangin — sa iyong sariling mga salita, sa harap ng Diyos."
+growLearnIntro,"Short readings on prayer and the Christian life, each rooted in Scripture.","De courtes lectures sur la prière et la vie chrétienne, enracinées dans l'Écriture.","Maiikling babasahin tungkol sa panalangin at buhay-Kristiyano, bawat isa'y nakaugat sa Kasulatan."
+guideBegin,Begin,Commencer,Magsimula
+guideDoneTitle,Amen,Amen,Amen
+guideDoneSub,He hears you. Carry this into your day.,Il t'entend. Emporte cela dans ta journée.,Naririnig ka Niya. Dalhin mo ito sa iyong araw.
+openInBible,Open in your Bible,Ouvre dans ta Bible,Buksan sa iyong Bibliya
+growScriptureNote,Don't take our word for it — open the Scriptures and see for yourself (Acts 17:11).,Ne nous crois pas sur parole — ouvre les Écritures et vois par toi-même (Actes 17:11).,Huwag mo lang basta paniwalaan ang sinasabi namin — buksan ang Kasulatan at tingnan mo mismo (Mga Gawa 17:11).
+growSeekerTitle,New to prayer or Christian faith?,Nouveau dans la prière ou la foi chrétienne ?,Bago sa panalangin o sa pananampalatayang Kristiyano?
+growSeekerDesc,"Discover who Christians pray to, why Jesus is at the center, and how you can come to God honestly.","Découvre à qui les chrétiens prient, pourquoi Jésus est au centre, et comment venir à Dieu honnêtement.","Alamin kung kanino nananalangin ang mga Kristiyano, bakit nasa gitna si Jesus, at paano ka makakalapit sa Diyos nang tapat."
+gospelStart,Start journey,Commencer le parcours,Simulan ang paglalakbay
+gospelBack,Back,Retour,Bumalik
+backBtn,Back,Retour,Bumalik
+gospelStep,Step {n} of {total},Étape {n} sur {total},Hakbang {n} ng {total}
+gospelCompleted,Journey completed,Parcours terminé,Natapos ang paglalakbay
+gospelUsePrayer,Use a guided prayer,Utiliser une prière guidée,Gumamit ng gabay na panalangin
+gospelHidePrayer,Hide guided prayer,Masquer la prière guidée,Itago ang gabay na panalangin
+gospelNextStepsHeading,Where would you like to go next?,Où souhaites-tu aller maintenant ?,Saan mo gustong pumunta susunod?
+gospelCreatePrayer,Create a private prayer,Créer une prière privée,Gumawa ng pribadong panalangin
+gospelContinueExploring,Continue exploring,Continuer à explorer,Magpatuloy sa pagtuklas
+gospelMoreQuestions,I still have questions,J'ai encore des questions,May mga tanong pa ako
+gospelRelatedReading,Related reading,Lectures liées,Kaugnay na babasahin
+gospelReturnToGrow,Return to Grow,Revenir à Grandir,Bumalik sa Lumago
+gospelReadMore,Read more,Lire la suite,Magbasa pa
+gospelReadWhyPray,Read about why Christians pray,Lire « Pourquoi les chrétiens prient »,Basahin: Bakit nananalangin ang mga Kristiyano
+gospelReadGrace,Read about grace,Lire « La grâce »,Basahin: Ang biyaya
+gospelReadFaith,Read about faith,Lire « La foi »,Basahin: Ang pananampalataya
+gospelReadRepentance,Read about repentance,Lire « La repentance »,Basahin: Ang pagsisisi
+gospelInviteWhyPray,Discover why Christians come to God through Jesus.,Découvre pourquoi les chrétiens viennent à Dieu par Jésus.,Alamin kung bakit lumalapit ang mga Kristiyano sa Diyos sa pamamagitan ni Jesus.
+gospelInviteGrace,Explore the good news at the heart of God's grace.,Explore la bonne nouvelle au cœur de la grâce de Dieu.,Tuklasin ang mabuting balita sa puso ng biyaya ng Diyos.
+gospelInviteFaith,Learn what it means to place your trust in Jesus.,Apprends ce que signifie placer ta confiance en Jésus.,Alamin ang kahulugan ng pagtitiwala kay Jesus.
+gospelInviteRepentance,See how repentance and faith belong together.,Vois comment la repentance et la foi vont ensemble.,Tingnan kung paano magkaugnay ang pagsisisi at pananampalataya.
+gospelInviteSuffering,Discover how Jesus entered human suffering and gives lasting hope.,Découvre comment Jésus est entré dans la souffrance humaine et donne une espérance durable.,Tuklasin kung paano pumasok si Jesus sa pagdurusa ng tao at nagbibigay ng pananatiling pag-asa.
+gospelInviteLabel,Exploring the Christian faith?,Tu explores la foi chrétienne ?,Tinutuklas ang pananampalatayang Kristiyano?
+scheduleLabel,Schedule,Planification,Iskedyul
+addSchedule,Add a schedule,Ajouter une planification,Magdagdag ng iskedyul
+editSchedule,Edit schedule,Modifier la planification,I-edit ang iskedyul
+schedFollowPlan,Follows weekly plan,Suit le plan hebdo,Sumusunod sa lingguhang plano
+schedOnce,One-time,Une fois,Minsanan
+schedRecurring,Recurring,Récurrent,Paulit-ulit
+scheduleHowOften,When would you like to pray?,Quand souhaites-tu prier ?,Kailan mo gustong manalangin?
+schedPrayOnce,Pray once,Prier une fois,Manalangin nang minsan
+schedPrayRecurring,Pray regularly,Prier régulièrement,Manalangin nang regular
+schedAdvanced,Advanced options,Options avancées,Mga advanced na opsyon
+followUpTitle,Remind me to follow up,Me rappeler de faire un suivi,Remind me to follow up
+followUpHint,A one-time nudge to check back in on this prayer — separate from its schedule.,Un rappel unique pour revenir sur cette prière — indépendant de sa planification.,A one-time nudge to check back in on this prayer — separate from its schedule.
+followUpOff,Off,Aucun,Off
+followUpIn3Days,In 3 days,Dans 3 jours,In 3 days
+followUpIn1Week,In 1 week,Dans 1 semaine,In 1 week
+followUpIn2Weeks,In 2 weeks,Dans 2 semaines,In 2 weeks
+followUpPickDate,Pick a date,Choisir une date,Pick a date
+followUpDue,Time to follow up on this prayer,Il est temps de faire un suivi de cette prière,Time to follow up on this prayer
+followUpSetFor,Follow-up set for {date},Suivi prévu le {date},Follow-up set for {date}
+followUpAddUpdate,Add update,Ajouter une note,Add update
+followUpSnooze,Snooze,Reporter,Snooze
+followUpAnother,Set another,Reprogrammer,Set another
+followUpDismiss,Dismiss,Ignorer,Dismiss
+followUpSetToast,Follow-up reminder set,Rappel de suivi programmé,Follow-up reminder set
+followUpDoneToast,Follow-up cleared,Suivi effacé,Follow-up cleared
+freqDaily,Daily,Chaque jour,Araw-araw
+freqWeekly,Weekly,Hebdomadaire,Lingguhan
+freqInterval,Every N days,Tous les N jours,Bawat N araw
+freqMonthly,Monthly,Mensuel,Buwanan
+freqYearly,Yearly,Annuel,Taunan
+intervalEvery,Every,Tous les,Bawat
+intervalDays,days,jours,araw
+monthlyOnDay,On day,Le jour,Sa araw
+slotLabel,Prayer time,Moment de prière,Oras ng panalangin
+slotAnytime,Anytime,À tout moment,Kahit kailan
+slot_morning,Morning,Matin,Umaga
+slot_midday,Midday,Midi,Tanghali
+slot_evening,Evening,Soir,Gabi
+endsLabel,Ends,Fin,Magtatapos
+endNever,Never,Jamais,Hindi kailanman
+endWhenAnswered,When answered,Quand exaucé,Kapag sinagot
+endOnDate,On a date,À une date,Sa isang petsa
+endAfterCount,After N times,Après N fois,Pagkatapos ng N beses
+endTimesSuffix,times,fois,beses
+schedDaily,Every day,Chaque jour,Araw-araw
+schedWeekly,Every {days},Chaque {days},Bawat {days}
+schedInterval,Every {n} days,Tous les {n} jours,Bawat {n} araw
+schedMonthly,On day {d} of each month,Le {d} de chaque mois,Sa ika-{d} ng bawat buwan
+schedYearly,Every year on {date},Chaque année le {date},Taun-taon sa {date}
+schedUntilDate,until {date},jusqu'au {date},hanggang {date}
+schedTimes,{n} times,{n} fois,{n} beses
+schedUntilAnswered,until answered,jusqu'à l'exaucement,hanggang masagot
+monthView,Month,Mois,Buwan
+weekView,Week,Semaine,Linggo
+calendarTitle,Prayer calendar,Calendrier de prière,Kalendaryo ng panalangin
+calendarSub,Plan one-time and recurring prayers day by day,Planifie des prières ponctuelles et récurrentes jour par jour,Iplano ang minsanan at paulit-ulit na panalangin araw-araw
+legendRecurring,Recurring,Récurrent,Paulit-ulit
+legendOnce,One-time,Une fois,Minsanan
+legendPlan,Weekly plan,Plan hebdo,Lingguhang plano
+legendGroup,Group,Groupe,Grupo
+noPrayersThisDay,Nothing planned this day,Rien de prévu ce jour,Walang nakaplano sa araw na ito
+prayedOnDay,Prayed,Prié,Naipanalangin
+markPrayed,Mark prayed,Marquer prié,Markahang naipanalangin
+skipThisDay,Skip this day,Passer ce jour,Laktawan ang araw na ito
+moveThisDay,Move to another day,Déplacer à un autre jour,Ilipat sa ibang araw
+restoreOccurrence,Restore this day,Rétablir ce jour,Ibalik ang araw na ito
+occurrenceSkipped,Skipped — this day only,Passé — ce jour uniquement,Nilaktawan — ngayong araw lang
+occurrenceMoved,Moved to {date},Déplacé au {date},Inilipat sa {date}
+endSeriesHere,End series before this day,Terminer la série avant ce jour,Tapusin ang serye bago ang araw na ito
+seriesEnded,Series ended,Série terminée,Natapos ang serye
+catchUpTitle,Catch up,Rattrapage,Habulin
+catchUpSub,"Missed these last days — no guilt, just grace","Manqués ces derniers jours — sans culpabilité, avec grâce","Nalampasan nitong mga nakaraang araw — walang sisi, may biyaya"
+missedOn,Missed {date},Manqué le {date},Nalampasan noong {date}
+rotationLabel,Rotation,Rotation,Rotasyon
+rotationOffShort,Off,Non,Wala
+rotationPerDay,{n} per day in rotation,{n} par jour en rotation,{n} bawat araw sa rotasyon
+rotationHint,Pray through this list a few at a time — everyone gets covered across the cycle.,Prie cette liste quelques sujets à la fois — chacun est couvert au fil du cycle.,Ipanalangin ang listahang ito nang paunti-unti — lahat ay masasakop sa buong siklo.
+plansTitle,Prayer plans,Plans de prière,Mga plano ng panalangin
+plansSub,Guided journeys with a theme and verse for each day,Des parcours guidés avec un thème et un verset chaque jour,Mga ginagabayang paglalakbay na may tema at talata bawat araw
+perDayTitle,A few per day,Quelques-unes par jour,Ilan bawat araw
+perDaySub,"Cap how many prayers Today asks of you, so a long list stays doable.","Limite le nombre de prières proposées chaque jour, pour qu'une longue liste reste tenable.","Limitahan kung ilang panalangin ang hinihingi ng Ngayon, para manatiling kaya ang mahabang listahan."
+perDayOff,All,Toutes,Lahat
+labelsTitle,Labels,Étiquettes,Mga label
+labelsSub,Group and filter your prayers. The rhythm is set on each prayer.,Pour regrouper et filtrer tes prières. Le rythme se règle sur chaque prière.,Para pagpangkatin at salain ang iyong mga panalangin. Nakatakda ang ritmo sa bawat panalangin.
+addLabel,Add label,Ajouter une étiquette,Magdagdag ng label
+editLabel,Edit label,Modifier l'étiquette,I-edit ang label
+newLabel,New label,Nouvelle étiquette,Bagong label
+labelNamePlaceholder,Label name,Nom de l'étiquette,Pangalan ng label
+noLabelsYet,No labels yet,Pas encore d'étiquettes,Wala pang label
+planStart,Start plan,Commencer le plan,Simulan ang plano
+planStartDate,Start date,Date de début,Petsa ng pagsisimula
+planStarted,Plan added to your prayers 🙏,Plan ajouté à tes prières 🙏,Naidagdag ang plano sa iyong mga panalangin 🙏
+planRunning,In progress,En cours,Isinasagawa
+planInviteCta,Invite friends or a group,Inviter des amis ou un groupe,Mag-imbita ng mga kaibigan o grupo
+planInviteTitle,Pray this plan together,Priez ce plan ensemble,Sabay-sabay ipagdasal ang planong ito
+planInviteSub,Invite friends or a whole group to walk this plan with you. Each person accepts on their own and the plan starts on their calendar.,Invite des amis ou un groupe entier à suivre ce plan avec toi. Chacun accepte de son côté et le plan démarre sur son calendrier.,Anyayahan ang mga kaibigan o isang buong grupo na tahakin ang planong ito kasama mo. Bawat isa ay tumatanggap mismo at magsisimula ang plano sa kanilang kalendaryo.
+planInviteFriendsHeading,Friends,Amis,Mga kaibigan
+planInviteGroupsHeading,Groups,Groupes,Mga grupo
+planInviteEmpty,"Add a friend or join a group first, then you can invite them here.","Ajoute d'abord un ami ou rejoins un groupe, puis tu pourras les inviter ici.","Magdagdag muna ng kaibigan o sumali sa isang grupo, saka mo sila maiimbitahan dito."
+planInviteSend,Send invitations,Envoyer les invitations,Ipadala ang mga imbitasyon
+planInviteSentToast,Invitations sent 🙏,Invitations envoyées 🙏,Naipadala ang mga imbitasyon 🙏
+planInvitedBadge,Invited,Invité,Inimbitahan
+planInvitationsHeading,Invited to pray together,Invité à prier ensemble,Inimbitahang manalangin nang sama-sama
+planInvitationFrom,{name} invited you,{name} t'a invité,Inimbitahan ka ni {name}
+planInviteAccept,Pray along,Prier aussi,Sumabay sa panalangin
+groupPlansHeading,Praying together,Prier ensemble,Sama-samang panalangin
+groupPlanStartCta,Pray a plan together,Prier un plan ensemble,Ipanalangin ang isang plano nang sama-sama
+groupPlanPickerTitle,Choose a plan for the group,Choisir un plan pour le groupe,Pumili ng plano para sa grupo
+groupPlanPickerSub,Everyone in the group will see this plan and can join in.,Tout le groupe verra ce plan et pourra s'y joindre.,Makikita ng lahat sa grupo ang planong ito at maaaring sumali.
+groupPlanAdoptCta,Start for the group,Lancer pour le groupe,Simulan para sa grupo
+groupPlanAdoptNote,Your whole group will see this plan and can pray it with you.,Tout ton groupe verra ce plan et pourra le prier avec toi.,Makikita ng buong grupo mo ang planong ito at maaari itong ipanalangin kasama mo.
+groupPlanAlreadyRunning,The group is already praying this,Le groupe prie déjà ce plan,Ipinapanalangin na ng grupo ang planong ito
+groupPlanRunningNow,Praying now,En prière,Ipinapanalangin ngayon
+groupPlanStartsOn,Starts {date},Débute le {date},Magsisimula sa {date}
+groupPlanJoinCta,Pray this with us,Prier avec le groupe,Manalangin kasama namin
+groupPlanJoinedBadge,Praying,En prière,Nananalangin
+groupPlanCountJustYou,just you,toi seul pour l'instant,ikaw pa lang
+groupPlanCountYouPlus,you and {n} more,toi et {n} autre(s),ikaw at {n} pa
+groupPlanCountNone,no one yet,personne encore,wala pa
+groupPlanCountOthers,{n} praying,{n} en prière,{n} ang nananalangin
+groupPlanEnd,End for the group,Terminer pour le groupe,Tapusin para sa grupo
+groupPlanEndConfirm,"End this shared plan? It stays on your own calendar, and everyone keeps theirs.","Terminer ce plan partagé ? Il reste sur ton calendrier, et chacun garde le sien.","Tapusin ang planong ito na pinagsasaluhan? Mananatili ito sa sarili mong kalendaryo, at panatilihin ng bawat isa ang kanila."
+groupPlanLeave,Leave this plan,Quitter ce plan,Umalis sa planong ito
+groupPlanEndedToast,Shared plan ended,Plan partagé terminé,Natapos ang pinagsasaluhang plano
+groupPlanStartedToast,Started for the group 🙏,Lancé pour le groupe 🙏,Sinimulan para sa grupo 🙏
+notifPlanInvitation,Prayer plan invitation,Invitation à un plan de prière,Imbitasyon sa plano ng panalangin
+planDays,{n} days,{n} jours,{n} araw
+planDayOf,Day {n} of {total},Jour {n} sur {total},Araw {n} ng {total}
+planTheme21Title,21 days of breakthrough,21 jours de percée,21 araw ng tagumpay
+planTheme21Sub,Three weeks of persistent daily prayer,Trois semaines de prière quotidienne persévérante,Tatlong linggo ng matiyagang pang-araw-araw na panalangin
+planUpperRoomTitle,The Upper Room — 10 days,La chambre haute — 10 jours,Silid sa Itaas — 10 na araw
+planUpperRoomSub,"Ten days of united prayer, waiting on the promised Spirit","Dix jours de prière unie, dans l'attente de l'Esprit promis","Sampung araw ng nagkakaisang panalangin, hinihintay ang ipinangakong Espiritu"
+planWeek7Title,7 days of gratitude,7 jours de gratitude,7 araw ng pasasalamat
+planWeek7Sub,"A week of thanksgiving, one theme a day","Une semaine d'actions de grâces, un thème par jour","Isang linggo ng pagpapasalamat, isang tema bawat araw"
+planAltar7Title,Rekindle the altar — 7 days,Rallume l'autel — 7 jours,Muling pag-alabin ang dambana — 7 araw
+planAltar7Sub,A week to return to God's presence and stir fresh hunger for Him,Une semaine pour revenir à la présence de Dieu et raviver la faim de Lui,Isang linggo para manumbalik sa presensya ng Diyos at pukawin ang bagong gutom sa Kanya
+plan30Title,30 days for others,30 jours pour les autres,30 araw para sa iba
+plan30Sub,A month of intercession for people around you,Un mois d'intercession pour ceux qui t'entourent,Isang buwan ng pamamagitan para sa mga tao sa paligid mo
+groupCalendarTitle,Prayer calendar,Calendrier de prière,Kalendaryo ng panalangin
+groupCalendarSub,Claim a day — the group covers this request together,Choisis un jour — le groupe couvre ce sujet ensemble,Pumili ng araw — sama-samang dinadala ng grupo ang kahilingang ito
+commitToPray,I'll pray this day,Je prierai ce jour,Mananalangin ako sa araw na ito
+commitmentAdded,Added to your calendar 🙏,Ajouté à ton calendrier 🙏,Naidagdag sa iyong kalendaryo 🙏
+commitmentRemoved,Commitment removed,Engagement retiré,Inalis ang pangako
+removeCommitmentBtn,Remove my commitment,Retirer mon engagement,Alisin ang aking pangako
+noCommitmentsYet,No one has claimed a day yet — be the first,Personne n'a encore choisi de jour — sois le premier,Wala pang pumipili ng araw — maging una
+myCommitments,Group commitments,Engagements de groupe,Mga pangako sa grupo
+exportIcs,Export to calendar (.ics),Exporter vers un calendrier (.ics),I-export sa kalendaryo (.ics)
+exportIcsSub,"Import your prayer schedule into Google Calendar, Outlook or Apple Calendar","Importe ton planning de prière dans Google Calendar, Outlook ou Apple Calendar","I-import ang iyong iskedyul ng panalangin sa Google Calendar, Outlook o Apple Calendar"
+scriptureRefOnly,The full text isn't available here. Open it in your Bible to read the whole passage.,Le texte complet n'est pas disponible ici. Ouvre-le dans ta Bible pour lire tout le passage.,Hindi available dito ang buong teksto. Buksan ito sa iyong Bibliya upang basahin ang buong sipi.
+privacyCenterTitle,Privacy Center,Centre de confidentialité,Sentro ng Privacy
+privacyCenterSub,Understand exactly how your prayers are stored and shared — in plain language.,Comprends exactement comment tes prières sont stockées et partagées — en langage clair.,Unawain nang eksakto kung paano iniimbak at ibinabahagi ang iyong mga panalangin — sa simpleng wika.
+privacyCenterBtn,Open Privacy Center,Ouvrir le Centre de confidentialité,Buksan ang Sentro ng Privacy
+pcIntro,Here's what leaves your device — and what stays encrypted.,Voici ce qui quitte ton appareil — et ce qui reste chiffré.,Personal ang iyong mga panalangin. Narito ang nangyayari sa kanila — at kung ano ang nananatiling sa iyo lamang.
+pcPrivateTitle,Private prayers,Prières privées,Mga pribadong panalangin
+pcPrivateBody,"Encrypted on your device before they're stored. Pray4Me keeps the encrypted content, not readable prayer text — so private prayers are encrypted for you.","Chiffrées sur ton appareil avant d'être stockées. Pray4Me conserve le contenu chiffré, pas le texte lisible de tes prières — tes prières privées sont chiffrées pour toi.",Ang mga panalanging itinatago mo para sa sarili mo ay iniimbak sa iyong account at ipinapakita lamang sa iyo. Hindi kailanman ipinopost ang mga ito sa isang grupo maliban kung piliin mong ibahagi.
+pcSharedTitle,Community prayers,Prières communautaires,Mga ibinahagi at panggrupong panalangin
+pcSharedBody,"Encrypted before they're stored, and readable by the members of the group you share them with. Community prayers are encrypted for those group members — not for Pray4Me.","Chiffrées avant d'être stockées, et lisibles par les membres du groupe avec qui tu les partages. Les prières communautaires sont chiffrées pour ces membres — pas pour Pray4Me.","Ang panalanging ibinabahagi mo sa isang grupo ay nakikita ng grupong iyon ayon sa disenyo — iyan ang puso ng sama-samang panalangin. Ang anumang ibinabahagi mo ay umaalis sa iyong pribadong espasyo, kaya ibahagi lamang ang bagay na panatag kang makita ng iba."
+pcAiTitle,AI guidance,Aide de l'IA,Mga mungkahing tinutulungan ng AI
+pcAiBody,"Optional, and off until you turn it on. Only the information needed for that feature is sent, with your consent. The AI can suggest Bible references but never generates Scripture text — that always comes from a trusted source or a link to your own Bible.","Optionnelle, et désactivée tant que tu ne l'actives pas. Seules les informations nécessaires à la fonction sont envoyées, avec ton consentement. L'IA peut suggérer des références bibliques mais ne génère jamais le texte de l'Écriture — celui-ci provient toujours d'une source fiable ou d'un lien vers ta propre Bible.","Nananatiling naka-off ang mga tampok ng AI hangga't hindi mo ito ino-on. Walang anuman tungkol sa isang panalangin ang ipinapadala sa AI nang walang tahasang pahintulot mo, at hindi kailanman lumilikha ang AI ng teksto ng talata sa Bibliya — palaging nagmumula ang Kasulatan sa isang mapagkakatiwalaang pinagmulan o isang link sa iyong sariling Bibliya."
+pcPushTitle,Prayer reminders,Rappels de prière,Mga paalala (notification)
+pcPushBody,"Generic by default — just a gentle nudge to pray. Prayer titles, details and names are never included in a notification unless you opt in.","Génériques par défaut — une simple invitation à prier. Les titres, détails et noms ne figurent jamais dans une notification, sauf si tu choisis de les inclure.",Ang mga paalala ay naka-iskedyul ayon sa oras lamang. Hindi kailanman kasama sa mga notification ang nilalaman ng iyong panalangin — isang banayad na paanyaya lamang na manalangin.
+pcRecoveryTitle,Recovery & other devices,Récupération et autres appareils,Recovery at iba pang device
+pcRecoveryBody,"Your prayers are encrypted with a key kept on this device. Set up recovery if you want to open them on another device — without it, encrypted prayers can only be read here. If you lose your recovery code, encrypted prayers can't be recovered.","Tes prières sont chiffrées avec une clé conservée sur cet appareil. Configure la récupération si tu veux les ouvrir sur un autre appareil — sans elle, les prières chiffrées ne sont lisibles qu'ici. Si tu perds ton code de récupération, les prières chiffrées ne peuvent pas être récupérées.","Naka-encrypt ang iyong mga panalangin gamit ang isang key na nananatili sa device na ito. Mag-set up ng recovery kung nais mong buksan ang mga ito sa ibang device — kung wala nito, mababasa lang dito ang mga naka-encrypt na panalangin. Kung mawala ang iyong recovery code, hindi na mababawi ang mga naka-encrypt na panalangin."
+pcExportTitle,Exporting your data,Exporter tes données,Pag-export ng iyong data
+pcExportBody,You can download all your prayers as a file at any time. Your data is yours.,Tu peux télécharger toutes tes prières dans un fichier à tout moment. Tes données t'appartiennent.,Maaari mong i-download ang lahat ng iyong panalangin bilang isang file anumang oras. Sa iyo ang iyong data.
+pcDeleteTitle,Deleting your account,Supprimer ton compte,Pagtanggal ng iyong account
+pcDeleteBody,You can permanently delete your account and its data whenever you want. This can't be undone.,Tu peux supprimer définitivement ton compte et ses données quand tu le souhaites. Cette action est irréversible.,Maaari mong permanenteng tanggalin ang iyong account at ang data nito kahit kailan mo gusto. Hindi na ito maibabalik.
+pcSecurityNote,"No app can promise perfect security, but Pray4Me is built to keep your prayers private by default.","Aucune application ne peut promettre une sécurité parfaite, mais Pray4Me est conçu pour garder tes prières privées par défaut.","Walang app ang makakapangako ng ganap na seguridad, ngunit ginawa ang Pray4Me upang panatilihing pribado ang iyong mga panalangin bilang default."
+planFast3Title,3 days of fasting & prayer,3 jours de jeûne et de prière,3 araw na pag-aayuno at panalangin
+planFast3Sub,A biblical three-day fast to seek God,Un jeûne biblique de trois jours pour chercher Dieu,Isang tatlong-araw na pag-aayuno ayon sa Bibliya upang hanapin ang Diyos
+planAbout,About this plan,À propos de ce plan,Tungkol sa planong ito
+planInBible,In the Bible,Dans la Bible,Sa Bibliya
+planDayByDay,Day-by-day preview,Aperçu jour par jour,Preview araw-araw
+planDayLabel,Day {n},Jour {n},Araw {n}
+planTapToPreview,Tap to preview & start,Touchez pour découvrir et commencer,I-tap para tingnan at simulan
+needsAttention,Needs attention,À traiter,Kailangan ng pansin
+checklistTitle,Get your group praying,Lance ton groupe dans la prière,Simulan ang panalangin ng grupo
+checklistInvite,Invite people,Invite des personnes,Mag-imbita ng mga tao
+checklistRequest,Add the first prayer request,Ajoute le premier sujet de prière,Idagdag ang unang kahilingan sa panalangin
+checklistPray,Begin praying,Commence à prier,Simulan ang pananalangin
+checklistDismiss,Hide this,Masquer,Itago
+intercessionTitle,Praying for others,Prier pour les autres,Pananalangin para sa iba
+intercessionSub,The requests you chose to carry — for people and groups,Les sujets que tu as choisi de porter — pour des personnes et des groupes,Mga kahilingang pinili mong dalhin — para sa mga tao at grupo
+praySharedBtn,Pray shared requests,Prier les sujets partagés,Ipanalangin ang mga ibinahaging kahilingan
+intercessionRemaining,{n} remaining today,{n} restants aujourd'hui,{n} na natitira ngayon
+intercessionDone,All prayed for today 🙏,Tout a été prié aujourd'hui 🙏,Naipanalangin na lahat ngayon 🙏
+srcPersonal,Personal,Personnels,Personal
+srcGroups,Groups,Groupes,Mga grupo
+latestUpdateLabel,Latest update,Dernière nouvelle,Pinakabagong balita
+growNextStep,Your next step,Ta prochaine étape,Ang susunod mong hakbang
+growContinueDesc,Continue where you left off — a few quiet minutes of guided prayer,Reprends là où tu t'étais arrêté — quelques minutes de prière guidée,Ipagpatuloy kung saan ka huminto — ilang minuto ng ginagabayang panalangin
+growNewDesc,Continue learning to pray — a five-minute guided prayer,Continue d'apprendre à prier — une prière guidée de cinq minutes,Patuloy na matutong manalangin — limang minutong ginagabayang panalangin
+growAgainDesc,You've prayed them all — walk this one again,Tu les as tous priés — reprends celui-ci,Naipanalangin mo na lahat — ulitin ang isang ito
+growHistory,Completed,Terminés,Natapos
+growBrowseAll,Browse all guides,Parcourir tous les guides,Tingnan ang lahat ng gabay
+lowDataTitle,Low data mode,Mode économie de données,Low data mode
+lowDataSub,"Fetch less over the network. Verse text loads from this device when already saved; otherwise you'll see the reference with a link. Prayer capture, Today and sessions keep working offline.","Réduit les téléchargements. Le texte des versets s'affiche s'il est déjà sur cet appareil ; sinon la référence avec un lien. La saisie, Aujourd'hui et les sessions continuent de fonctionner hors ligne.","Mas kaunting data ang kukunin. Lalabas ang teksto ng talata kung nakasave na sa device; kung hindi, ang reperensiya at link. Gumagana pa rin offline ang pagsulat ng panalangin, Ngayon, at mga sesyon."
+savedOffline,Saved on this device — it will sync when you're back online.,Enregistré sur cet appareil — la synchronisation se fera dès le retour de la connexion.,Naka-save sa device na ito — magsi-sync kapag online ka na ulit.
+translatedLabel,Translated,Traduit,Isinalin
+audiencePrivate,Private,Privé,Pribado
+audienceVault,Private · Encrypted,Privé · Chiffré,Pribado · Naka-encrypt
+audienceSharedWith,Shared with {name},Partagé avec {name},Ibinahagi sa {name}
+audienceSharedN,Shared with {n} groups,Partagé avec {n} groupes,Ibinahagi sa {n} grupo
+audienceFromGroup,From {name},De {name},Mula sa {name}
+privacySecurity,Privacy & Security,Confidentialité et sécurité,Privacy at seguridad
+notifPreviewTitle,Notification privacy,Confidentialité des notifications,Privacy ng notipikasyon
+notifPreviewSub,What a prayer reminder may show on your lock screen. Titles and names are never included.,Ce qu'un rappel de prière peut afficher sur ton écran verrouillé. Les titres et les noms ne sont jamais inclus.,Kung ano ang maaaring ipakita ng paalala sa panalangin sa lock screen mo. Hindi kailanman kasama ang mga pamagat at pangalan.
+notifPreviewGeneric,Just an invitation to pray — no details,Juste une invitation à prier — aucun détail,Paanyaya lamang na manalangin — walang detalye
+notifPreviewCount,Include today's count — never titles or names,Indiquer le nombre du jour — jamais les titres ni les noms,Isama ang bilang ngayong araw — walang mga pamagat o pangalan
+sharePreviewAudience,Will be shared with: {names},Sera partagé avec : {names},Ibabahagi sa: {names}
+sharePreviewSync,Updates you add to this prayer will be shared too.,Les nouvelles que tu ajouteras à cette prière seront aussi partagées.,Ibabahagi rin ang mga update na idaragdag mo sa panalanging ito.
+peopleView,People,Personnes,Mga tao
+followUpNext,Follow-up · {date},Suivi · {date},Follow-up · {date}
+resultsCount,{n} results,{n} résultats,{n} resulta
+clearFiltersBtn,Clear filters,Effacer les filtres,Alisin ang mga filter
+journalFilters,Journal filters,Filtres du journal,Mga filter ng journal
+journalSource,Source or group,Source ou groupe,Pinagmulan o grupo
+intercessionDueSub,Due today — from the requests you carry,À prier aujourd'hui — parmi les sujets que tu portes,Para sa araw na ito — mula sa mga kahilingang dala mo
+intercessionNoneDue,Nothing is due today — your rhythm covers these on other days.,Rien n'est prévu aujourd'hui — ton rythme couvre ces sujets d'autres jours.,Walang nakatakda ngayon — sakop ng iyong ritmo ang mga ito sa ibang araw.
+intercessionAllCarried,View all requests I'm carrying · {n},Voir tous les sujets que je porte · {n},Tingnan ang lahat ng kahilingang dala ko · {n}
+prayAllCarriedBtn,Pray all remaining · {n},Prier tous les sujets restants · {n},Ipanalangin ang lahat ng natitira · {n}
+prayAgainBtn,Pray again,Prier encore,Manalangin muli
+prayForPerson,Pray for {name} · {n} active requests,Prier pour {name} · {n} sujets actifs,Ipanalangin si {name} · {n} aktibong kahilingan
+personPrayedToday,You prayed for {name} today 🙏,Tu as prié pour {name} aujourd'hui 🙏,Naipanalangin mo na si {name} ngayon 🙏
+aboutMinutes,About {n} min,Environ {n} min,Mga {n} minuto
+whyThisStep,Why this step?,Pourquoi cette étape ?,Bakit ang hakbang na ito?
+protEncrypted,Encrypted,Chiffré,Naka-encrypt
+addUpdateBtn,Add update,Ajouter une nouvelle,Magdagdag ng balita
+privacyRowOverview,Privacy Center,Centre de confidentialité,Sentro ng privacy
+privacyRowVault,Prayer Vault,Coffre de prière,Vault ng panalangin
+privacyRowNotif,Notification privacy,Confidentialité des notifications,Privacy ng notification
+privacyRowLowData,Low data mode,Mode économie de données,Low data mode
+privacyRowAi,AI assistance & data,Assistance IA et données,Tulong ng AI at data
+privacyRowExport,Export my data,Exporter mes données,I-export ang aking data
+protWillEncrypt,Will be encrypted,Sera chiffré,Ie-encrypt
+protEncryptedLocked,Encrypted · locked here,Chiffré · verrouillé ici,Naka-encrypt · naka-lock dito
+checklistAddRequestFirst,Add a request first,Ajoute d'abord une demande,Magdagdag muna ng kahilingan
+sourceLangWrittenIn,Written in {name},Écrit en {name},Nakasulat sa {name}
+sourceLangChange,Change,Modifier,Baguhin
+sourceLangLabel,Language of this prayer,Langue de cette prière,Wika ng panalanging ito
+sourceLangLooksLike,Looks like {name} — use it?,On dirait du {name} — l'utiliser ?,Mukhang {name} — gamitin?
+schedRhythmLabel,Prayer rhythm,Rythme de prière,Ritmo ng panalangin
+schedChange,Change,Modifier,Baguhin
+schedChangeLater,You can change this later.,Tu pourras changer plus tard.,Puwede mo itong baguhin mamaya.
+schedWhenAppear,When would you like this prayer to appear?,Quand souhaites-tu voir cette prière apparaître ?,Kailan mo gustong lumabas ang panalanging ito?
+schedUsePlan,Use my normal prayer rhythm,Suivre mon rythme habituel,Gamitin ang karaniwan kong ritmo
+schedOnceSub,Choose a date,Choisir une date,Pumili ng petsa
+schedOtherRhythm,Choose another rhythm,Choisir un autre rythme,Pumili ng ibang ritmo
+schedOtherRhythmSub,"Daily, weekly or a custom pattern","Chaque jour, chaque semaine ou sur mesure","Araw-araw, lingguhan o sarili mong pattern"
+schedNoFixed,No fixed schedule,Pas d'horaire fixe,Walang takdang iskedyul
+schedNoFixedSub,"Stays in your Journal, never on a set day","Reste dans le Journal, jamais un jour précis","Nananatili sa Journal, hindi sa isang takdang araw"
+schedNoFixedSentence,"This prayer stays in your Journal, with no set day.","Cette prière restera dans ton Journal, sans jour fixe.","Nananatili ang panalanging ito sa iyong Journal, nang walang takdang araw."
+noFixedSchedule,No fixed schedule,Pas d'horaire fixe,Walang takdang iskedyul
+moreOptionsLabel,More options,Plus d'options,Higit pang opsyon
+formReminderAt,You'll be reminded around {time}.,Tu seras rappelé·e vers {time}.,Paaalalahanan ka bandang {time}.
+schedEveryDay,Every day,Chaque jour,Araw-araw
+schedOnceAWeek,Once a week,Une fois par semaine,Minsan sa isang linggo
+schedChooseDays,Choose days,Choisir les jours,Pumili ng mga araw
+schedMoreOptions,More scheduling options,Plus d'options,Iba pang opsyon
+schedPreferredTime,Preferred time,Moment préféré,Piniling oras
+schedStopQuestion,When should this rhythm stop?,Quand ce rythme doit-il s'arrêter ?,Kailan dapat matapos ang ritmong ito?
+schedUseRhythm,Use this rhythm,Utiliser ce rythme,Gamitin ang ritmong ito
+schedWeekdaysLabel,Days of the week,Jours de la semaine,Mga araw ng linggo
+schedDateLabel,Date,Date,Petsa
+schedEndDateLabel,End date,Date de fin,Petsa ng pagtatapos
+schedEndCountLabel,Number of times,Nombre de fois,Ilang beses
+endMarkAnswered,When I mark it answered,Quand je la marque exaucée,Kapag minarkahan kong sinagot
+endNoAutoEnd,No automatic end,Pas de fin automatique,Walang awtomatikong pagtatapos
+schedWillAppear,This prayer will appear {detail}.,Cette prière apparaîtra {detail}.,Lalabas ang panalanging ito {detail}.
+schedWillFollowPlan,This prayer will follow your normal rhythm: {days}.,Cette prière suivra ton rythme habituel : {days}.,Susunod ang panalanging ito sa karaniwan mong ritmo: {days}.
+sentOnce,once on {date},une fois le {date},minsan sa {date}
+sentDaily,every day,chaque jour,araw-araw
+sentWeekly,every {days},chaque {days},tuwing {days}
+sentInterval,every {n} days,tous les {n} jours,tuwing {n} araw
+sentMonthly,on day {d} of each month,le {d} de chaque mois,tuwing ika-{d} ng buwan
+sentYearly,every year on {date},chaque année le {date},taun-taon sa {date}
+sentAnytime,at any time,à tout moment,anumang oras
+sentMorning,in the morning,le matin,sa umaga
+sentMidday,at midday,à midi,sa tanghali
+sentEvening,in the evening,le soir,sa gabi
+sentUntilAnswered,until you mark it answered,jusqu'à ce que tu la marques exaucée,hanggang markahan mong sinagot
+sentUntilDate,until {date},jusqu'au {date},hanggang {date}
+sentTimes,{n} times in total,{n} fois au total,{n} beses lahat
+sentJoin,", ",", ",", "
+formatBold,Bold,Gras,Makapal
+formatItalic,Italic,Italique,Italiko
+formatList,List,Liste,Listahan
+attachMenu,Attach,Joindre,Maglakip
+attachPhoto,Photo,Photo,Larawan
+attachVideo,Video,Vidéo,Video
+attachAudio,Audio,Audio,Audio
+attachLink,Link,Lien,Link
+recordVoice,Record a voice note,Enregistrer une note vocale,Mag-record ng voice note
+stopRecording,Stop recording,Arrêter l'enregistrement,Itigil ang pagre-record
+attachRemove,Remove attachment,Retirer la pièce jointe,Alisin ang attachment
+textRemove,Remove text,Retirer le texte,Alisin ang teksto
+linkPlaceholder,Paste a link (https://…),Coller un lien (https://…),I-paste ang link (https://…)
+linkInvalid,This link is not valid,Ce lien n'est pas valide,Hindi wasto ang link na ito
+attachTooLarge,This file is too large,Ce fichier est trop volumineux,Masyadong malaki ang file na ito
+attachUnsupported,Unsupported file type,Type de fichier non pris en charge,Hindi suportado ang uri ng file
+attachOffline,Adding media requires a connection,Ajouter un média nécessite une connexion internet,Kailangan ng koneksyon sa internet para magdagdag ng media
+uploadFailed,"Upload failed, please try again","L'envoi a échoué, réessayez","Nabigo ang pag-upload, subukang muli"
+micUnavailable,Microphone unavailable,Micro indisponible,Hindi available ang mikropono
+mediaLoadError,Couldn't load this media,Impossible de charger ce média,Hindi ma-load ang media na ito
+restUnderSky,Rest under the sky,Reposez-vous sous le ciel,Magpahinga sa ilalim ng langit
