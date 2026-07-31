@@ -55,6 +55,8 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import OverflowMenu from '../components/shared/OverflowMenu';
+import useCommunityPrayerUpdates from './prayerDetail/useCommunityPrayerUpdates';
+import usePrayerSharing from './prayerDetail/usePrayerSharing';
 
 // One verse pill in the point list. Verses are stored in the prayer's creation
 // language; useLocalizedVerse swaps in authoritative text + a localized reference
@@ -140,8 +142,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const scheduleTriggerRef = useRef(null);
 
   // ── Community mode state ─────────────────────────────────────────────────
-  const [communityUpdates, setCommunityUpdates] = useState([]);
-  const [loadingUpdates, setLoadingUpdates] = useState(false);
+  // (The encouragement timeline — communityUpdates/loadingUpdates — now lives in
+  // useCommunityPrayerUpdates.)
   const [showCommunityTestimony, setShowCommunityTestimony] = useState(false);
   const [communityTestimonyAnon, setCommunityTestimonyAnon] = useState(false);
   const [testimonySent, setTestimonySent] = useState(false);
@@ -150,7 +152,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [deleting, setDeleting] = useState(false);
   const [togglingPraying, setTogglingPraying] = useState(false);
 
-  const { categories, markAnswered, markActive, markPrayedOn, softDeletePrayer, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers, refreshFromCommunity, fetchSharedActivity } = usePrayerStore(
+  const { categories, markAnswered, markActive, markPrayedOn, softDeletePrayer, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, addFromCommunity, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
       markAnswered: s.markAnswered,
@@ -176,8 +178,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       syncCategoriesFromCommunity: s.syncCategoriesFromCommunity,
       updatePrayer: s.updatePrayer,
       prayers: s.prayers,
-      refreshFromCommunity: s.refreshFromCommunity,
-      fetchSharedActivity: s.fetchSharedActivity,
     }))
   );
   const { tr, translateTexts, translating } = useTranslationStore();
@@ -190,18 +190,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
   const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
-  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, fetchUserReactions, fetchPrayerUpdates, addUpdate: addCommunityUpdate, deleteCommunityUpdate, editCommunityUpdate, deleteCommunityTestimony, editCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, prayerShares, fetchGroups, fetchPrayerShares, setPrayerShares, refreshPrayer, subscribePrayerActivity } = useCommunityStore(
+  // (fetchPrayerUpdates, addUpdate, delete/editCommunityUpdate, subscribePrayerActivity,
+  // refreshPrayer, fetchUserReactions moved into useCommunityPrayerUpdates.)
+  const { groups, activeGroupId, prayers: communityPrayers, userReactions, toggleReaction, deleteCommunityTestimony, editCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, setCommunityAnswered, testimonies: communityTestimonies, setPrayerShares } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       activeGroupId: s.activeGroupId,
       prayers: s.prayers,
       userReactions: s.userReactions,
       toggleReaction: s.toggleReaction,
-      fetchUserReactions: s.fetchUserReactions,
-      fetchPrayerUpdates: s.fetchPrayerUpdates,
-      addUpdate: s.addUpdate,
-      deleteCommunityUpdate: s.deleteCommunityUpdate,
-      editCommunityUpdate: s.editCommunityUpdate,
       deleteCommunityTestimony: s.deleteCommunityTestimony,
       editCommunityTestimony: s.editCommunityTestimony,
       addTestimony: s.addTestimony,
@@ -213,12 +210,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       removeCommunityVerse: s.removeCommunityVerse,
       setCommunityAnswered: s.setCommunityAnswered,
       testimonies: s.testimonies,
-      prayerShares: s.prayerShares,
-      fetchGroups: s.fetchGroups,
-      fetchPrayerShares: s.fetchPrayerShares,
       setPrayerShares: s.setPrayerShares,
-      refreshPrayer: s.refreshPrayer,
-      subscribePrayerActivity: s.subscribePrayerActivity,
     }))
   );
 
@@ -226,62 +218,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const authorName = getAuthorName(user);
   const { removePrayer } = usePrayerActions(lang);
 
-  // ── Community mode effects & handlers ────────────────────────────────────
-  useEffect(() => {
-    if (!isCommunity) return;
-    setLoadingUpdates(true);
-    fetchPrayerUpdates(communityPrayer.id).then(data => {
-      setCommunityUpdates(data);
-      setLoadingUpdates(false);
-    });
-  }, [communityPrayer?.id]);
-
-  // Live reactions + member updates on this open prayer.
-  useEffect(() => {
-    if (!isCommunity) return;
-    return subscribePrayerActivity(communityPrayer.id, {
-      onReaction: () => {
-        refreshPrayer(communityPrayer.id);
-        if (user?.id) fetchUserReactions(communityPrayer.group_id, user.id);
-      },
-      onUpdate: () => {
-        refreshPrayer(communityPrayer.id);
-        fetchPrayerUpdates(communityPrayer.id).then(setCommunityUpdates);
-      },
-    });
-  }, [communityPrayer?.id, isCommunity]);
-
-  const handleSendWord = async (text, attachments, isAnonymous) => {
-    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous, contentLanguage: lang, attachments });
-    // Re-fetch so the timeline reflects the (possibly synced) update.
-    setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
-  };
-
-  const handleDeleteWord = async (updateId) => {
-    // Optimistically drop it so the row disappears without waiting on the refetch.
-    setCommunityUpdates((prev) => prev.filter((u) => u.id !== updateId));
-    const res = await deleteCommunityUpdate(updateId, communityPrayer.id);
-    if (res?.error) {
-      toast.error(t(lang, 'errorGeneric'));
-      setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
-      return;
-    }
-    toast.success(t(lang, 'wordDeleted'));
-  };
-
-  // Author-only text edit. Optimistically patch the local timeline; the store
-  // re-encrypts and rewrites the row (attachments preserved). On failure the
-  // authoritative refetch restores the original text.
-  const handleEditWord = async (updateId, text) => {
-    const update = communityUpdates.find((u) => u.id === updateId);
-    if (!update) return;
-    setCommunityUpdates((prev) => prev.map((u) => (u.id === updateId ? { ...u, text } : u)));
-    const res = await editCommunityUpdate(communityPrayer.id, update, text);
-    if (res?.error) {
-      toast.error(t(lang, 'errorGeneric'));
-      setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
-    }
-  };
+  // ── Community mode: encouragement timeline (fetch, live subscription, CRUD) ──
+  const {
+    communityUpdates, loadingUpdates, handleSendWord, handleDeleteWord, handleEditWord,
+  } = useCommunityPrayerUpdates({ communityPrayer, isCommunity, user, authorName, lang });
 
   // Whole-testimony delete (author or group admin). The store drops it from the
   // testimonies list; CommunityTestimonies handles the author-only media cleanup.
@@ -381,35 +321,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   };
 
   // ── Personal mode: sharing to groups ──────────────────────────────────────
-  // Load the user's groups and existing share map so the share button and
-  // badges reflect reality even if the Community tab was never opened.
-  useEffect(() => {
-    if (isCommunity || !user?.id) return;
-    if (groups.length === 0) fetchGroups(user.id);
-    fetchPrayerShares(user.id);
-  }, [isCommunity, user?.id]);
-
-  const sharedGroups = isCommunity ? [] : (prayerShares[prayer.id] || []);
+  // Personal-mode sharing sync: load the user's groups + share map, follow the
+  // community copy's latest content, and surface member activity on shared copies.
+  const { sharedGroups, sharedActivity } = usePrayerSharing({ prayer, isCommunity, user });
 
   // Clear pending AI suggestions when language changes so user can re-generate in new language
   useEffect(() => { setUpdateRecs([]); setRecsError(null); }, [lang]);
 
   // Reset the translation toggle when the prayer or language changes
   useEffect(() => { setShowTranslated(false); }, [communityPrayer?.id, prayer?.id, lang]);
-
-  // For a prayer saved from the community, pull the author's/group's latest
-  // shared content into this copy on open (one-way follow).
-  useEffect(() => {
-    if (!isCommunity && prayer?.community_origin_id) refreshFromCommunity(prayer.id);
-  }, [isCommunity, prayer?.id]);
-
-  // Surface testimonies + member updates posted on the community copies of this
-  // personal prayer (shared source or saved copy).
-  const [sharedActivity, setSharedActivity] = useState({ testimonies: [], updates: [] });
-  const isShared = !isCommunity && (!!prayer?.community_origin_id || (prayerShares[prayer?.id]?.length > 0));
-  useEffect(() => {
-    if (isShared) fetchSharedActivity(prayer).then(setSharedActivity);
-  }, [isShared, prayer?.id]);
 
   // In community mode, read from store so updates (prayer points, edits) reflect immediately
   const livePrayer = isCommunity
