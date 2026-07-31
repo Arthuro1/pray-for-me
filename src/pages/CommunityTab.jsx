@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus, HeartHandshake, CalendarPlus } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
@@ -36,7 +36,7 @@ import { Modal, CreateGroupModal, JoinGroupModal, AddFriendModal } from './commu
 import { CARD_STYLE, SUBTLE_BTN, INPUT_STYLE } from './community/ui';
 import useCommunityHubData from './community/useCommunityHubData';
 import useGroupPlans from './community/useGroupPlans';
-import { markGroupSeen } from './community/seen';
+import useGroupWall from './community/useGroupWall';
 // Plain, recognisable line icons (currentColor, so they adapt to theme and to
 // the button they sit in): join = walk through a door, create = a circle of
 // people, add a friend = a person with a plus.
@@ -617,22 +617,14 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { groups, prayers, testimonies, loading, setActiveGroup, addPrayer, setGroupAutoAdd, subscribeGroupPrayers, leaveGroup, userReactions, fetchUserReactions } = useCommunityStore(
+  const { addPrayer, leaveGroup } = useCommunityStore(
     useShallow((s) => ({
-      groups: s.groups,
-      prayers: s.prayers,
-      testimonies: s.testimonies,
-      loading: s.loading,
-      setActiveGroup: s.setActiveGroup,
       addPrayer: s.addPrayer,
-      setGroupAutoAdd: s.setGroupAutoAdd,
-      subscribeGroupPrayers: s.subscribeGroupPrayers,
       leaveGroup: s.leaveGroup,
-      userReactions: s.userReactions,
-      fetchUserReactions: s.fetchUserReactions,
     }))
   );
-  const addFromCommunity = usePrayerStore(s => s.addFromCommunity);
+  // Shared read-model + live sync (prayers, testimonies, subscription, auto-add).
+  const { group, isAdmin, prayers, testimonies, loading, hasPrayedInGroup, handleToggleAutoAdd } = useGroupWall({ groupId, user });
   const categories = usePrayerStore(s => s.categories);
   const tr = useTranslationStore(s => s.tr);
   const [subTab, setSubTab] = useState('requests');
@@ -647,7 +639,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // Bumped when an invite action records a checklist flag, so the checklist
   // behind an open modal re-derives its steps.
   const [, setChecklistVersion] = useState(0);
-  const reconciledRef = useRef(null);
   // Group prayer plans (read-model, subscription, join/leave/end/adopt) live in a
   // dedicated hook; the picker/detail/confirm modals below consume its state.
   const {
@@ -658,30 +649,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     busyPlanId,
     handleJoinGroupPlan, handleLeaveGroupPlan, handleEndGroupPlan, handleAdoptGroupPlan,
   } = useGroupPlans({ groupId, user, lang });
-
-  // Always (re)fetch on entering a group so freshly synced points/updates from
-  // the personal side show up, even if this group was already the active one.
-  // (setActiveGroup, subscribeGroupPrayers, fetchUserReactions are stable Zustand
-  // actions — listing them satisfies exhaustive-deps without extra re-runs.)
-  useEffect(() => {
-    if (groupId) { setActiveGroup(groupId); markGroupSeen(groupId); }
-  }, [groupId, setActiveGroup]);
-
-  // Live prayer wall: reflect new/edited/answered requests from other members.
-  useEffect(() => {
-    if (!groupId) return;
-    return subscribeGroupPrayers(groupId);
-  }, [groupId, subscribeGroupPrayers]);
-
-  // The leader checklist's "begin praying" step ticks itself off once the user
-  // has an "I'm praying" on any of this group's requests.
-  useEffect(() => {
-    if (groupId && user?.id) fetchUserReactions(groupId, user.id);
-  }, [groupId, user?.id, fetchUserReactions]);
-
-  const group = groups.find(g => g.id === groupId);
-  const isAdmin = group?.role === 'admin';
-  const hasPrayedInGroup = prayers.some(p => userReactions.has(p.id));
 
   // An invitation genuinely went out (link shared/copied, QR shown, friend
   // invited) — only then does the checklist's Invite step record itself.
@@ -706,31 +673,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     }
     return true;
   });
-
-  // Copy group requests (not mine, not already linked) into the personal list.
-  const reconcileAutoAdd = async () => {
-    const mine = new Set(usePrayerStore.getState().prayers.map(p => p.id));
-    const groupName = groups.find(g => g.id === groupId)?.name || null;
-    for (const p of prayers) {
-      if (p.user_id === user.id) continue;
-      if (p.source_prayer_id && mine.has(p.source_prayer_id)) continue;
-      await addFromCommunity(p, groupName); // idempotent: deduped by community_origin_id
-    }
-  };
-
-  // When auto-add is on, reconcile once per group entry (after prayers load).
-  useEffect(() => {
-    if (group?.autoAdd && !loading && prayers.length && reconciledRef.current !== groupId) {
-      reconciledRef.current = groupId;
-      reconcileAutoAdd();
-    }
-  }, [group?.autoAdd, loading, prayers, groupId]);
-
-  const handleToggleAutoAdd = async () => {
-    const next = !group?.autoAdd;
-    await setGroupAutoAdd(groupId, user.id, next);
-    if (next) await reconcileAutoAdd();
-  };
 
   const handleLeave = async () => {
     setLeaving(true);
