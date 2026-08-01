@@ -4,6 +4,7 @@ import { clearLocalData } from '../lib/dataCache';
 import { forgetAccountKey } from '../lib/crypto/accountKey';
 import { authRedirectTarget } from '../lib/pendingInvite';
 import { setAuthSessionHint } from '../lib/authSessionHint';
+import { clearServiceWorkerUserCaches } from '../lib/serviceWorkerSecurity';
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -78,6 +79,7 @@ const useAuthStore = create((set) => ({
   signOut: async () => {
     const { data: { user } } = await supabase.auth.getUser();
     await clearLocalData(user?.id);
+    await clearServiceWorkerUserCaches();
     await supabase.auth.signOut();
     setAuthSessionHint(false);
     set({ user: null });
@@ -90,6 +92,7 @@ const useAuthStore = create((set) => ({
     const { error } = await supabase.rpc('delete_account');
     if (error) return { error };
     await clearLocalData(user?.id);
+    await clearServiceWorkerUserCaches();
     await forgetAccountKey(user?.id); // the account is gone — remove the local key too
     await supabase.auth.signOut();
     setAuthSessionHint(false);

@@ -6,7 +6,7 @@
 import { encryptJson, decryptJson, isEncryptedPayload } from './e2ee.ts';
 import { getMasterKey, isUnlocked } from './keyManager.ts';
 
-export const ENCRYPTION_VERSION = 1;
+export const ENCRYPTION_VERSION = 2;
 
 // Scalar prayer-row fields encrypted everywhere (server rows + local cache).
 export const SENSITIVE_FIELDS = ['title', 'description', 'person_name', 'phone'];
@@ -64,6 +64,33 @@ export function isPrayerEncrypted(row) {
   return !!row && isEncryptedPayload(row.encrypted_payload);
 }
 
+function prayerContext(row) {
+  return {
+    entityType: 'personal-prayer',
+    ownerOrGroupId: row.user_id || '',
+    recordId: row.id,
+    keyVersion: row.key_version || 1,
+    field: 'sensitive-payload',
+  };
+}
+
+function childEntity(fields, row) {
+  if (fields === UPDATE_SENSITIVE_FIELDS || 'text' in row) return 'prayer-update';
+  if (fields === POINT_SENSITIVE_FIELDS || 'verses' in row) return 'prayer-point';
+  return 'prayer-testimony';
+}
+
+function childContext(row, fields, ownerId = '') {
+  return {
+    entityType: childEntity(fields, row),
+    ownerOrGroupId: ownerId || row.user_id || '',
+    recordId: row.id,
+    parentId: row.prayer_id,
+    keyVersion: row.key_version || 1,
+    field: 'sensitive-payload',
+  };
+}
+
 // Returns a persistence-ready row: the sensitive fields are bundled into
 // encrypted_payload and their plaintext columns redacted to '' (title is
 // NOT NULL, so '' rather than null). Requires the vault to be unlocked.
@@ -80,7 +107,7 @@ export async function encryptPrayerForStorage(row, { nested = false } = {}) {
   if (nested) {
     for (const f of CACHE_NESTED_FIELDS) if (row[f] != null) payload[f] = row[f];
   }
-  const encrypted_payload = await encryptJson(key, payload);
+  const encrypted_payload = await encryptJson(key, payload, prayerContext(row));
   const out = { ...row, encrypted_payload, encryption_version: ENCRYPTION_VERSION };
   for (const f of SENSITIVE_FIELDS) if (f in out) out[f] = '';
   for (const f of SENSITIVE_JSON_FIELDS) if (f in out) out[f] = null;
@@ -95,11 +122,11 @@ export async function encryptPrayerForStorage(row, { nested = false } = {}) {
 // verses → []). Non-sensitive columns (id, prayer_id, author_name, created_at)
 // are left intact. Requires the vault unlocked. Used by the store for PRIVATE
 // prayers so updates/points never reach the server tables in plaintext.
-export async function encryptChildForStorage(row, fields) {
+export async function encryptChildForStorage(row, fields, ownerId = '') {
   const key = getMasterKey();
   const payload = {};
   for (const f of fields) payload[f] = row[f] ?? null;
-  const encrypted_payload = await encryptJson(key, payload);
+  const encrypted_payload = await encryptJson(key, payload, childContext(row, fields, ownerId));
   const out = { ...row, encrypted_payload, encryption_version: ENCRYPTION_VERSION };
   for (const f of fields) if (f in out) out[f] = Array.isArray(row[f]) ? [] : '';
   return out;
@@ -109,16 +136,20 @@ export async function encryptChildForStorage(row, fields) {
 // stripping the ciphertext so the in-memory / cache form is clean plaintext.
 // Plaintext rows (shared prayers, legacy) and a locked/failed decrypt are
 // handled like the parent path.
-async function decryptChildRow(row) {
+async function decryptChildRow(row, ownerId = '') {
   if (!isEncryptedPayload(row?.encrypted_payload)) return row;
   if (!isUnlocked()) return { ...row, _locked: true };
   try {
-    const data = await decryptJson(getMasterKey(), row.encrypted_payload);
+    const data = await decryptJson(
+      getMasterKey(),
+      row.encrypted_payload,
+      childContext(row, undefined, ownerId),
+    );
     // Strip the ciphertext so the in-memory / cache form is clean plaintext.
     const rest = { ...row };
     delete rest.encrypted_payload;
     delete rest.encryption_version;
-    return { ...rest, ...data };
+    return { ...rest, ...data, _encryptionMigrationNeeded: row.encrypted_payload.v === 1 };
   } catch {
     return { ...row, _locked: true };
   }
@@ -133,7 +164,7 @@ async function decryptNestedCollections(row) {
   for (const coll of SERVER_ENCRYPTED_COLLECTIONS) {
     const arr = out[coll];
     if (Array.isArray(arr) && arr.some((c) => isEncryptedPayload(c?.encrypted_payload))) {
-      out = { ...out, [coll]: await Promise.all(arr.map(decryptChildRow)) };
+      out = { ...out, [coll]: await Promise.all(arr.map((child) => decryptChildRow(child, row.user_id || ''))) };
     }
   }
   return out;
@@ -151,8 +182,8 @@ export async function decryptPrayerFromStorage(row) {
   if (isPrayerEncrypted(row)) {
     if (!isUnlocked()) return { ...row, _locked: true };
     try {
-      const data = await decryptJson(getMasterKey(), row.encrypted_payload);
-      out = { ...row, ...data, _locked: false };
+      const data = await decryptJson(getMasterKey(), row.encrypted_payload, prayerContext(row));
+      out = { ...row, ...data, _locked: false, _encryptionMigrationNeeded: row.encrypted_payload.v === 1 };
     } catch {
       return { ...row, _locked: true };
     }

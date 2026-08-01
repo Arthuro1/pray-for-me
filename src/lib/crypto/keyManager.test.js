@@ -11,9 +11,13 @@ import {
   rotateRecoveryCode,
   destroyVault,
   exportVaultRecord,
+  importVaultRecord,
   generateRecoveryCode,
+  encodeRecoveryBytes,
+  normalizeRecoveryCode,
+  RECOVERY_CODE_NORMALIZED_LENGTH,
 } from './keyManager.ts';
-import { encryptJson, decryptJson } from './e2ee.ts';
+import { encryptJsonLegacy, decryptJson } from './e2ee.ts';
 
 // Minimal localStorage shim for the Node test env.
 function installStorage() {
@@ -59,7 +63,7 @@ describe('vault lifecycle', () => {
 
   it('keeps the SAME master key across lock/unlock (data stays readable)', async () => {
     await createVault('pass');
-    const payload = await encryptJson(getMasterKey(), { msg: 'hello vault' });
+    const payload = await encryptJsonLegacy(getMasterKey(), { msg: 'hello vault' });
     lock();
     await unlock('pass');
     expect(await decryptJson(getMasterKey(), payload)).toEqual({ msg: 'hello vault' });
@@ -78,7 +82,7 @@ describe('vault lifecycle', () => {
 describe('recovery code', () => {
   it('resets the passphrase and still decrypts old data', async () => {
     const code = await createVault('old-pass');
-    const payload = await encryptJson(getMasterKey(), { v: 'survives reset' });
+    const payload = await encryptJsonLegacy(getMasterKey(), { v: 'survives reset' });
     lock();
 
     expect(await resetPassphrase(code, 'new-pass')).toBe(true);
@@ -97,14 +101,39 @@ describe('recovery code', () => {
 
   it('generates grouped, readable codes', () => {
     const code = generateRecoveryCode();
-    expect(code).toMatch(/^[0-9A-HJ-NP-TV-Z]{5}(-[0-9A-HJ-NP-TV-Z]{1,5})+$/);
+    const normalized = code.replaceAll('-', '');
+    expect(normalized).toHaveLength(RECOVERY_CODE_NORMALIZED_LENGTH);
+    expect(normalized).toMatch(/^[0-9A-HJKMNP-TV-Z]+$/);
+    expect(code).toMatch(/^[0-9A-HJKMNP-TV-Z]{5}(?:-[0-9A-HJKMNP-TV-Z]{5}){4}-[0-9A-HJKMNP-TV-Z]$/);
+  });
+
+  it('matches deterministic Crockford Base32 encoder vectors', () => {
+    expect(encodeRecoveryBytes(new Uint8Array(16))).toBe('00000000000000000000000000');
+    expect(encodeRecoveryBytes(new Uint8Array(16).fill(255))).toBe('ZZZZZZZZZZZZZZZZZZZZZZZZZW');
+  });
+
+  it('rejects malformed, ambiguous, or incorrectly-sized codes', async () => {
+    await createVault('pass');
+    lock();
+    expect(normalizeRecoveryCode('OOOOO-OOOOO-OOOOO-OOOOO-OOOOO-O')).toBeNull();
+    expect(normalizeRecoveryCode('AAAAA-AAAAA-AAAAA-AAAAA-AAAAA')).toBeNull();
+    expect(await resetPassphrase('<script>bad</script>', 'new-pass')).toBe(false);
+  });
+
+  it('keeps legacy version-1 recovery records readable', async () => {
+    const code = await createVault('old-pass');
+    const legacyRecord = JSON.parse(exportVaultRecord());
+    legacyRecord.v = 1;
+    lock();
+    importVaultRecord(JSON.stringify(legacyRecord), true);
+    expect(await resetPassphrase(code, 'migrated-pass')).toBe(true);
   });
 });
 
 describe('rotateRecoveryCode', () => {
   it('issues a new code that works and invalidates the old one', async () => {
     const oldCode = await createVault('pass');
-    const payload = await encryptJson(getMasterKey(), { v: 'survives rotation' });
+    const payload = await encryptJsonLegacy(getMasterKey(), { v: 'survives rotation' });
 
     const newCode = await rotateRecoveryCode();
     expect(typeof newCode).toBe('string');

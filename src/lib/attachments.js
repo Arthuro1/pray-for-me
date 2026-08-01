@@ -67,13 +67,16 @@ export async function uploadAttachment(file, userId) {
   const id = crypto.randomUUID();
   const path = `${userId}/${id}`;
   try {
-    const { bytes, key, iv } = await encryptBlob(prepared);
+    const { bytes, key, iv, encryptionVersion } = await encryptBlob(prepared, {
+      ownerOrGroupId: userId,
+      recordId: id,
+    });
     const { error } = await supabase.storage
       .from(ATTACHMENTS_BUCKET)
       .upload(path, bytes, { contentType: 'application/octet-stream' });
     if (error) return { error: 'uploadFailed' };
     return {
-      attachment: { id, type, path, mime: prepared.type, name: file.name || '', size: prepared.size, key, iv },
+      attachment: { id, type, path, mime: prepared.type, name: file.name || '', size: prepared.size, key, iv, encryptionVersion },
     };
   } catch {
     return { error: 'uploadFailed' };

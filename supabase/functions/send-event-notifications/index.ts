@@ -20,6 +20,7 @@
 //   supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 import { initReminderEnv, requireInternalAuth, sendPush, json } from '../_shared/reminders.ts';
 import { eventPayload, digestPayload } from '../_shared/eventNotify.ts';
+import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 type Notification = {
   id: string;
@@ -61,7 +62,7 @@ function inQuietHours(pref: Pref): boolean {
   return start < end ? (cur >= start && cur < end) : (cur >= start || cur < end);
 }
 
-async function resolvePref(supabase: any, n: Notification): Promise<Pref> {
+async function resolvePref(supabase: SupabaseClient, n: Notification): Promise<Pref> {
   const { data } = await supabase.rpc('resolve_notification_pref', {
     p_user: n.recipient_id, p_type: n.type, p_group: n.group_id,
   });
@@ -71,7 +72,7 @@ async function resolvePref(supabase: any, n: Notification): Promise<Pref> {
 
 // Delivers one claimed (already 'processing') notification and records the
 // outcome. Returns the terminal status for the batch summary.
-async function deliver(supabase: any, n: Notification): Promise<string> {
+async function deliver(supabase: SupabaseClient, n: Notification): Promise<string> {
   const pref = await resolvePref(supabase, n);
 
   // Push disabled for this type → nothing to send (the in-app row still stands).
@@ -143,7 +144,7 @@ async function deliver(supabase: any, n: Notification): Promise<string> {
 // summary push (respecting quiet hours) instead of the individual pushes that
 // were deferred by deliver(). Claiming stamps digested_at so rows are never
 // summarized twice, and a recipient still in quiet hours is left for the next run.
-async function runDigest(supabase: any, limit: number) {
+async function runDigest(supabase: SupabaseClient, limit: number) {
   const summary = { digested: 0, users: 0, skipped: 0 };
   const { data: recips } = await supabase.rpc('pending_digest_recipients', { p_limit: limit });
   for (const { recipient_id } of (recips || [])) {
@@ -181,7 +182,8 @@ Deno.serve(async (req) => {
     if ('error' in init) return init.error;
     const { supabase } = init;
 
-    const body = await req.json().catch(() => ({} as any));
+    const body: { digest?: boolean; limit?: number; notificationId?: string; record?: { id?: string }; id?: string } =
+      await req.json().catch(() => ({}));
 
     // Digest run (hourly cron): batch each user's deferred pushes into a summary.
     if (body?.digest) {

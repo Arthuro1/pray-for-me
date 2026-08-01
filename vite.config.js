@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => {
       // one manifest instead of injecting a second, drifting webmanifest link.
       manifest: false,
       workbox: {
+        cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         // Keep the install-time precache to the shell. The 15 non-French locale
         // chunks are code-split and loaded on demand — precaching all of them
@@ -45,14 +46,6 @@ export default defineConfig(({ mode }) => {
         // Pull our Web Push handlers into the generated service worker.
         importScripts: ['push-sw.js'],
         runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'supabase-cache',
-              expiration: { maxEntries: 50, maxAgeSeconds: 300 },
-            },
-          },
           {
             // On-demand locale chunks: serve from cache once fetched so offline
             // language switching still works, without bloating the precache.

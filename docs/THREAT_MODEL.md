@@ -1,158 +1,76 @@
-# Pray4Me — Threat Model
+# Threat model
 
-_Last updated: 2026-06-29. Scope: the PWA (`src/`), the serverless AI proxy
-(`api/anthropic.js`), the Supabase backend (`supabase/`), and the Edge Functions._
+Last reviewed: 2026-07-31. This document describes the implementation, not an
+aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 
-Pray4Me stores deeply personal content (prayers, names, phone numbers, health
-and relationship details). The guiding principles are **privacy**, **least
-privilege**, and **defense in depth**: the server should never be able to read
-private prayer content, and a breach of any single component should not expose
-plaintext.
+## Assets and trust boundaries
 
-## Assets
+Prayer text, updates, points, testimonies, attachment plaintext, account keys,
+group keys, recovery credentials, relationship metadata, sessions, and provider
+secrets are sensitive. The browser, deployed JavaScript, Supabase, Vercel
+serverless functions, Edge Functions, Anthropic, YouVersion, Web Push services,
+and the user's device are separate trust boundaries.
 
-| Asset | Sensitivity |
-|-------|-------------|
-| Private prayer content (title, description, person_name, phone, updates, points, testimonies) | High |
-| Vault master key (in memory only) | Critical |
-| Wrapped vault record (`vault_keys`, IndexedDB) | Low at rest (ciphertext) |
-| Vault passphrase / recovery code | Critical |
-| Supabase session (access/refresh token) | High |
-| Anthropic API key | High (cost/abuse) |
-| VAPID private key | Medium (push spoofing) |
-| Shared/community prayers | Public to the group **by design** |
+Supabase stores ciphertext for protected content, but necessarily sees metadata:
+account and group IDs, membership, record IDs, timestamps, status, categories,
+schedules, ciphertext sizes, key versions, reports, and notification routing.
+Group members see content explicitly shared with their group.
 
-## Trust boundaries
+## Key facts
 
-1. **Browser ↔ Supabase** — guarded by RLS (owner-only policies, see
-   `supabase/rls_audit.sql`) and the anon key + per-user JWT.
-2. **Browser ↔ AI proxy** (`/api/anthropic`) — requires a valid Supabase
-   session; the Anthropic key lives only on the server.
-3. **Vault boundary** — sensitive fields are encrypted client-side (AES-256-GCM)
-   under a passphrase-derived master key. Supabase stores only ciphertext for
-   the encrypted scalar fields.
+- Automatic device-local encryption creates a 256-bit account content key. Its
+  raw Base64 representation is stored in user-scoped IndexedDB as
+  `pfm_ak_<user-id>`. An unlocked raw key is also mirrored in tab-scoped
+  `sessionStorage` as `pfm_vault_session` so refresh does not re-lock it.
+- The account key survives sign-out by design. Sign-out removes the encrypted
+  offline snapshot, mutation queue, and legacy service-worker caches. Account
+  deletion removes the account key.
+- Default idle auto-lock is disabled (`0`). Explicit lock removes the in-memory
+  and session copy, but the device key remains available for the next sign-in.
+- Optional recovery wraps the same key under a passphrase and a recovery code.
+  Only wrapped blobs and salts are synced in `vault_keys`. A recovery code is
+  128 random bits encoded as 26 Crockford Base32 characters, formatted
+  `XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`. Version 1 16-character records remain
+  readable; rotating a code writes version 2 and invalidates the old code.
+- Version 2 AES-GCM uses canonical additional authenticated data containing the
+  encryption schema, entity, owner/group, record, parent, key version, and field.
+  Moving ciphertext to a different context fails authentication. Version 1 is
+  still readable and personal content is rewritten only after verified decrypt.
+- Group key version creation and the creator's wrapped key are one transaction.
+  Removal and forward rotation are one transaction. Removed members retain any
+  historical group keys or plaintext they already obtained; rotation protects
+  future content, not history.
 
----
+## Threats and controls
 
-## Scenarios
+| Threat | Controls | Residual risk |
+|---|---|---|
+| Database dump or RLS bypass | Browser-side AES-GCM; wrapped recovery records; RLS; least-privilege grants | Metadata and any legacy plaintext remain visible; weak user passphrases can be guessed offline against a stolen wrapped record |
+| Cross-account PWA replay | Auth/REST/RPC/Storage/Realtime are not Workbox-cached; legacy `supabase-cache` is deleted on activation and sign-out; snapshots/queues are user-scoped | A compromised browser profile can inspect local storage directly |
+| Ciphertext substitution | Version 2 AES-GCM AAD binds owner, record, parent, key version, and field | Legacy v1 remains unbound until safely rewritten |
+| Group-key orphan/concurrency | Row lock, next-version check, atomic creator envelope, idempotency key, FK, detection and repair RPCs | Content-bound legacy orphan versions need manual recovery from a member/device backup |
+| Removed group member | Atomic membership removal and key rotation; future content uses the new key | No retroactive revocation; screenshots, exports, old ciphertext, and old keys cannot be recalled |
+| XSS or malicious deployment | CSP, no HTML injection for rich text, dependency review, code review/CODEOWNERS | JavaScript running in the origin can read displayed plaintext, IndexedDB keys, session keys, and auth tokens. Encryption does not protect an unlocked compromised origin |
+| Lost or shared device | OS/browser access control, explicit lock, optional passphrase recovery | Default auto-lock is off; an unlocked browser profile or extracted local profile can expose the account key |
+| Recovery-code theft | 128-bit random code, PBKDF2 wrapping, rotation, code shown once | Anyone with the code and synced wrapped record can reset the passphrase; rotation is required after suspected disclosure |
+| AI relay/cost abuse | Supabase authentication; server-defined tasks/prompts/model; per-task limits; per-minute and atomic daily user/global quotas; `AI_PROXY_DISABLED` breaker | Authorized inputs leave the encryption boundary and are processed by Anthropic after explicit consent |
+| Community abuse/sensitive disclosure | Audience preview, local contact-detail warning/ack, report/block RPCs, restrictive blocking RLS, DB insert-rate triggers, moderator deletion | Moderators need human escalation processes; automated detection is intentionally limited and does not judge prayer/theology |
+| Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Pray4Me sent a notification |
 
-### 1. Database breach (attacker reads the Supabase DB)
-- **Exposure:** Encrypted scalar fields (`title`, `description`, `person_name`,
-  `phone`) are ciphertext in `prayers.encrypted_payload` — unreadable without
-  the master key, which is never stored server-side (`vault_keys` holds only the
-  *wrapped* key). Recovery code and passphrase are never stored.
-- **Mitigations in place:** owner-only RLS on every user table; client-side E2EE
-  of scalar fields; zero-knowledge vault key storage. **Phase 3b (done):** for
-  *unshared* vault prayers, the nested `prayer_updates` and `prayer_points` rows
-  (incl. verses) are now stored as ciphertext too — each child row carries its
-  own `encrypted_payload` and the plaintext columns are redacted (see
-  `encryptChildForStorage` + `canEncryptNested`). When a prayer is first shared,
-  those rows are rewritten to plaintext so the `sync_*` fan-out can read them.
-- **Phase 3c (done):** personal `testimonies` are now encrypted server-side for
-  *unshared* vault prayers. They were migrated off the `prayers.testimonies`
-  `jsonb[]` column (appended server-side by the `answer_prayer` RPC) into their
-  own child table `prayer_testimonies (id, prayer_id, author_name, created_at,
-  content, encrypted_payload, encryption_version)`, mirroring the
-  `prayer_updates` / `prayer_points` model:
-  - **Conflict-free without a server RPC:** an append is now a plain row
-    `INSERT` (`addTestimonyRow` in `mutationExecutors.js`), which cannot lose a
-    concurrent sibling the way a `jsonb[]` rewrite can — so the `answer_prayer`
-    append hack is retired and the offline guarantee is *preserved by
-    construction*. `markAnswered` now only updates status + mirrors `is_answered`.
-  - **E2EE reuses proven code:** for unshared prayers the client bundles
-    `content` into the row's `encrypted_payload` via `encryptChildForStorage`
-    (`TESTIMONY_SENSITIVE_FIELDS`) and redacts the plaintext column;
-    `SERVER_ENCRYPTED_COLLECTIONS` gained `prayer_testimonies` so
-    `decryptNestedCollections` restores it. Gated by `canEncryptNested`
-    (`_persistTestimony` in `prayerStore.js`).
-  - **Backward compatibility:** `supabase/e2ee_testimonies.sql` back-fills the
-    old `prayers.testimonies` `jsonb[]` and the legacy scalar `prayers.testimony`
-    into `prayer_testimonies` rows (plaintext — they were never encrypted).
-    `testimonyList` (`utils/prayer.js`) merges the new rows with the legacy
-    columns, deduped by id, so nothing changes for the UI. The old columns and
-    `answer_prayer` are retained read-only for one release, then dropped.
-- **Residual risk (LOW–MEDIUM):** still plaintext server-side — *shared* prayers'
-  nested rows and testimonies (plaintext by design so community fan-out / group
-  members can read them) and row metadata (timestamps, category links, user_id).
-  All private prayer *content* (scalars, updates, points, testimonies) is now
-  E2EE server-side. The Workbox Supabase runtime cache stores whatever the server
-  returns (ciphertext for encrypted fields).
+## Terminology
 
-### 2. XSS (attacker runs JS in the app origin)
-- **Exposure:** An attacker with script execution can read the in-memory master
-  key while the vault is unlocked, the Supabase session, `localStorage` (theme,
-  settings), and the *wrapped* vault record in IndexedDB. This is the worst case
-  for any client-side-E2EE app.
-- **Mitigations in place:** strict CSP (`script-src 'self'` + the Vercel
-  analytics origin — **no `unsafe-inline`/`unsafe-eval` for scripts**),
-  `object-src 'none'`, `frame-ancestors 'none'`, `X-Content-Type-Options`,
-  Trusted-by-default React escaping (no `dangerouslySetInnerHTML` anywhere),
-  auto-lock that drops the master key after inactivity, and dev-only logging so
-  prayer content never reaches the console in prod.
-- **Residual risk:** `style-src 'unsafe-inline'` remains (React inline styles +
-  Tailwind). It does not enable script execution but slightly widens the surface
-  (CSS exfiltration). Removing it requires a nonce/refactor — recommended later.
+“Device encryption” means content is encrypted in the browser before upload and
+the key is available to that browser profile. “Vault/recovery protection” means
+the account key additionally has passphrase/recovery wrappers for cross-device
+recovery. “Protection against database compromise” means a database-only
+attacker should get ciphertext plus metadata, not content. This project does not
+claim protection against malicious deployed JavaScript, a compromised device,
+or an already-unlocked browser. Avoid the unqualified phrase “zero knowledge.”
 
-### 3. Stolen / lost device (unlocked OS session)
-- **Exposure:** The wrapped vault record and cached ciphertext sit in
-  IndexedDB. Without the passphrase they are unreadable. If the
-  vault was left **unlocked**, the master key is in memory until auto-lock fires
-  (default 5 min idle) or the tab closes.
-- **Mitigations in place:** auto-lock on inactivity; master key never persisted;
-  `clearLocalData()` wipes cache + queue + vault record on sign-out.
-- **Recommendation:** shorten auto-lock for shared devices; consider re-prompt on
-  app foreground.
+## Assumptions
 
-### 4. Compromised Supabase (malicious/compromised backend)
-- **Exposure:** A hostile backend can read/serve all plaintext it stores (see
-  scenario 1: nested collections, metadata, community content) and can serve a
-  malicious app build if it also controls hosting. It **cannot** decrypt the
-  E2EE scalar fields — it never has the master key.
-- **Residual risk:** The backend could withhold/tamper with the wrapped
-  `vault_keys` record; GCM authentication means tampering yields a failed
-  unlock, not silent corruption. A backend that also controls the served
-  JavaScript could exfiltrate keys — hosting integrity (CSP, SRI, trusted
-  deploy) is the boundary here.
-
-### 5. Compromised AI provider (or network path to it)
-- **Exposure:** Prayer title + latest update (or category names) are sent to
-  Anthropic to generate suggestions — **plaintext, by necessity**. A compromised
-  provider could log these.
-- **Mitigations in place:** AI is **opt-in** per context with an explicit consent
-  modal naming exactly what is sent; only minimal fields are sent (never phone /
-  person_name); the proxy forwards a sanitized, model-pinned request; upstream
-  error bodies are never echoed to the client (could contain the prompt).
-- **Recommendation:** make the consent copy clear that content leaves the device
-  and is not vault-protected.
-
-### 6. Leaked recovery code
-- **Exposure:** Anyone with the recovery code **and** access to the wrapped vault
-  record (`vault_keys` or device IndexedDB) can reset the passphrase and
-  decrypt everything. The code alone, without the record, is useless.
-- **Mitigations in place:** the code is 128-bit, shown once, never stored in
-  retrievable form; resetting requires the record.
-- **Recommendation:** allow rotating the recovery code; warn users to store it
-  offline, not in the same cloud account as the device backup.
-
-### 7. Forgotten vault password
-- **Exposure:** None to confidentiality. Recovery requires the recovery code.
-- **Behavior:** With the recovery code → `resetPassphrase` re-wraps the *same*
-  master key under a new passphrase, so existing ciphertext stays readable.
-  **Without** either the passphrase or the recovery code, the data is
-  **unrecoverable by design** (true zero-knowledge). This is a documented,
-  intentional trade-off, surfaced to the user at vault setup.
-
----
-
-## Defense-in-depth summary
-
-- **Network:** HSTS (preload), `upgrade-insecure-requests`, strict CSP, tight
-  `Permissions-Policy`, `Referrer-Policy: strict-origin-when-cross-origin`.
-- **AuthZ:** owner-only RLS on all user tables; AI proxy requires a valid session.
-- **Secrets:** Anthropic key is server-only (no `VITE_` fallback, never bundled);
-  VAPID private key only in Supabase secrets; service-role key only in Edge
-  Functions.
-- **Crypto:** AES-256-GCM, 96-bit random IV per message, PBKDF2-SHA256 (310k
-  iterations), wrapped-master-key with passphrase + recovery code.
-- **Abuse:** per-user rate limiting + payload/message caps on the AI proxy.
-- **Blast radius:** auto-lock, dev-only logging, local-data wipe on sign-out.
+Web Crypto, the browser origin, package supply chain, TLS, Supabase Auth, and the
+user's device are trusted while in use. Provider and administrator access is
+constrained operationally, not eliminated cryptographically. Security claims
+must be retested after changes to crypto, RLS, service workers, authentication,
+or deployment headers.

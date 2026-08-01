@@ -33,7 +33,7 @@ vi.mock('../supabase', () => ({
 
 import { ensureAccountCryptoReady, startFreshEncryption, CRYPTO_STATUS } from './accountKey';
 import { isUnlocked, isVaultInitialized, getMasterKey, lock, destroyVault, createVault } from './keyManager';
-import { encryptJson, decryptJson } from './e2ee';
+import { encryptJsonLegacy, decryptJson } from './e2ee';
 import { clearUserKeyCache } from './userKeys';
 
 // Minimal localStorage shim for the Node test env (keyManager reads it during
@@ -71,7 +71,7 @@ describe('ensureAccountCryptoReady', () => {
 
   it('is idempotent and keeps the SAME key (data stays readable)', async () => {
     await ensureAccountCryptoReady('user-1');
-    const payload = await encryptJson(getMasterKey(), { msg: 'hello account key' });
+    const payload = await encryptJsonLegacy(getMasterKey(), { msg: 'hello account key' });
 
     await ensureAccountCryptoReady('user-1'); // must not rotate the key
 

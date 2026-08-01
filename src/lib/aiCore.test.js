@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { localizeAiError, languageName, scriptureSystemPrompt } from './aiCore';
+import { localizeAiError } from './aiCore';
 
 describe('localizeAiError', () => {
   it('returns null when there is no error', () => {
@@ -25,23 +25,3 @@ describe('localizeAiError', () => {
   });
 });
 
-describe('languageName', () => {
-  it('maps known locale codes to English language names', () => {
-    expect(languageName('fr')).toBe('French');
-    expect(languageName('sw')).toBe('Swahili');
-  });
-
-  it('falls back to English for unknown codes', () => {
-    expect(languageName('xx')).toBe('English');
-  });
-});
-
-describe('scriptureSystemPrompt', () => {
-  it('encodes the core guardrails and target language', () => {
-    const prompt = scriptureSystemPrompt('fr');
-    expect(prompt).toMatch(/NOT a pastor/i);
-    expect(prompt).toMatch(/never claim to speak for God/i);
-    expect(prompt).toMatch(/valid JSON/i);
-    expect(prompt).toMatch(/French/);
-  });
-});

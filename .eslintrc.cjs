@@ -29,6 +29,13 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['**/*.{ts,tsx}'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/recommended'],
+      parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+    },
+    {
       // Serverless functions and Node-side build/config run in Node, not the
       // browser: give them process/Buffer/etc. so they don't trip no-undef.
       files: [

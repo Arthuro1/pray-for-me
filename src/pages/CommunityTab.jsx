@@ -27,7 +27,7 @@ import PlanDetailModal from '../components/PlanDetailModal';
 import { groupPlanStatus, sortGroupPlans, prayingLabel } from '../lib/groupPlans';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
-import { plainText } from '../components/rich/RichText';
+import { plainText } from '../components/rich/plainText';
 import ShareButtons from '../components/shared/ShareButtons';
 import Switch from '../components/shared/Switch';
 import { QRCodeSVG } from 'qrcode.react';
@@ -381,7 +381,7 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
     setFriends(f.friends || []);
     setMembers(m.members || []);
     setInvited(Object.fromEntries((inv.inviteeIds || []).map(id => [id, true])));
-  }, [userId, group.id]);
+  }, [fetchFriends, fetchGroupInvitees, fetchGroupMembers, userId, group.id]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -539,7 +539,7 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
 
   useEffect(() => {
     fetchGroupMembers(group.id).then(r => { setMembers(r.members || []); setLoading(false); });
-  }, [group.id]);
+  }, [fetchGroupMembers, group.id]);
 
   const shareInvite = async () => {
     try {
@@ -1063,8 +1063,8 @@ function CommunityPrayerView({ lang, user, groupId, prayerId, onBack }) {
     }))
   );
 
-  useEffect(() => { if (groupId && groupId !== activeGroupId) setActiveGroup(groupId); }, [groupId]);
-  useEffect(() => { if (groupId && user?.id) fetchUserReactions(groupId, user.id); }, [groupId, user?.id]);
+  useEffect(() => { if (groupId && groupId !== activeGroupId) setActiveGroup(groupId); }, [activeGroupId, groupId, setActiveGroup]);
+  useEffect(() => { if (groupId && user?.id) fetchUserReactions(groupId, user.id); }, [fetchUserReactions, groupId, user?.id]);
 
   const prayer = prayers.find(p => p.id === prayerId);
   if (!prayer) {
@@ -1083,7 +1083,7 @@ export default function CommunityTab() {
   const { groupId, prayerId } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => { if (user?.id) fetchGroups(user.id); }, [user?.id]);
+  useEffect(() => { if (user?.id) fetchGroups(user.id); }, [fetchGroups, user?.id]);
 
   if (!user) return null;
 

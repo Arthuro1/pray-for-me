@@ -8,6 +8,22 @@
 
 // Parse a push message body into a plain object, tolerating non-JSON / empty
 // payloads without throwing.
+const LEGACY_USER_CACHE_NAMES = ['supabase-cache'];
+
+async function deleteLegacyUserCaches() {
+  await Promise.all(LEGACY_USER_CACHE_NAMES.map((name) => caches.delete(name)));
+}
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(deleteLegacyUserCaches());
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'CLEAR_USER_CACHES') {
+    event.waitUntil(deleteLegacyUserCaches());
+  }
+});
+
 function parsePushData(event) {
   try {
     return (event && event.data) ? event.data.json() : {};

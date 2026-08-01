@@ -18,6 +18,7 @@ vi.mock('../../lib/analytics', () => ({
 
 import PrayerShareModal from '../PrayerShareModal';
 import { t } from '../../i18n';
+import { safetyText } from '../../lib/communitySafety';
 
 const lang = 'fr';
 const groups = [{ id: 'g1', name: 'Family' }, { id: 'g2', name: 'Church' }];
@@ -92,6 +93,19 @@ describe('PrayerShareModal', () => {
     fireEvent.click(saveBtn);
     expect(setPrayerShares).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(onClose).toHaveBeenCalled());
+  });
+
+  it('requires an explicit review when a new share contains contact details', async () => {
+    const prayer = { id: 'p3', title: 'Please call +49 151 234 5678' };
+    const { setPrayerShares } = renderModal({ prayer });
+    fireEvent.click(screen.getAllByRole('checkbox')[0]);
+    expect(screen.getByText(safetyText(lang, 'sensitive'))).toBeTruthy();
+    const save = screen.getByText(t(lang, 'save')).closest('button');
+    expect(save.disabled).toBe(true);
+    fireEvent.click(screen.getByText(safetyText(lang, 'acknowledge')));
+    expect(save.disabled).toBe(false);
+    fireEvent.click(save);
+    expect(setPrayerShares).toHaveBeenCalledTimes(1);
   });
 
   it('closes without sharing when Cancel is clicked', () => {

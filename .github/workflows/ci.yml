@@ -6,9 +6,17 @@ on:
   pull_request:
     branches: [main, dev]
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
-  build-and-test:
+  application:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -18,42 +26,72 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: Install exact dependencies
         run: npm ci
 
-      # Lint is now enforced: the build fails on any ESLint error. Warnings
-      # (e.g. react-hooks/exhaustive-deps) are still surfaced but non-blocking.
-      - name: Lint
-        run: npm run lint
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
 
-      # Structural i18n check: fails on missing keys (which silently fall back to
-      # French for the user) or placeholder drift. Translation *quality* still
-      # needs a native pass; this only guards the mechanical invariants.
-      - name: Check locales
+      - name: Strict lint
+        run: npm run lint:strict
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Check locale structure
         run: npm run check:locales
 
-      - name: Test
+      - name: Unit and integration tests
         run: npm test
 
-      - name: Build
+      - name: Browser security tests
+        run: npm run test:browser
+
+      - name: Production build
         run: npm run build
 
-  # Real-browser E2E (Chromium via @vitest/browser-playwright). Separate job so a
-  # browser flake never blocks the fast unit/lint/build signal, and so the ~1min
-  # browser download is only paid when this runs. Secret-free: the guest prayer
-  # flow makes no network calls (see src/components/GuestPrayerFlow.browser.spec.jsx).
-  browser-e2e:
+      - name: Upload browser diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-diagnostics
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            test-results/
+            playwright-report/
+            screenshots/
+
+      - name: Application gate summary
+        if: always()
+        shell: bash
+        run: echo "### Application gates — ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+
+  database:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
         with:
-          node-version: 22
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: Install Chrome for Playwright
-        run: npx playwright install --with-deps chrome
-      - name: Browser tests
-        run: npm run test:browser
+          version: latest
+
+      - name: Start clean local Supabase
+        run: supabase start
+
+      - name: Rebuild database from migrations
+        run: supabase db reset
+
+      - name: Schema and RLS assertions
+        run: supabase test db
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --no-backup
+
+      - name: Database gate summary
+        if: always()
+        shell: bash
+        run: echo "### Database gates — ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"

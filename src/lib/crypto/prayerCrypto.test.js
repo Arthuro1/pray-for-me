@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createVault, lock } from './keyManager.ts';
+import { getMasterKey } from './keyManager.ts';
+import { encryptJsonLegacy } from './e2ee.ts';
 import {
   canEncrypt,
   isPrayerEncrypted,
@@ -296,5 +298,22 @@ describe('backward compatibility', () => {
     expect(out[0].id).toBe('p1');
     expect(out[1].id).toBe('p2');
     expect(out[1].title).toBe('Second');
+  });
+
+  it('reads version-1 ciphertext and a version-2 rewrite preserves its content', async () => {
+    await createVault('pass-phrase');
+    const original = samplePrayer();
+    const payload = Object.fromEntries(SENSITIVE_FIELDS.map((field) => [field, original[field] || '']));
+    const legacy = {
+      ...original,
+      title: '', description: '', person_name: '', phone: '',
+      encrypted_payload: await encryptJsonLegacy(getMasterKey(), payload),
+      encryption_version: 1,
+    };
+    const decrypted = await decryptPrayerFromStorage(legacy);
+    expect(decrypted._encryptionMigrationNeeded).toBe(true);
+    const migrated = await encryptPrayerForStorage(decrypted);
+    expect(migrated.encrypted_payload.v).toBe(2);
+    expect((await decryptPrayerFromStorage(migrated)).title).toBe(original.title);
   });
 });

@@ -22,6 +22,13 @@ const RSA_PARAMS = {
   hash: 'SHA-256',
 };
 const RSA_IMPORT = { name: 'RSA-OAEP', hash: 'SHA-256' };
+const privateKeyContext = (userId) => ({
+  entityType: 'user-identity-key',
+  ownerOrGroupId: userId,
+  recordId: userId,
+  keyVersion: 1,
+  field: 'encrypted-private-key',
+});
 
 // In-memory only: the unwrapped private key + its public JWK for this session.
 let cache = null; // { userId, publicJwk, privateKey }
@@ -58,7 +65,7 @@ export async function ensureUserPublicKey(userId) {
 
   if (row?.public_key_jwk && row?.encrypted_private_key) {
     try {
-      const pkcs8B64 = await decryptJson(getMasterKey(), row.encrypted_private_key);
+      const pkcs8B64 = await decryptJson(getMasterKey(), row.encrypted_private_key, privateKeyContext(userId));
       const privateKey = await crypto.subtle.importKey('pkcs8', fromB64(pkcs8B64), RSA_PARAMS, false, ['decrypt']);
       cache = { userId, publicJwk: row.public_key_jwk, privateKey };
       return cache.publicJwk;
@@ -84,7 +91,11 @@ async function publishNewKeypair(userId) {
   const kp = await crypto.subtle.generateKey(RSA_PARAMS, true, ['encrypt', 'decrypt']);
   const publicJwk = await crypto.subtle.exportKey('jwk', kp.publicKey);
   const pkcs8 = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
-  const encrypted_private_key = await encryptJson(getMasterKey(), toB64(new Uint8Array(pkcs8)));
+  const encrypted_private_key = await encryptJson(
+    getMasterKey(),
+    toB64(new Uint8Array(pkcs8)),
+    privateKeyContext(userId),
+  );
   try {
     await supabase.from('user_crypto_keys').upsert(
       { user_id: userId, public_key_jwk: publicJwk, encrypted_private_key, key_version: 1, updated_at: new Date().toISOString() },

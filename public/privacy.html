@@ -73,7 +73,7 @@
     <p>Your personal prayer companion</p>
   </header>
   <main>
-    <p class="updated">Last updated: July 2, 2026</p>
+    <p class="updated">Last updated: July 31, 2026</p>
 
     <section>
       <h2>Overview</h2>
@@ -96,15 +96,18 @@
     <section>
       <h2>Prayer content</h2>
       <p>
-        Prayers and journal entries you keep private are <strong>end-to-end encrypted on your
-        device</strong> before being stored. Only you hold the decryption key (protected by
-        your passphrase and an optional recovery code) — we cannot read the content of your
-        private prayers or testimonies.
+        Private prayers and journal entries are <strong>encrypted in your browser before
+        upload</strong>. For convenient same-device access, the account content key is stored
+        in this browser's IndexedDB and may be mirrored in tab-scoped session storage while
+        unlocked. An optional passphrase and recovery code can wrap that key for recovery on
+        another device. The passphrase, recovery code, and raw key are not sent to Supabase.
       </p>
       <p>
-        If you choose to share a prayer with a community or group, that specific content is
-        stored as plain text so the people you shared it with can read it. Anything you have
-        not explicitly shared stays private and encrypted.
+        Community prayer content is encrypted under a group key distributed to current group
+        members. Members can read content shared with their group. Removing a member rotates
+        the key for future content, but cannot make historical content or keys already received
+        disappear from that person's devices. Encryption does not protect content from
+        malicious code running in an unlocked app or from someone controlling your device.
       </p>
     </section>
 
@@ -114,17 +117,18 @@
         Pray4Me can offer AI-generated guidance and scripture suggestions using Anthropic's
         Claude API. This feature is <strong>opt-in</strong>: we ask for your explicit consent
         before ever sending anything to the AI. When you consent, only the specific
-        information needed (such as a prayer's title or a category name) is sent server-side
-        to Anthropic for generating a response — never your encrypted private content, and
-        never without your consent. You can withdraw consent at any time in Settings.
+        information needed for the selected task is decrypted in your browser and sent through
+        our authenticated proxy to Anthropic. The proxy accepts only approved structured tasks,
+        applies size and usage limits, and does not log prayer text. AI use is never automatic,
+        and you can withdraw consent at any time in Settings.
       </p>
     </section>
 
     <section>
       <h2>Scripture content</h2>
       <p>
-        Bible verse text may be fetched from the YouVersion API (where enabled) or generated
-        via the AI provider above, and cached to reduce repeated requests.
+        Bible verse text may be fetched from the YouVersion API (where enabled) and cached to
+        reduce repeated requests. AI is not used as an authoritative source of Scripture text.
       </p>
     </section>
 

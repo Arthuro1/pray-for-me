@@ -49,14 +49,36 @@ async function currentUserId() {
 
 // Wrap the raw GCK bytes to a member's RSA-OAEP public key → the jsonb stored in
 // group_member_keys.encrypted_group_key.
-async function wrapGck(gckRaw, publicKey) {
-  const ct = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, gckRaw);
-  return { v: 1, data: toB64(new Uint8Array(ct)) };
+async function wrapGck(gckRaw, publicKey, { groupId, version, userId }) {
+  const bound = new TextEncoder().encode(JSON.stringify({
+    v: 2,
+    key: toB64(gckRaw),
+    groupId,
+    version,
+    userId,
+  }));
+  const ct = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publicKey, bound);
+  return { v: 2, data: toB64(new Uint8Array(ct)) };
 }
 
 // Unwrap a stored wrapped key with my private key → an AES-GCM CryptoKey.
-async function unwrapGck(wrapped, privateKey) {
-  const raw = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, privateKey, fromB64(wrapped.data));
+async function unwrapGck(wrapped, privateKey, expected) {
+  const decrypted = new Uint8Array(await crypto.subtle.decrypt(
+    { name: 'RSA-OAEP' },
+    privateKey,
+    fromB64(wrapped.data),
+  ));
+  let raw = decrypted;
+  if (wrapped.v >= 2) {
+    const bound = JSON.parse(new TextDecoder().decode(decrypted));
+    if (bound.v !== 2
+      || bound.groupId !== expected.groupId
+      || bound.version !== expected.version
+      || bound.userId !== expected.userId) {
+      throw new Error('Wrapped group key context mismatch');
+    }
+    raw = fromB64(bound.key);
+  }
   return crypto.subtle.importKey('raw', raw, AES_PARAMS, true, ['encrypt', 'decrypt']);
 }
 
@@ -107,12 +129,20 @@ async function distribute(groupId, version, gckRaw, { force = false } = {}) {
   for (const m of list) {
     const pub = await getMemberPublicKey(m.user_id);
     if (!pub) { allPublished = false; continue; } // member hasn't published an identity key yet — retry later
-    rows.push({ group_id: groupId, key_version: version, user_id: m.user_id, encrypted_group_key: await wrapGck(gckRaw, pub) });
+    rows.push({
+      group_id: groupId,
+      key_version: version,
+      user_id: m.user_id,
+      encrypted_group_key: await wrapGck(gckRaw, pub, { groupId, version, userId: m.user_id }),
+    });
   }
   if (rows.length) {
-    await supabase
-      .from('group_member_keys')
-      .upsert(rows, { onConflict: 'group_id,key_version,user_id', ignoreDuplicates: true });
+    await Promise.all(rows.map((row) => supabase.rpc('distribute_group_key', {
+      p_group_id: row.group_id,
+      p_key_version: row.key_version,
+      p_target_user_id: row.user_id,
+      p_encrypted_group_key: row.encrypted_group_key,
+    })));
   }
   distributed.set(tag, { complete: allPublished, lastAt: Date.now() });
 }
@@ -128,17 +158,22 @@ async function createKeyVersion(groupId, version, myUserId) {
   if (!myPub) return null; // my own identity key isn't published yet
   const gck = await crypto.subtle.generateKey(AES_PARAMS, true, ['encrypt', 'decrypt']);
 
-  const { error } = await supabase
-    .from('group_key_versions')
-    .insert({ group_id: groupId, version, created_by: myUserId });
-  if (error) return null; // pk conflict (lost the race) or not permitted
-
   const gckRaw = new Uint8Array(await crypto.subtle.exportKey('raw', gck));
-  const { error: selfErr } = await supabase.from('group_member_keys').upsert(
-    { group_id: groupId, key_version: version, user_id: myUserId, encrypted_group_key: await wrapGck(gckRaw, myPub) },
-    { onConflict: 'group_id,key_version,user_id', ignoreDuplicates: true },
-  );
-  if (selfErr) return null;
+  const encryptedCreatorKey = await wrapGck(gckRaw, myPub, { groupId, version, userId: myUserId });
+  const idempotencyKey = crypto.randomUUID();
+  const args = {
+    p_group_id: groupId,
+    p_requested_version: version,
+    p_encrypted_creator_key: encryptedCreatorKey,
+    p_idempotency_key: idempotencyKey,
+  };
+  let committed = null;
+  // A lost response after commit is safe to retry with the same idempotency key.
+  for (let attempt = 0; attempt < 2 && committed == null; attempt++) {
+    const { data, error } = await supabase.rpc('create_group_key_version', args);
+    if (!error && Number(data) === version) committed = version;
+  }
+  if (committed == null) return null;
 
   keyCache.set(tagOf(groupId, version), gck);
   await distribute(groupId, version, gckRaw, { force: true });
@@ -166,7 +201,11 @@ export async function getGroupKey(groupId, version) {
       .eq('user_id', myUserId)
       .maybeSingle();
     if (!data?.encrypted_group_key) return null;
-    const key = await unwrapGck(data.encrypted_group_key, privateKey);
+    const key = await unwrapGck(data.encrypted_group_key, privateKey, {
+      groupId,
+      version,
+      userId: myUserId,
+    });
     keyCache.set(tagOf(groupId, version), key);
     return { key, version };
   } catch {
@@ -201,7 +240,9 @@ export async function ensureGroupKey(groupId) {
 // Fetch paths pass this to communityCrypto so each row is decrypted with the GCK
 // matching its own key_version, even across a rotation.
 export function groupKeyResolver(groupId) {
-  return (version) => getGroupKey(groupId, version);
+  const resolver = (version) => getGroupKey(groupId, version);
+  resolver.groupId = groupId;
+  return resolver;
 }
 
 // Forward-only rotation: mint the next version and wrap it only to the CURRENT
@@ -219,8 +260,29 @@ export async function rotateGroupKey(groupId) {
 // uses a key they never held. Best-effort; the delete requires admin rights (RLS).
 // Call after removing them from group_members.
 export async function revokeMemberAndRotate(groupId, userId) {
-  try {
-    await supabase.from('group_member_keys').delete().eq('group_id', groupId).eq('user_id', userId);
-  } catch { /* best-effort */ }
-  return rotateGroupKey(groupId);
+  const myUserId = await currentUserId();
+  if (!(await myIdentity(myUserId))) return null;
+  const version = (await currentVersion(groupId)) + 1;
+  const myPub = await getMemberPublicKey(myUserId);
+  if (!myPub) return null;
+  const gck = await crypto.subtle.generateKey(AES_PARAMS, true, ['encrypt', 'decrypt']);
+  const gckRaw = new Uint8Array(await crypto.subtle.exportKey('raw', gck));
+  const encryptedCreatorKey = await wrapGck(gckRaw, myPub, { groupId, version, userId: myUserId });
+  const idempotencyKey = crypto.randomUUID();
+  const args = {
+    p_group_id: groupId,
+    p_target_user_id: userId,
+    p_requested_version: version,
+    p_encrypted_creator_key: encryptedCreatorKey,
+    p_idempotency_key: idempotencyKey,
+  };
+  let committed = null;
+  for (let attempt = 0; attempt < 2 && committed == null; attempt++) {
+    const { data, error } = await supabase.rpc('remove_group_member_and_rotate', args);
+    if (!error && Number(data) === version) committed = version;
+  }
+  if (committed == null) return null;
+  keyCache.set(tagOf(groupId, version), gck);
+  await distribute(groupId, version, gckRaw, { force: true });
+  return { key: gck, version };
 }

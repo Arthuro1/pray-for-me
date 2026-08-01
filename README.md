@@ -44,7 +44,7 @@
 - **📬 Notifications** — a durable in-app inbox with a live unread badge, deep links, and privacy-safe Web Push for community events (friend requests, group invitations, prayer updates, answered prayers). Per-type preferences, quiet hours, and per-prayer follow; payloads never carry prayer content. [How it works →](./docs/NOTIFICATIONS.md)
 - **📱 PWA & offline** — installable on Android, iOS, and desktop; create and edit prayers offline with a durable IndexedDB write queue that replays on reconnect
 - **🌍 16 languages** — full UI in French, English, German, Portuguese, Chinese, Spanish, Hindi, Japanese, Swahili, Amharic, Indonesian, Tagalog, Korean, Russian, Arabic, and Persian; dynamic content translated via AI and cached. A device-local **Low data mode** (Privacy & Security) defers nonessential fetches for expensive connections — verse text falls back to a reference + link, while capture, Today and sessions keep working offline
-- **🔐 Encryption by default (E2EE)** — private prayers, updates and prayer points are encrypted client-side with AES-256-GCM from the moment you sign in — no setup, no passphrase to remember. An **account content key** is provisioned automatically; add an optional passphrase + one-time **recovery code** to unlock a new device, and the app walks you through recovery (or a clean fresh start) if a device ever loses its key. **Community prayers are encrypted too**, under a per-group key shared only to members — Supabase stores ciphertext, never your words
+- **🔐 Encryption by default** — private prayers, updates, points, testimonies, and attachments are encrypted in the browser with AES-256-GCM. The raw account content key is intentionally retained in user-scoped IndexedDB for same-device access and mirrored in tab-scoped `sessionStorage` while unlocked; it survives sign-out, while user snapshots, queues, and legacy service-worker caches are cleared. Optional passphrase recovery syncs only wrapped key material and uses a 128-bit Crockford Base32 recovery code (`XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`, shown once). New version-2 ciphertext is bound to its owner, record, parent, field, and key version. Community content uses per-group keys; member removal rotates the key for future content but cannot revoke historical keys already obtained. See [`docs/ENCRYPTION.md`](./docs/ENCRYPTION.md) for the exact guarantees and limitations
 - **🔒 Security & privacy at a glance** — Supabase Auth (Google or email/password), Row Level Security, server-only secrets, strict CSP; full threat model in [`docs/THREAT_MODEL.md`](./docs/THREAT_MODEL.md). Every prayer carries a compact **audience label** (Private / Shared with … / From \<group\>) in the form, the saved confirmation, the detail page and the share preview, with encryption shown as a **separate, smaller protection status** — never as a different audience. **Protection is determined per prayer, not by whether the vault is unlocked**: a prayer reads "Encrypted" only when its own stored row says so (`encryption_version` / an encrypted payload / the explicit marker recorded when it was written), so a legacy plaintext prayer is never relabelled just because the device key is available — unlocking lets ciphertext be *read*, it does not retroactively encrypt anything. While creating, the form states the intent ("Will be encrypted"); the saved confirmation switches to the fact, read from the prayer that was actually created. An encrypted prayer that can't be opened on this device says "Encrypted · locked here" rather than implying it is readable; a consolidated **Privacy & Security** settings section (from More) opens as a compact list of disclosure rows — Privacy Center, vault, notification privacy (pushes are generic by default — titles and names never leave the server), low data mode, AI consent, export — with account deletion kept apart at the bottom
 - Light & dark mode, accessible modals (Esc-to-close, focus trap), JSON export of your data
 
@@ -65,6 +65,9 @@ npm run build          # production build → dist/
 npm test               # Vitest suite (jsdom)
 npm run test:browser   # real-browser E2E (Chromium) — see docs/TESTING.md
 npm run lint           # ESLint
+npm run lint:strict    # zero-warning CI lint
+npm run typecheck      # strict TypeScript check
+npm run test:db        # pgTAP schema/RLS tests (after supabase start)
 npm run check:locales  # i18n key + placeholder parity — see docs/I18N_REVIEW.md
 ```
 
@@ -100,6 +103,8 @@ YVP_APP_KEY=your-youversion-app-key              # optional — in-app verse rea
 ```
 
 The VAPID **private** key is used only by the reminder Edge Functions and lives in Supabase secrets: `supabase secrets set VAPID_PRIVATE_KEY=...`
+
+Production procedures: [deployment and incidents](./docs/OPERATIONS.md) · [database migrations](./docs/MIGRATIONS.md) · [security policy](./SECURITY.md).
 
 ---
 

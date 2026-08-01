@@ -1,24 +1,19 @@
-// Prayer Vault key manager — zero-knowledge, passphrase-derived, with a
-// recovery code. The server never sees the key or the passphrase.
+// Account content-key and optional recovery manager.
 //
-// Design (wrapped-master-key):
-//   • A random 256-bit master key (MK) actually encrypts prayer content.
-//   • MK is itself encrypted ("wrapped") twice: once by a key derived from the
-//     user's passphrase, once by a key derived from a one-time recovery code.
-//   • Only the two wrapped blobs + their salts are persisted (localStorage).
-//     They are useless without the passphrase or the recovery code, so they are
-//     safe to store and could even be backed up — but MK in the clear never is.
-//   • unlock() re-derives a wrapping key and unwraps MK into memory. lock()
-//     drops MK. Auto-lock drops it after a period of inactivity.
+// Automatic encryption persists the user's raw account key in user-scoped
+// IndexedDB (accountKey.js) and mirrors an unlocked key in tab-scoped
+// sessionStorage. That is deliberate device convenience, not a zero-knowledge
+// claim: malicious JavaScript or an unlocked browser profile can read the key.
 //
-// Forgetting the passphrase is recoverable via the recovery code (which re-wraps
-// MK under a fresh passphrase). Losing BOTH means the data is unrecoverable by
-// design — that is the cost of true zero-knowledge encryption.
+// Optional recovery wraps the same 256-bit key under a passphrase and under a
+// 128-bit recovery code. Only those wrapped blobs and salts are synced through
+// `vault_keys`; neither the passphrase nor raw key is sent to Supabase. The
+// default inactivity auto-lock is disabled. See docs/ENCRYPTION.md.
 
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { toB64, fromB64 } from './e2ee';
 
-const VAULT_VERSION = 1;
+const VAULT_VERSION = 2;
 const PBKDF2_ITERATIONS = 310_000; // OWASP-recommended floor for PBKDF2-SHA256
 const SALT_BYTES = 16;
 const IV_BYTES = 12;
@@ -161,7 +156,7 @@ function saveRecord(record: VaultRecord): void {
 }
 
 // ─── Key derivation & (un)wrapping ───────────────────────────────────────────
-async function deriveWrappingKey(secret: string, salt: Uint8Array): Promise<CryptoKey> {
+async function deriveWrappingKey(secret: string, salt: Uint8Array<ArrayBuffer>): Promise<CryptoKey> {
   const base = await crypto.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey(
     { name: 'PBKDF2', salt, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
@@ -201,13 +196,46 @@ async function unwrapMasterKey(wrapped: WrappedKey, wrappingKey: CryptoKey): Pro
 // 26 readable chars grouped XXXXX-XXXXX-... — entropy comes from RECOVERY_BYTES.
 export function generateRecoveryCode(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(RECOVERY_BYTES));
-  let out = '';
-  for (let i = 0; i < bytes.length; i++) out += CODE_ALPHABET[bytes[i] & 31];
-  return out.replace(/(.{5})/g, '$1-').replace(/-$/, '');
+  return formatRecoveryCode(encodeRecoveryBytes(bytes));
 }
 
-function normalizeCode(code: string): string {
-  return code.toUpperCase().replace(/[^0-9A-Z]/g, '');
+export const RECOVERY_CODE_NORMALIZED_LENGTH = 26;
+export const LEGACY_RECOVERY_CODE_NORMALIZED_LENGTH = 16;
+
+export function encodeRecoveryBytes(bytes: Uint8Array): string {
+  if (bytes.length !== RECOVERY_BYTES) {
+    throw new Error(`Recovery entropy must be exactly ${RECOVERY_BYTES} bytes`);
+  }
+  let out = '';
+  let buffer = 0;
+  let bits = 0;
+  for (const byte of bytes) {
+    buffer = (buffer << 8) | byte;
+    bits += 8;
+    while (bits >= 5) {
+      bits -= 5;
+      out += CODE_ALPHABET[(buffer >>> bits) & 31];
+      buffer &= bits === 0 ? 0 : (1 << bits) - 1;
+    }
+  }
+  if (bits > 0) out += CODE_ALPHABET[(buffer << (5 - bits)) & 31];
+  return out;
+}
+
+export function formatRecoveryCode(normalized: string): string {
+  return normalized.match(/.{1,5}/g)?.join('-') ?? '';
+}
+
+export function normalizeRecoveryCode(code: string, version = VAULT_VERSION): string | null {
+  if (typeof code !== 'string' || !/^[0-9A-Za-z\s-]+$/.test(code)) return null;
+  const normalized = code.toUpperCase().replace(/[\s-]/g, '');
+  const validLength = version >= 2
+    ? normalized.length === RECOVERY_CODE_NORMALIZED_LENGTH
+    : normalized.length === LEGACY_RECOVERY_CODE_NORMALIZED_LENGTH
+      || normalized.length === RECOVERY_CODE_NORMALIZED_LENGTH;
+  if (!validLength) return null;
+  if ([...normalized].some((char) => !CODE_ALPHABET.includes(char))) return null;
+  return normalized;
 }
 
 // ─── Auto-lock ───────────────────────────────────────────────────────────────
@@ -262,7 +290,7 @@ export async function createVault(passphrase: string): Promise<string> {
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
 
   const passKey = await deriveWrappingKey(passphrase, passSalt);
-  const recoveryKey = await deriveWrappingKey(normalizeCode(recoveryCode), recoverySalt);
+  const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
 
   saveRecord({
     v: VAULT_VERSION,
@@ -297,7 +325,7 @@ export async function setUpRecovery(passphrase: string): Promise<string | null> 
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(passphrase, passSalt);
-  const recoveryKey = await deriveWrappingKey(normalizeCode(recoveryCode), recoverySalt);
+  const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
   saveRecord({
     v: VAULT_VERSION,
     passSalt: toB64(passSalt),
@@ -352,9 +380,11 @@ export async function unlock(passphrase: string): Promise<boolean> {
 export async function resetPassphrase(recoveryCode: string, newPassphrase: string): Promise<boolean> {
   const record = loadRecord();
   if (!record) return false;
+  const normalized = normalizeRecoveryCode(recoveryCode, record.v ?? 1);
+  if (!normalized) return false;
   let mk: CryptoKey;
   try {
-    const recoveryKey = await deriveWrappingKey(normalizeCode(recoveryCode), fromB64(record.recoverySalt));
+    const recoveryKey = await deriveWrappingKey(normalized, fromB64(record.recoverySalt));
     mk = await unwrapMasterKey(record.recoveryWrapped, recoveryKey);
   } catch {
     return false;
@@ -398,7 +428,8 @@ export async function rotateRecoveryCode(): Promise<string | null> {
   if (!record || !masterKey) return null;
   const recoveryCode = generateRecoveryCode();
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
-  const recoveryKey = await deriveWrappingKey(normalizeCode(recoveryCode), recoverySalt);
+  const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
+  record.v = VAULT_VERSION;
   record.recoverySalt = toB64(recoverySalt);
   record.recoveryWrapped = await wrapMasterKey(masterKey, recoveryKey);
   saveRecord(record);

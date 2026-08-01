@@ -1,0 +1,39 @@
+const COPY = {
+  en: {
+    report: 'Report', reportConfirm: 'Send this request to the group moderators? Prayer support is not emergency help.', reported: 'Report sent',
+    block: 'Block author', blockConfirm: 'Hide future community content from this person?', blocked: 'Author blocked',
+    sensitive: 'This appears to include contact details. Remove unnecessary phone numbers, email addresses, medical details, or information about children before sharing.',
+    acknowledge: 'I checked the details and still want to share them with the selected group.',
+  },
+  fr: {
+    report: 'Signaler', reportConfirm: "Envoyer cette demande aux modérateurs du groupe ? Le soutien par la prière ne remplace pas les secours.", reported: 'Signalement envoyé',
+    block: "Bloquer l’auteur", blockConfirm: 'Masquer les prochains contenus de cette personne ?', blocked: 'Auteur bloqué',
+    sensitive: 'Ce texte semble contenir des coordonnées. Retire les numéros, adresses e-mail, détails médicaux ou informations sur des enfants qui ne sont pas nécessaires.',
+    acknowledge: 'J’ai vérifié ces détails et je souhaite toujours les partager avec le groupe sélectionné.',
+  },
+  de: { report: 'Melden', reportConfirm: 'Diese Anfrage an die Gruppenmoderation senden? Gebetsunterstützung ist keine Notfallhilfe.', reported: 'Meldung gesendet', block: 'Autor blockieren', blockConfirm: 'Künftige Inhalte dieser Person ausblenden?', blocked: 'Autor blockiert', sensitive: 'Dieser Text scheint Kontaktdaten zu enthalten. Entferne unnötige Telefonnummern, E-Mail-Adressen, medizinische Angaben oder Informationen über Kinder.', acknowledge: 'Ich habe die Angaben geprüft und möchte sie weiterhin mit der ausgewählten Gruppe teilen.' },
+  es: { report: 'Denunciar', reportConfirm: '¿Enviar esta solicitud a los moderadores del grupo? El apoyo en oración no es ayuda de emergencia.', reported: 'Denuncia enviada', block: 'Bloquear autor', blockConfirm: '¿Ocultar el contenido futuro de esta persona?', blocked: 'Autor bloqueado', sensitive: 'Parece que el texto contiene datos de contacto. Quita teléfonos, correos, datos médicos o información de menores que no sean necesarios.', acknowledge: 'He revisado los datos y aun así quiero compartirlos con el grupo seleccionado.' },
+  pt: { report: 'Denunciar', reportConfirm: 'Enviar este pedido aos moderadores do grupo? Apoio em oração não é atendimento de emergência.', reported: 'Denúncia enviada', block: 'Bloquear autor', blockConfirm: 'Ocultar conteúdos futuros desta pessoa?', blocked: 'Autor bloqueado', sensitive: 'Este texto parece conter dados de contacto. Remove telefones, e-mails, dados médicos ou informações sobre crianças que não sejam necessários.', acknowledge: 'Revisei os dados e ainda quero partilhá-los com o grupo selecionado.' },
+  zh: { report: '举报', reportConfirm: '将此请求提交给小组管理员吗？祷告支持不能替代紧急援助。', reported: '已提交举报', block: '屏蔽作者', blockConfirm: '隐藏此人今后的社区内容吗？', blocked: '已屏蔽作者', sensitive: '内容似乎包含联系方式。分享前请删除不必要的电话号码、电子邮件、医疗信息或儿童信息。', acknowledge: '我已检查这些信息，仍希望与所选小组分享。' },
+  hi: { report: 'रिपोर्ट करें', reportConfirm: 'इसे समूह मॉडरेटर को भेजें? प्रार्थना सहायता आपातकालीन मदद नहीं है।', reported: 'रिपोर्ट भेजी गई', block: 'लेखक को ब्लॉक करें', blockConfirm: 'इस व्यक्ति की आगे की सामुदायिक सामग्री छिपाएँ?', blocked: 'लेखक ब्लॉक किया गया', sensitive: 'इसमें संपर्क विवरण हो सकते हैं। साझा करने से पहले अनावश्यक फ़ोन, ईमेल, चिकित्सा विवरण या बच्चों की जानकारी हटा दें।', acknowledge: 'मैंने विवरण जाँच लिया है और फिर भी चयनित समूह से साझा करना चाहता/चाहती हूँ।' },
+  ja: { report: '報告', reportConfirm: 'グループ管理者に報告しますか？祈りの支援は緊急支援ではありません。', reported: '報告しました', block: '投稿者をブロック', blockConfirm: 'この人の今後のコミュニティ投稿を非表示にしますか？', blocked: '投稿者をブロックしました', sensitive: '連絡先が含まれている可能性があります。不要な電話番号、メール、医療情報、子どもの情報は共有前に削除してください。', acknowledge: '内容を確認し、選択したグループに共有することを希望します。' },
+  sw: { report: 'Ripoti', reportConfirm: 'Tuma ombi hili kwa wasimamizi wa kikundi? Msaada wa maombi si huduma ya dharura.', reported: 'Ripoti imetumwa', block: 'Mzuie mwandishi', blockConfirm: 'Ficha maudhui ya baadaye ya mtu huyu?', blocked: 'Mwandishi amezuiwa', sensitive: 'Maandishi yanaonekana kuwa na mawasiliano. Ondoa namba, barua pepe, taarifa za afya au za watoto zisizohitajika kabla ya kushiriki.', acknowledge: 'Nimekagua maelezo na bado nataka kuyashiriki na kikundi kilichochaguliwa.' },
+  am: { report: 'ሪፖርት', reportConfirm: 'ይህን ጥያቄ ለቡድን አስተዳዳሪዎች ይላክ? የጸሎት ድጋፍ የአደጋ ጊዜ እርዳታ አይደለም።', reported: 'ሪፖርቱ ተልኳል', block: 'ጸሐፊውን አግድ', blockConfirm: 'የዚህን ሰው የወደፊት ይዘት ይደበቅ?', blocked: 'ጸሐፊው ታግዷል', sensitive: 'ጽሑፉ የመገናኛ መረጃ ያለው ይመስላል። ከማጋራትዎ በፊት አላስፈላጊ ስልክ፣ ኢሜይል፣ የሕክምና ወይም የልጆች መረጃ ያስወግዱ።', acknowledge: 'መረጃውን አረጋግጫለሁ እና ለተመረጠው ቡድን ማጋራት እፈልጋለሁ።' },
+  id: { report: 'Laporkan', reportConfirm: 'Kirim permintaan ini ke moderator grup? Dukungan doa bukan bantuan darurat.', reported: 'Laporan terkirim', block: 'Blokir penulis', blockConfirm: 'Sembunyikan konten berikutnya dari orang ini?', blocked: 'Penulis diblokir', sensitive: 'Teks ini tampaknya memuat kontak. Hapus nomor telepon, email, rincian medis, atau informasi anak yang tidak perlu sebelum berbagi.', acknowledge: 'Saya sudah memeriksa rinciannya dan tetap ingin membagikannya ke grup terpilih.' },
+  tl: { report: 'I-report', reportConfirm: 'Ipadala ito sa mga moderator ng grupo? Ang suportang panalangin ay hindi tulong pang-emergency.', reported: 'Naipadala ang report', block: 'I-block ang may-akda', blockConfirm: 'Itago ang susunod na community content ng taong ito?', blocked: 'Na-block ang may-akda', sensitive: 'Mukhang may contact details ang teksto. Alisin ang hindi kailangang phone, email, medical details, o impormasyon tungkol sa mga bata bago ibahagi.', acknowledge: 'Nasuri ko ang detalye at gusto ko pa ring ibahagi ito sa napiling grupo.' },
+  ko: { report: '신고', reportConfirm: '그룹 관리자에게 신고할까요? 기도 지원은 긴급 지원이 아닙니다.', reported: '신고했습니다', block: '작성자 차단', blockConfirm: '이 사람의 향후 커뮤니티 콘텐츠를 숨길까요?', blocked: '작성자를 차단했습니다', sensitive: '연락처가 포함된 것으로 보입니다. 공유 전에 불필요한 전화번호, 이메일, 의료 정보 또는 아동 정보를 삭제하세요.', acknowledge: '내용을 확인했으며 선택한 그룹에 계속 공유하겠습니다.' },
+  ru: { report: 'Пожаловаться', reportConfirm: 'Отправить запрос модераторам группы? Молитвенная поддержка не является экстренной помощью.', reported: 'Жалоба отправлена', block: 'Заблокировать автора', blockConfirm: 'Скрыть будущие материалы этого человека?', blocked: 'Автор заблокирован', sensitive: 'Похоже, текст содержит контакты. Перед публикацией удалите лишние телефоны, адреса почты, медицинские данные и сведения о детях.', acknowledge: 'Я проверил(а) сведения и всё равно хочу поделиться ими с выбранной группой.' },
+  ar: { report: 'إبلاغ', reportConfirm: 'إرسال هذا الطلب إلى مشرفي المجموعة؟ دعم الصلاة ليس مساعدة طارئة.', reported: 'تم إرسال البلاغ', block: 'حظر الكاتب', blockConfirm: 'إخفاء محتوى هذا الشخص مستقبلاً؟', blocked: 'تم حظر الكاتب', sensitive: 'يبدو أن النص يحتوي على بيانات اتصال. احذف أرقام الهاتف والبريد والتفاصيل الطبية أو معلومات الأطفال غير الضرورية قبل المشاركة.', acknowledge: 'راجعت التفاصيل وما زلت أريد مشاركتها مع المجموعة المحددة.' },
+  fa: { report: 'گزارش', reportConfirm: 'این درخواست برای مدیران گروه فرستاده شود؟ پشتیبانی دعایی کمک اضطراری نیست.', reported: 'گزارش ارسال شد', block: 'مسدود کردن نویسنده', blockConfirm: 'محتوای آینده این شخص پنهان شود؟', blocked: 'نویسنده مسدود شد', sensitive: 'به نظر می‌رسد متن شامل اطلاعات تماس است. پیش از اشتراک، تلفن، ایمیل، اطلاعات پزشکی یا اطلاعات کودکانِ غیرضروری را حذف کنید.', acknowledge: 'جزئیات را بررسی کرده‌ام و همچنان می‌خواهم با گروه انتخاب‌شده به اشتراک بگذارم.' },
+};
+
+export function safetyText(lang, key) {
+  return COPY[lang]?.[key] || COPY.en[key] || key;
+}
+
+export function containsSensitiveContactDetails(values) {
+  const value = (Array.isArray(values) ? values : [values]).filter(Boolean).join(' ');
+  const email = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+  const phone = /(?:^|\D)(?:\+?\d[\s().-]*){7,}(?:$|\D)/;
+  return email.test(value) || phone.test(value);
+}

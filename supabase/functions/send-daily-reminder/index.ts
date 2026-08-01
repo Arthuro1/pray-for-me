@@ -15,7 +15,7 @@ import {
   json,
 } from '../_shared/reminders.ts';
 import { dailyPayload, normalizeDetail } from '../_shared/notify.ts';
-import { prayersForDay } from '../_shared/planner.ts';
+import { prayersForDay, type PlannerCategory, type PlannerPrayer } from '../_shared/planner.ts';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 // Local calendar day key ("YYYY-MM-DD") for a subscription — the same key the
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
           .eq('user_id', sub.user_id)
           .eq('status', 'active');
         const { data: cats } = await supabase.from('categories').select('id, week_days, rotation').eq('user_id', sub.user_id);
-        count = prayersForDay((prayers as any[]) || [], (cats as any[]) || [], todayKey).length;
+        count = prayersForDay((prayers as PlannerPrayer[]) || [], (cats as PlannerCategory[]) || [], todayKey).length;
       }
 
       const payload = dailyPayload(sub.lang, detail, count);

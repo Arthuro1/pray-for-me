@@ -84,7 +84,12 @@ async function encryptedSensitiveFields(merged) {
     ...Object.fromEntries(SENSITIVE_FIELDS.map((f) => [f, merged[f] ?? ''])),
     ...Object.fromEntries(SENSITIVE_JSON_FIELDS.map((f) => [f, merged[f] ?? null])),
   };
-  const enc = await encryptPrayerForStorage(sensitive);
+  const enc = await encryptPrayerForStorage({
+    ...sensitive,
+    id: merged.id,
+    user_id: merged.user_id,
+    key_version: merged.key_version,
+  });
   return {
     title: '', description: '', person_name: '', phone: '', scripture_guidance: null,
     encrypted_payload: enc.encrypted_payload,
@@ -128,7 +133,7 @@ async function fetchSharedPrayerIds(userId) {
 async function fetchOwnedEncryptionState(userId) {
   const { data, error } = await supabase
     .from('prayers')
-    .select(`id, community_origin_id, encryption_version,
+    .select(`id, user_id, community_origin_id, encryption_version,
              prayer_updates(id, encryption_version),
              prayer_points(id, encryption_version),
              prayer_testimonies(id, encryption_version)`)
@@ -141,7 +146,7 @@ async function fetchOwnedEncryptionState(userId) {
 async function fetchOwnedForMigration(userId) {
   const { data, error } = await supabase
     .from('prayers')
-    .select(`id, community_origin_id, encryption_version,
+    .select(`id, user_id, community_origin_id, encryption_version,
              title, description, person_name, phone, scripture_guidance,
              prayer_updates(id, encryption_version, text),
              prayer_points(id, encryption_version, title, verses),
@@ -152,10 +157,10 @@ async function fetchOwnedForMigration(userId) {
 }
 
 // Encrypt any still-plaintext child rows of one collection, in place.
-async function encryptChildRows(table, rows, fields) {
+async function encryptChildRows(table, rows, fields, ownerId) {
   for (const row of rows || []) {
     if (isRowEncrypted(row)) continue;
-    const enc = await encryptChildForStorage(row, fields);
+    const enc = await encryptChildForStorage(row, fields, ownerId);
     const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
     for (const f of fields) patch[f] = enc[f]; // redacted plaintext ('' / [])
     const { error } = await supabase.from(table).update(patch).eq('id', row.id);
@@ -174,9 +179,38 @@ async function encryptExistingPrayer(p) {
     const { error } = await supabase.from('prayers').update(patch).eq('id', p.id);
     if (error) throw error;
   }
-  await encryptChildRows('prayer_updates', p.prayer_updates, UPDATE_SENSITIVE_FIELDS);
-  await encryptChildRows('prayer_points', p.prayer_points, POINT_SENSITIVE_FIELDS);
-  await encryptChildRows('prayer_testimonies', p.prayer_testimonies, TESTIMONY_SENSITIVE_FIELDS);
+  await encryptChildRows('prayer_updates', p.prayer_updates, UPDATE_SENSITIVE_FIELDS, p.user_id);
+  await encryptChildRows('prayer_points', p.prayer_points, POINT_SENSITIVE_FIELDS, p.user_id);
+  await encryptChildRows('prayer_testimonies', p.prayer_testimonies, TESTIMONY_SENSITIVE_FIELDS, p.user_id);
+}
+
+// After a version-1 ciphertext has authenticated and decrypted successfully,
+// rewrite it with version-2 contextual AAD. A failed/locked decrypt never sets
+// the marker, so this path can never overwrite unverifiable ciphertext.
+async function queueContextBindingMigrations(prayers) {
+  for (const prayer of prayers || []) {
+    if (prayer._encryptionMigrationNeeded && canEncrypt(prayer)) {
+      const payload = await encryptedSensitiveFields(prayer);
+      enqueue('updatePrayer', { id: prayer.id, payload });
+    }
+    const collections = [
+      ['prayer_updates', UPDATE_SENSITIVE_FIELDS, 'updateUpdateEncrypted', 'updateId'],
+      ['prayer_points', POINT_SENSITIVE_FIELDS, 'updatePointEncrypted', 'pointId'],
+      ['prayer_testimonies', TESTIMONY_SENSITIVE_FIELDS, 'updateTestimonyEncrypted', 'testimonyId'],
+    ];
+    for (const [collection, fields, mutation, idField] of collections) {
+      for (const row of prayer[collection] || []) {
+        if (!row._encryptionMigrationNeeded || !canEncryptNested(prayer)) continue;
+        const encrypted = await encryptChildForStorage(row, fields, prayer.user_id);
+        const patch = {
+          encrypted_payload: encrypted.encrypted_payload,
+          encryption_version: encrypted.encryption_version,
+        };
+        for (const field of fields) patch[field] = encrypted[field];
+        enqueue(mutation, { [idField]: row.id, row: patch });
+      }
+    }
+  }
 }
 
 // Keeps shared community copies in sync when the source personal prayer is
@@ -265,6 +299,7 @@ const usePrayerStore = create((set, get) => ({
     //    creation is STILL queued — so a prayer whose create was permanently
     //    dropped (rejected) is reconciled away rather than lingering as a ghost.
     serverPrayers = await decryptPrayers(serverPrayers);
+    await queueContextBindingMigrations(serverPrayers);
     const serverIds = new Set(serverPrayers.map((p) => p.id));
     const creating = pendingPrayerIds();
     const localPrayers = get().prayers;
@@ -647,7 +682,7 @@ const usePrayerStore = create((set, get) => ({
   // offline queue never holds the plaintext.
   _persistTestimony: async (prayer, row) => {
     const persistRow = canEncryptNested(prayer)
-      ? await encryptChildForStorage(row, TESTIMONY_SENSITIVE_FIELDS)
+      ? await encryptChildForStorage(row, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id)
       : row;
     enqueue('addTestimonyRow', { row: persistRow });
   },
@@ -678,7 +713,7 @@ const usePrayerStore = create((set, get) => ({
     }));
     removeAttachmentFiles([removed]);
     if (canEncryptNested(prayer)) {
-      const enc = await encryptChildForStorage({ ...row, attachments }, TESTIMONY_SENSITIVE_FIELDS);
+      const enc = await encryptChildForStorage({ ...row, attachments }, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
@@ -704,7 +739,7 @@ const usePrayerStore = create((set, get) => ({
       ),
     }));
     if (canEncryptNested(prayer)) {
-      const enc = await encryptChildForStorage({ ...row, content: '' }, TESTIMONY_SENSITIVE_FIELDS);
+      const enc = await encryptChildForStorage({ ...row, content: '' }, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
@@ -749,7 +784,7 @@ const usePrayerStore = create((set, get) => ({
       ),
     }));
     if (canEncryptNested(prayer)) {
-      const enc = await encryptChildForStorage({ ...row, content: next }, TESTIMONY_SENSITIVE_FIELDS);
+      const enc = await encryptChildForStorage({ ...row, content: next }, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
@@ -902,7 +937,7 @@ const usePrayerStore = create((set, get) => ({
     // route through sync_add_update so it fans out to the community copies.
     const prayer = get().prayers.find((p) => p.id === prayerId);
     if (canEncryptNested(prayer)) {
-      const encRow = await encryptChildForStorage(row, UPDATE_SENSITIVE_FIELDS);
+      const encRow = await encryptChildForStorage(row, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       enqueue('addUpdateEncrypted', { row: encRow });
     } else {
       enqueue('addUpdate', { id, prayerId, text, authorName, attachments });
@@ -941,7 +976,7 @@ const usePrayerStore = create((set, get) => ({
       enqueue('removeUpdateAttachment', { updateId, attId, attachments });
     }
     if (canEncryptNested(prayer)) {
-      const enc = await encryptChildForStorage({ ...row, attachments }, UPDATE_SENSITIVE_FIELDS);
+      const enc = await encryptChildForStorage({ ...row, attachments }, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateUpdateEncrypted', { updateId, row: patch });
@@ -969,7 +1004,7 @@ const usePrayerStore = create((set, get) => ({
       enqueue('removeUpdateText', { updateId });
     }
     if (canEncryptNested(prayer)) {
-      const enc = await encryptChildForStorage({ ...row, text: '' }, UPDATE_SENSITIVE_FIELDS);
+      const enc = await encryptChildForStorage({ ...row, text: '' }, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateUpdateEncrypted', { updateId, row: patch });
@@ -1013,7 +1048,7 @@ const usePrayerStore = create((set, get) => ({
       ),
     }));
     if (canEncryptNested(prayer)) {
-      const enc = await encryptChildForStorage({ ...row, text: next }, UPDATE_SENSITIVE_FIELDS);
+      const enc = await encryptChildForStorage({ ...row, text: next }, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
       enqueue('updateUpdateEncrypted', { updateId, row: patch });
@@ -1042,7 +1077,7 @@ const usePrayerStore = create((set, get) => ({
     }));
     const prayer = get().prayers.find((p) => p.id === prayerId);
     if (canEncryptNested(prayer)) {
-      const encRow = await encryptChildForStorage(row, POINT_SENSITIVE_FIELDS);
+      const encRow = await encryptChildForStorage(row, POINT_SENSITIVE_FIELDS, prayer.user_id);
       enqueue('addPointEncrypted', { row: encRow });
     } else {
       enqueue('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
@@ -1065,7 +1100,7 @@ const usePrayerStore = create((set, get) => ({
       ),
     }));
     if (canEncryptNested(prayer)) {
-      await get()._persistEncryptedPoint(pointId, point.title, updated);
+      await get()._persistEncryptedPoint(prayerId, pointId, point.title, updated, prayer.user_id);
     } else {
       enqueue('addVerse', { prayerId, pointId, verse });
     }
@@ -1085,7 +1120,7 @@ const usePrayerStore = create((set, get) => ({
       ),
     }));
     if (canEncryptNested(prayer)) {
-      await get()._persistEncryptedPoint(pointId, point.title, updated);
+      await get()._persistEncryptedPoint(prayerId, pointId, point.title, updated, prayer.user_id);
     } else {
       enqueue('removeVerse', { prayerId, pointId, verseRef });
     }
@@ -1108,8 +1143,12 @@ const usePrayerStore = create((set, get) => ({
   // server update — the verses live inside encrypted_payload, so we overwrite the
   // blob and keep the plaintext columns redacted. Encrypts before enqueue so the
   // offline queue never holds the plaintext.
-  _persistEncryptedPoint: async (pointId, title, verses) => {
-    const enc = await encryptChildForStorage({ title, verses }, POINT_SENSITIVE_FIELDS);
+  _persistEncryptedPoint: async (prayerId, pointId, title, verses, ownerId) => {
+    const enc = await encryptChildForStorage(
+      { id: pointId, prayer_id: prayerId, title, verses },
+      POINT_SENSITIVE_FIELDS,
+      ownerId,
+    );
     enqueue('updatePointEncrypted', {
       pointId,
       row: { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version, title: '', verses: [] },

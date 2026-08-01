@@ -12,8 +12,9 @@ import { supabase } from './supabase';
 const isDev = import.meta.env.DEV;
 export const aiEnabled = true;
 
-// POST a message to Claude through the appropriate server-side proxy.
-export async function anthropicFetch(body) {
+// Request one server-defined task. The browser cannot choose a model, system
+// prompt, role, token budget, or arbitrary message sequence.
+export async function anthropicFetch(task, input) {
   const endpoint = isDev ? '/api/anthropic/v1/messages' : '/api/anthropic';
   const headers = { 'Content-Type': 'application/json' };
 
@@ -22,5 +23,5 @@ export async function anthropicFetch(body) {
   const { data: { session } } = await supabase.auth.getSession();
   if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
 
-  return fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body) });
+  return fetch(endpoint, { method: 'POST', headers, body: JSON.stringify({ task, input }) });
 }

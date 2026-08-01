@@ -1,0 +1,11 @@
+# Replace @Arthuro1 or add additional reviewers as the maintainer team grows.
+/src/lib/crypto/ @Arthuro1
+/src/store/authStore.js @Arthuro1
+/src/lib/supabase.js @Arthuro1
+/vite.config.js @Arthuro1
+/public/push-sw.js @Arthuro1
+/src/lib/serviceWorkerSecurity.js @Arthuro1
+/api/ @Arthuro1
+/supabase/ @Arthuro1
+/.github/workflows/ @Arthuro1
+/SECURITY.md @Arthuro1

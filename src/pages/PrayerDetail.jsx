@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -58,6 +58,7 @@ import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityPrayerUpdates from './prayerDetail/useCommunityPrayerUpdates';
 import useCommunityPrayerActions from './prayerDetail/useCommunityPrayerActions';
 import usePrayerSharing from './prayerDetail/usePrayerSharing';
+import { safetyText } from '../lib/communitySafety';
 
 // One verse pill in the point list. Verses are stored in the prayer's creation
 // language; useLocalizedVerse swaps in authoritative text + a localized reference
@@ -151,6 +152,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showCommunityEdit, setShowCommunityEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showReportConfirm, setShowReportConfirm] = useState(false);
+  const [showBlockConfirm, setShowBlockConfirm] = useState(false);
 
   const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore(
     useShallow((s) => ({
@@ -190,7 +193,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { user } = useAuthStore();
   // (fetchPrayerUpdates, addUpdate, delete/editCommunityUpdate, subscribePrayerActivity,
   // refreshPrayer, fetchUserReactions moved into useCommunityPrayerUpdates.)
-  const { groups, activeGroupId, prayers: communityPrayers, deleteCommunityTestimony, editCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, testimonies: communityTestimonies, setPrayerShares } = useCommunityStore(
+  const { groups, activeGroupId, prayers: communityPrayers, deleteCommunityTestimony, editCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, testimonies: communityTestimonies, setPrayerShares, reportCommunityContent, setUserBlocked } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
       activeGroupId: s.activeGroupId,
@@ -206,6 +209,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       removeCommunityVerse: s.removeCommunityVerse,
       testimonies: s.testimonies,
       setPrayerShares: s.setPrayerShares,
+      reportCommunityContent: s.reportCommunityContent,
+      setUserBlocked: s.setUserBlocked,
     }))
   );
 
@@ -250,6 +255,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setDeleting(true);
     await deleteCommunityPrayer(communityPrayer.id);
     onBack();
+  };
+
+  const handleReportCommunity = async () => {
+    const result = await reportCommunityContent('prayer', communityPrayer.id, 'other');
+    setShowReportConfirm(false);
+    if (result?.error) toast.error(t(lang, 'errorGeneric'));
+    else toast.success(safetyText(lang, 'reported'));
+  };
+
+  const handleBlockCommunityAuthor = async () => {
+    const result = await setUserBlocked(communityPrayer.user_id, true);
+    setShowBlockConfirm(false);
+    if (result?.error) toast.error(t(lang, 'errorGeneric'));
+    else {
+      toast.success(safetyText(lang, 'blocked'));
+      onBack();
+    }
   };
 
   // ── Personal mode: sharing to groups ──────────────────────────────────────
@@ -540,6 +562,26 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         </div>
       )}
+      {showReportConfirm && (
+        <ConfirmDialog
+          title={safetyText(lang, 'report')}
+          message={safetyText(lang, 'reportConfirm')}
+          confirmLabel={safetyText(lang, 'report')}
+          cancelLabel={t(lang, 'cancel')}
+          onConfirm={handleReportCommunity}
+          onCancel={() => setShowReportConfirm(false)}
+        />
+      )}
+      {showBlockConfirm && (
+        <ConfirmDialog
+          title={safetyText(lang, 'block')}
+          message={safetyText(lang, 'blockConfirm')}
+          confirmLabel={safetyText(lang, 'block')}
+          cancelLabel={t(lang, 'cancel')}
+          onConfirm={handleBlockCommunityAuthor}
+          onCancel={() => setShowBlockConfirm(false)}
+        />
+      )}
 
       {/* The request itself has room to breathe in the constellation hero
           below; this sticky bar stays a quiet navigation rail. */}
@@ -566,6 +608,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               iconColor="var(--text-2)"
               items={[
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => setShowCommunityEdit(true), hidden: !canEditCommunityPrayer },
+                { key: 'report', icon: Flag, label: safetyText(lang, 'report'), onClick: () => setShowReportConfirm(true), hidden: communityPrayer.user_id === user?.id },
+                { key: 'block', icon: UserX, label: safetyText(lang, 'block'), danger: true, onClick: () => setShowBlockConfirm(true), hidden: communityPrayer.user_id === user?.id },
                 { key: 'delete', icon: Trash2, label: t(lang, 'delete'), danger: true, onClick: () => setShowDeleteConfirm(true), hidden: !canEditCommunityPrayer },
               ]}
             />

@@ -23,7 +23,7 @@
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { encryptJson, decryptJson } from './crypto/e2ee';
 
-const DRAFT_VERSION = 1;
+const DRAFT_VERSION = 2;
 const MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
 const SLOT = 'pfm_guest_draft'; // IndexedDB record key AND localStorage marker key
 
@@ -32,6 +32,14 @@ const hasIDB = () => typeof indexedDB !== 'undefined';
 // Memory-only fallback when CryptoKey persistence is unavailable (or IDB fails).
 // Holds { record, key } — the same shape persisted to IndexedDB otherwise.
 let memory = null;
+
+const draftContext = (id) => ({
+  entityType: 'guest-prayer-draft',
+  ownerOrGroupId: 'guest-device',
+  recordId: id,
+  keyVersion: 1,
+  field: 'draft-payload',
+});
 
 // Random draft id, used later as the imported prayer's id (client-generated UUID,
 // so the local record and the eventual server row line up — see addPrayer).
@@ -90,8 +98,12 @@ export async function saveGuestDraft({ id, title, completed = false, contentLang
   const createdAt = (await peekCreatedAt()) || Date.now();
   const key = await freshKey();
   // The subject / completion / writing language live only inside the ciphertext.
-  const payload = await encryptJson(key, { id: draftId, title, completed: !!completed, contentLanguage });
-  const record = { v: DRAFT_VERSION, createdAt, payload };
+  const payload = await encryptJson(
+    key,
+    { id: draftId, title, completed: !!completed, contentLanguage },
+    draftContext(draftId),
+  );
+  const record = { v: DRAFT_VERSION, id: draftId, createdAt, payload };
 
   if (hasIDB()) {
     try {
@@ -130,17 +142,18 @@ export async function loadGuestDraft() {
   } else if (hasIDB()) {
     try {
       const stored = await idbGet(SLOT);
-      if (stored) { key = stored.key; record = { v: stored.v, createdAt: stored.createdAt, payload: stored.payload }; }
+      if (stored) { key = stored.key; record = { v: stored.v, id: stored.id, createdAt: stored.createdAt, payload: stored.payload }; }
     } catch { /* unreadable — treated as absent below */ }
   }
   if (!record || !key) return null;
 
-  if (record.v !== DRAFT_VERSION || !Number.isFinite(record.createdAt) || Date.now() - record.createdAt > MAX_AGE_MS) {
+  const supportedVersion = record.v === 1 || (record.v === DRAFT_VERSION && typeof record.id === 'string');
+  if (!supportedVersion || !Number.isFinite(record.createdAt) || Date.now() - record.createdAt > MAX_AGE_MS) {
     await clearGuestDraft();
     return null;
   }
   try {
-    const data = await decryptJson(key, record.payload);
+    const data = await decryptJson(key, record.payload, record.payload?.v >= 2 ? draftContext(record.id) : undefined);
     if (!data || typeof data.title !== 'string') { await clearGuestDraft(); return null; }
     return {
       id: data.id,

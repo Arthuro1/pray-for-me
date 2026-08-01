@@ -98,11 +98,12 @@ export async function sendPush(
       payload,
     );
     return { sent: true, gone: false };
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const error = e as { statusCode?: number; body?: unknown; message?: string };
     // Logged so silent delivery failures (auth/VAPID mismatch, etc.) are
     // visible in the function's logs instead of just never sending.
-    console.error('push send failed', e?.statusCode, e?.body || e?.message || e);
-    const gone = [401, 403, 404, 410].includes(e?.statusCode);
+    console.error('push send failed', error.statusCode, error.body || error.message || error);
+    const gone = typeof error.statusCode === 'number' && [401, 403, 404, 410].includes(error.statusCode);
     return { sent: false, gone };
   }
 }

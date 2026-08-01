@@ -12,37 +12,14 @@ import { callClaudeForJson, localizeAiError } from './lib/aiCore';
 
 const cache = new Map();
 
-// Each point returns verses as an array: [{ref, text}, ...]
-const EXAMPLE = (n) =>
-  Array.from({ length: n }, () => ({
-    title: '...',
-    verses: [
-      { ref: '...', text: '...' },
-      { ref: '...', text: '...' },
-    ],
-  }));
-
-function pointsPrompt(title, description, isEvolution) {
-  const intro = isEvolution
-    ? `A believer is praying for: "${title}". They just added this update: "${description}".
-Suggest 3 further prayer points suited to this update.`
-    : `A believer wants to pray for: "${title}".${description ? ` Details: "${description}".` : ''}
-Suggest 4 related or deeper prayer points.`;
-  return `${intro}
-For each point, provide 2 relevant Bible references with the full text of the key verse(s), read in context.
-Reply ONLY with a valid JSON array, no text before or after:
-${JSON.stringify(EXAMPLE(isEvolution ? 3 : 4))}`;
-}
-
 export async function getAIRecommendations({ title, description = '', type = 'new', lang = 'fr' }) {
   const cacheKey = `${lang}:${type}:${title}:${description}`.slice(0, 100);
   if (cache.has(cacheKey)) return { recs: cache.get(cacheKey), error: null };
 
   const isEvolution = type === 'evolution';
   const { data, error } = await callClaudeForJson({
-    prompt: pointsPrompt(title, description, isEvolution),
-    lang,
-    maxTokens: 1200,
+    task: 'prayer_recommendations',
+    input: { title, description, kind: isEvolution ? 'evolution' : 'new', lang },
     shape: 'array',
     feature: 'points',
   });

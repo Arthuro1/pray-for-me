@@ -52,8 +52,6 @@ export function versionSupportsUsfm(lang, usfm) {
 const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3}(-\d{1,3})?)?$/;
 const cacheKey = (reference) => `usfm:${reference}`;
 
-const MODEL = 'claude-haiku-4-5-20251001';
-
 // Canonical English book name → USFM code, for every book of the Protestant
 // canon. This lets us map the app's own references (plan days, faithfulness and
 // ACTS-movement Psalms, user-typed refs) to USFM WITHOUT an AI round-trip — the
@@ -144,11 +142,9 @@ export async function referenceToUsfm(reference) {
     return local;
   }
 
-  const prompt = `Convert this Bible reference to a USFM passage id using the standard 3-letter USFM book code (Genesis=GEN, Psalms=PSA, Matthew=MAT, John=JHN, Philippians=PHP, 1 Thessalonians=1TH, James=JAS). Preserve the passage's extent: use BOOK.CHAPTER.VERSE for a single verse, BOOK.CHAPTER.STARTVERSE-ENDVERSE for a verse range, and BOOK.CHAPTER (no verse) for a whole chapter. The reference may be written in any language. Reference: "${reference}". Respond ONLY with JSON: {"usfm":"<CODE.CH.V>"}`;
-
   let res;
   try {
-    res = await anthropicFetch({ model: MODEL, max_tokens: 60, messages: [{ role: 'user', content: prompt }] });
+    res = await anthropicFetch('bible_reference_to_usfm', { reference });
   } catch {
     return null;
   }

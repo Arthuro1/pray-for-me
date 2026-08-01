@@ -4,7 +4,8 @@
 // URLs — and, critically, that user content is rendered as TEXT, never markup.
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
-import RichText, { plainText } from './RichText';
+import RichText from './RichText';
+import { plainText } from './plainText';
 
 afterEach(cleanup);
 

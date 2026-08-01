@@ -6,6 +6,7 @@ import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { containsSensitiveContactDetails, safetyText } from '../lib/communitySafety';
 
 // Modal for sharing a PERSONAL prayer to one or more groups. Owns its own share
 // selection (which groups, anonymous) so PrayerDetail doesn't have to. Mounted
@@ -20,12 +21,14 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
   const [shareGroupIds, setShareGroupIds] = useState(() => new Set(sharedGroups.map((g) => g.groupId)));
   const [shareAnon, setShareAnon] = useState(() => sharedGroups.some((g) => g.isAnonymous));
   const [sharing, setSharing] = useState(false);
+  const [sensitiveAcknowledged, setSensitiveAcknowledged] = useState(false);
 
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
 
   const alreadySharedIds = new Set(sharedGroups.map((g) => g.groupId));
   const addingNewGroups = [...shareGroupIds].some((id) => !alreadySharedIds.has(id));
+  const hasSensitiveDetails = containsSensitiveContactDetails([prayer.title, prayer.description, prayer.testimony]);
 
   const toggleShareGroup = (groupId) => {
     setShareGroupIds((prev) => {
@@ -36,7 +39,7 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
   };
 
   const handleSave = async () => {
-    if (sharing) return;
+    if (sharing || (addingNewGroups && hasSensitiveDetails && !sensitiveAcknowledged)) return;
     const isNewShare = addingNewGroups; // capture before the modal unmounts
     setSharing(true);
     const res = await setPrayerShares({ prayer, groupIds: [...shareGroupIds], userId, authorName, isAnonymous: shareAnon });
@@ -60,6 +63,16 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
           <Users size={16} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }} />
           <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'shareGroupInfo')}</p>
         </div>
+
+        {addingNewGroups && hasSensitiveDetails && (
+          <div className="rounded-xl p-3 mb-4" style={{ background: 'var(--danger-soft)', border: '0.5px solid var(--danger)' }}>
+            <p className="text-xs leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>{safetyText(lang, 'sensitive')}</p>
+            <label className="flex items-start gap-2 text-xs cursor-pointer" style={{ color: 'var(--text-2)' }}>
+              <input type="checkbox" checked={sensitiveAcknowledged} onChange={(event) => setSensitiveAcknowledged(event.target.checked)} className="rounded mt-0.5" />
+              <span>{safetyText(lang, 'acknowledge')}</span>
+            </label>
+          </div>
+        )}
 
         <div className="space-y-2 mb-5 max-h-60 overflow-y-auto">
           {groups.map((g) => {
@@ -105,7 +118,7 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
           <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
             {t(lang, 'cancel')}
           </button>
-          <button onClick={handleSave} disabled={sharing} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+          <button onClick={handleSave} disabled={sharing || (addingNewGroups && hasSensitiveDetails && !sensitiveAcknowledged)} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
             {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'save')}
           </button>
         </div>

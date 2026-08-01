@@ -58,18 +58,8 @@ async function writeGroupCache(fresh, lang, groupId) {
 async function callTranslate(texts, targetLang) {
   if (!aiEnabled || texts.length === 0) return {};
 
-  const LANG_NAMES = { fr: 'French', en: 'English', de: 'German', pt: 'Brazilian Portuguese', zh: 'Simplified Chinese', es: 'Spanish', hi: 'Hindi', ja: 'Japanese', sw: 'Swahili', am: 'Amharic', id: 'Indonesian', tl: 'Tagalog', ko: 'Korean', ru: 'Russian', ar: 'Arabic', fa: 'Persian' };
-  const langName = LANG_NAMES[targetLang] || 'English';
-
-  const prompt = `Translate the following texts to ${langName}. Keep proper nouns, Bible references (e.g. "John 3:16"), and names unchanged. Return ONLY a valid JSON object mapping each index to its translation, no extra text:
-${JSON.stringify(Object.fromEntries(texts.map((t, i) => [i, t])))}`;
-
   try {
-    const res = await anthropicFetch({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
-    });
+    const res = await anthropicFetch('translate_texts', { texts, lang: targetLang });
     if (!res.ok) return {};
     const data = await res.json();
     const text = data?.content?.[0]?.text || '';
