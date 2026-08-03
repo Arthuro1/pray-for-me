@@ -809,7 +809,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       <div className="phase-content max-w-4xl">
         <div className="group-header mb-5">
           <p className="section-label mb-2">{t(lang, 'community')}</p>
-          <h1 className="page-header__title" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)' }}>{group?.name}</h1>
+          <h1 className="page-header__title break-words" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)', overflowWrap: 'anywhere' }}>{group?.name}</h1>
         </div>
 
         {/* First-group checklist — leaders only, dismissible, retires itself as

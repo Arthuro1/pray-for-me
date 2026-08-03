@@ -25,6 +25,10 @@ export default function PrayerMusicControl({ lang, active = true }) {
   const [open, setOpen] = useState(false);
   const track = resolveTrack(trackId) || resolveTrack('silence');
 
+  // Auto-resume a remembered atmosphere when a session opens, and fade out when
+  // it closes. On iOS a start from here is blocked (no user gesture), which is
+  // fine — the tap in selectTrack is what actually unlocks audio there. Desktop
+  // and Android honour this resume, so returning users hear their track again.
   useEffect(() => {
     if (!active || trackId === 'silence') {
       void stopBackgroundAudio({ fade: !active });
@@ -40,13 +44,15 @@ export default function PrayerMusicControl({ lang, active = true }) {
   const selectTrack = (nextTrackId) => {
     localStorage.setItem(AUDIO_STORAGE_KEY, nextTrackId);
     setOpen(false);
-
-    if (nextTrackId === trackId) {
-      if (nextTrackId === 'silence') void stopBackgroundAudio();
-      else void startBackgroundInstrumental({ trackId: nextTrackId, volume: 0.16 });
-      return;
-    }
     setTrackId(nextTrackId);
+
+    // Also start/stop directly from THIS tap. iOS unlocks the audio element and
+    // resumes the Web Audio graph only inside a real user gesture, so the
+    // effect above (which runs outside the gesture) is blocked there; this call
+    // is what makes the chosen atmosphere actually play on iPhone. The engine
+    // is idempotent, so the duplicate call on other platforms is a no-op.
+    if (nextTrackId === 'silence') void stopBackgroundAudio({ fade: true });
+    else void startBackgroundInstrumental({ trackId: nextTrackId, volume: 0.16 });
   };
 
   return (

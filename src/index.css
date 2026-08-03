@@ -1378,6 +1378,11 @@ html.constellation-app body {
 
 .constellation-community__header .page-header__title {
   font-size: clamp(2.35rem, 9vw, 3.35rem);
+  /* The row stays on one line (title | action icons), so a long single-word
+     title in some locales (e.g. de "Gemeinschaft") must break within its own
+     min-width:0 column instead of spilling over the icon buttons. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .constellation-community__header .phase-icon-button {

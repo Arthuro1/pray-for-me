@@ -329,18 +329,18 @@ export default function PlanTab() {
 
         {/* Labels — grouping only: name, emoji, colour. No schedule lives here. */}
         <div className="pt-2">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="font-semibold flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-              <Tag size={16} style={{ color: 'var(--accent)' }} /> {t(lang, 'labelsTitle')}
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <h3 className="font-semibold flex items-center gap-2 min-w-0" style={{ color: 'var(--text-1)' }}>
+              <Tag size={16} className="shrink-0" style={{ color: 'var(--accent)' }} /> <span className="min-w-0 truncate">{t(lang, 'labelsTitle')}</span>
             </h3>
             {categories.length > 0 && (
               <button
                 onClick={openAdd}
                 title={t(lang, 'addLabel')}
-                className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium"
+                className="flex items-center gap-1.5 shrink-0 text-xs px-3 py-2 rounded-xl font-medium"
                 style={{ background: 'var(--plum)', color: '#fff' }}
               >
-                <Plus size={13} /> {t(lang, 'addLabel')}
+                <Plus size={13} className="shrink-0" /> {t(lang, 'addLabel')}
               </button>
             )}
           </div>

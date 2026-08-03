@@ -29,15 +29,17 @@ const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '
 function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
   return (
     <div className="settings-row" style={{ borderBottom: '0.5px solid var(--border-soft)', paddingBottom: '14px', marginBottom: '14px' }}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          {Icon && <Icon size={15} style={{ color: 'var(--text-3)' }} />}
-          <div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          {Icon && <Icon size={15} className="shrink-0" style={{ color: 'var(--text-3)' }} />}
+          <div className="min-w-0">
             <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</p>
             {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{sub}</p>}
           </div>
         </div>
-        {onToggle !== undefined && <Switch checked={!!enabled} onChange={onToggle} label={label} />}
+        {onToggle !== undefined && (
+          <span className="shrink-0"><Switch checked={!!enabled} onChange={onToggle} label={label} /></span>
+        )}
       </div>
       {children}
     </div>

@@ -57,7 +57,9 @@ function AudioAttachment({ att, lang }) {
   const { url, error } = useAttachmentUrl(att);
   return (
     <MediaFrame loading={!url} error={error} lang={lang}>
-      <audio controls src={url} preload="metadata" className="w-full max-w-xs h-10" />
+      {/* No fixed height: iOS Safari renders taller native audio controls and a
+          forced 40px height clips the play button, so it reads as "no audio". */}
+      <audio controls src={url} preload="metadata" className="w-full max-w-xs" />
     </MediaFrame>
   );
 }
