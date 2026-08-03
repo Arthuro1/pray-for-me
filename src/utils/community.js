@@ -12,6 +12,16 @@ export function orderedPair(a, b) {
   return [a, b].sort();
 }
 
+// Anonymity must hold AT REST, not only in the UI: a community row flagged
+// anonymous must never carry the author's real display name in its plaintext
+// `author_name` column, or the Network response / Supabase table editor
+// de-anonymizes exactly what the app renders as "Anonymous". Returns '' when
+// anonymous, the name otherwise. (user_id necessarily stays — RLS ownership,
+// "who's praying", moderation and blocking all key off it.)
+export function publicAuthorName(isAnonymous, name) {
+  return isAnonymous ? '' : (name || '');
+}
+
 // Immutably replaces one prayer in a list via the updater function.
 export function updatePrayerInList(prayers, prayerId, updater) {
   return prayers.map((p) => (p.id === prayerId ? updater(p) : p));

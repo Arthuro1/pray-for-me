@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { toError, orderedPair, updatePrayerInList, buildSharesMap } from '../utils/community';
+import { toError, orderedPair, updatePrayerInList, buildSharesMap, publicAuthorName } from '../utils/community';
 import { devError } from '../lib/logger';
 import { track, EVENTS } from '../lib/analytics';
 import { ensureGroupKey, groupKeyResolver, revokeMemberAndRotate } from '../lib/crypto/groupKeys';
@@ -173,7 +173,7 @@ const useCommunityStore = create((set, get) => ({
             id: updateId,
             community_prayer_id: communityPrayerId,
             user_id: userId,
-            author_name: u.author_name || authorName,
+            author_name: publicAuthorName(u.is_anonymous || false, u.author_name || authorName),
             is_anonymous: u.is_anonymous || false,
             ...updateCols,
           });
@@ -188,7 +188,7 @@ const useCommunityStore = create((set, get) => ({
           id: communityPrayerId,
           group_id: gid,
           user_id: userId,
-          author_name: authorName,
+          author_name: publicAuthorName(isAnonymous, authorName),
           ...cols,
           category_ids: categoryIds,
           source_prayer_id: prayer.id,
@@ -209,10 +209,12 @@ const useCommunityStore = create((set, get) => ({
     if (toRemove.length > 0) {
       await supabase.from('community_prayers').delete().in('id', toRemove.map(e => e.id));
     }
-    // Keep anonymity consistent across all remaining copies of this prayer.
+    // Keep anonymity consistent across all remaining copies of this prayer —
+    // including the plaintext author_name column, so toggling anonymity on a
+    // re-share doesn't leave a stale name at rest.
     if (target.size > 0) {
       await supabase.from('community_prayers')
-        .update({ is_anonymous: isAnonymous })
+        .update({ is_anonymous: isAnonymous, author_name: publicAuthorName(isAnonymous, authorName) })
         .eq('source_prayer_id', prayer.id);
     }
     await get().fetchPrayerShares(userId);
@@ -569,7 +571,7 @@ const useCommunityStore = create((set, get) => ({
     if (!cols) return encryptionUnavailable();
     const { data, error } = await supabase
       .from('community_prayers')
-      .insert({ id, group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [], content_language: contentLanguage })
+      .insert({ id, group_id: groupId, user_id: userId, author_name: publicAuthorName(isAnonymous, authorName), ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [], content_language: contentLanguage })
       .select()
       .single();
     if (error) return toError(error);
@@ -580,7 +582,7 @@ const useCommunityStore = create((set, get) => ({
     return { prayer: plaintext };
   },
 
-  updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds, contentLanguage }) => {
+  updatePrayer: async ({ prayerId, title, description, isAnonymous, categoryIds, contentLanguage, authorName }) => {
     const current = get().prayers.find((p) => p.id === prayerId);
     if (!current) return { error: 'Prayer not found' };
     const gk = await ensureGroupKey(current?.group_id);
@@ -588,7 +590,11 @@ const useCommunityStore = create((set, get) => ({
     // re-encrypt the whole bundle from the current (plaintext, in-memory) state.
     const cols = await encPrayerCols(gk, { id: prayerId, groupId: current?.group_id, title, description: description || '', prayer_points: current?.prayer_points || [] });
     if (!cols) return encryptionUnavailable();
-    const persist = { ...cols, is_anonymous: isAnonymous, category_ids: categoryIds || [] };
+    // Anonymity holds at rest: blank the plaintext name column when anonymous,
+    // and re-stamp it when un-anonymized. Fall back to the row's existing name
+    // when the caller omits one, so a plain title/description edit never wipes it.
+    const author_name = publicAuthorName(isAnonymous, authorName !== undefined ? authorName : (current.author_name || ''));
+    const persist = { ...cols, is_anonymous: isAnonymous, author_name, category_ids: categoryIds || [] };
     // An author correcting the request's language: metadata beside the group
     // envelope. Omitted entirely when the caller doesn't state one, so an edit
     // never wipes an existing stamp.
@@ -596,7 +602,7 @@ const useCommunityStore = create((set, get) => ({
     const { error } = await supabase.from('community_prayers').update(persist).eq('id', prayerId);
     if (error) return toError(error);
     set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, p => ({
-      ...p, title, description, is_anonymous: isAnonymous, category_ids: categoryIds || [],
+      ...p, title, description, is_anonymous: isAnonymous, author_name, category_ids: categoryIds || [],
       ...(contentLanguage !== undefined ? { content_language: contentLanguage } : {}),
     })) }));
     return {};
@@ -640,7 +646,7 @@ const useCommunityStore = create((set, get) => ({
     if (!cols) return encryptionUnavailable();
     const { error } = await supabase
       .from('community_updates')
-      .insert({ id, community_prayer_id: prayerId, user_id: userId, author_name: authorName, is_anonymous: isAnonymous, content_language: contentLanguage, ...cols });
+      .insert({ id, community_prayer_id: prayerId, user_id: userId, author_name: publicAuthorName(isAnonymous, authorName), is_anonymous: isAnonymous, content_language: contentLanguage, ...cols });
     if (error) return toError(error);
     const updated = await fetchPrayerWithCounts(prayerId);
     if (updated) set(state => ({ prayers: updatePrayerInList(state.prayers, prayerId, () => updated) }));
@@ -785,7 +791,7 @@ const useCommunityStore = create((set, get) => ({
     if (!cols) return encryptionUnavailable();
     const { data, error } = await supabase
       .from('testimonies')
-      .insert({ id, group_id: groupId, user_id: userId, author_name: authorName, ...cols, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null, content_language: contentLanguage })
+      .insert({ id, group_id: groupId, user_id: userId, author_name: publicAuthorName(isAnonymous, authorName), ...cols, is_anonymous: isAnonymous, community_prayer_id: communityPrayerId || null, content_language: contentLanguage })
       .select('*, community_prayers(title, category_ids)')
       .single();
     if (error) return toError(error);

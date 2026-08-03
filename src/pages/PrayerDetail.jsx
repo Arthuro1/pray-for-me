@@ -563,7 +563,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           editPrayer={communityPrayer}
           onClose={() => setShowCommunityEdit(false)}
           onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds, contentLanguage }) => {
-            const result = await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds, contentLanguage });
+            const result = await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds, contentLanguage, authorName });
             if (result?.error) {
               toast.error(t(lang, 'errorGeneric'));
               return result;

@@ -295,6 +295,59 @@ describe('community content is encrypted under the group key', () => {
     expect(second).toMatchObject({ status: 'complete', total: 0, completed: 0, failed: 0 });
   });
 
+  // Anonymity must hold at rest, not just in the UI: an anonymous community row
+  // must never carry the author's real display name in its plaintext author_name
+  // column (the Network response / table editor would de-anonymize it).
+  it('addPrayer blanks the stored author_name when anonymous', async () => {
+    await setup();
+    await useCommunityStore.getState().addPrayer({
+      groupId: 'g1', userId: 'me', authorName: 'Ruth Adeyemi',
+      title: 't', description: '', isAnonymous: true, categoryIds: [],
+    });
+    const stored = db.community_prayers[0];
+    expect(stored.is_anonymous).toBe(true);
+    expect(stored.author_name).toBe('');
+    expect(JSON.stringify(stored)).not.toContain('Ruth Adeyemi');
+  });
+
+  it('addPrayer keeps the stored author_name when NOT anonymous', async () => {
+    await setup();
+    await useCommunityStore.getState().addPrayer({
+      groupId: 'g1', userId: 'me', authorName: 'Ruth Adeyemi',
+      title: 't', description: '', isAnonymous: false, categoryIds: [],
+    });
+    expect(db.community_prayers[0].author_name).toBe('Ruth Adeyemi');
+  });
+
+  it('addUpdate and addTestimony blank the stored author_name when anonymous', async () => {
+    await setup();
+    await useCommunityStore.getState().addPrayer({ groupId: 'g1', userId: 'me', authorName: 'Me', title: 't', description: '', isAnonymous: false, categoryIds: [] });
+    const prayerId = useCommunityStore.getState().prayers[0].id;
+
+    await useCommunityStore.getState().addUpdate({ prayerId, userId: 'me', authorName: 'David Osei', text: 'x', isAnonymous: true });
+    expect(db.community_updates[0].author_name).toBe('');
+    expect(JSON.stringify(db.community_updates[0])).not.toContain('David Osei');
+
+    await useCommunityStore.getState().addTestimony({ groupId: 'g1', userId: 'me', authorName: 'Naomi Carter', content: 'y', isAnonymous: true });
+    expect(db.testimonies[0].author_name).toBe('');
+    expect(JSON.stringify(db.testimonies[0])).not.toContain('Naomi Carter');
+  });
+
+  it('updatePrayer blanks the stored name when a prayer is made anonymous, and restores it on un-anonymize', async () => {
+    await setup();
+    await useCommunityStore.getState().addPrayer({ groupId: 'g1', userId: 'me', authorName: 'Grace Bennett', title: 't', description: '', isAnonymous: false, categoryIds: [] });
+    const prayerId = useCommunityStore.getState().prayers[0].id;
+    expect(db.community_prayers[0].author_name).toBe('Grace Bennett');
+
+    await useCommunityStore.getState().updatePrayer({ prayerId, title: 't', description: '', isAnonymous: true, categoryIds: [], authorName: 'Grace Bennett' });
+    expect(db.community_prayers[0].author_name).toBe('');
+    expect(JSON.stringify(db.community_prayers[0])).not.toContain('Grace Bennett');
+    expect(useCommunityStore.getState().prayers[0].author_name).toBe('');
+
+    await useCommunityStore.getState().updatePrayer({ prayerId, title: 't', description: '', isAnonymous: false, categoryIds: [], authorName: 'Grace Bennett' });
+    expect(db.community_prayers[0].author_name).toBe('Grace Bennett');
+  });
+
   it('never overwrites a malformed non-null ciphertext envelope as plaintext', async () => {
     await setup();
     const malformed = {
