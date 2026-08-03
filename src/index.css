@@ -260,6 +260,12 @@ input::placeholder, textarea::placeholder { color: var(--text-faint); }
   letter-spacing: -0.035em;
   line-height: 1.04;
   text-wrap: balance;
+  /* The title shares its header row with an optional action aside. It must be
+     able to break — a long single token (a locale word, or Home's greeting with
+     a long email-derived name) has to wrap inside its own min-width:0 column
+     instead of forcing the page wider than the viewport at 320px. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .page-header__subtitle {
@@ -1377,12 +1383,9 @@ html.constellation-app body {
 }
 
 .constellation-community__header .page-header__title {
+  /* Overflow handling (min-width:0 + overflow-wrap) is inherited from the base
+     .page-header__title rule; only the community-specific scale differs here. */
   font-size: clamp(2.35rem, 9vw, 3.35rem);
-  /* The row stays on one line (title | action icons), so a long single-word
-     title in some locales (e.g. de "Gemeinschaft") must break within its own
-     min-width:0 column instead of spilling over the icon buttons. */
-  min-width: 0;
-  overflow-wrap: anywhere;
 }
 
 .constellation-community__header .phase-icon-button {

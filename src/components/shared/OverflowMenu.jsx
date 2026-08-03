@@ -98,6 +98,10 @@ export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClass
             style={{
               top: coords ? coords.top : -9999,
               left: coords ? coords.left : -9999,
+              // Never let a long localized label make the menu wider than the
+              // viewport — otherwise the horizontal clamp in place() can't keep
+              // its right edge on-screen at 320px. (2 × the 4px place() margin.)
+              maxWidth: 'calc(100vw - 8px)',
               visibility: coords ? 'visible' : 'hidden',
               zIndex: 61,
               background: 'var(--surface)',

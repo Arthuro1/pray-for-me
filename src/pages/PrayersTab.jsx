@@ -335,8 +335,8 @@ export default function PrayersTab({ onAdd }) {
               </button>
               <div className="flex items-center gap-3 mb-4">
                 <Avatar name={personDetail.name} size={40} />
-                <div>
-                  <p className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{personDetail.name}</p>
+                <div className="min-w-0">
+                  <p className="text-base font-semibold truncate" style={{ color: 'var(--text-1)' }}>{personDetail.name}</p>
                   <p className="text-xs" style={{ color: 'var(--text-3)' }}>
                     {personDetail.activeCount} {t(lang, 'active2')} · {personDetail.answeredCount} {t(lang, 'answered2')}
                   </p>
