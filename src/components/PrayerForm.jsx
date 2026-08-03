@@ -138,6 +138,7 @@ export default function PrayerForm({
 
   const [form, setForm] = useState(() => initialForm(editPrayer, prefill, lang));
   const [created, setCreated] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   // One required question — everything else is optional and collapsed: a note,
   // and "Organize" (person, categories, prayer rhythm). The community request
   // form keeps its note open (context for the group is the point there).
@@ -188,10 +189,15 @@ export default function PrayerForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title.trim()) return;
+    if (submitting || !form.title.trim()) return;
     if (communityMode) {
-      onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds, contentLanguage: form.contentLanguage });
-      onClose();
+      setSubmitting(true);
+      try {
+        const result = await onCommunitySubmit({ title: form.title.trim(), description: form.description.trim(), isAnonymous: form.isAnonymous, categoryIds: form.categoryIds, contentLanguage: form.contentLanguage });
+        if (!result?.error) onClose();
+      } finally {
+        setSubmitting(false);
+      }
     } else if (editPrayer) {
       updatePrayer(editPrayer.id, { ...form, schedule: scheduleFromDraft(form.scheduleDraft, editPrayer.schedule) });
       notifySaved();
@@ -408,8 +414,8 @@ export default function PrayerForm({
               style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}>
               {t(lang, 'cancel')}
             </button>
-            <button type="submit" title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
-              className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-semibold text-white focus-visible:ring-2"
+            <button type="submit" disabled={submitting} title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
+              className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-semibold text-white focus-visible:ring-2 disabled:opacity-50"
               style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
               {editPrayer || communityMode ? t(lang, editPrayer ? 'save' : 'add') : t(lang, 'savePrayer')}
             </button>

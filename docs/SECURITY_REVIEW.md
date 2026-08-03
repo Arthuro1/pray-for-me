@@ -1,6 +1,6 @@
 # Security review and implementation report
 
-Review date: 2026-07-31. Scope: repository `main` at the start of this work and
+Review date: 2026-08-01. Scope: repository `main` at the start of this work and
 the changes described below.
 
 ## Findings verification
@@ -29,8 +29,20 @@ the changes described below.
   historical access is explicitly not claimed revoked.
 - RLS and Data API grants are explicit. Direct group-key/quota/rate-limit writes
   are denied; protected mutations use definer RPCs with pinned search paths.
+- Profile updates now enforce ownership in both `USING` and `WITH CHECK`.
+  Published identity keys are synchronized into an authenticated-read-only RLS
+  table, and the compatibility view executes with the caller's privileges.
 - AI requests cannot select arbitrary prompts, messages, roles, model, or output
-  size. Shared daily quota failure stops requests instead of failing open.
+  size. Development and production use the same authenticated server handler;
+  provider errors are redacted and shared quota failure stops requests.
+- Community content writes fail closed when a group key is unavailable. Partial
+  key-envelope fan-out is retried, and a member's legacy plaintext/v1 rows are
+  resumably rewritten to record-bound v2 with visible progress.
+- Account-key bootstrap treats an unavailable server check as unknown and blocks
+  behind a retry screen; it never interprets a network/database failure as safe
+  permission to generate replacement key material.
+- CI actions and the Supabase CLI are immutable-version pinned, and CodeQL scans
+  JavaScript/TypeScript on pull requests, protected branches, and a weekly timer.
 - Security ownership, PR review prompts, dependency updates, vulnerability
   reporting, release notes, migration, rollback, backup/restore, privacy incident,
   key compromise, monitoring, and community moderation procedures are committed.
@@ -39,6 +51,9 @@ the changes described below.
 
 - Recovery record v1 and ciphertext v1 remain readable. Recovery rotation writes
   v2. New encryption writes v2 AAD-bound envelopes.
+- Opening a group scans and upgrades legacy community rows authored by that
+  member. Completed rows are idempotently skipped on retries; rows owned by other
+  members remain untouched until their author can safely rewrite them.
 - Existing device account keys intentionally remain in user-scoped IndexedDB and
   survive sign-out. This avoids locking existing users out; account deletion
   removes the key.
@@ -55,30 +70,30 @@ the changes described below.
 Focused suites passed for recovery/service-worker security, all crypto contexts,
 legacy migration, media, guest drafts, group-key failure/concurrency, AI boundary
 and quotas, community safety, group admin behavior, and sensitive-share gating.
-Strict lint and TypeScript passed after removing every warning/error. The final
-full-suite/build/browser results are recorded in the handoff for this change.
+Strict lint, TypeScript, and locale structure passed. The unit/integration matrix
+covered 129 files and 1,018 tests; real-browser coverage passed 7 tests in 4 files;
+the production PWA build completed successfully.
 
-The clean local Supabase rebuild could not be executed on this workstation
-because Docker Desktop's Linux engine pipe was unavailable. The reproducible
-`database` CI job and pgTAP suite are committed, but this remains an explicit
-pre-merge gate, not a claimed local pass.
+The clean local Supabase rebuild passed with CLI 2.111.0: all six migrations
+applied from zero on the local Postgres 17 stack, all 16 pgTAP assertions passed,
+the local migration history matched the repository, and the Supabase security
+advisor reported no error-level findings. The reproducible `database` CI job
+remains an explicit pre-merge gate.
 
 ## Residual risks and prioritized follow-up
 
-1. **Run the clean database CI gate before merge.** Fix any historical baseline
-   ordering/drift failure; do not waive it.
+1. **Require the clean database CI gate before merge.** The local reset passed,
+   but the independent CI replay must remain mandatory and must not be waived.
 2. Malicious same-origin JavaScript or a compromised/unlocked device can read
    account/group keys and plaintext. Continue CSP, dependency, review, and
    deployment protection; consider an opt-in app lock using platform keystores.
-3. Legacy v1 community ciphertext remains substitution-unbound until a safe user
-   edit/rewrite. Add a resumable, member-key-aware migration UI with progress.
-4. Group rotation gives future secrecy only. A design requiring historical
+3. Group rotation gives future secrecy only. A design requiring historical
    revocation needs per-record re-encryption and cannot erase copies already made.
-5. The contact detector is intentionally narrow. Establish staffed moderation,
+4. The contact detector is intentionally narrow. Establish staffed moderation,
    safeguarding training, retention, appeals, and localized crisis resources
    before broad public community growth.
-6. Add authenticated staging E2E with disposable Supabase accounts for full
+5. Add authenticated staging E2E with disposable Supabase accounts for full
    network RLS/report/block/rotation coverage; current account isolation uses
    real browser storage with synthetic account state.
-7. Pin GitHub actions to audited commit SHAs and enable CodeQL/secret scanning in
-   repository settings.
+6. Enable GitHub secret scanning and push protection in repository settings;
+   these server-side controls cannot be enabled by a source-tree change.

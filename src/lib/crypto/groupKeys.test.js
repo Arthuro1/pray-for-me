@@ -15,6 +15,7 @@ const db = {
 };
 let currentUser = null;
 let rpcFault = null;
+let distributeFaultUser = null;
 
 function resetDb() {
   db.user_crypto_keys.clear();
@@ -24,6 +25,7 @@ function resetDb() {
   db.group_key_operations.clear();
   currentUser = null;
   rpcFault = null;
+  distributeFaultUser = null;
 }
 
 function tableRows(table) {
@@ -103,6 +105,10 @@ vi.mock('../supabase', () => ({
     from: (table) => makeQuery(table),
     rpc: async (name, args) => {
       if (name === 'distribute_group_key') {
+        if (distributeFaultUser === args.p_target_user_id) {
+          distributeFaultUser = null;
+          return { data: null, error: { message: 'temporary distribution failure' } };
+        }
         const k = `${args.p_group_id}:${args.p_key_version}:${args.p_target_user_id}`;
         if (!db.group_member_keys.has(k)) db.group_member_keys.set(k, {
           group_id: args.p_group_id,
@@ -327,6 +333,25 @@ describe('group content key lifecycle', () => {
       // Alice touches the group again in the SAME session, past the coalescing
       // window → the still-incomplete fan-out retries and tops bob in. (The old
       // once-per-session guard would have skipped this and left bob unable to read.)
+      clock += 10_000;
+      await ensureGroupKey('g1');
+      expect(db.group_member_keys.has('g1:1:bob')).toBe(true);
+    } finally {
+      Date.now = realNow;
+    }
+  });
+
+  it('retries a failed member-envelope RPC instead of marking fan-out complete', async () => {
+    const { ackAlice } = await setupTwoMemberGroup();
+    const realNow = Date.now;
+    let clock = 2_000_000;
+    Date.now = () => clock;
+    try {
+      await becomeUser('alice', ackAlice);
+      distributeFaultUser = 'bob';
+      await ensureGroupKey('g1');
+      expect(db.group_member_keys.has('g1:1:bob')).toBe(false);
+
       clock += 10_000;
       await ensureGroupKey('g1');
       expect(db.group_member_keys.has('g1:1:bob')).toBe(true);

@@ -105,6 +105,27 @@ function prayersWritesJson() {
   return rec.writes.filter((w) => w.table === 'prayers').map((w) => JSON.stringify(w.payload));
 }
 
+function prayerContext(row) {
+  return {
+    entityType: 'personal-prayer',
+    ownerOrGroupId: row.user_id || 'user-1',
+    recordId: row.id,
+    keyVersion: row.key_version || 1,
+    field: 'sensitive-payload',
+  };
+}
+
+function childContext(entityType, row, prayerId) {
+  return {
+    entityType,
+    ownerOrGroupId: 'user-1',
+    recordId: row.id,
+    parentId: prayerId,
+    keyVersion: row.key_version || 1,
+    field: 'sensitive-payload',
+  };
+}
+
 beforeEach(() => {
   installStorage();
   lock();
@@ -169,7 +190,7 @@ describe('no private plaintext reaches Supabase (prayers table)', () => {
 
     const write = rec.writes.find((w) => w.table === 'prayers' && w.payload?.encrypted_payload);
     expect(write).toBeTruthy();
-    const data = await decryptJson(getMasterKey(), write.payload.encrypted_payload);
+    const data = await decryptJson(getMasterKey(), write.payload.encrypted_payload, prayerContext(write.payload));
     expect(data.title).toBe(SECRETS.title);
     expect(data.phone).toBe(SECRETS.phone);
     // The plaintext columns themselves are redacted to ''.
@@ -247,7 +268,11 @@ describe('no private plaintext reaches Supabase (nested tables: Phase 3b)', () =
     expect(rec.rpcs.find((r) => r.name === 'sync_add_update')).toBeUndefined();
 
     const w = writes.find((w) => w.payload?.encrypted_payload);
-    const data = await decryptJson(getMasterKey(), w.payload.encrypted_payload);
+    const data = await decryptJson(
+      getMasterKey(),
+      w.payload.encrypted_payload,
+      childContext('prayer-update', w.payload, id),
+    );
     expect(data.text).toBe(UPDATE_SECRET);
   });
 
@@ -312,7 +337,11 @@ describe('no private plaintext reaches Supabase (prayer_testimonies: Phase 3c)',
     expect(rec.rpcs.find((r) => r.name === 'answer_prayer')).toBeUndefined();
 
     const w = writes.find((w) => w.payload?.encrypted_payload);
-    const data = await decryptJson(getMasterKey(), w.payload.encrypted_payload);
+    const data = await decryptJson(
+      getMasterKey(),
+      w.payload.encrypted_payload,
+      childContext('prayer-testimony', w.payload, id),
+    );
     expect(data.content).toBe(TESTIMONY_SECRET);
     expect(w.payload.content).toBe(''); // plaintext column redacted
   });

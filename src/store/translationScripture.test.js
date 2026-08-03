@@ -13,13 +13,14 @@ vi.hoisted(() => {
   };
 });
 
-const calls = vi.hoisted(() => ({ prompts: [] }));
+const calls = vi.hoisted(() => ({ requests: [] }));
 
 vi.mock('../lib/anthropic', () => ({
   aiEnabled: true,
-  anthropicFetch: vi.fn(async (body) => {
-    calls.prompts.push(body.messages[0].content);
-    return { ok: true, json: async () => ({ content: [{ text: '{}' }] }) };
+  anthropicFetch: vi.fn(async (task, input) => {
+    calls.requests.push({ task, input });
+    const translated = Object.fromEntries(input.texts.map((_, index) => [index, `translated-${index}`]));
+    return { ok: true, json: async () => ({ content: [{ text: JSON.stringify(translated) }] }) };
   }),
 }));
 
@@ -36,7 +37,7 @@ vi.mock('../lib/supabase', () => {
 
 import useTranslationStore from './translationStore';
 
-beforeEach(() => { calls.prompts.length = 0; });
+beforeEach(() => { calls.requests.length = 0; });
 
 describe('translateContent — Scripture exclusion', () => {
   it('sends prayer wording but never verse text to the AI', async () => {
@@ -51,7 +52,8 @@ describe('translateContent — Scripture exclusion', () => {
       }],
     }];
     await useTranslationStore.getState().translateContent(prayers, [], 'en', 'user-1');
-    const sent = calls.prompts.join('\n');
+    const sent = JSON.stringify(calls.requests);
+    expect(calls.requests[0]?.task).toBe('translate_texts');
     expect(sent).toContain('Pour la paix de Marc');
     expect(sent).toContain('Prier pour la confiance');
     expect(sent).not.toContain('mon berger');

@@ -242,13 +242,22 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     const testimony = communityTestimonies.find((tm) => tm.id === testimonyId);
     if (!testimony) return;
     const res = await editCommunityTestimony(testimony, content);
-    if (res?.error) toast.error(t(lang, 'errorGeneric'));
+    if (res?.error) {
+      toast.error(t(lang, 'errorGeneric'));
+      return false;
+    }
+    return true;
   };
 
   const handlePostCommunityTestimony = async (text, attachments) => {
-    await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: text, isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
+    const result = await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: text, isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
+    if (result?.error) {
+      toast.error(t(lang, 'errorGeneric'));
+      return false;
+    }
     setTestimonySent(true);
     setShowCommunityTestimony(false);
+    return true;
   };
 
   const handleDeleteCommunity = async () => {
@@ -399,21 +408,37 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   // Point/verse mutations are mode-aware: community mode routes through the
   // community store (which syncs shared prayers); personal mode uses prayerStore.
-  const handleRemovePoint = (pointId) => isCommunity
-    ? removeCommunityPrayerPoint(communityPrayer.id, pointId, communityPrayer.source_prayer_id)
-    : removePrayerPoint(livePrayer.id, pointId);
+  const handleRemovePoint = async (pointId) => {
+    const result = isCommunity
+      ? await removeCommunityPrayerPoint(communityPrayer.id, pointId, communityPrayer.source_prayer_id)
+      : await removePrayerPoint(livePrayer.id, pointId);
+    if (result?.error) toast.error(t(lang, 'errorGeneric'));
+    return result;
+  };
 
-  const handleAddVerse = (pointId, verse) => isCommunity
-    ? addCommunityVerse(communityPrayer.id, pointId, verse, communityPrayer.source_prayer_id)
-    : addVerseToPoint(livePrayer.id, pointId, verse);
+  const handleAddVerse = async (pointId, verse) => {
+    const result = isCommunity
+      ? await addCommunityVerse(communityPrayer.id, pointId, verse, communityPrayer.source_prayer_id)
+      : await addVerseToPoint(livePrayer.id, pointId, verse);
+    if (result?.error) toast.error(t(lang, 'errorGeneric'));
+    return result;
+  };
 
-  const handleRemoveVerse = (pointId, verseRef) => isCommunity
-    ? removeCommunityVerse(communityPrayer.id, pointId, verseRef, communityPrayer.source_prayer_id)
-    : removeVerseFromPoint(livePrayer.id, pointId, verseRef);
+  const handleRemoveVerse = async (pointId, verseRef) => {
+    const result = isCommunity
+      ? await removeCommunityVerse(communityPrayer.id, pointId, verseRef, communityPrayer.source_prayer_id)
+      : await removeVerseFromPoint(livePrayer.id, pointId, verseRef);
+    if (result?.error) toast.error(t(lang, 'errorGeneric'));
+    return result;
+  };
 
-  const handleAddPoint = (point) => isCommunity
-    ? addCommunityPrayerPoint(communityPrayer.id, point, communityPrayer.source_prayer_id)
-    : addPrayerPoint(livePrayer.id, point);
+  const handleAddPoint = async (point) => {
+    const result = isCommunity
+      ? await addCommunityPrayerPoint(communityPrayer.id, point, communityPrayer.source_prayer_id)
+      : await addPrayerPoint(livePrayer.id, point);
+    if (result?.error) toast.error(t(lang, 'errorGeneric'));
+    return result;
+  };
 
   const fetchRecs = async () => {
     if (loadingRecs) return;
@@ -538,11 +563,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           editPrayer={communityPrayer}
           onClose={() => setShowCommunityEdit(false)}
           onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds, contentLanguage }) => {
-            await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds, contentLanguage });
+            const result = await updateCommunityPrayer({ prayerId: communityPrayer.id, title, description, isAnonymous, categoryIds, contentLanguage });
+            if (result?.error) {
+              toast.error(t(lang, 'errorGeneric'));
+              return result;
+            }
             // If the owner edits a shared prayer, sync categories back to personal + siblings.
             if (communityPrayer.source_prayer_id && communityPrayer.user_id === user?.id) {
               await syncCategoriesFromCommunity(communityPrayer.source_prayer_id, categoryIds);
             }
+            return result;
           }}
         />
       )}

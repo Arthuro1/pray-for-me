@@ -6,7 +6,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 // data on the server (orphaned).
 const db = { user_crypto_keys: new Map(), prayers: [] };
 let currentUser = null;
-function resetDb() { db.user_crypto_keys.clear(); db.prayers = []; currentUser = null; }
+let queryFailure = null;
+function resetDb() { db.user_crypto_keys.clear(); db.prayers = []; currentUser = null; queryFailure = null; }
 
 function makeQuery(table) {
   const q = { _f: [], _limit: null };
@@ -19,7 +20,9 @@ function makeQuery(table) {
   q.eq = (c, v) => { q._f.push([c, v]); return q; };
   q.not = (c) => { q._f.push(['__notnull__', c]); return q; };
   q.limit = (n) => { q._limit = n; return q; };
-  q.maybeSingle = () => Promise.resolve({ data: rows()[0] || null, error: null });
+  q.maybeSingle = () => Promise.resolve(queryFailure
+    ? { data: null, error: queryFailure }
+    : { data: rows()[0] || null, error: null });
   q.upsert = (r) => { if (table === 'user_crypto_keys') db.user_crypto_keys.set(r.user_id, { ...r }); return Promise.resolve({ data: null, error: null }); };
   return q;
 }
@@ -101,6 +104,15 @@ describe('ensureAccountCryptoReady', () => {
 
     expect(status).toBe(CRYPTO_STATUS.ORPHANED);
     expect(isUnlocked()).toBe(false); // crucially, no new key was minted
+  });
+
+  it('does NOT mint a key when server encryption state cannot be verified', async () => {
+    queryFailure = { message: 'network unavailable' };
+
+    const status = await ensureAccountCryptoReady('user-1');
+
+    expect(status).toBe(CRYPTO_STATUS.UNAVAILABLE);
+    expect(isUnlocked()).toBe(false);
   });
 });
 

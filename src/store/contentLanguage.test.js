@@ -49,12 +49,20 @@ vi.mock('../lib/supabase', () => {
   };
 });
 
-// No group key in this test → community writes pass plaintext columns through,
-// which lets us inspect the metadata beside them.
-vi.mock('../lib/crypto/groupKeys', () => ({
-  ensureGroupKey: async () => null,
-  groupKeyResolver: () => async () => null,
-}));
+// Community writes are encrypted; a real in-memory key lets the tests inspect
+// content_language as metadata beside the ciphertext envelope.
+vi.mock('../lib/crypto/groupKeys', () => {
+  let key;
+  const ensureGroupKey = async () => {
+    key ||= await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+    return { key, version: 1 };
+  };
+  return {
+    ensureGroupKey,
+    groupKeyResolver: () => ensureGroupKey,
+    revokeMemberAndRotate: vi.fn(),
+  };
+});
 
 import '../lib/mutationExecutors';
 import { pendingCount, flushQueue } from '../lib/mutationQueue';

@@ -30,25 +30,34 @@ export const CRYPTO_STATUS = {
   READY: 'ready',       // a key is in memory (restored or freshly provisioned)
   LOCKED: 'locked',     // a recovery record exists but isn't unlocked (VaultLockScreen)
   ORPHANED: 'orphaned', // server has encrypted data but this device has no key and no recovery
+  UNAVAILABLE: 'unavailable', // server state could not be verified; retry without changing keys
+};
+
+const SERVER_STATE = {
+  PRESENT: 'present',
+  ABSENT: 'absent',
+  UNKNOWN: 'unknown',
 };
 
 // Whether the server already holds encryption for this user — an identity
 // keypair (groups / cross-device) or any personal prayer stored as ciphertext.
 // If so, minting a fresh account key here would ORPHAN that data, so we must not
-// do it silently. Fails soft to `false` (never block genuine first-use) on a
-// missing table or network error.
+// do it silently. A query failure is deliberately UNKNOWN rather than ABSENT:
+// availability problems must never be allowed to rotate a user's key material.
 async function hasServerEncryptionState(userId) {
-  if (!userId) return false;
+  if (!userId) return SERVER_STATE.UNKNOWN;
   try {
-    const { data: keyRow } = await supabase
+    const { data: keyRow, error: keyError } = await supabase
       .from('user_crypto_keys').select('user_id').eq('user_id', userId).maybeSingle();
-    if (keyRow) return true;
-    const { data: enc } = await supabase
+    if (keyError) return SERVER_STATE.UNKNOWN;
+    if (keyRow) return SERVER_STATE.PRESENT;
+    const { data: enc, error: prayerError } = await supabase
       .from('prayers').select('id').eq('user_id', userId)
       .not('encrypted_payload', 'is', null).limit(1).maybeSingle();
-    return !!enc;
+    if (prayerError) return SERVER_STATE.UNKNOWN;
+    return enc ? SERVER_STATE.PRESENT : SERVER_STATE.ABSENT;
   } catch {
-    return false;
+    return SERVER_STATE.UNKNOWN;
   }
 }
 
@@ -77,7 +86,9 @@ export async function ensureAccountCryptoReady(userId) {
 
   if (km.isVaultInitialized()) return CRYPTO_STATUS.LOCKED; // recovery-protected key elsewhere
 
-  if (await hasServerEncryptionState(userId)) return CRYPTO_STATUS.ORPHANED;
+  const serverState = await hasServerEncryptionState(userId);
+  if (serverState === SERVER_STATE.PRESENT) return CRYPTO_STATUS.ORPHANED;
+  if (serverState === SERVER_STATE.UNKNOWN) return CRYPTO_STATUS.UNAVAILABLE;
 
   await km.autoInitAccountKey();
   await rememberAccountKey(userId);

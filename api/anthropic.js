@@ -3,7 +3,7 @@
 // prompts, messages, model selection, and token budgets.
 
 const MODEL = 'claude-haiku-4-5-20251001';
-const MAX_REQUEST_BYTES = 32 * 1024;
+export const MAX_REQUEST_BYTES = 32 * 1024;
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const DEFAULT_USER_DAILY_MAX = 100;
@@ -21,8 +21,8 @@ const LANGUAGE_NAMES = {
 
 const hits = new Map();
 
-function boundedEnvInt(name, fallback, max) {
-  const value = Number.parseInt(process.env[name] || '', 10);
+function boundedEnvInt(env, name, fallback, max) {
+  const value = Number.parseInt(env[name] || '', 10);
   return Number.isInteger(value) && value > 0 ? Math.min(value, max) : fallback;
 }
 
@@ -43,9 +43,9 @@ function rateLimitedInMemory(userId) {
   return false;
 }
 
-async function callRpc(supabaseBase, anonKey, token, name, body) {
+async function callRpc(supabaseBase, anonKey, token, name, body, fetchImpl) {
   try {
-    const response = await fetch(`${supabaseBase}/rest/v1/rpc/${name}`, {
+    const response = await fetchImpl(`${supabaseBase}/rest/v1/rpc/${name}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,20 +61,20 @@ async function callRpc(supabaseBase, anonKey, token, name, body) {
   }
 }
 
-async function rateLimitedShared(supabaseBase, anonKey, token) {
+async function rateLimitedShared(supabaseBase, anonKey, token, fetchImpl) {
   const result = await callRpc(supabaseBase, anonKey, token, 'check_ai_rate_limit', {
     p_max: RATE_LIMIT_MAX,
     p_window_seconds: RATE_LIMIT_WINDOW_MS / 1000,
-  });
+  }, fetchImpl);
   if (!result.ok || typeof result.data !== 'boolean') return { ok: false };
   return { ok: true, limited: !result.data };
 }
 
-async function reserveDailyQuota(supabaseBase, anonKey, token) {
+async function reserveDailyQuota(supabaseBase, anonKey, token, env, fetchImpl) {
   const result = await callRpc(supabaseBase, anonKey, token, 'check_ai_usage_quota', {
-    p_user_daily_max: boundedEnvInt('AI_USER_DAILY_LIMIT', DEFAULT_USER_DAILY_MAX, 10000),
-    p_global_daily_max: boundedEnvInt('AI_GLOBAL_DAILY_LIMIT', DEFAULT_GLOBAL_DAILY_MAX, 1000000),
-  });
+    p_user_daily_max: boundedEnvInt(env, 'AI_USER_DAILY_LIMIT', DEFAULT_USER_DAILY_MAX, 10000),
+    p_global_daily_max: boundedEnvInt(env, 'AI_GLOBAL_DAILY_LIMIT', DEFAULT_GLOBAL_DAILY_MAX, 1000000),
+  }, fetchImpl);
   if (!result.ok || typeof result.data?.allowed !== 'boolean') return { ok: false };
   return { ok: true, allowed: result.data.allowed, reason: result.data.reason };
 }
@@ -165,9 +165,13 @@ function taskRequest(body) {
   return null;
 }
 
-export default async function handler(req, res) {
+export async function handleAnthropicRequest(
+  req,
+  res,
+  { env = process.env, fetchImpl = globalThis.fetch } = {},
+) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  if (process.env.AI_PROXY_DISABLED === 'true') {
+  if (env.AI_PROXY_DISABLED === 'true') {
     return res.status(503).json({ error: 'AI temporarily disabled' });
   }
 
@@ -177,7 +181,7 @@ export default async function handler(req, res) {
 
   let requestBytes;
   try {
-    requestBytes = JSON.stringify(req.body).length;
+    requestBytes = new TextEncoder().encode(JSON.stringify(req.body)).byteLength;
   } catch {
     return res.status(400).json({ error: 'Invalid request body' });
   }
@@ -186,11 +190,11 @@ export default async function handler(req, res) {
   const safeBody = taskRequest(req.body);
   if (!safeBody) return res.status(400).json({ error: 'Unsupported or invalid task' });
 
-  const supabaseBase = (process.env.VITE_SUPABASE_URL || '').replace('/rest/v1/', '').replace(/\/$/, '');
-  const anonKey = process.env.VITE_SUPABASE_ANON_KEY;
+  const supabaseBase = (env.VITE_SUPABASE_URL || '').replace('/rest/v1/', '').replace(/\/$/, '');
+  const anonKey = env.VITE_SUPABASE_ANON_KEY;
   let userId;
   try {
-    const check = await fetch(`${supabaseBase}/auth/v1/user`, {
+    const check = await fetchImpl(`${supabaseBase}/auth/v1/user`, {
       headers: { Authorization: `Bearer ${token}`, apikey: anonKey },
     });
     if (!check.ok) return res.status(401).json({ error: 'Unauthorized' });
@@ -200,17 +204,17 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const shared = await rateLimitedShared(supabaseBase, anonKey, token);
+  const shared = await rateLimitedShared(supabaseBase, anonKey, token, fetchImpl);
   const minuteLimited = shared.ok ? shared.limited : rateLimitedInMemory(userId);
   if (minuteLimited) return res.status(429).json({ error: 'Rate limit exceeded' });
 
   // Daily/global reservations fail closed: losing the shared counter must never
   // turn an outage into unbounded provider spending.
-  const quota = await reserveDailyQuota(supabaseBase, anonKey, token);
+  const quota = await reserveDailyQuota(supabaseBase, anonKey, token, env, fetchImpl);
   if (!quota.ok) return res.status(503).json({ error: 'AI quota service unavailable' });
   if (!quota.allowed) return res.status(429).json({ error: 'Daily AI quota exceeded' });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'AI not configured' });
 
   const upstreamBody = {
@@ -219,7 +223,7 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetchImpl('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -228,8 +232,17 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify(upstreamBody),
     });
-    return res.status(response.status).json(await response.json());
+    const payload = await response.json();
+    if (!response.ok) {
+      const status = response.status === 429 ? 429 : 502;
+      return res.status(status).json({ error: 'AI provider request failed' });
+    }
+    return res.status(response.status).json(payload);
   } catch {
     return res.status(502).json({ error: 'Upstream request failed' });
   }
+}
+
+export default function handler(req, res) {
+  return handleAnthropicRequest(req, res);
 }

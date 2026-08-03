@@ -35,6 +35,7 @@ import useNotificationStore from './store/notificationStore';
 import useVaultStore from './store/vaultStore';
 import VaultLockScreen from './components/VaultLockScreen';
 import AccountKeyRecoveryScreen from './components/AccountKeyRecoveryScreen';
+import AccountKeyUnavailableScreen from './components/AccountKeyUnavailableScreen';
 import { pullVaultRecord } from './lib/vaultSync';
 import { ensureAccountCryptoReady, rememberAccountKey, CRYPTO_STATUS } from './lib/crypto/accountKey';
 import { hasAiConsent } from './lib/aiConsent';
@@ -163,6 +164,7 @@ export default function AuthenticatedApp({
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
   const [vaultChecked, setVaultChecked] = useState(false);
   const [cryptoStatus, setCryptoStatus] = useState(null);
+  const [cryptoAttempt, setCryptoAttempt] = useState(0);
 
   const openAdd = () => {
     setEditPrayer(null);
@@ -298,7 +300,7 @@ export default function AuthenticatedApp({
       setVaultChecked(true);
     })();
     return () => { cancelled = true; };
-  }, [user?.id]);
+  }, [user?.id, cryptoAttempt]);
 
   // Re-decrypt by reloading once the key becomes available (the first load may
   // have run before auto-init/unlock, leaving encrypted rows as placeholders).
@@ -423,6 +425,21 @@ export default function AuthenticatedApp({
     // startFreshEncryption unlocks the key, which flips vaultUnlocked → the
     // reload-on-unlock effect re-decrypts; here we just drop the gate.
     return <AccountKeyRecoveryScreen lang={lang} onResolved={() => setCryptoStatus(CRYPTO_STATUS.READY)} />;
+  }
+
+  // Hard gate: a network or database failure left the server encryption state
+  // unknown. Do not infer first use or generate a replacement account key.
+  if (cryptoStatus === CRYPTO_STATUS.UNAVAILABLE) {
+    return (
+      <AccountKeyUnavailableScreen
+        lang={lang}
+        onRetry={() => {
+          setVaultChecked(false);
+          setCryptoStatus(null);
+          setCryptoAttempt((attempt) => attempt + 1);
+        }}
+      />
+    );
   }
 
   return (

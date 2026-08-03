@@ -34,8 +34,8 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
   };
 
   const handleSaveEdit = async (tm, content) => {
-    await onEdit(tm.id, content);
-    setEditingId(null);
+    const saved = await onEdit(tm.id, content);
+    if (saved !== false) setEditingId(null);
   };
 
   return (

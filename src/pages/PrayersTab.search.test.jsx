@@ -66,8 +66,13 @@ const renderJournal = () => render(
   </MemoryRouter>
 );
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 beforeEach(() => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date('2026-07-23T12:00:00Z'));
   useLayoutStore.setState({ fabSuppressed: false });
   useAuthStore.setState({ user: null });
   useCommunityStore.setState({

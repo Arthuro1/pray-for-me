@@ -1,22 +1,78 @@
 import { readFileSync } from 'node:fs'
+import { Buffer } from 'node:buffer'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { handleAnthropicRequest, MAX_REQUEST_BYTES } from './api/anthropic.js'
 
 // Single source of truth for the app version: package.json. Injected as the
 // compile-time constant __APP_VERSION__ so the UI (Settings/About) and any docs
 // never drift from the published version.
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
+async function readJsonBody(req) {
+  const chunks = []
+  let bytes = 0
+  for await (const chunk of req) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
+    bytes += buffer.length
+    if (bytes > MAX_REQUEST_BYTES) {
+      const error = new Error('Request too large')
+      error.statusCode = 413
+      throw error
+    }
+    chunks.push(buffer)
+  }
+  const raw = Buffer.concat(chunks).toString('utf8')
+  return raw ? JSON.parse(raw) : {}
+}
+
+// Development exercises the same authenticated, structured, quota-controlled
+// handler as production. A direct upstream proxy would let callers choose their
+// own model/messages while the dev server silently attached its API key.
+function anthropicApiPlugin(env) {
+  return {
+    name: 'pray4me-anthropic-api',
+    configureServer(server) {
+      server.middlewares.use('/api/anthropic', async (req, res) => {
+        try {
+          req.body = await readJsonBody(req)
+        } catch (error) {
+          res.statusCode = error?.statusCode === 413 ? 413 : 400
+          res.setHeader('Content-Type', 'application/json; charset=utf-8')
+          res.setHeader('Cache-Control', 'no-store')
+          res.end(JSON.stringify({ error: error?.statusCode === 413 ? 'Request too large' : 'Invalid request body' }))
+          return
+        }
+
+        const apiRes = {
+          status(code) {
+            res.statusCode = code
+            return apiRes
+          },
+          json(payload) {
+            res.setHeader('Content-Type', 'application/json; charset=utf-8')
+            res.setHeader('Cache-Control', 'no-store')
+            res.end(JSON.stringify(payload))
+            return apiRes
+          },
+        }
+
+        try {
+          await handleAnthropicRequest(req, apiRes, { env, fetchImpl: globalThis.fetch })
+        } catch {
+          if (!res.writableEnded) apiRes.status(500).json({ error: 'Internal server error' })
+        }
+      })
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
   // server-only ANTHROPIC_API_KEY. This is read in the Node dev server only and
   // is never exposed to `import.meta.env` / the browser bundle.
   const env = loadEnv(mode, process.cwd(), '')
-  // Server-only key. There is NO VITE_ fallback on purpose: a VITE_-prefixed name
-  // is inlined into the browser bundle, so accepting one here would reintroduce
-  // the client-side-secret foot-gun. Keep this in sync with api/anthropic.js.
-  const anthropicKey = env.ANTHROPIC_API_KEY || ''
   const yvpKey = env.YVP_APP_KEY || ''
 
   return {
@@ -25,6 +81,7 @@ export default defineConfig(({ mode }) => {
   },
   plugins: [
     react(),
+    anthropicApiPlugin(env),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.svg', 'logo-constellation.svg', 'logo-constellation-dark.svg', 'icons/*.png'],
@@ -101,25 +158,6 @@ export default defineConfig(({ mode }) => {
       ].join('; '),
     },
     proxy: {
-      '/api/anthropic': {
-        target: 'https://api.anthropic.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/anthropic/, ''),
-        // Inject the API key Node-side so it never reaches the browser, even in
-        // dev. The client sends no key; the proxy adds the auth headers here.
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq) => {
-            if (anthropicKey) proxyReq.setHeader('x-api-key', anthropicKey)
-            proxyReq.setHeader('anthropic-version', '2023-06-01')
-            // The browser sends an Origin header which the proxy forwards; Anthropic
-            // then rejects the call ("CORS requests must set
-            // 'anthropic-dangerous-direct-browser-access'") with a 401, which silently
-            // broke the reference→USFM step and made the in-app verse reader fall back
-            // to "reference only". This IS a server-side proxy call, so acknowledge it.
-            proxyReq.setHeader('anthropic-dangerous-direct-browser-access', 'true')
-          })
-        },
-      },
       // YouVersion Platform API: the client calls /api/youversion?version=&ref=,
       // and we rewrite that to the upstream passages path + inject the App Key
       // Node-side so it never reaches the browser. Mirrors the prod serverless

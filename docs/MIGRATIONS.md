@@ -12,6 +12,9 @@
 4. `20260731190702_ai_usage_quotas.sql` — private atomic daily counters.
 5. `20260731191758_community_safety_controls.sql` — reports, blocks, and DB write
    throttles.
+6. `20260801050047_harden_profiles_policy.sql` — explicit authenticated profile
+   policies, ownership-preserving updates, pinned function paths, and an
+   RLS-aware public-key projection.
 
 The baseline preserves the old SQL files for audit/history; do not apply those
 files separately after using the baseline. Seed data is disabled.
@@ -19,14 +22,20 @@ files separately after using the baseline. Seed data is disabled.
 ## New environment
 
 ```bash
-npx supabase start
-npx supabase db reset --local --no-seed
-npx supabase test db --local supabase/tests
+npx --yes supabase@2.111.0 start
+npx --yes supabase@2.111.0 db reset --local --no-seed
+npx --yes supabase@2.111.0 test db --local supabase/tests
+npx --yes supabase@2.111.0 db advisors --local --type all --level error --fail-on error
 ```
 
-The same rebuild and pgTAP assertions run in CI. A successful reset proves
-ordering and syntax from zero; tests verify RLS, protected table privileges,
-critical RPC execution, group-key FK, and fixed definer search paths.
+The same rebuild, pgTAP assertions, and error-level advisor gate run in CI. A
+successful reset proves ordering and syntax from zero; tests verify RLS,
+protected table privileges, critical RPC execution, group-key FK, fixed definer
+search paths, profile ownership, and the caller-rights public-key view.
+
+Verified on 2026-08-01 with Supabase CLI 2.111.0 and the local Postgres 17 stack:
+all six migrations replayed from zero, all 16 pgTAP assertions passed, migration
+history matched, and the security advisor returned no error-level findings.
 
 ## Existing deployment
 

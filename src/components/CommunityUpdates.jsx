@@ -39,8 +39,8 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
   };
 
   const handleSaveEdit = async (u, text) => {
-    await onEdit(u.id, text);
-    setEditingId(null);
+    const saved = await onEdit(u.id, text);
+    if (saved !== false) setEditingId(null);
   };
 
   return (

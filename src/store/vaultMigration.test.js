@@ -75,29 +75,29 @@ const SECRET_P5_UPDATE = 'SECRET_p5_nested_update';
 function seed() {
   db.prayersRows = [
     {
-      id: 'p1', community_origin_id: null, encryption_version: null,
+      id: 'p1', user_id: 'user-1', community_origin_id: null, encryption_version: null,
       title: SECRET_TITLE, description: 'd', person_name: '', phone: '', scripture_guidance: null,
       prayer_updates: [{ id: 'u1', encryption_version: null, text: SECRET_UPDATE }],
       prayer_points: [{ id: 'pt1', encryption_version: null, title: SECRET_POINT, verses: [] }],
       prayer_testimonies: [{ id: 't1', encryption_version: null, content: SECRET_TESTIMONY }],
     },
     {
-      id: 'p2', community_origin_id: null, encryption_version: 1,
+      id: 'p2', user_id: 'user-1', community_origin_id: null, encryption_version: 1,
       title: '', description: '', person_name: '', phone: '', scripture_guidance: null,
       prayer_updates: [], prayer_points: [], prayer_testimonies: [],
     },
     {
-      id: 'p3', community_origin_id: null, encryption_version: null,
+      id: 'p3', user_id: 'user-1', community_origin_id: null, encryption_version: null,
       title: 'shared prayer', description: '', person_name: '', phone: '', scripture_guidance: null,
       prayer_updates: [], prayer_points: [], prayer_testimonies: [],
     },
     {
-      id: 'p4', community_origin_id: 'c-9', encryption_version: null,
+      id: 'p4', user_id: 'user-1', community_origin_id: 'c-9', encryption_version: null,
       title: 'saved copy', description: '', person_name: '', phone: '', scripture_guidance: null,
       prayer_updates: [], prayer_points: [], prayer_testimonies: [],
     },
     {
-      id: 'p5', community_origin_id: null, encryption_version: 1,
+      id: 'p5', user_id: 'user-1', community_origin_id: null, encryption_version: 1,
       title: '', description: '', person_name: '', phone: '', scripture_guidance: null,
       prayer_updates: [{ id: 'u5', encryption_version: null, text: SECRET_P5_UPDATE }],
       prayer_points: [], prayer_testimonies: [],
@@ -176,7 +176,13 @@ describe('migrateToVault', () => {
     await usePrayerStore.getState().migrateToVault();
 
     const parent = writesTo('prayers')[0];
-    const data = await decryptJson(getMasterKey(), parent.payload.encrypted_payload);
+    const data = await decryptJson(getMasterKey(), parent.payload.encrypted_payload, {
+      entityType: 'personal-prayer',
+      ownerOrGroupId: 'user-1',
+      recordId: 'p1',
+      keyVersion: 1,
+      field: 'sensitive-payload',
+    });
     expect(data.title).toBe(SECRET_TITLE);
   });
 

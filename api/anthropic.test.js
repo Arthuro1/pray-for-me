@@ -26,6 +26,8 @@ function installFetch({
   dailyRpcOk = true,
   dailyAllowed = true,
   upstreamOk = true,
+  upstreamStatus = 200,
+  upstreamBody = { content: [{ text: '{}' }] },
 } = {}) {
   let minuteCount = 0;
   global.fetch = vi.fn(async (url, options = {}) => {
@@ -44,7 +46,7 @@ function installFetch({
       return { ok: true, status: 200, json: async () => ({ allowed: dailyAllowed, reason: dailyAllowed ? null : 'user_daily' }) };
     }
     if (!upstreamOk) throw new Error('provider unavailable');
-    return { ok: true, status: 200, json: async () => ({ content: [{ text: '{}' }] }) };
+    return { ok: upstreamStatus >= 200 && upstreamStatus < 300, status: upstreamStatus, json: async () => upstreamBody };
   });
 }
 
@@ -167,5 +169,12 @@ describe('AI proxy quotas and failure handling', () => {
     await handler(req(), res);
     expect(res.statusCode).toBe(502);
     expect(res.body).toEqual({ error: 'Upstream request failed' });
+
+    installFetch({ upstreamStatus: 400, upstreamBody: { error: { message: 'internal provider detail' } } });
+    const rejected = mockRes();
+    await handler(req(), rejected);
+    expect(rejected.statusCode).toBe(502);
+    expect(rejected.body).toEqual({ error: 'AI provider request failed' });
+    expect(JSON.stringify(rejected.body)).not.toContain('internal provider detail');
   });
 });

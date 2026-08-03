@@ -159,7 +159,8 @@ export default function UpdateComposer({
     if (!canSend) return;
     setSending(true);
     try {
-      await onSend(text.trim(), ready);
+      const result = await onSend(text.trim(), ready);
+      if (result === false) return;
       setText('');
       setPending([]);
       setShowLinkInput(false);

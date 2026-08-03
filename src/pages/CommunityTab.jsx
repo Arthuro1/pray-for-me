@@ -617,10 +617,12 @@ function Empty({ lang, title }) {
 
 // ── Group View ────────────────────────────────────────────────────────────────
 function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
-  const { addPrayer, leaveGroup } = useCommunityStore(
+  const { addPrayer, leaveGroup, migrateLegacyCommunityContent, communityEncryptionMigration } = useCommunityStore(
     useShallow((s) => ({
       addPrayer: s.addPrayer,
       leaveGroup: s.leaveGroup,
+      migrateLegacyCommunityContent: s.migrateLegacyCommunityContent,
+      communityEncryptionMigration: s.communityEncryptionMigration,
     }))
   );
   // Shared read-model + live sync (prayers, testimonies, subscription, auto-add).
@@ -639,6 +641,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   // Bumped when an invite action records a checklist flag, so the checklist
   // behind an open modal re-derives its steps.
   const [, setChecklistVersion] = useState(0);
+
+  // Upgrade this member's own legacy rows once the group wall is available.
+  // The store scan is idempotent and exposes progress for slow/retried batches.
+  useEffect(() => {
+    if (!loading && group?.id && communityEncryptionMigration.groupId !== groupId) {
+      migrateLegacyCommunityContent(groupId);
+    }
+  }, [communityEncryptionMigration.groupId, group?.id, groupId, loading, migrateLegacyCommunityContent]);
   // Group prayer plans (read-model, subscription, join/leave/end/adopt) live in a
   // dedicated hook; the picker/detail/confirm modals below consume its state.
   const {
@@ -734,7 +744,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         onCommunitySubmit={async ({ title, description, isAnonymous, categoryIds, contentLanguage }) => {
           // The form's language field already defaults to the active language;
           // an explicit correction arrives here and wins.
-          await addPrayer({ groupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds, contentLanguage: contentLanguage || lang });
+          const result = await addPrayer({ groupId, userId: user.id, authorName: getAuthorName(user), title, description, isAnonymous, categoryIds, contentLanguage: contentLanguage || lang });
+          if (result?.error) toast.error(t(lang, 'errorGeneric'));
+          return result;
         }} />}
 
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}
@@ -802,6 +814,40 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
         {/* First-group checklist — leaders only, dismissible, retires itself as
             the steps complete. Its rows are shortcuts to actions on this page. */}
+        {communityEncryptionMigration.groupId === groupId
+          && (communityEncryptionMigration.total > 0 || communityEncryptionMigration.status === 'error')
+          && communityEncryptionMigration.status !== 'complete' && (
+          <div className="phase-card phase-card--quiet flex items-center gap-3 p-3 mb-4" role="status">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              {communityEncryptionMigration.status === 'migrating'
+                ? <Loader2 size={17} className="animate-spin" />
+                : <ShieldCheck size={17} />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>
+                {communityEncryptionMigration.status === 'error'
+                  ? t(lang, 'errorBoundaryTitle')
+                  : t(lang, 'vaultMigratePending', { count: communityEncryptionMigration.total })}
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                {['partial', 'error'].includes(communityEncryptionMigration.status)
+                  ? t(lang, 'vaultMigratePartial')
+                  : `${communityEncryptionMigration.completed} / ${communityEncryptionMigration.total}`}
+              </p>
+            </div>
+            {['partial', 'error'].includes(communityEncryptionMigration.status) && (
+              <button
+                type="button"
+                onClick={() => migrateLegacyCommunityContent(groupId)}
+                className="px-3 py-2 rounded-lg text-xs font-medium"
+                style={SUBTLE_BTN}
+              >
+                {t(lang, 'retry')}
+              </button>
+            )}
+          </div>
+        )}
+
         {isAdmin && group && !loading && (
           <GroupChecklist
             lang={lang}

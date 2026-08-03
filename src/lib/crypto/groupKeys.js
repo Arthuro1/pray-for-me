@@ -137,12 +137,22 @@ async function distribute(groupId, version, gckRaw, { force = false } = {}) {
     });
   }
   if (rows.length) {
-    await Promise.all(rows.map((row) => supabase.rpc('distribute_group_key', {
-      p_group_id: row.group_id,
-      p_key_version: row.key_version,
-      p_target_user_id: row.user_id,
-      p_encrypted_group_key: row.encrypted_group_key,
-    })));
+    const results = await Promise.all(rows.map(async (row) => {
+      try {
+        return await supabase.rpc('distribute_group_key', {
+          p_group_id: row.group_id,
+          p_key_version: row.key_version,
+          p_target_user_id: row.user_id,
+          p_encrypted_group_key: row.encrypted_group_key,
+        });
+      } catch {
+        return { error: { message: 'group_key_distribution_failed' } };
+      }
+    }));
+    // Publishing a member key is not enough: every RPC must also have reached
+    // the database. Keep the fan-out incomplete after a network/RPC failure so
+    // the next group touch retries instead of stranding a member for the session.
+    allPublished = allPublished && results.every((result) => !result?.error);
   }
   distributed.set(tag, { complete: allPublished, lastAt: Date.now() });
 }
@@ -256,9 +266,9 @@ export async function rotateGroupKey(groupId) {
   return createKeyVersion(groupId, next, myUserId);
 }
 
-// Revoke a removed member's wrapped keys (all versions) and rotate so new content
-// uses a key they never held. Best-effort; the delete requires admin rights (RLS).
-// Call after removing them from group_members.
+// Atomically remove a member, revoke their wrapped keys (all versions), and
+// rotate so new content uses a key they never held. The protected RPC performs
+// membership removal + creator-envelope creation in one transaction.
 export async function revokeMemberAndRotate(groupId, userId) {
   const myUserId = await currentUserId();
   if (!(await myIdentity(myUserId))) return null;

@@ -1821,8 +1821,10 @@ select cron.schedule(
 alter table public.push_subscriptions
   add column if not exists follow_up_time text not null default '07:00';  -- local "HH:MM"
 
-alter table public.user_settings
-  add column if not exists follow_up_time text not null default '07:00';  -- local "HH:MM"
+-- user_settings is created later in this consolidated baseline with
+-- follow_up_time already present. The original hand-run file altered an
+-- existing production table, but replaying that ALTER here would run before
+-- the table exists on a clean database.
 
 -- END LEGACY FILE: supabase/follow_up_time.sql
 
@@ -2792,14 +2794,10 @@ create policy "Inviter can cancel plan invitations" on public.plan_invitations
   for delete using (invited_by = auth.uid());
 
 -- â”€â”€ 3. Allow the new notification type â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
--- Widen the notifications type check constraint (originally set in
--- notifications.sql) to include 'plan_invitation'.
-alter table public.notifications drop constraint if exists notifications_type_check;
-alter table public.notifications add constraint notifications_type_check check (type in (
-  'friend_request','group_invitation','community_update','answered',
-  'reaction_bucket','group_prayer_added','testimony','membership_change',
-  'role_change','plan_invitation'
-));
+-- notifications is created later in this consolidated baseline. Its clean
+-- definition below already includes the final 'plan_invitation' value, so the
+-- original production-only constraint alteration must not run before the
+-- table exists.
 
 -- â”€â”€ 4. Notification trigger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- Plan invitation received â†’ notify the invitee (never the actor). Uses the
@@ -3012,7 +3010,8 @@ create table if not exists public.notifications (
 
   constraint notifications_type_check check (type in (
     'friend_request','group_invitation','community_update','answered',
-    'reaction_bucket','group_prayer_added','testimony','membership_change','role_change'
+    'reaction_bucket','group_prayer_added','testimony','membership_change',
+    'role_change','plan_invitation'
   ))
 );
 

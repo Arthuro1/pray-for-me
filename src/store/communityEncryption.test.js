@@ -16,6 +16,7 @@ const db = {
   testimonies: [],
 };
 let currentUser = null;
+let failGroupKeyOperations = false;
 const CONTENT_TABLES = ['community_prayers', 'community_updates', 'testimonies'];
 
 function resetDb() {
@@ -27,6 +28,7 @@ function resetDb() {
   db.community_updates = [];
   db.testimonies = [];
   currentUser = null;
+  failGroupKeyOperations = false;
 }
 
 function rowMatches(row, filters) {
@@ -101,6 +103,38 @@ vi.mock('../lib/supabase', () => ({
   supabase: {
     auth: { getUser: async () => ({ data: { user: currentUser ? { id: currentUser } : null } }) },
     from: (table) => makeQuery(table),
+    rpc: async (name, args) => {
+      if (failGroupKeyOperations) return { data: null, error: { message: 'group key unavailable' } };
+      if (name === 'create_group_key_version') {
+        const existing = db.group_key_versions.find((row) => (
+          row.group_id === args.p_group_id && row.version === args.p_requested_version
+        ));
+        if (!existing) db.group_key_versions.push({ group_id: args.p_group_id, version: args.p_requested_version });
+        db.group_member_keys.set(
+          `${args.p_group_id}:${args.p_requested_version}:${currentUser}`,
+          {
+            group_id: args.p_group_id,
+            key_version: args.p_requested_version,
+            user_id: currentUser,
+            encrypted_group_key: args.p_encrypted_creator_key,
+          },
+        );
+        return { data: args.p_requested_version, error: null };
+      }
+      if (name === 'distribute_group_key') {
+        const key = `${args.p_group_id}:${args.p_key_version}:${args.p_target_user_id}`;
+        if (!db.group_member_keys.has(key)) {
+          db.group_member_keys.set(key, {
+            group_id: args.p_group_id,
+            key_version: args.p_key_version,
+            user_id: args.p_target_user_id,
+            encrypted_group_key: args.p_encrypted_group_key,
+          });
+        }
+        return { data: null, error: null };
+      }
+      return { data: null, error: null };
+    },
   },
 }));
 
@@ -118,6 +152,7 @@ import useCommunityStore from './communityStore';
 import { getGroupKey, clearGroupKeyCache } from '../lib/crypto/groupKeys';
 import { ensureUserPublicKey, clearUserKeyCache } from '../lib/crypto/userKeys';
 import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
+import { encryptJsonLegacy } from '../lib/crypto/e2ee';
 import { autoInitAccountKey, destroyVault } from '../lib/crypto/keyManager';
 
 // The acting user, a member of group g1, with account key + identity key ready.
@@ -131,17 +166,36 @@ async function setup() {
   currentUser = 'me';
   await autoInitAccountKey();
   await ensureUserPublicKey('me');
-  useCommunityStore.setState({ prayers: [], testimonies: [], activeGroupId: 'g1' });
+  useCommunityStore.setState({
+    prayers: [], testimonies: [], activeGroupId: 'g1',
+    communityEncryptionMigration: { groupId: null, status: 'idle', total: 0, completed: 0, failed: 0 },
+  });
 }
 
 async function decryptStored(row) {
   const gk = await getGroupKey('g1', row.key_version || 1);
-  return decryptCommunityRow(async () => gk, row);
+  const resolver = async () => gk;
+  resolver.groupId = 'g1';
+  return decryptCommunityRow(resolver, row);
 }
 
 beforeEach(() => { installStorage(); });
 
 describe('community content is encrypted under the group key', () => {
+  it('fails closed without writing plaintext when the group key is unavailable', async () => {
+    await setup();
+    failGroupKeyOperations = true;
+
+    const result = await useCommunityStore.getState().addPrayer({
+      groupId: 'g1', userId: 'me', authorName: 'Me',
+      title: 'MUST_NOT_LEAK', description: 'MUST_NOT_LEAK_EITHER', isAnonymous: false, categoryIds: [],
+    });
+
+    expect(result).toEqual({ error: 'groupEncryptionUnavailable' });
+    expect(db.community_prayers).toHaveLength(0);
+    expect(JSON.stringify(db)).not.toContain('MUST_NOT_LEAK');
+  });
+
   it('addPrayer stores ciphertext (no plaintext title/description) and keeps plaintext in memory', async () => {
     await setup();
     const res = await useCommunityStore.getState().addPrayer({
@@ -216,5 +270,42 @@ describe('community content is encrypted under the group key', () => {
     expect(shown.length).toBe(1);
     expect(shown[0].title).toBe('SECRET_on_the_wall');
     expect(shown[0]._locked).toBe(false);
+  });
+
+  it('migrates owned v1 community ciphertext to record-bound v2 and is idempotent', async () => {
+    await setup();
+    await useCommunityStore.getState().addPrayer({
+      groupId: 'g1', userId: 'me', authorName: 'Me', title: 'legacy title', description: 'legacy body', isAnonymous: false, categoryIds: [],
+    });
+    const stored = db.community_prayers[0];
+    const gk = await getGroupKey('g1', stored.key_version);
+    stored.encrypted_payload = await encryptJsonLegacy(gk.key, {
+      title: 'legacy title', description: 'legacy body', prayer_points: [],
+    });
+    stored.encryption_version = 1;
+
+    const first = await useCommunityStore.getState().migrateLegacyCommunityContent('g1');
+
+    expect(first).toMatchObject({ status: 'complete', total: 1, completed: 1, failed: 0 });
+    expect(stored.encrypted_payload.v).toBe(2);
+    expect(stored.title).toBe('');
+    expect((await decryptStored(stored)).title).toBe('legacy title');
+
+    const second = await useCommunityStore.getState().migrateLegacyCommunityContent('g1');
+    expect(second).toMatchObject({ status: 'complete', total: 0, completed: 0, failed: 0 });
+  });
+
+  it('never overwrites a malformed non-null ciphertext envelope as plaintext', async () => {
+    await setup();
+    const malformed = {
+      id: 'broken', group_id: 'g1', user_id: 'me', title: '', description: '', prayer_points: [],
+      encrypted_payload: { v: 99, ciphertext: 'unknown-format' }, encryption_version: 99, key_version: 1,
+    };
+    db.community_prayers.push(malformed);
+
+    const result = await useCommunityStore.getState().migrateLegacyCommunityContent('g1');
+
+    expect(result).toMatchObject({ status: 'partial', total: 1, completed: 0, failed: 1 });
+    expect(malformed.encrypted_payload).toEqual({ v: 99, ciphertext: 'unknown-format' });
   });
 });

@@ -53,9 +53,14 @@ export default function useCommunityPrayerUpdates({ communityPrayer, isCommunity
   }, [communityPrayer?.id, communityPrayer?.group_id, isCommunity, subscribePrayerActivity, refreshPrayer, fetchUserReactions, fetchPrayerUpdates, user?.id]);
 
   const handleSendWord = async (text, attachments, isAnonymous) => {
-    await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous, contentLanguage: lang, attachments });
+    const result = await addCommunityUpdate({ prayerId: communityPrayer.id, sourcePrayerId: communityPrayer.source_prayer_id, userId: user.id, authorName, text, isAnonymous, contentLanguage: lang, attachments });
+    if (result?.error) {
+      toast.error(t(lang, 'errorGeneric'));
+      return false;
+    }
     // Re-fetch so the timeline reflects the (possibly synced) update.
     setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
+    return true;
   };
 
   const handleDeleteWord = async (updateId) => {
@@ -81,7 +86,9 @@ export default function useCommunityPrayerUpdates({ communityPrayer, isCommunity
     if (res?.error) {
       toast.error(t(lang, 'errorGeneric'));
       setCommunityUpdates(await fetchPrayerUpdates(communityPrayer.id));
+      return false;
     }
+    return true;
   };
 
   return { communityUpdates, loadingUpdates, handleSendWord, handleDeleteWord, handleEditWord };

@@ -67,17 +67,31 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
   };
 
   const handleConfirmCommunityAnswered = async (text, attachments = []) => {
-    await setCommunityAnswered(communityPrayer.id, true);
+    const answered = await setCommunityAnswered(communityPrayer.id, true);
+    if (answered?.error) {
+      toast.error(t(lang, 'errorGeneric'));
+      return false;
+    }
     await mirrorPersonalAnswered(true);
     if (text.trim() || attachments.length) {
-      await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: text.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
+      const testimony = await addTestimony({ groupId: communityPrayer.group_id, userId: user.id, authorName, content: text.trim(), isAnonymous: false, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
+      if (testimony?.error) {
+        toast.error(t(lang, 'errorGeneric'));
+        return false;
+      }
       setTestimonySent(true);
     }
+    return true;
   };
 
   const handleResumeCommunity = async () => {
-    await setCommunityAnswered(communityPrayer.id, false);
+    const resumed = await setCommunityAnswered(communityPrayer.id, false);
+    if (resumed?.error) {
+      toast.error(t(lang, 'errorGeneric'));
+      return false;
+    }
     await mirrorPersonalAnswered(false);
+    return true;
   };
 
   // Tapping "I'm praying" toggles the reaction (praying count) and mirrors it onto
