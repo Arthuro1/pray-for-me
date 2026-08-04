@@ -34,6 +34,7 @@ import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
 import useLayoutStore from '../store/layoutStore';
 import { todayKey } from '../lib/prayedLog';
+import { addDays } from '../lib/schedule';
 import { t } from '../i18n';
 
 const lang = 'fr';
@@ -128,6 +129,34 @@ describe('HomeTab — remaining vs completed', () => {
     usePrayerStore.getState().markPrayedOn('p1', DAY);
     renderHome();
     expect(screen.getByText(t(lang, 'todayRemainingLabel', { n: 2 }))).toBeTruthy();
+  });
+
+  it('"Pray now" in catch-up walks the missed prayers, recording each on the day it was missed', () => {
+    const YESTERDAY = addDays(DAY, -1);
+    const missed = {
+      id: 'm1', title: 'Prière manquée', status: 'active',
+      schedule: { type: 'once', date: YESTERDAY }, created_at: '2026-01-01T00:00:00Z',
+      prayer_categories: [], prayer_points: [], prayer_testimonies: [], prayer_updates: [],
+    };
+    // Alongside today's daily prayers, so both walks coexist on the page.
+    usePrayerStore.setState((s) => ({ prayers: [...s.prayers, missed] }));
+    renderHome();
+
+    // Open the collapsed catch-up section, then start its walk (scoped to the
+    // catch-up panel so it can't be confused with Today's "Pray now").
+    fireEvent.click(screen.getByText(new RegExp(t(lang, 'catchUpTitle'))));
+    const panel = document.getElementById('today-catch-up');
+    fireEvent.click(within(panel).getByText(t(lang, 'prayNow')));
+
+    // The immersive session opens on the missed request, walking only it.
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText('Prière manquée')).toBeTruthy();
+    expect(within(dialog).getByText('1 / 1')).toBeTruthy();
+
+    // Finishing records the completion on the MISSED day, not today — so it
+    // clears from catch-up exactly like the per-item checkmark would.
+    fireEvent.click(within(dialog).getByText(t(lang, 'amenBtn')));
+    expect(usePrayerStore.getState().completions.m1).toEqual([YESTERDAY]);
   });
 
   it('empty Today: keeps the explanatory Add CTA and suppresses the floating Add button', () => {

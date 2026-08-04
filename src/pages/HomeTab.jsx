@@ -141,6 +141,13 @@ export default function HomeTab({ onAdd, onEdit }) {
 
   const hour = today.getHours();
   const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
+
+  // Open the immersive walk. A normal list marks each prayer prayed TODAY;
+  // a catch-up walk passes dayById so each is recorded on the day it was
+  // missed — the same day the per-item catch-up buttons record.
+  const openSession = (prayers, dayById = null) => setSession({ prayers, dayById });
+  const startCatchUpSession = () =>
+    openSession(catchUp.map((c) => c.prayer), Object.fromEntries(catchUp.map((c) => [c.prayer.id, c.day])));
   // After a completed session, offer a reminder ONCE — in context, never during
   // Share the verse of the day via the native share sheet, or copy it as a fallback.
   const handleShareVerse = async () => {
@@ -164,9 +171,9 @@ export default function HomeTab({ onAdd, onEdit }) {
 
   return (
     <div className="phase-page constellation-home">
-      {session && session.length > 0 && (
+      {session && session.prayers.length > 0 && (
         <PrayerSession
-          prayers={session}
+          prayers={session.prayers}
           categories={categories}
           lang={lang}
           tr={tr}
@@ -175,7 +182,10 @@ export default function HomeTab({ onAdd, onEdit }) {
           // prayer (feeds Home's remaining count, catch-up, calendar history
           // and rotation fairness), so leaving halfway never loses genuine
           // progress — reopening resumes with the first unfinished request.
-          onPrayed={(id) => markPrayedOn(id, dayKey)}
+          // A catch-up walk records each prayer on the day it was MISSED
+          // (session.dayById), matching the per-item catch-up buttons; a
+          // normal walk records today.
+          onPrayed={(id) => markPrayedOn(id, session.dayById?.[id] ?? dayKey)}
         />
       )}
 
@@ -202,7 +212,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                 </p>
               )}
               <PrimaryButton
-                onClick={() => setSession(remainingPrayers)}
+                onClick={() => openSession(remainingPrayers)}
                 icon={HandHeart}
                 className="first-prayer-primary mt-8 w-full whitespace-nowrap sm:w-auto sm:min-w-44"
               >
@@ -227,7 +237,7 @@ export default function HomeTab({ onAdd, onEdit }) {
             <p className="editorial-heading mb-4 text-2xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</p>
             {todayEntries.length > 0 && (
               <QuietButton
-                onClick={() => setSession(todayEntries.map((e) => e.prayer))}
+                onClick={() => openSession(todayEntries.map((e) => e.prayer))}
                 icon={HandHeart}
               >
                 {t(lang, 'prayAgain')}
@@ -362,6 +372,13 @@ export default function HomeTab({ onAdd, onEdit }) {
             >
               <div className="px-4 pb-4">
                 <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'catchUpSub')}</p>
+                {/* Pray through all the missed requests in one walk, the same
+                    immersive session as Today — each is recorded on the day it
+                    was missed. The per-item checkmarks below stay for catching
+                    up one at a time. */}
+                <QuietButton onClick={startCatchUpSession} icon={HandHeart} className="mb-3 w-full">
+                  {t(lang, 'prayNow')}
+                </QuietButton>
                 <div className="space-y-1.5">
                   {catchUp.map(({ prayer, day }) => (
                     <div key={prayer.id} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: 'var(--input-bg)' }}>
