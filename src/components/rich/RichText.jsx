@@ -1,5 +1,5 @@
-// Markdown-lite renderer for updates/testimonies: **bold**, *italic* /
-// _italic_, "- " bullet lists, and auto-linked http(s) URLs. Builds React
+// Markdown-lite renderer for rich user text: **bold**, *italic* / _italic_,
+// ++underline++, bullet/numbered lists, and auto-linked http(s) URLs. Builds React
 // elements directly (never dangerouslySetInnerHTML), so user content can't
 // inject markup. Plain text renders unchanged, which keeps every existing
 // update readable without migration.
@@ -8,7 +8,7 @@ import { Fragment } from 'react';
 const URL_RE = /https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"]/g;
 
 // Inline emphasis over one line: longest marker first so ** wins over *.
-const INLINE_RE = /(\*\*([^*]+)\*\*|\*([^*]+)\*|_([^_]+)_)/;
+const INLINE_RE = /(\*\*([^*]+)\*\*|\+\+([^+]+)\+\+|\*([^*]+)\*|_([^_]+)_)/;
 
 function linkify(text, keyBase) {
   const nodes = [];
@@ -45,11 +45,13 @@ function renderInline(text, keyBase = 'n') {
       break;
     }
     if (m.index > 0) nodes.push(...linkify(rest.slice(0, m.index), `${keyBase}-${i}`));
-    const inner = m[2] ?? m[3] ?? m[4];
+    const inner = m[2] ?? m[3] ?? m[4] ?? m[5];
     nodes.push(
       m[2] != null
         ? <strong key={`${keyBase}-s${i}`}>{renderInline(inner, `${keyBase}-s${i}`)}</strong>
-        : <em key={`${keyBase}-e${i}`}>{renderInline(inner, `${keyBase}-e${i}`)}</em>
+        : m[3] != null
+          ? <u key={`${keyBase}-u${i}`}>{renderInline(inner, `${keyBase}-u${i}`)}</u>
+          : <em key={`${keyBase}-e${i}`}>{renderInline(inner, `${keyBase}-e${i}`)}</em>
     );
     rest = rest.slice(m.index + m[0].length);
     i++;
@@ -64,13 +66,17 @@ export default function RichText({ text, className, style }) {
   let list = null;
 
   const flushList = () => {
-    if (list) { blocks.push({ type: 'list', items: list }); list = null; }
+    if (list) { blocks.push({ type: 'list', kind: list.kind, items: list.items }); list = null; }
   };
 
   for (const line of lines) {
-    const item = line.match(/^\s*[-*]\s+(.*)$/);
+    const bullet = line.match(/^\s*[-*]\s+(.*)$/);
+    const numbered = line.match(/^\s*\d+\.\s+(.*)$/);
+    const item = bullet || numbered;
     if (item) {
-      (list ??= []).push(item[1]);
+      const kind = numbered ? 'ol' : 'ul';
+      if (list && list.kind !== kind) flushList();
+      (list ??= { kind, items: [] }).items.push(item[1]);
     } else {
       flushList();
       blocks.push({ type: 'line', text: line });
@@ -82,9 +88,15 @@ export default function RichText({ text, className, style }) {
     <div className={className} style={style}>
       {blocks.map((b, i) =>
         b.type === 'list' ? (
-          <ul key={i} className="list-disc ps-5 my-0.5 space-y-0.5">
-            {b.items.map((item, j) => <li key={j}>{renderInline(item, `l${i}-${j}`)}</li>)}
-          </ul>
+          b.kind === 'ol' ? (
+            <ol key={i} className="list-decimal ps-5 my-0.5 space-y-0.5">
+              {b.items.map((item, j) => <li key={j}>{renderInline(item, `l${i}-${j}`)}</li>)}
+            </ol>
+          ) : (
+            <ul key={i} className="list-disc ps-5 my-0.5 space-y-0.5">
+              {b.items.map((item, j) => <li key={j}>{renderInline(item, `l${i}-${j}`)}</li>)}
+            </ul>
+          )
         ) : (
           // Empty lines become paragraph spacing rather than collapsing.
           <Fragment key={i}>

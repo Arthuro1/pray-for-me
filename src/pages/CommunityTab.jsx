@@ -27,7 +27,7 @@ import PlanDetailModal from '../components/PlanDetailModal';
 import { groupPlanStatus, sortGroupPlans, prayingLabel } from '../lib/groupPlans';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
-import { plainText } from '../components/rich/plainText';
+import RichText from '../components/rich/RichText';
 import ShareButtons from '../components/shared/ShareButtons';
 import Switch from '../components/shared/Switch';
 import { QRCodeSVG } from 'qrcode.react';
@@ -1018,7 +1018,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                           <Star size={17} strokeWidth={1.7} aria-hidden="true" />
                           <span>{p.title}</span>
                         </p>
-                        {p.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }}>{plainText(p.description)}</p>}
+                        {p.description && <RichText text={p.description} className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }} />}
                       </>
                     )}
                     <div className="flex items-center gap-3">

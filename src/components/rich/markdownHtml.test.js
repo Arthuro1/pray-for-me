@@ -13,10 +13,12 @@ describe('mdToHtml', () => {
     expect(mdToHtml('**bold**')).toBe('<div><strong>bold</strong></div>');
     expect(mdToHtml('*italic*')).toBe('<div><em>italic</em></div>');
     expect(mdToHtml('_italic_')).toBe('<div><em>italic</em></div>');
+    expect(mdToHtml('++underlined++')).toBe('<div><u>underlined</u></div>');
   });
 
   it('groups "- " lines into one list and keeps other lines as blocks', () => {
     expect(mdToHtml('- a\n- b')).toBe('<ul><li>a</li><li>b</li></ul>');
+    expect(mdToHtml('1. a\n2. b')).toBe('<ol><li>a</li><li>b</li></ol>');
     expect(mdToHtml('line1\nline2')).toBe('<div>line1</div><div>line2</div>');
   });
 
@@ -35,16 +37,19 @@ describe('htmlToMd', () => {
     expect(md('<b>x</b>')).toBe('**x**');
     expect(md('<em>y</em>')).toBe('*y*');
     expect(md('<i>z</i>')).toBe('*z*');
+    expect(md('<u>u</u>')).toBe('++u++');
   });
 
   it('reads execCommand-style inline-styled spans', () => {
     expect(md('<span style="font-weight: bold;">bold</span>')).toBe('**bold**');
     expect(md('<span style="font-style: italic;">it</span>')).toBe('*it*');
+    expect(md('<span style="text-decoration: underline;">under</span>')).toBe('++under++');
   });
 
   it('turns block divs and lists into lines', () => {
     expect(md('<div>a</div><div>b</div>')).toBe('a\nb');
     expect(md('<ul><li>x</li><li>y</li></ul>')).toBe('- x\n- y');
+    expect(md('<ol><li>x</li><li>y</li></ol>')).toBe('1. x\n2. y');
   });
 
   it('keeps bullets when the browser nests the list in a block', () => {
@@ -64,7 +69,7 @@ describe('htmlToMd', () => {
 });
 
 describe('round trip', () => {
-  for (const source of ['**bold**', '*italic*', '- a\n- b', 'plain line', '**a** then *b*']) {
+  for (const source of ['**bold**', '*italic*', '++underlined++', '- a\n- b', '1. a\n2. b', 'plain line', '**a** then *b*']) {
     it(`preserves ${JSON.stringify(source)}`, () => {
       expect(md(mdToHtml(source))).toBe(source);
     });

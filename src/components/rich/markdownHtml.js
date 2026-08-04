@@ -1,11 +1,10 @@
-// The bridge between the markdown-lite we STORE (**bold**, *italic*, "- " lists)
-// and the HTML a contentEditable editor renders, so a styled selection shows as
-// real bold/italic text while being written — never the raw "**"/"*"/"-" markers.
+// The bridge between the markdown-lite we store and the HTML shown by editors.
+// Formatting stays visible while being written instead of exposing raw markers.
 // RichText remains the read-only renderer; these two functions only run at the
 // editor's edges (fill the editor from stored text, read it back out on input).
 //
-// Deliberately narrow: bold, italic and unordered lists — the same trio the
-// FormatToolbar has always offered. URLs are left as plain text while editing
+// Deliberately narrow: bold, italic, underline, and unordered/ordered lists.
+// URLs are left as plain text while editing
 // (RichText auto-links them once the text is rendered read-only).
 
 const escapeHtml = (s) =>
@@ -17,15 +16,20 @@ const escapeHtml = (s) =>
 function inlineToHtml(line) {
   return escapeHtml(line)
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\+\+([^+]+)\+\+/g, '<u>$1</u>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/_([^_]+)_/g, '<em>$1</em>');
 }
 
-const isListLine = (line) => /^\s*[-*]\s+/.test(line);
-const listBody = (line) => line.replace(/^\s*[-*]\s+/, '');
+const listKind = (line) => {
+  if (/^\s*[-*]\s+/.test(line)) return 'ul';
+  if (/^\s*\d+\.\s+/.test(line)) return 'ol';
+  return null;
+};
+const listBody = (line) => line.replace(/^\s*(?:[-*]|\d+\.)\s+/, '');
 
-// Stored markdown-lite → the HTML the editor shows. Consecutive "- " lines
-// become one <ul>; every other line is its own <div> (contentEditable's own
+// Stored markdown-lite → the HTML the editor shows. Consecutive list lines
+// become one <ul>/<ol>; every other line is its own <div> (contentEditable's own
 // block unit), so caret movement and Enter behave natively. An empty line keeps
 // its height via <br>.
 export function mdToHtml(md) {
@@ -33,10 +37,14 @@ export function mdToHtml(md) {
   const lines = String(md).split('\n');
   const blocks = [];
   let list = null;
-  const flush = () => { if (list) { blocks.push(`<ul>${list.join('')}</ul>`); list = null; } };
+  const flush = () => {
+    if (list) { blocks.push(`<${list.kind}>${list.items.join('')}</${list.kind}>`); list = null; }
+  };
   for (const line of lines) {
-    if (isListLine(line)) {
-      (list ??= []).push(`<li>${inlineToHtml(listBody(line))}</li>`);
+    const kind = listKind(line);
+    if (kind) {
+      if (list && list.kind !== kind) flush();
+      (list ??= { kind, items: [] }).items.push(`<li>${inlineToHtml(listBody(line))}</li>`);
     } else {
       flush();
       blocks.push(`<div>${line === '' ? '<br>' : inlineToHtml(line)}</div>`);
@@ -58,16 +66,19 @@ function inlineToMd(node) {
   const wrap = (marker) => (inner.trim() ? marker + inner + marker : inner);
   if (tag === 'STRONG' || tag === 'B') return wrap('**');
   if (tag === 'EM' || tag === 'I') return wrap('*');
+  if (tag === 'U') return wrap('++');
   if (tag === 'SPAN') {
     const fw = node.style.fontWeight;
     const bold = fw === 'bold' || (parseInt(fw, 10) >= 600);
     const italic = node.style.fontStyle === 'italic';
+    const underline = (node.style.textDecorationLine || node.style.textDecoration || '').includes('underline');
     let r = inner;
     if (bold && r.trim()) r = `**${r}**`;
     if (italic && r.trim()) r = `*${r}*`;
+    if (underline && r.trim()) r = `++${r}++`;
     return r;
   }
-  return inner; // A, U, and any other inline wrapper: keep its text only
+  return inner; // A and any other inline wrapper: keep its text only
 }
 
 const BLOCK_TAGS = new Set(['DIV', 'P']);
@@ -97,8 +108,11 @@ export function htmlToMd(root) {
       const tag = node.nodeType === 1 ? node.tagName : null;
       if (isList(tag)) {
         flush();
+        let index = 1;
         for (const li of node.children) {
-          if (li.tagName === 'LI') blocks.push(`- ${inlineToMd(li)}`);
+          if (li.tagName === 'LI') {
+            blocks.push(`${tag === 'OL' ? `${index++}.` : '-'} ${inlineToMd(li)}`);
+          }
         }
       } else if (tag && BLOCK_TAGS.has(tag)) {
         flush();

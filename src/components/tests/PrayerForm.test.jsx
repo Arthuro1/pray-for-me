@@ -45,7 +45,7 @@ describe('PrayerForm — Quick Add', () => {
     expect(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder'))).toBeTruthy();
     // The note textarea and everything under Organize (person, labels, rhythm)
     // wait behind their expanders.
-    expect(screen.queryByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeNull();
+    expect(screen.queryByRole('textbox', { name: t(lang, 'details') })).toBeNull();
     expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
     expect(screen.queryByText(t(lang, 'schedRhythmLabel'))).toBeNull();
     expect(screen.getByText(t(lang, 'addNote'))).toBeTruthy();
@@ -62,17 +62,20 @@ describe('PrayerForm — Quick Add', () => {
   it('"Add a note" reveals the note field', () => {
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.click(screen.getByText(t(lang, 'addNote')));
-    expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeTruthy();
+    expect(screen.getByRole('textbox', { name: t(lang, 'details') })).toBeTruthy();
   });
 
-  it('the note field offers the same light formatting as updates', () => {
+  it('the note field is WYSIWYG and offers every formatting action', () => {
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.click(screen.getByText(t(lang, 'addNote')));
-    const note = screen.getByPlaceholderText(t(lang, 'detailsPlaceholder'));
-    fireEvent.change(note, { target: { value: 'important' } });
-    note.setSelectionRange(0, 9);
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'formatBold') }));
-    expect(note.value).toBe('**important**');
+    const note = screen.getByRole('textbox', { name: t(lang, 'details') });
+    note.innerHTML = '<strong>important</strong><ol><li>first</li></ol>';
+    fireEvent.input(note);
+    expect(note.querySelector('strong').textContent).toBe('important');
+    expect(note.querySelector('ol li').textContent).toBe('first');
+    for (const key of ['formatBold', 'formatItalic', 'formatUnderline', 'formatList', 'formatOrderedList', 'formatRemove']) {
+      expect(screen.getByRole('button', { name: t(lang, key) })).toBeTruthy();
+    }
   });
 
   it('"Organize" reveals person, labels, and the prayer rhythm', () => {
@@ -220,14 +223,14 @@ describe('PrayerForm — accessibility', () => {
 
     fireEvent.click(noteToggle);
     expect(noteToggle.getAttribute('aria-expanded')).toBe('true');
-    fireEvent.change(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder')), {
-      target: { value: 'Un détail important' },
-    });
+    const note = screen.getByRole('textbox', { name: t(lang, 'details') });
+    note.textContent = 'Un détail important';
+    fireEvent.input(note);
     // Collapse, then reopen: the entered note is still there.
     fireEvent.click(noteToggle);
-    expect(screen.queryByPlaceholderText(t(lang, 'detailsPlaceholder'))).toBeNull();
+    expect(screen.queryByRole('textbox', { name: t(lang, 'details') })).toBeNull();
     fireEvent.click(noteToggle);
-    expect(screen.getByPlaceholderText(t(lang, 'detailsPlaceholder')).value).toBe('Un détail important');
+    expect(screen.getByRole('textbox', { name: t(lang, 'details') }).textContent).toBe('Un détail important');
   });
 
   it('uses a real labelled checkbox for "for someone else" (keyboard/screen-reader operable)', () => {

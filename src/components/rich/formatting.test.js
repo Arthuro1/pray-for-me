@@ -24,6 +24,20 @@ describe('applyMarkdownFormat', () => {
     );
   });
 
+  it('wraps underline and creates numbered lists', () => {
+    expect(applyMarkdownFormat('peace', 0, 5, 'underline').text).toBe('++peace++');
+    expect(applyMarkdownFormat('healing\npeace', 0, 13, 'insertOrderedList').text).toBe(
+      '1. healing\n2. peace'
+    );
+  });
+
+  it('removes inline and list formatting from a selection', () => {
+    const source = '1. **urgent**\n2. ++today++';
+    expect(applyMarkdownFormat(source, 0, source.length, 'removeFormat').text).toBe(
+      'urgent\ntoday'
+    );
+  });
+
   it('with no selection, lists from the current line to the end', () => {
     const { text } = applyMarkdownFormat('intro\nitem', 8, 8, 'list');
     expect(text).toBe('intro\n- item');

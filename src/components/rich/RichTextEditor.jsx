@@ -1,21 +1,22 @@
 // A WYSIWYG markdown-lite input: text is typed into a contentEditable surface so
 // **bold** shows as real bold while you write, never the raw markers. Formatting
 // is offered where the gesture belongs — a small toolbar that surfaces over the
-// current selection, applying bold / italic / list to exactly the highlighted
+// current selection, applying inline styles or lists to exactly the highlighted
 // span. Value in and onChange out are always markdown-lite (mdToHtml/htmlToMd
 // convert at the edges), so storage, RichText rendering and translation are all
 // unchanged.
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Bold, Italic, List } from 'lucide-react';
+import { Bold, Italic, List, ListOrdered, RemoveFormatting, Underline } from 'lucide-react';
 import { mdToHtml, htmlToMd } from './markdownHtml';
+import FormatToolbar from './FormatToolbar';
 import { t } from '../../i18n';
 
-// Rough size of the 3-button toolbar, used to decide which side of the
+// Rough size of the 6-button toolbar, used to decide which side of the
 // selection it fits on and to keep it inside the viewport. It never varies with
 // language (icon-only buttons), so a constant is enough — no measure pass.
 const TOOLBAR_H = 44; // height incl. padding
-const TOOLBAR_HALF_W = 66; // half its width, for horizontal clamping
+const TOOLBAR_HALF_W = 120; // half its width, for horizontal clamping
 const GAP = 8; // clearance between the toolbar and the selection
 // Touch selections raise a draggable handle just below the selection end; drop
 // the toolbar a little further on coarse pointers so it clears that handle.
@@ -67,7 +68,7 @@ function SelectionToolbar({ pos, lang, onFormat }) {
   return createPortal(
     <div
       role="toolbar"
-      aria-label={t(lang, 'formatBold')}
+      aria-label={t(lang, 'formatToolbar')}
       className="fixed flex items-center gap-0.5 rounded-xl p-1 shadow-lg"
       style={{
         top: pos.top,
@@ -80,7 +81,10 @@ function SelectionToolbar({ pos, lang, onFormat }) {
     >
       {btn(Bold, t(lang, 'formatBold'), 'bold')}
       {btn(Italic, t(lang, 'formatItalic'), 'italic')}
+      {btn(Underline, t(lang, 'formatUnderline'), 'underline')}
       {btn(List, t(lang, 'formatList'), 'insertUnorderedList')}
+      {btn(ListOrdered, t(lang, 'formatOrderedList'), 'insertOrderedList')}
+      {btn(RemoveFormatting, t(lang, 'formatRemove'), 'removeFormat')}
     </div>,
     document.body,
   );
@@ -97,6 +101,7 @@ export default function RichTextEditor({
   onKeyDown,
   minHeight = 24,
   maxHeight = 120,
+  showToolbar = false,
   className = '',
 }) {
   const ref = useRef(null);
@@ -182,33 +187,44 @@ export default function RichTextEditor({
 
   return (
     <div className="relative w-full">
-      {isEmpty && placeholder && (
+      <div className="relative">
+        {isEmpty && placeholder && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none overflow-hidden text-ellipsis whitespace-nowrap text-sm px-3.5 py-2.5 select-none"
+            style={{ color: 'var(--text-3)' }}
+          >
+            {placeholder}
+          </div>
+        )}
         <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none overflow-hidden text-ellipsis whitespace-nowrap text-sm px-3.5 py-2.5 select-none"
-          style={{ color: 'var(--text-3)' }}
+          ref={ref}
+          id={inputId}
+          role="textbox"
+          aria-multiline="true"
+          aria-label={ariaLabel || placeholder}
+          aria-placeholder={placeholder}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={emit}
+          onKeyDown={onKeyDown}
+          onBlur={() => setToolbar(null)}
+          // Browsers emit real <ul>/<ol> elements. Tailwind's preflight resets
+          // their markers, so restore them while typing to match RichText.
+          className={`w-full text-sm bg-transparent px-3.5 py-2.5 focus:outline-none overflow-y-auto whitespace-pre-wrap break-words [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-5 [&_ol]:ps-5 [&_ul]:my-0.5 [&_ol]:my-0.5 ${className}`}
+          style={{ color: 'var(--text-1)', minHeight, maxHeight }}
+        />
+      </div>
+      {showToolbar && (
+        <div
+          role="toolbar"
+          aria-label={t(lang, 'formatToolbar')}
+          className="flex items-center gap-0.5 px-1.5 pb-1.5"
         >
-          {placeholder}
+          <FormatToolbar lang={lang} onFormat={applyFormat} />
         </div>
       )}
-      <div
-        ref={ref}
-        id={inputId}
-        role="textbox"
-        aria-multiline="true"
-        aria-label={ariaLabel || placeholder}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={emit}
-        onKeyDown={onKeyDown}
-        onBlur={() => setToolbar(null)}
-        // The list button emits a real <ul>, but Tailwind's preflight resets
-        // list markers to none — so the bullet must be restyled here to show
-        // WHILE typing, matching RichText's read-only `list-disc ps-5`.
-        className={`w-full text-sm bg-transparent px-3.5 py-2.5 focus:outline-none overflow-y-auto whitespace-pre-wrap break-words [&_ul]:list-disc [&_ul]:ps-5 [&_ul]:my-0.5 ${className}`}
-        style={{ color: 'var(--text-1)', minHeight, maxHeight }}
-      />
-      {toolbar && <SelectionToolbar pos={toolbar} lang={lang} onFormat={applyFormat} />}
+      {toolbar && !showToolbar && <SelectionToolbar pos={toolbar} lang={lang} onFormat={applyFormat} />}
     </div>
   );
 }

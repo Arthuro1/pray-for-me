@@ -1,29 +1,21 @@
-// A single markdown-lite form field (the prayer note): the same bold / italic /
-// list affordance as UpdateComposer, without the media row or send action —
-// the surrounding form owns submission, and prayers store only their text.
-import { useRef } from 'react';
-import FormatToolbar from './FormatToolbar';
-import { useMarkdownFormatting } from './formatting';
+// The prayer description uses the same WYSIWYG surface as updates and message
+// edits. Its toolbar stays visible because this is the longer-form field.
+import RichTextEditor from './RichTextEditor';
 
-export default function FormattedTextarea({ id, value, onChange, placeholder, rows = 3, lang }) {
-  const textareaRef = useRef(null);
-  const applyFormat = useMarkdownFormatting(textareaRef, value, onChange);
-
+export default function FormattedTextarea({ id, value, onChange, placeholder, ariaLabel, rows = 3, lang }) {
   return (
     <div className="rounded-xl" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-      <textarea
-        ref={textareaRef}
-        id={id}
+      <RichTextEditor
+        inputId={id}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={onChange}
         placeholder={placeholder}
-        rows={rows}
-        className="w-full text-sm bg-transparent rounded-xl px-4 pt-3 pb-1 resize-none focus:outline-none focus-visible:ring-2"
-        style={{ color: 'var(--text-1)' }}
+        ariaLabel={ariaLabel || placeholder}
+        lang={lang}
+        minHeight={rows * 24 + 20}
+        maxHeight={Math.max(rows * 44, 160)}
+        showToolbar
       />
-      <div className="flex items-center gap-0.5 px-1.5 pb-1.5">
-        <FormatToolbar lang={lang} onFormat={applyFormat} />
-      </div>
     </div>
   );
 }

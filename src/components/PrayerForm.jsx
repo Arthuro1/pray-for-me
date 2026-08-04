@@ -303,6 +303,7 @@ export default function PrayerForm({
                   value={form.description}
                   onChange={(v) => patch('description', v)}
                   placeholder={t(lang, 'detailsPlaceholder')}
+                  ariaLabel={t(lang, 'details')}
                   rows={3}
                 />
               </div>

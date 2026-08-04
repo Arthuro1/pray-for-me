@@ -16,9 +16,10 @@ describe('RichText', () => {
   });
 
   it('renders **bold** and *italic* emphasis', () => {
-    const { container } = render(<RichText text="a **strong word** and *a soft one*" />);
+    const { container } = render(<RichText text="a **strong word**, *a soft one*, and ++an underlined one++" />);
     expect(container.querySelector('strong').textContent).toBe('strong word');
     expect(container.querySelector('em').textContent).toBe('a soft one');
+    expect(container.querySelector('u').textContent).toBe('an underlined one');
   });
 
   it('groups "- " lines into a list', () => {
@@ -26,6 +27,11 @@ describe('RichText', () => {
     const items = [...container.querySelectorAll('li')].map((li) => li.textContent);
     expect(items).toEqual(['healing', 'peace', 'the family']);
     expect(container.querySelectorAll('ul').length).toBe(1);
+  });
+
+  it('groups numbered lines into an ordered list', () => {
+    const { container } = render(<RichText text={'1. healing\n2. peace\n3. the family'} />);
+    expect([...container.querySelectorAll('ol li')].map((li) => li.textContent)).toEqual(['healing', 'peace', 'the family']);
   });
 
   it('auto-links URLs with safe rel/target', () => {
@@ -52,7 +58,7 @@ describe('RichText', () => {
 // Clamped card teasers flatten the same grammar to one readable line.
 describe('plainText', () => {
   it('strips emphasis markers and bullet prefixes', () => {
-    expect(plainText('**Urgent**: pray for:\n- *healing*\n- peace')).toBe(
+    expect(plainText('**Urgent**: ++pray for++:\n1. *healing*\n2. peace')).toBe(
       'Urgent: pray for: healing peace'
     );
   });
