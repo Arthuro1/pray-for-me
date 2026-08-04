@@ -37,8 +37,12 @@ export default function PrayerMusicControl({ lang, active = true }) {
     void startBackgroundInstrumental({ trackId, volume: 0.16 });
   }, [active, trackId]);
 
+  // Finishing a prayer with "Amen" swaps in the done screen, which unmounts this
+  // control. Fade the atmosphere out on teardown (session finished OR closed) so
+  // it settles gently instead of being cut off mid-note. The engine is a module
+  // singleton, so the fade keeps running after this component is gone.
   useEffect(() => () => {
-    void stopBackgroundAudio();
+    void stopBackgroundAudio({ fade: true });
   }, []);
 
   const selectTrack = (nextTrackId) => {

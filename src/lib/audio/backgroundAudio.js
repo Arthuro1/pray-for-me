@@ -1,7 +1,9 @@
 import { devWarn } from '../logger';
 
 const FADE_IN_MS = 1400;
-const FADE_OUT_MS = 900;
+// A gentle, gradual fade so finishing a prayer ("Amen") or choosing silence
+// lets the atmosphere settle out rather than cutting off mid-note.
+const FADE_OUT_MS = 1800;
 
 // First-party, instrumental-only prayer atmospheres. They are served from the
 // app's own origin, so changing music never shares prayer data with a third
@@ -172,6 +174,7 @@ function safePlay(element) {
 }
 
 async function stopInternal({ fade = false } = {}) {
+  const thisOperation = operationId;
   const wasPlaying = playing;
   playing = false;
   playingTrackId = 'silence';
@@ -180,6 +183,10 @@ async function stopInternal({ fade = false } = {}) {
   if (fade && wasPlaying) {
     applyLevel(0, FADE_OUT_MS);
     await new Promise((resolve) => setTimeout(resolve, FADE_OUT_MS));
+    // A newer start (e.g. a fresh session, or a StrictMode remount) can take
+    // over while this fade is still ramping down. Don't pause its track — that
+    // delayed pause would silence audio the user just asked to hear.
+    if (thisOperation !== operationId) return;
   } else {
     applyLevel(0);
   }
