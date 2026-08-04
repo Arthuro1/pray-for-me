@@ -298,7 +298,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
       <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
         <button
           onClick={goBack}
-          className="flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
+          className="shrink-0 whitespace-nowrap flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
           style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
         >
           <ChevronLeft size={16} /> {t(lang, 'backBtn')}
