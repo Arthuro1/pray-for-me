@@ -257,9 +257,11 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       {currentStep > 1 && (
         <QuietButton
           onClick={back}
-          className="shrink-0 whitespace-nowrapmin-h-[52px]"
+          className="shrink-0 min-h-[52px]"
         >
-          <ChevronLeft className="rtl-mirror" size={16} /> {t(lang, 'backBtn')}
+          <span className="inline-flex items-center gap-2 whitespace-nowrap">
+            <ChevronLeft className="rtl-mirror" size={16} /> {t(lang, 'backBtn')}
+          </span>
         </QuietButton>
       )}
       {advanceButton}

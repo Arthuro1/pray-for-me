@@ -253,10 +253,12 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
             disabled={!text.trim() || saving}
             className="first-prayer-primary min-h-[54px] w-full"
           >
-            {saving
-              ? <Loader2 size={17} className="animate-spin" aria-hidden="true" />
-              : <HandHeart size={17} aria-hidden="true" />}
-            {t(lang, 'firstPrayerPrayCta')}
+            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+              {saving
+                ? <Loader2 size={17} className="animate-spin" aria-hidden="true" />
+                : <HandHeart size={17} aria-hidden="true" />}
+              {t(lang, 'firstPrayerPrayCta')}
+            </span>
           </PrimaryButton>
           <button
             type="button"

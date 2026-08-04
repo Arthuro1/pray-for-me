@@ -204,7 +204,7 @@ export default function HomeTab({ onAdd, onEdit }) {
               <PrimaryButton
                 onClick={() => setSession(remainingPrayers)}
                 icon={HandHeart}
-                className="first-prayer-primary mt-8 w-full sm:w-auto sm:min-w-44"
+                className="first-prayer-primary mt-8 w-full whitespace-nowrap sm:w-auto sm:min-w-44"
               >
                 {t(lang, 'prayNow')}
               </PrimaryButton>

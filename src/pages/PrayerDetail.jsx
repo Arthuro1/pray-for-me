@@ -734,7 +734,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <PrimaryButton
               onClick={() => setShowPraySession(true)}
               icon={HandHeart}
-              className="constellation-detail__pray mt-8 w-full sm:w-auto sm:min-w-44"
+              className="constellation-detail__pray mt-8 w-full whitespace-nowrap sm:w-auto sm:min-w-44"
             >
               {t(lang, 'prayNow')}
             </PrimaryButton>

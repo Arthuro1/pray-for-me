@@ -202,8 +202,10 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
             disabled={!text.trim() || saving}
             className="first-prayer-primary w-full min-h-[54px]"
           >
-            {saving ? <Loader2 size={17} className="animate-spin" aria-hidden="true" /> : <HandHeart size={17} aria-hidden="true" />}
-            {t(lang, isGuest ? 'firstPrayerPrayCta' : 'onboardSaveAndPray')}
+            <span className="inline-flex items-center gap-2 whitespace-nowrap">
+              {saving ? <Loader2 size={17} className="animate-spin" aria-hidden="true" /> : <HandHeart size={17} aria-hidden="true" />}
+              {t(lang, isGuest ? 'firstPrayerPrayCta' : 'onboardSaveAndPray')}
+            </span>
           </PrimaryButton>
           <button
             type="button"
