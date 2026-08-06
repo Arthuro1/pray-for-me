@@ -5,9 +5,8 @@
 // like [EMAIL_1]. The placeholder→original map is kept ONLY in browser memory for
 // the duration of the request, and `restore` puts values back where appropriate.
 //
-// Ordinary people's NAMES are deliberately NOT redacted automatically — names are
-// often the point of a prayer. Name hiding is offered as an explicit user option
-// (hideNames) and is best-effort only.
+// Ordinary people's NAMES are never redacted — names are usually the point of a
+// prayer, and prayer content is bound for the owner's own local AI.
 
 // Ordered so more specific patterns run first (a token inside a URL is caught by
 // the URL rule, etc.). Each rule has a type label used for the placeholder.
@@ -52,7 +51,7 @@ function digitCount(s) {
 
 // Redact a batch of strings, sharing placeholder numbering so an identical value
 // in two strings maps to the SAME placeholder (and restores consistently).
-export function redactMany(texts, { hideNames = false } = {}) {
+export function redactMany(texts) {
   const map = new Map(); // original value -> placeholder
   const counters = Object.create(null);
 
@@ -75,7 +74,6 @@ export function redactMany(texts, { hideNames = false } = {}) {
       if (digits < 7 || digits > 15) return match;
       return placeholderFor('PHONE', match.trim());
     });
-    if (hideNames) out = redactNames(out, placeholderFor);
     return out;
   };
 
@@ -88,21 +86,9 @@ export function redactMany(texts, { hideNames = false } = {}) {
 }
 
 // Convenience for a single string.
-export function redactSensitive(text, opts) {
-  const { texts, map } = redactMany([text], opts);
+export function redactSensitive(text) {
+  const { texts, map } = redactMany([text]);
   return { text: texts[0], map };
-}
-
-// Best-effort name hiding (only when the user explicitly opts in). Replaces
-// sequences of capitalized words (e.g. "John Smith") with [NAME_n]. Deliberately
-// conservative and imperfect — offered as a user choice, never applied by default.
-function redactNames(text, placeholderFor) {
-  const NAME = /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\b/g;
-  return text.replace(NAME, (match) => {
-    // Skip single short capitalized words that are likely sentence starts.
-    if (!match.includes(' ') && match.length <= 3) return match;
-    return placeholderFor('NAME', match);
-  });
 }
 
 // Restore placeholders to their original values. Applied to AI output that may

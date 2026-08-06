@@ -534,7 +534,7 @@ export default function SettingsTab() {
               <AiDisclaimer lang={lang} variant="full" className="mb-3" />
 
               {/* Outgoing-data preferences (mirrored from the per-request preview).
-                  The title is always sent; description is opt-in; names optional. */}
+                  The title is always sent; description is opt-in. */}
               <div className="rounded-xl p-3 mb-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
                 <p className="text-xs font-semibold mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'aiDataPrefsTitle')}</p>
                 <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiDataPrefsSub')}</p>
@@ -544,14 +544,6 @@ export default function SettingsTab() {
                     checked={!!settings.aiSendDescription}
                     onChange={() => updateSettings({ aiSendDescription: !settings.aiSendDescription })}
                     label={t(lang, 'aiPreviewIncludeDescription')}
-                  />
-                </div>
-                <div className="flex items-center justify-between gap-3 py-1">
-                  <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'aiPreviewHideNames')}</span>
-                  <Switch
-                    checked={!!settings.aiHideNames}
-                    onChange={() => updateSettings({ aiHideNames: !settings.aiHideNames })}
-                    label={t(lang, 'aiPreviewHideNames')}
                   />
                 </div>
               </div>

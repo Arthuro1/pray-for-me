@@ -33,16 +33,12 @@ describe('redactSensitive', () => {
     expect(text).not.toContain('221 Baker Street');
   });
 
-  it('does NOT redact ordinary names by default', () => {
-    const { text } = redactSensitive('Please pray for John Smith and Mary Johnson');
+  it('never redacts people\'s names — they are the point of a prayer', () => {
+    const { text } = redactSensitive('Dear Lord Jesus, please heal John Smith and Mary Johnson on Monday');
     expect(text).toContain('John Smith');
     expect(text).toContain('Mary Johnson');
-  });
-
-  it('redacts names only when explicitly asked to', () => {
-    const { text, map } = redactSensitive('Please pray for John Smith', { hideNames: true });
-    expect(text).toContain('[NAME_1]');
-    expect(restore(text, map)).toContain('John Smith');
+    expect(text).toContain('Dear Lord Jesus');
+    expect(text).not.toContain('[NAME_');
   });
 });
 

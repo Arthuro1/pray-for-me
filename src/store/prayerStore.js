@@ -236,11 +236,9 @@ const usePrayerStore = create((set, get) => ({
       aiConsentPrayer: localStorage.getItem('pfm_ai_consent_prayer') === 'true',
       aiConsentHome: localStorage.getItem('pfm_ai_consent_home') === 'true',
       // Minimum-data defaults for AI: the prayer TITLE is sent, the description and
-      // the latest update are excluded unless the user opts in; people's names are
-      // only hidden on request (names are often central to a prayer). All default OFF.
+      // the latest update are excluded unless the user opts in. All default OFF.
       aiSendDescription: false,
       aiSendUpdate: false,
-      aiHideNames: false,
     };
     let saved = {};
     try { saved = JSON.parse(localStorage.getItem('pfm_settings') || '{}'); } catch { /* ignore */ }

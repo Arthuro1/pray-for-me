@@ -258,7 +258,6 @@ export default {
   "aiPreviewBody": "Voici exactement ce qui sera envoyé à l'IA. Rien d'autre ne quitte votre appareil.",
   "aiPreviewIncludeDescription": "Inclure la description",
   "aiPreviewIncludeUpdate": "Inclure la dernière mise à jour",
-  "aiPreviewHideNames": "Masquer les noms des personnes",
   "aiPreviewSend": "Envoyer",
   "aiPreviewFieldTitle": "Titre",
   "aiPreviewFieldDescription": "Description",

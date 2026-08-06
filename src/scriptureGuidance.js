@@ -40,10 +40,8 @@ export async function getScriptureGuidance({ title, description = '', lang = 'fr
   const userId = useAuthStore.getState().user?.id;
   const settings = usePrayerStore.getState().settings || {};
   // Minimum-data default: the title is sent, the description is EXCLUDED unless the
-  // user has explicitly opted in (aiSendDescription). Names are only hidden when
-  // the user asks (aiHideNames) — names are often central to a prayer.
+  // user has explicitly opted in (aiSendDescription).
   const sendDescription = !!settings.aiSendDescription;
-  const hideNames = !!settings.aiHideNames;
   const effectiveDescription = sendDescription ? description : '';
 
   const key = await aiCacheKey({
@@ -51,14 +49,14 @@ export async function getScriptureGuidance({ title, description = '', lang = 'fr
     task: 'scripture_guidance',
     model: AI_MODEL_HINT,
     lang,
-    input: { title, description: effectiveDescription, hideNames },
+    input: { title, description: effectiveDescription },
   });
   if (cache.has(key)) return { guidance: cache.get(key), error: null };
 
   // Redact high-confidence sensitive tokens (emails, phones, secrets, …) before
   // transmission. The guidance output is references + explanations, so no
   // placeholder restoration is needed on the response.
-  const { texts } = redactMany([title, effectiveDescription], { hideNames });
+  const { texts } = redactMany([title, effectiveDescription]);
 
   const { data, error } = await callAiForJson({
     task: 'scripture_guidance',

@@ -10,7 +10,7 @@ import Switch from './shared/Switch';
 // for a prayer, so nothing leaves the device unseen. The provider (self-hosted or
 // Anthropic) is chosen server-side, so the copy stays provider-neutral. Enforces
 // the minimum-data default (title always; description and latest update each
-// opt-in) and offers optional name hiding. The preview is post-redaction — it
+// opt-in). The preview is post-redaction — it
 // renders precisely what will be transmitted (sensitive tokens already replaced
 // by placeholders). Each field is labelled separately so "Description" never
 // shows the title or an update by mistake.
@@ -22,7 +22,6 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
 
   const sendDescription = !!settings.aiSendDescription;
   const sendUpdate = !!settings.aiSendUpdate;
-  const hideNames = !!settings.aiHideNames;
   const hasDescription = !!(description && description.trim());
   const hasUpdate = !!(update && update.trim());
 
@@ -30,7 +29,6 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
   // opted in), after sensitive-token redaction.
   const { texts } = redactMany(
     [title, sendDescription ? description : '', sendUpdate ? update : ''],
-    { hideNames },
   );
   const outTitle = texts[0];
   const outDescription = texts[1];
@@ -38,7 +36,6 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
 
   const includeDescriptionLabel = t(lang, 'aiPreviewIncludeDescription');
   const includeUpdateLabel = t(lang, 'aiPreviewIncludeUpdate');
-  const hideNamesLabel = t(lang, 'aiPreviewHideNames');
 
   return (
     <div className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
@@ -87,10 +84,6 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
               <Switch checked={sendUpdate} onChange={(v) => updateSettings({ aiSendUpdate: v })} label={includeUpdateLabel} />
             </div>
           )}
-          <div className="flex items-center justify-between gap-3 py-1.5">
-            <span className="text-sm" style={{ color: 'var(--text-2)' }}>{hideNamesLabel}</span>
-            <Switch checked={hideNames} onChange={(v) => updateSettings({ aiHideNames: v })} label={hideNamesLabel} />
-          </div>
         </div>
 
         <div className="flex gap-2">

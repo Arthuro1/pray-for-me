@@ -39,7 +39,6 @@ export async function getAIRecommendations({ title, description = '', update = '
   // composed into the single context string the gateway sees as `description`.
   const sendDescription = !!settings.aiSendDescription;
   const sendUpdate = !!settings.aiSendUpdate;
-  const hideNames = !!settings.aiHideNames;
   const parts = [];
   if (sendDescription && description && description.trim()) parts.push(description.trim());
   if (sendUpdate && update && update.trim()) parts.push(update.trim());
@@ -51,11 +50,11 @@ export async function getAIRecommendations({ title, description = '', update = '
     task: 'prayer_recommendations',
     model: AI_MODEL_HINT,
     lang,
-    input: { title, context: effectiveContext, kind, hideNames },
+    input: { title, context: effectiveContext, kind },
   });
   if (cache.has(key)) return { recs: cache.get(key), error: null };
 
-  const { texts } = redactMany([title, effectiveContext], { hideNames });
+  const { texts } = redactMany([title, effectiveContext]);
   const { data, error } = await callAiForJson({
     task: 'prayer_recommendations',
     input: { title: texts[0], description: texts[1], kind, lang },

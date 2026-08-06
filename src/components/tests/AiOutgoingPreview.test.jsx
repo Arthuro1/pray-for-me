@@ -23,7 +23,7 @@ import { t } from '../../i18n';
 const lang = 'en';
 afterEach(cleanup);
 beforeEach(() => {
-  usePrayerStore.setState({ settings: { language: lang, aiSendDescription: false, aiHideNames: false }, userId: null });
+  usePrayerStore.setState({ settings: { language: lang, aiSendDescription: false }, userId: null });
 });
 
 describe('AiOutgoingPreview', () => {
