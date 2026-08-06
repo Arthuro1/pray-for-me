@@ -1,8 +1,8 @@
 -- ════════════════════════════════════════════════════════════════════════
--- Shared rate limit for the AI relay (api/anthropic.js). Replaces the proxy's
--- per-instance in-memory counter with a GLOBAL fixed-window counter in Postgres,
--- so the cap holds across every serverless instance instead of resetting on each
--- cold start. Run in the Supabase SQL editor.
+-- Shared rate limit for AI requests. Called by the self-hosted AI gateway (via
+-- api/ai.js) as check_ai_rate_limit. A GLOBAL fixed-window counter in Postgres,
+-- so the cap holds across every gateway instance instead of resetting on each
+-- cold start (gateway-local limiting alone would not). Run in the Supabase SQL editor.
 --
 -- The proxy calls check_ai_rate_limit with the user's own Bearer token. The
 -- function is SECURITY DEFINER and keys on auth.uid(), so it can write the

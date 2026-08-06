@@ -15,12 +15,12 @@ vi.hoisted(() => {
 
 const calls = vi.hoisted(() => ({ requests: [] }));
 
-vi.mock('../lib/anthropic', () => ({
+vi.mock('../lib/aiClient', () => ({
   aiEnabled: true,
-  anthropicFetch: vi.fn(async (task, input) => {
+  aiFetch: vi.fn(async (task, input) => {
     calls.requests.push({ task, input });
-    const translated = Object.fromEntries(input.texts.map((_, index) => [index, `translated-${index}`]));
-    return { ok: true, json: async () => ({ content: [{ text: JSON.stringify(translated) }] }) };
+    const translations = Object.fromEntries(input.texts.map((_, index) => [index, `translated-${index}`]));
+    return { ok: true, json: async () => ({ data: { translations } }) };
   }),
 }));
 

@@ -51,6 +51,40 @@ The binding covers personal prayers, updates, points and testimonies; guest
 drafts; identity private keys; attachment blobs/metadata; community prayers,
 updates and testimonies; and wrapped group-key envelope identity.
 
+## Encrypted translation cache
+
+Machine translations of prayer content (personal and community) are cached so a
+text is not re-translated on every view. This cache is **encrypted at rest** and
+never stores the source or translated text in plaintext.
+
+- **Lookup key — keyed HMAC.** The source text is not stored. Instead each row is
+  keyed by `source_hmac = HMAC-SHA256(source)`, where the HMAC key is HKDF-derived
+  (info-separated from the AES key) from the user's **account key** for the private
+  cache (`translations`), or the **group key** for the shared cache
+  (`community_translations`). The server can therefore look up a translation by
+  source without ever seeing the source, and two different keys never collide.
+- **Ciphertext.** The translated text is AES-256-GCM encrypted (stored as
+  `encrypted_translation` + `nonce`) under the same account/group key, with the
+  v2 AAD context bound to the scope (owner/group, `source_hmac`, target language,
+  and — for community rows — the group key version).
+- **Invalidation.** Because `source_hmac` is deterministic per source, editing the
+  source produces a different hmac and the stale row is simply never matched again;
+  an `expires_at` TTL (90 days) sweeps orphans via `cleanup_expired_translations()`.
+  Community rows follow the group cascade and are superseded after key rotation
+  (new translations use the current key version).
+- **Legacy plaintext.** The previous plaintext `translations` /
+  `community_translations` tables are dropped by the migration
+  `20260804120000_encrypted_translations.sql`. The server cannot re-encrypt old
+  rows (keys are client-side), so no plaintext is migrated and none survives;
+  clients repopulate encrypted rows on demand.
+- **In memory.** While unlocked, translations are held in a plaintext in-memory
+  cache keyed by source text (the same trust boundary as decrypted prayers). It is
+  cleared on sign-out, account switch, vault lock, and AI consent withdrawal.
+
+Verse text is never sent through translation — authoritative Scripture wording
+comes only from the bundle / YouVersion. See `src/lib/crypto/translationCrypto.js`
+and `src/store/translationStore.js`.
+
 ## Group keys and forward secrecy
 
 Each group key version is distributed as a per-member RSA-OAEP envelope. The

@@ -1,6 +1,6 @@
 # Threat model
 
-Last reviewed: 2026-07-31. This document describes the implementation, not an
+Last reviewed: 2026-08-04. This document describes the implementation, not an
 aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 
 ## Assets and trust boundaries
@@ -8,8 +8,10 @@ aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 Prayer text, updates, points, testimonies, attachment plaintext, account keys,
 group keys, recovery credentials, relationship metadata, sessions, and provider
 secrets are sensitive. The browser, deployed JavaScript, Supabase, Vercel
-serverless functions, Edge Functions, Anthropic, YouVersion, Web Push services,
-and the user's device are separate trust boundaries.
+serverless functions, Edge Functions, the self-hosted AI gateway and local model
+(Ollama), YouVersion, Web Push services, and the user's device are separate trust
+boundaries. **No external AI provider (Anthropic, OpenAI, Google, Groq, …) is a
+trust boundary any more: prayer content selected for AI is never sent to one.**
 
 Supabase stores ciphertext for protected content, but necessarily sees metadata:
 account and group IDs, membership, record IDs, timestamps, status, categories,
@@ -53,9 +55,54 @@ Group members see content explicitly shared with their group.
 | XSS or malicious deployment | CSP, no HTML injection for rich text, dependency review, code review/CODEOWNERS | JavaScript running in the origin can read displayed plaintext, IndexedDB keys, session keys, and auth tokens. Encryption does not protect an unlocked compromised origin |
 | Lost or shared device | OS/browser access control, explicit lock, optional passphrase recovery | Default auto-lock is off; an unlocked browser profile or extracted local profile can expose the account key |
 | Recovery-code theft | 128-bit random code, PBKDF2 wrapping, rotation, code shown once | Anyone with the code and synced wrapped record can reset the passphrase; rotation is required after suspected disclosure |
-| AI relay/cost abuse | Supabase authentication; server-defined tasks/prompts/model; per-task limits; per-minute and atomic daily user/global quotas; `AI_PROXY_DISABLED` breaker | Authorized inputs leave the encryption boundary and are processed by Anthropic after explicit consent |
+| AI relay/cost abuse | Supabase JWT verification at the self-hosted gateway; server-defined tasks/prompts/model/token budgets; strict Zod input + structured-output validation; Bible-verse-text rejection; per-task limits; per-minute and atomic daily user/global quotas; gateway concurrency gate + bounded queue + request timeout; `AI_PROXY_DISABLED` breaker; no-content logging | Authorized inputs are decrypted on-device and processed by the Pray4Me-operated gateway + local model after explicit consent — never by an external AI provider. A server administrator can read process memory; a compromised AI host can expose active requests |
+| Sensitive data in AI input | Browser-side redaction of emails/phones/addresses/secrets/sensitive URLs before transmission; minimum-data default (title sent, description opt-in); optional name hiding | Redaction is best-effort; names are sent by default because they are often central to the prayer |
 | Community abuse/sensitive disclosure | Audience preview, local contact-detail warning/ack, report/block RPCs, restrictive blocking RLS, DB insert-rate triggers, moderator deletion | Moderators need human escalation processes; automated detection is intentionally limited and does not judge prayer/theology |
 | Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Pray4Me sent a notification |
+
+## AI processing boundary (self-hosted)
+
+Pray4Me runs AI on operator-controlled infrastructure — a private **AI gateway**
+(Node/TypeScript) that talks to a **local Ollama model** — instead of an external
+provider. The trust boundaries for the AI path are:
+
+- **The browser is the decryption boundary.** Prayer content is decrypted on the
+  user's device. Only the content the user consents to (title by default;
+  description opt-in), after browser-side redaction of high-confidence sensitive
+  tokens, leaves the device.
+- **The AI gateway is a plaintext-processing boundary.** It receives decrypted
+  text over TLS, verifies the user's Supabase JWT, builds fixed prompts, runs the
+  local model, validates the output, and returns references-only results. It does
+  not persist prayer content and does not log it.
+- **Ollama and the local model are trusted infrastructure** on the same private
+  server/container network as the gateway. Ollama is never exposed publicly.
+
+Precise statement (use this wording; do **not** call the design “zero
+knowledge”):
+
+> Prayer content selected for AI assistance is decrypted on the user's device and
+> processed by Pray4Me-operated infrastructure. It is not sent to an external AI
+> provider.
+
+What this does and does not protect:
+
+- **Does not** protect against malicious deployed JavaScript in the app origin —
+  JS that runs in the page can already read displayed plaintext and keys.
+- **Server administrators can access process memory** on the gateway/Ollama host
+  and could, in principle, observe a request while it is being processed.
+- **A compromised AI host can expose active requests** (the ones in flight); it
+  cannot expose past prayer content, which is never stored there.
+- **Protections in place:** full-disk encryption on the AI host, TLS in transit,
+  host access controls, private-only Ollama, and no-content logging across the
+  reverse proxy, Node server, and Ollama.
+- **Residual risks** live mostly on the user side: a compromised user device, XSS
+  or a malicious browser extension in the app origin, screenshots, and text the
+  user copies out of the app are all outside these controls.
+
+Machine **translations** of prayer content are cached encrypted (AES-GCM under
+the account or group key, keyed for lookup by a keyed HMAC of the source); the
+source text and translated text are never stored in plaintext. See
+[ENCRYPTION.md](./ENCRYPTION.md).
 
 ## Terminology
 

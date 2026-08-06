@@ -13,7 +13,9 @@ import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import AiConsentModal from '../components/AiConsentModal';
+import AiOutgoingPreview from '../components/AiOutgoingPreview';
 import { hasAiConsent } from '../lib/aiConsent';
+import { hasReviewedOutgoing, markOutgoingReviewed } from '../lib/aiCore';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import PrayerForm from '../components/PrayerForm';
 import PrayerShareModal from '../components/PrayerShareModal';
@@ -130,6 +132,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [addingVerseTo, setAddingVerseTo] = useState(null);
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
+  const [showAiPreview, setShowAiPreview] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showScripture, setShowScripture] = useState(false);
   // "Pray now" on this one prayer — a real session, so completion is recorded
@@ -440,15 +443,27 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     return result;
   };
 
-  const fetchRecs = async () => {
+  // The two optional context fields the outgoing-text preview labels separately:
+  // the prayer's own description, and its latest update (evolution recommendations
+  // lean on the update). Each is opt-in; the title is always sent, so no title
+  // fallback is needed here.
+  const recsDescription = () => livePrayer.description || '';
+  const recsLatestUpdate = () =>
+    isCommunity ? '' : ((livePrayer.prayer_updates || []).slice(-1)[0]?.text || '');
+
+  // Gate: require consent, then a one-time review of the exact outgoing text for
+  // this prayer, before the first AI request.
+  const fetchRecs = () => {
     if (loadingRecs) return;
     if (!hasAiConsent('prayer')) { setShowAiConsent(true); return; }
-    const lastUpdate = isCommunity
-      ? (livePrayer.description || livePrayer.title)
-      : ((livePrayer.prayer_updates || []).slice(-1)[0]?.text || livePrayer.title);
+    if (!hasReviewedOutgoing(livePrayer.id)) { setShowAiPreview(true); return; }
+    runRecs();
+  };
+
+  const runRecs = async () => {
     setLoadingRecs(true);
     setRecsError(null);
-    const { recs, error } = await getAIRecommendations({ title: livePrayer.title, description: lastUpdate, type: 'evolution', lang });
+    const { recs, error } = await getAIRecommendations({ title: livePrayer.title, description: recsDescription(), update: recsLatestUpdate(), type: 'evolution', lang });
     setUpdateRecs(recs);
     setRecsError(error);
     setLoadingRecs(false);
@@ -542,6 +557,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           lang={lang}
           onAccept={() => { setShowAiConsent(false); fetchRecs(); }}
           onCancel={() => setShowAiConsent(false)}
+        />
+      )}
+      {showAiPreview && (
+        <AiOutgoingPreview
+          lang={lang}
+          title={livePrayer.title}
+          description={recsDescription()}
+          update={recsLatestUpdate()}
+          onSend={() => { setShowAiPreview(false); markOutgoingReviewed(livePrayer.id); runRecs(); }}
+          onCancel={() => setShowAiPreview(false)}
         />
       )}
       {showShareModal && (
@@ -1038,7 +1063,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: 'var(--gold)', background: 'var(--gold-soft)' }}>{recsError}</p>}
 
           <div className="space-y-2 mt-2">
-            {updateRecs.map(rec => (
+            {updateRecs.map(rec => {
+              const recWhy = (rec.verses || []).find(v => v.why)?.why || '';
+              return (
               <div key={rec.title} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                 <div className="flex gap-2 items-start">
                   <p className="flex-1 text-sm leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
@@ -1054,6 +1081,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     <Plus size={13} />
                   </button>
                 </div>
+                {recWhy && (
+                  <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--text-3)' }}>{recWhy}</p>
+                )}
                 {(rec.verses || []).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {rec.verses.map((v, i) => (
@@ -1073,7 +1103,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   </div>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {updateRecs.length > 0 && <AiDisclaimer lang={lang} className="mt-2" />}

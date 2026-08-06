@@ -1,108 +1,198 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-import { aiEnabled, anthropicFetch } from '../lib/anthropic';
-import { hashText } from '../utils/hash';
+import { aiEnabled, aiFetch } from '../lib/aiClient';
+import { redactMany, restore } from '../lib/aiRedaction';
+import { ensureGroupKey } from '../lib/crypto/groupKeys';
+import {
+  deriveAccountHmacKey,
+  computeSourceHmac,
+  encryptAccountTranslation,
+  decryptAccountTranslation,
+  deriveGroupHmacKey,
+  encryptGroupTranslation,
+  decryptGroupTranslation,
+} from '../lib/crypto/translationCrypto';
 
-// In-memory cache for fast lookups: { [lang]: { [originalText]: translatedText } }
+// In-memory cache for fast, synchronous lookups in render: { [lang]: { [originalText]: translatedText } }.
+// This is plaintext IN MEMORY only, and only while the account/group key is
+// available — the same trust boundary as decrypted prayers. At REST (Supabase)
+// translations are ALWAYS encrypted (see translationCrypto); the original text is
+// never persisted.
 let memCache = {};
 
-// ── Group-scoped shared cache (community_translations) ───────────────────────
-// Community requests are visible to every member of the group, so their
-// translations can be shared among those same members — the first member's
-// translation spares everyone else the AI call. Scoped to the group, never used
-// for private personal prayers.
+// Encrypted rows carry a TTL so orphaned entries (whose source text changed, so
+// their hmac no longer matches) are swept server-side.
+const TTL_MS = 90 * 24 * 60 * 60 * 1000;
+const expiryIso = () => new Date(Date.now() + TTL_MS).toISOString();
 
-// Fill memCache from the group cache; return the subset still needing translation.
-async function fillFromGroupCache(todo, lang, groupId) {
-  try {
-    const byHash = new Map(todo.map((txt) => [hashText(txt), txt]));
-    const { data } = await supabase
-      .from('community_translations')
-      .select('source_hash, original_text, translated_text')
-      .eq('group_id', groupId)
-      .eq('lang', lang)
-      .in('source_hash', [...byHash.keys()]);
-    if (!memCache[lang]) memCache[lang] = {};
-    const hit = new Set();
-    for (const row of data || []) {
-      // Trust a row only on an exact original-text match (guards hash collisions).
-      if (byHash.get(row.source_hash) === row.original_text) {
-        memCache[lang][row.original_text] = row.translated_text;
-        hit.add(row.original_text);
-      }
-    }
-    return todo.filter((txt) => !hit.has(txt));
-  } catch {
-    return todo; // table missing / offline → translate everything
-  }
-}
-
-// Contribute freshly-translated texts back to the group cache for the next member.
-async function writeGroupCache(fresh, lang, groupId) {
-  try {
-    const rows = Object.entries(fresh).map(([original_text, translated_text]) => ({
-      group_id: groupId,
-      lang,
-      source_hash: hashText(original_text),
-      original_text,
-      translated_text,
-    }));
-    await supabase
-      .from('community_translations')
-      .upsert(rows, { onConflict: 'group_id,lang,source_hash', ignoreDuplicates: true });
-  } catch {
-    // non-fatal — the translation still shows this session.
-  }
-}
-
+// ── AI translation call (private gateway) ────────────────────────────────────
+// Sensitive tokens are redacted to placeholders before the text is sent, then
+// restored in the returned translation. Keys of the result map are the ORIGINAL
+// (unredacted) source texts, so memCache lookups by source text still work.
 async function callTranslate(texts, targetLang) {
   if (!aiEnabled || texts.length === 0) return {};
-
   try {
-    const res = await anthropicFetch('translate_texts', { texts, lang: targetLang });
+    const { texts: redacted, map } = redactMany(texts);
+    const res = await aiFetch('translate_texts', { texts: redacted, lang: targetLang });
     if (!res.ok) return {};
-    const data = await res.json();
-    const text = data?.content?.[0]?.text || '';
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) return {};
-    const parsed = JSON.parse(match[0]);
+    const body = await res.json();
+    // Gateway returns { data: { translations: { 0: '…', 1: '…' } } }.
+    const out = body?.data?.translations || {};
     const result = {};
-    texts.forEach((t, i) => { if (parsed[i]) result[t] = parsed[i]; });
+    texts.forEach((t, i) => {
+      if (typeof out[i] === 'string') result[t] = restore(out[i], map);
+    });
     return result;
   } catch {
     return {};
   }
 }
 
+// ── Private (account-key) encrypted cache ────────────────────────────────────
+// Fill memCache from existing encrypted rows; return the subset still needing AI.
+async function fillFromAccountCache(todo, lang, userId) {
+  const hmacKey = await deriveAccountHmacKey();
+  if (!hmacKey || !userId) return todo; // locked / signed-out → translate in memory only
+  try {
+    const byHmac = new Map();
+    for (const text of todo) byHmac.set(await computeSourceHmac(hmacKey, text), text);
+    const { data } = await supabase
+      .from('translations')
+      .select('source_hmac, target_language, encrypted_translation, nonce, encryption_version')
+      .eq('user_id', userId)
+      .eq('target_language', lang)
+      .in('source_hmac', [...byHmac.keys()]);
+    if (!memCache[lang]) memCache[lang] = {};
+    const hit = new Set();
+    for (const row of data || []) {
+      const text = byHmac.get(row.source_hmac);
+      if (!text) continue;
+      const translated = await decryptAccountTranslation({ userId, row });
+      if (translated != null) {
+        memCache[lang][text] = translated;
+        hit.add(text);
+      }
+    }
+    return todo.filter((t) => !hit.has(t));
+  } catch {
+    return todo;
+  }
+}
+
+async function writeAccountCache(fresh, lang, userId) {
+  const hmacKey = await deriveAccountHmacKey();
+  if (!hmacKey || !userId) return; // never persist plaintext when we can't encrypt
+  try {
+    const rows = [];
+    for (const [text, translated] of Object.entries(fresh)) {
+      const sourceHmac = await computeSourceHmac(hmacKey, text);
+      const enc = await encryptAccountTranslation({ userId, sourceHmac, targetLanguage: lang, translatedText: translated });
+      if (enc) rows.push({ user_id: userId, target_language: lang, expires_at: expiryIso(), ...enc });
+    }
+    if (rows.length) {
+      await supabase.from('translations').upsert(rows, { onConflict: 'user_id,target_language,source_hmac' });
+    }
+  } catch {
+    // non-fatal — the translation still shows this session (memCache).
+  }
+}
+
+// ── Community (group-key) encrypted, shared cache ────────────────────────────
+async function fillFromGroupCache(todo, lang, groupId) {
+  const gk = await ensureGroupKey(groupId);
+  const hmacKey = await deriveGroupHmacKey(gk?.key);
+  if (!gk || !hmacKey) return todo;
+  try {
+    const byHmac = new Map();
+    for (const text of todo) byHmac.set(await computeSourceHmac(hmacKey, text), text);
+    const { data } = await supabase
+      .from('community_translations')
+      .select('source_hmac, target_language, encrypted_translation, nonce, encryption_version, key_version')
+      .eq('group_id', groupId)
+      .eq('target_language', lang)
+      .eq('key_version', gk.version)
+      .in('source_hmac', [...byHmac.keys()]);
+    if (!memCache[lang]) memCache[lang] = {};
+    const hit = new Set();
+    for (const row of data || []) {
+      const text = byHmac.get(row.source_hmac);
+      if (!text) continue;
+      const translated = await decryptGroupTranslation({ groupKey: gk.key, groupId, row });
+      if (translated != null) {
+        memCache[lang][text] = translated;
+        hit.add(text);
+      }
+    }
+    return todo.filter((t) => !hit.has(t));
+  } catch {
+    return todo;
+  }
+}
+
+async function writeGroupCache(fresh, lang, groupId) {
+  const gk = await ensureGroupKey(groupId);
+  const hmacKey = await deriveGroupHmacKey(gk?.key);
+  if (!gk || !hmacKey) return;
+  try {
+    const rows = [];
+    for (const [text, translated] of Object.entries(fresh)) {
+      const sourceHmac = await computeSourceHmac(hmacKey, text);
+      const enc = await encryptGroupTranslation({
+        groupKey: gk.key,
+        groupId,
+        sourceHmac,
+        targetLanguage: lang,
+        keyVersion: gk.version,
+        translatedText: translated,
+      });
+      if (enc) rows.push({ group_id: groupId, target_language: lang, ...enc });
+    }
+    if (rows.length) {
+      // Overwrite on conflict (not ignoreDuplicates) so that after a group-key
+      // rotation a fresh translation replaces the stale-version row.
+      await supabase
+        .from('community_translations')
+        .upsert(rows, { onConflict: 'group_id,target_language,source_hmac' });
+    }
+  } catch {
+    // non-fatal.
+  }
+}
+
+async function translateChunks(todo, lang) {
+  const CHUNK = 20;
+  const fresh = {};
+  for (let i = 0; i < todo.length; i += CHUNK) {
+    Object.assign(fresh, await callTranslate(todo.slice(i, i + CHUNK), lang));
+  }
+  return fresh;
+}
+
+// Clear the in-memory translation cache. Called on sign-out, account switch, and
+// vault lock so no decrypted translation lingers in memory.
+export function clearTranslationCache() {
+  memCache = {};
+}
+
 const useTranslationStore = create((set) => ({
   translating: false,
 
-  // Load all translations for a user from Supabase into memCache
-  loadTranslations: async (userId) => {
-    const { data } = await supabase
-      .from('translations')
-      .select('lang, original_text, translated_text')
-      .eq('user_id', userId);
-
-    if (!data) return;
-    memCache = {};
-    for (const row of data) {
-      if (!memCache[row.lang]) memCache[row.lang] = {};
-      memCache[row.lang][row.original_text] = row.translated_text;
-    }
-    // Trigger re-render
+  // Retained for API compatibility. Translations are now resolved on demand by
+  // translateContent/translateTexts (which hold the source texts needed to derive
+  // the keyed lookup hmac); there is no plaintext bulk table to preload.
+  loadTranslations: async () => {
     set({});
   },
 
-  // Get translated text from memCache, fallback to original
+  // Synchronous lookup used in render; falls back to the original text.
   tr: (text, lang) => {
     if (!text || !lang) return text;
     return memCache[lang]?.[text] ?? text;
   },
 
   // Translate an arbitrary list of texts to lang (skipping already-cached ones).
-  // Used for on-demand community translation: when groupId is given, translations
-  // are shared across the group so each member doesn't re-pay for the same text.
+  // When groupId is given, uses the group-shared encrypted cache so members don't
+  // re-pay for the same text; otherwise uses the per-user encrypted cache.
   translateTexts: async (texts, lang, userId, groupId) => {
     if (!lang || !aiEnabled || !userId) return;
     const langCache = memCache[lang] || {};
@@ -110,29 +200,27 @@ const useTranslationStore = create((set) => ({
     if (todo.length === 0) return;
 
     set({ translating: true });
+    try {
+      const remaining = groupId
+        ? await fillFromGroupCache(todo, lang, groupId)
+        : await fillFromAccountCache(todo, lang, userId);
 
-    // Reuse anything a fellow group member already translated before calling AI.
-    const stillTodo = groupId ? await fillFromGroupCache(todo, lang, groupId) : todo;
-
-    const CHUNK = 20;
-    const fresh = {};
-    for (let i = 0; i < stillTodo.length; i += CHUNK) {
-      Object.assign(fresh, await callTranslate(stillTodo.slice(i, i + CHUNK), lang));
+      const fresh = await translateChunks(remaining, lang);
+      if (Object.keys(fresh).length > 0) {
+        if (!memCache[lang]) memCache[lang] = {};
+        Object.assign(memCache[lang], fresh);
+        await writeAccountCache(fresh, lang, userId);
+        if (groupId) await writeGroupCache(fresh, lang, groupId);
+      }
+    } finally {
+      set({ translating: false });
     }
-    if (Object.keys(fresh).length > 0) {
-      if (!memCache[lang]) memCache[lang] = {};
-      Object.assign(memCache[lang], fresh);
-      const rows = Object.entries(fresh).map(([original_text, translated_text]) => ({ user_id: userId, lang, original_text, translated_text }));
-      await supabase.from('translations').upsert(rows, { onConflict: 'user_id,lang,original_text', ignoreDuplicates: true });
-      if (groupId) await writeGroupCache(fresh, lang, groupId);
-    }
-    set({ translating: false });
   },
 
-  // Translate all texts not yet in DB for the given lang, then save to Supabase
+  // Translate all not-yet-cached texts for the given lang, resolving existing
+  // encrypted rows first, then AI-translating and persisting the rest (encrypted).
   translateContent: async (prayers, categories, lang, userId) => {
     if (!lang || !aiEnabled || !userId) return;
-
     const langCache = memCache[lang] || {};
 
     const toTranslate = new Set();
@@ -148,9 +236,8 @@ const useTranslationStore = create((set) => ({
       });
       (p.prayer_points || []).forEach((pp) => {
         if (pp.title && !langCache[pp.title]) toTranslate.add(pp.title);
-        // Scripture text (pp.verse_text / verses) is NEVER sent through AI
-        // translation — authoritative verse text comes from the bundle /
-        // YouVersion via useLocalizedVerse, or stays in its original language.
+        // Scripture text is NEVER sent through AI translation — authoritative verse
+        // text comes from the bundle / YouVersion, or stays in its original language.
       });
     });
 
@@ -158,37 +245,16 @@ const useTranslationStore = create((set) => ({
     if (texts.length === 0) return;
 
     set({ translating: true });
-
-    const CHUNK = 20;
-    const newTranslations = {};
-    for (let i = 0; i < texts.length; i += CHUNK) {
-      const chunk = texts.slice(i, i + CHUNK);
-      const result = await callTranslate(chunk, lang);
-      Object.assign(newTranslations, result);
-    }
-
-    if (Object.keys(newTranslations).length === 0) {
+    try {
+      const remaining = await fillFromAccountCache(texts, lang, userId);
+      const fresh = await translateChunks(remaining, lang);
+      if (Object.keys(fresh).length === 0) return;
+      if (!memCache[lang]) memCache[lang] = {};
+      Object.assign(memCache[lang], fresh);
+      await writeAccountCache(fresh, lang, userId);
+    } finally {
       set({ translating: false });
-      return;
     }
-
-    // Update memCache
-    if (!memCache[lang]) memCache[lang] = {};
-    Object.assign(memCache[lang], newTranslations);
-
-    // Save to Supabase with upsert (unique on user_id, lang, original_text)
-    const rows = Object.entries(newTranslations).map(([original_text, translated_text]) => ({
-      user_id: userId,
-      lang,
-      original_text,
-      translated_text,
-    }));
-
-    await supabase
-      .from('translations')
-      .upsert(rows, { onConflict: 'user_id,lang,original_text', ignoreDuplicates: true });
-
-    set({ translating: false });
   },
 }));
 

@@ -1,6 +1,8 @@
-// Shared client-side cooldown and JSON parsing for the finite AI tasks. Security
-// prompts, model selection, and token budgets live only in api/anthropic.js.
-import { anthropicFetch } from './anthropic';
+// Shared client-side cooldown and response handling for the finite AI tasks. The
+// system prompts, model selection, token budgets, and output validation all live
+// in the self-hosted gateway (services/ai-gateway); the browser only asks for a
+// server-defined { task, input } and receives a validated, normalized response.
+import { aiFetch } from './aiClient';
 import { devError } from './logger';
 import { t } from '../i18n';
 
@@ -14,12 +16,35 @@ const COOLDOWN_MS = 5000;
 // share a single 'default' bucket.
 const lastCallByFeature = new Map();
 
+// Prayers whose exact outgoing text the user has already reviewed this session.
+// The outgoing-text preview is shown once per prayer before its first AI request.
+const previewedPrayers = new Set();
+
+// In-memory request state (in-flight markers + cooldown timers). Cleared on
+// consent withdrawal / sign-out via resetAiRequestState().
 export function getRemainingCooldown(feature = 'default') {
   const last = lastCallByFeature.get(feature) || 0;
   return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000));
 }
 
-// Map a typed error from callClaudeForJson to localized, user-facing copy.
+// Whether the user has reviewed the outgoing text for this prayer this session.
+export function hasReviewedOutgoing(prayerId) {
+  return !!prayerId && previewedPrayers.has(prayerId);
+}
+
+// Record that the user reviewed and confirmed the outgoing text for this prayer.
+export function markOutgoingReviewed(prayerId) {
+  if (prayerId) previewedPrayers.add(prayerId);
+}
+
+// Clear all in-memory AI request state (cooldown timers, outgoing-text reviews).
+// Consent withdrawal and sign-out call this so a withdrawn user starts clean.
+export function resetAiRequestState() {
+  lastCallByFeature.clear();
+  previewedPrayers.clear();
+}
+
+// Map a typed error from callAiForJson to localized, user-facing copy.
 // Centralized so every AI caller surfaces the same wording in the user's language.
 export function localizeAiError(error, lang) {
   if (!error) return null;
@@ -30,17 +55,18 @@ export function localizeAiError(error, lang) {
   return t(lang, 'aiError');
 }
 
-// Sends one guardrailed request to Claude and returns the first JSON value found
-// in the response. `shape` selects whether we expect a top-level object or array.
-// Errors come back as a typed token ({ type, seconds? }) so each caller can map
-// them to its own localized copy — this module stays free of i18n.
-export async function callClaudeForJson({ task, input, shape = 'object', feature = 'default' }) {
+// Sends one guardrailed request to the gateway and returns its already-parsed,
+// already-validated `data` object. The gateway performs JSON parsing and strict
+// schema validation server-side, so there is no client-side regex extraction and
+// no raw model text to sift through. Errors come back as a typed token
+// ({ type, seconds? }) so each caller maps them to its own localized copy.
+export async function callAiForJson({ task, input, feature = 'default' }) {
   const remaining = getRemainingCooldown(feature);
   if (remaining > 0) return { data: null, error: { type: 'cooldown', seconds: remaining } };
 
   lastCallByFeature.set(feature, Date.now());
   try {
-    const res = await anthropicFetch(task, input);
+    const res = await aiFetch(task, input);
 
     if (res.status === 429) return { data: null, error: { type: 'busy' } };
     if (!res.ok) {
@@ -50,16 +76,11 @@ export async function callClaudeForJson({ task, input, shape = 'object', feature
       return { data: null, error: { type: 'error' } };
     }
 
-    const body = await res.json();
-    // A 200 response can still be an incomplete answer if Claude hit maxTokens
-    // mid-JSON. That's otherwise silent (no error, just an unmatched/unparsable
-    // regex below), which looks identical to a real failure from the caller's
-    // side — log it so a too-small maxTokens budget is diagnosable.
-    if (body?.stop_reason === 'max_tokens') devError('AI response truncated (max_tokens)', feature);
-    const text = body?.content?.[0]?.text || '';
-    const match = text.match(shape === 'array' ? /\[[\s\S]*\]/ : /\{[\s\S]*\}/);
-    if (!match) return { data: null, error: null };
-    return { data: JSON.parse(match[0]), error: null };
+    const body = await res.json().catch(() => null);
+    // The gateway returns { data, usage }. `data` is the validated task result.
+    const data = body?.data ?? null;
+    if (data == null) return { data: null, error: null };
+    return { data, error: null };
   } catch {
     return { data: null, error: { type: 'error' } };
   }

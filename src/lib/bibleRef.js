@@ -1,7 +1,11 @@
 // Bridges the app's localized verse references (e.g. "Philippiens 4:6",
 // "腓立比书 4:6") to what the YouVersion Platform API needs: a numeric version id
 // per language and a USFM passage id ("PHP.4.6").
-import { anthropicFetch } from './anthropic';
+//
+// Reference → USFM conversion is DETERMINISTIC and LOCAL. There is intentionally
+// no AI fallback: citation mapping must never depend on the AI service being
+// reachable, and (per the privacy model) reference strings are not sent to the
+// gateway just to be parsed. An unrecognized book name resolves to null.
 import { BOOK_NAMES } from '../content/dailyVerses';
 
 // Curated YouVersion version ids per UI language. The binding constraint is the
@@ -47,9 +51,6 @@ export function versionSupportsUsfm(lang, usfm) {
   return !(lang === 'ru' && String(usfm).startsWith('PSA.'));
 }
 
-// USFM passage ids: 3-char book code, chapter, optional verse, optional range end
-// — "1TH.5.17" (verse), "PHP.1.3-11" (range), "PSA.100" (whole chapter).
-const USFM_RE = /^[A-Z0-9]{3}\.\d{1,3}(\.\d{1,3}(-\d{1,3})?)?$/;
 const cacheKey = (reference) => `usfm:${reference}`;
 
 // Canonical English book name → USFM code, for every book of the Protestant
@@ -120,11 +121,9 @@ export function usfmFromReference(reference) {
 
 // Convert a (possibly localized) reference into a USFM passage id. This is a
 // deterministic citation transform, NOT scripture generation — the authoritative
-// verse text still comes from YouVersion; only the reference is mapped. We resolve
-// it locally first (offline, free, un-throttled) and only fall back to an AI call
-// for a book name we don't recognize. Cached permanently per reference string.
-// Uses anthropicFetch directly (not the cooldown-throttled callClaudeForJson) so
-// it never blocks the AI text fallback that may run on the same tap.
+// verse text still comes from YouVersion; only the reference is mapped. Resolved
+// entirely locally (offline, free, un-throttled). Returns null for a book name we
+// can't recognize; there is no AI fallback. Cached permanently per reference.
 export async function referenceToUsfm(reference) {
   if (!reference) return null;
   try {
@@ -142,31 +141,6 @@ export async function referenceToUsfm(reference) {
     return local;
   }
 
-  let res;
-  try {
-    res = await anthropicFetch('bible_reference_to_usfm', { reference });
-  } catch {
-    return null;
-  }
-  if (!res.ok) return null;
-
-  const body = await res.json().catch(() => null);
-  const text = body?.content?.[0]?.text || '';
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) return null;
-  let usfm;
-  try {
-    usfm = JSON.parse(match[0]).usfm;
-  } catch {
-    return null;
-  }
-  usfm = (usfm || '').trim().toUpperCase();
-  if (!USFM_RE.test(usfm)) return null;
-
-  try {
-    localStorage.setItem(cacheKey(reference), usfm);
-  } catch {
-    // best-effort cache only
-  }
-  return usfm;
+  // Unrecognized book name → reference-only (no AI round-trip).
+  return null;
 }

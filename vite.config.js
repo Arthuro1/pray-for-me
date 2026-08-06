@@ -3,7 +3,7 @@ import { Buffer } from 'node:buffer'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
-import { handleAnthropicRequest, MAX_REQUEST_BYTES } from './api/anthropic.js'
+import { handleAiRequest, MAX_REQUEST_BYTES } from './api/ai.js'
 
 // Single source of truth for the app version: package.json. Injected as the
 // compile-time constant __APP_VERSION__ so the UI (Settings/About) and any docs
@@ -27,14 +27,16 @@ async function readJsonBody(req) {
   return raw ? JSON.parse(raw) : {}
 }
 
-// Development exercises the same authenticated, structured, quota-controlled
-// handler as production. A direct upstream proxy would let callers choose their
-// own model/messages while the dev server silently attached its API key.
-function anthropicApiPlugin(env) {
+// Development exercises the same same-origin forwarder as production: the browser
+// posts { task, input } to /api/ai and this middleware relays it to the private
+// AI gateway (AI_GATEWAY_URL). The dev server never talks to an external provider
+// and never lets the caller choose a model/prompt/token budget — the gateway owns
+// all of that.
+function aiApiPlugin(env) {
   return {
-    name: 'pray4me-anthropic-api',
+    name: 'pray4me-ai-api',
     configureServer(server) {
-      server.middlewares.use('/api/anthropic', async (req, res) => {
+      server.middlewares.use('/api/ai', async (req, res) => {
         try {
           req.body = await readJsonBody(req)
         } catch (error) {
@@ -59,7 +61,7 @@ function anthropicApiPlugin(env) {
         }
 
         try {
-          await handleAnthropicRequest(req, apiRes, { env, fetchImpl: globalThis.fetch })
+          await handleAiRequest(req, apiRes, { env, fetchImpl: globalThis.fetch })
         } catch {
           if (!res.writableEnded) apiRes.status(500).json({ error: 'Internal server error' })
         }
@@ -70,10 +72,23 @@ function anthropicApiPlugin(env) {
 
 export default defineConfig(({ mode }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
-  // server-only ANTHROPIC_API_KEY. This is read in the Node dev server only and
-  // is never exposed to `import.meta.env` / the browser bundle.
+  // server-only AI_GATEWAY_URL. This is read in the Node dev server only and is
+  // never exposed to `import.meta.env` / the browser bundle.
   const env = loadEnv(mode, process.cwd(), '')
   const yvpKey = env.YVP_APP_KEY || ''
+
+  // Optional direct-gateway mode: when the browser talks to a dedicated gateway
+  // host (VITE_AI_GATEWAY_URL) instead of the same-origin /api/ai proxy, that
+  // origin must be allowed in connect-src. Same-origin mode needs no addition.
+  // (For production set the same origin in vercel.json's connect-src.)
+  let aiGatewayOrigin = ''
+  try {
+    if (env.VITE_AI_GATEWAY_URL) aiGatewayOrigin = new URL(env.VITE_AI_GATEWAY_URL).origin
+  } catch { /* ignore a malformed URL */ }
+  const connectSrc = [
+    "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co https://va.vercel-scripts.com https://*.vercel-insights.com",
+    aiGatewayOrigin,
+  ].filter(Boolean).join(' ')
 
   return {
   define: {
@@ -81,7 +96,7 @@ export default defineConfig(({ mode }) => {
   },
   plugins: [
     react(),
-    anthropicApiPlugin(env),
+    aiApiPlugin(env),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.svg', 'logo-constellation.svg', 'logo-constellation-dark.svg', 'icons/*.png'],
@@ -147,7 +162,7 @@ export default defineConfig(({ mode }) => {
         "img-src 'self' data: blob: https:",
         "media-src 'self' blob:",
         "font-src 'self' data:",
-        "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co https://va.vercel-scripts.com https://*.vercel-insights.com",
+        connectSrc,
         "worker-src 'self' blob:",
         "manifest-src 'self'",
         "base-uri 'self'",

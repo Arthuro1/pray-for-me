@@ -5,6 +5,18 @@ import { forgetAccountKey } from '../lib/crypto/accountKey';
 import { authRedirectTarget } from '../lib/pendingInvite';
 import { setAuthSessionHint } from '../lib/authSessionHint';
 import { clearServiceWorkerUserCaches } from '../lib/serviceWorkerSecurity';
+import { clearAllAiResultCaches } from '../lib/aiResultCache';
+import { resetAiRequestState } from '../lib/aiCore';
+import { clearTranslationCache } from './translationStore';
+
+// Clear all in-memory AI state (result caches, translation cache, in-flight
+// request/cooldown markers) so nothing decrypted lingers across an account
+// boundary. Called on sign-out and account deletion.
+function clearAiEphemeralState() {
+  clearAllAiResultCaches();
+  clearTranslationCache();
+  resetAiRequestState();
+}
 
 const useAuthStore = create((set) => ({
   user: null,
@@ -78,6 +90,7 @@ const useAuthStore = create((set) => ({
   // cross-account bleed) and only removed on account deletion.
   signOut: async () => {
     const { data: { user } } = await supabase.auth.getUser();
+    clearAiEphemeralState();
     await clearLocalData(user?.id);
     await clearServiceWorkerUserCaches();
     await supabase.auth.signOut();
@@ -91,6 +104,7 @@ const useAuthStore = create((set) => ({
     const { data: { user } } = await supabase.auth.getUser();
     const { error } = await supabase.rpc('delete_account');
     if (error) return { error };
+    clearAiEphemeralState();
     await clearLocalData(user?.id);
     await clearServiceWorkerUserCaches();
     await forgetAccountKey(user?.id); // the account is gone — remove the local key too
