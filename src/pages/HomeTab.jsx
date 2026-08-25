@@ -11,7 +11,6 @@ import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
 import Encouragement from '../components/shared/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
-import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
@@ -27,7 +26,7 @@ import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
 import VerseVersion from '../components/VerseVersion';
-import { versionForSource } from '../lib/bibleVersions';
+import VerseShareModal from '../components/VerseShareModal';
 import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
 import ActivationNudge from '../components/ActivationNudge';
@@ -71,6 +70,7 @@ export default function HomeTab({ onAdd, onEdit }) {
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [fetchPrayerShares, user?.id]);
   const [verse, setVerse] = useState(null);
   const [verseResolving, setVerseResolving] = useState(false);
+  const [sharingVerse, setSharingVerse] = useState(false);
   // The open session's prayer list, snapshotted when it starts: completions
   // recorded while praying must not reshuffle the walk mid-session. null = no
   // session open.
@@ -148,29 +148,12 @@ export default function HomeTab({ onAdd, onEdit }) {
   const openSession = (prayers, dayById = null) => setSession({ prayers, dayById });
   const startCatchUpSession = () =>
     openSession(catchUp.map((c) => c.prayer), Object.fromEntries(catchUp.map((c) => [c.prayer.id, c.day])));
-  // After a completed session, offer a reminder ONCE — in context, never during
-  // Share the verse of the day via the native share sheet, or copy it as a fallback.
-  const handleShareVerse = async () => {
-    if (!verse) return;
-    // Cite the edition alongside the reference when we know it (never for the
-    // unlabelled embedded SEED wording), so the shared verse can be verified.
-    const version = verse.source ? versionForSource(verse.source, lang) : null;
-    const ref = version ? `${verse.ref} (${version.abbr})` : verse.ref;
-    const text = verse.text ? `"${verse.text}" — ${ref}` : ref;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: t(lang, 'verseOfDay'), text, url: window.location.origin });
-      } else {
-        await navigator.clipboard.writeText(`${text}\n${window.location.origin}`);
-        toast.success(t(lang, 'verseCopied'));
-      }
-    } catch {
-      // user dismissed the share sheet, or share/clipboard was blocked — ignore
-    }
-  };
 
   return (
     <div className="phase-page constellation-home">
+      {sharingVerse && verse && (
+        <VerseShareModal verse={verse} lang={lang} dayKey={dayKey} onClose={() => setSharingVerse(false)} />
+      )}
       {session && session.prayers.length > 0 && (
         <PrayerSession
           prayers={session.prayers}
@@ -413,7 +396,7 @@ export default function HomeTab({ onAdd, onEdit }) {
             </p>
             {verse && (
               <button
-                onClick={handleShareVerse}
+                onClick={() => setSharingVerse(true)}
                 aria-label={t(lang, 'shareVerse')}
                 title={t(lang, 'shareVerse')}
                 className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors"

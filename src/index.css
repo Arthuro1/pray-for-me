@@ -1194,6 +1194,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   --border-soft: #e7e1f1;
   --header: linear-gradient(145deg, #30215e 0%, #5d43a7 100%);
   --header-answered: linear-gradient(145deg, #1d5f5b 0%, #279e98 100%);
+  /* The shared verse-of-the-day image wears the same sky as the Home hero, in both
+     themes — a near-white card would vanish against half the chat backgrounds it
+     lands on. Its whole palette lives here so the exported card can never drift
+     from the system; Light and Dark differ only in how deep the sky goes. */
+  --card-sky-from: #30215e;
+  --card-sky-to: #5d43a7;
+  --card-sky-ink: #f8f5ff;
+  --card-sky-accent: #cbb6f2;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
@@ -1246,6 +1254,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   --border-soft: #2c263a;
   --header: linear-gradient(145deg, #19132f 0%, #4a3190 100%);
   --header-answered: linear-gradient(145deg, #153532 0%, #23635f 100%);
+  --card-sky-from: #19132f;
+  --card-sky-to: #4a3190;
+  --card-sky-accent: #b19aeb;
   --accent: var(--plum);
   --accent-2: #b19aeb;
   --accent-soft: #28203d;

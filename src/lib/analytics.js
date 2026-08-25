@@ -35,6 +35,7 @@ export const EVENTS = Object.freeze({
   AI_CONSENT_REVOKED: 'ai_consent_revoked',
   GROUP_JOINED: 'group_joined',
   PRAYER_SHARED: 'prayer_shared',
+  VERSE_SHARED: 'verse_shared',
   DATA_EXPORTED: 'data_exported',
   ACCOUNT_DELETED_STARTED: 'account_deleted_started',
   PRIVACY_CENTER_OPENED: 'privacy_center_opened',
