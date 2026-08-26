@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getPlan, planDayContent } from '../content/prayerPlans';
 import { loadPlanTranslations, mergePlan } from '../content/plans/translations';
+import { canUsePlan } from '../lib/planReview';
 
 // Guided-plan content with the reader's language folded in.
 //
@@ -16,14 +17,14 @@ export function useLocalizedPlan(plan, lang) {
   useEffect(() => {
     if (!plan) { setLocalized(plan); return undefined; }
     // en/fr are authored in the source — no overlay to fetch. Neither is a plan
-    // that has not declared prose translations: an overlay file is per LANGUAGE,
-    // not per plan, so fetching one for a plan it does not cover would pull a
-    // sizeable chunk down for nothing (see `proseTranslations` in
+    // that has not declared prose translations: overlays are lazy per plan and
+    // language, so fetching one for a plan with no overlay would do work for
+    // nothing (see `proseTranslations` in
     // docs/PRAYER_PLANS.md).
-    if (lang === 'en' || lang === 'fr' || !plan.proseTranslations) { setLocalized(plan); return undefined; }
+    if (!canUsePlan(plan) || lang === 'en' || lang === 'fr' || !plan.proseTranslations) { setLocalized(plan); return undefined; }
     let alive = true;
     setLocalized(plan);
-    loadPlanTranslations(lang).then((overlay) => {
+    loadPlanTranslations(lang, plan.id).then((overlay) => {
       if (alive) setLocalized(mergePlan(plan, overlay, lang));
     });
     return () => { alive = false; };
@@ -36,8 +37,9 @@ export function useLocalizedPlan(plan, lang) {
 // plan id or day number simply resolves to null, so callers that only sometimes
 // sit on a plan day (the session walk, the prayer detail page) can still obey
 // the rules of hooks.
-export function useLocalizedPlanDay(planId, dayNumber, lang) {
-  const plan = planId ? getPlan(planId) : null;
+export function useLocalizedPlanDay(planId, dayNumber, lang, version = null) {
+  const resolved = planId ? getPlan(planId, version) : null;
+  const plan = canUsePlan(resolved) ? resolved : null;
   const localizedPlan = useLocalizedPlan(plan, lang);
   if (!localizedPlan || !dayNumber) return null;
   return planDayContent(planId, dayNumber, localizedPlan);

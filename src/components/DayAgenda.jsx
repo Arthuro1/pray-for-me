@@ -60,7 +60,7 @@ export default function DayAgenda({
                   <div key={prayer.id} className="rounded-xl px-3 py-2.5" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
                     <div className="flex items-center gap-2.5">
                       <SourceDot source={source} />
-                      <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-left">
+                      <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-start">
                         <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: prayed ? 'line-through' : 'none', opacity: prayed ? 0.6 : 1 }}>
                           {tr(prayer.title, lang)}
                         </p>
@@ -71,7 +71,7 @@ export default function DayAgenda({
                               // selected day; other schedules show their summary.
                               const plan = prayer.schedule.plan;
                               const n = plan ? planDayNumber(prayer.schedule, dayKey) : null;
-                              const content = n && planDayContent(plan.id, n);
+                              const content = n && planDayContent(plan.id, n, null, plan.version || null);
                               if (content) {
                                 return `${t(lang, 'planDayOf', { n, total: prayer.schedule.end?.count || '' })} · ${pick(content.theme, lang)}`;
                               }
@@ -139,7 +139,7 @@ export default function DayAgenda({
               <button
                 key={c.id}
                 onClick={() => navigate(`/community/group/${c.group_id}/prayer/${c.community_prayer_id}`)}
-                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left"
+                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-start"
                 style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}
               >
                 <span className="rounded-full shrink-0" style={{ width: 6, height: 6, background: DOT_COLORS.group }} />

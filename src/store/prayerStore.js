@@ -30,6 +30,7 @@ import {
 import { isUnlocked } from '../lib/crypto/keyManager';
 import { groupKeyResolver } from '../lib/crypto/groupKeys';
 import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
+import { clearPlanPersonalization } from '../lib/planPersonalizationStorage';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -840,8 +841,8 @@ const usePrayerStore = create((set, get) => ({
     // A guided plan that opts in also reports THAT one of its days was walked —
     // no day number, no plan progress, nothing the person wrote (see the
     // `analyticsEvents` note in src/content/plans/preparingInPrayer.js).
-    const planId = get().prayers.find((p) => p.id === prayerId)?.schedule?.plan?.id;
-    const dayEvent = planId && getPlan(planId)?.analyticsEvents?.dayCompleted;
+    const planSchedule = get().prayers.find((p) => p.id === prayerId)?.schedule?.plan;
+    const dayEvent = planSchedule?.id && getPlan(planSchedule.id, planSchedule.version || null)?.analyticsEvents?.dayCompleted;
     if (dayEvent) track(dayEvent);
   },
 
@@ -900,8 +901,10 @@ const usePrayerStore = create((set, get) => ({
 
   // Immediate delete (callers warn the user first). Optimistic + offline-queued.
   deletePrayer: async (id) => {
+    const ownerId = get().userId;
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
     enqueue('deletePrayer', { id });
+    await clearPlanPersonalization(ownerId, id);
   },
 
   // Optimistically hide a prayer and defer the real delete, so an "Undo" toast
@@ -913,6 +916,7 @@ const usePrayerStore = create((set, get) => ({
     const timer = setTimeout(() => {
       pendingDeletes.delete(id);
       enqueue('deletePrayer', { id });
+      clearPlanPersonalization(get().userId, id);
     }, UNDO_WINDOW_MS);
     pendingDeletes.set(id, { prayer, timer });
     return prayer;

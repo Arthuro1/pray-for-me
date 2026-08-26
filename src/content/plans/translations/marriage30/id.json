@@ -1,0 +1,347 @@
+{
+  "marriage30": {
+    "days": [
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kristus sebagai pusat”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kristus sebagai pusat; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Bersyukur atas pasangan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Bersyukur atas pasangan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Persahabatan dalam pernikahan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Persahabatan dalam pernikahan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Karakter di rumah”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Karakter di rumah; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "roles": {
+          "husband": "Sebagai suami, mintalah kasih yang rendah hati dan rela berkorban serta pelayanan yang bertanggung jawab, bukan kendali.",
+          "wife": "Sebagai istri, mintalah kasih yang berani dan rela berkorban serta hikmat, tanpa melepaskan suara, martabat, atau keselamatanmu."
+        }
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Perkataan yang membangun”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Perkataan yang membangun; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Mendengar sebelum menjawab”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Mendengar sebelum menjawab; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Konflik tanpa merendahkan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Konflik tanpa merendahkan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?",
+        "safetyNote": "Doa tidak pernah menuntut diam, menerima paksaan, atau tetap dalam bahaya. Carilah bantuan profesional, pastoral, medis, hukum, atau perlindungan yang tepercaya bila perlu; rencana ini tidak dapat menilai bahaya."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Pengampunan dan pemulihan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Pengampunan dan pemulihan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan.",
+        "safetyNote": "Doa tidak pernah menuntut diam, menerima paksaan, atau tetap dalam bahaya. Carilah bantuan profesional, pastoral, medis, hukum, atau perlindungan yang tepercaya bila perlu; rencana ini tidak dapat menilai bahaya."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kepercayaan melalui kejujuran”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kepercayaan melalui kejujuran; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kedekatan emosional”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kedekatan emosional; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Keintiman yang timbal balik dan setia”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Keintiman yang timbal balik dan setia; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?",
+        "safetyNote": "Doa tidak pernah menuntut diam, menerima paksaan, atau tetap dalam bahaya. Carilah bantuan profesional, pastoral, medis, hukum, atau perlindungan yang tepercaya bila perlu; rencana ini tidak dapat menilai bahaya."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kesetiaan dalam setiap pilihan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kesetiaan dalam setiap pilihan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "safetyNote": "Doa tidak pernah menuntut diam, menerima paksaan, atau tetap dalam bahaya. Carilah bantuan profesional, pastoral, medis, hukum, atau perlindungan yang tepercaya bila perlu; rencana ini tidak dapat menilai bahaya."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Uang sebagai tanggung jawab”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Uang sebagai tanggung jawab; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kerja dan istirahat”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kerja dan istirahat; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Irama rohani bersama”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Irama rohani bersama; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Berdoa bersama”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Berdoa bersama; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Berakar dalam gereja dan komunitas”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Berakar dalam gereja dan komunitas; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Batas keluarga yang bijaksana”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Batas keluarga yang bijaksana; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?",
+        "safetyNote": "Doa tidak pernah menuntut diam, menerima paksaan, atau tetap dalam bahaya. Carilah bantuan profesional, pastoral, medis, hukum, atau perlindungan yang tepercaya bila perlu; rencana ini tidak dapat menilai bahaya."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Rumah yang ramah”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Rumah yang ramah; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Melayani berdampingan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Melayani berdampingan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "roles": {
+          "husband": "Sebagai suami, mintalah kasih yang rendah hati dan rela berkorban serta pelayanan yang bertanggung jawab, bukan kendali.",
+          "wife": "Sebagai istri, mintalah kasih yang berani dan rela berkorban serta hikmat, tanpa melepaskan suara, martabat, atau keselamatanmu."
+        }
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Setia dalam masa sulit”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Setia dalam masa sulit; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan.",
+        "safetyNote": "Doa tidak pernah menuntut diam, menerima paksaan, atau tetap dalam bahaya. Carilah bantuan profesional, pastoral, medis, hukum, atau perlindungan yang tepercaya bila perlu; rencana ini tidak dapat menilai bahaya."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kesehatan dan kekuatan dengan rendah hati”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kesehatan dan kekuatan dengan rendah hati; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Impian dan keputusan”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Impian dan keputusan; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Rasa cukup dalam keseharian”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Rasa cukup dalam keseharian; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Menjaga waktu bersama”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Menjaga waktu bersama; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Hikmat bagi mereka yang kami rawat”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Hikmat bagi mereka yang kami rawat; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "withChildren": {
+          "reflection": "Setiap anak dikenal Allah. Berdoalah dengan harapan dan kerendahan hati, tanpa menjadikan doa sebagai jaminan atau alat kendali.",
+          "childPrompt": "Berikan {child} relasi yang bijaksana, keberanian, dan anugerah; jadikan kami orang tua yang penuh perhatian dan membimbing tanpa mengendalikan.",
+          "practice": "Berikan setiap anak waktu singkat dengan perhatian penuh dan dengarkan."
+        }
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Setiap pribadi dikenal Allah”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Setiap pribadi dikenal Allah; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?",
+        "withChildren": {
+          "reflection": "Setiap anak dikenal Allah. Berdoalah dengan harapan dan kerendahan hati, tanpa menjadikan doa sebagai jaminan atau alat kendali.",
+          "childPrompt": "Berikan {child} relasi yang bijaksana, keberanian, dan anugerah; jadikan kami orang tua yang penuh perhatian dan membimbing tanpa mengendalikan.",
+          "practice": "Berikan setiap anak waktu singkat dengan perhatian penuh dan dengarkan."
+        }
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Budaya rumah kami”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Budaya rumah kami; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "conversationPrompt": "Jika kami berdua mau dan merasa aman: bagaimana tema ini memengaruhi hidup kami sekarang?"
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Kemurahan hati dan misi”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Kemurahan hati dan misi; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      },
+      {
+        "reflection": "Hari ini Kitab Suci mengarahkan perhatian kita pada “Pernikahan kami dalam tangan terbuka”. Kita membawa bagian kehidupan pernikahan ini kepada Allah dengan kerendahan hati, kebenaran, dan kepedulian.",
+        "prompts": [
+          "Tuntun kami dalam Pernikahan kami dalam tangan terbuka; pusatkan doa kami pada anugerah-Mu, bukan pada mengendalikan satu sama lain."
+        ],
+        "spousePrompt": "Kuatkan {partner} dengan hikmat, martabat, dan anugerah dalam hal ini.",
+        "selfPrompt": "Tunjukkan apa yang perlu berubah dalam diriku dan jadikan aku rendah hati, bertanggung jawab, dan siap memperbaiki.",
+        "marriagePrompt": "Bentuklah kasih yang setia, rasa aman, dan kepedulian timbal balik dalam pernikahan kami.",
+        "practice": "Pilih satu tindakan kecil dan sukarela hari ini untuk menjalankan doa ini.",
+        "prayTogether": "Jika kami berdua mau dan merasa aman, berdoalah masing-masing satu kalimat. Tidak ada yang direkam atau dibagikan."
+      }
+    ],
+    "intro": "Tiga puluh hari membaca Kitab Suci dan berdoa bagi pasangan, pertumbuhan diri, dan pernikahan. Ini irama yang dapat diulang, bukan nilai atau diagnosis. Pasangan menikah sudah merupakan keluarga; anak-anak adalah lapisan opsional dan catatan pribadi tetap pribadi.",
+    "biblical": "Perjanjian Baru memanggil setiap orang percaya pada belas kasih, kerendahan hati, kesabaran, pengampunan, kasih, dan damai. Berdoalah bagi pasangan, pertobatan diri, dan pernikahan, bukan hanya agar Allah memperbaiki orang lain.",
+    "completion": "Anda telah berdoa tiga puluh hari bagi pasangan, pertumbuhan diri, dan pernikahan. Ini tidak mengukur kesehatan relasi. Anda dapat memulai lagi saat memilih; riwayat sebelumnya tetap utuh."
+  }
+}

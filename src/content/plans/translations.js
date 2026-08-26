@@ -1,4 +1,4 @@
-// Lazy, per-language translations for guided-plan PROSE.
+// Lazy, per-plan/per-language translations for guided-plan PROSE.
 //
 // The plans' day themes are authored inline in all 16 languages (see
 // prayerPlans.js and preparingInPrayerDays.js). The longer prose a rich plan
@@ -9,7 +9,9 @@
 // Grow-tab teaching overlays (src/content/teaching/translations.js), so doctrine
 // stays in authored, reviewable files rather than the AI translation pipeline.
 //
-// Overlay shape, keyed by PLAN id:
+// Each JSON file remains keyed by PLAN id, even though new files are also
+// directory-scoped (`translations/<plan-id>/<lang>.json`). This preserves the
+// legacy overlay contract while keeping bundles small:
 //   {
 //     "<planId>": {
 //       "intro": "...",
@@ -35,24 +37,24 @@
 
 // import.meta.glob gives Vite a static view of the directory so each language
 // becomes its own on-demand chunk. The literal glob string is required.
-const planLoaders = import.meta.glob('./translations/*.json');
+const planLoaders = import.meta.glob(['./translations/*.json', './translations/*/*.json']);
 
 const cache = new Map();
 
 // Resolve one language's plan overlay, or null when it has none (en/fr need
 // none, and a language may simply not be translated yet).
-export async function loadPlanTranslations(lang) {
-  if (cache.has(lang)) return cache.get(lang);
-  const loader = planLoaders[`./translations/${lang}.json`];
+export async function loadPlanTranslations(lang, planId = null) {
+  const cacheKey = `${lang}:${planId || '*'}`;
+  if (cache.has(cacheKey)) return cache.get(cacheKey);
+  const loaders = [
+    planLoaders[`./translations/${lang}.json`],
+    planId ? planLoaders[`./translations/${planId}/${lang}.json`] : null,
+  ].filter(Boolean);
   let data = null;
-  if (loader) {
-    try {
-      data = (await loader()).default;
-    } catch {
-      data = null;
-    }
+  for (const loader of loaders) {
+    try { data = { ...(data || {}), ...(await loader()).default }; } catch { /* keep any usable overlay */ }
   }
-  cache.set(lang, data);
+  cache.set(cacheKey, data);
   return data;
 }
 
@@ -77,18 +79,30 @@ export function mergePlan(plan, overlay, lang) {
     days: (plan.days || []).map((day, i) => {
       const dt = tr.days?.[i];
       if (!dt) return day;
-      return {
-        ...day,
-        reflection: withLang(day.reflection, dt.reflection, lang),
-        selfPrompt: withLang(day.selfPrompt, dt.selfPrompt, lang),
-        practice: withLang(day.practice, dt.practice, lang),
-        prompts: (day.prompts || []).map((p, j) => withLang(p, dt.prompts?.[j], lang)),
-        roles: day.roles
-          ? Object.fromEntries(
-            Object.entries(day.roles).map(([role, value]) => [role, withLang(value, dt.roles?.[role], lang)]),
-          )
-          : day.roles,
+      const mergeDay = (source, translated) => {
+        if (!source || !translated) return source;
+        const next = {
+          ...source,
+          reflection: withLang(source.reflection, translated.reflection, lang),
+          selfPrompt: withLang(source.selfPrompt, translated.selfPrompt, lang),
+          spousePrompt: withLang(source.spousePrompt, translated.spousePrompt, lang),
+          marriagePrompt: withLang(source.marriagePrompt, translated.marriagePrompt, lang),
+          childPrompt: withLang(source.childPrompt, translated.childPrompt, lang),
+          practice: withLang(source.practice, translated.practice, lang),
+          conversationPrompt: withLang(source.conversationPrompt, translated.conversationPrompt, lang),
+          prayTogether: withLang(source.prayTogether, translated.prayTogether, lang),
+          safetyNote: withLang(source.safetyNote, translated.safetyNote, lang),
+          prompts: (source.prompts || []).map((p, j) => withLang(p, translated.prompts?.[j], lang)),
+          roles: source.roles
+            ? Object.fromEntries(
+              Object.entries(source.roles).map(([role, value]) => [role, withLang(value, translated.roles?.[role], lang)]),
+            )
+            : source.roles,
+        };
+        if (source.withChildren) next.withChildren = mergeDay(source.withChildren, translated.withChildren);
+        return next;
       };
+      return mergeDay(day, dt);
     }),
   };
 }

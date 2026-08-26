@@ -1,0 +1,256 @@
+{
+  "covenant21": {
+    "intro": "Veintiún días para preparar su matrimonio, no solo la boda. Lean la Escritura, oren el uno por el otro y por su propio crecimiento, y conversen con sinceridad. Pueden orar en privado o elegir actividades juntos; sus notas siguen siendo privadas. El matrimonio es un contexto para seguir a Cristo, no un rango espiritual superior a la soltería.",
+    "biblical": "Jesús pone primero el reino de Dios. Génesis describe un hogar nuevo y comprometido; Filipenses dirige a la humildad y el servicio de Cristo. Estos pasajes invitan a una preparación fiel sin tratar el compromiso como prueba de que Dios garantiza un resultado.",
+    "completion": "Han pasado estos días orando, conversando cuando quisieron y preparándose para el matrimonio. Agradezcan a Dios lo aprendido y confíenle lo pendiente. La boda inicia una práctica de fidelidad; terminar el plan no certifica preparación. Pueden seguir orando por su matrimonio. El historial permanece y el estado de la relación no cambia automáticamente.",
+    "days": [
+      {
+        "reflection": "Jesús dirige nuestra atención al reino de Dios. El matrimonio puede servir ese propósito, pero no reemplazar a Cristo.",
+        "prompts": [
+          "Por {partner}: profundiza la fe y el amor por Cristo.",
+          "Mantén nuestra relación abierta a tu guía.",
+          "Ayúdanos a buscar primero tu reino."
+        ],
+        "selfPrompt": "¿Qué espero del matrimonio que solo Dios puede dar?",
+        "practice": "Empieza dando gracias por Cristo.",
+        "conversationPrompt": "¿Qué nos ayuda a poner a Cristo primero?",
+        "prayTogether": "Si ambos quieren, oren juntos brevemente con las pautas de hoy; no hace falta otra cuenta."
+      },
+      {
+        "reflection": "Génesis describe dejar, unirse y formar un nuevo hogar. El pacto exige fidelidad más allá de los sentimientos cambiantes.",
+        "prompts": [
+          "Enséñanos el peso y la alegría del compromiso.",
+          "Por {partner}: da sabiduría para nuestro futuro.",
+          "Forma un amor que cumpla promesas sinceras."
+        ],
+        "selfPrompt": "¿Qué promesa requiere más cuidado en mis actos?",
+        "practice": "Cumple hoy un compromiso pequeño.",
+        "conversationPrompt": "¿Cómo será la fidelidad en la vida cotidiana?"
+      },
+      {
+        "reflection": "Pablo señala la humildad de Cristo. Conocer al otro implica preguntar cómo servir sin suponer la respuesta.",
+        "prompts": [
+          "Por {partner}: da fuerza para las necesidades de hoy.",
+          "Líbrame de buscar toda la atención.",
+          "Enséñanos a servir sin llevar cuentas."
+        ],
+        "selfPrompt": "¿Dónde supuse en vez de preguntar?",
+        "practice": "Pregunta qué ayudaría hoy y escucha.",
+        "conversationPrompt": "¿Qué pequeño gesto de cuidado valoras más?"
+      },
+      {
+        "reflection": "El fruto del Espíritu crece en decisiones diarias. Paciencia, bondad, fidelidad, mansedumbre y dominio propio importan después de la boda.",
+        "prompts": [
+          "Haz crecer la paciencia cuando cambien los planes.",
+          "Haz constante nuestra bondad en privado.",
+          "Por {partner}: fortalece mansedumbre y dominio propio."
+        ],
+        "selfPrompt": "¿Qué fruto necesita crecer en mí?",
+        "practice": "Practica paciencia ante una interrupción.",
+        "conversationPrompt": "¿Cuándo nos cuesta más ser amables?"
+      },
+      {
+        "reflection": "Pablo pide considerar los intereses del otro. Nombrar expectativas deja espacio para ambos sin imponer un guion.",
+        "prompts": [
+          "Danos valor para expresar esperanzas calladas.",
+          "Mantennos curiosos ante nuestras diferencias.",
+          "Ayúdanos a repartir justamente las responsabilidades."
+        ],
+        "selfPrompt": "¿Qué expectativa convertí en regla?",
+        "practice": "Nombra una suposición sin exigir acuerdo.",
+        "conversationPrompt": "¿Qué esperamos sobre tareas, trabajo, afecto, tiempo personal e iglesia?"
+      },
+      {
+        "reflection": "Pablo pide palabras que hagan bien a quien escucha. La verdad puede ser clara y amable; escuchar también ama.",
+        "prompts": [
+          "Haz mis palabras verdaderas y amables.",
+          "Por {partner}: da libertad para hablar.",
+          "Enséñanos a escuchar antes de responder."
+        ],
+        "selfPrompt": "¿Cuándo respondo a la defensiva?",
+        "practice": "Escucha una preocupación sin interrumpir.",
+        "conversationPrompt": "¿Qué te ayuda a sentirte escuchado?"
+      },
+      {
+        "reflection": "Santiago une escuchar con contener la ira. El desacuerdo requiere cuidado; el desprecio, la intimidación y la manipulación no deben normalizarse.",
+        "prompts": [
+          "Frena mis reacciones airadas.",
+          "Por {partner}: trae seguridad y voz.",
+          "Danos humildad y ayuda sabia en el conflicto."
+        ],
+        "selfPrompt": "¿De qué puedo responsabilizarme sin excusar el daño?",
+        "practice": "Si es seguro, acuerden pausar y retomar con calma.",
+        "conversationPrompt": "¿Qué ocurre cuando uno se siente incomprendido?",
+        "safetyNote": "La oración nunca exige soportar daño, control o presión. Prioriza la seguridad y busca ayuda confiable y cualificada."
+      },
+      {
+        "reflection": "Pablo relaciona perdón, compasión y amor. Arrepentirse nombra el daño y cambia la conducta; perdonar no elimina la responsabilidad.",
+        "prompts": [
+          "Ayúdame a reconocer el daño sin excusas.",
+          "Por {partner}: trae sanidad y apoyo confiable.",
+          "Enséñanos misericordia con verdad y responsabilidad."
+        ],
+        "selfPrompt": "¿Qué disculpa requiere un cambio mío?",
+        "practice": "Ofrece una disculpa concreta si es seguro y apropiado.",
+        "conversationPrompt": "¿Qué hace sincera una disculpa y real una reparación?",
+        "safetyNote": "La oración nunca exige soportar daño, control o presión. Prioriza la seguridad y busca ayuda confiable y cualificada."
+      },
+      {
+        "reflection": "La verdad pertenece a la vida en Cristo. La confianza crece con actos fiables, no con vigilancia ni revelaciones forzadas.",
+        "prompts": [
+          "Haz coincidir mis palabras y mis actos.",
+          "Por {partner}: protege dignidad y privacidad.",
+          "Ayúdanos a reconstruir la confianza con paciencia."
+        ],
+        "selfPrompt": "¿Qué conversación verdadera evito?",
+        "practice": "Cumple algo que dijiste que harías.",
+        "conversationPrompt": "¿Cómo ser honestos sin vigilarnos?"
+      },
+      {
+        "reflection": "Pablo presenta el cuerpo como perteneciente a Dios. Prepárense para la fidelidad sexual con dignidad, cuidado mutuo y sin vergüenza por el pasado.",
+        "prompts": [
+          "Guía nuestras decisiones antes del matrimonio.",
+          "Por {partner}: protege dignidad y libertad de presión.",
+          "Prepáranos para una intimidad fiel y consentida."
+        ],
+        "selfPrompt": "¿Mis decisiones respetan la libertad del otro?",
+        "practice": "Considera un límite que favorezca el respeto.",
+        "conversationPrompt": "¿Cómo hablar de intimidad, consentimiento y límites sin presión?",
+        "safetyNote": "La oración nunca exige soportar daño, control o presión. Prioriza la seguridad y busca ayuda confiable y cualificada."
+      },
+      {
+        "reflection": "Jesús relaciona el tesoro con el corazón. Hablen del dinero como algo confiado a su cuidado, no como identidad o seguridad.",
+        "prompts": [
+          "Libera mi valor del dominio del dinero.",
+          "Danos honestidad sobre gastos, ahorro y deudas.",
+          "Haz crecer generosidad y responsabilidad compartida."
+        ],
+        "selfPrompt": "¿Qué miedo influye en mi uso del dinero?",
+        "practice": "Elijan un momento tranquilo para hablar de finanzas.",
+        "conversationPrompt": "¿Qué significaba el dinero en nuestras familias?"
+      },
+      {
+        "reflection": "Pablo llama a trabajar de corazón para el Señor. Trabajo, cuidados y descanso merecen lugar en prioridades comunes.",
+        "prompts": [
+          "Por {partner}: da fuerza y propósito en el trabajo.",
+          "Líbrame de demostrar mi valor con ocupación.",
+          "Ayúdanos a dar lugar al trabajo, cuidado y descanso."
+        ],
+        "selfPrompt": "¿Qué merece el tiempo que regalo a otra cosa?",
+        "practice": "Protege hoy un pequeño descanso.",
+        "conversationPrompt": "¿Cómo apoyaremos la vocación del otro y compartiremos cuidados?"
+      },
+      {
+        "reflection": "Génesis describe un nuevo hogar. Honrar a la familia puede convivir con límites sabios sobre tiempo, decisiones y privacidad.",
+        "prompts": [
+          "Danos gratitud sin renunciar al buen juicio.",
+          "Por {partner}: da libertad ante presiones dañinas.",
+          "Ayúdanos a establecer límites familiares claros."
+        ],
+        "selfPrompt": "¿Dónde debo hablar con claridad y bondad?",
+        "practice": "Nombra un límite que puedas tratar con seguridad.",
+        "conversationPrompt": "¿Qué esperamos sobre fiestas, cuidados y privacidad familiar?",
+        "safetyNote": "La oración nunca exige soportar daño, control o presión. Prioriza la seguridad y busca ayuda confiable y cualificada."
+      },
+      {
+        "reflection": "Eclesiastés valora la compañía y la ayuda. La amistad crece con atención, disfrute y curiosidad por el otro.",
+        "prompts": [
+          "Por {partner}: da alegría en momentos cotidianos.",
+          "Mantenme interesado en quien está llegando a ser.",
+          "Haz crecer amistad junto a responsabilidad."
+        ],
+        "selfPrompt": "¿Cuándo escuché solo para conocer mejor?",
+        "practice": "Compartan una actividad agradable si ambos quieren.",
+        "conversationPrompt": "¿Qué momentos sencillos disfrutamos juntos?",
+        "prayTogether": "Si ambos quieren, oren juntos brevemente con las pautas de hoy; no hace falta otra cuenta."
+      },
+      {
+        "reflection": "Pablo describe una comunidad formada por la palabra de Cristo y la gratitud. Los hábitos espirituales compartidos pueden ser sencillos y distintos.",
+        "prompts": [
+          "Ayúdanos a recibir la Escritura con humildad.",
+          "Por {partner}: nutre una relación personal contigo.",
+          "Danos un ritmo de oración amable y sostenible."
+        ],
+        "selfPrompt": "¿Invito a compartir la fe o impongo mi manera?",
+        "practice": "Prueben un pequeño hábito espiritual.",
+        "conversationPrompt": "¿Qué ritmo común nos nutriría sin presión?",
+        "prayTogether": "Si ambos quieren, oren juntos brevemente con las pautas de hoy; no hace falta otra cuenta."
+      },
+      {
+        "reflection": "Hebreos llama a animarse en amor. El matrimonio necesita amistades y comunidad cristiana, no aislamiento.",
+        "prompts": [
+          "Por {partner}: da amistades cristianas confiables.",
+          "Mantennos abiertos al consejo sabio.",
+          "Muéstranos cómo contribuir a la comunidad."
+        ],
+        "selfPrompt": "¿Qué voz sabia he dejado de escuchar?",
+        "practice": "Agradece a alguien que apoya tu fe.",
+        "conversationPrompt": "¿Quién puede apoyarnos respetando nuestra privacidad?"
+      },
+      {
+        "reflection": "Santiago enseña humildad al planear el futuro. Hablen sinceramente sobre hijos; ni matrimonio ni oración los garantizan.",
+        "prompts": [
+          "Ayúdanos a expresar esperanzas e incertidumbre con bondad.",
+          "Por {partner}: da libertad de la presión familiar.",
+          "Enséñanos a recibir el futuro sin exigirlo."
+        ],
+        "selfPrompt": "¿Qué suposición sobre hijos no he expresado?",
+        "practice": "Conversen sin exigir una decisión.",
+        "conversationPrompt": "¿Qué esperanzas, temores o preguntas tenemos sobre hijos o crianza?",
+        "safetyNote": "La oración nunca exige soportar daño, control o presión. Prioriza la seguridad y busca ayuda confiable y cualificada."
+      },
+      {
+        "reflection": "Pablo une esperanza, paciencia y oración en la dificultad. Atravesarla juntos incluye recibir ayuda, no cargar todo solos.",
+        "prompts": [
+          "Por {partner}: da fuerza para las cargas presentes.",
+          "Enséñame cuidado paciente y práctico.",
+          "Ayúdanos a buscar apoyo cuando sea necesario."
+        ],
+        "selfPrompt": "¿Qué ayuda me cuesta recibir?",
+        "practice": "Ofrece una ayuda práctica sin intentar arreglar todo.",
+        "conversationPrompt": "¿Qué nos ayuda a recibir cuidado en tiempos duros?",
+        "prayTogether": "Si ambos quieren, oren juntos brevemente con las pautas de hoy; no hace falta otra cuenta."
+      },
+      {
+        "reflection": "Pedro relaciona hospitalidad y servicio. Un hogar generoso acoge dentro de sus límites y recursos reales.",
+        "prompts": [
+          "Haznos atentos a personas fuera de nosotros.",
+          "Por {partner}: da alegría al servir con sus dones.",
+          "Haz nuestra hospitalidad generosa y sostenible."
+        ],
+        "selfPrompt": "¿A quién suelo pasar por alto?",
+        "practice": "Ofrece una bienvenida sencilla según tu capacidad.",
+        "conversationPrompt": "¿Cómo podría nuestro hogar servir a otros?"
+      },
+      {
+        "reflection": "Jesús describe la grandeza mediante el servicio. Prepararse para casarse incluye humildad, arrepentimiento y responsabilidad compartida.",
+        "prompts": [
+          "Haz práctico y generoso mi amor.",
+          "Por {partner}: fortalece sabiduría e integridad.",
+          "Enséñanos responsabilidad sin control."
+        ],
+        "selfPrompt": "¿Dónde puedo servir sin reclamar la última palabra?",
+        "practice": "Asume un acto cotidiano de servicio.",
+        "conversationPrompt": "¿Cómo son para nosotros servicio y respeto mutuo?",
+        "safetyNote": "La oración nunca exige soportar daño, control o presión. Prioriza la seguridad y busca ayuda confiable y cualificada.",
+        "roles": {
+          "husband": "Prepararse como esposo incluye amor abnegado, escucha, arrepentimiento y servicio, no exigir control.",
+          "wife": "Prepararse como esposa incluye sabiduría, fortaleza, voz sincera y bondad, no ocultar necesidades ni aceptar daño."
+        }
+      },
+      {
+        "reflection": "El salmo pone la obra humana bajo Dios. Entréguenle su matrimonio; la boda comienza una vida fiel, no la completa.",
+        "prompts": [
+          "Gracias por lo revelado estos días.",
+          "Por {partner}: sostiene la fe y esperanza en ti.",
+          "Sigue formando nuestro matrimonio con paciencia y gracia."
+        ],
+        "selfPrompt": "¿Qué hábito de oración quiero continuar?",
+        "practice": "Elige una forma sencilla de seguir orando.",
+        "conversationPrompt": "¿Qué agradecemos y qué seguimos confiando a Dios?",
+        "prayTogether": "Si ambos quieren, oren juntos brevemente con las pautas de hoy; no hace falta otra cuenta."
+      }
+    ]
+  }
+}
+

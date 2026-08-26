@@ -131,9 +131,12 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // supplication branch — the walk returns early for the Scripture movements, so
   // a hook further down would not run on every render.
   const sessionPlanId = currentPrayer?.schedule?.plan?.id || null;
+  const sessionPlanVersion = currentPrayer?.schedule?.plan?.version || null;
   const sessionPlanDayNo = sessionPlanId ? planDayNumber(currentPrayer.schedule, todayKey()) : null;
   const { day: sessionPlanDay, role: sessionPlanRole, resources: sessionPlanResources } =
-    usePlanDay(sessionPlanId, sessionPlanDayNo, lang);
+    usePlanDay(sessionPlanId, sessionPlanDayNo, lang, {
+      prayerId: currentPrayer?.id, ownerId: currentPrayer?.user_id, planVersion: sessionPlanVersion,
+    });
 
   // Restore an unfinished note if the session reopens on this prayer.
   useEffect(() => {
@@ -525,7 +528,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               role="radio"
               aria-checked={m === mode}
               onClick={() => pickFormat(m)}
-              className="pressable min-h-11 w-full rounded-lg px-3 py-2 text-left"
+              className="pressable min-h-11 w-full rounded-lg px-3 py-2 text-start"
               style={m === mode ? { background: 'rgba(255,255,255,0.12)' } : {}}
             >
               <p className="text-xs font-semibold flex items-center gap-1.5 text-white">
@@ -559,7 +562,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               {({ toggle }) => (
                 <button
                   onClick={toggle}
-                  className="scripture-block pressable flex min-h-16 w-full items-center justify-between gap-3 text-left"
+                  className="scripture-block pressable flex min-h-16 w-full items-center justify-between gap-3 text-start"
                 >
                   <span className="scripture-text flex items-center gap-2 text-lg" style={{ color: 'var(--text-1)' }}>
                     <BookOpen size={16} style={{ color: 'var(--gold)' }} /> {ref}
@@ -639,7 +642,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               {({ toggle }) => (
                 <button
                   onClick={toggle}
-                  className="scripture-block pressable mb-7 flex min-h-16 w-full items-center justify-between gap-3 text-left"
+                  className="scripture-block pressable mb-7 flex min-h-16 w-full items-center justify-between gap-3 text-start"
                 >
                   <span className="scripture-text flex items-center gap-2 text-lg" style={{ color: 'var(--text-1)' }}>
                     <BookOpen size={16} style={{ color: 'var(--gold)' }} /> {planRef}

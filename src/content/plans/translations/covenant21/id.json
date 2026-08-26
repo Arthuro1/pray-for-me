@@ -1,0 +1,256 @@
+{
+  "covenant21": {
+    "intro": "Dua puluh satu hari untuk mempersiapkan pernikahan, bukan hanya pesta. Bacalah Kitab Suci, berdoalah bagi satu sama lain dan pertumbuhan diri, serta berbicaralah jujur. Anda dapat berdoa pribadi atau memilih kegiatan bersama; catatan tetap pribadi. Pernikahan adalah konteks mengikuti Kristus, bukan tingkat rohani di atas hidup lajang.",
+    "biblical": "Yesus mengutamakan Kerajaan Allah. Kejadian menggambarkan rumah tangga baru yang berkomitmen; Filipi mengarahkan pada kerendahan hati dan pelayanan Kristus. Nas ini mengundang persiapan setia tanpa menjadikan pertunangan bukti bahwa Allah menjamin hasil tertentu.",
+    "completion": "Anda telah berdoa, berbicara ketika memilihnya, dan mempersiapkan pernikahan. Syukuri pelajaran dan serahkan sisanya kepada Allah. Upacara memulai kehidupan setia; menuntaskan rencana bukan sertifikat kesiapan. Anda dapat terus berdoa bagi pernikahan. Riwayat tersimpan dan status hubungan tidak berubah otomatis.",
+    "days": [
+      {
+        "reflection": "Hari ini renungkan “Kristus sebagai pusat” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Kristus sebagai pusat”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Kristus sebagai pusat”?",
+        "prayTogether": "Jika Anda berdua mau, berdoalah singkat dengan pokok hari ini; akun kedua tidak diperlukan."
+      },
+      {
+        "reflection": "Hari ini renungkan “Perjanjian melampaui romansa” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Perjanjian melampaui romansa”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Perjanjian melampaui romansa”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Saling mengenal dan melayani” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Saling mengenal dan melayani”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Saling mengenal dan melayani”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Karakter dalam keseharian” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Karakter dalam keseharian”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Karakter dalam keseharian”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Mengungkapkan harapan” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Mengungkapkan harapan”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Mengungkapkan harapan”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Perkataan yang membangun” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Perkataan yang membangun”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Perkataan yang membangun”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Menghadapi konflik dengan kepedulian” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Menghadapi konflik dengan kepedulian”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Menghadapi konflik dengan kepedulian”?",
+        "safetyNote": "Doa tidak pernah menuntut Anda menanggung bahaya, kendali, atau tekanan. Utamakan keselamatan dan carilah bantuan tepercaya yang berkualifikasi."
+      },
+      {
+        "reflection": "Hari ini renungkan “Pertobatan dan pengampunan” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Pertobatan dan pengampunan”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Pertobatan dan pengampunan”?",
+        "safetyNote": "Doa tidak pernah menuntut Anda menanggung bahaya, kendali, atau tekanan. Utamakan keselamatan dan carilah bantuan tepercaya yang berkualifikasi."
+      },
+      {
+        "reflection": "Hari ini renungkan “Kepercayaan dan kejujuran” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Kepercayaan dan kejujuran”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Kepercayaan dan kejujuran”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Keintiman yang menghormati martabat” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Keintiman yang menghormati martabat”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Keintiman yang menghormati martabat”?",
+        "safetyNote": "Doa tidak pernah menuntut Anda menanggung bahaya, kendali, atau tekanan. Utamakan keselamatan dan carilah bantuan tepercaya yang berkualifikasi."
+      },
+      {
+        "reflection": "Hari ini renungkan “Uang dan penatalayanan” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Uang dan penatalayanan”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Uang dan penatalayanan”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Pekerjaan, panggilan, dan istirahat” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Pekerjaan, panggilan, dan istirahat”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Pekerjaan, panggilan, dan istirahat”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Ikatan keluarga dan batasan” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Ikatan keluarga dan batasan”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Ikatan keluarga dan batasan”?",
+        "safetyNote": "Doa tidak pernah menuntut Anda menanggung bahaya, kendali, atau tekanan. Utamakan keselamatan dan carilah bantuan tepercaya yang berkualifikasi."
+      },
+      {
+        "reflection": "Hari ini renungkan “Persahabatan dalam pernikahan” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Persahabatan dalam pernikahan”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Persahabatan dalam pernikahan”?",
+        "prayTogether": "Jika Anda berdua mau, berdoalah singkat dengan pokok hari ini; akun kedua tidak diperlukan."
+      },
+      {
+        "reflection": "Hari ini renungkan “Kebiasaan rohani bersama” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Kebiasaan rohani bersama”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Kebiasaan rohani bersama”?",
+        "prayTogether": "Jika Anda berdua mau, berdoalah singkat dengan pokok hari ini; akun kedua tidak diperlukan."
+      },
+      {
+        "reflection": "Hari ini renungkan “Berakar dalam komunitas Kristen” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Berakar dalam komunitas Kristen”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Berakar dalam komunitas Kristen”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Harapan tentang anak” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Harapan tentang anak”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Harapan tentang anak”?",
+        "safetyNote": "Doa tidak pernah menuntut Anda menanggung bahaya, kendali, atau tekanan. Utamakan keselamatan dan carilah bantuan tepercaya yang berkualifikasi."
+      },
+      {
+        "reflection": "Hari ini renungkan “Menjalani masa sulit” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Menjalani masa sulit”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Menjalani masa sulit”?",
+        "prayTogether": "Jika Anda berdua mau, berdoalah singkat dengan pokok hari ini; akun kedua tidak diperlukan."
+      },
+      {
+        "reflection": "Hari ini renungkan “Rumah yang menyambut” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Rumah yang menyambut”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Rumah yang menyambut”?"
+      },
+      {
+        "reflection": "Hari ini renungkan “Bersiap melayani dengan setia” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Bersiap melayani dengan setia”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Bersiap melayani dengan setia”?",
+        "safetyNote": "Doa tidak pernah menuntut Anda menanggung bahaya, kendali, atau tekanan. Utamakan keselamatan dan carilah bantuan tepercaya yang berkualifikasi.",
+        "roles": {
+          "husband": "Persiapan menjadi suami mencakup kasih yang berkorban, mendengar, bertobat, dan melayani, bukan menuntut kendali.",
+          "wife": "Persiapan menjadi istri mencakup hikmat, kekuatan, suara jujur, dan kebaikan, bukan menyembunyikan kebutuhan atau menerima bahaya."
+        }
+      },
+      {
+        "reflection": "Hari ini renungkan “Menyerahkan pernikahan kepada Allah” melalui Kitab Suci dan doa.",
+        "prompts": [
+          "Allah, tuntun kami dalam “Menyerahkan pernikahan kepada Allah”.",
+          "Bagi {partner}: berikan hikmat dan anugerah.",
+          "Bentuk kami menjadi setia."
+        ],
+        "selfPrompt": "Apa dalam diri saya yang perlu berubah?",
+        "practice": "Ambil satu langkah praktis kecil hari ini.",
+        "conversationPrompt": "Apa yang perlu kami bicarakan jujur tentang “Menyerahkan pernikahan kepada Allah”?",
+        "prayTogether": "Jika Anda berdua mau, berdoalah singkat dengan pokok hari ini; akun kedua tidak diperlukan."
+      }
+    ]
+  }
+}
+

@@ -26,6 +26,7 @@ import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 import { PLANS } from '../content/prayerPlans';
 import PlanDetailModal from '../components/PlanDetailModal';
+import { canUsePlan } from '../lib/planReview';
 import { groupPlanStatus, sortGroupPlans, prayingLabel } from '../lib/groupPlans';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
@@ -778,14 +779,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         <Modal title={t(lang, 'groupPlanPickerTitle')} lang={lang} onClose={() => setShowPlanPicker(false)}>
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupPlanPickerSub')}</p>
           <div className="grid grid-cols-1 gap-2">
-            {PLANS.map((plan) => {
+            {PLANS.filter((plan) => canUsePlan(plan)).map((plan) => {
               const adopted = adoptedPlanIds.has(plan.id);
               return (
                 <button
                   key={plan.id}
                   disabled={adopted}
                   onClick={() => { setShowPlanPicker(false); setDetailPlan(plan); }}
-                  className="phase-card plan-card p-3 flex items-start gap-3 text-left w-full disabled:opacity-50"
+                  className="phase-card plan-card p-3 flex items-start gap-3 text-start w-full disabled:opacity-50"
                 >
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--accent-soft)' }}>{plan.emoji}</div>
                   <div className="flex-1 min-w-0">

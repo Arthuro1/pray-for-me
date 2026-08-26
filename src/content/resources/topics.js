@@ -10,6 +10,7 @@ export const RESOURCE_TOPICS = [
   'identity',
   'contentment',
   'dating',
+  'premarital',
   'discernment',
   'healing',
   'purity',
@@ -18,15 +19,42 @@ export const RESOURCE_TOPICS = [
   'marriage',
   'covenant',
   'communication',
+  'listening',
   'conflict',
   'forgiveness',
+  'trust',
   'sexuality',
+  'sexual-intimacy',
   'finances',
+  'work',
   'community',
+  'church',
   'family',
+  'children',
   'parenting',
   'family-discipleship',
+  'family-of-origin',
+  'boundaries',
+  'friendship',
   'spiritual-formation',
+  'spiritual-rhythms',
+  'prayer-together',
+  'hospitality',
+  'suffering',
+  'grief',
+  'infertility',
+  'miscarriage',
+  'marriage-crisis',
+  'abuse-safety',
+  'trauma',
+  'divorce',
+  'pornography',
+  'addiction',
+  'infidelity',
+  'illness',
+  'marriage-roles',
+  'generosity',
+  'mission',
 ];
 
 // Where in life a resource actually helps. Used to keep a book written for
@@ -42,3 +70,8 @@ export const RESOURCE_TYPES = ['book', 'article', 'podcast', 'teaching', 'video'
 // The review states an entry moves through. ONLY `approved` is ever shown to a
 // user; everything else is invisible in the app (see src/lib/resources.js).
 export const RESOURCE_STATUSES = ['draft', 'needs_review', 'approved', 'retired'];
+
+// Sensitive resources need two explicit human sign-offs in addition to the
+// normal publication status. The resolver treats an omitted level as
+// `standard` for backwards compatibility, but a sensitive topic always wins.
+export const RESOURCE_REVIEW_LEVELS = ['standard', 'sensitive'];

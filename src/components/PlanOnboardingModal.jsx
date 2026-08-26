@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { X, Check, ChevronDown } from 'lucide-react';
+import { X, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { SEASONS, EMPHASES, ROLES, GROWTH_AREAS, DEFAULT_EMPHASIS, DEFAULT_ROLE, getPlanPrefs } from '../lib/planPrefs';
+import { DEFAULT_MARRIAGE_INCLUDES, MARRIAGE_INCLUDES, isCouplePlan, sanitizePlanPersonalization } from '../lib/planPersonalization';
 
 // The short onboarding a rich plan asks for before it starts.
 //
-// Four questions, one screen, all of them skippable: nothing here is required to
-// begin, none of it asks about a person, and none of it changes the 21 days. It
-// only chooses which optional reflection appears and which approved resources
-// rank first. Answers are stored on the device and never leave it.
+// Singles keep their four short questions. Couple plans reuse this sheet for an
+// optional name, use mode, explicit role preference, and a small family layer.
+// The host encrypts couple answers per account and per plan run.
 //
 // The husband/wife question is asked OUT LOUD on purpose — the app must never
 // infer it from a name, a profile photo, pronouns or anything else — and it
@@ -47,7 +47,130 @@ function Question({ id, title, hint, children }) {
   );
 }
 
-export default function PlanOnboardingModal({ plan, lang, onStart, onClose }) {
+function CoupleQuestions({ plan, lang, people, onStart }) {
+  const engaged = plan.lifeStage === 'engaged';
+  const [partner, setPartner] = useState(null);
+  const [name, setName] = useState('');
+  const [mode, setMode] = useState('private');
+  const [role, setRole] = useState('general');
+  const [includes, setIncludes] = useState([...DEFAULT_MARRIAGE_INCLUDES]);
+  const [children, setChildren] = useState([]);
+  const childEnabled = includes.includes('children');
+
+  const choosePerson = (value) => {
+    const found = (people || []).find((item) => item.prayerId === value);
+    setPartner(found || null);
+    if (found) setName(found.name);
+  };
+  const toggleInclude = (id) => setIncludes((current) => current.includes(id)
+    ? current.filter((item) => item !== id) : [...current, id]);
+  const addChild = () => setChildren((current) => [
+    ...current, { id: crypto.randomUUID(), name: '' },
+  ]);
+  const start = () => onStart(sanitizePlanPersonalization({
+    partner: name.trim() ? { id: partner?.id, prayerId: partner?.prayerId, name } : null,
+    mode, role, includes, children,
+  }));
+
+  return (
+    <>
+      <div className="space-y-5 p-5">
+        <Question id="plan-couple-person" title={t(lang, engaged ? 'planCoupleFianceQ' : 'planCoupleSpouseQ')}>
+          {(people || []).length > 0 && (
+            <label className="mb-2 block text-xs" style={{ color: 'var(--text-3)' }}>
+              <span className="mb-1 block">{t(lang, 'planCoupleChoosePerson')}</span>
+              <select
+                value={partner?.prayerId || ''}
+                onChange={(event) => choosePerson(event.target.value)}
+                className="min-h-11 w-full rounded-xl px-3 text-sm"
+                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+              >
+                <option value="">{t(lang, 'planCoupleNoPerson')}</option>
+                {(people || []).map((item) => <option key={item.prayerId} value={item.prayerId}>{item.name}</option>)}
+              </select>
+            </label>
+          )}
+          <input
+            aria-label={t(lang, 'planCoupleDisplayName')}
+            value={name}
+            maxLength={80}
+            autoComplete="off"
+            onChange={(event) => { setName(event.target.value); setPartner(null); }}
+            placeholder={t(lang, 'planCoupleDisplayName')}
+            className="min-h-11 w-full rounded-xl px-3 text-sm"
+            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+          />
+        </Question>
+
+        <Question id="plan-couple-mode" title={t(lang, 'planCoupleModeQ')} hint={t(lang, 'planCoupleTogetherHint')}>
+          <div role="radiogroup" aria-labelledby="plan-couple-mode" className="flex flex-col gap-2">
+            <OptionRow label={t(lang, 'planCoupleModePrivate')} selected={mode === 'private'} onSelect={() => setMode('private')} />
+            <OptionRow label={t(lang, 'planCoupleModeTogether')} selected={mode === 'together'} onSelect={() => setMode('together')} />
+          </div>
+        </Question>
+
+        {!engaged && (
+          <Question id="plan-couple-includes" title={t(lang, 'planCoupleIncludeQ')} hint={t(lang, 'planCoupleIncludeHint')}>
+            <div role="group" aria-labelledby="plan-couple-includes" className="flex flex-col gap-2">
+              {MARRIAGE_INCLUDES.map((item) => (
+                <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={includes.includes(item.id)} multi onSelect={() => toggleInclude(item.id)} />
+              ))}
+            </div>
+          </Question>
+        )}
+
+        {!engaged && childEnabled && (
+          <Question id="plan-couple-children" title={t(lang, 'planCoupleIncludeChildren')}>
+            <div className="space-y-2">
+              {children.map((child, index) => (
+                <div key={child.id} className="flex items-center gap-2">
+                  <input
+                    aria-label={t(lang, 'planCoupleChildName')}
+                    value={child.name}
+                    maxLength={80}
+                    autoComplete="off"
+                    onChange={(event) => setChildren((current) => current.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)))}
+                    placeholder={t(lang, 'planCoupleChildName')}
+                    className="min-h-11 min-w-0 flex-1 rounded-xl px-3 text-sm"
+                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setChildren((current) => current.filter((_, i) => i !== index))}
+                    aria-label={t(lang, 'planCoupleRemoveChild', { name: child.name || String(index + 1) })}
+                    className="phase-icon-button shrink-0"
+                  ><Trash2 size={16} /></button>
+                </div>
+              ))}
+              <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
+              </button>
+            </div>
+          </Question>
+        )}
+
+        <Question id="plan-couple-role" title={t(lang, 'planCoupleRoleQ')} hint={t(lang, 'planCoupleRoleReviewPending')}>
+          <div role="radiogroup" aria-labelledby="plan-couple-role" className="flex flex-col gap-2">
+            {[
+              { id: 'general', key: 'planPrepRoleGeneral' },
+              { id: 'husband', key: 'planCoupleRoleHusband' },
+              { id: 'wife', key: 'planCoupleRoleWife' },
+            ].map((item) => <OptionRow key={item.id} label={t(lang, item.key)} selected={role === item.id} onSelect={() => setRole(item.id)} />)}
+          </div>
+        </Question>
+      </div>
+
+      <div className="sticky bottom-0 space-y-2 p-5 pt-0" style={{ background: 'var(--surface)' }}>
+        <button onClick={start} className="w-full rounded-xl px-3 py-3 text-sm font-semibold" style={{ background: 'var(--accent)', color: '#fff' }}>
+          {t(lang, 'planPrepOnboardingCta')}
+        </button>
+        <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCouplePrivacy')}</p>
+      </div>
+    </>
+  );
+}
+
+export default function PlanOnboardingModal({ plan, lang, onStart, onClose, people = [] }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const saved = getPlanPrefs(plan.id);
@@ -67,19 +190,19 @@ export default function PlanOnboardingModal({ plan, lang, onStart, onClose }) {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={t(lang, 'planPrepOnboardingTitle')}
+        aria-label={t(lang, isCouplePlan(plan) ? 'planCoupleOnboardingTitle' : 'planPrepOnboardingTitle')}
         className="editorial-dialog max-h-[85vh] w-full max-w-md overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-3 p-5 pb-4" style={{ borderBottom: '0.5px solid var(--border)' }}>
           <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planPrepOnboardingTitle')}</h3>
-            <p className="mt-0.5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planPrepOnboardingSub')}</p>
+            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, isCouplePlan(plan) ? 'planCoupleOnboardingTitle' : 'planPrepOnboardingTitle')}</h3>
+            <p className="mt-0.5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, isCouplePlan(plan) ? 'planCoupleOnboardingSub' : 'planPrepOnboardingSub')}</p>
           </div>
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 
-        <div className="space-y-5 p-5">
+        {isCouplePlan(plan) ? <CoupleQuestions plan={plan} lang={lang} people={people} onStart={onStart} /> : <><div className="space-y-5 p-5">
           <Question id="plan-prep-season" title={t(lang, 'planPrepSeasonQ')}>
             <div role="radiogroup" aria-labelledby="plan-prep-season" className="flex flex-col gap-2">
               {SEASONS.map((s) => (
@@ -167,7 +290,7 @@ export default function PlanOnboardingModal({ plan, lang, onStart, onClose }) {
           <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>
             {t(lang, 'planPrepOnboardingPrivacy')}
           </p>
-        </div>
+        </div></>}
       </div>
     </div>
   );

@@ -23,6 +23,9 @@ import PlanDetailModal from '../components/PlanDetailModal';
 import PlanInviteModal from '../components/PlanInviteModal';
 import PlanOnboardingModal from '../components/PlanOnboardingModal';
 import { savePlanPrefs, hasPlanPrefs } from '../lib/planPrefs';
+import { savePlanPersonalization, clearPlanPersonalization } from '../lib/planPersonalizationStorage';
+import { isCouplePlan } from '../lib/planPersonalization';
+import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { track } from '../lib/analytics';
 import { PageHeader } from '../components/shared/Primitives';
 
@@ -117,12 +120,42 @@ export default function PlanTab() {
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
+  const planPeople = (() => {
+    const seen = new Set();
+    return prayers.flatMap((prayer) => {
+      const name = prayer._locked ? '' : (prayer.person_name || '').trim();
+      const key = name.toLocaleLowerCase();
+      if (!name || seen.has(key)) return [];
+      seen.add(key);
+      return [{ id: `person-${seen.size}`, prayerId: prayer.id, name }];
+    });
+  })();
 
   // Actually begin a plan. `prefs` is only present for plans that ask the short
   // onboarding questions; it is saved on the device and never sent anywhere.
   const beginPlan = async (plan, startDate, prefs = null) => {
-    if (prefs) savePlanPrefs(plan.id, prefs);
-    await addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
+    if (!canUsePlan(plan)) return;
+    let runId = null;
+    if (isCouplePlan(plan)) {
+      runId = crypto.randomUUID();
+      try {
+        await savePlanPersonalization(user.id, runId, prefs || {});
+      } catch {
+        // The plan stays complete without personalization; never downgrade a
+        // name to plaintext just because private storage is unavailable.
+        runId = null;
+      }
+    } else if (prefs) {
+      savePlanPrefs(plan.id, prefs);
+    }
+    const createdId = await addPrayer({
+      ...buildGuidedPlanPrayer(plan, startDate, lang),
+      ...(runId ? { id: runId } : {}),
+    });
+    if (!createdId) {
+      if (runId) await clearPlanPersonalization(user.id, runId);
+      return;
+    }
     if (plan.analyticsEvents?.started) track(plan.analyticsEvents.started);
     toast.success(t(lang, 'planStarted'));
   };
@@ -130,7 +163,7 @@ export default function PlanTab() {
   // A plan that declares `onboarding` asks its questions first — but only the
   // first time. Re-starting a plan later keeps the answers already given.
   const startPlan = async (plan, startDate) => {
-    if (plan.onboarding && !hasPlanPrefs(plan.id)) {
+    if (plan.onboarding && (isCouplePlan(plan) || !hasPlanPrefs(plan.id))) {
       setOnboardingTarget({ plan, startDate });
       return;
     }
@@ -209,6 +242,7 @@ export default function PlanTab() {
         <PlanOnboardingModal
           plan={onboardingTarget.plan}
           lang={lang}
+          people={planPeople}
           onStart={async (prefs) => {
             const { plan, startDate } = onboardingTarget;
             setOnboardingTarget(null);
@@ -345,8 +379,9 @@ export default function PlanTab() {
                   return (
                     <button
                       key={plan.id}
-                      onClick={() => setDetailPlan(plan)}
-                      className="phase-card plan-card p-4 flex items-start gap-3 text-left w-full"
+                      onClick={() => { if (canUsePlan(plan)) setDetailPlan(plan); }}
+                      disabled={!canUsePlan(plan)}
+                      className="phase-card plan-card p-4 flex items-start gap-3 text-start w-full"
                     >
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
                         {plan.emoji}
@@ -357,6 +392,11 @@ export default function PlanTab() {
                           <p className="text-xs mt-0.5 font-medium" style={{ color: 'var(--text-3)' }}>{t(lang, plan.audienceKey)}</p>
                         )}
                         <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</p>
+                        {!isPlanReviewed(plan) && (
+                          <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>
+                            {t(lang, 'planCoupleReviewPending')}
+                          </p>
+                        )}
                         <p className="text-xs mt-2 font-medium" style={{ color: running ? 'var(--success)' : 'var(--accent)' }}>
                           {running
                             ? `✓ ${t(lang, 'planRunning')}`

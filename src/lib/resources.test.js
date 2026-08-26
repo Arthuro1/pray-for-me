@@ -3,8 +3,11 @@
 // unreviewed entries, unverified editions, retired links, or a language the
 // reader never said they could read.
 import { describe, it, expect } from 'vitest';
-import { resolveResources, resourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT } from './resources.js';
-import { RESOURCES } from '../content/resources/catalogue.js';
+import {
+  resolveResources, resourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
+  isResourceApprovedForDisplay, isSensitiveResource,
+} from './resources.js';
+import { RESOURCES, RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS } from '../content/resources/catalogue.js';
 
 const edition = (over = {}) => ({
   title: 'A title', author: 'An author', url: 'https://example.org', available: true,
@@ -15,7 +18,7 @@ const edition = (over = {}) => ({
 const CATALOGUE = [
   {
     id: 'en-original', type: 'book', originalLanguage: 'en', status: 'approved',
-    topics: ['marriage', 'covenant'], lifeStages: ['single', 'married'],
+    topics: ['marriage', 'covenant'], lifeStages: ['single', 'engaged', 'married'],
     description: { en: 'why', fr: 'pourquoi' },
     editions: { en: edition({ title: 'English original' }) },
   },
@@ -106,6 +109,58 @@ describe('resolveResources — review gate', () => {
   it('never renders an edition marked unavailable', () => {
     expect(resolve({ limit: 50 }).map((r) => r.id)).not.toContain('unavailable');
   });
+
+  it('requires a usable HTTPS URL as part of edition verification', () => {
+    const invalidEditions = ['', 'http://example.org/resource', 'not a url'].map((url, i) => ({
+      id: `bad-edition-${i}`, type: 'article', originalLanguage: 'en', status: 'approved',
+      topics: ['marriage'], lifeStages: ['married'], editions: { en: edition({ url }) },
+    }));
+    expect(resolveResources({
+      topics: ['marriage'], lifeStage: 'married', languages: ['en'], catalogue: invalidEditions,
+    })).toEqual([]);
+  });
+
+  it('rejects malformed verification dates rather than treating them as review evidence', () => {
+    const catalogue = [{
+      id: 'impossible-date', type: 'article', originalLanguage: 'en', status: 'approved',
+      topics: ['marriage'], lifeStages: ['married'],
+      editions: { en: edition({ lastVerifiedAt: '2026-02-31' }) },
+    }];
+    expect(resolveResources({
+      topics: ['marriage'], lifeStage: 'married', languages: ['en'], catalogue,
+    })).toEqual([]);
+  });
+
+  it('requires explicit content AND safety sign-off for sensitive resources', () => {
+    const signoff = { status: 'approved', reviewedBy: 'reviewer-id', reviewedAt: '2026-08-26' };
+    const base = {
+      id: 'sensitive', type: 'article', originalLanguage: 'en', status: 'approved',
+      reviewLevel: 'sensitive', topics: ['marriage'], lifeStages: ['married'],
+      editions: { en: edition() },
+    };
+    const catalogue = [
+      base,
+      { ...base, id: 'content-only', contentReview: signoff },
+      { ...base, id: 'fully-reviewed', contentReview: signoff, safetyReview: signoff },
+    ];
+    const ids = resolveResources({
+      topics: ['marriage'], lifeStage: 'married', languages: ['en'], catalogue, limit: 10,
+    }).map((r) => r.id);
+    expect(ids).toEqual(['fully-reviewed']);
+  });
+
+  it('cannot lower a sensitive topic to standard review', () => {
+    const resource = {
+      id: 'unsafe-override', type: 'article', originalLanguage: 'en', status: 'approved',
+      reviewLevel: 'standard', topics: ['abuse-safety'], lifeStages: ['married'],
+      editions: { en: edition() },
+    };
+    expect(isSensitiveResource(resource)).toBe(true);
+    expect(isResourceApprovedForDisplay(resource)).toBe(false);
+    expect(resolveResources({
+      topics: ['abuse-safety'], lifeStage: 'married', languages: ['en'], catalogue: [resource],
+    })).toEqual([]);
+  });
 });
 
 describe('resolveResources — language priority', () => {
@@ -161,6 +216,19 @@ describe('resolveResources — relevance and caps', () => {
     expect(resolve({ limit: 50 }).map((r) => r.id)).not.toContain('married-only');
   });
 
+  it('filters engaged and married recommendations by their stable life-stage ids', () => {
+    const engaged = resolveResources({
+      topics: ['marriage'], lifeStage: 'engaged', languages: ['en'], catalogue: CATALOGUE, limit: 50,
+    }).map((r) => r.id);
+    const married = resolveResources({
+      topics: ['marriage'], lifeStage: 'married', languages: ['en'], catalogue: CATALOGUE, limit: 50,
+    }).map((r) => r.id);
+    expect(engaged).toContain('en-original');
+    expect(engaged).not.toContain('married-only');
+    expect(married).toContain('en-original');
+    expect(married).toContain('married-only');
+  });
+
   it('growth-area boosts only re-rank; they never pull in an off-topic entry', () => {
     const out = resolve({ boostTopics: ['finances'], limit: 50 });
     expect(out.map((r) => r.id)).not.toContain('off-topic');
@@ -186,6 +254,15 @@ describe('replacementFor', () => {
 
   it('is null when there is no successor', () => {
     expect(replacementFor(CATALOGUE[0], CATALOGUE)).toBeNull();
+  });
+
+  it('cannot bypass sensitive review through a retired replacement', () => {
+    const retired = { status: 'retired', replacementResourceId: 'sensitive-successor' };
+    const successor = {
+      id: 'sensitive-successor', type: 'article', originalLanguage: 'en', status: 'approved',
+      topics: ['marriage-crisis'], editions: { en: edition() },
+    };
+    expect(replacementFor(retired, [successor])).toBeNull();
   });
 });
 
@@ -223,5 +300,36 @@ describe('the shipped catalogue', () => {
         if (ed.url) expect(ed.lastVerifiedAt).toBeTruthy();
       }
     }
+  });
+
+  it('uses canonical publisher or ministry pages instead of retailer links', () => {
+    for (const resource of RESOURCES) {
+      for (const editionValue of Object.values(resource.editions || {})) {
+        if (!editionValue.url) continue;
+        const host = new URL(editionValue.url).hostname;
+        expect(host, `${resource.id} should not use a retailer URL`).not.toMatch(/(^|\.)amazon\./i);
+      }
+    }
+  });
+
+  it('publishes no sensitive entry without explicit content and safety sign-off', () => {
+    for (const resource of RESOURCES) {
+      if (!isSensitiveResource(resource) || resource.status !== 'approved') continue;
+      expect(isResourceApprovedForDisplay(resource), resource.id).toBe(true);
+    }
+  });
+
+  it('uses the shared relationships taxonomy and stable life-stage ids', () => {
+    expect(LIFE_STAGES).toEqual(expect.arrayContaining(['single', 'dating', 'engaged', 'married']));
+    expect(new Set(LIFE_STAGES).size).toBe(LIFE_STAGES.length);
+    expect(RESOURCE_REVIEW_LEVELS).toEqual(['standard', 'sensitive']);
+    expect(new Set(RESOURCE_TOPICS).size).toBe(RESOURCE_TOPICS.length);
+    expect(RESOURCE_TOPICS).toEqual(expect.arrayContaining([
+      'premarital', 'marriage', 'covenant', 'communication', 'listening',
+      'conflict', 'forgiveness', 'trust', 'sexual-intimacy', 'finances',
+      'family-of-origin', 'boundaries', 'friendship', 'spiritual-rhythms',
+      'prayer-together', 'children', 'parenting', 'hospitality', 'suffering',
+      'grief', 'infertility', 'marriage-crisis', 'abuse-safety', 'generosity', 'mission',
+    ]));
   });
 });

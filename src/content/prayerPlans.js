@@ -1,6 +1,6 @@
 // Prayer plan templates: guided journeys with a theme + Scripture for each day.
 // Starting a plan creates ONE recurring prayer (freq daily, end after N times,
-// schedule.plan = { id, startDate }); the engine numbers the days and this file
+// schedule.plan = { id, version?, startDate }); the engine numbers the days and this file
 // supplies each day's content. Themes are AUTHORED (not generated) in all 16
 // supported languages and resolved via pick(); pick() still falls back to
 // English if a key is ever missing. Verse references are language-neutral and
@@ -14,6 +14,9 @@
 // the per-day themes remain authored in all 16 languages.
 
 import { PREPARING_IN_PRAYER } from './plans/preparingInPrayer';
+import { PREPARING_FOR_COVENANT } from './plans/preparingForCovenant';
+import { PRAYING_FOR_OUR_MARRIAGE } from './plans/prayingForOurMarriage';
+import { canUsePlan } from '../lib/planReview';
 
 // Plans are grouped in the UI by CATEGORY so the list stays browsable as it
 // grows. `id` is stable; the label is an i18n key resolved at render.
@@ -234,10 +237,16 @@ export const PLANS = [
     ],
   },
   PREPARING_IN_PRAYER,
+  PREPARING_FOR_COVENANT,
+  PRAYING_FOR_OUR_MARRIAGE,
 ];
 
-export function getPlan(id) {
-  return PLANS.find((p) => p.id === id) || null;
+export function getPlan(id, version = null) {
+  const plan = PLANS.find((p) => p.id === id) || null;
+  if (!plan || version == null || version === plan.version) return plan;
+  // Meaningful revisions retain their prior content here. Unknown versions
+  // fail closed instead of silently changing a completed prayer's history.
+  return plan.versions?.[version] || null;
 }
 
 // Plans grouped for display, in PLAN_CATEGORIES order. Empty categories are
@@ -251,8 +260,8 @@ export function plansByCategory(plans = PLANS) {
 // Day content (1-based) for a plan, or null past the end. `resolved` lets a
 // caller pass a plan that already has a language overlay folded in (see
 // src/hooks/useLocalizedPlan.js) without this module knowing about translations.
-export function planDayContent(planId, dayNumber, resolved = null) {
-  const plan = resolved || getPlan(planId);
-  if (!plan || !dayNumber || dayNumber < 1 || dayNumber > plan.days.length) return null;
+export function planDayContent(planId, dayNumber, resolved = null, version = null) {
+  const plan = resolved || getPlan(planId, version);
+  if (!canUsePlan(plan) || !dayNumber || dayNumber < 1 || dayNumber > plan.days.length) return null;
   return plan.days[dayNumber - 1];
 }

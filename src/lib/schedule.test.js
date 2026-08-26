@@ -181,4 +181,16 @@ describe('normalizeSchedule', () => {
     expect(s.slot).toBe('morning');
     expect(s.end).toEqual({ kind: 'answered' });
   });
+  it('preserves a positive plan version and drops invalid versions', () => {
+    const valid = normalizeSchedule({
+      type: 'recurring', freq: 'daily',
+      plan: { id: 'marriage30', startDate: '2026-07-04', version: 1 },
+    }, '2026-07-04');
+    expect(valid.plan).toEqual({ id: 'marriage30', startDate: '2026-07-04', version: 1 });
+
+    const invalid = normalizeSchedule({
+      type: 'recurring', freq: 'daily', plan: { id: 'marriage30', version: 0 },
+    }, '2026-07-04');
+    expect(invalid.plan).toEqual({ id: 'marriage30', startDate: '2026-07-04' });
+  });
 });

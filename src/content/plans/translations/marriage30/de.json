@@ -1,0 +1,347 @@
+{
+  "marriage30": {
+    "days": [
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Christus im Mittelpunkt“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Christus im Mittelpunkt; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Dankbarkeit für meinen Ehepartner“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Dankbarkeit für meinen Ehepartner; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Freundschaft in der Ehe“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Freundschaft in der Ehe; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Charakter zu Hause“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Charakter zu Hause; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "roles": {
+          "husband": "Bitte als Ehemann um demütige, selbsthingebende Liebe und verantwortlichen Dienst, niemals um Kontrolle.",
+          "wife": "Bitte als Ehefrau um mutige, selbsthingebende Liebe und Weisheit, ohne Stimme, Würde oder Sicherheit aufzugeben."
+        }
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Worte, die aufbauen“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Worte, die aufbauen; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Zuhören vor dem Antworten“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Zuhören vor dem Antworten; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Konflikt ohne Verachtung“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Konflikt ohne Verachtung; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?",
+        "safetyNote": "Gebet verlangt niemals Schweigen, Zwang oder das Verbleiben in Gefahr. Suche je nach Situation vertrauenswürdige fachliche, seelsorgerliche, medizinische, rechtliche oder schützende Hilfe; dieser Plan kann Risiken nicht beurteilen."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Vergebung und Wiedergutmachung“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Vergebung und Wiedergutmachung; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt.",
+        "safetyNote": "Gebet verlangt niemals Schweigen, Zwang oder das Verbleiben in Gefahr. Suche je nach Situation vertrauenswürdige fachliche, seelsorgerliche, medizinische, rechtliche oder schützende Hilfe; dieser Plan kann Risiken nicht beurteilen."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Vertrauen durch Ehrlichkeit“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Vertrauen durch Ehrlichkeit; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Emotionale Nähe“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Emotionale Nähe; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Gegenseitige und treue Intimität“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Gegenseitige und treue Intimität; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?",
+        "safetyNote": "Gebet verlangt niemals Schweigen, Zwang oder das Verbleiben in Gefahr. Suche je nach Situation vertrauenswürdige fachliche, seelsorgerliche, medizinische, rechtliche oder schützende Hilfe; dieser Plan kann Risiken nicht beurteilen."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Treue in jeder Entscheidung“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Treue in jeder Entscheidung; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "safetyNote": "Gebet verlangt niemals Schweigen, Zwang oder das Verbleiben in Gefahr. Suche je nach Situation vertrauenswürdige fachliche, seelsorgerliche, medizinische, rechtliche oder schützende Hilfe; dieser Plan kann Risiken nicht beurteilen."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Geld als anvertrautes Gut“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Geld als anvertrautes Gut; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Arbeit und Ruhe“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Arbeit und Ruhe; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Gemeinsame geistliche Rhythmen“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Gemeinsame geistliche Rhythmen; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Gemeinsam beten“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Gemeinsam beten; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „In Kirche und Gemeinschaft verwurzelt“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in In Kirche und Gemeinschaft verwurzelt; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Weise Grenzen in der Familie“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Weise Grenzen in der Familie; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?",
+        "safetyNote": "Gebet verlangt niemals Schweigen, Zwang oder das Verbleiben in Gefahr. Suche je nach Situation vertrauenswürdige fachliche, seelsorgerliche, medizinische, rechtliche oder schützende Hilfe; dieser Plan kann Risiken nicht beurteilen."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Ein gastfreundliches Zuhause“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Ein gastfreundliches Zuhause; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Seite an Seite dienen“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Seite an Seite dienen; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "roles": {
+          "husband": "Bitte als Ehemann um demütige, selbsthingebende Liebe und verantwortlichen Dienst, niemals um Kontrolle.",
+          "wife": "Bitte als Ehefrau um mutige, selbsthingebende Liebe und Weisheit, ohne Stimme, Würde oder Sicherheit aufzugeben."
+        }
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Treu in schweren Zeiten“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Treu in schweren Zeiten; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt.",
+        "safetyNote": "Gebet verlangt niemals Schweigen, Zwang oder das Verbleiben in Gefahr. Suche je nach Situation vertrauenswürdige fachliche, seelsorgerliche, medizinische, rechtliche oder schützende Hilfe; dieser Plan kann Risiken nicht beurteilen."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Gesundheit und Kraft in Demut“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Gesundheit und Kraft in Demut; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Träume und Entscheidungen“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Träume und Entscheidungen; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Zufriedenheit im Alltag“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Zufriedenheit im Alltag; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Gemeinsame Zeit schützen“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Gemeinsame Zeit schützen; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Weisheit für Menschen in unserer Obhut“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Weisheit für Menschen in unserer Obhut; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "withChildren": {
+          "reflection": "Jedes Kind ist Gott bekannt. Bete hoffnungsvoll und demütig, ohne Gebet als Garantie oder Mittel zur Kontrolle zu behandeln.",
+          "childPrompt": "Schenke {child} weise Beziehungen, Mut und Gnade; mache uns zu aufmerksamen Eltern, die führen, ohne zu kontrollieren.",
+          "practice": "Schenke jedem Kind einen kurzen Moment ungeteilter Aufmerksamkeit und höre zu."
+        }
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Jeder Mensch von Gott gekannt“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Jeder Mensch von Gott gekannt; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?",
+        "withChildren": {
+          "reflection": "Jedes Kind ist Gott bekannt. Bete hoffnungsvoll und demütig, ohne Gebet als Garantie oder Mittel zur Kontrolle zu behandeln.",
+          "childPrompt": "Schenke {child} weise Beziehungen, Mut und Gnade; mache uns zu aufmerksamen Eltern, die führen, ohne zu kontrollieren.",
+          "practice": "Schenke jedem Kind einen kurzen Moment ungeteilter Aufmerksamkeit und höre zu."
+        }
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Die Kultur unseres Zuhauses“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Die Kultur unseres Zuhauses; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "conversationPrompt": "Wenn wir beide möchten und uns sicher fühlen: Wie prägt dieses Thema gerade unser gemeinsames Leben?"
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Großzügigkeit und Mission“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Großzügigkeit und Mission; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      },
+      {
+        "reflection": "Heute lenkt die Schrift unsere Aufmerksamkeit auf „Unsere Ehe in offenen Händen“. Wir bringen diesen Bereich des Ehelebens mit Demut, Wahrheit und Fürsorge vor Gott.",
+        "prompts": [
+          "Führe uns in Unsere Ehe in offenen Händen; richte unser Gebet auf Deine Gnade statt darauf, einander zu kontrollieren."
+        ],
+        "spousePrompt": "Stärke {partner} in diesem Bereich mit Weisheit, Würde und Gnade.",
+        "selfPrompt": "Zeige mir, was sich in mir ändern muss, und mache mich demütig, verantwortlich und bereit zur Wiedergutmachung.",
+        "marriagePrompt": "Forme treue Liebe, Sicherheit und gegenseitige Fürsorge in unserer Ehe.",
+        "practice": "Wähle heute eine kleine, freiwillige Handlung, die dieses Gebet umsetzt.",
+        "prayTogether": "Wenn wir beide möchten und uns sicher fühlen, beten wir je einen Satz. Nichts wird aufgezeichnet oder geteilt."
+      }
+    ],
+    "intro": "Dreißig Tage mit Schrift und Gebet für den Ehepartner, das eigene Wachstum und die Ehe. Dies ist ein wiederholbarer Rhythmus, keine Bewertung oder Diagnose. Ein Ehepaar ist bereits eine Familie; Kinder sind optional, und private Notizen bleiben privat.",
+    "biblical": "Das Neue Testament ruft alle Glaubenden zu Mitgefühl, Demut, Geduld, Vergebung, Liebe und Frieden. Bete für den Ehepartner, die eigene Umkehr und die Ehe, nicht einfach dafür, dass Gott den anderen Menschen repariert.",
+    "completion": "Du hast dreißig Tage für deinen Ehepartner, dein eigenes Wachstum und eure Ehe gebetet. Das misst nicht die Gesundheit der Beziehung. Du kannst den Rhythmus später erneut beginnen; der bisherige Verlauf bleibt erhalten."
+  }
+}

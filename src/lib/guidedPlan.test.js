@@ -43,4 +43,11 @@ describe('buildGuidedPlanPrayer', () => {
     expect(prayer.schedule.startDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(prayer.schedule.plan.startDate).toBe(prayer.schedule.startDate);
   });
+
+  it('pins every versioned plan to its authored content version', () => {
+    for (const versionedPlan of PLANS.filter((candidate) => candidate.version)) {
+      const prayer = buildGuidedPlanPrayer(versionedPlan, '2026-08-01', 'fr');
+      expect(prayer.schedule.plan.version).toBe(versionedPlan.version);
+    }
+  });
 });

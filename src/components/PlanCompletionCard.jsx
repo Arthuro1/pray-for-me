@@ -13,7 +13,7 @@ import { getPlanPrefs } from '../lib/planPrefs';
 //
 // The themes pre-ticked are the ones the reader asked to emphasize at the start,
 // which is the whole use of that answer — it never changed a single day.
-export default function PlanCompletionCard({ plan, lang, onContinue }) {
+export default function PlanCompletionCard({ plan, lang, onContinue, onRelationshipNext }) {
   const prefs = getPlanPrefs(plan.id);
   const themes = plan.continueThemes || [];
   const [selected, setSelected] = useState(() => {
@@ -25,6 +25,9 @@ export default function PlanCompletionCard({ plan, lang, onContinue }) {
   const toggle = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const chosen = themes.filter((th) => selected.includes(th.id));
+  const relationshipActionKey = plan.lifeStage === 'engaged'
+    ? 'planCoupleContinueMarriage'
+    : (plan.lifeStage === 'married' && plan.renewable ? 'planCoupleRepeat' : null);
 
   return (
     <section className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -32,6 +35,17 @@ export default function PlanCompletionCard({ plan, lang, onContinue }) {
         <Sprout size={13} aria-hidden="true" /> {t(lang, 'planCompleteHeading', { n: plan.count })}
       </p>
       <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(plan.completion, lang)}</p>
+
+      {relationshipActionKey && (
+        <a
+          href="/plan"
+          onClick={onRelationshipNext}
+          className="mb-3 block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"
+          style={{ background: 'var(--accent)', color: '#fff' }}
+        >
+          {t(lang, relationshipActionKey)}
+        </a>
+      )}
 
       {themes.length > 0 && !done && (
         <>

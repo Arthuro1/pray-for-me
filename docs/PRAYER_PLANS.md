@@ -8,7 +8,7 @@ a separate engine, a separate session, or a separate history.
 start a plan
   → addPrayer({ schedule: { type:'recurring', freq:'daily',
                             end:{ kind:'count', count:N },
-                            plan:{ id, startDate } } })
+                            plan:{ id, version, startDate } } })
   → planDayNumber(schedule, day)   numbers the days      (src/lib/schedule.js)
   → planDayContent(planId, n)      supplies the content  (src/content/prayerPlans.js)
 ```
@@ -26,9 +26,12 @@ and history, the calendar, catch-up, reminders, offline, and the ICS export.
 | `src/content/prayerPlans.js` | the `PLANS` registry, `PLAN_CATEGORIES`, `plansByCategory()`, `getPlan()`, `planDayContent()` |
 | `src/content/plans/<plan>.js` | one rich plan's meta (intro, movements, completion) |
 | `src/content/plans/<plan>Days.js` | that plan's day-by-day curriculum |
-| `src/content/plans/translations.js` + `translations/<lang>.json` | lazy per-language overlays for plan **prose** |
+| `src/content/plans/translations.js` + `translations/<plan-id>/<lang>.json` | lazy per-plan, per-language overlays for plan **prose** |
 | `src/lib/guidedPlan.js` | `planById()`, `buildGuidedPlanPrayer()` — shared by Plan tab, invitations, group plans |
-| `src/lib/planPrefs.js` | device-local onboarding answers + resource-language preference |
+| `src/lib/planPrefs.js` | fixed-choice, device-local singles onboarding answers |
+| `src/lib/planPersonalization.js` | couple-plan personalization and safe name interpolation |
+| `src/lib/planPersonalizationStorage.js` | per-account/per-run AES-GCM storage for optional couple names and family choices |
+| `src/lib/planReview.js` | production publication gate for theological, safety, and all-locale sign-offs |
 | `src/hooks/useLocalizedPlan.js` | folds a language overlay into a plan / one day |
 | `src/hooks/usePlanDay.js` | one screen's worth: the day + the reader's role + resolved resources |
 | `src/components/PlanDayBody.jsx` | renders a rich day's reflection, prompts, practice, "Go deeper" |
@@ -51,8 +54,14 @@ the older plans (theme + verse) render exactly as they always did.
   movement:       'intercede',                 // which movement this day is in
   reflection:     { en, fr },                  // 2-4 sentences of OUR commentary
   prompts:        [{ en, fr }, …],             // short prayer prompts
+  spousePrompt:   { en, fr },                  // pray for spouse/fiancé(e)
   selfPrompt:     { en, fr },                  // the "also pray for yourself" mirror
+  marriagePrompt: { en, fr },                  // pray for the relationship/covenant
+  conversationPrompt: { en, fr },              // optional "Talk together"
+  prayTogether:   { en, fr },                  // optional shared instruction
   practice:       { en, fr },                  // one small optional response
+  safetyNote:     { en, fr },                  // contextual safeguarding copy
+  withChildren:   { childPrompt: { en, fr } }, // additive; omitted without children
   roles:          { husband: { en, fr, ref? }, // optional, opt-in only
                     wife:    { en, fr, ref? } },
   resourceTopics: ['future-spouse', 'prayer'], // taxonomy ids for "Go deeper"
@@ -94,17 +103,18 @@ Three layers, each with its own reason:
 |---|---|---|
 | Plan title, subtitle, audience, movement names, all section labels, onboarding, completion, resource labels | `src/i18n/locales/*.js` | **all 16**, CI-gated by `npm run check:locales` |
 | Day titles (`theme`) | inline in the day file | **all 16**, authored |
-| Day prose (reflection, prompts, selfPrompt, practice, roles) + intro/biblical/completion body | source `en` + `fr`, plus `src/content/plans/translations/<lang>.json` | **all 16** — en + fr authored in source, the other 14 shipped as overlays (AI-drafted, native review pending) |
+| Day prose (reflection, prayer directions, conversation/practice, safety, roles) + intro/biblical/completion body | source `en` + `fr`, plus `src/content/plans/translations/<plan-id>/<lang>.json` | **all 16** — en + fr authored in source, the other 14 are review-pending drafts |
 
 Overlay shape (keyed by plan id, days matched **by position**):
 
 ```json
 {
-  "preparing21": {
+  "marriage30": {
     "intro": "…", "biblical": "…", "completion": "…",
     "days": [
       { "reflection": "…", "prompts": ["…","…","…"],
-        "selfPrompt": "…", "practice": "…",
+        "spousePrompt": "…", "selfPrompt": "…", "marriagePrompt": "…",
+        "conversationPrompt": "…", "prayTogether": "…", "practice": "…",
         "roles": { "husband": "…", "wife": "…" } }
     ]
   }
@@ -115,10 +125,10 @@ Overlay shape (keyed by plan id, days matched **by position**):
 authored plan (day count, prompt count, no unknown fields, no Scripture), so a
 mis-positioned translation is a build failure rather than a quiet content bug.
 
-An overlay file is per LANGUAGE, not per plan, so a plan must opt in with
-`proseTranslations: true` before the loader will fetch one for it — otherwise
-opening any plan would pull down a chunk of prose for a different one. Set the
-flag in the same commit that adds the overlays.
+An overlay file is scoped to one PLAN and one LANGUAGE. A plan must opt in with
+`proseTranslations: true` before the loader fetches it. This keeps each plan's
+prose in a separate lazy chunk. Set the flag in the same commit that adds all
+required overlays.
 
 Ids, Scripture references, movements, `resourceTopics` and `emphasis` stay in
 the source and are **never** translated, so the journey is structurally
@@ -129,7 +139,10 @@ authored en/fr value — a partially translated plan is never blank or broken.
 
 ## Versioning
 
-A plan carries `version`. Bump it whenever a day's **meaning** changes (a
+A plan carries `version`, and every newly started prayer pins it in
+`schedule.plan.version`. `getPlan(id, version)` resolves that exact release and
+fails closed if it is unavailable; retain older releases in the plan's
+`versions` archive while any prayer can reference them. Bump the version whenever a day's **meaning** changes (a
 different passage, a reworked reflection, a corrected prompt). Do **not**
 renumber days, change `id`, or reorder the array of a plan that is live: a
 running plan is a prayer whose `schedule.plan.startDate` maps a calendar date to
@@ -234,4 +247,10 @@ emitted with no properties. The day event fires from `markPrayedOn` in the store
    whoever owns doctrine for this app.
 8. Review all 16 translations for **meaning**, not just key parity.
 
+New plans remain visible only in development preview until `review.status`,
+theology review, safety review, and every locale sign-off contain an approved
+status, a named reviewer, and an ISO date. Draft role material has its own gate.
+
 See `docs/RESOURCES.md` for the separate review the "Go deeper" catalogue needs.
+See `docs/RELATIONSHIP_FAMILY_PLANS.md` for the engaged/married implementation,
+privacy boundary, optional child layer, and release checklist.

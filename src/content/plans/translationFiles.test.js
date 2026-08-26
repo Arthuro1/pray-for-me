@@ -9,16 +9,16 @@
 // says what the English says, is a native-review question — see
 // docs/I18N_REVIEW.md.
 import { describe, it, expect } from 'vitest';
-import { PREPARING_IN_PRAYER } from './preparingInPrayer.js';
+import { PLANS } from '../prayerPlans.js';
 import { LANG_CODES } from '../../i18n.js';
 
-const overlays = import.meta.glob('./translations/*.json', { eager: true });
+const overlays = import.meta.glob(['./translations/*.json', './translations/*/*.json'], { eager: true });
 const entries = Object.entries(overlays).map(([path, mod]) => [
-  path.replace('./translations/', '').replace('.json', ''),
+  path.split('/').at(-1).replace('.json', ''),
   mod.default,
 ]);
 
-const PLANS_BY_ID = { preparing21: PREPARING_IN_PRAYER };
+const PLANS_BY_ID = Object.fromEntries(PLANS.map((plan) => [plan.id, plan]));
 
 describe('plan translation overlays', () => {
   it('are named after a supported language, and never en/fr (those are authored)', () => {
@@ -36,10 +36,8 @@ describe('plan translation overlays', () => {
       // Days are positional: the count must match exactly.
       expect(tr.days, `${lang}/${planId}: day count`).toHaveLength(plan.days.length);
 
-      tr.days.forEach((day, i) => {
-        const source = plan.days[i];
-        const where = `${lang}/${planId} day ${i + 1}`;
-
+      const validateDay = (day, source, where) => {
+        expect(source, `${where}: source day`).toBeTruthy();
         // Prompts are positional too.
         if (day.prompts) {
           expect(day.prompts, `${where}: prompt count`).toHaveLength(source.prompts.length);
@@ -47,11 +45,16 @@ describe('plan translation overlays', () => {
         }
         // A translated field must correspond to a field the source actually has,
         // or it would translate something that never renders.
-        for (const field of ['reflection', 'selfPrompt', 'practice']) {
+        for (const field of ['reflection', 'selfPrompt', 'spousePrompt', 'marriagePrompt', 'childPrompt',
+          'practice', 'conversationPrompt', 'prayTogether', 'safetyNote']) {
           if (day[field] !== undefined) {
             expect(source[field], `${where}: "${field}" is not in the source`).toBeTruthy();
             expect(typeof day[field], `${where}: "${field}" type`).toBe('string');
           }
+        }
+        if (day.withChildren) {
+          expect(source.withChildren, `${where}: source has no child variant`).toBeTruthy();
+          validateDay(day.withChildren, source.withChildren, `${where} child variant`);
         }
         if (day.roles) {
           expect(source.roles, `${where}: source has no role reflections`).toBeTruthy();
@@ -62,9 +65,12 @@ describe('plan translation overlays', () => {
         }
         // Structure never moves: an overlay may not carry Scripture, ids,
         // movements or topics.
-        for (const forbidden of ['ref', 'related', 'movement', 'resourceTopics', 'theme', 'emphasis']) {
+        for (const forbidden of ['ref', 'related', 'movement', 'resourceTopics', 'theme', 'emphasis', 'lifeStage']) {
           expect(day[forbidden], `${where}: overlays must not carry "${forbidden}"`).toBeUndefined();
         }
+      };
+      tr.days.forEach((day, i) => {
+        validateDay(day, plan.days[i], `${lang}/${planId} day ${i + 1}`);
       });
 
       for (const field of ['intro', 'biblical', 'completion']) {

@@ -111,6 +111,12 @@ describe('growthTopics', () => {
     const topics = growthTopics({ growth: ['responsibility', 'leadership'] });
     expect(new Set(topics).size).toBe(topics.length);
   });
+
+  it('uses couple include choices only as resource-ranking topics', () => {
+    expect(growthTopics({ includes: ['spiritual', 'children'] })).toEqual(expect.arrayContaining([
+      'spiritual-rhythms', 'prayer-together', 'children', 'parenting', 'family-discipleship',
+    ]));
+  });
 });
 
 describe('resource fallback languages', () => {

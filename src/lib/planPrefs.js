@@ -161,5 +161,19 @@ export function growthTopics(prefs) {
   for (const area of GROWTH_AREAS) {
     if (chosen.has(area.id)) area.topics.forEach((t) => topics.add(t));
   }
+  // Couple-plan include choices also rank already-relevant resources; they
+  // never broaden a day's topic filter or expose the choices to analytics.
+  const includeTopics = {
+    marriage: ['marriage', 'covenant'],
+    spouse: ['marriage', 'character'],
+    self: ['character', 'spiritual-formation'],
+    spiritual: ['spiritual-rhythms', 'prayer-together'],
+    children: ['children', 'parenting', 'family-discipleship'],
+    home: ['family', 'hospitality'],
+    'extended-family': ['family-of-origin', 'boundaries'],
+  };
+  for (const include of prefs?.includes || []) {
+    for (const topic of includeTopics[include] || []) topics.add(topic);
+  }
   return [...topics];
 }

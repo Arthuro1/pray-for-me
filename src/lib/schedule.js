@@ -220,6 +220,10 @@ export function normalizeSchedule(s, todayKeyStr) {
   else if (end.kind === 'count' && end.count > 0) out.end = { kind: 'count', count: Math.floor(end.count) };
   else if (end.kind === 'answered') out.end = { kind: 'answered' };
   else out.end = { kind: 'never' };
-  if (s.plan?.id) out.plan = { id: s.plan.id, startDate: s.plan.startDate || out.startDate };
+  if (s.plan?.id) out.plan = {
+    id: s.plan.id,
+    startDate: s.plan.startDate || out.startDate,
+    ...(Number.isInteger(s.plan.version) && s.plan.version > 0 ? { version: s.plan.version } : {}),
+  };
   return out;
 }

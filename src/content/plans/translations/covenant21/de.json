@@ -1,0 +1,256 @@
+{
+  "covenant21": {
+    "intro": "Einundzwanzig Tage, um die Ehe vorzubereiten, nicht nur die Hochzeit. Lest die Schrift, betet füreinander und für das eigene Wachstum und redet ehrlich. Ihr könnt privat beten oder gemeinsam etwas tun; Notizen bleiben privat. Ehe ist ein Lebensrahmen für die Nachfolge Christi, kein höherer geistlicher Rang als Ehelosigkeit.",
+    "biblical": "Jesus stellt Gottes Reich zuerst. Genesis beschreibt einen neuen verbindlichen Haushalt; der Philipperbrief weist auf Christi Demut und Dienst. Diese Texte laden zu treuer Vorbereitung ein, ohne die Verlobung als Garantie Gottes für ein bestimmtes Ergebnis zu behandeln.",
+    "completion": "Ihr habt gebetet, freiwillig miteinander geredet und die Ehe vorbereitet. Dankt Gott und vertraut Ihm das Offene an. Die Hochzeit beginnt gelebte Treue; ein abgeschlossener Plan bescheinigt keine Reife. Ihr könnt weiter für eure Ehe beten. Der Verlauf bleibt erhalten, der Beziehungsstatus ändert sich nicht automatisch.",
+    "days": [
+      {
+        "reflection": "Jesus stellt Gottes Reich zuerst; die Ehe ersetzt Christus nicht.",
+        "prompts": [
+          "Für {partner}: Vertiefe Glauben und Christusliebe.",
+          "Führe unsere Beziehung.",
+          "Lass uns Dein Reich zuerst suchen."
+        ],
+        "selfPrompt": "Was erwarte ich nur von der Ehe?",
+        "practice": "Danke zuerst für Christus.",
+        "conversationPrompt": "Was hilft uns, Christus zuerst zu setzen?",
+        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+      },
+      {
+        "reflection": "Der Bund verlangt Treue über wechselnde Gefühle hinaus.",
+        "prompts": [
+          "Lehre uns Freude und Gewicht der Bindung.",
+          "Für {partner}: Schenke Weisheit.",
+          "Forme versprechentreue Liebe."
+        ],
+        "selfPrompt": "Welches Versprechen braucht mehr Sorgfalt?",
+        "practice": "Halte heute eine kleine Zusage.",
+        "conversationPrompt": "Wie sieht Treue im Alltag aus?"
+      },
+      {
+        "reflection": "Christus zeigt demütiges Dienen ohne Aufrechnung.",
+        "prompts": [
+          "Für {partner}: Gib Kraft für heute.",
+          "Befreie mich vom Geltungsbedürfnis.",
+          "Lehre uns selbstlos zu dienen."
+        ],
+        "selfPrompt": "Wo unterstelle ich statt zu fragen?",
+        "practice": "Frage und höre zu.",
+        "conversationPrompt": "Welche kleine Fürsorge bedeutet dir viel?"
+      },
+      {
+        "reflection": "Geistesfrucht wächst in alltäglichen Entscheidungen.",
+        "prompts": [
+          "Lass Geduld wachsen.",
+          "Mache unsere Güte verlässlich.",
+          "Für {partner}: Stärke Sanftmut und Selbstbeherrschung."
+        ],
+        "selfPrompt": "Welche Frucht muss in mir wachsen?",
+        "practice": "Übe Geduld bei einer Unterbrechung.",
+        "conversationPrompt": "Wann fällt uns Sanftmut schwer?"
+      },
+      {
+        "reflection": "Ausgesprochene Erwartungen schaffen Raum für beide.",
+        "prompts": [
+          "Gib Mut zu ehrlichen Erwartungen.",
+          "Halte uns neugierig auf Unterschiede.",
+          "Hilf uns, Aufgaben fair zu teilen."
+        ],
+        "selfPrompt": "Welche Erwartung behandle ich als Regel?",
+        "practice": "Nenne eine Annahme ohne Forderung.",
+        "conversationPrompt": "Was erwarten wir bei Haushalt, Arbeit, Nähe, Freiraum und Gemeinde?"
+      },
+      {
+        "reflection": "Wahre, freundliche Worte und Zuhören bauen auf.",
+        "prompts": [
+          "Mache meine Worte wahr und freundlich.",
+          "Für {partner}: Schaffe freien Gesprächsraum.",
+          "Lehre uns zuerst zuzuhören."
+        ],
+        "selfPrompt": "Wann werde ich defensiv?",
+        "practice": "Höre ohne Unterbrechung zu.",
+        "conversationPrompt": "Wodurch fühlst du dich gehört?"
+      },
+      {
+        "reflection": "Streit braucht Zuhören und Selbstbeherrschung; Verachtung und Einschüchterung dürfen nicht normal werden.",
+        "prompts": [
+          "Bremse meinen Zorn.",
+          "Für {partner}: Schenke Sicherheit und Stimme.",
+          "Gib Demut und weise Hilfe."
+        ],
+        "selfPrompt": "Wofür trage ich Verantwortung?",
+        "practice": "Wenn sicher, pausiert und kehrt ruhig zurück.",
+        "conversationPrompt": "Was geschieht bei Missverständnissen?",
+        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+      },
+      {
+        "reflection": "Umkehr benennt Schaden und ändert Verhalten; Vergebung hebt Verantwortung nicht auf.",
+        "prompts": [
+          "Hilf mir, Schaden ohne Ausreden anzuerkennen.",
+          "Für {partner}: Schenke Heilung und Hilfe.",
+          "Lehre Barmherzigkeit und Verantwortung."
+        ],
+        "selfPrompt": "Welche Entschuldigung braucht Veränderung?",
+        "practice": "Entschuldige dich konkret, wenn sicher.",
+        "conversationPrompt": "Was macht Wiedergutmachung glaubwürdig?",
+        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+      },
+      {
+        "reflection": "Vertrauen wächst durch verlässliches Handeln, nicht Überwachung.",
+        "prompts": [
+          "Lass Worte und Taten übereinstimmen.",
+          "Für {partner}: Schütze Würde und Privatsphäre.",
+          "Hilf uns, Vertrauen geduldig aufzubauen."
+        ],
+        "selfPrompt": "Welches ehrliche Gespräch vermeide ich?",
+        "practice": "Halte eine Zusage ein.",
+        "conversationPrompt": "Wie bleiben wir ehrlich ohne Kontrolle?"
+      },
+      {
+        "reflection": "Sexuelle Treue braucht Würde, gegenseitige Achtung und keinen Schamzwang.",
+        "prompts": [
+          "Führe unsere Entscheidungen vor der Ehe.",
+          "Für {partner}: Schütze Freiheit vor Druck.",
+          "Bereite uns auf freiwillige, treue Intimität vor."
+        ],
+        "selfPrompt": "Respektiere ich die Freiheit des anderen?",
+        "practice": "Prüfe eine hilfreiche Grenze.",
+        "conversationPrompt": "Wie sprechen wir druckfrei über Intimität, Einwilligung und Grenzen?",
+        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+      },
+      {
+        "reflection": "Geld ist anvertraut, nicht Identität oder Sicherheit.",
+        "prompts": [
+          "Löse meinen Wert vom Geld.",
+          "Gib Ehrlichkeit bei Ausgaben, Sparen und Schulden.",
+          "Lass Großzügigkeit wachsen."
+        ],
+        "selfPrompt": "Welche Angst prägt meinen Umgang mit Geld?",
+        "practice": "Plant ein ruhiges Finanzgespräch.",
+        "conversationPrompt": "Was bedeutete Geld in unseren Familien?"
+      },
+      {
+        "reflection": "Arbeit, Fürsorge und Ruhe brauchen gemeinsame Aufmerksamkeit.",
+        "prompts": [
+          "Für {partner}: Gib Kraft und Sinn in der Arbeit.",
+          "Befreie mich von hektischem Leistungsdruck.",
+          "Gib Raum für Arbeit, Pflege und Ruhe."
+        ],
+        "selfPrompt": "Was verdient mehr Zeit?",
+        "practice": "Schütze eine kurze Ruhezeit.",
+        "conversationPrompt": "Wie unterstützen wir Berufung und teilen Fürsorge?"
+      },
+      {
+        "reflection": "Familienehre kann mit klaren Grenzen vereinbar sein.",
+        "prompts": [
+          "Gib Dankbarkeit und Urteilsvermögen.",
+          "Für {partner}: Befreie von schädlichem Druck.",
+          "Hilf uns bei klaren Familiengrenzen."
+        ],
+        "selfPrompt": "Wo muss ich freundlich klar sein?",
+        "practice": "Nenne eine sicher besprechbare Grenze.",
+        "conversationPrompt": "Was erwarten wir bei Feiertagen, Pflege und Privatsphäre?",
+        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+      },
+      {
+        "reflection": "Freundschaft wächst durch Aufmerksamkeit, Freude und Neugier.",
+        "prompts": [
+          "Für {partner}: Schenke Alltagsfreude.",
+          "Halte mein Interesse lebendig.",
+          "Lass Freundschaft wachsen."
+        ],
+        "selfPrompt": "Wann hörte ich nur zum Kennenlernen zu?",
+        "practice": "Tut gemeinsam etwas Schönes, wenn beide wollen.",
+        "conversationPrompt": "Welche Alltagsmomente genießen wir?",
+        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+      },
+      {
+        "reflection": "Gemeinsame Glaubensgewohnheiten dürfen einfach und verschieden sein.",
+        "prompts": [
+          "Hilf uns, die Schrift demütig aufzunehmen.",
+          "Für {partner}: Stärke den persönlichen Glauben.",
+          "Gib einen sanften Gebetsrhythmus."
+        ],
+        "selfPrompt": "Lade ich ein oder zwinge ich?",
+        "practice": "Probiert eine kleine geistliche Gewohnheit.",
+        "conversationPrompt": "Welcher Rhythmus nährt uns ohne Druck?",
+        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+      },
+      {
+        "reflection": "Eine Ehe braucht christliche Gemeinschaft statt Isolation.",
+        "prompts": [
+          "Für {partner}: Gib verlässliche christliche Freunde.",
+          "Halte uns offen für weisen Rat.",
+          "Zeige unseren Beitrag zur Gemeinschaft."
+        ],
+        "selfPrompt": "Welche weise Stimme ignoriere ich?",
+        "practice": "Danke einem Unterstützer.",
+        "conversationPrompt": "Wer unterstützt uns und achtet Privatsphäre?"
+      },
+      {
+        "reflection": "Kinderhoffnungen brauchen Ehrlichkeit; Ehe und Gebet garantieren keine Kinder.",
+        "prompts": [
+          "Hilf uns, Hoffnung und Unsicherheit freundlich auszusprechen.",
+          "Für {partner}: Befreie von Familiendruck.",
+          "Lehre uns, Zukunft ohne Anspruch anzunehmen."
+        ],
+        "selfPrompt": "Welche Kinderannahme verschwieg ich?",
+        "practice": "Redet ohne Entscheidungszwang.",
+        "conversationPrompt": "Welche Hoffnungen und Ängste haben wir zu Kindern und Elternschaft?",
+        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+      },
+      {
+        "reflection": "Schwere Zeiten gemeinsam zu tragen heißt auch, Hilfe anzunehmen.",
+        "prompts": [
+          "Für {partner}: Stärke in heutigen Lasten.",
+          "Lehre mich praktische Geduld.",
+          "Hilf uns, Unterstützung zu suchen."
+        ],
+        "selfPrompt": "Welche Hilfe lehne ich ab?",
+        "practice": "Hilf praktisch, ohne alles lösen zu wollen.",
+        "conversationPrompt": "Was hilft uns, Fürsorge anzunehmen?",
+        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+      },
+      {
+        "reflection": "Ein gastfreundliches Zuhause dient innerhalb wirklicher Grenzen.",
+        "prompts": [
+          "Mach uns aufmerksam für andere.",
+          "Für {partner}: Gib Freude am Dienen.",
+          "Lass nachhaltige Gastfreundschaft wachsen."
+        ],
+        "selfPrompt": "Wen übersehe ich?",
+        "practice": "Heiße jemanden im möglichen Rahmen willkommen.",
+        "conversationPrompt": "Wie kann unser Zuhause anderen dienen?"
+      },
+      {
+        "reflection": "Jesu Größe zeigt sich im Dienst; Ehevorbereitung braucht Demut und geteilte Verantwortung.",
+        "prompts": [
+          "Mache meine Liebe praktisch.",
+          "Für {partner}: Stärke Weisheit und Integrität.",
+          "Lehre Verantwortung ohne Kontrolle."
+        ],
+        "selfPrompt": "Wo kann ich dienen ohne letztes Wort?",
+        "practice": "Übernimm einen Alltagsdienst.",
+        "conversationPrompt": "Was bedeuten Dienst und gegenseitiger Respekt?",
+        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe.",
+        "roles": {
+          "husband": "Vorbereitung als Ehemann bedeutet selbsthingebende Liebe, Zuhören, Umkehr und Dienst, nicht Kontrolle zu fordern.",
+          "wife": "Vorbereitung als Ehefrau bedeutet Weisheit, Kraft, ehrliche Stimme und Güte, nicht Bedürfnisse zu verbergen oder Schaden hinzunehmen."
+        }
+      },
+      {
+        "reflection": "Vertraut die kommende Ehe Gott an; die Hochzeit beginnt Treue, sie vollendet sie nicht.",
+        "prompts": [
+          "Danke für diese Tage.",
+          "Für {partner}: Stärke Glauben und Hoffnung.",
+          "Forme unsere Ehe weiter."
+        ],
+        "selfPrompt": "Welchen Gebetsrhythmus behalte ich?",
+        "practice": "Wähle ein einfaches Folgegebet.",
+        "conversationPrompt": "Wofür danken wir und was vertrauen wir Gott an?",
+        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+      }
+    ]
+  }
+}
+

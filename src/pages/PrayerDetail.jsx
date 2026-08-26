@@ -30,6 +30,7 @@ import PlanCompletionCard from '../components/PlanCompletionCard';
 import { markPlanCompleted } from '../lib/planPrefs';
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
+import { canUsePlan } from '../lib/planReview';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
@@ -314,8 +315,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // for the many prayers that are not part of a plan.
   const planId = livePrayer.schedule?.plan?.id || null;
   const planDayNo = planId ? planDayNumber(livePrayer.schedule, todayKey()) : null;
-  const plan = planId ? getPlan(planId) : null;
-  const { day: planDay, role: planRole, resources: planResources } = usePlanDay(planId, planDayNo, lang);
+  const planVersion = livePrayer.schedule?.plan?.version || null;
+  const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
+  const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
+  const { day: planDay, role: planRole, resources: planResources } = usePlanDay(planId, planDayNo, lang, {
+    prayerId: livePrayer.id, ownerId: livePrayer.user_id, planVersion,
+  });
   // The last day is behind them: the series can produce no more occurrences.
   const planFinished = !!plan?.completion && !isCommunity && scheduleEnded(livePrayer, todayKey());
 
@@ -909,6 +914,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <PlanCompletionCard
             plan={plan}
             lang={lang}
+            onRelationshipNext={() => {
+              if (plan.analyticsEvents?.completed) track(plan.analyticsEvents.completed);
+            }}
             onContinue={async (themes) => {
               for (const theme of themes) {
                 await addPrayer({

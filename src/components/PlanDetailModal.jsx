@@ -7,6 +7,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedPlan } from '../hooks/useLocalizedPlan';
 import VersePill from './shared/VersePill';
+import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 
 // Explains a guided plan before the user commits to it: what the journey is
 // (intro), the Scripture story it follows — when and how it was prayed/fasted in
@@ -25,6 +26,7 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const [startDate, setStartDate] = useState(todayKey());
+  const usable = canUsePlan(source);
 
   return (
     <div
@@ -50,11 +52,14 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
             <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
               {plan.audienceKey ? `${t(lang, plan.audienceKey)} · ` : ''}{t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}
             </p>
+            {!isPlanReviewed(source) && (
+              <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{t(lang, 'planCoupleReviewPending')}</p>
+            )}
           </div>
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 
-        <div className="p-5 space-y-5">
+        {usable ? (<div className="p-5 space-y-5">
           {/* What this journey is */}
           {plan.intro && (
             <section>
@@ -97,11 +102,15 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
               })}
             </ol>
           </section>
-        </div>
+        </div>) : (
+          <div className="p-5 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+            {t(lang, 'planCoupleReviewHint')}
+          </div>
+        )}
 
         {/* Start action lives with the explanation: read, then choose when to begin */}
         <div className="p-5 pt-0 sticky bottom-0 space-y-3" style={{ background: 'var(--surface)' }}>
-          {!running && (
+          {!running && usable && (
             <label className="flex items-center justify-between gap-3">
               <span className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>{t(lang, 'planStartDate')}</span>
               <input
@@ -116,21 +125,21 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
           )}
           <button
             // Hand back the SOURCE plan, not the localized copy, so callers keep the canonical PLANS entry.
-            onClick={() => { if (!running) { onStart(source, startDate || todayKey()); onClose(); } }}
-            disabled={running}
+            onClick={() => { if (!running && usable) { onStart(source, startDate || todayKey()); onClose(); } }}
+            disabled={running || !usable}
             className="w-full text-sm font-semibold px-3 py-3 rounded-xl disabled:opacity-60"
             style={running
               ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
               : { background: 'var(--accent)', color: '#fff' }}
           >
-            {running
+            {!usable ? t(lang, 'planCoupleReviewHint') : running
               ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {runningLabel || t(lang, 'planRunning')}</span>
               : (ctaLabel || `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`)}
           </button>
           {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-3)' }}>{footnote}</p>}
           {/* Invite others to walk the plan with you — available whether or not
               you've started it yourself. */}
-          {onInvite && (
+          {onInvite && usable && (
             <button
               onClick={() => onInvite(source, startDate || todayKey())}
               className="w-full text-sm font-semibold px-3 py-2.5 rounded-xl inline-flex items-center justify-center gap-2"

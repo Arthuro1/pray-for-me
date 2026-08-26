@@ -5,21 +5,27 @@ podcast, a teaching, a video, a study, a prayer guide. They sit at the very
 bottom of the day, folded away, and the plan is complete without them.
 
 **Nothing in this catalogue reaches a user until a human has verified and
-approved it.** That is not a policy note; it is enforced by the resolver.
+approved it. Sensitive material also needs explicit content and safety
+sign-offs.** These are resolver gates, not policy notes.
 
 ---
 
 ## An entry shows nothing until a human has approved it
 
-`src/content/resources/catalogue.js` started life as a **curation worksheet**:
-real, well-known titles and authors, seeded so a curator had somewhere to start,
-every one of them `status: 'needs_review'` with no URL — because recommending
-reading to someone praying about marriage is a pastoral act, and because nothing
-in it was looked up at runtime, so no URL, ISBN, publisher page or translated
-edition may be asserted as fact by this repo.
+`src/content/resources/catalogue.js` started as a **curation worksheet**. Some
+standard entries had already passed editorial review before the relationship
+plans were extended. Their English editions now use canonical publisher or
+ministry pages, re-verified on 2026-08-26; retailer links are not used. A verified
+link is not a theological endorsement and does not change review status.
 
-That gate has not moved; entries pass through it one at a time. Until a curator
-verifies an entry and flips it to `approved`, the app shows **no "Go deeper"
+Material involving marriage roles, submission/authority, purity, or sexuality
+was moved back to `needs_review` and marked `sensitive`. It remains invisible
+until both named reviews below exist. No localized title, edition, ISBN, author,
+or URL was fabricated to fill a language gap.
+
+The publication gate has not moved; entries pass through it one at a time. Until a curator
+verifies an entry and flips it to `approved` (and supplies both sign-offs when
+the entry is sensitive), the app shows **no "Go deeper"
 section at all** — not an apology, not an empty state. `src/lib/resources.test.js`
 asserts that an unreviewed entry resolves to nothing no matter what its editions
 claim, and that every approved edition carries a verified URL.
@@ -36,6 +42,10 @@ claim, and that every approved edition carries a verified URL.
   topics: ['marriage', 'covenant'],   // RESOURCE_TOPICS
   lifeStages: ['single', 'engaged'],  // LIFE_STAGES
   status: 'needs_review',             // draft | needs_review | approved | retired
+  reviewLevel: 'standard',            // standard | sensitive (standard if omitted)
+  contentReview: { status: 'approved', reviewedBy: '…', reviewedAt: 'YYYY-MM-DD' },
+  safetyReview: { status: 'approved', reviewedBy: '…', reviewedAt: 'YYYY-MM-DD' },
+                                       // both required when sensitive; omit while pending
   replacementResourceId: null,        // set when retiring something with a successor
   description: { en: '…', fr: '…' },  // OUR one sentence on why it fits — localized
   editions: {
@@ -46,9 +56,31 @@ claim, and that every approved edition carries a verified URL.
 }
 ```
 
-Taxonomy, types, life stages and statuses live in
+Taxonomy, types, life stages, statuses and review levels live in
 `src/content/resources/topics.js`. Keep the taxonomy small and flat — a tag
 nobody uses is worse than no tag.
+
+### Relationships and family taxonomy
+
+The shared flat taxonomy now supports the engaged and married plans. Reuse an
+existing tag when it expresses the subject; do not create per-plan variants.
+
+- Stages and relationships: `premarital`, `marriage`, `covenant`, `friendship`
+- Relating well: `communication`, `listening`, `conflict`, `forgiveness`, `trust`
+- Life together: `finances`, `work`, `family-of-origin`, `boundaries`,
+  `hospitality`, `generosity`, `mission`
+- Faith and community: `spiritual-formation`, `spiritual-rhythms`,
+  `prayer-together`, `community`, `church`
+- Family: `family`, `children`, `parenting`, `family-discipleship`
+- Difficult seasons and safety: `suffering`, `grief`, `infertility`,
+  `miscarriage`, `marriage-crisis`, `abuse-safety`, `trauma`, `divorce`,
+  `pornography`, `addiction`, `infidelity`, `illness`, `marriage-roles`
+
+The nearby tags above are deliberate distinctions: `community` is broader than
+`church`; `family` is broader than child-specific content; `sexuality` is broad,
+while `sexual-intimacy` is specifically couple-facing; and
+`spiritual-formation` is broader than shared spiritual rhythms. Prefer the
+narrower tag only when it materially improves matching.
 
 ### Thumbnails
 
@@ -120,7 +152,9 @@ AI may help a curator *discover candidates*. Publication always requires a human
 `resolveResources({ topics, lifeStage, languages, boostTopics, limit, catalogue })`
 
 - only `status: 'approved'` entries;
+- sensitive entries only after both explicit content and safety sign-offs;
 - only editions with a `lastVerifiedAt` date and not marked `available: false`;
+- only editions with a usable HTTPS URL and verified localized title;
 - only entries whose topics overlap the day's `resourceTopics`;
 - only entries whose `lifeStages` include the plan's `lifeStage` (when declared);
 - ranked by the language hierarchy above, then by topic fit;
@@ -148,6 +182,39 @@ draft ──► needs_review ──► approved ──► retired
    secondary and region-aware.)
 4. Write the one-sentence `description` in en + fr.
 5. Set `lastVerifiedAt` on that edition and `status: 'approved'`.
+6. If it is sensitive, complete the two reviews below before publication.
+
+### Sensitive-resource review
+
+Set `reviewLevel: 'sensitive'` for resources involving intimacy, infertility,
+abuse, divorce or separation, submission or authority, pornography, severe
+marriage crisis, trauma, coercion, addiction, infidelity, miscarriage, or
+serious illness. The resolver also treats the corresponding sensitive taxonomy
+tags as sensitive even if an entry incorrectly says `reviewLevel: 'standard'`.
+This prevents a metadata downgrade from bypassing review.
+
+Sensitive publication requires both fields, with `status: 'approved'`, a
+non-empty reviewer identifier, and an ISO review date:
+
+```js
+contentReview: {
+  status: 'approved',
+  reviewedBy: 'content-reviewer-id',
+  reviewedAt: 'YYYY-MM-DD',
+},
+safetyReview: {
+  status: 'approved',
+  reviewedBy: 'safety-reviewer-id',
+  reviewedAt: 'YYYY-MM-DD',
+},
+```
+
+Content review covers theology, pastoral framing, language, and whether the
+resource supports rather than replaces prayer and Scripture. Safety review
+covers coercion, abuse, trauma, crisis language, confidentiality, and whether it
+appropriately permits outside pastoral, clinical, medical, legal, or
+safeguarding help. A catalogue `status` alone is never a sensitive sign-off.
+Leave either field absent while review is pending; the resource will not render.
 
 **To add a locale**
 
@@ -158,13 +225,20 @@ in that language.
 **To retire an entry**
 
 Set `status: 'retired'`. If there is a successor, set `replacementResourceId`.
-Retired entries never render; `replacementFor()` follows the successor.
+Retired entries never render; `replacementFor()` follows the successor only
+when the successor passes the same publication, sensitive-review, and verified
+edition gates. Replacement metadata cannot bypass review.
 
 **Link maintenance**
 
 `lastVerifiedAt` is the re-check clock. Re-verify periodically; anything that has
 gone dead should be retired rather than left to 404. A broken resource must
 never block the prayer plan — it simply disappears from the day.
+
+The 2026-08-26 relationship-plan audit replaced Amazon and YouTube playlist
+links with official Crossway, Penguin Random House, Zondervan, New Growth Press,
+P&R Publishing, Baker Publishing Group, and Desiring God pages. Availability,
+edition identity, and review status remain separate checks.
 
 ---
 

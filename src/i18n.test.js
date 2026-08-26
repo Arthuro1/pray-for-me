@@ -4,9 +4,30 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { t, tp, LANGUAGES, isLocaleLoaded, resolveLanguage } from './i18n.js';
 import fr from './i18n/locales/fr.js';
+import { SEASONS } from './lib/planPrefs.js';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const LOCALE_CODES = LANGUAGES.map((l) => l.code);
+const COUPLE_PLAN_KEYS = [
+  'planCovenantTitle', 'planCovenantSub', 'planCovenantAudience',
+  'planMarriageTitle', 'planMarriageSub', 'planMarriageAudience',
+  'planCoupleOnboardingTitle', 'planCoupleOnboardingSub', 'planCoupleFianceQ',
+  'planCoupleSpouseQ', 'planCoupleDisplayName', 'planCoupleChoosePerson',
+  'planCoupleNoPerson', 'planCoupleWeddingQ', 'planCoupleModeQ',
+  'planCoupleModePrivate', 'planCoupleModeTogether', 'planCoupleIncludeQ',
+  'planCoupleIncludeMarriage', 'planCoupleIncludeSpouse', 'planCoupleIncludeSelf',
+  'planCoupleIncludeSpiritual', 'planCoupleIncludeChildren', 'planCoupleIncludeHome',
+  'planCoupleIncludeExtendedFamily', 'planCoupleIncludeHint', 'planCoupleAddChild',
+  'planCoupleRemoveChild', 'planCoupleChildName', 'planCouplePrivacy',
+  'planCoupleRoleQ', 'planCoupleRoleHusband', 'planCoupleRoleWife',
+  'planCouplePartnerEngaged', 'planCouplePartnerMarried', 'planTalkTogether',
+  'planPrayTogether', 'planPrayForSpouse', 'planPrayForNamedPerson',
+  'planPrayForMarriage', 'planPrayForChild', 'planCoupleHomePrayer',
+  'planCoupleExtendedFamilyPrayer', 'planCoupleSafetyHeading',
+  'planCoupleReviewPending', 'planCoupleReviewHint', 'planCoupleContinueMarriage',
+  'planCoupleRepeat', 'planCoupleEditPersonalization', 'planCoupleTogetherHint',
+  'planCoupleRoleReviewPending',
+];
 
 function sourceFiles(dir, acc = []) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -101,6 +122,30 @@ describe('locale coverage', () => {
       const locale = (await import(`./i18n/locales/${code}.js`)).default;
       const missing = frKeys.filter((k) => !(k in locale));
       expect(missing, `${code}.js is missing keys: ${missing.join(', ')}`).toEqual([]);
+    }
+  });
+});
+
+describe('relationships and family plan localization', () => {
+  it('keeps the stable singles option while removing its ambiguous English copy', async () => {
+    const en = (await import('./i18n/locales/en.js')).default;
+    expect(en.planPrepSeasonDiscerning).toBe("I'm seeking clarity about marriage");
+    const obsoleteCopy = ["I'm", 'discerning marriage'].join(' ');
+    expect(Object.values(en)).not.toContain(obsoleteCopy);
+    expect(SEASONS.map((option) => option.id)).toEqual(['hope', 'discerning', 'open', 'grow']);
+    expect(new Set(SEASONS.map((option) => option.id)).size).toBe(SEASONS.length);
+    expect(new Set(SEASONS.map((option) => option.labelKey)).size).toBe(SEASONS.length);
+    expect(SEASONS.find((option) => option.id === 'discerning')?.labelKey)
+      .toBe('planPrepSeasonDiscerning');
+  });
+
+  it('provides every new couple-plan key in all 16 locales', async () => {
+    expect(new Set(COUPLE_PLAN_KEYS).size).toBe(COUPLE_PLAN_KEYS.length);
+    for (const code of LOCALE_CODES) {
+      const locale = code === 'fr' ? fr : (await import(`./i18n/locales/${code}.js`)).default;
+      const missing = COUPLE_PLAN_KEYS.filter((key) => typeof locale[key] !== 'string' || !locale[key].trim());
+      expect(missing, `${code}.js is missing couple-plan keys: ${missing.join(', ')}`).toEqual([]);
+      expect(locale.planPrepSeasonDiscerning).toBeTruthy();
     }
   });
 });

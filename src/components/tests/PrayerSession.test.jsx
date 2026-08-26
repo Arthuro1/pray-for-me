@@ -65,6 +65,7 @@ beforeEach(() => {
   localStorage.clear();
   backgroundAudioMocks.start.mockClear();
   backgroundAudioMocks.stop.mockClear();
+  vi.mocked(fetchScriptureText).mockClear();
   // Only the Psalm resolves to authoritative English text; everything else has
   // none, exercising the "keep the original pair" fallback.
   vi.mocked(fetchScriptureText).mockImplementation(async ({ reference }) =>
@@ -161,6 +162,31 @@ describe('PrayerSession — guided plan day content', () => {
     // Still the ORDINARY session underneath: the same closing action, and the
     // same optional prayer note (so notes, voice notes and completion all keep
     // working on a plan day exactly as they do on any other prayer).
+    expect(screen.getByRole('button', { name: t(lang, 'amenBtn') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'noteAdd') })).toBeTruthy();
+  });
+
+  it.each([
+    ['covenant21', 21, 1, 'Matthew 6:33', 'Christ at the center'],
+    ['marriage30', 30, 1, 'Matthew 6:33', 'Christ at the center'],
+  ])('walks %s through the same PrayerSession and Scripture reader', async (planId, total, version, ref, theme) => {
+    const relationshipPrayer = {
+      ...planPrayer,
+      id: `${planId}-run`,
+      title: planId,
+      schedule: {
+        type: 'recurring', freq: 'daily', startDate: todayKey(),
+        end: { kind: 'count', count: total },
+        plan: { id: planId, version, startDate: todayKey() },
+      },
+    };
+    render(<PrayerSession prayers={[relationshipPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.getByText(new RegExp(t(lang, 'planDayOf', { n: 1, total })))).toBeTruthy();
+    expect(screen.getByText(theme)).toBeTruthy();
+    const scriptureTrigger = screen.getByText(ref).closest('button');
+    expect(scriptureTrigger).toBeTruthy();
+    fireEvent.click(scriptureTrigger);
+    await waitFor(() => expect(fetchScriptureText).toHaveBeenCalledWith({ reference: ref, lang }));
     expect(screen.getByRole('button', { name: t(lang, 'amenBtn') })).toBeTruthy();
     expect(screen.getByRole('button', { name: t(lang, 'noteAdd') })).toBeTruthy();
   });

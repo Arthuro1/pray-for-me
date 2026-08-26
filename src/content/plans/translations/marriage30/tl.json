@@ -1,0 +1,347 @@
+{
+  "marriage30": {
+    "days": [
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Si Cristo ang sentro”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Si Cristo ang sentro; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pasasalamat para sa asawa ko”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pasasalamat para sa asawa ko; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pagkakaibigan sa pag-aasawa”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pagkakaibigan sa pag-aasawa; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Ugali sa tahanan”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Ugali sa tahanan; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "roles": {
+          "husband": "Bilang asawa, humingi ng mapagpakumbaba at mapagbigay-sariling pag-ibig at responsableng paglilingkod, hindi pagkontrol.",
+          "wife": "Bilang asawa, humingi ng matapang at mapagbigay-sariling pag-ibig at karunungan, nang hindi isinusuko ang boses, dignidad, o kaligtasan."
+        }
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Mga salitang nagpapatibay”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Mga salitang nagpapatibay; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Makinig bago sumagot”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Makinig bago sumagot; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Alitan na walang paghamak”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Alitan na walang paghamak; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?",
+        "safetyNote": "Hindi kailanman hinihingi ng panalangin ang pananahimik, pamimilit, o pananatili sa panganib. Humingi ng mapagkakatiwalaang propesyonal, pastoral, medikal, legal, o pangkaligtasang tulong kung kailangan; hindi kayang suriin ng planong ito ang panganib."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pagpapatawad at pag-aayos”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pagpapatawad at pag-aayos; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi.",
+        "safetyNote": "Hindi kailanman hinihingi ng panalangin ang pananahimik, pamimilit, o pananatili sa panganib. Humingi ng mapagkakatiwalaang propesyonal, pastoral, medikal, legal, o pangkaligtasang tulong kung kailangan; hindi kayang suriin ng planong ito ang panganib."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Tiwala sa pamamagitan ng katapatan”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Tiwala sa pamamagitan ng katapatan; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Emosyonal na pagiging malapit”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Emosyonal na pagiging malapit; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Tapat at kapwa-loob na pagiging malapit”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Tapat at kapwa-loob na pagiging malapit; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?",
+        "safetyNote": "Hindi kailanman hinihingi ng panalangin ang pananahimik, pamimilit, o pananatili sa panganib. Humingi ng mapagkakatiwalaang propesyonal, pastoral, medikal, legal, o pangkaligtasang tulong kung kailangan; hindi kayang suriin ng planong ito ang panganib."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Katapatan sa bawat pasya”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Katapatan sa bawat pasya; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "safetyNote": "Hindi kailanman hinihingi ng panalangin ang pananahimik, pamimilit, o pananatili sa panganib. Humingi ng mapagkakatiwalaang propesyonal, pastoral, medikal, legal, o pangkaligtasang tulong kung kailangan; hindi kayang suriin ng planong ito ang panganib."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pera bilang katiwala”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pera bilang katiwala; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Trabaho at pahinga”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Trabaho at pahinga; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Sabay na espirituwal na ritmo”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Sabay na espirituwal na ritmo; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Manalangin nang magkasama”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Manalangin nang magkasama; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Nakaugat sa iglesya at komunidad”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Nakaugat sa iglesya at komunidad; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Matalinong hangganan sa pamilya”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Matalinong hangganan sa pamilya; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?",
+        "safetyNote": "Hindi kailanman hinihingi ng panalangin ang pananahimik, pamimilit, o pananatili sa panganib. Humingi ng mapagkakatiwalaang propesyonal, pastoral, medikal, legal, o pangkaligtasang tulong kung kailangan; hindi kayang suriin ng planong ito ang panganib."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Mapagpatuloy na tahanan”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Mapagpatuloy na tahanan; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Magkatabing maglingkod”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Magkatabing maglingkod; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "roles": {
+          "husband": "Bilang asawa, humingi ng mapagpakumbaba at mapagbigay-sariling pag-ibig at responsableng paglilingkod, hindi pagkontrol.",
+          "wife": "Bilang asawa, humingi ng matapang at mapagbigay-sariling pag-ibig at karunungan, nang hindi isinusuko ang boses, dignidad, o kaligtasan."
+        }
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Tapat sa mahihirap na panahon”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Tapat sa mahihirap na panahon; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi.",
+        "safetyNote": "Hindi kailanman hinihingi ng panalangin ang pananahimik, pamimilit, o pananatili sa panganib. Humingi ng mapagkakatiwalaang propesyonal, pastoral, medikal, legal, o pangkaligtasang tulong kung kailangan; hindi kayang suriin ng planong ito ang panganib."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Kalusugan at lakas na may pagpapakumbaba”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Kalusugan at lakas na may pagpapakumbaba; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Mga pangarap at pasya”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Mga pangarap at pasya; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pagiging kontento sa karaniwang buhay”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pagiging kontento sa karaniwang buhay; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pangalagaan ang oras na magkasama”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pangalagaan ang oras na magkasama; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Karunungan para sa mga inaalagaan namin”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Karunungan para sa mga inaalagaan namin; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "withChildren": {
+          "reflection": "Kilala ng Diyos ang bawat bata. Manalangin nang may pag-asa at pagpapakumbaba, hindi bilang garantiya o paraan ng pagkontrol.",
+          "childPrompt": "Bigyan si {child} ng matalinong ugnayan, tapang, at biyaya; gawin kaming maingat na magulang na gumagabay nang hindi kumokontrol.",
+          "practice": "Bigyan ang bawat bata ng maikling oras ng buong pansin at makinig."
+        }
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Bawat tao ay kilala ng Diyos”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Bawat tao ay kilala ng Diyos; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?",
+        "withChildren": {
+          "reflection": "Kilala ng Diyos ang bawat bata. Manalangin nang may pag-asa at pagpapakumbaba, hindi bilang garantiya o paraan ng pagkontrol.",
+          "childPrompt": "Bigyan si {child} ng matalinong ugnayan, tapang, at biyaya; gawin kaming maingat na magulang na gumagabay nang hindi kumokontrol.",
+          "practice": "Bigyan ang bawat bata ng maikling oras ng buong pansin at makinig."
+        }
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Kultura ng aming tahanan”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Kultura ng aming tahanan; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "conversationPrompt": "Kung pareho naming nais at ligtas ang pakiramdam: paano nakaaapekto ang temang ito sa buhay namin ngayon?"
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Pagkamapagbigay at misyon”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Pagkamapagbigay at misyon; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      },
+      {
+        "reflection": "Itinuturo ng Kasulatan ngayon ang ating pansin sa “Ang aming pagsasama sa bukas na mga kamay”. Dinadala natin ang bahaging ito ng buhay may-asawa sa Diyos nang may pagpapakumbaba, katotohanan, at malasakit.",
+        "prompts": [
+          "Gabayan Mo kami sa Ang aming pagsasama sa bukas na mga kamay; ituon ang aming panalangin sa Iyong biyaya, hindi sa pagkontrol sa isa’t isa."
+        ],
+        "spousePrompt": "Palakasin si {partner} ng karunungan, dignidad, at biyaya sa bahaging ito.",
+        "selfPrompt": "Ipakita ang kailangang magbago sa akin at gawin akong mapagpakumbaba, responsable, at handang mag-ayos.",
+        "marriagePrompt": "Hubugin ang tapat na pag-ibig, kaligtasan, at pag-aaruga sa isa’t isa sa aming pagsasama.",
+        "practice": "Pumili ngayon ng isang maliit at malayang hakbang na isasabuhay ang panalanging ito.",
+        "prayTogether": "Kung pareho naming nais at ligtas ang pakiramdam, manalangin ng tig-isang pangungusap. Walang itinatala o ibinabahagi."
+      }
+    ],
+    "intro": "Tatlumpung araw ng Kasulatan at panalangin para sa asawa, sariling paglago, at pagsasama. Paulit-ulit itong espirituwal na ritmo, hindi marka o diyagnosis. Pamilya na ang mag-asawa; opsyonal ang nilalaman tungkol sa mga anak at nananatiling pribado ang mga tala.",
+    "biblical": "Tinatawag ng Bagong Tipan ang bawat mananampalataya sa habag, pagpapakumbaba, pagtitiis, pagpapatawad, pag-ibig, at kapayapaan. Ipanalangin ang asawa, sariling pagsisisi, at pagsasama, hindi lamang na ayusin ng Diyos ang ibang tao.",
+    "completion": "Nanalangin ka nang tatlumpung araw para sa asawa, sariling paglago, at pagsasama. Hindi nito sinusukat ang kalusugan ng relasyon. Maaari mong simulan muli kapag nais mo; nananatili ang dating kasaysayan."
+  }
+}

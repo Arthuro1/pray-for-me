@@ -3,6 +3,7 @@ import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import VersePill from './shared/VersePill';
 import GoDeeper from './GoDeeper';
+import { hasReviewSignoff } from '../lib/planReview';
 
 // Everything a rich plan day says BELOW its title and primary passage:
 // reflection → related Scripture → prayer prompts → the self-prompt → an
@@ -25,14 +26,23 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
   const reflection = pick(day.reflection, lang);
   const prompts = (day.prompts || []).map((p) => pick(p, lang)).filter(Boolean);
   const selfPrompt = pick(day.selfPrompt, lang);
+  const spousePrompt = pick(day.spousePrompt, lang);
+  const marriagePrompt = pick(day.marriagePrompt, lang);
   const practice = pick(day.practice, lang);
+  const conversationPrompt = pick(day.conversationPrompt, lang);
+  const prayTogether = pick(day.prayTogether, lang);
+  const safetyNote = pick(day.safetyNote, lang);
   const related = day.related || [];
   // Role reflections are shown ONLY when the reader explicitly asked for them in
   // onboarding — never inferred from a name, a photo or anything else.
-  const roleReflection = role && role !== 'general' ? day.roles?.[role] : null;
+  const roleApproved = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
+  const roleReflection = roleApproved && role && role !== 'general' ? day.roles?.[role] : null;
   const roleText = pick(roleReflection, lang);
+  const rolePending = !roleApproved && role !== 'general' && !!day.roles?.[role];
 
-  if (!reflection && !prompts.length && !selfPrompt && !practice && !related.length && !roleText && !resources.length) {
+  if (!reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
+    && !day.childPrayers?.length && !conversationPrompt && !prayTogether && !safetyNote
+    && !practice && !related.length && !roleText && !rolePending && !resources.length) {
     return null;
   }
 
@@ -80,6 +90,17 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
         </section>
       )}
 
+      {spousePrompt && (
+        <section>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            {day.partnerName
+              ? t(lang, 'planPrayForNamedPerson', { name: `\u2068${day.partnerName}\u2069` })
+              : t(lang, 'planPrayForSpouse')}
+          </h4>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{spousePrompt}</p>
+        </section>
+      )}
+
       {/* The mirror: every prayer for someone else is prayed back over the reader. */}
       {selfPrompt && (
         <section className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
@@ -89,6 +110,24 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{selfPrompt}</p>
         </section>
       )}
+
+      {marriagePrompt && (
+        <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            {t(lang, 'planPrayForMarriage')}
+          </h4>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{marriagePrompt}</p>
+        </section>
+      )}
+
+      {(day.childPrayers || []).map((child) => (
+        <section key={child.id}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            {t(lang, 'planPrayForChild', { name: `\u2068${child.name}\u2069` })}
+          </h4>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{pick(child.prompt, lang)}</p>
+        </section>
+      ))}
 
       {roleText && (
         <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
@@ -102,6 +141,15 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
         </section>
       )}
 
+      {conversationPrompt && (
+        <section>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            {t(lang, 'planTalkTogether')}
+          </h4>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{conversationPrompt}</p>
+        </section>
+      )}
+
       {practice && (
         <section>
           <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
@@ -109,6 +157,28 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
           </h4>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{practice}</p>
         </section>
+      )}
+
+      {prayTogether && (
+        <section className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
+            {t(lang, 'planPrayTogether')}
+          </h4>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{prayTogether}</p>
+        </section>
+      )}
+
+      {safetyNote && (
+        <aside className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            {t(lang, 'planCoupleSafetyHeading')}
+          </h4>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{safetyNote}</p>
+        </aside>
+      )}
+
+      {rolePending && (
+        <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
       )}
 
       <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />

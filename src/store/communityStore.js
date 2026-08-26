@@ -8,6 +8,13 @@ import { autoFollowOnReaction } from '../lib/prayerFollow';
 import { avatarColumns, avatarConfigFrom } from '../lib/avatar';
 import { fetchProfileAvatars } from '../lib/profileAvatars';
 import {
+  acceptedPlanFromInvitation,
+  buildGroupPlanMembershipRow,
+  buildPlanInvitationRow,
+  groupPlanMembershipTarget,
+  summarizePlanParticipation,
+} from '../lib/planSharing';
+import {
   encryptCommunityPrayer,
   encryptCommunityUpdate,
   encryptCommunityTestimony,
@@ -1071,8 +1078,8 @@ const useCommunityStore = create((set, get) => ({
       }
     }
     if (targets.size === 0) return { invited: 0 };
-    const rows = [...targets].map(([uid, gid]) => ({
-      plan_id: planId, start_date: startDate, invited_user_id: uid, invited_by: invitedBy, group_id: gid,
+    const rows = [...targets].map(([uid, gid]) => buildPlanInvitationRow({
+      planId, startDate, invitedUserId: uid, invitedBy, groupId: gid,
     }));
     const { error } = await supabase
       .from('plan_invitations')
@@ -1133,7 +1140,7 @@ const useCommunityStore = create((set, get) => ({
       .from('plan_invitations').select('plan_id, start_date').eq('id', inviteId).single();
     if (error) return toError(error);
     await supabase.from('plan_invitations').delete().eq('id', inviteId);
-    return { planId: invite.plan_id, startDate: invite.start_date };
+    return acceptedPlanFromInvitation(invite);
   },
 
   declinePlanInvitation: async (inviteId) => {
@@ -1164,7 +1171,7 @@ const useCommunityStore = create((set, get) => ({
     return {
       plans: (plans || []).map((p) => {
         const parts = byPlan[p.id] || [];
-        return { ...p, participantCount: parts.length, joinedByMe: parts.includes(userId) };
+        return { ...p, ...summarizePlanParticipation(parts, userId) };
       }),
     };
   },
@@ -1194,15 +1201,16 @@ const useCommunityStore = create((set, get) => ({
   joinGroupPlan: async (groupPlanId, groupId, userId) => {
     const { error } = await supabase
       .from('group_plan_members')
-      .upsert({ group_plan_id: groupPlanId, group_id: groupId, user_id: userId },
+      .upsert(buildGroupPlanMembershipRow({ groupPlanId, groupId, userId }),
         { onConflict: 'group_plan_id,user_id', ignoreDuplicates: true });
     return error ? toError(error) : {};
   },
 
   // Stop praying a group plan (removes only the caller's participation).
   leaveGroupPlan: async (groupPlanId, userId) => {
+    const target = groupPlanMembershipTarget({ groupPlanId, userId });
     const { error } = await supabase
-      .from('group_plan_members').delete().eq('group_plan_id', groupPlanId).eq('user_id', userId);
+      .from('group_plan_members').delete().eq('group_plan_id', target.groupPlanId).eq('user_id', target.userId);
     return error ? toError(error) : {};
   },
 

@@ -45,6 +45,12 @@ export const EVENTS = Object.freeze({
   SINGLES_PLAN_STARTED: 'singles_plan_started',
   SINGLES_PLAN_DAY_COMPLETED: 'singles_plan_day_completed',
   SINGLES_PLAN_COMPLETED: 'singles_plan_completed',
+  ENGAGED_PLAN_STARTED: 'engaged_plan_started',
+  ENGAGED_PLAN_DAY_COMPLETED: 'engaged_plan_day_completed',
+  ENGAGED_PLAN_COMPLETED: 'engaged_plan_completed',
+  MARRIAGE_PLAN_STARTED: 'marriage_plan_started',
+  MARRIAGE_PLAN_DAY_COMPLETED: 'marriage_plan_day_completed',
+  MARRIAGE_PLAN_COMPLETED: 'marriage_plan_completed',
   // That a recommended resource was opened — never which topic surfaced it, and
   // never anything about the reader.
   RESOURCE_OPENED: 'resource_opened',
