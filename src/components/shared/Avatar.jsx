@@ -1,35 +1,52 @@
 import { User } from 'lucide-react';
+import { resolveAvatar } from '../../lib/avatar';
+import { AVATAR_ICON_COMPONENTS } from './avatarIcons';
 
-// Deterministic, pleasant palette derived from the name so each person keeps a
-// stable colour without storing anything.
-const COLORS = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#0ea5e9'];
+// The one place an avatar is drawn. Everything else — group cards, member and
+// admin lists, friend requests, "I'm praying" faces — passes a name plus the
+// stored config and gets the same tile back.
+//
+// `kind` decides both the default look (a group is a rounded tile, a person a
+// circle) and the fallback (a group falls back to a symbol, a person to their
+// initials). Avatars sit beside the display name almost everywhere, so the tile
+// is decorative by default; pass `label` where it stands alone and needs a name.
+export default function Avatar({
+  name = '?',
+  size = 32,
+  kind = 'user',
+  avatar = null,
+  anonymous = false,
+  label = null,
+  className = '',
+}) {
+  const box = { width: size, height: size, borderRadius: kind === 'group' ? Math.round(size * 0.3) : '50%' };
+  const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
 
-function colorFor(name) {
-  let h = 0;
-  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return COLORS[h % COLORS.length];
-}
-
-function initials(name) {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return '?';
-  return ((parts[0][0] || '') + (parts[1]?.[0] || '')).toUpperCase();
-}
-
-export default function Avatar({ name = '?', size = 32, anonymous = false }) {
-  const dim = { width: size, height: size };
   if (anonymous) {
     return (
-      <div className="rounded-full flex items-center justify-center shrink-0"
-        style={{ ...dim, background: 'var(--input-bg)', color: 'var(--text-3)' }}>
-        <User size={size * 0.55} />
+      <div
+        {...a11y}
+        className={`avatar avatar--anonymous ${className}`}
+        style={{ ...box, background: 'var(--input-bg)', color: 'var(--text-3)' }}
+      >
+        <User size={Math.round(size * 0.55)} aria-hidden="true" />
       </div>
     );
   }
+
+  const { type, icon, initials, color } = resolveAvatar({ config: avatar, name, kind });
+  const Icon = AVATAR_ICON_COMPONENTS[icon];
+  // Two letters in a tiny inline tile would render at ~7px. Below 24px one
+  // letter is shown instead, at a size that is still legible.
+  const compact = size < 24;
+  const text = compact ? Array.from(initials)[0] : initials;
+  const fontSize = Math.max(Math.round(size * (compact ? 0.5 : 0.4)), 9);
+
   return (
-    <div className="rounded-full flex items-center justify-center shrink-0 text-white font-semibold"
-      style={{ ...dim, background: colorFor(name), fontSize: size * 0.4 }}>
-      {initials(name)}
+    <div {...a11y} className={`avatar ${className}`} style={{ ...box, background: color }}>
+      {type === 'icon' && Icon
+        ? <Icon size={Math.round(size * 0.5)} strokeWidth={1.9} aria-hidden="true" />
+        : <span style={{ fontSize, lineHeight: 1 }}>{text}</span>}
     </div>
   );
 }

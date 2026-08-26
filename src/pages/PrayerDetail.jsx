@@ -31,6 +31,7 @@ import FollowPrayerButton from '../components/FollowPrayerButton';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
 import CommunityUpdates from '../components/CommunityUpdates';
+import useMemberAvatars from '../hooks/useMemberAvatars';
 import CommunityTestimonies from '../components/CommunityTestimonies';
 import UpdateComposer from '../components/rich/UpdateComposer';
 import RichText from '../components/rich/RichText';
@@ -307,6 +308,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const prayerCategoryIds = isCommunity ? (livePrayer.category_ids || []) : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
   const isGroupAdmin = isCommunity && groups.find(g => g.id === communityPrayer.group_id)?.role === 'admin';
+  // Members' chosen avatars for this group, so an author tile here matches the
+  // one on the group wall instead of falling back to the name-derived default.
+  const memberAvatarFor = useMemberAvatars(isCommunity ? communityPrayer.group_id : null);
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
   const constellationPrayerCount = isCommunity
@@ -1202,6 +1206,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             lang={lang}
             userId={user?.id}
             isAdmin={isGroupAdmin}
+            avatarFor={memberAvatarFor}
             onSend={handleSendWord}
             onDelete={handleDeleteWord}
             onEdit={handleEditWord}

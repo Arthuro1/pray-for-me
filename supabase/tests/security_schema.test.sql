@@ -1,5 +1,5 @@
 begin;
-select plan(16);
+select plan(20);
 
 select ok(
   not exists (
@@ -144,6 +144,39 @@ select ok(
       and coalesce(p.proconfig, '{}'::text[]) && array['search_path=""']
   ),
   'notification default helper uses an empty search path'
+);
+
+-- ── Avatars ─────────────────────────────────────────────────────────────────
+
+select ok(
+  not has_column_privilege('authenticated', 'public.profiles', 'avatar_type', 'SELECT')
+  and not has_column_privilege('authenticated', 'public.profiles', 'avatar_value', 'SELECT')
+  and not has_column_privilege('authenticated', 'public.profiles', 'avatar_color', 'SELECT'),
+  'profile avatars are not selectable straight off the profiles table'
+);
+
+select ok(
+  has_column_privilege('authenticated', 'public.profiles', 'id', 'SELECT')
+  and has_column_privilege('authenticated', 'public.profiles', 'full_name', 'SELECT'),
+  'display names stay readable so a friend request can name its sender'
+);
+
+select ok(
+  has_function_privilege('authenticated', 'public.get_profile_avatars(uuid[])', 'EXECUTE')
+  and not has_function_privilege('anon', 'public.get_profile_avatars(uuid[])', 'EXECUTE'),
+  'profile avatars are reachable only by signed-in users, through the RPC'
+);
+
+select ok(
+  exists (
+    select 1
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public'
+      and p.proname = 'get_profile_avatars'
+      and p.prosecdef
+      and coalesce(p.proconfig, '{}'::text[]) && array['search_path=""']
+  ),
+  'the avatar visibility function is definer-rights with a pinned search path'
 );
 
 select * from finish();

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Loader2, Users, Check, HeartHandshake } from 'lucide-react';
+import { Loader2, Check, HeartHandshake } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import useCommunityStore from '../store/communityStore';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import Avatar from './shared/Avatar';
+import { avatarConfigFrom } from '../lib/avatar';
 import EmptyState from './shared/EmptyState';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -131,7 +132,7 @@ export default function PlanInviteModal({ plan, startDate, lang, userId, onClose
                           style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', cursor: already ? 'default' : 'pointer', opacity: already ? 0.6 : 1 }}
                         >
                           <input type="checkbox" className="rounded" checked={already || checked} disabled={already} onChange={() => toggleFriend(f.id)} />
-                          <Avatar name={f.name} size={30} />
+                          <Avatar name={f.name} avatar={f.avatar} size={30} />
                           <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--text-1)' }}>{f.name}</span>
                           {already && (
                             <span className="text-xs inline-flex items-center gap-1 shrink-0" style={{ color: 'var(--accent)' }}>
@@ -152,9 +153,7 @@ export default function PlanInviteModal({ plan, startDate, lang, userId, onClose
                     {groups.map((g) => (
                       <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
                         <input type="checkbox" className="rounded" checked={selGroups.has(g.id)} onChange={() => toggleGroup(g.id)} />
-                        <span className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                          <Users size={15} />
-                        </span>
+                        <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={32} />
                         <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--text-1)' }}>{g.name}</span>
                       </label>
                     ))}

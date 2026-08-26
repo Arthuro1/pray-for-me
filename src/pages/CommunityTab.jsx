@@ -19,6 +19,8 @@ import { setChecklistFlag } from '../lib/groupChecklist';
 import { groupListControls } from '../lib/groupTools';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import Avatar from '../components/shared/Avatar';
+import AvatarEditor from '../components/shared/AvatarEditor';
+import { avatarConfigFrom, canEditGroupAvatar } from '../lib/avatar';
 import { planById, buildGuidedPlanPrayer } from '../lib/guidedPlan';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
@@ -57,11 +59,11 @@ function formatPlanDate(key, lang) {
   try { return d.toLocaleDateString(lang, { month: 'short', day: 'numeric' }); } catch { return key; }
 }
 
-function ActionRow({ label, sublabel, avatarName, primaryText, onPrimary, onSecondary, secondaryText, busy }) {
+function ActionRow({ label, sublabel, avatarName, avatar, avatarKind = 'user', primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
     <div className="phase-card phase-card--quiet flex items-center justify-between p-3 gap-3">
       <div className="flex items-center gap-3 min-w-0">
-        {avatarName && <Avatar name={avatarName} size={36} />}
+        {avatarName && <Avatar name={avatarName} avatar={avatar} kind={avatarKind} size={36} />}
         <div className="min-w-0">
           <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{label}</p>
           {sublabel && <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>{sublabel}</p>}
@@ -236,7 +238,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           <Section title={t(lang, 'needsAttention')} icon={<Mail size={18} />}>
             {friendRequests.map(req => (
               <ActionRow key={req.id} label={req.fromName} sublabel={t(lang, 'friendRequests')}
-                avatarName={req.fromName} busy={busyId === req.id}
+                avatarName={req.fromName} avatar={req.fromAvatar} busy={busyId === req.id}
                 primaryText={t(lang, 'accept')} secondaryText={t(lang, 'reject')}
                 onPrimary={() => handle(req.id, () => acceptFriendRequest(req.id))}
                 onSecondary={() => handle(req.id, () => rejectFriendRequest(req.id))} />
@@ -246,6 +248,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 label={inv.groupName || t(lang, 'groupInviteFallbackTitle')}
                 sublabel={inv.inviterName ? `${t(lang, 'invitedBy')} ${inv.inviterName}` : t(lang, 'groupInviteFallbackDesc')}
                 avatarName={inv.groupName || t(lang, 'groupInviteFallbackTitle')}
+                avatar={inv.groupAvatar} avatarKind="group"
                 busy={busyId === inv.id}
                 primaryText={t(lang, 'join')} secondaryText={t(lang, 'reject')}
                 onPrimary={() => handle(inv.id, () => acceptGroupInvitation(inv.id, userId))}
@@ -281,9 +284,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
               {groups.map(g => (
                 <button key={g.id} onClick={() => onViewGroup(g.id)} className="phase-card community-card p-4 text-left">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-                      <Users size={18} />
-                    </div>
+                    <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={40} />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm truncate" style={{ color: 'var(--text-1)' }}>{g.name}</p>
                       {g.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
@@ -306,7 +307,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
               {friends.map(f => (
                 <div key={f.id} className="phase-card phase-card--quiet flex items-center justify-between gap-3 p-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <Avatar name={f.name} size={36} />
+                    <Avatar name={f.name} avatar={f.avatar} size={36} />
                     <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
                   </div>
                   <button onClick={() => handleRemoveFriend(f)} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
@@ -345,7 +346,7 @@ function roleErrorKey(message = '') {
 // ── Group Admin Modal (invite friends + manage members) ──────────────────────
 // `onInviteAction` (optional) fires when a friend invitation is actually sent.
 export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }) {
-  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, setMemberRole, renameGroup } = useCommunityStore(
+  const { fetchFriends, fetchGroupMembers, fetchGroupInvitees, inviteToGroup, removeMember, setMemberRole, renameGroup, updateGroupAvatar } = useCommunityStore(
     useShallow((s) => ({
       fetchFriends: s.fetchFriends,
       fetchGroupMembers: s.fetchGroupMembers,
@@ -354,6 +355,7 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
       removeMember: s.removeMember,
       setMemberRole: s.setMemberRole,
       renameGroup: s.renameGroup,
+      updateGroupAvatar: s.updateGroupAvatar,
     }))
   );
   const [friends, setFriends] = useState([]);
@@ -365,6 +367,13 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
   const [confirmRole, setConfirmRole] = useState(null);
   const [name, setName] = useState(group.name);
   const [renaming, setRenaming] = useState(false);
+  const canEditAvatar = canEditGroupAvatar(group, userId);
+
+  const handleAvatarSave = async (config) => {
+    const { error } = await updateGroupAvatar(group.id, config);
+    if (error) { toast.error(t(lang, 'errorGeneric')); return; }
+    toast.success(t(lang, 'avatarUpdated'));
+  };
 
   const handleRename = async () => {
     const trimmed = name.trim();
@@ -452,6 +461,16 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
         />
       )}
       <div className="max-h-[60vh] overflow-y-auto">
+        {/* Only admins and the group's creator can restyle a group — the same
+            rule the "Admins can update their group" policy enforces server-side. */}
+        {canEditAvatar && (
+          <div className="mb-5">
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupAvatar')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupAvatarHint')}</p>
+            <AvatarEditor lang={lang} kind="group" name={group.name} avatar={avatarConfigFrom(group)} onSave={handleAvatarSave} />
+          </div>
+        )}
+
         <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'renameGroup')}</p>
         <div className="flex gap-2 mb-5">
           <input value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
@@ -471,7 +490,7 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
             {invitable.map(f => (
               <div key={f.id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Avatar name={f.name} size={30} />
+                  <Avatar name={f.name} avatar={f.avatar} size={30} />
                   <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
                 </div>
                 <button onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]} className="px-3 py-1 rounded-lg text-xs font-medium text-white disabled:opacity-40 shrink-0" style={{ background: 'var(--accent)' }}>
@@ -500,7 +519,7 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
             return (
               <div key={m.user_id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Avatar name={m.name} size={30} />
+                  <Avatar name={m.name} avatar={m.avatar} size={30} />
                   <div className="min-w-0">
                     <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{isSelf ? ` (${t(lang, 'you')})` : ''}</p>
                     {isOwner
@@ -556,6 +575,11 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
 
   return (
     <Modal title={`${t(lang, 'members')} (${members.length})`} lang={lang} onClose={onClose}>
+      {/* Invite preview: what the person on the other end is being invited to. */}
+      <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={CARD_STYLE}>
+        <Avatar kind="group" name={group.name} avatar={avatarConfigFrom(group)} size={40} />
+        <p className="text-sm font-semibold min-w-0 truncate" style={{ color: 'var(--text-1)' }}>{group.name}</p>
+      </div>
       <div className="flex gap-2 mb-4">
         <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
           <Share2 size={15} /> {t(lang, 'shareInviteLink')}
@@ -589,7 +613,7 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {members.map(m => (
             <div key={m.user_id} className="flex items-center gap-2.5 p-2.5 rounded-xl" style={CARD_STYLE}>
-              <Avatar name={m.name} size={32} />
+              <Avatar name={m.name} avatar={m.avatar} size={32} />
               <div className="min-w-0">
                 <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
                 {m.user_id === group.created_by
@@ -626,7 +650,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     }))
   );
   // Shared read-model + live sync (prayers, testimonies, subscription, auto-add).
-  const { group, isAdmin, prayers, testimonies, loading, hasPrayedInGroup, handleToggleAutoAdd } = useGroupWall({ groupId, user });
+  const { group, isAdmin, prayers, testimonies, loading, hasPrayedInGroup, handleToggleAutoAdd, avatarFor } = useGroupWall({ groupId, user });
   const categories = usePrayerStore(s => s.categories);
   const tr = useTranslationStore(s => s.tr);
   const [subTab, setSubTab] = useState('requests');
@@ -807,9 +831,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       )}
 
       <div className="phase-content max-w-4xl">
-        <div className="group-header mb-5">
-          <p className="section-label mb-2">{t(lang, 'community')}</p>
-          <h1 className="page-header__title break-words" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)', overflowWrap: 'anywhere' }}>{group?.name}</h1>
+        <div className="group-header mb-5 flex items-start gap-3">
+          <Avatar kind="group" name={group?.name || ''} avatar={avatarConfigFrom(group)} size={48} className="mt-1" />
+          <div className="min-w-0">
+            <p className="section-label mb-2">{t(lang, 'community')}</p>
+            <h1 className="page-header__title break-words" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)', overflowWrap: 'anywhere' }}>{group?.name}</h1>
+          </div>
         </div>
 
         {/* First-group checklist — leaders only, dismissible, retires itself as
@@ -999,7 +1026,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                   <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="phase-card community-card constellation-community-prayer p-4 text-left">
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <div className="flex items-center gap-2 min-w-0">
-                        <Avatar name={p.is_anonymous ? '?' : p.author_name} size={26} anonymous={p.is_anonymous} />
+                        <Avatar name={p.is_anonymous ? '?' : p.author_name} avatar={p.is_anonymous ? null : avatarFor(p.user_id)} size={26} anonymous={p.is_anonymous} />
                         <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
                           {communityAuthor(p, user.id, lang)} · {timeAgo(p.created_at, lang)}
                         </p>
@@ -1059,7 +1086,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         style={{ borderInlineStart: '3px solid var(--success)' }}
                       >
                         <div className="flex items-center gap-2 mb-1.5 min-w-0">
-                          <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} size={26} anonymous={testimony.is_anonymous} />
+                          <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} avatar={testimony.is_anonymous ? null : avatarFor(testimony.user_id)} size={26} anonymous={testimony.is_anonymous} />
                           <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
                             {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
                           </p>

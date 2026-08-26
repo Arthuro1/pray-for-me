@@ -1,6 +1,8 @@
 import { UserPlus, Mail, MessageSquare, CheckCircle2, HandHeart, Plus, Sparkles, Users, Shield, Bell, CalendarPlus } from 'lucide-react';
 import { t } from '../i18n';
 import { timeAgo } from '../utils/date';
+import Avatar from './shared/Avatar';
+import { avatarConfigFrom } from '../lib/avatar';
 
 // Type → icon + localized, PRIVACY-SAFE label. The label text is a fixed generic
 // string per type — it is NEVER built from notification metadata content (no
@@ -25,7 +27,13 @@ function notificationLabel(notification, lang) {
 
 // One inbox row. Renders as a button so it is keyboard-focusable and activates
 // on Enter/Space. `onActivate` marks read + navigates (handled by the caller).
-export default function NotificationRow({ notification, lang, onActivate }) {
+//
+// `group` (optional) is the recipient's OWN membership record for the group this
+// notification belongs to, resolved by the caller. It only ever contributes the
+// group's avatar and name — never a member, an actor, or any content — so the
+// row gains "which group is this?" at a glance without disclosing anything the
+// recipient could not already see, and the generic label text is untouched.
+export default function NotificationRow({ notification, lang, onActivate, group = null }) {
   const meta = TYPE_META[notification.type] || { icon: Bell, labelKey: 'notifGeneric' };
   const Icon = meta.icon;
   const unread = !notification.read_at;
@@ -41,13 +49,27 @@ export default function NotificationRow({ notification, lang, onActivate }) {
         border: '0.5px solid var(--border)',
       }}
     >
-      <span
-        className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center mt-0.5"
-        style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
-        aria-hidden="true"
-      >
-        <Icon size={17} strokeWidth={2} />
-      </span>
+      {group ? (
+        // Group context: the group's tile leads, with the type icon as a small
+        // badge so the KIND of notification stays glanceable too.
+        <span className="relative shrink-0 mt-0.5" aria-hidden="true">
+          <Avatar kind="group" name={group.name} avatar={avatarConfigFrom(group)} size={36} />
+          <span
+            className="absolute -bottom-1 flex items-center justify-center w-4 h-4 rounded-full"
+            style={{ insetInlineEnd: '-0.25rem', background: 'var(--surface)', color: 'var(--accent)', border: '0.5px solid var(--border)' }}
+          >
+            <Icon size={10} strokeWidth={2.4} />
+          </span>
+        </span>
+      ) : (
+        <span
+          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center mt-0.5"
+          style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+          aria-hidden="true"
+        >
+          <Icon size={17} strokeWidth={2} />
+        </span>
+      )}
       <span className="min-w-0 flex-1">
         <span className="block text-sm" style={{ color: 'var(--text-1)', fontWeight: unread ? 600 : 400 }}>
           {t(lang, meta.labelKey)}

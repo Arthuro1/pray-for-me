@@ -15,6 +15,10 @@
 6. `20260801050047_harden_profiles_policy.sql` — explicit authenticated profile
    policies, ownership-preserving updates, pinned function paths, and an
    RLS-aware public-key projection.
+7. `20260826120000_group_and_profile_avatars.sql` — preset avatar columns on
+   groups and profiles, a check constraint per table, column-level SELECT on
+   `profiles` (display names stay readable, avatars do not), and the
+   relationship-scoped `get_profile_avatars()` RPC.
 
 The baseline preserves the old SQL files for audit/history; do not apply those
 files separately after using the baseline. Seed data is disabled.

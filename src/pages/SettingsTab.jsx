@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
+import { Bell, Clock, Calendar, LogOut, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -21,6 +21,9 @@ import Switch from '../components/shared/Switch';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 import { PageHeader } from '../components/shared/Primitives';
+import Avatar from '../components/shared/Avatar';
+import AvatarEditor from '../components/shared/AvatarEditor';
+import { fetchMyAvatar, saveMyAvatar } from '../lib/profileAvatars';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
@@ -166,6 +169,9 @@ export default function SettingsTab() {
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
+  // The user's own avatar preset. Read through the same relationship-scoped RPC
+  // as everyone else's (the caller is always allowed to see their own).
+  const [myAvatar, setMyAvatar] = useState(null);
   // Settings reads as a short list of destinations: every section starts
   // collapsed and opens on demand. A deep-link (below) force-opens its target.
   // Privacy & Security is ONE consolidated section (visibility, vault,
@@ -191,6 +197,22 @@ export default function SettingsTab() {
     getFollowUpLastSent(user.id).then((val) => { if (!cancelled) setFollowUpLastSent(val); });
     return () => { cancelled = true; };
   }, [settings.followUpEnabled, user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) return undefined;
+    let cancelled = false;
+    fetchMyAvatar(user.id).then((cfg) => { if (!cancelled) setMyAvatar(cfg); });
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  // Save the chosen preset, then reflect it locally so the header tile and the
+  // editor preview agree immediately without a refetch.
+  const handleSaveAvatar = async (config) => {
+    const { error } = await saveMyAvatar(user?.id, config);
+    if (error) { toast.error(t(lang, 'errorGeneric')); return; }
+    setMyAvatar(config);
+    toast.success(t(lang, 'avatarUpdated'));
+  };
 
   // Deep-link into a section (e.g. /settings#notifications from the inbox):
   // expand the matching section first, then scroll it into view next frame.
@@ -344,7 +366,6 @@ export default function SettingsTab() {
   };
   const provider = user?.app_metadata?.provider;
   const providerLabel = provider === 'google' ? 'Google' : t(lang, 'providerEmail');
-  const avatarUrl = user?.user_metadata?.avatar_url;
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
   const memberSince = user?.created_at
     ? new Date(user.created_at).toLocaleDateString(lang, { month: 'long', year: 'numeric' })
@@ -358,15 +379,7 @@ export default function SettingsTab() {
           eyebrow={t(lang, 'settingsSecAccount')}
           title={t(lang, 'settings')}
           subtitle={memberSince ? `${t(lang, 'memberSince')} ${memberSince}` : undefined}
-          aside={(
-            <div className="settings-avatar">
-          {avatarUrl ? (
-              <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
-          ) : (
-              <User size={24} aria-hidden="true" />
-          )}
-            </div>
-          )}
+          aside={<Avatar name={displayName || ''} avatar={myAvatar} size={56} />}
         />
         <div className="settings-profile phase-card phase-card--quiet px-4 py-3 mb-5">
           <div className="min-w-0">
@@ -380,6 +393,19 @@ export default function SettingsTab() {
 
         {/* ── Account & privacy ── */}
         <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={Shield} open={openSections.account} onToggle={() => toggleSection('account')}>
+          {/* Avatar — three controls, deliberately not a profile screen. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'profileAvatar')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'profileAvatarHint')}</p>
+            <AvatarEditor
+              lang={lang}
+              kind="user"
+              name={displayName || ''}
+              avatar={myAvatar}
+              onSave={handleSaveAvatar}
+            />
+          </div>
+
           {/* Account info */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'account')}</p>

@@ -9,6 +9,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { t } from '../i18n';
 import NotificationRow from './NotificationRow';
+import useGroupLookup from '../hooks/useGroupLookup';
 
 // A dropdown-style panel (bottom sheet on mobile) listing the most recent
 // notifications. Clicking one marks it read and deep-links to the relevant page.
@@ -16,6 +17,7 @@ export default function NotificationPanel({ onClose }) {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const groupFor = useGroupLookup();
   const {
     notifications, unreadCount, loading, error,
     fetchNotifications, markRead, markAllRead,
@@ -95,7 +97,7 @@ export default function NotificationPanel({ onClose }) {
             </div>
           ) : (
             recent.map((n) => (
-              <NotificationRow key={n.id} notification={n} lang={lang} onActivate={handleActivate} />
+              <NotificationRow key={n.id} notification={n} lang={lang} onActivate={handleActivate} group={groupFor(n.group_id)} />
             ))
           )}
         </div>

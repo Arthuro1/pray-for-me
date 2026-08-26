@@ -203,7 +203,7 @@ export function AddFriendModal({ lang, userId, onClose }) {
                   return (
                     <div key={s.id} className="flex items-center justify-between gap-3 p-2 rounded-xl" style={CARD_STYLE}>
                       <div className="flex items-center gap-2 min-w-0">
-                        <Avatar name={s.name} size={32} />
+                        <Avatar name={s.name} avatar={s.avatar} size={32} />
                         <span className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{s.name}</span>
                       </div>
                       <button onClick={() => handleAddSuggestion(s.id)} disabled={added || busyId === s.id}
@@ -226,7 +226,7 @@ export function AddFriendModal({ lang, userId, onClose }) {
                 {sent.map((r) => (
                   <div key={r.id} className="flex items-center justify-between gap-3 p-2 rounded-xl" style={CARD_STYLE}>
                     <div className="flex items-center gap-2 min-w-0">
-                      <Avatar name={r.toName} size={32} />
+                      <Avatar name={r.toName} avatar={r.toAvatar} size={32} />
                       <div className="min-w-0">
                         <span className="block text-sm truncate" style={{ color: 'var(--text-1)' }}>{r.toName}</span>
                         <span className="block text-xs truncate" style={{ color: 'var(--text-3)' }}>{t(lang, 'awaitingResponse')}</span>
