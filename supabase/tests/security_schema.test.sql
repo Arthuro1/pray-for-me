@@ -1,5 +1,5 @@
 begin;
-select plan(33);
+select plan(34);
 
 select ok(
   not exists (
@@ -313,6 +313,28 @@ select ok(
      and policyname in ('avatars_profile_insert_own', 'avatars_group_insert_admin')
      and with_check like '%avatar_folder_under_quota%') = 2,
   'a signed-in client cannot write unbounded objects into an avatar folder'
+);
+
+-- A policy expression is evaluated with the privileges of the querying role, so
+-- a function a policy calls must be EXECUTE-able by `authenticated` or every read
+-- of that table fails with `permission denied for function ...`. This is not
+-- hypothetical: the explicit-grants migration revoked EXECUTE on all public
+-- functions and re-granted only the client-called RPCs, which silently took
+-- get_my_group_ids() -- and with it all of Community -- offline.
+select ok(
+  not exists (
+    select 1
+    from pg_proc f
+    join pg_namespace fn on fn.oid = f.pronamespace
+    join (
+      select coalesce(pg_get_expr(p.polqual, p.polrelid), '') || ' ' ||
+             coalesce(pg_get_expr(p.polwithcheck, p.polrelid), '') as expr
+      from pg_policy p
+    ) pol on pol.expr like '%' || f.proname || '(%'
+    where fn.nspname = 'public'
+      and not has_function_privilege('authenticated', f.oid, 'EXECUTE')
+  ),
+  'every public function called from an RLS policy is executable by authenticated'
 );
 
 select * from finish();

@@ -25,6 +25,12 @@
    `can_view_group_avatar` / `can_edit_group_avatar` predicates, and
    before-delete triggers that take a profile's or group's avatar objects with
    it. **Creates a storage bucket** — see below.
+9. `20260826180000_restore_group_helper_grants.sql` — restores `authenticated`
+   EXECUTE on `get_my_group_ids()` / `get_my_admin_group_ids()`. Migration 3
+   revoked EXECUTE on every public function and re-granted only client-called
+   RPCs; these two are called by 31 RLS policies instead, and a policy is
+   evaluated as the querying role, so all of Community read as
+   `permission denied for function get_my_group_ids`.
 
 The baseline preserves the old SQL files for audit/history; do not apply those
 files separately after using the baseline. Seed data is disabled.
@@ -75,7 +81,7 @@ different relationships and checks, as each of them in turn, what they can
 actually read and write.
 
 Verified on 2026-08-26 with Supabase CLI 2.115.0 and the local Postgres 17 stack:
-all eight migrations replayed from zero, all 53 pgTAP assertions passed, migration
+all nine migrations replayed from zero, all 54 pgTAP assertions passed, migration
 history matched, and the security advisor returned no error-level findings.
 
 ## Existing deployment
