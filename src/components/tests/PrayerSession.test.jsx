@@ -127,6 +127,43 @@ describe('PrayerSession — guided plan day content', () => {
     // The day's passage is offered to read in place.
     expect(screen.getByText(/Joel 2:12/)).toBeTruthy();
   });
+
+  // The older plans carry a theme and a verse only — the rich sections a plan
+  // like "Preparing in Prayer" adds must stay absent for them.
+  it('adds no reflection, prompts or practice to a plain theme-and-verse plan', () => {
+    render(<PrayerSession prayers={[planPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.queryByText(t(lang, 'planPrayerPrompts'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'planPrayForYourself'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'planPracticeToday'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'goDeeper'))).toBeNull();
+  });
+
+  // A rich plan day walks through the SAME session — same prayer, same
+  // completion, same notes — and simply carries more content.
+  it('walks a rich plan day through the ordinary session, with its prompts and practice', () => {
+    const richPrayer = {
+      ...planPrayer,
+      id: 'plan2',
+      title: 'Preparing in Prayer',
+      schedule: {
+        type: 'recurring', freq: 'daily', startDate: todayKey(),
+        end: { kind: 'count', count: 21 },
+        plan: { id: 'preparing21', startDate: todayKey() },
+      },
+    };
+    render(<PrayerSession prayers={[richPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.getByText(new RegExp(t(lang, 'planDayOf', { n: 1, total: 21 })))).toBeTruthy();
+    expect(screen.getByText(/God is enough|Dieu suffit/)).toBeTruthy();
+    expect(screen.getByText(/Psalm 73:25-26|Psaume 73:25-26/)).toBeTruthy();
+    expect(screen.getByText(t(lang, 'planPrayerPrompts'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'planPrayForYourself'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'planPracticeToday'))).toBeTruthy();
+    // Still the ORDINARY session underneath: the same closing action, and the
+    // same optional prayer note (so notes, voice notes and completion all keep
+    // working on a plan day exactly as they do on any other prayer).
+    expect(screen.getByRole('button', { name: t(lang, 'amenBtn') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'noteAdd') })).toBeTruthy();
+  });
 });
 
 describe('PrayerSession — immediate start & format control', () => {

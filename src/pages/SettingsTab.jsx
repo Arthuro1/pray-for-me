@@ -4,6 +4,7 @@ import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import { Bell, Clock, Calendar, LogOut, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
+import ResourceLanguagePref from '../components/ResourceLanguagePref';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
 import { enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
@@ -750,6 +751,10 @@ export default function SettingsTab() {
               />
             </div>
           </div>
+
+          {/* Which languages recommended resources may be offered in. The app
+              language is always included, so this needs no setup to work. */}
+          <ResourceLanguagePref lang={lang} />
         </SettingsSection>
 
         {/* ── Support & feedback ── */}

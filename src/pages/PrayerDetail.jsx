@@ -22,8 +22,14 @@ import { scheduleSummary } from '../lib/scheduleDraft';
 import { planWeekDays, scheduleEnded } from '../lib/planner';
 import { planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
-import { planDayContent } from '../content/prayerPlans';
+import { getPlan } from '../content/prayerPlans';
 import { pick, localizeRef } from '../content/teaching';
+import { usePlanDay } from '../hooks/usePlanDay';
+import PlanDayBody from '../components/PlanDayBody';
+import PlanCompletionCard from '../components/PlanCompletionCard';
+import { markPlanCompleted } from '../lib/planPrefs';
+import { defaultNewSchedule } from '../lib/scheduleDraft';
+import { track } from '../lib/analytics';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
@@ -157,9 +163,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showReportConfirm, setShowReportConfirm] = useState(false);
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
 
-  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore(
+  const { categories, addPrayer, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
+      addPrayer: s.addPrayer,
       markAnswered: s.markAnswered,
       markActive: s.markActive,
       markPrayedOn: s.markPrayedOn,
@@ -300,6 +307,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
+  // ── Guided plan ──────────────────────────────────────────────────────────
+  // Which day of a running plan today is, the day's content with the reader's
+  // language folded in, and any APPROVED resources for its topics. Called
+  // unconditionally (a null plan id resolves to null) so the rules of hooks hold
+  // for the many prayers that are not part of a plan.
+  const planId = livePrayer.schedule?.plan?.id || null;
+  const planDayNo = planId ? planDayNumber(livePrayer.schedule, todayKey()) : null;
+  const plan = planId ? getPlan(planId) : null;
+  const { day: planDay, role: planRole, resources: planResources } = usePlanDay(planId, planDayNo, lang);
+  // The last day is behind them: the series can produce no more occurrences.
+  const planFinished = !!plan?.completion && !isCommunity && scheduleEnded(livePrayer, todayKey());
+
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
   // Rows whose content was fully deleted would render as bare author+date
   // shells — hide them. Locked E2EE rows stay visible with their placeholder.
@@ -858,31 +877,53 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           })()
         )}
 
-        {/* Guided plan: today's theme + passage (only on a plan day) */}
-        {livePrayer.schedule?.plan && (() => {
-          const n = planDayNumber(livePrayer.schedule, todayKey());
-          const content = n ? planDayContent(livePrayer.schedule.plan.id, n) : null;
-          if (!content) return null;
-          return (
-            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        {/* Guided plan: today's theme + passage (only on a plan day), and — for a
+            rich plan — its reflection, prompts, practice and "Go deeper". */}
+        {planDay && (
+          <div className="rounded-2xl p-4 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <div>
               <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>
-                {t(lang, 'planDayOf', { n, total: livePrayer.schedule.end?.count || '' })}
+                {t(lang, 'planDayOf', { n: planDayNo, total: livePrayer.schedule.end?.count || '' })}
               </p>
-              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(content.theme, lang)}</p>
-              <VerseAccordion reference={localizeRef(content.ref, lang)} lang={lang}>
-                {({ toggle }) => (
+              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(planDay.theme, lang)}</p>
+              <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
+                {({ toggle, expanded }) => (
                   <button
                     onClick={toggle}
+                    aria-expanded={expanded}
                     className="text-xs flex items-center gap-1.5"
                     style={{ color: 'var(--accent)' }}
                   >
-                    <BookOpen size={12} /> {localizeRef(content.ref, lang)}
+                    <BookOpen size={12} /> {localizeRef(planDay.ref, lang)}
                   </button>
                 )}
               </VerseAccordion>
             </div>
-          );
-        })()}
+            <PlanDayBody day={planDay} lang={lang} role={planRole} resources={planResources} idPrefix="detail-plan-day" />
+          </div>
+        )}
+
+        {/* The last day is behind them — a calm close, and an optional way to
+            carry some of the themes on as ordinary recurring prayers. */}
+        {planFinished && (
+          <PlanCompletionCard
+            plan={plan}
+            lang={lang}
+            onContinue={async (themes) => {
+              for (const theme of themes) {
+                await addPrayer({
+                  title: t(lang, theme.titleKey),
+                  description: t(lang, theme.descKey),
+                  categoryIds: [],
+                  schedule: defaultNewSchedule(),
+                });
+              }
+              markPlanCompleted(plan.id);
+              if (plan.analyticsEvents?.completed) track(plan.analyticsEvents.completed);
+              toast.success(t(lang, 'planContinueAdded'));
+            }}
+          />
+        )}
         {savedCopy && categories.length > 0 && (
           <div>
             <div className="flex flex-wrap gap-1.5 items-center">

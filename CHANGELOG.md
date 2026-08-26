@@ -8,6 +8,31 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ### Added
 
+- Added "Preparing in Prayer", a 21-day guided prayer plan for single believers,
+  under a new "Relationships & family" category on the Plan tab. It runs on the
+  existing plan engine (one recurring prayer capped after 21 days), so Pray now,
+  the prayer session, prayer notes and voice notes, completion, history,
+  scheduling, reminders and offline all behave exactly as for any other prayer.
+  Days carry a reflection, prayer prompts, an "also pray for yourself" mirror, an
+  optional practice, related passages and — where a curator has approved any — a
+  collapsed "Go deeper" shelf. Scripture is referenced, never authored or
+  generated. The plan never promises marriage and stays valuable if the reader
+  never marries. Optional, device-local onboarding (season, emphasis, an
+  explicitly asked husband/wife question defaulting to "keep the plan general",
+  and growth areas) only adds emphasis; the 21 days are identical for everyone.
+  No schema change. See `docs/PRAYER_PLANS.md`.
+- Added a curated external-resource catalogue and an on-device resolver behind
+  "Go deeper", with a draft → needs_review → approved → retired review gate.
+  Only approved entries with a verified edition in a language the reader
+  actually reads are ever shown, locales are curated independently rather than
+  translated from English, and no edition, URL or title is ever fabricated. The
+  catalogue ships as a curation worksheet (nothing approved yet), so the section
+  is currently absent everywhere — the plan is complete without it. A new
+  device-local "Resource languages" preference (Settings → Appearance &
+  language) is the only way a resource in another language is ever offered. See
+  `docs/RESOURCES.md`.
+- Added localized book names for Micah (`MIC`), so plan and teaching references
+  to it render in all 16 languages instead of falling back to English.
 - Added optional prayer-session notes: while praying for a request, a collapsed
   "Add a prayer note" action captures formatted text and/or a voice note for
   that request. Next commits the note as an ordinary entry in that prayer's

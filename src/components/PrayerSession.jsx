@@ -7,7 +7,8 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
 import { planDayNumber } from '../lib/schedule';
-import { planDayContent } from '../content/prayerPlans';
+import { usePlanDay } from '../hooks/usePlanDay';
+import PlanDayBody from './PlanDayBody';
 import { pick, localizeRef } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
 import { markActivationSessionCompleted } from '../lib/activationProgress';
@@ -124,6 +125,15 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const notesEnabled = allowNotes && !currentPrayer?.community_origin_id;
   const notes = useSessionNotes(allowNotes);
   const noteDraft = currentPrayer ? notes.draftFor(currentPrayer.id) : null;
+
+  // Guided plan: the day-specific content for the request being prayed right
+  // now. Resolved HERE, at the top of the component, rather than down in the
+  // supplication branch — the walk returns early for the Scripture movements, so
+  // a hook further down would not run on every render.
+  const sessionPlanId = currentPrayer?.schedule?.plan?.id || null;
+  const sessionPlanDayNo = sessionPlanId ? planDayNumber(currentPrayer.schedule, todayKey()) : null;
+  const { day: sessionPlanDay, role: sessionPlanRole, resources: sessionPlanResources } =
+    usePlanDay(sessionPlanId, sessionPlanDayNo, lang);
 
   // Restore an unfinished note if the session reopens on this prayer.
   useEffect(() => {
@@ -575,12 +585,9 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // walk shows what CHANGES each day (Day 3: "Pray the promises…") instead of
   // the unchanging plan name on every day. Computed for today, matching the
   // detail page; off a plan day (planDayNumber null) it falls back to normal.
-  const planContent = (() => {
-    if (!prayer.schedule?.plan) return null;
-    const n = planDayNumber(prayer.schedule, todayKey());
-    const content = n && planDayContent(prayer.schedule.plan.id, n);
-    return content ? { ...content, n, total: prayer.schedule.end?.count || '' } : null;
-  })();
+  const planContent = sessionPlanDay
+    ? { ...sessionPlanDay, n: sessionPlanDayNo, total: prayer.schedule.end?.count || '' }
+    : null;
   // The most recent meaningful update — the freshest thing to pray from,
   // especially for shared/intercession requests. Older updates stay on the
   // prayer's detail page.
@@ -643,6 +650,20 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
             </VerseAccordion>
           );
         })()}
+
+        {/* A rich plan day's reflection, prompts, self-prompt, practice and
+            "Go deeper" — nothing renders for the simpler plans. */}
+        {planContent && (
+          <div className="mb-7">
+            <PlanDayBody
+              day={planContent}
+              lang={lang}
+              role={sessionPlanRole}
+              resources={sessionPlanResources}
+              idPrefix="session-plan-day"
+            />
+          </div>
+        )}
 
         {prayer.description && (
           <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--text-2)' }} />

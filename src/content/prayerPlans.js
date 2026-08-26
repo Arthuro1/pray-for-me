@@ -13,9 +13,25 @@
 // English + French only and fall back to English via pick() in other languages;
 // the per-day themes remain authored in all 16 languages.
 
+import { PREPARING_IN_PRAYER } from './plans/preparingInPrayer';
+
+// Plans are grouped in the UI by CATEGORY so the list stays browsable as it
+// grows. `id` is stable; the label is an i18n key resolved at render.
+export const PLAN_CATEGORIES = [
+  { id: 'seeking', labelKey: 'planCategorySeeking' },
+  { id: 'others', labelKey: 'planCategoryOthers' },
+  { id: 'relationships', labelKey: 'planCategoryRelationships' },
+];
+
+// Plans with no category of their own fall in here, so an older plan never
+// disappears from the list just because categories were introduced.
+export const DEFAULT_PLAN_CATEGORY = 'seeking';
+
 export const PLANS = [
+
   {
     id: 'fast3',
+    category: 'seeking',
     emoji: '🕯️',
     count: 3,
     titleKey: 'planFast3Title',
@@ -39,6 +55,7 @@ export const PLANS = [
   },
   {
     id: 'altar7',
+    category: 'seeking',
     emoji: '🕊️',
     count: 7,
     titleKey: 'planAltar7Title',
@@ -66,6 +83,7 @@ export const PLANS = [
   },
   {
     id: 'gratitude7',
+    category: 'seeking',
     emoji: '🌅',
     count: 7,
     titleKey: 'planWeek7Title',
@@ -93,6 +111,7 @@ export const PLANS = [
   },
   {
     id: 'upperRoom10',
+    category: 'seeking',
     emoji: '🔥',
     count: 10,
     titleKey: 'planUpperRoomTitle',
@@ -123,6 +142,7 @@ export const PLANS = [
   },
   {
     id: 'breakthrough21',
+    category: 'seeking',
     emoji: '⚡',
     count: 21,
     titleKey: 'planTheme21Title',
@@ -164,6 +184,7 @@ export const PLANS = [
   },
   {
     id: 'others30',
+    category: 'others',
     emoji: '🤝',
     count: 30,
     titleKey: 'plan30Title',
@@ -212,15 +233,26 @@ export const PLANS = [
       { theme: { en: 'One more: whoever God brings to mind', fr: 'Encore un : celui que Dieu met sur ton cœur', es: 'Uno más: aquel que Dios traiga a tu mente', pt: 'Mais um: aquele que Deus trouxer à mente', de: 'Noch einer: wen Gott dir ins Herz legt', ru: 'Ещё один: тот, кого напомнит Бог', zh: '再多一个：神让你想起的那个人', ja: 'もう一人——神様が心に思い起こさせる人', ko: '한 사람 더: 하나님이 마음에 떠올려 주시는 이', ar: 'واحد آخر: من يضعه الله في قلبك', fa: 'یکی دیگر: هر که خدا به یادت می‌آورد', hi: 'एक और: जिसे परमेश्वर आपके मन में लाए', id: 'Satu lagi: siapa pun yang Allah ingatkan', sw: 'Mmoja zaidi: yeyote Mungu akuletaye moyoni', tl: 'Isa pa: sinumang ipaalala ng Diyos sa iyo', am: 'አንድ ተጨማሪ፦ እግዚአብሔር ወደ ልብህ የሚያመጣው ማንኛውም ሰው' }, ref: 'Romans 10:1' },
     ],
   },
+  PREPARING_IN_PRAYER,
 ];
 
 export function getPlan(id) {
   return PLANS.find((p) => p.id === id) || null;
 }
 
-// Day content (1-based) for a plan, or null past the end.
-export function planDayContent(planId, dayNumber) {
-  const plan = getPlan(planId);
+// Plans grouped for display, in PLAN_CATEGORIES order. Empty categories are
+// dropped so the list only ever shows headings that have something under them.
+export function plansByCategory(plans = PLANS) {
+  return PLAN_CATEGORIES
+    .map((c) => ({ ...c, plans: plans.filter((p) => (p.category || DEFAULT_PLAN_CATEGORY) === c.id) }))
+    .filter((c) => c.plans.length > 0);
+}
+
+// Day content (1-based) for a plan, or null past the end. `resolved` lets a
+// caller pass a plan that already has a language overlay folded in (see
+// src/hooks/useLocalizedPlan.js) without this module knowing about translations.
+export function planDayContent(planId, dayNumber, resolved = null) {
+  const plan = resolved || getPlan(planId);
   if (!plan || !dayNumber || dayNumber < 1 || dayNumber > plan.days.length) return null;
   return plan.days[dayNumber - 1];
 }

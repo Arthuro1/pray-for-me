@@ -11,7 +11,7 @@ import { monthDots, prayersForDay, sortEntries, runningPlanIds } from '../lib/pl
 import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { buildICS } from '../utils/ics';
-import { PLANS } from '../content/prayerPlans';
+import { plansByCategory } from '../content/prayerPlans';
 import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
 import { CATEGORY_COLORS, categoryTint } from '../lib/categoryColor';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
@@ -21,6 +21,9 @@ import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanInviteModal from '../components/PlanInviteModal';
+import PlanOnboardingModal from '../components/PlanOnboardingModal';
+import { savePlanPrefs, hasPlanPrefs } from '../lib/planPrefs';
+import { track } from '../lib/analytics';
 import { PageHeader } from '../components/shared/Primitives';
 
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
@@ -61,6 +64,7 @@ export default function PlanTab() {
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [detailPlan, setDetailPlan] = useState(null); // plan whose explanation modal is open
   const [inviteTarget, setInviteTarget] = useState(null); // { plan, startDate } → invite modal
+  const [onboardingTarget, setOnboardingTarget] = useState(null); // { plan, startDate } → onboarding sheet
   const [planInvitations, setPlanInvitations] = useState([]); // incoming "pray together" invites
   const [busyInvite, setBusyInvite] = useState(null);
 
@@ -113,9 +117,24 @@ export default function PlanTab() {
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
-  const startPlan = async (plan, startDate) => {
+
+  // Actually begin a plan. `prefs` is only present for plans that ask the short
+  // onboarding questions; it is saved on the device and never sent anywhere.
+  const beginPlan = async (plan, startDate, prefs = null) => {
+    if (prefs) savePlanPrefs(plan.id, prefs);
     await addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
+    if (plan.analyticsEvents?.started) track(plan.analyticsEvents.started);
     toast.success(t(lang, 'planStarted'));
+  };
+
+  // A plan that declares `onboarding` asks its questions first — but only the
+  // first time. Re-starting a plan later keeps the answers already given.
+  const startPlan = async (plan, startDate) => {
+    if (plan.onboarding && !hasPlanPrefs(plan.id)) {
+      setOnboardingTarget({ plan, startDate });
+      return;
+    }
+    await beginPlan(plan, startDate);
   };
 
   // Accept an invitation to pray a plan together: start the SAME guided plan on
@@ -183,6 +202,19 @@ export default function PlanTab() {
           lang={lang}
           userId={user.id}
           onClose={() => setInviteTarget(null)}
+        />
+      )}
+
+      {onboardingTarget && (
+        <PlanOnboardingModal
+          plan={onboardingTarget.plan}
+          lang={lang}
+          onStart={async (prefs) => {
+            const { plan, startDate } = onboardingTarget;
+            setOnboardingTarget(null);
+            await beginPlan(plan, startDate, prefs);
+          }}
+          onClose={() => setOnboardingTarget(null)}
         />
       )}
 
@@ -300,31 +332,43 @@ export default function PlanTab() {
         <div className="pt-2">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'plansTitle')}</h3>
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'plansSub')}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {PLANS.map((plan) => {
-              const running = activePlanIds.has(plan.id);
-              return (
-                <button
-                  key={plan.id}
-                  onClick={() => setDetailPlan(plan)}
-                  className="phase-card plan-card p-4 flex items-start gap-3 text-left w-full"
-                >
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
-                    {plan.emoji}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</p>
-                    <p className="text-xs mt-2 font-medium" style={{ color: running ? 'var(--success)' : 'var(--accent)' }}>
-                      {running
-                        ? `✓ ${t(lang, 'planRunning')}`
-                        : `${t(lang, 'planTapToPreview')} · ${t(lang, 'planDays', { n: plan.count })}`}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          {/* Grouped by category so the list stays browsable as plans are added.
+              A category heading only appears when it has plans under it. */}
+          {plansByCategory().map((group) => (
+            <section key={group.id} className="mb-4 last:mb-0">
+              <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                {t(lang, group.labelKey)}
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {group.plans.map((plan) => {
+                  const running = activePlanIds.has(plan.id);
+                  return (
+                    <button
+                      key={plan.id}
+                      onClick={() => setDetailPlan(plan)}
+                      className="phase-card plan-card p-4 flex items-start gap-3 text-left w-full"
+                    >
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
+                        {plan.emoji}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
+                        {plan.audienceKey && (
+                          <p className="text-xs mt-0.5 font-medium" style={{ color: 'var(--text-3)' }}>{t(lang, plan.audienceKey)}</p>
+                        )}
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</p>
+                        <p className="text-xs mt-2 font-medium" style={{ color: running ? 'var(--success)' : 'var(--accent)' }}>
+                          {running
+                            ? `✓ ${t(lang, 'planRunning')}`
+                            : `${t(lang, 'planTapToPreview')} · ${t(lang, 'planDays', { n: plan.count })}`}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
 
         {/* Labels — grouping only: name, emoji, colour. No schedule lives here. */}

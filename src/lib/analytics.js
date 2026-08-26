@@ -36,6 +36,18 @@ export const EVENTS = Object.freeze({
   PRAYER_NOTE_SAVED: 'prayer_note_saved',
   PRAYER_NOTE_VOICE_USED: 'prayer_note_voice_used',
   PRAYER_ANSWERED: 'prayer_answered',
+  // Guided prayer plans. A plan a person chooses can say something personal
+  // about their life (the singles plan is the obvious case), so these events
+  // record only THAT a plan of that KIND was started, walked or finished —
+  // never a day's reflection, a prompt, a note, an onboarding answer, or
+  // anything the person typed. Only plans that opt in (see `analyticsEvents`
+  // on a PLANS entry) emit anything at all.
+  SINGLES_PLAN_STARTED: 'singles_plan_started',
+  SINGLES_PLAN_DAY_COMPLETED: 'singles_plan_day_completed',
+  SINGLES_PLAN_COMPLETED: 'singles_plan_completed',
+  // That a recommended resource was opened — never which topic surfaced it, and
+  // never anything about the reader.
+  RESOURCE_OPENED: 'resource_opened',
   VAULT_ENABLED: 'vault_enabled',
   AI_CONSENT_ENABLED: 'ai_consent_enabled',
   AI_CONSENT_REVOKED: 'ai_consent_revoked',

@@ -10,6 +10,7 @@ import { removeAttachmentFiles } from '../lib/attachments';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
 import { track, EVENTS } from '../lib/analytics';
+import { getPlan } from '../content/prayerPlans';
 import { ensurePushSubscription } from '../push';
 import { isEventPushEnabled } from '../lib/notificationPrefs';
 import { resolveLanguage } from '../i18n';
@@ -836,6 +837,12 @@ const usePrayerStore = create((set, get) => ({
     }));
     enqueue('logCompletion', { row, last_prayed_at: now });
     track(EVENTS.PRAYER_PRAYED); // deduped above — one event per prayer per day
+    // A guided plan that opts in also reports THAT one of its days was walked —
+    // no day number, no plan progress, nothing the person wrote (see the
+    // `analyticsEvents` note in src/content/plans/preparingInPrayer.js).
+    const planId = get().prayers.find((p) => p.id === prayerId)?.schedule?.plan?.id;
+    const dayEvent = planId && getPlan(planId)?.analyticsEvents?.dayCompleted;
+    if (dayEvent) track(dayEvent);
   },
 
   unmarkPrayedOn: (prayerId, dayKey) => {

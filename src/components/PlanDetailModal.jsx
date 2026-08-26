@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { X, BookOpen, Check, HeartHandshake } from 'lucide-react';
+import { X, Check, HeartHandshake } from 'lucide-react';
 import { t } from '../i18n';
-import { pick, localizeRef } from '../content/teaching';
+import { pick } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import VerseAccordion from './VerseAccordion';
+import { useLocalizedPlan } from '../hooks/useLocalizedPlan';
+import VersePill from './shared/VersePill';
 
 // Explains a guided plan before the user commits to it: what the journey is
 // (intro), the Scripture story it follows — when and how it was prayed/fasted in
@@ -13,29 +14,14 @@ import VerseAccordion from './VerseAccordion';
 // A single Start action lives here so "read, then choose" is one flow. Pure
 // presentation: `plan` is a PLANS entry, actions come from the caller.
 
-// A verse reference rendered as a tappable pill that expands the passage in place
-// (authoritative Scripture only, no AI) via VerseAccordion.
-function VersePill({ reference, lang }) {
-  return (
-    <VerseAccordion reference={reference} lang={lang} panelStyle={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-      {({ toggle }) => (
-        <button
-          onClick={toggle}
-          className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg"
-          style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
-        >
-          <BookOpen size={11} /> {localizeRef(reference, lang)}
-        </button>
-      )}
-    </VerseAccordion>
-  );
-}
-
 // Optional props let the same modal drive the "adopt for the group" flow:
 //   ctaLabel     — overrides the primary "Start" label (e.g. "Start for the group")
 //   runningLabel — overrides the disabled/started label (e.g. "The group is already praying this")
 //   footnote     — a small line under the actions (e.g. what starting shares with the group)
-export default function PlanDetailModal({ plan, lang, running, onStart, onInvite, onClose, ctaLabel, runningLabel, footnote }) {
+export default function PlanDetailModal({ plan: source, lang, running, onStart, onInvite, onClose, ctaLabel, runningLabel, footnote }) {
+  // Rich plans carry prose in more languages than the source file authors; the
+  // overlay folds in on demand and the day themes are already localized.
+  const plan = useLocalizedPlan(source, lang);
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const [startDate, setStartDate] = useState(todayKey());
@@ -61,7 +47,9 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onInvite
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</h3>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}</p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+              {plan.audienceKey ? `${t(lang, plan.audienceKey)} · ` : ''}{t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}
+            </p>
           </div>
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
@@ -88,13 +76,25 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onInvite
           <section>
             <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayByDay')}</h4>
             <ol className="space-y-2">
-              {plan.days.map((day, i) => (
-                <li key={i} className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>{t(lang, 'planDayLabel', { n: i + 1 })}</p>
-                  <p className="text-sm font-medium mb-2 leading-snug" style={{ color: 'var(--text-1)' }}>{pick(day.theme, lang)}</p>
-                  <VersePill reference={day.ref} lang={lang} />
-                </li>
-              ))}
+              {plan.days.map((day, i) => {
+                // A movement heading appears on the day it starts, so the shape
+                // of a longer journey reads without adding a second list level.
+                const movement = plan.movements?.find((m) => m.from === i + 1);
+                return (
+                  <li key={i}>
+                    {movement && (
+                      <p className="mb-1.5 mt-3 first:mt-0 text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                        {t(lang, movement.titleKey)}
+                      </p>
+                    )}
+                    <div className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+                      <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>{t(lang, 'planDayLabel', { n: i + 1 })}</p>
+                      <p className="text-sm font-medium mb-2 leading-snug" style={{ color: 'var(--text-1)' }}>{pick(day.theme, lang)}</p>
+                      <VersePill reference={day.ref} lang={lang} />
+                    </div>
+                  </li>
+                );
+              })}
             </ol>
           </section>
         </div>
@@ -115,7 +115,8 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onInvite
             </label>
           )}
           <button
-            onClick={() => { if (!running) { onStart(plan, startDate || todayKey()); onClose(); } }}
+            // Hand back the SOURCE plan, not the localized copy, so callers keep the canonical PLANS entry.
+            onClick={() => { if (!running) { onStart(source, startDate || todayKey()); onClose(); } }}
             disabled={running}
             className="w-full text-sm font-semibold px-3 py-3 rounded-xl disabled:opacity-60"
             style={running
@@ -131,7 +132,7 @@ export default function PlanDetailModal({ plan, lang, running, onStart, onInvite
               you've started it yourself. */}
           {onInvite && (
             <button
-              onClick={() => onInvite(plan, startDate || todayKey())}
+              onClick={() => onInvite(source, startDate || todayKey())}
               className="w-full text-sm font-semibold px-3 py-2.5 rounded-xl inline-flex items-center justify-center gap-2"
               style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
             >
