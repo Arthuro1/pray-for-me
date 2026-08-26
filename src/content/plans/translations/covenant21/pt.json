@@ -92,8 +92,7 @@
         ],
         "selfPrompt": "Que pedido de perdão requer mudança minha?",
         "practice": "Pede perdão de modo específico, se for seguro e adequado.",
-        "conversationPrompt": "O que torna sincero um pedido de perdão e real uma reparação?",
-        "safetyNote": "A oração nunca exige suportar dano, controle ou pressão. Priorize a segurança e busque ajuda confiável e qualificada."
+        "conversationPrompt": "O que torna sincero um pedido de perdão e real uma reparação?"
       },
       {
         "reflection": "A verdade pertence à vida em Cristo. A confiança cresce por atos confiáveis, não por vigilância ou revelações forçadas.",
@@ -115,8 +114,7 @@
         ],
         "selfPrompt": "Minhas escolhas respeitam a liberdade do outro?",
         "practice": "Considera um limite que favoreça respeito.",
-        "conversationPrompt": "Como falar de intimidade, consentimento e limites sem pressão?",
-        "safetyNote": "A oração nunca exige suportar dano, controle ou pressão. Priorize a segurança e busque ajuda confiável e qualificada."
+        "conversationPrompt": "Como falar de intimidade, consentimento e limites sem pressão?"
       },
       {
         "reflection": "Jesus liga o tesouro ao coração. Falem de dinheiro como algo confiado aos seus cuidados, não como identidade ou segurança.",
@@ -149,8 +147,7 @@
         ],
         "selfPrompt": "Onde preciso falar com clareza e gentileza?",
         "practice": "Nomeia um limite que possas tratar com segurança.",
-        "conversationPrompt": "O que esperamos sobre feriados, cuidados e privacidade familiar?",
-        "safetyNote": "A oração nunca exige suportar dano, controle ou pressão. Priorize a segurança e busque ajuda confiável e qualificada."
+        "conversationPrompt": "O que esperamos sobre feriados, cuidados e privacidade familiar?"
       },
       {
         "reflection": "Eclesiastes valoriza companhia e ajuda. A amizade cresce com atenção, alegria e curiosidade pelo outro.",
@@ -161,8 +158,7 @@
         ],
         "selfPrompt": "Quando escutei apenas para conhecer melhor?",
         "practice": "Compartilhem uma atividade agradável se ambos quiserem.",
-        "conversationPrompt": "Que momentos simples gostamos de viver juntos?",
-        "prayTogether": "Se ambos quiserem, orem juntos brevemente com os pontos de hoje; não é preciso outra conta."
+        "conversationPrompt": "Que momentos simples gostamos de viver juntos?"
       },
       {
         "reflection": "Paulo descreve uma comunidade formada pela palavra de Cristo e gratidão. Hábitos espirituais comuns podem ser simples e diferentes.",
@@ -173,8 +169,7 @@
         ],
         "selfPrompt": "Convido à fé comum ou imponho meu jeito?",
         "practice": "Experimentem um pequeno hábito espiritual.",
-        "conversationPrompt": "Que ritmo comum nos nutriria sem pressão?",
-        "prayTogether": "Se ambos quiserem, orem juntos brevemente com os pontos de hoje; não é preciso outra conta."
+        "conversationPrompt": "Que ritmo comum nos nutriria sem pressão?"
       },
       {
         "reflection": "Hebreus chama os crentes a encorajar-se em amor. O casamento precisa de amizades e comunidade cristã, não isolamento.",
@@ -196,8 +191,7 @@
         ],
         "selfPrompt": "Que suposição sobre filhos não expressei?",
         "practice": "Conversem sem exigir uma decisão.",
-        "conversationPrompt": "Que esperanças, medos ou dúvidas temos sobre filhos ou criação?",
-        "safetyNote": "A oração nunca exige suportar dano, controle ou pressão. Priorize a segurança e busque ajuda confiável e qualificada."
+        "conversationPrompt": "Que esperanças, medos ou dúvidas temos sobre filhos ou criação?"
       },
       {
         "reflection": "Paulo une esperança, paciência e oração na dificuldade. Atravessá-la juntos inclui receber ajuda, não carregar tudo sozinhos.",
@@ -208,8 +202,7 @@
         ],
         "selfPrompt": "Que ajuda reluto em receber?",
         "practice": "Oferece ajuda prática sem tentar resolver tudo.",
-        "conversationPrompt": "O que nos ajuda a receber cuidado em tempos difíceis?",
-        "prayTogether": "Se ambos quiserem, orem juntos brevemente com os pontos de hoje; não é preciso outra conta."
+        "conversationPrompt": "O que nos ajuda a receber cuidado em tempos difíceis?"
       },
       {
         "reflection": "Pedro relaciona hospitalidade e serviço. Um lar generoso acolhe dentro dos seus limites e recursos reais.",
@@ -232,7 +225,6 @@
         "selfPrompt": "Onde posso servir sem exigir a palavra final?",
         "practice": "Assume um ato cotidiano de serviço.",
         "conversationPrompt": "Como entendemos serviço e respeito mútuo?",
-        "safetyNote": "A oração nunca exige suportar dano, controle ou pressão. Priorize a segurança e busque ajuda confiável e qualificada.",
         "roles": {
           "husband": "Preparar-se como marido inclui amor abnegado, escuta, arrependimento e serviço, não exigir controle.",
           "wife": "Preparar-se como esposa inclui sabedoria, força, voz sincera e bondade, não esconder necessidades nem aceitar dano."
@@ -247,10 +239,8 @@
         ],
         "selfPrompt": "Que hábito de oração quero continuar?",
         "practice": "Escolhe um modo simples de seguir orando.",
-        "conversationPrompt": "Por que agradecemos e o que ainda confiamos a Deus?",
-        "prayTogether": "Se ambos quiserem, orem juntos brevemente com os pontos de hoje; não é preciso outra conta."
+        "conversationPrompt": "Por que agradecemos e o que ainda confiamos a Deus?"
       }
     ]
   }
 }
-

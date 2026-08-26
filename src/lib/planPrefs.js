@@ -122,6 +122,41 @@ export function markPlanCompleted(planId) {
   writeAll(all);
 }
 
+// ── Completion reported once, per run ────────────────────────────────────────
+// A plan's `completed` event used to fire only if the reader took a follow-up
+// action, so finishing thirty days and closing the app counted as nothing. It
+// now fires when the last day is actually behind them — which means it needs a
+// guard, because the completion card renders on every visit to that prayer.
+//
+// Keyed by PRAYER id, not plan id, so a renewable plan started again is counted
+// again. Device-local and content-free, like the rest of this module.
+const REPORTED_KEY = 'pfm_plan_completed_reported';
+const MAX_REPORTED = 200;
+
+function readReported() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(REPORTED_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.filter((id) => typeof id === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+// True the FIRST time it is asked about a run, false ever after — so a caller
+// can simply guard on it. A device that cannot store anything reports every
+// time it re-renders, so it fails closed instead: nothing is reported.
+export function claimPlanCompletionReport(prayerId) {
+  if (!prayerId) return false;
+  const reported = readReported();
+  if (reported.includes(prayerId)) return false;
+  try {
+    localStorage.setItem(REPORTED_KEY, JSON.stringify([...reported, prayerId].slice(-MAX_REPORTED)));
+  } catch {
+    return false;
+  }
+  return true;
+}
+
 // Clearing a plan's answers is part of "my data is mine": ending or restarting a
 // plan should not leave a record of what someone once said about their season.
 export function clearPlanPrefs(planId) {

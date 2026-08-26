@@ -151,3 +151,50 @@ describe('prayerNoteDrafts — fail closed', () => {
     expect(await loadNoteDraft('a')).toBeNull();
   });
 });
+
+// Every save is a read-modify-write, so two of them racing for the same prayer
+// must not let the later one resurrect what the earlier one dropped.
+describe('prayerNoteDrafts — concurrent writes', () => {
+  const blob = () => new Blob([new Uint8Array([1, 2, 3])], { type: 'audio/webm' });
+
+  it('does not bring a deleted recording back when a text save is in flight', async () => {
+    await saveNoteDraft({ prayerId: PRAYER, text: 'the written half', voice: { blob: blob(), mime: 'audio/webm', seconds: 2 } });
+
+    // Deleting the recording and flushing the text debounce, started together.
+    await Promise.all([
+      saveNoteDraft({ prayerId: PRAYER, text: 'the written half', voice: null }),
+      saveNoteDraft({ prayerId: PRAYER, text: 'the written half' }),
+    ]);
+
+    const draft = await loadNoteDraft(PRAYER);
+    expect(draft.voice).toBeNull();
+    expect(draft.text).toBe('the written half');
+  });
+
+  it('keeps a recording captured while an earlier text save is in flight', async () => {
+    await saveNoteDraft({ prayerId: PRAYER, text: 'first' });
+    await Promise.all([
+      saveNoteDraft({ prayerId: PRAYER, text: 'second' }),
+      saveNoteDraft({ prayerId: PRAYER, voice: { blob: blob(), mime: 'audio/webm', seconds: 3 } }),
+    ]);
+
+    const draft = await loadNoteDraft(PRAYER);
+    expect(draft.voice?.seconds).toBe(3);
+    expect(draft.text).toBe('second');
+  });
+
+  it('does not re-create a draft that was cleared while a save was in flight', async () => {
+    await saveNoteDraft({ prayerId: PRAYER, text: 'something' });
+    await Promise.all([
+      saveNoteDraft({ prayerId: PRAYER, text: 'something more' }),
+      clearNoteDraft(PRAYER),
+    ]);
+    expect(await loadNoteDraft(PRAYER)).toBeNull();
+  });
+
+  it('keeps serving later writes after one of them fails', async () => {
+    await expect(saveNoteDraft({ text: 'no prayer id' })).rejects.toThrow();
+    await saveNoteDraft({ prayerId: PRAYER, text: 'still works' });
+    expect((await loadNoteDraft(PRAYER)).text).toBe('still works');
+  });
+});

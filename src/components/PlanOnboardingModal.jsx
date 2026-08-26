@@ -4,7 +4,7 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { SEASONS, EMPHASES, ROLES, GROWTH_AREAS, DEFAULT_EMPHASIS, DEFAULT_ROLE, getPlanPrefs } from '../lib/planPrefs';
-import { DEFAULT_MARRIAGE_INCLUDES, MARRIAGE_INCLUDES, isCouplePlan, sanitizePlanPersonalization } from '../lib/planPersonalization';
+import { DEFAULT_MARRIAGE_INCLUDES, MARRIAGE_INCLUDES, MAX_PLAN_CHILDREN, isCouplePlan, sanitizePlanPersonalization } from '../lib/planPersonalization';
 
 // The short onboarding a rich plan asks for before it starts.
 //
@@ -47,15 +47,26 @@ function Question({ id, title, hint, children }) {
   );
 }
 
-function CoupleQuestions({ plan, lang, people, onStart }) {
+function CoupleQuestions({ plan, lang, people, initial, onStart, ctaKey }) {
   const engaged = plan.lifeStage === 'engaged';
-  const [partner, setPartner] = useState(null);
-  const [name, setName] = useState('');
-  const [mode, setMode] = useState('private');
-  const [role, setRole] = useState('general');
-  const [includes, setIncludes] = useState([...DEFAULT_MARRIAGE_INCLUDES]);
-  const [children, setChildren] = useState([]);
+  // The emphasis question is only asked on the married plan, where the optional
+  // home/extended-family/children layers exist. An engaged couple keeps the
+  // shared default — marriage, spouse, self, spiritual — which is exactly what
+  // preparing for a covenant is about, so nothing is inherited that does not
+  // apply. Those four add no prompts either way; they only rank resources.
+  const saved = initial ? sanitizePlanPersonalization(initial) : null;
+  const [partner, setPartner] = useState(() => (saved?.partner?.prayerId
+    ? (people || []).find((item) => item.prayerId === saved.partner.prayerId) || null
+    : null));
+  const [name, setName] = useState(saved?.partner?.name || '');
+  const [mode, setMode] = useState(saved?.mode || 'private');
+  const [role, setRole] = useState(saved?.role || 'general');
+  const [includes, setIncludes] = useState(() => saved?.includes || [...DEFAULT_MARRIAGE_INCLUDES]);
+  const [children, setChildren] = useState(() => (saved?.children || []).map((child) => ({
+    id: child.id || crypto.randomUUID(), name: child.name,
+  })));
   const childEnabled = includes.includes('children');
+  const atChildLimit = children.length >= MAX_PLAN_CHILDREN;
 
   const choosePerson = (value) => {
     const found = (people || []).find((item) => item.prayerId === value);
@@ -64,9 +75,9 @@ function CoupleQuestions({ plan, lang, people, onStart }) {
   };
   const toggleInclude = (id) => setIncludes((current) => current.includes(id)
     ? current.filter((item) => item !== id) : [...current, id]);
-  const addChild = () => setChildren((current) => [
+  const addChild = () => setChildren((current) => (current.length >= MAX_PLAN_CHILDREN ? current : [
     ...current, { id: crypto.randomUUID(), name: '' },
-  ]);
+  ]));
   const start = () => onStart(sanitizePlanPersonalization({
     partner: name.trim() ? { id: partner?.id, prayerId: partner?.prayerId, name } : null,
     mode, role, includes, children,
@@ -142,9 +153,13 @@ function CoupleQuestions({ plan, lang, people, onStart }) {
                   ><Trash2 size={16} /></button>
                 </div>
               ))}
-              <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
-              </button>
+              {/* At the cap the action goes away rather than accepting a name
+                  that sanitizePlanPersonalization would silently drop. */}
+              {!atChildLimit && (
+                <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                  <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
+                </button>
+              )}
             </div>
           </Question>
         )}
@@ -162,7 +177,7 @@ function CoupleQuestions({ plan, lang, people, onStart }) {
 
       <div className="sticky bottom-0 space-y-2 p-5 pt-0" style={{ background: 'var(--surface)' }}>
         <button onClick={start} className="w-full rounded-xl px-3 py-3 text-sm font-semibold" style={{ background: 'var(--accent)', color: '#fff' }}>
-          {t(lang, 'planPrepOnboardingCta')}
+          {t(lang, ctaKey || 'planPrepOnboardingCta')}
         </button>
         <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCouplePrivacy')}</p>
       </div>
@@ -170,7 +185,10 @@ function CoupleQuestions({ plan, lang, people, onStart }) {
   );
 }
 
-export default function PlanOnboardingModal({ plan, lang, onStart, onClose, people = [] }) {
+// `initial` reopens the sheet on a RUNNING couple plan so the reader can correct
+// a name, add a child, or change how they are praying it — without deleting the
+// prayer and losing its history, which used to be the only way.
+export default function PlanOnboardingModal({ plan, lang, onStart, onClose, people = [], initial = null, ctaKey = null }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const saved = getPlanPrefs(plan.id);
@@ -202,7 +220,7 @@ export default function PlanOnboardingModal({ plan, lang, onStart, onClose, peop
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 
-        {isCouplePlan(plan) ? <CoupleQuestions plan={plan} lang={lang} people={people} onStart={onStart} /> : <><div className="space-y-5 p-5">
+        {isCouplePlan(plan) ? <CoupleQuestions plan={plan} lang={lang} people={people} initial={initial} ctaKey={ctaKey} onStart={onStart} /> : <><div className="space-y-5 p-5">
           <Question id="plan-prep-season" title={t(lang, 'planPrepSeasonQ')}>
             <div role="radiogroup" aria-labelledby="plan-prep-season" className="flex flex-col gap-2">
               {SEASONS.map((s) => (

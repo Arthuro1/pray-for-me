@@ -319,6 +319,15 @@ describe('the shipped catalogue', () => {
     }
   });
 
+  // `approved` is a promise to the curator that the entry is live. An entry the
+  // resolver silently drops is a status that lies — say `needs_review` instead.
+  it('marks nothing approved that the resolver would refuse to display', () => {
+    for (const resource of RESOURCES) {
+      if (resource.status !== 'approved') continue;
+      expect(isResourceApprovedForDisplay(resource), `${resource.id} is approved but never displayable`).toBe(true);
+    }
+  });
+
   it('uses the shared relationships taxonomy and stable life-stage ids', () => {
     expect(LIFE_STAGES).toEqual(expect.arrayContaining(['single', 'dating', 'engaged', 'married']));
     expect(new Set(LIFE_STAGES).size).toBe(LIFE_STAGES.length);

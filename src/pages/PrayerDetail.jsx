@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -27,7 +27,10 @@ import { pick, localizeRef } from '../content/teaching';
 import { usePlanDay } from '../hooks/usePlanDay';
 import PlanDayBody from '../components/PlanDayBody';
 import PlanCompletionCard from '../components/PlanCompletionCard';
-import { markPlanCompleted } from '../lib/planPrefs';
+import PlanOnboardingModal from '../components/PlanOnboardingModal';
+import { isCouplePlan } from '../lib/planPersonalization';
+import { savePlanPersonalization } from '../lib/planPersonalizationStorage';
+import { claimPlanCompletionReport, markPlanCompleted } from '../lib/planPrefs';
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
 import { canUsePlan } from '../lib/planReview';
@@ -318,11 +321,26 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const planVersion = livePrayer.schedule?.plan?.version || null;
   const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
   const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
-  const { day: planDay, role: planRole, resources: planResources } = usePlanDay(planId, planDayNo, lang, {
-    prayerId: livePrayer.id, ownerId: livePrayer.user_id, planVersion,
-  });
+  const { day: planDay, prefs: planPrefs, role: planRole, resources: planResources, reloadPrefs } =
+    usePlanDay(planId, planDayNo, lang, {
+      prayerId: livePrayer.id, ownerId: livePrayer.user_id, planVersion,
+    });
   // The last day is behind them: the series can produce no more occurrences.
   const planFinished = !!plan?.completion && !isCommunity && scheduleEnded(livePrayer, todayKey());
+  // A couple plan's answers used to be capturable only at the moment it started,
+  // so a mistyped name or a child born mid-plan meant deleting the prayer and
+  // losing its history. They can be corrected here for the life of the run.
+  const [editingPersonalization, setEditingPersonalization] = useState(false);
+  const canEditPersonalization = !isCommunity && !planFinished
+    && isCouplePlan(plan) && !!livePrayer.user_id;
+
+  // Completion is reported when the last day is actually behind the reader, not
+  // when they happen to tap a follow-up action. claimPlanCompletionReport()
+  // makes it once per run, so re-opening the finished prayer counts nothing.
+  const completedEvent = planFinished ? plan?.analyticsEvents?.completed : null;
+  useEffect(() => {
+    if (completedEvent && claimPlanCompletionReport(livePrayer.id)) track(completedEvent);
+  }, [completedEvent, livePrayer.id]);
 
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
   // Rows whose content was fully deleted would render as bare author+date
@@ -905,7 +923,38 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               </VerseAccordion>
             </div>
             <PlanDayBody day={planDay} lang={lang} role={planRole} resources={planResources} idPrefix="detail-plan-day" />
+            {canEditPersonalization && (
+              <button
+                type="button"
+                onClick={() => setEditingPersonalization(true)}
+                className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
+                style={{ color: 'var(--text-3)' }}
+              >
+                <Pencil size={12} aria-hidden="true" /> {t(lang, 'planCoupleOnboardingTitle')}
+              </button>
+            )}
           </div>
+        )}
+
+        {editingPersonalization && (
+          <PlanOnboardingModal
+            plan={plan}
+            lang={lang}
+            initial={planPrefs}
+            ctaKey="save"
+            onClose={() => setEditingPersonalization(false)}
+            onStart={async (prefs) => {
+              setEditingPersonalization(false);
+              try {
+                await savePlanPersonalization(livePrayer.user_id, livePrayer.id, prefs);
+                reloadPrefs();
+              } catch {
+                // Storage refused the private record. The run keeps the answers
+                // it already had rather than losing them to a failed write.
+                toast.error(t(lang, 'errorGeneric'));
+              }
+            }}
+          />
         )}
 
         {/* The last day is behind them — a calm close, and an optional way to
@@ -914,9 +963,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <PlanCompletionCard
             plan={plan}
             lang={lang}
-            onRelationshipNext={() => {
-              if (plan.analyticsEvents?.completed) track(plan.analyticsEvents.completed);
-            }}
             onContinue={async (themes) => {
               for (const theme of themes) {
                 await addPrayer({
@@ -927,7 +973,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 });
               }
               markPlanCompleted(plan.id);
-              if (plan.analyticsEvents?.completed) track(plan.analyticsEvents.completed);
               toast.success(t(lang, 'planContinueAdded'));
             }}
           />

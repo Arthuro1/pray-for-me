@@ -92,8 +92,7 @@
         ],
         "selfPrompt": "Welche Entschuldigung braucht Veränderung?",
         "practice": "Entschuldige dich konkret, wenn sicher.",
-        "conversationPrompt": "Was macht Wiedergutmachung glaubwürdig?",
-        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+        "conversationPrompt": "Was macht Wiedergutmachung glaubwürdig?"
       },
       {
         "reflection": "Vertrauen wächst durch verlässliches Handeln, nicht Überwachung.",
@@ -115,8 +114,7 @@
         ],
         "selfPrompt": "Respektiere ich die Freiheit des anderen?",
         "practice": "Prüfe eine hilfreiche Grenze.",
-        "conversationPrompt": "Wie sprechen wir druckfrei über Intimität, Einwilligung und Grenzen?",
-        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+        "conversationPrompt": "Wie sprechen wir druckfrei über Intimität, Einwilligung und Grenzen?"
       },
       {
         "reflection": "Geld ist anvertraut, nicht Identität oder Sicherheit.",
@@ -149,8 +147,7 @@
         ],
         "selfPrompt": "Wo muss ich freundlich klar sein?",
         "practice": "Nenne eine sicher besprechbare Grenze.",
-        "conversationPrompt": "Was erwarten wir bei Feiertagen, Pflege und Privatsphäre?",
-        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+        "conversationPrompt": "Was erwarten wir bei Feiertagen, Pflege und Privatsphäre?"
       },
       {
         "reflection": "Freundschaft wächst durch Aufmerksamkeit, Freude und Neugier.",
@@ -161,8 +158,7 @@
         ],
         "selfPrompt": "Wann hörte ich nur zum Kennenlernen zu?",
         "practice": "Tut gemeinsam etwas Schönes, wenn beide wollen.",
-        "conversationPrompt": "Welche Alltagsmomente genießen wir?",
-        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+        "conversationPrompt": "Welche Alltagsmomente genießen wir?"
       },
       {
         "reflection": "Gemeinsame Glaubensgewohnheiten dürfen einfach und verschieden sein.",
@@ -173,8 +169,7 @@
         ],
         "selfPrompt": "Lade ich ein oder zwinge ich?",
         "practice": "Probiert eine kleine geistliche Gewohnheit.",
-        "conversationPrompt": "Welcher Rhythmus nährt uns ohne Druck?",
-        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+        "conversationPrompt": "Welcher Rhythmus nährt uns ohne Druck?"
       },
       {
         "reflection": "Eine Ehe braucht christliche Gemeinschaft statt Isolation.",
@@ -196,8 +191,7 @@
         ],
         "selfPrompt": "Welche Kinderannahme verschwieg ich?",
         "practice": "Redet ohne Entscheidungszwang.",
-        "conversationPrompt": "Welche Hoffnungen und Ängste haben wir zu Kindern und Elternschaft?",
-        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe."
+        "conversationPrompt": "Welche Hoffnungen und Ängste haben wir zu Kindern und Elternschaft?"
       },
       {
         "reflection": "Schwere Zeiten gemeinsam zu tragen heißt auch, Hilfe anzunehmen.",
@@ -208,8 +202,7 @@
         ],
         "selfPrompt": "Welche Hilfe lehne ich ab?",
         "practice": "Hilf praktisch, ohne alles lösen zu wollen.",
-        "conversationPrompt": "Was hilft uns, Fürsorge anzunehmen?",
-        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+        "conversationPrompt": "Was hilft uns, Fürsorge anzunehmen?"
       },
       {
         "reflection": "Ein gastfreundliches Zuhause dient innerhalb wirklicher Grenzen.",
@@ -232,7 +225,6 @@
         "selfPrompt": "Wo kann ich dienen ohne letztes Wort?",
         "practice": "Übernimm einen Alltagsdienst.",
         "conversationPrompt": "Was bedeuten Dienst und gegenseitiger Respekt?",
-        "safetyNote": "Gebet verlangt nie, Schaden, Kontrolle oder Druck auszuhalten. Sicherheit hat Vorrang; sucht vertrauenswürdige qualifizierte Hilfe.",
         "roles": {
           "husband": "Vorbereitung als Ehemann bedeutet selbsthingebende Liebe, Zuhören, Umkehr und Dienst, nicht Kontrolle zu fordern.",
           "wife": "Vorbereitung als Ehefrau bedeutet Weisheit, Kraft, ehrliche Stimme und Güte, nicht Bedürfnisse zu verbergen oder Schaden hinzunehmen."
@@ -247,10 +239,8 @@
         ],
         "selfPrompt": "Welchen Gebetsrhythmus behalte ich?",
         "practice": "Wähle ein einfaches Folgegebet.",
-        "conversationPrompt": "Wofür danken wir und was vertrauen wir Gott an?",
-        "prayTogether": "Wenn beide möchten, betet kurz gemeinsam mit den heutigen Impulsen; ein zweites Konto ist nicht nötig."
+        "conversationPrompt": "Wofür danken wir und was vertrauen wir Gott an?"
       }
     ]
   }
 }
-

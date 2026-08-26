@@ -80,10 +80,28 @@ preference remains encrypted in memory for that session; if encryption itself
 is unavailable, the run stays generic. Data is cleared on sign-out and account
 deletion.
 
-Interpolation strips control/bidirectional-control characters, limits size,
-and wraps inserted names in Unicode directional isolates so Arabic, Persian,
-and mixed-script names cannot reorder surrounding text. Adding a person or
-child name does not invite, notify, or link an account.
+**What that protection is and is not.** The key is stored in the same IndexedDB
+record as the ciphertext it decrypts. Non-extractable means its raw bytes can
+never be exported, so the key material cannot be exfiltrated and the value is
+not readable by inspecting storage — but any script running on the origin can
+call `decrypt` with that handle. This is protection against casual inspection
+and key exfiltration, not confidentiality against local code execution. The
+guarantee that matters most is the simpler one: these names never leave the
+device.
+
+A failed READ (private browsing, a quota error, a blocked database upgrade)
+leaves the record alone and the run generic for that session. Only a record that
+is the wrong shape, or whose ciphertext fails GCM authentication, is deleted.
+
+Answers can be revised for the life of a run from the prayer's detail page —
+correcting a name, adding a child, switching between praying privately and
+together — so a typo no longer costs the prayer and its history.
+
+Interpolation strips control characters, the bidi embedding/override characters,
+the isolates the renderer itself uses, and the implicit marks LRM/RLM/ALM; it
+limits size, and wraps inserted names in Unicode directional isolates so Arabic,
+Persian, and mixed-script names cannot reorder surrounding text. Adding a person
+or child name does not invite, notify, or link an account.
 
 Written Prayer Notes, formatted notes, voice notes, private reflections,
 personal answers, and sensitive disclosures remain part of each user's own
@@ -99,7 +117,14 @@ status or name starts sharing. `planSharing.js` permits only:
 - group view: aggregate participant count and whether the viewer joined.
 
 Accepting an invitation creates a separate private guided prayer for that
-participant. Group participation does not share historical notes or answers.
+participant. Every path that starts a plan — the Plan tab's own button,
+accepting an invitation from the Plan tab or from Community, and joining a plan
+a group is praying — goes through `src/lib/startGuidedPlan.js`, so none of them
+can skip the review gate or a plan's onboarding. A screen with no onboarding
+sheet hands the start to the Plan tab (`src/lib/pendingPlanStart.js`) rather
+than creating a run with answers nobody was asked for.
+
+Group participation does not share historical notes or answers.
 Leaving deletes only the membership row; the person's prayer, notes, voice
 recordings, and history remain untouched. This release intentionally omits
 per-spouse daily completion indicators; aggregate participation provides a
@@ -115,11 +140,33 @@ exist in the 16 app locales. The main new key families are `planCovenant*`,
 spouse/self/marriage/child direction headings.
 
 Every day title is present inline in all 16 languages. English and French prose
-is authored in source; the other 14 plan-specific overlays live at
-`src/content/plans/translations/{covenant21|marriage30}/<lang>.json`. Those
-overlays are drafts pending native and theological review. Structural tests
-enforce day/field parity and reject authored Scripture text. UI uses logical
-alignment and isolated name interpolation for RTL layouts.
+is authored in source; plan-specific overlays live at
+`src/content/plans/translations/{covenant21|marriage30}/<lang>.json`.
+
+**Most of those overlays are not translations yet.** They were generated as one
+fixed frame per field, repeated on every day with only the day title slotted in
+— structurally complete, and worthless to read. Because `mergePlan` folds an
+overlay in and `pick()` then prefers it, serving one would *displace* the
+authored English and French. So a plan now lists only the languages that are
+genuinely translated:
+
+| Plan | Served | Still structural stubs |
+|---|---|---|
+| `preparing21` | all 14 | — |
+| `covenant21` | de, es, pt, ru | am, ar, fa, hi, id, ja, ko, sw, tl, zh |
+| `marriage30` | none | all 14 |
+
+The stub files stay in the repo for translators. A language joins its plan's
+`proseTranslations` list only once its overlay is real prose, which
+`src/content/plans/translationQuality.test.js` checks: it rejects an overlay
+that reuses one day's wording where the source differs, or whose values are one
+template with a variable slotted in. Everything not served falls back to the
+authored en/fr, which is always the better of the two.
+
+Structural tests enforce day alignment and reject authored Scripture text or
+fields the plan does not have; a field an overlay omits is legitimate and simply
+falls back. UI uses logical alignment and isolated name interpolation for RTL
+layouts.
 
 ## Scripture, safety, roles, and resources
 
@@ -148,6 +195,11 @@ no retailer fallback or invented localized edition was added. Details are in
 theology, pastoral safety, role material, and every locale have approved,
 named, dated sign-offs. Development preview remains available for reviewers.
 Generated theological or translated prose must not be approved automatically.
+
+A plan that cannot be opened is left out of the catalogue entirely rather than
+shown disabled — `plansByCategory()` filters on `canUsePlan()`, so a production
+build advertises nothing a reader cannot have, while reviewers still see both
+plans in a development build.
 
 No database schema, RLS policy, migration, environment variable, background
 job, or deployment setting changed for these plans. Existing plan invitation

@@ -11,9 +11,12 @@ describe('Praying for Our Marriage content contract', () => {
   it('is a review-gated, renewable 30-day plan on the shared model', () => {
     expect(plan).toMatchObject({
       id: 'marriage30', category: 'relationships', lifeStage: 'married',
-      count: 30, version: 1, onboarding: 'married', proseTranslations: true,
+      count: 30, version: 1, onboarding: 'married',
       renewable: true, review: { status: 'needs_review' },
     });
+    // Every overlay in translations/marriage30/ is still a structural stub, so
+    // none is served yet and readers get the authored en/fr instead.
+    expect(plan.proseTranslations).toEqual([]);
     expect(plan.days).toHaveLength(30);
     expect(plan.analyticsEvents).toEqual({
       started: 'marriage_plan_started',

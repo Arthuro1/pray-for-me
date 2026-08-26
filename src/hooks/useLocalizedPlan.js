@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getPlan, planDayContent } from '../content/prayerPlans';
-import { loadPlanTranslations, mergePlan } from '../content/plans/translations';
+import { hasOverlay, loadPlanTranslations, mergePlan } from '../content/plans/translations';
 import { canUsePlan } from '../lib/planReview';
 
 // Guided-plan content with the reader's language folded in.
@@ -17,11 +17,11 @@ export function useLocalizedPlan(plan, lang) {
   useEffect(() => {
     if (!plan) { setLocalized(plan); return undefined; }
     // en/fr are authored in the source — no overlay to fetch. Neither is a plan
-    // that has not declared prose translations: overlays are lazy per plan and
-    // language, so fetching one for a plan with no overlay would do work for
-    // nothing (see `proseTranslations` in
-    // docs/PRAYER_PLANS.md).
-    if (!canUsePlan(plan) || lang === 'en' || lang === 'fr' || !plan.proseTranslations) { setLocalized(plan); return undefined; }
+    // that has not declared this language READY: overlays are lazy per plan and
+    // language, and a language whose overlay is still a structural stub is
+    // deliberately left out of the list so the reader gets the authored English
+    // and French instead (see `proseTranslations` in docs/PRAYER_PLANS.md).
+    if (!canUsePlan(plan) || lang === 'en' || lang === 'fr' || !hasOverlay(plan, lang)) { setLocalized(plan); return undefined; }
     let alive = true;
     setLocalized(plan);
     loadPlanTranslations(lang, plan.id).then((overlay) => {

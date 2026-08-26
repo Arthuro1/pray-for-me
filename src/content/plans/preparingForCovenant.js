@@ -13,7 +13,13 @@ export const PREPARING_FOR_COVENANT = {
   audienceKey: 'planCovenantAudience',
   titleKey: 'planCovenantTitle',
   subKey: 'planCovenantSub',
-  proseTranslations: true,
+  // Only the languages whose overlay is real prose. The remaining files in
+  // translations/covenant21/ are still structural stubs — one frame repeated on
+  // every day — so they are deliberately NOT served: a reader in those languages
+  // gets the authored English/French through pick(), which is the better of the
+  // two. Add a code here once its overlay is genuinely translated; the check in
+  // translationQuality.test.js enforces that.
+  proseTranslations: ['de', 'es', 'pt', 'ru'],
   onboarding: 'engaged',
   review: { status: 'needs_review' },
   analyticsEvents: {

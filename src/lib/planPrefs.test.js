@@ -4,9 +4,10 @@
 // what season someone is in, whether they hope to marry, what they want healed.
 // These tests hold the two promises made about them: they stay on the device,
 // and only known ids ever come back out.
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   getPlanPrefs, hasPlanPrefs, savePlanPrefs, markPlanCompleted, clearPlanPrefs,
+  claimPlanCompletionReport,
   growthTopics, getResourceFallbackLanguages, setResourceFallbackLanguages,
   SEASONS, EMPHASES, ROLES, GROWTH_AREAS, DEFAULT_EMPHASIS, DEFAULT_ROLE,
 } from './planPrefs.js';
@@ -63,6 +64,35 @@ describe('saving', () => {
     clearPlanPrefs(PLAN);
     expect(hasPlanPrefs(PLAN)).toBe(false);
     expect(localStorage.getItem('pfm_plan_prefs')).not.toMatch(/husband/);
+  });
+});
+
+// The `completed` event fires when the last day is behind the reader, not when
+// they happen to tap a follow-up action — so it needs a once-per-run guard,
+// because the completion card renders on every visit to that prayer.
+describe('completion reporting', () => {
+  it('is claimable exactly once for a run', () => {
+    expect(claimPlanCompletionReport('prayer-1')).toBe(true);
+    expect(claimPlanCompletionReport('prayer-1')).toBe(false);
+    expect(claimPlanCompletionReport('prayer-1')).toBe(false);
+  });
+
+  it('counts a renewable plan again when it is started again', () => {
+    expect(claimPlanCompletionReport('run-one')).toBe(true);
+    expect(claimPlanCompletionReport('run-two')).toBe(true);
+  });
+
+  it('reports nothing rather than everything when storage refuses', () => {
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('full'); });
+    try {
+      expect(claimPlanCompletionReport('prayer-2')).toBe(false);
+    } finally {
+      setItem.mockRestore();
+    }
+  });
+
+  it('ignores a missing id', () => {
+    expect(claimPlanCompletionReport(null)).toBe(false);
   });
 });
 

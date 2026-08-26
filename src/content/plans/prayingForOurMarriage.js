@@ -13,7 +13,11 @@ export const PRAYING_FOR_OUR_MARRIAGE = {
   audienceKey: 'planMarriageAudience',
   titleKey: 'planMarriageTitle',
   subKey: 'planMarriageSub',
-  proseTranslations: true,
+  // No language is ready yet: every file in translations/marriage30/ is still a
+  // structural stub (one frame stamped across all thirty days), so none is
+  // served and every reader outside en/fr gets the authored prose. The files
+  // stay in the repo for translators; add a code here once its overlay is real.
+  proseTranslations: [],
   onboarding: 'married',
   renewable: true,
   review: { status: 'needs_review' },

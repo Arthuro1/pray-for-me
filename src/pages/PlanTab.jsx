@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -12,7 +12,7 @@ import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { buildICS } from '../utils/ics';
 import { plansByCategory } from '../content/prayerPlans';
-import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
+import { planById } from '../lib/guidedPlan';
 import { CATEGORY_COLORS, categoryTint } from '../lib/categoryColor';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import EmptyState from '../components/shared/EmptyState';
@@ -22,9 +22,8 @@ import DayAgenda from '../components/DayAgenda';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanInviteModal from '../components/PlanInviteModal';
 import PlanOnboardingModal from '../components/PlanOnboardingModal';
-import { savePlanPrefs, hasPlanPrefs } from '../lib/planPrefs';
-import { savePlanPersonalization, clearPlanPersonalization } from '../lib/planPersonalizationStorage';
-import { isCouplePlan } from '../lib/planPersonalization';
+import { needsOnboarding, startGuidedPlan } from '../lib/startGuidedPlan';
+import { takePlanStart } from '../lib/pendingPlanStart';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { track } from '../lib/analytics';
 import { PageHeader } from '../components/shared/Primitives';
@@ -120,55 +119,59 @@ export default function PlanTab() {
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
-  const planPeople = (() => {
+  // People already named in the journal, offered as a shortcut when a couple
+  // plan asks who it is for. The id is the PRAYER's id, not a position: it is
+  // stored inside the run's private preferences, so a list that reorders must
+  // never make a saved choice point at someone else.
+  const planPeople = useMemo(() => {
     const seen = new Set();
     return prayers.flatMap((prayer) => {
       const name = prayer._locked ? '' : (prayer.person_name || '').trim();
       const key = name.toLocaleLowerCase();
       if (!name || seen.has(key)) return [];
       seen.add(key);
-      return [{ id: `person-${seen.size}`, prayerId: prayer.id, name }];
+      return [{ id: prayer.id, prayerId: prayer.id, name }];
     });
-  })();
+  }, [prayers]);
 
   // Actually begin a plan. `prefs` is only present for plans that ask the short
   // onboarding questions; it is saved on the device and never sent anywhere.
-  const beginPlan = async (plan, startDate, prefs = null) => {
-    if (!canUsePlan(plan)) return;
-    let runId = null;
-    if (isCouplePlan(plan)) {
-      runId = crypto.randomUUID();
-      try {
-        await savePlanPersonalization(user.id, runId, prefs || {});
-      } catch {
-        // The plan stays complete without personalization; never downgrade a
-        // name to plaintext just because private storage is unavailable.
-        runId = null;
-      }
-    } else if (prefs) {
-      savePlanPrefs(plan.id, prefs);
-    }
-    const createdId = await addPrayer({
-      ...buildGuidedPlanPrayer(plan, startDate, lang),
-      ...(runId ? { id: runId } : {}),
+  // Every entry point goes through startGuidedPlan so none of them can skip the
+  // review gate or a plan's onboarding — see src/lib/startGuidedPlan.js.
+  const beginPlan = useCallback(async (plan, startDate, prefs = null) => {
+    const result = await startGuidedPlan({
+      plan, startDate, lang, ownerId: user?.id, addPrayer, prefs, skipOnboarding: true,
     });
-    if (!createdId) {
-      if (runId) await clearPlanPersonalization(user.id, runId);
-      return;
+    if (!result.ok) {
+      toast.error(t(lang, result.reason === 'unavailable' ? 'planCoupleReviewHint' : 'errorGeneric'));
+      return result;
     }
     if (plan.analyticsEvents?.started) track(plan.analyticsEvents.started);
     toast.success(t(lang, 'planStarted'));
-  };
+    return result;
+  }, [lang, user?.id, addPrayer]);
 
-  // A plan that declares `onboarding` asks its questions first — but only the
-  // first time. Re-starting a plan later keeps the answers already given.
-  const startPlan = async (plan, startDate) => {
-    if (plan.onboarding && (isCouplePlan(plan) || !hasPlanPrefs(plan.id))) {
+  // A plan that declares `onboarding` asks its questions first. The singles plan
+  // asks once; a couple plan asks every run, because its answers belong to that
+  // run and cannot be added later.
+  const startPlan = useCallback(async (plan, startDate) => {
+    if (!canUsePlan(plan)) { toast.error(t(lang, 'planCoupleReviewHint')); return; }
+    if (needsOnboarding(plan)) {
       setOnboardingTarget({ plan, startDate });
       return;
     }
     await beginPlan(plan, startDate);
-  };
+  }, [beginPlan, lang]);
+
+  // Community and the group-plan list hand a start over here rather than
+  // creating the prayer themselves, because this is the screen that owns the
+  // onboarding sheet (see src/lib/pendingPlanStart.js).
+  useEffect(() => {
+    const claimed = takePlanStart();
+    if (!claimed) return;
+    const plan = planById(claimed.planId);
+    if (plan) startPlan(plan, claimed.startDate || todayKey());
+  }, [startPlan]);
 
   // Accept an invitation to pray a plan together: start the SAME guided plan on
   // your own calendar (unless you're already running it) and clear the invite.
@@ -176,14 +179,16 @@ export default function PlanTab() {
     setBusyInvite(inv.id);
     const res = await acceptPlanInvitation(inv.id);
     if (res?.error) { setBusyInvite(null); toast.error(t(lang, 'errorGeneric')); return; }
-    const plan = planById(res.planId);
-    if (plan && !activePlanIds.has(plan.id)) {
-      await addPrayer(buildGuidedPlanPrayer(plan, res.startDate, lang));
-    }
     setBusyInvite(null);
     setPlanInvitations((prev) => prev.filter((x) => x.id !== inv.id));
     if (user?.id) fetchPendingCount(user.id);
-    toast.success(t(lang, 'planStarted'));
+
+    const plan = planById(res.planId);
+    // Already praying it: the invitation is simply cleared. Nothing to start,
+    // and nothing to claim.
+    if (plan && activePlanIds.has(plan.id)) { toast.success(t(lang, 'planRunning')); return; }
+    if (!plan) { toast.error(t(lang, 'planCoupleReviewHint')); return; }
+    await startPlan(plan, res.startDate);
   };
 
   const declineInvitation = async (inv) => {

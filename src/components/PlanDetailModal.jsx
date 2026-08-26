@@ -132,7 +132,9 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
               ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
               : { background: 'var(--accent)', color: '#fff' }}
           >
-            {!usable ? t(lang, 'planCoupleReviewHint') : running
+            {/* A short label, not the explanation — that already sits in the
+                body of this modal, right above. */}
+            {!usable ? t(lang, 'planCoupleReviewPending') : running
               ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {runningLabel || t(lang, 'planRunning')}</span>
               : (ctaLabel || `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`)}
           </button>

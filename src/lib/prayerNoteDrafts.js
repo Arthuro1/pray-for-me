@@ -37,6 +37,27 @@ const slot = (prayerId) => `${KEY_PREFIX}${prayerId}`;
 // prayerId → { record, key }, the same shape persisted to IndexedDB otherwise.
 const memory = new Map();
 
+// Every write here is a read-modify-write (fields left `undefined` keep their
+// stored value), and encrypting takes several turns of the event loop. Two
+// concurrent writes for the same prayer would therefore both read the SAME
+// record and the later one would resurrect what the earlier one dropped —
+// deleting a recording while the text debounce is in flight used to bring the
+// recording back. So writes for one prayer are queued behind each other.
+const writeQueues = new Map();
+
+function serialize(prayerId, operation) {
+  const previous = writeQueues.get(prayerId) || Promise.resolve();
+  // The queue must advance even when a caller's operation rejects, so a single
+  // failed save can never wedge every later write for that prayer.
+  const run = previous.catch(() => {}).then(operation);
+  const settled = run.catch(() => {});
+  writeQueues.set(prayerId, settled);
+  settled.then(() => {
+    if (writeQueues.get(prayerId) === settled) writeQueues.delete(prayerId);
+  });
+  return run;
+}
+
 const draftContext = (prayerId, field) => ({
   entityType: 'prayer-note-draft',
   ownerOrGroupId: 'device',
@@ -120,6 +141,10 @@ async function readText(key, record, prayerId) {
 // treat a rejection as saved (the composer offers Try again / discard instead).
 export async function saveNoteDraft({ prayerId, text, voice, savedUpdateId, status }) {
   if (!prayerId) throw new Error('prayerId required');
+  return serialize(prayerId, () => writeNoteDraft({ prayerId, text, voice, savedUpdateId, status }));
+}
+
+async function writeNoteDraft({ prayerId, text, voice, savedUpdateId, status }) {
   const existing = await readRecord(prayerId);
   const key = existing?.key || (await freshKey());
   const prev = existing?.record;
@@ -202,9 +227,14 @@ export async function peekNoteDraft(prayerId) {
   };
 }
 
+// Queued alongside the writes, so an in-flight save can never re-create a draft
+// the user just discarded.
 export async function clearNoteDraft(prayerId) {
-  memory.delete(prayerId);
-  if (hasIDB()) { try { await idbDel(slot(prayerId)); } catch { /* best-effort */ } }
+  if (!prayerId) return;
+  await serialize(prayerId, async () => {
+    memory.delete(prayerId);
+    if (hasIDB()) { try { await idbDel(slot(prayerId)); } catch { /* best-effort */ } }
+  });
 }
 
 // Every prayer id that currently holds a draft on this device.
@@ -224,4 +254,5 @@ export async function listNoteDraftIds() {
 // persisted IndexedDB records untouched.
 export function __resetMemoryForTests() {
   memory.clear();
+  writeQueues.clear();
 }

@@ -67,4 +67,22 @@ describe('relationship plan personalization', () => {
     expect(resolved.spousePrompt.en).toContain(name);
     expect(resolved.spousePrompt.en).not.toContain('{partner}');
   });
+
+  // LRM, RLM and ALM are bidirectional controls too. The isolates the renderer
+  // adds contain the damage either way, but a name is not "cleaned" while it
+  // can still carry them.
+  it('strips the implicit bidi marks, not only the overrides', () => {
+    expect(cleanPlanName('A‎lex‏؜')).toBe('Alex');
+    expect(cleanPlanName('⁦Alex⁩')).toBe('Alex');
+  });
+
+  // The marriage plan's three directions are the plan, not an optional extra.
+  // Unticking every box must not leave a run with no emphasis at all — which,
+  // once it has started, there would be no way back from.
+  it('falls back to the default emphases when every option is unticked', () => {
+    expect(sanitizePlanPersonalization({ includes: [] }).includes).toEqual(DEFAULT_MARRIAGE_INCLUDES);
+    expect(sanitizePlanPersonalization({ includes: ['nonsense'] }).includes).toEqual(DEFAULT_MARRIAGE_INCLUDES);
+    // A real choice is still honoured exactly as given.
+    expect(sanitizePlanPersonalization({ includes: ['spouse'] }).includes).toEqual(['spouse']);
+  });
 });

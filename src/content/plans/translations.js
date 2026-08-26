@@ -41,6 +41,28 @@ const planLoaders = import.meta.glob(['./translations/*.json', './translations/*
 
 const cache = new Map();
 
+// Which languages a plan is actually ready to be READ in.
+//
+// `proseTranslations` is an explicit statement about quality, not a count of
+// files on disk. A plan may declare `true` (every supported language is ready)
+// or a list of language codes — which is how a plan whose remaining overlays
+// are still structural stubs keeps those stubs out of readers' hands while the
+// files stay in the repo for a translator to finish. Anything not listed falls
+// back through pick() to the authored English and French, which is always
+// better than serving a frame repeated on every day.
+export function overlayLanguages(plan) {
+  const declared = plan?.proseTranslations;
+  if (Array.isArray(declared)) return [...declared];
+  if (!declared) return [];
+  return Object.keys(planLoaders)
+    .map((path) => path.match(/\/([a-z]{2})\.json$/)?.[1])
+    .filter((lang, i, all) => lang && all.indexOf(lang) === i);
+}
+
+export function hasOverlay(plan, lang) {
+  return overlayLanguages(plan).includes(lang);
+}
+
 // Resolve one language's plan overlay, or null when it has none (en/fr need
 // none, and a language may simply not be translated yet).
 export async function loadPlanTranslations(lang, planId = null) {

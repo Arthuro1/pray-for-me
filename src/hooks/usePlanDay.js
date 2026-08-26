@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getPlan } from '../content/prayerPlans';
 import { useLocalizedPlanDay } from './useLocalizedPlan';
 import { getPlanPrefs, growthTopics, getResourceFallbackLanguages } from '../lib/planPrefs';
@@ -28,6 +28,10 @@ export function usePlanDay(planId, dayNumber, lang, {
   const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
   const singlesPrefs = useMemo(() => (planId && !isCouplePlan(plan) ? getPlanPrefs(planId) : null), [planId, plan]);
   const [privatePrefs, setPrivatePrefs] = useState(() => sanitizePlanPersonalization());
+  // Bumped by reloadPrefs() so a screen that just let the reader change a
+  // partner's name or add a child re-reads them without a remount.
+  const [prefsEpoch, setPrefsEpoch] = useState(0);
+  const reloadPrefs = useCallback(() => setPrefsEpoch((n) => n + 1), []);
   useEffect(() => {
     let alive = true;
     setPrivatePrefs(sanitizePlanPersonalization());
@@ -36,7 +40,7 @@ export function usePlanDay(planId, dayNumber, lang, {
       if (alive && prefs) setPrivatePrefs(prefs);
     });
     return () => { alive = false; };
-  }, [plan, prayerId, ownerId]);
+  }, [plan, prayerId, ownerId, prefsEpoch]);
   const day = useMemo(
     () => (isCouplePlan(plan) ? personalizePlanDay(plan, sourceDay, privatePrefs, lang) : sourceDay),
     [plan, sourceDay, privatePrefs, lang],
@@ -55,5 +59,5 @@ export function usePlanDay(planId, dayNumber, lang, {
     });
   }, [day, plan, lang, fallbackKey, prefs]);
 
-  return { day, prefs, role: prefs?.role || 'general', resources };
+  return { day, prefs, role: prefs?.role || 'general', resources, reloadPrefs };
 }

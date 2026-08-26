@@ -21,7 +21,8 @@ import PrayerListSkeleton from '../components/shared/Skeleton';
 import Avatar from '../components/shared/Avatar';
 import AvatarEditor from '../components/shared/AvatarEditor';
 import { avatarConfigFrom, canEditGroupAvatar } from '../lib/avatar';
-import { planById, buildGuidedPlanPrayer } from '../lib/guidedPlan';
+import { planById } from '../lib/guidedPlan';
+import { requestPlanStart } from '../lib/pendingPlanStart';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 import { PLANS } from '../content/prayerPlans';
@@ -123,11 +124,20 @@ function CommunityHub({ lang, userId, onViewGroup }) {
     const res = await acceptPlanInvitation(inv.id);
     if (res?.error) return res;
     const plan = planById(res.planId);
+    // A plan whose content review has not passed cannot be started at all —
+    // say so rather than claiming it began.
+    if (!plan) { toast.error(t(lang, 'planCoupleReviewHint')); return {}; }
+
     const personal = usePrayerStore.getState().prayers;
-    if (plan && !runningPlanIds(personal, todayKey()).has(plan.id)) {
-      await usePrayerStore.getState().addPrayer(buildGuidedPlanPrayer(plan, res.startDate, lang));
+    if (runningPlanIds(personal, todayKey()).has(plan.id)) {
+      toast.success(t(lang, 'planRunning'));
+      navigate('/plan');
+      return {};
     }
-    toast.success(t(lang, 'planStarted'));
+    // The Plan tab owns the onboarding sheet, so the start is completed there.
+    // Doing it here would hand a couple plan a run with no partner name, no
+    // private/together choice and no role, none of which can be added later.
+    requestPlanStart(plan.id, res.startDate);
     navigate('/plan');
     return {};
   };

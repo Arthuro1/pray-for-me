@@ -46,9 +46,21 @@ export async function loadPlanPersonalization(ownerId, prayerId) {
   if (!ownerId || !prayerId) return null;
   const epoch = epochs.get(ownerId) || 0;
   const storageKey = slot(ownerId, prayerId);
+
+  // READING can fail for reasons that say nothing about the record: private
+  // browsing, a quota error, a blocked database upgrade. Those must not destroy
+  // a partner's and children's names — the run simply stays generic this time.
+  let record;
   try {
-    const record = memory.get(storageKey) || (hasIDB() ? await get(storageKey) : null);
-    if (!record) return null;
+    record = memory.get(storageKey) || (hasIDB() ? await get(storageKey) : null);
+  } catch {
+    return null;
+  }
+  if (!record) return null;
+
+  // A record that is the wrong shape, or whose ciphertext fails GCM
+  // authentication, cannot be trusted — that one IS deleted rather than kept.
+  try {
     if (record.v !== 1 || !record.key || record.key.extractable !== false) throw new Error('Invalid private preferences');
     const prefs = await decryptJson(record.key, record.payload, context(ownerId, prayerId));
     return (epochs.get(ownerId) || 0) === epoch ? sanitizePlanPersonalization(prefs) : null;

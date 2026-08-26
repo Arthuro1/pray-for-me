@@ -22,9 +22,14 @@ export const isCouplePlan = (plan) => ['engaged', 'married'].includes(plan?.life
 // Strip bidi controls from user input; rendering supplies its own isolation.
 // Names remain plain React text, never HTML or an interpolation replacement
 // string (so "$&" / braces in a name cannot become executable/template syntax).
+//
+// The class covers C0/C1 controls, the embedding and override characters
+// (U+202A\u2013202E), the isolates the renderer itself uses (U+2066\u20132069), and the
+// implicit marks LRM/RLM/ALM \u2014 which are bidirectional controls too, and were
+// the gap between what this did and what the docs claimed it did.
 export function cleanPlanName(value) {
   return typeof value === 'string'
-    ? value.replace(/[\p{Cc}\u202a-\u202e\u2066-\u2069]/gu, '').trim().slice(0, MAX_PLAN_NAME)
+    ? value.replace(/[\p{Cc}\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/gu, '').trim().slice(0, MAX_PLAN_NAME)
     : '';
 }
 
@@ -37,9 +42,14 @@ function person(value, fallbackId = '') {
 }
 
 export function sanitizePlanPersonalization(value = {}) {
-  const includes = Array.isArray(value?.includes)
+  // An unanswered question falls back to the defaults, and so does an answer
+  // that survives sanitizing as nothing: the marriage plan's three directions
+  // are the plan, not an optional extra, and unticking every box must not
+  // leave a run with no emphasis and (for a started run) no way back.
+  const chosen = Array.isArray(value?.includes)
     ? [...new Set(value.includes.filter((id) => INCLUDE_IDS.has(id)))]
-    : [...DEFAULT_MARRIAGE_INCLUDES];
+    : null;
+  const includes = chosen?.length ? chosen : [...DEFAULT_MARRIAGE_INCLUDES];
   const seen = new Set();
   const children = includes.includes('children') && Array.isArray(value?.children)
     ? value.children.slice(0, MAX_PLAN_CHILDREN).flatMap((child, i) => {

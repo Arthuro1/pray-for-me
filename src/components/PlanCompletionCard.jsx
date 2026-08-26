@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Check, Sprout } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
@@ -36,15 +37,18 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
       </p>
       <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(plan.completion, lang)}</p>
 
+      {/* Router navigation, not a bare href: a plain link reloads the whole
+          document, which in the installed PWA re-runs the splash and refetch —
+          at the moment someone has just finished thirty days. */}
       {relationshipActionKey && (
-        <a
-          href="/plan"
+        <Link
+          to="/plan"
           onClick={onRelationshipNext}
           className="mb-3 block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"
           style={{ background: 'var(--accent)', color: '#fff' }}
         >
           {t(lang, relationshipActionKey)}
-        </a>
+        </Link>
       )}
 
       {themes.length > 0 && !done && (

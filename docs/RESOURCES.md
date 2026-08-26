@@ -30,6 +30,31 @@ section at all** — not an apology, not an empty state. `src/lib/resources.test
 asserts that an unreviewed entry resolves to nothing no matter what its editions
 claim, and that every approved edition carries a verified URL.
 
+`approved` is a promise that the entry is live, so it must never be set on
+something the resolver would drop. Three sensitive entries
+(`piper-momentary-marriage`, `keller-meaning-of-marriage`,
+`elliot-passion-and-purity`) carried `approved` with no sign-offs, which made
+them permanently invisible under an approval that was not true; they are back at
+`needs_review` until their content and safety reviews exist. A test now rejects
+any `approved` entry the resolver refuses to display.
+
+### What actually reaches a reader today
+
+Seven entries are displayable, and every one of them is **English-only**. So the
+"Go deeper" shelf resolves like this for the relationship plans:
+
+| Plan | en | fr | es | zh |
+|---|---:|---:|---:|---:|
+| `covenant21` | 1 | 0 | 0 | 0 |
+| `marriage30` | 3 | 0 | 0 | 0 |
+
+That is by design, not a bug: rule 2 below forbids inventing a localized edition
+that does not exist, and rule 3 says no match means no section. But it is worth
+stating plainly — a French reader gets fully authored French prose across 21
+days and never a single resource. Closing that gap means a curator verifying
+real non-English editions (or different, natively authored resources on the same
+topics), not translating the English list.
+
 ---
 
 ## The model

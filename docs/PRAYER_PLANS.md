@@ -125,15 +125,30 @@ Overlay shape (keyed by plan id, days matched **by position**):
 authored plan (day count, prompt count, no unknown fields, no Scripture), so a
 mis-positioned translation is a build failure rather than a quiet content bug.
 
-An overlay file is scoped to one PLAN and one LANGUAGE. A plan must opt in with
-`proseTranslations: true` before the loader fetches it. This keeps each plan's
-prose in a separate lazy chunk. Set the flag in the same commit that adds all
-required overlays.
+An overlay file is scoped to one PLAN and one LANGUAGE, and the loader fetches
+one only when the plan says that language is **ready**:
+
+- `proseTranslations: true` — every language with an overlay file is served.
+- `proseTranslations: ['de', 'es']` — only those are; the rest fall back.
+- `proseTranslations: []` — none are, though the files may exist.
+
+The list is a statement about QUALITY, not about which files are on disk. An
+overlay that exists but is still a structural stub belongs out of the list: a
+file's presence is not evidence that it is worth reading, and once folded in by
+`mergePlan` it *displaces* the authored en/fr prose, so a stub is worse than no
+overlay at all. `src/content/plans/translationQuality.test.js` enforces this for
+every language a plan declares ready — it rejects an overlay that reuses one
+day's wording where the source differs, or whose values are one template with
+the day title slotted in.
 
 Ids, Scripture references, movements, `resourceTopics` and `emphasis` stay in
 the source and are **never** translated, so the journey is structurally
 identical in every language. A missing overlay, day or field simply keeps its
 authored en/fr value — a partially translated plan is never blank or broken.
+
+`scripts/prune-overlay-duplicates.mjs` removes values an overlay repeats where
+the source does not, so the field falls back rather than saying the same thing
+five days running.
 
 ---
 
@@ -161,7 +176,8 @@ and retire the old one from `PLANS` once no one can still be running it
 2. Give it a `category` from `PLAN_CATEGORIES` and add it to `PLANS`.
 3. Add its i18n keys (title / subtitle / audience / movements / any theme keys)
    to **all 16** locales — `npm run check:locales` fails CI otherwise.
-4. If you ship prose overlays for it, set `proseTranslations: true`.
+4. If you ship prose overlays for it, list the languages that are genuinely
+   translated in `proseTranslations` (or `true` once they all are).
 5. If it needs onboarding, set `onboarding` and extend `src/lib/planPrefs.js`.
 6. If it wants analytics, declare `analyticsEvents` with names that exist on the
    `EVENTS` allowlist in `src/lib/analytics.js` (they are plain strings in the
