@@ -25,7 +25,7 @@ import PlanDayBody from '../PlanDayBody';
 import { t } from '../../i18n';
 
 const lang = 'fr'; // the always-loaded fallback locale
-afterEach(() => { cleanup(); trackMock.mockClear(); });
+afterEach(() => { cleanup(); trackMock.mockClear(); localStorage.clear(); });
 
 const day = {
   ref: 'Colossians 1:9-12',
@@ -144,5 +144,24 @@ describe('Go deeper', () => {
     fireEvent.click(screen.getByRole('link'));
     expect(trackMock).toHaveBeenCalledWith('resource_opened');
     expect(trackMock.mock.calls[0]).toHaveLength(1);
+  });
+
+  it('carries a cover tile on every card, with or without a cover file', () => {
+    const withCover = { ...resource, edition: { ...resource.edition, thumbnail: '/resources/covers/r1.webp' } };
+    const { container } = render(<PlanDayBody day={day} lang={lang} resources={[withCover, { ...resource, id: 'r2' }]} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    expect(container.querySelectorAll('img')).toHaveLength(1);
+    // The second card has no cover file, so it draws its tile instead.
+    expect(container.querySelectorAll('li div[aria-hidden="true"]')).toHaveLength(2);
+  });
+
+  it('skips cover files in low data mode — a cover is decoration, not content', () => {
+    localStorage.setItem('pfm_settings', JSON.stringify({ lowDataMode: true }));
+    const withCover = { ...resource, edition: { ...resource.edition, thumbnail: '/resources/covers/r1.webp' } };
+    const { container } = render(<PlanDayBody day={day} lang={lang} resources={[withCover]} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    expect(container.querySelector('img')).toBeNull();
+    // …and the card still shows everything that actually matters.
+    expect(screen.getByText('A verified title')).toBeTruthy();
   });
 });

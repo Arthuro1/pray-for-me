@@ -189,14 +189,31 @@ describe('replacementFor', () => {
   });
 });
 
-// The shipped catalogue is a CURATION WORKSHEET until a human verifies each
-// entry. These two assertions are what keep that promise honest in code.
+// Nothing reaches a reader until a human has verified it. These assertions are
+// what keep that promise honest in code for the content that actually ships.
 describe('the shipped catalogue', () => {
-  it('shows nothing to users until entries are reviewed and verified', () => {
+  const renderableEditions = (resource) => (resource.status === 'approved'
+    ? Object.values(resource.editions || {}).filter((e) => e.available !== false && e.lastVerifiedAt)
+    : []);
+
+  it('shows a reader nothing that has not been reviewed AND verified', () => {
     for (const resource of RESOURCES) {
-      const renderable = resource.status === 'approved'
-        && Object.values(resource.editions || {}).some((e) => e.available !== false && e.lastVerifiedAt);
-      expect(renderable).toBe(false);
+      if (resource.status === 'approved') continue;
+      // An unreviewed entry may sit here as curation work in progress, but the
+      // resolver must never surface it, whatever its editions say.
+      expect(resolveResources({
+        topics: resource.topics || [], languages: Object.keys(resource.editions || {}),
+        catalogue: [resource], limit: 50,
+      })).toEqual([]);
+    }
+  });
+
+  it('gives every approved edition somewhere to go', () => {
+    for (const resource of RESOURCES) {
+      for (const ed of renderableEditions(resource)) {
+        expect(ed.title).toBeTruthy();
+        expect(ed.url).toBeTruthy();
+      }
     }
   });
 

@@ -49,9 +49,11 @@ export function resolveCategoryColor(stored) {
   return best;
 }
 
-// A soft, theme-adaptive tile background: the hue mixed toward the current
-// surface, so an emoji chip reads on cream and on indigo alike (unlike a fixed
-// low-alpha overlay, which muddies on dark).
-export function categoryTint(color, amount = 20) {
-  return `color-mix(in srgb, ${color} ${amount}%, var(--surface))`;
+// A soft, theme-adaptive tile background: the hue mixed toward the surface it
+// sits on, so an emoji chip reads on cream and on indigo alike (unlike a fixed
+// low-alpha overlay, which muddies on dark). Pass `surface` when the tile sits
+// on something other than the page ground — a card's own fill, say — otherwise
+// the mix is computed against a background that isn't actually behind it.
+export function categoryTint(color, amount = 20, surface = 'var(--surface)') {
+  return `color-mix(in srgb, ${color} ${amount}%, ${surface})`;
 }

@@ -40,7 +40,13 @@
 //   description         Pray4Me-authored, one sentence, why it fits — localized
 //                       like the rest of our content ({ en, fr, ... })
 //   editions            { <lang>: { title, author, publisher, url, available,
-//                                   lastVerifiedAt } }
+//                                   lastVerifiedAt, thumbnail } }
+//
+// `thumbnail` is OPTIONAL and must be a path to a cover file we host ourselves
+// (public/resources/covers/…). Never a publisher's or a retailer's image URL:
+// loading one would tell that host the reader's IP and which subject they are
+// praying about, before they tap anything. Leave it out and the card draws a
+// calm generated tile instead — see src/lib/resourceThumbnail.js.
 import { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES } from './topics';
 
 export { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES };

@@ -26,11 +26,20 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   Only approved entries with a verified edition in a language the reader
   actually reads are ever shown, locales are curated independently rather than
   translated from English, and no edition, URL or title is ever fabricated. The
-  catalogue ships as a curation worksheet (nothing approved yet), so the section
-  is currently absent everywhere — the plan is complete without it. A new
-  device-local "Resource languages" preference (Settings → Appearance &
-  language) is the only way a resource in another language is ever offered. See
-  `docs/RESOURCES.md`.
+  catalogue started as a curation worksheet and entries pass the gate one at a
+  time; a day with nothing approved for it simply has no "Go deeper" section —
+  the plan is complete without it. A new device-local "Resource languages"
+  preference (Settings → Appearance & language) is the only way a resource in
+  another language is ever offered. See `docs/RESOURCES.md`.
+- Added cover thumbnails to "Go deeper" cards. An entry may name a cover file we
+  host ourselves; where none exists — the normal case — the card draws a calm
+  tile instead: the resource's type glyph on a tint seeded from its id, so a
+  shelf reads as several covers rather than a list of lines. A thumbnail may
+  never be hot-linked from a publisher or a retailer, because the request itself
+  would tell that host the reader's IP and the subject they are praying about
+  before they tapped anything; the resolver refuses anything that is not a
+  same-origin path. Cover files are skipped entirely under Low data mode, and a
+  missing or broken one falls back to the drawn tile rather than a hole.
 - Added localized book names for Micah (`MIC`), so plan and teaching references
   to it render in all 16 languages instead of falling back to English.
 - Added optional prayer-session notes: while praying for a request, a collapsed

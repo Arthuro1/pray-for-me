@@ -9,20 +9,20 @@ approved it.** That is not a policy note; it is enforced by the resolver.
 
 ---
 
-## Why the shipped catalogue currently shows nothing
+## An entry shows nothing until a human has approved it
 
-`src/content/resources/catalogue.js` ships as a **curation worksheet**: real,
-well-known titles and authors, seeded so a curator has somewhere to start. Every
-entry is `status: 'needs_review'` and carries no URL, because:
+`src/content/resources/catalogue.js` started life as a **curation worksheet**:
+real, well-known titles and authors, seeded so a curator had somewhere to start,
+every one of them `status: 'needs_review'` with no URL — because recommending
+reading to someone praying about marriage is a pastoral act, and because nothing
+in it was looked up at runtime, so no URL, ISBN, publisher page or translated
+edition may be asserted as fact by this repo.
 
-- recommending reading to someone praying about marriage is a pastoral act, and
-- nothing here was looked up at runtime, so no URL, ISBN, publisher page or
-  translated edition may be asserted as fact by this repo.
-
-Until a curator verifies an entry and flips it to `approved`, the app shows **no
-"Go deeper" section at all** — not an apology, not an empty state. That is the
-correct behaviour, and `src/lib/resources.test.js` asserts that the shipped
-catalogue renders nothing.
+That gate has not moved; entries pass through it one at a time. Until a curator
+verifies an entry and flips it to `approved`, the app shows **no "Go deeper"
+section at all** — not an apology, not an empty state. `src/lib/resources.test.js`
+asserts that an unreviewed entry resolves to nothing no matter what its editions
+claim, and that every approved edition carries a verified URL.
 
 ---
 
@@ -39,7 +39,8 @@ catalogue renders nothing.
   replacementResourceId: null,        // set when retiring something with a successor
   description: { en: '…', fr: '…' },  // OUR one sentence on why it fits — localized
   editions: {
-    en: { title, author, publisher, url, available: true, lastVerifiedAt: '2026-08-26' },
+    en: { title, author, publisher, url, available: true, lastVerifiedAt: '2026-08-26',
+          thumbnail: '/resources/covers/keller-meaning-of-marriage.webp' },  // optional
     de: { …a verified German edition, or the key is simply absent… },
   },
 }
@@ -48,6 +49,28 @@ catalogue renders nothing.
 Taxonomy, types, life stages and statuses live in
 `src/content/resources/topics.js`. Keep the taxonomy small and flat — a tag
 nobody uses is worse than no tag.
+
+### Thumbnails
+
+Every card carries a small cover tile. It has two states, and the second is the
+normal one:
+
+1. **A curated cover file**, when an edition names a `thumbnail`. It must be a
+   path to a file we host ourselves under `public/resources/covers/` — see the
+   README there for sizing, naming and the licensing question.
+2. **A generated tile**, otherwise: the resource's type glyph on a tint seeded
+   from its id, so three books read as three distinct covers. Costs no bytes,
+   fakes no artwork, and is also what a card falls back to when a cover file is
+   missing or the reader is offline.
+
+**A thumbnail may never be hot-linked** from a publisher, a retailer or any other
+third party — `src/lib/resourceThumbnail.js` rejects anything that is not a
+same-origin path. See §Privacy below: the request itself would leak the reader's
+IP and their subject to that host before they tapped anything.
+
+Under the reader's **Low data mode**, cover files are skipped entirely and every
+card uses the generated tile. A cover is decoration; that setting exists exactly
+for nonessential fetches.
 
 ### `description` is ours, not the publisher's
 
@@ -160,3 +183,10 @@ Resource recommendations are resolved **entirely on the device** from a bundled
 catalogue. No topic, no plan day, no preference and no reader identifier is sent
 anywhere to produce them. Opening one emits `resource_opened` with **no
 properties** — not the id, the title, the topic, or the language.
+
+Cover thumbnails are held to the same rule, which is why they are self-hosted
+only. A `<img>` pointing at a publisher's or a retailer's CDN is a request the
+reader never made: it would carry their IP and, by the filename, the subject they
+are praying about, to a third party who could log it — all before they decided
+whether to open the resource at all. Nothing about "Go deeper" should reach the
+network until the reader taps the link.
