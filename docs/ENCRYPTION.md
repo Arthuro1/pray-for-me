@@ -48,8 +48,32 @@ authenticated decryption; a failed or locked row is never rewritten. Community
 v1 content remains readable and is upgraded on a later safe content rewrite.
 
 The binding covers personal prayers, updates, points and testimonies; guest
-drafts; identity private keys; attachment blobs/metadata; community prayers,
-updates and testimonies; and wrapped group-key envelope identity.
+drafts; prayer-session note drafts; identity private keys; attachment
+blobs/metadata; community prayers, updates and testimonies; and wrapped
+group-key envelope identity.
+
+## Prayer-session note drafts
+
+A note captured during a prayer session is personal content that may not have
+reached the server yet, so its device-local draft is encrypted at rest with the
+same guarantees as the guest prayer draft:
+
+- One record per prayer in IndexedDB (`pfm_note_draft:<prayer-id>`), holding the
+  note text as an AES-GCM payload and the recording as separately encrypted raw
+  bytes. Nothing is written to `localStorage`.
+- The key is a **non-extractable** `CryptoKey` persisted alongside the ciphertext
+  by structured clone. Where that clone is unavailable the module falls back to
+  memory-only rather than downgrading to plaintext at rest.
+- Both fields are v2 context-bound: entity `prayer-note-draft`, owner `device`,
+  record = prayer ID, field `note-text` / `note-voice`.
+- Plaintext metadata is limited to the prayer ID, timestamps, commit status and
+  the reserved update ID. Records expire after seven days, and an expired,
+  malformed or undecryptable draft is deleted rather than trusted.
+
+Promotion writes the note through the ordinary `addUpdate` path, so the stored
+entry inherits the prayer's own protection (account-key ciphertext for a private
+prayer), and the recording goes through the ordinary encrypted attachment
+pipeline. The local draft is deleted only after the update genuinely exists.
 
 ## Group keys and forward secrecy
 

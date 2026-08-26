@@ -925,8 +925,13 @@ const usePrayerStore = create((set, get) => ({
   // ─── Updates ─────────────────────────────────────────────────
   // Routed through sync_add_update so the update also fans out to any shared
   // community copies. For non-shared prayers it just writes prayer_updates.
-  addUpdate: async (prayerId, text, authorName = '', attachments = []) => {
-    const id = crypto.randomUUID();
+  // `options.id` lets a caller supply the row id up front (prayer-session notes
+  // mint one before the write so a retried promotion upserts the SAME row).
+  // Re-calling with an id that already exists locally is therefore a no-op
+  // rather than a duplicate entry.
+  addUpdate: async (prayerId, text, authorName = '', attachments = [], options = {}) => {
+    const id = options.id || crypto.randomUUID();
+    if (options.id && (get().prayers.find((p) => p.id === prayerId)?.prayer_updates || []).some((u) => u.id === id)) return;
     const row = { id, prayer_id: prayerId, text, attachments, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString(), content_language: get().settings.language || null };
     set((state) => ({
       prayers: state.prayers.map((p) =>

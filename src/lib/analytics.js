@@ -29,6 +29,12 @@ export const EVENTS = Object.freeze({
   REMINDER_SET: 'reminder_set',
   PRAYER_PRAYED: 'prayer_prayed',
   PRAYER_UPDATED: 'prayer_updated',
+  // Prayer-session notes. Content-free by construction — THAT someone captured
+  // something while praying, never a word of what they wrote, recorded, or
+  // prayed about.
+  PRAYER_NOTE_STARTED: 'prayer_note_started',
+  PRAYER_NOTE_SAVED: 'prayer_note_saved',
+  PRAYER_NOTE_VOICE_USED: 'prayer_note_voice_used',
   PRAYER_ANSWERED: 'prayer_answered',
   VAULT_ENABLED: 'vault_enabled',
   AI_CONSENT_ENABLED: 'ai_consent_enabled',

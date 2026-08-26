@@ -36,6 +36,12 @@ Group members see content explicitly shared with their group.
   encryption schema, entity, owner/group, record, parent, key version, and field.
   Moving ciphertext to a different context fails authentication. Version 1 is
   still readable and personal content is rewritten only after verified decrypt.
+- A prayer note captured during a session is held on device as ciphertext under
+  a non-extractable key (`pfm_note_draft:<prayer-id>`) until it is promoted into
+  the prayer's update history; see [ENCRYPTION.md](./ENCRYPTION.md). Which
+  updates came from a session is recorded device-locally as a list of update IDs
+  (`pfm_session_note_ids`) — IDs only, never content — so the timeline label
+  needs no schema and reveals nothing if read.
 - Avatar photos are the one category of user-uploaded media stored in the clear.
   They are readable pictures by definition, so instead of encryption they are
   protected by authorization: a private bucket, opaque object names, no public

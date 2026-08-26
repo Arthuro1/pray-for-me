@@ -37,6 +37,7 @@ import UpdateComposer from '../components/rich/UpdateComposer';
 import RichText from '../components/rich/RichText';
 import RemovableText from '../components/rich/RemovableText';
 import AttachmentList from '../components/rich/AttachmentList';
+import { useSessionNoteIds } from '../hooks/useSessionNoteIds';
 import DeleteButton from '../components/rich/DeleteButton';
 import EditButton from '../components/rich/EditButton';
 import MessageEditor from '../components/rich/MessageEditor';
@@ -331,6 +332,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // You can post updates/testimonies and mark answered only on prayers you own —
   // a saved-from-community copy is read-only (you follow the author's prayer).
   const canManage = !savedCopy;
+  const sessionNoteIds = useSessionNoteIds();
 
   // The translation control appears only on a KNOWN or probable language
   // mismatch — explicit `content_language` metadata (stamped at creation, so
@@ -1286,6 +1288,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <div key={u.id} className="prayer-activity-item prayer-activity-item--personal group flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div className="prayer-activity-item__body min-w-0 flex-1">
+                  {/* An entry captured while praying reads as part of the
+                      prayer's story, not as a different kind of thing — the same
+                      row, with a quiet line saying where it came from. */}
+                  {sessionNoteIds.has(u.id) && !u._locked && (
+                    <p className="prayer-activity-item__meta mb-1">
+                      {t(lang, 'noteLabel')} · {t(lang, 'noteDuringPrayer')}
+                    </p>
+                  )}
                   {u._locked ? (
                     <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
                   ) : editingUpdateId === u.id ? (

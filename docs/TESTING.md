@@ -4,7 +4,7 @@ Three layers, fastest first.
 
 ## 1. Unit + integration (jsdom) — `npm test`
 
-The bulk of the suite (~980 tests). Vitest + Testing Library under jsdom. Per the
+The bulk of the suite (~1,270 tests). Vitest + Testing Library under jsdom. Per the
 project convention, each file that needs a DOM declares `// @vitest-environment
 jsdom` at the top and does manual `cleanup()`. Fast, no browser, runs on every
 push. This is where store logic, component behavior, crypto units, and
@@ -28,6 +28,7 @@ Current specs:
 | `src/lib/journalSearch.browser.spec.js` | Journal search in a real DOM |
 | `src/components/GuestPrayerFlow.browser.spec.jsx` | The guest prayer is stored as **decrypt-only ciphertext** (real AES-GCM + IndexedDB), and the capture→session flow renders end to end |
 | `src/lib/accountIsolation.browser.spec.js` | Account A's IndexedDB snapshot and legacy user cache are gone before Account B is taken offline |
+| `src/lib/prayerNoteDrafts.browser.spec.js` | A prayer-session note draft (text **and** recording) is at rest as decrypt-only ciphertext under a structured-cloned non-extractable `CryptoKey`, and tampered ciphertext fails closed |
 
 `GuestPrayerFlow.browser.spec.jsx` is the first spec to **render a React
 component** in browser mode — `vitest.browser.config.js` dedupes React so

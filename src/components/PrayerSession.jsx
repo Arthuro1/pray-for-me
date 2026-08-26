@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
+import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen, Loader2 } from 'lucide-react';
 import { t, tp } from '../i18n';
+import { confirm } from '../store/confirmStore';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
@@ -15,6 +16,8 @@ import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
 import { PrimaryButton, QuietButton, SectionLabel, StatusPill } from './shared/Primitives';
 import PrayerMusicControl from './PrayerMusicControl';
+import PrayerSessionNote from './prayerSession/PrayerSessionNote';
+import { useSessionNotes } from './prayerSession/useSessionNotes';
 
 // "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
 // straight into the last-used format (requests, for a new user) and a small
@@ -85,7 +88,11 @@ function SessionVerse({ verse, lang }) {
 // on by default; the guest first-prayer experience passes it false so the session
 // stays requests-only — the deeper paths open Scripture movements (verse lookups),
 // and a signed-out visitor's prayer must make no AI / YouVersion / network calls.
-export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed, allowFormats = true }) {
+//
+// `allowNotes` gates the optional prayer note. Off for a signed-out visitor for
+// the same reason: a note becomes an entry in the prayer's update history, which
+// only exists for an account.
+export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed, allowFormats = true, allowNotes = true }) {
   const [mode, setMode] = useState(() => (allowFormats ? initialMode() : 'requests'));
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
@@ -94,17 +101,64 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const [requestsCompleted, setRequestsCompleted] = useState(0);
   const [done, setDone] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
+  // Set while an atomic leave-this-prayer step runs (finalising a recording,
+  // writing the encrypted draft). It disables navigation so a fast double tap
+  // can never land a note on the NEXT prayer.
+  const [committing, setCommitting] = useState(false);
+  const [noteError, setNoteError] = useState(false);
+  // { height, top } while an on-screen keyboard is shrinking the visible area.
+  const [viewport, setViewport] = useState(null);
+  // Prayers whose completion has already been recorded this session, so
+  // navigating back and forward doesn't log the same prayer twice.
+  const completedIds = useRef(new Set());
   const requestScrollRef = useRef(null);
   const trapRef = useFocusTrap(true);
-
-  const handleClose = () => {
-    onClose?.();
-  };
-  useEscapeKey(handleClose);
 
   const stages = MODE_STAGES[mode];
   const stage = stages[stageIndex];
   const total = prayers.length;
+  const currentPrayer = stage === 'requests' ? prayers[prayerIndex] : null;
+  // A saved-from-community copy follows someone else's request: its update
+  // history belongs to the group's author, so there is nothing to note onto here
+  // (Prayer Details hides its update composer for the same reason).
+  const notesEnabled = allowNotes && !currentPrayer?.community_origin_id;
+  const notes = useSessionNotes(allowNotes);
+  const noteDraft = currentPrayer ? notes.draftFor(currentPrayer.id) : null;
+
+  // Restore an unfinished note if the session reopens on this prayer.
+  useEffect(() => {
+    if (notesEnabled && currentPrayer) notes.hydrate(currentPrayer.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notesEnabled, currentPrayer?.id]);
+
+  // Closing is the "pause" — anything captured for the current prayer is kept
+  // (an in-flight recording is finalised first), but nothing is committed and
+  // nothing is marked prayed.
+  const handleClose = () => {
+    if (notesEnabled && currentPrayer && notes.hasWork(currentPrayer.id)) {
+      notes.preserveCurrentPrayerDraft(currentPrayer.id).finally(() => onClose?.());
+      return;
+    }
+    onClose?.();
+  };
+  useEscapeKey(handleClose);
+
+  // A phone keyboard doesn't shrink the layout viewport on iOS, so a `fixed
+  // inset-0` surface keeps its full height and the footer — the Next control —
+  // ends up behind the keyboard. Now that the session can hold a writing field,
+  // track the VISUAL viewport and shrink to it while the keyboard is up.
+  useEffect(() => {
+    const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+    if (!vv) return undefined;
+    const sync = () => {
+      const shrunk = window.innerHeight - vv.height > 80; // a keyboard, not browser chrome
+      setViewport(shrunk ? { height: vv.height, top: vv.offsetTop } : null);
+    };
+    sync();
+    vv.addEventListener('resize', sync);
+    vv.addEventListener('scroll', sync);
+    return () => { vv.removeEventListener('resize', sync); vv.removeEventListener('scroll', sync); };
+  }, []);
 
   // This is a full-screen, transient prayer surface. Keep scroll gestures inside
   // it so reaching the top/bottom cannot chain into the document (or trigger a
@@ -178,12 +232,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       : 0);
   };
 
-  const advance = () => {
-    // Record each prayer as prayed the moment the user moves PAST it, so leaving
-    // a session halfway still keeps the genuine progress already made.
+  // Pure navigation — walk one step forward through the chosen path.
+  const advanceStep = () => {
     let completed = requestsCompleted;
     if (stage === 'requests') {
-      onPrayed?.(prayers[prayerIndex].id);
       completed = Math.max(completed, prayerIndex + 1);
       setRequestsCompleted(completed);
       if (prayerIndex + 1 < total) {
@@ -204,12 +256,60 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     }
   };
 
+  // Record each prayer as prayed the moment the user moves PAST it, so leaving a
+  // session halfway still keeps the genuine progress already made — once per
+  // prayer, however often the walk revisits it.
+  const recordAndAdvance = (prayer) => {
+    if (prayer && !completedIds.current.has(prayer.id)) {
+      completedIds.current.add(prayer.id);
+      onPrayed?.(prayer.id);
+    }
+    advanceStep();
+  };
+
+  const commitThenAdvance = async (prayer) => {
+    setCommitting(true);
+    let result;
+    try {
+      result = await notes.completeCurrentPrayer(prayer.id);
+    } finally {
+      setCommitting(false);
+    }
+    if (!result.ok) { setNoteError(true); return; }
+    setNoteError(false);
+    recordAndAdvance(prayer);
+  };
+
+  // NEXT means "I am finished with this prayer". One operation owns everything
+  // that implies, in an order that cannot lose what was captured:
+  //   1. finalise an active recording        4. record the completion
+  //   2. persist the note draft (encrypted)  5. advance
+  //   3. commit/queue it as an update
+  // Steps 1–3 resolve as soon as the note is SAFELY held on-device and handed to
+  // the durable pipeline; the server round-trip happens afterwards, so a normal
+  // Next still feels instantaneous and works offline. Only a failure to persist
+  // locally stops the session — advancing then would silently lose the note.
+  const advance = () => {
+    if (committing) return;
+    const prayer = stage === 'requests' ? prayers[prayerIndex] : null;
+    // Nothing was captured for this prayer → the walk moves on exactly as it did
+    // before this feature existed, in the same tick. Notes cost the people who
+    // don't use them nothing at all.
+    if (prayer && notesEnabled && notes.hasWork(prayer.id)) {
+      commitThenAdvance(prayer);
+      return;
+    }
+    recordAndAdvance(prayer);
+  };
+
   // Step back through the same path `advance` walks forward. Re-entering a
   // supplication stage lands on its LAST prayer, mirroring advance.
-  const back = () => {
-    if (currentStep <= 1) {
-      return;
-    } else if (stage === 'requests' && prayerIndex > 0) {
+  //
+  // PREVIOUS PRESERVES; NEXT COMMITS. Going back keeps the current prayer's
+  // draft safe on-device (finalising a recording first) but creates no update
+  // and marks nothing prayed — the user hasn't finished with it.
+  const backStep = () => {
+    if (stage === 'requests' && prayerIndex > 0) {
       setPrayerIndex(prayerIndex - 1);
     } else {
       const prevStage = stages[stageIndex - 1];
@@ -218,10 +318,56 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     }
   };
 
+  const back = () => {
+    if (committing || currentStep <= 1) return;
+    const prayer = stage === 'requests' ? prayers[prayerIndex] : null;
+    if (prayer && notesEnabled && notes.hasWork(prayer.id)) {
+      (async () => {
+        setCommitting(true);
+        let result;
+        try {
+          result = await notes.preserveCurrentPrayerDraft(prayer.id);
+        } finally {
+          setCommitting(false);
+        }
+        if (!result.ok) { setNoteError(true); return; }
+        setNoteError(false);
+        backStep();
+      })();
+      return;
+    }
+    backStep();
+  };
+
+  // Local persistence failed — the ONE case where the session must not move on.
+  // Discarding is offered explicitly and confirmed, because it throws away what
+  // the user wrote or recorded.
+  const discardNoteAndContinue = () => {
+    confirm({
+      title: t(lang, 'noteDiscardTitle'),
+      message: t(lang, 'noteDiscardMessage'),
+      confirmLabel: t(lang, 'noteContinueWithoutSaving'),
+      cancelLabel: t(lang, 'cancel'),
+      danger: true,
+      onConfirm: async () => {
+        const prayer = prayers[prayerIndex];
+        await notes.discard(prayer.id);
+        setNoteError(false);
+        if (!completedIds.current.has(prayer.id)) {
+          completedIds.current.add(prayer.id);
+          onPrayed?.(prayer.id);
+        }
+        advanceStep();
+      },
+    });
+  };
+
   const overlay = (children) => (
     <div
       className="prayer-session constellation-session fixed inset-0 z-[70] flex flex-col"
-      style={{ background: 'var(--background)' }}
+      style={viewport
+        ? { background: 'var(--background)', top: viewport.top, height: viewport.height, bottom: 'auto' }
+        : { background: 'var(--background)' }}
     >
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
         {children}
@@ -237,26 +383,68 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     </button>
   );
 
-  // Single advancing action — "Continue" until the last step, then "Amen".
+  // Single advancing action — "Continue" until the last step, then "Amen". A
+  // brief busy state appears only when there is genuinely something to finish
+  // (an open microphone, a recording being encrypted); a text note is instant.
   const advanceButton = (
     <PrimaryButton
       onClick={advance}
+      disabled={committing}
       className="min-h-[52px] flex-1"
     >
-      {isLastStep
-        ? <span className="inline-flex items-center gap-2"><Check size={16} /> {t(lang, 'amenBtn')}</span>
-        : <span className="inline-flex items-center gap-2">{t(lang, 'continueBtn')} <ChevronRight className="rtl-mirror" size={16} /></span>}
+      {committing
+        ? <span className="inline-flex items-center gap-2">
+            <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+            {/* Only a recording is slow enough to be worth naming; a written
+                note is already saved by the time this could paint. */}
+            {noteDraft?.voice ? t(lang, 'noteSavingRecording') : t(lang, 'continueBtn')}
+          </span>
+        : isLastStep
+          ? <span className="inline-flex items-center gap-2"><Check size={16} /> {t(lang, 'amenBtn')}</span>
+          : <span className="inline-flex items-center gap-2">{t(lang, 'continueBtn')} <ChevronRight className="rtl-mirror" size={16} /></span>}
     </PrimaryButton>
+  );
+
+  // Shown instead of moving on when the note could not be safely stored on this
+  // device. Nothing has been lost yet, and nothing is discarded without asking.
+  const noteErrorPanel = noteError && (
+    <div
+      role="alert"
+      className="mx-auto mb-3 w-full max-w-2xl rounded-xl px-4 py-3"
+      style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}
+    >
+      <p className="text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'noteSaveFailed')}</p>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={advance}
+          className="pressable min-h-11 rounded-xl px-3 text-xs font-semibold"
+          style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+        >
+          {t(lang, 'noteTryAgain')}
+        </button>
+        <button
+          type="button"
+          onClick={discardNoteAndContinue}
+          className="pressable min-h-11 rounded-xl px-3 text-xs font-medium"
+          style={{ color: 'var(--text-3)' }}
+        >
+          {t(lang, 'noteContinueWithoutSaving')}
+        </button>
+      </div>
+    </div>
   );
 
   // Footer paired with a Back control, shared by the movement and supplication
   // views. Back hides on the very first step — there is no picker to return to.
   const footer = (
-    <div className="constellation-session__footer session-safe-footer shrink-0 px-5 pt-3 flex items-center gap-3 w-full">
+    <div className="constellation-session__footer session-safe-footer shrink-0 px-5 pt-3 w-full">
+      {noteErrorPanel}
       <div className="mx-auto flex w-full max-w-2xl items-center gap-3">
       {currentStep > 1 && (
         <QuietButton
           onClick={back}
+          disabled={committing}
           className="shrink-0 min-h-[52px]"
         >
           <span className="inline-flex items-center gap-2 whitespace-nowrap">
@@ -279,6 +467,11 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
         <Encouragement lang={lang} className="mt-4 max-w-sm text-sm" />
         <p className="mt-5 text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'sessionDoneSub', total)}</p>
+        {/* Notes were attached to their prayers as the walk went on — this is a
+            quiet acknowledgement, never another step to complete. */}
+        {notes.savedCount > 0 && (
+          <p className="mt-1.5 text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'notesSavedCount', notes.savedCount)}</p>
+        )}
         <PrimaryButton onClick={handleClose} className="mt-9 min-w-36">
           {t(lang, 'close')}
         </PrimaryButton>
@@ -476,6 +669,21 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               </div>
             ))}
           </div>
+        )}
+
+        {/* The optional note: after the request and its Scripture, well clear of
+            the primary Continue action, and collapsed until it is asked for. */}
+        {notesEnabled && noteDraft && (
+          <PrayerSessionNote
+            lang={lang}
+            prayerId={prayer.id}
+            draft={noteDraft}
+            recorderRef={notes.recorderRef}
+            saving={committing}
+            onChangeText={(text) => notes.setText(prayer.id, text)}
+            onCaptureVoice={(voice) => notes.setVoice(prayer.id, voice)}
+            onDeleteVoice={() => notes.deleteVoice(prayer.id)}
+          />
         )}
       </div>
 

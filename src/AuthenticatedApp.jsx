@@ -41,6 +41,7 @@ import { ensureAccountCryptoReady, rememberAccountKey, CRYPTO_STATUS } from './l
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
+import { initPrayerNotes } from './lib/prayerNotes';
 import { resolvePwaShortcut } from './lib/pwaInstall';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
@@ -226,6 +227,9 @@ export default function AuthenticatedApp({
       if (uid) usePrayerStore.getState().loadData(uid);
     });
     initQueue();
+    // Prayer notes held back by an offline recording finish promoting on the
+    // same reconnect triggers as the mutation queue.
+    initPrayerNotes();
   }, [init]);
 
   // Manifest shortcut: signed-out visitors enter the existing private guest

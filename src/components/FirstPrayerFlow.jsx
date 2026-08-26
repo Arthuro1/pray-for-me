@@ -103,6 +103,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         lang={lang}
         tr={isGuest ? (txt) => txt : useTranslationStore.getState().tr}
         allowFormats={!isGuest}
+        allowNotes={!isGuest}
         onClose={() => (isGuest ? setPhase('decide') : onFinish?.())}
         onPrayed={handlePrayed}
       />
