@@ -77,7 +77,7 @@ describe('saving a group avatar', () => {
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'avatarSave') }));
 
     await waitFor(() => expect(updateGroupAvatar).toHaveBeenCalledWith('g1', {
-      type: 'icon', value: 'church', color: AVATAR_COLORS[3],
+      type: 'icon', value: 'church', color: AVATAR_COLORS[3], photoPath: null,
     }));
     await waitFor(() => expect(toast.success).toHaveBeenCalledWith(t(lang, 'avatarUpdated')));
   });

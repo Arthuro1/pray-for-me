@@ -915,6 +915,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
    edge visible against a dark ground, where a dark fill would otherwise melt
    into the page. Logical properties only, so it mirrors cleanly in RTL. */
 .avatar {
+  position: relative;
   display: flex;
   flex: 0 0 auto;
   align-items: center;
@@ -928,6 +929,18 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .avatar--anonymous {
   box-shadow: inset 0 0 0 1px var(--border);
+}
+
+/* A photo covers the preset that is already drawn underneath, so the tile is
+   correct before the image arrives and stays correct if it never does. `inset`
+   rather than left/right, so the square mirrors cleanly in RTL. */
+.avatar__photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* The avatar editor: a quiet row of swatches and symbols, sized as real touch
@@ -953,6 +966,71 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .avatar-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Photo actions sit above the preset rows: full-width rows rather than tiles,
+   because they are verbs ("upload a photo") and not choices of symbol. */
+.avatar-action {
+  display: flex;
+  min-height: 2.75rem;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  border-radius: .75rem;
+  padding-inline: .75rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-2);
+  font-size: .8125rem;
+  font-weight: 500;
+}
+
+.avatar-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.avatar-action:disabled { opacity: .4; }
+
+/* The crop window. `touch-action: none` so a drag frames the photo instead of
+   scrolling the sheet underneath it on a phone. */
+.avatar-crop-frame {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 15rem;
+  aspect-ratio: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 0.5px solid var(--border);
+  cursor: grab;
+  touch-action: none;
+}
+
+.avatar-crop-frame:active { cursor: grabbing; }
+
+.avatar-crop-frame:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.avatar-crop-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-crop-zoom {
+  min-height: 2.75rem;
+  accent-color: var(--accent);
+}
+
+.avatar-crop-zoom:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }

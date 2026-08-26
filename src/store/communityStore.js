@@ -315,10 +315,17 @@ const useCommunityStore = create((set, get) => ({
   },
 
   fetchGroups: async (userId) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('group_members')
       .select('role, groups(*)')
       .eq('user_id', userId);
+    // A failed read is not an empty membership. Swallowing it silently leaves the
+    // list at [], which is indistinguishable from "my groups were deleted" — so
+    // keep whatever we already have and say out loud why the refresh failed.
+    if (error) {
+      console.error('[community] could not load groups:', error.message);
+      return toError(error);
+    }
     if (!data) return;
     const { data: prefs } = await supabase
       .from('group_member_prefs')
@@ -989,7 +996,7 @@ const useCommunityStore = create((set, get) => ({
   fetchGroupInvitations: async (userId) => {
     const { data, error } = await supabase
       .from('group_invitations')
-      .select('*, groups(name, avatar_type, avatar_value, avatar_color)')
+      .select('*, groups(name, avatar_type, avatar_value, avatar_color, avatar_photo_path)')
       .eq('invited_user_id', userId);
     if (error) return { error: error.message };
     const { nameOf } = await resolveProfiles((data || []).map(i => i.invited_by));

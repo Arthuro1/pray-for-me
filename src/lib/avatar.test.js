@@ -122,19 +122,22 @@ describe('validation helpers', () => {
 
   it('reads the three columns off any row shape, missing ones included', () => {
     expect(avatarConfigFrom({ avatar_type: 'icon', avatar_value: 'cross', avatar_color: '#4a4f9e' }))
-      .toEqual({ type: 'icon', value: 'cross', color: '#4a4f9e' });
-    expect(avatarConfigFrom({ name: 'legacy row' })).toEqual({ type: null, value: null, color: null });
+      .toEqual({ type: 'icon', value: 'cross', color: '#4a4f9e', photoPath: null });
+    expect(avatarConfigFrom({ name: 'legacy row' })).toEqual({ type: null, value: null, color: null, photoPath: null });
     expect(avatarConfigFrom(null)).toBeNull();
   });
 
   it('never persists a value it would refuse to read back', () => {
     expect(avatarColumns({ type: 'icon', value: 'dove', color: '#2f6ea8' }))
-      .toEqual({ avatar_type: 'icon', avatar_value: 'dove', avatar_color: '#2f6ea8' });
+      .toEqual({ avatar_type: 'icon', avatar_value: 'dove', avatar_color: '#2f6ea8', avatar_photo_path: null });
     // Initials carry no symbol, so the symbol column is cleared.
     expect(avatarColumns({ type: 'initials', value: 'dove', color: '#2f6ea8' }).avatar_value).toBeNull();
+    // A photo whose object key is junk is not a photo: the type collapses too,
+    // so the row falls back to the deterministic avatar instead of claiming an
+    // image it cannot show.
     expect(avatarColumns({ type: 'photo', value: '<script>', color: 'javascript:alert(1)' }))
-      .toEqual({ avatar_type: null, avatar_value: null, avatar_color: null });
-    expect(avatarColumns()).toEqual({ avatar_type: null, avatar_value: null, avatar_color: null });
+      .toEqual({ avatar_type: null, avatar_value: null, avatar_color: null, avatar_photo_path: null });
+    expect(avatarColumns()).toEqual({ avatar_type: null, avatar_value: null, avatar_color: null, avatar_photo_path: null });
   });
 });
 

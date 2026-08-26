@@ -1,5 +1,5 @@
 begin;
-select plan(20);
+select plan(33);
 
 select ok(
   not exists (
@@ -177,6 +177,142 @@ select ok(
       and coalesce(p.proconfig, '{}'::text[]) && array['search_path=""']
   ),
   'the avatar visibility function is definer-rights with a pinned search path'
+);
+
+-- ── Avatar photos ───────────────────────────────────────────────────────────
+
+select ok(
+  not has_column_privilege('authenticated', 'public.profiles', 'avatar_photo_path', 'SELECT'),
+  'an uploaded profile photo is no more enumerable than the preset it replaces'
+);
+
+select ok(
+  exists (
+    select 1 from pg_get_function_result(
+      (select p.oid from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public' and p.proname = 'get_profile_avatars')
+    ) as result
+    where result like '%avatar_photo_path%'
+  ),
+  'the avatar RPC hands out the photo key alongside the preset'
+);
+
+select ok(
+  exists (
+    select 1 from storage.buckets
+    where id = 'avatars'
+      and public = false
+      and file_size_limit is not null and file_size_limit <= 524288
+      and allowed_mime_types @> array['image/webp', 'image/jpeg']
+      and not (allowed_mime_types @> array['image/svg+xml'])
+  ),
+  'avatars live in a private bucket with a size and format floor under the client'
+);
+
+select ok(
+  (select count(*) from pg_policies
+   where schemaname = 'storage' and tablename = 'objects' and policyname like 'avatars\_%') = 6,
+  'the avatars bucket carries exactly the six policies it needs'
+);
+
+select ok(
+  not exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname like 'avatars\_%' and cmd = 'UPDATE'
+  ),
+  'an avatar object is never overwritten in place, so a replacement can keep the old one'
+);
+
+select ok(
+  exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname = 'avatars_profile_insert_own'
+      and cmd = 'INSERT' and roles = array['authenticated']::name[]
+      and with_check like '%auth.uid()%'
+  )
+  and exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname = 'avatars_profile_delete_own'
+      and cmd = 'DELETE' and qual like '%auth.uid()%'
+  ),
+  'only a user may write or delete their own profile photo'
+);
+
+select ok(
+  exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname = 'avatars_profile_select_related'
+      and cmd = 'SELECT' and qual like '%can_view_profile_avatar%'
+  ),
+  'reading a profile photo asks the same relationship question as reading its preset'
+);
+
+select ok(
+  exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname = 'avatars_group_insert_admin'
+      and cmd = 'INSERT' and with_check like '%can_edit_group_avatar%'
+  )
+  and exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname = 'avatars_group_delete_admin'
+      and cmd = 'DELETE' and qual like '%can_edit_group_avatar%'
+  )
+  and exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects'
+      and policyname = 'avatars_group_select_member'
+      and cmd = 'SELECT' and qual like '%can_view_group_avatar%'
+  ),
+  'group photos are admin-written and member-read, enforced in the database'
+);
+
+select ok(
+  (select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public'
+     and p.proname in ('can_view_profile_avatar', 'can_view_group_avatar', 'can_edit_group_avatar')
+     and p.prosecdef
+     and coalesce(p.proconfig, '{}'::text[]) && array['search_path=""']) = 3,
+  'every avatar authorization predicate is definer-rights with a pinned search path'
+);
+
+select ok(
+  not has_function_privilege('anon', 'public.can_view_profile_avatar(uuid)', 'EXECUTE')
+  and not has_function_privilege('anon', 'public.can_view_group_avatar(uuid)', 'EXECUTE')
+  and not has_function_privilege('anon', 'public.can_edit_group_avatar(uuid)', 'EXECUTE'),
+  'an anonymous caller cannot probe avatar visibility'
+);
+
+-- The constraint that makes it impossible for a row to claim someone else's
+-- picture: the stored key must name an object inside this row's own folder.
+select ok(
+  (select count(*) from pg_constraint c join pg_class t on t.oid = c.conrelid
+   where t.relname in ('profiles', 'groups')
+     and c.conname like '%_avatar_preset_check'
+     and pg_get_constraintdef(c.oid) like '%avatar_photo_path%'
+     and pg_get_constraintdef(c.oid) like '%(id)::text%') = 2,
+  'a stored photo key is pinned to the profile or group that owns it'
+);
+
+select ok(
+  (select count(*) from pg_trigger
+   where not tgisinternal
+     and tgname in ('profiles_avatar_cleanup', 'groups_avatar_cleanup')) = 2,
+  'deleting a profile or a group takes its avatar objects with it'
+);
+
+select ok(
+  (select count(*) from pg_policies
+   where schemaname = 'storage' and tablename = 'objects'
+     and policyname in ('avatars_profile_insert_own', 'avatars_group_insert_admin')
+     and with_check like '%avatar_folder_under_quota%') = 2,
+  'a signed-in client cannot write unbounded objects into an avatar folder'
 );
 
 select * from finish();

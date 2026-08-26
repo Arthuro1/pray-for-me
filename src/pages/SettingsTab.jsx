@@ -24,6 +24,7 @@ import { PageHeader } from '../components/shared/Primitives';
 import Avatar from '../components/shared/Avatar';
 import AvatarEditor from '../components/shared/AvatarEditor';
 import { fetchMyAvatar, saveMyAvatar } from '../lib/profileAvatars';
+import { identityPhotoUrlFrom, withIdentityPhoto } from '../lib/identityPhoto';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
@@ -205,13 +206,16 @@ export default function SettingsTab() {
     return () => { cancelled = true; };
   }, [user?.id]);
 
-  // Save the chosen preset, then reflect it locally so the header tile and the
-  // editor preview agree immediately without a refetch.
+  // Persist the chosen avatar, then reflect it locally so the header tile and
+  // the editor preview agree immediately without a refetch. The editor owns the
+  // toast, so this only reports whether the write landed. The account picture is
+  // re-attached because it is never stored: clearing an explicit choice is
+  // exactly what makes it the default again.
   const handleSaveAvatar = async (config) => {
     const { error } = await saveMyAvatar(user?.id, config);
-    if (error) { toast.error(t(lang, 'errorGeneric')); return; }
-    setMyAvatar(config);
-    toast.success(t(lang, 'avatarUpdated'));
+    if (error) return { error };
+    setMyAvatar(withIdentityPhoto(user?.id, config));
+    return {};
   };
 
   // Deep-link into a section (e.g. /settings#notifications from the inbox):
@@ -402,6 +406,8 @@ export default function SettingsTab() {
               kind="user"
               name={displayName || ''}
               avatar={myAvatar}
+              ownerId={user?.id}
+              identityPhotoUrl={identityPhotoUrlFrom(user)}
               onSave={handleSaveAvatar}
             />
           </div>

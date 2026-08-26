@@ -4,6 +4,8 @@ import { clearLocalData } from '../lib/dataCache';
 import { forgetAccountKey } from '../lib/crypto/accountKey';
 import { authRedirectTarget } from '../lib/pendingInvite';
 import { setAuthSessionHint } from '../lib/authSessionHint';
+import { setIdentityUser } from '../lib/identityPhoto';
+import { AVATAR_SCOPES, removeAllAvatarObjects } from '../lib/avatarPhotos';
 import { clearServiceWorkerUserCaches } from '../lib/serviceWorkerSecurity';
 
 const useAuthStore = create((set) => ({
@@ -13,10 +15,15 @@ const useAuthStore = create((set) => ({
   init: async () => {
     const { data: { session } } = await supabase.auth.getSession();
     setAuthSessionHint(!!session);
+    // The account picture the identity provider sent with this session. Kept in
+    // memory only, and re-set on every change so it can never outlive the
+    // session it belongs to.
+    setIdentityUser(session?.user ?? null);
     set({ user: session?.user ?? null, loading: false });
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setAuthSessionHint(!!session);
+      setIdentityUser(session?.user ?? null);
       set({ user: session?.user ?? null });
     });
   },
@@ -82,6 +89,7 @@ const useAuthStore = create((set) => ({
     await clearServiceWorkerUserCaches();
     await supabase.auth.signOut();
     setAuthSessionHint(false);
+    setIdentityUser(null);
     set({ user: null });
   },
 
@@ -89,6 +97,11 @@ const useAuthStore = create((set) => ({
   // then wipe local caches and sign out. Irreversible — callers MUST confirm.
   deleteAccount: async () => {
     const { data: { user } } = await supabase.auth.getUser();
+    // Remove the uploaded avatar while the account still exists and can
+    // authorise it — afterwards nobody can. Best-effort by design: erasure must
+    // not be blocked by storage, and a delete trigger on profiles revokes
+    // access to anything left behind.
+    await removeAllAvatarObjects(AVATAR_SCOPES.user, user?.id);
     const { error } = await supabase.rpc('delete_account');
     if (error) return { error };
     await clearLocalData(user?.id);
@@ -96,6 +109,7 @@ const useAuthStore = create((set) => ({
     await forgetAccountKey(user?.id); // the account is gone — remove the local key too
     await supabase.auth.signOut();
     setAuthSessionHint(false);
+    setIdentityUser(null);
     set({ user: null });
     return { error: null };
   },

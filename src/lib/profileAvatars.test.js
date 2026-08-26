@@ -34,7 +34,7 @@ describe('fetchProfileAvatars', () => {
     const byId = await fetchProfileAvatars(['u1']);
     expect(rpc).toHaveBeenCalledWith('get_profile_avatars', { p_ids: ['u1'] });
     expect(from).not.toHaveBeenCalled();
-    expect(byId).toEqual({ u1: { type: 'icon', value: 'dove', color: '#1f7d76' } });
+    expect(byId).toEqual({ u1: { type: 'icon', value: 'dove', color: '#1f7d76', photoPath: null } });
   });
 
   it('leaves out anyone the caller has no group or friendship with', async () => {
@@ -68,7 +68,7 @@ describe('fetchProfileAvatars', () => {
 describe('fetchMyAvatar', () => {
   it('reads the caller’s own row through the same RPC', async () => {
     rpc.mockResolvedValue({ data: [{ id: 'me', avatar_type: 'initials', avatar_value: null, avatar_color: '#a35540' }], error: null });
-    expect(await fetchMyAvatar('me')).toEqual({ type: 'initials', value: null, color: '#a35540' });
+    expect(await fetchMyAvatar('me')).toEqual({ type: 'initials', value: null, color: '#a35540', photoPath: null });
   });
 
   it('returns null for a signed-out caller without querying', async () => {
@@ -86,13 +86,13 @@ describe('saveMyAvatar', () => {
   it('writes only the validated preset columns, to the caller’s own row', async () => {
     await saveMyAvatar('me', { type: 'icon', value: 'cross', color: '#4a4f9e' });
     expect(from).toHaveBeenCalledWith('profiles');
-    expect(update).toHaveBeenCalledWith({ avatar_type: 'icon', avatar_value: 'cross', avatar_color: '#4a4f9e' });
+    expect(update).toHaveBeenCalledWith({ avatar_type: 'icon', avatar_value: 'cross', avatar_color: '#4a4f9e', avatar_photo_path: null });
     expect(eq).toHaveBeenCalledWith('id', 'me');
   });
 
   it('drops anything outside the preset list instead of storing it', async () => {
     await saveMyAvatar('me', { type: 'photo', value: 'https://example.com/me.jpg', color: 'red' });
-    expect(update).toHaveBeenCalledWith({ avatar_type: null, avatar_value: null, avatar_color: null });
+    expect(update).toHaveBeenCalledWith({ avatar_type: null, avatar_value: null, avatar_color: null, avatar_photo_path: null });
   });
 
   it('never reads the row back, so the write cannot widen the read surface', async () => {

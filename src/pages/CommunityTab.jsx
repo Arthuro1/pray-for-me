@@ -369,11 +369,8 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
   const [renaming, setRenaming] = useState(false);
   const canEditAvatar = canEditGroupAvatar(group, userId);
 
-  const handleAvatarSave = async (config) => {
-    const { error } = await updateGroupAvatar(group.id, config);
-    if (error) { toast.error(t(lang, 'errorGeneric')); return; }
-    toast.success(t(lang, 'avatarUpdated'));
-  };
+  // The editor owns the toast and the storage lifecycle; this only persists.
+  const handleAvatarSave = (config) => updateGroupAvatar(group.id, config);
 
   const handleRename = async () => {
     const trimmed = name.trim();
@@ -467,7 +464,7 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
           <div className="mb-5">
             <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupAvatar')}</p>
             <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupAvatarHint')}</p>
-            <AvatarEditor lang={lang} kind="group" name={group.name} avatar={avatarConfigFrom(group)} onSave={handleAvatarSave} />
+            <AvatarEditor lang={lang} kind="group" name={group.name} avatar={avatarConfigFrom(group)} ownerId={group.id} onSave={handleAvatarSave} />
           </div>
         )}
 

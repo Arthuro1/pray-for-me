@@ -19,9 +19,40 @@
    groups and profiles, a check constraint per table, column-level SELECT on
    `profiles` (display names stay readable, avatars do not), and the
    relationship-scoped `get_profile_avatars()` RPC.
+8. `20260826160000_avatar_photo_uploads.sql` — optional photo avatars: an
+   `avatar_photo_path` column per table, the private `avatars` storage bucket
+   with its policies, the shared `can_view_profile_avatar` /
+   `can_view_group_avatar` / `can_edit_group_avatar` predicates, and
+   before-delete triggers that take a profile's or group's avatar objects with
+   it. **Creates a storage bucket** — see below.
 
 The baseline preserves the old SQL files for audit/history; do not apply those
 files separately after using the baseline. Seed data is disabled.
+
+## Storage buckets
+
+Two private buckets exist. `attachments` (created by the legacy
+`rich_media_updates.sql`) only ever holds client-side ciphertext, so any signed-in
+user may download from it. `avatars` (created by `20260826160000`) holds readable
+images, so its read policies are relationship-scoped instead: a profile photo is
+signable only by the person themselves, an accepted friend, or a member of a
+group they share; a group photo only by a member or a pending invitee. The bucket
+is capped at 512 KB per object and restricted to `image/webp` and `image/jpeg`,
+which is a server-side floor under the client's 512x512 pipeline — SVG and every
+other active format are refused by the bucket itself. A write policy also caps
+each folder at 20 objects, so a client cannot write unbounded data by uploading
+avatars it never references; normal use leaves one.
+
+Avatar objects are named `<profiles|groups>/<owner id>/<32 hex>.<webp|jpg>`. A
+check constraint ties a row's stored key to that row's own folder, so no profile
+or group can reference an object it does not own. Nothing about a display name,
+an email address, or any prayer content appears in an object name, and no avatar
+has a permanent public URL — the client renders from short-lived signed URLs it
+caches for the session.
+
+Deploy order: apply `20260826160000` before shipping a client that can upload a
+photo. A client deployed first simply cannot upload (the bucket does not exist);
+preset and initials avatars are unaffected either way.
 
 ## New environment
 
@@ -37,8 +68,14 @@ successful reset proves ordering and syntax from zero; tests verify RLS,
 protected table privileges, critical RPC execution, group-key FK, fixed definer
 search paths, profile ownership, and the caller-rights public-key view.
 
-Verified on 2026-08-01 with Supabase CLI 2.111.0 and the local Postgres 17 stack:
-all six migrations replayed from zero, all 16 pgTAP assertions passed, migration
+`supabase/tests/` holds two files. `security_schema.test.sql` inspects the
+schema — that the right policies, grants, constraints, and definer settings
+exist. `avatar_policies.test.sql` exercises them: it creates five users with
+different relationships and checks, as each of them in turn, what they can
+actually read and write.
+
+Verified on 2026-08-26 with Supabase CLI 2.115.0 and the local Postgres 17 stack:
+all eight migrations replayed from zero, all 53 pgTAP assertions passed, migration
 history matched, and the security advisor returned no error-level findings.
 
 ## Existing deployment

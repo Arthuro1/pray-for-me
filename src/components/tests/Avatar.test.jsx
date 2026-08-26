@@ -11,6 +11,7 @@ import { AVATAR_COLORS, AVATAR_ICONS, fallbackAvatarColor, fallbackAvatarIcon } 
 import { t } from '../../i18n';
 
 const lang = 'fr';
+const GROUP_ID = '11111111-2222-4333-8444-555555555555';
 
 // The tile is the only element carrying the .avatar class.
 const tile = (root = document.body) => root.querySelector('.avatar');
@@ -129,7 +130,7 @@ describe('Avatar theming and direction', () => {
 describe('AvatarEditor', () => {
   const setup = (props = {}) => {
     const onSave = vi.fn().mockResolvedValue({});
-    render(<AvatarEditor lang={lang} kind="group" name="Guerriers de prière" avatar={null} onSave={onSave} {...props} />);
+    render(<AvatarEditor lang={lang} kind="group" name="Guerriers de prière" avatar={null} ownerId={GROUP_ID} onSave={onSave} {...props} />);
     return { onSave };
   };
 
@@ -189,14 +190,14 @@ describe('AvatarEditor', () => {
     fireEvent.click(screen.getByRole('radio', { name: t(lang, 'avatarIconChurch') }));
     fireEvent.click(screen.getByRole('radio', { name: t(lang, 'avatarColorTeal') }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'avatarSave') }));
-    expect(onSave).toHaveBeenCalledWith({ type: 'icon', value: 'church', color: AVATAR_COLORS[3] });
+    expect(onSave).toHaveBeenCalledWith({ type: 'icon', value: 'church', color: AVATAR_COLORS[3], photoPath: null });
   });
 
   it('clears the symbol when the user goes back to initials', () => {
     const { onSave } = setup({ kind: 'user', name: 'Marie Dupont', avatar: { type: 'icon', value: 'heart', color: AVATAR_COLORS[1] } });
     fireEvent.click(screen.getByRole('radio', { name: t(lang, 'avatarInitials') }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'avatarSave') }));
-    expect(onSave).toHaveBeenCalledWith({ type: 'initials', value: null, color: AVATAR_COLORS[1] });
+    expect(onSave).toHaveBeenCalledWith({ type: 'initials', value: null, color: AVATAR_COLORS[1], photoPath: null });
   });
 
   it('previews the draft with a named tile, and updates it live', () => {
