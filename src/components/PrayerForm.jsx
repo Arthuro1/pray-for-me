@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { X, ChevronDown, Plus } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -19,7 +19,9 @@ import SchedulePicker from './SchedulePicker';
 import CategorySelector from './CategorySelector';
 import FormattedTextarea from './rich/FormattedTextarea';
 import { planWeekDays } from '../lib/planner';
-import { defaultNewDraft, draftFromSchedule, scheduleFromDraft } from '../lib/scheduleDraft';
+import { defaultNewDraft, draftFromSchedule, returnsSummary, scheduleFromDraft } from '../lib/scheduleDraft';
+import { useFormDraft } from '../hooks/useFormDraft';
+import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 
 const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
@@ -158,21 +160,86 @@ export default function PrayerForm({
     : [...form.categoryIds, id]
   );
 
+  // An unfinished PERSONAL prayer survives a mis-tapped backdrop, a swipe-away
+  // or a reload: it is autosaved to this device only, encrypted, and cleared the
+  // moment the prayer really exists. Editing an existing prayer and composing a
+  // community request are both excluded — the first already has a saved row, the
+  // second is written for other people to read and gets no local copy.
+  const draftEnabled = !editPrayer && !communityMode;
+  const { restored, dismissRestoredNote, commit: commitDraft } = useFormDraft({
+    slot: DRAFT_SLOTS.NEW_PRAYER,
+    enabled: draftEnabled,
+    value: form,
+    // Only what the user actually chose — named field by field, so the draft can
+    // never quietly carry something the form happens to hold later.
+    serialize: (f) => (f.title.trim() || f.description.trim() || f.personName.trim()
+      ? {
+        title: f.title,
+        description: f.description,
+        forOther: f.forOther,
+        personName: f.personName,
+        categoryIds: f.categoryIds,
+        scheduleDraft: f.scheduleDraft,
+        contentLanguage: f.contentLanguage,
+      }
+      : null),
+    restore: ({ title, description, forOther, personName, categoryIds, scheduleDraft, contentLanguage }) => {
+      if (!title && !description && !personName) return false;
+      setForm((current) => ({
+        ...current,
+        title: title || '',
+        description: description || '',
+        forOther: !!forOther,
+        personName: personName || '',
+        categoryIds: categoryIds || [],
+        scheduleDraft: scheduleDraft || current.scheduleDraft,
+        contentLanguage: contentLanguage || current.contentLanguage,
+      }));
+      if (description) setNoteOpen(true);
+      return true;
+    },
+  });
+
+  const startFresh = () => {
+    setForm(initialForm(null, prefill, lang));
+    setNoteOpen(hasNote(null, prefill));
+    setOrganizeOpen(false);
+    dismissRestoredNote();
+  };
+
+  // "Change" on the rhythm line opens Organize and hands focus to the rhythm
+  // row itself, so the control the user asked for is where they're looking.
+  const [rhythmFocusSignal, setRhythmFocusSignal] = useState(0);
+  const revealRhythm = useCallback(() => {
+    setOrganizeOpen(true);
+    setRhythmFocusSignal((n) => n + 1);
+  }, []);
+
   // What "follow my normal rhythm" would actually mean for THIS prayer, from
   // the same planner Today uses — so the choice can show its real days instead
   // of asking the user to remember their weekly plan.
   const planDays = planWeekDays(categories, form.categoryIds, editPrayer?.week_days);
 
-  // Subtle, non-technical reassurance after a personal prayer is saved. Encryption
-  // is automatic and invisible, so we only hint at it — "Saved privately" always,
-  // with "Encrypted on this device" added when the account key is actually ready.
-  // Offline, say plainly where the prayer lives and that it will sync — the write
-  // is already queued, nothing is lost.
+  // Read from the SAME conversion the save performs, so the line and the saved
+  // schedule can never disagree.
+  const rhythmLine = returnsSummary(scheduleFromDraft(form.scheduleDraft), lang, { planDays });
+
+  // Subtle, non-technical reassurance after a personal prayer is saved. Offline,
+  // say plainly where the prayer lives and that it will sync — the write is
+  // already queued, nothing is lost.
+  //
+  // A NEW prayer gets the short form: this toast is followed immediately by the
+  // saved panel, and three privacy statements around one private note make the
+  // app feel riskier, not safer. The full "Encrypted on this device" line stays
+  // on an EDIT, where the toast is the only confirmation there is. Nothing is
+  // hidden either way — the saved panel and the prayer's own page keep stating
+  // its real audience and protection.
   const notifySaved = () => {
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {
       toast.success(t(lang, 'savedOffline'));
       return;
     }
+    if (!editPrayer) { toast.success(t(lang, 'savedPrivately')); return; }
     toast.success(t(lang, willEncryptNewPrayer() ? 'savedEncrypted' : 'savedPrivately'));
   };
 
@@ -209,14 +276,17 @@ export default function PrayerForm({
       // Recorded BEFORE the write, so the confirmation states what actually
       // happened to this prayer rather than re-reading the vault later.
       const encrypted = willEncryptNewPrayer();
-      const id = await addPrayer({ ...form, schedule: scheduleFromDraft(form.scheduleDraft) });
+      const schedule = scheduleFromDraft(form.scheduleDraft);
+      const id = await addPrayer({ ...form, schedule });
       if (id) {
+        // The prayer exists now — the unfinished copy has served its purpose.
+        commitDraft();
         // Record the language this prayer was written in, so we don't later pay
         // to translate personal content into the language it's already in — the
         // author's correction, when they made one, not just the interface.
         setContentLang(form.contentLanguage || lang);
         notifySaved();
-        setCreated({ id, title: form.title.trim(), description: form.description.trim(), encrypted });
+        setCreated({ id, title: form.title.trim(), description: form.description.trim(), encrypted, schedule });
       } else onClose();
     }
   };
@@ -228,6 +298,7 @@ export default function PrayerForm({
         title={created.title}
         description={created.description}
         encrypted={created.encrypted}
+        schedule={created.schedule}
         lang={lang}
         onClose={onClose}
       />
@@ -284,6 +355,41 @@ export default function PrayerForm({
               style={INPUT_STYLE}
             />
           </div>
+
+          {/* The rhythm this prayer already has, in one quiet line, BEFORE the
+              optional sections — so the bounded weekly default a new prayer
+              receives is something the writer reads rather than discovers later.
+              It is secondary information, not a field: one tap opens the real
+              control under Organize. */}
+          {!communityMode && (
+            <button
+              type="button"
+              onClick={revealRhythm}
+              aria-label={`${rhythmLine} — ${t(lang, 'rhythmChangeAria')}`}
+              className="-mx-1.5 flex min-h-[44px] w-full items-center gap-1.5 rounded-lg px-1.5 text-start text-xs focus-visible:ring-2"
+              style={{ color: 'var(--text-3)' }}
+            >
+              <span className="min-w-0 break-words">{rhythmLine}</span>
+              <span aria-hidden="true">·</span>
+              <span className="shrink-0 font-medium" style={{ color: 'var(--accent)' }}>{t(lang, 'schedChange')}</span>
+            </button>
+          )}
+
+          {/* Something unfinished was put back. Stated once, quietly, with the
+              one action that undoes it — never a modal in the way of praying. */}
+          {restored && (
+            <p className="flex flex-wrap items-center gap-x-2 text-xs" style={{ color: 'var(--text-3)' }} role="status">
+              {t(lang, 'draftRestoredNote')}
+              <button
+                type="button"
+                onClick={startFresh}
+                className="min-h-[44px] font-medium focus-visible:ring-2"
+                style={{ color: 'var(--accent)' }}
+              >
+                {t(lang, 'draftDiscardCta')}
+              </button>
+            </p>
+          )}
 
           <div>
             <SectionToggle
@@ -386,6 +492,7 @@ export default function PrayerForm({
                     lang={lang}
                     planDays={planDays}
                     idPrefix="prayer-sched"
+                    focusSignal={rhythmFocusSignal}
                   />
 
                   {/* Source language — already answered, correctable in one tap.

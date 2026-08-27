@@ -5,7 +5,7 @@
 // A DRAFT is the editor's working shape; scheduleFromDraft() turns it into the
 // persisted schedule (or null = follows the weekly category plan).
 import { t } from '../i18n';
-import { normalizeSchedule, parseKey } from './schedule';
+import { addDays, diffDays, nextOccurrence, normalizeSchedule, parseKey } from './schedule';
 import { todayKey } from './prayedLog';
 
 // ── Simple rhythm presets ────────────────────────────────────────────────────
@@ -329,4 +329,40 @@ export function scheduleSentence(s, lang, { planDays } = {}) {
     .filter(Boolean)
     .join(t(lang, 'sentJoin'));
   return t(lang, 'schedWillAppear', { detail });
+}
+
+// ── "When does this come back?" ──────────────────────────────────────────────
+// The one-line rhythm summary the Add-prayer form shows under the subject field,
+// so the rhythm a new prayer silently receives is READABLE before saving rather
+// than hidden inside a collapsed section.
+//
+// It reuses the very sentence fragments the confirmation sentence is built from
+// ("every Thursday", "every day", "once on 12 September"), so the quiet line and
+// the scheduler can never describe different things. No recurrence vocabulary
+// leaks out: the reader sees "Returns every Thursday", never a freq or a mode.
+export function returnsSummary(s, lang, { planDays } = {}) {
+  if (s && s.type === 'none') return t(lang, 'noFixedSchedule');
+  // A null schedule is the legacy "follows my weekly plan" state, only reachable
+  // while editing an older prayer — it still has real days, so say which.
+  const phrase = s ? rhythmPhrase(s, lang, true) : planSummary(planDays, lang);
+  if (!phrase) return '';
+  return t(lang, 'rhythmReturns', { phrase });
+}
+
+// The FIRST return after today, as a short human "when" ("tomorrow", "Thursday",
+// "12 September") — the one useful fact a saved confirmation can add. Today is
+// deliberately excluded: the prayer is on screen right now, so "today" answers
+// nothing. Returns null when the schedule has no further occurrence (a one-off
+// already due, a finished series, "no fixed schedule"), so callers can simply
+// omit the line rather than print a hedge.
+export function nextReturnLabel(s, lang, { fromKey = todayKey(), overrides = {} } = {}) {
+  if (!s) return null;
+  const key = nextOccurrence(s, addDays(fromKey, 1), overrides);
+  if (!key) return null;
+  const delta = diffDays(fromKey, key);
+  if (delta === 1) return t(lang, 'tomorrow');
+  // Inside the coming week a weekday name is the clearest answer; past that it
+  // stops being unambiguous and a date reads better.
+  if (delta <= 7) return weekdayName(lang, parseKey(key).getDay());
+  return parseKey(key).toLocaleDateString(lang, { day: 'numeric', month: 'long' });
 }

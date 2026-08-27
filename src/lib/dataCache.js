@@ -2,6 +2,7 @@ import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { isVaultInitialized, isUnlocked, destroyVault, hydrate } from './crypto/keyManager';
 import { encryptPrayersForCache, decryptPrayers } from './crypto/prayerCrypto';
 import { clearPlanPersonalizations } from './planPersonalizationStorage';
+import { clearAllFormDrafts } from './prayerFormDrafts';
 
 // Persists the user's prayers + categories locally (IndexedDB) so the app can
 // hydrate instantly offline — including prayers created offline that aren't on
@@ -39,10 +40,11 @@ export async function saveSnapshot(userId, data) {
 }
 
 // Wipe every local trace of the user after an account deletion or sign-out on a
-// shared device: the cached prayer snapshot, the offline mutation queue, and the
-// vault record (the wrapped key) in localStorage.
+// shared device: the cached prayer snapshot, the offline mutation queue, any
+// unfinished prayer draft, and the vault record (the wrapped key) in localStorage.
 export async function clearLocalData(userId) {
   await clearPlanPersonalizations(userId);
+  await clearAllFormDrafts();
   await destroyVault();
   if (!hasIDB) return;
   try {
