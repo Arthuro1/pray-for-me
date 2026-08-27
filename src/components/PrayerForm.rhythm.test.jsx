@@ -174,6 +174,24 @@ describe('PrayerForm — an unfinished prayer is not lost', () => {
     expect(clearFormDraft).toHaveBeenCalledWith(DRAFT_SLOTS.NEW_PRAYER);
   });
 
+  it('does not let a keystroke still in flight resurrect the saved draft', async () => {
+    vi.useFakeTimers();
+    renderForm();
+    await act(async () => { await Promise.resolve(); });
+    // Type and submit INSIDE the save debounce — the pending timer must not
+    // write an unfinished copy of a prayer that now exists.
+    type('Pour la santé de ma sœur');
+    await act(async () => { vi.advanceTimersByTime(200); });
+    await act(async () => {
+      fireEvent.submit(screen.getByLabelText(t(lang, 'prayerFieldLabel')).closest('form'));
+    });
+    saveFormDraft.mockClear();
+    await act(async () => { vi.advanceTimersByTime(5000); });
+
+    expect(saveFormDraft).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
   it('never restores a new-prayer draft into an edit', async () => {
     drafts.set(DRAFT_SLOTS.NEW_PRAYER, { title: 'Un brouillon sans rapport', categoryIds: [] });
     renderForm({ editPrayer: { id: 'p1', title: 'La prière existante', prayer_categories: [] } });

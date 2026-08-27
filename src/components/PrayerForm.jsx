@@ -162,10 +162,14 @@ export default function PrayerForm({
 
   // An unfinished PERSONAL prayer survives a mis-tapped backdrop, a swipe-away
   // or a reload: it is autosaved to this device only, encrypted, and cleared the
-  // moment the prayer really exists. Editing an existing prayer and composing a
-  // community request are both excluded — the first already has a saved row, the
-  // second is written for other people to read and gets no local copy.
-  const draftEnabled = !editPrayer && !communityMode;
+  // moment the prayer really exists.
+  //
+  // Three cases are excluded. Editing already has a saved row. A community
+  // request is written for other people to read and gets no local copy. And a
+  // PREFILLED form was opened to write one specific thing (a starter prompt from
+  // Grow), so restoring an unrelated draft over it — or letting that prompt take
+  // the slot a later blank Add would restore from — would both be wrong.
+  const draftEnabled = !editPrayer && !communityMode && !prefill;
   const { restored, commit: commitDraft, discard: discardDraft } = useFormDraft({
     slot: DRAFT_SLOTS.NEW_PRAYER,
     enabled: draftEnabled,

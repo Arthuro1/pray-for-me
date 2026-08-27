@@ -14,8 +14,11 @@ const SAVE_DELAY_MS = 600;
 //     lets the host show one quiet line saying so, with a way to start fresh.
 //   • While the value changes, it is debounce-persisted. `serialize` decides
 //     what is worth keeping; returning null means "this is empty, drop it".
-//   • `commit()` clears the slot once the prayer really exists; `discard()`
-//     clears it when the user chooses to start over.
+//   • `commit()` is called once the prayer really exists: the slot is cleared
+//     and this form stops persisting for good, so a keystroke's debounce still
+//     in flight cannot resurrect the draft a moment after it was saved.
+//   • `discard()` clears the slot but keeps protecting the form — the user is
+//     starting over in it, not finishing with it.
 //
 // `enabled: false` (editing an existing prayer, or a community request) makes
 // the hook completely inert: nothing is read, nothing is written, and no other
@@ -32,6 +35,8 @@ export function useFormDraft({ slot, enabled = true, value, serialize, restore }
   const serializeRef = useRef(serialize);
   restoreRef.current = restore;
   serializeRef.current = serialize;
+  // Set by commit(): this form's work is done and nothing more may be written.
+  const finishedRef = useRef(false);
 
   useEffect(() => {
     if (!enabled || !slot) return undefined;
@@ -46,9 +51,13 @@ export function useFormDraft({ slot, enabled = true, value, serialize, restore }
   }, [enabled, slot]);
 
   useEffect(() => {
-    if (!enabled || !slot || !ready) return undefined;
+    if (!enabled || !slot || !ready || finishedRef.current) return undefined;
     const fields = serializeRef.current?.(value);
     const timer = setTimeout(() => {
+      // Saving happens AFTER the delay, by which time the prayer may already
+      // have been created — writing then would leave an unfinished copy of a
+      // prayer that is finished.
+      if (finishedRef.current) return;
       // An emptied form is not a draft worth keeping — and clearing beats
       // storing a blank record that would later "restore" nothing.
       if (fields) saveFormDraft(slot, fields);
@@ -62,8 +71,10 @@ export function useFormDraft({ slot, enabled = true, value, serialize, restore }
     if (slot) clearFormDraft(slot);
   }, [slot]);
 
-  // commit (the real thing now exists) and discard (start over) do the same
-  // thing to the slot; they are named apart because the callers mean different
-  // things by them.
-  return { restored, commit: forget, discard: forget };
+  const commit = useCallback(() => {
+    finishedRef.current = true;
+    forget();
+  }, [forget]);
+
+  return { restored, commit, discard: forget };
 }

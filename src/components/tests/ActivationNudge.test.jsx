@@ -17,12 +17,25 @@ const prayer = (id) => ({
   prayer_categories: [],
 });
 
-beforeEach(() => localStorage.clear());
+// Each test is its own VISIT: education is capped at one prompt per visit, so a
+// card answered in the previous test must not silence the next one.
+beforeEach(() => {
+  localStorage.clear();
+  sessionStorage.clear();
+});
 
 describe('ActivationNudge', () => {
+  it('says nothing at all to someone with their first prayer', () => {
+    const { container } = render(
+      <ActivationNudge prayers={[prayer('p1')]} settings={{}} lang={lang} />
+    );
+    expect(container.firstChild).toBeNull();
+  });
+
   it('shows the first contextual step and opens Organize without persisting prayer identity', () => {
     const onEditPrayer = vi.fn();
-    const prayers = [prayer('p1')];
+    // Two prayers: the point at which a rhythm has something to solve.
+    const prayers = [prayer('p1'), prayer('p2')];
     render(
       <ActivationNudge
         prayers={prayers}

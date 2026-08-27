@@ -15,7 +15,9 @@ const loaders = {
   am: () => import('./locales/landing-am.js'),
   ar: () => import('./locales/landing-ar.js'),
   de: () => import('./locales/landing-de.js'),
-  en: () => import('./locales/landing-en.js'),
+  // Already bundled with the landing shell (see above) — kept in the map so the
+  // supported-language list stays complete, but never fetched as a chunk.
+  en: () => Promise.resolve({ default: en }),
   es: () => import('./locales/landing-es.js'),
   fa: () => import('./locales/landing-fa.js'),
   fr: () => import('./locales/landing-fr.js'),
