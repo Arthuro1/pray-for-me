@@ -23,6 +23,9 @@ describe('relationship plan personalization in a real RTL browser', () => {
     const dialog = screen.getByRole('dialog');
     expect(getComputedStyle(dialog).direction).toBe('rtl');
 
+    // The family layers sit behind a collapsed disclosure, so nothing inside it
+    // is in the accessibility tree until it is opened.
+    fireEvent.click(screen.getByRole('button', { name: t('ar', 'planCoupleIncludeQ') }));
     fireEvent.click(screen.getByRole('checkbox', { name: t('ar', 'planCoupleIncludeChildren') }));
     fireEvent.click(screen.getByRole('button', { name: t('ar', 'planCoupleAddChild') }));
     const childInput = screen.getByLabelText(t('ar', 'planCoupleChildName'));

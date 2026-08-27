@@ -33,20 +33,29 @@ claim, and that every approved edition carries a verified URL.
 `approved` is a promise that the entry is live, so it must never be set on
 something the resolver would drop. Three sensitive entries
 (`piper-momentary-marriage`, `keller-meaning-of-marriage`,
-`elliot-passion-and-purity`) carried `approved` with no sign-offs, which made
-them permanently invisible under an approval that was not true; they are back at
-`needs_review` until their content and safety reviews exist. A test now rejects
-any `approved` entry the resolver refuses to display.
+`elliot-passion-and-purity`) once carried `approved` with no sign-offs, which
+made them permanently invisible under an approval that was not true. Both
+reviews now exist for each of them, so they publish. A test rejects any
+`approved` entry the resolver refuses to display.
+
+That mistake has a mirror image, and it is just as quiet: an entry whose
+sign-offs are recorded but whose `status` is missing entirely is dropped too, so
+the curator's work reaches nobody and nothing says so. A second test requires
+every entry to state one of `RESOURCE_STATUSES`.
 
 ### What actually reaches a reader today
 
-Seven entries are displayable, and every one of them is **English-only**. So the
-"Go deeper" shelf resolves like this for the relationship plans:
+Ten entries are displayable, and every one of them is **English-only**. Counting
+the days of each relationship plan that resolve to at least one resource:
 
-| Plan | en | fr | es | zh |
-|---|---:|---:|---:|---:|
-| `covenant21` | 1 | 0 | 0 | 0 |
-| `marriage30` | 3 | 0 | 0 | 0 |
+| Plan | days | en | fr | es | zh |
+|---|---:|---:|---:|---:|---:|
+| `preparing21` | 21 | 17 | 0 | 0 | 0 |
+| `covenant21` | 21 | 13 | 0 | 0 | 0 |
+| `marriage30` | 30 | 24 | 0 | 0 | 0 |
+
+The six other plans declare no `resourceTopics` on any day, so they never show a
+"Go deeper" shelf in any language.
 
 That is by design, not a bug: rule 2 below forbids inventing a localized edition
 that does not exist, and rule 3 says no match means no section. But it is worth

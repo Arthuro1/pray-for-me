@@ -7,7 +7,7 @@ import {
   resolveResources, resourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
   isResourceApprovedForDisplay, isSensitiveResource,
 } from './resources.js';
-import { RESOURCES, RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS } from '../content/resources/catalogue.js';
+import { RESOURCES, RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS, RESOURCE_STATUSES } from '../content/resources/catalogue.js';
 
 const edition = (over = {}) => ({
   title: 'A title', author: 'An author', url: 'https://example.org', available: true,
@@ -325,6 +325,15 @@ describe('the shipped catalogue', () => {
     for (const resource of RESOURCES) {
       if (resource.status !== 'approved') continue;
       expect(isResourceApprovedForDisplay(resource), `${resource.id} is approved but never displayable`).toBe(true);
+    }
+  });
+
+  // The mirror of the test above. An entry with no status at all is dropped just
+  // as silently as an unapproved one — a curator who recorded both sign-offs and
+  // left the status off gets no signal that the entry never reached anyone.
+  it('states an explicit publication status on every entry', () => {
+    for (const resource of RESOURCES) {
+      expect(RESOURCE_STATUSES, `${resource.id} has no valid status`).toContain(resource.status);
     }
   });
 

@@ -55,9 +55,13 @@ describe('prayer-note drafts in a real browser', () => {
   it('fails closed when the stored ciphertext is tampered with', async () => {
     await saveNoteDraft({ prayerId: PRAYER, text: SECRET });
     const stored = await idbGet(SLOT);
-    // Real GCM authentication: one flipped character must not decrypt.
+    // Real GCM authentication: one flipped character must not decrypt. The
+    // replacement has to differ from what is already there — hardcoding 'A'
+    // silently tampered with nothing on the ~1 run in 64 where the ciphertext
+    // already started with 'A', and the test then failed on a correct decrypt.
+    const { ct } = stored.payload;
     const { set: idbSet } = await import('idb-keyval');
-    await idbSet(SLOT, { ...stored, payload: { ...stored.payload, ct: `A${stored.payload.ct.slice(1)}` } });
+    await idbSet(SLOT, { ...stored, payload: { ...stored.payload, ct: `${ct[0] === 'A' ? 'B' : 'A'}${ct.slice(1)}` } });
 
     __resetMemoryForTests();
     expect(await loadNoteDraft(PRAYER)).toBeNull();
