@@ -6,14 +6,12 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { ROLES, GROWTH_AREAS, DEFAULT_ROLE, getPlanPrefs } from '../lib/planPrefs';
 import { MARRIAGE_INCLUDES, MAX_PLAN_CHILDREN, isCouplePlan, sanitizePlanPersonalization } from '../lib/planPersonalization';
 
-// Tailoring a plan that is ALREADY RUNNING.
-//
-// This used to be a gate: a sheet of questions between "Start" and the first
-// day. It asked four things of a single reader, of which one — a season — was
-// stored and never read by anything, and another only pre-ticked a checkbox
-// three weeks later on the completion card. Nothing here blocks a start any
-// more; the plan begins on Start, and this sheet is offered from the plan day,
-// where a reader can see what the answers actually change.
+// One compact tailoring sheet with two contexts: the singles plan opens it
+// before day one because role wording and resource ranking matter immediately;
+// engaged and married plans start without a gate and offer it from the plan day.
+// The old singles sheet also asked for a season that nothing read and an
+// emphasis that only pre-ticked completion choices weeks later. Those questions
+// stay out so the pre-start step remains short and consequential.
 //
 // So every question left has to earn its place by changing what a day says:
 //   role      which optional husband/wife reflection a day shows
@@ -81,11 +79,18 @@ function RoleQuestion({ lang, role, onChange, questionKey, hintKey, options }) {
 
 function Footer({ lang, ctaKey, privacyKey, onSave }) {
   return (
-    <div className="sticky bottom-0 space-y-2 p-5 pt-0" style={{ background: 'var(--surface)' }}>
+    <div
+      className="shrink-0 space-y-2 px-5 pt-4"
+      style={{
+        background: 'var(--surface)',
+        borderTop: '0.5px solid var(--border)',
+        paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
+      }}
+    >
       <button onClick={onSave} className="w-full rounded-xl px-3 py-3 text-sm font-semibold" style={{ background: 'var(--accent)', color: '#fff' }}>
         {t(lang, ctaKey)}
       </button>
-      <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, privacyKey)}</p>
+      {privacyKey && <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, privacyKey)}</p>}
     </div>
   );
 }
@@ -103,16 +108,19 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
   const [mode, setMode] = useState(saved?.mode || 'private');
   const [role, setRole] = useState(saved?.role || DEFAULT_ROLE);
   const [includes, setIncludes] = useState(() => saved?.includes || []);
+  const [familyOpen, setFamilyOpen] = useState(() => !!saved?.includes?.length);
+  const [roleOpen, setRoleOpen] = useState(() => !!saved?.role && saved.role !== DEFAULT_ROLE);
   const [children, setChildren] = useState(() => (saved?.children || []).map((child) => ({
     id: child.id || crypto.randomUUID(), name: child.name,
   })));
   const childEnabled = includes.includes('children');
   const atChildLimit = children.length >= MAX_PLAN_CHILDREN;
 
-  const choosePerson = (value) => {
-    const found = (people || []).find((item) => item.prayerId === value);
+  const changeName = (value) => {
+    const normalized = value.trim().toLocaleLowerCase();
+    const found = (people || []).find((item) => item.name.trim().toLocaleLowerCase() === normalized);
     setPartner(found || null);
-    if (found) setName(found.name);
+    setName(value);
   };
   const toggleInclude = (id) => setIncludes((current) => (current.includes(id)
     ? current.filter((item) => item !== id) : [...current, id]));
@@ -126,32 +134,25 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
 
   return (
     <>
-      <div className="space-y-5 p-5">
+      <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5 pb-8">
         <Question id="plan-couple-person" title={t(lang, engaged ? 'planCoupleFianceQ' : 'planCoupleSpouseQ')}>
-          {(people || []).length > 0 && (
-            <label className="mb-2 block text-xs" style={{ color: 'var(--text-3)' }}>
-              <span className="mb-1 block">{t(lang, 'planCoupleChoosePerson')}</span>
-              <select
-                value={partner?.prayerId || ''}
-                onChange={(event) => choosePerson(event.target.value)}
-                className="min-h-11 w-full rounded-xl px-3 text-sm"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-              >
-                <option value="">{t(lang, 'planCoupleNoPerson')}</option>
-                {(people || []).map((item) => <option key={item.prayerId} value={item.prayerId}>{item.name}</option>)}
-              </select>
-            </label>
-          )}
           <input
             aria-label={t(lang, 'planCoupleDisplayName')}
+            list={(people || []).length > 0 ? `plan-couple-people-${plan.id}` : undefined}
             value={name}
             maxLength={80}
             autoComplete="off"
-            onChange={(event) => { setName(event.target.value); setPartner(null); }}
+            onChange={(event) => changeName(event.target.value)}
             placeholder={t(lang, 'planCoupleDisplayName')}
             className="min-h-11 w-full rounded-xl px-3 text-sm"
             style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
           />
+          {(people || []).length > 0 && (
+            <datalist id={`plan-couple-people-${plan.id}`}>
+              {(people || []).map((item) => <option key={item.prayerId} value={item.name} />)}
+            </datalist>
+          )}
+          <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCouplePrivacy')}</p>
         </Question>
 
         <Question id="plan-couple-mode" title={t(lang, 'planCoupleModeQ')} hint={t(lang, 'planCoupleTogetherHint')}>
@@ -162,60 +163,91 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
         </Question>
 
         {!engaged && (
-          <Question id="plan-couple-includes" title={t(lang, 'planCoupleIncludeQ')} hint={t(lang, 'planCoupleIncludeHint')}>
-            <div role="group" aria-labelledby="plan-couple-includes" className="flex flex-col gap-2">
-              {MARRIAGE_INCLUDES.map((item) => (
-                <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={includes.includes(item.id)} multi onSelect={() => toggleInclude(item.id)} />
-              ))}
-            </div>
-          </Question>
-        )}
-
-        {!engaged && childEnabled && (
-          <Question id="plan-couple-children" title={t(lang, 'planCoupleIncludeChildren')}>
-            <div className="space-y-2">
-              {children.map((child, index) => (
-                <div key={child.id} className="flex items-center gap-2">
-                  <input
-                    aria-label={t(lang, 'planCoupleChildName')}
-                    value={child.name}
-                    maxLength={80}
-                    autoComplete="off"
-                    onChange={(event) => setChildren((current) => current.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)))}
-                    placeholder={t(lang, 'planCoupleChildName')}
-                    className="min-h-11 min-w-0 flex-1 rounded-xl px-3 text-sm"
-                    style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setChildren((current) => current.filter((_, i) => i !== index))}
-                    aria-label={t(lang, 'planCoupleRemoveChild', { name: child.name || String(index + 1) })}
-                    className="phase-icon-button shrink-0"
-                  ><Trash2 size={16} /></button>
+          <section>
+            <button
+              type="button"
+              onClick={() => setFamilyOpen((open) => !open)}
+              aria-expanded={familyOpen}
+              aria-controls="plan-couple-family-options"
+              className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
+            >
+              <span className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+                {t(lang, 'planCoupleIncludeQ')}{includes.length ? ` · ${includes.length}` : ''}
+              </span>
+              <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--text-3)', transform: familyOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
+            </button>
+            {familyOpen && (
+              <div id="plan-couple-family-options" className="mt-2 space-y-4">
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleIncludeHint')}</p>
+                <div role="group" aria-label={t(lang, 'planCoupleIncludeQ')} className="flex flex-col gap-2">
+                  {MARRIAGE_INCLUDES.map((item) => (
+                    <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={includes.includes(item.id)} multi onSelect={() => toggleInclude(item.id)} />
+                  ))}
                 </div>
-              ))}
-              {/* At the cap the action goes away rather than accepting a name
-                  that sanitizePlanPersonalization would silently drop. */}
-              {!atChildLimit && (
-                <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                  <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
-                </button>
-              )}
-            </div>
-          </Question>
+
+                {childEnabled && (
+                  <Question id="plan-couple-children" title={t(lang, 'planCoupleIncludeChildren')}>
+                    <div className="space-y-2">
+                      {children.map((child, index) => (
+                        <div key={child.id} className="flex items-center gap-2">
+                          <input
+                            aria-label={t(lang, 'planCoupleChildName')}
+                            value={child.name}
+                            maxLength={80}
+                            autoComplete="off"
+                            onChange={(event) => setChildren((current) => current.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)))}
+                            placeholder={t(lang, 'planCoupleChildName')}
+                            className="min-h-11 min-w-0 flex-1 rounded-xl px-3 text-sm"
+                            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setChildren((current) => current.filter((_, i) => i !== index))}
+                            aria-label={t(lang, 'planCoupleRemoveChild', { name: child.name || String(index + 1) })}
+                            className="phase-icon-button shrink-0"
+                          ><Trash2 size={16} /></button>
+                        </div>
+                      ))}
+                      {!atChildLimit && (
+                        <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                          <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
+                        </button>
+                      )}
+                    </div>
+                  </Question>
+                )}
+              </div>
+            )}
+          </section>
         )}
 
-        <RoleQuestion
-          lang={lang}
-          role={role}
-          onChange={setRole}
-          questionKey="planCoupleRoleQ"
-          hintKey="planCoupleRoleReviewPending"
-          options={COUPLE_ROLES}
-        />
+        <section>
+          <button
+            type="button"
+            onClick={() => setRoleOpen((open) => !open)}
+            aria-expanded={roleOpen}
+            aria-controls="plan-couple-role-options"
+            className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
+          >
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+              {t(lang, 'planCoupleRoleQ')}{role !== DEFAULT_ROLE ? ' · 1' : ''}
+            </span>
+            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--text-3)', transform: roleOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
+          </button>
+          {roleOpen && (
+            <div id="plan-couple-role-options" className="mt-2">
+              <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
+              <div role="radiogroup" aria-label={t(lang, 'planCoupleRoleQ')} className="flex flex-col gap-2">
+                {COUPLE_ROLES.map((item) => (
+                  <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={role === item.id} onSelect={() => setRole(item.id)} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
       </div>
 
-      <Footer lang={lang} ctaKey={ctaKey} privacyKey="planCouplePrivacy" onSave={save} />
+      <Footer lang={lang} ctaKey={ctaKey} onSave={save} />
     </>
   );
 }
@@ -231,7 +263,7 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
 
   return (
     <>
-      <div className="space-y-5 p-5">
+      <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5 pb-8">
         <RoleQuestion
           lang={lang}
           role={role}
@@ -290,7 +322,7 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
 // pre-filled — a reader corrects a name or adds a child without deleting the
 // prayer and losing its history, which used to be the only way. The singles
 // answers live on the device and are read here directly.
-export default function PlanPersonalizeModal({ plan, lang, onSave, onClose, people = [], initial = null, ctaKey = 'save' }) {
+export default function PlanPersonalizeModal({ plan, lang, onSave, onClose, people = [], initial = null, ctaKey = 'save', mode = 'edit' }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const couple = isCouplePlan(plan);
@@ -303,13 +335,16 @@ export default function PlanPersonalizeModal({ plan, lang, onSave, onClose, peop
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, 'planPersonalizeTitle')}
-        className="editorial-dialog max-h-[85vh] w-full max-w-md overflow-y-auto"
+        className="editorial-dialog flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start gap-3 p-5 pb-4" style={{ borderBottom: '0.5px solid var(--border)' }}>
-          <h3 className="min-w-0 flex-1 text-base font-semibold" style={{ color: 'var(--text-1)' }}>
-            {t(lang, 'planPersonalizeTitle')}
-          </h3>
+          <div className="min-w-0 flex-1">
+            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planPersonalizeTitle')}</h3>
+            <p className="mt-0.5 text-xs" style={{ color: 'var(--text-3)' }}>
+              {t(lang, plan.titleKey)}{mode === 'start' ? ` · ${t(lang, 'planDays', { n: plan.count })}` : ''}
+            </p>
+          </div>
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 

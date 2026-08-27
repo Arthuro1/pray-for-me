@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import VersePill from './shared/VersePill';
@@ -7,12 +8,12 @@ import { ROLES } from '../lib/planPrefs';
 import { hasReviewSignoff } from '../lib/planReview';
 
 // Everything a rich plan day says BELOW its title and primary passage:
-// reflection → related Scripture → prayer prompts → the self-prompt → an
-// optional role reflection → today's practice → "Go deeper".
+// reflection → prayer directions → an optional role reflection → one folded
+// shelf for related Scripture, couple exercises, practice and resources.
 //
 // The order is the resource hierarchy the plan is built on: Scripture first
 // (rendered by the host, immediately above this), then Pray4Me's reflection,
-// then prayer, then an optional practice, and only then anything external. The
+// then prayer, then an optional after-prayer shelf, and only then anything external. The
 // three kinds of text stay visually distinct — Bible text only ever appears
 // inside a VersePill's panel, reflections are prose, prompts are a list — so a
 // prayer prompt is never mistaken for a quotation.
@@ -28,7 +29,7 @@ import { hasReviewSignoff } from '../lib/planReview';
 export default function PlanDayBody({
   day, lang, role = 'general', resources = [], idPrefix = 'plan-day', onChooseRole,
 }) {
-  const [relatedOpen, setRelatedOpen] = useState(false);
+  const [afterPrayerOpen, setAfterPrayerOpen] = useState(false);
   if (!day) return null;
 
   const reflection = pick(day.reflection, lang);
@@ -41,6 +42,12 @@ export default function PlanDayBody({
   const prayTogether = pick(day.prayTogether, lang);
   const safetyNote = pick(day.safetyNote, lang);
   const related = day.related || [];
+  const requestedAfterPrayerLabel = t(lang, 'planAfterPrayer');
+  // Until the dedicated label is translated in every locale, keep this
+  // disclosure useful instead of exposing an untranslated key.
+  const afterPrayerLabel = requestedAfterPrayerLabel === 'planAfterPrayer'
+    ? t(lang, 'moreOptionsLabel')
+    : requestedAfterPrayerLabel;
   // Role reflections are shown ONLY when the reader has explicitly asked for
   // them — never inferred from a name, a photo or anything else.
   const roleApproved = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
@@ -50,6 +57,8 @@ export default function PlanDayBody({
   // Asked only where an answer has somewhere to land: this day carries the
   // reflections, they have cleared review, and no answer has been given yet.
   const askRole = !!onChooseRole && roleApproved && !!day.roles && !roleText;
+  const hasAfterPrayer = related.length > 0 || !!conversationPrompt || !!practice
+    || !!prayTogether || resources.length > 0;
 
   if (!askRole && !reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
     && !day.childPrayers?.length && !conversationPrompt && !prayTogether && !safetyNote
@@ -61,28 +70,6 @@ export default function PlanDayBody({
     <div className="space-y-4">
       {reflection && (
         <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{reflection}</p>
-      )}
-
-      {/* Related passages stay quiet and folded away — the primary passage above
-          must keep the reader's attention. */}
-      {related.length > 0 && (
-        <div>
-          <button
-            type="button"
-            onClick={() => setRelatedOpen((v) => !v)}
-            aria-expanded={relatedOpen}
-            aria-controls={`${idPrefix}-related`}
-            className="min-h-11 text-xs font-medium"
-            style={{ color: 'var(--text-3)' }}
-          >
-            {t(lang, 'planRelatedScripture')}
-          </button>
-          {relatedOpen && (
-            <div id={`${idPrefix}-related`} className="mt-1 flex flex-wrap gap-1.5">
-              {related.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
-            </div>
-          )}
-        </div>
       )}
 
       {prompts.length > 0 && (
@@ -173,33 +160,6 @@ export default function PlanDayBody({
         </section>
       )}
 
-      {conversationPrompt && (
-        <section>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
-            {t(lang, 'planTalkTogether')}
-          </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{conversationPrompt}</p>
-        </section>
-      )}
-
-      {practice && (
-        <section>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
-            {t(lang, 'planPracticeToday')}
-          </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{practice}</p>
-        </section>
-      )}
-
-      {prayTogether && (
-        <section className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
-            {t(lang, 'planPrayTogether')}
-          </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{prayTogether}</p>
-        </section>
-      )}
-
       {safetyNote && (
         <aside className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
           <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
@@ -213,7 +173,74 @@ export default function PlanDayBody({
         <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
       )}
 
-      <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
+      {/* Keep the prayer itself short. Related reading and couple exercises are
+          available after prayer without competing with the primary directions. */}
+      {hasAfterPrayer && (
+        <section className="rounded-xl px-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <button
+            type="button"
+            onClick={() => setAfterPrayerOpen((v) => !v)}
+            aria-expanded={afterPrayerOpen}
+            aria-controls={`${idPrefix}-after-prayer`}
+            className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
+          >
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>{afterPrayerLabel}</span>
+            <ChevronDown
+              size={16}
+              aria-hidden="true"
+              style={{
+                color: 'var(--text-3)',
+                transform: afterPrayerOpen ? 'rotate(180deg)' : undefined,
+                transition: 'transform 0.15s',
+              }}
+            />
+          </button>
+
+          {afterPrayerOpen && (
+            <div id={`${idPrefix}-after-prayer`} className="space-y-4 pb-3">
+              {related.length > 0 && (
+                <section>
+                  <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                    {t(lang, 'planRelatedScripture')}
+                  </h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {related.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
+                  </div>
+                </section>
+              )}
+
+              {conversationPrompt && (
+                <section>
+                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                    {t(lang, 'planTalkTogether')}
+                  </h4>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{conversationPrompt}</p>
+                </section>
+              )}
+
+              {practice && (
+                <section>
+                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                    {t(lang, 'planPracticeToday')}
+                  </h4>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{practice}</p>
+                </section>
+              )}
+
+              {prayTogether && (
+                <section className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
+                    {t(lang, 'planPrayTogether')}
+                  </h4>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{prayTogether}</p>
+                </section>
+              )}
+
+              <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }

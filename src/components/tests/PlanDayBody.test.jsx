@@ -25,6 +25,10 @@ import PlanDayBody from '../PlanDayBody';
 import { t } from '../../i18n';
 
 const lang = 'fr'; // the always-loaded fallback locale
+const afterPrayerLabel = () => {
+  const requested = t(lang, 'planAfterPrayer');
+  return requested === 'planAfterPrayer' ? t(lang, 'moreOptionsLabel') : requested;
+};
 afterEach(() => { cleanup(); trackMock.mockClear(); localStorage.clear(); });
 
 const day = {
@@ -54,24 +58,30 @@ const resource = {
 };
 
 describe('the day body', () => {
-  it('renders reflection, prompts, the self-prompt and the practice', () => {
+  it('keeps reflection and prayer directions prominent while practice stays optional', () => {
     render(<PlanDayBody day={day} lang={lang} />);
     expect(screen.getByText('La réflexion du jour')).toBeTruthy();
     expect(screen.getByText('Premier sujet')).toBeTruthy();
     expect(screen.getByText('Deuxième sujet')).toBeTruthy();
     expect(screen.getByText('Prie-le pour toi aussi')).toBeTruthy();
-    expect(screen.getByText('Une petite mise en pratique')).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPrayForYourself'))).toBeTruthy();
+    expect(screen.queryByText('Une petite mise en pratique')).toBeNull();
+
+    const trigger = screen.getByRole('button', { name: afterPrayerLabel() });
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(trigger.getAttribute('aria-controls')).toBe('plan-day-after-prayer');
+    fireEvent.click(trigger);
+
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText('Une petite mise en pratique')).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPracticeToday'))).toBeTruthy();
   });
 
-  it('keeps related passages folded away behind a disclosure', () => {
+  it('keeps related passages in the same after-prayer disclosure', () => {
     render(<PlanDayBody day={day} lang={lang} />);
-    const trigger = screen.getByRole('button', { name: t(lang, 'planRelatedScripture') });
-    expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByText(/Philippiens 1:9-11|Philippians 1:9-11/)).toBeNull();
-    fireEvent.click(trigger);
-    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
+    expect(screen.getByText(t(lang, 'planRelatedScripture'))).toBeTruthy();
     expect(screen.getByText(/Philippiens 1:9-11|Philippians 1:9-11/)).toBeTruthy();
   });
 
@@ -106,6 +116,7 @@ describe('husband / wife reflections', () => {
 describe('Go deeper', () => {
   it('is omitted entirely when no approved resource matched', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[]} />);
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     expect(screen.queryByText(t(lang, 'goDeeper'))).toBeNull();
     // …and never explains its own absence.
     expect(document.body.textContent).not.toMatch(/aucune ressource|no resources/i);
@@ -113,6 +124,8 @@ describe('Go deeper', () => {
 
   it('is a collapsed disclosure that announces its state', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
+    expect(screen.queryByRole('button', { name: t(lang, 'goDeeper') })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     const trigger = screen.getByRole('button', { name: t(lang, 'goDeeper') });
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByText('A verified title')).toBeNull();
@@ -123,6 +136,7 @@ describe('Go deeper', () => {
 
   it('names the resource type and its language on the card', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     expect(screen.getByText(`${t(lang, 'resourceTypeBook')} · English`)).toBeTruthy();
     expect(screen.getByText('An author')).toBeTruthy();
@@ -131,6 +145,7 @@ describe('Go deeper', () => {
 
   it('says out loud that the link leaves the app, not just with an icon', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     const link = screen.getByRole('link');
     expect(link.getAttribute('aria-label')).toContain(t(lang, 'resourceOpensExternally'));
@@ -140,6 +155,7 @@ describe('Go deeper', () => {
 
   it('reports only THAT a resource was opened — no id, title, topic or language', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     fireEvent.click(screen.getByRole('link'));
     expect(trackMock).toHaveBeenCalledWith('resource_opened');
@@ -149,6 +165,7 @@ describe('Go deeper', () => {
   it('carries a cover tile on every card, with or without a cover file', () => {
     const withCover = { ...resource, edition: { ...resource.edition, thumbnail: '/resources/covers/r1.webp' } };
     const { container } = render(<PlanDayBody day={day} lang={lang} resources={[withCover, { ...resource, id: 'r2' }]} />);
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     expect(container.querySelectorAll('img')).toHaveLength(1);
     // The second card has no cover file, so it draws its tile instead.
@@ -159,6 +176,7 @@ describe('Go deeper', () => {
     localStorage.setItem('pfm_settings', JSON.stringify({ lowDataMode: true }));
     const withCover = { ...resource, edition: { ...resource.edition, thumbnail: '/resources/covers/r1.webp' } };
     const { container } = render(<PlanDayBody day={day} lang={lang} resources={[withCover]} />);
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     expect(container.querySelector('img')).toBeNull();
     // …and the card still shows everything that actually matters.

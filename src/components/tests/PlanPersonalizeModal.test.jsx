@@ -23,6 +23,19 @@ const open = (onSave = vi.fn()) => {
 const submit = () => fireEvent.click(screen.getByRole('button', { name: t(lang, 'save') }));
 
 describe('the questions', () => {
+  it('can serve as the slim pre-start step with clear plan context', () => {
+    render(<PlanPersonalizeModal
+      plan={PREPARING_IN_PRAYER}
+      lang={lang}
+      mode="start"
+      ctaKey="planStart"
+      onSave={vi.fn()}
+      onClose={vi.fn()}
+    />);
+    expect(screen.getByText(t(lang, PREPARING_IN_PRAYER.titleKey), { exact: false })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'planStart') })).toBeTruthy();
+  });
+
   // The season and the emphasis used to be asked here too. A season was stored
   // and read by nothing at all; an emphasis only pre-ticked the completion card
   // three weeks later, which is where it is asked now. Neither comes back.

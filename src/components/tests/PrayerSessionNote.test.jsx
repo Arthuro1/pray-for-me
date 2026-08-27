@@ -200,7 +200,7 @@ describe('a session without notes is unchanged', () => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 describe('the composer', () => {
-  it('opens on Add a prayer note and collapses on Done, returning focus', async () => {
+  it('opens on Add a prayer note and returns to prayer, returning focus without moving the dialog', async () => {
     renderSession([prayerA]);
     const trigger = screen.getByRole('button', { name: T('noteAdd') });
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
@@ -208,9 +208,11 @@ describe('the composer', () => {
     fireEvent.click(trigger);
     expect(editor()).toBeTruthy();
 
-    fireEvent.click(screen.getByText(T('noteDone')));
+    fireEvent.click(screen.getByRole('button', { name: T('resumePrayer') }));
     await waitFor(() => expect(screen.queryByRole('textbox', { name: T('noteTitle') })).toBeNull());
     expect(document.activeElement).toBe(screen.getByRole('button', { name: T('noteAdd') }));
+    expect(screen.getByRole('dialog').className).toMatch(/min-h-0/);
+    expect(screen.getByRole('dialog').className).toMatch(/overflow-hidden/);
   });
 
   it('keeps formatting behind one Aa control and collapses it with the composer', async () => {
@@ -228,15 +230,16 @@ describe('the composer', () => {
     // Nothing a word processor would offer beyond the shared model.
     expect(screen.queryByRole('button', { name: T('attachPhoto') })).toBeNull();
 
-    fireEvent.click(screen.getByText(T('noteDone')));
+    fireEvent.click(screen.getByRole('button', { name: T('resumePrayer') }));
     await waitFor(() => expect(screen.queryByRole('button', { name: T('formatBold') })).toBeNull());
   });
 
-  it('restores the draft when reopened, and summarises it while collapsed', async () => {
+  it('makes local persistence clear, then restores and summarises the draft while collapsed', async () => {
     renderSession([prayerA]);
     openComposer();
     typeNote('<div>Call Sarah before Thursday</div>');
-    fireEvent.click(screen.getByText(T('noteDone')));
+    expect(screen.getByRole('status').textContent).toContain(T('noteSavedOnContinue'));
+    fireEvent.click(screen.getByRole('button', { name: T('resumePrayer') }));
 
     await waitFor(() => expect(screen.getByRole('button', { name: T('noteAdded') })).toBeTruthy());
     fireEvent.click(screen.getByRole('button', { name: T('noteAdded') }));
@@ -471,6 +474,7 @@ describe('Previous preserves; Next commits', () => {
 
     fireEvent.click(screen.getByRole('button', { name: T('noteSaved') }));
     typeNote('<div>first thought, and one more</div>');
+    expect(screen.getByRole('status').textContent).toContain(T('noteSavedOnContinue'));
     onPrayed.mockClear();
     await clickNext();
 
@@ -699,7 +703,7 @@ describe('accessibility', () => {
 describe('localization', () => {
   const KEYS = [
     'noteAdd', 'noteTitle', 'notePlaceholder', 'noteFormatting', 'noteVoice', 'noteRecording',
-    'noteStopRecording', 'noteRecordAgain', 'noteDeleteRecording', 'noteDone', 'noteAdded',
+    'noteStopRecording', 'noteRecordAgain', 'noteDeleteRecording', 'resumePrayer', 'noteSavedOnContinue', 'noteAdded',
     'noteSaved', 'noteSummaryBoth', 'noteSummaryVoice', 'noteContinue', 'noteVoicePending',
     'noteVoicePlayback', 'noteSavingRecording', 'noteSaveFailed', 'noteSaveFailedShort',
     'noteTryAgain', 'noteContinueWithoutSaving', 'noteDiscardTitle', 'noteDiscardMessage',

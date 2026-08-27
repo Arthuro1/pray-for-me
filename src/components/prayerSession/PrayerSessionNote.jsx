@@ -6,8 +6,8 @@
 // textarea, no formatting toolbar by default (one `Aa` control reveals it), and
 // no media beyond writing and a voice note. Photos, videos and links stay in
 // Prayer Details, where the full composer already lives.
-import { useEffect, useRef, useState } from 'react';
-import { Check, ChevronDown, Loader2, NotebookPen, Type } from 'lucide-react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Check, ChevronUp, Loader2, NotebookPen, Type } from 'lucide-react';
 import { t } from '../../i18n';
 import RichTextEditor from '../rich/RichTextEditor';
 import { plainText } from '../rich/plainText';
@@ -18,12 +18,30 @@ import { NOTE_STATUS } from './useSessionNotes';
 // What the collapsed row says once something has been captured. Quiet, factual,
 // and never claiming a server round-trip that hasn't happened.
 function summaryLabel(lang, draft) {
-  if (draft.status === NOTE_STATUS.SAVED || draft.status === NOTE_STATUS.SAVING) return t(lang, 'noteSaved');
+  const committedText = plainText(draft.committedText || '');
+  const textChanged = plainText(draft.text) !== committedText;
+  if ((draft.status === NOTE_STATUS.SAVED || draft.status === NOTE_STATUS.SAVING) && !textChanged) {
+    return t(lang, 'noteSaved');
+  }
   if (draft.status === NOTE_STATUS.PENDING) return t(lang, 'noteAdded');
   const hasText = !!plainText(draft.text);
   if (hasText && draft.voice) return t(lang, 'noteSummaryBoth');
   if (draft.voice) return t(lang, 'noteSummaryVoice', { duration: fmtDuration(draft.voice.seconds || 0) });
   return t(lang, 'noteAdded');
+}
+
+function focusEditorWithoutPageScroll(panel) {
+  const editor = panel?.querySelector('[role="textbox"]');
+  if (!editor) return;
+  editor.focus?.({ preventScroll: true });
+  try {
+    const range = document.createRange();
+    range.selectNodeContents(editor);
+    range.collapse(false);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  } catch { /* selection APIs can be absent in lightweight browser shells */ }
 }
 
 export default function PrayerSessionNote({
@@ -46,20 +64,66 @@ export default function PrayerSessionNote({
   // Each prayer starts collapsed — moving on is never a note-taking prompt.
   useEffect(() => { setOpen(false); setShowFormatting(false); }, [prayerId]);
 
-  // On a phone the composer sits below the fold and the keyboard eats what's
-  // left, so bring it into view as it opens.
-  useEffect(() => {
-    if (!open) return;
-    panelRef.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+  // Focus before paint and explicitly suppress the browser's default page
+  // scrolling. The request container is adjusted separately below.
+  useLayoutEffect(() => {
+    if (open) focusEditorWithoutPageScroll(panelRef.current);
   }, [open]);
 
-  // Done collapses the composer, which is when the disclosure row is rendered
-  // again — so the focus hand-back waits for that render rather than reaching
-  // for a button that doesn't exist yet.
+  // On a phone the composer sits below the fold and the keyboard eats what's
+  // left. Keep the reveal inside the request's own scroll area: scrollIntoView
+  // can move the fixed dialog itself in mobile browsers and clip its header.
+  // Re-run when the visual viewport changes so the editor remains reachable
+  // after the keyboard has finished opening.
+  useEffect(() => {
+    if (!open) return;
+
+    let frame = null;
+    const reveal = () => {
+      if (frame) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const panel = panelRef.current;
+        if (!panel) return;
+
+        const scroller = panel.closest('.constellation-session__request');
+        if (!scroller) return;
+        const panelRect = panel.getBoundingClientRect();
+        const scrollerRect = scroller.getBoundingClientRect();
+        const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+        const viewportTop = vv?.offsetTop || 0;
+        const viewportBottom = viewportTop + (vv?.height || window.innerHeight);
+        const visibleTop = Math.max(scrollerRect.top, viewportTop) + 12;
+        const visibleBottom = Math.min(scrollerRect.bottom, viewportBottom) - 12;
+        if (visibleBottom <= visibleTop) return;
+
+        // If the panel is taller than the remaining viewport, prioritise its
+        // heading/editor; otherwise reveal its bottom actions as well.
+        if (panelRect.height > visibleBottom - visibleTop || panelRect.top < visibleTop) {
+          scroller.scrollTop += panelRect.top - visibleTop;
+        } else if (panelRect.bottom > visibleBottom) {
+          scroller.scrollTop += panelRect.bottom - visibleBottom;
+        }
+      });
+    };
+
+    reveal();
+    const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+    vv?.addEventListener?.('resize', reveal);
+    vv?.addEventListener?.('scroll', reveal);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      vv?.removeEventListener?.('resize', reveal);
+      vv?.removeEventListener?.('scroll', reveal);
+    };
+  }, [open]);
+
+  // Returning to prayer collapses the composer, which is when the disclosure
+  // row is rendered again — so the focus hand-back waits for that render rather
+  // than reaching for a button that doesn't exist yet.
   useEffect(() => {
     if (!open && returnFocus.current) {
       returnFocus.current = false;
-      triggerRef.current?.focus();
+      triggerRef.current?.focus?.({ preventScroll: true });
     }
   }, [open]);
 
@@ -73,6 +137,9 @@ export default function PrayerSessionNote({
   // Once the note has become a real update, its recording belongs to that entry:
   // further media is added from Prayer Details, like any other update.
   const committed = draft.status === NOTE_STATUS.SAVED || draft.status === NOTE_STATUS.SAVING;
+  const hasPendingTextChanges = committed
+    && plainText(draft.text) !== plainText(draft.committedText || '');
+  const settled = committed && !hasPendingTextChanges;
 
   if (!open) {
     return (
@@ -113,7 +180,7 @@ export default function PrayerSessionNote({
         <p className="text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--text-3)' }}>
           {t(lang, 'noteTitle')}
         </p>
-        {committed && (
+        {settled && (
           <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: 'var(--success)' }}>
             <Check size={11} aria-hidden="true" /> {t(lang, 'noteSaved')}
           </span>
@@ -127,7 +194,6 @@ export default function PrayerSessionNote({
           placeholder={t(lang, 'notePlaceholder')}
           ariaLabel={t(lang, 'noteTitle')}
           lang={lang}
-          autoFocus
           minHeight={72}
           maxHeight={200}
           showToolbar={showFormatting}
@@ -167,13 +233,24 @@ export default function PrayerSessionNote({
         <PrayerVoiceRecorder lang={lang} voice={draft.voice} readOnly onCaptured={() => {}} onDelete={() => {}} />
       )}
 
+      {hasContent && (!committed || hasPendingTextChanges) && (
+        <p
+          role="status"
+          className="mt-2 flex items-start gap-1.5 text-xs leading-5"
+          style={{ color: 'var(--text-3)' }}
+        >
+          <Check className="mt-0.5 shrink-0" size={12} aria-hidden="true" />
+          <span>{t(lang, 'noteSavedOnContinue')}</span>
+        </p>
+      )}
+
       <button
         type="button"
         onClick={collapse}
         className="pressable mt-3 flex min-h-11 items-center gap-1.5 rounded-xl text-sm font-medium"
         style={{ color: 'var(--accent)' }}
       >
-        {t(lang, 'noteDone')} <ChevronDown size={14} aria-hidden="true" />
+        <ChevronUp size={14} aria-hidden="true" /> {t(lang, 'resumePrayer')}
       </button>
     </div>
   );

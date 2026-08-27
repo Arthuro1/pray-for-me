@@ -134,11 +134,13 @@ function CommunityHub({ lang, userId, onViewGroup }) {
       navigate('/plan');
       return {};
     }
-    // Started here, in place: a plan no longer owes any questions before it can
-    // begin, so this screen has nothing to hand off to the Plan tab.
     const started = await startGuidedPlan({
       plan, startDate: res.startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
     });
+    if (!started.ok && started.reason === 'personalize') {
+      navigate('/plan', { state: { guidedPlanStart: { planId: plan.id, startDate: res.startDate } } });
+      return {};
+    }
     if (!started.ok) { toast.error(t(lang, 'errorGeneric')); return {}; }
     toast.success(t(lang, 'planStarted'));
     navigate('/plan');

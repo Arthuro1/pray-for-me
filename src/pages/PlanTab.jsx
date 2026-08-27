@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -21,7 +22,8 @@ import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanInviteModal from '../components/PlanInviteModal';
-import { startGuidedPlan } from '../lib/startGuidedPlan';
+import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
+import { needsPreStartPersonalization, startGuidedPlan } from '../lib/startGuidedPlan';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { track } from '../lib/analytics';
 import { PageHeader } from '../components/shared/Primitives';
@@ -56,6 +58,8 @@ export default function PlanTab() {
   );
   const { tr } = useTranslationStore();
   const lang = settings.language || 'fr';
+  const location = useLocation();
+  const navigate = useNavigate();
   const [monthDate, setMonthDate] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
   const [selectedKey, setSelectedKey] = useState(todayKey());
   const [showAddForm, setShowAddForm] = useState(false);
@@ -64,6 +68,7 @@ export default function PlanTab() {
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [detailPlan, setDetailPlan] = useState(null); // plan whose explanation modal is open
   const [inviteTarget, setInviteTarget] = useState(null); // { plan, startDate } → invite modal
+  const [personalizeTarget, setPersonalizeTarget] = useState(null); // singles plan choices before its run begins
   const [planInvitations, setPlanInvitations] = useState([]); // incoming "pray together" invites
   const [busyInvite, setBusyInvite] = useState(null);
 
@@ -117,12 +122,11 @@ export default function PlanTab() {
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
 
-  // Begin a plan. Nothing is asked first — a plan that can be tailored offers
-  // that from its own day, once the reader can see what an answer changes.
-  // Every entry point goes through startGuidedPlan so none of them can skip the
-  // review gate — see src/lib/startGuidedPlan.js.
-  const startPlan = useCallback(async (plan, startDate) => {
-    const result = await startGuidedPlan({ plan, startDate, lang, addPrayer });
+  // Actually create the run after any required pre-start choices have been
+  // collected. Couple plans remain immediate and can be personalized later;
+  // the singles plan carries its two small choices into day one.
+  const beginPlan = useCallback(async (plan, startDate, prefs = null) => {
+    const result = await startGuidedPlan({ plan, startDate, lang, addPrayer, prefs });
     if (!result.ok) {
       toast.error(t(lang, result.reason === 'unavailable' ? 'planCoupleReviewHint' : 'errorGeneric'));
       return result;
@@ -131,6 +135,29 @@ export default function PlanTab() {
     toast.success(t(lang, 'planStarted'));
     return result;
   }, [lang, addPrayer]);
+
+  const startPlan = useCallback(async (plan, startDate) => {
+    if (!canUsePlan(plan)) {
+      toast.error(t(lang, 'planCoupleReviewHint'));
+      return { ok: false, reason: 'unavailable' };
+    }
+    if (needsPreStartPersonalization(plan)) {
+      setPersonalizeTarget({ plan, startDate });
+      return { ok: false, reason: 'personalize' };
+    }
+    return beginPlan(plan, startDate);
+  }, [beginPlan, lang]);
+
+  // Starts handed over from Community or a group keep the same date and open
+  // the same small singles sheet here. Route state is consumed immediately so
+  // Back/refresh never repeats the request.
+  useEffect(() => {
+    const pending = location.state?.guidedPlanStart;
+    if (!pending?.planId) return;
+    navigate(location.pathname, { replace: true, state: null });
+    const plan = planById(pending.planId);
+    if (plan) startPlan(plan, pending.startDate || todayKey());
+  }, [location.pathname, location.state, navigate, startPlan]);
 
   // Accept an invitation to pray a plan together: start the SAME guided plan on
   // your own calendar (unless you're already running it) and clear the invite.
@@ -199,6 +226,21 @@ export default function PlanTab() {
           lang={lang}
           userId={user.id}
           onClose={() => setInviteTarget(null)}
+        />
+      )}
+
+      {personalizeTarget && (
+        <PlanPersonalizeModal
+          plan={personalizeTarget.plan}
+          lang={lang}
+          mode="start"
+          ctaKey="planStart"
+          onSave={async (prefs) => {
+            const target = personalizeTarget;
+            setPersonalizeTarget(null);
+            await beginPlan(target.plan, target.startDate, prefs);
+          }}
+          onClose={() => setPersonalizeTarget(null)}
         />
       )}
 

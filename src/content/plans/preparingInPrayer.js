@@ -65,7 +65,8 @@ export const PREPARING_IN_PRAYER = {
   // (src/content/plans/translations/<lang>.json). The flag is what tells the
   // loader an overlay is worth fetching for this plan at all.
   proseTranslations: true,
-  // Asks the four short onboarding questions before the plan starts.
+  // Asks only the two choices that affect day one: optional role wording and
+  // resource-ranking growth areas. Everything is optional and prefilled.
   onboarding: 'preparing',
   // Content-free product events, opt-in per plan. The names must exist on the
   // EVENTS allowlist in src/lib/analytics.js — they are plain strings here so

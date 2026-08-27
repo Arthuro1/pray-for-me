@@ -36,7 +36,7 @@ and history, the calendar, catch-up, reminders, offline, and the ICS export.
 | `src/hooks/usePlanDay.js` | one screen's worth: the day + the reader's role + resolved resources |
 | `src/components/PlanDayBody.jsx` | renders a rich day's reflection, prompts, practice, "Go deeper" |
 | `src/components/PlanDetailModal.jsx` | the read-before-you-commit preview |
-| `src/components/PlanPersonalizeModal.jsx` | the optional questions a rich plan may ask, offered *after* it starts |
+| `src/components/PlanPersonalizeModal.jsx` | the slim singles pre-start choices and the reopenable couple personalization sheet |
 | `src/components/PlanCompletionCard.jsx` | the close, and "continue praying" |
 
 ---
@@ -179,10 +179,10 @@ and retire the old one from `PLANS` once no one can still be running it
    `docs/RELATIONSHIP_FAMILY_PLANS.md`); there is no separate audience line.
 4. If you ship prose overlays for it, list the languages that are genuinely
    translated in `proseTranslations` (or `true` once they all are).
-5. If it can be tailored, set `onboarding` and extend `src/lib/planPrefs.js`.
-   Nothing is asked before a start: the sheet is reached from the plan's own day
-   and can be reopened for the life of the run. Only add a question that changes
-   something the reader will actually see.
+5. If it can be tailored, set `onboarding` and extend the matching preference
+   module. A singles plan may ask a short, optional pre-start choice only when it
+   affects day one; couple details stay reopenable on the running plan. Only add
+   a question that changes something the reader will actually see.
 6. If it wants analytics, declare `analyticsEvents` with names that exist on the
    `EVENTS` allowlist in `src/lib/analytics.js` (they are plain strings in the
    content file so it stays free of app imports).
@@ -218,18 +218,14 @@ never marries. In practice:
 
 `preparingInPrayer.test.js` enforces the forbidden phrasings in code.
 
-### Personalization (optional, device-local, never before the start)
+### Personalization (optional, device-local, before each new run)
 
-The plan starts on **Start**. Nothing is asked first, from any of the four
-screens that can begin one.
+Before **Start**, one compact sheet offers two optional choices:
+**husband/wife reflections** (defaulting to *keep the plan general*) and
+**growth areas** (folded away). Previous answers prefill the sheet, and both can
+still be changed later from the running plan.
 
-Two questions, neither required, reached from the plan's own day and reopenable
-for the life of the run: **husband/wife reflections** (defaulting to *keep the
-plan general*) and **growth areas** (folded away). The husband/wife question is
-also offered inline on the first day that actually carries such a reflection,
-and stops being offered once it has been answered either way.
-
-This used to be four questions behind a sheet between *Start* and day 1. A
+The old version used four questions behind that sheet. A
 **season** was collected, stored and read by nothing at all; an **emphasis** did
 one thing only — pre-tick the boxes on the completion card three weeks later,
 which is where that question is asked now. Both are gone, along with their copy

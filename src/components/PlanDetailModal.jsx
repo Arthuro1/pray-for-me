@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, Check, HeartHandshake } from 'lucide-react';
+import { useId, useState } from 'react';
+import { X, Check, ChevronDown, ChevronUp, HeartHandshake } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
@@ -26,7 +26,12 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const [startDate, setStartDate] = useState(todayKey());
+  const [showFullAbout, setShowFullAbout] = useState(false);
+  const [showAllDays, setShowAllDays] = useState(false);
+  const disclosureId = useId();
   const usable = canUsePlan(source);
+  const visibleDays = showAllDays ? plan.days : plan.days.slice(0, 3);
+  const hiddenDayCount = Math.max(0, plan.days.length - 3);
 
   return (
     <div
@@ -39,11 +44,11 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, plan.titleKey)}
-        className="editorial-dialog w-full max-w-md max-h-[85vh] overflow-y-auto"
+        className="editorial-dialog w-full max-w-md max-h-[85vh] min-h-0 overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 pb-4 flex items-start gap-3" style={{ borderBottom: '0.5px solid var(--border)' }}>
+        <div className="p-5 pb-4 flex items-start gap-3 shrink-0" style={{ borderBottom: '0.5px solid var(--border)' }}>
           <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
             {plan.emoji}
           </div>
@@ -59,29 +64,57 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 
-        {usable ? (<div className="p-5 space-y-5">
+        {usable ? (<div className="min-h-0 flex-1 overflow-y-auto p-5 pb-8 space-y-5">
           {/* What this journey is */}
-          {plan.intro && (
+          {(plan.intro || plan.biblical) && (
             <section>
               <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'planAbout')}</h4>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(plan.intro, lang)}</p>
-            </section>
-          )}
+              <div id={`${disclosureId}-about`}>
+                {plan.intro && (
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{
+                      color: 'var(--text-2)',
+                      ...(!showFullAbout && plan.biblical
+                        ? { display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }
+                        : {}),
+                    }}
+                  >
+                    {pick(plan.intro, lang)}
+                  </p>
+                )}
 
-          {/* The Scripture story it follows — when & how it was done in the Bible */}
-          {plan.biblical && (
-            <section className="rounded-xl p-3.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-              <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--accent)' }}>{t(lang, 'planInBible')}</h4>
-              <p className="text-sm leading-relaxed mb-2.5" style={{ color: 'var(--text-1)' }}>{pick(plan.biblical.text, lang)}</p>
-              <VersePill reference={plan.biblical.ref} lang={lang} />
+                {/* Keep the longer biblical context available without making it
+                    part of the first-use scan. */}
+                {showFullAbout && plan.biblical && (
+                  <div className="rounded-xl p-3.5 mt-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+                    <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--accent)' }}>{t(lang, 'planInBible')}</h4>
+                    <p className="text-sm leading-relaxed mb-2.5" style={{ color: 'var(--text-1)' }}>{pick(plan.biblical.text, lang)}</p>
+                    <VersePill reference={plan.biblical.ref} lang={lang} />
+                  </div>
+                )}
+              </div>
+              {plan.biblical && (
+                <button
+                  type="button"
+                  aria-expanded={showFullAbout}
+                  aria-controls={`${disclosureId}-about`}
+                  onClick={() => setShowFullAbout((open) => !open)}
+                  className="mt-2 min-h-11 inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  {showFullAbout ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
+                  {t(lang, showFullAbout ? 'tipCollapse' : 'gospelReadMore')}
+                </button>
+              )}
             </section>
           )}
 
           {/* Day-by-day preview so the user knows what they're starting */}
           <section>
             <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayByDay')}</h4>
-            <ol className="space-y-2">
-              {plan.days.map((day, i) => {
+            <ol id={`${disclosureId}-days`} className="space-y-2">
+              {visibleDays.map((day, i) => {
                 // A movement heading appears on the day it starts, so the shape
                 // of a longer journey reads without adding a second list level.
                 const movement = plan.movements?.find((m) => m.from === i + 1);
@@ -101,15 +134,38 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
                 );
               })}
             </ol>
+            {hiddenDayCount > 0 && (
+              <button
+                type="button"
+                aria-expanded={showAllDays}
+                aria-controls={`${disclosureId}-days`}
+                aria-label={`${t(lang, showAllDays ? 'tipCollapse' : 'loadMore')}: ${t(lang, 'planDayByDay')}`}
+                onClick={() => setShowAllDays((open) => !open)}
+                className="mt-3 w-full min-h-11 rounded-xl inline-flex items-center justify-center gap-1.5 text-sm font-semibold"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              >
+                {showAllDays ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+                {showAllDays
+                  ? t(lang, 'tipCollapse')
+                  : `${t(lang, 'loadMore')} · ${t(lang, 'planDays', { n: hiddenDayCount })}`}
+              </button>
+            )}
           </section>
         </div>) : (
-          <div className="p-5 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+          <div className="min-h-0 flex-1 overflow-y-auto p-5 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
             {t(lang, 'planCoupleReviewHint')}
           </div>
         )}
 
         {/* Start action lives with the explanation: read, then choose when to begin */}
-        <div className="p-5 pt-0 sticky bottom-0 space-y-3" style={{ background: 'var(--surface)' }}>
+        <div
+          className="shrink-0 p-5 pt-4 space-y-3"
+          style={{
+            background: 'var(--surface)',
+            borderTop: '0.5px solid var(--border)',
+            paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
+          }}
+        >
           {!running && usable && (
             <label className="flex items-center justify-between gap-3">
               <span className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>{t(lang, 'planStartDate')}</span>

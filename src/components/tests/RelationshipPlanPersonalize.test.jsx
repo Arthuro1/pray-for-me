@@ -15,7 +15,7 @@ describe('couple plan personalization', () => {
     const onSave = vi.fn();
     render(<PlanPersonalizeModal plan={engaged} lang={lang} people={[{ id: 'p1', prayerId: 'prayer-1', name: 'Anna' }]} onSave={onSave} onClose={vi.fn()} />);
     expect(screen.getByText(t(lang, 'planCoupleFianceQ'))).toBeTruthy();
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'prayer-1' } });
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Anna' } });
     expect(screen.getByLabelText(t(lang, 'planCoupleDisplayName')).value).toBe('Anna');
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'save') }));
     expect(onSave).toHaveBeenCalledWith(expect.objectContaining({
@@ -34,6 +34,7 @@ describe('couple plan personalization', () => {
     const onSave = vi.fn();
     render(<PlanPersonalizeModal plan={married} lang={lang} onSave={onSave} onClose={vi.fn()} />);
     expect(screen.queryByLabelText(t(lang, 'planCoupleChildName'))).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'planCoupleIncludeQ')) }));
     fireEvent.click(screen.getByRole('checkbox', { name: t(lang, 'planCoupleIncludeChildren') }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'planCoupleAddChild') }));
     fireEvent.change(screen.getByLabelText(t(lang, 'planCoupleChildName')), { target: { value: 'Emma' } });

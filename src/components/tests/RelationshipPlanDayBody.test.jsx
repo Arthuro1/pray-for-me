@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 vi.mock('../../lib/verseText', () => ({
   fetchScriptureText: vi.fn(async () => null), fetchVerseText: vi.fn(async () => ({ data: null, error: null })),
@@ -12,21 +12,34 @@ import PlanDayBody from '../PlanDayBody';
 import { t } from '../../i18n';
 
 const lang = 'fr';
+const afterPrayerLabel = () => {
+  const requested = t(lang, 'planAfterPrayer');
+  return requested === 'planAfterPrayer' ? t(lang, 'moreOptionsLabel') : requested;
+};
 afterEach(cleanup);
 
 describe('relationship plan day sections', () => {
-  it('renders spouse, self, marriage, conversation, and shared-prayer directions distinctly', () => {
+  it('keeps prayer directions visible and moves couple exercises after prayer', () => {
     render(<PlanDayBody lang={lang} role="general" day={{
       partnerName: 'Anna',
       spousePrompt: { fr: 'Prie pour Anna' }, selfPrompt: { fr: 'Prie pour ton propre cœur' },
       marriagePrompt: { fr: 'Prie pour votre mariage' },
       conversationPrompt: { fr: 'Une question à discuter' }, prayTogether: { fr: 'Quelques mots à prier ensemble' },
+      safetyNote: { fr: 'Demande de l’aide si tu ne te sens pas en sécurité.' },
     }} />);
     expect(screen.getByText('Prie pour Anna')).toBeTruthy();
     expect(screen.getByText('Prie pour ton propre cœur')).toBeTruthy();
     expect(screen.getByText('Prie pour votre mariage')).toBeTruthy();
+    expect(screen.getByText('Demande de l’aide si tu ne te sens pas en sécurité.')).toBeTruthy();
+    expect(screen.queryByText('Une question à discuter')).toBeNull();
+    expect(screen.queryByText('Quelques mots à prier ensemble')).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
+
     expect(screen.getByText(t(lang, 'planTalkTogether'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPrayTogether'))).toBeTruthy();
+    expect(screen.getByText('Une question à discuter')).toBeTruthy();
+    expect(screen.getByText('Quelques mots à prier ensemble')).toBeTruthy();
   });
 
   it('renders each child in an isolated section', () => {

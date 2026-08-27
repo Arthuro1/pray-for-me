@@ -22,9 +22,10 @@ the title; it is gone, and the three `plan*Audience` keys with it. All three
 titles are authored in **all 16 locales**, like every other plan string.
 
 These are contexts for faithful Christian life, not stages of spiritual rank.
-The singles implementation is unchanged except that it no longer asks what
-season the reader is in: that answer was stored and read by nothing, so the
-question and its copy are gone from all 16 locales.
+The singles plan restores a compact pre-start choice sheet with only role
+wording and optional growth areas. It no longer asks what season the reader is
+in: that answer was stored and read by nothing, so the question and its copy are
+gone from all 16 locales.
 
 ## Engaged: `covenant21`
 
@@ -131,9 +132,9 @@ Accepting an invitation creates a separate private guided prayer for that
 participant. Every path that starts a plan — the Plan tab's own button,
 accepting an invitation from the Plan tab or from Community, and joining a plan
 a group is praying — goes through `src/lib/startGuidedPlan.js`, so none of them
-can skip the review gate. A plan owes no questions before it begins, so every
-screen finishes its own start; there is no cross-screen handoff and no bounce to
-the Plan tab to answer a sheet.
+can skip the review gate. Engaged and married plans finish their own start and
+are personalized afterward. A singles start is handed to the Plan tab only long
+enough to collect its two optional, prefilled choices before creating the run.
 
 Group participation does not share historical notes or answers.
 Leaving deletes only the membership row; the person's prayer, notes, voice

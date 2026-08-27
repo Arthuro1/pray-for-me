@@ -17,7 +17,9 @@ import { pick } from '../content/teaching';
 // three weeks later — so it is asked once, here, with everything offered.
 export default function PlanCompletionCard({ plan, lang, onContinue, onRelationshipNext }) {
   const themes = plan.continueThemes || [];
-  const [selected, setSelected] = useState(() => themes.map((th) => th.id));
+  // Recurring prayers are a lasting choice, so completion never opts the
+  // reader into all of them by default.
+  const [selected, setSelected] = useState([]);
   const [done, setDone] = useState(false);
 
   const toggle = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -26,6 +28,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
   const relationshipActionKey = plan.lifeStage === 'engaged'
     ? 'planCoupleContinueMarriage'
     : (plan.lifeStage === 'married' && plan.renewable ? 'planCoupleRepeat' : null);
+  const continuationChoiceOpen = themes.length > 0 && !done;
 
   return (
     <section className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
@@ -33,20 +36,6 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
         <Sprout size={13} aria-hidden="true" /> {t(lang, 'planCompleteHeading', { n: plan.count })}
       </p>
       <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(plan.completion, lang)}</p>
-
-      {/* Router navigation, not a bare href: a plain link reloads the whole
-          document, which in the installed PWA re-runs the splash and refetch —
-          at the moment someone has just finished thirty days. */}
-      {relationshipActionKey && (
-        <Link
-          to="/plan"
-          onClick={onRelationshipNext}
-          className="mb-3 block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"
-          style={{ background: 'var(--accent)', color: '#fff' }}
-        >
-          {t(lang, relationshipActionKey)}
-        </Link>
-      )}
 
       {themes.length > 0 && !done && (
         <>
@@ -73,9 +62,10 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
             })}
           </div>
           <button
+            type="button"
             onClick={async () => { await onContinue(chosen); setDone(true); }}
             disabled={chosen.length === 0}
-            className="w-full rounded-xl px-3 py-2.5 text-sm font-semibold disabled:opacity-50"
+            className={`${relationshipActionKey ? 'mb-3 ' : ''}w-full rounded-xl px-3 py-2.5 text-sm font-semibold disabled:opacity-50`}
             style={{ background: 'var(--accent)', color: '#fff' }}
           >
             {t(lang, 'planContinueCta')}
@@ -84,7 +74,28 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
       )}
 
       {done && (
-        <p className="text-sm font-medium" style={{ color: 'var(--success)' }}>{t(lang, 'planContinueAdded')}</p>
+        <p className={relationshipActionKey ? 'mb-3 text-sm font-medium' : 'text-sm font-medium'} style={{ color: 'var(--success)' }}>
+          {t(lang, 'planContinueAdded')}
+        </p>
+      )}
+
+      {/* Router navigation, not a bare href: a plain link reloads the whole
+          document, which in the installed PWA re-runs the splash and refetch —
+          at the moment someone has just finished thirty days. When continuation
+          choices are also present, this remains a secondary path so the card
+          never presents two competing primary actions. */}
+      {relationshipActionKey && (
+        <Link
+          to="/plan"
+          onClick={onRelationshipNext}
+          data-emphasis={continuationChoiceOpen ? 'secondary' : 'primary'}
+          className="block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"
+          style={continuationChoiceOpen
+            ? { background: 'var(--input-bg)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }
+            : { background: 'var(--accent)', color: '#fff' }}
+        >
+          {t(lang, relationshipActionKey)}
+        </Link>
       )}
     </section>
   );

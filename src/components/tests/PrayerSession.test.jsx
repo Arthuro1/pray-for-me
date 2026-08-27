@@ -140,8 +140,8 @@ describe('PrayerSession — guided plan day content', () => {
   });
 
   // A rich plan day walks through the SAME session — same prayer, same
-  // completion, same notes — and simply carries more content.
-  it('walks a rich plan day through the ordinary session, with its prompts and practice', () => {
+  // completion, same notes — while exercises wait until after prayer.
+  it('walks a rich plan day through the ordinary session and keeps practice optional', () => {
     const richPrayer = {
       ...planPrayer,
       id: 'plan2',
@@ -158,6 +158,12 @@ describe('PrayerSession — guided plan day content', () => {
     expect(screen.getByText(/Psalm 73:25-26|Psaume 73:25-26/)).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPrayerPrompts'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPrayForYourself'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'planPracticeToday'))).toBeNull();
+    const requestedAfterPrayerLabel = t(lang, 'planAfterPrayer');
+    const afterPrayerLabel = requestedAfterPrayerLabel === 'planAfterPrayer'
+      ? t(lang, 'moreOptionsLabel')
+      : requestedAfterPrayerLabel;
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel }));
     expect(screen.getByText(t(lang, 'planPracticeToday'))).toBeTruthy();
     // Still the ORDINARY session underneath: the same closing action, and the
     // same optional prayer note (so notes, voice notes and completion all keep

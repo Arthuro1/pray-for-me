@@ -382,7 +382,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         ? { background: 'var(--background)', top: viewport.top, height: viewport.height, bottom: 'auto' }
         : { background: 'var(--background)' }}
     >
-      <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
+      <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex h-full min-h-0 flex-col overflow-hidden focus:outline-none">
         {children}
       </div>
     </div>
