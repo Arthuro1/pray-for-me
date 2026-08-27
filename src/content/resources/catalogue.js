@@ -64,7 +64,6 @@ export const RESOURCES = [
     // Sensitive: publication waits on a `contentReview` and a `safetyReview`.
     // Marking it `approved` without them is a status that never takes effect —
     // the resolver drops the entry either way.
-    status: 'approved',
     reviewLevel: 'sensitive',
     contentReview: {
       status: 'approved',
@@ -90,7 +89,6 @@ export const RESOURCES = [
     originalLanguage: 'en',
     topics: ['marriage', 'covenant', 'communication', 'character'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'approved',
     reviewLevel: 'sensitive',
     contentReview: {
       status: 'approved',
@@ -116,7 +114,6 @@ export const RESOURCES = [
     originalLanguage: 'en',
     topics: ['singleness', 'identity', 'contentment', 'community'],
     lifeStages: ['single'],
-    status: 'approved',
     reviewLevel: 'sensitive',
     contentReview: {
       status: 'approved',
