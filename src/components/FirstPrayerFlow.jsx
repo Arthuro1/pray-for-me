@@ -9,6 +9,8 @@ import { setContentLang } from '../lib/contentLang';
 import { todayKey } from '../lib/prayedLog';
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { saveGuestDraft, markGuestDraftPrayed, hasPendingGuestDraftSync } from '../lib/guestPrayerDraft';
+import { useFormDraft } from '../hooks/useFormDraft';
+import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { track, EVENTS } from '../lib/analytics';
 import PrayerSession from './PrayerSession';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
@@ -48,6 +50,21 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
   const [prayer, setPrayer] = useState(null); // the in-memory prayer for the session
   const prayedRef = useRef(false); // fire the "prayed" analytic at most once
 
+  // What is typed here is a prayer before it is anything else. Protect it while
+  // it is still just text on a screen — encrypted, on this device, cleared the
+  // moment it becomes a real prayer — so a mis-tapped close or a reload doesn't
+  // take it. Nothing about a capture draft is ever sent anywhere.
+  const { commit: commitCapture } = useFormDraft({
+    slot: DRAFT_SLOTS.FIRST_PRAYER,
+    value: text,
+    serialize: (value) => (value.trim() ? { title: value } : null),
+    restore: ({ title }) => {
+      if (!title) return false;
+      setText(title);
+      return true;
+    },
+  });
+
   // Re-focus the active panel when the phase changes. During 'pray' the ref is
   // attached to nothing (PrayerSession owns its own trap), so this stays inert.
   const trapRef = useFocusTrap(phase, phase === 'capture' ? 'textarea' : null);
@@ -63,6 +80,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
     setSaving(true);
     if (isGuest) {
       const { id } = await saveGuestDraft({ title, completed: false, contentLanguage: lang });
+      commitCapture(); // the words now live in the guest prayer draft instead
       setContentLang(lang); // local only — never a network call
       track(EVENTS.GUEST_PRAYER_STARTED);
       setPrayer({ id, title, prayer_categories: [], prayer_points: [] });
@@ -74,7 +92,10 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
     // shows today and returns weekly, not silently every day.
     const id = await usePrayerStore.getState().addPrayer({ title, schedule: defaultNewSchedule() });
     setSaving(false);
+    // A failed write keeps the capture draft — losing the words to an offline
+    // moment is exactly what it is there to prevent.
     if (!id) { onFinish?.(); return; }
+    commitCapture();
     setContentLang(lang);
     const created = usePrayerStore.getState().prayers.find((p) => p.id === id)
       || { id, title, prayer_categories: [], prayer_points: [] };

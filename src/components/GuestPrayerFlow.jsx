@@ -10,6 +10,8 @@ import {
   saveGuestDraft,
 } from '../lib/guestPrayerDraft';
 import { markActivationSessionCompleted } from '../lib/activationProgress';
+import { useFormDraft } from '../hooks/useFormDraft';
+import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { EVENTS, track } from '../lib/analytics';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
 import Encouragement from './shared/Encouragement';
@@ -123,6 +125,21 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
   const [saving, setSaving] = useState(false);
   const [prayer, setPrayer] = useState(null);
   const prayedRef = useRef(false);
+
+  // What is typed here is a prayer before it is anything else. Protect it while
+  // it is still just text on a screen — encrypted, on this device, cleared the
+  // moment it becomes a real prayer — so a mis-tapped close or a reload doesn't
+  // take it. Nothing about a capture draft is ever sent anywhere.
+  const { commit: commitCapture } = useFormDraft({
+    slot: DRAFT_SLOTS.FIRST_PRAYER,
+    value: text,
+    serialize: (value) => (value.trim() ? { title: value } : null),
+    restore: ({ title }) => {
+      if (!title) return false;
+      setText(title);
+      return true;
+    },
+  });
   const trapRef = useFocusTrap(phase, phase === 'capture' ? 'textarea' : null);
   useEscapeKey(phase === 'capture' ? onFinish : undefined);
 
@@ -132,6 +149,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
     if (!title || saving) return;
     setSaving(true);
     const { id } = await saveGuestDraft({ title, completed: false, contentLanguage: lang });
+    commitCapture(); // the words now live in the guest prayer draft instead
     setContentLang(lang);
     track(EVENTS.GUEST_PRAYER_STARTED);
     setPrayer({ id, title });

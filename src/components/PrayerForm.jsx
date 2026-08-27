@@ -166,7 +166,7 @@ export default function PrayerForm({
   // community request are both excluded — the first already has a saved row, the
   // second is written for other people to read and gets no local copy.
   const draftEnabled = !editPrayer && !communityMode;
-  const { restored, dismissRestoredNote, commit: commitDraft } = useFormDraft({
+  const { restored, commit: commitDraft, discard: discardDraft } = useFormDraft({
     slot: DRAFT_SLOTS.NEW_PRAYER,
     enabled: draftEnabled,
     value: form,
@@ -200,11 +200,13 @@ export default function PrayerForm({
     },
   });
 
+  // "Start fresh" really starts fresh: the form goes back to what it opens with
+  // and the stored draft is deleted, not merely hidden.
   const startFresh = () => {
     setForm(initialForm(null, prefill, lang));
     setNoteOpen(hasNote(null, prefill));
     setOrganizeOpen(false);
-    dismissRestoredNote();
+    discardDraft();
   };
 
   // "Change" on the rhythm line opens Organize and hands focus to the rhythm

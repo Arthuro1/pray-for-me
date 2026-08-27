@@ -1,9 +1,14 @@
 // @vitest-environment jsdom
 //
-// After saving a new prayer the user sees a compact "Saved privately" state with
-// ONE decision: pray now (opens a real session on that prayer) or done. The old
+// After saving a new prayer the user sees a compact confirmation with ONE
+// decision: pray now (opens a real session on that prayer) or done. The old
 // decision-heavy screen (Scripture / reminder / sharing) is gone — those live on
 // the prayer detail page instead.
+//
+// This panel deliberately does NOT lead with privacy: the save toast has already
+// said "Saved privately", so repeating it as a heading here (on top of the quiet
+// audience badge) made one private note carry three reassurances. The badge stays
+// — the FACTS about audience and encryption are never removed, only the repetition.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -27,6 +32,7 @@ import PrayerSavedStep from '../PrayerSavedStep';
 import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
 import { readActivationProgress } from '../../lib/activationProgress';
+import { defaultNewSchedule, nextReturnLabel } from '../../lib/scheduleDraft';
 
 const lang = 'fr';
 afterEach(cleanup);
@@ -35,15 +41,22 @@ beforeEach(() => {
   usePrayerStore.setState({ prayers: [], categories: [], settings: { language: lang } });
 });
 
-const renderStep = (props = {}) =>
+const renderStep = ({ onClose, ...props } = {}) =>
   render(
-    <PrayerSavedStep prayerId="p1" title="Ma prière" description="" lang={lang} onClose={props.onClose || (() => {})} />
+    <PrayerSavedStep
+      prayerId="p1"
+      title="Ma prière"
+      description=""
+      lang={lang}
+      onClose={onClose || (() => {})}
+      {...props}
+    />
   );
 
 describe('PrayerSavedStep', () => {
-  it('confirms "saved privately" with just pray-now and done', () => {
+  it('confirms the prayer is saved, with just pray-now and done', () => {
     renderStep();
-    expect(screen.getByText(t(lang, 'savedPrivately'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'prayerSavedTitle'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'savedOnToday'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'prayNowCta'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'doneBtn'))).toBeTruthy();
@@ -68,6 +81,27 @@ describe('PrayerSavedStep', () => {
     fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
     expect(markPrayedOn).toHaveBeenCalledWith('p1', expect.any(String));
     expect(readActivationProgress().signals).toContain('session_completed');
+  });
+
+  it('does not repeat the privacy reassurance the save toast already gave', () => {
+    renderStep();
+    // Said once here, as the quiet badge — never again as a heading.
+    expect(screen.queryByText(t(lang, 'savedPrivately'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'savedEncrypted'))).toBeNull();
+    expect(screen.getByText(t(lang, 'audiencePrivate'))).toBeTruthy();
+  });
+
+  it('says when the prayer comes back next, from its real schedule', () => {
+    const schedule = defaultNewSchedule();
+    renderStep({ schedule });
+    const when = nextReturnLabel(schedule, lang);
+    expect(when).toBeTruthy();
+    expect(screen.getByText(t(lang, 'nextPrayerLabel', { when }))).toBeTruthy();
+  });
+
+  it('stays silent when there is no next day to name', () => {
+    renderStep({ schedule: { type: 'none' } });
+    expect(screen.queryByText(/^Prochaine prière/)).toBeNull();
   });
 
   it('closes when done', () => {

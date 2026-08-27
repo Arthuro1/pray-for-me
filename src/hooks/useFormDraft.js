@@ -62,5 +62,8 @@ export function useFormDraft({ slot, enabled = true, value, serialize, restore }
     if (slot) clearFormDraft(slot);
   }, [slot]);
 
-  return { restored, dismissRestoredNote: () => setRestored(false), commit: forget, discard: forget };
+  // commit (the real thing now exists) and discard (start over) do the same
+  // thing to the slot; they are named apart because the callers mean different
+  // things by them.
+  return { restored, commit: forget, discard: forget };
 }

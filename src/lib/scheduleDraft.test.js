@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest';
 import {
   defaultNewDraft, defaultNewSchedule, draftFromSchedule, scheduleFromDraft, rhythmOf, RHYTHM_PRESETS,
   draftForMode, draftForRecurrenceChoice, draftForEnd, recurrenceChoiceOf, emptyDraft,
-  scheduleSummary, scheduleSentence, planSummary,
+  scheduleSummary, scheduleSentence, planSummary, returnsSummary, nextReturnLabel, weekdayName,
 } from './scheduleDraft';
 import { planWeekDays } from './planner';
 import { occursOn, addDays, parseKey } from './schedule';
@@ -187,5 +187,80 @@ describe('planWeekDays — what "my normal rhythm" resolves to', () => {
 
   it('lets a per-prayer weekday override win, exactly like the planner', () => {
     expect(planWeekDays(cats, ['c1'], [6])).toEqual([6]);
+  });
+});
+
+// ── The one-line rhythm summary the Add-prayer form shows ────────────────────
+// It has to answer "when does this come back?" in ordinary language, from the
+// SAME schedule that will be saved — a hidden default is only fixed if the line
+// can never describe something other than what the scheduler holds.
+describe('returnsSummary — the rhythm, in one readable line', () => {
+  const lang = 'fr';
+
+  it('names the real weekday of the default new-prayer rhythm', () => {
+    const line = returnsSummary(defaultNewSchedule(), lang);
+    const today = weekdayName(lang, parseKey(DAY).getDay());
+    expect(line).toBe(t(lang, 'rhythmReturns', { phrase: t(lang, 'sentWeekly', { days: today }) }));
+    expect(line).toContain(today);
+  });
+
+  it('reads every rhythm without exposing recurrence vocabulary', () => {
+    const say = (s) => returnsSummary(s, lang);
+    expect(say({ type: 'recurring', freq: 'daily', startDate: DAY }))
+      .toBe(t(lang, 'rhythmReturns', { phrase: t(lang, 'sentDaily') }));
+    // Several weekdays read as a conjunction ("Monday and Friday"), never as a
+    // comma-separated code list.
+    expect(say({ type: 'recurring', freq: 'weekly', weekDays: [1, 5], startDate: DAY }))
+      .toContain(weekdayName(lang, 1));
+    expect(say({ type: 'recurring', freq: 'weekly', weekDays: [1, 5], startDate: DAY }))
+      .toContain(weekdayName(lang, 5));
+    expect(say({ type: 'recurring', freq: 'interval', interval: 14, startDate: DAY }))
+      .toBe(t(lang, 'rhythmReturns', { phrase: t(lang, 'sentInterval', { n: 14 }) }));
+    expect(say({ type: 'once', date: '2026-09-12' })).toContain('12');
+    expect(['freq', 'recurring', 'interval', 'weekDays']).not.toContain(say({ type: 'recurring', freq: 'daily', startDate: DAY }));
+  });
+
+  it('says "no fixed schedule" rather than inventing a rhythm', () => {
+    expect(returnsSummary({ type: 'none' }, lang)).toBe(t(lang, 'noFixedSchedule'));
+  });
+
+  it("falls back to the weekly plan's real days for a legacy null schedule", () => {
+    expect(returnsSummary(null, lang, { planDays: [2] }))
+      .toBe(t(lang, 'rhythmReturns', { phrase: planSummary([2], lang) }));
+  });
+
+  it('matches the schedule an untouched form would actually save', () => {
+    // The line is built from scheduleFromDraft, the same conversion handleSubmit
+    // performs — so the two can never disagree.
+    expect(returnsSummary(scheduleFromDraft(defaultNewDraft()), lang))
+      .toBe(returnsSummary(defaultNewSchedule(), lang));
+  });
+});
+
+describe('nextReturnLabel — when it comes back next', () => {
+  const lang = 'fr';
+
+  it('skips today and names the next weekday of a weekly rhythm', () => {
+    const label = nextReturnLabel(defaultNewSchedule(), lang);
+    // Weekly on today's weekday → exactly seven days away, so a week from now.
+    expect(label).toBe(weekdayName(lang, parseKey(addDays(DAY, 7)).getDay()));
+  });
+
+  it('says "tomorrow" for a daily rhythm rather than repeating a weekday', () => {
+    expect(nextReturnLabel({ type: 'recurring', freq: 'daily', startDate: DAY }, lang))
+      .toBe(t(lang, 'tomorrow'));
+  });
+
+  it('is null when there is nothing further to name', () => {
+    expect(nextReturnLabel({ type: 'none' }, lang)).toBeNull();
+    expect(nextReturnLabel(null, lang)).toBeNull();
+    // A one-off due today has no next day — better silence than a hedge.
+    expect(nextReturnLabel({ type: 'once', date: DAY }, lang)).toBeNull();
+  });
+
+  it('uses a date once a weekday would stop being unambiguous', () => {
+    const far = addDays(DAY, 30);
+    expect(nextReturnLabel({ type: 'once', date: far }, lang))
+      .toBe(parseKey(far).toLocaleDateString(lang, { day: 'numeric', month: 'long' }));
   });
 });
