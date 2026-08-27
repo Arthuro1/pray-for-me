@@ -61,13 +61,21 @@ export const RESOURCES = [
     originalLanguage: 'en',
     topics: ['marriage', 'covenant', 'spiritual-formation'],
     lifeStages: ['single', 'engaged', 'married'],
-    // Sensitive: publication waits on the content and safety sign-offs below.
-    // Marking it `approved` without them would only have been a status that
-    // never took effect — the resolver drops the entry either way.
+    // Sensitive: publication waits on a `contentReview` and a `safetyReview`.
+    // Marking it `approved` without them is a status that never takes effect —
+    // the resolver drops the entry either way.
     status: 'approved',
     reviewLevel: 'sensitive',
-    reviewedBy: 'Paul', 
-    reviewedAt: '2026-08-26',
+    contentReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
+    safetyReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
     description: {
       en: 'Reads marriage as a picture of Christ’s covenant love rather than a route to personal fulfilment.',
       fr: "Lit le mariage comme une image de l'amour d'alliance du Christ plutôt que comme une voie vers l'épanouissement personnel.",
@@ -84,8 +92,16 @@ export const RESOURCES = [
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'approved',
     reviewLevel: 'sensitive',
-    reviewedBy: 'Paul', 
-    reviewedAt: '2026-08-26',
+    contentReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
+    safetyReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
     description: {
       en: 'Works through commitment, service and friendship in marriage, with a chapter written for single readers.',
       fr: "Parcourt l'engagement, le service et l'amitié dans le mariage, avec un chapitre écrit pour les lecteurs célibataires.",
@@ -101,6 +117,17 @@ export const RESOURCES = [
     topics: ['singleness', 'identity', 'contentment', 'community'],
     lifeStages: ['single'],
     status: 'approved',
+    reviewLevel: 'sensitive',
+    contentReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
+    safetyReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
     description: {
       en: 'Takes apart the assumptions that make singleness feel like a waiting room.',
       fr: "Démonte les idées reçues qui font du célibat une salle d'attente.",
@@ -192,8 +219,16 @@ export const RESOURCES = [
     lifeStages: ['single', 'dating'],
     status: 'approved',
     reviewLevel: 'sensitive',
-    reviewedBy: 'Paul', 
-    reviewedAt: '2026-08-26',
+    contentReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
+    safetyReview: {
+      status: 'approved',
+      reviewedBy: 'Paul',
+      reviewedAt: '2026-08-26',
+    },
     description: {
       en: 'A personal account of bringing romantic desire under Christ’s authority over many years of waiting.',
       fr: "Un récit personnel : soumettre le désir amoureux à l'autorité du Christ au fil de longues années d'attente.",
