@@ -42,12 +42,6 @@ export default function PlanDayBody({
   const prayTogether = pick(day.prayTogether, lang);
   const safetyNote = pick(day.safetyNote, lang);
   const related = day.related || [];
-  const requestedAfterPrayerLabel = t(lang, 'planAfterPrayer');
-  // Until the dedicated label is translated in every locale, keep this
-  // disclosure useful instead of exposing an untranslated key.
-  const afterPrayerLabel = requestedAfterPrayerLabel === 'planAfterPrayer'
-    ? t(lang, 'moreOptionsLabel')
-    : requestedAfterPrayerLabel;
   // Role reflections are shown ONLY when the reader has explicitly asked for
   // them — never inferred from a name, a photo or anything else.
   const roleApproved = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
@@ -184,7 +178,7 @@ export default function PlanDayBody({
             aria-controls={`${idPrefix}-after-prayer`}
             className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
           >
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>{afterPrayerLabel}</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>{t(lang, 'planAfterPrayer')}</span>
             <ChevronDown
               size={16}
               aria-hidden="true"

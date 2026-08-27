@@ -80,6 +80,11 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
   );
 }
 
+// The "a few per day" options: off, or a small cap on how many prayers Today
+// asks for. Off is first because it is the default — nothing is hidden unless
+// the reader asks for it.
+const CAP_OPTIONS = [null, 3, 5, 10];
+
 // A collapsible, labelled group of settings cards. Progressive disclosure: the
 // header stays visible so nothing is hidden from discovery, and the panel is
 // `hidden` when collapsed so its controls drop out of the tab order too. The
@@ -613,6 +618,34 @@ export default function SettingsTab() {
 
         {/* ── Prayer reminders (deep-link id stays `notifications`) ── */}
         <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
+          {/* A few per day — one calm global cap on how many prayers Today asks
+              for, so a long list stays coverable. Off = show everything. It used
+              to sit on the Plan tab between the day agenda and the plan
+              catalogue, which is a content surface, not a place for a standing
+              preference. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'perDayTitle')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'perDaySub')}</p>
+            <div className="flex gap-2 flex-wrap" role="group" aria-label={t(lang, 'perDayTitle')}>
+              {CAP_OPTIONS.map((n) => {
+                const active = (settings.maxPerDay || null) === n;
+                return (
+                  <button
+                    key={n ?? 'off'}
+                    onClick={() => updateSettings({ maxPerDay: n })}
+                    aria-pressed={active}
+                    className="min-h-[44px] px-4 rounded-xl text-sm font-medium transition-colors"
+                    style={active
+                      ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
+                      : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    {n ?? t(lang, 'perDayOff')}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Daily + follow-up reminders */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-4">

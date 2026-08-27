@@ -19,6 +19,7 @@ import { PrimaryButton, QuietButton, SectionLabel, StatusPill } from './shared/P
 import PrayerMusicControl from './PrayerMusicControl';
 import PrayerSessionNote from './prayerSession/PrayerSessionNote';
 import { useSessionNotes } from './prayerSession/useSessionNotes';
+import { isSessionNote } from '../lib/prayerNotes';
 
 // "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
 // straight into the last-used format (requests, for a new user) and a small
@@ -122,7 +123,12 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // A saved-from-community copy follows someone else's request: its update
   // history belongs to the group's author, so there is nothing to note onto here
   // (Prayer Details hides its update composer for the same reason).
-  const notesEnabled = allowNotes && !currentPrayer?.community_origin_id;
+  // Not offered on a prayer this device cannot read: a locked row is exactly the
+  // state where the vault cannot encrypt a note either, and promotion would then
+  // fall back to the plaintext sync_add_update path — which fans a SHARED
+  // prayer's updates out to every group copy. Writing a note about a request you
+  // cannot see was never useful anyway.
+  const notesEnabled = allowNotes && !currentPrayer?.community_origin_id && !currentPrayer?._locked;
   const notes = useSessionNotes(allowNotes);
   const noteDraft = currentPrayer ? notes.draftFor(currentPrayer.id) : null;
 
@@ -672,15 +678,28 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--text-2)' }} />
         )}
 
-        {/* Freshest news to pray from — one line, never the whole history */}
-        {latestUpdate?.text && (
-          <aside className="mb-8 border-inline-start-2 py-1 ps-4" style={{ borderColor: 'var(--sage)' }}>
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--success)' }}>
-              {t(lang, 'latestUpdateLabel')}
-            </p>
-            <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-6" style={{ color: 'var(--text-2)' }} />
-          </aside>
-        )}
+        {/* Freshest news to pray from — one line, never the whole history.
+            A note the reader captured in an earlier session is an ordinary update
+            by the time it lands here, so without this it came back as "Latest
+            update" in news green: their own quiet note, dressed up as something
+            that had happened. Named and toned as what it is instead. */}
+        {latestUpdate?.text && (() => {
+          const ownNote = isSessionNote(latestUpdate.id);
+          return (
+            <aside
+              className="mb-8 border-inline-start-2 py-1 ps-4"
+              style={{ borderColor: ownNote ? 'var(--border)' : 'var(--sage)' }}
+            >
+              <p
+                className="mb-2 text-[10px] font-bold uppercase tracking-[.16em]"
+                style={{ color: ownNote ? 'var(--text-3)' : 'var(--success)' }}
+              >
+                {t(lang, ownNote ? 'noteTitle' : 'latestUpdateLabel')}
+              </p>
+              <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-6" style={{ color: 'var(--text-2)' }} />
+            </aside>
+          );
+        })()}
 
         {points.length > 0 && (
           <div className="border-block-start" style={{ borderColor: 'var(--border)' }}>

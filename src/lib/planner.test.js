@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds } from './planner.js';
+import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds, runningPlanProgress } from './planner.js';
 
 // 2026-07-06 is a Monday (weekday 1); 2026-07-07 a Tuesday (weekday 2).
 const cats = [
@@ -139,6 +139,58 @@ describe('scheduleEnded / runningPlanIds', () => {
   it('answered and unscheduled prayers never claim a plan', () => {
     const prayers = [planPrayer('a', '2026-07-01', 21, { status: 'answered' }), base({ id: 'c' })];
     expect(runningPlanIds(prayers, '2026-07-10').size).toBe(0);
+  });
+});
+
+// A running plan used to be a dead end: its catalogue card said "Running" and
+// opened a preview whose Start button was disabled. It now has to say WHICH day
+// the reader is on and which prayer is carrying the run.
+describe('runningPlanProgress', () => {
+  const run = (id, planId, startDate, count, over = {}) => base({
+    id,
+    schedule: {
+      type: 'recurring', freq: 'daily', startDate,
+      end: { kind: 'count', count },
+      plan: { id: planId, startDate },
+    },
+    ...over,
+  });
+
+  it('reports the day a run has reached, and the prayer carrying it', () => {
+    const progress = runningPlanProgress([run('p-1', 'marriage30', '2026-07-01', 30)], '2026-07-12');
+    expect(progress).toEqual({ marriage30: { prayerId: 'p-1', day: 12 } });
+  });
+
+  it('says nothing about a plan whose last day is behind the reader', () => {
+    expect(runningPlanProgress([run('p-1', 'fast3', '2026-07-01', 3)], '2026-07-05')).toEqual({});
+  });
+
+  it('ignores a run that is no longer active, so the card cannot point at it', () => {
+    const prayers = [
+      run('archived', 'marriage30', '2026-07-01', 30, { status: 'answered' }),
+      run('live', 'marriage30', '2026-07-01', 30),
+    ];
+    expect(runningPlanProgress(prayers, '2026-07-12').marriage30.prayerId).toBe('live');
+  });
+
+  // A moved or skipped occurrence leaves the plan running but off a plan day.
+  // Callers read a null day as "running, not today" — never as an error.
+  it('keeps the run but reports no day when today is not a plan day', () => {
+    const weekly = base({
+      id: 'p-1',
+      schedule: {
+        type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-07-06',
+        end: { kind: 'count', count: 10 },
+        plan: { id: 'altar7', startDate: '2026-07-06' },
+      },
+    });
+    const progress = runningPlanProgress([weekly], '2026-07-07'); // Tuesday
+    expect(progress.altar7.prayerId).toBe('p-1');
+    expect(progress.altar7.day).toBeNull();
+  });
+
+  it('is empty when nothing is running', () => {
+    expect(runningPlanProgress([base({ id: 'plain' })], '2026-07-06')).toEqual({});
   });
 });
 

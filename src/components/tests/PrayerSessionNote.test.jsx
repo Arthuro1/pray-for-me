@@ -60,7 +60,7 @@ vi.mock('../../store/confirmStore', () => ({ confirm: confirmSpy, default: () =>
 import PrayerSession from '../PrayerSession';
 import RichText from '../rich/RichText';
 import { __resetMemoryForTests, loadNoteDraft } from '../../lib/prayerNoteDrafts';
-import { __resetForTests as resetNotes } from '../../lib/prayerNotes';
+import { __resetForTests as resetNotes, loadSessionNoteIds } from '../../lib/prayerNotes';
 import { t } from '../../i18n';
 import { LANG_CODES } from '../../i18n';
 
@@ -732,5 +732,45 @@ describe('localization', () => {
     );
     expect(screen.getByRole('button', { name: t('ar', 'noteAdd') })).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Add a prayer note' })).toBeNull();
+  });
+});
+
+// A note is a private thing the session promises to keep. Two places that
+// promise used to leak: a prayer this device cannot read (where the vault cannot
+// encrypt the note either, so promotion falls back to the plaintext
+// sync_add_update path — which fans a SHARED prayer's updates out to its group),
+// and the session's own "Latest update" slot, which handed a reader their own
+// quiet note back as though it were news from someone else.
+describe('what a note is allowed to become', () => {
+  beforeEach(() => { resetNotes(); idbStore.clear(); });
+
+  it('offers no note on a prayer this device cannot read', () => {
+    renderSession([{ ...prayerA, _locked: true, title: '' }]);
+    expect(screen.queryByRole('button', { name: T('noteAdd') })).toBeNull();
+  });
+
+  it('still offers one on a readable prayer', () => {
+    renderSession([prayerA]);
+    expect(screen.getByRole('button', { name: T('noteAdd') })).toBeTruthy();
+  });
+
+  it("names the reader's own earlier note as a note, not as an update", async () => {
+    idbStore.set('pfm_session_note_ids', ['u-note']);
+    await loadSessionNoteIds();
+    renderSession([{
+      ...prayerA,
+      prayer_updates: [{ id: 'u-note', text: 'He gave me peace about it', created_at: '2026-08-01T09:00:00Z' }],
+    }]);
+    expect(screen.getByText(T('noteTitle'))).toBeTruthy();
+    expect(screen.queryByText(T('latestUpdateLabel'))).toBeNull();
+  });
+
+  it('still calls a real update an update', async () => {
+    await loadSessionNoteIds();
+    renderSession([{
+      ...prayerA,
+      prayer_updates: [{ id: 'u-real', text: 'Surgery went well', created_at: '2026-08-01T09:00:00Z' }],
+    }]);
+    expect(screen.getByText(T('latestUpdateLabel'))).toBeTruthy();
   });
 });

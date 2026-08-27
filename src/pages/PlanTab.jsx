@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
-import { Plus, Trash2, X, Check, Download, Tag, HeartHandshake, Loader2 } from 'lucide-react';
+import { Plus, Trash2, X, Check, ChevronDown, Download, Tag, HeartHandshake, Loader2 } from 'lucide-react';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
-import { monthDots, prayersForDay, sortEntries, runningPlanIds } from '../lib/planner';
+import { monthDots, prayersForDay, sortEntries, runningPlanIds, runningPlanProgress } from '../lib/planner';
 import { addDays } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { buildICS } from '../utils/ics';
@@ -29,13 +29,10 @@ import { track } from '../lib/analytics';
 import { PageHeader } from '../components/shared/Primitives';
 
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️', '⚡', '🌟', '💰', '🎓', '👶'];
-// "A few per day" (Decision A): a global cap on how many prayers a day surfaces
-// on Today, so a long list stays coverable. Off = show everything.
-const CAP_OPTIONS = [null, 3, 5, 10];
 
 export default function PlanTab() {
   const {
-    categories, prayers, addCategory, updateCategory, deleteCategory, settings, updateSettings, addPrayer,
+    categories, prayers, addCategory, updateCategory, deleteCategory, settings, addPrayer,
     completions, markPrayedOn, unmarkPrayedOn, skipOccurrence, moveOccurrence, setOccurrenceOverride, endSeriesBefore,
   } = usePrayerStore(
     useShallow((s) => ({
@@ -45,7 +42,6 @@ export default function PlanTab() {
       updateCategory: s.updateCategory,
       deleteCategory: s.deleteCategory,
       settings: s.settings,
-      updateSettings: s.updateSettings,
       addPrayer: s.addPrayer,
       completions: s.completions,
       markPrayedOn: s.markPrayedOn,
@@ -66,6 +62,9 @@ export default function PlanTab() {
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', emoji: '🙏', color: CATEGORY_COLORS[0] });
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
+  // Labels are grouping admin, not something a reader comes to this page for.
+  // Folded away by default so the calendar and the plans are what the page is.
+  const [labelsOpen, setLabelsOpen] = useState(false);
   const [detailPlan, setDetailPlan] = useState(null); // plan whose explanation modal is open
   const [inviteTarget, setInviteTarget] = useState(null); // { plan, startDate } → invite modal
   const [personalizeTarget, setPersonalizeTarget] = useState(null); // singles plan choices before its run begins
@@ -121,6 +120,9 @@ export default function PlanTab() {
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
+  // Where each running plan has got to, so its card can say "Day 12 of 30" and
+  // hand the reader straight to that day instead of a preview it cannot start.
+  const runningPlans = useMemo(() => runningPlanProgress(prayers, todayKey()), [prayers]);
 
   // Actually create the run after any required pre-start choices have been
   // collected. Couple plans remain immediate and can be personalized later;
@@ -203,8 +205,6 @@ export default function PlanTab() {
     setEditId(null);
     setShowAddForm(false);
   };
-
-  const currentCap = settings.maxPerDay || null;
 
   return (
     <div className="phase-page constellation-plan">
@@ -330,30 +330,6 @@ export default function PlanTab() {
           onEndSeries={(id, day) => { endSeriesBefore(id, day); toast.success(t(lang, 'seriesEnded')); }}
         />
 
-        {/* A few per day — one calm global cap so a long list stays coverable */}
-        <div className="phase-card p-4">
-          <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'perDayTitle')}</p>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'perDaySub')}</p>
-          <div className="flex gap-2 flex-wrap" role="group" aria-label={t(lang, 'perDayTitle')}>
-            {CAP_OPTIONS.map((n) => {
-              const active = currentCap === n;
-              return (
-                <button
-                  key={n ?? 'off'}
-                  onClick={() => updateSettings({ maxPerDay: n })}
-                  aria-pressed={active}
-                  className="min-h-[40px] px-4 rounded-xl text-sm font-medium transition-colors"
-                  style={active
-                    ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                >
-                  {n ?? t(lang, 'perDayOff')}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Guided prayer plans */}
         <div className="pt-2">
           <h3 className="font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'plansTitle')}</h3>
@@ -367,11 +343,18 @@ export default function PlanTab() {
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {group.plans.map((plan) => {
+                  const run = runningPlans[plan.id];
                   const running = activePlanIds.has(plan.id);
                   return (
                     <button
                       key={plan.id}
-                      onClick={() => { if (canUsePlan(plan)) setDetailPlan(plan); }}
+                      onClick={() => {
+                        if (!canUsePlan(plan)) return;
+                        // A plan already on the calendar opens where the reader
+                        // actually is; only an unstarted one needs the preview.
+                        if (run) navigate(`/prayers/${run.prayerId}`);
+                        else setDetailPlan(plan);
+                      }}
                       disabled={!canUsePlan(plan)}
                       className="phase-card plan-card p-4 flex items-start gap-3 text-start w-full"
                     >
@@ -388,7 +371,9 @@ export default function PlanTab() {
                         )}
                         <p className="text-xs mt-2 font-medium" style={{ color: running ? 'var(--success)' : 'var(--accent)' }}>
                           {running
-                            ? `✓ ${t(lang, 'planRunning')}`
+                            ? (run?.day
+                              ? `✓ ${t(lang, 'planDayOf', { n: run.day, total: plan.count })}`
+                              : `✓ ${t(lang, 'planRunning')}`)
                             : `${t(lang, 'planTapToPreview')} · ${t(lang, 'planDays', { n: plan.count })}`}
                         </p>
                       </div>
@@ -403,10 +388,27 @@ export default function PlanTab() {
         {/* Labels — grouping only: name, emoji, colour. No schedule lives here. */}
         <div className="pt-2">
           <div className="flex items-center justify-between gap-3 mb-1">
-            <h3 className="font-semibold flex items-center gap-2 min-w-0" style={{ color: 'var(--text-1)' }}>
-              <Tag size={16} className="shrink-0" style={{ color: 'var(--accent)' }} /> <span className="min-w-0 truncate">{t(lang, 'labelsTitle')}</span>
-            </h3>
-            {categories.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setLabelsOpen((open) => !open)}
+              aria-expanded={labelsOpen}
+              aria-controls="plan-labels"
+              className="flex min-h-11 min-w-0 items-center gap-2 font-semibold text-start"
+              style={{ color: 'var(--text-1)' }}
+            >
+              <Tag size={16} className="shrink-0" style={{ color: 'var(--accent)' }} />
+              <span className="min-w-0 truncate">{t(lang, 'labelsTitle')}</span>
+              {categories.length > 0 && (
+                <span className="shrink-0 text-xs font-normal" style={{ color: 'var(--text-3)' }}>· {categories.length}</span>
+              )}
+              <ChevronDown
+                size={16}
+                aria-hidden="true"
+                className="shrink-0"
+                style={{ color: 'var(--text-3)', transform: labelsOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }}
+              />
+            </button>
+            {labelsOpen && categories.length > 0 && (
               <button
                 onClick={openAdd}
                 title={t(lang, 'addLabel')}
@@ -417,6 +419,7 @@ export default function PlanTab() {
               </button>
             )}
           </div>
+          {labelsOpen && (<div id="plan-labels">
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'labelsSub')}</p>
 
           {/* Add / edit form */}
@@ -519,6 +522,7 @@ export default function PlanTab() {
               ))}
             </div>
           )}
+          </div>)}
         </div>
 
         {/* ICS export — take the schedule into any external calendar */}

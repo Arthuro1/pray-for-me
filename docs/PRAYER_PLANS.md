@@ -28,6 +28,7 @@ and history, the calendar, catch-up, reminders, offline, and the ICS export.
 | `src/content/plans/<plan>Days.js` | that plan's day-by-day curriculum |
 | `src/content/plans/translations.js` + `translations/<plan-id>/<lang>.json` | lazy per-plan, per-language overlays for plan **prose** |
 | `src/lib/guidedPlan.js` | `planById()`, `buildGuidedPlanPrayer()` — shared by Plan tab, invitations, group plans |
+| `src/lib/planner.js` | `runningPlanIds()` / `runningPlanProgress()` — which plans are running, and which day each has reached |
 | `src/lib/planPrefs.js` | fixed-choice, device-local singles personalization answers |
 | `src/lib/planPersonalization.js` | couple-plan personalization and safe name interpolation |
 | `src/lib/planPersonalizationStorage.js` | per-account/per-run AES-GCM storage for optional couple names and family choices |

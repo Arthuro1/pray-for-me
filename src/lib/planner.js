@@ -2,7 +2,7 @@
 // the new per-prayer schedules (src/lib/schedule.js) and the legacy weekly
 // category plan (categories.week_days / prayers.week_days). Pure functions so
 // the store, Home, and the calendar all agree on what "today" means.
-import { occursOn, rotationForDay, addDays, seriesEnded, normalizeSchedule } from './schedule';
+import { occursOn, rotationForDay, addDays, seriesEnded, normalizeSchedule, planDayNumber } from './schedule';
 import { prayerPriority } from '../utils/prayer';
 
 // Every planned entry for a day:
@@ -126,6 +126,29 @@ export function runningPlanIds(prayers, dayKey) {
     if (p.status === 'active' && p.schedule?.plan?.id && !scheduleEnded(p, dayKey)) ids.add(p.schedule.plan.id);
   }
   return ids;
+}
+
+// Where each running plan has GOT TO on `dayKey`, keyed by plan id:
+//
+//   { marriage30: { prayerId: 'p-1', day: 12 } }
+//
+// So a plan catalogue can say "Day 12 of 30" and send the reader to the prayer
+// that is actually carrying the run, instead of offering a preview whose Start
+// button is disabled because they already started it.
+//
+// `day` is null off a plan day (a paused or moved occurrence), which callers
+// read as "running, but not today" rather than as an error. The first prayer
+// wins if a plan somehow has two runs, so the card is stable rather than
+// flickering between them.
+export function runningPlanProgress(prayers, dayKey) {
+  const running = runningPlanIds(prayers, dayKey);
+  const out = {};
+  for (const p of prayers) {
+    const id = p.schedule?.plan?.id;
+    if (!id || p.status !== 'active' || !running.has(id) || out[id]) continue;
+    out[id] = { prayerId: p.id, day: planDayNumber(p.schedule, dayKey) };
+  }
+  return out;
 }
 
 // Which weekdays a plan-following (unscheduled) prayer actually lands on, read
