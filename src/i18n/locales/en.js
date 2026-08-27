@@ -1202,4 +1202,5 @@ export default {
   "morePrivacyDesc": "Encryption, recovery and data controls",
   "moreSettingsDesc": "Language, appearance and preferences",
   "moreSupportDesc": "Help, feedback and Pray4Me information",
+  "journalPeopleHintCta": "View by person",
 };

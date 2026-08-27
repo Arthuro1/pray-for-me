@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "Encryption, pagbawi at kontrol sa data",
   "moreSettingsDesc": "Wika, itsura at mga kagustuhan",
   "moreSupportDesc": "Tulong, feedback at impormasyon tungkol sa Pray4Me",
+  "journalPeopleHintCta": "Tingnan ayon sa tao",
 };

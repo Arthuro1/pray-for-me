@@ -3,11 +3,11 @@ import { Bell, CalendarClock, FolderHeart } from 'lucide-react';
 import { t } from '../i18n';
 import {
   ACTIVATION_STEPS,
-  activationTargetPrayer,
   markActivationStepHandled,
-  nextActivationStep,
+  markEducationHandledForVisit,
   readActivationProgress,
 } from '../lib/activationProgress';
+import { activationTargetPrayer, nextActivationStep } from '../lib/activationPolicy';
 import { markContextualPromptShownForVisit } from '../lib/pwaInstall';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
 
@@ -37,6 +37,7 @@ const COPY = {
 // else in the same moment.
 export default function ActivationNudge({
   prayers,
+  completions,
   settings,
   lang,
   onEditPrayer,
@@ -46,6 +47,7 @@ export default function ActivationNudge({
   const progress = readActivationProgress();
   const step = nextActivationStep({
     prayers,
+    completions,
     dailyReminderEnabled: !!settings?.dailyReminderEnabled,
     progress,
   });
@@ -59,8 +61,11 @@ export default function ActivationNudge({
 
   const finish = () => {
     markActivationStepHandled(step);
-    // Do not replace one suggestion with the next immediately. A later visit
-    // can reveal the next relevant step, keeping this moment to one invitation.
+    // Do not replace one suggestion with the next immediately — including the
+    // install invitation. A later visit can reveal the next relevant step,
+    // keeping this moment to one invitation. (The local flag hides the card now;
+    // the visit marker keeps it hidden across navigation within the same visit.)
+    markEducationHandledForVisit();
     setHiddenForVisit(true);
   };
 

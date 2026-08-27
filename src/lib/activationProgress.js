@@ -1,7 +1,12 @@
 // Content-free, device-local progress for the small post-sign-in activation
 // sequence. We store only which generic step was handled — never a prayer id,
 // title, person, group, timestamp, or anything else that could reveal content.
+//
+// This module is STORAGE only. Whether a step should be offered at all is
+// decided in activationPolicy.js, so the thresholds live in one readable place.
 export const ACTIVATION_STORAGE_KEY = 'pfm_activation_progress_v1';
+// Session-scoped: one education prompt per visit, answered and then done.
+export const EDUCATION_VISIT_KEY = 'pfm_education_handled';
 
 export const ACTIVATION_STEPS = Object.freeze({
   RHYTHM: 'rhythm',
@@ -17,6 +22,43 @@ function storage() {
     return typeof localStorage === 'undefined' ? null : localStorage;
   } catch {
     return null;
+  }
+}
+
+function sessionStore() {
+  try {
+    return typeof sessionStorage === 'undefined' ? null : sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+// An earlier implementation offered the reminder as a one-time toast. Either
+// path should stop the other from asking the same person again.
+export function legacyReminderSuggested() {
+  try {
+    return storage()?.getItem('pfm_reminder_suggested') === '1';
+  } catch {
+    return false;
+  }
+}
+
+// A prompt was offered AND answered (acted on or dismissed) in this visit.
+// Nothing else is taught until the next one — dismissing one card must never
+// hand the next one straight to the same person.
+export function markEducationHandledForVisit() {
+  try {
+    sessionStore()?.setItem(EDUCATION_VISIT_KEY, '1');
+  } catch {
+    // Best-effort only; prayer work never depends on this.
+  }
+}
+
+export function educationHandledThisVisit() {
+  try {
+    return sessionStore()?.getItem(EDUCATION_VISIT_KEY) === '1';
+  } catch {
+    return false;
   }
 }
 
@@ -71,60 +113,4 @@ export function markActivationSessionCompleted() {
     // Best-effort only; prayer completion itself must never depend on storage.
   }
   return next;
-}
-
-function hasOrganization(prayer) {
-  return !!(
-    prayer?.for_other
-    || prayer?.person_name
-    || (prayer?.category_ids || []).length
-    || (prayer?.prayer_categories || []).length
-  );
-}
-
-// Returns ONE next step in priority order. Natural product state also completes
-// a step: an enabled reminder needs no prompt, and an already-organized journal
-// needs no introduction.
-export function nextActivationStep({
-  prayers = [],
-  dailyReminderEnabled = false,
-  progress = readActivationProgress(),
-  handled = progress.handled,
-  sessionCompleted = progress.signals.includes(SESSION_COMPLETED),
-  legacyReminderHandled = storage()?.getItem('pfm_reminder_suggested') === '1',
-} = {}) {
-  const done = new Set(handled);
-  const activePrayers = prayers.filter((prayer) => prayer?.status !== 'answered');
-
-  if (activePrayers.length === 1 && !done.has(ACTIVATION_STEPS.RHYTHM)) {
-    return ACTIVATION_STEPS.RHYTHM;
-  }
-
-  if (
-    sessionCompleted
-    && !dailyReminderEnabled
-    && !legacyReminderHandled
-    && !done.has(ACTIVATION_STEPS.REMINDER)
-  ) {
-    return ACTIVATION_STEPS.REMINDER;
-  }
-
-  if (
-    activePrayers.length >= 3
-    && !activePrayers.some(hasOrganization)
-    && !done.has(ACTIVATION_STEPS.ORGANIZE)
-  ) {
-    return ACTIVATION_STEPS.ORGANIZE;
-  }
-
-  return null;
-}
-
-export function activationTargetPrayer(step, prayers = []) {
-  const active = prayers.filter((prayer) => prayer?.status !== 'answered');
-  if (step === ACTIVATION_STEPS.RHYTHM) return active[0] || null;
-  if (step === ACTIVATION_STEPS.ORGANIZE) {
-    return active.find((prayer) => !hasOrganization(prayer)) || null;
-  }
-  return null;
 }

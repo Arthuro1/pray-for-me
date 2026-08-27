@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "暗号化・復旧・データの管理",
   "moreSettingsDesc": "言語・表示・環境設定",
   "moreSupportDesc": "ヘルプ・フィードバック・Pray4Me について",
+  "journalPeopleHintCta": "人ごとに見る",
 };

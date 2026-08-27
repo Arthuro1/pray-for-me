@@ -37,14 +37,19 @@ const inputStyle = { background: 'var(--input-bg)', border: '0.5px solid var(--i
 
 export default function AuthPage({ onBack, intent }) {
   // `intent === 'save-prayer'` is the contextual auth that follows the pray-first
-  // guest flow: the visitor already prayed and chose to keep it, so registration
-  // leads (with "I already have an account" always one tap away via the tabs) and
-  // the copy is warm and specific about what they're doing — saving that prayer.
+  // guest flow. The visitor is not here to register for an app — they are here to
+  // keep the prayer they just prayed, and the screen says so: the heading is
+  // about the prayer, the account is explained as what makes keeping it possible,
+  // and the fastest ways through (Google, or a one-time email link) lead. No
+  // password to invent, no display name to think up: a name is asked for later,
+  // in a place where it means something. "I already have an account" stays one
+  // tap away throughout.
   const savePrayerIntent = intent === 'save-prayer';
-  // 'login' is the default view; 'register' is the secondary option; 'forgot' is
-  // the password-reset sub-view. The selected app language (carried over from the
+  // 'login' is the default view; 'register' is the secondary option; 'link' is the
+  // passwordless email path (the save-a-prayer default); 'forgot' is the
+  // password-reset sub-view. The selected app language (carried over from the
   // landing page via the shared settings store) drives every string here.
-  const [mode, setMode] = useState(savePrayerIntent ? 'register' : 'login');
+  const [mode, setMode] = useState(savePrayerIntent ? 'link' : 'login');
   const [form, setForm] = useState({ email: '', password: '', fullName: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,7 +61,10 @@ export default function AuthPage({ onBack, intent }) {
   const passwordRef = useRef(null);
 
   const lang = usePrayerStore((s) => s.settings.language) || 'en';
-  const { signInWithEmail, signUpWithEmail, signInWithGoogle, resetPassword, resendConfirmation } = useAuthStore();
+  const {
+    signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithEmailLink,
+    resetPassword, resendConfirmation,
+  } = useAuthStore();
 
   useEffect(() => {
     document.documentElement.classList.add('constellation-auth-root');
@@ -119,6 +127,20 @@ export default function AuthPage({ onBack, intent }) {
       if (error) showError(error);
       else { setSuccess(t(lang, 'authConfirmSent')); setCanResend(true); }
     }
+    setLoading(false);
+  };
+
+  // Passwordless: one email that both creates the account and signs in. The
+  // prayer waits, encrypted, on this device until the link is followed back here.
+  const handleEmailLink = async (e) => {
+    e.preventDefault();
+    resetFeedback();
+    const email = form.email.trim();
+    if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
+    setLoading(true);
+    const { error } = await signInWithEmailLink(email);
+    if (error) showError(error);
+    else setSuccess(t(lang, 'authEmailLinkSent'));
     setLoading(false);
   };
 
@@ -227,33 +249,38 @@ export default function AuthPage({ onBack, intent }) {
           </form>
         ) : (
           <>
-            {/* Pray-first contextual header: warm, specific about saving the prayer
-                the visitor just prayed. Purely additive — the tabs below still
-                offer "I already have an account". */}
+            {/* Pray-first contextual header: the task is still "keep this prayer",
+                and the account is explained as what makes that possible. */}
             {savePrayerIntent && (
               <div className="mb-5 text-center">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authSavePrayerTitle')}</h2>
-                <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authSavePrayerBody')}</p>
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authKeepPrayerTitle')}</h2>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authKeepPrayerBody')}</p>
               </div>
             )}
 
-            {/* Tabs — login first (default), register secondary */}
-            <div
-              className="auth-mode-switch mb-5"
-              aria-label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
-            >
-              {['login', 'register'].map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => switchMode(m)}
-                  aria-pressed={mode === m}
-                  className="auth-mode-switch__option"
-                >
-                  {m === 'login' ? t(lang, 'authLogIn') : t(lang, 'authSignUp')}
-                </button>
-              ))}
-            </div>
+            {/* Tabs — login first (default), register secondary. Deliberately
+                absent when the visitor is saving a prayer: a Log in / Sign up
+                switch is the moment the screen stops being about their prayer
+                and starts being about an app. That path is still one tap away,
+                as a plain sentence under the form. */}
+            {!savePrayerIntent && (
+              <div
+                className="auth-mode-switch mb-5"
+                aria-label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
+              >
+                {['login', 'register'].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => switchMode(m)}
+                    aria-pressed={mode === m}
+                    className="auth-mode-switch__option"
+                  >
+                    {m === 'login' ? t(lang, 'authLogIn') : t(lang, 'authSignUp')}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Google */}
             <button
@@ -273,8 +300,55 @@ export default function AuthPage({ onBack, intent }) {
               <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
             </div>
 
+            {mode === 'link' ? (
+              <form onSubmit={handleEmailLink} noValidate className="space-y-3">
+                <div>
+                  <label htmlFor="auth-link-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
+                  <div className="relative">
+                    <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                    <input
+                      ref={emailRef}
+                      id="auth-link-email"
+                      type="email"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={(e) => patchField('email', e.target.value)}
+                      placeholder={t(lang, 'authEmail')}
+                      aria-invalid={errorField === 'email'}
+                      aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
+                      className="auth-field w-full rounded-xl text-sm focus:outline-none"
+                      style={inputStyle}
+                    />
+                  </div>
+                </div>
+
+                {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
+                {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="auth-primary w-full rounded-xl px-5 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  {loading && <Loader2 size={14} className="animate-spin" />}
+                  {t(lang, 'authEmailLinkCta')}
+                </button>
+
+                {/* Both escape hatches, plainly worded — no tab bar needed. */}
+                <button
+                  type="button"
+                  onClick={() => switchMode('register')}
+                  className="w-full text-center text-xs font-medium"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  {t(lang, 'authUsePasswordInstead')}
+                </button>
+              </form>
+            ) : (
             <form onSubmit={handleSubmit} noValidate className="space-y-3">
-              {mode === 'register' && (
+              {/* A display name is never needed to keep a prayer. It is asked for
+                  later, where it means something (sharing with a group). */}
+              {mode === 'register' && !savePrayerIntent && (
                 <div>
                   <label htmlFor="auth-name" className="auth-field-label">{t(lang, 'authNamePlaceholder')}</label>
                   <div className="relative">
@@ -384,7 +458,32 @@ export default function AuthPage({ onBack, intent }) {
                   ? t(lang, 'authLogIn')
                   : t(lang, savePrayerIntent ? 'authSavePrayerCta' : 'authCreateAccount')}
               </button>
+
+              {savePrayerIntent && (
+                <button
+                  type="button"
+                  onClick={() => switchMode('link')}
+                  className="w-full text-center text-xs font-medium"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  {t(lang, 'authUseLinkInstead')}
+                </button>
+              )}
             </form>
+            )}
+
+            {/* Always one tap away, in every save-prayer sub-view — the prayer
+                is waiting on this device either way. */}
+            {savePrayerIntent && mode !== 'login' && (
+              <button
+                type="button"
+                onClick={() => switchMode('login')}
+                className="mt-4 w-full text-center text-sm font-medium"
+                style={{ color: 'var(--accent)' }}
+              >
+                {t(lang, 'authHaveAccount')}
+              </button>
+            )}
           </>
         )}
 

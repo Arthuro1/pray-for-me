@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "Enkripsi, pemulihan, dan kendali data",
   "moreSettingsDesc": "Bahasa, tampilan, dan preferensi",
   "moreSupportDesc": "Bantuan, masukan, dan informasi Pray4Me",
+  "journalPeopleHintCta": "Lihat per orang",
 };

@@ -13,7 +13,7 @@ import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
 import JournalFilters from '../components/JournalFilters';
 import Avatar from '../components/shared/Avatar';
-import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check, Lightbulb } from 'lucide-react';
 import { t } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
 import { getAuthorName } from '../utils/user';
@@ -30,13 +30,53 @@ import {
   journalFilterOptions,
   journalFiltersActive,
 } from '../lib/journalSearch';
+import {
+  JOURNAL_HINTS,
+  journalToolsUseful,
+  markJournalHintSeen,
+  nextJournalHint,
+  readJournalHints,
+} from '../lib/journalHints';
 
 // The Journal: every request and its history, in two simple segments — Active
-// and Answered. Search and useful retrieval filters hide behind icons, while
-// an optional People view (for anyone praying over
-// many people by name — pastors, intercessors) appears only when the data
-// makes it useful. The count line shows ONLY while filters narrow the list
-// ("N results"); the segments already carry the real totals.
+// and Answered. Search and useful retrieval filters stay quiet, and an optional
+// People view (for anyone praying over many people by name — pastors,
+// intercessors) appears only when the data makes it useful.
+//
+// Quiet is not the same as hidden. The tools carry short labels wherever there
+// is room for them, they stop living behind the search toggle once the list is
+// long enough to need them, each is introduced once in words at the moment it
+// becomes useful, and an active filter says so plainly with one tap to undo it.
+// The count line shows ONLY while filters narrow the list ("N results"); the
+// segments already carry the real totals.
+// Filtering is a state you can get stuck in: the list looks short and nothing
+// explains why. So while anything narrows it, the Journal says so in words and
+// keeps one tap to undo it — not only on the empty result, where it is already
+// too late to be reassuring.
+function FilterStatus({ lang, count, label, onClear }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 mb-1" style={{ color: 'var(--text-3)' }}>
+      <p className="text-xs" role="status">
+        <span>{t(lang, 'filtersOnLabel')}</span>
+        <span aria-hidden="true"> · </span>
+        <span>{label}</span>
+      </p>
+      {/* A filtered-to-nothing list has its own, larger "Clear filters" below —
+          two of them side by side would only make the way out harder to see. */}
+      {count > 0 && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="inline-flex min-h-[44px] items-center gap-1 text-xs font-medium"
+          style={{ color: 'var(--accent)' }}
+        >
+          <X size={12} aria-hidden="true" /> {t(lang, 'clearFiltersBtn')}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
   const { prayers, categories, settings, loading, completions, markPrayedOn } = usePrayerStore(
@@ -67,6 +107,9 @@ export default function PrayersTab({ onAdd }) {
   // Snapshot of a person-scoped session, fixed when it starts — completions
   // recorded mid-session must not reshuffle the walk.
   const [personSessionPrayers, setPersonSessionPrayers] = useState(null);
+  // One-time, dismissible introductions to the Journal's own tools (see
+  // lib/journalHints.js). Held in state so dismissing one takes effect at once.
+  const [hintsSeen, setHintsSeen] = useState(() => readJournalHints().seen);
 
   const activeCount = prayers.filter((p) => p.status === 'active').length;
   const answeredCount = prayers.filter((p) => p.status === 'answered').length;
@@ -120,6 +163,22 @@ export default function PrayersTab({ onAdd }) {
   const resultsLabel = (count) => count === 1
     ? `1 ${t(lang, 'prayer')}`
     : t(lang, 'resultsCount', { n: count });
+
+  // Once the list is long enough to need them, the retrieval tools stop hiding
+  // behind the search toggle — a filter nobody can reach without first opening
+  // search is a filter nobody finds.
+  const toolsUseful = journalToolsUseful(prayers);
+  // People has its own, stronger signal (several people prayed for by name), so
+  // it never waits on the list-length threshold.
+  const utilityPanelOpen = searchOpen || !!search || peopleOpen
+    || peopleAvailable || (toolsUseful && hasFilterControls);
+  const hint = nextJournalHint({
+    prayers,
+    peopleOpen,
+    toolsInUse: filtersActive || searchOpen || showFilters,
+    seen: hintsSeen,
+  });
+  const dismissHint = (which) => setHintsSeen(markJournalHintSeen(which).seen);
 
   // Truly empty (no active prayers at all) → the empty state carries the one
   // prominent Add CTA and the floating button hides. A FILTERED zero keeps the
@@ -185,18 +244,22 @@ export default function PrayersTab({ onAdd }) {
               }}
               aria-expanded={searchOpen || !!search}
               aria-label={t(lang, 'search')}
-              className="phase-icon-button constellation-journal__icon-button"
+              title={t(lang, 'searchLabel')}
+              className="phase-icon-button constellation-journal__icon-button constellation-journal__labelled"
             >
-              <Search size={24} strokeWidth={1.8} />
+              <Search size={24} strokeWidth={1.8} aria-hidden="true" />
+              {/* The label appears only where it costs no header height. */}
+              <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'searchLabel')}</span>
             </button>
             {onAdd && (
               <button
                 type="button"
                 onClick={onAdd}
                 aria-label={t(lang, 'emptyAddManual')}
+                title={t(lang, 'emptyAddManual')}
                 className="phase-icon-button constellation-journal__icon-button"
               >
-                <Plus size={27} strokeWidth={1.7} />
+                <Plus size={27} strokeWidth={1.7} aria-hidden="true" />
               </button>
             )}
           </span>
@@ -225,9 +288,9 @@ export default function PrayersTab({ onAdd }) {
 
         {/* The search field only takes space once asked for; text is preserved
             while it (or the segment) is toggled. */}
-        {(searchOpen || !!search || peopleOpen) && (
+        {utilityPanelOpen && (
           <div className="constellation-journal__utility-panel">
-            {!peopleOpen && (
+            {!peopleOpen && (searchOpen || !!search) && (
               <div className="journal-search">
                 <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)', insetInlineStart: '0.9rem' }} />
                 <input
@@ -260,10 +323,11 @@ export default function PrayersTab({ onAdd }) {
                   aria-pressed={peopleOpen}
                   aria-label={t(lang, 'peopleView')}
                   title={t(lang, 'peopleView')}
-                  className="phase-icon-button shrink-0"
+                  className="phase-icon-button constellation-journal__labelled shrink-0"
                   style={peopleOpen ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
                 >
-                  <Users size={16} />
+                  <Users size={16} aria-hidden="true" />
+                  <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'peopleView')}</span>
                 </button>
               )}
               {!peopleOpen && hasFilterControls && (
@@ -272,11 +336,17 @@ export default function PrayersTab({ onAdd }) {
                   onClick={() => setShowFilters(!showFilters)}
                   aria-expanded={showFilters}
                   aria-haspopup="dialog"
-                  aria-label={t(lang, 'journalFilters')}
-                  className="phase-icon-button shrink-0"
+                  // Screen readers hear the state, not just the name — the plum
+                  // fill alone would say nothing to them.
+                  aria-label={structuredFiltersActive
+                    ? `${t(lang, 'journalFilters')} — ${t(lang, 'filtersOnLabel')}`
+                    : t(lang, 'journalFilters')}
+                  title={t(lang, 'journalFilters')}
+                  className="phase-icon-button constellation-journal__labelled shrink-0"
                   style={structuredFiltersActive ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
                 >
-                  <SlidersHorizontal size={16} />
+                  <SlidersHorizontal size={16} aria-hidden="true" />
+                  <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'journalFilters')}</span>
                 </button>
               )}
               {peopleOpen && (
@@ -290,6 +360,41 @@ export default function PrayersTab({ onAdd }) {
                 </button>
               )}
             </div>
+          </div>
+        )}
+        {/* One quiet introduction, once, to the tool that has just become
+            useful — dismissible, and never shown again after that. */}
+        {hint && (
+          <div
+            className="constellation-journal__hint"
+            role="status"
+          >
+            <Lightbulb size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--gold)' }} />
+            <p className="min-w-0 flex-1 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+              {t(lang, hint === JOURNAL_HINTS.PEOPLE ? 'journalPeopleHint' : 'journalDiscoverHint')}
+            </p>
+            {hint === JOURNAL_HINTS.PEOPLE && (
+              <button
+                type="button"
+                onClick={() => {
+                  dismissHint(JOURNAL_HINTS.PEOPLE);
+                  setPeopleOpen(true);
+                  setSelectedPerson(null);
+                }}
+                className="min-h-[44px] shrink-0 px-2 text-xs font-semibold"
+                style={{ color: 'var(--accent)' }}
+              >
+                {t(lang, 'journalPeopleHintCta')}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => dismissHint(hint)}
+              className="min-h-[44px] shrink-0 px-2 text-xs font-medium"
+              style={{ color: 'var(--text-3)' }}
+            >
+              {t(lang, 'hintDismiss')}
+            </button>
           </div>
         )}
         {!peopleOpen && showFilters && hasFilterControls && (
@@ -426,9 +531,7 @@ export default function PrayersTab({ onAdd }) {
               </p>
             )}
             {filtersActive && answeredCount > 0 && (
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }} role="status">
-                {resultsLabel(filteredEntries.length)}
-              </p>
+              <FilterStatus lang={lang} count={filteredEntries.length} label={resultsLabel(filteredEntries.length)} onClear={clearFilters} />
             )}
             {answeredCount === 0 && !filtersActive ? (
               <AnsweredGallery prayers={[]} showCount={false} showReflection={false} />
@@ -454,9 +557,7 @@ export default function PrayersTab({ onAdd }) {
             {/* The segments already state the totals — a count line appears
                 only while filters narrow the list, as a result label. */}
             {filtersActive && !(loading && prayers.length === 0) && (
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }} role="status">
-                {resultsLabel(sortedEntries.length)}
-              </p>
+              <FilterStatus lang={lang} count={sortedEntries.length} label={resultsLabel(sortedEntries.length)} onClear={clearFilters} />
             )}
 
             {loading && prayers.length === 0 ? (

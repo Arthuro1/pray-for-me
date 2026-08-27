@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "Cifrado, recuperación y control de datos",
   "moreSettingsDesc": "Idioma, apariencia y preferencias",
   "moreSupportDesc": "Ayuda, comentarios e información sobre Pray4Me",
+  "journalPeopleHintCta": "Ver por persona",
 };

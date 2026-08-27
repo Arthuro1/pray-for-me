@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "एन्क्रिप्शन, रिकवरी और डेटा नियंत्रण",
   "moreSettingsDesc": "भाषा, रूप और प्राथमिकताएँ",
   "moreSupportDesc": "सहायता, प्रतिक्रिया और Pray4Me की जानकारी",
+  "journalPeopleHintCta": "व्यक्ति के अनुसार देखें",
 };

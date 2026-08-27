@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "رمزنگاری، بازیابی و کنترل داده‌ها",
   "moreSettingsDesc": "زبان، ظاهر و ترجیحات",
   "moreSupportDesc": "راهنما، بازخورد و اطلاعات Pray4Me",
+  "journalPeopleHintCta": "نمایش بر پایهٔ شخص",
 };

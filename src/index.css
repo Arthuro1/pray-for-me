@@ -2153,6 +2153,48 @@ html.constellation-app body {
   gap: .4rem;
 }
 
+/* A tool button that carries a short label wherever the layout has room for
+   one. Below 30rem the label is dropped and the control falls back to the plain
+   44px icon button, so the mobile header never grows a row of text. The
+   accessible name comes from aria-label either way, so nothing is lost when the
+   label is not painted. */
+.constellation-journal__labelled {
+  width: 44px;
+  min-width: 44px;
+  gap: .4rem;
+}
+
+.constellation-journal__button-label {
+  display: none;
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (min-width: 30rem) {
+  .constellation-journal__labelled {
+    width: auto;
+    padding-inline: .7rem;
+  }
+
+  .constellation-journal__button-label {
+    display: inline;
+  }
+}
+
+/* One-time introduction to a Journal tool — a quiet line, not a card competing
+   with the prayers underneath it. */
+.constellation-journal__hint {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-block-end: .75rem;
+  padding: .1rem .75rem;
+  border: 0.5px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+
 .constellation-journal__people-label {
   display: inline-flex;
   min-height: 44px;

@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "Usimbaji fiche, urejeshaji na udhibiti wa data",
   "moreSettingsDesc": "Lugha, muonekano na mapendeleo",
   "moreSupportDesc": "Msaada, maoni na taarifa za Pray4Me",
+  "journalPeopleHintCta": "Tazama kwa mtu",
 };

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Download, Share, SquarePlus } from 'lucide-react';
 import { t } from '../i18n';
-import { readActivationProgress } from '../lib/activationProgress';
+import { markEducationHandledForVisit, readActivationProgress } from '../lib/activationProgress';
+import { pwaInstallAllowed } from '../lib/activationPolicy';
 import {
   markContextualPromptShownForVisit,
   pwaInstallMode,
@@ -15,6 +16,9 @@ import { BottomSheet, PrimaryButton } from './shared/Primitives';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
 
 function currentInstallMode() {
+  // Installing is education too: it waits behind the same one-prompt-per-visit
+  // rule as the activation cards, on top of pwaInstall's own conditions.
+  if (!pwaInstallAllowed()) return null;
   const progress = readActivationProgress();
   return pwaInstallMode({
     sessionCompleted: progress.signals.includes('session_completed'),
@@ -39,6 +43,9 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
 
   const dismiss = () => {
     snoozePwaInstallPrompt();
+    // Answering this ends education for the visit, so declining the install
+    // never uncovers an activation card in its place.
+    markEducationHandledForVisit();
     setShowIosHelp(false);
     setMode(null);
   };

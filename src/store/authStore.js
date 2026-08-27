@@ -57,6 +57,23 @@ const useAuthStore = create((set) => ({
     return { user: data?.user, error };
   },
 
+  // Passwordless sign-in: email a one-time link that both creates the account (if
+  // it is new) and signs it in. Used by the save-your-prayer path, where asking
+  // someone to invent a password is a detour from the thing they came to do.
+  //
+  // This does not weaken anything: it is the same email-ownership proof the
+  // confirmation mail already relies on, and the end-to-end encryption key is
+  // minted on the device — it never depended on the password.
+  signInWithEmailLink: async (email) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      // Same deep-link-preserving target as every other mail we send, so the
+      // link returns them to the page they left (and their pending prayer).
+      options: { emailRedirectTo: authRedirectTarget(), shouldCreateUser: true },
+    });
+    return { error };
+  },
+
   // Send a password-reset link. The redirect returns the user to the app (the
   // same target as sign-in) so they land back where they started after resetting.
   resetPassword: async (email) => {

@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "Шифрование, восстановление и управление данными",
   "moreSettingsDesc": "Язык, оформление и настройки",
   "moreSupportDesc": "Помощь, отзывы и сведения о Pray4Me",
+  "journalPeopleHintCta": "Смотреть по людям",
 };

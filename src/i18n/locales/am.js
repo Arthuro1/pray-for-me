@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "ምስጠራ፣ መልሶ ማግኛና የመረጃ ቁጥጥር",
   "moreSettingsDesc": "ቋንቋ፣ መልክና ምርጫዎች",
   "moreSupportDesc": "እገዛ፣ አስተያየትና ስለ Pray4Me መረጃ",
+  "journalPeopleHintCta": "በሰው ይመልከቱ",
 };

@@ -1198,4 +1198,5 @@ export default {
   "morePrivacyDesc": "加密、恢复与数据管理",
   "moreSettingsDesc": "语言、外观与偏好设置",
   "moreSupportDesc": "帮助、反馈与 Pray4Me 相关信息",
+  "journalPeopleHintCta": "按人查看",
 };

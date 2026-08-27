@@ -1,63 +1,28 @@
 // @vitest-environment jsdom
+//
+// activationProgress is STORAGE. It records, content-free, which generic step a
+// person has handled and whether they have completed a prayer session — never a
+// prayer id, title, person or timestamp. The decision of what (if anything) to
+// offer lives in activationPolicy.js and is tested there.
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
   ACTIVATION_STORAGE_KEY,
   ACTIVATION_STEPS,
-  activationTargetPrayer,
+  EDUCATION_VISIT_KEY,
+  educationHandledThisVisit,
+  legacyReminderSuggested,
   markActivationStepHandled,
   markActivationSessionCompleted,
-  nextActivationStep,
+  markEducationHandledForVisit,
   readActivationProgress,
 } from './activationProgress';
 
-const prayer = (id, extra = {}) => ({
-  id,
-  title: `private-${id}`,
-  status: 'active',
-  prayer_categories: [],
-  ...extra,
+beforeEach(() => {
+  localStorage.clear();
+  sessionStorage.clear();
 });
 
-beforeEach(() => localStorage.clear());
-
-describe('progressive activation', () => {
-  it('reveals exactly one step in contextual priority order', () => {
-    const prayers = [prayer('p1')];
-    expect(nextActivationStep({ prayers })).toBe(ACTIVATION_STEPS.RHYTHM);
-
-    markActivationStepHandled(ACTIVATION_STEPS.RHYTHM);
-    markActivationSessionCompleted();
-    expect(nextActivationStep({ prayers }))
-      .toBe(ACTIVATION_STEPS.REMINDER);
-
-    markActivationStepHandled(ACTIVATION_STEPS.REMINDER);
-    const grown = [prayer('p1'), prayer('p2'), prayer('p3')];
-    expect(nextActivationStep({ prayers: grown })).toBe(ACTIVATION_STEPS.ORGANIZE);
-  });
-
-  it('skips suggestions already satisfied by product state', () => {
-    const organized = [
-      prayer('p1', { person_name: 'kept only in memory' }),
-      prayer('p2'),
-      prayer('p3'),
-    ];
-    expect(nextActivationStep({
-      prayers: organized,
-      sessionCompleted: true,
-      dailyReminderEnabled: true,
-      handled: [ACTIVATION_STEPS.RHYTHM],
-    })).toBeNull();
-  });
-
-  it('honours the earlier reminder-toast marker so users are not prompted twice', () => {
-    localStorage.setItem('pfm_reminder_suggested', '1');
-    expect(nextActivationStep({
-      prayers: [prayer('p1'), prayer('p2')],
-      sessionCompleted: true,
-      handled: [ACTIVATION_STEPS.RHYTHM],
-    })).toBeNull();
-  });
-
+describe('activation progress storage', () => {
   it('persists only generic step identifiers, never prayer content or ids', () => {
     markActivationStepHandled(ACTIVATION_STEPS.RHYTHM);
     const raw = localStorage.getItem(ACTIVATION_STORAGE_KEY);
@@ -67,9 +32,36 @@ describe('progressive activation', () => {
     expect(readActivationProgress().handled).toEqual(['rhythm']);
   });
 
-  it('opens an in-memory prayer target without persisting its identity', () => {
-    const prayers = [prayer('p1'), prayer('p2'), prayer('p3')];
-    expect(activationTargetPrayer(ACTIVATION_STEPS.ORGANIZE, prayers)).toBe(prayers[0]);
+  it('records a completed prayer session as a bare signal', () => {
+    markActivationSessionCompleted();
+    expect(readActivationProgress().signals).toEqual(['session_completed']);
+  });
+
+  it('ignores an unknown step rather than storing it', () => {
+    expect(markActivationStepHandled('not-a-step').handled).toEqual([]);
     expect(localStorage.getItem(ACTIVATION_STORAGE_KEY)).toBeNull();
+  });
+
+  it('recovers from a corrupt record instead of throwing', () => {
+    localStorage.setItem(ACTIVATION_STORAGE_KEY, '{not json');
+    expect(readActivationProgress()).toEqual({ version: 1, handled: [], signals: [] });
+  });
+
+  it('sets the legacy reminder marker so neither implementation asks twice', () => {
+    expect(legacyReminderSuggested()).toBe(false);
+    markActivationStepHandled(ACTIVATION_STEPS.REMINDER);
+    expect(legacyReminderSuggested()).toBe(true);
+  });
+});
+
+describe('one education prompt per visit', () => {
+  it('remembers, for this visit only, that a prompt was answered', () => {
+    expect(educationHandledThisVisit()).toBe(false);
+    markEducationHandledForVisit();
+    expect(educationHandledThisVisit()).toBe(true);
+    // Session-scoped: a later visit starts clean.
+    expect(sessionStorage.getItem(EDUCATION_VISIT_KEY)).toBe('1');
+    sessionStorage.clear();
+    expect(educationHandledThisVisit()).toBe(false);
   });
 });

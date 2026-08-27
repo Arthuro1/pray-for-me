@@ -40,6 +40,7 @@ beforeEach(() => {
     signInWithEmail: vi.fn(async () => ({ error: null })),
     signUpWithEmail: vi.fn(async () => ({ error: null })),
     signInWithGoogle: vi.fn(async () => ({ error: null })),
+    signInWithEmailLink: vi.fn(async () => ({ error: null })),
     resetPassword: vi.fn(async () => ({ error: null })),
     resendConfirmation: vi.fn(async () => ({ error: null })),
   });
@@ -136,25 +137,76 @@ describe('AuthPage', () => {
   });
 
   // Pray-first: the contextual auth that follows a guest prayer the visitor chose
-  // to keep. Registration leads (they have no account yet), the copy is warm and
-  // specific, and "I already have an account" stays one tap away.
-  it('save-prayer intent leads with registration and warm, specific copy', () => {
-    render(<AuthPage intent="save-prayer" onBack={() => {}} />);
-    expect(screen.getByText(t('fr', 'authSavePrayerTitle'))).toBeTruthy();
-    expect(screen.getByText(t('fr', 'authSavePrayerBody'))).toBeTruthy();
-    // Registration is the default view: the name field shows and the CTA is the
-    // save-specific "Continue to save privately", not a generic signup label.
-    expect(screen.getByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
-    expect(screen.getByRole('button', { name: t('fr', 'authSavePrayerCta') })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: t('fr', 'authCreateAccount') })).toBeNull();
-    // The login tab remains available for existing users.
-    expect(screen.getByRole('button', { name: t('fr', 'authLogIn') })).toBeTruthy();
+  // to keep. The screen stays about THAT prayer — no Log in / Sign up tab bar, no
+  // password to invent, no display name — while "I already have an account"
+  // remains one tap away throughout.
+  describe('save-prayer intent — keeping the prayer, not registering for an app', () => {
+    const renderSave = () => render(<AuthPage intent="save-prayer" onBack={() => {}} />);
+
+    it('leads with the prayer and explains the account as what keeps it', () => {
+      renderSave();
+      expect(screen.getByText(t('fr', 'authKeepPrayerTitle'))).toBeTruthy();
+      expect(screen.getByText(t('fr', 'authKeepPrayerBody'))).toBeTruthy();
+      // The old registration framing is gone.
+      expect(screen.queryByText(t('fr', 'authSavePrayerTitle'))).toBeNull();
+      expect(document.querySelector('.auth-mode-switch')).toBeNull();
+    });
+
+    it('offers Google first, then one email link — no password, no display name', () => {
+      renderSave();
+      expect(screen.getByText(t('fr', 'authContinueGoogle'))).toBeTruthy();
+      expect(screen.getByRole('button', { name: t('fr', 'authEmailLinkCta') })).toBeTruthy();
+      expect(screen.queryByPlaceholderText(t('fr', 'authPassword'))).toBeNull();
+      expect(screen.queryByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeNull();
+    });
+
+    it('sends the sign-in link and says where to look for it', async () => {
+      const { container } = renderSave();
+      fireEvent.change(screen.getByPlaceholderText(t('fr', 'authEmail')), { target: { value: 'a@b.com' } });
+      submitForm(container);
+      await waitFor(() => expect(useAuthStore.getState().signInWithEmailLink).toHaveBeenCalledWith('a@b.com'));
+      await screen.findByText(t('fr', 'authEmailLinkSent'));
+    });
+
+    it('validates the address before sending anything', () => {
+      const { container } = renderSave();
+      fireEvent.change(screen.getByPlaceholderText(t('fr', 'authEmail')), { target: { value: 'nope' } });
+      submitForm(container);
+      expect(screen.getByText(t('fr', 'authErrEmail'))).toBeTruthy();
+      expect(useAuthStore.getState().signInWithEmailLink).not.toHaveBeenCalled();
+    });
+
+    it('keeps a password path for anyone who wants one, still without a name', () => {
+      renderSave();
+      fireEvent.click(screen.getByRole('button', { name: t('fr', 'authUsePasswordInstead') }));
+      expect(screen.getByPlaceholderText(t('fr', 'authPassword'))).toBeTruthy();
+      expect(screen.queryByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeNull();
+      expect(screen.getByRole('button', { name: t('fr', 'authSavePrayerCta') })).toBeTruthy();
+      // …and a way back to the link.
+      fireEvent.click(screen.getByRole('button', { name: t('fr', 'authUseLinkInstead') }));
+      expect(screen.getByRole('button', { name: t('fr', 'authEmailLinkCta') })).toBeTruthy();
+    });
+
+    it('keeps "I already have an account" one tap away from every sub-view', () => {
+      renderSave();
+      expect(screen.getByRole('button', { name: t('fr', 'authHaveAccount') })).toBeTruthy();
+
+      fireEvent.click(screen.getByRole('button', { name: t('fr', 'authUsePasswordInstead') }));
+      const existing = screen.getByRole('button', { name: t('fr', 'authHaveAccount') });
+      fireEvent.click(existing);
+      // Landed on log in, with the prayer framing intact above it.
+      expect(screen.getByText(t('fr', 'authKeepPrayerTitle'))).toBeTruthy();
+      expect(screen.getByText(t('fr', 'authForgotPassword'))).toBeTruthy();
+    });
   });
 
   it('without the save-prayer intent it still defaults to log in (no contextual copy)', () => {
     render(<AuthPage onBack={() => {}} />);
-    expect(screen.queryByText(t('fr', 'authSavePrayerTitle'))).toBeNull();
+    expect(screen.queryByText(t('fr', 'authKeepPrayerTitle'))).toBeNull();
     expect(screen.queryByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeNull();
+    // The tab switch is untouched for everyone else.
+    expect(document.querySelector('.auth-mode-switch')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t('fr', 'authEmailLinkCta') })).toBeNull();
   });
 
   it('offers to resend the confirmation email after a successful sign-up', async () => {

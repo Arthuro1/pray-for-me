@@ -2,7 +2,7 @@
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2 } from 'lucide-react';
 import { dirFor, LANGUAGES } from '../i18n';
 import { normalizeTheme } from '../utils/theme';
-import { loadLandingCopy } from './landing/copy';
+import { cachedLandingCopy, FALLBACK_LANDING_COPY, FALLBACK_LANDING_LANG, resolveLandingCopy } from './landing/copy';
 
 // Keep native language names in the shared registry. Languages whose longer
 // marketing copy is still abbreviated show a clear, translated status label.
@@ -148,7 +148,19 @@ function FAQ({ q, a, T }) {
 // preserved for people who already have an account.
 export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
-  const [copyState, setCopyState] = useState(null);
+  // What is ON SCREEN right now, and which language it is really in. The page
+  // never waits behind a dictionary: English is bundled, so the first frame is
+  // the real landing page, and the visitor's language replaces it a moment
+  // later. Switching languages keeps the current copy up until the new one is
+  // in hand — replacing a whole page with a spinner to change a language reads
+  // as a slower site than simply letting the words change.
+  const [rendered, setRendered] = useState(() => {
+    const initial = detectLang();
+    const ready = cachedLandingCopy(initial);
+    return ready
+      ? { lang: initial, copy: ready }
+      : { lang: FALLBACK_LANDING_LANG, copy: FALLBACK_LANDING_COPY };
+  });
   const [langOpen, setLangOpen] = useState(false);
   const langMenuRef = useRef(null);
   const langButtonRef = useRef(null);
@@ -164,26 +176,35 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const activeLang = LANGS.find(l => l.code === lang);
 
   // Fetch only the selected landing dictionary. A stale request cannot overwrite
-  // a newer language selection.
+  // a newer language selection. resolveLandingCopy reports the language the copy
+  // is genuinely in, so a chunk that fails to load leaves the page labelled
+  // English rather than claiming to be a language it is not showing.
   useEffect(() => {
+    if (rendered.lang === lang) return undefined;
     let current = true;
-    loadLandingCopy(lang).then((copy) => {
-      if (current) setCopyState({ lang, copy });
+    resolveLandingCopy(lang).then((next) => {
+      if (current) setRendered(next);
     });
     return () => { current = false; };
-  }, [lang]);
+  }, [lang, rendered.lang]);
 
   // Reflect the visitor's language on <html> so screen readers pronounce the
   // marketing copy correctly and Arabic/Persian render right-to-left. Mirrors the
   // in-app effect in App.jsx, which takes over once the visitor signs in.
+  //
+  // The two attributes deliberately follow different things. `dir` follows the
+  // SELECTED language and is set immediately, so the layout is already correct
+  // and never flips once the translated copy arrives. `lang` follows the copy
+  // actually on screen, so a screen reader is never told to pronounce English
+  // words as Arabic during the moment before the real dictionary lands.
   useEffect(() => {
-    document.documentElement.lang = lang;
+    document.documentElement.lang = rendered.lang;
     document.documentElement.dir = dirFor(lang);
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.classList.add('constellation-landing-root');
     localStorage.setItem('pfm_theme', theme);
     return () => document.documentElement.classList.remove('constellation-landing-root');
-  }, [lang, theme]);
+  }, [lang, rendered.lang, theme]);
 
   useEffect(() => {
     if (!langOpen) return undefined;
@@ -254,21 +275,10 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     document.documentElement.setAttribute('data-theme', next);
   };
 
-  const copy = copyState?.lang === lang ? copyState.copy : null;
-  if (!copy) {
-    return (
-      <div
-        aria-busy="true"
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: T.bg, color: T.text }}
-      >
-        <div className="text-center">
-          <img src="/logo-constellation.svg" alt="Pray4Me" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
-          <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
-        </div>
-      </div>
-    );
-  }
+  const copy = rendered.copy;
+  // A language was asked for and its words have not arrived yet. The page stays
+  // exactly as it is; only the language control says it is working.
+  const copyPending = rendered.lang !== lang;
 
   const {
     content: c,
@@ -326,12 +336,18 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               aria-haspopup="menu"
               aria-controls="landing-language-menu"
               aria-label={`${languageMenuLabel}: ${activeLang?.label}`}
+              // The ONLY thing that reports a language still loading. The page
+              // itself keeps its words; a whole-page spinner to change a
+              // language is what made the site feel slow.
+              aria-busy={copyPending || undefined}
               className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-all"
               style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
             >
               <span>{activeLang?.flag}</span>
               <span>{activeLang?.shortLabel}</span>
-              <ChevronDown size={13} style={{ opacity: 0.6 }} />
+              {copyPending
+                ? <Loader2 size={13} className="animate-spin" aria-hidden="true" style={{ opacity: 0.6 }} />
+                : <ChevronDown size={13} aria-hidden="true" style={{ opacity: 0.6 }} />}
             </button>
 
             {langOpen && (

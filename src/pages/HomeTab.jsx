@@ -31,7 +31,8 @@ import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
 import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
-import { nextActivationStep, readActivationProgress } from '../lib/activationProgress';
+import { readActivationProgress } from '../lib/activationProgress';
+import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -100,6 +101,7 @@ export default function HomeTab({ onAdd, onEdit }) {
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
   const activationStep = nextActivationStep({
     prayers,
+    completions,
     dailyReminderEnabled: !!settings.dailyReminderEnabled,
     progress: readActivationProgress(),
   });
@@ -239,12 +241,13 @@ export default function HomeTab({ onAdd, onEdit }) {
           <>
             <ActivationNudge
               prayers={prayers}
+              completions={completions}
               settings={settings}
               lang={lang}
               onEditPrayer={onEdit}
               onOpenReminders={() => navigate('/settings#notifications')}
             />
-            {!activationStep && <PwaInstallNudge lang={lang} />}
+            {pwaInstallAllowed({ activationStep }) && <PwaInstallNudge lang={lang} />}
           </>
         )}
 

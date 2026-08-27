@@ -1202,4 +1202,5 @@ export default {
   "morePrivacyDesc": "Chiffrement, récupération et gestion des données",
   "moreSettingsDesc": "Langue, apparence et préférences",
   "moreSupportDesc": "Aide, retours et informations sur Pray4Me",
+  "journalPeopleHintCta": "Afficher par personne",
 };
