@@ -29,6 +29,26 @@ This gate is wired into `.github/workflows/ci.yml`, so a PR that adds an English
 string without adding it to every locale fails CI instead of shipping a
 half-translated screen.
 
+#### Two bundles, two references
+
+The checker covers **both** translated bundles, and they do not work the same way:
+
+| Bundle | Reference | Runtime fallback |
+|---|---|---|
+| `src/i18n/locales/*.js` (the app UI) | `fr` | per **key** — a missing key silently renders the French string |
+| `src/pages/landing/locales/landing-*.js` (marketing) | `en` | per **file** — there is **no** per-key fallback |
+
+The landing page does not use `t()`. `src/pages/landing/copy.js` swaps in one
+whole dictionary per language, so whatever a locale's file holds is exactly what
+that reader sees: a missing key renders `undefined`, and a short array simply
+renders fewer items. That is why the landing copy is flattened to leaf paths
+(`content.faqs[3].q`) and array indices count as keys — eight locales once
+shipped three FAQ entries while everyone else saw five, with every test green.
+
+The landing table also prints an **"english-left?"** column (a value byte-identical
+to the English source). `icon` and `color` are excluded — a lucide name and a hex
+value are structural and identical in every language by design.
+
 ### 2. Quality — needs a native speaker
 
 The checker also prints a per-locale **"untranslated?"** count — strings that are

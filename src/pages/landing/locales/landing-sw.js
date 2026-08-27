@@ -102,6 +102,14 @@ export default {
         "a": "Hapana — unaweza kuomba ombi la kwanza bila akaunti, nalo linabaki kwenye kifaa chako. Akaunti ya bure inahitajika tu kuhifadhi maombi na kuyasawazisha kwenye vifaa vyako; jisajili na Google kwa kugonga mara moja au tumia barua pepe/neno la siri."
       },
       {
+        "q": "Je, kitafutaji cha Maandiko hufanyaje kazi?",
+        "a": "Unaingiza kichwa cha ombi lako na programu hupendekeza mistari ya Biblia inayohusiana pamoja na maandishi yake kamili. Wewe huchagua inayoendana na hali yako."
+      },
+      {
+        "q": "Ni lugha zipi zinazotumika?",
+        "a": "Kiolesura kizima kinapatikana katika lugha 16."
+      },
+      {
         "q": "Je, ni bure?",
         "a": "Ndiyo, bure kabisa. Programu hii ni chanzo wazi."
       }
@@ -150,7 +158,7 @@ export default {
     "Wafilipi 4:7",
     "Isaya 40:31"
   ],
-  "stepLabel": "Step",
+  "stepLabel": "Hatua",
   "todayLabel": "Leo",
   "prayNowLabel": "Omba sasa"
 };

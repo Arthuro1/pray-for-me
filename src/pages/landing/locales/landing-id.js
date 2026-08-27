@@ -102,6 +102,14 @@ export default {
         "a": "Tidak — Anda dapat memanjatkan doa pertama tanpa akun, dan doa itu tetap di perangkat Anda. Akun gratis hanya diperlukan untuk menyimpan doa dan menyinkronkannya di seluruh perangkat Anda; daftar dengan Google dalam satu ketukan."
       },
       {
+        "q": "Bagaimana pencari ayat bekerja?",
+        "a": "Anda memasukkan judul doa Anda dan aplikasi menampilkan ayat-ayat Alkitab yang relevan beserta teks lengkapnya. Anda memilih yang sesuai dengan situasi Anda."
+      },
+      {
+        "q": "Bahasa apa saja yang didukung?",
+        "a": "Seluruh antarmuka tersedia dalam 16 bahasa."
+      },
+      {
         "q": "Apakah gratis?",
         "a": "Ya, sepenuhnya gratis. Aplikasi ini adalah open source."
       }
@@ -150,7 +158,7 @@ export default {
     "Filipi 4:7",
     "Yesaya 40:31"
   ],
-  "stepLabel": "Step",
+  "stepLabel": "Langkah",
   "todayLabel": "Hari ini",
   "prayNowLabel": "Berdoa sekarang"
 };

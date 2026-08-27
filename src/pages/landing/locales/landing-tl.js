@@ -102,6 +102,14 @@ export default {
         "a": "Hindi — maaari kang manalangin ng unang panalangin nang walang account, at mananatili ito sa iyong device. Kailangan lang ang libreng account para i-save ang mga panalangin at i-sync ang mga ito sa iyong mga device; mag-sign up gamit ang Google sa isang tap."
       },
       {
+        "q": "Paano gumagana ang panghanap ng talata?",
+        "a": "Ilalagay mo ang pamagat ng iyong panalangin at magmumungkahi ang app ng mga kaugnay na talata sa Bibliya kasama ang buong teksto ng mga ito. Ikaw ang pipili kung alin ang tumutugma sa iyong kalagayan."
+      },
+      {
+        "q": "Anong mga wika ang suportado?",
+        "a": "Gumagana ang buong interface sa 16 na wika."
+      },
+      {
         "q": "Libre ba?",
         "a": "Oo, ganap na libre. Ang app na ito ay open source."
       }
@@ -150,7 +158,7 @@ export default {
     "Filipos 4:7",
     "Isaias 40:31"
   ],
-  "stepLabel": "Step",
+  "stepLabel": "Hakbang",
   "todayLabel": "Ngayon",
   "prayNowLabel": "Manalangin ngayon"
 };

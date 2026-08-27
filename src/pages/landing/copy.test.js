@@ -17,11 +17,18 @@ describe('landing locale chunks', () => {
       LANDING_LOCALE_CODES.map(async (code) => [code, await loadLandingCopy(code)]),
     );
 
+    // The landing copy is a whole-file swap with NO key-level fallback: whatever
+    // a locale's array holds is exactly what that reader sees. So the FAQ list is
+    // measured against English rather than a floor — a `>= 3` check once let eight
+    // locales ship three questions while everyone else saw five, silently and with
+    // every test green.
+    const expectedFaqs = (await loadLandingCopy('en')).content.faqs.length;
+
     for (const [code, copy] of copies) {
       expect(copy.content.signIn, `${code}: sign-in`).toEqual(expect.any(String));
       expect(copy.content.features, `${code}: features`).toHaveLength(9);
       expect(copy.content.steps, `${code}: steps`).toHaveLength(3);
-      expect(copy.content.faqs.length, `${code}: FAQs`).toBeGreaterThanOrEqual(3);
+      expect(copy.content.faqs, `${code}: FAQs`).toHaveLength(expectedFaqs);
       expect(copy.benefits, `${code}: benefits`).toHaveLength(3);
       expect(copy.scripturePreviewPoints, `${code}: Scripture points`).toHaveLength(2);
       expect(copy.scriptureReferences, `${code}: Scripture references`).toHaveLength(2);

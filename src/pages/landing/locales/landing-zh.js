@@ -158,7 +158,7 @@ export default {
     "腓立比书 4:7",
     "以赛亚书 40:31"
   ],
-  "stepLabel": "Step",
+  "stepLabel": "步骤",
   "todayLabel": "今天",
   "prayNowLabel": "现在祷告"
 };

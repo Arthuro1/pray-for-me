@@ -158,7 +158,7 @@ export default {
     "फिलिप्पियों 4:7",
     "यशायाह 40:31"
   ],
-  "stepLabel": "Step",
+  "stepLabel": "चरण",
   "todayLabel": "आज",
   "prayNowLabel": "अभी प्रार्थना करें"
 };
