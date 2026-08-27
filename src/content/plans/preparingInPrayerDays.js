@@ -19,9 +19,6 @@
 //                   twenty-one carry one, and none of them changes the day's
 //                   Scripture, prompts or structure
 //   resourceTopics  taxonomy ids used to look up approved external resources
-//   emphasis        which onboarding emphasis this day serves (used to weight
-//                   resources and to pre-tick the completion step, never to add
-//                   or remove days)
 //
 // Prose is authored in en + fr; other languages arrive as overlays keyed by day
 // number (see ./translations.js).
@@ -49,7 +46,6 @@ export const DAYS = [
       fr: "Passe le début de la prière d'aujourd'hui à remercier Dieu, avant de Lui demander quoi que ce soit au sujet du mariage.",
     },
     resourceTopics: ['prayer', 'spiritual-formation'],
-    emphasis: ['closeness'],
   },
   {
     movement: 'rooted',
@@ -81,7 +77,6 @@ export const DAYS = [
       },
     },
     resourceTopics: ['identity', 'spiritual-formation'],
-    emphasis: ['closeness', 'character'],
   },
   {
     movement: 'rooted',
@@ -106,7 +101,6 @@ export const DAYS = [
       fr: "Nomme trois bons dons que Dieu t'a faits dans cette saison, et remercie-Le pour chacun.",
     },
     resourceTopics: ['singleness', 'contentment'],
-    emphasis: ['contentment'],
   },
   {
     movement: 'rooted',
@@ -127,7 +121,6 @@ export const DAYS = [
       fr: "Ce que tu appelles « attendre », Dieu ne l'appelle-t-il pas simplement « vivre » ?",
     },
     resourceTopics: ['contentment', 'discernment'],
-    emphasis: ['contentment'],
   },
   {
     movement: 'rooted',
@@ -148,7 +141,6 @@ export const DAYS = [
       fr: "Si Dieu ne l'accorde jamais, Lui feras-tu encore confiance ? Dis-Lui la réponse honnête.",
     },
     resourceTopics: ['prayer', 'singleness'],
-    emphasis: ['closeness', 'contentment'],
   },
   {
     movement: 'becoming',
@@ -185,7 +177,6 @@ export const DAYS = [
       },
     },
     resourceTopics: ['character', 'spiritual-formation'],
-    emphasis: ['character'],
   },
   {
     movement: 'becoming',
@@ -206,7 +197,6 @@ export const DAYS = [
       fr: "Y a-t-il ici quelque chose dont tu devrais aussi parler à un pasteur, à un ami mûr ou à un conseiller ?",
     },
     resourceTopics: ['healing'],
-    emphasis: ['healing'],
   },
   {
     movement: 'becoming',
@@ -231,7 +221,6 @@ export const DAYS = [
       fr: "Fais aujourd'hui un pas honnête de responsabilité — une conversation, une limite, un réglage changé.",
     },
     resourceTopics: ['purity', 'sexuality'],
-    emphasis: ['character'],
   },
   {
     movement: 'becoming',
@@ -252,7 +241,6 @@ export const DAYS = [
       fr: "De qui évites-tu le conseil parce que tu devines déjà ce qu'il te dirait ?",
     },
     resourceTopics: ['discernment', 'dating'],
-    emphasis: ['character'],
   },
   {
     movement: 'becoming',
@@ -277,7 +265,6 @@ export const DAYS = [
       fr: "Encourage ou prends des nouvelles d'une personne de ton Église ou de ta communauté aujourd'hui.",
     },
     resourceTopics: ['community', 'singleness'],
-    emphasis: ['contentment'],
   },
   {
     movement: 'intercede',
@@ -302,7 +289,6 @@ export const DAYS = [
       fr: "Avant de prier pour la marche d'un autre avec Dieu, prie-la une fois sur la tienne.",
     },
     resourceTopics: ['future-spouse', 'prayer'],
-    emphasis: ['spouse'],
   },
   {
     movement: 'intercede',
@@ -323,7 +309,6 @@ export const DAYS = [
       fr: 'La personne pour qui tu pries reconnaîtrait-elle ces trois mêmes choses en toi ?',
     },
     resourceTopics: ['future-spouse', 'character'],
-    emphasis: ['spouse', 'character'],
   },
   {
     movement: 'intercede',
@@ -344,7 +329,6 @@ export const DAYS = [
       fr: "Demande à Dieu d'achever Sa bonne œuvre en toi, à Son rythme et non au tien.",
     },
     resourceTopics: ['future-spouse', 'healing'],
-    emphasis: ['spouse', 'healing'],
   },
   {
     movement: 'intercede',
@@ -365,7 +349,6 @@ export const DAYS = [
       fr: "Que t'a confié Dieu en ce moment dont tu ne fais pas encore bon usage ?",
     },
     resourceTopics: ['future-spouse', 'spiritual-formation', 'finances'],
-    emphasis: ['spouse'],
   },
   {
     movement: 'intercede',
@@ -402,7 +385,6 @@ export const DAYS = [
       },
     },
     resourceTopics: ['communication', 'marriage'],
-    emphasis: ['character'],
   },
   {
     movement: 'intercede',
@@ -435,7 +417,6 @@ export const DAYS = [
       },
     },
     resourceTopics: ['conflict', 'forgiveness'],
-    emphasis: ['character', 'healing'],
   },
   {
     movement: 'intercede',
@@ -467,7 +448,6 @@ export const DAYS = [
       },
     },
     resourceTopics: ['covenant', 'marriage'],
-    emphasis: ['spouse', 'character'],
   },
   {
     movement: 'surrender',
@@ -492,7 +472,6 @@ export const DAYS = [
       fr: "Fais aujourd'hui une chose qui rend ton logement plus accueillant pour quelqu'un d'autre.",
     },
     resourceTopics: ['family', 'family-discipleship', 'finances'],
-    emphasis: ['character'],
   },
   {
     movement: 'surrender',
@@ -513,7 +492,6 @@ export const DAYS = [
       fr: 'Quelle part de ton avenir serres-tu le plus fort ? Dis-la à Dieu.',
     },
     resourceTopics: ['parenting', 'family'],
-    emphasis: ['spouse'],
   },
   {
     movement: 'surrender',
@@ -534,7 +512,6 @@ export const DAYS = [
       fr: 'Qui Dieu place-t-il devant toi en ce moment pour que tu le serves ?',
     },
     resourceTopics: ['marriage', 'community'],
-    emphasis: ['contentment'],
   },
   {
     movement: 'surrender',
@@ -559,7 +536,6 @@ export const DAYS = [
       fr: "Écris une phrase que tu veux continuer à prier après aujourd'hui, et ajoute-la à tes prières.",
     },
     resourceTopics: ['prayer', 'singleness', 'contentment'],
-    emphasis: ['closeness', 'contentment'],
   },
 ];
 

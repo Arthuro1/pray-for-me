@@ -1,15 +1,16 @@
 // @vitest-environment jsdom
 //
-// Plan onboarding answers are among the most personal things this app touches —
-// what season someone is in, whether they hope to marry, what they want healed.
-// These tests hold the two promises made about them: they stay on the device,
-// and only known ids ever come back out.
+// Plan personalization answers are among the most personal things this app
+// touches — whether someone is preparing to be a husband or a wife, what they
+// want healed. These tests hold the three promises made about them: they stay on
+// the device, only known ids ever come back out, and nothing is asked that does
+// not change something the reader can see.
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
-  getPlanPrefs, hasPlanPrefs, savePlanPrefs, markPlanCompleted, clearPlanPrefs,
+  getPlanPrefs, savePlanPrefs, markPlanCompleted, clearPlanPrefs,
   claimPlanCompletionReport,
   growthTopics, getResourceFallbackLanguages, setResourceFallbackLanguages,
-  SEASONS, EMPHASES, ROLES, GROWTH_AREAS, DEFAULT_EMPHASIS, DEFAULT_ROLE,
+  ROLES, GROWTH_AREAS, DEFAULT_ROLE,
 } from './planPrefs.js';
 
 const PLAN = 'preparing21';
@@ -17,13 +18,14 @@ const PLAN = 'preparing21';
 beforeEach(() => localStorage.clear());
 
 describe('defaults', () => {
-  it('returns usable recommended defaults before anyone has answered', () => {
+  // An UNANSWERED role stays absent rather than becoming 'general'. That is what
+  // lets a plan day tell "never asked" from "asked, and chose to keep it
+  // general", so the inline question is offered once and then stops.
+  it('stores nothing at all before anyone has answered', () => {
     const prefs = getPlanPrefs(PLAN);
-    expect(hasPlanPrefs(PLAN)).toBe(false);
-    expect(prefs.emphasis).toEqual(DEFAULT_EMPHASIS);
-    expect(prefs.role).toBe(DEFAULT_ROLE);
+    expect(localStorage.getItem('pfm_plan_prefs')).toBeNull();
+    expect(prefs.role).toBeUndefined();
     expect(prefs.growth).toEqual([]);
-    expect(prefs.season).toBeUndefined();
   });
 
   it('defaults the husband/wife question to keeping the plan general', () => {
@@ -31,38 +33,38 @@ describe('defaults', () => {
     expect(ROLES.map((r) => r.id)).toContain('general');
   });
 
-  it('recommends growing closer to God, character and a possible spouse', () => {
-    expect(DEFAULT_EMPHASIS).toEqual(['closeness', 'character', 'spouse']);
+  it('records "keep it general" as a real answer, not as silence', () => {
+    savePlanPrefs(PLAN, { role: 'general' });
+    expect(getPlanPrefs(PLAN).role).toBe('general');
   });
 });
 
 describe('saving', () => {
   it('round-trips a full set of answers', () => {
-    savePlanPrefs(PLAN, { season: 'hope', emphasis: ['healing'], role: 'wife', growth: ['conflict'] });
+    savePlanPrefs(PLAN, { role: 'wife', growth: ['conflict'] });
     const prefs = getPlanPrefs(PLAN);
-    expect(hasPlanPrefs(PLAN)).toBe(true);
-    expect(prefs).toMatchObject({ season: 'hope', emphasis: ['healing'], role: 'wife', growth: ['conflict'] });
+    expect(prefs).toMatchObject({ role: 'wife', growth: ['conflict'] });
     expect(prefs.startedAt).toBeTruthy();
   });
 
   it('keeps the original start date when answers are revised', () => {
-    savePlanPrefs(PLAN, { season: 'hope' });
+    savePlanPrefs(PLAN, { role: 'wife' });
     const first = getPlanPrefs(PLAN).startedAt;
-    savePlanPrefs(PLAN, { season: 'open' });
+    savePlanPrefs(PLAN, { role: 'husband' });
     expect(getPlanPrefs(PLAN).startedAt).toBe(first);
-    expect(getPlanPrefs(PLAN).season).toBe('open');
+    expect(getPlanPrefs(PLAN).role).toBe('husband');
   });
 
   it('records completion', () => {
-    savePlanPrefs(PLAN, { season: 'hope' });
+    savePlanPrefs(PLAN, { role: 'wife' });
     markPlanCompleted(PLAN);
     expect(getPlanPrefs(PLAN).completedAt).toBeTruthy();
   });
 
   it('forgets everything when the answers are cleared', () => {
-    savePlanPrefs(PLAN, { season: 'hope', role: 'husband' });
+    savePlanPrefs(PLAN, { role: 'husband', growth: ['healing'] });
     clearPlanPrefs(PLAN);
-    expect(hasPlanPrefs(PLAN)).toBe(false);
+    expect(localStorage.getItem('pfm_plan_prefs')).not.toContain(PLAN);
     expect(localStorage.getItem('pfm_plan_prefs')).not.toMatch(/husband/);
   });
 });
@@ -99,28 +101,24 @@ describe('completion reporting', () => {
 describe('only known ids survive', () => {
   it('drops anything that is not on the fixed lists', () => {
     savePlanPrefs(PLAN, {
-      season: 'in a relationship with Alex',
-      emphasis: ['closeness', 'my ex'],
-      role: 'something else',
+      role: 'in a relationship with Alex',
       growth: ['conflict', 'free text'],
     });
     const prefs = getPlanPrefs(PLAN);
-    expect(prefs.season).toBeUndefined();
-    expect(prefs.emphasis).toEqual(['closeness']);
-    expect(prefs.role).toBe(DEFAULT_ROLE);
+    expect(prefs.role).toBeUndefined();
     expect(prefs.growth).toEqual(['conflict']);
     // Nothing free-text ever reaches storage.
-    expect(localStorage.getItem('pfm_plan_prefs')).not.toMatch(/Alex|free text|my ex/);
+    expect(localStorage.getItem('pfm_plan_prefs')).not.toMatch(/Alex|free text/);
   });
 
   it('survives corrupt storage without throwing', () => {
     localStorage.setItem('pfm_plan_prefs', 'not json');
     expect(() => getPlanPrefs(PLAN)).not.toThrow();
-    expect(getPlanPrefs(PLAN).role).toBe(DEFAULT_ROLE);
+    expect(getPlanPrefs(PLAN).growth).toEqual([]);
   });
 
   it('every option id in the UI lists is unique', () => {
-    for (const list of [SEASONS, EMPHASES, ROLES, GROWTH_AREAS]) {
+    for (const list of [ROLES, GROWTH_AREAS]) {
       const ids = list.map((o) => o.id);
       expect(new Set(ids).size).toBe(ids.length);
     }
@@ -142,10 +140,16 @@ describe('growthTopics', () => {
     expect(new Set(topics).size).toBe(topics.length);
   });
 
-  it('uses couple include choices only as resource-ranking topics', () => {
-    expect(growthTopics({ includes: ['spiritual', 'children'] })).toEqual(expect.arrayContaining([
-      'spiritual-rhythms', 'prayer-together', 'children', 'parenting', 'family-discipleship',
+  it('uses the optional couple layers only as resource-ranking topics', () => {
+    expect(growthTopics({ includes: ['children', 'home'] })).toEqual(expect.arrayContaining([
+      'children', 'parenting', 'family-discipleship', 'family', 'hospitality',
     ]));
+  });
+
+  // They were pre-ticked boxes that changed nothing a day said; unticking them
+  // was a control the plan could not honour, so they are no longer offered.
+  it('no longer knows the four directions that were never optional', () => {
+    expect(growthTopics({ includes: ['marriage', 'spouse', 'self', 'spiritual'] })).toEqual([]);
   });
 });
 

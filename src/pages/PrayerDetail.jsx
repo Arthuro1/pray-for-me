@@ -27,10 +27,10 @@ import { pick, localizeRef } from '../content/teaching';
 import { usePlanDay } from '../hooks/usePlanDay';
 import PlanDayBody from '../components/PlanDayBody';
 import PlanCompletionCard from '../components/PlanCompletionCard';
-import PlanOnboardingModal from '../components/PlanOnboardingModal';
-import { isCouplePlan } from '../lib/planPersonalization';
+import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
+import { hasPersonalization, isCouplePlan, planPeopleFrom } from '../lib/planPersonalization';
 import { savePlanPersonalization } from '../lib/planPersonalizationStorage';
-import { claimPlanCompletionReport, markPlanCompleted } from '../lib/planPrefs';
+import { claimPlanCompletionReport, markPlanCompleted, savePlanPrefs } from '../lib/planPrefs';
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
 import { canUsePlan } from '../lib/planReview';
@@ -327,12 +327,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     });
   // The last day is behind them: the series can produce no more occurrences.
   const planFinished = !!plan?.completion && !isCommunity && scheduleEnded(livePrayer, todayKey());
-  // A couple plan's answers used to be capturable only at the moment it started,
-  // so a mistyped name or a child born mid-plan meant deleting the prayer and
-  // losing its history. They can be corrected here for the life of the run.
+  // A plan's answers used to be capturable only at the moment it started, behind
+  // a sheet that stood between "Start" and the first day. They are asked here
+  // instead — on the day itself, where the reader can see what an answer
+  // changes — and stay correctable for the life of the run.
   const [editingPersonalization, setEditingPersonalization] = useState(false);
   const canEditPersonalization = !isCommunity && !planFinished
-    && isCouplePlan(plan) && !!livePrayer.user_id;
+    && hasPersonalization(plan) && (!isCouplePlan(plan) || !!livePrayer.user_id);
+  // A couple run's answers are private to that run; a single reader's stay on
+  // the device under the plan's own id.
+  const savePersonalization = async (prefs) => {
+    if (!isCouplePlan(plan)) { savePlanPrefs(plan.id, prefs); return; }
+    await savePlanPersonalization(livePrayer.user_id, livePrayer.id, prefs);
+  };
+  // The husband/wife question, offered inline on the first day that actually
+  // carries such a reflection — and only until it has been answered, so
+  // "keep it general" silences it just as firmly as choosing one.
+  const offerRoleChoice = canEditPersonalization && !isCouplePlan(plan) && !planPrefs?.role;
 
   // Completion is reported when the last day is actually behind the reader, not
   // when they happen to tap a follow-up action. claimPlanCompletionReport()
@@ -922,7 +933,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 )}
               </VerseAccordion>
             </div>
-            <PlanDayBody day={planDay} lang={lang} role={planRole} resources={planResources} idPrefix="detail-plan-day" />
+            <PlanDayBody
+              day={planDay}
+              lang={lang}
+              role={planRole}
+              resources={planResources}
+              idPrefix="detail-plan-day"
+              onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
+            />
             {canEditPersonalization && (
               <button
                 type="button"
@@ -930,23 +948,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
                 style={{ color: 'var(--text-3)' }}
               >
-                <Pencil size={12} aria-hidden="true" /> {t(lang, 'planCoupleOnboardingTitle')}
+                <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
               </button>
             )}
           </div>
         )}
 
         {editingPersonalization && (
-          <PlanOnboardingModal
+          <PlanPersonalizeModal
             plan={plan}
             lang={lang}
-            initial={planPrefs}
-            ctaKey="save"
+            initial={isCouplePlan(plan) ? planPrefs : null}
+            people={planPeopleFrom(prayers)}
             onClose={() => setEditingPersonalization(false)}
-            onStart={async (prefs) => {
+            onSave={async (prefs) => {
               setEditingPersonalization(false);
               try {
-                await savePlanPersonalization(livePrayer.user_id, livePrayer.id, prefs);
+                await savePersonalization(prefs);
                 reloadPrefs();
               } catch {
                 // Storage refused the private record. The run keeps the answers

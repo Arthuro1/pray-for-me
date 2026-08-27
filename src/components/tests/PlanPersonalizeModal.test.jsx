@@ -1,38 +1,42 @@
 // @vitest-environment jsdom
 //
-// The short onboarding a rich plan asks for. What is being defended: it is four
-// questions and no more, the husband/wife question is ASKED rather than guessed,
-// it defaults to keeping the plan general, and nothing is required to begin.
+// The sheet that tailors a plan a reader is ALREADY praying. What is being
+// defended: every question left changes something the reader can see, the
+// husband/wife question is ASKED rather than guessed, it defaults to keeping the
+// plan general, and nothing is required.
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
-import PlanOnboardingModal from '../PlanOnboardingModal';
+import PlanPersonalizeModal from '../PlanPersonalizeModal';
 import { PREPARING_IN_PRAYER } from '../../content/plans/preparingInPrayer';
-import { DEFAULT_EMPHASIS, GROWTH_AREAS } from '../../lib/planPrefs';
+import { GROWTH_AREAS, savePlanPrefs } from '../../lib/planPrefs';
 import { t } from '../../i18n';
 
 const lang = 'fr'; // the always-loaded fallback locale
 afterEach(() => { cleanup(); localStorage.clear(); });
 
-const open = (onStart = vi.fn()) => {
-  render(<PlanOnboardingModal plan={PREPARING_IN_PRAYER} lang={lang} onStart={onStart} onClose={vi.fn()} />);
-  return onStart;
+const open = (onSave = vi.fn()) => {
+  render(<PlanPersonalizeModal plan={PREPARING_IN_PRAYER} lang={lang} onSave={onSave} onClose={vi.fn()} />);
+  return onSave;
 };
 
+const submit = () => fireEvent.click(screen.getByRole('button', { name: t(lang, 'save') }));
+
 describe('the questions', () => {
-  it('asks about the season, the emphasis, the role and growth areas — and no more', () => {
+  // The season and the emphasis used to be asked here too. A season was stored
+  // and read by nothing at all; an emphasis only pre-ticked the completion card
+  // three weeks later, which is where it is asked now. Neither comes back.
+  it('asks about the role and growth areas — and no more', () => {
     open();
-    expect(screen.getByText(t(lang, 'planPrepSeasonQ'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'planPrepEmphasisQ'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPrepRoleQ'))).toBeTruthy();
     expect(screen.getByText(new RegExp(t(lang, 'planPrepGrowthQ')))).toBeTruthy();
-    // Single-choice questions are radio groups; the multi-choice one is not.
-    expect(screen.getAllByRole('radiogroup')).toHaveLength(2);
+    // The role is the only single-choice question left.
+    expect(screen.getAllByRole('radiogroup')).toHaveLength(1);
   });
 
   it('never asks for a person, a name or anything free-text', () => {
     const { container } = render(
-      <PlanOnboardingModal plan={PREPARING_IN_PRAYER} lang={lang} onStart={vi.fn()} onClose={vi.fn()} />,
+      <PlanPersonalizeModal plan={PREPARING_IN_PRAYER} lang={lang} onSave={vi.fn()} onClose={vi.fn()} />,
     );
     expect(container.querySelectorAll('input, textarea')).toHaveLength(0);
   });
@@ -44,57 +48,31 @@ describe('the questions', () => {
 });
 
 describe('defaults', () => {
-  it('pre-selects the three recommended emphases and nothing else', () => {
-    const onStart = open();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ emphasis: DEFAULT_EMPHASIS }));
-  });
-
   it('defaults the husband/wife question to keeping the plan general', () => {
-    const onStart = open();
+    const onSave = open();
     const general = screen.getByRole('radio', { name: t(lang, 'planPrepRoleGeneral') });
     expect(general.getAttribute('aria-checked')).toBe('true');
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ role: 'general' }));
+    submit();
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ role: 'general' }));
   });
 
-  it('starts with no season chosen and starts anyway — nothing is required', () => {
-    const onStart = open();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ season: null, growth: [] }));
+  it('saves with nothing chosen — no answer is required', () => {
+    const onSave = open();
+    submit();
+    expect(onSave).toHaveBeenCalledWith({ role: 'general', growth: [] });
   });
 });
 
 describe('choosing', () => {
-  it('records a season, and lets it be unset again', () => {
-    const onStart = open();
-    const hope = screen.getByRole('radio', { name: t(lang, 'planPrepSeasonHope') });
-    fireEvent.click(hope);
-    expect(hope.getAttribute('aria-checked')).toBe('true');
-    fireEvent.click(hope);
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ season: null }));
-  });
-
-  it('toggles emphases on and off', () => {
-    const onStart = open();
-    fireEvent.click(screen.getByRole('checkbox', { name: t(lang, 'planPrepEmphasisCloseness') }));
-    fireEvent.click(screen.getByRole('checkbox', { name: t(lang, 'planPrepEmphasisHealing') }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    const { emphasis } = onStart.mock.calls[0][0];
-    expect(emphasis).not.toContain('closeness');
-    expect(emphasis).toContain('healing');
-  });
-
   it('asks for the role out loud, and passes on the explicit answer', () => {
-    const onStart = open();
+    const onSave = open();
     fireEvent.click(screen.getByRole('radio', { name: t(lang, 'planPrepRoleWife') }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ role: 'wife' }));
+    submit();
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ role: 'wife' }));
   });
 
   it('keeps the long growth-area list folded away until it is asked for', () => {
-    const onStart = open();
+    const onSave = open();
     const disclosure = screen.getByRole('button', { name: new RegExp(t(lang, 'planPrepGrowthQ')) });
     expect(disclosure.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByRole('checkbox', { name: t(lang, GROWTH_AREAS[0].labelKey) })).toBeNull();
@@ -102,7 +80,32 @@ describe('choosing', () => {
     fireEvent.click(disclosure);
     expect(disclosure.getAttribute('aria-expanded')).toBe('true');
     fireEvent.click(screen.getByRole('checkbox', { name: t(lang, GROWTH_AREAS[0].labelKey) }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({ growth: [GROWTH_AREAS[0].id] }));
+    submit();
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ growth: [GROWTH_AREAS[0].id] }));
+  });
+});
+
+// The sheet can be reopened for the life of a run, so it has to come back
+// holding the answers already given: a reader with nothing to change closes it,
+// and one who wants a different reflection can say so.
+describe('reopening', () => {
+  it('reopens holding the answers already on the device', () => {
+    savePlanPrefs(PREPARING_IN_PRAYER.id, { role: 'husband', growth: [GROWTH_AREAS[1].id] });
+    const onSave = open();
+
+    expect(screen.getByRole('radio', { name: t(lang, 'planPrepRoleHusband') }).getAttribute('aria-checked')).toBe('true');
+    // Growth areas were answered, so the disclosure opens already unfolded.
+    expect(screen.getByRole('checkbox', { name: t(lang, GROWTH_AREAS[1].labelKey) }).getAttribute('aria-checked')).toBe('true');
+
+    submit();
+    expect(onSave).toHaveBeenCalledWith({ role: 'husband', growth: [GROWTH_AREAS[1].id] });
+  });
+
+  it('lets an answer be changed later in the run', () => {
+    savePlanPrefs(PREPARING_IN_PRAYER.id, { role: 'husband' });
+    const onSave = open();
+    fireEvent.click(screen.getByRole('radio', { name: t(lang, 'planPrepRoleGeneral') }));
+    submit();
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ role: 'general' }));
   });
 });

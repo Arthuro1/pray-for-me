@@ -2,22 +2,43 @@
 // added to a prayer row, its schedule, an invitation, a resource, or analytics.
 import { t } from '../i18n';
 
+// The OPTIONAL layers a married couple can add on top of the plan.
+//
+// Prayer for the spouse, for one's own growth, and for the marriage used to sit
+// in this list as four pre-ticked boxes. They are the plan itself, not a choice:
+// unticking them changed nothing a day said, so the list promised a control it
+// could not honour. Every id left here genuinely changes a day.
 export const MARRIAGE_INCLUDES = [
-  { id: 'marriage', labelKey: 'planCoupleIncludeMarriage' },
-  { id: 'spouse', labelKey: 'planCoupleIncludeSpouse' },
-  { id: 'self', labelKey: 'planCoupleIncludeSelf' },
-  { id: 'spiritual', labelKey: 'planCoupleIncludeSpiritual' },
   { id: 'children', labelKey: 'planCoupleIncludeChildren' },
   { id: 'home', labelKey: 'planCoupleIncludeHome' },
   { id: 'extended-family', labelKey: 'planCoupleIncludeExtendedFamily' },
 ];
-export const DEFAULT_MARRIAGE_INCLUDES = ['marriage', 'spouse', 'self', 'spiritual'];
 export const MAX_PLAN_CHILDREN = 20;
 export const MAX_PLAN_NAME = 80;
 const INCLUDE_IDS = new Set(MARRIAGE_INCLUDES.map(({ id }) => id));
 const ROLE_IDS = new Set(['general', 'husband', 'wife']);
 
 export const isCouplePlan = (plan) => ['engaged', 'married'].includes(plan?.lifeStage);
+
+// Does this plan have anything to tailor at all? A plan that declares
+// `onboarding` carries the optional layer the personalize sheet edits; every
+// other plan is the same for everyone and offers no sheet.
+export const hasPersonalization = (plan) => !!plan?.onboarding;
+
+// People already named in the journal, offered as a shortcut when a couple plan
+// asks who it is for. The id is the PRAYER's id, not a position: it is stored
+// inside the run's private preferences, so a list that reorders must never make
+// a saved choice point at someone else.
+export function planPeopleFrom(prayers) {
+  const seen = new Set();
+  return (prayers || []).flatMap((prayer) => {
+    const name = prayer._locked ? '' : (prayer.person_name || '').trim();
+    const key = name.toLocaleLowerCase();
+    if (!name || seen.has(key)) return [];
+    seen.add(key);
+    return [{ id: prayer.id, prayerId: prayer.id, name }];
+  });
+}
 
 // Strip bidi controls from user input; rendering supplies its own isolation.
 // Names remain plain React text, never HTML or an interpolation replacement
@@ -42,14 +63,12 @@ function person(value, fallbackId = '') {
 }
 
 export function sanitizePlanPersonalization(value = {}) {
-  // An unanswered question falls back to the defaults, and so does an answer
-  // that survives sanitizing as nothing: the marriage plan's three directions
-  // are the plan, not an optional extra, and unticking every box must not
-  // leave a run with no emphasis and (for a started run) no way back.
-  const chosen = Array.isArray(value?.includes)
+  // Adding no layer is a real answer: the marriage plan is complete without
+  // children, a home or an extended family, so an empty list stands. An id saved
+  // by an older build that no longer names a layer simply drops out here.
+  const includes = Array.isArray(value?.includes)
     ? [...new Set(value.includes.filter((id) => INCLUDE_IDS.has(id)))]
-    : null;
-  const includes = chosen?.length ? chosen : [...DEFAULT_MARRIAGE_INCLUDES];
+    : [];
   const seen = new Set();
   const children = includes.includes('children') && Array.isArray(value?.children)
     ? value.children.slice(0, MAX_PLAN_CHILDREN).flatMap((child, i) => {
@@ -108,8 +127,8 @@ export function personalizePlanDay(plan, source, input, lang) {
     extraPrompts.push({ [lang]: t(lang, 'planCoupleExtendedFamilyPrayer') });
   }
   day.prompts = [...(day.prompts || []), ...extraPrompts];
-  // The three directions stay together: selecting an emphasis must never turn
-  // the marriage plan into prayers that only ask God to change the spouse.
+  // Praying alone is the default: the shared activities appear only when both
+  // people have said they want them.
   if (prefs.mode !== 'together') {
     day.conversationPrompt = undefined;
     day.prayTogether = undefined;

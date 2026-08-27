@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -21,9 +21,7 @@ import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanInviteModal from '../components/PlanInviteModal';
-import PlanOnboardingModal from '../components/PlanOnboardingModal';
-import { needsOnboarding, startGuidedPlan } from '../lib/startGuidedPlan';
-import { takePlanStart } from '../lib/pendingPlanStart';
+import { startGuidedPlan } from '../lib/startGuidedPlan';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { track } from '../lib/analytics';
 import { PageHeader } from '../components/shared/Primitives';
@@ -66,7 +64,6 @@ export default function PlanTab() {
   const [confirmDeleteCat, setConfirmDeleteCat] = useState(null);
   const [detailPlan, setDetailPlan] = useState(null); // plan whose explanation modal is open
   const [inviteTarget, setInviteTarget] = useState(null); // { plan, startDate } → invite modal
-  const [onboardingTarget, setOnboardingTarget] = useState(null); // { plan, startDate } → onboarding sheet
   const [planInvitations, setPlanInvitations] = useState([]); // incoming "pray together" invites
   const [busyInvite, setBusyInvite] = useState(null);
 
@@ -119,29 +116,13 @@ export default function PlanTab() {
   // Start a guided plan: ONE recurring daily prayer capped after N occurrences;
   // the engine numbers the days and prayerPlans.js supplies each day's theme.
   const activePlanIds = runningPlanIds(prayers, todayKey());
-  // People already named in the journal, offered as a shortcut when a couple
-  // plan asks who it is for. The id is the PRAYER's id, not a position: it is
-  // stored inside the run's private preferences, so a list that reorders must
-  // never make a saved choice point at someone else.
-  const planPeople = useMemo(() => {
-    const seen = new Set();
-    return prayers.flatMap((prayer) => {
-      const name = prayer._locked ? '' : (prayer.person_name || '').trim();
-      const key = name.toLocaleLowerCase();
-      if (!name || seen.has(key)) return [];
-      seen.add(key);
-      return [{ id: prayer.id, prayerId: prayer.id, name }];
-    });
-  }, [prayers]);
 
-  // Actually begin a plan. `prefs` is only present for plans that ask the short
-  // onboarding questions; it is saved on the device and never sent anywhere.
+  // Begin a plan. Nothing is asked first — a plan that can be tailored offers
+  // that from its own day, once the reader can see what an answer changes.
   // Every entry point goes through startGuidedPlan so none of them can skip the
-  // review gate or a plan's onboarding — see src/lib/startGuidedPlan.js.
-  const beginPlan = useCallback(async (plan, startDate, prefs = null) => {
-    const result = await startGuidedPlan({
-      plan, startDate, lang, ownerId: user?.id, addPrayer, prefs, skipOnboarding: true,
-    });
+  // review gate — see src/lib/startGuidedPlan.js.
+  const startPlan = useCallback(async (plan, startDate) => {
+    const result = await startGuidedPlan({ plan, startDate, lang, addPrayer });
     if (!result.ok) {
       toast.error(t(lang, result.reason === 'unavailable' ? 'planCoupleReviewHint' : 'errorGeneric'));
       return result;
@@ -149,29 +130,7 @@ export default function PlanTab() {
     if (plan.analyticsEvents?.started) track(plan.analyticsEvents.started);
     toast.success(t(lang, 'planStarted'));
     return result;
-  }, [lang, user?.id, addPrayer]);
-
-  // A plan that declares `onboarding` asks its questions first. The singles plan
-  // asks once; a couple plan asks every run, because its answers belong to that
-  // run and cannot be added later.
-  const startPlan = useCallback(async (plan, startDate) => {
-    if (!canUsePlan(plan)) { toast.error(t(lang, 'planCoupleReviewHint')); return; }
-    if (needsOnboarding(plan)) {
-      setOnboardingTarget({ plan, startDate });
-      return;
-    }
-    await beginPlan(plan, startDate);
-  }, [beginPlan, lang]);
-
-  // Community and the group-plan list hand a start over here rather than
-  // creating the prayer themselves, because this is the screen that owns the
-  // onboarding sheet (see src/lib/pendingPlanStart.js).
-  useEffect(() => {
-    const claimed = takePlanStart();
-    if (!claimed) return;
-    const plan = planById(claimed.planId);
-    if (plan) startPlan(plan, claimed.startDate || todayKey());
-  }, [startPlan]);
+  }, [lang, addPrayer]);
 
   // Accept an invitation to pray a plan together: start the SAME guided plan on
   // your own calendar (unless you're already running it) and clear the invite.
@@ -240,20 +199,6 @@ export default function PlanTab() {
           lang={lang}
           userId={user.id}
           onClose={() => setInviteTarget(null)}
-        />
-      )}
-
-      {onboardingTarget && (
-        <PlanOnboardingModal
-          plan={onboardingTarget.plan}
-          lang={lang}
-          people={planPeople}
-          onStart={async (prefs) => {
-            const { plan, startDate } = onboardingTarget;
-            setOnboardingTarget(null);
-            await beginPlan(plan, startDate, prefs);
-          }}
-          onClose={() => setOnboardingTarget(null)}
         />
       )}
 
@@ -393,9 +338,6 @@ export default function PlanTab() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
-                        {plan.audienceKey && (
-                          <p className="text-xs mt-0.5 font-medium" style={{ color: 'var(--text-3)' }}>{t(lang, plan.audienceKey)}</p>
-                        )}
                         <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</p>
                         {!isPlanReviewed(plan) && (
                           <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>

@@ -10,7 +10,6 @@ export const PRAYING_FOR_OUR_MARRIAGE = {
   version: 1,
   category: 'relationships',
   lifeStage: 'married',
-  audienceKey: 'planMarriageAudience',
   titleKey: 'planMarriageTitle',
   subKey: 'planMarriageSub',
   // No language is ready yet: every file in translations/marriage30/ is still a

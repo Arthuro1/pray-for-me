@@ -15,7 +15,7 @@ import { canUsePlan } from '../lib/planReview';
 // sometimes sits on a plan day can still obey the rules of hooks.
 //
 // Preferences are read on the device (never synced, never sent anywhere) and
-// only ever ADD emphasis: they choose which optional reflection is shown and
+// only ever ADD to a day: they choose which optional reflection is shown and
 // which approved resources rank first. They never change the day itself.
 //
 // `fallbackLanguages` is injectable for tests; in the app it comes from the
@@ -26,12 +26,21 @@ export function usePlanDay(planId, dayNumber, lang, {
   const sourceDay = useLocalizedPlanDay(planId, dayNumber, lang, planVersion);
   const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
   const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
-  const singlesPrefs = useMemo(() => (planId && !isCouplePlan(plan) ? getPlanPrefs(planId) : null), [planId, plan]);
-  const [privatePrefs, setPrivatePrefs] = useState(() => sanitizePlanPersonalization());
-  // Bumped by reloadPrefs() so a screen that just let the reader change a
-  // partner's name or add a child re-reads them without a remount.
+  // Bumped by reloadPrefs() so a screen that just let the reader answer the
+  // husband/wife question, change a partner's name or add a child re-reads the
+  // answers without a remount. Both stores are keyed off it: a single reader's
+  // live on the device, a couple's in the run's private record.
   const [prefsEpoch, setPrefsEpoch] = useState(0);
   const reloadPrefs = useCallback(() => setPrefsEpoch((n) => n + 1), []);
+  const singlesPrefs = useMemo(
+    () => (planId && !isCouplePlan(plan) ? getPlanPrefs(planId) : null),
+    // prefsEpoch looks unused to the linter because the answers come from
+    // localStorage, which it cannot see: it is exactly what makes this re-read
+    // after the reader has just answered.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [planId, plan, prefsEpoch],
+  );
+  const [privatePrefs, setPrivatePrefs] = useState(() => sanitizePlanPersonalization());
   useEffect(() => {
     let alive = true;
     setPrivatePrefs(sanitizePlanPersonalization());

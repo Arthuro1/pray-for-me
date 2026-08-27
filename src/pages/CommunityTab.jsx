@@ -22,7 +22,7 @@ import Avatar from '../components/shared/Avatar';
 import AvatarEditor from '../components/shared/AvatarEditor';
 import { avatarConfigFrom, canEditGroupAvatar } from '../lib/avatar';
 import { planById } from '../lib/guidedPlan';
-import { requestPlanStart } from '../lib/pendingPlanStart';
+import { startGuidedPlan } from '../lib/startGuidedPlan';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 import { PLANS } from '../content/prayerPlans';
@@ -134,10 +134,13 @@ function CommunityHub({ lang, userId, onViewGroup }) {
       navigate('/plan');
       return {};
     }
-    // The Plan tab owns the onboarding sheet, so the start is completed there.
-    // Doing it here would hand a couple plan a run with no partner name, no
-    // private/together choice and no role, none of which can be added later.
-    requestPlanStart(plan.id, res.startDate);
+    // Started here, in place: a plan no longer owes any questions before it can
+    // begin, so this screen has nothing to hand off to the Plan tab.
+    const started = await startGuidedPlan({
+      plan, startDate: res.startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
+    });
+    if (!started.ok) { toast.error(t(lang, 'errorGeneric')); return {}; }
+    toast.success(t(lang, 'planStarted'));
     navigate('/plan');
     return {};
   };

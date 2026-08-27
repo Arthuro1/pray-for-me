@@ -4,19 +4,17 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { t, tp, LANGUAGES, isLocaleLoaded, resolveLanguage } from './i18n.js';
 import fr from './i18n/locales/fr.js';
-import { SEASONS } from './lib/planPrefs.js';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const LOCALE_CODES = LANGUAGES.map((l) => l.code);
 const COUPLE_PLAN_KEYS = [
-  'planCovenantTitle', 'planCovenantSub', 'planCovenantAudience',
-  'planMarriageTitle', 'planMarriageSub', 'planMarriageAudience',
-  'planCoupleOnboardingTitle', 'planCoupleOnboardingSub', 'planCoupleFianceQ',
+  'planCovenantTitle', 'planCovenantSub',
+  'planMarriageTitle', 'planMarriageSub',
+  'planPersonalizeTitle', 'planCoupleFianceQ',
   'planCoupleSpouseQ', 'planCoupleDisplayName', 'planCoupleChoosePerson',
-  'planCoupleNoPerson', 'planCoupleWeddingQ', 'planCoupleModeQ',
+  'planCoupleNoPerson', 'planCoupleModeQ',
   'planCoupleModePrivate', 'planCoupleModeTogether', 'planCoupleIncludeQ',
-  'planCoupleIncludeMarriage', 'planCoupleIncludeSpouse', 'planCoupleIncludeSelf',
-  'planCoupleIncludeSpiritual', 'planCoupleIncludeChildren', 'planCoupleIncludeHome',
+  'planCoupleIncludeChildren', 'planCoupleIncludeHome',
   'planCoupleIncludeExtendedFamily', 'planCoupleIncludeHint', 'planCoupleAddChild',
   'planCoupleRemoveChild', 'planCoupleChildName', 'planCouplePrivacy',
   'planCoupleRoleQ', 'planCoupleRoleHusband', 'planCoupleRoleWife',
@@ -25,7 +23,7 @@ const COUPLE_PLAN_KEYS = [
   'planPrayForMarriage', 'planPrayForChild', 'planCoupleHomePrayer',
   'planCoupleExtendedFamilyPrayer', 'planCoupleSafetyHeading',
   'planCoupleReviewPending', 'planCoupleReviewHint', 'planCoupleContinueMarriage',
-  'planCoupleRepeat', 'planCoupleEditPersonalization', 'planCoupleTogetherHint',
+  'planCoupleRepeat', 'planCoupleTogetherHint',
   'planCoupleRoleReviewPending',
 ];
 
@@ -127,25 +125,26 @@ describe('locale coverage', () => {
 });
 
 describe('relationships and family plan localization', () => {
-  it('keeps the stable singles option while removing its ambiguous English copy', async () => {
+  // The season question is gone: it asked a reader where they were romantically,
+  // stored the answer, and nothing ever read it. Its copy went with it, and no
+  // locale may quietly keep a string for it.
+  it('no longer ships copy for questions that changed nothing', async () => {
     const en = (await import('./i18n/locales/en.js')).default;
-    expect(en.planPrepSeasonDiscerning).toBe("I'm seeking clarity about marriage");
-    const obsoleteCopy = ["I'm", 'discerning marriage'].join(' ');
-    expect(Object.values(en)).not.toContain(obsoleteCopy);
-    expect(SEASONS.map((option) => option.id)).toEqual(['hope', 'discerning', 'open', 'grow']);
-    expect(new Set(SEASONS.map((option) => option.id)).size).toBe(SEASONS.length);
-    expect(new Set(SEASONS.map((option) => option.labelKey)).size).toBe(SEASONS.length);
-    expect(SEASONS.find((option) => option.id === 'discerning')?.labelKey)
-      .toBe('planPrepSeasonDiscerning');
+    const retired = Object.keys(en).filter((key) => /^planPrep(Season|Emphasis)/.test(key));
+    expect(retired).toEqual([]);
+    for (const code of LOCALE_CODES) {
+      const locale = code === 'fr' ? fr : (await import(`./i18n/locales/${code}.js`)).default;
+      const stale = Object.keys(locale).filter((key) => /^planPrep(Season|Emphasis)/.test(key));
+      expect(stale, `${code}.js still ships retired keys: ${stale.join(', ')}`).toEqual([]);
+    }
   });
 
-  it('provides every new couple-plan key in all 16 locales', async () => {
+  it('provides every couple-plan key in all 16 locales', async () => {
     expect(new Set(COUPLE_PLAN_KEYS).size).toBe(COUPLE_PLAN_KEYS.length);
     for (const code of LOCALE_CODES) {
       const locale = code === 'fr' ? fr : (await import(`./i18n/locales/${code}.js`)).default;
       const missing = COUPLE_PLAN_KEYS.filter((key) => typeof locale[key] !== 'string' || !locale[key].trim());
       expect(missing, `${code}.js is missing couple-plan keys: ${missing.join(', ')}`).toEqual([]);
-      expect(locale.planPrepSeasonDiscerning).toBeTruthy();
     }
   });
 });

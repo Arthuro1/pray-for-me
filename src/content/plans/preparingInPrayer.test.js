@@ -170,7 +170,7 @@ describe('localization', () => {
   it('resolves its title, subtitle, audience and movement labels from i18n', async () => {
     for (const code of LANG_CODES) {
       await loadLocale(code);
-      for (const key of [plan.titleKey, plan.subKey, plan.audienceKey, ...MOVEMENTS.map((m) => m.titleKey)]) {
+      for (const key of [plan.titleKey, plan.subKey, ...MOVEMENTS.map((m) => m.titleKey)]) {
         const value = t(code, key);
         expect(value, `${key} / ${code}`).not.toBe(key);
         expect(value.length).toBeGreaterThan(0);

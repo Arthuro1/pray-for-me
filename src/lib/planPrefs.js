@@ -1,36 +1,16 @@
 // Per-plan onboarding answers, kept on the device only.
 //
-// PRIVACY: what a person says about their season, their hopes for marriage, or
-// the areas they want to grow in is exactly the kind of thing that must not
-// leave the device. So this stores nothing but SHORT IDS from the fixed lists
-// below, in localStorage, alongside the other on-device progress (see
-// guideProgress.js). No free text, no server row, nothing in analytics.
+// PRIVACY: what a person hopes for in marriage, or the areas they want to grow
+// in, is exactly the kind of thing that must not leave the device. So this
+// stores nothing but SHORT IDS from the fixed lists below, in localStorage,
+// alongside the other on-device progress (see guideProgress.js). No free text,
+// no server row, nothing in analytics.
 //
-// The answers only ever ADD EMPHASIS. They never add, remove or reorder a day:
+// Nothing here is collected unless it CHANGES something the reader will see:
+// `role` picks which optional reflection a day shows, `growth` ranks the
+// resources on the "Go deeper" shelf. Neither adds, removes or reorders a day —
 // the 21-day sequence is identical for everyone.
 const KEY = 'pfm_plan_prefs';
-
-// "What best describes this season?" — one choice, and none of them requires a
-// romantic interest or assumes marriage will happen.
-export const SEASONS = [
-  { id: 'hope', labelKey: 'planPrepSeasonHope' },
-  { id: 'discerning', labelKey: 'planPrepSeasonDiscerning' },
-  { id: 'open', labelKey: 'planPrepSeasonOpen' },
-  { id: 'grow', labelKey: 'planPrepSeasonGrow' },
-];
-
-// "What would you like this plan to emphasize?" — multiple choice. The ids match
-// the `emphasis` tags on the days.
-export const EMPHASES = [
-  { id: 'closeness', labelKey: 'planPrepEmphasisCloseness' },
-  { id: 'character', labelKey: 'planPrepEmphasisCharacter' },
-  { id: 'spouse', labelKey: 'planPrepEmphasisSpouse' },
-  { id: 'healing', labelKey: 'planPrepEmphasisHealing' },
-  { id: 'wisdom', labelKey: 'planPrepEmphasisWisdom' },
-  { id: 'contentment', labelKey: 'planPrepEmphasisContentment' },
-];
-
-export const DEFAULT_EMPHASIS = ['closeness', 'character', 'spouse'];
 
 // "Would you like reflections specifically about preparing to be a husband or
 // wife?" — asked explicitly, never inferred from a name, a photo or anything
@@ -41,6 +21,9 @@ export const ROLES = [
   { id: 'wife', labelKey: 'planPrepRoleWife' },
 ];
 
+// The wording a day uses when no one has chosen — and the value that means "I
+// was asked and I want it general". An ABSENT role means the question has not
+// been put yet, which is what lets a plan day offer it at the moment it matters.
 export const DEFAULT_ROLE = 'general';
 
 // Growth areas matter more than the husband/wife choice (they are what actually
@@ -61,8 +44,6 @@ export const GROWTH_AREAS = [
   { id: 'familyExpectations', labelKey: 'planPrepGrowthFamily', topics: ['family'] },
 ];
 
-const SEASON_IDS = new Set(SEASONS.map((s) => s.id));
-const EMPHASIS_IDS = new Set(EMPHASES.map((e) => e.id));
 const ROLE_IDS = new Set(ROLES.map((r) => r.id));
 const GROWTH_IDS = new Set(GROWTH_AREAS.map((g) => g.id));
 
@@ -83,28 +64,19 @@ function writeAll(all) {
 // never reach the UI or the resource resolver.
 function sanitize(prefs) {
   const out = {};
-  if (SEASON_IDS.has(prefs?.season)) out.season = prefs.season;
   if (ROLE_IDS.has(prefs?.role)) out.role = prefs.role;
-  const emphasis = (prefs?.emphasis || []).filter((id) => EMPHASIS_IDS.has(id));
-  out.emphasis = emphasis.length ? emphasis : [...DEFAULT_EMPHASIS];
   out.growth = (prefs?.growth || []).filter((id) => GROWTH_IDS.has(id));
-  if (!out.role) out.role = DEFAULT_ROLE;
   if (typeof prefs?.startedAt === 'string') out.startedAt = prefs.startedAt;
   if (typeof prefs?.completedAt === 'string') out.completedAt = prefs.completedAt;
   return out;
 }
 
 // The saved answers for a plan, always in a usable shape: an unanswered plan
-// returns the recommended defaults rather than null, so every caller can read
-// prefs without a special case.
+// returns an empty set of answers rather than null, so every caller can read
+// prefs without a special case. `role` is absent until it has actually been
+// answered — read it as `prefs.role || DEFAULT_ROLE` to render.
 export function getPlanPrefs(planId) {
   return sanitize(readAll()[planId]);
-}
-
-// True only once the user has actually been through onboarding for this plan.
-export function hasPlanPrefs(planId) {
-  const saved = readAll()[planId];
-  return !!(saved && typeof saved === 'object');
 }
 
 export function savePlanPrefs(planId, prefs) {
@@ -158,7 +130,7 @@ export function claimPlanCompletionReport(prayerId) {
 }
 
 // Clearing a plan's answers is part of "my data is mine": ending or restarting a
-// plan should not leave a record of what someone once said about their season.
+// plan should not leave a record of what someone once said they hoped for.
 export function clearPlanPrefs(planId) {
   const all = readAll();
   if (!(planId in all)) return;
@@ -196,13 +168,9 @@ export function growthTopics(prefs) {
   for (const area of GROWTH_AREAS) {
     if (chosen.has(area.id)) area.topics.forEach((t) => topics.add(t));
   }
-  // Couple-plan include choices also rank already-relevant resources; they
-  // never broaden a day's topic filter or expose the choices to analytics.
+  // The optional layers a married couple added also rank already-relevant
+  // resources; they never broaden a day's topic filter or reach analytics.
   const includeTopics = {
-    marriage: ['marriage', 'covenant'],
-    spouse: ['marriage', 'character'],
-    self: ['character', 'spiritual-formation'],
-    spiritual: ['spiritual-rhythms', 'prayer-together'],
     children: ['children', 'parenting', 'family-discipleship'],
     home: ['family', 'hospitality'],
     'extended-family': ['family-of-origin', 'boundaries'],

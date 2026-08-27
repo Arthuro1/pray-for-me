@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import useCommunityStore from '../../store/communityStore';
 import usePrayerStore from '../../store/prayerStore';
@@ -7,7 +6,6 @@ import { t } from '../../i18n';
 import { toast } from '../../store/toastStore';
 import { planById } from '../../lib/guidedPlan';
 import { startGuidedPlan } from '../../lib/startGuidedPlan';
-import { requestPlanStart } from '../../lib/pendingPlanStart';
 import { runningPlanIds } from '../../lib/planner';
 import { todayKey } from '../../lib/prayedLog';
 
@@ -17,7 +15,6 @@ import { todayKey } from '../../lib/prayedLog';
 // mutations (with optimistic "who's praying" count updates). Lifted out of
 // GroupView, which was carrying ~90 lines of plan logic on top of the prayer wall.
 export default function useGroupPlans({ groupId, user, lang }) {
-  const navigate = useNavigate();
   const { fetchGroupPlans, startGroupPlan, joinGroupPlan, leaveGroupPlan, endGroupPlan, subscribeGroupPlans } = useCommunityStore(
     useShallow((s) => ({
       fetchGroupPlans: s.fetchGroupPlans,
@@ -48,28 +45,16 @@ export default function useGroupPlans({ groupId, user, lang }) {
   }, [groupId, loadGroupPlans, subscribeGroupPlans]);
 
   // Start the guided plan on MY own calendar (unless I'm already running it).
-  // Shared by "join a group plan" and "adopt a plan for the group".
-  //
-  // A plan that asks onboarding questions is NOT started here: this screen has
-  // no sheet to ask them with, and a couple plan's answers belong to the run and
-  // cannot be supplied afterwards. It is handed to the Plan tab instead, which
-  // owns the sheet. Returns whether the caller should navigate there.
+  // Shared by "join a group plan" and "adopt a plan for the group". A plan owes
+  // no questions before it begins, so it starts here rather than sending the
+  // member to another tab to finish what they already asked for.
   const startPlanOnMyCalendar = async (plan, startDate) => {
     if (!plan) return { ok: false, reason: 'unavailable' };
     const mine = usePrayerStore.getState().prayers;
     if (runningPlanIds(mine, todayKey()).has(plan.id)) return { ok: true, alreadyRunning: true };
-    const result = await startGuidedPlan({
-      plan,
-      startDate,
-      lang,
-      ownerId: user?.id,
-      addPrayer: usePrayerStore.getState().addPrayer,
+    return startGuidedPlan({
+      plan, startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
     });
-    if (!result.ok && result.reason === 'onboarding') {
-      requestPlanStart(plan.id, startDate);
-      return { ok: true, handedOff: true };
-    }
-    return result;
   };
 
   // Join a plan the group is praying: I'm counted among those praying it, and it
@@ -93,7 +78,6 @@ export default function useGroupPlans({ groupId, user, lang }) {
     setBusyPlanId(null);
     if (!started.ok) { toast.error(t(lang, 'errorGeneric')); return; }
     toast.success(t(lang, 'planStarted'));
-    if (started.handedOff) navigate('/plan');
   };
 
   // Stop praying a group plan (removes only my participation; my calendar copy
@@ -123,10 +107,9 @@ export default function useGroupPlans({ groupId, user, lang }) {
   const handleAdoptGroupPlan = async (plan, startDate) => {
     const res = await startGroupPlan({ groupId, planId: plan.id, startDate, userId: user.id });
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
-    const started = await startPlanOnMyCalendar(plan, startDate);
+    await startPlanOnMyCalendar(plan, startDate);
     await loadGroupPlans();
     toast.success(t(lang, 'groupPlanStartedToast'));
-    if (started.handedOff) navigate('/plan');
   };
 
   const adoptedPlanIds = new Set(groupPlans.map((p) => p.plan_id));

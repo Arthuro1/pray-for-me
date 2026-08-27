@@ -50,7 +50,7 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
           <div className="flex-1 min-w-0">
             <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</h3>
             <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
-              {plan.audienceKey ? `${t(lang, plan.audienceKey)} · ` : ''}{t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}
+              {t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}
             </p>
             {!isPlanReviewed(source) && (
               <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{t(lang, 'planCoupleReviewPending')}</p>

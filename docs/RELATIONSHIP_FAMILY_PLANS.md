@@ -8,16 +8,23 @@ offline behavior, and completion flow continue to apply.
 
 ## Catalogue
 
-| Plan id | Audience | Length | Purpose |
-|---|---:|---:|---|
-| `preparing21` | single believers | 21 days | seek God and grow without assuming marriage |
-| `covenant21` | engaged couples | 21 days | prepare for covenant and marriage, not only a wedding |
-| `marriage30` | married couples | 30 days | a renewable rhythm for spouse, self, and marriage |
+| Plan id | Title (en) | Audience | Length | Purpose |
+|---|---|---:|---:|---|
+| `preparing21` | Single: Preparing in Prayer for Marriage | single believers | 21 days | seek God and grow without assuming marriage |
+| `covenant21` | Engaged: Preparing for Marriage | engaged couples | 21 days | prepare for covenant and marriage, not only a wedding |
+| `marriage30` | Married: Praying for Our Marriage | married couples | 30 days | a renewable rhythm for spouse, self, and marriage |
+
+Each title names its life stage, because the title is the only thing that
+travels: it becomes the prayer's own title in the Journal, the line in an
+invitation, and the label on a group's shared plan. The catalogue used to carry
+a separate "For singles / For engaged couples / For married couples" line under
+the title; it is gone, and the three `plan*Audience` keys with it. All three
+titles are authored in **all 16 locales**, like every other plan string.
 
 These are contexts for faithful Christian life, not stages of spiritual rank.
-The singles implementation is unchanged except that its season option now says
-**“I'm seeking clarity about marriage.”** The old phrase is prohibited by tests
-across all 16 locales.
+The singles implementation is unchanged except that it no longer asks what
+season the reader is in: that answer was stored and read by nothing, so the
+question and its copy are gone from all 16 locales.
 
 ## Engaged: `covenant21`
 
@@ -28,12 +35,13 @@ families and boundaries; friendship; shared spiritual rhythms; church;
 children without guarantees; suffering; hospitality and mission; optional role
 reflection; and surrender.
 
-Onboarding may link an existing Pray4Me person, accept a first/display name, or
-remain generic. The user explicitly chooses private use or optional activities
-together and explicitly chooses husband, wife, or general role wording. No
-choice is inferred. A wedding date is not collected in this release because no
-calm pacing or reminder behavior consumes it; collecting unused relationship
-data would add risk without helping the plan.
+Personalization is offered **after** the plan starts, from the plan's own day,
+and can be reopened for the life of the run. It may link an existing Pray4Me
+person, accept a first/display name, or remain generic. The user explicitly
+chooses private use or optional activities together and explicitly chooses
+husband, wife, or general role wording. No choice is inferred. A wedding date is
+not collected because no calm pacing or reminder behavior consumes it;
+collecting unused relationship data would add risk without helping the plan.
 
 `conversationPrompt` renders **Talk together**, and `prayTogether` renders a
 short instruction that works even when the other person has no account. Neither
@@ -58,8 +66,11 @@ certificate; the user may start a new run while old prayer history remains.
 ### Optional family layer
 
 The base plan is complete without children. A married couple is already a
-family. The onboarding defaults to marriage, spouse, personal growth, and
-spiritual life. Home/extended-family emphases and children are opt-in.
+family, and prayer for the spouse, for one's own growth and for the marriage is
+the plan itself — those three used to appear as pre-ticked boxes, which promised
+a choice the plan could not honour, and they are no longer offered as options.
+Only the genuinely optional layers remain: **children**, **home**, and
+**extended family**, none of them selected by default.
 
 Only after **Our children** is selected can a user add first/display names. No
 age, birthday, school, location, gender, medical detail, or contact account is
@@ -120,9 +131,9 @@ Accepting an invitation creates a separate private guided prayer for that
 participant. Every path that starts a plan — the Plan tab's own button,
 accepting an invitation from the Plan tab or from Community, and joining a plan
 a group is praying — goes through `src/lib/startGuidedPlan.js`, so none of them
-can skip the review gate or a plan's onboarding. A screen with no onboarding
-sheet hands the start to the Plan tab (`src/lib/pendingPlanStart.js`) rather
-than creating a run with answers nobody was asked for.
+can skip the review gate. A plan owes no questions before it begins, so every
+screen finishes its own start; there is no cross-screen handoff and no bounce to
+the Plan tab to answer a sheet.
 
 Group participation does not share historical notes or answers.
 Leaving deletes only the membership row; the person's prayer, notes, voice
@@ -134,8 +145,8 @@ or relationship-health assessments.
 
 ## Localization and RTL
 
-All catalogue, onboarding, section, privacy, safety, completion, and status keys
-exist in the 16 app locales. The main new key families are `planCovenant*`,
+All catalogue, personalization, section, privacy, safety, completion, and status
+keys exist in the 16 app locales. The main new key families are `planCovenant*`,
 `planMarriage*`, `planCouple*`, `planTalkTogether`, `planPrayTogether`, and the
 spouse/self/marriage/child direction headings.
 

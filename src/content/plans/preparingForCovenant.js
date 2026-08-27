@@ -10,7 +10,6 @@ export const PREPARING_FOR_COVENANT = {
   version: 1,
   category: 'relationships',
   lifeStage: 'engaged',
-  audienceKey: 'planCovenantAudience',
   titleKey: 'planCovenantTitle',
   subKey: 'planCovenantSub',
   // Only the languages whose overlay is real prose. The remaining files in

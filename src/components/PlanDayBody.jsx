@@ -3,6 +3,7 @@ import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import VersePill from './shared/VersePill';
 import GoDeeper from './GoDeeper';
+import { ROLES } from '../lib/planPrefs';
 import { hasReviewSignoff } from '../lib/planReview';
 
 // Everything a rich plan day says BELOW its title and primary passage:
@@ -19,7 +20,14 @@ import { hasReviewSignoff } from '../lib/planReview';
 // Every section is optional, so the older plans (theme + verse only) render
 // nothing here at all. Pure presentation: the host resolves the localized day,
 // the reader's chosen role and any approved resources.
-export default function PlanDayBody({ day, lang, role = 'general', resources = [], idPrefix = 'plan-day' }) {
+//
+// `onChooseRole` is how the husband/wife question gets asked without a sheet in
+// front of the plan: the host passes it only while the question is still open,
+// and only a day that HAS such a reflection puts it on screen — so it is asked
+// on the first day it would change something, and never again after an answer.
+export default function PlanDayBody({
+  day, lang, role = 'general', resources = [], idPrefix = 'plan-day', onChooseRole,
+}) {
   const [relatedOpen, setRelatedOpen] = useState(false);
   if (!day) return null;
 
@@ -33,14 +41,17 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
   const prayTogether = pick(day.prayTogether, lang);
   const safetyNote = pick(day.safetyNote, lang);
   const related = day.related || [];
-  // Role reflections are shown ONLY when the reader explicitly asked for them in
-  // onboarding — never inferred from a name, a photo or anything else.
+  // Role reflections are shown ONLY when the reader has explicitly asked for
+  // them — never inferred from a name, a photo or anything else.
   const roleApproved = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
   const roleReflection = roleApproved && role && role !== 'general' ? day.roles?.[role] : null;
   const roleText = pick(roleReflection, lang);
   const rolePending = !roleApproved && role !== 'general' && !!day.roles?.[role];
+  // Asked only where an answer has somewhere to land: this day carries the
+  // reflections, they have cleared review, and no answer has been given yet.
+  const askRole = !!onChooseRole && roleApproved && !!day.roles && !roleText;
 
-  if (!reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
+  if (!askRole && !reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
     && !day.childPrayers?.length && !conversationPrompt && !prayTogether && !safetyNote
     && !practice && !related.length && !roleText && !rolePending && !resources.length) {
     return null;
@@ -128,6 +139,27 @@ export default function PlanDayBody({ day, lang, role = 'general', resources = [
           <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{pick(child.prompt, lang)}</p>
         </section>
       ))}
+
+      {askRole && (
+        <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planPrepRoleQ')}</h4>
+          <div role="radiogroup" aria-label={t(lang, 'planPrepRoleQ')} className="flex flex-wrap gap-2">
+            {ROLES.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                role="radio"
+                aria-checked={false}
+                onClick={() => onChooseRole(r.id)}
+                className="pressable min-h-11 rounded-full px-3 text-xs font-medium"
+                style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              >
+                {t(lang, r.labelKey)}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       {roleText && (
         <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>

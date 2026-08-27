@@ -28,7 +28,7 @@ and history, the calendar, catch-up, reminders, offline, and the ICS export.
 | `src/content/plans/<plan>Days.js` | that plan's day-by-day curriculum |
 | `src/content/plans/translations.js` + `translations/<plan-id>/<lang>.json` | lazy per-plan, per-language overlays for plan **prose** |
 | `src/lib/guidedPlan.js` | `planById()`, `buildGuidedPlanPrayer()` — shared by Plan tab, invitations, group plans |
-| `src/lib/planPrefs.js` | fixed-choice, device-local singles onboarding answers |
+| `src/lib/planPrefs.js` | fixed-choice, device-local singles personalization answers |
 | `src/lib/planPersonalization.js` | couple-plan personalization and safe name interpolation |
 | `src/lib/planPersonalizationStorage.js` | per-account/per-run AES-GCM storage for optional couple names and family choices |
 | `src/lib/planReview.js` | production publication gate for theological, safety, and all-locale sign-offs |
@@ -36,7 +36,7 @@ and history, the calendar, catch-up, reminders, offline, and the ICS export.
 | `src/hooks/usePlanDay.js` | one screen's worth: the day + the reader's role + resolved resources |
 | `src/components/PlanDayBody.jsx` | renders a rich day's reflection, prompts, practice, "Go deeper" |
 | `src/components/PlanDetailModal.jsx` | the read-before-you-commit preview |
-| `src/components/PlanOnboardingModal.jsx` | the four optional questions a rich plan may ask |
+| `src/components/PlanPersonalizeModal.jsx` | the optional questions a rich plan may ask, offered *after* it starts |
 | `src/components/PlanCompletionCard.jsx` | the close, and "continue praying" |
 
 ---
@@ -65,7 +65,6 @@ the older plans (theme + verse) render exactly as they always did.
   roles:          { husband: { en, fr, ref? }, // optional, opt-in only
                     wife:    { en, fr, ref? } },
   resourceTopics: ['future-spouse', 'prayer'], // taxonomy ids for "Go deeper"
-  emphasis:       ['spouse'],                  // which onboarding emphasis this serves
 }
 ```
 
@@ -101,7 +100,7 @@ Three layers, each with its own reason:
 
 | Layer | Where | Languages |
 |---|---|---|
-| Plan title, subtitle, audience, movement names, all section labels, onboarding, completion, resource labels | `src/i18n/locales/*.js` | **all 16**, CI-gated by `npm run check:locales` |
+| Plan title, subtitle, movement names, all section labels, onboarding, completion, resource labels | `src/i18n/locales/*.js` | **all 16**, CI-gated by `npm run check:locales` |
 | Day titles (`theme`) | inline in the day file | **all 16**, authored |
 | Day prose (reflection, prayer directions, conversation/practice, safety, roles) + intro/biblical/completion body | source `en` + `fr`, plus `src/content/plans/translations/<plan-id>/<lang>.json` | **all 16** — en + fr authored in source, the other 14 are review-pending drafts |
 
@@ -141,9 +140,9 @@ every language a plan declares ready — it rejects an overlay that reuses one
 day's wording where the source differs, or whose values are one template with
 the day title slotted in.
 
-Ids, Scripture references, movements, `resourceTopics` and `emphasis` stay in
-the source and are **never** translated, so the journey is structurally
-identical in every language. A missing overlay, day or field simply keeps its
+Ids, Scripture references, movements and `resourceTopics` stay in the source and
+are **never** translated, so the journey is structurally identical in every
+language. A missing overlay, day or field simply keeps its
 authored en/fr value — a partially translated plan is never blank or broken.
 
 `scripts/prune-overlay-duplicates.mjs` removes values an overlay repeats where
@@ -174,11 +173,16 @@ and retire the old one from `PLANS` once no one can still be running it
 
 1. Author the content (`src/content/plans/`), day titles in all 16 languages.
 2. Give it a `category` from `PLAN_CATEGORIES` and add it to `PLANS`.
-3. Add its i18n keys (title / subtitle / audience / movements / any theme keys)
-   to **all 16** locales — `npm run check:locales` fails CI otherwise.
+3. Add its i18n keys (title / subtitle / movements / any theme keys) to **all
+   16** locales — `npm run check:locales` fails CI otherwise. A plan written for
+   one life stage says so **in its own title** (see the catalogue in
+   `docs/RELATIONSHIP_FAMILY_PLANS.md`); there is no separate audience line.
 4. If you ship prose overlays for it, list the languages that are genuinely
    translated in `proseTranslations` (or `true` once they all are).
-5. If it needs onboarding, set `onboarding` and extend `src/lib/planPrefs.js`.
+5. If it can be tailored, set `onboarding` and extend `src/lib/planPrefs.js`.
+   Nothing is asked before a start: the sheet is reached from the plan's own day
+   and can be reopened for the life of the run. Only add a question that changes
+   something the reader will actually see.
 6. If it wants analytics, declare `analyticsEvents` with names that exist on the
    `EVENTS` allowlist in `src/lib/analytics.js` (they are plain strings in the
    content file so it stays free of app imports).
@@ -214,17 +218,30 @@ never marries. In practice:
 
 `preparingInPrayer.test.js` enforces the forbidden phrasings in code.
 
-### Onboarding (optional, device-local)
+### Personalization (optional, device-local, never before the start)
 
-Four questions, none required, asked once: **season**, **emphasis**
-(multi-select, defaulting to *closer to God · character · a possible spouse*),
-**husband/wife reflections** (defaulting to *keep the plan general*), and
-**growth areas** (folded away).
+The plan starts on **Start**. Nothing is asked first, from any of the four
+screens that can begin one.
 
-They are stored in `localStorage` under `pfm_plan_prefs` as short ids from fixed
-lists — no free text, no server row, nothing in analytics. They **only add
-emphasis**: they choose which optional reflection is shown and which approved
-resources rank first. The 21 days are identical for everyone.
+Two questions, neither required, reached from the plan's own day and reopenable
+for the life of the run: **husband/wife reflections** (defaulting to *keep the
+plan general*) and **growth areas** (folded away). The husband/wife question is
+also offered inline on the first day that actually carries such a reflection,
+and stops being offered once it has been answered either way.
+
+This used to be four questions behind a sheet between *Start* and day 1. A
+**season** was collected, stored and read by nothing at all; an **emphasis** did
+one thing only — pre-tick the boxes on the completion card three weeks later,
+which is where that question is asked now. Both are gone, along with their copy
+in all 16 locales. A question that changes nothing a reader sees does not belong
+in front of a prayer.
+
+The answers are stored in `localStorage` under `pfm_plan_prefs` as short ids from
+fixed lists — no free text, no server row, nothing in analytics. They **only
+add**: they choose which optional reflection is shown and which approved
+resources rank first. The 21 days are identical for everyone. An *absent* role
+means the question has not been put yet, which is what lets the inline question
+be asked once and then stop.
 
 The husband/wife question is **asked out loud** and never inferred from a name,
 a profile photo, pronouns or any other signal. Role reflections appear on 5 of

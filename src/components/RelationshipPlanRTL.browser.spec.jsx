@@ -1,20 +1,20 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
-import PlanOnboardingModal from './PlanOnboardingModal';
+import PlanPersonalizeModal from './PlanPersonalizeModal';
 import { t } from '../i18n';
 
 afterEach(cleanup);
 
-describe('relationship plan onboarding in a real RTL browser', () => {
+describe('relationship plan personalization in a real RTL browser', () => {
   it('inherits RTL direction and keeps optional child controls accessible', () => {
-    const onStart = vi.fn();
+    const onSave = vi.fn();
     render(
       <main dir="rtl">
-        <PlanOnboardingModal
+        <PlanPersonalizeModal
           plan={{ id: 'marriage30', lifeStage: 'married' }}
           lang="ar"
-          onStart={onStart}
+          onSave={onSave}
           onClose={() => {}}
         />
       </main>,
@@ -29,8 +29,8 @@ describe('relationship plan onboarding in a real RTL browser', () => {
     fireEvent.change(childInput, { target: { value: 'مريم' } });
     expect(screen.getByRole('button', { name: t('ar', 'planCoupleRemoveChild', { name: 'مريم' }) })).toBeTruthy();
 
-    fireEvent.click(screen.getByRole('button', { name: t('ar', 'planPrepOnboardingCta') }));
-    expect(onStart).toHaveBeenCalledWith(expect.objectContaining({
+    fireEvent.click(screen.getByRole('button', { name: t('ar', 'save') }));
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({
       children: [expect.objectContaining({ name: 'مريم' })],
     }));
   });

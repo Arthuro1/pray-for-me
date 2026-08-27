@@ -46,10 +46,10 @@ export const MOVEMENTS = [
 // they arrive in the reader's own language and then behave like anything else
 // in the Journal.
 export const CONTINUE_THEMES = [
-  { id: 'walk', titleKey: 'planPreparingContinueWalk', descKey: 'planPreparingContinueWalkDesc', emphasis: 'closeness' },
-  { id: 'character', titleKey: 'planPreparingContinueCharacter', descKey: 'planPreparingContinueCharacterDesc', emphasis: 'character' },
-  { id: 'spouse', titleKey: 'planPreparingContinueSpouse', descKey: 'planPreparingContinueSpouseDesc', emphasis: 'spouse' },
-  { id: 'community', titleKey: 'planPreparingContinueCommunity', descKey: 'planPreparingContinueCommunityDesc', emphasis: 'contentment' },
+  { id: 'walk', titleKey: 'planPreparingContinueWalk', descKey: 'planPreparingContinueWalkDesc' },
+  { id: 'character', titleKey: 'planPreparingContinueCharacter', descKey: 'planPreparingContinueCharacterDesc' },
+  { id: 'spouse', titleKey: 'planPreparingContinueSpouse', descKey: 'planPreparingContinueSpouseDesc' },
+  { id: 'community', titleKey: 'planPreparingContinueCommunity', descKey: 'planPreparingContinueCommunityDesc' },
 ];
 
 export const PREPARING_IN_PRAYER = {
@@ -59,7 +59,6 @@ export const PREPARING_IN_PRAYER = {
   version: 1,
   category: 'relationships',
   lifeStage: 'single',
-  audienceKey: 'planPreparingAudience',
   titleKey: 'planPreparingTitle',
   subKey: 'planPreparingSub',
   // This plan's prose is translated into the other 14 languages as overlays

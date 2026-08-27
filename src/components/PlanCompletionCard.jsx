@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Check, Sprout } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
-import { getPlanPrefs } from '../lib/planPrefs';
 
 // What a rich plan says once its last day is behind the reader.
 //
@@ -12,15 +11,13 @@ import { getPlanPrefs } from '../lib/planPrefs';
 // that they are now ready or that anything has been earned. The one forward
 // action is optional: carry some of the themes on as ordinary recurring prayers.
 //
-// The themes pre-ticked are the ones the reader asked to emphasize at the start,
-// which is the whole use of that answer — it never changed a single day.
+// This list IS the "what would you like this plan to emphasize?" question,
+// asked where it can finally do something. It used to be put at the START of the
+// plan as well, and the only thing that answer ever did was pre-tick these boxes
+// three weeks later — so it is asked once, here, with everything offered.
 export default function PlanCompletionCard({ plan, lang, onContinue, onRelationshipNext }) {
-  const prefs = getPlanPrefs(plan.id);
   const themes = plan.continueThemes || [];
-  const [selected, setSelected] = useState(() => {
-    const emphasized = themes.filter((th) => prefs.emphasis?.includes(th.emphasis)).map((th) => th.id);
-    return emphasized.length ? emphasized : themes.map((th) => th.id);
-  });
+  const [selected, setSelected] = useState(() => themes.map((th) => th.id));
   const [done, setDone] = useState(false);
 
   const toggle = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
