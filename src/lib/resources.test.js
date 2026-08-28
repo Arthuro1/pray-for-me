@@ -8,6 +8,10 @@ import {
   isResourceApprovedForDisplay, isSensitiveResource,
 } from './resources.js';
 import { RESOURCES, RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS, RESOURCE_STATUSES } from '../content/resources/catalogue.js';
+import { RELATIONSHIP_BOOKS } from '../content/resources/relationshipBooks.js';
+import preparingInPrayerDays from '../content/plans/preparingInPrayerDays.js';
+import { DAYS as preparingForCovenantDays } from '../content/plans/preparingForCovenantDays.js';
+import prayingForOurMarriageDays from '../content/plans/prayingForOurMarriageDays.js';
 
 const edition = (over = {}) => ({
   title: 'A title', author: 'An author', url: 'https://example.org', available: true,
@@ -346,6 +350,24 @@ describe('the shipped catalogue', () => {
     }
   });
 
+  it('uses unique ids and valid metadata on every entry', () => {
+    expect(new Set(RESOURCES.map((resource) => resource.id)).size).toBe(RESOURCES.length);
+
+    for (const resource of RESOURCES) {
+      expect(RESOURCE_TOPICS, `${resource.id} has an unknown topic`).toEqual(
+        expect.arrayContaining(resource.topics || []),
+      );
+      expect(LIFE_STAGES, `${resource.id} has an unknown life stage`).toEqual(
+        expect.arrayContaining(resource.lifeStages || []),
+      );
+      expect(resource.description?.en, `${resource.id} needs an English editorial description`).toBeTruthy();
+      for (const editionValue of Object.values(resource.editions || {})) {
+        expect(editionValue.author, `${resource.id} needs an author`).toBeTruthy();
+        expect(editionValue.publisher, `${resource.id} needs a publisher`).toBeTruthy();
+      }
+    }
+  });
+
   it('uses the shared relationships taxonomy and stable life-stage ids', () => {
     expect(LIFE_STAGES).toEqual(expect.arrayContaining(['single', 'dating', 'engaged', 'married']));
     expect(new Set(LIFE_STAGES).size).toBe(LIFE_STAGES.length);
@@ -358,5 +380,121 @@ describe('the shipped catalogue', () => {
       'prayer-together', 'children', 'parenting', 'hospitality', 'suffering',
       'grief', 'infertility', 'marriage-crisis', 'abuse-safety', 'generosity', 'mission',
     ]));
+  });
+});
+
+describe('the relationship and family book expansion', () => {
+  const dayMatches = [
+    ...preparingInPrayerDays.map((day) => ({ lifeStage: 'single', topics: day.resourceTopics })),
+    ...preparingForCovenantDays.map((day) => ({ lifeStage: 'engaged', topics: day.resourceTopics })),
+    ...prayingForOurMarriageDays.flatMap((day) => [
+      { lifeStage: 'married', topics: day.resourceTopics },
+      ...(day.withChildren?.resourceTopics
+        ? [{ lifeStage: 'married', topics: day.withChildren.resourceTopics }]
+        : []),
+    ]),
+  ];
+
+  const matchingDay = (resource) => dayMatches.find(({ lifeStage, topics = [] }) => (
+    resource.lifeStages.includes(lifeStage)
+      && topics.some((topic) => resource.topics.includes(topic))
+  ));
+
+  it('records a curated book from every newly requested author group', () => {
+    const requestedIds = [
+      'chapman-five-love-languages',
+      'omartian-praying-couple',
+      'cloud-townsend-boundaries',
+      'parrott-saving-your-marriage',
+      'todd-relationship-goals',
+      'thomas-sacred-marriage',
+      'feldhahn-highly-happy-marriages',
+      'eggerichs-love-respect',
+      'stuart-single-dating-engaged-married',
+      'chan-you-and-me-forever',
+      'tripp-parenting',
+      'wright-before-you-say-i-do',
+      'poujol-vivre-a-deux',
+      'dufour-construire-mariage-epanoui',
+      'jouvet-du-celibat-vie-couple',
+      'karambiri-avant-dire-oui',
+      'okonkwo-who-should-i-marry',
+      'adewale-before-you-say-i-do',
+      'emmanuel-love-is-not-enough',
+      'fowowe-unbroken',
+      'heward-mills-model-marriage',
+      'funke-adejumo-marriage-destiny',
+      'felix-adejumo-woman-in-your-house',
+      'sanogo-six-sagesses-mariage',
+      'lilliane-sanogo-sept-alertes',
+      'castanou-vous-pensez-mariage',
+      'tsengue-preparer-reussir-mariage',
+    ];
+    const ids = new Set(RESOURCES.map((resource) => resource.id));
+    for (const id of requestedIds) expect(ids, id).toContain(id);
+
+    // Timothy & Kathy Keller and Paul David Tripp's marriage title were already
+    // present, so the expansion must not create duplicate records for them.
+    expect(RESOURCES.filter((resource) => resource.id === 'keller-meaning-of-marriage')).toHaveLength(1);
+    expect(RESOURCES.filter((resource) => resource.id === 'tripp-what-did-you-expect')).toHaveLength(1);
+  });
+
+  it('maps every added book to at least one relationship-plan day', () => {
+    for (const resource of RELATIONSHIP_BOOKS) {
+      expect(matchingDay(resource), `${resource.id} has no fitting plan day`).toBeTruthy();
+    }
+  });
+
+  it('can resolve every approved added book on one of its fitting days', () => {
+    for (const resource of RELATIONSHIP_BOOKS.filter(({ status }) => status === 'approved')) {
+      const day = matchingDay(resource);
+      const out = resolveResources({
+        topics: day.topics,
+        lifeStage: day.lifeStage,
+        languages: [resource.originalLanguage],
+        catalogue: [resource],
+      });
+      expect(out.map(({ id }) => id), `${resource.id} should resolve on a fitting day`).toContain(resource.id);
+    }
+  });
+
+  it('places the approved books on representative single, engaged, marriage and parenting days', () => {
+    const idsFor = (topics, lifeStage, languages = ['en']) => resolveResources({
+      topics, lifeStage, languages, catalogue: RESOURCES, limit: 100,
+    }).map(({ id }) => id);
+
+    expect(idsFor(preparingInPrayerDays[8].resourceTopics, 'single')).toEqual(expect.arrayContaining([
+      'chapman-five-love-languages-singles',
+      'okonkwo-who-should-i-marry',
+      'emmanuel-love-is-not-enough',
+    ]));
+    expect(idsFor(preparingForCovenantDays[4].resourceTopics, 'engaged')).toEqual(expect.arrayContaining([
+      'chapman-things-before-married',
+      'parrott-saving-your-marriage',
+      'wright-before-you-say-i-do',
+      'adewale-before-you-say-i-do',
+    ]));
+    expect(idsFor(prayingForOurMarriageDays[14].resourceTopics, 'married')).toContain('omartian-praying-couple');
+    expect(idsFor(prayingForOurMarriageDays[25].withChildren.resourceTopics, 'married')).toEqual(expect.arrayContaining([
+      'omartian-praying-parent',
+      'tripp-parenting',
+      'fowowe-out-of-box-parenting',
+    ]));
+    expect(idsFor(preparingInPrayerDays[8].resourceTopics, 'single', ['fr'])).toEqual(expect.arrayContaining([
+      'karambiri-bien-choisir-conjoint',
+      'castanou-vous-pensez-mariage',
+    ]));
+  });
+
+  it('keeps the sensitive and pastorally disputed additions out of every recommendation', () => {
+    for (const resource of RELATIONSHIP_BOOKS.filter(({ status }) => status !== 'approved')) {
+      const day = matchingDay(resource);
+      expect(resolveResources({
+        topics: day.topics,
+        lifeStage: day.lifeStage,
+        languages: [resource.originalLanguage],
+        catalogue: [resource],
+      }), resource.id).toEqual([]);
+    }
   });
 });

@@ -51,6 +51,7 @@
 // praying about, before they tap anything. Leave it out and the card draws a
 // calm generated tile instead — see src/lib/resourceThumbnail.js.
 import { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS } from './topics';
+import { RELATIONSHIP_BOOKS } from './relationshipBooks';
 
 export { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
@@ -323,6 +324,7 @@ export const RESOURCES = [
       en: { title: 'Ask Pastor John', author: 'John Piper', publisher: 'Desiring God', url: 'https://www.desiringgod.org/ask-pastor-john', available: true, lastVerifiedAt: '2026-08-26' },
     },
   },
+  ...RELATIONSHIP_BOOKS,
 ];
 
 export default RESOURCES;
