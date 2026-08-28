@@ -2,6 +2,8 @@
 // reach an <img src>: a third-party URL that would leak the reader's IP and
 // their subject to a publisher or a retailer before they tapped anything.
 import { describe, it, expect } from 'vitest';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { resolveResourceThumbnail, isBundledThumbnail, thumbnailColor } from './resourceThumbnail.js';
 import { CATEGORY_COLORS } from './categoryColor.js';
 import { RESOURCE_TYPES } from '../content/resources/topics.js';
@@ -105,6 +107,18 @@ describe('the shipped catalogue', () => {
     for (const resource of RESOURCES) {
       for (const ed of Object.values(resource.editions || {})) {
         if (ed.thumbnail) expect(isBundledThumbnail(ed.thumbnail)).toBe(true);
+      }
+    }
+  });
+
+  it('ships every cover file referenced by a live edition', () => {
+    for (const resource of RESOURCES) {
+      for (const edition of Object.values(resource.editions || {})) {
+        if (!edition.thumbnail) continue;
+        expect(
+          existsSync(join(process.cwd(), 'public', edition.thumbnail.replace(/^\//, ''))),
+          `${resource.id} references a missing cover`,
+        ).toBe(true);
       }
     }
   });

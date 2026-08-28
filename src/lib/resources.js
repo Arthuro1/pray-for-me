@@ -17,7 +17,12 @@
 //      language has no relevant recommendation at all.
 import { RESOURCES } from '../content/resources/catalogue';
 
-export const DEFAULT_RESOURCE_LIMIT = 3;
+// The resolver returns the complete relevant language tier by default. The UI
+// is responsible for progressive disclosure (it previews a few cards, then
+// lets the reader reveal the rest) so catalogue data is not silently discarded
+// before it reaches the shelf. Callers can still pass a finite limit when they
+// genuinely need a bounded subset.
+export const DEFAULT_RESOURCE_LIMIT = Number.POSITIVE_INFINITY;
 
 // Topics whose recommendations can touch safety, trauma, sexual coercion,
 // disputed marriage roles, or other situations where ordinary editorial review
@@ -106,7 +111,7 @@ function languageRank(resource, lang) {
 //   lifeStage          e.g. 'single' — an entry that names lifeStages must include it
 //   languages          from resourceLanguages(): [appLang, ...enabled fallbacks]
 //   boostTopics        from the reader's growth areas (ranking only)
-//   limit              hard cap; one good resource is usually enough
+//   limit              optional hard cap; defaults to the complete matching tier
 //   catalogue          injectable, so tests never depend on shipped content
 //
 // Returns the first non-empty language tier. This makes "English if none found"
@@ -149,7 +154,8 @@ export function resolveResources({
 
     if (matches.length) {
       matches.sort((a, b) => a.rank - b.rank || b.score - a.score || a.id.localeCompare(b.id));
-      return matches.slice(0, Math.max(0, limit));
+      const resultLimit = Number.isFinite(limit) ? Math.max(0, limit) : matches.length;
+      return matches.slice(0, resultLimit);
     }
   }
 

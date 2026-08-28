@@ -21,6 +21,7 @@ function relationshipBook({
   author,
   publisher,
   url,
+  translatedEditions = {},
   // Out of print, or only obtainable secondhand. The resolver refuses to render
   // an unavailable edition, so this records the title for a human curator
   // without ever sending a reader to something they cannot get.
@@ -45,6 +46,7 @@ function relationshipBook({
         available,
         lastVerifiedAt: VERIFIED_AT,
       },
+      ...translatedEditions,
     },
   };
 }
@@ -58,11 +60,52 @@ export const RELATIONSHIP_BOOKS = [
     description: {
       en: 'A practical vocabulary for noticing how people tend to give and receive affection, best used as a conversation starter rather than a personality test.',
       fr: "Un vocabulaire pratique pour discerner comment chacun donne et reçoit l'affection, à utiliser comme point de départ d'une conversation plutôt que comme test de personnalité.",
+      ar: 'مفردات عملية لفهم الطرق التي يميل بها الناس إلى تقديم المودة وتلقيها، والأفضل استخدامها كبداية للحوار لا كاختبار للشخصية.',
+      de: 'Ein praktisches Vokabular dafür, wie Menschen Zuneigung geben und empfangen – als Gesprächseinstieg gedacht, nicht als Persönlichkeitstest.',
+      es: 'Un vocabulario práctico para notar cómo cada persona da y recibe afecto; sirve mejor como punto de partida para conversar que como test de personalidad.',
+      pt: 'Um vocabulário prático para perceber como cada pessoa dá e recebe afeto; funciona melhor como início de conversa do que como teste de personalidade.',
     },
     title: 'The 5 Love Languages',
     author: 'Gary Chapman',
     publisher: 'Northfield Publishing',
     url: 'https://www.moodypublishers.com/the-5-love-languagesreg',
+    translatedEditions: {
+      ar: {
+        title: 'لغات الحب الخمس: كيف تعبر عن حبك العميق لشريك حياتك',
+        author: 'غاري تشابمان',
+        publisher: 'مكتبة جرير',
+        url: 'https://www.jarir.com/jarir-publication-327816.html',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+      de: {
+        title: 'Die 5 Sprachen der Liebe: Wie Kommunikation in der Partnerschaft gelingt',
+        author: 'Gary Chapman',
+        publisher: 'Francke',
+        url: 'https://www.francke-buch.de/buecher/0/450/0/gary-chapman-die-5-sprachen-der-liebe/',
+        isbn: '9783861221265',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+      es: {
+        title: 'Los 5 lenguajes del amor (Revisado)',
+        author: 'Gary Chapman',
+        publisher: 'Editorial Unilit',
+        url: 'https://www.editorialunilit.com/los-cinco-lenguajes-del-amor',
+        isbn: '9780789923738',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+      pt: {
+        title: 'As 5 linguagens do amor – 3ª edição',
+        author: 'Gary Chapman',
+        publisher: 'Editora Mundo Cristão',
+        url: 'https://www.mundocristao.com.br/produto/as-5-linguagens-do-amor-3a-edicao/',
+        isbn: '9786559883172',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+    },
   }),
   relationshipBook({
     id: 'chapman-things-before-married',
@@ -71,11 +114,23 @@ export const RELATIONSHIP_BOOKS = [
     description: {
       en: 'Prompts engaged couples to discuss expectations, conflict, money and family patterns before the wedding.',
       fr: "Invite les couples fiancés à parler des attentes, des conflits, de l'argent et des héritages familiaux avant le mariage.",
+      es: 'Invita a las parejas comprometidas a hablar de expectativas, conflictos, dinero y patrones familiares antes de la boda.',
     },
     title: "Things I Wish I'd Known Before We Got Married",
     author: 'Gary Chapman',
     publisher: 'Northfield Publishing',
     url: 'https://www.moodypublishers.com/things-i-wish-id-known-before-we-got-married?variationCode=978-1-57567-922-8',
+    translatedEditions: {
+      es: {
+        title: 'Lo que me hubiera gustado saber antes de casarme',
+        author: 'Gary Chapman',
+        publisher: 'Editorial Portavoz',
+        url: 'https://www.portavoz.com/lo-que-me-hubiera-gustado-saber-antes-de-casarme',
+        isbn: '9780825412295',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+    },
   }),
   relationshipBook({
     id: 'chapman-five-love-languages-singles',
@@ -84,11 +139,42 @@ export const RELATIONSHIP_BOOKS = [
     description: {
       en: 'Applies the love-languages framework to friendships, family relationships and dating during singleness.',
       fr: "Applique le cadre des langages de l'amour aux amitiés, aux relations familiales et aux fréquentations pendant le célibat.",
+      de: 'Überträgt die Sprachen der Liebe auf Freundschaften, Familie und Beziehungen im Leben als Single.',
+      es: 'Aplica el marco de los lenguajes del amor a las amistades, la familia y las relaciones durante la soltería.',
+      pt: 'Aplica as linguagens do amor às amizades, às relações familiares e aos relacionamentos durante a solteirice.',
     },
     title: 'The 5 Love Languages: Singles Edition',
     author: 'Gary Chapman',
     publisher: 'Northfield Publishing',
     url: 'https://www.moodypublishers.com/the-5-love-languages-singles-edition?variationCode=978-0-8024-6785-0',
+    translatedEditions: {
+      de: {
+        title: 'Die 5 Sprachen der Liebe für Singles',
+        author: 'Gary Chapman',
+        publisher: 'Francke',
+        url: 'https://www.francke-buch.de/buecher/0/573/0/gary-chapman-die-5-sprachen-der-liebe-fuer-singles/',
+        isbn: '9783861227366',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+      es: {
+        title: 'Los 5 lenguajes del amor para solteros (Revisado)',
+        author: 'Gary Chapman',
+        publisher: 'Editorial Unilit',
+        url: 'https://www.editorialunilit.com/cinco-lenguajes-del-amor-para-solteros-los',
+        isbn: '9780789924179',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+      pt: {
+        title: 'As 5 linguagens do amor para solteiros',
+        author: 'Gary Chapman',
+        publisher: 'Editora Mundo Cristão',
+        url: 'https://www.mundocristao.com.br/produto/as-5-linguagens-do-amor-para-solteiros/',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+    },
   }),
   relationshipBook({
     id: 'omartian-praying-couple',
@@ -123,11 +209,23 @@ export const RELATIONSHIP_BOOKS = [
     description: {
       en: 'Explains responsibility, limits and saying no in ways that can clarify difficult family and relationship patterns.',
       fr: 'Explique la responsabilité, les limites et le refus afin de clarifier des dynamiques familiales et relationnelles difficiles.',
+      de: 'Erklärt Verantwortung, Grenzen und das Neinsagen so, dass schwierige Familien- und Beziehungsmuster klarer werden.',
     },
     title: 'Boundaries, Updated and Expanded Edition',
     author: 'Henry Cloud and John Townsend',
     publisher: 'Zondervan',
     url: 'https://www.zondervan.com/9780310351801/boundaries-updated-and-expanded-edition/',
+    translatedEditions: {
+      de: {
+        title: 'Nein sagen ohne Schuldgefühle: Gesunde Grenzen setzen',
+        author: 'Henry Cloud und John Townsend',
+        publisher: 'SCM Hänssler',
+        url: 'https://www.scm-shop.de/nein-sagen-ohne-schuldgefuehle-158910.html',
+        isbn: '9783775156165',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+    },
   }),
   relationshipBook({
     id: 'cloud-townsend-boundaries-marriage',
@@ -304,11 +402,23 @@ export const RELATIONSHIP_BOOKS = [
     description: {
       en: 'Organises parenting around gospel-shaped principles rather than a collection of behaviour-management techniques.',
       fr: "Organise l'éducation des enfants autour de principes façonnés par l'Évangile plutôt que d'une collection de techniques de gestion du comportement.",
+      ru: 'Строит воспитание детей вокруг евангельских принципов, а не набора техник управления поведением.',
     },
     title: 'Parenting: 14 Gospel Principles That Can Radically Change Your Family',
     author: 'Paul David Tripp',
     publisher: 'Crossway',
     url: 'https://www.crossway.org/books/parenting-hcj-2/',
+    translatedEditions: {
+      ru: {
+        title: 'Воспитание: 14 евангельских принципов, которые могут радикально изменить вашу семью',
+        author: 'Пол Дэвид Трипп',
+        publisher: 'Левит',
+        url: 'https://levitbooks.com/ru/products/vospitanie',
+        isbn: '9789669768391',
+        available: true,
+        lastVerifiedAt: VERIFIED_AT,
+      },
+    },
   }),
   relationshipBook({
     id: 'wright-before-you-say-i-do',

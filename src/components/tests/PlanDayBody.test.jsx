@@ -124,8 +124,6 @@ describe('Go deeper', () => {
 
   it('is a collapsed disclosure that announces its state', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
-    expect(screen.queryByRole('button', { name: t(lang, 'goDeeper') })).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     const trigger = screen.getByRole('button', { name: t(lang, 'goDeeper') });
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(screen.queryByText('A verified title')).toBeNull();
@@ -136,7 +134,6 @@ describe('Go deeper', () => {
 
   it('names the resource type and its language on the card', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
-    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     expect(screen.getByText(`${t(lang, 'resourceTypeBook')} · English`)).toBeTruthy();
     expect(screen.getByText('An author')).toBeTruthy();
@@ -145,7 +142,6 @@ describe('Go deeper', () => {
 
   it('says out loud that the link leaves the app, not just with an icon', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
-    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     const link = screen.getByRole('link');
     expect(link.getAttribute('aria-label')).toContain(t(lang, 'resourceOpensExternally'));
@@ -155,7 +151,6 @@ describe('Go deeper', () => {
 
   it('reports only THAT a resource was opened — no id, title, topic or language', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
-    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     fireEvent.click(screen.getByRole('link'));
     expect(trackMock).toHaveBeenCalledWith('resource_opened');
@@ -165,7 +160,6 @@ describe('Go deeper', () => {
   it('carries a cover tile on every card, with or without a cover file', () => {
     const withCover = { ...resource, edition: { ...resource.edition, thumbnail: '/resources/covers/r1.webp' } };
     const { container } = render(<PlanDayBody day={day} lang={lang} resources={[withCover, { ...resource, id: 'r2' }]} />);
-    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     expect(container.querySelectorAll('img')).toHaveLength(1);
     // The second card has no cover file, so it draws its tile instead.
@@ -176,10 +170,51 @@ describe('Go deeper', () => {
     localStorage.setItem('pfm_settings', JSON.stringify({ lowDataMode: true }));
     const withCover = { ...resource, edition: { ...resource.edition, thumbnail: '/resources/covers/r1.webp' } };
     const { container } = render(<PlanDayBody day={day} lang={lang} resources={[withCover]} />);
-    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel() }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
     expect(container.querySelector('img')).toBeNull();
     // …and the card still shows everything that actually matters.
     expect(screen.getByText('A verified title')).toBeTruthy();
+  });
+
+  // The resolver has already decided these are relevant to today. Hiding all but
+  // three of them behind a second tap made a long shelf indistinguishable from a
+  // short one, so expanding now reveals the complete matched set.
+  it('reveals every relevant resource in one expansion, with no second tap', () => {
+    const resources = Array.from({ length: 5 }, (_, index) => ({
+      ...resource,
+      id: `r${index + 1}`,
+      edition: { ...resource.edition, title: `Verified title ${index + 1}` },
+    }));
+    render(<PlanDayBody day={day} lang={lang} resources={resources} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+
+    for (let index = 1; index <= 5; index += 1) {
+      expect(screen.getByText(`Verified title ${index}`)).toBeTruthy();
+    }
+    expect(screen.getAllByRole('link')).toHaveLength(5);
+    expect(screen.queryByRole('button', { name: new RegExp(t(lang, 'loadMore')) })).toBeNull();
+  });
+
+  // The count is the only advance warning of how big the shelf is, so it has to
+  // be the real total rather than the size of a preview.
+  it('announces the full size of the shelf before it is opened', () => {
+    const resources = Array.from({ length: 7 }, (_, index) => ({
+      ...resource,
+      id: `r${index + 1}`,
+      edition: { ...resource.edition, title: `Verified title ${index + 1}` },
+    }));
+    render(<PlanDayBody day={day} lang={lang} resources={resources} />);
+    expect(screen.getByText('7')).toBeTruthy();
+  });
+
+  // The cover is the thing the eye lands on, so it should be the tap target too
+  // — not an 11px "Learn more" tail underneath it.
+  it('makes the whole card one link, cover included', () => {
+    render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    const link = screen.getByRole('link');
+    expect(link.textContent).toContain('A verified title');
+    expect(link.querySelector('[aria-hidden="true"]')).toBeTruthy();
+    expect(link.getAttribute('aria-label')).toContain('An author');
   });
 });

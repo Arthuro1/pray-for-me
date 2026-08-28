@@ -1,8 +1,10 @@
 # The curated resource catalogue ("Go deeper")
 
-A plan day may offer one to three external resources — a book, an article, a
-podcast, a teaching, a video, a study, a prayer guide. They sit at the very
-bottom of the day, folded away, and the plan is complete without them.
+A plan day may offer any number of relevant external resources — a book, an
+article, a podcast, a teaching, a video, a study, a prayer guide. They sit at
+the very bottom of the day in their own folded shelf. The collapsed header
+carries the real total, and opening it reveals **the complete matched set** —
+one tap, nothing held back.
 
 **Nothing in this catalogue reaches a user until a human has verified and
 approved it. Sensitive material also needs explicit content and safety
@@ -46,23 +48,35 @@ every entry to state one of `RESOURCE_STATUSES`.
 
 ### What actually reaches a reader today
 
-Ten entries are displayable. Three of them now carry eleven verified localized
-editions in French, German, Portuguese, Spanish and Japanese. Counting the days
-of each relationship plan that resolve to at least one resource in that exact
-language (without fallback):
+Forty-five entries are displayable. Eight translated works now carry
+twenty-five verified localized editions; together with original-language works,
+the live catalogue covers eleven app languages: Arabic, Chinese, English,
+French, German, Indonesian, Japanese, Korean, Portuguese, Russian and Spanish.
+Counting the days of each relationship plan that resolve to at least one
+resource in that exact language (without fallback):
 
-| Plan | days | en | fr | de | pt | es | ja |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `preparing21` | 21 | 17 | 11 | 10 | 10 | 15 | 10 |
-| `covenant21` | 21 | 13 | 9 | 11 | 11 | 11 | 11 |
-| `marriage30` | 30 | 24 | 22 | 22 | 22 | 22 | 22 |
+| Plan | days | ar | de | en | es | fr | id | ja | ko | pt | ru | zh |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `preparing21` | 21 | 3 | 17 | 17 | 16 | 14 | 5 | 10 | 5 | 15 | 5 | 6 |
+| `covenant21` | 21 | 6 | 15 | 17 | 15 | 11 | 9 | 11 | 9 | 11 | 9 | 2 |
+| `marriage30` | 30 | 21 | 27 | 29 | 23 | 25 | 22 | 22 | 22 | 23 | 23 | 0 |
+
+The 2026-08-28 translation pass added eight verified editions, all of them of
+titles the catalogue already carried in English: Gary Chapman's *The 5 Love
+Languages* (German, Spanish, Portuguese) and its Singles edition (German,
+Spanish, Portuguese), *Things I Wish I'd Known Before We Got Married*
+(Spanish), and Cloud & Townsend's *Boundaries* (German). Each was checked on
+the publisher's own product page — Francke, Editorial Unilit, Editora Mundo
+Cristão, Editorial Portavoz and SCM Hänssler. Nothing was translated by us: a
+language key exists only where a real edition was found.
 
 The six other plans declare no `resourceTopics` on any day, so they never show a
 "Go deeper" shelf in any language.
 
-The other ten app languages currently have no displayable edition. English is
-therefore the default fallback for those readers, but it is used only when their
-app language has no relevant match and can be turned off in Resource languages.
+Amharic, Farsi, Hindi, Swahili and Tagalog currently have no displayable
+edition. English is therefore the default fallback for those readers, but it is
+used only when their app language has no relevant match and can be turned off in
+Resource languages.
 
 Two newly discovered multilingual studies are recorded as `needs_review`, not
 published: Family Discipleship Ministries' *Marriage Is a Ministry* (English,
@@ -145,6 +159,34 @@ Under the reader's **Low data mode**, cover files are skipped entirely and every
 card uses the generated tile. A cover is decoration; that setting exists exactly
 for nonessential fetches.
 
+#### Freezing a real cover: `npm run build:covers`
+
+Because a cover may only be served from our own origin, real publisher artwork
+has to be fetched **once, at build time, on a developer's machine** and
+committed. `scripts/build-covers.mjs` does that from the worksheet in
+`scripts/resource-covers.json`: it downloads the publisher's own product image,
+crops it to 216×324 (3× the 72×108 shelf tile, at a paperback's 2:3), writes a
+webp under `public/resources/covers/`, and prints the `thumbnail:` line and the
+README provenance row to paste in. The catalogue is still edited by hand — a
+build script never writes to `src/`.
+
+The third-party URLs live in that manifest and **never in `src/`**, so nothing
+shipped to a browser knows a publisher's hostname.
+
+Licensing is a human gate, in the same spirit as `status` on an entry:
+
+| `licence` | meaning |
+|---|---|
+| `unreviewed` | nobody has checked whether we may use this artwork — **skipped** |
+| `cleared` | a person confirmed the licence, press kit, or written permission |
+| `declined` | checked, and we may not use it; kept so nobody re-checks it |
+
+`npm run build:covers` fetches **only** `cleared` entries, so a run can never
+quietly publish artwork nobody has cleared. `-- --list` shows the worksheet
+without changing anything; `-- --force` re-fetches a cover that already exists.
+An entry with no cleared cover is not a defect — its card draws the generated
+tile, which is what most of the catalogue uses today.
+
 ### `description` is ours, not the publisher's
 
 One short sentence, written by us, saying why this fits *this* subject. Never a
@@ -205,8 +247,19 @@ AI may help a curator *discover candidates*. Publication always requires a human
 - ranked by the language hierarchy above, then by topic fit;
 - the reader's **growth areas** boost ranking only — they can never pull an
   off-topic resource in;
-- capped at 3, and usually one is enough;
+- returns the complete matching language tier by default, which is what the
+  shelf renders (callers may still pass an explicit cap);
 - `[]` when nothing qualifies, so the caller omits the section.
+
+### Why the shelf opens complete
+
+It used to preview three cards behind a second “load more” tap. That put two
+gates in front of a book the resolver had *already* judged relevant to today,
+and it hid the shape of the shelf: a day matching fifteen titles looked exactly
+like a day matching three. The count sits on the collapsed header, so a reader
+who expands has asked for the whole set — and gets it. Cards run one column on a
+phone and two-up from `sm` upward; each card is a single link, cover included,
+so the tap target is the card rather than a line of 11px text.
 
 ---
 

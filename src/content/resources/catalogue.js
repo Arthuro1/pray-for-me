@@ -107,6 +107,9 @@ export const RESOURCES = [
       pt: 'Explora compromisso, serviço e amizade no casamento, com um capítulo escrito para leitores solteiros.',
       es: 'Explora el compromiso, el servicio y la amistad en el matrimonio, con un capítulo escrito para lectores solteros.',
       ja: '結婚における献身、仕えること、友情を扱い、独身の読者に向けた章も収録しています。',
+      ru: 'О верности, служении и дружбе в браке, с отдельной главой для неженатых и незамужних читателей.',
+      ko: '결혼 안에서의 헌신, 섬김, 우정을 다루며 미혼 독자를 위한 장도 포함합니다.',
+      id: 'Membahas komitmen, pelayanan, dan persahabatan dalam pernikahan, termasuk satu bab bagi pembaca lajang.',
     },
     editions: {
       en: { title: 'The Meaning of Marriage', author: 'Timothy Keller with Kathy Keller', publisher: 'Penguin Books', url: 'https://www.penguinrandomhouse.com/books/309809/the-meaning-of-marriage-by-timothy-keller-with-kathy-keller/', available: true, lastVerifiedAt: '2026-08-26' },
@@ -115,6 +118,9 @@ export const RESOURCES = [
       pt: { title: 'O significado do casamento', author: 'Timothy Keller com Kathy Keller', publisher: 'Vida Nova', url: 'https://www.vidanova.com.br/livros/significado-do-casamento-o', available: true, lastVerifiedAt: '2026-08-28' },
       es: { title: 'El significado del matrimonio', author: 'Timothy Keller', publisher: 'B&H Español', url: 'https://www.bhpublishinggroup.com/product/el-significado-del-matrimonio-2/', available: true, lastVerifiedAt: '2026-08-28' },
       ja: { title: '結婚の意味 わかりあえない2人のために', author: 'ティモシー・ケラー、キャシー・ケラー', publisher: 'いのちのことば社', url: 'https://www.wlpm.or.jp/pub/?sh_cd=96747', available: true, lastVerifiedAt: '2026-08-28' },
+      ru: { title: 'Замысел брака', author: 'Тимоти Келлер и Кэти Келлер', publisher: 'Левит', url: 'https://levitbooks.com/ru/products/zamisel-braka', isbn: '9786177662500', available: true, lastVerifiedAt: '2026-08-28' },
+      ko: { title: '팀 켈러, 결혼을 말하다', author: '팀 켈러, 캐시 켈러', publisher: '두란노', url: 'https://www.lifebook.co.kr/goods/detail.asp?cate=172&gno=88527', isbn: '9788953120501', available: true, lastVerifiedAt: '2026-08-28' },
+      id: { title: 'Makna Pernikahan: Menghadapi Kompleksitas Komitmen dengan Hikmat Allah', author: 'Timothy Keller dan Kathy Keller', publisher: 'Pionir Jaya', url: 'https://library.sttrii.ac.id/index.php?id=16420&keywords=&p=show_detail', isbn: '9789795423607', available: true, lastVerifiedAt: '2026-08-28' },
     },
   },
   {
@@ -261,13 +267,15 @@ export const RESOURCES = [
       pt: 'Sobre o coração de Cristo para com quem sofre — um bom companheiro para os dias de cura deste plano.',
       es: 'Sobre el corazón de Cristo hacia quienes sufren; un buen compañero para los días de sanidad de este plan.',
       ja: '傷ついた人に向けられたキリストの心を描き、このプランの癒やしの日々に寄り添う一冊です。',
+      zh: '本书描绘基督对受伤者的心，是这个祷告计划中医治主题日的合适陪伴。',
     },
     editions: {
-      en: { title: 'Gentle and Lowly', author: 'Dane C. Ortlund', publisher: 'Crossway', url: 'https://www.crossway.org/books/gentle-and-lowly-hcj/', available: true, lastVerifiedAt: '2026-08-26' },
+      en: { title: 'Gentle and Lowly', author: 'Dane C. Ortlund', publisher: 'Crossway', url: 'https://www.crossway.org/books/gentle-and-lowly-hcj/', available: true, lastVerifiedAt: '2026-08-26', thumbnail: '/resources/covers/ortlund-gentle-and-lowly-en.webp' },
       de: { title: 'Gütig und Sanft', author: 'Dane Ortlund', publisher: '3L Verlag', url: 'https://www.3lverlag.de/kategorien/1815-guetig-und-sanft.html', available: true, lastVerifiedAt: '2026-08-28' },
       pt: { title: 'Manso e humilde', author: 'Dane C. Ortlund', publisher: 'Thomas Nelson Brasil', url: 'https://thomasnelson.com.br/products/manso-e-humilde-dane-c-ortlund', available: true, lastVerifiedAt: '2026-08-28' },
       es: { title: 'Manso y humilde', author: 'Dane C. Ortlund', publisher: 'B&H Español', url: 'https://bhespanol.bhpublishinggroup.com/product/manso-y-humilde-2/', available: true, lastVerifiedAt: '2026-08-28' },
       ja: { title: 'わたしは心が柔和でへりくだっているから キリストの心をさぐる23章', author: 'デイン・オートランド', publisher: 'いのちのことば社', url: 'https://www.wlpm.or.jp/pub/?sh_cd=113670', available: true, lastVerifiedAt: '2026-08-28' },
+      zh: { title: '柔和谦卑：基督对罪人和困苦人的心', author: '戴恩·奥特伦', publisher: '十架路出版社 / 福音联盟中文', url: 'https://www.tgcchinese.org/book/gentle-and-lowly', isbn: '9781433586811', available: true, lastVerifiedAt: '2026-08-28' },
     },
   },
   {

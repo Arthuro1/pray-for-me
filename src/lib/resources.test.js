@@ -247,8 +247,9 @@ describe('resolveResources — relevance and caps', () => {
     expect(out.map((r) => r.id)).not.toContain('off-topic');
   });
 
-  it('caps the list — a day offers a few resources, not a library', () => {
-    expect(DEFAULT_RESOURCE_LIMIT).toBeLessThanOrEqual(3);
+  it('returns the complete relevant tier by default and honours an explicit cap', () => {
+    expect(DEFAULT_RESOURCE_LIMIT).toBe(Number.POSITIVE_INFINITY);
+    expect(resolve({ limit: DEFAULT_RESOURCE_LIMIT }).length).toBeGreaterThan(1);
     expect(resolve({ limit: 1 })).toHaveLength(1);
   });
 
@@ -364,6 +365,50 @@ describe('the shipped catalogue', () => {
       for (const editionValue of Object.values(resource.editions || {})) {
         expect(editionValue.author, `${resource.id} needs an author`).toBeTruthy();
         expect(editionValue.publisher, `${resource.id} needs a publisher`).toBeTruthy();
+      }
+    }
+  });
+
+  it('ships verified recommendations in every currently covered app language', () => {
+    const coveredLanguages = [...new Set(
+      RESOURCES
+        .filter(({ status }) => status === 'approved')
+        .flatMap(({ editions }) => Object.keys(editions || {})),
+    )].sort();
+
+    expect(coveredLanguages).toEqual([
+      'ar', 'de', 'en', 'es', 'fr', 'id', 'ja', 'ko', 'pt', 'ru', 'zh',
+    ]);
+    // `expect.anything` without the call is a plain function, so the Indonesian
+    // edition was being compared against it and this could never pass.
+    expect(RESOURCES.find(({ id }) => id === 'keller-meaning-of-marriage').editions)
+      .toEqual(expect.objectContaining({
+        id: expect.any(Object), ko: expect.any(Object), ru: expect.any(Object),
+      }));
+  });
+
+  // Locale coverage is the whole point of the per-language tiers, so the titles
+  // that carry several verified editions are asserted by name: a translation
+  // silently dropped in a refactor would otherwise just look like a quiet shelf.
+  it('offers the widely translated titles in each language whose edition was verified', () => {
+    const editionsFor = (id) => RESOURCES.find((resource) => resource.id === id)?.editions || {};
+    const languagesFor = (id) => Object.keys(editionsFor(id)).sort();
+
+    expect(languagesFor('chapman-five-love-languages')).toEqual(['ar', 'de', 'en', 'es', 'pt']);
+    expect(languagesFor('chapman-five-love-languages-singles')).toEqual(['de', 'en', 'es', 'pt']);
+    expect(languagesFor('chapman-things-before-married')).toEqual(['en', 'es']);
+    expect(languagesFor('cloud-townsend-boundaries')).toEqual(['de', 'en']);
+
+    // A translated edition is only useful if it is a real, resolvable one.
+    for (const id of [
+      'chapman-five-love-languages', 'chapman-five-love-languages-singles',
+      'chapman-things-before-married', 'cloud-townsend-boundaries',
+    ]) {
+      for (const [language, ed] of Object.entries(editionsFor(id))) {
+        expect(ed.title, `${id}.${language} needs a verified title`).toBeTruthy();
+        expect(ed.publisher, `${id}.${language} needs a publisher`).toBeTruthy();
+        expect(new URL(ed.url).protocol, `${id}.${language} needs an HTTPS link`).toBe('https:');
+        expect(ed.lastVerifiedAt, `${id}.${language} needs a verification date`).toBeTruthy();
       }
     }
   });

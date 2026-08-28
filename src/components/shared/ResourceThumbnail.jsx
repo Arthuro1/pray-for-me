@@ -24,10 +24,15 @@ const TYPE_ICONS = {
   prayerGuide: HandHeart,
 };
 
-const WIDTH = 44;
-const HEIGHT = 60;
+// Portrait, at the 2:3 of an actual trade paperback. `shelf` is the browsing
+// size: once a card carries a real cover it is the thing the eye lands on, so
+// it is sized to be recognisable rather than merely present.
+const SIZES = {
+  compact: { width: 44, height: 66, icon: 18, radius: 'rounded-md' },
+  shelf: { width: 72, height: 108, icon: 24, radius: 'rounded-lg' },
+};
 
-export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg)' }) {
+export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg)', size = 'compact' }) {
   // Keyed by the src that failed rather than a boolean, so the tile re-tries by
   // itself if the card is ever handed a different cover.
   const [failedSrc, setFailedSrc] = useState(null);
@@ -36,14 +41,15 @@ export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg
   const { src, color, type, spine } = thumbnail;
   const Icon = TYPE_ICONS[type] || BookOpen;
   const showImage = src && failedSrc !== src;
+  const dimensions = SIZES[size] || SIZES.compact;
 
   return (
     <div
       aria-hidden="true"
-      className="relative shrink-0 overflow-hidden rounded-md"
+      className={`relative shrink-0 overflow-hidden ${dimensions.radius}`}
       style={{
-        width: WIDTH,
-        height: HEIGHT,
+        width: dimensions.width,
+        height: dimensions.height,
         background: categoryTint(color, 18, surface),
         border: '0.5px solid var(--input-border)',
       }}
@@ -52,8 +58,8 @@ export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg
         <img
           src={src}
           alt=""
-          width={WIDTH}
-          height={HEIGHT}
+          width={dimensions.width}
+          height={dimensions.height}
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover"
@@ -73,7 +79,7 @@ export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg
                 18% tint of itself measures ~2.5:1 at worst, which is under the
                 3:1 a graphic should hold. Mixed like this the whole palette
                 clears 3.2:1 in both themes, and still reads as its own colour. */}
-            <Icon size={18} style={{ color: `color-mix(in srgb, ${color} 85%, var(--ink))` }} />
+            <Icon size={dimensions.icon} style={{ color: `color-mix(in srgb, ${color} 85%, var(--ink))` }} />
           </span>
         </>
       )}

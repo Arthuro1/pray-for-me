@@ -51,8 +51,7 @@ export default function PlanDayBody({
   // Asked only where an answer has somewhere to land: this day carries the
   // reflections, they have cleared review, and no answer has been given yet.
   const askRole = !!onChooseRole && roleApproved && !!day.roles && !roleText;
-  const hasAfterPrayer = related.length > 0 || !!conversationPrompt || !!practice
-    || !!prayTogether || resources.length > 0;
+  const hasAfterPrayer = related.length > 0 || !!conversationPrompt || !!practice || !!prayTogether;
 
   if (!askRole && !reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
     && !day.childPrayers?.length && !conversationPrompt && !prayTogether && !safetyNote
@@ -230,10 +229,18 @@ export default function PlanDayBody({
                 </section>
               )}
 
-              <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
             </div>
           )}
         </section>
+      )}
+
+      {/* External reading stays last, but it gets its own single disclosure.
+          Hiding it inside "After prayer" made a relevant book take two taps to
+          discover and concealed the size of the shelf. */}
+      {resources.length > 0 && (
+        <div className="rounded-xl px-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
+        </div>
       )}
     </div>
   );
