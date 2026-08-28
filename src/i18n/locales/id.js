@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Undangan rencana doa",
   "planDays": "{n} hari",
   "planDayOf": "Hari {n} dari {total}",
+  "planViewingOtherDay": "Hari lain dari perjalanan ini",
+  "planBackToToday": "Kembali ke hari ini",
   "planTheme21Title": "21 hari terobosan",
   "planTheme21Sub": "Tiga minggu doa harian yang tekun",
   "planUpperRoomTitle": "Ruang Atas — 10 hari",

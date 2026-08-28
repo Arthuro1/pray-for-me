@@ -7,7 +7,7 @@ import {
   resolveResources, resourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
   isResourceApprovedForDisplay, isSensitiveResource,
 } from './resources.js';
-import { RESOURCES, RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS, RESOURCE_STATUSES } from '../content/resources/catalogue.js';
+import { RESOURCES, RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS, RESOURCE_STATUSES } from '../content/resources/catalogue.js';
 import { RELATIONSHIP_BOOKS } from '../content/resources/relationshipBooks.js';
 import preparingInPrayerDays from '../content/plans/preparingInPrayerDays.js';
 import { DAYS as preparingForCovenantDays } from '../content/plans/preparingForCovenantDays.js';
@@ -260,6 +260,60 @@ describe('resolveResources — relevance and caps', () => {
   });
 });
 
+describe('resolveResources — domain scope', () => {
+  // The failure this exists to stop: topic tags are shared across every plan,
+  // so a book about discerning a future spouse ('discernment') matched a
+  // deliverance day about discerning occult influence ('discernment') and was
+  // recommended to a reader renouncing a covenant.
+  const DOMAINS = [
+    {
+      id: 'dating-book', type: 'book', originalLanguage: 'en', status: 'approved',
+      domains: ['relationships'], topics: ['dating', 'discernment'],
+      editions: { en: edition({ title: 'Choosing well' }) },
+    },
+    {
+      id: 'freedom-book', type: 'book', originalLanguage: 'en', status: 'approved',
+      domains: ['freedom'], topics: ['discernment', 'renunciation'],
+      contentReview: { status: 'approved', reviewedBy: 'A reviewer', reviewedAt: '2026-08-28' },
+      safetyReview: { status: 'approved', reviewedBy: 'A reviewer', reviewedAt: '2026-08-28' },
+      editions: { en: edition({ title: 'Renouncing well' }) },
+    },
+    {
+      id: 'both-book', type: 'book', originalLanguage: 'en', status: 'approved',
+      domains: ['relationships', 'freedom'], topics: ['discernment'],
+      editions: { en: edition({ title: 'Christian formation' }) },
+    },
+    {
+      id: 'undeclared-book', type: 'book', originalLanguage: 'en', status: 'approved',
+      topics: ['discernment'],
+      editions: { en: edition({ title: 'Belongs nowhere in particular' }) },
+    },
+  ];
+  const ids = (domains) => resolveResources({ topics: ['discernment'], domains, catalogue: DOMAINS }).map((r) => r.id);
+
+  it('keeps a relationships title off a scoped freedom shelf, however well its topics match', () => {
+    expect(ids(['freedom'])).not.toContain('dating-book');
+  });
+
+  it('keeps a freedom title off a scoped relationships shelf', () => {
+    expect(ids(['relationships'])).not.toContain('freedom-book');
+  });
+
+  it('shows an entry that belongs to both on either shelf', () => {
+    expect(ids(['freedom'])).toContain('both-book');
+    expect(ids(['relationships'])).toContain('both-book');
+  });
+
+  it('fails closed: an entry that declares no domain is invisible to a scoped plan', () => {
+    expect(ids(['freedom'])).not.toContain('undeclared-book');
+    expect(ids(['relationships'])).not.toContain('undeclared-book');
+  });
+
+  it('leaves a plan that declares no domains exactly as it was', () => {
+    expect(ids([]).sort()).toEqual(['both-book', 'dating-book', 'freedom-book', 'undeclared-book']);
+  });
+});
+
 describe('replacementFor', () => {
   it('follows a retired entry to its approved successor', () => {
     const retired = CATALOGUE.find((r) => r.id === 'retired-entry');
@@ -345,6 +399,14 @@ describe('the shipped catalogue', () => {
   // The mirror of the test above. An entry with no status at all is dropped just
   // as silently as an unapproved one — a curator who recorded both sign-offs and
   // left the status off gets no signal that the entry never reached anyone.
+  it('places every entry in at least one known domain, so nothing is stranded', () => {
+    for (const entry of RESOURCES) {
+      expect(entry.domains, entry.id).toBeInstanceOf(Array);
+      expect(entry.domains.length, entry.id).toBeGreaterThan(0);
+      for (const domain of entry.domains) expect(RESOURCE_DOMAINS, entry.id).toContain(domain);
+    }
+  });
+
   it('states an explicit publication status on every entry', () => {
     for (const resource of RESOURCES) {
       expect(RESOURCE_STATUSES, `${resource.id} has no valid status`).toContain(resource.status);
@@ -377,7 +439,10 @@ describe('the shipped catalogue', () => {
     )].sort();
 
     expect(coveredLanguages).toEqual([
-      'ar', 'de', 'en', 'es', 'fr', 'id', 'ja', 'ko', 'pt', 'ru', 'zh',
+      // `hi` arrived with the deliverance shelf: Derek Prince Ministries India
+      // sells its own Hindi editions, which is the only Hindi publisher page
+      // anyone has verified so far.
+      'ar', 'de', 'en', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'zh',
     ]);
     // `expect.anything` without the call is a plain function, so the Indonesian
     // edition was being compared against it and this could never pass.

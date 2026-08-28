@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Convite para plano de oração",
   "planDays": "{n} dias",
   "planDayOf": "Dia {n} de {total}",
+  "planViewingOtherDay": "Outro dia deste percurso",
+  "planBackToToday": "Voltar para hoje",
   "planTheme21Title": "21 dias de avanço",
   "planTheme21Sub": "Três semanas de oração diária perseverante",
   "planUpperRoomTitle": "O cenáculo — 10 dias",

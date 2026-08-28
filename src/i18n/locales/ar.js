@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "دعوة إلى خطة صلاة",
   "planDays": "{n} يومًا",
   "planDayOf": "اليوم {n} من {total}",
+  "planViewingOtherDay": "يوم آخر من هذه الرحلة",
+  "planBackToToday": "العودة إلى اليوم",
   "planTheme21Title": "21 يومًا من الاختراق",
   "planTheme21Sub": "ثلاثة أسابيع من الصلاة اليومية المثابرة",
   "planUpperRoomTitle": "العليّة — 10 أيام",

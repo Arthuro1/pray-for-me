@@ -795,6 +795,8 @@ export default {
   "notifPlanInvitation": "Prayer plan invitation",
   "planDays": "{n} days",
   "planDayOf": "Day {n} of {total}",
+  "planViewingOtherDay": "Another day of this journey",
+  "planBackToToday": "Back to today",
   "planTheme21Title": "21 days of breakthrough",
   "planTheme21Sub": "Three weeks of persistent daily prayer",
   "planUpperRoomTitle": "The Upper Room — 10 days",

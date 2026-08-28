@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Einladung zu einem Gebetsplan",
   "planDays": "{n} Tage",
   "planDayOf": "Tag {n} von {total}",
+  "planViewingOtherDay": "Ein anderer Tag dieses Wegs",
+  "planBackToToday": "Zurück zu heute",
   "planTheme21Title": "21 Tage des Durchbruchs",
   "planTheme21Sub": "Drei Wochen beharrliches tägliches Gebet",
   "planUpperRoomTitle": "Der Obersaal — 10 Tage",

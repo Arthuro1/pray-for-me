@@ -117,6 +117,13 @@ export const FREEDOM_IN_CHRIST = {
   // every entry still has to be individually approved, and a perspective label
   // is context, never a judgement.
   resourcePerspectives: ['african-pentecostal', 'pentecostal', 'charismatic', 'evangelical'],
+  // And it draws ONLY from freedom material. The shared topic taxonomy is what
+  // makes this necessary: 'discernment', 'healing', 'identity' and 'family-line'
+  // all mean something different on a marriage shelf, and without this scope a
+  // reader renouncing an occult covenant on day 7 was offered books on choosing
+  // a spouse. Unlike perspective, this filters — see § domain in
+  // src/lib/resources.js.
+  resourceDomains: ['freedom'],
   // Content-free product events, opt-in per plan. The names must exist on the
   // EVENTS allowlist in src/lib/analytics.js. Nothing a person selects, writes,
   // records, prays or remembers is ever attached to them — in particular no

@@ -84,6 +84,23 @@ export const RESOURCE_TOPICS = [
   'cross',
 ];
 
+// The FAMILY OF PLANS a resource belongs on.
+//
+// The taxonomy above is flat and shared, which is what keeps it maintainable —
+// but it also means one tag can mean two different things in two different
+// worlds. 'discernment' on a dating book is discerning a partner; 'discernment'
+// on day 7 of the deliverance plan is discerning occult influence. Matching on
+// topics alone therefore put "Boundaries in Dating" and "Who Should I Marry?"
+// on a day about renouncing occult covenants — relevant-looking, pastorally
+// wrong, and impossible to fix by retagging without breaking the plans those
+// tags were written for.
+//
+// A domain is the coarse scope the topic match happens INSIDE. A plan declares
+// the domains it draws from (`resourceDomains`), an entry declares the domains
+// it belongs to (`domains`), and a plan that declares neither stays unscoped
+// and matches on topics alone. See resolveResources() in src/lib/resources.js.
+export const RESOURCE_DOMAINS = ['relationships', 'freedom'];
+
 // The theological tradition a resource comes out of. This is CONTEXT for a
 // reader, never a judgement: labelling a book "african-pentecostal" says where
 // its teaching sits, not that it is better or worse than anything else. Used to

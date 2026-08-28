@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "祈りのプランへの招待",
   "planDays": "{n}日間",
   "planDayOf": "{total}日中 {n}日目",
+  "planViewingOtherDay": "この歩みの別の日",
+  "planBackToToday": "今日に戻る",
   "planTheme21Title": "ブレイクスルーの21日",
   "planTheme21Sub": "3週間の粘り強い毎日の祈り",
   "planUpperRoomTitle": "階上の部屋 — 10日間",

@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "دعوت به برنامهٔ دعا",
   "planDays": "{n} روز",
   "planDayOf": "روز {n} از {total}",
+  "planViewingOtherDay": "روزی دیگر از این مسیر",
+  "planBackToToday": "بازگشت به امروز",
   "planTheme21Title": "۲۱ روز گشایش",
   "planTheme21Sub": "سه هفته دعای روزانهٔ پیوسته",
   "planUpperRoomTitle": "بالاخانه — ۱۰ روز",

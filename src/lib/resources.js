@@ -15,6 +15,12 @@
 //   3. FALLBACKS NEVER DILUTE A LOCAL MATCH. The resolver tries one language at
 //      a time. It only moves to the next configured fallback when the earlier
 //      language has no relevant recommendation at all.
+//   4. A TOPIC ONLY MATCHES INSIDE ITS OWN DOMAIN. Topic tags are shared by
+//      every plan, so 'discernment', 'healing' or 'identity' can mean one thing
+//      to a dating book and something else entirely on a day about renouncing
+//      occult covenants. A plan that declares `resourceDomains` therefore sees
+//      only entries belonging to those domains, and an entry that declares no
+//      domain belongs to none of them.
 import { RESOURCES } from '../content/resources/catalogue';
 
 // The resolver returns the complete relevant language tier by default. The UI
@@ -109,6 +115,17 @@ function topicScore(resource, dayTopics, boostTopics) {
   return score;
 }
 
+// § domain — the coarse scope a topic match is allowed to happen inside (see
+// RESOURCE_DOMAINS in ../content/resources/topics). Unlike perspective, this
+// FILTERS: a plan that names its domains never sees an entry from another one.
+// It fails closed on purpose — an entry declaring no domain is invisible to
+// every scoped plan, so a future catalogue cannot leak onto the deliverance
+// shelf by forgetting a field.
+function matchesDomain(resource, domains) {
+  if (!domains?.length) return true;
+  return (resource.domains || []).some((d) => domains.includes(d));
+}
+
 // § fallback — within a chosen language, original work comes before a verified
 // translation. Language priority itself is handled one complete tier at a time.
 function languageRank(resource, lang) {
@@ -135,6 +152,8 @@ function perspectiveRank(resource, perspectiveOrder) {
 //
 //   topics             the day's `resourceTopics`
 //   lifeStage          e.g. 'single' — an entry that names lifeStages must include it
+//   domains            from the plan's `resourceDomains`: the families of
+//                      resources it draws from ([] leaves the plan unscoped)
 //   languages          from resourceLanguages(): [appLang, ...enabled fallbacks]
 //   boostTopics        from the reader's growth areas (ranking only)
 //   perspectiveOrder   theological traditions this plan wants first (ranking only)
@@ -146,6 +165,7 @@ function perspectiveRank(resource, perspectiveOrder) {
 export function resolveResources({
   topics = [],
   lifeStage = null,
+  domains = [],
   languages = ['en'],
   boostTopics = [],
   perspectiveOrder = [],
@@ -162,6 +182,7 @@ export function resolveResources({
 
     for (const resource of catalogue) {
       if (!isResourceApprovedForDisplay(resource)) continue;
+      if (!matchesDomain(resource, domains)) continue;
       if (lifeStage && resource.lifeStages?.length && !resource.lifeStages.includes(lifeStage)) continue;
       const score = topicScore(resource, dayTopics, boostTopics);
       if (score === 0 || !isRenderableEdition(resource.editions?.[lang])) continue;

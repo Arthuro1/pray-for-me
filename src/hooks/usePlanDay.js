@@ -63,6 +63,11 @@ export function usePlanDay(planId, dayNumber, lang, {
     return resolveResources({
       topics: day.resourceTopics,
       lifeStage: plan?.lifeStage || null,
+      // The families of resources this plan draws from. Topic tags are shared
+      // across every plan, so without this a day about renouncing occult
+      // covenants matched dating books on 'discernment'. A plan that declares
+      // no domains is unscoped, exactly as before.
+      domains: plan?.resourceDomains || [],
       languages: resourceLanguages(lang, fallbackKey ? fallbackKey.split(',') : []),
       boostTopics: growthTopics(prefs),
       // A plan may ask for its shelf to be ORDERED by theological perspective

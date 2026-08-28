@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -123,13 +123,27 @@ function AddFriendPage() {
 function PersonalPrayerPage({ onEdit }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  // `?day=YYYY-MM-DD` opens one particular day of a guided plan instead of
+  // today's — that is how the calendar hands a day over (PlanTab → DayAgenda).
+  // It is read here and passed down as a prop so PrayerDetail stays free of the
+  // router. An unusable value changes nothing: PrayerDetail falls back to today.
+  const [searchParams] = useSearchParams();
   const { prayers, settings } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, settings: s.settings }))
   );
   const lang = settings.language || 'fr';
   const prayer = prayers.find((p) => p.id === id);
   if (!prayer) return <Navigate to="/prayers" replace />;
-  return <PrayerDetail prayer={prayer} lang={lang} onBack={() => navigate(-1)} onEdit={onEdit} />;
+  return (
+    <PrayerDetail
+      prayer={prayer}
+      lang={lang}
+      planDayKey={searchParams.get('day')}
+      onShowToday={() => navigate(`/prayers/${id}`, { replace: true })}
+      onBack={() => navigate(-1)}
+      onEdit={onEdit}
+    />
+  );
 }
 
 export default function AuthenticatedApp({

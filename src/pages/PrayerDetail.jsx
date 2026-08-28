@@ -20,7 +20,8 @@ import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { planWeekDays, scheduleEnded } from '../lib/planner';
-import { planDayNumber } from '../lib/schedule';
+import { occursOn } from '../lib/schedule';
+import { planDayNumber, parseKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { getPlan } from '../content/prayerPlans';
 import { pick, localizeRef } from '../content/teaching';
@@ -115,7 +116,12 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 }
 
 // communityPrayer prop switches the component to community mode
-export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
+// `?day=` arrives from a URL, so it is checked for shape before it is asked
+// about: without this a hand-typed value walks the occurrence scan to its guard
+// before being rejected.
+const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
+
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null }) {
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
@@ -317,7 +323,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // unconditionally (a null plan id resolves to null) so the rules of hooks hold
   // for the many prayers that are not part of a plan.
   const planId = livePrayer.schedule?.plan?.id || null;
-  const planDayNo = planId ? planDayNumber(livePrayer.schedule, todayKey()) : null;
+  // WHICH day of the plan is on screen. Today's, unless the calendar handed over
+  // another day of the same run (`?day=` → planDayKey): that is how a reader
+  // returns to a day they missed, or reads the next one, without leaving the
+  // plan. Only a real occurrence of THIS prayer's schedule is accepted, so a
+  // stale link or a hand-typed date quietly falls back to today rather than
+  // showing a day the run does not have.
+  const requestedDay = planId && DAY_KEY.test(planDayKey || '')
+    && occursOn(livePrayer.schedule, planDayKey, livePrayer.schedule_overrides || {})
+    ? planDayKey : null;
+  const viewedDayKey = requestedDay || todayKey();
+  const planDayNo = planId ? planDayNumber(livePrayer.schedule, viewedDayKey) : null;
+  // Everything else on this page — marking prayed, the follow-up, the series
+  // summary — stays about TODAY. Only the plan day itself moves.
+  const viewingOtherDay = planDayNo != null && viewedDayKey !== todayKey();
   const planVersion = livePrayer.schedule?.plan?.version || null;
   const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
   const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
@@ -919,6 +938,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>
                 {t(lang, 'planDayOf', { n: planDayNo, total: livePrayer.schedule.end?.count || '' })}
               </p>
+              {viewingOtherDay && (
+                <div className="flex flex-wrap items-center justify-between gap-x-3 mb-1.5">
+                  <p className="text-[11px] first-letter:uppercase" style={{ color: 'var(--text-3)' }}>
+                    {t(lang, 'planViewingOtherDay')} · {parseKey(viewedDayKey).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' })}
+                  </p>
+                  {onShowToday && (
+                    <button
+                      type="button"
+                      onClick={onShowToday}
+                      className="pressable flex min-h-11 items-center text-[11px] font-medium"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      {t(lang, 'planBackToToday')}
+                    </button>
+                  )}
+                </div>
+              )}
               <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(planDay.theme, lang)}</p>
               <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
                 {({ toggle, expanded }) => (

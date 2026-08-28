@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "기도 계획 초대",
   "planDays": "{n}일",
   "planDayOf": "{total}일 중 {n}일째",
+  "planViewingOtherDay": "이 여정의 다른 날",
+  "planBackToToday": "오늘로 돌아가기",
   "planTheme21Title": "돌파의 21일",
   "planTheme21Sub": "3주간의 끈질긴 매일 기도",
   "planUpperRoomTitle": "다락방 — 10일",

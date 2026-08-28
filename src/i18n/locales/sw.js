@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Mwaliko wa mpango wa maombi",
   "planDays": "siku {n}",
   "planDayOf": "Siku ya {n} kati ya {total}",
+  "planViewingOtherDay": "Siku nyingine ya safari hii",
+  "planBackToToday": "Rudi kwa leo",
   "planTheme21Title": "Siku 21 za ushindi",
   "planTheme21Sub": "Wiki tatu za maombi ya kila siku kwa bidii",
   "planUpperRoomTitle": "Chumba cha Juu — siku 10",

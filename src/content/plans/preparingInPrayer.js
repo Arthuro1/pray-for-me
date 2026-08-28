@@ -58,6 +58,10 @@ export const PREPARING_IN_PRAYER = {
   count: 21,
   version: 1,
   category: 'relationships',
+  // Relationship material only: deliverance and freedom titles share topics like
+  // 'healing', 'forgiveness' and 'family-line' with these days, and belong on
+  // their own plan's shelf rather than this one.
+  resourceDomains: ['relationships'],
   lifeStage: 'single',
   titleKey: 'planPreparingTitle',
   subKey: 'planPreparingSub',

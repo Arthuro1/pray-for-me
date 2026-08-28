@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Приглашение к плану молитвы",
   "planDays": "{n} дней",
   "planDayOf": "День {n} из {total}",
+  "planViewingOtherDay": "Другой день этого пути",
+  "planBackToToday": "Вернуться к сегодняшнему дню",
   "planTheme21Title": "21 день прорыва",
   "planTheme21Sub": "Три недели настойчивой ежедневной молитвы",
   "planUpperRoomTitle": "Горница — 10 дней",

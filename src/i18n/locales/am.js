@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "የጸሎት እቅድ ግብዣ",
   "planDays": "{n} ቀናት",
   "planDayOf": "ቀን {n} ከ{total}",
+  "planViewingOtherDay": "የዚህ ጉዞ ሌላ ቀን",
+  "planBackToToday": "ወደ ዛሬ ተመለስ",
   "planTheme21Title": "የ21 ቀናት ድል",
   "planTheme21Sub": "ሦስት ሳምንታት ጽኑ ዕለታዊ ጸሎት",
   "planUpperRoomTitle": "ሰገነት — 10 ቀናት",

@@ -32,6 +32,9 @@
 //   type                one of RESOURCE_TYPES
 //   originalLanguage    the language it was written/produced in
 //   topics              RESOURCE_TOPICS ids
+//   domains             RESOURCE_DOMAINS ids — the families of plans this entry
+//                       belongs on. Applied per collection below; an entry only
+//                       states its own when it belongs on more than one shelf.
 //   lifeStages          who it actually helps
 //   status              draft | needs_review | approved | retired
 //   reviewLevel         standard | sensitive (standard when omitted)
@@ -50,13 +53,15 @@
 // loading one would tell that host the reader's IP and which subject they are
 // praying about, before they tap anything. Leave it out and the card draws a
 // calm generated tile instead — see src/lib/resourceThumbnail.js.
-import { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS } from './topics';
+import { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS } from './topics';
 import { RELATIONSHIP_BOOKS } from './relationshipBooks';
 import { DELIVERANCE_BOOKS } from './deliveranceBooks';
 
-export { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
+export { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
-export const RESOURCES = [
+// The original curated set: marriage, singleness and preparation titles, plus a
+// few general discipleship books that are not about relationships at all.
+const CORE_RESOURCES = [
   {
     id: 'piper-momentary-marriage',
     type: 'book',
@@ -187,6 +192,12 @@ export const RESOURCES = [
     id: 'lane-tripp-how-people-change',
     type: 'book',
     originalLanguage: 'en',
+    // General Christian formation rather than a relationships book, so it stands
+    // on the freedom shelf too: the "complementary evangelical freedom and
+    // discipleship material" that plan's resourcePerspectives asks for. It was
+    // already on that shelf before domains existed; only the dating and marriage
+    // titles beside it were wrong.
+    domains: ['relationships', 'freedom'],
     topics: ['character', 'healing', 'spiritual-formation'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'approved',
@@ -202,6 +213,12 @@ export const RESOURCES = [
     id: 'welch-when-people-are-big',
     type: 'book',
     originalLanguage: 'en',
+    // General Christian formation rather than a relationships book, so it stands
+    // on the freedom shelf too: the "complementary evangelical freedom and
+    // discipleship material" that plan's resourcePerspectives asks for. It was
+    // already on that shelf before domains existed; only the dating and marriage
+    // titles beside it were wrong.
+    domains: ['relationships', 'freedom'],
     topics: ['identity', 'character', 'healing'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'approved',
@@ -258,6 +275,12 @@ export const RESOURCES = [
     id: 'ortlund-gentle-and-lowly',
     type: 'book',
     originalLanguage: 'en',
+    // General Christian formation rather than a relationships book, so it stands
+    // on the freedom shelf too: the "complementary evangelical freedom and
+    // discipleship material" that plan's resourcePerspectives asks for. It was
+    // already on that shelf before domains existed; only the dating and marriage
+    // titles beside it were wrong.
+    domains: ['relationships', 'freedom'],
     topics: ['healing', 'identity', 'spiritual-formation'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'approved',
@@ -333,10 +356,21 @@ export const RESOURCES = [
       en: { title: 'Ask Pastor John', author: 'John Piper', publisher: 'Desiring God', url: 'https://www.desiringgod.org/ask-pastor-john', available: true, lastVerifiedAt: '2026-08-26' },
     },
   },
-  ...RELATIONSHIP_BOOKS,
-  // Every deliverance candidate is `needs_review` and unsigned, so none of them
-  // renders yet. See ./deliveranceBooks.js for why that is the intended state.
-  ...DELIVERANCE_BOOKS,
+];
+
+// A file IS a collection here, so a domain is stamped on the whole collection
+// rather than repeated on eighty entries. An entry that states its own `domains`
+// keeps them, which is how a general discipleship title earns a place on more
+// than one shelf.
+const inDomain = (domain, entries) => entries.map((entry) => ({ domains: [domain], ...entry }));
+
+export const RESOURCES = [
+  ...inDomain('relationships', CORE_RESOURCES),
+  ...inDomain('relationships', RELATIONSHIP_BOOKS),
+  // Deliverance material is sensitive without exception, so each of these
+  // renders only on two named human sign-offs. See ./deliveranceBooks.js for
+  // which languages have a verified edition and which deliberately have none.
+  ...inDomain('freedom', DELIVERANCE_BOOKS),
 ];
 
 export default RESOURCES;

@@ -56,11 +56,18 @@ export default function DayAgenda({
                 const prayed = (completions[prayer.id] || []).includes(dayKey);
                 const hasSchedule = !!prayer.schedule;
                 const override = prayer.schedule_overrides?.[dayKey];
+                // On a plan day the row opens THAT day of the plan rather than
+                // today's: selecting a day on the calendar is how a reader goes
+                // back to a day they missed, or reads the next one. Anything
+                // else opens the prayer plainly.
+                const plan = prayer.schedule?.plan;
+                const planDayNo = plan ? planDayNumber(prayer.schedule, dayKey) : null;
+                const href = planDayNo ? `/prayers/${prayer.id}?day=${dayKey}` : `/prayers/${prayer.id}`;
                 return (
                   <div key={prayer.id} className="rounded-xl px-3 py-2.5" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
                     <div className="flex items-center gap-2.5">
                       <SourceDot source={source} />
-                      <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-start">
+                      <button onClick={() => navigate(href)} className="flex-1 min-w-0 text-start">
                         <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: prayed ? 'line-through' : 'none', opacity: prayed ? 0.6 : 1 }}>
                           {tr(prayer.title, lang)}
                         </p>
@@ -69,11 +76,9 @@ export default function DayAgenda({
                             {(() => {
                               // Plan prayers show "Day n of N · theme" for the
                               // selected day; other schedules show their summary.
-                              const plan = prayer.schedule.plan;
-                              const n = plan ? planDayNumber(prayer.schedule, dayKey) : null;
-                              const content = n && planDayContent(plan.id, n, null, plan.version || null);
+                              const content = planDayNo && planDayContent(plan.id, planDayNo, null, plan.version || null);
                               if (content) {
-                                return `${t(lang, 'planDayOf', { n, total: prayer.schedule.end?.count || '' })} · ${pick(content.theme, lang)}`;
+                                return `${t(lang, 'planDayOf', { n: planDayNo, total: prayer.schedule.end?.count || '' })} · ${pick(content.theme, lang)}`;
                               }
                               return scheduleSummary(prayer.schedule, lang);
                             })()}

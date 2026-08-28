@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "प्रार्थना योजना निमंत्रण",
   "planDays": "{n} दिन",
   "planDayOf": "दिन {n} / {total}",
+  "planViewingOtherDay": "इस यात्रा का एक और दिन",
+  "planBackToToday": "आज पर लौटें",
   "planTheme21Title": "विजय के 21 दिन",
   "planTheme21Sub": "तीन सप्ताह की दृढ़ दैनिक प्रार्थना",
   "planUpperRoomTitle": "ऊपरी कमरा — 10 दिन",

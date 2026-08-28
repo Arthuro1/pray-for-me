@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Invitación a un plan de oración",
   "planDays": "{n} días",
   "planDayOf": "Día {n} de {total}",
+  "planViewingOtherDay": "Otro día de este recorrido",
+  "planBackToToday": "Volver a hoy",
   "planTheme21Title": "21 días de avance",
   "planTheme21Sub": "Tres semanas de oración diaria perseverante",
   "planUpperRoomTitle": "El aposento alto — 10 días",

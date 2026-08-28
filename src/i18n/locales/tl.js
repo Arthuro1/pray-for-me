@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "Imbitasyon sa plano ng panalangin",
   "planDays": "{n} araw",
   "planDayOf": "Araw {n} ng {total}",
+  "planViewingOtherDay": "Isa pang araw ng paglalakbay na ito",
+  "planBackToToday": "Bumalik sa ngayon",
   "planTheme21Title": "21 araw ng tagumpay",
   "planTheme21Sub": "Tatlong linggo ng matiyagang pang-araw-araw na panalangin",
   "planUpperRoomTitle": "Silid sa Itaas — 10 na araw",

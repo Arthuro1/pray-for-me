@@ -798,6 +798,8 @@ export default {
   "notifPlanInvitation": "祷告计划邀请",
   "planDays": "{n} 天",
   "planDayOf": "第 {n} 天，共 {total} 天",
+  "planViewingOtherDay": "这段旅程中的另一天",
+  "planBackToToday": "回到今天",
   "planTheme21Title": "21 天突破",
   "planTheme21Sub": "三周恒切的每日祷告",
   "planUpperRoomTitle": "楼上的房间 — 10 天",
