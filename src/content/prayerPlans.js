@@ -16,6 +16,7 @@
 import { PREPARING_IN_PRAYER } from './plans/preparingInPrayer';
 import { PREPARING_FOR_COVENANT } from './plans/preparingForCovenant';
 import { PRAYING_FOR_OUR_MARRIAGE } from './plans/prayingForOurMarriage';
+import { FREEDOM_IN_CHRIST } from './plans/freedomInChrist';
 import { canUsePlan } from '../lib/planReview';
 
 // Plans are grouped in the UI by CATEGORY so the list stays browsable as it
@@ -24,6 +25,7 @@ export const PLAN_CATEGORIES = [
   { id: 'seeking', labelKey: 'planCategorySeeking' },
   { id: 'others', labelKey: 'planCategoryOthers' },
   { id: 'relationships', labelKey: 'planCategoryRelationships' },
+  { id: 'freedom', labelKey: 'planCategoryFreedom' },
 ];
 
 // Plans with no category of their own fall in here, so an older plan never
@@ -239,6 +241,7 @@ export const PLANS = [
   PREPARING_IN_PRAYER,
   PREPARING_FOR_COVENANT,
   PRAYING_FOR_OUR_MARRIAGE,
+  FREEDOM_IN_CHRIST,
 ];
 
 export function getPlan(id, version = null) {

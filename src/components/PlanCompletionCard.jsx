@@ -37,6 +37,26 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
       </p>
       <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(plan.completion, lang)}</p>
 
+      {/* "Look back" — questions to sit with, not a form to fill in. A plan that
+          declares them gets them; the others render nothing here. They ask about
+          Scripture, surrender, practical change and remaining prayer — never
+          about what supposedly left the reader. */}
+      {(plan.lookBack || []).length > 0 && (
+        <section className="mb-4">
+          <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            {t(lang, 'planLookBackHeading')}
+          </h4>
+          <ul className="space-y-1.5">
+            {plan.lookBack.map((key) => (
+              <li key={key} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                <span aria-hidden="true" style={{ color: 'var(--accent)' }}>•</span>
+                <span className="min-w-0">{t(lang, key)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {themes.length > 0 && !done && (
         <>
           <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planContinueHeading')}</h4>

@@ -939,6 +939,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               role={planRole}
               resources={planResources}
               idPrefix="detail-plan-day"
+              onAddNote={focusUpdateField}
               onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
             />
             {canEditPersonalization && (

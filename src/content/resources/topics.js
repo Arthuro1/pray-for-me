@@ -55,6 +55,49 @@ export const RESOURCE_TOPICS = [
   'marriage-roles',
   'generosity',
   'mission',
+  // ── Freedom & deliverance ────────────────────────────────────────────────
+  // Added for the 30-day "Freedom & Deliverance in Christ" plan. Deliberately
+  // descriptive rather than diagnostic: they say what a resource is ABOUT, and
+  // never what is true of a reader. Everything under this heading raises the
+  // review level to `sensitive` — see SENSITIVE_RESOURCE_TOPICS in
+  // src/lib/resources.js.
+  'deliverance',
+  'spiritual-warfare',
+  'holy-spirit',
+  'repentance',
+  'renunciation',
+  'covenants',
+  'curses',
+  'altars',
+  'occult',
+  'idolatry',
+  'secret-societies',
+  'dedications',
+  'family-line',
+  'generational-patterns',
+  'strongholds',
+  'fear',
+  'armor-of-god',
+  'scripture-prayer',
+  'discipleship',
+  'victory',
+  'cross',
+];
+
+// The theological tradition a resource comes out of. This is CONTEXT for a
+// reader, never a judgement: labelling a book "african-pentecostal" says where
+// its teaching sits, not that it is better or worse than anything else. Used to
+// ORDER an already-approved shelf (a plan may declare a preferred order), never
+// to filter one.
+export const RESOURCE_PERSPECTIVES = [
+  'african-pentecostal',
+  'pentecostal',
+  'charismatic',
+  'evangelical',
+  'reformed',
+  'anglican',
+  'catholic',
+  'orthodox',
 ];
 
 // Where in life a resource actually helps. Used to keep a book written for

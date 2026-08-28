@@ -76,6 +76,7 @@ export const BOOK_NAMES = {
   DAN: { fr: 'Daniel', en: 'Daniel', de: 'Daniel', pt: 'Daniel', zh: '但以理书', es: 'Daniel', hi: 'दानिय्येल', ja: 'ダニエル書', sw: 'Danieli', am: 'ዳንኤል', id: 'Daniel', tl: 'Daniel', ko: '다니엘', ru: 'Даниил', ar: 'دانيال', fa: 'دانیال' },
   ACT: { fr: 'Actes', en: 'Acts', de: 'Apostelgeschichte', pt: 'Atos', zh: '使徒行传', es: 'Hechos', hi: 'प्रेरितों के काम', ja: '使徒の働き', sw: 'Matendo', am: 'የሐዋርያት ሥራ', id: 'Kisah Para Rasul', tl: 'Mga Gawa', ko: '사도행전', ru: 'Деяния', ar: 'أعمال الرسل', fa: 'اعمال رسولان' },
   '2PE': { fr: '2 Pierre', en: '2 Peter', de: '2. Petrus', pt: '2 Pedro', zh: '彼得后书', es: '2 Pedro', hi: '2 पतरस', ja: '2ペテロ', sw: '2 Petro', am: '2ኛ ጴጥሮስ', id: '2 Petrus', tl: '2 Pedro', ko: '베드로후서', ru: '2 Петра', ar: '2 بطرس', fa: 'دوم پطرس' },
+  EZK: { fr: 'Ézéchiel', en: 'Ezekiel', de: 'Hesekiel', pt: 'Ezequiel', zh: '以西结书', es: 'Ezequiel', hi: 'यहेजकेल', ja: 'エゼキエル書', sw: 'Ezekieli', am: 'ሕዝቅኤል', id: 'Yehezkiel', tl: 'Ezekiel', ko: '에스겔', ru: 'Иезекииль', ar: 'حزقيال', fa: 'حزقیال' },
   REV: { fr: 'Apocalypse', en: 'Revelation', de: 'Offenbarung', pt: 'Apocalipse', zh: '启示录', es: 'Apocalipsis', hi: 'प्रकाशितवाक्य', ja: '黙示録', sw: 'Ufunuo', am: 'ራእይ', id: 'Wahyu', tl: 'Pahayag', ko: '요한계시록', ru: 'Откровение', ar: 'رؤيا', fa: 'مکاشفه' },
 };
 

@@ -32,6 +32,16 @@ export const SENSITIVE_RESOURCE_TOPICS = new Set([
   'sexuality', 'sexual-intimacy', 'purity', 'infertility', 'miscarriage', 'marriage-crisis',
   'abuse-safety', 'trauma', 'divorce', 'pornography', 'addiction',
   'infidelity', 'illness', 'marriage-roles',
+  // Every deliverance topic is sensitive without exception. Material on demons,
+  // curses, generational curses, covenants, ancestral practices, witchcraft,
+  // occult activity, deliverance, exorcism, spiritual warfare, evil altars or
+  // prophetic spiritual diagnosis can teach fear, unsupported certainty,
+  // dangerous medical claims, defamatory accusation or coercive ministry — so
+  // it needs two named human sign-offs before it can ever be shown, and a
+  // catalogue author cannot opt out by labelling the entry `standard`.
+  'deliverance', 'spiritual-warfare', 'renunciation', 'covenants', 'curses',
+  'altars', 'occult', 'idolatry', 'secret-societies', 'dedications',
+  'family-line', 'generational-patterns', 'strongholds',
 ]);
 
 function isIsoDate(value) {
@@ -105,12 +115,29 @@ function languageRank(resource, lang) {
   return resource.originalLanguage === lang ? 0 : 1;
 }
 
+// § perspective — a plan may declare which theological traditions it wants to
+// hear from FIRST (the deliverance plan puts African Pentecostal and African
+// deliverance resources ahead of international Pentecostal/charismatic, and
+// those ahead of complementary evangelical material). This only ORDERS a shelf
+// that has already passed every approval gate: it never adds a resource, never
+// removes one, and never says a tradition is better than another. An entry with
+// no declared perspective, or one the plan did not rank, sorts after those it
+// did rather than being dropped.
+function perspectiveRank(resource, perspectiveOrder) {
+  if (!perspectiveOrder?.length) return 0;
+  const ranks = (resource.perspective || [])
+    .map((p) => perspectiveOrder.indexOf(p))
+    .filter((i) => i >= 0);
+  return ranks.length ? Math.min(...ranks) : perspectiveOrder.length;
+}
+
 // The resources to show for one plan day, already capped and ordered.
 //
 //   topics             the day's `resourceTopics`
 //   lifeStage          e.g. 'single' — an entry that names lifeStages must include it
 //   languages          from resourceLanguages(): [appLang, ...enabled fallbacks]
 //   boostTopics        from the reader's growth areas (ranking only)
+//   perspectiveOrder   theological traditions this plan wants first (ranking only)
 //   limit              optional hard cap; defaults to the complete matching tier
 //   catalogue          injectable, so tests never depend on shipped content
 //
@@ -121,6 +148,7 @@ export function resolveResources({
   lifeStage = null,
   languages = ['en'],
   boostTopics = [],
+  perspectiveOrder = [],
   limit = DEFAULT_RESOURCE_LIMIT,
   catalogue = RESOURCES,
 } = {}) {
@@ -147,13 +175,18 @@ export function resolveResources({
         // Every fallback card still names its language in the UI.
         isFallback: languageIndex > 0,
         edition: resource.editions[lang],
+        perspective: resource.perspective || [],
         rank: languageRank(resource, lang),
+        perspectiveRank: perspectiveRank(resource, perspectiveOrder),
         score,
       });
     }
 
     if (matches.length) {
-      matches.sort((a, b) => a.rank - b.rank || b.score - a.score || a.id.localeCompare(b.id));
+      matches.sort((a, b) => a.perspectiveRank - b.perspectiveRank
+        || a.rank - b.rank
+        || b.score - a.score
+        || a.id.localeCompare(b.id));
       const resultLimit = Number.isFinite(limit) ? Math.max(0, limit) : matches.length;
       return matches.slice(0, resultLimit);
     }

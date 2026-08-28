@@ -48,6 +48,13 @@ export const EVENTS = Object.freeze({
   ENGAGED_PLAN_STARTED: 'engaged_plan_started',
   ENGAGED_PLAN_DAY_COMPLETED: 'engaged_plan_day_completed',
   ENGAGED_PLAN_COMPLETED: 'engaged_plan_completed',
+  // The deliverance plan. What someone selects, remembers, writes or renounces
+  // inside it is the most sensitive thing this app could hold, so these three
+  // events carry NO properties at all — not a day number, not a movement, not a
+  // category, and never a certainty level.
+  DELIVERANCE_PLAN_STARTED: 'deliverance_plan_started',
+  DELIVERANCE_PLAN_DAY_COMPLETED: 'deliverance_plan_day_completed',
+  DELIVERANCE_PLAN_COMPLETED: 'deliverance_plan_completed',
   MARRIAGE_PLAN_STARTED: 'marriage_plan_started',
   MARRIAGE_PLAN_DAY_COMPLETED: 'marriage_plan_day_completed',
   MARRIAGE_PLAN_COMPLETED: 'marriage_plan_completed',

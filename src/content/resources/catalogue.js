@@ -52,6 +52,7 @@
 // calm generated tile instead — see src/lib/resourceThumbnail.js.
 import { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS } from './topics';
 import { RELATIONSHIP_BOOKS } from './relationshipBooks';
+import { DELIVERANCE_BOOKS } from './deliveranceBooks';
 
 export { RESOURCE_TOPICS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
@@ -333,6 +334,9 @@ export const RESOURCES = [
     },
   },
   ...RELATIONSHIP_BOOKS,
+  // Every deliverance candidate is `needs_review` and unsigned, so none of them
+  // renders yet. See ./deliveranceBooks.js for why that is the intended state.
+  ...DELIVERANCE_BOOKS,
 ];
 
 export default RESOURCES;

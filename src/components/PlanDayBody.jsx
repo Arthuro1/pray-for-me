@@ -6,6 +6,7 @@ import VersePill from './shared/VersePill';
 import GoDeeper from './GoDeeper';
 import { ROLES } from '../lib/planPrefs';
 import { hasReviewSignoff } from '../lib/planReview';
+import DeliveranceDayGuide from './deliverance/DeliveranceDayGuide';
 
 // Everything a rich plan day says BELOW its title and primary passage:
 // reflection → prayer directions → an optional role reflection → one folded
@@ -27,7 +28,7 @@ import { hasReviewSignoff } from '../lib/planReview';
 // and only a day that HAS such a reflection puts it on screen — so it is asked
 // on the first day it would change something, and never again after an answer.
 export default function PlanDayBody({
-  day, lang, role = 'general', resources = [], idPrefix = 'plan-day', onChooseRole,
+  day, lang, role = 'general', resources = [], idPrefix = 'plan-day', onChooseRole, onAddNote,
 }) {
   const [afterPrayerOpen, setAfterPrayerOpen] = useState(false);
   if (!day) return null;
@@ -42,6 +43,7 @@ export default function PlanDayBody({
   const prayTogether = pick(day.prayTogether, lang);
   const safetyNote = pick(day.safetyNote, lang);
   const related = day.related || [];
+  const isFreedomDay = !!day.freedom;
   // Role reflections are shown ONLY when the reader has explicitly asked for
   // them — never inferred from a name, a photo or anything else.
   const roleApproved = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
@@ -53,7 +55,7 @@ export default function PlanDayBody({
   const askRole = !!onChooseRole && roleApproved && !!day.roles && !roleText;
   const hasAfterPrayer = related.length > 0 || !!conversationPrompt || !!practice || !!prayTogether;
 
-  if (!askRole && !reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
+  if (!isFreedomDay && !askRole && !reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt
     && !day.childPrayers?.length && !conversationPrompt && !prayTogether && !safetyNote
     && !practice && !related.length && !roleText && !rolePending && !resources.length) {
     return null;
@@ -65,7 +67,21 @@ export default function PlanDayBody({
         <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{reflection}</p>
       )}
 
-      {prompts.length > 0 && (
+      {/* A deliverance day replaces the plain prompt list with its own guidance:
+          what the category means, the Holy Spirit invitation, what the reader
+          actually knows, and the three ways to pray. The prompts become the
+          "Prayer points" path inside it rather than a fourth thing on screen. */}
+      {isFreedomDay && (
+        <DeliveranceDayGuide
+          day={day}
+          lang={lang}
+          prompts={prompts}
+          idPrefix={idPrefix}
+          onAddNote={onAddNote}
+        />
+      )}
+
+      {!isFreedomDay && prompts.length > 0 && (
         <section>
           <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
             {t(lang, 'planPrayerPrompts')}

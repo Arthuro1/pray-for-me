@@ -53,6 +53,7 @@ export default function PrayerSessionNote({
   onDeleteVoice,
   recorderRef,
   saving = false,
+  openSignal = 0,
 }) {
   const [open, setOpen] = useState(false);
   const [showFormatting, setShowFormatting] = useState(false);
@@ -63,6 +64,12 @@ export default function PrayerSessionNote({
 
   // Each prayer starts collapsed — moving on is never a note-taking prompt.
   useEffect(() => { setOpen(false); setShowFormatting(false); }, [prayerId]);
+
+  // A surface above the composer can ASK for it (the deliverance plan's "Add a
+  // private prayer note" answer). It is a counter rather than a boolean so the
+  // same request twice still opens it, and 0 — the default — never does, which
+  // keeps every other caller's behaviour identical.
+  useEffect(() => { if (openSignal > 0) setOpen(true); }, [openSignal]);
 
   // Focus before paint and explicitly suppress the browser's default page
   // scrolling. The request container is adjusted separately below.

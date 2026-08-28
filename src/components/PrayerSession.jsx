@@ -108,6 +108,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // can never land a note on the NEXT prayer.
   const [committing, setCommitting] = useState(false);
   const [noteError, setNoteError] = useState(false);
+  // Bumped when a plan day asks for the note composer ("Add a private prayer
+  // note" on a deliverance day), so the reader lands in the existing composer
+  // instead of a second, parallel one.
+  const [noteOpenSignal, setNoteOpenSignal] = useState(0);
   // { height, top } while an on-screen keyboard is shrinking the visible area.
   const [viewport, setViewport] = useState(null);
   // Prayers whose completion has already been recorded this session, so
@@ -670,6 +674,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               role={sessionPlanRole}
               resources={sessionPlanResources}
               idPrefix="session-plan-day"
+              onAddNote={notesEnabled ? () => setNoteOpenSignal((n) => n + 1) : undefined}
             />
           </div>
         )}
@@ -726,6 +731,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
             onChangeText={(text) => notes.setText(prayer.id, text)}
             onCaptureVoice={(voice) => notes.setVoice(prayer.id, voice)}
             onDeleteVoice={() => notes.deleteVoice(prayer.id)}
+            openSignal={noteOpenSignal}
           />
         )}
       </div>

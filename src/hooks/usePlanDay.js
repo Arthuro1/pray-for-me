@@ -65,6 +65,10 @@ export function usePlanDay(planId, dayNumber, lang, {
       lifeStage: plan?.lifeStage || null,
       languages: resourceLanguages(lang, fallbackKey ? fallbackKey.split(',') : []),
       boostTopics: growthTopics(prefs),
+      // A plan may ask for its shelf to be ORDERED by theological perspective
+      // (the deliverance plan puts African Pentecostal material first). Ordering
+      // only: it never adds or removes an approved resource.
+      perspectiveOrder: plan?.resourcePerspectives || [],
     });
   }, [day, plan, lang, fallbackKey, prefs]);
 

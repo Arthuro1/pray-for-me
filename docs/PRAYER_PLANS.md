@@ -25,6 +25,9 @@ and history, the calendar, catch-up, reminders, offline, and the ICS export.
 |---|---|
 | `src/content/prayerPlans.js` | the `PLANS` registry, `PLAN_CATEGORIES`, `plansByCategory()`, `getPlan()`, `planDayContent()` |
 | `src/content/plans/<plan>.js` | one rich plan's meta (intro, movements, completion) |
+| `src/content/plans/freedom/` | the deliverance plan's reviewed prayer modules and certainty model |
+| `src/lib/freedomSession.js` | deterministic assembly of a guided deliverance prayer from reviewed modules |
+| `src/components/deliverance/` | the deliverance day layer and its one-step-at-a-time prayer walk |
 | `src/content/plans/<plan>Days.js` | that plan's day-by-day curriculum |
 | `src/content/plans/translations.js` + `translations/<plan-id>/<lang>.json` | lazy per-plan, per-language overlays for plan **prose** |
 | `src/lib/guidedPlan.js` | `planById()`, `buildGuidedPlanPrayer()` — shared by Plan tab, invitations, group plans |
@@ -280,6 +283,28 @@ emitted with no properties. The day event fires from `markPrayedOn` in the store
 New plans remain visible only in development preview until `review.status`,
 theology review, safety review, and every locale sign-off contain an approved
 status, a named reviewer, and an ISO date. Draft role material has its own gate.
+
+---
+
+## "Freedom & Deliverance in Christ" (`freedom30`)
+
+A 30-day plan on the same engine, written from an African/Pentecostal
+deliverance perspective and held inside strict non-diagnostic boundaries. It adds
+one optional day layer (`day.freedom`): a plain explanation of the category,
+illustrative examples, an invitation to the Holy Spirit, a question about what
+the reader actually KNOWS, and three ways to pray — of which "Guide me in prayer"
+walks reviewed prayer modules one short step at a time.
+
+The certainty a reader reports is the ONLY personalization, it is never
+persisted, and it selects between AUTHORED modules rather than concluding
+anything. `review.status` is `needs_review`, so the plan is development-preview
+only until a human signs off theology, safety and all 16 locales.
+
+**See `docs/FREEDOM_DELIVERANCE.md`** for the theological model, the day model,
+the certainty→prayer mapping, the family-line categories, the resource review
+rules, the localization decision and the release checklist.
+
+---
 
 See `docs/RESOURCES.md` for the separate review the "Go deeper" catalogue needs.
 See `docs/RELATIONSHIP_FAMILY_PLANS.md` for the engaged/married implementation,

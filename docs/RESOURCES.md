@@ -314,6 +314,38 @@ appropriately permits outside pastoral, clinical, medical, legal, or
 safeguarding help. A catalogue `status` alone is never a sensitive sign-off.
 Leave either field absent while review is pending; the resource will not render.
 
+#### Deliverance material
+
+Every taxonomy tag added for the 30-day deliverance plan — `deliverance`,
+`spiritual-warfare`, `renunciation`, `covenants`, `curses`, `altars`, `occult`,
+`idolatry`, `secret-societies`, `dedications`, `family-line`,
+`generational-patterns`, `strongholds` — is in `SENSITIVE_RESOURCE_TOPICS`, so it
+raises the review level on its own. Alongside the checks above, review such a
+resource for:
+
+- biblical grounding, and whether the teaching is **fear-based**;
+- **unsupported certainty** — naming demons, diagnosing a curse from symptoms,
+  telling a reader what a dream proves;
+- dangerous medical claims, or anything discouraging medical or psychiatric care;
+- encouragement of violence, or of accusing named people, families or groups;
+- **commercialisation** of deliverance, and coercive ministry practices.
+
+Recommending a book on this subject is a pastoral act with a real risk of harm.
+An empty shelf is the correct outcome when nothing has been approved — the plan
+is complete without it. See `docs/FREEDOM_DELIVERANCE.md` § Resource mappings.
+
+### `perspective` — theological context, never a verdict
+
+An entry may declare `perspective: ['african-pentecostal', 'pentecostal']` from
+`RESOURCE_PERSPECTIVES`. It explains where a resource's teaching sits; it never
+says one tradition is better than another, and it is never shown as a judgement.
+
+A plan may declare `resourcePerspectives: [...]`, which `usePlanDay` passes to
+the resolver as `perspectiveOrder`. It **orders** a shelf that has already passed
+every approval gate — it can never add a resource, remove one, or override
+topic relevance or the language tier. An entry with no perspective, or one the
+plan did not rank, sorts after those it did rather than being dropped.
+
 **To add a locale**
 
 Add only a language key you have personally verified exists. It may be a
