@@ -1129,7 +1129,7 @@ export default {
   "resourceTypeStudy": "성경 공부",
   "resourceTypePrayerGuide": "기도 가이드",
   "resourceLanguagesTitle": "자료 언어",
-  "resourceLanguagesSub": "추천 도서와 가르침은 앱 언어로 표시됩니다. 읽을 수 있는 다른 언어를 추가하세요.",
+  "resourceLanguagesSub": "추천 자료는 먼저 앱 언어로 표시됩니다. 해당 언어의 자료가 없을 때만 영어가 표시되며, 영어를 끄거나 읽을 수 있는 다른 언어를 추가할 수 있습니다.",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "약혼: 결혼을 준비하기",

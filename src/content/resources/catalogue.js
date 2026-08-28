@@ -24,8 +24,8 @@
 // edition in that language has been verified. Locales are NOT expected to match:
 // a German reader may get a completely different, German-authored resource on
 // the same topic, and that is preferred over a translation. See §fallback in
-// src/lib/resources.js for how a reader's language, their explicitly enabled
-// fallback languages, and the entry's original language are ranked.
+// src/lib/resources.js for how the app language, configured fallback languages,
+// and the entry's original language are ranked.
 //
 // Entry shape:
 //   id                  stable id, referenced by replacementResourceId
@@ -102,9 +102,18 @@ export const RESOURCES = [
     description: {
       en: 'Works through commitment, service and friendship in marriage, with a chapter written for single readers.',
       fr: "Parcourt l'engagement, le service et l'amitié dans le mariage, avec un chapitre écrit pour les lecteurs célibataires.",
+      de: 'Behandelt Verbindlichkeit, Dienst und Freundschaft in der Ehe und enthält ein Kapitel für alleinstehende Leserinnen und Leser.',
+      pt: 'Explora compromisso, serviço e amizade no casamento, com um capítulo escrito para leitores solteiros.',
+      es: 'Explora el compromiso, el servicio y la amistad en el matrimonio, con un capítulo escrito para lectores solteros.',
+      ja: '結婚における献身、仕えること、友情を扱い、独身の読者に向けた章も収録しています。',
     },
     editions: {
       en: { title: 'The Meaning of Marriage', author: 'Timothy Keller with Kathy Keller', publisher: 'Penguin Books', url: 'https://www.penguinrandomhouse.com/books/309809/the-meaning-of-marriage-by-timothy-keller-with-kathy-keller/', available: true, lastVerifiedAt: '2026-08-26' },
+      fr: { title: 'Le mariage', author: 'Timothy Keller et Kathy Keller', publisher: 'Éditions Clé', url: 'https://editionscle.com/vie-chretienne/222-le-mariage-edition-brochee-9782358430432.html', available: true, lastVerifiedAt: '2026-08-28' },
+      de: { title: 'Ehe: Gottes Idee für das größte Versprechen des Lebens', author: 'Kathy & Timothy Keller', publisher: 'Brunnen Verlag', url: 'https://brunnen-verlag.de/191305/ehe.html', available: true, lastVerifiedAt: '2026-08-28' },
+      pt: { title: 'O significado do casamento', author: 'Timothy Keller com Kathy Keller', publisher: 'Vida Nova', url: 'https://www.vidanova.com.br/livros/significado-do-casamento-o', available: true, lastVerifiedAt: '2026-08-28' },
+      es: { title: 'El significado del matrimonio', author: 'Timothy Keller', publisher: 'B&H Español', url: 'https://www.bhpublishinggroup.com/product/el-significado-del-matrimonio-2/', available: true, lastVerifiedAt: '2026-08-28' },
+      ja: { title: '結婚の意味 わかりあえない2人のために', author: 'ティモシー・ケラー、キャシー・ケラー', publisher: 'いのちのことば社', url: 'https://www.wlpm.or.jp/pub/?sh_cd=96747', available: true, lastVerifiedAt: '2026-08-28' },
     },
   },
   {
@@ -128,9 +137,12 @@ export const RESOURCES = [
     description: {
       en: 'Takes apart the assumptions that make singleness feel like a waiting room.',
       fr: "Démonte les idées reçues qui font du célibat une salle d'attente.",
+      es: 'Desmonta las ideas que hacen que la soltería parezca una sala de espera.',
     },
     editions: {
       en: { title: '7 Myths About Singleness', author: 'Sam Allberry', publisher: 'Crossway', url: 'https://www.crossway.org/books/7-myths-about-singleness-tpb/', available: true, lastVerifiedAt: '2026-08-26' },
+      fr: { title: '7 mensonges sur le célibat', author: 'Sam Allberry', publisher: 'BLF Éditions', url: 'https://blfstore.com/products/7-mensonges-sur-le-celibat', available: true, lastVerifiedAt: '2026-08-28' },
+      es: { title: '7 mitos sobre la soltería', author: 'Sam Allberry', publisher: 'B&H Español', url: 'https://bhespanol.bhpublishinggroup.com/product/7-mitos-sobre-la-solteria-2/', available: true, lastVerifiedAt: '2026-08-28' },
     },
   },
   {
@@ -244,9 +256,55 @@ export const RESOURCES = [
     description: {
       en: 'On the heart of Christ towards the hurting — a good companion for the healing days of this plan.',
       fr: 'Sur le cœur du Christ envers ceux qui souffrent — un bon compagnon pour les jours de guérison de ce parcours.',
+      de: 'Über das Herz Christi für verletzte Menschen – ein guter Begleiter für die Tage dieses Plans, die der Heilung gewidmet sind.',
+      pt: 'Sobre o coração de Cristo para com quem sofre — um bom companheiro para os dias de cura deste plano.',
+      es: 'Sobre el corazón de Cristo hacia quienes sufren; un buen compañero para los días de sanidad de este plan.',
+      ja: '傷ついた人に向けられたキリストの心を描き、このプランの癒やしの日々に寄り添う一冊です。',
     },
     editions: {
       en: { title: 'Gentle and Lowly', author: 'Dane C. Ortlund', publisher: 'Crossway', url: 'https://www.crossway.org/books/gentle-and-lowly-hcj/', available: true, lastVerifiedAt: '2026-08-26' },
+      de: { title: 'Gütig und Sanft', author: 'Dane Ortlund', publisher: '3L Verlag', url: 'https://www.3lverlag.de/kategorien/1815-guetig-und-sanft.html', available: true, lastVerifiedAt: '2026-08-28' },
+      pt: { title: 'Manso e humilde', author: 'Dane C. Ortlund', publisher: 'Thomas Nelson Brasil', url: 'https://thomasnelson.com.br/products/manso-e-humilde-dane-c-ortlund', available: true, lastVerifiedAt: '2026-08-28' },
+      es: { title: 'Manso y humilde', author: 'Dane C. Ortlund', publisher: 'B&H Español', url: 'https://bhespanol.bhpublishinggroup.com/product/manso-y-humilde-2/', available: true, lastVerifiedAt: '2026-08-28' },
+      ja: { title: 'わたしは心が柔和でへりくだっているから キリストの心をさぐる23章', author: 'デイン・オートランド', publisher: 'いのちのことば社', url: 'https://www.wlpm.or.jp/pub/?sh_cd=113670', available: true, lastVerifiedAt: '2026-08-28' },
+    },
+  },
+  {
+    id: 'fdm-marriage-is-a-ministry',
+    type: 'study',
+    originalLanguage: 'en',
+    topics: ['premarital', 'marriage', 'covenant', 'communication', 'sexual-intimacy', 'marriage-roles'],
+    lifeStages: ['engaged', 'married'],
+    status: 'needs_review',
+    reviewLevel: 'sensitive',
+    description: {
+      en: 'A five-part marriage workbook series on biblical foundations, love, intimacy, roles and serving one another.',
+      fr: "Une série de cinq cahiers sur les fondements bibliques du mariage, l'amour, l'intimité, les rôles et le service mutuel.",
+      es: 'Una serie de cinco cuadernos sobre fundamentos bíblicos del matrimonio, amor, intimidad, roles y servicio mutuo.',
+    },
+    editions: {
+      en: { title: 'Marriage Is a Ministry', author: 'Craig Caster', publisher: 'Family Discipleship Ministries', url: 'https://fdm.world/resources/marriage/', available: true, lastVerifiedAt: '2026-08-28' },
+      es: { title: 'El matrimonio es un ministerio', author: 'Craig Caster', publisher: 'Family Discipleship Ministries', url: 'https://fdm.world/languages/spanish/', available: true, lastVerifiedAt: '2026-08-28' },
+      hi: { title: 'विवाह एक सेवकाई है', author: 'Craig Caster', publisher: 'Family Discipleship Ministries', url: 'https://fdm.world/languages/hindi/', available: true, lastVerifiedAt: '2026-08-28' },
+      sw: { title: 'Ndoa ni huduma', author: 'Craig Caster', publisher: 'Family Discipleship Ministries', url: 'https://fdm.world/languages/swahili/', available: true, lastVerifiedAt: '2026-08-28' },
+      am: { title: 'ጋብቻ አገልግሎት ነው', author: 'Craig Caster', publisher: 'Family Discipleship Ministries', url: 'https://fdm.world/languages/amharic/', available: true, lastVerifiedAt: '2026-08-28' },
+    },
+  },
+  {
+    id: 'shepherds-global-christian-family',
+    type: 'study',
+    originalLanguage: 'en',
+    topics: ['singleness', 'premarital', 'marriage', 'communication', 'sexuality', 'family', 'parenting', 'family-discipleship'],
+    lifeStages: ['single', 'dating', 'engaged', 'married'],
+    status: 'needs_review',
+    reviewLevel: 'sensitive',
+    description: {
+      en: 'A fifteen-lesson Christian family course covering singleness, preparation for marriage, marriage, sexuality and parenting.',
+    },
+    editions: {
+      zh: { title: '基督徒家庭', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/simplified-chinese/christian-family', available: true, lastVerifiedAt: '2026-08-28' },
+      hi: { title: 'मसीही परिवार', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/hindi/christian-family', available: true, lastVerifiedAt: '2026-08-28' },
+      tl: { title: 'Pamilyang Kristiyano', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/tagalog/christian-family', available: true, lastVerifiedAt: '2026-08-28' },
     },
   },
   {

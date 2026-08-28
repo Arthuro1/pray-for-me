@@ -1129,7 +1129,7 @@ export default {
   "resourceTypeStudy": "Somo",
   "resourceTypePrayerGuide": "Mwongozo wa maombi",
   "resourceLanguagesTitle": "Lugha za rasilimali",
-  "resourceLanguagesSub": "Vitabu na mafundisho yanayopendekezwa huonyeshwa kwa lugha ya programu. Ongeza lugha nyingine yoyote unayoweza kusoma.",
+  "resourceLanguagesSub": "Mapendekezo hutumia kwanza lugha ya programu. Kiingereza huonekana tu ikiwa hakuna rasilimali inayopatikana; unaweza kukizima au kuongeza lugha nyingine unazoweza kusoma.",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Wachumba: kujiandaa kwa ndoa",

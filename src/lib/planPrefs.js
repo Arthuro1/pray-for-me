@@ -139,20 +139,23 @@ export function clearPlanPrefs(planId) {
 }
 
 // ── Resource languages ───────────────────────────────────────────────────────
-// Recommended books, articles and teachings are shown in the app's language by
-// default — that requires no configuration and is what almost everyone wants.
-// This list holds the ADDITIONAL languages someone has explicitly said they can
-// read, which is the only way a resource in another language is ever offered
-// (see the fallback hierarchy in src/lib/resources.js). Device-local, like the
-// rest of this module.
+// Recommended books, articles and teachings are tried in the app's language
+// first. English is preselected as a fallback for new readers, but the setting
+// is visible and removable. An explicitly saved [] therefore means "show no
+// fallback". Device-local, like the rest of this module.
 const LANG_KEY = 'pfm_resource_langs';
+export const DEFAULT_RESOURCE_FALLBACK_LANGUAGES = ['en'];
 
 export function getResourceFallbackLanguages() {
   try {
-    const parsed = JSON.parse(localStorage.getItem(LANG_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : [];
+    const stored = localStorage.getItem(LANG_KEY);
+    if (stored == null) return [...DEFAULT_RESOURCE_FALLBACK_LANGUAGES];
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed)
+      ? [...new Set(parsed.filter((x) => typeof x === 'string'))]
+      : [...DEFAULT_RESOURCE_FALLBACK_LANGUAGES];
   } catch {
-    return [];
+    return [...DEFAULT_RESOURCE_FALLBACK_LANGUAGES];
   }
 }
 

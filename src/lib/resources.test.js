@@ -1,7 +1,7 @@
 // The "Go deeper" resolver is the gate between a curated catalogue and a real
 // reader, so these tests are mostly about what must NEVER come out of it:
 // unreviewed entries, unverified editions, retired links, or a language the
-// reader never said they could read.
+// reader cannot identify before opening it.
 import { describe, it, expect } from 'vitest';
 import {
   resolveResources, resourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
@@ -191,7 +191,7 @@ describe('resolveResources — language priority', () => {
     expect(out.map((r) => r.id)).not.toContain('en-original');
   });
 
-  it('offers a fallback language ONLY when the reader enabled it', () => {
+  it('offers a configured fallback language when the app language has no match', () => {
     const withoutFallback = resolveResources({
       topics: ['covenant'], lifeStage: 'single', languages: ['de'], catalogue: CATALOGUE,
     });
@@ -204,6 +204,15 @@ describe('resolveResources — language priority', () => {
     // …and it is flagged, so the UI can name the language.
     expect(withFallback[0].isFallback).toBe(true);
     expect(withFallback[0].lang).toBe('en');
+  });
+
+  it('does not mix in fallback results when the app language has a match', () => {
+    const out = resolveResources({
+      topics: ['marriage'], lifeStage: 'single', languages: ['de', 'en'], catalogue: CATALOGUE, limit: 50,
+    });
+    expect(out.length).toBeGreaterThan(0);
+    expect(out.every((resource) => resource.lang === 'de')).toBe(true);
+    expect(out.map((resource) => resource.id)).not.toContain('en-original');
   });
 });
 

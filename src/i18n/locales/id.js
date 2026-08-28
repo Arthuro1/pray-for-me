@@ -1129,7 +1129,7 @@ export default {
   "resourceTypeStudy": "Studi",
   "resourceTypePrayerGuide": "Panduan doa",
   "resourceLanguagesTitle": "Bahasa sumber",
-  "resourceLanguagesSub": "Buku dan pengajaran yang disarankan ditampilkan dalam bahasa aplikasimu. Tambahkan bahasa lain yang bisa kamu baca.",
+  "resourceLanguagesSub": "Rekomendasi memakai bahasa aplikasi terlebih dahulu. Bahasa Inggris hanya muncul jika tidak ada sumber yang tersedia; kamu dapat menonaktifkannya atau menambahkan bahasa lain yang bisa kamu baca.",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Bertunangan: bersiap untuk pernikahan",

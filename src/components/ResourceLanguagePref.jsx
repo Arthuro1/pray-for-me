@@ -6,11 +6,10 @@ import { getResourceFallbackLanguages, setResourceFallbackLanguages } from '../l
 // "Resource languages" — which languages the recommended books, articles and
 // teachings under a plan day's "Go deeper" may be offered in.
 //
-// The app's own language is always included and cannot be switched off, so this
-// needs no configuration to work. Everything listed here is an ADDITIONAL
-// language the reader has said they can read; nothing is ever shown in another
-// language unless they turned it on, so a Spanish reader is never quietly filled
-// with English.
+// The app's own language is always tried first and cannot be switched off.
+// English is preselected for new readers, but it appears here like every other
+// fallback and can be removed. A fallback is used only when every earlier
+// language has no relevant recommendation.
 export default function ResourceLanguagePref({ lang }) {
   const [open, setOpen] = useState(false);
   const [enabled, setEnabled] = useState(() => getResourceFallbackLanguages());
@@ -22,7 +21,9 @@ export default function ResourceLanguagePref({ lang }) {
   };
 
   const appLabel = LANGUAGES.find((l) => l.code === lang)?.label || lang;
-  const extra = enabled.map((c) => LANGUAGES.find((l) => l.code === c)?.label || c);
+  const extra = enabled
+    .filter((c) => c !== lang)
+    .map((c) => LANGUAGES.find((l) => l.code === c)?.label || c);
   const summary = [appLabel, ...extra].join(' · ');
 
   return (

@@ -1129,7 +1129,7 @@ export default {
   "resourceTypeStudy": "学び",
   "resourceTypePrayerGuide": "祈りのガイド",
   "resourceLanguagesTitle": "資料の言語",
-  "resourceLanguagesSub": "おすすめの書籍や教えはアプリの言語で表示されます。読める言語があれば追加してください。",
+  "resourceLanguagesSub": "おすすめはまずアプリの言語で表示されます。その言語の資料がない場合だけ英語を表示します。英語をオフにしたり、読めるほかの言語を追加したりできます。",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "婚約中の方へ：結婚に備える",

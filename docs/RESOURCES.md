@@ -14,9 +14,10 @@ sign-offs.** These are resolver gates, not policy notes.
 
 `src/content/resources/catalogue.js` started as a **curation worksheet**. Some
 standard entries had already passed editorial review before the relationship
-plans were extended. Their English editions now use canonical publisher or
-ministry pages, re-verified on 2026-08-26; retailer links are not used. A verified
-link is not a theological endorsement and does not change review status.
+plans were extended. Their editions use canonical publisher or ministry pages.
+The English links were re-verified on 2026-08-26; eleven localized editions were
+verified on 2026-08-28. A verified link is not a theological endorsement and
+does not change review status.
 
 Material involving marriage roles, submission/authority, purity, or sexuality
 was moved back to `needs_review` and marked `sensitive`. It remains invisible
@@ -45,24 +46,30 @@ every entry to state one of `RESOURCE_STATUSES`.
 
 ### What actually reaches a reader today
 
-Ten entries are displayable, and every one of them is **English-only**. Counting
-the days of each relationship plan that resolve to at least one resource:
+Ten entries are displayable. Three of them now carry eleven verified localized
+editions in French, German, Portuguese, Spanish and Japanese. Counting the days
+of each relationship plan that resolve to at least one resource in that exact
+language (without fallback):
 
-| Plan | days | en | fr | es | zh |
-|---|---:|---:|---:|---:|---:|
-| `preparing21` | 21 | 17 | 0 | 0 | 0 |
-| `covenant21` | 21 | 13 | 0 | 0 | 0 |
-| `marriage30` | 30 | 24 | 0 | 0 | 0 |
+| Plan | days | en | fr | de | pt | es | ja |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `preparing21` | 21 | 17 | 11 | 10 | 10 | 15 | 10 |
+| `covenant21` | 21 | 13 | 9 | 11 | 11 | 11 | 11 |
+| `marriage30` | 30 | 24 | 22 | 22 | 22 | 22 | 22 |
 
 The six other plans declare no `resourceTopics` on any day, so they never show a
 "Go deeper" shelf in any language.
 
-That is by design, not a bug: rule 2 below forbids inventing a localized edition
-that does not exist, and rule 3 says no match means no section. But it is worth
-stating plainly — a French reader gets fully authored French prose across 21
-days and never a single resource. Closing that gap means a curator verifying
-real non-English editions (or different, natively authored resources on the same
-topics), not translating the English list.
+The other ten app languages currently have no displayable edition. English is
+therefore the default fallback for those readers, but it is used only when their
+app language has no relevant match and can be turned off in Resource languages.
+
+Two newly discovered multilingual studies are recorded as `needs_review`, not
+published: Family Discipleship Ministries' *Marriage Is a Ministry* (English,
+Spanish, Hindi, Swahili and Amharic), and Shepherds Global Classroom's
+*Christian Family* (Simplified Chinese, Hindi and Tagalog). Both cover sensitive
+subjects such as sexuality, intimacy or marriage roles and remain invisible
+until both pastoral/content and safety reviews are signed.
 
 ---
 
@@ -157,15 +164,19 @@ different author than an English reader gets on the same topic — and that is
 
 ### The fallback hierarchy (`src/lib/resources.js`)
 
-1. An approved resource **originally in the reader's language**.
-2. A **verified edition** (translation) in the reader's language.
-3. A resource in a **fallback language the reader explicitly enabled**.
+1. Try the app language as a complete tier: approved resources **originally in
+   that language** rank before verified translations.
+2. Only when that tier has no relevant result, try configured fallback languages
+   one at a time in the reader's chosen order.
+3. If every tier is empty, show no "Go deeper" shelf.
 
-A non-English reader is never quietly filled with English. Fallback languages
-come from the reader's own "Resource languages" preference
-(Settings → Appearance & language), stored on the device under
-`pfm_resource_langs`; the app language is always included and cannot be removed,
-so the default needs no configuration.
+English is preselected as a fallback for a new reader, matching the product rule
+"English if none is found". It never supplements a smaller local-language list:
+one relevant local result is enough to keep the whole shelf local. English is a
+visible, removable option, and readers may add any other language they can read.
+The preference is stored on the device under `pfm_resource_langs`; an explicitly
+saved empty list means no fallback. The app language is always first and cannot
+be removed.
 
 Every card names its **type and its language**, so a fallback-language
 recommendation is obvious before it is opened.

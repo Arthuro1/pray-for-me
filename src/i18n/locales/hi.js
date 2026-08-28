@@ -1129,7 +1129,7 @@ export default {
   "resourceTypeStudy": "अध्ययन",
   "resourceTypePrayerGuide": "प्रार्थना मार्गदर्शिका",
   "resourceLanguagesTitle": "सामग्री की भाषाएँ",
-  "resourceLanguagesSub": "अनुशंसित पुस्तकें और शिक्षाएँ आपकी ऐप भाषा में दिखती हैं। कोई भी अन्य भाषा जोड़ें जिसे आप पढ़ सकते हैं।",
+  "resourceLanguagesSub": "सुझाव पहले ऐप की भाषा में दिखते हैं। उसी भाषा में कुछ उपलब्ध न होने पर ही अंग्रेज़ी दिखाई जाती है; आप इसे बंद कर सकते हैं या अपनी पढ़ी जाने वाली दूसरी भाषाएँ जोड़ सकते हैं।",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "मंगेतर: विवाह की तैयारी",

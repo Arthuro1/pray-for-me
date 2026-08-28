@@ -1129,7 +1129,7 @@ export default {
   "resourceTypeStudy": "查经",
   "resourceTypePrayerGuide": "祷告指南",
   "resourceLanguagesTitle": "资源语言",
-  "resourceLanguagesSub": "推荐的书籍和教导会以应用语言显示。你可以加入任何你能阅读的语言。",
+  "resourceLanguagesSub": "推荐内容会优先使用应用语言；只有没有可用内容时才显示英语。你可以关闭英语，或添加其他你能阅读的语言。",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "已订婚：为婚姻预备",

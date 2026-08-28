@@ -10,7 +10,7 @@ import {
   getPlanPrefs, savePlanPrefs, markPlanCompleted, clearPlanPrefs,
   claimPlanCompletionReport,
   growthTopics, getResourceFallbackLanguages, setResourceFallbackLanguages,
-  ROLES, GROWTH_AREAS, DEFAULT_ROLE,
+  ROLES, GROWTH_AREAS, DEFAULT_ROLE, DEFAULT_RESOURCE_FALLBACK_LANGUAGES,
 } from './planPrefs.js';
 
 const PLAN = 'preparing21';
@@ -154,7 +154,13 @@ describe('growthTopics', () => {
 });
 
 describe('resource fallback languages', () => {
-  it('is empty by default, so nothing is ever shown in an unasked-for language', () => {
+  it('preselects English for a new reader', () => {
+    expect(DEFAULT_RESOURCE_FALLBACK_LANGUAGES).toEqual(['en']);
+    expect(getResourceFallbackLanguages()).toEqual(['en']);
+  });
+
+  it('lets the reader explicitly turn every fallback off', () => {
+    setResourceFallbackLanguages([]);
     expect(getResourceFallbackLanguages()).toEqual([]);
   });
 
@@ -165,6 +171,6 @@ describe('resource fallback languages', () => {
 
   it('survives corrupt storage', () => {
     localStorage.setItem('pfm_resource_langs', '{oops');
-    expect(getResourceFallbackLanguages()).toEqual([]);
+    expect(getResourceFallbackLanguages()).toEqual(['en']);
   });
 });
