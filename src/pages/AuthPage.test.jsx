@@ -70,7 +70,7 @@ describe('AuthPage', () => {
     expect(screen.getByText(t('fr', 'authContinueGoogle'))).toBeTruthy();
     expect(container.querySelector('.constellation-auth__sky-image--light')).toBeTruthy();
     expect(container.querySelector('.constellation-auth__sky-image--dark')).toBeTruthy();
-    expect(container.querySelector('img[src="/logo-constellation.svg"]')).toBeTruthy();
+    expect(container.querySelector('img[src="/logo.svg"]')).toBeTruthy();
     expect(container.querySelector('img[src="/assets/google-g.png"]')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t('fr', 'authBackHome')));
     expect(onBack).toHaveBeenCalled();

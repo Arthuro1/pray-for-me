@@ -84,7 +84,7 @@ export default defineConfig(({ mode }) => {
     anthropicApiPlugin(env),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['logo.svg', 'logo-constellation.svg', 'logo-constellation-dark.svg', 'icons/*.png'],
+      includeAssets: ['logo.svg', 'logo-dark.svg', 'icons/*.png'],
       // /public/manifest.json is also consumed by the Android TWA wrapper. Keep
       // one manifest instead of injecting a second, drifting webmanifest link.
       manifest: false,

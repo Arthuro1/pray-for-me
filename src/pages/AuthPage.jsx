@@ -196,7 +196,7 @@ export default function AuthPage({ onBack, intent }) {
 
       {/* Logo */}
       <div className="auth-brand">
-        <img src="/logo-constellation.svg" alt="Praystead" className="w-12 h-12 mb-3 rounded-xl" />
+        <img src="/logo.svg" alt="Praystead" className="w-12 h-12 mb-3 rounded-xl" />
         <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>Praystead</h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'authTagline')}</p>
       </div>

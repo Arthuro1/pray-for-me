@@ -230,7 +230,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
       >
         <header className="flex min-h-11 items-center justify-between">
           <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
-            <img src="/logo-constellation.svg" alt="" className="h-8 w-8 rounded-lg" />
+            <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
             Praystead
           </div>
           <button

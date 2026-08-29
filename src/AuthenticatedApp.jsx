@@ -398,7 +398,7 @@ export default function AuthenticatedApp({
     return (
       <div className="min-h-screen bg-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
-          <img src="/logo-constellation.svg" alt="Praystead" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
+          <img src="/logo.svg" alt="Praystead" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <Loader2 className="animate-spin mx-auto" size={24} />
         </div>
       </div>
