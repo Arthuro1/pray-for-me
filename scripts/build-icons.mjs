@@ -63,9 +63,9 @@ const compose = (...layers) => Buffer.from(`${head}${layers.join('')}</svg>`)
 /** Render at least at the target size, so no output is upscaled from a smaller raster. */
 const densityFor = (size) => Math.max(72, Math.ceil((72 * size) / CANVAS))
 
-// Where the artwork actually sits, measured rather than hard-coded: the bubble's
-// tail and its drop shadow make it bottom-heavy, and a stale constant here is
-// exactly how these icons drifted away from the logo once already.
+// Measure the artwork rather than relying on coordinates from the current logo.
+// Its rectangular bounds are not a good optical centre: the narrow speech-tail
+// and diffuse shadow reach much farther down than the dominant bubble body.
 const probe = await sharp(compose(art), { density: densityFor(CANVAS) })
   .resize(CANVAS, CANVAS)
   .png()
@@ -74,19 +74,42 @@ const { info: bounds } = await sharp(probe)
   .trim({ threshold: 1 })
   .toBuffer({ resolveWithObject: true })
 
-const centreX = -bounds.trimOffsetLeft + bounds.width / 2
-const centreY = -bounds.trimOffsetTop + bounds.height / 2
+// Use the alpha-weighted centroid of the substantially opaque pixels. This
+// follows the visual mass of the mark while excluding the soft drop shadow.
+const { data: pixels, info: pixelInfo } = await sharp(probe)
+  .ensureAlpha()
+  .raw()
+  .toBuffer({ resolveWithObject: true })
+const ALPHA_CUTOFF = 128
+let totalWeight = 0
+let weightedX = 0
+let weightedY = 0
+for (let y = 0; y < pixelInfo.height; y += 1) {
+  for (let x = 0; x < pixelInfo.width; x += 1) {
+    const alpha = pixels[(y * pixelInfo.width + x) * pixelInfo.channels + 3]
+    if (alpha < ALPHA_CUTOFF) continue
+    totalWeight += alpha
+    weightedX += (x + 0.5) * alpha
+    weightedY += (y + 0.5) * alpha
+  }
+}
+if (totalWeight === 0) {
+  throw new Error(`${SOURCE}: found no opaque artwork to centre.`)
+}
+const opticalCentreX = weightedX / totalWeight
+const opticalCentreY = weightedY / totalWeight
+
 // A rectangle fits inside a circle when its diagonal does, so the diagonal is
 // what the safe zone has to hold.
 const scale = Math.min(1, (CANVAS * SAFE_ZONE * BREATHING_ROOM) / Math.hypot(bounds.width, bounds.height))
-const centred =
-  `<g transform="translate(${CANVAS / 2},${CANVAS / 2}) scale(${scale.toFixed(4)}) ` +
-  `translate(${-centreX},${-centreY})">${art}</g>`
+const placeAtCentre = (artScale) =>
+  `<g transform="translate(${CANVAS / 2},${CANVAS / 2}) scale(${artScale.toFixed(4)}) ` +
+  `translate(${-opticalCentreX},${-opticalCentreY})">${art}</g>`
 
 const variant = {
-  rounded: compose(backdrop[0], art),
-  square: compose(fullBleed, art),
-  maskable: compose(fullBleed, centred),
+  rounded: compose(backdrop[0], placeAtCentre(1)),
+  square: compose(fullBleed, placeAtCentre(1)),
+  maskable: compose(fullBleed, placeAtCentre(scale)),
 }
 
 async function render(kind, size, outPath) {
@@ -109,7 +132,7 @@ const twaRes = 'android-twa/app/src/main/res'
 
 console.log(
   `Source: ${SOURCE} — ${CANVAS}px canvas, artwork ${Math.round(bounds.width)}x${Math.round(bounds.height)}, ` +
-    `maskable scale ${scale.toFixed(2)}x\n`
+    `optical centre ${opticalCentreX.toFixed(1)},${opticalCentreY.toFixed(1)}, maskable scale ${scale.toFixed(2)}x\n`
 )
 
 console.log('Web app (PWA):')

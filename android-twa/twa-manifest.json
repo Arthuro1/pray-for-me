@@ -14,7 +14,7 @@
   "enableNotifications": true,
   "startUrl": "/",
   "iconUrl": "https://pray4me.space/icons/icon-512.png",
-  "maskableIconUrl": "https://pray4me.space/icons/icon-512.png",
+  "maskableIconUrl": "https://pray4me.space/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\android-twa\\android.keystore",
