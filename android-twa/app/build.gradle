@@ -21,7 +21,7 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'space.pray4me.twa',
+    applicationId: 'space.praystead.twa',
     hostName: 'pray4me.space', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Praystead', // The application name.
@@ -52,9 +52,9 @@ def twaManifest = [
 
 android {
     compileSdkVersion 36
-    namespace "space.pray4me.twa"
+    namespace "space.praystead.twa"
     defaultConfig {
-        applicationId "space.pray4me.twa"
+        applicationId "space.praystead.twa"
         minSdkVersion 21
         targetSdkVersion 36
         versionCode 1

@@ -135,9 +135,6 @@ site serves.
   production environment: it is inlined at **build** time, so an unset variable
   silently ships the `paypal.me/YOUR_USERNAME` placeholder. Same build-time trap
   as `VITE_YOUVERSION_ENABLED`.
-- **Feature graphic is German-only** ("Gebet. Gemeinschaft. Hoffnung."). It fits
-  a German default listing. An English or French default listing needs a
-  localized graphic; Play accepts one per listing language.
 - **`targetSdk 36` is untested on a device.** Android 16 enforces edge-to-edge
   without an opt-out. The bump was necessary — new apps must target API 36 from
   31 Aug 2026 — but install the signed build on an Android 15/16 device and
@@ -220,8 +217,11 @@ must not be reused anywhere in the listing.
 
 - App icon: `store_icon.png` — 512×512, 32-bit PNG with alpha. Ready.
 - Feature graphic: `store_feature_graphic.png` — 1024×500, 24-bit, no alpha.
-  Ready. Regenerate with alpha stripped if the artwork is ever replaced; Play
-  rejects transparency here.
+  Ready: the Praystead wordmark over the current logo, in **English**, so it
+  suits an English default listing (Play accepts one graphic per listing
+  language). Unlike the icon it is hand-made artwork, not output of
+  `build:icons` — if it is ever replaced, strip the alpha channel first, as
+  Play rejects transparency here.
 - Phone screenshots: **still needed**, 2–8 of them, 16:9 or 9:16, each side
   320–3840 px. Capture on a device from the installed app rather than from a
   browser — they must show the real in-app experience. Suggested set: Today view
