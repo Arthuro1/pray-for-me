@@ -1,8 +1,8 @@
 {
   "packageId": "space.pray4me.twa",
   "host": "pray4me.space",
-  "name": "Pray4Me",
-  "launcherName": "Pray4Me",
+  "name": "Praystead",
+  "launcherName": "Praystead",
   "display": "standalone",
   "themeColor": "#6D28D9",
   "themeColorDark": "#000000",

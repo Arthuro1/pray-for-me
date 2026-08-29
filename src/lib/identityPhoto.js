@@ -5,7 +5,7 @@
 // bucket, no column mirrors the URL, and no query can be asked for someone
 // else's. The picture lives in the caller's own session, so it can only ever
 // resolve for the caller — which is exactly the privacy property we want. Other
-// people see whatever that person explicitly chose in Pray4Me (a photo, a
+// people see whatever that person explicitly chose in Praystead (a photo, a
 // preset, or their initials), and never an account picture we quietly
 // republished on their behalf.
 //

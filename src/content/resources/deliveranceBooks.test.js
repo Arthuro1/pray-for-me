@@ -272,7 +272,7 @@ describe('the worksheet covers what the plan asks for', () => {
   });
 
   it('never carries prayer text copied from a recommended book', () => {
-    // Descriptions are Pray4Me-authored, one sentence, and describe the book —
+    // Descriptions are Praystead-authored, one sentence, and describe the book —
     // they never reproduce its prayers, prayer points or renunciation formulas.
     for (const entry of DELIVERANCE_BOOKS) {
       const description = entry.description.en;

@@ -35,7 +35,7 @@ export function buildICS(prayers = [], commitments = []) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Pray4Me//Prayer Schedule//EN',
+    'PRODID:-//Praystead//Prayer Schedule//EN',
     'CALSCALE:GREGORIAN',
   ];
   for (const p of prayers) {

@@ -3,7 +3,7 @@
 //
 // The bucket is PRIVATE. Nothing here mints a permanent public URL — a tile is
 // drawn from a short-lived signed URL that the database authorised for this
-// caller, so a profile photo is reachable by the people Pray4Me already lets
+// caller, so a profile photo is reachable by the people Praystead already lets
 // see that person (themselves, an accepted friend, someone in a shared group)
 // and by nobody else. Objects are named `<scope>/<owner id>/<opaque id>.<ext>`:
 // no display name, no email, no prayer title, nothing that would leak through a

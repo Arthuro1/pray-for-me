@@ -43,7 +43,7 @@
 //                       Both are mandatory for sensitive material. `approved`
 //                       status alone can never publish a sensitive entry.
 //   replacementResourceId  set when retiring something that has a successor
-//   description         Pray4Me-authored, one sentence, why it fits — localized
+//   description         Praystead-authored, one sentence, why it fits — localized
 //                       like the rest of our content ({ en, fr, ... })
 //   editions            { <lang>: { title, author, publisher, url, available,
 //                                   lastVerifiedAt, thumbnail } }

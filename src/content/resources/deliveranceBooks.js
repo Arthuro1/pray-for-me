@@ -64,7 +64,7 @@
 // Listing an author is not a blanket endorsement of everything they have
 // written or taught. Each individual resource is reviewed on its own.
 //
-// COPYRIGHT: these are recommendations. Pray4Me writes its own prayers (see
+// COPYRIGHT: these are recommendations. Praystead writes its own prayers (see
 // src/content/plans/freedom/prayerModules.js) and never reproduces prayer text,
 // prayer points, renunciation formulas or substantial passages from any of them.
 export const DELIVERANCE_BOOKS = [
@@ -461,8 +461,8 @@ export const DELIVERANCE_BOOKS = [
       reviewedAt: '2026-08-26',
     },
     description: {
-      en: 'A collection of Scripture-based warfare prayers; recommended as reading, never reproduced — Pray4Me writes its own prayers.',
-      fr: "Un recueil de prières de combat fondées sur l'Écriture ; recommandé en lecture, jamais reproduit — Pray4Me écrit ses propres prières.",
+      en: 'A collection of Scripture-based warfare prayers; recommended as reading, never reproduced — Praystead writes its own prayers.',
+      fr: "Un recueil de prières de combat fondées sur l'Écriture ; recommandé en lecture, jamais reproduit — Praystead écrit ses propres prières.",
     },
     editions: {
       en: {

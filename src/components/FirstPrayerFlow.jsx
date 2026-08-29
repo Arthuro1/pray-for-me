@@ -148,7 +148,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Pray4Me</SectionLabel>
+          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Praystead</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
@@ -184,7 +184,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         <header className="flex min-h-11 items-center justify-between">
           <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
             <img src="/logo-constellation.svg" alt="" className="h-8 w-8 rounded-lg" />
-            Pray4Me
+            Praystead
           </div>
           <button
             type="button"
@@ -197,7 +197,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
-          <SectionLabel className="mb-4">Pray4Me</SectionLabel>
+          <SectionLabel className="mb-4">Praystead</SectionLabel>
           <h2 id="first-prayer-question" className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
           </h2>

@@ -13,7 +13,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // WHAT THESE TEXTS ARE — AND ARE NOT
 // ─────────────────────────────────────────────────────────────────────────────
-// Every `body` below is PRAY4ME GUIDED PRAYER BASED ON SCRIPTURE. It is not
+// Every `body` below is PRAYSTEAD GUIDED PRAYER BASED ON SCRIPTURE. It is not
 // Scripture, it is not a quotation, and it is never rendered as one: the UI
 // keeps Bible text inside a verse panel and this text in a prayer card (see
 // src/components/deliverance/GuidedPrayerSteps.jsx). `refs` are the passages the

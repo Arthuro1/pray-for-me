@@ -1275,7 +1275,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 /* Constellation app -------------------------------------------------------
-   The approved Light/Dark system is scoped to signed-in Pray4Me by the
+   The approved Light/Dark system is scoped to signed-in Praystead by the
    constellation-app class on <html>. Public landing/auth surfaces keep their
    existing palette, while every authenticated route, sheet and prayer moment
    shares one calm sky. */

@@ -131,7 +131,7 @@ describe('Scripture is referenced, never authored', () => {
   });
 });
 
-describe('Pray4Me guides; it never diagnoses', () => {
+describe('Praystead guides; it never diagnoses', () => {
   // Claims the app may never make. Written to catch the ASSERTION, not the
   // vocabulary: the plan talks about curses and covenants constantly, and must,
   // but it may never say that one is present.

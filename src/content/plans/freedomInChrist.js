@@ -26,7 +26,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // WHAT THE APP MAY AND MAY NOT SAY
 // ─────────────────────────────────────────────────────────────────────────────
-// Pray4Me GUIDES. It is not a spiritual diagnostician. It may explain commonly
+// Praystead GUIDES. It is not a spiritual diagnostician. It may explain commonly
 // recognised categories within African/Pentecostal deliverance teaching, give
 // illustrative examples, guide biblical self-examination, and offer
 // Scripture-centred prayers. It may never claim that a particular demon is

@@ -15,7 +15,7 @@ const LANGS = LANGUAGES.map((language) => ({
 
 const ALL_CODES = LANGS.map(l => l.code);
 
-// The three things Pray4Me does, surfaced right under the hero. Icons/colours are
+// The three things Praystead does, surfaced right under the hero. Icons/colours are
 // language-independent (defined once); the copy lives in one shared map with an
 // English fallback, so all 16 languages keep working even where the per-language
 // CONTENT below is still an abbreviated placeholder.
@@ -306,7 +306,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <nav className="constellation-landing__nav mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
         <div className="flex items-center gap-2.5 shrink-0">
           <img src="/logo-constellation.svg" alt="" className="w-8 h-8 rounded-lg" />
-          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Pray4Me</span>
+          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Praystead</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -437,12 +437,12 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         {/* A truthful preview of the actual journey: Today → focused prayer →
             remembrance. Its Pray now action enters the same guest flow as the
             primary CTA; no fabricated usage statistics. */}
-        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Pray4Me product preview">
+        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Praystead product preview">
           <div className="constellation-landing__preview-frame relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
             <div className="flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2.5">
                 <img src="/logo-constellation.svg" alt="" className="h-7 w-7 rounded-lg" />
-                <span className="text-xs font-bold" style={{ color: T.text }}>Pray4Me</span>
+                <span className="text-xs font-bold" style={{ color: T.text }}>Praystead</span>
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
             </div>
@@ -475,7 +475,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         </div>
       </section>
 
-      {/* Core benefits — the three things Pray4Me does, up front, before the
+      {/* Core benefits — the three things Praystead does, up front, before the
           longer feature list. Centered so it reads cleanly in RTL too. */}
       <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6">
         <div className="constellation-landing__benefits grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
@@ -632,7 +632,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <img src="/logo-constellation.svg" alt="" className="w-6 h-6 rounded-md" />
-            <span className="text-sm font-medium" style={{ color: T.text }}>Pray4Me</span>
+            <span className="text-sm font-medium" style={{ color: T.text }}>Praystead</span>
           </div>
           <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
           <button onClick={onSignIn} className="pressable min-h-11 rounded-xl px-4 py-2 text-xs font-medium" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>

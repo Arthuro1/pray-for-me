@@ -48,7 +48,7 @@ function findAscii(bytes, needle) {
 
 // Splice an EXIF APP1 segment and a JPEG comment into a real JPEG, standing in
 // for the GPS coordinates, device name and capture time a phone would attach.
-const SECRET = 'PRAY4ME-GPS-48.8566-2.3522-IPHONE';
+const SECRET = 'PRAYSTEAD-GPS-48.8566-2.3522-IPHONE';
 function withMetadata(jpeg) {
   const tiff = [0x49, 0x49, 0x2a, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
   const app1Body = [...new TextEncoder().encode('Exif\0\0'), ...tiff, ...new TextEncoder().encode(SECRET)];

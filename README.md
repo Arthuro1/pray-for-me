@@ -2,9 +2,9 @@
 
 <br/>
 
-<img src="public/logo.svg" alt="Pray4Me" width="80" height="80" />
+<img src="public/logo.svg" alt="Praystead" width="80" height="80" />
 
-# Pray4Me
+# Praystead
 
 ### Your personal Christian prayer companion
 
@@ -197,7 +197,7 @@ npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJEC
 
 ## 💛 No paid feature gating
 
-Pray4Me currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, end-to-end encryption, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
+Praystead currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, end-to-end encryption, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
 
 Some of the richer flows use a **Simple vs Advanced** split purely to keep new users from being overloaded — it is a UX distinction, **not** a plan distinction:
 

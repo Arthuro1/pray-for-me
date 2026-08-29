@@ -37,7 +37,7 @@ children without guarantees; suffering; hospitality and mission; optional role
 reflection; and surrender.
 
 Personalization is offered **after** the plan starts, from the plan's own day,
-and can be reopened for the life of the run. It may link an existing Pray4Me
+and can be reopened for the life of the run. It may link an existing Praystead
 person, accept a first/display name, or remain generic. The user explicitly
 chooses private use or optional activities together and explicitly chooses
 husband, wife, or general role wording. No choice is inferred. A wedding date is

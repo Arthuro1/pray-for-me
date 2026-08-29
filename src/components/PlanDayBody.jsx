@@ -13,7 +13,7 @@ import DeliveranceDayGuide from './deliverance/DeliveranceDayGuide';
 // shelf for related Scripture, couple exercises, practice and resources.
 //
 // The order is the resource hierarchy the plan is built on: Scripture first
-// (rendered by the host, immediately above this), then Pray4Me's reflection,
+// (rendered by the host, immediately above this), then Praystead's reflection,
 // then prayer, then an optional after-prayer shelf, and only then anything external. The
 // three kinds of text stay visually distinct — Bible text only ever appears
 // inside a VersePill's panel, reflections are prose, prompts are a list — so a

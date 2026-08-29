@@ -92,7 +92,7 @@ They stay visually distinct on purpose, so nothing of ours is ever mistaken for
 Scripture:
 
 1. **Bible text** — only ever inside a `VersePill` / `VerseAccordion` panel.
-2. **Pray4Me reflection** — prose.
+2. **Praystead reflection** — prose.
 3. **Prayer prompts** — a bulleted list. They may paraphrase biblical themes;
    they are never presented as quotations.
 

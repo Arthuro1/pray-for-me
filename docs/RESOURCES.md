@@ -288,7 +288,7 @@ draft ──► needs_review ──► approved ──► retired
 1. Read enough of it to stand behind it pastorally and theologically.
 2. Confirm the title, author and publisher against the actual edition.
 3. Find the **canonical** URL — publisher, author, or ministry page. Not a
-   retailer. Pray4Me is not a bookstore. (Purchase links, if ever added, stay
+   retailer. Praystead is not a bookstore. (Purchase links, if ever added, stay
    secondary and region-aware.)
 4. Write the one-sentence `description` in en + fr.
 5. Set `lastVerifiedAt` on that edition and `status: 'approved'`.

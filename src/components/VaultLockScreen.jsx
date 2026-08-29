@@ -15,7 +15,7 @@ export default function VaultLockScreen({ lang = 'fr' }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10" style={{ background: 'var(--bg)' }}>
       <div className="w-full max-w-sm flex flex-col items-center">
-        <img src="/logo-constellation.svg" alt="Pray4Me" className="w-12 h-12 rounded-2xl mb-6" />
+        <img src="/logo-constellation.svg" alt="Praystead" className="w-12 h-12 rounded-2xl mb-6" />
 
         <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ background: 'var(--accent-soft)' }}>
           <Lock size={24} style={{ color: 'var(--accent)' }} />

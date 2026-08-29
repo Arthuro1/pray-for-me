@@ -14,7 +14,7 @@ import { containsSensitiveContactDetails, safetyText } from '../lib/communitySaf
 //
 // Sharing writes an independent copy of the prayer content into each group,
 // ENCRYPTED under that group's key (see communityStore.setPrayerShares). Group
-// members decrypt it locally; Pray4Me stores only ciphertext. So the honest,
+// members decrypt it locally; Praystead stores only ciphertext. So the honest,
 // calm framing is simply: "the members of this group will be able to read this"
 // — no scary "unencrypted" warning, because the copy is not plaintext.
 export default function PrayerShareModal({ prayer, groups, sharedGroups, authorName, userId, setPrayerShares, lang, onClose }) {

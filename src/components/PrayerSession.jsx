@@ -510,7 +510,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            <span>Pray4Me · </span><span>{currentStep} / {totalSteps}</span>
+            <span>Praystead · </span><span>{currentStep} / {totalSteps}</span>
           </p>
         </div>
         <div className="flex items-center gap-2">

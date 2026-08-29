@@ -1,6 +1,6 @@
 # Multilingual relationship-resource discovery
 
-**Audience:** Pray4Me product, pastoral, safety, and localization reviewers  
+**Audience:** Praystead product, pastoral, safety, and localization reviewers  
 **Research date:** 2026-08-28  
 **Scope:** The 16 configured app locales (`fr`, `en`, `de`, `pt`, `zh`, `es`, `hi`, `ja`, `sw`, `am`, `id`, `tl`, `ko`, `ru`, `ar`, `fa`) and the three relationship plans that currently declare resource topics.  
 **Assumption:** “All other languages” means every language the app can currently select, not every language in the world.

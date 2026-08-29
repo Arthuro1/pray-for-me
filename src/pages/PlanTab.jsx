@@ -111,7 +111,7 @@ export default function PlanTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'pray4me-schedule.ics';
+    a.download = 'praystead-schedule.ics';
     a.click();
     URL.revokeObjectURL(url);
     toast.success(t(lang, 'exportDone'));

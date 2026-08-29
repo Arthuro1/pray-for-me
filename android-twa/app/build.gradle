@@ -24,8 +24,8 @@ def twaManifest = [
     applicationId: 'space.pray4me.twa',
     hostName: 'pray4me.space', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
-    name: 'Pray4Me', // The application name.
-    launcherName: 'Pray4Me', // The name shown on the Android Launcher.
+    name: 'Praystead', // The application name.
+    launcherName: 'Praystead', // The name shown on the Android Launcher.
     themeColor: '#6D28D9', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.

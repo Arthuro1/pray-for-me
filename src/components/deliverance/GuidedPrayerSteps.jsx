@@ -15,7 +15,7 @@ import VersePill from '../shared/VersePill';
 // can move backwards to reread, and Pause simply closes — nothing is recorded,
 // nothing is lost, and nothing is marked incomplete.
 //
-// THE TEXT IS NOT SCRIPTURE. Each step's body is Pray4Me guided prayer based on
+// THE TEXT IS NOT SCRIPTURE. Each step's body is Praystead guided prayer based on
 // Scripture, labelled as such, and visually distinct from the verse pills below
 // it — which are the only place authoritative Bible text ever appears.
 //

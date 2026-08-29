@@ -39,7 +39,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
 
   const label = t(lang, 'verseOfDay');
   const invite = t(lang, 'verseReadInBible');
-  const fileName = `pray4me-verse-${dayKey}.png`;
+  const fileName = `praystead-verse-${dayKey}.png`;
   const linkUrl = typeof window === 'undefined' ? '' : window.location.origin;
 
   useEffect(() => {

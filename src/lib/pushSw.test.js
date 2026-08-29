@@ -45,7 +45,7 @@ describe('push-sw push handler', () => {
   it('falls back safely for a malformed (non-JSON) payload', async () => {
     const self = makeSelf([]);
     await firePush(self, { json: () => { throw new Error('bad'); } });
-    expect(self.registration.showNotification).toHaveBeenCalledWith('Pray4Me 🙏', expect.objectContaining({
+    expect(self.registration.showNotification).toHaveBeenCalledWith('Praystead 🙏', expect.objectContaining({
       data: { url: '/', notificationId: null },
     }));
   });

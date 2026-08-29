@@ -65,6 +65,21 @@ jarsigner -storepass:env KSPASS -sigalg SHA256withRSA -digestalg SHA-256 -keysto
 
 with `KSPASS` exported in that shell beforehand.
 
+### Finding the signed bundle
+
+`android-twa/app/build/` is gitignored, so editors that hide ignored paths will
+not show the output at all. The file is on disk regardless — paste the absolute
+path into the upload dialog:
+
+```
+C:\Users\T480s\Desktop\Ministry\projets\pray_for_me\android-twa\app\build\outputs\bundle\release\app-release.aab
+```
+
+**Do not upload `android-twa/app-release-bundle.aab`.** That is a stale July
+2026 artefact — unsigned and built at `targetSdk 35`. The only bundle to upload
+is the one under `app/build/outputs/bundle/release/`. Confirm any candidate with
+`jarsigner -verify`, which prints `jar verified` and needs no password.
+
 ## 2. Play Console
 
 Upload the signed `.aab` to the target track. Sections that must be completed
@@ -195,6 +210,12 @@ the community surfaces are not empty.
 
 ## Appendix D — Store listing
 
+**App name**: `Praystead`. The Console field and the bundle's launcher
+name must match; the bundle carries it from `twaManifest.launcherName` in
+`android-twa/app/build.gradle`, so a name change means a rebuild, not just a
+Console edit. The old name `Pray4Me` is taken by another Play listing and
+must not be reused anywhere in the listing.
+
 **Assets** (in `android-twa/`):
 
 - App icon: `store_icon.png` — 512×512, 32-bit PNG with alpha. Ready.
@@ -216,7 +237,7 @@ A free, private prayer journal: know what to pray today, remember every answer.
 **Full description** (4000 char limit):
 
 ```
-Pray4Me is a private prayer journal for Christians who want to pray with
+Praystead is a private prayer journal for Christians who want to pray with
 intention and keep a record of God's faithfulness.
 
 Write down what is on your heart in seconds. Open the app and today's prayers

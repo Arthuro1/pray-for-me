@@ -2,7 +2,7 @@
 // underneath it, and what an account picture is (and is not) allowed to do.
 //
 // The rule these tests pin down, in order:
-//   an explicit Pray4Me photo → an explicit preset → the identity photo → initials
+//   an explicit Praystead photo → an explicit preset → the identity photo → initials
 // An explicit choice ALWAYS beats an automatically discovered account picture.
 import { describe, it, expect, beforeEach } from 'vitest';
 import {

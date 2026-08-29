@@ -51,7 +51,7 @@ Group members see content explicitly shared with their group.
   device, so EXIF — GPS, device, timestamp, embedded thumbnail — does not survive.
 - An OAuth identity provider's account picture is display metadata, never stored.
   It is resolved from the caller's own session at render time and can therefore
-  only ever resolve for its owner; no Pray4Me row, RPC, or lookup can return
+  only ever resolve for its owner; no Praystead row, RPC, or lookup can return
   another person's provider picture, and the `<img>` is loaded with
   `referrerPolicy="no-referrer"`.
 - Group key version creation and the creator's wrapped key are one transaction.
@@ -74,7 +74,7 @@ Group members see content explicitly shared with their group.
 | AI relay/cost abuse | Supabase authentication; server-defined tasks/prompts/model; per-task limits; per-minute and atomic daily user/global quotas; `AI_PROXY_DISABLED` breaker | Authorized inputs leave the encryption boundary and are processed by Anthropic after explicit consent |
 | Community abuse/sensitive disclosure | Audience preview, local contact-detail warning/ack, report/block RPCs, restrictive blocking RLS, DB insert-rate triggers, moderator deletion | Moderators need human escalation processes; automated detection is intentionally limited and does not judge prayer/theology |
 | Avatar photo disclosure | Private bucket; no public URL; opaque object names; short-lived signed URLs; storage read policies scoped to friendship/shared group (profiles) or membership/pending invitation (groups); a row's photo key is pinned to its own folder by check constraint; on-device redraw strips EXIF; 512 KB / webp-jpeg-only bucket limits and a 20-object cap per folder | A photo shown to a legitimate viewer can be screenshotted or re-shared; a signed URL remains usable until it expires; the provider still sees a request when an account picture is loaded from its CDN |
-| Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Pray4Me sent a notification |
+| Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Praystead sent a notification |
 
 ## Terminology
 

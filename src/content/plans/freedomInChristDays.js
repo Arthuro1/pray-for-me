@@ -7,7 +7,7 @@
 //   ref             the PRIMARY passage; language-neutral, localized at render
 //   related         supporting passages, kept visually secondary
 //   movement        which of the five movements this day belongs to
-//   reflection      2-4 sentences of Pray4Me commentary — never Scripture text
+//   reflection      2-4 sentences of Praystead commentary — never Scripture text
 //   prompts         short prayer points (the "Give me prayer points" path)
 //   practice        one small, optional, concrete response for today
 //   safetyNote      contextual safeguarding copy (health, abuse, dreams)
@@ -119,8 +119,8 @@ export const DAYS = [
     resourceTopics: ['holy-spirit', 'discernment', 'prayer'],
     freedom: {
       understand: {
-        en: 'From today onward, most prayer sessions in this plan begin by inviting the Holy Spirit and then giving you quiet space. You may write or record a private prayer note about anything that comes to mind, or answer that nothing specific did. Pray4Me records what you choose to say. It never interprets it, never tells you what it means, and never claims that God has revealed anything through this app.',
-        fr: "À partir d'aujourd'hui, la plupart des temps de prière de ce parcours commencent en invitant le Saint-Esprit, puis en te laissant un temps de silence. Tu peux écrire ou enregistrer une note de prière privée sur ce qui te vient, ou répondre que rien de précis n'est venu. Pray4Me enregistre ce que tu choisis de dire. Il ne l'interprète jamais, ne te dit jamais ce que cela signifie, et ne prétend jamais que Dieu a révélé quoi que ce soit par cette application.",
+        en: 'From today onward, most prayer sessions in this plan begin by inviting the Holy Spirit and then giving you quiet space. You may write or record a private prayer note about anything that comes to mind, or answer that nothing specific did. Praystead records what you choose to say. It never interprets it, never tells you what it means, and never claims that God has revealed anything through this app.',
+        fr: "À partir d'aujourd'hui, la plupart des temps de prière de ce parcours commencent en invitant le Saint-Esprit, puis en te laissant un temps de silence. Tu peux écrire ou enregistrer une note de prière privée sur ce qui te vient, ou répondre que rien de précis n'est venu. Praystead enregistre ce que tu choisis de dire. Il ne l'interprète jamais, ne te dit jamais ce que cela signifie, et ne prétend jamais que Dieu a révélé quoi que ce soit par cette application.",
       },
       standRefs: ['John 16:13', 'Psalm 139:23-24'],
     },

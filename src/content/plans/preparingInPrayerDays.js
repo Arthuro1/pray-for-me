@@ -7,7 +7,7 @@
 //   ref             the PRIMARY passage; language-neutral, localized at render
 //   related         up to 3 supporting passages, kept visually secondary
 //   movement        which of the four movements this day belongs to
-//   reflection      2-4 sentences of Pray4Me commentary — never Scripture text
+//   reflection      2-4 sentences of Praystead commentary — never Scripture text
 //   prompts         3 short prayer prompts; they may paraphrase biblical themes
 //                   but are NEVER presented as quotations
 //   selfPrompt      the "also pray for yourself" mirror. Days 11-17 pray for a

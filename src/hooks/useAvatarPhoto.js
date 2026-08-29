@@ -4,7 +4,7 @@ import { signedAvatarUrl } from '../lib/avatarPhotos';
 // Resolve the `photo` part of a resolved avatar to something an <img> can use.
 //
 // Two sources, one shape: an identity-provider picture is already a URL and is
-// returned as-is, while an uploaded Pray4Me photo is an opaque object key that
+// returned as-is, while an uploaded Praystead photo is an opaque object key that
 // has to be signed. Signing goes through a module-level cache, so a group with
 // forty members asks for at most forty signatures for the whole session — not
 // one per render.

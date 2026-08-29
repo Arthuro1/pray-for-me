@@ -1,6 +1,6 @@
 # Localization Review
 
-Pray4Me ships a full UI in **16 languages**. French (`fr`) is the bundled
+Praystead ships a full UI in **16 languages**. French (`fr`) is the bundled
 fallback and the canonical key set; English (`en`) is the source most strings
 were authored in. Several locales were **AI-authored and have not yet had a
 native pass** — for content this personal (prayer, "answered", "encrypted"), a

@@ -114,7 +114,7 @@ export function avatarConfigFrom(row) {
 
 // Which image, if any, sits on top of the preset.
 //
-//   • an explicitly uploaded Pray4Me photo always wins;
+//   • an explicitly uploaded Praystead photo always wins;
 //   • an identity-provider photo fills in only when the person has made NO
 //     explicit choice at all, so a chosen preset or "use initials" is never
 //     silently overruled by an account picture.

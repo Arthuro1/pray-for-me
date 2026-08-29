@@ -56,7 +56,7 @@ fertility problem, relationship breakdown, mental-health condition or recurring
 hardship is demonic.
 
 These are enforced as a regex corpus check over every day, example, explanation
-and prayer module (`freedomInChrist.test.js` → *"Pray4Me guides; it never
+and prayer module (`freedomInChrist.test.js` → *"Praystead guides; it never
 diagnoses"*).
 
 ---
@@ -114,7 +114,7 @@ Constraints, all test-enforced:
 Kept visually distinct so nothing of ours is ever mistaken for Scripture:
 
 1. **Bible text** — only ever inside a `VersePill` / `VerseAccordion` panel.
-2. **Pray4Me guided prayer, based on Scripture** — labelled with that exact
+2. **Praystead guided prayer, based on Scripture** — labelled with that exact
    phrase above every step body in the guided walk.
 3. **Reflection** (prose) and **prayer points** (a bulleted list) — these may
    paraphrase biblical themes and are never presented as quotations.
@@ -141,7 +141,7 @@ Did anything specific come to mind?
 - "Nothing specific" and "I'm not sure" are complete answers, and the app says so
   out loud: *"You do not need to force yourself to remember or discover
   something."*
-- Pray4Me **records** what the reader chooses to say. It never interprets it,
+- Praystead **records** what the reader chooses to say. It never interprets it,
   never says what it means, and never claims God revealed anything through the
   app. Notes are not analysed.
 
@@ -309,7 +309,7 @@ not a translation task.
 
 ### Copyright
 
-Books inspire the topic taxonomy and the recommendations. Pray4Me writes its own
+Books inspire the topic taxonomy and the recommendations. Praystead writes its own
 prayers, and never reproduces prayer text, prayer points, renunciation formulas
 or substantial passages from *Prayer Rain*, *Prayers That Rout Demons*,
 *They Shall Expel Demons*, *Blessing or Curse*, the Solomon titles or any other

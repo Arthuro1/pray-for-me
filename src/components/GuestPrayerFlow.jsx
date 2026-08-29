@@ -79,7 +79,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
             <header className="constellation-session__header shrink-0 px-5 pb-3 pt-[max(1rem,env(safe-area-inset-top))]" style={{ background: 'var(--plum-deep)' }}>
               <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
                 <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Pray4Me · 1 / 1
+                  Praystead · 1 / 1
                 </p>
                 <div className="flex items-center gap-2">
                   <PrayerMusicControl lang={lang} active />
@@ -196,7 +196,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
           <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Pray4Me</SectionLabel>
+          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Praystead</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
@@ -231,7 +231,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         <header className="flex min-h-11 items-center justify-between">
           <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
             <img src="/logo-constellation.svg" alt="" className="h-8 w-8 rounded-lg" />
-            Pray4Me
+            Praystead
           </div>
           <button
             type="button"
@@ -244,7 +244,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
-          <SectionLabel className="mb-4">Pray4Me</SectionLabel>
+          <SectionLabel className="mb-4">Praystead</SectionLabel>
           <h2 id="guest-prayer-question" className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, 'firstPrayerQuestion')}
           </h2>
