@@ -10,6 +10,7 @@
 // t() resolves to French strings.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 // Heavy children / side-effecting modules are stubbed — this test is about the
 // section scaffolding, not each card's internals.
@@ -34,6 +35,7 @@ import useVaultStore from '../store/vaultStore';
 import { t } from '../i18n';
 
 const lang = 'fr';
+const renderSettings = () => render(<MemoryRouter><SettingsTab /></MemoryRouter>);
 afterEach(cleanup);
 
 beforeEach(() => {
@@ -55,14 +57,14 @@ beforeEach(() => {
 
 describe('SettingsTab — grouped sections', () => {
   it('renders all five section headers (reminders titled "Prayer reminders")', () => {
-    render(<SettingsTab />);
+    renderSettings();
     for (const key of ['settingsSecAccount', 'privacySecurity', 'prayerReminders', 'settingsSecAppearance', 'settingsSecSupport']) {
       expect(screen.getAllByText(t(lang, key)).length).toBeGreaterThan(0);
     }
   });
 
   it('consolidates privacy: vault, previews, low data, export and deletion in Privacy & Security', () => {
-    render(<SettingsTab />);
+    renderSettings();
     const privacy = document.getElementById('privacy');
     expect(privacy).toBeTruthy();
     for (const key of ['privacyCenterTitle', 'vaultTitle', 'notifPreviewTitle', 'lowDataTitle', 'exportData', 'dangerZone', 'deleteAccount']) {
@@ -71,12 +73,12 @@ describe('SettingsTab — grouped sections', () => {
   });
 
   it('relabels the reminders card so it does not duplicate the section title', () => {
-    render(<SettingsTab />);
+    renderSettings();
     expect(screen.getByText(t(lang, 'remindersTitle'))).toBeTruthy();
   });
 
   it('starts EVERY section collapsed — Settings reads as a short list of destinations', () => {
-    render(<SettingsTab />);
+    renderSettings();
     // Panels are present in the DOM; collapsed ones carry the `hidden` attribute.
     for (const id of ['account-panel', 'privacy-panel', 'notifications-panel', 'appearance-panel', 'support-panel']) {
       expect(document.getElementById(id).hidden, `${id} should start collapsed`).toBe(true);
@@ -85,19 +87,19 @@ describe('SettingsTab — grouped sections', () => {
 
   it('expands the section named by a /settings#<id> deep-link', () => {
     window.location.hash = '#privacy';
-    render(<SettingsTab />);
+    renderSettings();
     expect(document.getElementById('privacy-panel').hidden).toBe(false);
   });
 
   it('keeps legacy #data deep-links working via the privacy alias', () => {
     window.location.hash = '#data';
-    render(<SettingsTab />);
+    renderSettings();
     expect(document.getElementById('privacy-panel').hidden).toBe(false);
   });
 
   it('offers only Light and Dark in Appearance', () => {
     window.location.hash = '#appearance';
-    render(<SettingsTab />);
+    renderSettings();
     expect(screen.getByRole('button', { name: t(lang, 'themeLight') })).toBeTruthy();
     expect(screen.getByRole('button', { name: t(lang, 'themeDark') })).toBeTruthy();
     expect(screen.queryByRole('button', { name: t(lang, 'themeNight') })).toBeNull();
@@ -105,7 +107,7 @@ describe('SettingsTab — grouped sections', () => {
 
   it('personal prayers stay private by default: the preview choice defaults to generic', () => {
     window.location.hash = '#privacy'; // expand the section
-    render(<SettingsTab />);
+    renderSettings();
     // The notification-privacy content sits behind its compact row.
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowNotif') }));
     const generic = screen.getByRole('radio', { name: t(lang, 'notifPreviewGeneric') });
@@ -114,7 +116,7 @@ describe('SettingsTab — grouped sections', () => {
 
   it('Privacy & Security starts COMPACT: every internal row collapsed, deletion apart at the bottom', () => {
     window.location.hash = '#privacy';
-    render(<SettingsTab />);
+    renderSettings();
     for (const key of ['privacyRowOverview', 'privacyRowVault', 'privacyRowNotif', 'privacyRowLowData', 'privacyRowAi', 'privacyRowExport']) {
       const row = screen.getByRole('button', { name: t(lang, key) });
       expect(row.getAttribute('aria-expanded'), `${key} should start collapsed`).toBe('false');
@@ -129,7 +131,7 @@ describe('SettingsTab — grouped sections', () => {
 
   it('the low-data switch exposes real switch semantics with a label and checked state', () => {
     window.location.hash = '#privacy';
-    render(<SettingsTab />);
+    renderSettings();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowLowData') }));
     const sw = screen.getByRole('switch', { name: t(lang, 'lowDataTitle') });
     expect(sw.getAttribute('aria-checked')).toBe('false');

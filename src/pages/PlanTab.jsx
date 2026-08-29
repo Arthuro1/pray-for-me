@@ -93,6 +93,9 @@ export default function CalendarTab() {
           eyebrow={t(lang, 'calendar')}
           title={t(lang, 'calendarTitle')}
           subtitle={t(lang, 'calendarSub')}
+          backTo="/more"
+          backLabel={t(lang, 'moreTab')}
+          backAriaLabel={`${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`}
           aside={(
             <OverflowMenu
               lang={lang}

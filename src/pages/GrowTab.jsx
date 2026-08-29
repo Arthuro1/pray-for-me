@@ -151,6 +151,9 @@ export default function GrowTab({ onCreatePrayer }) {
           eyebrow={t(lang, 'guidance')}
           title={t(lang, 'guidanceTitle')}
           subtitle={t(lang, 'guidanceSub')}
+          backTo="/more"
+          backLabel={t(lang, 'moreTab')}
+          backAriaLabel={`${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`}
         />
       </div>
 

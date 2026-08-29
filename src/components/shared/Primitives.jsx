@@ -1,9 +1,21 @@
 import { forwardRef } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ChevronDown, ChevronLeft } from 'lucide-react';
 
-export function PageHeader({ eyebrow, title, subtitle, aside, className = '' }) {
+export function PageHeader({ eyebrow, title, subtitle, aside, backTo, backLabel, backAriaLabel, className = '' }) {
   return (
     <header className={`page-header ${className}`}>
+      {backTo && backLabel && (
+        <Link
+          to={backTo}
+          aria-label={backAriaLabel || backLabel}
+          className="pressable mb-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-semibold no-underline"
+          style={{ color: 'var(--accent)' }}
+        >
+          <ChevronLeft className="rtl-mirror" size={17} aria-hidden="true" />
+          <span>{backLabel}</span>
+        </Link>
+      )}
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="min-w-0">
           {eyebrow && <p className="page-header__eyebrow mb-2">{eyebrow}</p>}

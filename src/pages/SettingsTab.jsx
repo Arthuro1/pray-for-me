@@ -389,6 +389,9 @@ export default function SettingsTab() {
           eyebrow={t(lang, 'settingsSecAccount')}
           title={t(lang, 'settings')}
           subtitle={memberSince ? `${t(lang, 'memberSince')} ${memberSince}` : undefined}
+          backTo="/more"
+          backLabel={t(lang, 'moreTab')}
+          backAriaLabel={`${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`}
           aside={<Avatar name={displayName || ''} avatar={myAvatar} size={56} />}
         />
         <div className="settings-profile phase-card phase-card--quiet px-4 py-3 mb-5">

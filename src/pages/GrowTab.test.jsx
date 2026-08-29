@@ -46,6 +46,14 @@ const openJourneyToEnd = () => {
 };
 
 describe('GrowTab — seeker card', () => {
+  it('offers a direct way back to the More choices', () => {
+    renderGrow();
+    const backLink = screen.getByRole('link', {
+      name: `${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`,
+    });
+    expect(backLink.getAttribute('href')).toBe('/more');
+  });
+
   it('renders the seeker card below the guides, not above the selector', () => {
     renderGrow();
     const card = screen.getByText(t(lang, 'growSeekerTitle'));
