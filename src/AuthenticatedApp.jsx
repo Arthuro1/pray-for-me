@@ -12,6 +12,7 @@ import SyncIndicator from './components/shared/SyncIndicator';
 import Onboarding from './components/Onboarding';
 import FirstPrayerFlow from './components/FirstPrayerFlow';
 import RecoveryPromptBanner from './components/RecoveryPromptBanner';
+import { ContextualNudgeProvider } from './components/shared/ContextualNudgeCoordinator';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
@@ -20,8 +21,8 @@ import useAuthStore from './store/authStore';
 const HomeTab = lazy(() => import('./pages/HomeTab'));
 const PrayersTab = lazy(() => import('./pages/PrayersTab'));
 const MoreTab = lazy(() => import('./pages/MoreTab'));
-const PlanTab = lazy(() => import('./pages/PlanTab'));
-const GrowTab = lazy(() => import('./pages/GrowTab'));
+const CalendarTab = lazy(() => import('./pages/PlanTab'));
+const GuidanceTab = lazy(() => import('./pages/GrowTab'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
 const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
@@ -465,11 +466,12 @@ export default function AuthenticatedApp({
 
   return (
     <>
-      <Layout onAddPrayer={openAdd}>
-        <RecoveryPromptBanner lang={lang} />
-        <ErrorBoundary lang={lang} resetKey={location.pathname}>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+      <ContextualNudgeProvider key={location.pathname}>
+        <Layout onAddPrayer={openAdd}>
+          <RecoveryPromptBanner lang={lang} />
+          <ErrorBoundary lang={lang} resetKey={location.pathname}>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
               <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} />} />
               <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
               <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
@@ -482,15 +484,20 @@ export default function AuthenticatedApp({
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
               <Route path="/community/group/:groupId" element={<CommunityTab />} />
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
-              <Route path="/plan" element={<PlanTab />} />
-              <Route path="/grow" element={<GrowTab onCreatePrayer={openCreatePrayer} />} />
+              <Route path="/calendar" element={<CalendarTab />} />
+              <Route path="/guidance" element={<GuidanceTab onCreatePrayer={openCreatePrayer} />} />
+              {/* Legacy destinations remain valid without keeping the old
+                  overloaded product concepts in navigation or page copy. */}
+              <Route path="/plan" element={<Navigate to="/calendar" replace />} />
+              <Route path="/grow" element={<Navigate to="/guidance" replace />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/settings" element={<SettingsTab />} />
               <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
-        </ErrorBoundary>
-      </Layout>
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </Layout>
+      </ContextualNudgeProvider>
       {showForm && (
         <PrayerForm
           onClose={() => {

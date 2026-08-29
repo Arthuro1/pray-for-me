@@ -23,7 +23,7 @@ describe('relationship plan completion actions', () => {
       onRelationshipNext,
     });
     const link = screen.getByRole('link', { name: t('en', 'planCoupleContinueMarriage') });
-    expect(link.getAttribute('href')).toBe('/plan');
+    expect(link.getAttribute('href')).toBe('/guidance');
     expect(link.getAttribute('data-emphasis')).toBe('primary');
     fireEvent.click(link);
     expect(onRelationshipNext).toHaveBeenCalledTimes(1);
@@ -33,7 +33,7 @@ describe('relationship plan completion actions', () => {
     renderCard({
       plan: { id: 'marriage30', count: 30, lifeStage: 'married', renewable: true, completion: { en: 'Finished.' } },
     });
-    expect(screen.getByRole('link', { name: t('en', 'planCoupleRepeat') }).getAttribute('href')).toBe('/plan');
+    expect(screen.getByRole('link', { name: t('en', 'planCoupleRepeat') }).getAttribute('href')).toBe('/guidance');
   });
 
   it('leaves the next step out for a plan that has no follow-on', () => {

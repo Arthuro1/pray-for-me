@@ -19,10 +19,10 @@ describe('notificationRoute', () => {
     expect(notificationRoute({ type: 'group_invitation', metadata: { group_id: GROUP } })).toBe('/community');
   });
 
-  it('routes a plan invitation to the Plan tab', () => {
-    expect(notificationRoute({ type: 'plan_invitation', metadata: { plan_id: 'fast3' } })).toBe('/plan');
-    // A group-originated plan invitation still routes to the Plan tab, not the group.
-    expect(notificationRoute({ type: 'plan_invitation', metadata: { plan_id: 'fast3', group_id: GROUP } })).toBe('/plan');
+  it('routes a journey invitation to Together attention', () => {
+    expect(notificationRoute({ type: 'plan_invitation', metadata: { plan_id: 'fast3' } })).toBe('/community');
+    // Group-originated journey invitations enter the same consolidated queue.
+    expect(notificationRoute({ type: 'plan_invitation', metadata: { plan_id: 'fast3', group_id: GROUP } })).toBe('/community');
   });
 
   it('falls back safely for missing/forged ids', () => {

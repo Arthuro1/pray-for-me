@@ -283,7 +283,7 @@ export function eventUrl(type: string, meta: Record<string, unknown> = {}): stri
     case 'group_invitation':
       return '/community';
     case 'plan_invitation':
-      return '/plan';
+      return '/community';
     default:
       return '/community';
   }

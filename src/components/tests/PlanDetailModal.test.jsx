@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 //
-// The plan preview should help someone decide without making them scroll past
-// an entire curriculum. It gives the summary and first three days first, while
-// keeping both the complete outline and biblical context available on request.
+// The journey preview should help someone decide without making them scroll
+// past an entire curriculum. Longer journeys lead with their movements; the
+// complete day-by-day outline and biblical context stay available on request.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
@@ -31,15 +31,17 @@ function open(props = {}) {
 }
 
 describe('the concise plan preview', () => {
-  it('shows only the first three days until the reader asks for the full outline', () => {
+  it('shows movements first, then the complete day outline on request', () => {
     open();
 
-    expect(screen.getByText(pick(PREPARING_IN_PRAYER.days[0].theme, lang))).toBeTruthy();
-    expect(screen.getByText(pick(PREPARING_IN_PRAYER.days[2].theme, lang))).toBeTruthy();
+    for (const movement of PREPARING_IN_PRAYER.movements) {
+      expect(screen.getByText(t(lang, movement.titleKey))).toBeTruthy();
+    }
+    expect(screen.queryByText(pick(PREPARING_IN_PRAYER.days[0].theme, lang))).toBeNull();
     expect(screen.queryByText(pick(PREPARING_IN_PRAYER.days[3].theme, lang))).toBeNull();
 
     const disclosure = screen.getByRole('button', {
-      name: `${t(lang, 'loadMore')}: ${t(lang, 'planDayByDay')}`,
+      name: t(lang, 'previewAllDays'),
     });
     expect(disclosure.getAttribute('aria-expanded')).toBe('false');
 
@@ -67,18 +69,20 @@ describe('the concise plan preview', () => {
 });
 
 describe('the start action', () => {
-  it('stays outside the scrolling preview and passes the chosen date to the caller', () => {
+  it('stays outside the scrolling preview and progressively reveals a custom date', () => {
     const { container, onStart } = open();
     const scrollRegion = container.querySelector('.flex-1.overflow-y-auto');
-    const startButton = screen.getByRole('button', { name: new RegExp(t(lang, 'planStart')) });
-    const startDate = screen.getByLabelText(t(lang, 'planStartDate'));
+    const todayButton = screen.getByRole('button', { name: t(lang, 'journeyStartToday') });
 
     expect(scrollRegion).toBeTruthy();
-    expect(scrollRegion.contains(startButton)).toBe(false);
-    expect(startButton.closest('.sticky')).toBeNull();
+    expect(scrollRegion.contains(todayButton)).toBe(false);
+    expect(todayButton.closest('.sticky')).toBeNull();
+    expect(screen.queryByLabelText(t(lang, 'planStartDate'))).toBeNull();
 
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'startAnotherDay') }));
+    const startDate = screen.getByLabelText(t(lang, 'planStartDate'));
     fireEvent.change(startDate, { target: { value: '2099-04-12' } });
-    fireEvent.click(startButton);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journeyStart') }));
     expect(onStart).toHaveBeenCalledWith(PREPARING_IN_PRAYER, '2099-04-12');
   });
 });

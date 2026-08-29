@@ -264,8 +264,8 @@ export default function HomeTab({ onAdd, onEdit }) {
               actionLabel={t(lang, 'emptyAddManual')}
               onAction={onAdd}
               actionIcon={Plus}
-              secondaryLabel={t(lang, 'growTitle')}
-              onSecondary={() => navigate('/grow')}
+              secondaryLabel={t(lang, 'guidance')}
+              onSecondary={() => navigate('/guidance')}
             />
             <Encouragement lang={lang} className="mx-auto mb-7 max-w-sm px-6 text-center" />
           </PrayerSurface>

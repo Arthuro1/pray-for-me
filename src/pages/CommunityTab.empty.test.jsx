@@ -5,7 +5,7 @@
 // with another Join button. Once groups exist, the list leads and creating /
 // befriending shrink into header actions.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import CommunityTab from './CommunityTab';
@@ -65,13 +65,15 @@ describe('CommunityTab — empty state consolidation', () => {
     renderCommunity();
     expect(await screen.findByText('Groupe Familial')).toBeTruthy();
     expect(screen.getByText(t(lang, 'myGroups'))).toBeTruthy();
-    // The onboarding card is gone; its big buttons are replaced by small
-    // icon actions in the header.
+    // The onboarding card is gone; its big buttons are consolidated under one
+    // labelled Add menu in the header.
     expect(screen.queryByText(t(lang, 'prayWithOthers'))).toBeNull();
-    // The header actions are icon-only buttons, each with an inline SVG icon.
-    expect(screen.getByRole('button', { name: t(lang, 'joinGroupCta') }).querySelector('svg')).toBeTruthy();
-    expect(screen.getByRole('button', { name: t(lang, 'createGroup') }).querySelector('svg')).toBeTruthy();
-    expect(screen.getByRole('button', { name: t(lang, 'addFriend') }).querySelector('svg')).toBeTruthy();
+    const add = screen.getByRole('button', { name: new RegExp(t(lang, 'add')) });
+    expect(add.querySelector('svg')).toBeTruthy();
+    fireEvent.click(add);
+    expect(screen.getByRole('menuitem', { name: t(lang, 'joinGroupCta') })).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: t(lang, 'createGroup') })).toBeTruthy();
+    expect(screen.getByRole('menuitem', { name: t(lang, 'addPerson') })).toBeTruthy();
   });
 
   it('does not load or render a prayer-request feed on the Community hub', async () => {

@@ -10,6 +10,7 @@ import {
 import { activationTargetPrayer, nextActivationStep } from '../lib/activationPolicy';
 import { markContextualPromptShownForVisit } from '../lib/pwaInstall';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
+import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
 
 const COPY = {
   [ACTIVATION_STEPS.RHYTHM]: {
@@ -51,12 +52,13 @@ export default function ActivationNudge({
     dailyReminderEnabled: !!settings?.dailyReminderEnabled,
     progress,
   });
+  const { visible, complete } = useContextualNudgeSlot('activation', !!step && !hiddenForVisit, 20);
 
   useEffect(() => {
     if (step) markContextualPromptShownForVisit();
   }, [step]);
 
-  if (!step || hiddenForVisit) return null;
+  if (!visible) return null;
   const { icon: Icon, title, body, action } = COPY[step];
 
   const finish = () => {
@@ -66,6 +68,7 @@ export default function ActivationNudge({
     // keeping this moment to one invitation. (The local flag hides the card now;
     // the visit marker keeps it hidden across navigation within the same visit.)
     markEducationHandledForVisit();
+    complete();
     setHiddenForVisit(true);
   };
 

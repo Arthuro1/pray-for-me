@@ -1,7 +1,9 @@
-import { X } from 'lucide-react';
+import { useState } from 'react';
+import { Tag, X } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import LabelsManager from './LabelsManager';
 
 const selectClass = 'min-h-11 w-full rounded-xl px-3 text-sm';
 
@@ -19,6 +21,7 @@ export default function JournalFilters({
   onClear,
   onClose,
 }) {
+  const [managingLabels, setManagingLabels] = useState(false);
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true, 'select');
   const set = (key) => (event) => onChange({ ...filters, [key]: event.target.value });
@@ -40,19 +43,22 @@ export default function JournalFilters({
         className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-5 sm:rounded-3xl"
         style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', boxShadow: 'var(--shadow-md)' }}
       >
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>
-            {t(lang, 'journalFilters')}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t(lang, 'close')}
-            className="phase-icon-button shrink-0"
-          >
-            <X size={17} aria-hidden="true" />
-          </button>
-        </div>
+        {managingLabels ? (
+          <LabelsManager lang={lang} tr={tr} onDone={() => setManagingLabels(false)} />
+        ) : (<>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>
+              {t(lang, 'journalFilters')}
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={t(lang, 'close')}
+              className="phase-icon-button shrink-0"
+            >
+              <X size={17} aria-hidden="true" />
+            </button>
+          </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {categories.length > 0 && (
@@ -132,6 +138,15 @@ export default function JournalFilters({
             </button>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => setManagingLabels(true)}
+          className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium"
+          style={{ background: 'var(--surface-soft)', color: 'var(--text-2)', border: '0.5px solid var(--border)' }}
+        >
+          <Tag size={15} aria-hidden="true" /> {t(lang, 'manageLabels')}
+        </button>
+        </>)}
       </div>
     </div>
   );

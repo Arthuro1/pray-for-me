@@ -73,20 +73,20 @@ export default function Layout({ children, onAddPrayer }) {
   }, [sidebarWidth, isMd]);
 
   // Four destinations, so the daily prayer rhythm stays front-and-centre:
-  // Today, Journal, Community and More. Grow, Plan, Settings, data export and
+  // Today, Journal, Together and More. Guidance, Calendar, Settings, data export and
   // support all live inside More — Settings no longer occupies prime
   // bottom-navigation space.
   const tabs = [
     { id: 'home', path: '/', label: t(lang, 'today'), icon: Home },
     // Label reads "Journal" (all requests + history); route/id stay `prayers`.
     { id: 'prayers', path: '/prayers', label: t(lang, 'journal'), icon: BookOpen },
-    { id: 'community', path: '/community', label: t(lang, 'community'), icon: Users, badge: pendingCount },
+    { id: 'community', path: '/community', label: t(lang, 'together'), icon: Users, badge: pendingCount },
     { id: 'more', path: '/more', label: t(lang, 'moreTab'), icon: MoreHorizontal },
   ];
 
   // Destinations reached THROUGH More keep the More tab lit, so the user always
   // knows the way back to them.
-  const MORE_PATHS = ['/more', '/grow', '/plan', '/settings', '/notifications'];
+  const MORE_PATHS = ['/more', '/guidance', '/calendar', '/grow', '/plan', '/settings', '/notifications'];
   const isActive = (path) => {
     if (path === '/') return pathname === '/';
     if (path === '/more') return MORE_PATHS.some((p) => pathname.startsWith(p));

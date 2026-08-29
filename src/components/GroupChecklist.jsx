@@ -3,6 +3,7 @@ import { X, Check, UserPlus, Plus, HandHeart, ChevronRight } from 'lucide-react'
 import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
 import { checklistFlags, checklistSteps, checklistVisible, dismissChecklist } from '../lib/groupChecklist';
+import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
 
 const STEP_META = {
   invite: { icon: UserPlus, labelKey: 'checklistInvite' },
@@ -48,18 +49,20 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
     };
   }, [inviteDone, refreshMembers]);
 
-  if (memberCount === null) return null; // don't flash a wrong state while loading
-
-  const steps = checklistSteps({ memberCount, requestCount, hasPrayed, flags });
-  if (!checklistVisible(group.id, steps)) return null;
+  const steps = memberCount === null
+    ? []
+    : checklistSteps({ memberCount, requestCount, hasPrayed, flags });
+  const eligible = memberCount !== null && checklistVisible(group.id, steps);
+  const { visible, complete } = useContextualNudgeSlot(`group-checklist-${group.id}`, eligible, 40);
+  if (!visible) return null; // includes the member-count loading state
 
   // Valid sequencing: with no request yet there is nothing to pray over, so the
   // row SAYS "Add a request first" and goes there — never an apparently
   // available "Begin praying" that can't be honoured.
   const actions = {
-    invite: onInvite,
-    request: onAddRequest,
-    pray: requestCount > 0 ? onPray : onAddRequest,
+    invite: () => { complete(); onInvite?.(); },
+    request: () => { complete(); onAddRequest?.(); },
+    pray: () => { complete(); (requestCount > 0 ? onPray : onAddRequest)?.(); },
   };
 
   return (
@@ -67,7 +70,7 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
       <div className="flex items-center justify-between gap-2 mb-2">
         <h3 className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'checklistTitle')}</h3>
         <button
-          onClick={() => { dismissChecklist(group.id); setVersion((v) => v + 1); }}
+          onClick={() => { dismissChecklist(group.id); complete(); setVersion((v) => v + 1); }}
           aria-label={t(lang, 'checklistDismiss')}
           title={t(lang, 'checklistDismiss')}
           className="w-11 h-11 -m-2 flex items-center justify-center rounded-full shrink-0"

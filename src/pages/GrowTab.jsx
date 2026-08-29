@@ -12,6 +12,9 @@ import GuideReader from '../components/GuideReader';
 import ArticleReader from '../components/ArticleReader';
 import GospelJourneyReader from '../components/GospelJourneyReader';
 import { PageHeader } from '../components/shared/Primitives';
+import PrayerJourneys from '../components/PrayerJourneys';
+import { runningPlanIds } from '../lib/planner';
+import { todayKey } from '../lib/prayedLog';
 
 // A guide/article row. Top-level (not defined inside GrowTab) so React keeps
 // the DOM node across re-renders — an inline component type would remount on
@@ -74,6 +77,7 @@ function Disclosure({ id, label, open, onToggle, count }) {
 // starter prompt rather than duplicating any form logic.
 export default function GrowTab({ onCreatePrayer }) {
   const settings = usePrayerStore((s) => s.settings);
+  const prayers = usePrayerStore((s) => s.prayers);
   const lang = settings.language || 'fr';
   const [view, setView] = useState('pray'); // 'pray' | 'learn'
   const [openGuide, setOpenGuide] = useState(null);
@@ -95,9 +99,10 @@ export default function GrowTab({ onCreatePrayer }) {
   const recommendation = recommendNext(guides, progress);
   const completed = completedGuides(guides, progress);
   const completedIds = new Set(completed.map((g) => g.id));
+  const hasActiveJourney = runningPlanIds(prayers, todayKey()).size > 0;
   // The browsable rest: everything not already surfaced by the next-step card
   // and not completed (those live in History).
-  const browsable = guides.filter((g) => g.id !== recommendation?.guide?.id && !completedIds.has(g.id));
+  const browsable = guides.filter((g) => (hasActiveJourney || g.id !== recommendation?.guide?.id) && !completedIds.has(g.id));
 
   const REC_DESC_KEYS = { continue: 'growContinueDesc', new: 'growNewDesc', again: 'growAgainDesc' };
 
@@ -143,9 +148,9 @@ export default function GrowTab({ onCreatePrayer }) {
 
       <div className="phase-page__shell">
         <PageHeader
-          eyebrow={t(lang, 'grow')}
-          title={t(lang, 'growTitle')}
-          subtitle={t(lang, 'growSubtitle')}
+          eyebrow={t(lang, 'guidance')}
+          title={t(lang, 'guidanceTitle')}
+          subtitle={t(lang, 'guidanceSub')}
         />
       </div>
 
@@ -178,7 +183,7 @@ export default function GrowTab({ onCreatePrayer }) {
             {/* ONE recommended next step, from existing progress — an
                 in-progress guide always outranks anything new. It lives INSIDE
                 the Pray segment so Learn stays focused on learning content. */}
-            {recommendation && (
+            {recommendation && !hasActiveJourney && (
               <div className="mb-5">
                 <p className="section-label mb-2">
                   {t(lang, 'growNextStep')}
@@ -249,11 +254,15 @@ export default function GrowTab({ onCreatePrayer }) {
           </>
         )}
 
+        {view === 'pray' && (
+          <PrayerJourneys lang={lang} showRecommendation={hasActiveJourney || !recommendation} />
+        )}
+
         {/* Gentle, optional invitation for those new to prayer or exploring
             faith — a quiet card BELOW the guides (an established believer's
             content comes first). It never auto-opens and stays available after
             it's been read or dismissed. */}
-        <button
+        {prayers.length <= 1 && Object.keys(progress).length === 0 && !hasActiveJourney && <button
           onClick={() => setOpenJourney(true)}
           className="phase-card phase-card--quiet grow-card w-full text-left p-4 mt-6 mb-8 flex items-center gap-3"
         >
@@ -265,7 +274,7 @@ export default function GrowTab({ onCreatePrayer }) {
             <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'growSeekerDesc')}</span>
           </span>
           <ChevronRight size={15} className="shrink-0 opacity-60" style={{ color: 'var(--accent)' }} aria-hidden="true" />
-        </button>
+        </button>}
       </div>
     </div>
   );

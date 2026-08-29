@@ -106,7 +106,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           never presents two competing primary actions. */}
       {relationshipActionKey && (
         <Link
-          to="/plan"
+          to="/guidance"
           onClick={onRelationshipNext}
           data-emphasis={continuationChoiceOpen ? 'secondary' : 'primary'}
           className="block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"

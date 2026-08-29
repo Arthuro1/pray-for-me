@@ -37,6 +37,7 @@ import {
   nextJournalHint,
   readJournalHints,
 } from '../lib/journalHints';
+import { useContextualNudgeSlot } from '../components/shared/ContextualNudgeCoordinator';
 
 // The Journal: every request and its history, in two simple segments — Active
 // and Answered. Search and useful retrieval filters stay quiet, and an optional
@@ -178,6 +179,7 @@ export default function PrayersTab({ onAdd }) {
     toolsInUse: filtersActive || searchOpen || showFilters,
     seen: hintsSeen,
   });
+  const { visible: hintVisible, complete: completeHint } = useContextualNudgeSlot('journal-hint', !!hint, 40);
   const dismissHint = (which) => setHintsSeen(markJournalHintSeen(which).seen);
 
   // Truly empty (no active prayers at all) → the empty state carries the one
@@ -330,7 +332,7 @@ export default function PrayersTab({ onAdd }) {
                   <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'peopleView')}</span>
                 </button>
               )}
-              {!peopleOpen && hasFilterControls && (
+              {!peopleOpen && (hasFilterControls || toolsUseful) && (
                 <button
                   type="button"
                   onClick={() => setShowFilters(!showFilters)}
@@ -364,7 +366,7 @@ export default function PrayersTab({ onAdd }) {
         )}
         {/* One quiet introduction, once, to the tool that has just become
             useful — dismissible, and never shown again after that. */}
-        {hint && (
+        {hintVisible && (
           <div
             className="constellation-journal__hint"
             role="status"
@@ -378,6 +380,7 @@ export default function PrayersTab({ onAdd }) {
                 type="button"
                 onClick={() => {
                   dismissHint(JOURNAL_HINTS.PEOPLE);
+                  completeHint();
                   setPeopleOpen(true);
                   setSelectedPerson(null);
                 }}
@@ -389,7 +392,7 @@ export default function PrayersTab({ onAdd }) {
             )}
             <button
               type="button"
-              onClick={() => dismissHint(hint)}
+              onClick={() => { dismissHint(hint); completeHint(); }}
               className="min-h-[44px] shrink-0 px-2 text-xs font-medium"
               style={{ color: 'var(--text-3)' }}
             >
@@ -397,7 +400,7 @@ export default function PrayersTab({ onAdd }) {
             </button>
           </div>
         )}
-        {!peopleOpen && showFilters && hasFilterControls && (
+        {!peopleOpen && showFilters && (hasFilterControls || toolsUseful) && (
           <JournalFilters
             segment={segment}
             filters={filters}

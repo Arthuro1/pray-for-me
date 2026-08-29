@@ -59,7 +59,7 @@ export default function useGroupPlans({ groupId, user, lang }) {
       plan, startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
     });
     if (!result.ok && result.reason === 'personalize') {
-      navigate('/plan', { state: { guidedPlanStart: { planId: plan.id, startDate } } });
+      navigate('/guidance', { state: { guidedJourneyStart: { planId: plan.id, startDate } } });
       return { ok: true, handedOff: true };
     }
     return result;

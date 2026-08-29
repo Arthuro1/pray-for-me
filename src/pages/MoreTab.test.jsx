@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 //
-// "Grow", "Plan", "Privacy & Security", "Settings" and "Support" mean little
-// from outside, and two of them sound alike. Every row now says what is behind
-// it in one localized line — and still goes exactly where it went before.
+// More is a short overflow menu, not a second navigation system. Guidance owns
+// guides + journeys, Calendar owns schedule browsing, and Settings & help owns
+// account, reminders, privacy, export and support.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -25,11 +25,9 @@ beforeEach(() => {
 const renderMore = () => render(<MemoryRouter><MoreTab /></MemoryRouter>);
 
 const ROWS = [
-  ['grow', 'moreGrowDesc', '/grow'],
-  ['plan', 'morePlanDesc', '/plan'],
-  ['privacySecurity', 'morePrivacyDesc', '/settings#privacy'],
-  ['settings', 'moreSettingsDesc', '/settings'],
-  ['settingsSecSupport', 'moreSupportDesc', '/settings#support'],
+  ['guidance', 'moreGuidanceDesc', '/guidance'],
+  ['calendar', 'moreCalendarDesc', '/calendar'],
+  ['settingsAndHelp', 'moreSettingsHelpDesc', '/settings'],
 ];
 
 describe('MoreTab', () => {
@@ -53,7 +51,7 @@ describe('MoreTab', () => {
     }
   });
 
-  it('still navigates where it always did, hashes included', () => {
+  it('navigates to the three consolidated destinations', () => {
     renderMore();
     for (const [label, description, to] of ROWS) {
       fireEvent.click(screen.getByRole('button', {
@@ -64,10 +62,10 @@ describe('MoreTab', () => {
     expect(navigate).toHaveBeenCalledTimes(ROWS.length);
   });
 
-  it('tells Privacy & Security and Settings apart, which the labels alone do not', () => {
+  it('keeps the overflow intentionally limited to three destinations', () => {
     renderMore();
-    expect(t(lang, 'morePrivacyDesc')).not.toBe(t(lang, 'moreSettingsDesc'));
-    expect(screen.getByText(t(lang, 'morePrivacyDesc'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'moreSettingsDesc'))).toBeTruthy();
+    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.queryByText(t(lang, 'privacySecurity'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'settingsSecSupport'))).toBeNull();
   });
 });

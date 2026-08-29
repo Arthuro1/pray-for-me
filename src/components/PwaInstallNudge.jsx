@@ -14,6 +14,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { BottomSheet, PrimaryButton } from './shared/Primitives';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
+import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
 
 function currentInstallMode() {
   // Installing is education too: it waits behind the same one-prompt-per-visit
@@ -29,6 +30,7 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
   const [mode, setMode] = useState(() => modeOverride || currentInstallMode());
   const [showIosHelp, setShowIosHelp] = useState(false);
   const sheetRef = useFocusTrap(showIosHelp);
+  const { visible, complete } = useContextualNudgeSlot('pwa-install', !!mode || showIosHelp, 30);
 
   useEffect(() => {
     if (modeOverride) return undefined;
@@ -39,13 +41,14 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
   }, [mode]);
   useEscapeKey(showIosHelp ? () => setShowIosHelp(false) : null);
 
-  if (!mode && !showIosHelp) return null;
+  if (!visible) return null;
 
   const dismiss = () => {
     snoozePwaInstallPrompt();
     // Answering this ends education for the visit, so declining the install
     // never uncovers an activation card in its place.
     markEducationHandledForVisit();
+    complete();
     setShowIosHelp(false);
     setMode(null);
   };
@@ -56,6 +59,7 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
       return;
     }
     await requestNativePwaInstall();
+    complete();
     setMode(null);
   };
 

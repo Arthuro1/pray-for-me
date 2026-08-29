@@ -30,7 +30,18 @@ function MenuItem({ icon: Icon, label, onClick, danger }) {
 
 // `triggerRef` (optional) also receives the trigger button, so a host that
 // opened a disclosure from one of these items can hand focus back to it.
-export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClassName, triggerStyle, iconColor = 'currentColor', align = 'right', triggerRef: externalTriggerRef }) {
+export default function OverflowMenu({
+  lang,
+  items = [],
+  ariaLabel,
+  triggerClassName,
+  triggerStyle,
+  iconColor = 'currentColor',
+  align = 'right',
+  triggerRef: externalTriggerRef,
+  triggerIcon: TriggerIcon = MoreVertical,
+  triggerLabel = null,
+}) {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState(null);
   const triggerRef = useRef(null);
@@ -83,10 +94,13 @@ export default function OverflowMenu({ lang, items = [], ariaLabel, triggerClass
         aria-label={ariaLabel || t(lang, 'options')}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={triggerClassName || 'flex items-center justify-center w-11 h-11 rounded-full focus-visible:ring-2'}
+        className={triggerClassName || (triggerLabel
+          ? 'pressable inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold focus-visible:ring-2'
+          : 'flex items-center justify-center w-11 h-11 rounded-full focus-visible:ring-2')}
         style={triggerStyle}
       >
-        <MoreVertical size={18} style={{ color: iconColor }} />
+        <TriggerIcon size={18} style={{ color: iconColor }} aria-hidden="true" />
+        {triggerLabel && <span>{triggerLabel}</span>}
       </button>
       {open && createPortal(
         <>

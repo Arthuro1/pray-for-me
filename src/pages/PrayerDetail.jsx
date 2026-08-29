@@ -1077,25 +1077,25 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             description, before the pray-together / updates / calendar sections. ── */}
         <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="prayer-points-panel__header flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'waysToPray')}</p>
             {(isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={fetchRecs}
                   disabled={loadingRecs}
                   title={t(lang, 'tipAiSuggest')}
-                  className="flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 font-medium disabled:opacity-50 text-white"
-                  style={{ background: 'var(--accent)' }}
+                  className="flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium disabled:opacity-50"
+                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
                 >
                   {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
-                  {t(lang, 'aiSuggest')}
+                  {t(lang, 'prayerSuggestionsCta')}
                 </button>
               </div>
             )}
           </div>
 
           {(livePrayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
-            <p className="text-sm italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPlaceholder')}</p>
+            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'needHelpFindingWords')}</p>
           )}
 
           <div className="prayer-points-panel__list">

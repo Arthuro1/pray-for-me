@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { X, Check, ChevronDown, ChevronUp, HeartHandshake } from 'lucide-react';
+import { X, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
@@ -19,19 +19,21 @@ import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 //   ctaLabel     — overrides the primary "Start" label (e.g. "Start for the group")
 //   runningLabel — overrides the disabled/started label (e.g. "The group is already praying this")
 //   footnote     — a small line under the actions (e.g. what starting shares with the group)
-export default function PlanDetailModal({ plan: source, lang, running, onStart, onInvite, onClose, ctaLabel, runningLabel, footnote }) {
+export default function PlanDetailModal({ plan: source, lang, running, onStart, onClose, ctaLabel, runningLabel, footnote }) {
   // Rich plans carry prose in more languages than the source file authors; the
   // overlay folds in on demand and the day themes are already localized.
   const plan = useLocalizedPlan(source, lang);
   useEscapeKey(onClose);
   const trapRef = useFocusTrap(true);
   const [startDate, setStartDate] = useState(todayKey());
+  const [showStartDate, setShowStartDate] = useState(false);
   const [showFullAbout, setShowFullAbout] = useState(false);
   const [showAllDays, setShowAllDays] = useState(false);
   const disclosureId = useId();
   const usable = canUsePlan(source);
-  const visibleDays = showAllDays ? plan.days : plan.days.slice(0, 3);
-  const hiddenDayCount = Math.max(0, plan.days.length - 3);
+  const movementFirst = plan.count >= 8 && (plan.movements?.length || 0) > 0;
+  const defaultDayCount = plan.count <= 7 ? plan.days.length : 3;
+  const visibleDays = showAllDays ? plan.days : movementFirst ? [] : plan.days.slice(0, defaultDayCount);
 
   return (
     <div
@@ -110,9 +112,25 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
             </section>
           )}
 
-          {/* Day-by-day preview so the user knows what they're starting */}
+          {/* Long journeys reveal their shape before their full syllabus. */}
           <section>
-            <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayByDay')}</h4>
+            <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+              {t(lang, movementFirst && !showAllDays ? 'journeyWalkThrough' : 'journeyDayPreview')}
+            </h4>
+            {movementFirst && !showAllDays && (
+              <ol className="space-y-2">
+                {plan.movements.map((movement, index) => {
+                  const next = plan.movements[index + 1];
+                  const to = next ? next.from - 1 : plan.count;
+                  return (
+                    <li key={`${movement.from}-${movement.titleKey}`} className="flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+                      <span className="w-14 shrink-0 text-xs font-semibold" style={{ color: 'var(--accent)' }}>{movement.from}–{to}</span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, movement.titleKey)}</span>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
             <ol id={`${disclosureId}-days`} className="space-y-2">
               {visibleDays.map((day, i) => {
                 // A movement heading appears on the day it starts, so the shape
@@ -134,20 +152,18 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
                 );
               })}
             </ol>
-            {hiddenDayCount > 0 && (
+            {plan.count > 7 && (
               <button
                 type="button"
                 aria-expanded={showAllDays}
                 aria-controls={`${disclosureId}-days`}
-                aria-label={`${t(lang, showAllDays ? 'tipCollapse' : 'loadMore')}: ${t(lang, 'planDayByDay')}`}
+                aria-label={t(lang, showAllDays ? 'tipCollapse' : 'previewAllDays')}
                 onClick={() => setShowAllDays((open) => !open)}
                 className="mt-3 w-full min-h-11 rounded-xl inline-flex items-center justify-center gap-1.5 text-sm font-semibold"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
               >
                 {showAllDays ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
-                {showAllDays
-                  ? t(lang, 'tipCollapse')
-                  : `${t(lang, 'loadMore')} · ${t(lang, 'planDays', { n: hiddenDayCount })}`}
+                {showAllDays ? t(lang, 'tipCollapse') : t(lang, 'previewAllDays')}
               </button>
             )}
           </section>
@@ -166,7 +182,7 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
             paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
           }}
         >
-          {!running && usable && (
+          {!running && usable && showStartDate && (
             <label className="flex items-center justify-between gap-3">
               <span className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>{t(lang, 'planStartDate')}</span>
               <input
@@ -192,18 +208,17 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
                 body of this modal, right above. */}
             {!usable ? t(lang, 'planCoupleReviewPending') : running
               ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {runningLabel || t(lang, 'planRunning')}</span>
-              : (ctaLabel || `${t(lang, 'planStart')} · ${t(lang, 'planDays', { n: plan.count })}`)}
+              : (ctaLabel || t(lang, showStartDate ? 'journeyStart' : 'journeyStartToday'))}
           </button>
           {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-3)' }}>{footnote}</p>}
-          {/* Invite others to walk the plan with you — available whether or not
-              you've started it yourself. */}
-          {onInvite && usable && (
+          {!running && usable && !ctaLabel && (
             <button
-              onClick={() => onInvite(source, startDate || todayKey())}
-              className="w-full text-sm font-semibold px-3 py-2.5 rounded-xl inline-flex items-center justify-center gap-2"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              type="button"
+              onClick={() => setShowStartDate((open) => !open)}
+              className="w-full min-h-11 text-sm font-medium"
+              style={{ color: 'var(--accent)' }}
             >
-              <HeartHandshake size={15} /> {t(lang, 'planInviteCta')}
+              {t(lang, showStartDate ? 'startTodayInstead' : 'startAnotherDay')}
             </button>
           )}
         </div>

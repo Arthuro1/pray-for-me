@@ -131,19 +131,19 @@ function CommunityHub({ lang, userId, onViewGroup }) {
     const personal = usePrayerStore.getState().prayers;
     if (runningPlanIds(personal, todayKey()).has(plan.id)) {
       toast.success(t(lang, 'planRunning'));
-      navigate('/plan');
+      navigate('/guidance');
       return {};
     }
     const started = await startGuidedPlan({
       plan, startDate: res.startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
     });
     if (!started.ok && started.reason === 'personalize') {
-      navigate('/plan', { state: { guidedPlanStart: { planId: plan.id, startDate: res.startDate } } });
+      navigate('/guidance', { state: { guidedJourneyStart: { planId: plan.id, startDate: res.startDate } } });
       return {};
     }
     if (!started.ok) { toast.error(t(lang, 'errorGeneric')); return {}; }
     toast.success(t(lang, 'planStarted'));
-    navigate('/plan');
+    navigate(`/prayers/${started.prayerId}`);
     return {};
   };
 
@@ -183,34 +183,21 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             second button row. Join stays reachable — invitations arrive by code. */}
         <PageHeader
           className="constellation-community__header"
-          title={t(lang, 'community')}
+          title={t(lang, 'together')}
           aside={groups.length > 0 ? (
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => setShowJoinGroup(true)}
-                aria-label={t(lang, 'joinGroupCta')}
-                title={t(lang, 'joinGroupCta')}
-                className="phase-icon-button"
-              >
-                <CommunityActionIcon action="join" />
-              </button>
-              <button
-                onClick={() => setShowCreateGroup(true)}
-                aria-label={t(lang, 'createGroup')}
-                title={t(lang, 'createGroup')}
-                className="phase-icon-button"
-              >
-                <CommunityActionIcon action="create" />
-              </button>
-              <button
-                onClick={() => setShowAddFriend(true)}
-                aria-label={t(lang, 'addFriend')}
-                title={t(lang, 'addFriend')}
-                className="phase-icon-button"
-              >
-                <CommunityActionIcon action="friend" />
-              </button>
-            </div>
+            <OverflowMenu
+              lang={lang}
+              ariaLabel={t(lang, 'add')}
+              triggerIcon={Plus}
+              triggerLabel={t(lang, 'add')}
+              triggerStyle={{ background: 'var(--plum)', color: '#fff' }}
+              iconColor="#fff"
+              items={[
+                { key: 'join', icon: DoorOpen, label: t(lang, 'joinGroupCta'), onClick: () => setShowJoinGroup(true) },
+                { key: 'create', icon: UsersRound, label: t(lang, 'createGroup'), onClick: () => setShowCreateGroup(true) },
+                { key: 'person', icon: UserPlus, label: t(lang, 'addPerson'), onClick: () => setShowAddFriend(true) },
+              ]}
+            />
           ) : undefined}
         />
 
@@ -318,7 +305,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         )}
 
         {friends.length > 0 && (
-          <Section title={`${t(lang, 'friends')} (${friends.length})`}>
+          <Section title={`${t(lang, 'peopleView')} (${friends.length})`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {friends.map(f => (
                 <div key={f.id} className="phase-card phase-card--quiet flex items-center justify-between gap-3 p-3">
@@ -733,7 +720,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     <div className="phase-page constellation-community constellation-community-group min-h-screen">
       <div className="phase-page__shell pt-3 flex items-center justify-between">
         <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-          <ArrowLeft size={16} /> {t(lang, 'community')}
+          <ArrowLeft size={16} /> {t(lang, 'together')}
         </button>
         <OverflowMenu
           lang={lang}
@@ -742,6 +729,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           triggerStyle={SUBTLE_BTN}
           items={[
             { key: 'members', icon: Users, label: t(lang, 'members'), onClick: () => setShowMembers(true) },
+            { key: 'journey', icon: CalendarPlus, label: t(lang, 'groupJourneyStartCta'), onClick: () => setShowPlanPicker(true) },
             { key: 'settings', icon: SlidersHorizontal, label: t(lang, 'groupSettings'), onClick: () => setShowSettings(true) },
             { key: 'manage', icon: Settings, label: t(lang, 'manageGroup'), onClick: () => setShowAdmin(true), hidden: !isAdmin },
             { key: 'leave', icon: LogOut, label: t(lang, 'leaveGroup'), danger: true, onClick: () => setShowLeave(true) },
@@ -788,20 +776,16 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}
 
-      {/* Pick a plan to pray as a group. Plans the group already prays are shown
-          as such and can't be re-adopted.
-
-          The whole catalogue is listed, exactly as the Plan tab lists it. This
-          used to drop every plan awaiting review, which in a production build
-          made three plans disappear from this sheet with nothing said — a
-          reader comparing it with their own Plan tab simply found plans
-          missing. A plan still under review is shown and explained instead;
-          canUsePlan() remains the gate at the detail and start boundaries. */}
+      {/* Only reviewed journeys appear in the group's chooser. Content awaiting
+          theology, safety, language, or editorial review is not a user task. */}
       {showPlanPicker && (
         <Modal title={t(lang, 'groupPlanPickerTitle')} lang={lang} onClose={() => setShowPlanPicker(false)}>
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupPlanPickerSub')}</p>
           <div className="grid grid-cols-1 gap-2">
-            {plansByCategory().map((group) => (
+            {plansByCategory()
+              .map((group) => ({ ...group, plans: group.plans.filter(isPlanReviewed) }))
+              .filter((group) => group.plans.length > 0)
+              .map((group) => (
               <section key={group.id}>
                 <h4 className="mb-2 mt-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
                   {t(lang, group.labelKey)}
@@ -822,11 +806,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                           <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
                             {adopted ? t(lang, 'groupPlanAlreadyRunning') : `${t(lang, plan.subKey)} · ${t(lang, 'planDays', { n: plan.count })}`}
                           </p>
-                          {!isPlanReviewed(plan) && (
-                            <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>
-                              {t(lang, 'planCoupleReviewPending')}
-                            </p>
-                          )}
                         </div>
                       </button>
                     );
@@ -868,7 +847,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         <div className="group-header mb-5 flex items-start gap-3">
           <Avatar kind="group" name={group?.name || ''} avatar={avatarConfigFrom(group)} size={48} className="mt-1" />
           <div className="min-w-0">
-            <p className="section-label mb-2">{t(lang, 'community')}</p>
+            <p className="section-label mb-2">{t(lang, 'together')}</p>
             <h1 className="page-header__title break-words" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)', overflowWrap: 'anywhere' }}>{group?.name}</h1>
           </div>
         </div>
@@ -992,26 +971,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
         {subTab === 'requests' && (
           <>
-            {/* Principal actions, side by side: add a request, share the invite.
-                Hidden while the group is empty — the empty state below carries
-                the single Add-request action then. */}
+            {/* One visible action keeps the group focused on prayer. Invitations,
+                journeys, members, and administration stay in the group menu. */}
             {prayers.length > 0 && (
-              <div className="constellation-community-group__actions flex gap-2 mb-4">
-                <button onClick={() => setShowNewRequest(true)} className="flex-1 flex items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--accent)' }}>
+              <div className="constellation-community-group__actions mb-4">
+                <button onClick={() => setShowNewRequest(true)} className="flex w-full items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--accent)' }}>
                   <Plus size={16} /> {t(lang, 'newRequest')}
                 </button>
-                <button onClick={() => setShowMembers(true)} className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium justify-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-                  <Share2 size={15} /> {t(lang, 'shareInviteLink')}
-                </button>
               </div>
-            )}
-
-            {/* Any member can start a plan the whole group prays together; it then
-                shows in the "Praying together" section above for everyone. */}
-            {prayers.length > 0 && (
-              <button onClick={() => setShowPlanPicker(true)} className="w-full flex items-center gap-2 py-2.5 mb-4 rounded-xl text-sm font-medium justify-center" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
-                <CalendarPlus size={15} style={{ color: 'var(--accent)' }} /> {t(lang, 'groupPlanStartCta')}
-              </button>
             )}
 
             {/* List tools appear progressively: search once the wall is long

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 //
 // One unambiguous inbox: the bell is the single way in and is named "Inbox";
-// More has NO Notifications row (Grow / Plan / Settings / data / support only),
+// More has NO Notifications row (Guidance / Calendar / Settings & help only),
 // and the reminder settings section is titled "Prayer reminders".
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
@@ -20,13 +20,12 @@ beforeEach(() => {
 });
 
 describe('More — no duplicate destinations', () => {
-  it('lists exactly Grow, Plan, Privacy & Security, Settings, Support — no Notifications row', () => {
+  it('lists exactly Guidance, Calendar and Settings & help — no Notifications row', () => {
     render(<MemoryRouter><MoreTab /></MemoryRouter>);
-    expect(screen.getByText(t(lang, 'grow'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'plan'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'privacySecurity'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'settings'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'settingsSecSupport'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'guidance'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'calendar'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'settingsAndHelp'))).toBeTruthy();
+    expect(screen.getAllByRole('button')).toHaveLength(3);
     expect(screen.queryByText(t(lang, 'notifications'))).toBeNull();
     expect(screen.queryByText(t(lang, 'inbox'))).toBeNull();
   });

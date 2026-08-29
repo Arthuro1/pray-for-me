@@ -5,6 +5,7 @@
 // and the format descriptions read beginner-friendly (no ACTS jargon required).
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../lib/supabase', () => {
   const chain = {
@@ -33,12 +34,14 @@ const lang = 'fr';
 afterEach(cleanup);
 beforeEach(() => {
   localStorage.clear();
-  usePrayerStore.setState({ settings: { language: lang } });
+  usePrayerStore.setState({ settings: { language: lang }, prayers: [], completions: {}, categories: [] });
 });
+
+const renderGrow = () => render(<MemoryRouter><GrowTab /></MemoryRouter>);
 
 describe('GrowTab — one recommended next step', () => {
   it('leads with exactly one next-step card (the first new guide) and folds the rest away', () => {
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
     // The recommended guide appears once; the others wait behind Browse all.
     expect(screen.getAllByText(pick(guides[0].title, lang))).toHaveLength(1);
@@ -49,14 +52,14 @@ describe('GrowTab — one recommended next step', () => {
 
   it('current progress takes priority: a started guide is the recommendation', () => {
     markGuideStarted(guides[2].id);
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.getByText(pick(guides[2].title, lang))).toBeTruthy();
     expect(screen.getByText(t(lang, 'growContinueDesc'))).toBeTruthy();
   });
 
   it('completed guides move into a collapsed History section', () => {
     markGuideCompleted(guides[0].id);
-    render(<GrowTab />);
+    renderGrow();
     // Not recommended, not visible until History is expanded.
     expect(screen.queryByText(pick(guides[0].title, lang))).toBeNull();
     const history = screen.getByRole('button', { name: `${t(lang, 'growHistory')} (1)` });
@@ -71,13 +74,13 @@ describe('GrowTab — one recommended next step', () => {
 
 describe('GrowTab — recommendation lives in the Pray segment only', () => {
   it('shows the next step in Pray and an authored duration with it', () => {
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'aboutMinutes', { n: guideDurationMinutes(guides[0]) }))).toBeTruthy();
   });
 
   it('switching to Learn removes the guide recommendation — learning content stands alone', () => {
-    render(<GrowTab />);
+    renderGrow();
     fireEvent.click(screen.getByText(t(lang, 'growLearn')));
     expect(screen.queryByText(t(lang, 'growNextStep'))).toBeNull();
     expect(screen.queryByText(pick(guides[0].title, lang))).toBeNull();
