@@ -139,10 +139,12 @@ export function clearPlanPrefs(planId) {
 }
 
 // ── Resource languages ───────────────────────────────────────────────────────
-// Recommended books, articles and teachings are tried in the app's language
-// first. English is preselected as a fallback for new readers, but the setting
-// is visible and removable. An explicitly saved [] therefore means "show no
-// fallback". Device-local, like the rest of this module.
+// Recommended books, articles and teachings prefer the app's language, which is
+// always enabled. This list stores additional languages that may appear on the
+// same shelf. English is preselected for new readers but remains visible and
+// removable. An explicitly saved [] therefore means "app language only".
+// Device-local, like the rest of this module. The exported fallback names are
+// retained for storage/API compatibility.
 const LANG_KEY = 'pfm_resource_langs';
 export const DEFAULT_RESOURCE_FALLBACK_LANGUAGES = ['en'];
 

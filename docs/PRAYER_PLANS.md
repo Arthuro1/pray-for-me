@@ -280,9 +280,10 @@ emitted with no properties. The day event fires from `markPrayedOn` in the store
    whoever owns doctrine for this app.
 8. Review all 16 translations for **meaning**, not just key parity.
 
-New plans remain visible only in development preview until `review.status`,
-theology review, safety review, and every locale sign-off contain an approved
-status, a named reviewer, and an ISO date. Draft role material has its own gate.
+New plans remain visible in the catalogue while review is pending, but their
+curriculum and Start action stay unavailable until `review.status`, theology
+review, safety review, and every locale sign-off contain an approved status, a
+named reviewer, and an ISO date. Draft role material has its own gate.
 
 ---
 
@@ -297,8 +298,9 @@ walks reviewed prayer modules one short step at a time.
 
 The certainty a reader reports is the ONLY personalization, it is never
 persisted, and it selects between AUTHORED modules rather than concluding
-anything. `review.status` is `needs_review`, so the plan is development-preview
-only until a human signs off theology, safety and all 16 locales.
+anything. `review.status` is `needs_review`, so readers can discover the plan but
+cannot preview its curriculum or start it until a human signs off theology,
+safety and all 16 locales.
 
 **See `docs/FREEDOM_DELIVERANCE.md`** for the theological model, the day model,
 the certainty→prayer mapping, the family-line categories, the resource review

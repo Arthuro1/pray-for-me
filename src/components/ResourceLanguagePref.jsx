@@ -2,14 +2,18 @@ import { useState } from 'react';
 import { Check, ChevronDown, Library } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { getResourceFallbackLanguages, setResourceFallbackLanguages } from '../lib/planPrefs';
+import { availableResourceLanguages } from '../lib/resources';
+
+const DISPLAYABLE_RESOURCE_LANGUAGES = new Set(availableResourceLanguages());
 
 // "Resource languages" — which languages the recommended books, articles and
 // teachings under a plan day's "Go deeper" may be offered in.
 //
-// The app's own language is always tried first and cannot be switched off.
+// The app's own language is always preferred and cannot be switched off.
 // English is preselected for new readers, but it appears here like every other
-// fallback and can be removed. A fallback is used only when every earlier
-// language has no relevant recommendation.
+// additional language and can be removed. A shelf may mix languages: each work
+// uses its first available edition in [app language, ...selected languages].
+// Languages with no approved, renderable catalogue edition are not offered.
 export default function ResourceLanguagePref({ lang }) {
   const [open, setOpen] = useState(false);
   const [enabled, setEnabled] = useState(() => getResourceFallbackLanguages());
@@ -22,7 +26,7 @@ export default function ResourceLanguagePref({ lang }) {
 
   const appLabel = LANGUAGES.find((l) => l.code === lang)?.label || lang;
   const extra = enabled
-    .filter((c) => c !== lang)
+    .filter((c) => c !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(c))
     .map((c) => LANGUAGES.find((l) => l.code === c)?.label || c);
   const summary = [appLabel, ...extra].join(' · ');
 
@@ -49,7 +53,7 @@ export default function ResourceLanguagePref({ lang }) {
         <div id="resource-languages-panel" className="mt-3">
           <p className="mb-2 text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'resourceLanguagesSub')}</p>
           <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
-            {LANGUAGES.filter((l) => l.code !== lang).map((l) => {
+            {LANGUAGES.filter((l) => l.code !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code)).map((l) => {
               const on = enabled.includes(l.code);
               return (
                 <button

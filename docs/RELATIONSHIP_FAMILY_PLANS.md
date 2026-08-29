@@ -208,10 +208,11 @@ theology, pastoral safety, role material, and every locale have approved,
 named, dated sign-offs. Development preview remains available for reviewers.
 Generated theological or translated prose must not be approved automatically.
 
-A plan that cannot be opened is left out of the catalogue entirely rather than
-shown disabled — `plansByCategory()` filters on `canUsePlan()`, so a production
-build advertises nothing a reader cannot have, while reviewers still see both
-plans in a development build.
+Pending plans remain visible in the catalogue so readers can discover the full
+plan family. Catalogue visibility is separate from release eligibility:
+`canUsePlan()` still keeps the curriculum, Start action, invitations, and group
+adoption unavailable in production, while reviewers can exercise them in a
+development build.
 
 No database schema, RLS policy, migration, environment variable, background
 job, or deployment setting changed for these plans. Existing plan invitation

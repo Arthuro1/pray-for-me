@@ -4,7 +4,7 @@
 // reader cannot identify before opening it.
 import { describe, it, expect } from 'vitest';
 import {
-  resolveResources, resourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
+  resolveResources, resourceLanguages, availableResourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
   isResourceApprovedForDisplay, isSensitiveResource,
 } from './resources.js';
 import { RESOURCES, RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS, RESOURCE_STATUSES } from '../content/resources/catalogue.js';
@@ -86,9 +86,39 @@ describe('resourceLanguages', () => {
     expect(resourceLanguages('de', ['en', 'de'])).toEqual(['de', 'en']);
   });
 
-  it('is just the app language when no fallback was enabled', () => {
+  it('is just the app language when no additional language was enabled', () => {
     expect(resourceLanguages('de')).toEqual(['de']);
   });
+});
+
+describe('availableResourceLanguages', () => {
+  it('returns only languages backed by an approved, renderable edition', () => {
+    const catalogue = [
+      {
+        id: 'live', status: 'approved', topics: ['marriage'],
+        editions: {
+          en: edition(),
+          de: edition({ available: false }),
+          es: edition({ lastVerifiedAt: null }),
+        },
+      },
+      {
+        id: 'draft-only-fr', status: 'draft', topics: ['marriage'],
+        editions: { fr: edition() },
+      },
+      {
+        id: 'unsigned-sensitive-ar', status: 'approved', reviewLevel: 'sensitive', topics: ['marriage'],
+        editions: { ar: edition() },
+      },
+      {
+        id: 'another-live-language', status: 'approved', topics: ['marriage'],
+        editions: { zh: edition() },
+      },
+    ];
+
+    expect(availableResourceLanguages(catalogue)).toEqual(['en', 'zh']);
+  });
+
 });
 
 describe('resolveResources — review gate', () => {
@@ -195,28 +225,41 @@ describe('resolveResources — language priority', () => {
     expect(out.map((r) => r.id)).not.toContain('en-original');
   });
 
-  it('offers a configured fallback language when the app language has no match', () => {
-    const withoutFallback = resolveResources({
+  it('offers a selected additional language when the app language has no match', () => {
+    const withoutAdditionalLanguage = resolveResources({
       topics: ['covenant'], lifeStage: 'single', languages: ['de'], catalogue: CATALOGUE,
     });
-    expect(withoutFallback).toEqual([]);
+    expect(withoutAdditionalLanguage).toEqual([]);
 
-    const withFallback = resolveResources({
+    const withAdditionalLanguage = resolveResources({
       topics: ['covenant'], lifeStage: 'single', languages: ['de', 'en'], catalogue: CATALOGUE,
     });
-    expect(withFallback.map((r) => r.id)).toEqual(['en-original']);
+    expect(withAdditionalLanguage.map((r) => r.id)).toEqual(['en-original']);
     // …and it is flagged, so the UI can name the language.
-    expect(withFallback[0].isFallback).toBe(true);
-    expect(withFallback[0].lang).toBe('en');
+    expect(withAdditionalLanguage[0].isFallback).toBe(true);
+    expect(withAdditionalLanguage[0].lang).toBe('en');
   });
 
-  it('does not mix in fallback results when the app language has a match', () => {
+  it('mixes in selected-language-only resources even when the app language has matches', () => {
     const out = resolveResources({
       topics: ['marriage'], lifeStage: 'single', languages: ['de', 'en'], catalogue: CATALOGUE, limit: 50,
     });
-    expect(out.length).toBeGreaterThan(0);
-    expect(out.every((resource) => resource.lang === 'de')).toBe(true);
-    expect(out.map((resource) => resource.id)).not.toContain('en-original');
+    expect(out.map((resource) => resource.lang)).toEqual(['de', 'de', 'en']);
+    expect(out.map((resource) => resource.id)).toEqual([
+      'de-original', 'en-with-de-edition', 'en-original',
+    ]);
+    expect(out.at(-1)).toMatchObject({ id: 'en-original', lang: 'en', isFallback: true });
+  });
+
+  it('returns one preferred edition per resource instead of duplicate language rows', () => {
+    const out = resolveResources({
+      topics: ['marriage'], lifeStage: 'single', languages: ['de', 'en'], catalogue: CATALOGUE,
+    });
+    const translatedWork = out.filter((resource) => resource.id === 'en-with-de-edition');
+    expect(translatedWork).toHaveLength(1);
+    expect(translatedWork[0]).toMatchObject({
+      lang: 'de', isFallback: false, edition: { title: 'Verifizierte deutsche Ausgabe' },
+    });
   });
 });
 
@@ -247,7 +290,7 @@ describe('resolveResources — relevance and caps', () => {
     expect(out.map((r) => r.id)).not.toContain('off-topic');
   });
 
-  it('returns the complete relevant tier by default and honours an explicit cap', () => {
+  it('returns the complete relevant set by default and honours an explicit cap', () => {
     expect(DEFAULT_RESOURCE_LIMIT).toBe(Number.POSITIVE_INFINITY);
     expect(resolve({ limit: DEFAULT_RESOURCE_LIMIT }).length).toBeGreaterThan(1);
     expect(resolve({ limit: 1 })).toHaveLength(1);
@@ -432,11 +475,7 @@ describe('the shipped catalogue', () => {
   });
 
   it('ships verified recommendations in every currently covered app language', () => {
-    const coveredLanguages = [...new Set(
-      RESOURCES
-        .filter(({ status }) => status === 'approved')
-        .flatMap(({ editions }) => Object.keys(editions || {})),
-    )].sort();
+    const coveredLanguages = availableResourceLanguages();
 
     expect(coveredLanguages).toEqual([
       // `hi` arrived with the deliverance shelf: Derek Prince Ministries India
@@ -452,7 +491,7 @@ describe('the shipped catalogue', () => {
       }));
   });
 
-  // Locale coverage is the whole point of the per-language tiers, so the titles
+  // Locale coverage is the whole point of language selection, so the titles
   // that carry several verified editions are asserted by name: a translation
   // silently dropped in a refactor would otherwise just look like a quiet shelf.
   it('offers the widely translated titles in each language whose edition was verified', () => {

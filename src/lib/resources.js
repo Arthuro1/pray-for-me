@@ -12,9 +12,9 @@
 //      trustworthy German resource covers the topic — very possibly a different
 //      book by a different author from the English list. Nothing is ever
 //      machine-translated into an edition that does not exist.
-//   3. FALLBACKS NEVER DILUTE A LOCAL MATCH. The resolver tries one language at
-//      a time. It only moves to the next configured fallback when the earlier
-//      language has no relevant recommendation at all.
+//   3. ENABLED LANGUAGES ARE HONOURED TOGETHER. The app language ranks first,
+//      then any additional languages the reader selected. Each resource appears
+//      once, in the first enabled language that has a verified edition.
 //   4. A TOPIC ONLY MATCHES INSIDE ITS OWN DOMAIN. Topic tags are shared by
 //      every plan, so 'discernment', 'healing' or 'identity' can mean one thing
 //      to a dating book and something else entirely on a day about renouncing
@@ -23,11 +23,10 @@
 //      domain belongs to none of them.
 import { RESOURCES } from '../content/resources/catalogue';
 
-// The resolver returns the complete relevant language tier by default. The UI
-// is responsible for progressive disclosure (it previews a few cards, then
-// lets the reader reveal the rest) so catalogue data is not silently discarded
-// before it reaches the shelf. Callers can still pass a finite limit when they
-// genuinely need a bounded subset.
+// The resolver returns the complete relevant mixed-language set by default, so
+// selected-language resources are not silently discarded before they reach the
+// shelf. Callers can still pass a finite limit when they genuinely need a
+// bounded subset.
 export const DEFAULT_RESOURCE_LIMIT = Number.POSITIVE_INFINITY;
 
 // Topics whose recommendations can touch safety, trauma, sexual coercion,
@@ -82,9 +81,9 @@ export function isResourceApprovedForDisplay(resource) {
 }
 
 // The languages a reader should be offered resources in: their app language
-// first, then configured fallbacks (see the "Resource languages" preference).
-// English is preselected for a new reader, but it is removable; the resolver
-// only reaches it when every earlier language has no relevant recommendation.
+// first, then the additional languages selected in "Resource languages".
+// English is preselected for a new reader, but it is removable. The order is
+// also the edition preference for a resource available in several languages.
 export function resourceLanguages(lang, enabledFallbacks = []) {
   const out = [];
   for (const code of [lang, ...(enabledFallbacks || [])]) {
@@ -101,6 +100,21 @@ function isRenderableEdition(edition) {
   } catch {
     return false;
   }
+}
+
+// Languages for which the bundled catalogue has at least one edition that can
+// actually reach a reader. This uses the same publication and edition gates as
+// resolveResources(), so Settings never offers a language backed only by draft,
+// unreviewed, unavailable, malformed or unverified material.
+export function availableResourceLanguages(catalogue = RESOURCES) {
+  const languages = new Set();
+  for (const resource of catalogue) {
+    if (!isResourceApprovedForDisplay(resource)) continue;
+    for (const [lang, edition] of Object.entries(resource.editions || {})) {
+      if (lang && isRenderableEdition(edition)) languages.add(lang);
+    }
+  }
+  return [...languages].sort();
 }
 
 // How well an entry matches what today is about. Day topics are what make a
@@ -126,8 +140,8 @@ function matchesDomain(resource, domains) {
   return (resource.domains || []).some((d) => domains.includes(d));
 }
 
-// § fallback — within a chosen language, original work comes before a verified
-// translation. Language priority itself is handled one complete tier at a time.
+// Within each enabled language, original work comes before a verified
+// translation. Language priority is handled before this rank.
 function languageRank(resource, lang) {
   return resource.originalLanguage === lang ? 0 : 1;
 }
@@ -154,14 +168,15 @@ function perspectiveRank(resource, perspectiveOrder) {
 //   lifeStage          e.g. 'single' — an entry that names lifeStages must include it
 //   domains            from the plan's `resourceDomains`: the families of
 //                      resources it draws from ([] leaves the plan unscoped)
-//   languages          from resourceLanguages(): [appLang, ...enabled fallbacks]
+//   languages          from resourceLanguages(): [appLang, ...enabled languages]
 //   boostTopics        from the reader's growth areas (ranking only)
 //   perspectiveOrder   theological traditions this plan wants first (ranking only)
-//   limit              optional hard cap; defaults to the complete matching tier
+//   limit              optional hard cap; defaults to the complete matching set
 //   catalogue          injectable, so tests never depend on shipped content
 //
-// Returns the first non-empty language tier. This makes "English if none found"
-// literal: English never supplements a smaller app-language list.
+// Returns one row per matching resource. For a work with several verified
+// editions, the first enabled language wins; resources that exist only in a
+// selected additional language are still included after app-language results.
 export function resolveResources({
   topics = [],
   lifeStage = null,
@@ -175,45 +190,44 @@ export function resolveResources({
   if (!topics.length || !languages.length) return [];
   const dayTopics = topics;
   const languageTiers = [...new Set(languages.filter(Boolean))];
+  const languageOrder = new Map(languageTiers.map((code, index) => [code, index]));
+  const matches = [];
 
-  for (let languageIndex = 0; languageIndex < languageTiers.length; languageIndex += 1) {
+  for (const resource of catalogue) {
+    if (!isResourceApprovedForDisplay(resource)) continue;
+    if (!matchesDomain(resource, domains)) continue;
+    if (lifeStage && resource.lifeStages?.length && !resource.lifeStages.includes(lifeStage)) continue;
+    const score = topicScore(resource, dayTopics, boostTopics);
+    if (score === 0) continue;
+
+    // Pick exactly one edition for this resource. The app language wins when it
+    // exists; otherwise the reader's additional languages are tried in order.
+    const languageIndex = languageTiers.findIndex((code) => isRenderableEdition(resource.editions?.[code]));
+    if (languageIndex === -1) continue;
     const lang = languageTiers[languageIndex];
-    const matches = [];
 
-    for (const resource of catalogue) {
-      if (!isResourceApprovedForDisplay(resource)) continue;
-      if (!matchesDomain(resource, domains)) continue;
-      if (lifeStage && resource.lifeStages?.length && !resource.lifeStages.includes(lifeStage)) continue;
-      const score = topicScore(resource, dayTopics, boostTopics);
-      if (score === 0 || !isRenderableEdition(resource.editions?.[lang])) continue;
-
-      matches.push({
-        id: resource.id,
-        type: resource.type,
-        topics: resource.topics || [],
-        description: resource.description || null,
-        lang,
-        // Every fallback card still names its language in the UI.
-        isFallback: languageIndex > 0,
-        edition: resource.editions[lang],
-        perspective: resource.perspective || [],
-        rank: languageRank(resource, lang),
-        perspectiveRank: perspectiveRank(resource, perspectiveOrder),
-        score,
-      });
-    }
-
-    if (matches.length) {
-      matches.sort((a, b) => a.perspectiveRank - b.perspectiveRank
-        || a.rank - b.rank
-        || b.score - a.score
-        || a.id.localeCompare(b.id));
-      const resultLimit = Number.isFinite(limit) ? Math.max(0, limit) : matches.length;
-      return matches.slice(0, resultLimit);
-    }
+    matches.push({
+      id: resource.id,
+      type: resource.type,
+      topics: resource.topics || [],
+      description: resource.description || null,
+      lang,
+      isFallback: languageIndex > 0,
+      edition: resource.editions[lang],
+      perspective: resource.perspective || [],
+      rank: languageRank(resource, lang),
+      perspectiveRank: perspectiveRank(resource, perspectiveOrder),
+      score,
+    });
   }
 
-  return [];
+  matches.sort((a, b) => languageOrder.get(a.lang) - languageOrder.get(b.lang)
+    || a.perspectiveRank - b.perspectiveRank
+    || a.rank - b.rank
+    || b.score - a.score
+    || a.id.localeCompare(b.id));
+  const resultLimit = Number.isFinite(limit) ? Math.max(0, limit) : matches.length;
+  return matches.slice(0, resultLimit);
 }
 
 // A retired entry can name its successor; follow that so a link that has died

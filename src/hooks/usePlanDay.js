@@ -18,8 +18,10 @@ import { canUsePlan } from '../lib/planReview';
 // only ever ADD to a day: they choose which optional reflection is shown and
 // which approved resources rank first. They never change the day itself.
 //
-// `fallbackLanguages` is injectable for tests; in the app it comes from the
-// reader's own "Resource languages" preference.
+// `fallbackLanguages` is the legacy API name for additional resource languages.
+// It is injectable for tests; in the app it comes from the reader's own
+// "Resource languages" preference and may contribute rows alongside app-language
+// resources.
 export function usePlanDay(planId, dayNumber, lang, {
   fallbackLanguages, prayerId = null, ownerId = null, planVersion = null,
 } = {}) {
@@ -55,8 +57,8 @@ export function usePlanDay(planId, dayNumber, lang, {
     [plan, sourceDay, privatePrefs, lang],
   );
   const prefs = isCouplePlan(plan) ? privatePrefs : singlesPrefs;
-  const fallbacks = fallbackLanguages || getResourceFallbackLanguages();
-  const fallbackKey = fallbacks.join(',');
+  const additionalLanguages = fallbackLanguages || getResourceFallbackLanguages();
+  const additionalLanguageKey = additionalLanguages.join(',');
 
   const resources = useMemo(() => {
     if (!day?.resourceTopics?.length) return [];
@@ -68,14 +70,14 @@ export function usePlanDay(planId, dayNumber, lang, {
       // covenants matched dating books on 'discernment'. A plan that declares
       // no domains is unscoped, exactly as before.
       domains: plan?.resourceDomains || [],
-      languages: resourceLanguages(lang, fallbackKey ? fallbackKey.split(',') : []),
+      languages: resourceLanguages(lang, additionalLanguageKey ? additionalLanguageKey.split(',') : []),
       boostTopics: growthTopics(prefs),
       // A plan may ask for its shelf to be ORDERED by theological perspective
       // (the deliverance plan puts African Pentecostal material first). Ordering
       // only: it never adds or removes an approved resource.
       perspectiveOrder: plan?.resourcePerspectives || [],
     });
-  }, [day, plan, lang, fallbackKey, prefs]);
+  }, [day, plan, lang, additionalLanguageKey, prefs]);
 
   return { day, prefs, role: prefs?.role || 'general', resources, reloadPrefs };
 }

@@ -349,13 +349,11 @@ export default function PlanTab() {
                     <button
                       key={plan.id}
                       onClick={() => {
-                        if (!canUsePlan(plan)) return;
                         // A plan already on the calendar opens where the reader
                         // actually is; only an unstarted one needs the preview.
                         if (run) navigate(`/prayers/${run.prayerId}`);
                         else setDetailPlan(plan);
                       }}
-                      disabled={!canUsePlan(plan)}
                       className="phase-card plan-card p-4 flex items-start gap-3 text-start w-full"
                     >
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>

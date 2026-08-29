@@ -153,13 +153,13 @@ describe('growthTopics', () => {
   });
 });
 
-describe('resource fallback languages', () => {
+describe('additional resource languages', () => {
   it('preselects English for a new reader', () => {
     expect(DEFAULT_RESOURCE_FALLBACK_LANGUAGES).toEqual(['en']);
     expect(getResourceFallbackLanguages()).toEqual(['en']);
   });
 
-  it('lets the reader explicitly turn every fallback off', () => {
+  it('lets the reader explicitly turn every additional language off', () => {
     setResourceFallbackLanguages([]);
     expect(getResourceFallbackLanguages()).toEqual([]);
   });

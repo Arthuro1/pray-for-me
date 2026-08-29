@@ -1131,7 +1131,7 @@ export default {
   "resourceTypeStudy": "ጥናት",
   "resourceTypePrayerGuide": "የጸሎት መመሪያ",
   "resourceLanguagesTitle": "የግብዓት ቋንቋዎች",
-  "resourceLanguagesSub": "ምክሮች መጀመሪያ የመተግበሪያውን ቋንቋ ይጠቀማሉ። በዚያ ቋንቋ ምንም ካልተገኘ ብቻ እንግሊዝኛ ይታያል፤ ማጥፋት ወይም ማንበብ የምትችላቸውን ሌሎች ቋንቋዎች መጨመር ትችላለህ።",
+  "resourceLanguagesSub": "ምክሮች የመተግበሪያውን ቋንቋ ያስቀድማሉ፣ እንዲሁም በመረጥካቸው ሌሎች ቋንቋዎች የተዘጋጁ ግብዓቶችን ሊያካትቱ ይችላሉ። እንግሊዝኛ በነባሪ ተመርጧል፤ የማታነበው ከሆነ አጥፋው።",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "ለታጩ፦ ለጋብቻ መዘጋጀት",

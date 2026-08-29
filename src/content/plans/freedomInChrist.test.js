@@ -79,12 +79,12 @@ describe('the plan runs on the existing engine', () => {
     });
   });
 
-  it('stays out of a production build until a human has signed it off', () => {
+  it('stays unavailable in production until a human has signed it off', () => {
     expect(isPlanReviewed(plan)).toBe(false);
     expect(canUsePlan(plan, { preview: false })).toBe(false);
-    // …and is therefore not listed in a production build either.
-    const production = plansByCategory(PLANS, { preview: false }).flatMap((g) => g.plans);
-    expect(production).not.toContain(plan);
+    // It remains discoverable without exposing the curriculum or Start action.
+    const production = plansByCategory(PLANS).flatMap((g) => g.plans);
+    expect(production).toContain(plan);
     // Reviewers still see it in a development preview.
     expect(canUsePlan(plan, { preview: true })).toBe(true);
   });

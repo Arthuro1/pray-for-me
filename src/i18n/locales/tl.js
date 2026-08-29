@@ -1131,7 +1131,7 @@ export default {
   "resourceTypeStudy": "Pag-aaral",
   "resourceTypePrayerGuide": "Gabay sa panalangin",
   "resourceLanguagesTitle": "Mga wika ng materyal",
-  "resourceLanguagesSub": "Uunahin ng mga rekomendasyon ang wika ng app. Lalabas lang ang English kapag walang available na materyal; maaari mo itong i-off o magdagdag ng iba pang wikang nababasa mo.",
+  "resourceLanguagesSub": "Uunahin ng mga rekomendasyon ang wika ng app at maaari ring magsama ng mga materyal sa alinmang iba pang wikang pipiliin mo. Naka-select ang English bilang default; i-off ito kung hindi mo ito binabasa.",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Magkatipan: paghahanda sa pag-aasawa",

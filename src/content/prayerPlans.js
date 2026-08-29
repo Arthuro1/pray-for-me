@@ -255,16 +255,13 @@ export function getPlan(id, version = null) {
 // Plans grouped for display, in PLAN_CATEGORIES order. Empty categories are
 // dropped so the list only ever shows headings that have something under them.
 //
-// A plan whose content review has not passed is left out entirely rather than
-// shown disabled: a production build cannot open it, and a card labelled
-// "Content review pending" is internal state, not a product. Reviewers still see
-// them, because canUsePlan() is permissive in a development build.
-// `options` is passed straight to canUsePlan, so a test can ask what a
-// PRODUCTION build would list ({ preview: false }) rather than what this one does.
-export function plansByCategory(plans = PLANS, options = undefined) {
-  const usable = plans.filter((p) => canUsePlan(p, options));
+// Catalogue visibility and launch eligibility are deliberately separate. A
+// pending plan still belongs in the catalogue so readers can discover it and
+// understand why it is not available yet; canUsePlan() remains the gate at the
+// detail, start and day-content boundaries.
+export function plansByCategory(plans = PLANS) {
   return PLAN_CATEGORIES
-    .map((c) => ({ ...c, plans: usable.filter((p) => (p.category || DEFAULT_PLAN_CATEGORY) === c.id) }))
+    .map((c) => ({ ...c, plans: plans.filter((p) => (p.category || DEFAULT_PLAN_CATEGORY) === c.id) }))
     .filter((c) => c.plans.length > 0);
 }
 

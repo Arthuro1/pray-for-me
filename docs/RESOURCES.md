@@ -49,11 +49,12 @@ every entry to state one of `RESOURCE_STATUSES`.
 ### What actually reaches a reader today
 
 Forty-five entries are displayable. Eight translated works now carry
-twenty-five verified localized editions; together with original-language works,
-the live catalogue covers eleven app languages: Arabic, Chinese, English,
-French, German, Indonesian, Japanese, Korean, Portuguese, Russian and Spanish.
-Counting the days of each relationship plan that resolve to at least one
-resource in that exact language (without fallback):
+twenty-five verified localized editions; together with original-language works
+and the freedom-resource collection, the live catalogue covers twelve app
+languages: Arabic, Chinese, English, French, German, Hindi, Indonesian,
+Japanese, Korean, Portuguese, Russian and Spanish. Counting the days of each
+relationship plan that resolve to at least one resource with only that exact
+language enabled:
 
 | Plan | days | ar | de | en | es | fr | id | ja | ko | pt | ru | zh |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -73,10 +74,12 @@ language key exists only where a real edition was found.
 The six other plans declare no `resourceTopics` on any day, so they never show a
 "Go deeper" shelf in any language.
 
-Amharic, Farsi, Hindi, Swahili and Tagalog currently have no displayable
-edition. English is therefore the default fallback for those readers, but it is
-used only when their app language has no relevant match and can be turned off in
-Resource languages.
+Hindi's approved editions currently belong to the freedom-resource domain, not
+the relationship plans in the table. Amharic, Farsi, Swahili and Tagalog have no
+displayable edition anywhere in the catalogue, so they are not offered as
+additional Resource languages. If one is the app language it is still tried
+automatically; English is selected as an additional language for new readers
+and can be turned off.
 
 Two newly discovered multilingual studies are recorded as `needs_review`, not
 published: Family Discipleship Ministries' *Marriage Is a Ministry* (English,
@@ -204,24 +207,30 @@ A German reader may be offered a completely different, German-authored book by a
 different author than an English reader gets on the same topic — and that is
 **preferred** over a translation.
 
-### The fallback hierarchy (`src/lib/resources.js`)
+### Language selection and ordering (`src/lib/resources.js`)
 
-1. Try the app language as a complete tier: approved resources **originally in
-   that language** rank before verified translations.
-2. Only when that tier has no relevant result, try configured fallback languages
-   one at a time in the reader's chosen order.
-3. If every tier is empty, show no "Go deeper" shelf.
+1. The app language is always enabled, ranks first and cannot be removed.
+2. Every additional language selected by the reader is eligible on the same
+   shelf. For each resource, the resolver chooses the first verified edition in
+   `[app language, ...selected languages]`, so a work never appears twice.
+3. App-language resources sort first, followed by additional languages in the
+   reader's selection order. Within one language, an originally authored work
+   ranks before a verified translation.
+4. If no approved resource has a relevant edition in any enabled language, show
+   no "Go deeper" shelf.
 
-English is preselected as a fallback for a new reader, matching the product rule
-"English if none is found". It never supplements a smaller local-language list:
-one relevant local result is enough to keep the whole shelf local. English is a
-visible, removable option, and readers may add any other language they can read.
+English is preselected as an additional language for a new reader. It can add a
+relevant English-only title even when the day also has app-language resources;
+it is visible and removable. Readers may add any other language with at least
+one approved, renderable catalogue edition. `availableResourceLanguages()` uses
+the same approval and edition gates as the resolver to keep zero-coverage
+languages out of Settings. Availability somewhere in the catalogue does not
+promise a match for every plan domain or day.
+
 The preference is stored on the device under `pfm_resource_langs`; an explicitly
-saved empty list means no fallback. The app language is always first and cannot
-be removed.
-
-Every card names its **type and its language**, so a fallback-language
-recommendation is obvious before it is opened.
+saved empty list means app language only. Every card names its **type and its
+language**, so an additional-language recommendation is obvious before it is
+opened.
 
 ### Never fabricate an edition
 
@@ -244,10 +253,13 @@ AI may help a curator *discover candidates*. Publication always requires a human
 - only editions with a usable HTTPS URL and verified localized title;
 - only entries whose topics overlap the day's `resourceTopics`;
 - only entries whose `lifeStages` include the plan's `lifeStage` (when declared);
-- ranked by the language hierarchy above, then by topic fit;
+- chooses at most one edition per resource, using app language before selected
+  additional languages;
+- ranked by language order, then perspective, original-language authorship and
+  topic fit;
 - the reader's **growth areas** boost ranking only — they can never pull an
   off-topic resource in;
-- returns the complete matching language tier by default, which is what the
+- returns the complete matching mixed-language set by default, which is what the
   shelf renders (callers may still pass an explicit cap);
 - `[]` when nothing qualifies, so the caller omits the section.
 
@@ -341,10 +353,11 @@ An entry may declare `perspective: ['african-pentecostal', 'pentecostal']` from
 says one tradition is better than another, and it is never shown as a judgement.
 
 A plan may declare `resourcePerspectives: [...]`, which `usePlanDay` passes to
-the resolver as `perspectiveOrder`. It **orders** a shelf that has already passed
-every approval gate — it can never add a resource, remove one, or override
-topic relevance or the language tier. An entry with no perspective, or one the
-plan did not rank, sorts after those it did rather than being dropped.
+the resolver as `perspectiveOrder`. It **orders** resources within their selected
+language after every approval gate has passed — it can never add a resource,
+remove one, or override topic relevance or language priority. An entry with no
+perspective, or one the plan did not rank, sorts after those it did rather than
+being dropped.
 
 **To add a locale**
 

@@ -26,25 +26,20 @@ describe('Relationships & Family plan family', () => {
     }
   });
 
-  // A plan nobody can open must not appear in the list at all. Showing it
-  // disabled, with a "Content review pending" label, ships internal review
-  // state to every reader and advertises something they cannot have.
-  it('leaves the unreviewed couple plans out of a production catalogue', () => {
-    const shipped = plansByCategory(PLANS, { preview: false }).flatMap((group) => group.plans);
+  // Visibility is not a release bypass: pending plans stay discoverable in the
+  // catalogue, while canUsePlan() still prevents opening their curriculum or
+  // starting them until every review has passed.
+  it('keeps unreviewed couple plans visible but unavailable', () => {
+    const shipped = plansByCategory(PLANS).flatMap((group) => group.plans);
     expect(shipped).toContain(PREPARING_IN_PRAYER);
-    expect(shipped).not.toContain(PREPARING_FOR_COVENANT);
-    expect(shipped).not.toContain(PRAYING_FOR_OUR_MARRIAGE);
-    // Every plan a production build lists is one it can actually open.
-    for (const plan of shipped) expect(canUsePlan(plan, { preview: false })).toBe(true);
-  });
-
-  it('still shows them to reviewers in a development preview', () => {
-    const preview = plansByCategory(PLANS, { preview: true }).flatMap((group) => group.plans);
-    expect(preview).toEqual(expect.arrayContaining([PREPARING_FOR_COVENANT, PRAYING_FOR_OUR_MARRIAGE]));
+    expect(shipped).toEqual(expect.arrayContaining([PREPARING_FOR_COVENANT, PRAYING_FOR_OUR_MARRIAGE]));
+    expect(canUsePlan(PREPARING_FOR_COVENANT, { preview: false })).toBe(false);
+    expect(canUsePlan(PRAYING_FOR_OUR_MARRIAGE, { preview: false })).toBe(false);
   });
 
   it('drops a category once nothing in it can be shown', () => {
     expect(plansByCategory([]).length).toBe(0);
-    expect(plansByCategory([PRAYING_FOR_OUR_MARRIAGE], { preview: false }).length).toBe(0);
+    expect(plansByCategory([PRAYING_FOR_OUR_MARRIAGE]).flatMap((group) => group.plans))
+      .toEqual([PRAYING_FOR_OUR_MARRIAGE]);
   });
 });
