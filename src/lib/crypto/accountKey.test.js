@@ -35,6 +35,7 @@ vi.mock('../supabase', () => ({
 }));
 
 import { ensureAccountCryptoReady, startFreshEncryption, CRYPTO_STATUS } from './accountKey';
+import { VAULT_SYNC } from '../vaultSync';
 import { isUnlocked, isVaultInitialized, getMasterKey, lock, destroyVault, createVault } from './keyManager';
 import { encryptJsonLegacy, decryptJson } from './e2ee';
 import { clearUserKeyCache } from './userKeys';
@@ -113,6 +114,27 @@ describe('ensureAccountCryptoReady', () => {
 
     expect(status).toBe(CRYPTO_STATUS.UNAVAILABLE);
     expect(isUnlocked()).toBe(false);
+  });
+
+  it('does NOT offer to start fresh when the recovery lookup failed', async () => {
+    // Same shape as the ORPHANED case, except the caller could not read
+    // vault_keys. A recovery record may well exist, so the honest answer is the
+    // retry screen — not the one that says none was set up and offers to
+    // discard everything encrypted under the missing key.
+    db.user_crypto_keys.set('user-1', { user_id: 'user-1', public_key_jwk: {}, encrypted_private_key: {} });
+
+    const status = await ensureAccountCryptoReady('user-1', VAULT_SYNC.UNKNOWN);
+
+    expect(status).toBe(CRYPTO_STATUS.UNAVAILABLE);
+    expect(isUnlocked()).toBe(false);
+  });
+
+  it('still surfaces ORPHANED when the server confirms there is no recovery record', async () => {
+    db.user_crypto_keys.set('user-1', { user_id: 'user-1', public_key_jwk: {}, encrypted_private_key: {} });
+
+    const status = await ensureAccountCryptoReady('user-1', VAULT_SYNC.ABSENT);
+
+    expect(status).toBe(CRYPTO_STATUS.ORPHANED);
   });
 });
 

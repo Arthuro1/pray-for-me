@@ -65,6 +65,10 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   const [confirm, setConfirm] = useState('');
   const [code, setCode] = useState('');
   const [recoveryCode, setRecoveryCode] = useState('');
+  // False when the wrapped record didn't reach the server: the code works here,
+  // but no other device can use it until this one syncs (which it retries on the
+  // next launch). Saying nothing would promise cross-device recovery we haven't got.
+  const [codeSynced, setCodeSynced] = useState(true);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -90,10 +94,11 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     // THAT key under the passphrase — never mint a new one, which would orphan
     // every prayer already encrypted under the current key. createVault is only
     // for the (rare) case where no key exists yet.
-    const rc = unlocked ? await setUpRecovery(pass) : await createVault(pass);
+    const { code: rc, synced } = unlocked ? await setUpRecovery(pass) : await createVault(pass);
     setBusy(false);
     if (!rc) return setError(t(lang, 'errorGeneric'));
     setRecoveryCode(rc);
+    setCodeSynced(synced);
     setPass(''); setConfirm('');
     setMode('recovery');
   };
@@ -133,10 +138,11 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   const handleRotate = async () => {
     setError('');
     setBusy(true);
-    const rc = await rotateRecoveryCode();
+    const { code: rc, synced } = await rotateRecoveryCode();
     setBusy(false);
     if (!rc) return setError(t(lang, 'vaultWrongPass')); // locked or no vault
     setRecoveryCode(rc);
+    setCodeSynced(synced);
     setMode('recovery');
   };
 
@@ -190,6 +196,9 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </button>
             </div>
+            {!codeSynced && (
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--danger)' }}>{t(lang, 'vaultCodeNotSynced')}</p>
+            )}
             <PrimaryButton onClick={() => done()}>{t(lang, 'vaultRecoverySaved')}</PrimaryButton>
           </div>
         )}

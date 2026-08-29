@@ -20,6 +20,7 @@
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import * as km from './keyManager';
 import { supabase } from '../supabase';
+import { VAULT_SYNC } from '../vaultSync';
 import { regenerateIdentityKey } from './userKeys';
 
 const hasIDB = () => typeof indexedDB !== 'undefined';
@@ -63,17 +64,23 @@ async function hasServerEncryptionState(userId) {
 
 // Ensure an account key is ready for the signed-in user. Idempotent; safe to
 // call on every boot. Returns a CRYPTO_STATUS so the caller can gate the UI.
+// `recoverySync` is the VAULT_SYNC result of the caller's pullVaultRecord() —
+// what the SERVER holds — which is the only way to tell "this user never set up
+// recovery" apart from "we could not read their recovery record".
 // Order:
 //   1. If a key is already in memory (session mirror / earlier call) → reuse it.
 //   2. Restore the transparent per-user key from IndexedDB.
 //   3. If a recovery record exists but no local key → a new/other device; stay
 //      LOCKED so the recovery unlock UI (VaultLockScreen) can handle it.
-//   4. If the server shows this user already has encrypted data but we reach
+//   4. If the recovery lookup itself failed → UNAVAILABLE. A record may well
+//      exist; treating the blip as "none" would offer to discard recoverable
+//      prayers on the very screen that says no recovery was set up.
+//   5. If the server shows this user already has encrypted data but we reach
 //      here with no local key and no recovery record → ORPHANED. Do NOT mint a
 //      new key (that would silently orphan the existing ciphertext); surface the
 //      recovery screen so the user makes an explicit choice.
-//   5. Otherwise this is genuine first use → auto-provision the key transparently.
-export async function ensureAccountCryptoReady(userId) {
+//   6. Otherwise this is genuine first use → auto-provision the key transparently.
+export async function ensureAccountCryptoReady(userId, recoverySync) {
   await km.hydrate();
   if (km.isUnlocked()) { await rememberAccountKey(userId); return CRYPTO_STATUS.READY; }
 
@@ -85,6 +92,7 @@ export async function ensureAccountCryptoReady(userId) {
   }
 
   if (km.isVaultInitialized()) return CRYPTO_STATUS.LOCKED; // recovery-protected key elsewhere
+  if (recoverySync === VAULT_SYNC.UNKNOWN) return CRYPTO_STATUS.UNAVAILABLE;
 
   const serverState = await hasServerEncryptionState(userId);
   if (serverState === SERVER_STATE.PRESENT) return CRYPTO_STATUS.ORPHANED;

@@ -301,17 +301,20 @@ export default function AuthenticatedApp({
     if (pending) navigate(pending, { replace: true });
   }, [user?.id, navigate]);
 
-  // Pull any (wrapped) recovery record synced from another device, then make the
-  // account key ready: this auto-provisions encryption transparently on first
-  // use, restores the device-local key on later boots, or leaves it locked when
-  // a recovery-protected key exists elsewhere (new device → VaultLockScreen).
+  // Reconcile the (wrapped) recovery record with the server — pulling one synced
+  // from another device, or re-pushing one an earlier failed sync stranded here —
+  // then make the account key ready: this auto-provisions encryption
+  // transparently on first use, restores the device-local key on later boots, or
+  // leaves it locked when a recovery-protected key exists elsewhere (new device
+  // → VaultLockScreen). The sync result is passed on so a FAILED lookup gates on
+  // the retry screen instead of being read as "no recovery was ever set up".
   // Gates the splash until the crypto state is known.
   useEffect(() => {
     if (!user?.id) { setVaultChecked(false); setCryptoStatus(null); return undefined; }
     let cancelled = false;
     (async () => {
-      await pullVaultRecord();
-      const status = await ensureAccountCryptoReady(user.id);
+      const recoverySync = await pullVaultRecord();
+      const status = await ensureAccountCryptoReady(user.id, recoverySync);
       if (cancelled) return;
       setCryptoStatus(status);
       useVaultStore.getState().refresh();

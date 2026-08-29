@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "Nakili msimbo",
   "vaultCodeCopied": "Msimbo wa kurejesha umenakiliwa",
   "vaultRecoverySaved": "Nimehifadhi msimbo wangu wa kurejesha",
+  "vaultCodeNotSynced": "Msimbo huu umehifadhiwa kwenye kifaa hiki pekee — hatukuweza kufikia seva. Hautafungua vifaa vyako vingine hadi kifaa hiki kisawazishe; fungua Pray4Me hapa ukiwa mtandaoni na itakamilika yenyewe.",
   "vaultUnlockTitle": "Fungua Sanduku lako la Maombi",
   "vaultUnlockIntro": "Weka neno-siri lako ili kusoma na kuhariri maombi yako ya faragha.",
   "vaultUnlock": "Fungua",

@@ -14,12 +14,25 @@ const DISPLAYABLE_RESOURCE_LANGUAGES = new Set(availableResourceLanguages());
 // additional language and can be removed. A shelf may mix languages: each work
 // uses its first available edition in [app language, ...selected languages].
 // Languages with no approved, renderable catalogue edition are not offered.
+//
+// ── WHY A NEW CHOICE GOES TO THE FRONT ─────────────────────────────────────
+// The list is a PRIORITY order, not a set: a work published in several of the
+// enabled languages is offered once, in the first one that has a verified
+// edition. Appending a newly ticked language therefore left it behind English,
+// which is preselected for everyone — and because almost every work in the
+// catalogue has an English edition, eight of the eleven offerable languages
+// could never win. Ticking Japanese, Portuguese or Russian changed nothing a
+// reader could see, which is not a setting, it is decoration.
+//
+// A language the reader deliberately ticks now outranks the one we ticked for
+// them. Ticking again moves it back to the front, which is how the order is
+// re-arranged; the numbered chain above the toggles shows where each one sits.
 export default function ResourceLanguagePref({ lang }) {
   const [open, setOpen] = useState(false);
   const [enabled, setEnabled] = useState(() => getResourceFallbackLanguages());
 
   const toggle = (code) => {
-    const next = enabled.includes(code) ? enabled.filter((c) => c !== code) : [...enabled, code];
+    const next = enabled.includes(code) ? enabled.filter((c) => c !== code) : [code, ...enabled];
     setEnabled(next);
     setResourceFallbackLanguages(next);
   };
@@ -28,7 +41,13 @@ export default function ResourceLanguagePref({ lang }) {
   const extra = enabled
     .filter((c) => c !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(c))
     .map((c) => LANGUAGES.find((l) => l.code === c)?.label || c);
-  const summary = [appLabel, ...extra].join(' · ');
+  // Numbered rather than described, so the order reads as an order in every
+  // script without a sentence of copy to translate sixteen times. One language
+  // on its own has no order to show, so it is left unnumbered.
+  const chain = [appLabel, ...extra];
+  const summary = chain.length > 1
+    ? chain.map((label, i) => `${i + 1}. ${label}`).join('  ·  ')
+    : chain.join('  ·  ');
 
   return (
     <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>

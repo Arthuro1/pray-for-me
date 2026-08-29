@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "Copiar código",
   "vaultCodeCopied": "Código de recuperação copiado",
   "vaultRecoverySaved": "Salvei meu código de recuperação",
+  "vaultCodeNotSynced": "Este código está salvo apenas neste dispositivo — não conseguimos falar com o servidor. Ele não vai desbloquear seus outros dispositivos até que este sincronize; reabra o Pray4Me aqui com conexão e isso será concluído sozinho.",
   "vaultUnlockTitle": "Desbloqueie seu cofre de oração",
   "vaultUnlockIntro": "Digite sua frase secreta para ler e editar suas orações privadas.",
   "vaultUnlock": "Desbloquear",

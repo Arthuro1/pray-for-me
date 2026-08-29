@@ -6,6 +6,7 @@ import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
 import { toast } from '../../store/toastStore';
 import { planById } from '../../lib/guidedPlan';
+import { canUsePlan } from '../../lib/planReview';
 import { startGuidedPlan } from '../../lib/startGuidedPlan';
 import { runningPlanIds } from '../../lib/planner';
 import { todayKey } from '../../lib/prayedLog';
@@ -113,6 +114,11 @@ export default function useGroupPlans({ groupId, user, lang }) {
   // Adopt a plan for the group (picker → PlanDetailModal): it becomes visible to
   // everyone and also starts on the adopter's own calendar.
   const handleAdoptGroupPlan = async (plan, startDate) => {
+    // The start boundary, not just the button's disabled state. Adopting wrote
+    // the group_plans row BEFORE startGuidedPlan() checked the review gate, so a
+    // plan awaiting sign-off could be pinned to a whole group's wall even though
+    // no member could ever pray a day of it.
+    if (!canUsePlan(plan)) { toast.error(t(lang, 'planCoupleReviewHint')); return; }
     const res = await startGroupPlan({ groupId, planId: plan.id, startDate, userId: user.id });
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
     await startPlanOnMyCalendar(plan, startDate);

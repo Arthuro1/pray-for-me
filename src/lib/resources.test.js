@@ -647,3 +647,45 @@ describe('the relationship and family book expansion', () => {
     }
   });
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// A language Settings offers must be able to REACH a reader.
+//
+// The stored list is a priority order and each work is offered once, in the
+// first enabled language with a verified edition. English is preselected for
+// everyone and nearly every catalogue work has an English edition, so while a
+// newly ticked language was appended after it, eight of the eleven offerable
+// languages could never surface a single row: ticking Japanese, Portuguese,
+// Russian, Arabic, Hindi, Indonesian, Korean or Chinese changed nothing the
+// reader could see. These tests pin the outcome, not the mechanism.
+// ─────────────────────────────────────────────────────────────────────────────
+describe('an offered resource language can actually surface a resource', () => {
+  const everyTopic = [...RESOURCE_TOPICS];
+
+  it('returns at least one edition in each offered language when it leads the order', () => {
+    for (const lang of availableResourceLanguages()) {
+      const rows = resolveResources({ topics: everyTopic, languages: [lang] });
+      expect(rows.length, lang).toBeGreaterThan(0);
+      expect(rows.some((r) => r.lang === lang), lang).toBe(true);
+    }
+  });
+
+  it('honours a reader who ranks a language ahead of English', () => {
+    for (const lang of availableResourceLanguages()) {
+      if (lang === 'en') continue;
+      // The reader's app language has no catalogue coverage of its own (am), so
+      // what they see is decided purely by the additional languages they chose.
+      const chosenFirst = resolveResources({
+        topics: everyTopic, languages: resourceLanguages('am', [lang, 'en']),
+      });
+      expect(chosenFirst.some((r) => r.lang === lang), lang).toBe(true);
+    }
+  });
+
+  it('still falls back to a later language for a work the first one does not publish', () => {
+    // Ranking German first must not hide the English-only titles behind it.
+    const rows = resolveResources({ topics: everyTopic, languages: resourceLanguages('am', ['de', 'en']) });
+    expect(rows.some((r) => r.lang === 'de')).toBe(true);
+    expect(rows.some((r) => r.lang === 'en')).toBe(true);
+  });
+});

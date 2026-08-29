@@ -161,6 +161,7 @@ export default {
   "vaultCopyCode": "Copier le code",
   "vaultCodeCopied": "Code de récupération copié",
   "vaultRecoverySaved": "J’ai enregistré mon code de récupération",
+  "vaultCodeNotSynced": "Ce code n’est enregistré que sur cet appareil — le serveur n’a pas pu être joint. Il ne déverrouillera pas vos autres appareils tant que celui-ci n’a pas synchronisé ; rouvrez Pray4Me ici en étant connecté et cela se terminera tout seul.",
   "vaultUnlockTitle": "Déverrouiller votre coffre de prière",
   "vaultUnlockIntro": "Saisissez votre phrase secrète pour lire et modifier vos prières privées.",
   "vaultUnlock": "Déverrouiller",

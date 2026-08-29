@@ -12,9 +12,12 @@
 //      trustworthy German resource covers the topic — very possibly a different
 //      book by a different author from the English list. Nothing is ever
 //      machine-translated into an edition that does not exist.
-//   3. ENABLED LANGUAGES ARE HONOURED TOGETHER. The app language ranks first,
-//      then any additional languages the reader selected. Each resource appears
-//      once, in the first enabled language that has a verified edition.
+//   3. ENABLED LANGUAGES ARE HONOURED TOGETHER, IN THE READER'S OWN ORDER. The
+//      app language ranks first, then the additional languages the reader
+//      selected, in the order they selected them (most recent first — see
+//      planPrefs). Each resource appears once, in the first enabled language
+//      that has a verified edition, so that order is what decides which
+//      edition of a multi-language work a reader is actually offered.
 //   4. A TOPIC ONLY MATCHES INSIDE ITS OWN DOMAIN. Topic tags are shared by
 //      every plan, so 'discernment', 'healing' or 'identity' can mean one thing
 //      to a dating book and something else entirely on a day about renouncing

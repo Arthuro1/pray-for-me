@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "نسخ الرمز",
   "vaultCodeCopied": "تم نسخ رمز الاسترداد",
   "vaultRecoverySaved": "لقد حفظت رمز الاسترداد",
+  "vaultCodeNotSynced": "هذا الرمز محفوظ على هذا الجهاز فقط — تعذّر الوصول إلى الخادم. لن يفتح أجهزتك الأخرى حتى تتمّ المزامنة من هذا الجهاز؛ أعد فتح Pray4Me هنا وأنت متصل وستكتمل وحدها.",
   "vaultUnlockTitle": "افتح خزنة صلاتك",
   "vaultUnlockIntro": "أدخل عبارتك السرّية لقراءة صلواتك الخاصة وتعديلها.",
   "vaultUnlock": "فتح",

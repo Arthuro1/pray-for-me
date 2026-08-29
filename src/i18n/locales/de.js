@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "Code kopieren",
   "vaultCodeCopied": "Wiederherstellungscode kopiert",
   "vaultRecoverySaved": "Ich habe meinen Wiederherstellungscode gespeichert",
+  "vaultCodeNotSynced": "Dieser Code ist nur auf diesem Gerät gespeichert — der Server war nicht erreichbar. Er entsperrt deine anderen Geräte erst, wenn dieses Gerät synchronisiert hat; öffne Pray4Me hier online erneut, dann geschieht das von selbst.",
   "vaultUnlockTitle": "Entsperre deinen Gebets-Tresor",
   "vaultUnlockIntro": "Gib dein Passwort ein, um deine privaten Gebete zu lesen und zu bearbeiten.",
   "vaultUnlock": "Entsperren",

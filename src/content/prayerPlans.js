@@ -260,8 +260,15 @@ export function getPlan(id, version = null) {
 // understand why it is not available yet; canUsePlan() remains the gate at the
 // detail, start and day-content boundaries.
 export function plansByCategory(plans = PLANS) {
+  const known = new Set(PLAN_CATEGORIES.map((c) => c.id));
+  // A category this file does not know about must never swallow a plan. Matching
+  // on the raw value meant one typo, or a category retired later, dropped the
+  // plan from every group and therefore from the catalogue entirely — silently,
+  // with nothing in the UI to show it had gone. Anything unrecognised falls back
+  // to the default group instead, so a plan can always be found and started.
+  const groupOf = (plan) => (known.has(plan.category) ? plan.category : DEFAULT_PLAN_CATEGORY);
   return PLAN_CATEGORIES
-    .map((c) => ({ ...c, plans: plans.filter((p) => (p.category || DEFAULT_PLAN_CATEGORY) === c.id) }))
+    .map((c) => ({ ...c, plans: plans.filter((p) => groupOf(p) === c.id) }))
     .filter((c) => c.plans.length > 0);
 }
 

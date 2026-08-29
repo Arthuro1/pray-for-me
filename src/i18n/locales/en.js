@@ -161,6 +161,7 @@ export default {
   "vaultCopyCode": "Copy code",
   "vaultCodeCopied": "Recovery code copied",
   "vaultRecoverySaved": "I've saved my recovery code",
+  "vaultCodeNotSynced": "This code is saved on this device only — we couldn’t reach the server. It won’t unlock your other devices until this one syncs; reopen Pray4Me here while online and it will finish on its own.",
   "vaultUnlockTitle": "Unlock your Prayer Vault",
   "vaultUnlockIntro": "Enter your passphrase to read and edit your private prayers.",
   "vaultUnlock": "Unlock",

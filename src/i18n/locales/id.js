@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "Salin kode",
   "vaultCodeCopied": "Kode pemulihan disalin",
   "vaultRecoverySaved": "Saya sudah menyimpan kode pemulihan",
+  "vaultCodeNotSynced": "Kode ini hanya tersimpan di perangkat ini — server tidak dapat dihubungi. Kode ini belum bisa membuka perangkat Anda yang lain sampai perangkat ini tersinkron; buka lagi Pray4Me di sini saat online dan proses itu selesai dengan sendirinya.",
   "vaultUnlockTitle": "Buka Brankas Doa Anda",
   "vaultUnlockIntro": "Masukkan frasa sandi untuk membaca dan mengedit doa pribadi Anda.",
   "vaultUnlock": "Buka",

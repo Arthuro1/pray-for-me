@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "Kopyahin ang code",
   "vaultCodeCopied": "Nakopya ang recovery code",
   "vaultRecoverySaved": "Na-save ko na ang aking recovery code",
+  "vaultCodeNotSynced": "Naka-save lang ang code na ito sa device na ito — hindi namin naabot ang server. Hindi nito mabubuksan ang iba mong device hangga’t hindi ito nagsi-sync; buksan ulit ang Pray4Me dito habang naka-online at kusa itong matatapos.",
   "vaultUnlockTitle": "I-unlock ang iyong Vault ng Panalangin",
   "vaultUnlockIntro": "Ilagay ang iyong passphrase para basahin at i-edit ang iyong mga pribadong panalangin.",
   "vaultUnlock": "I-unlock",

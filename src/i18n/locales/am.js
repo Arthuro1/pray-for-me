@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "ኮድ ቅዳ",
   "vaultCodeCopied": "የመልሶ ማግኛ ኮድ ተቀድቷል",
   "vaultRecoverySaved": "የመልሶ ማግኛ ኮዴን አስቀምጫለሁ",
+  "vaultCodeNotSynced": "ይህ ኮድ በዚህ መሳሪያ ላይ ብቻ ነው የተቀመጠው — ሰርቭሩን ልንደርስበት አልቻልንም። ይህ መሳሪያ እስከሚሴንክ ድረስ ሌሎች መሳሪያዎችዎን አይክፈትም፡ በኢንተርኔት ሆነው Pray4Meን እዚህ እንደገና ይክፈቱት፣ ባስትዓለው ይጬሰሳል።",
   "vaultUnlockTitle": "የጸሎት ካዝናዎን ይክፈቱ",
   "vaultUnlockIntro": "የግል ጸሎቶችዎን ለማንበብና ለማረም የይለፍ ሐረግዎን ያስገቡ።",
   "vaultUnlock": "ክፈት",

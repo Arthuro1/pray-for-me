@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "复制恢复码",
   "vaultCodeCopied": "已复制恢复码",
   "vaultRecoverySaved": "我已保存恢复码",
+  "vaultCodeNotSynced": "此恢复码仅保存在本设备，服务器无法连接。在本设备完成同步前，它无法解锁你的其他设备；联网后在这里重新打开 Pray4Me，它会自动完成。",
   "vaultUnlockTitle": "解锁你的祷告保险库",
   "vaultUnlockIntro": "输入密码短语以阅读和编辑你的私密祷告。",
   "vaultUnlock": "解锁",

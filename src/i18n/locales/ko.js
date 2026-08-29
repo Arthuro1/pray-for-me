@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "코드 복사",
   "vaultCodeCopied": "복구 코드가 복사되었습니다",
   "vaultRecoverySaved": "복구 코드를 저장했습니다",
+  "vaultCodeNotSynced": "이 코드는 이 기기에만 저장되었습니다 — 서버에 연결하지 못했습니다. 이 기기가 동기화될 때까지는 다른 기기를 잠금 해제할 수 없습니다. 온라인 상태에서 Pray4Me를 다시 열면 자동으로 완료됩니다.",
   "vaultUnlockTitle": "기도 금고 잠금 해제",
   "vaultUnlockIntro": "비공개 기도를 읽고 편집하려면 암호 문구를 입력하세요.",
   "vaultUnlock": "잠금 해제",

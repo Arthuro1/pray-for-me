@@ -145,6 +145,12 @@ export function clearPlanPrefs(planId) {
 // removable. An explicitly saved [] therefore means "app language only".
 // Device-local, like the rest of this module. The exported fallback names are
 // retained for storage/API compatibility.
+//
+// ORDER IS PRIORITY, not just membership: a work published in several enabled
+// languages is offered once, in the FIRST one here that has a verified edition
+// (see resolveResources). ResourceLanguagePref therefore puts a newly ticked
+// language at the front — otherwise it sat behind the preselected English and,
+// since nearly every catalogue work has an English edition, could never surface.
 const LANG_KEY = 'pfm_resource_langs';
 export const DEFAULT_RESOURCE_FALLBACK_LANGUAGES = ['en'];
 

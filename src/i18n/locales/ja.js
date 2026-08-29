@@ -194,6 +194,7 @@ export default {
   "vaultCopyCode": "コードをコピー",
   "vaultCodeCopied": "リカバリーコードをコピーしました",
   "vaultRecoverySaved": "リカバリーコードを保存しました",
+  "vaultCodeNotSynced": "このコードはこの端末にしか保存されていません。サーバーに接続できませんでした。この端末が同期するまで、他の端末のロックは解除できません。オンラインで Pray4Me を開き直せば自動で完了します。",
   "vaultUnlockTitle": "祈りの保管庫をロック解除",
   "vaultUnlockIntro": "プライベートな祈りを読んだり編集したりするには、パスフレーズを入力してください。",
   "vaultUnlock": "ロック解除",

@@ -25,9 +25,9 @@ import { planById } from '../lib/guidedPlan';
 import { startGuidedPlan } from '../lib/startGuidedPlan';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
-import { PLANS } from '../content/prayerPlans';
+import { plansByCategory } from '../content/prayerPlans';
 import PlanDetailModal from '../components/PlanDetailModal';
-import { canUsePlan } from '../lib/planReview';
+import { isPlanReviewed } from '../lib/planReview';
 import { groupPlanStatus, sortGroupPlans, prayingLabel } from '../lib/groupPlans';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
@@ -789,30 +789,51 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
       {showAdmin && group && <GroupAdminModal lang={lang} userId={user.id} group={group} onClose={() => setShowAdmin(false)} onInviteAction={recordInviteAction} />}
 
       {/* Pick a plan to pray as a group. Plans the group already prays are shown
-          as such and can't be re-adopted. */}
+          as such and can't be re-adopted.
+
+          The whole catalogue is listed, exactly as the Plan tab lists it. This
+          used to drop every plan awaiting review, which in a production build
+          made three plans disappear from this sheet with nothing said — a
+          reader comparing it with their own Plan tab simply found plans
+          missing. A plan still under review is shown and explained instead;
+          canUsePlan() remains the gate at the detail and start boundaries. */}
       {showPlanPicker && (
         <Modal title={t(lang, 'groupPlanPickerTitle')} lang={lang} onClose={() => setShowPlanPicker(false)}>
           <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupPlanPickerSub')}</p>
           <div className="grid grid-cols-1 gap-2">
-            {PLANS.filter((plan) => canUsePlan(plan)).map((plan) => {
-              const adopted = adoptedPlanIds.has(plan.id);
-              return (
-                <button
-                  key={plan.id}
-                  disabled={adopted}
-                  onClick={() => { setShowPlanPicker(false); setDetailPlan(plan); }}
-                  className="phase-card plan-card p-3 flex items-start gap-3 text-start w-full disabled:opacity-50"
-                >
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--accent-soft)' }}>{plan.emoji}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
-                      {adopted ? t(lang, 'groupPlanAlreadyRunning') : `${t(lang, plan.subKey)} · ${t(lang, 'planDays', { n: plan.count })}`}
-                    </p>
-                  </div>
-                </button>
-              );
-            })}
+            {plansByCategory().map((group) => (
+              <section key={group.id}>
+                <h4 className="mb-2 mt-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                  {t(lang, group.labelKey)}
+                </h4>
+                <div className="grid grid-cols-1 gap-2">
+                  {group.plans.map((plan) => {
+                    const adopted = adoptedPlanIds.has(plan.id);
+                    return (
+                      <button
+                        key={plan.id}
+                        disabled={adopted}
+                        onClick={() => { setShowPlanPicker(false); setDetailPlan(plan); }}
+                        className="phase-card plan-card p-3 flex items-start gap-3 text-start w-full disabled:opacity-50"
+                      >
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--accent-soft)' }}>{plan.emoji}</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
+                          <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                            {adopted ? t(lang, 'groupPlanAlreadyRunning') : `${t(lang, plan.subKey)} · ${t(lang, 'planDays', { n: plan.count })}`}
+                          </p>
+                          {!isPlanReviewed(plan) && (
+                            <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>
+                              {t(lang, 'planCoupleReviewPending')}
+                            </p>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
           </div>
         </Modal>
       )}
