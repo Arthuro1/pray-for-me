@@ -4,8 +4,8 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 import {
   ContextualNudgeProvider,
-  useContextualNudgeSlot,
 } from '../shared/ContextualNudgeCoordinator';
+import { useContextualNudgeSlot } from '../shared/contextualNudge';
 
 afterEach(cleanup);
 

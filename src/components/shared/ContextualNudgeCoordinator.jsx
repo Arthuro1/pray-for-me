@@ -1,6 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-
-const ContextualNudgeContext = createContext(null);
+import { useCallback, useMemo, useState } from 'react';
+import { ContextualNudgeContext } from './contextualNudge';
 
 // A screen gets one quiet invitation at a time. Every eligible nudge registers
 // its priority here; the coordinator exposes only the strongest one and, once
@@ -31,20 +30,4 @@ export function ContextualNudgeProvider({ children }) {
 
   const value = useMemo(() => ({ activeId, register, complete }), [activeId, complete, register]);
   return <ContextualNudgeContext.Provider value={value}>{children}</ContextualNudgeContext.Provider>;
-}
-
-export function useContextualNudgeSlot(id, eligible, priority) {
-  const coordinator = useContext(ContextualNudgeContext);
-
-  useEffect(() => {
-    if (!coordinator || !eligible) return undefined;
-    return coordinator.register(id, priority);
-  }, [coordinator?.register, eligible, id, priority]);
-
-  // Components remain independently testable and reusable outside the product
-  // shell; without a provider, eligibility alone controls their visibility.
-  return {
-    visible: !!eligible && (!coordinator || coordinator.activeId === id),
-    complete: coordinator?.complete || (() => {}),
-  };
 }

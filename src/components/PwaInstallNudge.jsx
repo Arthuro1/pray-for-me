@@ -14,7 +14,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { BottomSheet, PrimaryButton } from './shared/Primitives';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
-import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
+import { useContextualNudgeSlot } from './shared/contextualNudge';
 
 function currentInstallMode() {
   // Installing is education too: it waits behind the same one-prompt-per-visit

@@ -10,7 +10,7 @@ import {
 import { activationTargetPrayer, nextActivationStep } from '../lib/activationPolicy';
 import { markContextualPromptShownForVisit } from '../lib/pwaInstall';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
-import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
+import { useContextualNudgeSlot } from './shared/contextualNudge';
 
 const COPY = {
   [ACTIVATION_STEPS.RHYTHM]: {

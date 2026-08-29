@@ -37,7 +37,7 @@ import {
   nextJournalHint,
   readJournalHints,
 } from '../lib/journalHints';
-import { useContextualNudgeSlot } from '../components/shared/ContextualNudgeCoordinator';
+import { useContextualNudgeSlot } from '../components/shared/contextualNudge';
 
 // The Journal: every request and its history, in two simple segments — Active
 // and Answered. Search and useful retrieval filters stay quiet, and an optional

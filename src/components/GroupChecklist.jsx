@@ -3,7 +3,7 @@ import { X, Check, UserPlus, Plus, HandHeart, ChevronRight } from 'lucide-react'
 import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
 import { checklistFlags, checklistSteps, checklistVisible, dismissChecklist } from '../lib/groupChecklist';
-import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
+import { useContextualNudgeSlot } from './shared/contextualNudge';
 
 const STEP_META = {
   invite: { icon: UserPlus, labelKey: 'checklistInvite' },

@@ -3,7 +3,7 @@ import { KeyRound, X } from 'lucide-react';
 import useVaultStore from '../store/vaultStore';
 import VaultModal from './VaultModal';
 import { t } from '../i18n';
-import { useContextualNudgeSlot } from './shared/ContextualNudgeCoordinator';
+import { useContextualNudgeSlot } from './shared/contextualNudge';
 
 const DISMISS_KEY = 'pfm_recovery_prompt_dismissed';
 const SNOOZE_MS = 7 * 24 * 60 * 60 * 1000; // "Later" re-surfaces after a week
