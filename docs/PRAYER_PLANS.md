@@ -298,9 +298,12 @@ walks reviewed prayer modules one short step at a time.
 
 The certainty a reader reports is the ONLY personalization, it is never
 persisted, and it selects between AUTHORED modules rather than concluding
-anything. `review.status` is `needs_review`, so readers can discover the plan but
-cannot preview its curriculum or start it until a human signs off theology,
-safety and all 16 locales.
+anything. `review.status` is `needs_review`, so the plan stays out of the
+catalogue for ordinary readers, and its curriculum and Start action stay closed,
+until a human signs off theology, safety and all 16 locales. A reviewer reaches
+it by opening the app once at `?planPreview=1` (see § Review mode in
+`docs/RELATIONSHIP_FAMILY_PLANS.md`), which reveals the draft while keeping its
+"review pending" marks.
 
 **See `docs/FREEDOM_DELIVERANCE.md`** for the theological model, the day model,
 the certainty→prayer mapping, the family-line categories, the resource review

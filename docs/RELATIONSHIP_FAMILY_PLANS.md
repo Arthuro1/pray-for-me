@@ -205,14 +205,31 @@ no retailer fallback or invented localized edition was added. Details are in
 `covenant21` and `marriage30` deliberately have `review.status:
 'needs_review'`. Production access stays closed until Scripture/context,
 theology, pastoral safety, role material, and every locale have approved,
-named, dated sign-offs. Development preview remains available for reviewers.
-Generated theological or translated prose must not be approved automatically.
+named, dated sign-offs. Generated theological or translated prose must not be
+approved automatically.
 
-Pending plans remain visible in the catalogue so readers can discover the full
-plan family. Catalogue visibility is separate from release eligibility:
-`canUsePlan()` still keeps the curriculum, Start action, invitations, and group
-adoption unavailable in production, while reviewers can exercise them in a
-development build.
+Catalogue visibility is separate from release eligibility. `canUsePlan()` keeps
+the curriculum, the Start action, invitations and group adoption closed for
+ordinary readers, and the journey catalogue lists a plan only where it can
+actually be opened — so a draft is never a locked card someone taps in vain.
+
+### Review mode
+
+A reviewer has to read a draft in order to correct it, so reading one is a
+device setting rather than a content change:
+
+| Where | How |
+|---|---|
+| Deployed build (phone, prod, preview URL) | open `…/guidance?planPreview=1` once — it sticks on that browser; `?planPreview=0` ends it |
+| Development build (`npm run dev`) | drafts are already listed; add `?planPreview=1` to also read unsigned **role reflections** |
+
+Review mode never edits a `review` record and never makes a draft look
+approved: the card, the detail modal and each role reflection keep saying that
+their review is pending. It stores one device-local flag (`pfm_plan_preview`),
+syncs nothing, and needs no build, environment variable or redeploy. Only the
+named sign-offs in `review` ever release a plan — an AI must never write one.
+Group adoption stays reviewed-only regardless, because pinning a draft to a
+group wall would push it at people who never asked to review anything.
 
 No database schema, RLS policy, migration, environment variable, background
 job, or deployment setting changed for these plans. Existing plan invitation

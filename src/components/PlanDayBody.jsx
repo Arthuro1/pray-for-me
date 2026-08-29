@@ -5,7 +5,7 @@ import { pick } from '../content/teaching';
 import VersePill from './shared/VersePill';
 import GoDeeper from './GoDeeper';
 import { ROLES } from '../lib/planPrefs';
-import { hasReviewSignoff } from '../lib/planReview';
+import { hasReviewSignoff, isPlanPreviewOn } from '../lib/planReview';
 import DeliveranceDayGuide from './deliverance/DeliveranceDayGuide';
 
 // Everything a rich plan day says BELOW its title and primary passage:
@@ -45,14 +45,18 @@ export default function PlanDayBody({
   const related = day.related || [];
   const isFreedomDay = !!day.freedom;
   // Role reflections are shown ONLY when the reader has explicitly asked for
-  // them — never inferred from a name, a photo or anything else.
-  const roleApproved = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
-  const roleReflection = roleApproved && role && role !== 'general' ? day.roles?.[role] : null;
+  // them — never inferred from a name, a photo or anything else. They carry
+  // their own sign-off, separate from the plan's, and review mode reveals an
+  // unsigned one to its reviewer WITHOUT clearing the pending note below: the
+  // one text a reviewer has to correct was otherwise unreadable everywhere.
+  const roleSignedOff = !day.roleReviewStatus || hasReviewSignoff(day.roleReviewStatus);
+  const roleVisible = roleSignedOff || isPlanPreviewOn();
+  const roleReflection = roleVisible && role && role !== 'general' ? day.roles?.[role] : null;
   const roleText = pick(roleReflection, lang);
-  const rolePending = !roleApproved && role !== 'general' && !!day.roles?.[role];
+  const rolePending = !roleSignedOff && role !== 'general' && !!day.roles?.[role];
   // Asked only where an answer has somewhere to land: this day carries the
-  // reflections, they have cleared review, and no answer has been given yet.
-  const askRole = !!onChooseRole && roleApproved && !!day.roles && !roleText;
+  // reflections, they are readable, and no answer has been given yet.
+  const askRole = !!onChooseRole && roleVisible && !!day.roles && !roleText;
   const hasAfterPrayer = related.length > 0 || !!conversationPrompt || !!practice || !!prayTogether;
 
   if (!isFreedomDay && !askRole && !reflection && !prompts.length && !selfPrompt && !spousePrompt && !marriagePrompt

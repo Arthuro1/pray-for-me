@@ -9,6 +9,7 @@ vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.co
 vi.mock('../../lib/analytics', () => ({ track: vi.fn(), EVENTS: { RESOURCE_OPENED: 'resource_opened' } }));
 
 import PlanDayBody from '../PlanDayBody';
+import { setPlanPreview } from '../../lib/planReview';
 import { t } from '../../i18n';
 
 const lang = 'fr';
@@ -16,7 +17,7 @@ const afterPrayerLabel = () => {
   const requested = t(lang, 'planAfterPrayer');
   return requested === 'planAfterPrayer' ? t(lang, 'moreOptionsLabel') : requested;
 };
-afterEach(cleanup);
+afterEach(() => { cleanup(); localStorage.clear(); });
 
 describe('relationship plan day sections', () => {
   it('keeps prayer directions visible and moves couple exercises after prayer', () => {
@@ -56,6 +57,17 @@ describe('relationship plan day sections', () => {
       roles: { husband: { fr: 'Contenu de rôle non révisé' } }, roleReviewStatus: 'needs_review',
     }} />);
     expect(screen.queryByText('Contenu de rôle non révisé')).toBeNull();
+    expect(screen.getByText(t(lang, 'planCoupleRoleReviewPending'))).toBeTruthy();
+  });
+
+  // Otherwise the one text that most needs a human eye is the one text no human
+  // can read: it is hidden on every surface until it is signed off.
+  it('hands that reflection to a reviewer, still marked as awaiting review', () => {
+    setPlanPreview(true);
+    render(<PlanDayBody lang={lang} role="husband" day={{
+      roles: { husband: { fr: 'Contenu de rôle non révisé' } }, roleReviewStatus: 'needs_review',
+    }} />);
+    expect(screen.getByText('Contenu de rôle non révisé')).toBeTruthy();
     expect(screen.getByText(t(lang, 'planCoupleRoleReviewPending'))).toBeTruthy();
   });
 });

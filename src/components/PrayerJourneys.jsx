@@ -33,6 +33,11 @@ function JourneyCard({ plan, lang, running, progress, onOpen }) {
         <span className="min-w-0 flex-1">
           <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</span>
           <span className="mt-0.5 block text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, plan.subKey)}</span>
+          {/* A draft on screen always says so, in the card and again in the
+              detail — a reviewer must never mistake one for shipped content. */}
+          {!isPlanReviewed(plan) && (
+            <span className="mt-1 block text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{t(lang, 'planCoupleReviewPending')}</span>
+          )}
           <span className="mt-2 block text-xs font-medium" style={{ color: running ? 'var(--success)' : 'var(--accent)' }}>
             {running
               ? t(lang, 'planDayOf', { n: progress?.day || 1, total: plan.count })
@@ -60,9 +65,12 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
   const [startedJourney, setStartedJourney] = useState(null);
   const [browseOpen, setBrowseOpen] = useState(false);
 
+  // A journey appears here when it can actually be opened, so the catalogue
+  // still holds no dead ends: a plan awaiting sign-off is listed for whoever is
+  // in review mode (or a dev build) and stays invisible to everyone else.
   const groups = useMemo(
     () => plansByCategory()
-      .map((group) => ({ ...group, plans: group.plans.filter((plan) => isPlanReviewed(plan) && canUsePlan(plan)) }))
+      .map((group) => ({ ...group, plans: group.plans.filter((plan) => canUsePlan(plan)) }))
       .filter((group) => group.plans.length > 0),
     [],
   );
@@ -70,7 +78,11 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
   const activeIds = runningPlanIds(prayers, todayKey());
   const progressById = useMemo(() => runningPlanProgress(prayers, todayKey()), [prayers]);
   const activeJourney = journeys.find((journey) => activeIds.has(journey.id)) || null;
-  const recommendation = activeJourney || journeys.find((journey) => !activeIds.has(journey.id)) || null;
+  // Reviewable, never recommended: a draft is something a reviewer goes and
+  // finds under Browse, not the one journey the app puts forward.
+  const recommendation = activeJourney
+    || journeys.find((journey) => !activeIds.has(journey.id) && isPlanReviewed(journey))
+    || null;
   const featuredJourney = showRecommendation ? recommendation : null;
 
   const beginJourney = useCallback(async (journey, startDate, prefs = null) => {

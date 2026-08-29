@@ -255,9 +255,10 @@ export function getPlan(id, version = null) {
 // Plans grouped for display, in PLAN_CATEGORIES order. Empty categories are
 // dropped so the list only ever shows headings that have something under them.
 //
-// Catalogue visibility and launch eligibility are deliberately separate. A
-// pending plan still belongs in the catalogue so readers can discover it and
-// understand why it is not available yet; canUsePlan() remains the gate at the
+// Catalogue membership and launch eligibility are deliberately separate: this
+// function drops nothing, so a plan awaiting review can always be found by the
+// surface that should show it (a reviewer's catalogue, a doc, a test). Deciding
+// who sees it belongs to that surface, and canUsePlan() remains the gate at the
 // detail, start and day-content boundaries.
 export function plansByCategory(plans = PLANS) {
   const known = new Set(PLAN_CATEGORIES.map((c) => c.id));

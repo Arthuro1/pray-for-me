@@ -67,6 +67,14 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
         </div>
 
         {usable ? (<div className="min-h-0 flex-1 overflow-y-auto p-5 pb-8 space-y-5">
+          {/* Opened in review mode (or a dev build): say plainly that what
+              follows is a draft, not only that a review is outstanding. */}
+          {!isPlanReviewed(source) && (
+            <p className="rounded-xl p-3 text-xs leading-relaxed" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}>
+              {t(lang, 'planCoupleReviewHint')}
+            </p>
+          )}
+
           {/* What this journey is */}
           {(plan.intro || plan.biblical) && (
             <section>

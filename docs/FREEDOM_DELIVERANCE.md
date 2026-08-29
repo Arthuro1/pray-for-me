@@ -12,8 +12,10 @@ the calendar, catch-up, reminders, offline and the ICS export all keep working
 untouched. There is no parallel prayer, Scripture, media or resource system.
 
 > **Release status: not shippable yet.** `review.status` is `needs_review`, so
-> `canUsePlan()` keeps the plan out of a production build entirely. It is visible
-> in a development preview so it can be reviewed. See § Release checklist.
+> `canUsePlan()` keeps the plan out of a production build entirely. To read it,
+> open the app once at **`/guidance?planPreview=1`** — review mode (below) — and
+> it appears under *Browse*, marked "Content review pending". See § Release
+> checklist.
 
 ---
 
