@@ -3,7 +3,7 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "space.pray4me.twa",
+      "package_name": "space.praystead.twa",
       "sha256_cert_fingerprints": [
         "F3:67:E4:FF:3D:DD:7B:11:CD:03:BD:0C:50:46:2D:B2:B0:D3:4D:85:26:57:18:96:D1:6A:1E:C0:E0:F2:B1:14"
       ]

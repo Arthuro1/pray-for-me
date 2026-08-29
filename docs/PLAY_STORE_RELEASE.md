@@ -1,6 +1,6 @@
 # Google Play release runbook
 
-Ships the existing TWA wrapper in `android-twa/` (`space.pray4me.twa`) as the
+Ships the existing TWA wrapper in `android-twa/` (`space.praystead.twa`) as the
 Android build of `pray4me.space`. The TWA is a thin shell: it loads the live
 site, so **the production web deploy is the release**. The bundle only changes
 when the wrapper's manifest, icons, or SDK levels change.
@@ -76,9 +76,21 @@ C:\Users\T480s\Desktop\Ministry\projets\pray_for_me\android-twa\app\build\output
 ```
 
 **Do not upload `android-twa/app-release-bundle.aab`.** That is a stale July
-2026 artefact — unsigned and built at `targetSdk 35`. The only bundle to upload
-is the one under `app/build/outputs/bundle/release/`. Confirm any candidate with
-`jarsigner -verify`, which prints `jar verified` and needs no password.
+2026 artefact — unsigned, built at `targetSdk 35`, and carrying the old package
+name `space.pray4me.twa`, which Play now rejects outright. The same is true of
+the `app-release-*.apk` files beside it. The only bundle to upload is the one
+under `app/build/outputs/bundle/release/`.
+
+Check a candidate before uploading — both commands need no password:
+
+- `jarsigner -verify <aab>` must print `jar verified`.
+- The package name must be `space.praystead.twa`. Gradle re-signs nothing and
+  will happily hand you a cached bundle, so verify the artefact itself rather
+  than trusting that `build.gradle` was edited:
+  `unzip -p <aab> base/manifest/AndroidManifest.xml | grep -a -o "space[.][a-z]*[.]twa" | head -1`
+
+If a build looks suspiciously unchanged, it did not recompile: run
+`./gradlew clean bundleRelease` rather than a bare `bundleRelease`.
 
 ## 2. Play Console
 
@@ -107,6 +119,11 @@ before a production rollout:
 fingerprint (`F3:67:E4:…`). Play App Signing re-signs the app with a
 **different** key, so the installed app's fingerprint will not match what the
 site serves.
+
+Its `package_name` is `space.praystead.twa` and must stay in step with
+`applicationId` in `app/build.gradle` — a mismatch fails verification just as
+silently as a wrong fingerprint. **The file is only live once the site is
+deployed**, so a package rename means a web deploy, not just a commit.
 
 1. Play Console → Test and release → Setup → App integrity → App signing key
    certificate → copy the **SHA-256 certificate fingerprint**.
