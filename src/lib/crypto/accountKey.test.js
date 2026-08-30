@@ -34,9 +34,15 @@ vi.mock('../supabase', () => ({
   },
 }));
 
-import { ensureAccountCryptoReady, startFreshEncryption, CRYPTO_STATUS } from './accountKey';
+import {
+  ensureAccountCryptoReady,
+  lockAccountKey,
+  rememberAccountKey,
+  startFreshEncryption,
+  CRYPTO_STATUS,
+} from './accountKey';
 import { VAULT_SYNC } from '../vaultSync';
-import { isUnlocked, isVaultInitialized, getMasterKey, lock, destroyVault, createVault } from './keyManager';
+import { isUnlocked, isVaultInitialized, getMasterKey, lock, unlock, destroyVault, createVault } from './keyManager';
 import { encryptJsonLegacy, decryptJson } from './e2ee';
 import { clearUserKeyCache } from './userKeys';
 
@@ -93,6 +99,19 @@ describe('ensureAccountCryptoReady', () => {
 
     expect(status).toBe(CRYPTO_STATUS.LOCKED);
     expect(isUnlocked()).toBe(false);
+  });
+
+  it('keeps an explicit account lock in force until a successful passphrase unlock', async () => {
+    await createVault('lock-me');
+    await lockAccountKey('user-1');
+    expect(globalThis.localStorage.getItem('pfm_ak_locked_user-1')).toBeTruthy();
+
+    expect(await ensureAccountCryptoReady('user-1', VAULT_SYNC.PRESENT)).toBe(CRYPTO_STATUS.LOCKED);
+    expect(isUnlocked()).toBe(false);
+
+    expect(await unlock('lock-me')).toBe(true);
+    await rememberAccountKey('user-1', { clearLock: true });
+    expect(globalThis.localStorage.getItem('pfm_ak_locked_user-1')).toBe(null);
   });
 
   it('does NOT silently mint a key when the server already holds encrypted data', async () => {

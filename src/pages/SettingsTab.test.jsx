@@ -9,7 +9,7 @@
 // #data alias) expand their section. Only French is loaded in unit tests, so
 // t() resolves to French strings.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 // Heavy children / side-effecting modules are stubbed — this test is about the
@@ -36,6 +36,7 @@ import { t } from '../i18n';
 
 const lang = 'fr';
 const renderSettings = () => render(<MemoryRouter><SettingsTab /></MemoryRouter>);
+const originalVaultLock = useVaultStore.getState().lock;
 afterEach(cleanup);
 
 beforeEach(() => {
@@ -50,9 +51,9 @@ beforeEach(() => {
     prayers: [], categories: [],
   });
   useAuthStore.setState({
-    user: { email: 'test@example.com', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: new Date().toISOString() },
+    user: { id: 'user-1', email: 'test@example.com', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: new Date().toISOString() },
   });
-  useVaultStore.setState({ initialized: false, unlocked: false });
+  useVaultStore.setState({ initialized: false, unlocked: false, lock: originalVaultLock });
 });
 
 describe('SettingsTab — grouped sections', () => {
@@ -138,5 +139,17 @@ describe('SettingsTab — grouped sections', () => {
     fireEvent.click(sw);
     expect(screen.getByRole('switch', { name: t(lang, 'lowDataTitle') }).getAttribute('aria-checked')).toBe('true');
     expect(usePrayerStore.getState().settings.lowDataMode).toBe(true);
+  });
+
+  it('locks the signed-in account through the vault button', async () => {
+    const lockVault = vi.fn(async () => true);
+    useVaultStore.setState({ initialized: true, unlocked: true, lock: lockVault });
+    window.location.hash = '#privacy';
+    renderSettings();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowVault') }));
+
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'vaultLockNow') }));
+
+    await waitFor(() => expect(lockVault).toHaveBeenCalledWith('user-1'));
   });
 });

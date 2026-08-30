@@ -40,7 +40,16 @@ vi.mock('./supabase', () => ({
 }));
 
 import { pushVaultRecord, pullVaultRecord, VAULT_SYNC } from './vaultSync';
-import { createVault, destroyVault, isVaultInitialized, exportVaultRecord } from './crypto/keyManager';
+import {
+  changePassphrase,
+  createVault,
+  destroyVault,
+  exportVaultRecord,
+  importVaultRecord,
+  isVaultInitialized,
+  lock,
+  unlock,
+} from './crypto/keyManager';
 
 // keyManager reads localStorage during hydrate; IndexedDB is absent in Node, so
 // the wrapped record lives in the module cache for the duration of a test.
@@ -103,6 +112,48 @@ describe('pullVaultRecord', () => {
     upsertError = null; // next launch, back online
     expect(await pullVaultRecord()).toBe(VAULT_SYNC.PRESENT);
     expect(db.vault_keys.get('user-1').record).toEqual(JSON.parse(exportVaultRecord()));
+  });
+
+  it('imports a newer passphrase wrapper instead of keeping a stale local copy', async () => {
+    await createVault('old-passphrase');
+    const stale = exportVaultRecord();
+    await pushVaultRecord();
+    await changePassphrase('old-passphrase', 'new-passphrase');
+    await pushVaultRecord();
+    const fresh = JSON.stringify(db.vault_keys.get('user-1').record);
+
+    await importVaultRecord(stale, true); // another device still has generation 1
+    lock();
+    expect(await pullVaultRecord()).toBe(VAULT_SYNC.PRESENT);
+    expect(exportVaultRecord()).toBe(fresh);
+    expect(await unlock('old-passphrase')).toBe(false);
+    expect(await unlock('new-passphrase')).toBe(true);
+  });
+
+  it('re-pushes a newer local passphrase wrapper after an interrupted upload', async () => {
+    await createVault('old-passphrase');
+    await pushVaultRecord();
+    await changePassphrase('old-passphrase', 'new-passphrase');
+    const newerLocal = JSON.parse(exportVaultRecord());
+
+    expect(await pullVaultRecord()).toBe(VAULT_SYNC.PRESENT);
+    expect(db.vault_keys.get('user-1').record).toEqual(newerLocal);
+  });
+
+  it('treats a malformed server wrapper as unavailable, not unlockable', async () => {
+    db.vault_keys.set('user-1', { user_id: 'user-1', record: { v: 2 }, updated_at: new Date().toISOString() });
+
+    expect(await pullVaultRecord()).toBe(VAULT_SYNC.UNKNOWN);
+    expect(isVaultInitialized()).toBe(false);
+  });
+
+  it('repairs a malformed server wrapper when this device has a valid copy', async () => {
+    await createVault('valid-local-copy');
+    const local = JSON.parse(exportVaultRecord());
+    db.vault_keys.set('user-1', { user_id: 'user-1', record: { v: 2 }, updated_at: new Date().toISOString() });
+
+    expect(await pullVaultRecord()).toBe(VAULT_SYNC.PRESENT);
+    expect(db.vault_keys.get('user-1').record).toEqual(local);
   });
 
   it('reports UNKNOWN — never ABSENT — when the lookup fails', async () => {

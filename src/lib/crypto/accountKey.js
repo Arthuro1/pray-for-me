@@ -25,6 +25,34 @@ import { regenerateIdentityKey } from './userKeys';
 
 const hasIDB = () => typeof indexedDB !== 'undefined';
 const slot = (userId) => `pfm_ak_${userId}`;
+const lockSlot = (userId) => `pfm_ak_locked_${userId}`;
+
+function localStorageRef() {
+  try { return globalThis.localStorage ?? null; } catch { return null; }
+}
+
+function explicitLockToken(userId) {
+  return userId ? localStorageRef()?.getItem(lockSlot(userId)) : null;
+}
+
+function setExplicitlyLocked(userId, locked) {
+  if (!userId) return null;
+  try {
+    if (locked) {
+      const token = `${Date.now()}:${crypto.randomUUID?.() ?? Math.random()}`;
+      localStorageRef()?.setItem(lockSlot(userId), token);
+      return token;
+    }
+    localStorageRef()?.removeItem(lockSlot(userId));
+  } catch { /* best-effort; the in-memory lock still takes effect */ }
+  return null;
+}
+
+function clearExplicitLock(userId, expectedToken) {
+  if (expectedToken && explicitLockToken(userId) !== expectedToken) return false;
+  setExplicitlyLocked(userId, false);
+  return true;
+}
 
 // Outcomes of ensureAccountCryptoReady, so the app can render the right gate.
 export const CRYPTO_STATUS = {
@@ -82,6 +110,20 @@ async function hasServerEncryptionState(userId) {
 //   6. Otherwise this is genuine first use → auto-provision the key transparently.
 export async function ensureAccountCryptoReady(userId, recoverySync) {
   await km.hydrate();
+  // An explicit Lock action must survive refresh and sign-in. Without this
+  // marker, step 2 below immediately re-imported the raw device key, making the
+  // Lock button look broken. Lock first in case a tab-scoped session key was
+  // restored during hydration.
+  if (explicitLockToken(userId)) {
+    km.lock();
+    if (km.isVaultInitialized()) return CRYPTO_STATUS.LOCKED;
+    // The wrapped record may have been cleared during sign-out and still need
+    // to be pulled. Never mint a replacement key while that lookup is unknown.
+    if (recoverySync === VAULT_SYNC.UNKNOWN) return CRYPTO_STATUS.UNAVAILABLE;
+    // A definitive absence means the marker is stale (the Lock control is only
+    // offered for recovery-enabled vaults). Continue through orphan checks.
+    setExplicitlyLocked(userId, false);
+  }
   if (km.isUnlocked()) { await rememberAccountKey(userId); return CRYPTO_STATUS.READY; }
 
   if (userId && hasIDB()) {
@@ -120,18 +162,56 @@ export async function startFreshEncryption(userId) {
 // Persist the current (unlocked) account key for transparent access on this
 // device, scoped to the user. Called after auto-init and after a successful
 // recovery unlock so the device stays transparent from then on.
-export async function rememberAccountKey(userId) {
-  if (!userId || !hasIDB() || !km.isUnlocked()) return;
+export async function rememberAccountKey(userId, { clearLock = false } = {}) {
+  if (!userId || !km.isUnlocked()) return false;
+  const lockAtStart = explicitLockToken(userId);
+  if (lockAtStart && !clearLock) return false;
+  if (!hasIDB()) {
+    if (clearLock) clearExplicitLock(userId, lockAtStart);
+    return true;
+  }
   try {
     const b64 = await km.exportRawMasterKey();
-    if (b64) await idbSet(slot(userId), b64);
-  } catch { /* best-effort */ }
+    if (!b64) return false;
+    await idbSet(slot(userId), b64);
+    const lockAfterWrite = explicitLockToken(userId);
+    // A Lock click may have raced this best-effort persistence. Its newer token
+    // wins: remove the just-written raw key and never clear the new lock.
+    if (lockAfterWrite && (!clearLock || lockAfterWrite !== lockAtStart)) {
+      try { await idbDel(slot(userId)); } catch { /* marker still blocks restore */ }
+      return false;
+    }
+    if (clearLock) clearExplicitLock(userId, lockAtStart);
+    return true;
+  } catch {
+    // Keep the explicit-lock marker if persistence failed; otherwise a refresh
+    // could claim the device will reopen transparently when it cannot.
+    return false;
+  }
+}
+
+// Persist an intentional app lock for this account and remove the convenient
+// raw device copy before dropping the in-memory/session key. The wrapped vault
+// record remains, so the passphrase or recovery code can always reopen it.
+export async function lockAccountKey(userId) {
+  if (!userId) {
+    km.lock();
+    return true;
+  }
+  setExplicitlyLocked(userId, true);
+  if (hasIDB()) {
+    try { await idbDel(slot(userId)); } catch { /* marker still prevents auto-restore */ }
+  }
+  km.lock();
+  return true;
 }
 
 // Remove the transparent per-user key. Used on ACCOUNT DELETION only — not on
 // sign-out, which must preserve it to avoid locking a transparent user out of
 // their own encrypted prayers.
 export async function forgetAccountKey(userId) {
-  if (!userId || !hasIDB()) return;
+  if (!userId) return;
+  setExplicitlyLocked(userId, false);
+  if (!hasIDB()) return;
   try { await idbDel(slot(userId)); } catch { /* best-effort */ }
 }

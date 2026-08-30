@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import * as vault from '../lib/crypto/keyManager';
+import { lockAccountKey, rememberAccountKey } from '../lib/crypto/accountKey';
 import { pushVaultRecord } from '../lib/vaultSync';
 import { track, EVENTS } from '../lib/analytics';
 
@@ -38,26 +39,43 @@ const useVaultStore = create((set) => ({
     return { code, synced };
   },
 
-  unlock: async (passphrase) => {
+  unlock: async (passphrase, userId) => {
     const ok = await vault.unlock(passphrase);
-    if (ok) set({ unlocked: true });
+    if (ok) {
+      // Clear an explicit-lock marker and restore this account's convenient
+      // device copy before reporting the action complete.
+      if (userId) await rememberAccountKey(userId, { clearLock: true });
+      set({ unlocked: true });
+    }
     return ok;
   },
 
-  lock: () => {
-    vault.lock();
+  lock: async (userId) => {
+    // With a user id this is a durable, intentional lock: it also removes the
+    // raw device copy so a refresh cannot silently reopen the vault.
+    if (userId) await lockAccountKey(userId);
+    else vault.lock();
     set({ unlocked: false });
+    return true;
   },
 
-  resetPassphrase: async (recoveryCode, newPassphrase) => {
+  resetPassphrase: async (recoveryCode, newPassphrase, userId) => {
     const ok = await vault.resetPassphrase(recoveryCode, newPassphrase);
-    if (ok) { set({ unlocked: true }); pushVaultRecord(); } // re-wrapped under new passphrase
+    if (ok) {
+      if (userId) await rememberAccountKey(userId, { clearLock: true });
+      set({ unlocked: true });
+      await pushVaultRecord(); // finish persistence before the success UI closes
+    }
     return ok;
   },
 
-  changePassphrase: async (current, next) => {
+  changePassphrase: async (current, next, userId) => {
     const ok = await vault.changePassphrase(current, next);
-    if (ok) { set({ unlocked: true }); pushVaultRecord(); } // re-wrapped under new passphrase
+    if (ok) {
+      if (userId) await rememberAccountKey(userId);
+      set({ unlocked: true });
+      await pushVaultRecord(); // do not strand the new wrapper on tab close
+    }
     return ok;
   },
 

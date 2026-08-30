@@ -240,8 +240,8 @@ export default function SettingsTab() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const handleLockVault = () => {
-    lockVault();
+  const handleLockVault = async () => {
+    await lockVault(user?.id);
     toast.success(t(lang, 'vaultLockedToast'));
   };
 
@@ -842,7 +842,7 @@ export default function SettingsTab() {
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
       {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
       {vaultMode && (
-        <VaultModal lang={lang} initialMode={vaultMode} onClose={() => setVaultMode(null)} />
+        <VaultModal lang={lang} initialMode={vaultMode} userId={user?.id} onClose={() => setVaultMode(null)} />
       )}
     </div>
   );

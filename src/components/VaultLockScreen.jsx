@@ -36,7 +36,7 @@ export default function VaultLockScreen({ lang = 'fr' }) {
         {/* Reuses the unlock + "Forgot your passphrase?" recovery flow, rendered
             inline (no overlay) inside this friendlier screen. Unlocking flips the
             vault store's `unlocked`, which drops this gate in App. */}
-        <VaultModal lang={lang} initialMode="unlock" dismissable={false} embedded />
+        <VaultModal lang={lang} initialMode="unlock" userId={user?.id} dismissable={false} embedded />
 
         <div className="mt-6 text-center">
           {user?.email && (

@@ -12,6 +12,7 @@ import {
   destroyVault,
   exportVaultRecord,
   importVaultRecord,
+  inspectVaultRecord,
   generateRecoveryCode,
   encodeRecoveryBytes,
   normalizeRecoveryCode,
@@ -125,7 +126,7 @@ describe('recovery code', () => {
     const legacyRecord = JSON.parse(exportVaultRecord());
     legacyRecord.v = 1;
     lock();
-    importVaultRecord(JSON.stringify(legacyRecord), true);
+    await importVaultRecord(JSON.stringify(legacyRecord), true);
     expect(await resetPassphrase(code, 'migrated-pass')).toBe(true);
   });
 });
@@ -163,7 +164,11 @@ describe('rotateRecoveryCode', () => {
 describe('changePassphrase', () => {
   it('rotates the passphrase when the current one is correct', async () => {
     await createVault('p1');
+    const before = inspectVaultRecord(exportVaultRecord());
     expect(await changePassphrase('p1', 'p2')).toBe(true);
+    const after = inspectVaultRecord(exportVaultRecord());
+    expect(after.revision).toBe(before.revision + 1);
+    expect(after.updatedAt).toBeGreaterThanOrEqual(before.updatedAt);
     lock();
     expect(await unlock('p1')).toBe(false);
     expect(await unlock('p2')).toBe(true);
@@ -172,6 +177,17 @@ describe('changePassphrase', () => {
   it('refuses with the wrong current passphrase', async () => {
     await createVault('p1');
     expect(await changePassphrase('nope', 'p2')).toBe(false);
+  });
+
+  it('does not let a malformed synced record replace a usable vault', async () => {
+    await createVault('still-works');
+    const original = exportVaultRecord();
+
+    expect(await importVaultRecord('{"v":2}', true)).toBe(false);
+    expect(exportVaultRecord()).toBe(original);
+
+    lock();
+    expect(await unlock('still-works')).toBe(true);
   });
 });
 

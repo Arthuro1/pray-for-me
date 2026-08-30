@@ -8,7 +8,13 @@
 // isn't is the worst outcome the vault has: every other device is then locked
 // out of content the user was told they could recover.
 import { supabase } from './supabase';
-import { exportVaultRecord, importVaultRecord, isVaultInitialized, hydrate } from './crypto/keyManager';
+import {
+  exportVaultRecord,
+  importVaultRecord,
+  inspectVaultRecord,
+  isVaultInitialized,
+  hydrate,
+} from './crypto/keyManager';
 import { devError } from './logger';
 
 // What the server holds for this user, as far as we were able to tell.
@@ -66,10 +72,39 @@ export async function pullVaultRecord() {
   if (!userId) return VAULT_SYNC.UNKNOWN;
   try {
     const { data, error } = await supabase
-      .from('vault_keys').select('record').eq('user_id', userId).maybeSingle();
+      .from('vault_keys').select('record, updated_at').eq('user_id', userId).maybeSingle();
     if (error) { devError('vaultSync pull failed', error.code); return VAULT_SYNC.UNKNOWN; }
     if (data?.record) {
-      importVaultRecord(JSON.stringify(data.record)); // never clobbers a local record
+      const remote = inspectVaultRecord(data.record);
+      if (!remote) {
+        // A malformed row is not a usable recovery record. Treating it as
+        // PRESENT would route the user to an unlock form that can never work.
+        devError('vaultSync pull failed', 'invalid_record');
+        if (inspectVaultRecord(exportVaultRecord()) && await pushVaultRecord()) {
+          return VAULT_SYNC.PRESENT;
+        }
+        return VAULT_SYNC.UNKNOWN;
+      }
+      const local = inspectVaultRecord(exportVaultRecord());
+      if (!local) {
+        await importVaultRecord(remote.json, true);
+        return VAULT_SYNC.PRESENT;
+      }
+      if (local.json === remote.json) return VAULT_SYNC.PRESENT;
+
+      // Passphrase and recovery-code changes increment `revision`. `updatedAt`
+      // resolves the rare same-revision concurrent edit; the server timestamp
+      // is only a fallback for legacy wrappers that predate embedded metadata.
+      const remoteUpdatedAt = remote.updatedAt || Date.parse(data.updated_at || '') || 0;
+      const remoteIsNewer = remote.revision > local.revision
+        || (remote.revision === local.revision && remoteUpdatedAt >= local.updatedAt);
+      if (remoteIsNewer) {
+        await importVaultRecord(remote.json, true);
+      } else {
+        // This device has a passphrase/recovery change whose earlier upload was
+        // interrupted. Re-publish it instead of silently reverting it.
+        await pushVaultRecord();
+      }
       return VAULT_SYNC.PRESENT;
     }
     if (isVaultInitialized()) {

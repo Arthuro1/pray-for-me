@@ -12,7 +12,10 @@ JavaScript, device compromise, or another person using an unlocked profile.
 Sign-out clears user-scoped offline snapshots, mutation queues, in-memory data,
 and legacy Workbox caches. The account key remains for the next sign-in on that
 device. Account deletion removes it. Idle auto-lock is disabled by default;
-explicit lock clears memory/session state.
+explicit lock clears memory/session state, removes that account's raw device
+copy, and records a user-scoped lock marker. Refresh and sign-in therefore stay
+locked until the passphrase or recovery flow succeeds; a successful unlock
+stores the same account key on the device again.
 
 ## Optional passphrase recovery
 
@@ -28,6 +31,12 @@ and display as `XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`. The code is displayed once;
 users must store it separately. Version 1 records accept their legacy
 16-character codes. A successful rotation preserves the content key, writes a
 version 2 recovery wrapper, and invalidates the prior code.
+
+Every new or changed wrapped record carries a monotonic revision and modification
+timestamp. Startup reconciliation imports the newer local/server revision (or
+re-pushes a newer local revision after an interrupted upload), and credential
+operations re-read IndexedDB so a change made in another browser tab is not
+silently replaced by a stale in-memory wrapper. Malformed wrappers fail closed.
 
 Cross-device recovery requires the synced wrapped record plus either the
 passphrase or recovery code. If no recovery record exists, only a device that

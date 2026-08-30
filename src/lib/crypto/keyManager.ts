@@ -41,6 +41,11 @@ interface VaultRecord {
   recoverySalt: string;
   passWrapped: WrappedKey;
   recoveryWrapped: WrappedKey;
+  // Monotonic generation + wall-clock tie-breaker let vaultSync distinguish a
+  // passphrase/recovery change from a stale wrapper cached on another device.
+  // Older records omit both fields and are treated as generation zero.
+  revision?: number;
+  updatedAt?: string;
 }
 
 // ─── In-memory state (never persisted) ───────────────────────────────────────
@@ -62,6 +67,48 @@ const hasIDB = (): boolean => typeof indexedDB !== 'undefined';
 
 let cachedRecord: VaultRecord | null = null;
 let hydration: Promise<void> | null = null;
+
+function parseVaultRecord(value: unknown): VaultRecord | null {
+  try {
+    const record = typeof value === 'string' ? JSON.parse(value) : value;
+    if (!record || typeof record !== 'object') return null;
+    const candidate = record as Partial<VaultRecord>;
+    const wrappedIsValid = (wrapped: WrappedKey | undefined) => !!wrapped
+      && typeof wrapped.iv === 'string' && wrapped.iv.length > 0
+      && typeof wrapped.data === 'string' && wrapped.data.length > 0;
+    if (!Number.isInteger(candidate.v) || (candidate.v !== 1 && candidate.v !== VAULT_VERSION)) return null;
+    if (typeof candidate.passSalt !== 'string' || !candidate.passSalt) return null;
+    if (typeof candidate.recoverySalt !== 'string' || !candidate.recoverySalt) return null;
+    if (!wrappedIsValid(candidate.passWrapped) || !wrappedIsValid(candidate.recoveryWrapped)) return null;
+    if (candidate.revision !== undefined
+      && (!Number.isInteger(candidate.revision) || candidate.revision < 0)) return null;
+    if (candidate.updatedAt !== undefined
+      && (typeof candidate.updatedAt !== 'string' || !Number.isFinite(Date.parse(candidate.updatedAt)))) return null;
+    return candidate as VaultRecord;
+  } catch {
+    return null;
+  }
+}
+
+function recordMetadata(previous?: VaultRecord | null): Pick<VaultRecord, 'revision' | 'updatedAt'> {
+  return {
+    revision: (previous?.revision ?? 0) + 1,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function recordIsNewer(candidate: VaultRecord, current: VaultRecord | null): boolean {
+  if (!current) return true;
+  const candidateRevision = candidate.revision ?? 0;
+  const currentRevision = current.revision ?? 0;
+  if (candidateRevision !== currentRevision) return candidateRevision > currentRevision;
+  const candidateTime = candidate.updatedAt ? Date.parse(candidate.updatedAt) : 0;
+  const currentTime = current.updatedAt ? Date.parse(current.updatedAt) : 0;
+  // When both are legacy records, IndexedDB is the shared same-browser source
+  // of truth and may have been updated by another tab since this module cached it.
+  return candidateTime > currentTime
+    || (candidateTime === currentTime && JSON.stringify(candidate) !== JSON.stringify(current));
+}
 
 // Legacy localStorage access (only to migrate an existing record out of it).
 function legacyStorage(): Storage | null {
@@ -118,10 +165,14 @@ async function doHydrate(): Promise<void> {
   const legacy = ls?.getItem(STORAGE_KEY);
   let migrated = false;
   if (legacy) {
+    const parsed = parseVaultRecord(legacy);
     try {
-      cachedRecord = JSON.parse(legacy) as VaultRecord;
-      if (hasIDB()) await idbSet(STORAGE_KEY, cachedRecord);
+      cachedRecord = parsed;
+      // A corrupt legacy value must not permanently masquerade as a vault and
+      // trap the user at an unlock screen that can never succeed.
       ls?.removeItem(STORAGE_KEY);
+      if (!parsed) throw new Error('Invalid legacy vault record');
+      if (hasIDB()) await idbSet(STORAGE_KEY, cachedRecord);
       migrated = true;
     } catch {
       cachedRecord = null;
@@ -129,7 +180,9 @@ async function doHydrate(): Promise<void> {
   }
   if (!migrated && hasIDB()) {
     try {
-      cachedRecord = ((await idbGet(STORAGE_KEY)) as VaultRecord) ?? null;
+      const persisted = await idbGet(STORAGE_KEY);
+      cachedRecord = persisted == null ? null : parseVaultRecord(persisted);
+      if (persisted != null && !cachedRecord) await idbDel(STORAGE_KEY);
     } catch {
       cachedRecord = null;
     }
@@ -148,11 +201,26 @@ function loadRecord(): VaultRecord | null {
   return cachedRecord;
 }
 
-// Update the cache and persist to IndexedDB (best-effort; cache is the source of
-// truth for the running session).
-function saveRecord(record: VaultRecord): void {
+// Update the cache immediately and await the IndexedDB write where callers are
+// already async. Awaiting closes a page-close race that could make a successful
+// passphrase change revert on the next launch.
+async function saveRecord(record: VaultRecord): Promise<void> {
   cachedRecord = record;
-  if (hasIDB()) idbSet(STORAGE_KEY, record).catch(() => {});
+  if (hasIDB()) {
+    try { await idbSet(STORAGE_KEY, record); } catch { /* server sync can still preserve it */ }
+  }
+}
+
+// The cache is per tab while IndexedDB is shared. Re-read it before any
+// credential operation so a passphrase changed in another tab invalidates the
+// old passphrase here too instead of surviving until a full reload.
+async function refreshPersistedRecord(): Promise<void> {
+  await hydrate();
+  if (!hasIDB()) return;
+  try {
+    const persisted = parseVaultRecord(await idbGet(STORAGE_KEY));
+    if (persisted && recordIsNewer(persisted, cachedRecord)) cachedRecord = persisted;
+  } catch { /* retain the last validated in-memory record */ }
 }
 
 // ─── Key derivation & (un)wrapping ───────────────────────────────────────────
@@ -292,12 +360,13 @@ export async function createVault(passphrase: string): Promise<string> {
   const passKey = await deriveWrappingKey(passphrase, passSalt);
   const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
 
-  saveRecord({
+  await saveRecord({
     v: VAULT_VERSION,
     passSalt: toB64(passSalt),
     recoverySalt: toB64(recoverySalt),
     passWrapped: await wrapMasterKey(mk, passKey),
     recoveryWrapped: await wrapMasterKey(mk, recoveryKey),
+    ...recordMetadata(),
   });
   setMasterKey(mk);
   return recoveryCode;
@@ -326,12 +395,13 @@ export async function setUpRecovery(passphrase: string): Promise<string | null> 
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(passphrase, passSalt);
   const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
-  saveRecord({
+  await saveRecord({
     v: VAULT_VERSION,
     passSalt: toB64(passSalt),
     recoverySalt: toB64(recoverySalt),
     passWrapped: await wrapMasterKey(masterKey, passKey),
     recoveryWrapped: await wrapMasterKey(masterKey, recoveryKey),
+    ...recordMetadata(),
   });
   return recoveryCode;
 }
@@ -363,6 +433,7 @@ export async function exportRawMasterKey(): Promise<string | null> {
 
 // Unlock with the passphrase. Returns false on a wrong passphrase (no throw).
 export async function unlock(passphrase: string): Promise<boolean> {
+  await refreshPersistedRecord();
   const record = loadRecord();
   if (!record) return false;
   try {
@@ -378,6 +449,7 @@ export async function unlock(passphrase: string): Promise<boolean> {
 // Recover access with the recovery code and set a new passphrase (re-wrapping
 // the same master key, so existing ciphertext stays readable).
 export async function resetPassphrase(recoveryCode: string, newPassphrase: string): Promise<boolean> {
+  await refreshPersistedRecord();
   const record = loadRecord();
   if (!record) return false;
   const normalized = normalizeRecoveryCode(recoveryCode, record.v ?? 1);
@@ -391,15 +463,19 @@ export async function resetPassphrase(recoveryCode: string, newPassphrase: strin
   }
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(newPassphrase, passSalt);
-  record.passSalt = toB64(passSalt);
-  record.passWrapped = await wrapMasterKey(mk, passKey);
-  saveRecord(record);
+  await saveRecord({
+    ...record,
+    passSalt: toB64(passSalt),
+    passWrapped: await wrapMasterKey(mk, passKey),
+    ...recordMetadata(record),
+  });
   setMasterKey(mk);
   return true;
 }
 
 // Change the passphrase while unlocked (or by supplying the current one).
 export async function changePassphrase(currentPassphrase: string, newPassphrase: string): Promise<boolean> {
+  await refreshPersistedRecord();
   const record = loadRecord();
   if (!record) return false;
   let mk: CryptoKey;
@@ -411,9 +487,12 @@ export async function changePassphrase(currentPassphrase: string, newPassphrase:
   }
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(newPassphrase, passSalt);
-  record.passSalt = toB64(passSalt);
-  record.passWrapped = await wrapMasterKey(mk, passKey);
-  saveRecord(record);
+  await saveRecord({
+    ...record,
+    passSalt: toB64(passSalt),
+    passWrapped: await wrapMasterKey(mk, passKey),
+    ...recordMetadata(record),
+  });
   setMasterKey(mk);
   return true;
 }
@@ -424,15 +503,19 @@ export async function changePassphrase(currentPassphrase: string, newPassphrase:
 // or null if the vault is locked (no master key in memory to re-wrap). The
 // passphrase wrapping is untouched.
 export async function rotateRecoveryCode(): Promise<string | null> {
+  await refreshPersistedRecord();
   const record = loadRecord();
   if (!record || !masterKey) return null;
   const recoveryCode = generateRecoveryCode();
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
-  record.v = VAULT_VERSION;
-  record.recoverySalt = toB64(recoverySalt);
-  record.recoveryWrapped = await wrapMasterKey(masterKey, recoveryKey);
-  saveRecord(record);
+  await saveRecord({
+    ...record,
+    v: VAULT_VERSION,
+    recoverySalt: toB64(recoverySalt),
+    recoveryWrapped: await wrapMasterKey(masterKey, recoveryKey),
+    ...recordMetadata(record),
+  });
   return recoveryCode;
 }
 
@@ -462,6 +545,9 @@ export async function destroyVault(): Promise<void> {
       /* best-effort */
     }
   }
+  // A later account in the same SPA session must hydrate its own newly pulled
+  // record instead of reusing this already-resolved hydration promise.
+  hydration = null;
 }
 
 // ─── Cross-device sync of the WRAPPED record (ciphertext only) ────────────────
@@ -475,13 +561,25 @@ export function exportVaultRecord(): string | null {
   return cachedRecord ? JSON.stringify(cachedRecord) : null;
 }
 
+// Validated metadata used by vaultSync's conflict resolution. Returning a
+// canonical JSON string also prevents malformed server data from being imported
+// and turning into an impossible-to-unlock local vault.
+export function inspectVaultRecord(record: unknown): { json: string; revision: number; updatedAt: number } | null {
+  const parsed = parseVaultRecord(record);
+  if (!parsed) return null;
+  return {
+    json: JSON.stringify(parsed),
+    revision: parsed.revision ?? 0,
+    updatedAt: parsed.updatedAt ? Date.parse(parsed.updatedAt) : 0,
+  };
+}
+
 // Seed this device's vault from a synced record. By default it won't clobber an
 // existing local record (which may be newer); pass overwrite to force.
-export function importVaultRecord(recordJson: string, overwrite = false): void {
-  if (!overwrite && cachedRecord) return;
-  try {
-    saveRecord(JSON.parse(recordJson) as VaultRecord);
-  } catch {
-    /* malformed record — ignore */
-  }
+export async function importVaultRecord(recordJson: string | object, overwrite = false): Promise<boolean> {
+  if (!overwrite && cachedRecord) return false;
+  const record = parseVaultRecord(recordJson);
+  if (!record) return false;
+  await saveRecord(record);
+  return true;
 }

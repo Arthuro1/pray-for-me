@@ -22,11 +22,13 @@ Group members see content explicitly shared with their group.
   raw Base64 representation is stored in user-scoped IndexedDB as
   `pfm_ak_<user-id>`. An unlocked raw key is also mirrored in tab-scoped
   `sessionStorage` as `pfm_vault_session` so refresh does not re-lock it.
-- The account key survives sign-out by design. Sign-out removes the encrypted
-  offline snapshot, mutation queue, and legacy service-worker caches. Account
-  deletion removes the account key.
-- Default idle auto-lock is disabled (`0`). Explicit lock removes the in-memory
-  and session copy, but the device key remains available for the next sign-in.
+- The account key normally survives sign-out by design. Sign-out removes the
+  encrypted offline snapshot, mutation queue, and legacy service-worker caches.
+  Account deletion removes the account key.
+- Default idle auto-lock is disabled (`0`). Explicit lock removes the in-memory,
+  session, and raw device copies and persists a user-scoped lock marker. The
+  account stays locked across refresh/sign-in until a successful credential
+  flow restores the same key and clears that marker.
 - Optional recovery wraps the same key under a passphrase and a recovery code.
   Only wrapped blobs and salts are synced in `vault_keys`. A recovery code is
   128 random bits encoded as 26 Crockford Base32 characters, formatted
