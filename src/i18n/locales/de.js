@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "Hochladen fehlgeschlagen, bitte erneut versuchen",
   "micUnavailable": "Mikrofon nicht verfügbar",
   "mediaLoadError": "Medium konnte nicht geladen werden",
+  "voiceNoteLabel": "Sprachnachricht",
+  "mediaPlay": "Abspielen",
+  "mediaPause": "Pausieren",
+  "mediaSeek": "Audioposition",
+  "mediaLoading": "Medium wird geladen",
+  "mediaUploading": "Medium wird hochgeladen",
+  "openLink": "Link öffnen",
   "restUnderSky": "Ruhe unter dem Himmel",
 
   // ── Avatars (groups + people) ──

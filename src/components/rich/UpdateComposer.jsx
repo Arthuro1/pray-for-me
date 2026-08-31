@@ -12,13 +12,23 @@
 // sends never touch the network here, so offline text updates keep working;
 // media picks while offline fail fast with an honest toast.
 import { useEffect, useRef, useState } from 'react';
-import { Camera, Film, Link2, Loader2, Mic, Music, Plus, Send, Square, Trash2, X } from 'lucide-react';
+import { Camera, Film, Link2, Loader2, Mic, Music, Plus, Send, Square, Trash2 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
-import { uploadAttachment, linkAttachment, removeAttachmentFiles } from '../../lib/attachments';
+import { attachmentType, uploadAttachment, linkAttachment, removeAttachmentFiles } from '../../lib/attachments';
 import { toast } from '../../store/toastStore';
 import { t } from '../../i18n';
 import RichTextEditor from './RichTextEditor';
 import { recorderMime } from './recorderMime';
+import { PendingAttachmentList } from './AttachmentList';
+
+const localPreviewUrl = (file) => {
+  try { return URL.createObjectURL(file); } catch { return null; }
+};
+
+const releaseLocalPreview = (entry) => {
+  if (!entry?.previewUrl) return;
+  try { URL.revokeObjectURL(entry.previewUrl); } catch { /* test/browser fallback */ }
+};
 
 // One row in the attach "+" menu: an icon chip and a label.
 function MenuRow({ icon: Icon, label, onClick }) {
@@ -62,12 +72,16 @@ export default function UpdateComposer({
   const recorderRef = useRef(null);
   const timerRef = useRef(null);
   const discardRef = useRef(false); // set true to drop an in-progress recording
+  const pendingRef = useRef([]);
   const { user } = useAuthStore();
+
+  pendingRef.current = pending;
 
   // Stop the mic if the composer unmounts mid-recording.
   useEffect(() => () => {
     recorderRef.current?.stream?.getTracks().forEach((tr) => tr.stop());
     clearInterval(timerRef.current);
+    pendingRef.current.forEach(releaseLocalPreview);
   }, []);
 
   // Close the attach menu on an outside click or Escape.
@@ -89,9 +103,13 @@ export default function UpdateComposer({
   const addFiles = async (files) => {
     for (const file of files) {
       const entryId = crypto.randomUUID();
-      setPending((prev) => [...prev, { id: entryId, status: 'uploading', name: file.name }]);
+      const type = attachmentType(file.type);
+      const previewUrl = type ? localPreviewUrl(file) : null;
+      const pendingEntry = { id: entryId, status: 'uploading', name: file.name, type, previewUrl };
+      setPending((prev) => [...prev, pendingEntry]);
       const { attachment, error } = await uploadAttachment(file, user?.id);
       if (error) {
+        releaseLocalPreview(pendingEntry);
         toast.error(t(lang, error));
         setPending((prev) => prev.filter((p) => p.id !== entryId));
       } else {
@@ -109,6 +127,7 @@ export default function UpdateComposer({
   };
 
   const removePending = (entry) => {
+    releaseLocalPreview(entry);
     setPending((prev) => prev.filter((p) => p.id !== entry.id));
     if (entry.meta?.path) removeAttachmentFiles([entry.meta]);
   };
@@ -116,7 +135,7 @@ export default function UpdateComposer({
   const addLink = () => {
     const att = linkAttachment(linkDraft);
     if (!att) { toast.error(t(lang, 'linkInvalid')); return; }
-    setPending((prev) => [...prev, { id: att.id, status: 'ready', meta: att, name: att.url }]);
+    setPending((prev) => [...prev, { id: att.id, status: 'ready', type: 'link', meta: att, name: att.url }]);
     setLinkDraft('');
     setShowLinkInput(false);
   };
@@ -161,6 +180,7 @@ export default function UpdateComposer({
     try {
       const result = await onSend(text.trim(), ready);
       if (result === false) return;
+      pending.forEach(releaseLocalPreview);
       setText('');
       setPending([]);
       setShowLinkInput(false);
@@ -194,22 +214,8 @@ export default function UpdateComposer({
 
   return (
     <div id={inputId} className={`update-composer space-y-1.5 ${sendLabel ? 'update-composer--labelled' : 'update-composer--compact'}`}>
-      {/* Pending attachment chips */}
-      {pending.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {pending.map((p) => (
-            <span key={p.id} className="inline-flex items-center gap-1.5 max-w-[180px] rounded-full ps-2.5 pe-1 py-1 text-xs" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-              {p.status === 'uploading' && <Loader2 size={11} className="animate-spin shrink-0" aria-hidden="true" />}
-              <span className="truncate">{p.name || p.meta?.type}</span>
-              {p.status !== 'uploading' && (
-                <button type="button" onClick={() => removePending(p)} aria-label={t(lang, 'attachRemove')} title={t(lang, 'attachRemove')} className="w-5 h-5 flex items-center justify-center rounded-full shrink-0">
-                  <X size={11} aria-hidden="true" />
-                </button>
-              )}
-            </span>
-          ))}
-        </div>
-      )}
+      {/* Playable/clickable previews make media verifiable before it is sent. */}
+      <PendingAttachmentList entries={pending} lang={lang} onRemove={removePending} />
 
       {/* Inline link input */}
       {showLinkInput && (

@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "فشل الرفع، حاول مرة أخرى",
   "micUnavailable": "الميكروفون غير متاح",
   "mediaLoadError": "تعذّر تحميل هذه الوسائط",
+  "voiceNoteLabel": "ملاحظة صوتية",
+  "mediaPlay": "تشغيل",
+  "mediaPause": "إيقاف مؤقت",
+  "mediaSeek": "التنقل في الصوت",
+  "mediaLoading": "جارٍ تحميل الوسائط",
+  "mediaUploading": "جارٍ رفع الوسائط",
+  "openLink": "فتح الرابط",
   "restUnderSky": "استرح تحت السماء",
 
   // ── Avatars (groups + people) ──

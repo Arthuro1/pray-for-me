@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "Nabigo ang pag-upload, subukang muli",
   "micUnavailable": "Hindi available ang mikropono",
   "mediaLoadError": "Hindi ma-load ang media na ito",
+  "voiceNoteLabel": "Voice note",
+  "mediaPlay": "I-play",
+  "mediaPause": "I-pause",
+  "mediaSeek": "Pumunta sa bahagi ng audio",
+  "mediaLoading": "Nilo-load ang media",
+  "mediaUploading": "Ina-upload ang media",
+  "openLink": "Buksan ang link",
   "restUnderSky": "Magpahinga sa ilalim ng langit",
 
   // ── Avatars (groups + people) ──

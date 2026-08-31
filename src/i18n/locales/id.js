@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "Unggahan gagal, coba lagi",
   "micUnavailable": "Mikrofon tidak tersedia",
   "mediaLoadError": "Tidak dapat memuat media ini",
+  "voiceNoteLabel": "Catatan suara",
+  "mediaPlay": "Putar",
+  "mediaPause": "Jeda",
+  "mediaSeek": "Geser audio",
+  "mediaLoading": "Memuat media",
+  "mediaUploading": "Mengunggah media",
+  "openLink": "Buka tautan",
   "restUnderSky": "Beristirahat di bawah langit",
 
   // ── Avatars (groups + people) ──

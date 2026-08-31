@@ -1027,6 +1027,13 @@ export default {
   "uploadFailed": "Upload failed, please try again",
   "micUnavailable": "Microphone unavailable",
   "mediaLoadError": "Couldn't load this media",
+  "voiceNoteLabel": "Voice note",
+  "mediaPlay": "Play",
+  "mediaPause": "Pause",
+  "mediaSeek": "Seek audio",
+  "mediaLoading": "Loading media",
+  "mediaUploading": "Uploading media",
+  "openLink": "Open link",
   "restUnderSky": "Rest under the sky",
 
   // ── Avatars (groups + people) ──

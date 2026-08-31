@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "بارگذاری ناموفق بود، دوباره تلاش کنید",
   "micUnavailable": "میکروفون در دسترس نیست",
   "mediaLoadError": "این رسانه بارگیری نشد",
+  "voiceNoteLabel": "یادداشت صوتی",
+  "mediaPlay": "پخش",
+  "mediaPause": "مکث",
+  "mediaSeek": "پیمایش صدا",
+  "mediaLoading": "در حال بارگیری رسانه",
+  "mediaUploading": "در حال بارگذاری رسانه",
+  "openLink": "باز کردن پیوند",
   "restUnderSky": "زیر آسمان آرام بگیر",
 
   // ── Avatars (groups + people) ──

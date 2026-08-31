@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "업로드에 실패했습니다. 다시 시도해 주세요",
   "micUnavailable": "마이크를 사용할 수 없습니다",
   "mediaLoadError": "미디어를 불러올 수 없습니다",
+  "voiceNoteLabel": "음성 메모",
+  "mediaPlay": "재생",
+  "mediaPause": "일시 정지",
+  "mediaSeek": "오디오 탐색",
+  "mediaLoading": "미디어 불러오는 중",
+  "mediaUploading": "미디어 업로드 중",
+  "openLink": "링크 열기",
   "restUnderSky": "하늘 아래에서 쉬세요",
 
   // ── Avatars (groups + people) ──

@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "アップロードに失敗しました。もう一度お試しください",
   "micUnavailable": "マイクを利用できません",
   "mediaLoadError": "このメディアを読み込めませんでした",
+  "voiceNoteLabel": "ボイスメモ",
+  "mediaPlay": "再生",
+  "mediaPause": "一時停止",
+  "mediaSeek": "音声を移動",
+  "mediaLoading": "メディアを読み込み中",
+  "mediaUploading": "メディアをアップロード中",
+  "openLink": "リンクを開く",
   "restUnderSky": "空の下で安らぐ",
 
   // ── Avatars (groups + people) ──

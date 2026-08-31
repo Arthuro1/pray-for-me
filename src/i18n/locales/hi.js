@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "अपलोड विफल रहा, फिर से कोशिश करें",
   "micUnavailable": "माइक्रोफ़ोन उपलब्ध नहीं है",
   "mediaLoadError": "यह मीडिया लोड नहीं हो सका",
+  "voiceNoteLabel": "वॉइस नोट",
+  "mediaPlay": "चलाएँ",
+  "mediaPause": "रोकें",
+  "mediaSeek": "ऑडियो में जाएँ",
+  "mediaLoading": "मीडिया लोड हो रहा है",
+  "mediaUploading": "मीडिया अपलोड हो रहा है",
+  "openLink": "लिंक खोलें",
   "restUnderSky": "आकाश के नीचे विश्राम करें",
 
   // ── Avatars (groups + people) ──

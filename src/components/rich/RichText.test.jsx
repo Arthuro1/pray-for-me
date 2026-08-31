@@ -42,6 +42,22 @@ describe('RichText', () => {
     expect(a.getAttribute('rel')).toContain('noopener');
   });
 
+  it('auto-links www and bare-domain URLs while keeping punctuation outside', () => {
+    const { container } = render(<RichText text="Try www.example.com/help, or example.org/prayer." />);
+    const links = [...container.querySelectorAll('a')];
+    expect(links.map((a) => a.textContent)).toEqual(['www.example.com/help', 'example.org/prayer']);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      'https://www.example.com/help',
+      'https://example.org/prayer',
+    ]);
+    expect(container.textContent).toBe('Try www.example.com/help, or example.org/prayer.');
+  });
+
+  it('does not link unsafe protocols or email addresses', () => {
+    const { container } = render(<RichText text="javascript:alert(1) and hello@example.com" />);
+    expect(container.querySelector('a')).toBeNull();
+  });
+
   it('never interprets HTML in user content', () => {
     const { container } = render(<RichText text={'<img src=x onerror=alert(1)> **bold**'} />);
     expect(container.querySelector('img')).toBeNull();

@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "Error al subir, inténtalo de nuevo",
   "micUnavailable": "Micrófono no disponible",
   "mediaLoadError": "No se pudo cargar este archivo",
+  "voiceNoteLabel": "Nota de voz",
+  "mediaPlay": "Reproducir",
+  "mediaPause": "Pausar",
+  "mediaSeek": "Buscar en el audio",
+  "mediaLoading": "Cargando contenido",
+  "mediaUploading": "Enviando contenido",
+  "openLink": "Abrir enlace",
   "restUnderSky": "Descansa bajo el cielo",
 
   // ── Avatars (groups + people) ──

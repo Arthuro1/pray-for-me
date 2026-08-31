@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "Не удалось загрузить, попробуйте ещё раз",
   "micUnavailable": "Микрофон недоступен",
   "mediaLoadError": "Не удалось загрузить это медиа",
+  "voiceNoteLabel": "Голосовая заметка",
+  "mediaPlay": "Воспроизвести",
+  "mediaPause": "Пауза",
+  "mediaSeek": "Перемотать аудио",
+  "mediaLoading": "Загрузка медиа",
+  "mediaUploading": "Отправка медиа",
+  "openLink": "Открыть ссылку",
   "restUnderSky": "Отдохните под небом",
 
   // ── Avatars (groups + people) ──

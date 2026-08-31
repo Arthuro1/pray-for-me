@@ -762,6 +762,325 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   overflow: hidden;
 }
 
+/* Rich media -------------------------------------------------------------
+   Attachments are actual content, not filename metadata. These cards are
+   shared by the composer preview and posted activity, with 44px playback/link
+   targets and restrained surfaces that remain legible in every theme. */
+.attachment-list {
+  display: grid;
+  min-width: 0;
+  gap: .55rem;
+}
+
+.attachment-list__item {
+  position: relative;
+  width: min(100%, 28rem);
+  min-width: 0;
+}
+
+.attachment-list__item--image {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.attachment-load-state {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .75rem;
+  color: var(--text-faint);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: .9rem;
+  font-size: .75rem;
+  font-style: italic;
+}
+
+.attachment-load-state--video {
+  min-height: 9rem;
+}
+
+.attachment-image {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: .9rem;
+}
+
+.attachment-image img {
+  display: block;
+  max-width: 100%;
+  max-height: 15rem;
+  object-fit: cover;
+}
+
+.attachment-audio {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: .65rem;
+  min-height: 4.75rem;
+  padding: .65rem .75rem;
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent-border) 76%, var(--border));
+  border-radius: .95rem;
+}
+
+.attachment-audio > audio {
+  display: none;
+}
+
+.attachment-audio__play {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline-start: .1rem;
+  color: var(--badge-text);
+  background: var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.attachment-audio__body {
+  min-width: 0;
+}
+
+.attachment-audio__heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .35rem;
+  margin-block-end: .35rem;
+  color: var(--text-1);
+  font-size: .76rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.attachment-audio__name {
+  overflow: hidden;
+  color: var(--text-faint);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-audio__timeline {
+  display: grid;
+  grid-template-columns: 2.35rem minmax(3rem, 1fr) 2.35rem;
+  align-items: center;
+  gap: .4rem;
+  color: var(--text-faint);
+  font-size: .64rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.attachment-audio__timeline span:last-child {
+  text-align: end;
+}
+
+.attachment-audio__timeline input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.attachment-audio__timeline input[type="range"]:disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+.attachment-video {
+  overflow: hidden;
+  background: #09090b;
+  border: 1px solid var(--border-strong);
+  border-radius: .95rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.attachment-video__heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .35rem;
+  padding: .55rem .7rem;
+  overflow: hidden;
+  color: var(--text-2);
+  background: var(--surface-muted);
+  font-size: .72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.attachment-video__heading span:last-child {
+  overflow: hidden;
+  color: var(--text-faint);
+  font-weight: 500;
+  text-overflow: ellipsis;
+}
+
+.attachment-video video {
+  display: block;
+  width: 100%;
+  max-height: 22rem;
+  background: #000;
+}
+
+.attachment-video__stage {
+  position: relative;
+  min-height: 8rem;
+  background: #000;
+}
+
+.attachment-video__play {
+  position: absolute;
+  z-index: 1;
+  inset: 50% auto auto 50%;
+  display: inline-flex;
+  width: 3.5rem;
+  height: 3.5rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline-start: .15rem;
+  color: #fff;
+  background: color-mix(in srgb, var(--accent) 88%, #000);
+  border: 2px solid rgba(255, 255, 255, .82);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .42);
+  transform: translate(-50%, -50%);
+}
+
+.attachment-video__error {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  min-height: 8rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  padding: 1rem;
+  color: rgba(255, 255, 255, .82);
+  background: rgba(8, 8, 10, .9);
+  font-size: .72rem;
+  text-align: center;
+}
+
+.attachment-video__error button {
+  min-height: 2.25rem;
+  padding: .35rem .8rem;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.attachment-link {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  min-height: 3.65rem;
+  align-items: center;
+  gap: .65rem;
+  padding: .6rem .75rem;
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent-soft) 48%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent-border) 76%, var(--border));
+  border-radius: .9rem;
+  text-decoration: none;
+  transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease), transform var(--motion) var(--ease);
+}
+
+.attachment-link__icon {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: .7rem;
+}
+
+.attachment-link__copy {
+  display: grid;
+  min-width: 0;
+  gap: .08rem;
+}
+
+.attachment-link__copy strong,
+.attachment-link__copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-link__copy strong {
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.attachment-link__copy span {
+  color: var(--text-faint);
+  font-size: .68rem;
+}
+
+.attachment-link__arrow {
+  color: var(--accent);
+}
+
+.attachment-list__remove,
+.attachment-list__status {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: .45rem;
+  inset-inline-end: .45rem;
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.attachment-list__status {
+  color: var(--accent);
+}
+
+.attachment-list__item--removable .attachment-audio__heading,
+.attachment-list__item--removable .attachment-video__heading,
+.attachment-list__item--removable .attachment-link {
+  padding-inline-end: 3rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .attachment-link:hover {
+    background: color-mix(in srgb, var(--accent-soft) 72%, var(--surface));
+    border-color: var(--accent-border);
+    transform: translateY(-1px);
+  }
+
+  .attachment-audio__play:hover,
+  .attachment-list__remove:hover {
+    filter: brightness(1.06);
+  }
+}
+
 .update-composer--labelled .update-composer__input {
   min-height: 44px;
 }

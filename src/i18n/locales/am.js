@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "መስቀል አልተሳካም፣ እንደገና ይሞክሩ",
   "micUnavailable": "ማይክሮፎን አይገኝም",
   "mediaLoadError": "ይህን ሚዲያ መጫን አልተቻለም",
+  "voiceNoteLabel": "የድምፅ ማስታወሻ",
+  "mediaPlay": "አጫውት",
+  "mediaPause": "ለአፍታ አቁም",
+  "mediaSeek": "ድምፁን ፈልግ",
+  "mediaLoading": "ሚዲያ በመጫን ላይ",
+  "mediaUploading": "ሚዲያ በመላክ ላይ",
+  "openLink": "አገናኙን ክፈት",
   "restUnderSky": "ከሰማይ በታች ዕረፍት",
 
   // ── Avatars (groups + people) ──

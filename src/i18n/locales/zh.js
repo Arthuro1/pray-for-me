@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "上传失败，请重试",
   "micUnavailable": "麦克风不可用",
   "mediaLoadError": "无法加载此媒体",
+  "voiceNoteLabel": "语音便笺",
+  "mediaPlay": "播放",
+  "mediaPause": "暂停",
+  "mediaSeek": "跳转音频",
+  "mediaLoading": "正在加载媒体",
+  "mediaUploading": "正在上传媒体",
+  "openLink": "打开链接",
   "restUnderSky": "在星空下安歇",
 
   // ── Avatars (groups + people) ──

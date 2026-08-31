@@ -1027,6 +1027,13 @@ export default {
   "uploadFailed": "L'envoi a échoué, réessayez",
   "micUnavailable": "Micro indisponible",
   "mediaLoadError": "Impossible de charger ce média",
+  "voiceNoteLabel": "Note vocale",
+  "mediaPlay": "Lire",
+  "mediaPause": "Pause",
+  "mediaSeek": "Parcourir l'audio",
+  "mediaLoading": "Chargement du média",
+  "mediaUploading": "Envoi du média",
+  "openLink": "Ouvrir le lien",
   "restUnderSky": "Reposez-vous sous le ciel",
 
   // ── Avatars (groups + people) ──

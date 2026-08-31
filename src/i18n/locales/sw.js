@@ -1022,6 +1022,13 @@ export default {
   "uploadFailed": "Upakiaji umeshindikana, jaribu tena",
   "micUnavailable": "Maikrofoni haipatikani",
   "mediaLoadError": "Imeshindwa kupakia media hii",
+  "voiceNoteLabel": "Ujumbe wa sauti",
+  "mediaPlay": "Cheza",
+  "mediaPause": "Sitisha",
+  "mediaSeek": "Sogeza sauti",
+  "mediaLoading": "Inapakia media",
+  "mediaUploading": "Inatuma media",
+  "openLink": "Fungua kiungo",
   "restUnderSky": "Pumzika chini ya anga",
 
   // ── Avatars (groups + people) ──
