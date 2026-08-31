@@ -7,6 +7,7 @@ import { ExternalLink, Film, ImageOff, Loader2, Music, Pause, Play, X } from 'lu
 import { useAttachmentUrl } from '../../hooks/useAttachmentUrl';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { t } from '../../i18n';
+import { needsVideoTranscode, transcodedPlaybackUrl } from '../../lib/videoTranscode';
 
 const itemWidthClass = 'w-full max-w-md';
 
@@ -162,13 +163,36 @@ function VideoAttachment({ att, url, loading, error, lang }) {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [playbackError, setPlaybackError] = useState(false);
+  const [playUrl, setPlayUrl] = useState(url);
+  const [converting, setConverting] = useState(false);
+
+  const preparePlayable = async () => {
+    if (!url || converting) return;
+    setConverting(true);
+    setPlaybackError(false);
+    try {
+      setPlayUrl(await transcodedPlaybackUrl(att.id, url));
+    } catch {
+      setPlaybackError(true);
+    } finally {
+      setConverting(false);
+    }
+  };
 
   useEffect(() => {
     setPlaying(false);
     setPlaybackError(false);
-  }, [url]);
+    setPlayUrl(url);
+    if (url && needsVideoTranscode(att)) preparePlayable();
+    // preparePlayable intentionally follows the current attachment URL only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, att.id, att.mime, att.name]);
 
   const togglePlayback = async () => {
+    if (playbackError) {
+      await preparePlayable();
+      return;
+    }
     const video = videoRef.current;
     if (!video) return;
     if (!video.paused) {
@@ -199,7 +223,7 @@ function VideoAttachment({ att, url, loading, error, lang }) {
             ref={videoRef}
             controls
             playsInline
-            src={url}
+            src={converting ? undefined : playUrl}
             preload="auto"
             aria-label={att.name || t(lang, 'attachVideo')}
             onPlay={() => setPlaying(true)}
@@ -207,7 +231,7 @@ function VideoAttachment({ att, url, loading, error, lang }) {
             onEnded={() => setPlaying(false)}
             onError={() => setPlaybackError(true)}
           />
-          {!playing && !playbackError && (
+          {!playing && !playbackError && !converting && (
             <button
               type="button"
               onClick={togglePlayback}
@@ -218,11 +242,17 @@ function VideoAttachment({ att, url, loading, error, lang }) {
               <Play size={22} fill="currentColor" aria-hidden="true" />
             </button>
           )}
-          {playbackError && (
+          {converting && (
+            <div className="attachment-video__error" role="status">
+              <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+              <span>{t(lang, 'mediaLoading')}</span>
+            </div>
+          )}
+          {playbackError && !converting && (
             <div className="attachment-video__error" role="status">
               <ImageOff size={18} aria-hidden="true" />
               <span>{t(lang, 'mediaLoadError')}</span>
-              <button type="button" onClick={togglePlayback}>{t(lang, 'mediaPlay')}</button>
+              <button type="button" onClick={preparePlayable}>{t(lang, 'mediaPlay')}</button>
             </div>
           )}
         </div>

@@ -20,6 +20,7 @@ import { t } from '../../i18n';
 import RichTextEditor from './RichTextEditor';
 import { recorderMime } from './recorderMime';
 import { PendingAttachmentList } from './AttachmentList';
+import { needsVideoTranscode } from '../../lib/videoTranscode';
 
 const localPreviewUrl = (file) => {
   try { return URL.createObjectURL(file); } catch { return null; }
@@ -104,16 +105,27 @@ export default function UpdateComposer({
     for (const file of files) {
       const entryId = crypto.randomUUID();
       const type = attachmentType(file.type);
-      const previewUrl = type ? localPreviewUrl(file) : null;
+      // Unsupported containers are converted during upload. Do not hand the
+      // original AVI URL to <video> (which would immediately show a false
+      // playback error), and do not convert it twice in the preview component.
+      const waitsForPlayableVideo = type === 'video' && needsVideoTranscode(file);
+      const previewUrl = type && !waitsForPlayableVideo ? localPreviewUrl(file) : null;
       const pendingEntry = { id: entryId, status: 'uploading', name: file.name, type, previewUrl };
       setPending((prev) => [...prev, pendingEntry]);
-      const { attachment, error } = await uploadAttachment(file, user?.id);
+      const { attachment, previewFile, error } = await uploadAttachment(file, user?.id);
       if (error) {
         releaseLocalPreview(pendingEntry);
         toast.error(t(lang, error));
         setPending((prev) => prev.filter((p) => p.id !== entryId));
       } else {
-        setPending((prev) => prev.map((p) => (p.id === entryId ? { ...p, status: 'ready', meta: attachment } : p)));
+        const playablePreview = previewUrl || localPreviewUrl(previewFile || file);
+        setPending((prev) => prev.map((p) => (p.id === entryId ? {
+          ...p,
+          status: 'ready',
+          name: attachment.name,
+          previewUrl: playablePreview,
+          meta: attachment,
+        } : p)));
       }
     }
   };

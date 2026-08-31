@@ -4,7 +4,13 @@
 // remove affordance. Link attachments are used throughout: they render without
 // the download + decrypt pipeline media types need, so rendering is tested pure.
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+
+const transcodedPlaybackUrl = vi.hoisted(() => vi.fn());
+vi.mock('../../lib/videoTranscode', async (importOriginal) => ({
+  ...(await importOriginal()),
+  transcodedPlaybackUrl,
+}));
 
 import AttachmentList, { AttachmentPreview, PendingAttachmentList } from './AttachmentList';
 import { t } from '../../i18n';
@@ -13,7 +19,10 @@ const lang = 'fr';
 
 const link = (id) => ({ id, type: 'link', url: `https://example.com/${id}` });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  transcodedPlaybackUrl.mockReset();
+});
 
 describe('AttachmentList', () => {
   it('renders nothing when there are no attachments', () => {
@@ -64,5 +73,20 @@ describe('AttachmentList', () => {
 
     play.mockRestore();
     pause.mockRestore();
+  });
+
+  it('converts an existing AVI attachment before handing it to the player', async () => {
+    transcodedPlaybackUrl.mockResolvedValue('blob:converted-mp4');
+    const { container } = render(
+      <AttachmentPreview
+        att={{ id: 'legacy-video', type: 'video', mime: 'video/x-msvideo', name: 'MOV08533.AVI' }}
+        url="blob:decrypted-avi"
+        lang={lang}
+      />
+    );
+
+    expect(screen.getByRole('status').textContent).toContain(t(lang, 'mediaLoading'));
+    await waitFor(() => expect(container.querySelector('video')?.getAttribute('src')).toBe('blob:converted-mp4'));
+    expect(transcodedPlaybackUrl).toHaveBeenCalledWith('legacy-video', 'blob:decrypted-avi');
   });
 });
