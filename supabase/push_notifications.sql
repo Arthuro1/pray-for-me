@@ -18,6 +18,7 @@ create table if not exists public.push_subscriptions (
   tz_offset     int  not null default 0,         -- minutes to add to UTC for local time
   lang          text not null default 'en',
   enabled       boolean not null default true,
+  last_daily_sent_on date,
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
 );
@@ -33,7 +34,45 @@ drop policy if exists "own push subs" on public.push_subscriptions;
 create policy "own push subs" on public.push_subscriptions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
--- 2. Scheduled job — runs every 15 minutes and invokes the send-daily-reminder
+alter table public.push_subscriptions add column if not exists last_daily_sent_on date;
+
+-- A newly enabled reminder whose time already passed starts tomorrow. Keep
+-- this database-side so older deployed clients cannot accidentally trigger an
+-- immediate "catch-up" push under the retryable scheduler.
+create or replace function public.prepare_daily_reminder_activation()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+declare
+  v_activation_change boolean := tg_op = 'INSERT';
+  v_local_now timestamp := (now() at time zone 'UTC')
+    + coalesce(new.tz_offset, 0) * interval '1 minute';
+begin
+  if tg_op = 'UPDATE' then
+    v_activation_change :=
+      (not coalesce(old.enabled, false) and new.enabled)
+      or new.reminder_time is distinct from old.reminder_time;
+  end if;
+  if new.enabled
+     and v_activation_change
+     and new.reminder_time ~ '^([01][0-9]|2[0-3]):[0-5][0-9]$'
+     and to_char(v_local_now, 'HH24:MI') >= new.reminder_time
+     and new.last_daily_sent_on is distinct from v_local_now::date
+  then
+    new.last_daily_sent_on := v_local_now::date;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists prepare_daily_reminder_activation on public.push_subscriptions;
+create trigger prepare_daily_reminder_activation
+before insert or update of enabled, reminder_time on public.push_subscriptions
+for each row execute function public.prepare_daily_reminder_activation();
+revoke all on function public.prepare_daily_reminder_activation() from public, anon, authenticated;
+
+-- 2. Scheduled job — runs every minute and invokes the send-daily-reminder
 --    Edge Function, which decides which subscriptions are due in their local
 --    timezone. Requires the pg_cron and pg_net extensions. The follow-up
 --    reminder has its own, independently-scheduled function/cron — see
@@ -50,7 +89,7 @@ select cron.unschedule('send-daily-reminder')
 
 select cron.schedule(
   'send-daily-reminder',
-  '*/15 * * * *',
+  '* * * * *',
   $$
   select net.http_post(
     url     := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url')

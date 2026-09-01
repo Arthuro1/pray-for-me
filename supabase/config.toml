@@ -382,6 +382,18 @@ inspector_port = 8083
 # The Deno major version to use.
 deno_version = 2
 
+# Cron/database-webhook callers use a purpose-scoped shared secret which each
+# handler verifies itself. The platform JWT check must therefore stay disabled
+# or it rejects the opaque bearer before the handler can authenticate it.
+[functions.send-daily-reminder]
+verify_jwt = false
+
+[functions.send-follow-up-reminder]
+verify_jwt = false
+
+[functions.send-event-notifications]
+verify_jwt = false
+
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 

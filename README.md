@@ -180,7 +180,7 @@ The daily verse is client-side: a curated pool of ~200 vetted references rotated
 
 | Function | Purpose |
 |---|---|
-| `send-daily-reminder` | Daily Web Push with today's prayer subjects, at each user's local reminder time (`pg_cron`, every 15 min) |
+| `send-daily-reminder` | Daily Web Push with today's prayer subjects, at each user's local reminder time (`pg_cron`, every minute; once-per-local-day idempotency) |
 | `send-follow-up-reminder` | Follow-up Web Push every `follow_up_days`, at each user's chosen time (`pg_cron`, every 15 min) |
 | `send-event-notifications` | Privacy-safe Web Push for community events (friend requests, invitations, prayer updates, answered). Claims durable notification rows via a Database Webhook (fast) + retry cron (backstop). [Docs](./docs/NOTIFICATIONS.md) |
 

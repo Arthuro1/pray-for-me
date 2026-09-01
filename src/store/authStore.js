@@ -8,7 +8,7 @@ import { setIdentityUser } from '../lib/identityPhoto';
 import { AVATAR_SCOPES, removeAllAvatarObjects } from '../lib/avatarPhotos';
 import { clearServiceWorkerUserCaches } from '../lib/serviceWorkerSecurity';
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   loading: true,
 
@@ -113,18 +113,36 @@ const useAuthStore = create((set) => ({
   // Permanently delete the account and ALL server-side data (right to erasure),
   // then wipe local caches and sign out. Irreversible — callers MUST confirm.
   deleteAccount: async () => {
-    const { data: { user } } = await supabase.auth.getUser();
+    let user;
+    try {
+      const result = await supabase.auth.getUser();
+      user = result.data?.user || get().user;
+    } catch (error) {
+      return { error };
+    }
+    if (!user?.id) return { error: new Error('No authenticated user') };
+
     // Remove the uploaded avatar while the account still exists and can
     // authorise it — afterwards nobody can. Best-effort by design: erasure must
     // not be blocked by storage, and a delete trigger on profiles revokes
     // access to anything left behind.
-    await removeAllAvatarObjects(AVATAR_SCOPES.user, user?.id);
-    const { error } = await supabase.rpc('delete_account');
+    await removeAllAvatarObjects(AVATAR_SCOPES.user, user.id);
+    let error;
+    try {
+      ({ error } = await supabase.rpc('delete_account'));
+    } catch (caught) {
+      error = caught;
+    }
     if (error) return { error };
-    await clearLocalData(user?.id);
-    await clearServiceWorkerUserCaches();
-    await forgetAccountKey(user?.id); // the account is gone — remove the local key too
-    await supabase.auth.signOut();
+
+    // Server erasure succeeded. Local cleanup is best-effort and must never
+    // leave the deleted account rendered because one browser cache failed.
+    await Promise.allSettled([
+      clearLocalData(user.id),
+      clearServiceWorkerUserCaches(),
+      forgetAccountKey(user.id),
+    ]);
+    try { await supabase.auth.signOut({ scope: 'local' }); } catch { /* local state below is authoritative */ }
     setAuthSessionHint(false);
     setIdentityUser(null);
     set({ user: null });

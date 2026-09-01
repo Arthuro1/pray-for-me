@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import useConfirmStore from '../../store/confirmStore';
 import ConfirmDialog from './ConfirmDialog';
 
@@ -5,7 +6,20 @@ import ConfirmDialog from './ConfirmDialog';
 // once at the app root so any destructive action can request a warning.
 export default function ConfirmHost() {
   const { dialog, close } = useConfirmStore();
+  const [loading, setLoading] = useState(false);
   if (!dialog) return null;
+
+  const handleConfirm = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await dialog.onConfirm?.();
+    } finally {
+      close();
+      setLoading(false);
+    }
+  };
+
   return (
     <ConfirmDialog
       title={dialog.title}
@@ -13,8 +27,9 @@ export default function ConfirmHost() {
       confirmLabel={dialog.confirmLabel}
       cancelLabel={dialog.cancelLabel}
       danger={dialog.danger !== false}
-      onConfirm={() => { close(); dialog.onConfirm?.(); }}
-      onCancel={close}
+      loading={loading}
+      onConfirm={handleConfirm}
+      onCancel={loading ? undefined : close}
     />
   );
 }

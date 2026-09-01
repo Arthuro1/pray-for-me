@@ -1,6 +1,6 @@
 // Supabase Edge Function: send-daily-reminder
-// Invoked every ~15 min by its own pg_cron job. Finds subscriptions whose
-// local time has just reached their reminder_time and sends a localized
+// Invoked every minute by its own pg_cron job. Finds subscriptions whose local
+// time has reached their reminder_time and sends a localized, once-per-day
 // "you have N prayer subjects today" Web Push. Independent of, and runs
 // alongside, send-follow-up-reminder (split so each reminder type has its
 // own cron schedule and can be deployed/toggled on its own).
@@ -8,7 +8,6 @@
 // Deploy:  supabase functions deploy send-daily-reminder --no-verify-jwt
 // Secrets: supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 import {
-  isWithinReminderWindow,
   initReminderEnv,
   requireInternalAuth,
   sendPush,
@@ -16,14 +15,7 @@ import {
 } from '../_shared/reminders.ts';
 import { dailyPayload, normalizeDetail } from '../_shared/notify.ts';
 import { prayersForDay, type PlannerCategory, type PlannerPrayer } from '../_shared/planner.ts';
-
-const pad = (n: number) => String(n).padStart(2, '0');
-// Local calendar day key ("YYYY-MM-DD") for a subscription — the same key the
-// app's planner uses, so scheduled/recurring prayers are counted identically.
-function localDayKey(now: Date, tzOffsetMin: number): string {
-  const d = new Date(now.getTime() + tzOffsetMin * 60000);
-  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`;
-}
+import { dailyReminderDue } from '../_shared/reminderSchedule.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -35,14 +27,13 @@ Deno.serve(async (req) => {
     const { supabase } = init;
 
     const now = new Date();
-    const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-
     const { data: subs, error } = await supabase.from('push_subscriptions').select('*').eq('enabled', true);
     if (error) return json({ error: error.message }, 500);
 
     let sent = 0;
     for (const sub of subs || []) {
-      if (!isWithinReminderWindow(sub, utcMinutes)) continue;
+      const { due, dayKey } = dailyReminderDue(sub, now);
+      if (!due) continue;
 
       // Only a due-prayer COUNT is ever computed — never titles or any prayer
       // content — and it is used only when the account opted into the 'count'
@@ -50,14 +41,13 @@ Deno.serve(async (req) => {
       const detail = normalizeDetail(sub.notification_detail);
       let count = 0;
       if (detail !== 'generic') {
-        const todayKey = localDayKey(now, sub.tz_offset || 0);
         const { data: prayers } = await supabase
           .from('prayers')
           .select('id, status, created_at, week_days, schedule, schedule_overrides, prayer_categories(category_id)')
           .eq('user_id', sub.user_id)
           .eq('status', 'active');
         const { data: cats } = await supabase.from('categories').select('id, week_days, rotation').eq('user_id', sub.user_id);
-        count = prayersForDay((prayers as PlannerPrayer[]) || [], (cats as PlannerCategory[]) || [], todayKey).length;
+        count = prayersForDay((prayers as PlannerPrayer[]) || [], (cats as PlannerCategory[]) || [], dayKey).length;
       }
 
       const payload = dailyPayload(sub.lang, detail, count);
@@ -66,6 +56,10 @@ Deno.serve(async (req) => {
       if (result.gone) {
         await supabase.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
       } else if (result.sent) {
+        await supabase
+          .from('push_subscriptions')
+          .update({ last_daily_sent_on: dayKey })
+          .eq('endpoint', sub.endpoint);
         sent++;
       }
     }

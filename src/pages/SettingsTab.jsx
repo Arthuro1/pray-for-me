@@ -7,7 +7,7 @@ import { t, LANGUAGES } from '../i18n';
 import ResourceLanguagePref from '../components/ResourceLanguagePref';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
-import { enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
+import { dailyReminderStartDay, enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
 import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
 import { track, EVENTS } from '../lib/analytics';
@@ -251,8 +251,9 @@ export default function SettingsTab() {
       // as best-effort. Only an explicit permission denial reverts it.
       updateSettings({ dailyReminderEnabled: true });
       track(EVENTS.REMINDER_SET, { method: 'daily' });
+      const lastDailySentOn = dailyReminderStartDay(settings.dailyReminderTime);
       let res;
-      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); }
+      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true, lastDailySentOn }); }
       catch { res = { error: 'failed' }; }
       if (res?.error === 'denied') {
         updateSettings({ dailyReminderEnabled: false });
@@ -268,7 +269,7 @@ export default function SettingsTab() {
         }
         // The toggle is account-level: align every other signed-in device's
         // subscription row too (enablePush only wrote this one's).
-        try { await updatePushPrefs(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); } catch { /* best-effort */ }
+        try { await updatePushPrefs(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true, lastDailySentOn }); } catch { /* best-effort */ }
       }
     } else {
       updateSettings({ dailyReminderEnabled: false });

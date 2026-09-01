@@ -15,6 +15,7 @@ import { MemoryRouter } from 'react-router-dom';
 // Heavy children / side-effecting modules are stubbed — this test is about the
 // section scaffolding, not each card's internals.
 vi.mock('../push', () => ({
+  dailyReminderStartDay: vi.fn(() => undefined),
   enablePush: vi.fn(async () => ({})),
   updatePushPrefs: vi.fn(async () => ({})),
   getFollowUpLastSent: vi.fn(async () => null),
@@ -29,18 +30,21 @@ vi.mock('../components/PrivacyCenter', () => ({ default: () => null }));
 vi.mock('../components/VaultModal', () => ({ default: () => null }));
 
 import SettingsTab from './SettingsTab';
+import ConfirmHost from '../components/shared/ConfirmHost';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useVaultStore from '../store/vaultStore';
+import useConfirmStore from '../store/confirmStore';
 import { t } from '../i18n';
 
 const lang = 'fr';
-const renderSettings = () => render(<MemoryRouter><SettingsTab /></MemoryRouter>);
+const renderSettings = () => render(<MemoryRouter><SettingsTab /><ConfirmHost /></MemoryRouter>);
 const originalVaultLock = useVaultStore.getState().lock;
 afterEach(cleanup);
 
 beforeEach(() => {
   window.location.hash = '';
+  HTMLElement.prototype.scrollIntoView = vi.fn();
   usePrayerStore.setState({
     settings: {
       language: lang, theme: 'light',
@@ -52,7 +56,9 @@ beforeEach(() => {
   });
   useAuthStore.setState({
     user: { id: 'user-1', email: 'test@example.com', app_metadata: { provider: 'email' }, user_metadata: {}, created_at: new Date().toISOString() },
+    deleteAccount: vi.fn(async () => ({ error: null })),
   });
+  useConfirmStore.setState({ dialog: null });
   useVaultStore.setState({ initialized: false, unlocked: false, lock: originalVaultLock });
 });
 
@@ -151,5 +157,21 @@ describe('SettingsTab — grouped sections', () => {
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'vaultLockNow') }));
 
     await waitFor(() => expect(lockVault).toHaveBeenCalledWith('user-1'));
+  });
+
+  it('warns before deleting and runs account erasure only after confirmation', async () => {
+    const deleteAccount = vi.fn(async () => ({ error: null }));
+    useAuthStore.setState({ deleteAccount });
+    window.location.hash = '#privacy';
+    renderSettings();
+
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'deleteAccount') }));
+
+    expect(deleteAccount).not.toHaveBeenCalled();
+    expect(screen.getByRole('dialog').textContent).toContain(t(lang, 'deleteAccountWarning'));
+
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'deleteAccountConfirm') }));
+    await waitFor(() => expect(deleteAccount).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 });
