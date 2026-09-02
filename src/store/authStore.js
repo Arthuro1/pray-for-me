@@ -7,6 +7,13 @@ import { setAuthSessionHint } from '../lib/authSessionHint';
 import { setIdentityUser } from '../lib/identityPhoto';
 import { AVATAR_SCOPES, removeAllAvatarObjects } from '../lib/avatarPhotos';
 import { clearServiceWorkerUserCaches } from '../lib/serviceWorkerSecurity';
+import { clearUserKeyCache } from '../lib/crypto/userKeys';
+import { clearGroupKeyCache } from '../lib/crypto/groupKeys';
+
+function clearSessionCryptoCaches() {
+  clearGroupKeyCache();
+  clearUserKeyCache();
+}
 
 const useAuthStore = create((set, get) => ({
   user: null,
@@ -22,9 +29,11 @@ const useAuthStore = create((set, get) => ({
     set({ user: session?.user ?? null, loading: false });
 
     supabase.auth.onAuthStateChange((_event, session) => {
+      const nextUser = session?.user ?? null;
+      if (get().user?.id !== nextUser?.id) clearSessionCryptoCaches();
       setAuthSessionHint(!!session);
-      setIdentityUser(session?.user ?? null);
-      set({ user: session?.user ?? null });
+      setIdentityUser(nextUser);
+      set({ user: nextUser });
     });
   },
 
@@ -105,6 +114,7 @@ const useAuthStore = create((set, get) => ({
     await clearLocalData(user?.id);
     await clearServiceWorkerUserCaches();
     await supabase.auth.signOut();
+    clearSessionCryptoCaches();
     setAuthSessionHint(false);
     setIdentityUser(null);
     set({ user: null });
@@ -143,6 +153,7 @@ const useAuthStore = create((set, get) => ({
       forgetAccountKey(user.id),
     ]);
     try { await supabase.auth.signOut({ scope: 'local' }); } catch { /* local state below is authoritative */ }
+    clearSessionCryptoCaches();
     setAuthSessionHint(false);
     setIdentityUser(null);
     set({ user: null });

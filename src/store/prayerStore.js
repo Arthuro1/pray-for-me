@@ -387,25 +387,30 @@ const usePrayerStore = create((set, get) => ({
     }));
   },
 
-  // Fetch testimonies + member updates posted on the community copies of a
-  // personal prayer (whether it's the shared source or a saved copy), so they
-  // can be shown read-only in the personal prayer detail.
+  // Fetch the readable community snapshots, testimonies and member updates for a
+  // personal prayer (whether it's the shared source or a saved copy). Besides
+  // showing group activity, the snapshots provide a display-only fallback when
+  // an older personal child row cannot be opened with this device's account key.
   fetchSharedActivity: async (prayer) => {
     // The community copies whose activity we display, each with its group so the
     // rows can be decrypted under the right group key.
     const col = prayer.community_origin_id ? 'id' : 'source_prayer_id';
     const val = prayer.community_origin_id || prayer.id;
-    const { data: copies } = await supabase.from('community_prayers').select('id, group_id').eq(col, val);
-    if (!copies || copies.length === 0) return { testimonies: [], updates: [] };
+    const { data: copies } = await supabase
+      .from('community_prayers')
+      .select('id, group_id, prayer_points, encrypted_payload, encryption_version, key_version')
+      .eq(col, val);
+    if (!copies || copies.length === 0) return { prayers: [], testimonies: [], updates: [] };
     const ids = copies.map((c) => c.id);
     const groupByCp = Object.fromEntries(copies.map((c) => [c.id, c.group_id]));
     const [tRes, uRes] = await Promise.all([
       supabase.from('testimonies').select('*').in('community_prayer_id', ids).order('created_at'),
       supabase.from('community_updates').select('*').in('community_prayer_id', ids).order('created_at', { ascending: true }),
     ]);
+    const prayers = await Promise.all(copies.map((copy) => decryptCommunityRow(groupKeyResolver(copy.group_id), copy)));
     const testimonies = await Promise.all((tRes.data || []).map((t) => decryptCommunityRow(groupKeyResolver(t.group_id), t)));
     const updates = await Promise.all((uRes.data || []).map((u) => decryptCommunityRow(groupKeyResolver(groupByCp[u.community_prayer_id]), u)));
-    return { testimonies, updates };
+    return { prayers, testimonies, updates };
   },
 
   // One-way pull for prayers saved from the community: refresh the saved copy's

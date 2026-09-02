@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { testimonyList, prayerOnDay, prayerPriority, communityToPersonalInsert, mirrorSavedCopy, sortByOrder } from './prayer.js';
+import {
+  testimonyList, prayerOnDay, prayerPriority, communityToPersonalInsert,
+  mirrorSavedCopy, recoverLockedPrayerPoints, mergeSharedPrayerUpdates, sortByOrder,
+} from './prayer.js';
 
 describe('mirrorSavedCopy', () => {
   const saved = { id: 'sc1', community_origin_id: 'c1', title: 'old', description: 'old', status: 'active', answered_at: null };
@@ -54,6 +57,81 @@ describe('communityToPersonalInsert', () => {
     expect(out.origin_author_name).toBeNull();
     expect(out.origin_is_anonymous).toBe(true);
     expect(out.description).toBe('');
+  });
+});
+
+describe('shared-source display recovery', () => {
+  it('recovers locked personal prayer points from a readable group snapshot by id', () => {
+    const personal = [
+      { id: 'pt1', title: '', verses: [], _locked: true },
+      { id: 'pt2', title: 'Still readable', verses: [] },
+    ];
+    const copies = [{
+      id: 'cp1', group_id: 'g1',
+      prayer_points: [
+        { id: 'pt1', title: 'Pray for healing', verses: [{ ref: 'Ps 23', text: '' }] },
+        { id: 'pt2', title: 'Stale group wording', verses: [] },
+      ],
+    }];
+
+    expect(recoverLockedPrayerPoints(personal, copies)).toEqual([
+      {
+        id: 'pt1', title: 'Pray for healing', verses: [{ ref: 'Ps 23', text: '' }],
+        _locked: false, _communityFallback: true,
+      },
+      personal[1],
+    ]);
+  });
+
+  it('does not replace a locked point from a locked group copy', () => {
+    const personal = [{ id: 'pt1', title: '', verses: [], _locked: true }];
+    const copies = [{ _locked: true, prayer_points: [{ id: 'pt1', title: '', verses: [] }] }];
+    expect(recoverLockedPrayerPoints(personal, copies)).toBe(personal);
+  });
+
+  it('uses a matching group mirror for a locked personal update without making it editable', () => {
+    const personal = [{
+      id: 'up1', text: '', author_name: 'Cabrel Fokam', _locked: true,
+      created_at: '2026-06-29T10:00:00Z',
+    }];
+    const shared = [{
+      id: 'cup1', text: 'Die Operation ist gut verlaufen', author_name: 'Cabrel Fokam',
+      created_at: '2026-06-29T10:00:01Z',
+    }];
+
+    expect(mergeSharedPrayerUpdates(personal, shared)).toEqual([{
+      id: 'up1', text: 'Die Operation ist gut verlaufen', author_name: 'Cabrel Fokam',
+      created_at: '2026-06-29T10:00:00Z', attachments: [], content_language: null,
+      _locked: false, _communityFallback: true,
+    }]);
+  });
+
+  it('does not attach an unrelated later group update to a locked personal row', () => {
+    const personal = [{
+      id: 'up1', text: '', author_name: 'Cabrel Fokam', _locked: true,
+      created_at: '2026-06-29T10:00:00Z',
+    }];
+    const later = {
+      id: 'cup2', text: 'A later group word', author_name: 'Cabrel Fokam',
+      created_at: '2026-07-03T10:00:00Z',
+    };
+    const merged = mergeSharedPrayerUpdates(personal, [later]);
+
+    expect(merged[0]).toBe(personal[0]);
+    expect(merged[1]).toMatchObject({ id: 'cup2', text: 'A later group word', _communityFallback: true });
+  });
+
+  it('deduplicates readable personal mirrors and appends group-only activity read-only', () => {
+    const personal = [{ id: 'up1', text: 'Same word', author_name: 'Cabrel', is_anonymous: false }];
+    const shared = [
+      { id: 'cup1', text: 'Same word', author_name: 'Cabrel', is_anonymous: false },
+      { id: 'cup2', text: 'A friend added this', author_name: 'Marie', is_anonymous: false },
+    ];
+    const merged = mergeSharedPrayerUpdates(personal, shared);
+
+    expect(merged).toHaveLength(2);
+    expect(merged[0]).toBe(personal[0]);
+    expect(merged[1]).toMatchObject({ text: 'A friend added this', _communityFallback: true });
   });
 });
 

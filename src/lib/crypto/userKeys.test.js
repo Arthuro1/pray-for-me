@@ -50,6 +50,23 @@ describe('user identity keypair', () => {
     expect(getMyPrivateKey()).toBeTruthy();
   });
 
+  it('coalesces concurrent first-use initialisation to one identity', async () => {
+    const [first, second, third] = await Promise.all([
+      ensureUserPublicKey('u-concurrent'),
+      ensureUserPublicKey('u-concurrent'),
+      ensureUserPublicKey('u-concurrent'),
+    ]);
+
+    expect(first).toEqual(second);
+    expect(second).toEqual(third);
+
+    const published = await getMemberPublicKey('u-concurrent');
+    const secret = new TextEncoder().encode('same-identity');
+    const ciphertext = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, published, secret);
+    const plaintext = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, getMyPrivateKey(), ciphertext);
+    expect(new TextDecoder().decode(plaintext)).toBe('same-identity');
+  });
+
   it('the published public key wraps to the matching private key (RSA-OAEP round-trip)', async () => {
     await ensureUserPublicKey('u-rsa');
     const pub = await getMemberPublicKey('u-rsa');

@@ -65,6 +65,106 @@ export function mirrorSavedCopy(p, c) {
   };
 }
 
+// A personal source prayer can outlive the account key that encrypted one of
+// its child rows (for example after recovery was reset on another device). When
+// that prayer was shared, every community copy received the same point ids and
+// a group-key-encrypted snapshot. Use a readable snapshot as a display-only
+// fallback for locked points; never rewrite the personal ciphertext implicitly.
+export function recoverLockedPrayerPoints(personalPoints = [], communityCopies = []) {
+  const readableById = new Map();
+  for (const copy of communityCopies || []) {
+    if (copy?._locked) continue;
+    for (const point of copy?.prayer_points || []) {
+      if (point?.id && !readableById.has(point.id)) readableById.set(point.id, point);
+    }
+  }
+
+  let changed = false;
+  const recovered = (personalPoints || []).map((point) => {
+    if (!point?._locked) return point;
+    const fallback = readableById.get(point.id);
+    if (!fallback) return point;
+    changed = true;
+    return {
+      ...point,
+      title: fallback.title || '',
+      verses: fallback.verses || [],
+      _locked: false,
+      _communityFallback: true,
+    };
+  });
+  return changed ? recovered : personalPoints;
+}
+
+const updateHasContent = (row) => !!(row?.text || (row?.attachments || []).length);
+const normalizedAuthor = (row) => (row?.author_name || '').trim().toLocaleLowerCase();
+const sameUpdateAuthor = (a, b) => {
+  if (a?.user_id && b?.user_id) return a.user_id === b.user_id;
+  const aName = normalizedAuthor(a);
+  const bName = normalizedAuthor(b);
+  if (aName && bName) return aName === bName && !!a.is_anonymous === !!b.is_anonymous;
+  return !!a?.is_anonymous && !!b?.is_anonymous;
+};
+const sameUpdateMoment = (a, b) => {
+  const aTime = Date.parse(a?.created_at || '');
+  const bTime = Date.parse(b?.created_at || '');
+  return Number.isFinite(aTime) && Number.isFinite(bTime) && Math.abs(aTime - bTime) <= 10_000;
+};
+const updateSignature = (row) => JSON.stringify([
+  row?.text || '',
+  normalizedAuthor(row),
+  !!row?.is_anonymous,
+  (row?.attachments || []).map((attachment) => attachment?.id || attachment?.path || '').sort(),
+]);
+
+// Merge a personal prayer's timeline with activity from its community copies.
+// Readable personal rows win. A locked personal row may borrow the corresponding
+// group text for display, and group-only activity is appended read-only. Semantic
+// deduplication collapses the same pre-encryption mirror across several groups.
+export function mergeSharedPrayerUpdates(personalUpdates = [], sharedUpdates = []) {
+  const uniqueShared = [];
+  const sharedSignatures = new Set();
+  for (const row of sharedUpdates || []) {
+    const signature = row?._locked ? `locked:${row.id}` : updateSignature(row);
+    if (sharedSignatures.has(signature)) continue;
+    sharedSignatures.add(signature);
+    uniqueShared.push(row);
+  }
+
+  const personalSignatures = new Set(
+    (personalUpdates || []).filter((row) => !row?._locked).map(updateSignature)
+  );
+  const available = uniqueShared.filter((row) => !personalSignatures.has(updateSignature(row)));
+  const consumed = new Set();
+
+  const personal = (personalUpdates || []).map((row) => {
+    if (!row?._locked) return row;
+    const matchIndex = available.findIndex((candidate, index) => (
+      !consumed.has(index)
+      && !candidate?._locked
+      && updateHasContent(candidate)
+      && sameUpdateAuthor(row, candidate)
+      && (row.id === candidate.id || sameUpdateMoment(row, candidate))
+    ));
+    if (matchIndex < 0) return row;
+    consumed.add(matchIndex);
+    const match = available[matchIndex];
+    return {
+      ...row,
+      text: match.text || '',
+      attachments: match.attachments || [],
+      content_language: match.content_language || row.content_language || null,
+      _locked: false,
+      _communityFallback: true,
+    };
+  });
+
+  const groupOnly = available
+    .filter((row, index) => !consumed.has(index))
+    .map((row) => ({ ...row, _communityFallback: true }));
+  return [...personal, ...groupOnly];
+}
+
 // Builds the personal-prayer insert payload when saving a community prayer.
 // Categories are intentionally omitted — they belong to the original author.
 export function communityToPersonalInsert(communityPrayer, groupName, userId) {

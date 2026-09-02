@@ -27,12 +27,22 @@ const distributed = new Map();
 // Small coalescing window: while a fan-out is still incomplete (some member
 // hasn't published a key yet) we retry on the holder's next touch, but not more
 // than once per this interval, so a burst of ensureGroupKey calls within one UI
-// flow doesn't re-run it repeatedly. Member public keys are memoized, so a retry
-// is cheap once everyone reachable has been wrapped in.
+// flow doesn't re-run it repeatedly.
 const REDISTRIBUTE_THROTTLE_MS = 5_000;
+// A member can explicitly replace their RSA identity key. Re-check even a
+// previously complete fan-out occasionally so holders repair envelopes that
+// became stale later in the same long-lived app session.
+const DISTRIBUTION_REFRESH_MS = 5 * 60_000;
 
 export function clearGroupKeyCache() {
   keyCache.clear();
+  distributed.clear();
+}
+
+// An identity reset should keep any valid group keys already held in memory so
+// they can be wrapped to the replacement identity, while forcing the fan-out to
+// run again. Sign-out still uses clearGroupKeyCache() to drop everything.
+export function clearGroupKeyDistributionCache() {
   distributed.clear();
 }
 
@@ -119,8 +129,9 @@ async function myIdentity(myUserId) {
 async function distribute(groupId, version, gckRaw, { force = false } = {}) {
   const tag = tagOf(groupId, version);
   const state = distributed.get(tag);
-  if (!force && state?.complete) return;
-  if (!force && state && Date.now() - state.lastAt < REDISTRIBUTE_THROTTLE_MS) return;
+  const age = state ? Date.now() - state.lastAt : Infinity;
+  if (!force && state?.complete && age < DISTRIBUTION_REFRESH_MS) return;
+  if (!force && state && !state.complete && age < REDISTRIBUTE_THROTTLE_MS) return;
 
   const { data: members } = await supabase.from('group_members').select('user_id').eq('group_id', groupId);
   const list = members || [];

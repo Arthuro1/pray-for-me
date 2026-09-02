@@ -6,7 +6,7 @@
 // activity for a shared prayer. Renders personal mode (a `prayer` prop, no
 // `communityPrayer`) with a signed-in user so the effects actually run.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { render, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, cleanup, waitFor } from '@testing-library/react';
 
 vi.mock('../lib/supabase', () => {
   const chain = {
@@ -35,6 +35,7 @@ import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import useFollowUpStore from '../store/followUpStore';
+import { t } from '../i18n';
 
 const lang = 'fr';
 const base = (extra = {}) => ({
@@ -106,5 +107,38 @@ describe('PrayerDetail — personal-mode sharing sync', () => {
     await waitFor(() => {}); // let effects settle
     expect(refreshFromCommunity).not.toHaveBeenCalled();
     expect(fetchSharedActivity).not.toHaveBeenCalled();
+  });
+
+  it('shows locked personal points and updates from their readable group mirrors', async () => {
+    const locked = base({
+      prayer_points: [{ id: 'pt1', title: '', verses: [], _locked: true }],
+      prayer_updates: [{
+        id: 'up1', prayer_id: 'p1', text: '', attachments: [], _locked: true,
+        author_name: 'Cabrel Fokam', created_at: '2026-06-29T10:00:00Z',
+      }],
+    });
+    const fetchSharedActivity = vi.fn().mockResolvedValue({
+      prayers: [{
+        id: 'cp1', group_id: 'g1',
+        prayer_points: [{ id: 'pt1', title: 'Prier pour la guérison', verses: [] }],
+      }],
+      updates: [{
+        id: 'cup1', community_prayer_id: 'cp1', text: 'La situation va mieux', attachments: [],
+        author_name: 'Cabrel Fokam', created_at: '2026-06-29T10:00:01Z',
+      }],
+      testimonies: [],
+    });
+    renderPersonal(locked, {
+      communitySpies: { prayerShares: { p1: [{ groupId: 'g1', groupName: 'Église' }] } },
+      prayerSpies: { fetchSharedActivity },
+    });
+
+    expect(await screen.findByText('Prier pour la guérison')).toBeTruthy();
+    expect(await screen.findByText('La situation va mieux')).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'updateSyncing'))).toBeNull();
+    // The mirror is a recovery view, not permission to overwrite ciphertext the
+    // current device cannot authenticate.
+    expect(screen.queryByRole('button', { name: t(lang, 'tipRemovePoint') })).toBeNull();
+    expect(screen.queryByText(t(lang, 'addVerse'))).toBeNull();
   });
 });

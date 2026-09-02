@@ -22,6 +22,7 @@ import * as km from './keyManager';
 import { supabase } from '../supabase';
 import { VAULT_SYNC } from '../vaultSync';
 import { regenerateIdentityKey } from './userKeys';
+import { clearGroupKeyDistributionCache } from './groupKeys';
 
 const hasIDB = () => typeof indexedDB !== 'undefined';
 const slot = (userId) => `pfm_ak_${userId}`;
@@ -154,7 +155,13 @@ export async function startFreshEncryption(userId) {
   await km.autoInitAccountKey();
   await rememberAccountKey(userId);
   try {
-    await regenerateIdentityKey(userId); // overwrite the orphaned identity key under the new ACK
+    const identity = await regenerateIdentityKey(userId); // overwrite the orphaned identity key under the new ACK
+    if (identity) {
+      // Keep valid group keys already held by this running device, but force them
+      // to be wrapped to the replacement identity on the next group touch. The
+      // server only replaces envelopes older than that identity.
+      clearGroupKeyDistributionCache();
+    }
   } catch { /* group content will re-provision lazily; personal encryption already works */ }
   return km.isUnlocked();
 }

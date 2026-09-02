@@ -8,7 +8,7 @@ import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
-import { testimonyList } from '../utils/prayer';
+import { testimonyList, recoverLockedPrayerPoints, mergeSharedPrayerUpdates } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
@@ -317,6 +317,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
+  // An owned prayer can contain older child rows encrypted under an account key
+  // this device no longer holds, while its group-key snapshot remains readable.
+  // Recover matching points for display only; the original ciphertext is never
+  // overwritten and every recovered row stays read-only below.
+  const visiblePrayerPoints = isCommunity
+    ? (livePrayer.prayer_points || [])
+    : recoverLockedPrayerPoints(livePrayer.prayer_points || [], sharedActivity.prayers || []);
+  const displayPrayer = visiblePrayerPoints === livePrayer.prayer_points
+    ? livePrayer
+    : { ...livePrayer, prayer_points: visiblePrayerPoints };
   // ── Guided plan ──────────────────────────────────────────────────────────
   // Which day of a running plan today is, the day's content with the reader's
   // language folded in, and any APPROVED resources for its topics. Called
@@ -396,10 +406,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
   const canAddContent = !isAnswered && (isCommunity || !savedCopy);
   const canRemoveContent = !isAnswered && (isCommunity || !savedCopy);
-  // Author copies already have member updates synced into prayer_updates; saved
-  // copies don't, so fold the group's updates into the displayed list for them.
+  // Fold in group activity for both saved copies and owned source prayers. For an
+  // older locked personal row, a matching readable group mirror supplies a
+  // display-only fallback instead of the misleading permanent sync placeholder.
   const allUpdates = (!isCommunity
-    ? [...(livePrayer.prayer_updates || []), ...(savedCopy ? sharedActivity.updates : [])]
+    ? mergeSharedPrayerUpdates(livePrayer.prayer_updates || [], sharedActivity.updates || [])
     : []).filter(hasContent);
   // You can post updates/testimonies and mark answered only on prayers you own —
   // a saved-from-community copy is read-only (you follow the author's prayer).
@@ -444,7 +455,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     // authoritative verse text comes from useLocalizedVerse (bundle /
     // YouVersion) or stays with its original reference.
     const texts = [livePrayer.title, livePrayer.description];
-    (livePrayer.prayer_points || []).forEach(pp => texts.push(pp.title));
+    (displayPrayer.prayer_points || []).forEach(pp => texts.push(pp.title));
     if (isCommunity) {
       communityUpdates.forEach(u => texts.push(u.text));
       prayerTestimonies.forEach(tm => texts.push(tm.content));
@@ -597,7 +608,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           Today, so praying from here counts everywhere. */}
       {showPraySession && (
         <PrayerSession
-          prayers={[livePrayer]}
+          prayers={[displayPrayer]}
           categories={categories}
           lang={lang}
           tr={tr}
@@ -1094,21 +1105,24 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )}
           </div>
 
-          {(livePrayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
+          {(displayPrayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
             <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'needHelpFindingWords')}</p>
           )}
 
           <div className="prayer-points-panel__list">
-            {(livePrayer.prayer_points || []).map(pp => {
+            {(displayPrayer.prayer_points || []).map(pp => {
               // Support both new `verses` array and legacy `verse`/`verse_text` fields
               const verses = pp.verses?.length
                 ? pp.verses
                 : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
+              const pointReadOnly = !!(pp._locked || pp._communityFallback);
               return (
                 <div key={pp.id} className="prayer-point-card group rounded-xl">
                   <div className="flex items-start gap-2">
-                    <p className="flex-1 text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(pp.title)}</p>
-                    {canRemoveContent && (
+                    <p className="flex-1 text-sm leading-snug" style={{ color: pp._locked ? 'var(--text-3)' : 'var(--text-1)' }}>
+                      {pp._locked ? t(lang, 'contentLocked') : loc(pp.title)}
+                    </p>
+                    {canRemoveContent && !pointReadOnly && (
                       <button
                         onClick={() => setConfirmRemovePoint(pp)}
                         aria-label={t(lang, 'tipRemovePoint')}
@@ -1129,7 +1143,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           key={i}
                           verse={v}
                           lang={lang}
-                          canRemove={canRemoveContent}
+                          canRemove={canRemoveContent && !pointReadOnly}
                           onRemove={() => handleRemoveVerse(pp.id, v.ref)}
                         />
                       ))}
@@ -1137,7 +1151,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   )}
 
                   {/* Add verse inline form */}
-                  {canAddContent && (
+                  {canAddContent && !pointReadOnly && (
                     addingVerseTo === pp.id ? (
                       <div className="mt-2 space-y-1.5">
                         <input
@@ -1462,13 +1476,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         lang={lang}
                         className="text-sm leading-snug"
                         style={{ color: 'var(--text-1)' }}
-                        onRemove={canManage ? () => removeUpdateText(livePrayer.id, u.id) : null}
+                        onRemove={canManage && !u._communityFallback ? () => removeUpdateText(livePrayer.id, u.id) : null}
                       />
                       <AttachmentList
                         attachments={u.attachments}
                         lang={lang}
                         className={u.text ? 'mt-1.5' : ''}
-                        onRemove={canManage ? (att) => removeUpdateAttachment(livePrayer.id, u.id, att.id) : null}
+                        onRemove={canManage && !u._communityFallback ? (att) => removeUpdateAttachment(livePrayer.id, u.id, att.id) : null}
                       />
                     </>
                   )}
@@ -1480,7 +1494,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 </div>
                 {/* Author-only edit + delete cluster (own personal updates), hidden
                     while this row's inline editor is open. Edit needs text to edit. */}
-                {editingUpdateId !== u.id && canManage && !u._locked && (
+                {editingUpdateId !== u.id && canManage && !u._locked && !u._communityFallback && (
                   <div className="prayer-activity-item__actions flex items-start gap-1.5 self-start mt-1.5">
                     {!!u.text && (
                       <EditButton onEdit={() => setEditingUpdateId(u.id)} label={t(lang, 'editUpdate')} />
