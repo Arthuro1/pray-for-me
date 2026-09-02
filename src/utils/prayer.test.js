@@ -26,6 +26,15 @@ describe('mirrorSavedCopy', () => {
     const c = { id: 'c1', title: 'new', description: 'newd', prayer_points: [], is_answered: true };
     expect(mirrorSavedCopy(answeredCopy, c).answered_at).toBe('2026-07-02T00:00:00Z');
   });
+
+  it('keeps the saved snapshot when an encrypted group row is temporarily locked', () => {
+    const locked = {
+      id: 'c1', title: '', description: '', prayer_points: [], is_answered: false,
+      encrypted_payload: { v: 2, iv: 'redacted', data: 'redacted' }, _locked: true,
+    };
+
+    expect({ ...saved, ...mirrorSavedCopy(saved, locked) }).toEqual(saved);
+  });
 });
 
 describe('communityToPersonalInsert', () => {

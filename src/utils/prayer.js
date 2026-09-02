@@ -49,6 +49,12 @@ export function testimonyList(prayer) {
 // answered_at it already had (null for a pure follower — the gallery falls back
 // to updated_at and hides the date chip).
 export function mirrorSavedCopy(p, c) {
+  // Encrypted community rows are fetched with redacted plaintext columns. If
+  // the group key is not available yet, decryptCommunityRow marks the row as
+  // locked and leaves those empty columns in place. Never mirror that transient
+  // representation into the personal copy: doing so would hide a perfectly
+  // readable saved snapshot until the key becomes available again.
+  if (!c || c._locked) return {};
   const answered = !!c.is_answered;
   return {
     title: c.title ?? p.title,
