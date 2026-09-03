@@ -44,19 +44,19 @@ afterEach(() => { cleanup(); localStorage.clear(); vi.unstubAllEnvs(); });
 
 describe('approved and draft plans in the journey catalogue', () => {
   it('keeps a real negative fixture after the pending curricula are approved', () => {
-    expect(drafts.map((plan) => plan.id)).toEqual(['discernment28', 'test-review-draft']);
+    expect(drafts.map((plan) => plan.id)).toEqual(['test-review-draft']);
   });
 
-  it('shows all four newly approved curricula to an ordinary reader', () => {
+  it('shows all five approved curricula to an ordinary reader', () => {
     renderJourneys();
     openBrowse();
-    for (const id of ['covenant21', 'marriage30', 'freedom30', 'david12']) {
+    for (const id of ['covenant21', 'marriage30', 'freedom30', 'david12', 'discernment28']) {
       expect(screen.getByText(titleOf(PLANS.find((plan) => plan.id === id))), id).toBeTruthy();
     }
     expect(screen.queryByText(t(lang, 'planCoupleReviewPending'))).toBeNull();
   });
 
-  it.each(['covenant21', 'marriage30', 'freedom30', 'david12'])('opens %s without a draft warning or preview flag', (id) => {
+  it.each(['covenant21', 'marriage30', 'freedom30', 'david12', 'discernment28'])('opens %s without a draft warning or preview flag', (id) => {
     renderJourneys();
     openBrowse();
     fireEvent.click(screen.getByText(titleOf(PLANS.find((plan) => plan.id === id))));

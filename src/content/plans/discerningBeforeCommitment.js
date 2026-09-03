@@ -1,10 +1,10 @@
-// Complete 28-day curriculum. Translation drafts remain behind the existing
-// publication gate until named reviewers approve this new content explicitly.
+// Complete 28-day curriculum, approved by Paul on 2026-09-03 in all 16 languages.
 import fr from './discernment/fr.json';
 import en from './discernment/en.json';
 import themes from './discernment/themes.json';
 import scripture from './discernment/references.json';
 import { LANG_CODES } from '../../i18n';
+import { DISCERNMENT_PLAN_APPROVAL } from '../reviews/paulDiscernment20260903';
 
 const localized = (french, english) => ({ fr: french, en: english });
 
@@ -28,10 +28,7 @@ export const DISCERNING_BEFORE_COMMITMENT = {
   category: 'relationships', lifeStage: 'single', resourceDomains: ['relationships'],
   titleKey: 'planDiscernmentTitle', subKey: 'planDiscernmentSub',
   proseTranslations: LANG_CODES.filter((lang) => !['en', 'fr'].includes(lang)),
-  review: {
-    status: 'draft', theology: { status: 'pending' }, safety: { status: 'pending' },
-    locales: Object.fromEntries(LANG_CODES.map((lang) => [lang, { status: 'pending' }])),
-  },
+  review: DISCERNMENT_PLAN_APPROVAL,
   movements: MOVEMENTS,
   intro: localized(fr.intro.replace(/\n{3,}/g, '\n\n').replace(/ - /g, '\n- '), en.intro),
   biblical: { ref: 'James 1:2-8', text: localized(fr.biblical, en.biblical) },

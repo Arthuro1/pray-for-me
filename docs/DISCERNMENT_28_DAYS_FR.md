@@ -2,11 +2,12 @@
 
 **28 jours de prière à la lumière de la Bible et sous la conduite du Saint-Esprit**
 
-Version française pour relecture — septembre 2026.
+Version française approuvée par Paul — 3 septembre 2026.
 
 Le parcours est désormais intégré localement dans les 16 langues disponibles,
-en mode de relecture. Voir [l’état de l’intégration](./DISCERNMENT_IMPLEMENTATION.md)
-pour les validations éditoriales encore requises.
+avec la validation explicite de Paul. Voir
+[la portée de la validation](./DISCERNMENT_APPROVAL_2026-09-03.md) et
+[l’état de l’intégration](./DISCERNMENT_IMPLEMENTATION.md).
 
 ## Entrer dans le parcours
 

@@ -5,6 +5,7 @@
 // recorded on the entries associated with the newly approved plans. Unavailable
 // editions and resources outside that scope retain their prior status.
 import { PAUL_RESOURCE_SIGNOFF } from '../reviews/paul20260903';
+import { DISCERNMENT_RESOURCE_SIGNOFF } from '../reviews/paulDiscernment20260903';
 
 const VERIFIED_AT = '2026-08-28';
 
@@ -113,8 +114,10 @@ export const RELATIONSHIP_BOOKS = [
   }),
   relationshipBook({
     id: 'chapman-things-before-married',
+    contentReview: { ...DISCERNMENT_RESOURCE_SIGNOFF },
+    safetyReview: { ...DISCERNMENT_RESOURCE_SIGNOFF },
     topics: ['premarital', 'communication', 'conflict', 'family-of-origin', 'finances'],
-    lifeStages: ['dating', 'engaged'],
+    lifeStages: ['single', 'dating', 'engaged'],
     description: {
       en: 'Prompts engaged couples to discuss expectations, conflict, money and family patterns before the wedding.',
       fr: "Invite les couples fiancés à parler des attentes, des conflits, de l'argent et des héritages familiaux avant le mariage.",
@@ -138,6 +141,8 @@ export const RELATIONSHIP_BOOKS = [
   }),
   relationshipBook({
     id: 'chapman-five-love-languages-singles',
+    contentReview: { ...DISCERNMENT_RESOURCE_SIGNOFF },
+    safetyReview: { ...DISCERNMENT_RESOURCE_SIGNOFF },
     topics: ['singleness', 'dating', 'communication', 'friendship'],
     lifeStages: ['single', 'dating'],
     description: {

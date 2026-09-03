@@ -64,13 +64,14 @@ describe('discernment before commitment', () => {
     }
   });
 
-  it('keeps new content in review preview without inheriting a historical approval', () => {
-    expect(isPlanReviewed(plan)).toBe(false);
-    expect(canUsePlan(plan, { preview: false })).toBe(false);
+  it('uses Paul’s explicit approval and remains subject to every publication gate', () => {
+    expect(isPlanReviewed(plan)).toBe(true);
+    expect(canUsePlan(plan, { preview: false })).toBe(true);
     expect(canUsePlan(plan, { preview: true })).toBe(true);
     expect(plansByCategory(PLANS).find((group) => group.id === 'relationships').plans).toContain(plan);
     expect(plan.onboarding).toBeUndefined();
-    expect(Object.values(plan.review.locales).every((review) => !review.reviewer)).toBe(true);
+    expect(Object.values(plan.review.locales).every((review) => review.reviewer === 'Paul')).toBe(true);
+    expect(canUsePlan({ ...plan, review: { ...plan.review, safety: null } }, { preview: false })).toBe(false);
   });
 
   it('serves precisely the 14 additional authored translation files', () => {

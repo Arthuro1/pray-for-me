@@ -73,7 +73,9 @@ describe('Paul’s explicit 2026-09-03 approval', () => {
       const rows = resolveResources({ topics: resource.topics, languages: Object.keys(resource.editions), catalogue: [resource] });
       expect(rows.map((row) => row.id), id).toEqual([id]);
     }
-    const newlySigned = RESOURCES.filter((entry) => entry.contentReview?.reviewedAt === '2026-09-03').map((entry) => entry.id).sort();
+    // Later same-day approvals have their own approvalId and audit record.
+    const newlySigned = RESOURCES.filter((entry) => entry.contentReview?.reviewedAt === '2026-09-03'
+      && !entry.contentReview.approvalId).map((entry) => entry.id).sort();
     expect(newlySigned).toEqual([...APPROVED_RESOURCE_IDS, ...CONTENT_ONLY_RESOURCE_IDS].sort());
   });
 

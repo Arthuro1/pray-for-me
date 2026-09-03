@@ -23,20 +23,22 @@ Le manuscrit français se trouve dans `DISCERNMENT_28_DAYS_FR.md`. Les textes
 d’accompagnement sont distincts de l’Écriture : les références partagées
 passent par le lecteur biblique existant, sans texte biblique généré.
 Les ressources proposées par l’application proviennent du catalogue approuvé.
-Les nouvelles pistes de la recherche restent à examiner avant ajout au catalogue.
+La sélection de 13 ressources est également approuvée par Paul ; sept nouveaux
+articles, vidéos et études ont rejoint le catalogue, ainsi que six éditions SGC.
 
 ## Statut éditorial
 
-**Le parcours est intégré en mode de relecture ; il n’est pas approuvé pour la
-publication ordinaire.** La règle de `PRAYER_PLANS.md` et `src/lib/planReview.js`
-demande des validations humaines nominatives de la théologie, de la protection
-des personnes et de chaque langue. Les champs de validation restent `pending`.
-Les approbations historiques ne couvrent pas ce nouveau contenu.
+**Le parcours et sa sélection de ressources ont été approuvés explicitement
+par l’utilisateur sous le nom de Paul le 3 septembre 2026.** La version 1 porte
+les signatures théologique, protection des personnes et linguistiques pour les
+16 langues. Le registre propre à cette validation est
+`src/content/reviews/paulDiscernment20260903.js` ; sa portée est documentée dans
+`DISCERNMENT_APPROVAL_2026-09-03.md`. Les anciennes signatures des autres parcours
+ne sont pas utilisées pour étendre automatiquement leur portée.
 
-En développement, le parcours est visible dans le catalogue. Sur une version
-contenant cette intégration, `?planPreview=1` active la relecture dans ce
-navigateur ; `?planPreview=0` la désactive. Les badges de brouillon restent
-visibles. Aucun déploiement n’est réalisé par cette intégration.
+Le parcours est désormais disponible sans `?planPreview=1` dans une version
+construite avec ces modifications. Les contrôles de publication restent actifs
+pour tout contenu non signé. Aucun déploiement n’est réalisé par cette intégration.
 
 Les traductions ont été produites avec assistance IA, puis corrigées localement.
 Les versions anglaise, portugaise et espagnole ont été reprises entièrement ;

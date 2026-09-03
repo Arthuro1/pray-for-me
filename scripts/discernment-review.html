@@ -16,6 +16,7 @@
     header p { max-width:850px; margin:8px 0; }
     .muted, footer { color:var(--muted); }
     .status { display:inline-block; border:1px solid #d4c1a1; color:#6b4a18; background:#fff6e7; border-radius:6px; padding:3px 10px; font-size:13px; }
+    .status.approved { border-color:#b4d5bf; color:#245438; background:#eff8f2; }
     .toolbar { display:flex; flex-wrap:wrap; gap:16px; align-items:end; border:1px solid var(--line); border-radius:14px; background:var(--paper); padding:20px; margin-top:24px; }
     .field { display:flex; flex-direction:column; gap:5px; min-width:180px; flex:1; }
     .field.wide { flex:2; }
@@ -76,7 +77,7 @@
     <div class="eyebrow">Praystead · Atelier de relecture</div>
     <h1>Un parcours, seize langues.</h1>
     <p class="muted">Parcourez les 28 journées et comparez chaque traduction au manuscrit français. Les références bibliques sont partagées avec l’application ; lisez les passages dans votre Bible.</p>
-    <p><span class="status">Brouillon · Validation théologique, protection des personnes et langues en attente</span></p>
+    <p><span class="status CONTENT_APPROVAL_CLASS">CONTENT_APPROVAL_STATUS</span></p>
     <div class="toolbar" aria-label="Choix de lecture">
       <div class="field"><label for="language">Langue à relire</label><select id="language"></select></div>
       <div class="field wide"><label for="section">Partie du parcours</label><select id="section"></select></div>

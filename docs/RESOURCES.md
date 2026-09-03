@@ -104,6 +104,11 @@ and Hindi resources for relationship plans.
 
 ## The model
 
+The later approval of `discernment28` and its thirteen selected resources is
+recorded separately in `DISCERNMENT_APPROVAL_2026-09-03.md`. Seven new entries
+and six verified SGC editions are included. The Persian article supplies the
+sixteenth resource language; this does not imply every work has sixteen editions.
+
 ```js
 {
   id: 'keller-meaning-of-marriage',   // stable; referenced by replacementResourceId

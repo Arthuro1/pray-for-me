@@ -480,7 +480,7 @@ describe('the shipped catalogue', () => {
     expect(coveredLanguages).toEqual([
       // Paul's approval also makes the verified Amharic, Swahili and Tagalog
       // editions of the family-study resources available.
-      'am', 'ar', 'de', 'en', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'sw', 'tl', 'zh',
+      'am', 'ar', 'de', 'en', 'es', 'fa', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'sw', 'tl', 'zh',
     ]);
     // `expect.anything` without the call is a plain function, so the Indonesian
     // edition was being compared against it and this could never pass.
@@ -672,10 +672,10 @@ describe('an offered resource language can actually surface a resource', () => {
   it('honours a reader who ranks a language ahead of English', () => {
     for (const lang of availableResourceLanguages()) {
       if (lang === 'en') continue;
-      // The reader's app language has no catalogue coverage of its own (fa), so
-      // what they see is decided purely by the additional languages they chose.
+      // A locale without a catalogue edition leaves the ordering to the
+      // additional languages. Persian now has its own approved resource.
       const chosenFirst = resolveResources({
-        topics: everyTopic, languages: resourceLanguages('fa', [lang, 'en']),
+        topics: everyTopic, languages: resourceLanguages('no-edition', [lang, 'en']),
       });
       expect(chosenFirst.some((r) => r.lang === lang), lang).toBe(true);
     }

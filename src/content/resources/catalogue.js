@@ -58,6 +58,7 @@ import { PAUL_RESOURCE_SIGNOFF } from '../reviews/paul20260903';
 import { RELATIONSHIP_BOOKS } from './relationshipBooks';
 import { DELIVERANCE_BOOKS } from './deliveranceBooks';
 import { DAVID_STUDY_RESOURCES } from './davidStudyResources';
+import { DISCERNMENT_RESOURCES } from './discernmentResources';
 
 export { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
@@ -309,15 +310,15 @@ const CORE_RESOURCES = [
     type: 'study',
     originalLanguage: 'en',
     topics: ['premarital', 'marriage', 'covenant', 'communication', 'sexual-intimacy', 'marriage-roles'],
-    lifeStages: ['engaged', 'married'],
+    lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'approved',
     contentReview: { ...PAUL_RESOURCE_SIGNOFF },
     safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
-      en: 'A five-part marriage workbook series on biblical foundations, love, intimacy, roles and serving one another.',
-      fr: "Une série de cinq cahiers sur les fondements bibliques du mariage, l'amour, l'intimité, les rôles et le service mutuel.",
-      es: 'Una serie de cinco cuadernos sobre fundamentos bíblicos del matrimonio, amor, intimidad, roles y servicio mutuo.',
+      en: 'Five marriage workbooks on biblical foundations, love, intimacy, roles and mutual service; optional reading when considering life together.',
+      fr: 'Cinq cahiers sur les fondements bibliques du mariage, l’amour, l’intimité, les rôles et le service mutuel ; une lecture facultative pour envisager la vie commune.',
+      es: 'Cinco cuadernos sobre fundamentos bíblicos del matrimonio, amor, intimidad, roles y servicio mutuo; lectura opcional al considerar una vida compartida.',
     },
     editions: {
       en: { title: 'Marriage Is a Ministry', author: 'Craig Caster', publisher: 'Family Discipleship Ministries', url: 'https://fdm.world/resources/marriage/', available: true, lastVerifiedAt: '2026-08-28' },
@@ -341,6 +342,12 @@ const CORE_RESOURCES = [
       en: 'A fifteen-lesson Christian family course covering singleness, preparation for marriage, marriage, sexuality and parenting.',
     },
     editions: {
+      en: { title: 'Christian Family', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/english/christian-family', available: true, lastVerifiedAt: '2026-09-03' },
+      fr: { title: 'La famille chrétienne', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/french/christian-family', available: true, lastVerifiedAt: '2026-09-03' },
+      es: { title: 'La Familia Cristiana', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/spanish/christian-family', available: true, lastVerifiedAt: '2026-09-03' },
+      pt: { title: 'Família Cristã', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/portuguese/christian-family', available: true, lastVerifiedAt: '2026-09-03' },
+      ar: { title: 'الأسرة المسيحية', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/arabic/christian-family', available: true, lastVerifiedAt: '2026-09-03' },
+      sw: { title: 'Familia ya Kikristo — Useja', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/kiswahili/christian-family/lesson/5-useja', available: true, lastVerifiedAt: '2026-09-03' },
       zh: { title: '基督徒家庭', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/simplified-chinese/christian-family', available: true, lastVerifiedAt: '2026-08-28' },
       hi: { title: 'मसीही परिवार', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/hindi/christian-family', available: true, lastVerifiedAt: '2026-08-28' },
       tl: { title: 'Pamilyang Kristiyano', author: 'Stephen Gibson', publisher: 'Shepherds Global Classroom', url: 'https://courses.shepherdsglobal.org/tagalog/christian-family', available: true, lastVerifiedAt: '2026-08-28' },
@@ -375,6 +382,7 @@ const inDomain = (domain, entries) => entries.map((entry) => ({ domains: [domain
 export const RESOURCES = [
   ...inDomain('relationships', CORE_RESOURCES),
   ...inDomain('relationships', RELATIONSHIP_BOOKS),
+  ...inDomain('relationships', DISCERNMENT_RESOURCES),
   // Deliverance material is sensitive without exception, so each of these
   // renders only on two named human sign-offs. See ./deliveranceBooks.js for
   // which languages have a verified edition and which deliberately have none.

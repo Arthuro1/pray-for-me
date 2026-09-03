@@ -18,20 +18,18 @@ describe('ResourceLanguagePref', () => {
 
     // These languages have at least one displayable resource somewhere in the
     // bundled catalogue, including the newly approved family studies.
-    for (const label of ['English', 'Deutsch', 'हिन्दी', 'Kiswahili', 'አማርኛ', 'Tagalog']) {
+    for (const label of ['English', 'Deutsch', 'हिन्दी', 'Kiswahili', 'አማርኛ', 'Tagalog', 'فارسی']) {
       expect(screen.getByRole('checkbox', { name: label }), label).toBeTruthy();
     }
 
-    // Draft or needs-review editions do not make a language selectable.
-    expect(screen.queryByRole('checkbox', { name: 'فارسی' })).toBeNull();
   });
 
-  it('does not summarize a stale stored language that no longer has coverage', () => {
+  it('retains a saved Persian preference now that a reviewed edition exists', () => {
     localStorage.setItem('pfm_resource_langs', JSON.stringify(['en', 'fa']));
     const { container } = render(<ResourceLanguagePref lang="fr" />);
 
     expect(container.textContent).toContain('English');
-    expect(container.textContent).not.toContain('فارسی');
+    expect(container.textContent).toContain('فارسی');
   });
 
   it('persists a supported additional language when it is checked', () => {

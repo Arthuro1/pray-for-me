@@ -5,6 +5,13 @@ validé dans l’échange fourni. Il s’agit d’une sélection préparatoire, 
 propositions d’usage et des limites de vérification, pas d’une approbation
 éditoriale ni d’une publication dans l’application.
 
+**Mise à jour après la recherche :** l’utilisateur a ensuite donné sa validation
+explicite sous le nom de Paul. Le parcours et la sélection de 13 ressources sont
+approuvés ; les sept nouveaux contenus et les éditions vérifiées sont intégrés.
+Voir `DISCERNMENT_APPROVAL_2026-09-03.md` pour la portée et les liens retenus.
+Les niveaux de vérification ci-dessous décrivent la recherche préparatoire ;
+ils ne sont pas transformés en affirmation de relecture intégrale des œuvres.
+
 Le cadre retenu est celui demandé : **la Bible fait autorité ; la conduite du
 Saint-Esprit est recherchée ; les interprétations et impressions personnelles
 sont éprouvées**. Les ressources restent facultatives. Le parcours doit pouvoir
@@ -238,7 +245,8 @@ au nouveau parcours, à de nouvelles traductions ou à de nouveaux articles.
 La rédaction française des 28 journées est maintenant disponible dans
 [le manuscrit complet](C:/Users/T480s/Desktop/Ministry/projets/pray_for_me/docs/DISCERNMENT_28_DAYS_FR.md),
 avec prières, temps d’écoute, questions, démarches et bilan final. Ce manuscrit
-est intégré localement dans les 16 langues, avec un statut de brouillon.
-Voir [l’état de l’intégration](./DISCERNMENT_IMPLEMENTATION.md) pour les détails
-et les relectures encore requises. Cette intégration n’approuve pas les
-nouvelles ressources identifiées dans cette recherche.
+est intégré localement et approuvé par Paul dans les 16 langues.
+Voir [l’état de l’intégration](./DISCERNMENT_IMPLEMENTATION.md) et
+[la validation du parcours et des ressources](./DISCERNMENT_APPROVAL_2026-09-03.md)
+pour la sélection désormais publiée dans le catalogue local. Les langues
+supplémentaires sans lien concret vérifié restent des pistes à compléter.

@@ -1,11 +1,12 @@
 // Standalone editorial reader built only from the versioned application copy.
-// No translation calls, account, journal storage or approval signatures.
+// No translation calls, account, journal storage or approval mutations.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve, dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 import { LANGUAGES, RTL_LANGS } from '../src/i18n.js';
 import { BOOK_NAMES } from '../src/content/dailyVerses.js';
+import { DISCERNMENT_PLAN_APPROVAL } from '../src/content/reviews/paulDiscernment20260903.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const readJson = (path) => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
@@ -46,15 +47,23 @@ for (const { code } of LANGUAGES) {
     days: prose.days.map((day, index) => ({ ...day, theme: themes[index][code] })),
   };
 }
-const payload = { languages: LANGUAGES, rtl: RTL_LANGS, references, books: BOOK_NAMES, content };
+const payload = { languages: LANGUAGES, rtl: RTL_LANGS, references, books: BOOK_NAMES, content, review: DISCERNMENT_PLAN_APPROVAL };
 const data = JSON.stringify(payload);
 const fingerprint = createHash('sha256').update(data).digest('hex').slice(0, 12);
 // JSON is embedded as inert data. Escape '<' to prevent script-end injection.
 const safeData = data.replace(/</g, '\\u003c');
 const template = readFileSync(new URL('./discernment-review.html', import.meta.url), 'utf8');
-const html = template.replace('<!-- CONTENT_DATA -->', () => safeData).replaceAll('CONTENT_FINGERPRINT', fingerprint);
+const approved = DISCERNMENT_PLAN_APPROVAL.status === 'approved';
+const approvalText = approved
+  ? `Validé par ${DISCERNMENT_PLAN_APPROVAL.theology.reviewer} · ${DISCERNMENT_PLAN_APPROVAL.theology.reviewedAt} · Version 1 · 16 langues`
+  : 'Brouillon · Validation en attente';
+const escapedApprovalText = approvalText.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+const html = template.replace('<!-- CONTENT_DATA -->', () => safeData)
+  .replaceAll('CONTENT_FINGERPRINT', fingerprint)
+  .replace('CONTENT_APPROVAL_STATUS', escapedApprovalText)
+  .replace('CONTENT_APPROVAL_CLASS', approved ? 'approved' : '');
 const destination = resolve(root, 'design-qa/discernment-review.html');
 mkdirSync(dirname(destination), { recursive: true });
 writeFileSync(destination, html);
 console.log(`Editorial reader: ${destination}`);
-console.log(`${LANGUAGES.length} languages · 28 days · source ${fingerprint} · no approval recorded`);
+console.log(`${LANGUAGES.length} languages · 28 days · source ${fingerprint} · approval displayed; signatures unchanged`);
