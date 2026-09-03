@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 //
-// The three curricula awaiting sign-off (covenant21, marriage30, freedom30)
+// The curricula awaiting sign-off (covenant21, marriage30, freedom30, david12)
 // have to be readable by the human who reviews and corrects them, and invisible
 // to everyone else. Review mode is the whole difference: it never edits a
 // review record, so a draft on screen still says it is a draft.
@@ -36,8 +36,8 @@ beforeEach(() => {
 afterEach(() => { cleanup(); localStorage.clear(); vi.unstubAllEnvs(); });
 
 describe('draft plans in the journey catalogue', () => {
-  it('guards the premise: covenant21, marriage30 and freedom30 are the drafts', () => {
-    expect(drafts.map((plan) => plan.id).sort()).toEqual(['covenant21', 'freedom30', 'marriage30']);
+  it('guards the premise: relationship, freedom and David curricula are drafts', () => {
+    expect(drafts.map((plan) => plan.id).sort()).toEqual(['covenant21', 'david12', 'freedom30', 'marriage30']);
   });
 
   it('shows an ordinary reader none of them', () => {

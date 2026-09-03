@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "성경 연구",
+  "planDavidTitle": "다윗: 하나님의 마음에 합한 사람",
+  "planDavidSub": "성품과 삶과 시대를 살피는 12번의 연구",
+  "planDavidRooted": "하나님을 향한 마음",
+  "planDavidTeachable": "배우려는 마음",
+  "planDavidReturn": "하나님께 돌아오는 마음",
+  "planDavidSurrender": "감사하며 맡기는 마음",
+  "studyQuestions": "관찰하고 이해하기",
+  "studyContext": "역사적·문화적 배경",
+  "studyTension": "입체적으로 바라보기",
+  "studySynthesis": "배운 내용 정리하기",
+  "studyPrayer": "선택 기도",
+  "studyRelated": "성경 본문 비교하기",
+  "studyAddNote": "노트 추가",
+  "studyPace": "성경 연구 · 하루 25–40분 · 기도는 선택",
   // ── 목적 중심 정보 구조 ──
   "together": "함께",
   "addPerson": "사람 추가",

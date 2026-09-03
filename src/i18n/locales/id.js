@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "Studi Alkitab",
+  "planDavidTitle": "Daud: seorang yang berkenan di hati Allah",
+  "planDavidSub": "12 studi tentang karakter, kehidupan dan dunianya",
+  "planDavidRooted": "Hati yang tertuju kepada Allah",
+  "planDavidTeachable": "Hati yang mau diajar",
+  "planDavidReturn": "Hati yang kembali kepada Allah",
+  "planDavidSurrender": "Hati yang bersyukur dan berserah",
+  "studyQuestions": "Amati dan pahami",
+  "studyContext": "Konteks sejarah dan budaya",
+  "studyTension": "Potret yang perlu dicermati",
+  "studySynthesis": "Tulis kesimpulanmu",
+  "studyPrayer": "Doa opsional",
+  "studyRelated": "Bandingkan bagian Alkitab",
+  "studyAddNote": "Tambahkan catatan",
+  "studyPace": "Studi Alkitab · 25–40 menit sehari · doa opsional",
   // ── Arsitektur informasi berorientasi hasil ──
   "together": "Bersama",
   "addPerson": "Tambah orang",

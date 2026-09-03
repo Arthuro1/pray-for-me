@@ -122,6 +122,13 @@ export function mergePlan(plan, overlay, lang) {
             : source.roles,
         };
         if (source.withChildren) next.withChildren = mergeDay(source.withChildren, translated.withChildren);
+        if (source.study && translated.study) {
+          next.study = { ...source.study };
+          for (const key of ['context', 'tension', 'synthesis', 'prayer']) {
+            next.study[key] = withLang(source.study[key], translated.study[key], lang);
+          }
+          next.study.questions = (source.study.questions || []).map((q, j) => withLang(q, translated.study.questions?.[j], lang));
+        }
         return next;
       };
       return mergeDay(day, dt);

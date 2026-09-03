@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "Masomo ya Biblia",
+  "planDavidTitle": "Daudi: mtu anayeupendeza moyo wa Mungu",
+  "planDavidSub": "Masomo 12 kuhusu tabia, maisha na ulimwengu wake",
+  "planDavidRooted": "Moyo unaomwelekea Mungu",
+  "planDavidTeachable": "Moyo ulio tayari kujifunza",
+  "planDavidReturn": "Moyo unaomrudia Mungu",
+  "planDavidSurrender": "Moyo wa shukrani na kujisalimisha",
+  "studyQuestions": "Chunguza na uelewe",
+  "studyContext": "Muktadha wa kihistoria na kitamaduni",
+  "studyTension": "Picha yenye pande tofauti",
+  "studySynthesis": "Andika muhtasari wako",
+  "studyPrayer": "Sala ya hiari",
+  "studyRelated": "Linganisha vifungu",
+  "studyAddNote": "Ongeza dokezo",
+  "studyPace": "Somo la Biblia · Dakika 25–40 kwa siku · sala ya hiari",
   // ── Mpangilio wa taarifa unaolenga matokeo ──
   "together": "Pamoja",
   "addPerson": "Ongeza mtu",

@@ -61,6 +61,8 @@ export const BOOK_NAMES = {
   // English/French. Non-en/fr names follow the same conventions as the rows above
   // (German Pentateuch "N. Mose", Persian spelled-out ordinals, Russian Synodal
   // numbering where 1 Kings = 3 Царств); AI-drafted, pending native review.
+  '1SA': { fr: '1 Samuel', en: '1 Samuel', de: '1. Samuel', pt: '1 Samuel', zh: '撒母耳记上', es: '1 Samuel', hi: '1 शमूएल', ja: 'サムエル記第一', sw: '1 Samweli', am: '1ኛ ሳሙኤል', id: '1 Samuel', tl: '1 Samuel', ko: '사무엘상', ru: '1 Царств', ar: '1 صموئيل', fa: 'اول سموئیل' },
+  '2SA': { fr: '2 Samuel', en: '2 Samuel', de: '2. Samuel', pt: '2 Samuel', zh: '撒母耳记下', es: '2 Samuel', hi: '2 शमूएल', ja: 'サムエル記第二', sw: '2 Samweli', am: '2ኛ ሳሙኤል', id: '2 Samuel', tl: '2 Samuel', ko: '사무엘하', ru: '2 Царств', ar: '2 صموئيل', fa: 'دوم سموئیل' },
   GEN: { fr: 'Genèse', en: 'Genesis', de: '1. Mose', pt: 'Gênesis', zh: '创世记', es: 'Génesis', hi: 'उत्पत्ति', ja: '創世記', sw: 'Mwanzo', am: 'ዘፍጥረት', id: 'Kejadian', tl: 'Genesis', ko: '창세기', ru: 'Бытие', ar: 'تكوين', fa: 'پیدایش' },
   EXO: { fr: 'Exode', en: 'Exodus', de: '2. Mose', pt: 'Êxodo', zh: '出埃及记', es: 'Éxodo', hi: 'निर्गमन', ja: '出エジプト記', sw: 'Kutoka', am: 'ዘጸአት', id: 'Keluaran', tl: 'Exodo', ko: '출애굽기', ru: 'Исход', ar: 'خروج', fa: 'خروج' },
   LEV: { fr: 'Lévitique', en: 'Leviticus', de: '3. Mose', pt: 'Levítico', zh: '利未记', es: 'Levítico', hi: 'लैव्यव्यवस्था', ja: 'レビ記', sw: 'Mambo ya Walawi', am: 'ዘሌዋውያን', id: 'Imamat', tl: 'Levitico', ko: '레위기', ru: 'Левит', ar: 'اللاويين', fa: 'لاویان' },

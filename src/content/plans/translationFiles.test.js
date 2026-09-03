@@ -56,6 +56,21 @@ describe('plan translation overlays', () => {
           expect(source.withChildren, `${where}: source has no child variant`).toBeTruthy();
           validateDay(day.withChildren, source.withChildren, `${where} child variant`);
         }
+        if (day.study) {
+          expect(source.study, `${where}: source has no study`).toBeTruthy();
+          const allowed = ['context', 'tension', 'synthesis', 'prayer', 'questions'];
+          for (const key of Object.keys(day.study)) expect(allowed, `${where}: unknown study field`).toContain(key);
+          for (const key of allowed.filter((key) => key !== 'questions')) {
+            if (day.study[key] !== undefined) {
+              expect(source.study[key], `${where}: missing study source ${key}`).toBeTruthy();
+              expect(typeof day.study[key]).toBe('string');
+            }
+          }
+          if (day.study.questions) {
+            expect(day.study.questions).toHaveLength(source.study.questions.length);
+            for (const question of day.study.questions) expect(typeof question).toBe('string');
+          }
+        }
         if (day.roles) {
           expect(source.roles, `${where}: source has no role reflections`).toBeTruthy();
           for (const role of Object.keys(day.roles)) {

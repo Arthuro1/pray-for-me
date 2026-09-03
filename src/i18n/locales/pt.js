@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "Estudos bíblicos",
+  "planDavidTitle": "Davi: um homem segundo o coração de Deus",
+  "planDavidSub": "12 estudos sobre seu caráter, sua vida e seu mundo",
+  "planDavidRooted": "Um coração voltado para Deus",
+  "planDavidTeachable": "Um coração disposto a aprender",
+  "planDavidReturn": "Um coração que volta para Deus",
+  "planDavidSurrender": "Um coração grato e entregue",
+  "studyQuestions": "Observar e compreender",
+  "studyContext": "Contexto histórico e cultural",
+  "studyTension": "Um retrato com nuances",
+  "studySynthesis": "Escreva sua síntese",
+  "studyPrayer": "Oração opcional",
+  "studyRelated": "Comparar as passagens",
+  "studyAddNote": "Adicionar uma nota",
+  "studyPace": "Estudo bíblico · 25–40 min por dia · oração opcional",
   // ── Arquitetura da informação orientada a resultados ──
   "together": "Juntos",
   "addPerson": "Adicionar uma pessoa",

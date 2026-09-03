@@ -7,6 +7,7 @@ import GoDeeper from './GoDeeper';
 import { ROLES } from '../lib/planPrefs';
 import { hasReviewSignoff, isPlanPreviewOn } from '../lib/planReview';
 import DeliveranceDayGuide from './deliverance/DeliveranceDayGuide';
+import StudyDayGuide from './StudyDayGuide';
 
 // Everything a rich plan day says BELOW its title and primary passage:
 // reflection → prayer directions → an optional role reflection → one folded
@@ -34,6 +35,29 @@ export default function PlanDayBody({
   if (!day) return null;
 
   const reflection = pick(day.reflection, lang);
+  // Bible studies share the existing day, notes, references and resource shelf,
+  // but never hide their questions behind "After prayer" or require prayer.
+  if (day.study) {
+    return (
+      <div className="space-y-4">
+        {reflection && <p dir="auto" className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{reflection}</p>}
+        <StudyDayGuide study={day.study} lang={lang} onAddNote={onAddNote} />
+        {(day.related || []).length > 0 && (
+          <section>
+            <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'studyRelated')}</h4>
+            <div className="flex flex-wrap gap-1.5">
+              {day.related.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
+            </div>
+          </section>
+        )}
+        {resources.length > 0 && (
+          <div className="rounded-xl px-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+            <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
+          </div>
+        )}
+      </div>
+    );
+  }
   const prompts = (day.prompts || []).map((p) => pick(p, lang)).filter(Boolean);
   const selfPrompt = pick(day.selfPrompt, lang);
   const spousePrompt = pick(day.spousePrompt, lang);

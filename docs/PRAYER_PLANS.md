@@ -175,6 +175,17 @@ and retire the old one from `PLANS` once no one can still be running it
 
 ## Adding a plan
 
+### Study-first plans
+
+`david12` adds the optional `mode: 'study'` / `day.study` layer on this same
+engine. It replaces prayer-first directions with observation questions, a
+counterpoint, collapsible historical context, a note synthesis and optional
+prayer. It reuses Scripture, notes, progress and the approved-resource shelf;
+existing prayer plans are unchanged. See `docs/DAVID_STUDY.md` for its curriculum,
+resource review worksheet, language coverage and pending publication gates.
+
+### Checklist
+
 1. Author the content (`src/content/plans/`), day titles in all 16 languages.
 2. Give it a `category` from `PLAN_CATEGORIES` and add it to `PLANS`.
 3. Add its i18n keys (title / subtitle / movements / any theme keys) to **all

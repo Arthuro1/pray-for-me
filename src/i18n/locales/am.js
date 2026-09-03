@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "የመጽሐፍ ቅዱስ ጥናቶች",
+  "planDavidTitle": "ዳዊት፦ እንደ እግዚአብሔር ልብ የሆነ ሰው",
+  "planDavidSub": "ስለ ባሕርዩ፣ ሕይወቱና ዘመኑ 12 ጥናቶች",
+  "planDavidRooted": "ወደ እግዚአብሔር የዞረ ልብ",
+  "planDavidTeachable": "ለመማር ዝግጁ የሆነ ልብ",
+  "planDavidReturn": "ወደ እግዚአብሔር የሚመለስ ልብ",
+  "planDavidSurrender": "አመስጋኝና ለእግዚአብሔር የተሰጠ ልብ",
+  "studyQuestions": "መመልከትና መረዳት",
+  "studyContext": "ታሪካዊና ባህላዊ አውድ",
+  "studyTension": "በጥንቃቄ የሚመዘን ምስል",
+  "studySynthesis": "ማጠቃለያህን ጻፍ",
+  "studyPrayer": "አማራጭ ጸሎት",
+  "studyRelated": "ክፍሎቹን አወዳድር",
+  "studyAddNote": "ማስታወሻ ጨምር",
+  "studyPace": "የመጽሐፍ ቅዱስ ጥናት · በቀን 25–40 ደቂቃ · አማራጭ ጸሎት",
   // ── በውጤት ላይ ያተኮረ የመረጃ አወቃቀር ──
   "together": "በጋራ",
   "addPerson": "ሰው ጨምር",

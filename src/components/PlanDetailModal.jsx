@@ -67,6 +67,9 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
         </div>
 
         {usable ? (<div className="min-h-0 flex-1 overflow-y-auto p-5 pb-8 space-y-5">
+          {plan.mode === 'study' && (
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'studyPace')}</p>
+          )}
           {/* Opened in review mode (or a dev build): say plainly that what
               follows is a draft, not only that a review is outstanding. */}
           {!isPlanReviewed(source) && (

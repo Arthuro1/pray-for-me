@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "مطالعات کتاب‌مقدس",
+  "planDavidTitle": "داوود: مردی موافق دل خدا",
+  "planDavidSub": "۱۲ مطالعه دربارهٔ شخصیت، زندگی و دنیای او",
+  "planDavidRooted": "دلی رو به خدا",
+  "planDavidTeachable": "دلی آموزش‌پذیر",
+  "planDavidReturn": "دلی که به خدا بازمی‌گردد",
+  "planDavidSurrender": "دلی شکرگزار و تسلیم خدا",
+  "studyQuestions": "مشاهده و درک",
+  "studyContext": "زمینهٔ تاریخی و فرهنگی",
+  "studyTension": "تصویری نیازمند بررسی دقیق",
+  "studySynthesis": "خلاصهٔ خود را بنویس",
+  "studyPrayer": "دعای اختیاری",
+  "studyRelated": "مقایسهٔ بخش‌ها",
+  "studyAddNote": "افزودن یادداشت",
+  "studyPace": "مطالعهٔ کتاب‌مقدس · روزانه ۲۵ تا ۴۰ دقیقه · دعای اختیاری",
   // ── معماری اطلاعات نتیجه‌محور ──
   "together": "با هم",
   "addPerson": "افزودن شخص",

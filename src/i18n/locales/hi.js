@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "बाइबल अध्ययन",
+  "planDavidTitle": "दाऊद: परमेश्वर के मन के अनुसार एक व्यक्ति",
+  "planDavidSub": "उसके चरित्र, जीवन और संसार पर 12 अध्ययन",
+  "planDavidRooted": "परमेश्वर की ओर मुड़ा हृदय",
+  "planDavidTeachable": "सीखने को तैयार हृदय",
+  "planDavidReturn": "परमेश्वर के पास लौटता हृदय",
+  "planDavidSurrender": "कृतज्ञ और समर्पित हृदय",
+  "studyQuestions": "देखें और समझें",
+  "studyContext": "ऐतिहासिक और सांस्कृतिक संदर्भ",
+  "studyTension": "एक बहुआयामी चित्र",
+  "studySynthesis": "अपना सार लिखें",
+  "studyPrayer": "वैकल्पिक प्रार्थना",
+  "studyRelated": "अंशों की तुलना करें",
+  "studyAddNote": "नोट जोड़ें",
+  "studyPace": "बाइबल अध्ययन · प्रतिदिन 25–40 मिनट · वैकल्पिक प्रार्थना",
   // ── परिणाम-केंद्रित सूचना संरचना ──
   "together": "साथ मिलकर",
   "addPerson": "किसी व्यक्ति को जोड़ें",

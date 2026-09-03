@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "دراسات كتابية",
+  "planDavidTitle": "داود: رجل بحسب قلب الله",
+  "planDavidSub": "12 دراسة عن شخصيته وحياته وعالمه",
+  "planDavidRooted": "قلب متّجه نحو الله",
+  "planDavidTeachable": "قلب يقبل التعلّم",
+  "planDavidReturn": "قلب يعود إلى الله",
+  "planDavidSurrender": "قلب شاكر ومستسلم لله",
+  "studyQuestions": "الملاحظة والفهم",
+  "studyContext": "السياق التاريخي والثقافي",
+  "studyTension": "صورة تحتاج إلى التمييز",
+  "studySynthesis": "دوّن خلاصة الدراسة",
+  "studyPrayer": "صلاة اختيارية",
+  "studyRelated": "مقارنة المقاطع",
+  "studyAddNote": "إضافة ملاحظة",
+  "studyPace": "دراسة كتابية · 25–40 دقيقة يوميًا · صلاة اختيارية",
   // ── بنية معلومات متمحورة حول النتيجة ──
   "together": "معًا",
   "addPerson": "إضافة شخص",

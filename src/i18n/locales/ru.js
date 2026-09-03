@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "Изучение Библии",
+  "planDavidTitle": "Давид: человек по сердцу Бога",
+  "planDavidSub": "12 занятий о его характере, жизни и мире",
+  "planDavidRooted": "Сердце, обращённое к Богу",
+  "planDavidTeachable": "Сердце, готовое учиться",
+  "planDavidReturn": "Сердце, возвращающееся к Богу",
+  "planDavidSurrender": "Благодарное сердце, доверяющее Богу",
+  "studyQuestions": "Наблюдать и понимать",
+  "studyContext": "Исторический и культурный контекст",
+  "studyTension": "Неоднозначный портрет",
+  "studySynthesis": "Запишите свои выводы",
+  "studyPrayer": "Молитва по желанию",
+  "studyRelated": "Сравнить отрывки",
+  "studyAddNote": "Добавить заметку",
+  "studyPace": "Изучение Библии · 25–40 мин в день · молитва по желанию",
   // ── Информационная архитектура вокруг задач ──
   "together": "Вместе",
   "addPerson": "Добавить человека",

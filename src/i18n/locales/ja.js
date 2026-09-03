@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "聖書研究",
+  "planDavidTitle": "ダビデ：神の心にかなう人",
+  "planDavidSub": "性格、生涯、時代を学ぶ12の研究",
+  "planDavidRooted": "神に向かう心",
+  "planDavidTeachable": "教えを受け入れる心",
+  "planDavidReturn": "神に立ち帰る心",
+  "planDavidSurrender": "感謝して神に委ねる心",
+  "studyQuestions": "観察し、理解する",
+  "studyContext": "歴史的・文化的背景",
+  "studyTension": "人物像を多面的に見る",
+  "studySynthesis": "学びをまとめる",
+  "studyPrayer": "任意の祈り",
+  "studyRelated": "聖書箇所を比較する",
+  "studyAddNote": "ノートを追加",
+  "studyPace": "聖書研究 · 1日25〜40分 · 祈りは任意",
   // ── 目的に沿った情報設計 ──
   "together": "ともに祈る",
   "addPerson": "人を追加",

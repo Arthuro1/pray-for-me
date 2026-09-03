@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "Mga pag-aaral ng Bibliya",
+  "planDavidTitle": "David: isang taong ayon sa puso ng Diyos",
+  "planDavidSub": "12 pag-aaral sa kanyang ugali, buhay at daigdig",
+  "planDavidRooted": "Pusong nakatuon sa Diyos",
+  "planDavidTeachable": "Pusong handang matuto",
+  "planDavidReturn": "Pusong bumabalik sa Diyos",
+  "planDavidSurrender": "Pusong mapagpasalamat at nagpapasakop",
+  "studyQuestions": "Magmasid at umunawa",
+  "studyContext": "Kontekstong pangkasaysayan at pangkultura",
+  "studyTension": "Isang mas masusing pagtingin",
+  "studySynthesis": "Isulat ang iyong buod",
+  "studyPrayer": "Opsyonal na panalangin",
+  "studyRelated": "Ihambing ang mga talata",
+  "studyAddNote": "Magdagdag ng tala",
+  "studyPace": "Pag-aaral ng Bibliya · 25–40 minuto bawat araw · opsyonal na panalangin",
   // ── Impormasyong nakatuon sa layunin ──
   "together": "Sama-sama",
   "addPerson": "Magdagdag ng tao",

@@ -56,6 +56,7 @@
 import { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS } from './topics';
 import { RELATIONSHIP_BOOKS } from './relationshipBooks';
 import { DELIVERANCE_BOOKS } from './deliveranceBooks';
+import { DAVID_STUDY_RESOURCES } from './davidStudyResources';
 
 export { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
@@ -371,6 +372,7 @@ export const RESOURCES = [
   // renders only on two named human sign-offs. See ./deliveranceBooks.js for
   // which languages have a verified edition and which deliberately have none.
   ...inDomain('freedom', DELIVERANCE_BOOKS),
+  ...inDomain('bible-study', DAVID_STUDY_RESOURCES),
 ];
 
 export default RESOURCES;

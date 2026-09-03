@@ -82,6 +82,15 @@ export const RESOURCE_TOPICS = [
   'discipleship',
   'victory',
   'cross',
+  // Historical and literary study: scoped away from prayer-resource domains.
+  'david',
+  'ancient-israel',
+  'biblical-geography',
+  'biblical-archaeology',
+  'biblical-narrative',
+  'kingship',
+  'philistines',
+  'ancient-worship',
 ];
 
 // The FAMILY OF PLANS a resource belongs on.
@@ -99,7 +108,7 @@ export const RESOURCE_TOPICS = [
 // the domains it draws from (`resourceDomains`), an entry declares the domains
 // it belongs to (`domains`), and a plan that declares neither stays unscoped
 // and matches on topics alone. See resolveResources() in src/lib/resources.js.
-export const RESOURCE_DOMAINS = ['relationships', 'freedom'];
+export const RESOURCE_DOMAINS = ['relationships', 'freedom', 'bible-study'];
 
 // The theological tradition a resource comes out of. This is CONTEXT for a
 // reader, never a judgement: labelling a book "african-pentecostal" says where

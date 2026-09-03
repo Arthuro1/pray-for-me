@@ -1,4 +1,20 @@
 export default {
+  // Bible-study journeys (David).
+  "planCategoryStudy": "圣经研读",
+  "planDavidTitle": "大卫：合神心意的人",
+  "planDavidSub": "12课探索他的品格、人生与时代",
+  "planDavidRooted": "一颗归向神的心",
+  "planDavidTeachable": "一颗受教的心",
+  "planDavidReturn": "一颗回转归向神的心",
+  "planDavidSurrender": "一颗感恩交托的心",
+  "studyQuestions": "观察与理解",
+  "studyContext": "历史与文化背景",
+  "studyTension": "更全面地认识人物",
+  "studySynthesis": "写下研读总结",
+  "studyPrayer": "可选祷告",
+  "studyRelated": "对照经文",
+  "studyAddNote": "添加笔记",
+  "studyPace": "圣经研读 · 每天25–40分钟 · 祷告自愿",
   // ── 以结果为导向的信息架构 ──
   "together": "一起祷告",
   "addPerson": "添加联系人",
