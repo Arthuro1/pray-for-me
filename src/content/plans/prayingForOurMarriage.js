@@ -1,7 +1,7 @@
-// Draft content on the existing guided-plan engine. Publication is blocked by
-// planReview until named reviewers approve Scripture/theology, safety, and all
-// 16 languages. References are resolved by the existing Scripture reader.
+// Content on the existing guided-plan engine, approved by Paul on 2026-09-03.
+// References are resolved by the existing Scripture reader.
 import { DAYS } from './prayingForOurMarriageDays';
+import { PLAN_APPROVALS } from '../reviews/paul20260903';
 
 export const PRAYING_FOR_OUR_MARRIAGE = {
   id: 'marriage30',
@@ -23,7 +23,7 @@ export const PRAYING_FOR_OUR_MARRIAGE = {
   proseTranslations: [],
   onboarding: 'married',
   renewable: true,
-  review: { status: 'needs_review' },
+  review: PLAN_APPROVALS.marriage30,
   analyticsEvents: {
     started: 'marriage_plan_started',
     dayCompleted: 'marriage_plan_day_completed',

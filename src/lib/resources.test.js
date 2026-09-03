@@ -478,10 +478,9 @@ describe('the shipped catalogue', () => {
     const coveredLanguages = availableResourceLanguages();
 
     expect(coveredLanguages).toEqual([
-      // `hi` arrived with the deliverance shelf: Derek Prince Ministries India
-      // sells its own Hindi editions, which is the only Hindi publisher page
-      // anyone has verified so far.
-      'ar', 'de', 'en', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'zh',
+      // Paul's approval also makes the verified Amharic, Swahili and Tagalog
+      // editions of the family-study resources available.
+      'am', 'ar', 'de', 'en', 'es', 'fr', 'hi', 'id', 'ja', 'ko', 'pt', 'ru', 'sw', 'tl', 'zh',
     ]);
     // `expect.anything` without the call is a plain function, so the Indonesian
     // edition was being compared against it and this could never pass.
@@ -673,10 +672,10 @@ describe('an offered resource language can actually surface a resource', () => {
   it('honours a reader who ranks a language ahead of English', () => {
     for (const lang of availableResourceLanguages()) {
       if (lang === 'en') continue;
-      // The reader's app language has no catalogue coverage of its own (am), so
+      // The reader's app language has no catalogue coverage of its own (fa), so
       // what they see is decided purely by the additional languages they chose.
       const chosenFirst = resolveResources({
-        topics: everyTopic, languages: resourceLanguages('am', [lang, 'en']),
+        topics: everyTopic, languages: resourceLanguages('fa', [lang, 'en']),
       });
       expect(chosenFirst.some((r) => r.lang === lang), lang).toBe(true);
     }
@@ -684,7 +683,7 @@ describe('an offered resource language can actually surface a resource', () => {
 
   it('still falls back to a later language for a work the first one does not publish', () => {
     // Ranking German first must not hide the English-only titles behind it.
-    const rows = resolveResources({ topics: everyTopic, languages: resourceLanguages('am', ['de', 'en']) });
+    const rows = resolveResources({ topics: everyTopic, languages: resourceLanguages('fa', ['de', 'en']) });
     expect(rows.some((r) => r.lang === 'de')).toBe(true);
     expect(rows.some((r) => r.lang === 'en')).toBe(true);
   });

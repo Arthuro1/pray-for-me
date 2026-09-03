@@ -182,7 +182,7 @@ engine. It replaces prayer-first directions with observation questions, a
 counterpoint, collapsible historical context, a note synthesis and optional
 prayer. It reuses Scripture, notes, progress and the approved-resource shelf;
 existing prayer plans are unchanged. See `docs/DAVID_STUDY.md` for its curriculum,
-resource review worksheet, language coverage and pending publication gates.
+approved resources, language coverage and Paul's dated approval record.
 
 ### Checklist
 
@@ -291,8 +291,8 @@ emitted with no properties. The day event fires from `markPrayedOn` in the store
    whoever owns doctrine for this app.
 8. Review all 16 translations for **meaning**, not just key parity.
 
-New plans remain visible in the catalogue while review is pending, but their
-curriculum and Start action stay unavailable until `review.status`, theology
+New drafts remain in the data catalogue but are hidden from ordinary readers
+unless review preview is enabled. Production use requires `review.status`, theology
 review, safety review, and every locale sign-off contain an approved status, a
 named reviewer, and an ISO date. Draft role material has its own gate.
 
@@ -309,12 +309,11 @@ walks reviewed prayer modules one short step at a time.
 
 The certainty a reader reports is the ONLY personalization, it is never
 persisted, and it selects between AUTHORED modules rather than concluding
-anything. `review.status` is `needs_review`, so the plan stays out of the
-catalogue for ordinary readers, and its curriculum and Start action stay closed,
-until a human signs off theology, safety and all 16 locales. A reviewer reaches
-it by opening the app once at `?planPreview=1` (see § Review mode in
-`docs/RELATIONSHIP_FAMILY_PLANS.md`), which reveals the draft while keeping its
-"review pending" marks.
+anything. Version 1 is approved by Paul on 2026-09-03 for theology, safety and
+all 16 current language presentations, including existing fallbacks. It is
+available without review preview in an updated build. This does not complete
+missing translations or approve future content. See
+`docs/CONTENT_APPROVAL_2026-09-03.md`; the review gates remain unchanged.
 
 **See `docs/FREEDOM_DELIVERANCE.md`** for the theological model, the day model,
 the certainty→prayer mapping, the family-line categories, the resource review

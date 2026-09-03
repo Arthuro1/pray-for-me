@@ -26,15 +26,12 @@ describe('Relationships & Family plan family', () => {
     }
   });
 
-  // Visibility is not a release bypass: pending plans stay discoverable in the
-  // catalogue, while canUsePlan() still prevents opening their curriculum or
-  // starting them until every review has passed.
-  it('keeps unreviewed couple plans visible but unavailable', () => {
+  it('makes the approved couple plans available without review mode', () => {
     const shipped = plansByCategory(PLANS).flatMap((group) => group.plans);
     expect(shipped).toContain(PREPARING_IN_PRAYER);
     expect(shipped).toEqual(expect.arrayContaining([PREPARING_FOR_COVENANT, PRAYING_FOR_OUR_MARRIAGE]));
-    expect(canUsePlan(PREPARING_FOR_COVENANT, { preview: false })).toBe(false);
-    expect(canUsePlan(PRAYING_FOR_OUR_MARRIAGE, { preview: false })).toBe(false);
+    expect(canUsePlan(PREPARING_FOR_COVENANT, { preview: false })).toBe(true);
+    expect(canUsePlan(PRAYING_FOR_OUR_MARRIAGE, { preview: false })).toBe(true);
   });
 
   it('drops a category once nothing in it can be shown', () => {

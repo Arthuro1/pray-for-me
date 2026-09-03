@@ -44,11 +44,12 @@ ni responsabilité, ni droit des victimes à la sécurité. Le respect de l’oi
 n’impose jamais le silence face aux abus. Aucun lien entre maladie actuelle et
 faute cachée n’est établi.
 
-## Ressources : sélection vérifiée, validation éditoriale à faire
+## Ressources : sélection vérifiée et approuvée par Paul
 
 Les neuf liens ci-dessous ont été consultés le **3 septembre 2026**. Leurs
 descriptions sont originales et précisent la portée/les limites de chaque
-source. Aucune image ou vidéo distante n’est chargée automatiquement.
+source. Paul a approuvé leur contenu et leur sécurité le **3 septembre 2026**.
+Aucune image ou vidéo distante n’est chargée automatiquement.
 
 | Ressource | Langue | Apport et limite |
 |---|---|---|
@@ -72,26 +73,29 @@ L’ordre des langues, les liens externes et l’absence de suivi du contenu res
 ceux du catalogue existant. Les deux articles contradictoires sur Mésha sont
 associés aux mêmes thèmes pour permettre une lecture comparée.
 
-## Statut et relecture avant publication
+## Statut et accès
 
-**Plan et neuf ressources : `needs_review`. Aucun signataire inventé.**
+**Plan et neuf ressources : `approved`, au nom de Paul, le 3 septembre 2026.**
+Cette approbation est enregistrée sur demande explicite de l’utilisateur ; voir
+le [registre de validation](CONTENT_APPROVAL_2026-09-03.md).
 
-- Le plan se lit et se démarre en développement ou dans le mode de relecture
-  existant : ouvrir `/guidance?planPreview=1`, puis **Accompagnement → Parcourir
-  les parcours → Études bibliques**. `?planPreview=0` désactive ce mode.
-- Hors mode de relecture, le catalogue public ne propose pas ce nouveau plan.
-- Les ressources non approuvées ne s’affichent pas, même en mode de relecture.
-  Les liens de ce document sont la liste de travail du relecteur. L’étagère
-  « Pour aller plus loin » apparaîtra après leur approbation individuelle.
+- Dans une version construite avec ces modifications, ouvrir `/guidance`, puis
+  **Accompagnement → Parcourir les parcours → Études bibliques**. Le mode
+  `?planPreview=1` n’est plus nécessaire pour lire ou démarrer David.
+- Les ressources approuvées s’affichent dans « Pour aller plus loin » selon
+  les thèmes du jour et les langues de ressources sélectionnées. Les liens
+  anglophones nécessitent que l’anglais soit sélectionné.
 - Les textes longs sont entièrement rédigés en français et en anglais. Les
   titres des jours et les libellés sont présents dans les 16 langues ; la prose
   utilise le repli anglais tant que de vraies traductions n’ont pas été validées.
-  Aucun faux lot de traductions n’est déclaré prêt.
+  La validation couvre cette présentation actuelle, y compris les replis ;
+  aucun faux lot de traductions n’est déclaré prêt.
 - La publication du plan conserve les exigences de `planReview.js` : statut,
   relectures théologique et sécurité, signatures nominatives et dates, validation
-  de chaque langue. Les titres traduits restent eux aussi à relire.
+  de chaque présentation linguistique. Ces signatures sont enregistrées au nom
+  de Paul ; les contrôles restent actifs pour les futurs contenus.
 - Les ressources ont leur validation indépendante. Le cours de Römer, qui
-  aborde pouvoir et sexualité, est marqué sensible et exige deux signatures.
+  aborde pouvoir et sexualité, reste marqué sensible et porte les deux signatures.
 
 ## Fichiers et vérification
 
@@ -101,7 +105,7 @@ associés aux mêmes thèmes pour permettre une lecture comparée.
 - `src/components/StudyDayGuide.jsx` : couche d’étude facultative du jour.
 - `src/content/dailyVerses.js` : noms de 1 et 2 Samuel dans les 16 langues,
   sans changement du texte biblique ni de la sélection du verset du jour.
-- `src/content/resources/davidStudyResources.js` : candidats bibliographiques.
+- `src/content/resources/davidStudyResources.js` : ressources bibliographiques approuvées.
 - `davidHeart.test.js` et `StudyDayGuide.test.jsx` : structure, langues,
   références, contrôle de publication, ressources, affichage et démarrage.
 - `StudyDayGuide.browser.spec.jsx` : français mobile, aperçu sur ordinateur,

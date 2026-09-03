@@ -11,11 +11,11 @@ Pray now, the prayer session, prayer notes and voice notes, completion history,
 the calendar, catch-up, reminders, offline and the ICS export all keep working
 untouched. There is no parallel prayer, Scripture, media or resource system.
 
-> **Release status: not shippable yet.** `review.status` is `needs_review`, so
-> `canUsePlan()` keeps the plan out of a production build entirely. To read it,
-> open the app once at **`/guidance?planPreview=1`** — review mode (below) — and
-> it appears under *Browse*, marked "Content review pending". See § Release
-> checklist.
+> **Release status: version 1 approved by Paul on 2026-09-03.** Theology,
+> safety and all 16 current language presentations/fallbacks are signed following
+> the user's explicit approval. An updated build offers it under *Browse* without
+> review preview. Missing translations remain unfinished. See
+> `docs/CONTENT_APPROVAL_2026-09-03.md`; no deployment was performed.
 
 ---
 
@@ -280,12 +280,17 @@ never adds or removes anything.
 
 Movement-level shelves live on each `MOVEMENTS` entry's `resourceTopics`.
 
-### The worksheet is deliberately unpublished
+### Resource approval and historical discovery notes
 
-Every entry in `deliveranceBooks.js` is `needs_review` with no sign-offs, so the
-"Go deeper" shelf is currently **absent** for this plan. That is the intended
-state: an empty shelf is correct, and the thirty days are complete without a
-single external book.
+The ten entries in `deliveranceBooks.js` already carry Paul's earlier content
+and safety approvals; these records are unchanged by the 2026-09-03 plan
+approval. The shelf resolves only entries with a usable verified edition.
+`solomon-breaking-evil-altars` and `olukoya-prayer-rain` still lack verified URLs
+and remain hidden. The thirty days are complete without an external book.
+
+The following describes the initial discovery worksheet on **2026-08-28**, not
+the current edition inventory. Consult `deliveranceBooks.js` for subsequent
+verified URLs and translated editions.
 
 Verified official pages (read 2026-08-28): Derek Prince Ministries for *They
 Shall Expel Demons*, *Blessing or Curse: You Can Choose*, *Prayers and
@@ -410,10 +415,12 @@ production SQL. It is client content plus components on the existing plan engine
 
 ## Release checklist
 
-The plan cannot ship until a named human works through all of this and fills in
+Paul's approval of the current version is recorded on 2026-09-03. Retain this
+checklist for future revisions: a named human approval must be recorded in
 `review` on `FREEDOM_IN_CHRIST` (see `src/lib/planReview.js` for the shape:
-approved status, named reviewer, ISO date — for theology, for safety, and for
-every one of the 16 locales).
+approved status, named reviewer, ISO date — for theology, safety and every
+current language presentation). Recording approval does not attest to review
+steps or native-language expertise that the user has not claimed.
 
 1. Read **every** Scripture reference in context — 30 primary passages, all
    related passages, all `standRefs`, and all 17 module reference sets.

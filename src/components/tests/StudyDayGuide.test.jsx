@@ -66,7 +66,7 @@ describe('a study-first day on the shared plan surfaces', () => {
     render(<PlanDetailModal plan={plan} lang="fr" onStart={onStart} onClose={() => {}} />);
     expect(screen.getByRole('dialog', { name: t('fr', plan.titleKey) })).toBeTruthy();
     expect(screen.getByText(t('fr', 'studyPace'))).toBeTruthy();
-    expect(screen.getByText(t('fr', 'planCoupleReviewPending'))).toBeTruthy();
+    expect(screen.queryByText(t('fr', 'planCoupleReviewPending'))).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t('fr', 'previewAllDays') }));
     plan.days.forEach((day) => expect(screen.getByText(day.theme.fr)).toBeTruthy());
     fireEvent.click(screen.getByRole('button', { name: t('fr', 'journeyStartToday') }));

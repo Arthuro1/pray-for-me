@@ -1,10 +1,10 @@
 // Relationship and family books added from the August 2026 editorial brief.
 //
 // Standard-topic books in this file are approved because the brief explicitly
-// selected both the authors and the subjects. Books centred on sexuality,
-// gender/role frameworks, marriage crisis, or disputed pastoral claims remain
-// `needs_review`; the resolver will keep them invisible until the two sensitive
-// sign-offs described in catalogue.js have been completed.
+// selected both the authors and the subjects. Paul's 2026-09-03 sign-offs are
+// recorded on the entries associated with the newly approved plans. Unavailable
+// editions and resources outside that scope retain their prior status.
+import { PAUL_RESOURCE_SIGNOFF } from '../reviews/paul20260903';
 
 const VERIFIED_AT = '2026-08-28';
 
@@ -15,6 +15,8 @@ function relationshipBook({
   lifeStages,
   status = 'approved',
   reviewLevel,
+  contentReview,
+  safetyReview,
   replacementResourceId,
   description,
   title,
@@ -35,6 +37,8 @@ function relationshipBook({
     lifeStages,
     status,
     ...(reviewLevel ? { reviewLevel } : {}),
+    ...(contentReview ? { contentReview } : {}),
+    ...(safetyReview ? { safetyReview } : {}),
     ...(replacementResourceId ? { replacementResourceId } : {}),
     description,
     editions: {
@@ -270,7 +274,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'todd-relationship-goals',
     topics: ['dating', 'marriage', 'sexuality', 'purity'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Addresses singleness, dating, marriage and sexual ethics in one accessible relationship overview.',
@@ -285,7 +291,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'thomas-sacred-search',
     topics: ['discernment', 'dating', 'premarital', 'character'],
     lifeStages: ['single', 'dating', 'engaged'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Moves dating discernment away from finding a mythical perfect match and toward character, purpose and wise choice.',
@@ -313,7 +321,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'thomas-sacred-marriage',
     topics: ['marriage', 'covenant', 'spiritual-formation', 'sexual-intimacy'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Explores how the ordinary demands of marriage can expose sin and form Christian character.',
@@ -341,7 +351,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'feldhahn-secrets-sex-marriage',
     topics: ['sexual-intimacy', 'communication', 'trust'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Uses survey research and clinical experience to help couples discuss desire, pressure and mutual understanding in sexual intimacy.',
@@ -356,7 +368,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'eggerichs-love-respect',
     topics: ['communication', 'marriage', 'marriage-roles'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Presents a strongly gendered love-and-respect framework for recurring communication patterns in marriage.',
@@ -371,7 +385,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'stuart-single-dating-engaged-married',
     topics: ['singleness', 'dating', 'premarital', 'marriage', 'purity', 'sexuality'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Traces purpose and practical decisions across singleness, dating, engagement and marriage in one continuous framework.',
@@ -468,7 +484,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['marriage', 'communication', 'conflict', 'sexual-intimacy'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A French pastoral resource spanning communication, conflict and intimacy in marriage.',
@@ -484,7 +502,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['sexuality', 'sexual-intimacy', 'purity'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A direct French-language treatment of sexuality for Christian singles and couples.',
@@ -543,7 +563,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['marriage', 'communication', 'sexual-intimacy', 'family-of-origin', 'marriage-roles', 'abuse-safety'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A wide-ranging guide for newlyweds that includes communication, intimacy, roles, in-laws, money and destructive patterns.',
@@ -559,7 +581,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['marriage-crisis', 'communication', 'forgiveness', 'marriage'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A short restoration-oriented guide for couples who want to examine recurring habits in their relationship.',
@@ -575,7 +599,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['marriage-crisis', 'spiritual-formation', 'marriage'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Uses the wedding at Cana as a framework for spiritual preparation and renewal in marriage.',
@@ -591,7 +617,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['marriage-crisis', 'communication', 'trust'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Names warning signs that may precede a serious rupture in a couple and therefore requires careful safety review.',
@@ -621,7 +649,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'fr',
     topics: ['singleness', 'premarital', 'family-of-origin', 'marriage-crisis', 'divorce'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Spans singleness, engagement customs, marriage preparation, couple crises and divorce in a Francophone African context.',
@@ -729,7 +759,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'heward-mills-model-marriage',
     topics: ['marriage', 'sexual-intimacy', 'marriage-roles', 'family'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A broad marriage manual that includes intimacy and husband-and-wife roles and therefore remains behind sensitive review.',
@@ -744,7 +776,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'funke-adejumo-marriage-destiny',
     topics: ['covenant', 'mission', 'marriage', 'marriage-roles'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Connects marriage with calling and destiny; its role framework needs review before recommendation.',
@@ -759,7 +793,9 @@ export const RELATIONSHIP_BOOKS = [
     id: 'felix-adejumo-woman-in-your-house',
     topics: ['marriage', 'communication', 'marriage-roles'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A husband-and-wife roles title recorded for review before it can be matched to role-sensitive marriage days.',
@@ -838,6 +874,8 @@ export const RELATIONSHIP_BOOKS = [
     // Print run ended; the publisher still lists an e-book. A curator should
     // decide whether to point at the e-book edition before this goes live.
     status: 'needs_review',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     available: false,
     description: {
       de: 'Kurze Kapitel mit Checklisten und Gesprächsimpulsen darüber, wie Liebe – wie ein Garten – gepflegt und geschützt sein will.',
@@ -857,7 +895,9 @@ export const RELATIONSHIP_BOOKS = [
     // General-market psychology from an academic publisher, with no faith
     // frame and a host that puts the reader through a login redirect. Recorded
     // for a curator rather than published.
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     description: {
       de: 'Paarpsychologie ohne Glaubensbezug, beim Wissenschaftsverlag erschienen – vor einer Empfehlung zu prüfen.',
       en: 'Couple psychology with no faith frame, from an academic publisher — to be checked before it is recommended here.',
@@ -873,7 +913,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['sexual-intimacy', 'sexuality', 'marriage'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Eine Sexologin über erschöpfte Sexualität in langen Ehen; wegen der Thematik erst nach den beiden Freigaben empfehlbar.',
@@ -890,7 +932,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['sexual-intimacy', 'marriage', 'communication'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Über Nähe, die im Alltag von Langzeitpaaren verloren geht; wegen der Thematik erst nach den beiden Freigaben empfehlbar.',
@@ -907,7 +951,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['marriage-roles', 'identity', 'church'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Eine pointierte Auseinandersetzung mit Geschlechterrollen in konservativen Gemeinden; als Rollenthema freigabepflichtig.',
@@ -924,7 +970,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['marriage-roles', 'marriage', 'character'],
     lifeStages: ['dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Ein kurzer, bildstarker Essay darüber, wie ein Mann das Herz einer Frau achten lernt; als Rollenthema freigabepflichtig.',
@@ -941,7 +989,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['marriage-roles', 'marriage', 'character'],
     lifeStages: ['dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Das Gegenstück mit konkreten Anregungen, den eigenen Mann zu lieben; als Rollenthema freigabepflichtig.',
@@ -959,6 +1009,8 @@ export const RELATIONSHIP_BOOKS = [
     topics: ['sexuality', 'identity', 'family'],
     lifeStages: ['single', 'married'],
     status: 'needs_review',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     available: false,
     description: {
@@ -994,6 +1046,8 @@ export const RELATIONSHIP_BOOKS = [
     topics: ['friendship', 'identity', 'listening'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'needs_review',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     available: false,
     description: {
       de: 'Über das Gestalten tragfähiger Beziehungen als Frau; nur noch antiquarisch erhältlich.',
@@ -1043,6 +1097,8 @@ export const RELATIONSHIP_BOOKS = [
     topics: ['character', 'communication', 'conflict'],
     lifeStages: ['dating', 'engaged', 'married'],
     status: 'needs_review',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     available: false,
     description: {
       de: 'Über sehr unterschiedliche Empfindsamkeiten in einer Beziehung; vergriffen, nur noch antiquarisch.',
@@ -1060,6 +1116,8 @@ export const RELATIONSHIP_BOOKS = [
     topics: ['sexuality', 'purity'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'needs_review',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     available: false,
     description: {
@@ -1092,7 +1150,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['parenting', 'sexuality', 'children', 'family'],
     lifeStages: ['married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Für Eltern, die Sexualerziehung selbst in die Hand nehmen wollen; als Sexualthema freigabepflichtig.',
@@ -1218,7 +1278,9 @@ export const RELATIONSHIP_BOOKS = [
     language: 'de',
     topics: ['sexuality', 'identity', 'singleness', 'marriage'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       de: 'Eine Frauenärztin und Sexualberaterin über weibliche Sexualität und Identität; als Sexualthema freigabepflichtig.',

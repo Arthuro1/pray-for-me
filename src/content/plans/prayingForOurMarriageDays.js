@@ -1,8 +1,10 @@
-// Draft 30-day marriage curriculum using the same rich-day shape as the
+// 30-day marriage curriculum using the same rich-day shape as the
 // singles plan. English/French prose is authored here; 14 lazy overlays live in
 // translations/marriage30/. Day titles are present in every supported language.
 // The no-children day is always complete; `withChildren` is only an additive
 // presentation layer and never changes the schedule or day numbering.
+
+import { PAUL_PLAN_SIGNOFF } from '../reviews/paul20260903';
 
 const l = (en, fr) => ({ en, fr });
 const title = (en, fr, es, pt, de, ru, zh, ja, ko, ar, fa, hi, id, sw, tl, am) => ({
@@ -86,6 +88,7 @@ export const DAYS = [
     self: ['Expose the gap between how I appear and how I act at home.', 'Révèle l’écart entre l’image que je donne et ma conduite à la maison.'],
     marriage: ['Make our closest relationship a place where Christlike character grows.', 'Fais de notre relation la plus proche un lieu où grandit le caractère de Christ.'],
     practice: ['Respond gently to one interruption today.', 'Réponds avec douceur à une interruption aujourd’hui.'],
+    roleReviewStatus: { ...PAUL_PLAN_SIGNOFF },
     roles: {
       husband: ['As a husband, ask for self-giving love, humble responsibility, and gentleness; do not use a role to control.', 'Comme mari, demande un amour qui se donne, une responsabilité humble et de la douceur ; n’utilise pas un rôle pour contrôler.'],
       wife: ['As a wife, ask for self-giving love, courageous wisdom, and gentleness; do not let a role silence truth or safety.', 'Comme épouse, demande un amour qui se donne, une sagesse courageuse et de la douceur ; ne laisse pas un rôle faire taire la vérité ou la sécurité.'],
@@ -274,6 +277,7 @@ export const DAYS = [
     self: ['Make me willing to take unnoticed responsibility and to receive help.', 'Rends-moi prêt à prendre une responsabilité invisible et à recevoir de l’aide.'],
     marriage: ['Teach us partnership shaped by humility, consent, and shared responsibility.', 'Apprends-nous un partenariat marqué par l’humilité, le consentement et une responsabilité partagée.'],
     practice: ['Choose one task to carry together or redistribute fairly.', 'Choisissez une tâche à porter ensemble ou à redistribuer équitablement.'],
+    roleReviewStatus: { ...PAUL_PLAN_SIGNOFF },
     roles: {
       husband: ['As a husband, practice leadership only as accountable, self-giving service; never as entitlement, control, or immunity from correction.', 'Comme mari, ne vis la conduite que comme un service responsable qui se donne ; jamais comme un droit, un contrôle ou une immunité face à la correction.'],
       wife: ['As a wife, practice courageous, self-giving service without surrendering voice, wisdom, safety, or equal dignity before God.', 'Comme épouse, vis un service courageux qui se donne sans abandonner ta voix, ta sagesse, ta sécurité ni ton égale dignité devant Dieu.'],

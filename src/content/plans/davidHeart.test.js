@@ -35,10 +35,10 @@ describe('David: a study on the existing plan engine', () => {
     });
   });
 
-  it('keeps pending human review intact and permits only the existing preview path', () => {
-    expect(plan.review).toEqual({ status: 'needs_review' });
-    expect(isPlanReviewed(plan)).toBe(false);
-    expect(canUsePlan(plan, { preview: false })).toBe(false);
+  it('records Paul’s approval and no longer needs review mode', () => {
+    expect(plan.review.theology).toEqual({ status: 'approved', reviewer: 'Paul', reviewedAt: '2026-09-03' });
+    expect(isPlanReviewed(plan)).toBe(true);
+    expect(canUsePlan(plan, { preview: false })).toBe(true);
     expect(canUsePlan(plan, { preview: true })).toBe(true);
     expect(plan.proseTranslations).toEqual([]);
   });
@@ -115,38 +115,37 @@ describe('Scripture, study content and languages', () => {
 
 describe('David’s historical resource shelf', () => {
   const entries = RESOURCES.filter((r) => r.domains.includes('bible-study'));
-  // Test-only approval models a future curator's sign-off. Source stays pending.
-  const signoff = { status: 'approved', reviewedBy: 'test-only', reviewedAt: '2026-09-03' };
-  const approvedFixture = entries.map((r) => ({ ...r, status: 'approved', contentReview: signoff, safetyReview: signoff }));
+  const unreviewedFixture = entries.map((r) => ({ ...r, status: 'needs_review' }));
 
-  it('records nine verified candidates without publishing any by accident', () => {
+  it('records nine verified resources with Paul’s explicit approval', () => {
     expect(entries).toHaveLength(9);
     expect(DAVID_STUDY_RESOURCES).toHaveLength(9);
     for (const r of entries) {
-      expect(r.status).toBe('needs_review');
-      expect(r.contentReview).toBeUndefined();
+      expect(r.status).toBe('approved');
+      expect(r.contentReview).toEqual({ status: 'approved', reviewedBy: 'Paul', reviewedAt: '2026-09-03' });
+      expect(r.safetyReview).toEqual(r.contentReview);
       for (const edition of Object.values(r.editions)) {
         expect(new URL(edition.url).protocol).toBe('https:');
         expect(edition.lastVerifiedAt).toBe('2026-09-03');
       }
     }
     for (const day of plan.days) {
-      expect(resolveResources({ topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'] })).toEqual([]);
+      expect(resolveResources({ topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'], catalogue: unreviewedFixture })).toEqual([]);
     }
   });
 
-  it('has relevant resources for each study once reviewed and keeps the domain isolated', () => {
+  it('has live resources for each study and keeps the domain isolated', () => {
     for (const day of plan.days) {
       for (const topic of day.resourceTopics) expect(RESOURCE_TOPICS).toContain(topic);
-      const rows = resolveResources({ topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'], catalogue: approvedFixture });
+      const rows = resolveResources({ topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'] });
       expect(rows.length, day.theme.fr).toBeGreaterThan(0);
-      expect(resolveResources({ topics: day.resourceTopics, domains: ['relationships'], catalogue: approvedFixture })).toEqual([]);
+      expect(resolveResources({ topics: day.resourceTopics, domains: ['relationships'], catalogue: entries })).toEqual([]);
     }
     for (const r of entries) expect(plan.days.some((d) => d.resourceTopics.some((topic) => r.topics.includes(topic))), r.id).toBe(true);
   });
 
   it('keeps both scholarly positions on the disputed Mesha reading together', () => {
-    const rows = resolveResources({ topics: plan.days[9].resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'], catalogue: approvedFixture });
+    const rows = resolveResources({ topics: plan.days[9].resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'] });
     expect(rows.map((r) => r.id)).toEqual(expect.arrayContaining(['mesha-reading-defence', 'mesha-reading-hypothetical', 'louvre-mesha-stele', 'jewish-museum-tel-dan']));
     expect(rows[0].lang).toBe('fr');
   });

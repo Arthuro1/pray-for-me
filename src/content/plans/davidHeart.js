@@ -1,7 +1,7 @@
 import { DAYS } from './davidHeartDays';
+import { PLAN_APPROVALS } from '../reviews/paul20260903';
 
-// Study-first curriculum on the shared daily-plan engine. Human approval is
-// deliberately pending; no invented theology, safety or translation sign-offs.
+// Study-first curriculum on the shared daily-plan engine, approved by Paul.
 export const DAVID_HEART = {
   id: 'david12',
   version: 1,
@@ -13,7 +13,7 @@ export const DAVID_HEART = {
   titleKey: 'planDavidTitle',
   subKey: 'planDavidSub',
   proseTranslations: [],
-  review: { status: 'needs_review' },
+  review: PLAN_APPROVALS.david12,
   movements: [
     { id: 'rooted', from: 1, to: 3, titleKey: 'planDavidRooted' },
     { id: 'teachable', from: 4, to: 6, titleKey: 'planDavidTeachable' },

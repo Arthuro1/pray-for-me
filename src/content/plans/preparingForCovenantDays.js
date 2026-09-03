@@ -1,4 +1,4 @@
-// Draft engaged-plan days on the shared guided-plan model.
+// Engaged-plan days on the shared guided-plan model.
 // English/French prose is authored here; the other 14 languages are lazy JSON
 // overlays in translations/covenant21/. All day titles are authored inline.
 // No Scripture text is stored. Partner tokens never infer gender or pronouns.
@@ -8,6 +8,8 @@
 // default automatically; these days are hand-written JSON, so the gate is
 // applied on the way out instead. A new day given `roles` is therefore gated
 // whether or not its author remembered — which is the point.
+import { PAUL_PLAN_SIGNOFF } from '../reviews/paul20260903';
+
 const withRoleGate = (day) => (day.roles
   ? { ...day, roleReviewStatus: day.roleReviewStatus || { status: 'needs_review' } }
   : day);
@@ -1188,7 +1190,7 @@ const AUTHORED_DAYS = [
       "en": "Christlike service never excuses domination, coercion, or abuse. Optional role reflections require theological review and do not grant control over another person.",
       "fr": "Le service à l’image de Christ n’excuse jamais domination, contrainte ou violence. Les réflexions de rôle facultatives demandent une relecture théologique et n’accordent aucun contrôle sur l’autre."
     },
-    "roleReviewStatus": { "status": "needs_review" },
+    "roleReviewStatus": { ...PAUL_PLAN_SIGNOFF },
     "roles": {
       "husband": {
         "ref": "Ephesians 5:25-29",
@@ -1265,4 +1267,3 @@ const AUTHORED_DAYS = [
 ];
 
 export const DAYS = AUTHORED_DAYS.map(withRoleGate);
-

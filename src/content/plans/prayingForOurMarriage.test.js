@@ -12,7 +12,7 @@ describe('Praying for Our Marriage content contract', () => {
     expect(plan).toMatchObject({
       id: 'marriage30', category: 'relationships', lifeStage: 'married',
       count: 30, version: 1, onboarding: 'married',
-      renewable: true, review: { status: 'needs_review' },
+      renewable: true, review: { status: 'approved' },
     });
     // Every overlay in translations/marriage30/ is still a structural stub, so
     // none is served yet and readers get the authored en/fr instead.
@@ -63,7 +63,7 @@ describe('Praying for Our Marriage content contract', () => {
     const roleDays = plan.days.filter((day) => day.roles);
     expect(roleDays).toHaveLength(2);
     for (const day of roleDays) {
-      expect(day.roleReviewStatus).toEqual({ status: 'needs_review' });
+      expect(day.roleReviewStatus).toEqual({ status: 'approved', reviewer: 'Paul', reviewedAt: '2026-09-03' });
       expect(Object.keys(day.roles).sort()).toEqual(['husband', 'wife']);
     }
   });

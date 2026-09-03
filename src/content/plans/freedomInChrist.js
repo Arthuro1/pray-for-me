@@ -45,12 +45,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // RELEASE GATE
 // ─────────────────────────────────────────────────────────────────────────────
-// `review.status` is deliberately `needs_review`: canUsePlan() therefore keeps
-// this plan out of a PRODUCTION build entirely until a named human has signed
-// off theology, safety and every shipped locale (src/lib/planReview.js). Given
-// the subject, that gate is the point — see docs/FREEDOM_DELIVERANCE.md for the
-// checklist a reviewer works through.
+// Paul approved this version on 2026-09-03. The existing named theology,
+// safety and locale gates stay intact; the approval concerns the current
+// authored content and language fallbacks, not nonexistent prose translations.
 import { DAYS } from './freedomInChristDays';
+import { PLAN_APPROVALS } from '../reviews/paul20260903';
 
 // The five movements. A reader sees these as calm milestones; the content model
 // is what actually carries them (every day names its movement).
@@ -133,7 +132,7 @@ export const FREEDOM_IN_CHRIST = {
     dayCompleted: 'deliverance_plan_day_completed',
     completed: 'deliverance_plan_completed',
   },
-  review: { status: 'needs_review' },
+  review: PLAN_APPROVALS.freedom30,
   movements: MOVEMENTS,
   continueThemes: CONTINUE_THEMES,
   lookBack: LOOK_BACK,

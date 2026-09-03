@@ -1,7 +1,7 @@
-// Draft content on the existing guided-plan engine. Do not publish until the
-// Scripture, theology, safety wording and all translations have been reviewed.
+// Content on the existing guided-plan engine, approved by Paul on 2026-09-03.
 // References are identifiers for the existing reader, never authored verse text.
 import { DAYS } from './preparingForCovenantDays';
+import { PLAN_APPROVALS } from '../reviews/paul20260903';
 
 export const PREPARING_FOR_COVENANT = {
   id: 'covenant21',
@@ -24,7 +24,7 @@ export const PREPARING_FOR_COVENANT = {
   // translationQuality.test.js enforces that.
   proseTranslations: ['de', 'es', 'pt', 'ru'],
   onboarding: 'engaged',
-  review: { status: 'needs_review' },
+  review: PLAN_APPROVALS.covenant21,
   analyticsEvents: {
     started: 'engaged_plan_started',
     dayCompleted: 'engaged_plan_day_completed',

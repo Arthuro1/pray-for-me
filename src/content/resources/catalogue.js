@@ -54,6 +54,7 @@
 // praying about, before they tap anything. Leave it out and the card draws a
 // calm generated tile instead — see src/lib/resourceThumbnail.js.
 import { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS } from './topics';
+import { PAUL_RESOURCE_SIGNOFF } from '../reviews/paul20260903';
 import { RELATIONSHIP_BOOKS } from './relationshipBooks';
 import { DELIVERANCE_BOOKS } from './deliveranceBooks';
 import { DAVID_STUDY_RESOURCES } from './davidStudyResources';
@@ -309,7 +310,9 @@ const CORE_RESOURCES = [
     originalLanguage: 'en',
     topics: ['premarital', 'marriage', 'covenant', 'communication', 'sexual-intimacy', 'marriage-roles'],
     lifeStages: ['engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A five-part marriage workbook series on biblical foundations, love, intimacy, roles and serving one another.',
@@ -330,7 +333,9 @@ const CORE_RESOURCES = [
     originalLanguage: 'en',
     topics: ['singleness', 'premarital', 'marriage', 'communication', 'sexuality', 'family', 'parenting', 'family-discipleship'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'A fifteen-lesson Christian family course covering singleness, preparation for marriage, marriage, sexuality and parenting.',
@@ -347,7 +352,9 @@ const CORE_RESOURCES = [
     originalLanguage: 'en',
     topics: ['singleness', 'purity', 'marriage', 'discernment'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
-    status: 'needs_review',
+    status: 'approved',
+    contentReview: { ...PAUL_RESOURCE_SIGNOFF },
+    safetyReview: { ...PAUL_RESOURCE_SIGNOFF },
     reviewLevel: 'sensitive',
     description: {
       en: 'Short question-and-answer episodes, many of them on singleness, dating and purity.',

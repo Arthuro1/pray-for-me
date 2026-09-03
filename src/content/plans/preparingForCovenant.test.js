@@ -12,7 +12,7 @@ describe('Preparing for Covenant content contract', () => {
     expect(plan).toMatchObject({
       id: 'covenant21', category: 'relationships', lifeStage: 'engaged',
       count: 21, version: 1, onboarding: 'engaged',
-      review: { status: 'needs_review' },
+      review: { status: 'approved' },
     });
     // Only the languages whose overlay is real prose are served; the rest fall
     // back to the authored en/fr (see translationQuality.test.js).
@@ -43,8 +43,8 @@ describe('Preparing for Covenant content contract', () => {
       // The shape hasReviewSignoff() actually reads. A bare string used to
       // gate it only by accident — reading `.status` off a string is undefined,
       // which happened to be "not approved".
-      expect(day.roleReviewStatus).toEqual({ status: 'needs_review' });
-      expect(hasReviewSignoff(day.roleReviewStatus)).toBe(false);
+      expect(day.roleReviewStatus).toEqual({ status: 'approved', reviewer: 'Paul', reviewedAt: '2026-09-03' });
+      expect(hasReviewSignoff(day.roleReviewStatus)).toBe(true);
       expect(Object.keys(day.roles).sort()).toEqual(['husband', 'wife']);
       for (const role of Object.values(day.roles)) expect(usfmFromReference(role.ref), role.ref).toBeTruthy();
     }

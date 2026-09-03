@@ -79,14 +79,14 @@ describe('the plan runs on the existing engine', () => {
     });
   });
 
-  it('stays unavailable in production until a human has signed it off', () => {
-    expect(isPlanReviewed(plan)).toBe(false);
-    expect(canUsePlan(plan, { preview: false })).toBe(false);
-    // It remains discoverable without exposing the curriculum or Start action.
+  it('is available after Paul’s sign-off without weakening the pending gate', () => {
+    expect(isPlanReviewed(plan)).toBe(true);
+    expect(canUsePlan(plan, { preview: false })).toBe(true);
+    const pending = { ...plan, review: { status: 'needs_review' } };
+    expect(canUsePlan(pending, { preview: false })).toBe(false);
     const production = plansByCategory(PLANS).flatMap((g) => g.plans);
     expect(production).toContain(plan);
-    // Reviewers still see it in a development preview.
-    expect(canUsePlan(plan, { preview: true })).toBe(true);
+    expect(canUsePlan(pending, { preview: true })).toBe(true);
   });
 
   it('declares only analytics events that exist on the allowlist, and no properties', async () => {

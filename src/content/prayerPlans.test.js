@@ -1,10 +1,9 @@
 // The catalogue itself: every plan in PLANS must be reachable by a reader.
 //
 // Visibility and launch eligibility are deliberately separate here. A plan
-// awaiting review still belongs in the catalogue — the reader discovers it and
-// is told why it is not available yet — while canUsePlan() holds the line at
-// the detail, start and day-content boundaries. So the one thing this module
-// must never do is drop a plan on the floor.
+// awaiting review still belongs in the data catalogue, while the UI filters
+// drafts unless review preview is enabled. canUsePlan() also holds the line at
+// the detail, start and day-content boundaries.
 import { describe, it, expect } from 'vitest';
 import { PLANS, PLAN_CATEGORIES, DEFAULT_PLAN_CATEGORY, plansByCategory } from './prayerPlans.js';
 
@@ -17,10 +16,9 @@ describe('plansByCategory', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('lists plans still awaiting review, so they can be found and explained', () => {
-    const pending = PLANS.filter((p) => p.review?.status === 'needs_review');
-    expect(pending.length).toBeGreaterThan(0); // guards the premise of this test
-    for (const plan of pending) expect(listed(PLANS), plan.id).toContain(plan.id);
+  it('keeps future drafts in the data catalogue for review preview', () => {
+    const pending = { ...PLANS[0], id: 'future-draft', review: { status: 'needs_review' } };
+    expect(listed([...PLANS, pending])).toContain(pending.id);
   });
 
   // Matching on the raw category value meant one typo — or a category retired
