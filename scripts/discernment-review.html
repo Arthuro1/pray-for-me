@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Discernement — Relecture des 16 langues</title>
+  <style>
+    :root { color-scheme: light; --ink:#292334; --muted:#655e70; --line:#ddd6e6; --accent:#634c82; --paper:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#f5f2f7; font:16px/1.75 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    header, main, footer { max-width:1280px; margin:auto; padding:28px 32px; }
+    header { padding-top:48px; padding-bottom:22px; }
+    .eyebrow { color:var(--accent); font-size:12px; letter-spacing:.12em; font-weight:750; text-transform:uppercase; }
+    h1 { font:600 clamp(26px,4vw,42px)/1.2 Georgia,serif; margin:10px 0 16px; }
+    header p { max-width:850px; margin:8px 0; }
+    .muted, footer { color:var(--muted); }
+    .status { display:inline-block; border:1px solid #d4c1a1; color:#6b4a18; background:#fff6e7; border-radius:6px; padding:3px 10px; font-size:13px; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:16px; align-items:end; border:1px solid var(--line); border-radius:14px; background:var(--paper); padding:20px; margin-top:24px; }
+    .field { display:flex; flex-direction:column; gap:5px; min-width:180px; flex:1; }
+    .field.wide { flex:2; }
+    label { font-size:14px; font-weight:600; }
+    select, button { font:inherit; font-size:15px; min-height:44px; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:8px 12px; background:white; }
+    select { width:100%; max-width:100%; }
+    button { cursor:pointer; }
+    button:hover { background:#f1edf6; }
+    button:disabled { opacity:.45; cursor:default; }
+    :focus-visible { outline:3px solid #9c7bc4; outline-offset:3px; }
+    .check { display:flex; gap:8px; align-items:center; min-height:44px; }
+    input { width:18px; height:18px; accent-color:var(--accent); }
+    .navigation { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; margin-top:18px; }
+    #position { margin:0; font-size:14px; }
+    main { padding-top:8px; }
+    .pair { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; margin-bottom:28px; align-items:start; }
+    .pair.single { grid-template-columns:minmax(0,1fr); max-width:900px; margin-inline:auto; }
+    article { min-width:0; border:1px solid var(--line); background:var(--paper); border-radius:14px; padding:30px; overflow-wrap:anywhere; }
+    article[dir="rtl"] { line-height:1.95; }
+    .language-label { color:var(--accent); font-size:13px; font-weight:700; margin:0 0 12px; }
+    h2 { font-size:25px; line-height:1.4; margin:8px 0 16px; font-weight:650; }
+    h3 { font-size:15px; color:var(--accent); margin:28px 0 10px; }
+    .prose { white-space:pre-line; margin:0; }
+    .movement { color:var(--muted); font-size:14px; }
+    .refs { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+    .ref { border:1px solid #ded5e7; background:#f8f5fb; border-radius:5px; padding:2px 8px; font-size:13px; }
+    ol { padding-inline-start:24px; }
+    li { margin:8px 0; }
+    .note { padding:12px; border-inline-start:3px solid #b99042; background:#fff8e9; margin-bottom:14px; }
+    .practice { background:#f6f2fa; border-radius:8px; padding:1px 18px 18px; margin-top:24px; }
+    .practice h3 { margin-top:16px; }
+    footer { padding-top:0; font-size:12px; }
+    noscript { display:block; margin:32px; }
+    @media (max-width:800px) {
+      header, main, footer { padding-inline:16px; }
+      header { padding-top:28px; }
+      .pair { grid-template-columns:minmax(0,1fr); }
+      article { padding:22px; }
+      .field { min-width:100%; }
+      .toolbar { padding:16px; gap:12px; }
+      h2 { font-size:22px; }
+    }
+    @media print {
+      body { background:white; font-size:11pt; }
+      header { padding:0 0 12px; }
+      header .eyebrow, header h1, header > p.muted, .toolbar, .navigation, footer { display:none; }
+      header p { margin:0; }
+      main { padding:0; }
+      .pair, .pair.single { display:block; max-width:none; margin:0; }
+      article { border:0; border-radius:0; padding:0; break-after:page; }
+      h2, h3 { break-after:avoid; }
+      .ref { color:black; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">Praystead · Atelier de relecture</div>
+    <h1>Un parcours, seize langues.</h1>
+    <p class="muted">Parcourez les 28 journées et comparez chaque traduction au manuscrit français. Les références bibliques sont partagées avec l’application ; lisez les passages dans votre Bible.</p>
+    <p><span class="status">Brouillon · Validation théologique, protection des personnes et langues en attente</span></p>
+    <div class="toolbar" aria-label="Choix de lecture">
+      <div class="field"><label for="language">Langue à relire</label><select id="language"></select></div>
+      <div class="field wide"><label for="section">Partie du parcours</label><select id="section"></select></div>
+      <label class="check" for="compare"><input id="compare" type="checkbox" checked>Comparer au français</label>
+      <button id="print" type="button">Imprimer la vue</button>
+    </div>
+    <div class="navigation">
+      <button id="previous" type="button">← Précédent</button>
+      <p id="position" role="status" aria-live="polite"></p>
+      <button id="next" type="button">Suivant →</button>
+    </div>
+  </header>
+  <main id="reader" aria-label="Contenu à relire"></main>
+  <footer>Copie locale de relecture · Empreinte du contenu : CONTENT_FINGERPRINT. Cette vue ne collecte aucune réponse et n’enregistre aucune validation.</footer>
+  <noscript>Activez JavaScript pour sélectionner une langue et lire le contenu intégré à ce fichier. Aucune connexion réseau n’est nécessaire.</noscript>
+  <script id="content-data" type="application/json"><!-- CONTENT_DATA --></script>
+  <script>
+    const data = JSON.parse(document.getElementById('content-data').textContent);
+    const language = document.getElementById('language');
+    const section = document.getElementById('section');
+    const compare = document.getElementById('compare');
+    const reader = document.getElementById('reader');
+    const previous = document.getElementById('previous');
+    const next = document.getElementById('next');
+    const parts = ['intro', ...Array.from({ length:28 }, (_, i) => String(i + 1)), 'completion'];
+    const languageName = (code) => data.languages.find((item) => item.code === code).label;
+    const create = (tag, text, className) => {
+      const element = document.createElement(tag);
+      if (text != null) element.textContent = text;
+      if (className) element.className = className;
+      return element;
+    };
+    for (const item of data.languages) {
+      const option = create('option', item.label);
+      option.value = item.code;
+      language.append(option);
+    }
+    for (const part of [...parts, 'all']) {
+      const title = part === 'intro' ? 'Introduction et repères bibliques'
+        : part === 'completion' ? 'Conclusion' : part === 'all' ? 'Tout le parcours (impression)'
+        : `Jour ${part} · ${data.content.fr.days[Number(part) - 1].theme}`;
+      const option = create('option', title);
+      option.value = part;
+      section.append(option);
+    }
+    const initial = new URLSearchParams(location.hash.slice(1));
+    language.value = data.content[initial.get('lang')] ? initial.get('lang') : 'fr';
+    section.value = [...parts, 'all'].includes(initial.get('section')) ? initial.get('section') : 'intro';
+    compare.checked = initial.get('compare') !== '0';
+
+    function addReferences(parent, refs, lang) {
+      if (!refs.length) return;
+      const list = create('div', null, 'refs');
+      for (const ref of refs) {
+        const match = ref.match(/^(.+?)\s+(\d.*)$/);
+        const book = Object.values(data.books).find((names) => names.en === match?.[1]);
+        const label = book?.[lang] ? `${book[lang]} ${match[2]}` : ref;
+        const chip = create('span', label, 'ref');
+        chip.dir = 'auto';
+        list.append(chip);
+      }
+      parent.append(list);
+    }
+    function addText(parent, heading, text, className) {
+      if (!text) return;
+      const block = create('section', null, className);
+      block.append(create('h3', heading), create('p', text, 'prose'));
+      parent.append(block);
+      return block;
+    }
+    function articleFor(code, part) {
+      const copy = data.content[code];
+      const article = create('article');
+      article.lang = code;
+      article.dir = data.rtl.includes(code) ? 'rtl' : 'ltr';
+      article.dataset.language = code;
+      article.dataset.part = part;
+      const badge = create('p', languageName(code), 'language-label');
+      article.append(badge);
+      if (part === 'intro') {
+        article.append(create('h2', copy.title), create('p', copy.subtitle, 'movement'));
+        addText(article, 'Introduction', copy.intro).firstChild.lang = 'fr';
+        addText(article, 'Repères bibliques', copy.biblical).firstChild.lang = 'fr';
+        addReferences(article, [data.references[0][0]], code);
+        const movements = create('ol');
+        copy.movements.forEach((value) => movements.append(create('li', value)));
+        article.append(movements);
+      } else if (part === 'completion') {
+        article.append(create('h2', copy.title));
+        addText(article, 'Conclusion', copy.completion).firstChild.lang = 'fr';
+      } else {
+        const index = Number(part) - 1;
+        const day = copy.days[index];
+        const labels = copy.labels;
+        const dayLabel = labels.planDayLabel.replace('{n}', part);
+        article.append(create('p', `${dayLabel} · ${copy.movements[Math.floor(index / 7)]}`, 'movement'));
+        article.append(create('h2', day.theme));
+        addReferences(article, [data.references[index][0], ...data.references[index][1]], code);
+        for (const [heading, text] of [
+          [labels.planDiscernmentReading, day.discernment.reading.replace(/^[,،，]\s*/, '')],
+          [labels.planDiscernmentReflection, day.reflection],
+          [labels.planDiscernmentPrayer, day.discernment.prayer],
+          [labels.planDiscernmentListening, day.discernment.listening],
+        ]) addText(article, heading, text);
+        const journal = create('section');
+        journal.append(create('h3', labels.planDiscernmentJournal));
+        if (day.discernment.journalNote) journal.append(create('p', day.discernment.journalNote, 'note'));
+        const questions = create('ol');
+        day.discernment.questions.forEach((question) => questions.append(create('li', question)));
+        journal.append(questions);
+        article.append(journal);
+        addText(article, labels.planPracticeToday, day.practice, 'practice');
+        addText(article, labels.planDiscernmentReview, day.discernment.review);
+        const deeper = addText(article, labels.planDiscernmentDeeper, day.discernment.deeper);
+        addReferences(deeper, data.references[index][2], code);
+      }
+      return article;
+    }
+    function render() {
+      const code = language.value;
+      const chosen = section.value;
+      compare.disabled = code === 'fr';
+      const comparing = compare.checked && code !== 'fr';
+      reader.replaceChildren();
+      const fragment = document.createDocumentFragment();
+      for (const part of chosen === 'all' ? parts : [chosen]) {
+        const pair = create('div', null, comparing ? 'pair' : 'pair single');
+        if (comparing) pair.append(articleFor('fr', part));
+        pair.append(articleFor(code, part));
+        fragment.append(pair);
+      }
+      reader.append(fragment);
+      const index = parts.indexOf(chosen);
+      previous.disabled = index <= 0;
+      next.disabled = index < 0 || index === parts.length - 1;
+      // Isolate the native language name so an RTL label cannot reverse 29 / 30.
+      document.getElementById('position').replaceChildren(
+        create('bdi', languageName(code)),
+        document.createTextNode(` · ${chosen === 'all' ? '30 parties' : `${index + 1} / 30`}${comparing ? ' · Français en regard' : ''}`),
+      );
+      const state = new URLSearchParams({ lang:code, section:chosen, compare:compare.checked ? '1' : '0' });
+      history.replaceState(null, '', `#${state}`);
+    }
+    for (const control of [language, section, compare]) control.addEventListener('change', render);
+    for (const [button, step] of [[previous, -1], [next, 1]]) {
+      button.addEventListener('click', () => {
+        section.value = parts[parts.indexOf(section.value) + step];
+        render();
+        reader.scrollIntoView({ block:'start' });
+      });
+    }
+    document.getElementById('print').addEventListener('click', () => window.print());
+    render();
+  </script>
+</body>
+</html>

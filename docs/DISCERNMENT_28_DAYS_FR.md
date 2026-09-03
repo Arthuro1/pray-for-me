@@ -1,0 +1,1575 @@
+# Discerner avant de s’engager
+
+**28 jours de prière à la lumière de la Bible et sous la conduite du Saint-Esprit**
+
+Version française pour relecture — septembre 2026.
+
+Le parcours est désormais intégré localement dans les 16 langues disponibles,
+en mode de relecture. Voir [l’état de l’intégration](./DISCERNMENT_IMPLEMENTATION.md)
+pour les validations éditoriales encore requises.
+
+## Entrer dans le parcours
+
+Tu désires te marier et tu te demandes comment discerner une relation. Peut-être
+as-tu reçu plusieurs demandes, plusieurs personnes t’intéressent, ou une relation
+existe déjà. Peut-être aussi n’as-tu personne de précis en vue. Tu peux présenter
+chacune de ces situations à Dieu avec confiance.
+
+La question de ce parcours est : **« Seigneur, à la lumière de ta Parole et sous
+la conduite de ton Esprit, aide-moi à discerner cette relation et à choisir avec
+sagesse, vérité et amour. »**
+
+La Bible est notre autorité. Le Saint-Esprit nous éclaire, nous reprend et nous
+conduit ; nous recherchons sa direction dans la prière et l’obéissance. Nos
+impressions et notre compréhension demandent toutefois à être éprouvées. Une
+conviction personnelle ne suffit pas à engager une autre personne à se marier.
+
+Le parcours t’aide à discerner une **prochaine étape**. Les 28 jours ne fixent
+aucune date limite pour choisir un conjoint. Une relation se connaît dans le
+temps. Ton célibat ne diminue ni ta valeur devant Dieu ni ta place dans l’Église.
+
+### Un rythme simple
+
+Prévois environ 15 à 20 minutes pour lire, méditer, prier et écrire. Les actes
+proposés peuvent demander un autre moment : une conversation ne doit pas être
+précipitée pour terminer une journée. Tu peux reprendre un jour ou prolonger une
+semaine. Les ressources externes sont facultatives et s’ajoutent à ce temps.
+
+Lis les passages dans ta Bible. Les méditations, prières et questions qui suivent
+sont des textes d’accompagnement, jamais de nouvelles paroles de l’Écriture.
+Les prières sont des propositions à personnaliser. Le temps d’écoute n’impose
+ni sensation particulière ni message à obtenir.
+
+Garde un carnet personnel en distinguant :
+
+| Ce que je note | Exemple |
+|---|---|
+| Fait observé | Lors de notre désaccord, cette personne a accepté que nous reprenions la discussion plus tard. |
+| Ressenti | Je me suis senti soulagé, inquiet ou attiré. |
+| Interprétation ou impression à éprouver | Je pense que nous pourrions construire quelque chose ensemble. |
+| Question encore ouverte | Comment chacun envisage-t-il le travail et les responsabilités familiales ? |
+
+Tes notes t’appartiennent. Tu peux utiliser des initiales et ne partager qu’un
+résumé choisi avec une personne de confiance. Personne n’a besoin d’accéder à
+ton carnet pour prouver que tu es sincère.
+
+### Adapter les journées à ta situation
+
+- **Plusieurs demandes reçues :** tu peux demander du temps, refuser une demande
+  ou ne poursuivre aucune possibilité. Une déclaration ne crée pas de dette.
+- **Plusieurs personnes intéressantes :** distingue intérêt et relation réelle.
+  Respecte chacune et clarifie tes intentions sans promesses incompatibles.
+- **Une relation en cours :** examinez votre désir réciproque de poursuivre ; les
+  conversations proposées supposent que chacun puisse parler librement.
+- **Aucune personne précise :** travaille tes attentes, ton caractère et tes
+  relations actuelles. Tu n’as pas besoin d’inventer un candidat pour avancer.
+
+Ces situations peuvent concerner les femmes comme les hommes. Les mêmes
+exigences de vérité, de respect et de maîtrise de soi s’appliquent à tous.
+
+**Dès le début :** le contrôle, l’humiliation, les menaces et les pressions
+sexuelles ou spirituelles ne doivent pas être minimisés. Si une situation te
+met en danger, cherche un soutien sûr sans attendre le jour 25. La prière et le
+pardon ne t’obligent pas à t’exposer à la violence. Les démarches de conversation
+de ce carnet sont facultatives et doivent être adaptées à ta sécurité.
+
+## Sommaire
+
+| Semaine | Jours | Cheminement |
+|---|---|---|
+| 1 — Présenter mon cœur à Dieu | 1–7 | Sagesse, Parole, Saint-Esprit, motivations, célibat, inquiétudes, bilan. |
+| 2 — Connaître l’autre avec vérité | 8–14 | Mariage, amour, fruit de l’Esprit, foi vécue, honnêteté, désaccords, bilan. |
+| 3 — Examiner une vie commune | 15–21 | Foi partagée, argent, famille, sexualité, plusieurs demandes, plusieurs intérêts, bilan. |
+| 4 — Éprouver et choisir | 22–28 | Impressions, sagesse, conseils, comportements destructeurs, inconnues, parole claire, prochaine étape. |
+
+## Semaine 1 — Présenter mon cœur à Dieu
+
+### Jour 1 — Seigneur, donne-moi la sagesse pour discerner
+
+**Lire la Parole : Jacques 1.2–8.** Observe la situation des croyants, la manière
+dont Dieu donne et l’attitude de confiance à laquelle Jacques les appelle.
+
+**Comprendre et méditer.** Jacques écrit à des croyants confrontés à des
+épreuves. Il les invite à persévérer et à demander à Dieu la sagesse qui leur
+manque. Ce passage ne donne pas une méthode pour obtenir le nom d’un conjoint ;
+il nous apprend à nous tourner vers Dieu au milieu de nos difficultés.
+
+Dans le discernement amoureux, cette sagesse commence par reconnaître nos
+limites. Une attirance sincère peut précéder une connaissance suffisante de
+l’autre. L’envie de décider vite peut venir de la peur de perdre une occasion.
+Demander à Dieu de nous éclairer, c’est accepter qu’une conversation, une
+observation ou une correction change notre manière de voir.
+
+La confiance en Dieu ne signifie pas que tu dois déjà être certain de ton choix.
+Hésiter entre des personnes n’est pas, en soi, un manque de foi. Tu peux lui
+confier tes questions sans exiger que toutes trouvent aujourd’hui leur réponse.
+
+**Prier.** Père, je viens avec mon désir d’aimer et de construire un foyer. Tu
+connais mes espoirs et mes attachements. Je reconnais que la peur, l’apparence ou
+le besoin d’être choisi peuvent influencer mon regard. Donne-moi ta sagesse.
+Pardonne-moi lorsque je cherche seulement à faire confirmer mes préférences.
+Saint-Esprit, éclaire mon intelligence dans la Parole et rends mon cœur
+disponible à ta direction. Apprends-moi à respecter chaque personne concernée.
+Garde-moi des promesses prématurées et donne-moi le courage de poser les
+questions nécessaires. Que mon désir de mariage reste soumis à toi. Au nom de
+Jésus, amen.
+
+**Écouter.** Relis le passage dans le calme. Demande : « Saint-Esprit, aide-moi
+à reconnaître ce que je dois comprendre et mettre en pratique aujourd’hui. »
+Note une attitude, une question ou une démarche. Si une impression apparaît,
+note-la comme telle et laisse-la être éprouvée.
+
+**Écrire dans mon carnet.**
+
+1. Qu’est-ce que j’espère recevoir de ce parcours ?
+2. Quelle issue ai-je le plus peur d’envisager, et pourquoi ?
+3. Quel fait ai-je tendance à minimiser parce qu’il contrarie mon désir ?
+
+**Un pas concret.** Identifie une information qui te manque et une manière
+respectueuse de la connaître. Sans personne précise, écris une attente
+concernant le mariage que tu souhaites examiner devant Dieu.
+
+**Pour approfondir.** Jacques 3.13–18. Ressource facultative : la série sur la
+sagesse de [BibleProject en français][bibleproject-fr].
+
+### Jour 2 — Accueillir l’autorité de la Parole
+
+**Lire la Parole : 2 Timothée 3.14–17.** Observe ce que les Écritures apportent
+à Timothée et vers quelle vie elles le forment.
+
+**Comprendre et méditer.** Paul encourage Timothée à demeurer dans ce qu’il a
+reçu. Les Écritures le conduisent à la sagesse pour le salut par la foi en
+Jésus-Christ et l’équipent pour agir justement. Elles enseignent aussi en
+reprenant et en corrigeant.
+
+Dans une relation, nous pouvons chercher les passages qui rassurent notre
+préférence et éviter ceux qui interrogent notre conduite. Accueillir l’autorité
+de la Bible demande de la laisser examiner aussi notre manière de parler, de
+désirer, de promettre et de traiter l’autre.
+
+Un verset isolé ne doit pas porter une conclusion que son contexte ne porte
+pas. Une histoire de mariage dans la Bible n’est pas automatiquement une marche
+à suivre pour chaque célibataire. Lis ce qui précède et ce qui suit ; distingue
+le commandement, le récit et l’application que tu proposes. Dieu ne te demande
+pas de faire dire au texte le nom de la personne que tu espères épouser.
+
+**Prier.** Seigneur, merci pour ta Parole qui m’enseigne et me forme. Délivre-moi
+de l’habitude de ne retenir que ce qui me convient. Donne-moi de recevoir avec
+confiance ce qui me reprend. Saint-Esprit, aide-moi à comprendre les Écritures
+et à leur obéir dans ma vie affective. Apprends-moi à reconnaître la différence
+entre ce que le texte dit et ce que j’aimerais lui faire dire. Que mes choix
+expriment mon attachement à Jésus. Amen.
+
+**Écouter.** Reprends un enseignement clair du passage. Quelle place pourrais-tu
+lui donner aujourd’hui ? Tu peux demander de l’aide pour comprendre un texte
+sans attendre de tout maîtriser avant de prier.
+
+**Écrire dans mon carnet.**
+
+1. Quelle conviction sur le mariage vient réellement d’un passage compris dans son contexte ?
+2. Quelle attente vient plutôt de mon milieu, de ma famille ou d’une expérience ?
+3. Dans quel domaine la Parole m’invite-t-elle déjà à changer ?
+
+**Un pas concret.** Choisis un verset souvent utilisé dans tes réflexions
+amoureuses et lis son paragraphe entier. Écris son sens principal avant ton
+application personnelle.
+
+**Pour approfondir.** Jacques 1.22–25. Ressource facultative : « Comment lire la
+Bible » sur [BibleProject][bibleproject-fr].
+
+### Jour 3 — Me laisser conduire par le Saint-Esprit
+
+**Lire la Parole : Romains 8.12–17.** Observe le lien entre la conduite de
+l’Esprit, la lutte contre le péché et notre relation au Père.
+
+**Comprendre et méditer.** Paul décrit une vie transformée par l’Esprit et
+l’assurance d’appartenir à Dieu comme ses enfants. Être conduit par l’Esprit
+concerne toute notre marche avec Dieu. Dans ce passage, il ne s’agit pas d’un
+code permettant de déchiffrer chaque décision particulière.
+
+Tu peux néanmoins rechercher réellement sa direction pour une relation :
+demander qu’il t’éclaire, corrige tes motivations et t’aide à reconnaître le pas
+juste. Cette disponibilité se vit aussi dans ce qui est déjà clair : renoncer
+au mensonge, respecter un refus, tenir une parole ou demander pardon.
+
+Parfois, nous attendons une indication extraordinaire tout en repoussant une
+obéissance simple. Avancer avec l’Esprit, c’est aussi accueillir cette
+transformation quotidienne. Tu n’as pas à fabriquer une émotion ou une phrase
+intérieure pour prouver qu’il est présent. Approche le Père comme son enfant,
+avec tes questions et avec confiance.
+
+**Prier.** Père, merci de m’accueillir en Jésus. Saint-Esprit, conduis-moi dans
+la vérité et fais grandir en moi une vie qui plaît à Dieu. Je te présente cette
+relation et les choix qui m’attendent. Reprends ce qui me détourne de toi,
+éclaire ce que je comprends mal et affermis ce qui est juste. Donne-moi le
+courage d’obéir à ce que tu m’as déjà fait comprendre. Que mon désir d’une
+réponse ne me fasse pas négliger ma communion avec toi. Amen.
+
+**Écouter.** Reste un moment devant Dieu avec cette demande : « Quelle attitude
+ai-je besoin de te remettre ? » Reviens à la lecture et note librement ce
+qu’elle met en lumière, sans lui attribuer une certitude qu’elle ne donne pas.
+
+**Écrire dans mon carnet.**
+
+1. Comment est-ce que je recherche habituellement la direction de l’Esprit ?
+2. Quelle obéissance simple ai-je repoussée ?
+3. Qu’est-ce que le fait d’être aimé du Père change à mon besoin d’être choisi ?
+
+**Un pas concret.** Mets en pratique une chose déjà claire : rectifier une
+parole, honorer une limite ou reprendre un temps de lecture et de prière.
+
+**Pour approfondir.** Galates 5.16–25. Ressource facultative : « Le Saint-Esprit »
+sur [BibleProject][bibleproject-fr]. [Relire Romains 8][romains-8].
+
+### Jour 4 — Présenter mes désirs et mes motivations à Dieu
+
+**Lire la Parole : Psaume 139.23–24**, puis relire les versets 1–6.
+Observe comment la demande finale s’inscrit dans la connaissance que Dieu a
+déjà du psalmiste.
+
+**Comprendre et méditer.** Le psalmiste s’adresse à un Dieu qui le connaît
+profondément et lui demande d’examiner sa vie. Cette prière peut nous aider à
+sortir de la volonté de paraître irréprochables. Dieu connaît nos désirs avant
+que nous trouvions les mots pour les nommer.
+
+Le désir de mariage peut mêler l’envie d’aimer, de partager la foi, de fonder un
+foyer, la peur de la solitude et le besoin de rassurer notre entourage. Reconnaître
+ce mélange ouvre un chemin de vérité. Cela ne rend pas ton désir illégitime.
+
+Demande-toi aussi si tu regardes une personne pour elle-même ou surtout pour
+ce qu’elle pourrait résoudre dans ta vie. Un conjoint ne peut porter toute la
+responsabilité de ton identité et de ton apaisement. Confie tes besoins à Dieu
+et accueille les formes de soutien, d’amitié et de croissance déjà possibles.
+Tu peux apprendre à aimer sans attendre d’être devenu une personne sans fragilité.
+
+**Prier.** Seigneur, tu connais mon cœur. Je te confie mon désir de tendresse,
+de présence et d’engagement. Montre-moi les attentes que j’ai du mal à reconnaître.
+Pardonne-moi si je réduis quelqu’un au rôle qu’il pourrait jouer pour moi.
+Saint-Esprit, travaille mes motivations et apprends-moi à aimer avec vérité.
+Aide-moi à recevoir l’amitié et le soutien dont j’ai besoin aujourd’hui. Conduis
+mes désirs pour qu’ils trouvent leur juste place devant toi. Amen.
+
+**Écouter.** Nomme simplement un désir et une peur. Présente-les à Dieu sans
+les corriger immédiatement. Puis demande quelle réponse fidèle tu peux leur
+apporter aujourd’hui.
+
+**Écrire dans mon carnet.**
+
+1. Qu’est-ce qui m’attire dans le mariage, au-delà de la cérémonie et du statut ?
+2. Qu’est-ce que j’attends de l’autre qu’aucune personne ne pourrait garantir ?
+3. Quel besoin puis-je déjà confier à Dieu et partager avec une personne sûre ?
+
+**Un pas concret.** Complète deux phrases : « Je désire me marier parce que… »
+et « J’ai peur de rester célibataire parce que… ». Relis-les sans te condamner.
+
+**Pour approfondir.** Psaume 62.6–9. Reviens à tes notes du jour 1.
+
+### Jour 5 — Honorer ma vie de célibataire
+
+**Lire la Parole : 1 Corinthiens 7.7–9, 32–35.** Si possible, parcours aussi
+les versets 25–31 pour situer les conseils de Paul.
+
+**Comprendre et méditer.** Paul considère le mariage et le célibat devant Dieu.
+Il souligne les possibilités de disponibilité pour le Seigneur et explique
+qu’il recherche le bien des destinataires, sans leur tendre de piège. Ses
+conseils tiennent aussi compte de leur situation.
+
+Ce passage nous empêche de considérer le célibat comme une vie chrétienne
+incomplète. Ton service, tes amitiés et ton appartenance à l’Église ont une valeur
+dès maintenant. Le mariage est un engagement à discerner, pas une promotion
+spirituelle à obtenir.
+
+Tu peux accueillir cela tout en ressentant la peine d’un désir insatisfait.
+Exprimer cette peine ne te rend pas ingrat. Tu n’as pas non plus à conclure
+aujourd’hui que tu resteras célibataire toute ta vie. Vis ta situation présente
+devant Dieu, en gardant ton désir ouvert et tes relations vivantes. La croissance
+personnelle ne constitue pas un moyen de rendre Dieu redevable d’un mariage.
+
+**Prier.** Père, je te remercie pour la vie que tu me donnes aujourd’hui. Je te
+confie aussi les attentes qui me font souffrir. Libère-moi de la comparaison et
+de l’idée que ma valeur dépend d’un engagement amoureux. Saint-Esprit,
+apprends-moi à servir, à aimer et à recevoir l’amour dans ma situation actuelle.
+Je te remets mon désir de mariage. Garde mon espérance attachée à toi, et
+montre-moi les relations que je peux cultiver maintenant. Amen.
+
+**Écouter.** Fais mémoire d’une relation, d’un don reçu ou d’une possibilité de
+service pour laquelle tu peux remercier Dieu. Laisse aussi une place honnête
+à ce qui reste douloureux.
+
+**Écrire dans mon carnet.**
+
+1. Dans quelles situations ai-je l’impression de devoir justifier mon célibat ?
+2. Quelle joie ou responsabilité présente est-ce que je reporte à « quand je serai marié » ?
+3. Qui m’aide à me sentir pleinement membre de la communauté ?
+
+**Un pas concret.** Consacre un moment à une amitié, un engagement ou un projet
+qui a de la valeur aujourd’hui, sans en faire une stratégie de rencontre.
+
+**Pour approfondir.** [Relire 1 Corinthiens 7][corinthiens-7]. Ressource
+facultative : la leçon 5, « Le célibat », de [La famille chrétienne][sgc-fr].
+
+### Jour 6 — Confier mes inquiétudes et les pressions que je ressens
+
+**Lire la Parole : Philippiens 4.4–9.** Observe la place de la prière, de la
+reconnaissance, de l’attention et de la mise en pratique.
+
+**Comprendre et méditer.** Paul invite les croyants à présenter leurs besoins
+à Dieu et à orienter leur pensée vers ce qui est vrai et juste. La paix de Dieu
+accompagne une vie tournée vers lui. Le texte n’en fait pas un signal permettant
+de certifier qu’une personne est le bon conjoint.
+
+L’âge, les remarques familiales ou la peur qu’une occasion disparaisse peuvent
+créer une urgence intérieure. Ces pressions méritent d’être nommées. Leur force
+ne constitue pas une raison suffisante pour s’engager. À l’inverse, ressentir
+de l’inquiétude ne prouve pas que Dieu refuse une relation.
+
+Tu peux prier tout en prenant des mesures simples : demander un délai,
+limiter certaines discussions répétitives et te rendre disponible pour
+une conversation importante. Si l’inquiétude envahit ta vie, chercher un soutien
+adapté est compatible avec la confiance en Dieu. Il n’est pas nécessaire de
+nier ton état pour venir devant lui.
+
+**Prier.** Seigneur, voici ce qui m’inquiète et ce que je crains de perdre.
+Je te confie les paroles qui me pressent et les comparaisons qui me fatiguent.
+Merci de m’accueillir avec mes besoins. Saint-Esprit, aide-moi à reconnaître ce
+qui est vrai et à ne pas décider sous la seule force de la peur. Accorde-moi
+ta paix et la liberté de demander le temps nécessaire. Apprends-moi à poser
+des limites avec respect et à recevoir de l’aide. Amen.
+
+**Écouter.** Présente une inquiétude précise à Dieu. Après un temps de silence,
+écris ce qui relève d’une démarche possible et ce que tu ne maîtrises pas.
+Tu n’as pas à produire le calme avant de poursuivre la journée.
+
+**Écrire dans mon carnet.**
+
+1. Qui ou quoi me fait sentir que je dois choisir rapidement ?
+2. Quelle différence y a-t-il entre une contrainte réelle et une peur anticipée ?
+3. De quelle aide ai-je besoin pour retrouver de l’espace de réflexion ?
+
+**Un pas concret.** Prépare une phrase simple : « Merci de vous soucier de moi.
+J’ai besoin de temps pour discerner et je vous parlerai de ma décision lorsque
+je serai prêt. » Adapte-la à ta situation.
+
+**Pour approfondir.** Matthieu 6.25–34. Note ce que Jésus invite à chercher
+aujourd’hui, sans transformer ce texte en garantie d’un mariage futur.
+
+### Jour 7 — Bilan : suis-je disponible pour être réorienté ?
+
+**Lire la Parole : Psaume 25.4–5**, puis les versets 8–10.
+Observe ce que le psalmiste demande à Dieu de lui apprendre.
+
+**Comprendre et méditer.** Le psalmiste demande à être instruit et guidé. Il
+ne présente pas seulement un résultat à obtenir, mais sa propre marche à
+conduire. Cette posture donne son sens à notre première semaine.
+
+Relire ne consiste pas à vérifier si tu as assez bien prié pour mériter une
+réponse. Regarde plutôt ce qui devient plus vrai : un désir mieux nommé, une
+pression reconnue, une attente remise à sa place ou une obéissance commencée.
+Une prise de conscience modeste peut déjà rendre ton regard plus juste.
+
+Tu peux encore préférer une issue particulière tout en restant disponible
+devant Dieu. L’enjeu est de ne pas disqualifier d’avance tout ce qui la
+contrarierait. Une correction peut porter sur ton rythme, sur ta manière de
+connaître l’autre ou sur la relation elle-même. Aucun bilan ne t’oblige à décider
+aujourd’hui. Fais place à la reconnaissance et à la prochaine étape d’apprentissage.
+
+**Prier.** Père, merci pour ce que tu m’as permis de comprendre cette semaine.
+Je te présente mes progrès et mes résistances. Saint-Esprit, garde mon cœur
+enseignable. Si je m’accroche à une conclusion avant de connaître la réalité,
+aide-moi à desserrer mon emprise. Si la peur me ferme à toute relation, conduis-moi
+avec douceur. Donne-moi de continuer à te chercher avec confiance et de mettre
+en pratique ce qui est devenu clair. Au nom de Jésus, amen.
+
+**Écouter.** Relis une note qui t’a marqué. Présente-la à Dieu, puis demeure un
+moment dans la gratitude. Ne transforme pas la répétition d’une pensée en
+preuve automatique de son origine divine.
+
+**Écrire dans mon carnet.**
+
+1. Qu’ai-je appris sur mes motivations, mes peurs et mes attentes ?
+2. Sur quel point suis-je prêt à être corrigé ou réorienté ?
+3. Quelle question vais-je garder ouverte pour la semaine suivante ?
+
+**Un pas concret.** Fais un bilan en trois lignes : une reconnaissance, une
+attente à remettre à Dieu, une démarche à poursuivre. Si tu le souhaites,
+partage seulement ces trois lignes avec une personne de confiance.
+
+**Pour approfondir.** Reprends le passage de cette semaine qui demande encore
+ton attention. Le même texte peut être médité plusieurs jours.
+
+
+## Semaine 2 — Connaître l’autre avec vérité
+
+### Jour 8 — Comprendre l’engagement du mariage
+
+**Lire la Parole : Genèse 2.18–24.** Observe ce que le récit dit de la relation,
+de l’attachement et de la vie commune.
+
+**Comprendre et méditer.** Le récit de la création présente l’union de l’homme
+et de la femme dans une relation qui engage leur vie. Il invite à considérer
+le mariage avec sérieux : il s’agit de construire une communion et une fidélité,
+au-delà de la joie des débuts ou de la réussite d’une cérémonie.
+
+Ce passage n’explique pas comment reconnaître, parmi plusieurs personnes, un
+conjoint qui serait désigné par un signe secret. La rencontre d’Adam et Ève
+appartient au récit de la création ; ses circonstances ne constituent pas une
+méthode de recherche d’un conjoint. La Bible reconnaît aussi la valeur du
+célibat, comme nous l’avons vu au jour 5.
+
+Demande-toi aujourd’hui ce que tu souhaites réellement partager : des décisions,
+des responsabilités, une vie de foi, des joies et des difficultés. Une personne
+n’est pas une réponse à tous tes besoins. Se préparer à l’engagement suppose
+d’apprendre à donner et à recevoir, à parler vrai et à respecter la liberté
+de l’autre. Un projet de mariage doit pouvoir être voulu et exprimé par les
+deux personnes.
+
+**Prier.** Seigneur, forme en moi une vision juste du mariage. Apprends-moi à
+désirer une vie partagée avec fidélité, et pas seulement le soulagement d’être
+choisi. Saint-Esprit, éclaire les attentes que je dois approfondir ou corriger.
+Prépare-moi à assumer mes responsabilités et à recevoir l’autre comme une
+personne entière, avec sa liberté, son histoire et ses limites. Que mon désir
+d’engagement demeure soumis à ta Parole. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu l’image du mariage que tu portes depuis ton enfance.
+Laisse venir à ta conscience ce qui mérite d’être examiné. Tu peux reconnaître
+une influence familiale sans condamner toute ton histoire.
+
+**Écrire dans mon carnet.**
+
+1. Qu’est-ce que le mariage représente pour moi, au-delà de la cérémonie ?
+2. Quelle responsabilité suis-je prêt à assumer, et laquelle m’inquiète ?
+3. Quelle attente ai-je besoin de confronter à la Parole et à la réalité ?
+
+**Un pas concret.** Termine ces deux phrases avec tes propres mots : « Dans le
+mariage, je souhaite construire… » et « Pour y contribuer, j’ai besoin de
+grandir dans… ». Si une relation existe, garde ces notes pour une conversation
+au moment approprié.
+
+**Pour approfondir.** Lis Matthieu 19.3–6 : Jésus répond à une question sur le
+divorce en rappelant le sérieux de l’union. Ce passage ne donne pas une procédure
+pour sélectionner un conjoint.
+
+### Jour 9 — Reconnaître l’amour dans les actes
+
+**Lire la Parole : 1 Corinthiens 13.4–7.** Replace ces versets entre les
+chapitres 12 et 14, consacrés notamment aux dons et à la vie de la communauté.
+
+**Comprendre et méditer.** Paul décrit l’amour au milieu d’un enseignement sur
+la vie de l’Église. Ce texte concerne donc l’ensemble des relations chrétiennes.
+Son application à une relation amoureuse est légitime, mais il n’a pas été
+écrit comme une liste permettant de certifier un futur mariage.
+
+L’attirance peut être un beau commencement. Elle ne renseigne pas, à elle
+seule, sur la manière dont deux personnes se traiteront dans le temps. Observe
+la place laissée à l’écoute, à la vérité, au respect d’un refus et à la joie
+de l’autre. Pose aussi ces questions à ta propre conduite : aimer ne consiste
+pas seulement à attendre des qualités chez quelqu’un.
+
+Tu n’as pas à fabriquer une attirance pour une personne dont tu reconnais les
+qualités. Tu n’as pas non plus à appeler amour une relation qui t’humilie.
+La patience chrétienne ne demande pas de subir la violence ; le passage
+associe précisément l’amour au refus de l’injustice. Discerner permet de
+reconnaître ce qui se construit réellement, sans idéaliser une émotion ni
+réduire l’autre à ses défauts.
+
+**Prier.** Jésus, apprends-moi à aimer dans la vérité. Merci pour la capacité
+d’éprouver de l’affection et de me réjouir d’une rencontre. Saint-Esprit, fais
+grandir en moi un amour patient et attentif, libre de la possession et du
+mépris. Ouvre mes yeux sur ma manière de traiter les autres. Donne-moi aussi
+la lucidité nécessaire pour ne pas confondre l’intensité d’un sentiment avec
+la qualité d’une relation. Au nom de Jésus, amen.
+
+**Écouter.** Pense à une interaction récente. Présente-la à Dieu sans en
+réécrire les faits. Quelle attitude d’amour peux-tu choisir maintenant, même
+si cette relation ne devient jamais une relation de couple ?
+
+**Écrire dans mon carnet.**
+
+1. Qu’est-ce qui m’attire, et qu’est-ce que je connais réellement de la personne ?
+2. Quel acte concret de respect ou d’attention ai-je observé ou posé ?
+3. À quel endroit l’attirance me pousse-t-elle à minimiser une difficulté ?
+
+**Un pas concret.** Pose un geste d’attention sans chercher une réponse
+romantique en échange. Dans une relation existante, observe les situations
+ordinaires ; n’organise pas d’épreuve pour tester l’autre.
+
+**Pour approfondir.** Lis 1 Jean 3.16–18 sur un amour qui se traduit dans les
+actes et le partage.
+
+### Jour 10 — Regarder le fruit qui mûrit
+
+**Lire la Parole : Galates 5.16–25.** Observe comment Paul relie l’action de
+l’Esprit à la conduite quotidienne.
+
+**Comprendre et méditer.** Paul s’adresse à des croyants appelés à marcher par
+l’Esprit. Le fruit qu’il décrit ne constitue pas un talent réservé à quelques
+personnes. Il touche la manière de vivre, de désirer et d’entrer en relation.
+
+Dans le discernement amoureux, une parole éloquente, une responsabilité dans
+l’Église ou une expérience spirituelle impressionnante ne suffisent pas à
+connaître le caractère. Regarde ce qui se manifeste dans la durée : comment
+la personne accueille-t-elle une contrariété, partage-t-elle l’attention,
+reconnaît-elle ses torts, respecte-t-elle les limites ? Une observation isolée
+ne raconte pas toute une vie ; des comportements répétés méritent néanmoins
+d’être pris au sérieux.
+
+Ce regard vaut aussi pour toi. Le parcours ne te place pas au-dessus de
+l’autre en position d’examinateur. Demande au Saint-Esprit de faire mûrir ton
+propre caractère. Tu peux reconnaître une croissance réelle sans exiger la
+perfection. Une demande de pardon devient crédible lorsqu’elle s’accompagne
+d’une responsabilité assumée et d’actes cohérents dans le temps ; elle ne
+t’oblige pas à poursuivre une relation.
+
+**Prier.** Saint-Esprit, fais porter du fruit à ma vie. Travaille ma patience,
+ma douceur et ma maîtrise de moi dans les situations où je les perds
+facilement. Garde-moi de juger sur l’apparence ou sur le prestige spirituel.
+Donne-moi de reconnaître une croissance sincère et de nommer honnêtement
+ce qui se répète sans changer. Que je reste disponible à ton œuvre dans
+mon propre cœur. Au nom de Jésus, amen.
+
+**Écouter.** Relis lentement les qualités évoquées par Paul. Arrête-toi sur
+une seule et demande à Dieu comment la pratiquer aujourd’hui. Tu n’as pas
+besoin de mesurer toute ta maturité en quelques minutes.
+
+**Écrire dans mon carnet.**
+
+1. Dans quelle situation ai-je particulièrement besoin de grandir ?
+2. Quels comportements ai-je observés plusieurs fois, avec quel contexte ?
+3. Ai-je confondu aisance spirituelle, réputation ou réussite avec maturité ?
+
+**Un pas concret.** Choisis une habitude précise à travailler cette semaine :
+laisser finir une phrase, honorer une limite, reconnaître un tort ou tenir
+un engagement. Note ce que tu as effectivement pratiqué.
+
+**Pour approfondir.** Relis Galates 5.13–15 pour situer cette conduite dans
+l’appel à servir les autres par amour.
+
+### Jour 11 — Chercher une foi vécue
+
+**Lire la Parole : Jacques 2.14–18.** Repère l’exemple matériel et concret
+choisi par Jacques pour parler de la foi.
+
+**Comprendre et méditer.** Jacques met en cause une profession de foi qui
+reste sans réponse devant les besoins d’un frère ou d’une sœur. Il demande
+une cohérence entre ce qui est affirmé et ce qui est vécu. Le passage
+n’enseigne pas qu’il faudrait être riche, très actif ou socialement à l’aise
+pour avoir une foi réelle.
+
+Dans une relation, la foi partagée se découvre aussi hors des conversations
+religieuses. Comment chacun traite-t-il une personne qui ne peut rien lui
+apporter ? Quelle place donne-t-il à la compassion, à la justice, au service
+discret ? Une personne réservée peut vivre une foi profonde ; une personne
+très visible peut encore avoir beaucoup à apprendre. Les moyens disponibles,
+la santé et les responsabilités de chacun doivent être considérés avec équité.
+
+Regarde ces éléments avec humilité. Tu ne connais pas tout ce que l’autre
+fait en secret, et tu n’es pas chargé de prononcer un verdict sur son salut.
+Tu peux toutefois demander si votre relation encourage une foi sincère et
+une obéissance concrète. Commence par laisser la Parole interroger ta propre
+manière d’aimer.
+
+**Prier.** Père, que ma foi prenne corps dans ma vie. Pardonne mes paroles
+généreuses lorsqu’elles ne s’accompagnent d’aucune attention réelle.
+Saint-Esprit, rends-moi sensible aux besoins que je peux accueillir avec
+les moyens dont je dispose. Apprends-moi à connaître l’autre avec justesse,
+sans fascination pour sa visibilité ni mépris pour sa discrétion.
+Conduis-moi vers des relations où la foi et les actes se répondent.
+Au nom de Jésus, amen.
+
+**Écouter.** Demande à Dieu de te rendre attentif à une personne ou à une
+responsabilité que tu négliges. Examine ce qui te vient à l’esprit, puis
+choisis une réponse proportionnée à ta situation.
+
+**Écrire dans mon carnet.**
+
+1. Où ma foi se traduit-elle déjà dans mes actes ordinaires ?
+2. Que sais-je de la manière dont l’autre traite les personnes vulnérables ?
+3. Quelle conclusion ai-je tirée trop vite à partir d’une réputation ?
+
+**Un pas concret.** Accomplis un acte de service accessible, sans le mettre
+en scène pour impressionner. Si tu réfléchis à une personne, reste attentif
+aux occasions naturelles de connaître sa vie.
+
+**Pour approfondir.** Lis Jacques 2.1–9 : l’interdiction du favoritisme éclaire
+aussi notre tendance à privilégier le statut et l’apparence.
+
+### Jour 12 — S’appuyer sur une parole fiable
+
+**Lire la Parole : Éphésiens 4.25–28.** Observe les changements concrets
+demandés aux membres de la communauté.
+
+**Comprendre et méditer.** Paul relie la vie nouvelle à des actes précis :
+parler vrai, assumer sa conduite et agir honnêtement. Cette éthique concerne
+tous les croyants. Dans une relation amoureuse, elle aide à poser les
+fondations de la confiance.
+
+Être fiable ne signifie pas disposer d’un bon revenu, d’un diplôme ou d’une
+vie sans difficultés. Une personne peut traverser une période de chômage
+tout en étant responsable et sincère. Une autre peut avoir une belle
+situation et multiplier les mensonges. Regarde la relation entre les
+engagements pris, les actes accomplis et la manière de reconnaître un écart.
+
+La transparence se construit selon la profondeur de la relation. Elle ne
+donne aucun droit de contrôler les comptes, les mots de passe ou tous les
+échanges privés de l’autre. En revanche, un projet de mariage demande des
+conversations honnêtes sur les engagements et les réalités qui affecteront
+la vie commune. On peut respecter la vie privée et refuser une présentation
+trompeuse. Accueillir une vérité difficile permet de réfléchir sur une base
+réelle ; cela ne t’oblige pas à tout accepter.
+
+**Prier.** Dieu de vérité, apprends-moi à parler avec simplicité et à tenir
+parole. Si j’ai exagéré, caché une réalité importante ou promis trop vite,
+donne-moi le courage de rectifier. Saint-Esprit, libère-moi du besoin de
+paraître et de la tentation de contrôler. Aide-moi à construire la confiance
+par des actes honnêtes, à reconnaître mes limites et à respecter celles de
+l’autre. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu un engagement récent. As-tu besoin de l’honorer,
+d’en préciser les limites ou de reconnaître que tu ne pourras pas le tenir ?
+Accueille cette responsabilité sans fabriquer d’excuse spirituelle.
+
+**Écrire dans mon carnet.**
+
+1. Sur quels faits repose ma confiance actuelle ?
+2. Comment chacun réagit-il lorsqu’une promesse n’a pas été tenue ?
+3. Quelle conversation honnête serait appropriée au stade de la relation ?
+
+**Un pas concret.** Honore un engagement précis ou rectifie clairement une
+parole inexacte. Pour une question concernant l’autre, prépare une demande
+respectueuse plutôt qu’une vérification cachée.
+
+**Pour approfondir.** Lis Proverbes 12.17–22 sur la vérité et l’effet des paroles.
+
+### Jour 13 — Écouter dans le désaccord
+
+**Lire la Parole : Jacques 1.19–20 et Éphésiens 4.29–32.** Observe la place
+donnée à l’écoute, aux paroles et à la maîtrise de la colère.
+
+**Comprendre et méditer.** Ces passages enseignent une manière de vivre
+ensemble sous l’autorité de Dieu. Ils ne supposent pas que les croyants
+seront toujours du même avis. Ils interrogent ce que nous faisons de nos
+différences et de nos émotions.
+
+Un désaccord peut révéler la capacité d’écouter, de reformuler et de chercher
+une solution. Il peut aussi faire apparaître le refus de toute responsabilité.
+Regarde si chacun peut parler sans humiliation, poser une limite et demander
+une pause. Un tempérament calme ne garantit pas le respect ; une émotion
+visible n’annule pas la légitimité de ce qui est exprimé. Ce sont les actes,
+leur contexte et leur répétition qu’il faut regarder.
+
+La réconciliation demande davantage qu’une formule d’excuse. Peut-on nommer
+le tort, réparer ce qui peut l’être et changer sa conduite ? Une dispute ne
+justifie jamais les menaces ni la violence. Si tu as peur des réactions de
+l’autre, tu peux chercher un soutien individuel avant toute conversation.
+La démarche proposée aujourd’hui concerne un échange dans lequel chacun
+dispose de la liberté de parler et de s’arrêter.
+
+**Prier.** Seigneur, garde ma bouche et ouvre mes oreilles. Aide-moi à entendre
+avant de me défendre, à parler sans rabaisser et à reconnaître ma part de
+responsabilité. Saint-Esprit, apprends-moi à exprimer un désaccord avec
+fermeté et respect. Donne-nous, lorsqu’une relation existe, la volonté
+d’apprendre et de réparer. Éclaire ce qui demande du temps, une aide
+extérieure ou une limite claire. Au nom de Jésus, amen.
+
+**Écouter.** Reviens sur un échange difficile sans chercher immédiatement
+qui a gagné. Demande à Dieu ce qui dépend de ta propre conduite. Tu n’as
+pas à prendre la responsabilité des actes de l’autre.
+
+**Écrire dans mon carnet.**
+
+1. Est-ce que chacun peut exprimer un désaccord sans craindre une punition ?
+2. Comment avons-nous réparé, ou laissé sans réponse, un tort récent ?
+3. Quelle habitude d’écoute ai-je besoin de pratiquer ?
+
+**Un pas concret.** Dans un échange sûr, reformule ce que tu as compris avant
+de répondre. Si la tension monte, propose une pause et un moment convenu
+pour reprendre. Sans relation en cours, exerce cette écoute dans une amitié.
+
+**Pour approfondir.** Lis Proverbes 15.1–4. La première journée du
+[plan gratuit Alpha « The Pre-Marriage Course »][alpha-en] propose aussi un
+travail sur la communication ; elle est en anglais, avec des versions
+espagnole et portugaise recensées dans les ressources en fin de parcours.
+
+### Jour 14 — Faire le bilan de ce que je connais
+
+**Lire la Parole : Proverbes 18.13.** Considère l’appel à écouter avant de
+conclure.
+
+**Comprendre et méditer.** Les Proverbes forment le jugement par des paroles
+de sagesse. Ici, l’empressement à répondre sans écouter est mis en cause.
+Appliqué à une relation, ce principe invite à faire une place aux faits
+qui manquent encore.
+
+Tu peux connaître une personne depuis longtemps tout en ignorant comment
+elle envisage le mariage. Tu peux aussi l’avoir rencontrée récemment et
+ressentir une forte proximité. Ni la durée seule ni l’intensité seule ne
+répondent à toutes les questions. Relis tes notes : qu’as-tu réellement
+observé, qu’as-tu entendu directement, qu’as-tu simplement supposé ?
+
+Cette distinction ne t’impose pas une enquête sur la vie privée de l’autre.
+Elle t’aide à choisir les conversations et les situations ordinaires qui
+permettront de mieux se connaître. Une difficulté ne disparaît pas parce
+qu’elle reste inexpliquée. Une zone inconnue n’est pas non plus une faute
+à attribuer. Tu peux reconnaître le bien, nommer une inquiétude et laisser
+une question ouverte, sans attribuer une note globale à une personne.
+
+**Prier.** Père, merci pour les personnes que tu me permets de rencontrer
+et pour ce que j’apprends dans mes relations. Saint-Esprit, affermis mon
+discernement. Aide-moi à distinguer ce que je sais de ce que j’espère.
+Garde-moi des conclusions hâtives, de la curiosité intrusive et du refus
+de voir. Donne-moi la patience de connaître avec vérité et le courage
+d’agir lorsque quelque chose est suffisamment clair. Au nom de Jésus, amen.
+
+**Écouter.** Relis une observation encourageante et une question encore
+ouverte. Remets-les à Dieu sans forcer une conclusion favorable ou
+défavorable. Demande la sagesse pour la prochaine démarche.
+
+**Écrire dans mon carnet.**
+
+1. Quel fait concret a confirmé ou corrigé mon regard cette semaine ?
+2. Quelle espérance ai-je présentée comme une réalité déjà établie ?
+3. Que dois-je encore connaître avant d’envisager une étape supplémentaire ?
+
+**Un pas concret.** Note deux exemples datés, avec leur contexte : un
+comportement encourageant et un point à clarifier. Si personne n’est
+actuellement concerné, fais ce bilan sur tes propres habitudes relationnelles.
+
+**Pour approfondir.** Lis Proverbes 18.17, qui invite à ne pas confondre une
+première présentation avec une compréhension complète.
+
+
+## Semaine 3 — Examiner la possibilité d’une vie commune
+
+### Jour 15 — Partager une direction spirituelle
+
+**Lire la Parole : 1 Corinthiens 7.39, dans le contexte des versets 35–40.**
+Repère à qui Paul s’adresse directement et la liberté qu’il reconnaît.
+
+**Comprendre et méditer.** Le verset 39 concerne une veuve qui envisage de
+se remarier. Paul reconnaît son choix tout en le situant dans son appartenance
+au Seigneur. Dans ce parcours, nous appliquons cette orientation à la
+recherche d’un mariage où les deux personnes partagent la foi en Christ.
+Il faut distinguer cette application du destinataire immédiat du texte.
+Tu peux relire le [chapitre entier][corinthiens-7] pour garder son contexte.
+
+Une foi partagée mérite une conversation concrète. Quelle place chacun
+donne-t-il à Jésus, à la Bible, à la prière et à la vie de l’Église ?
+Comment souhaite-t-il vivre et transmettre sa foi ? Deux personnes qui
+se disent chrétiennes peuvent avoir des attentes très différentes. Un même
+nom d’Église ne résout pas automatiquement ces différences ; des traditions
+différentes demandent une discussion honnête sur leurs conséquences.
+
+Le respect de toute personne demeure essentiel, quelle que soit sa foi.
+Tu n’as pas à provoquer une déclaration religieuse pour obtenir un mariage,
+ni à promettre le mariage en échange d’une conversion. La foi ne peut pas
+être imposée. Cherche une adhésion sincère, libre et vécue, tout en
+reconnaissant qu’elle ne suffit pas, seule, à établir qu’un engagement
+entre vous serait sage.
+
+**Prier.** Seigneur Jésus, je te remets la direction spirituelle de ma vie.
+Apprends-moi à prendre au sérieux ma foi sans l’utiliser pour dominer ou
+mépriser. Saint-Esprit, donne-moi des conversations sincères et la liberté
+d’entendre des convictions différentes des miennes. Si une vie commune est
+envisagée, aide-nous à regarder ce que nous croyons réellement et ce que
+cela implique. Garde-nous de toute promesse religieuse destinée seulement
+à préserver la relation. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu ce qui est central dans ta foi. Demande-lui de
+t’aider à l’exprimer simplement, sans organiser un examen de connaissances
+bibliques pour l’autre.
+
+**Écrire dans mon carnet.**
+
+1. Quelle place concrète ma foi occupe-t-elle dans mes décisions ?
+2. Qu’avons-nous réellement échangé sur notre vie spirituelle commune ?
+3. Quelle différence de conviction aurait besoin d’être approfondie ?
+
+**Un pas concret.** Prépare deux questions ouvertes sur la foi vécue.
+Par exemple : « Comment souhaites-tu faire place à la prière dans ta vie ? »
+et « Comment envisages-tu la transmission de la foi à des enfants ? ».
+Sans relation, réponds d’abord pour toi-même.
+
+**Pour approfondir.** Lis Éphésiens 4.1–6 sur l’unité, l’humilité et la manière
+de vivre avec les autres croyants.
+
+### Jour 16 — Parler des priorités et de l’argent
+
+**Lire la Parole : 1 Timothée 6.6–10 et 17–19.** Observe l’enseignement
+adressé à ceux qui désirent s’enrichir et à ceux qui possèdent déjà des biens.
+
+**Comprendre et méditer.** Paul met en garde contre l’attachement à l’argent
+et appelle à une vie généreuse, confiante en Dieu. Il ne présente ni le
+revenu comme une mesure de fidélité, ni le manque de ressources comme une
+garantie de sagesse. Le passage invite à examiner notre rapport aux biens.
+
+Un projet de vie commune demande de parler de priorités : travail, dépenses,
+épargne, dettes, générosité et responsabilités envers les proches. L’objectif
+de cette conversation est de comprendre ce qui affectera réellement le
+foyer. Les habitudes se sont souvent formées dans des contextes familiaux
+différents ; elles méritent d’être expliquées avant d’être jugées.
+
+Tu n’as pas besoin de demander tous les détails financiers lors d’une
+première rencontre. À mesure que l’engagement devient sérieux, chacun doit
+pouvoir présenter honnêtement les réalités importantes pour la vie commune.
+Le respect de la vie privée demeure, et personne n’acquiert un droit de
+contrôle sur les ressources de l’autre. Cherche la responsabilité, la
+clarté et la capacité de décider ensemble, sans faire de la richesse une
+condition de valeur personnelle.
+
+**Prier.** Père, tu connais mes besoins et mes inquiétudes matérielles.
+Libère mon cœur de la cupidité, de la comparaison et de la honte.
+Saint-Esprit, apprends-moi à gérer ce qui m’est confié avec honnêteté et
+générosité. Donne-moi le courage de parler clairement de mes responsabilités.
+Si une relation avance, aide-nous à comprendre nos habitudes et à préparer
+des décisions réalistes, dans le respect de chacun. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu la première émotion que suscite le sujet de
+l’argent : peur, sécurité, honte ou désir de réussite. Cette émotion peut
+t’aider à comprendre ton histoire ; elle n’a pas à diriger seule tes choix.
+
+**Écrire dans mon carnet.**
+
+1. Quelles priorités mes habitudes financières révèlent-elles ?
+2. Quelles responsabilités actuelles affecteraient une future vie commune ?
+3. Sur quel sujet avons-nous besoin d’une conversation plus claire ?
+
+**Un pas concret.** Choisis deux thèmes à préparer parmi les dépenses,
+les dettes, le travail, la générosité et l’aide à la famille. Selon le stade
+de la relation, propose un échange ou clarifie d’abord tes propres habitudes.
+
+**Pour approfondir.** Lis Hébreux 13.5–6 sur le rapport aux biens et la
+confiance en Dieu.
+
+### Jour 17 — Envisager la famille et la vie quotidienne
+
+**Lire la Parole : Genèse 2.24 et Proverbes 24.3–4.** Considère la nouvelle
+unité du couple et l’image d’une maison bâtie avec sagesse.
+
+**Comprendre et méditer.** La Genèse présente un attachement conjugal qui
+engage une nouvelle vie commune. Les Proverbes évoquent une maison établie
+par la sagesse et la compréhension. Ensemble, ces textes invitent à
+réfléchir à la manière de construire, sans fournir un modèle unique
+d’organisation pour chaque famille.
+
+Avant le mariage, plusieurs sujets méritent d’être abordés : le lieu de
+vie, le travail, les responsabilités domestiques, les relations avec les
+familles, le désir ou non d’avoir des enfants et les convictions concernant
+leur éducation. Des enfants ou d’autres personnes peuvent déjà dépendre
+de l’un de vous. Leur réalité doit être accueillie honnêtement.
+
+Honorer sa famille ne signifie pas lui abandonner la décision de se marier.
+Construire un foyer ne demande pas non plus de rompre avec ses proches.
+Il s’agit de pouvoir poser des limites et assumer ensemble des
+responsabilités. Certains désaccords se travaillent ; d’autres touchent
+des projets fondamentaux. Parle-en sans promettre que l’autre changera.
+Le désir d’enfants peut être partagé sans garantie de fertilité, et
+l’absence d’enfants n’enlève rien à la dignité d’un couple.
+
+**Prier.** Seigneur, je te présente ma famille, mon histoire et le foyer
+que j’espère construire. Saint-Esprit, donne-moi la sagesse d’honorer mes
+proches et d’assumer mes propres choix. Aide-moi à parler des sujets
+concrets avec douceur et franchise. Rends-moi attentif aux personnes
+déjà confiées à mes soins. Apprends-nous à discerner ce qui peut se
+construire ensemble et ce qui demande une vraie clarification.
+Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu une habitude familiale que tu souhaites garder
+et une autre que tu souhaites transformer. Accueille ton histoire avec
+vérité, sans te croire condamné à tout reproduire.
+
+**Écrire dans mon carnet.**
+
+1. Quel quotidien souhaité ai-je déjà exprimé, et lequel ai-je seulement imaginé ?
+2. Quelles responsabilités familiales doivent être connues et respectées ?
+3. Quel désaccord de projet serait difficile à vivre s’il restait inchangé ?
+
+**Un pas concret.** Choisis un sujet encore peu abordé : lieu de vie,
+responsabilités à la maison, proches ou enfants. Prépare une question qui
+laisse à l’autre la possibilité d’exprimer un souhait différent du tien.
+
+**Pour approfondir.** Lis Éphésiens 6.1–4, en prêtant attention à la
+responsabilité des parents envers les enfants.
+
+### Jour 18 — Honorer le corps et les limites
+
+**Lire la Parole : 1 Thessaloniciens 4.3–8.** Observe le lien entre la
+sanctification, la maîtrise de soi et le respect de l’autre.
+
+**Comprendre et méditer.** Paul appelle les croyants à une conduite sexuelle
+accordée à leur appartenance à Dieu, sans exploiter autrui. Dans le cadre
+chrétien de ce parcours, l’intimité sexuelle est réservée au mariage.
+Cette conviction demande une conversation honnête et une responsabilité
+personnelle ; elle ne justifie ni le contrôle ni l’humiliation.
+
+Tes limites concernent aussi le rythme de la relation, le contact physique,
+les messages et les images intimes. L’affection ne donne aucun droit sur le
+corps de l’autre. Un refus doit être respecté, y compris dans le mariage.
+La pression, le chantage et l’insistance après un refus ne sont pas des
+preuves d’amour.
+
+Ton histoire ne te réduit pas à des erreurs ou à des blessures. Si tu as
+subi une agression, tu n’en portes pas la faute. Si tu reconnais des choix
+que tu souhaites changer, tu peux chercher le pardon de Dieu, un soutien
+bienveillant et une manière nouvelle de vivre. N’impose pas à l’autre de
+raconter tous les détails de son passé. Le mariage ne remplace pas le
+travail de maîtrise de soi et de respect qui commence aujourd’hui.
+
+**Prier.** Père, merci pour la dignité que tu donnes à mon corps et à ma
+personne. Saint-Esprit, conduis-moi dans une vie qui t’honore. Apprends-moi
+à exprimer mes limites et à respecter pleinement celles de l’autre.
+Guéris ce qui est blessé et donne-moi le courage de chercher le soutien
+dont j’ai besoin. Que l’affection ne devienne jamais une justification
+pour exercer une pression. Fais grandir en moi la liberté d’obéir avec
+confiance. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu une limite que tu souhaites clarifier. Tu peux
+rester simplement dans la prière si revenir sur ton histoire est trop
+difficile aujourd’hui ; aucun détail intime n’est exigé dans ce carnet.
+
+**Écrire dans mon carnet.**
+
+1. Quelles limites ai-je besoin d’exprimer avec clarté ?
+2. Comment est reçu un refus, de mon côté comme de l’autre ?
+3. Quel soutien m’aiderait à vivre mes convictions sans honte ni isolement ?
+
+**Un pas concret.** Formule une limite concrète que tu peux mettre en
+pratique. Si l’exprimer directement te met en danger, cherche d’abord
+un soutien confidentiel ; le jour 25 indique des repères.
+
+**Pour approfondir.** Lis 1 Corinthiens 6.19–20. L’appartenance à Dieu ne
+donne à aucun prétendant un droit de possession sur toi.
+
+### Jour 19 — Recevoir plusieurs propositions avec liberté
+
+**Lire la Parole : Proverbes 19.2.** Observe l’avertissement contre
+l’empressement qui manque de connaissance.
+
+**Comprendre et méditer.** Cette parole de sagesse invite à ne pas avancer
+précipitamment sans comprendre. Elle rejoint une situation fréquente :
+plusieurs personnes manifestent un intérêt ou font une proposition, et tu
+te sens pressé de choisir. Ce jour s’adresse notamment aux femmes qui
+reçoivent plusieurs propositions, mais les mêmes repères valent pour chacun.
+
+Être sollicité ne crée aucune dette affective. Un cadeau, l’appui des
+familles, la réputation d’une personne ou une parole spirituelle ne
+t’obligent pas à accepter. Tu peux demander du temps, refuser une proposition
+ou ne retenir aucune de ces relations. La question demeure : souhaites-tu
+librement connaître cette personne et existe-t-il une possibilité réelle
+d’avancer ensemble ?
+
+Il serait injuste de classer les personnes comme des offres ou de
+promettre à plusieurs une exclusivité. Examine chaque situation pour ce
+qu’elle est : les intentions exprimées, les faits connus, ta propre
+disponibilité et les questions encore ouvertes. Si tu demandes un délai,
+sois clair sur ce que tu peux ou ne peux pas promettre. L’autre reste
+libre de ne pas attendre. Une réponse respectueuse peut être ferme,
+sans comparaison humiliante ni justification présentée comme une parole
+incontestable de Dieu.
+
+**Prier.** Seigneur, je te présente les propositions que je reçois et les
+émotions qu’elles suscitent. Saint-Esprit, garde-moi de choisir sous la
+pression, par peur de manquer une occasion ou par besoin d’être admiré.
+Donne-moi de considérer chaque personne avec respect et de rester honnête
+sur ma disponibilité. Apprends-moi à reconnaître ce que je souhaite
+vraiment, à chercher les informations utiles et à dire oui, attendre ou
+non avec liberté. Au nom de Jésus, amen.
+
+**Écouter.** Éloigne un moment les avis et les attentes de ton entourage.
+Devant Dieu, demande-toi ce que tu peux dire en vérité aujourd’hui. Une
+réponse encore incomplète peut être exprimée sans laisser croire à un
+engagement déjà pris.
+
+**Écrire dans mon carnet.**
+
+1. Quelles propositions ont été réellement formulées, et qu’ai-je répondu ?
+2. Qu’est-ce qui relève de mon désir, et qu’est-ce qui relève d’une pression ?
+3. Quelle limite ou clarification dois-je communiquer à une personne concernée ?
+
+**Un pas concret.** Prépare, pour une situation actuelle, une réponse
+honnête. Par exemple : « Merci pour ta démarche. J’ai besoin de temps pour
+réfléchir et je ne peux pas te promettre un engagement. » Pour un refus :
+« Je ne souhaite pas poursuivre cette relation dans la perspective du
+mariage. » Adapte la formulation à ta réalité. Sans proposition actuelle,
+écris les limites qui t’aideraient dans cette situation.
+
+**Pour approfondir.** Relis Proverbes 19.2 et 1 Corinthiens 7.39 en gardant
+leurs contextes. Ni la hâte de l’entourage ni une occasion rare ne remplacent
+un choix personnel éclairé.
+
+### Jour 20 — Clarifier plusieurs intérêts amoureux
+
+**Lire la Parole : Philippiens 2.3–4 et Éphésiens 4.25.** Observe l’attention
+portée au bien d’autrui et à la vérité dans la vie communautaire.
+
+**Comprendre et méditer.** Ces passages s’adressent aux relations entre
+croyants. Nous les appliquons ici à une situation précise : éprouver de
+l’intérêt pour plusieurs personnes. Ce jour rejoint notamment les hommes
+qui hésitent entre plusieurs relations possibles ; son exigence
+d’honnêteté concerne tout le monde.
+
+Éprouver une attirance ne constitue pas une promesse de mariage. Cela ne
+signifie pas non plus qu’une relation existe ou serait réciproque. La
+gentillesse, une conversation profonde et une amitié ne valent pas
+consentement à une démarche amoureuse. Prends le temps de distinguer
+l’attrait, la connaissance réelle et les intentions exprimées.
+
+Tu n’as pas à annoncer chaque attirance passagère. En revanche, tu es
+responsable des attentes que tes paroles et tes actes entretiennent.
+Évite de faire croire à plusieurs personnes qu’elles sont chacune seules
+dans une relation exclusive. Si tu as déjà pris un engagement, clarifie
+honnêtement cette situation avant de poursuivre une autre relation.
+Aucune méthode de prière ne peut transformer l’indécision en permission
+de maintenir les autres dans l’ambiguïté. Tu peux prendre du recul pour
+comprendre tes motivations, en respectant la liberté de chacun de se
+retirer.
+
+**Prier.** Père, je te présente mes attirances et mes hésitations.
+Saint-Esprit, aide-moi à regarder les personnes avec respect, au-delà de
+ce qu’elles m’apportent. Montre-moi les attentes que j’ai pu entretenir
+sans clarté. Donne-moi le courage de rectifier mes paroles, d’honorer
+mes engagements et d’accepter qu’un intérêt ne soit pas partagé.
+Apprends-moi à avancer avec sincérité et à renoncer à ce qui nourrit
+seulement mon besoin d’attention. Au nom de Jésus, amen.
+
+**Écouter.** Demande à Dieu de te montrer ce qui relève de ta responsabilité :
+une parole à rectifier, un comportement ambigu à arrêter ou une question
+à poser. Ne cherche pas à deviner intérieurement les sentiments de l’autre ;
+ils lui appartiennent et doivent pouvoir être exprimés librement.
+
+**Écrire dans mon carnet.**
+
+1. Quels intérêts sont réciproques et exprimés, et lesquels sont seulement supposés ?
+2. Mes actes ont-ils laissé croire à un engagement que je n’assume pas ?
+3. Quel pas honnête respecterait les personnes concernées aujourd’hui ?
+
+**Un pas concret.** Choisis une démarche : cesser un comportement ambigu,
+clarifier une intention dans une relation réelle ou prendre du recul avant
+de poursuivre. Si tu ne vis pas cette situation, réfléchis à la manière
+de distinguer une amitié d’une démarche amoureuse.
+
+**Pour approfondir.** Lis Romains 13.8–10 sur une manière d’aimer attentive
+au bien du prochain.
+
+### Jour 21 — Vérifier qu’un projet est partagé
+
+**Lire la Parole : Romains 12.9–10.** Repère l’appel à la sincérité et au
+respect dans l’amour fraternel.
+
+**Comprendre et méditer.** Paul appelle les croyants à une affection sincère
+et à l’honneur mutuel. Ce commandement ne demande pas de ressentir de
+l’amour romantique pour quelqu’un ni d’accepter une proposition.
+Son application au discernement consiste à traiter l’autre avec vérité.
+
+Cette semaine a soulevé des sujets parfois décisifs : la foi, les
+responsabilités, le quotidien, les limites et les intentions. Un projet
+commun ne peut pas reposer uniquement sur ce que tu souhaites ou sur ce
+que l’entourage approuve. Il demande que les deux personnes expriment
+librement leur désir d’avancer et comprennent l’étape envisagée.
+
+Il peut être trop tôt pour parler de mariage tout en étant approprié
+d’apprendre à se connaître. Il peut aussi devenir clair que l’un des deux
+ne souhaite pas poursuivre. Reconnaître cette réalité est une manière
+d’honorer la personne. Si personne ne partage actuellement un tel projet
+avec toi, cette semaine reste utile pour clarifier ta direction et tes
+habitudes. Tu n’as pas besoin d’inventer une relation pour réussir le
+parcours.
+
+**Prier.** Seigneur, merci pour ce qui devient plus clair et pour ce qui
+reste à apprendre. Saint-Esprit, aide-moi à accueillir la vérité d’une
+relation, même lorsqu’elle diffère de mon espérance. Donne-moi de respecter
+les intentions et le rythme de l’autre sans perdre ma propre liberté.
+Si un projet se construit, affermis notre sincérité. Si nos chemins ne
+se rejoignent pas, accompagne-moi dans le renoncement et dans la suite
+de ma vie. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu une réalité que tu acceptes facilement et une
+autre qui te coûte. Tu peux lui confier ta déception sans la transformer
+en reproche contre l’autre ou en signe d’abandon de Dieu.
+
+**Écrire dans mon carnet.**
+
+1. Qu’avons-nous chacun exprimé sur l’avenir de cette relation ?
+2. Quel accord est réel, et quelle différence reste importante ?
+3. Quelle étape correspond aujourd’hui à notre consentement et à notre connaissance ?
+
+**Un pas concret.** Choisis une seule clarification utile. Si une relation
+existe, propose un moment pour en parler librement. Sinon, note un progrès
+personnel et une relation amicale ou communautaire à cultiver.
+
+**Pour approfondir.** Reprends les notes des jours 15 à 20. Distingue ce qui
+est partagé, ce qui reste à discuter et ce qui constitue déjà un désaccord
+important. Aucun total ni classement de personnes n’est nécessaire.
+
+
+## Semaine 4 — Éprouver le discernement et choisir une prochaine étape
+
+### Jour 22 — Éprouver les impressions spirituelles
+
+**Lire la Parole : 1 Thessaloniciens 5.19–22 et 1 Jean 4.1–3.** Observe
+comment l’accueil de l’action de l’Esprit s’accompagne d’un discernement.
+
+**Comprendre et méditer.** Paul appelle la communauté à accueillir l’action
+de l’Esprit tout en examinant ce qui est présenté comme prophétique.
+Jean demande d’éprouver les esprits face à de faux prophètes, en portant
+notamment attention à leur confession de Jésus-Christ. Ces textes
+demandent une ouverture à Dieu accompagnée de vigilance ; ils ne décrivent
+pas une technique pour identifier un conjoint.
+
+Tu peux demander au Saint-Esprit de te conduire et accueillir avec
+reconnaissance ce que tu crois recevoir dans la prière. Distingue ensuite
+l’expérience de ton interprétation : une pensée, un rêve, une conviction
+ou une parole reçue ne s’expliquent pas automatiquement d’eux-mêmes.
+Une rencontre inhabituelle ou une parole répétée ne suffit pas à établir
+que Dieu te demande de te marier.
+
+Examine ce qui est proposé à la lumière de l’Écriture dans son contexte.
+Présente-le à des croyants mûrs, considère les faits et laisse le temps
+éclairer la situation. L’accord avec un principe biblique est nécessaire,
+mais ne prouve pas à lui seul l’origine divine d’une impression précise.
+Une direction que tu crois avoir reçue ne peut engager la conscience de
+l’autre à ta place. Son refus doit être respecté. Tu peux revenir sur une
+interprétation sans renoncer à rechercher sincèrement la conduite de
+l’Esprit. Relis au besoin [1 Thessaloniciens 5][thessaloniciens-5].
+
+**Prier.** Saint-Esprit, je désire accueillir ta direction avec un cœur
+humble. Éclaire ma compréhension et apprends-moi à éprouver ce que je
+crois recevoir. Garde-moi de fermer mon cœur à ton action comme de
+présenter mes préférences sous ton autorité. Si j’ai mal compris, donne-moi
+la liberté de le reconnaître. Que ta Parole conduise mon jugement et
+que mes paroles respectent toujours la liberté de l’autre.
+Au nom de Jésus, amen.
+
+**Écouter.** Demeure quelques instants dans la disponibilité devant Dieu.
+Si une impression vient, note séparément ce que tu as vécu et le sens
+que tu lui attribues. Si rien de particulier ne vient, poursuis avec
+confiance ce que la Parole t’invite déjà à pratiquer.
+
+**Écrire dans mon carnet.**
+
+1. Qu’ai-je réellement perçu ou entendu, et qu’en ai-je déduit ?
+2. Cette interprétation résiste-t-elle à la lecture biblique, aux faits et au conseil ?
+3. Suis-je prêt à reconnaître une erreur et à respecter la liberté de l’autre ?
+
+**Un pas concret.** Choisis, s’il y en a une, une impression importante
+dans ton discernement. Note ce qui reste à examiner et une personne
+mûre à qui en parler. N’invente pas d’expérience spirituelle pour remplir
+cette journée.
+
+**Pour approfondir.** Relis le contexte de 1 Jean 4.1–6. La question de
+l’identité du Christ y est centrale ; ce passage ne se réduit pas à
+l’évaluation d’un ressenti amoureux.
+
+### Jour 23 — Reconnaître la sagesse dans ma démarche
+
+**Lire la Parole : Jacques 3.13–18.** Observe les attitudes associées aux
+deux manières de rechercher la sagesse.
+
+**Comprendre et méditer.** Jacques oppose une conduite nourrie de rivalité
+à une sagesse qui se manifeste dans la douceur, la droiture et le souci
+de la paix. Sa lettre interroge la vie communautaire et les ambitions de
+ceux qui prétendent savoir. Pour notre discernement, elle invite à
+regarder la manière de chercher une réponse, autant que la réponse souhaitée.
+
+Comment réagis-tu lorsqu’un conseil te contredit ? Acceptes-tu que l’autre
+ait un rythme et une volonté propres ? Cherches-tu à comprendre ou à
+remporter l’adhésion de ton entourage ? Une démarche sage laisse place
+à la vérité, à la correction et au bien des personnes concernées.
+Tu peux prendre une décision ferme tout en restant humble.
+
+La paix évoquée ici ne doit pas devenir un test d’absence d’émotion
+désagréable. Une décision juste peut s’accompagner de tristesse ou de
+crainte ; un choix imprudent peut procurer un soulagement immédiat.
+Demande à Dieu une sagesse qui se reconnaît dans tes actes, puis
+considère ensemble la Parole, les faits, le conseil et la liberté de chacun.
+Tu peux lire le [chapitre complet][jacques-3] pour poursuivre la méditation.
+
+**Prier.** Père, donne-moi une sagesse qui se voit dans ma conduite.
+Saint-Esprit, montre-moi la jalousie, l’ambition ou le désir d’avoir raison
+lorsqu’ils orientent mes décisions. Apprends-moi à recevoir une correction
+sans me fermer. Donne-moi de rechercher la paix avec vérité et de traiter
+les personnes avec douceur. Lorsque je dois prendre une décision difficile,
+soutiens mon courage et garde mon cœur humble. Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu un désaccord avec un proche ou un conseil
+qui t’a contrarié. Cherche ce que tu peux examiner honnêtement, sans
+te croire obligé d’accepter tout ce qui t’a été dit.
+
+**Écrire dans mon carnet.**
+
+1. Quelle attitude accompagne ma recherche de réponse en ce moment ?
+2. Comment ai-je réagi à une information qui contrariait mon souhait ?
+3. Quel acte exprimerait aujourd’hui une sagesse humble et attentive ?
+
+**Un pas concret.** Reprends une conclusion que tu considérais comme
+évidente. Écris le fait qui la soutient, ce qui pourrait la corriger et
+ce que tu peux faire pour avancer avec droiture.
+
+**Pour approfondir.** Reviens à Jacques 1.5 et aux notes du jour 1.
+Observe comment ta manière de demander la sagesse a évolué.
+
+### Jour 24 — Recevoir des conseils sans abandonner ma responsabilité
+
+**Lire la Parole : Proverbes 15.22.** Considère l’aide que peuvent apporter
+plusieurs regards dans la préparation d’un projet.
+
+**Comprendre et méditer.** Ce proverbe souligne la valeur de la consultation.
+Il ne promet pas qu’un groupe donnera toujours la bonne réponse et ne
+transfère pas ton choix à un responsable spirituel ou à ta famille.
+Le conseil aide à voir ce que l’on ne perçoit pas seul.
+
+Choisis des personnes mûres, capables d’écouter les faits, de respecter
+la confidentialité et de reconnaître leurs limites. Un avis indépendant
+est précieux lorsqu’un proche souhaite fortement qu’un mariage se fasse.
+Une personne qui connaît ta vie peut repérer une habitude ; une autre
+peut aider à examiner une question biblique. Leurs observations peuvent
+se compléter sans devenir un vote à majorité.
+
+Présente aussi ce qui te met en difficulté. Si tu ne racontes que les
+éléments favorables, tu empêches le conseil de porter sur la situation
+réelle. Évite cependant de multiplier les consultations jusqu’à obtenir
+la réponse désirée. Le but est d’apprendre et de réfléchir devant Dieu.
+Une parole qui impose le mariage, menace ou réclame un accès illimité
+à ta vie ne doit pas être reçue comme une autorité incontestable.
+Lorsque la sécurité est en jeu, un soutien spécialisé peut être nécessaire.
+
+**Prier.** Seigneur, merci pour les personnes par lesquelles tu peux
+m’éclairer et m’encourager. Saint-Esprit, conduis-moi vers des conseils
+sages, honnêtes et respectueux. Donne-moi l’humilité de présenter les
+faits sans les arranger. Apprends-moi à écouter, à vérifier et à garder
+ma responsabilité. Que je ne cherche ni une approbation facile ni
+quelqu’un qui décidera à ma place. Au nom de Jésus, amen.
+
+**Écouter.** Pense à une personne à qui tu pourrais parler librement.
+Présente à Dieu ce qui te rassure et ce qui te retient. Tu peux choisir
+un autre interlocuteur si la confidentialité ou la liberté ne sont pas
+respectées.
+
+**Écrire dans mon carnet.**
+
+1. Qui peut m’écouter avec maturité, discrétion et indépendance ?
+2. Quel fait important ai-je tendance à omettre lorsque je demande conseil ?
+3. Quel conseil reçu mérite d’être approfondi ou confronté à la Parole ?
+
+**Un pas concret.** Prépare un bref résumé : trois faits utiles, deux
+questions et le type d’aide que tu souhaites. Tu peux ensuite demander
+toi-même un entretien, en partageant seulement les informations nécessaires.
+
+**Pour approfondir.** Lis Proverbes 12.15 et 19.20. L’ouverture au conseil
+va de pair avec un apprentissage patient.
+
+### Jour 25 — Prendre au sérieux ce qui détruit
+
+**Lire la Parole : Romains 12.9 et Éphésiens 5.11.** Observe l’appel à
+rejeter le mal et à ne pas y participer.
+
+**Comprendre et méditer.** L’amour chrétien ne demande pas de dissimuler le
+mal pour préserver l’image d’une relation. Ces passages s’adressent à la
+conduite des croyants ; nous les appliquons ici à ce qui porte atteinte
+à la dignité et à la sécurité dans une relation.
+
+Les menaces, l’humiliation, la surveillance imposée et les actes sexuels
+forcés doivent être pris au sérieux. Les promesses après un épisode
+violent n’annulent pas les faits. Tu n’es pas responsable de la violence
+que l’autre exerce. Tu peux chercher un soutien confidentiel auprès
+d’une personne sûre et d’un service spécialisé. En danger immédiat,
+contacte les services d’urgence de ton pays dès que tu peux le faire
+en sécurité. Les [repères officiels français][violences-fr] décrivent
+ces violences et les possibilités d’aide en France.
+
+Une affirmation religieuse ne peut justifier la domination. Pardonner
+ne signifie pas redonner accès à soi, poursuivre la relation ou préparer
+un mariage. Tu n’as pas à confronter la personne seul pour avoir le
+droit de te protéger. Une démarche spirituelle peut accompagner une
+recherche d’aide ; elle ne la remplace pas.
+
+Si tu reconnais tes propres comportements de contrôle ou de violence,
+prends-en la responsabilité, cesse les pressions et cherche une aide
+spécialisée pour changer. Ne réclame ni pardon immédiat ni reprise de
+la relation. La liberté et la sécurité de l’autre doivent être respectées.
+
+**Prier.** Dieu de justice et de compassion, éclaire ce qui doit être
+nommé dans ma situation. Saint-Esprit, donne-moi le courage de chercher
+l’aide nécessaire et de ne pas couvrir le mal par un langage religieux.
+Entoure les personnes blessées de soutiens sûrs. Là où j’ai fait du tort,
+conduis-moi à en prendre la responsabilité sans excuse ni pression sur
+l’autre. Apprends-moi à unir la vérité, la protection et l’espérance.
+Au nom de Jésus, amen.
+
+**Écouter.** Tu peux rester simplement devant Dieu, sans revivre ni
+détailler des événements douloureux. Demander une aide concrète peut
+être la démarche appropriée aujourd’hui ; ne reste pas à attendre
+une impression spirituelle pour te protéger.
+
+**Écrire dans mon carnet.** Tu peux répondre oralement, passer ces
+questions ou ne rien conserver si tes notes risquent d’être consultées.
+
+1. Est-ce que je peux dire non et chercher de l’aide sans craindre des représailles ?
+2. Quel comportement ai-je minimisé, subi ou exercé ?
+3. Quel soutien confidentiel et sûr puis-je solliciter ?
+
+**Un pas concret.** Identifie une personne ou un service pouvant t’aider
+en sécurité. Si tu es concerné, choisis avec un soutien adapté la
+prochaine démarche de protection ; tu n’as pas à attendre la fin du
+parcours.
+
+**Pour approfondir.** En France, consulte la page
+[« Violences au sein du couple »][violences-fr]. Ailleurs, cherche un
+service spécialisé de ton pays. Cette lecture pratique est facultative
+si une aide immédiate est nécessaire.
+
+### Jour 26 — Clarifier les questions qui restent ouvertes
+
+**Lire la Parole : Proverbes 18.13 et 17.** Observe l’importance de
+comprendre avant de conclure à partir d’une seule présentation.
+
+**Comprendre et méditer.** Ces paroles de sagesse invitent à écouter et
+à vérifier ce que l’on croit savoir. Elles ne demandent pas de devenir
+méfiant envers tout le monde. Elles encouragent un jugement attentif
+aux informations disponibles et à leurs limites.
+
+À ce stade, il peut rester des questions sur la foi, les responsabilités,
+les intentions ou une conduite qui t’inquiète. Certaines peuvent recevoir
+une réponse au cours d’une conversation. D’autres demandent du temps
+pour observer une cohérence. Il existe aussi des désaccords déjà connus
+qu’il serait trompeur de présenter comme de simples inconnues. Demande-toi
+si tu attendais une information ou si tu attendais surtout que l’autre
+devienne différent.
+
+La clarification doit respecter la vie privée et le stade de la relation.
+Elle n’autorise ni surveillance ni accès exigé aux appareils. À l’inverse,
+tu n’as pas à résoudre chaque doute pour avoir le droit de refuser un
+engagement. Une information importante qui reste inaccessible peut
+suffire à justifier une pause. En présence de peur ou de violence,
+les repères de protection du jour 25 passent avant cette démarche
+de conversation.
+
+**Prier.** Père, je te confie les questions qui restent ouvertes.
+Saint-Esprit, aide-moi à discerner celles qui demandent une conversation,
+du temps ou une décision. Garde-moi d’interpréter trop vite et de
+repousser sans fin ce qui est déjà clair. Donne-moi la patience de
+connaître sans contrôler, et la liberté de reconnaître les limites
+de ce que je peux savoir aujourd’hui. Au nom de Jésus, amen.
+
+**Écouter.** Choisis une seule question, puis présente-la à Dieu.
+Demande une prochaine démarche réaliste. Tu peux reconnaître que
+tu ne disposes pas encore de suffisamment d’éléments pour avancer.
+
+**Écrire dans mon carnet.**
+
+1. Quelle question ouverte pourrait réellement modifier ma prochaine étape ?
+2. Est-ce une inconnue, un désaccord connu ou l’espoir d’un changement ?
+3. Comment puis-je la clarifier de façon respectueuse et sûre ?
+
+**Un pas concret.** Complète quatre éléments : la question précise,
+la manière de l’éclaircir, la personne concernée et un moment approprié
+pour refaire le point. Ce moment organise la réflexion ; il ne fixe
+pas une date obligatoire pour dire oui.
+
+**Pour approfondir.** Lis Proverbes 14.15. La prudence invite à considérer
+son chemin, sans chercher une certitude absolue sur tout l’avenir.
+
+### Jour 27 — Parler avec vérité et respect
+
+**Lire la Parole : Éphésiens 4.15 et 25.** Observe comment la vérité
+s’inscrit dans la croissance et dans la relation aux autres.
+
+**Comprendre et méditer.** Paul parle de la vie du corps de Christ.
+La vérité exprimée avec amour contribue à des relations qui peuvent
+grandir. Dans le discernement amoureux, cette orientation nous aide
+à sortir d’une ambiguïté devenue inutile ou trompeuse.
+
+Tu peux souhaiter mieux connaître une personne sans être prêt à
+parler de mariage. Tu peux demander du temps pour une question précise.
+Tu peux aussi ne pas vouloir poursuivre. Une parole claire indique
+ce que tu souhaites, ce que tu ne promets pas et, si nécessaire,
+ce qui reste à discuter. Elle permet à l’autre de répondre librement.
+
+Tu n’as pas à présenter chaque décision comme une instruction certaine
+de Dieu pour qu’elle mérite d’être respectée. Tu peux expliquer que
+tu as prié et réfléchi, puis assumer ta réponse. Évite les comparaisons
+avec d’autres personnes et les formules qui donnent un faux espoir.
+La bonté n’exige pas une justification interminable. Si une réponse
+t’est adressée, accueille aussi le droit de l’autre à choisir.
+Lorsqu’une conversation directe présente un danger, privilégie un
+moyen sûr avec le soutien approprié.
+
+**Prier.** Seigneur, donne-moi une parole honnête et bienveillante.
+Saint-Esprit, aide-moi à dire ce que je peux réellement assumer.
+Garde-moi des promesses destinées à éviter une déception immédiate,
+et des explications qui humilient. Donne-moi le courage de clarifier
+et l’humilité de recevoir la réponse de l’autre. Que mon langage
+spirituel serve la vérité et ne devienne jamais une pression.
+Au nom de Jésus, amen.
+
+**Écouter.** Présente à Dieu la conversation que tu redoutes.
+Demande-lui de t’aider à distinguer la tristesse que tu ne peux pas
+entièrement éviter et le tort que tu peux éviter par une parole juste.
+
+**Écrire dans mon carnet.**
+
+1. Quelle réponse puis-je donner en vérité à ce stade ?
+2. Ma formulation laisse-t-elle croire à une promesse que je ne fais pas ?
+3. Comment puis-je respecter la liberté et la dignité de l’autre ?
+
+**Un pas concret.** Rédige une courte formulation, sans obligation
+de l’envoyer aujourd’hui. Par exemple : « Je souhaite continuer à te
+connaître, sans promettre encore un mariage » ; « J’ai besoin de
+clarifier ce point avant d’avancer » ; ou « Je ne souhaite pas
+poursuivre cette relation amoureuse ». Adapte-la à ce qui est vrai
+et à ta sécurité.
+
+**Pour approfondir.** Lis Colossiens 4.6 sur une parole attentive à la
+personne à qui l’on s’adresse.
+
+### Jour 28 — Confier la prochaine étape à Dieu
+
+**Lire la Parole : Proverbes 3.5–6, dans le contexte des versets 1–8.**
+Observe la place de la confiance en Dieu dans la conduite de la vie.
+
+**Comprendre et méditer.** Ce passage invite à reconnaître Dieu dans son
+chemin et à ne pas faire de son propre jugement la seule autorité.
+Il ne promet pas une connaissance détaillée de l’avenir. Pour le
+discernement, il nous apprend à continuer de prier, d’apprendre et
+d’agir sous la conduite de Dieu.
+
+Relis ton parcours. Qu’as-tu compris de la Parole ? Qu’est-ce qui a
+changé dans tes motivations, ta manière de connaître l’autre ou de
+parler vrai ? Quels faits, conversations et conseils ont éclairé
+ta situation ? Tu n’as pas besoin d’avoir reçu une expérience
+extraordinaire ni d’avoir choisi un conjoint pour reconnaître un fruit
+de ces journées.
+
+La prochaine étape peut prendre quatre formes : poursuivre une
+connaissance réciproque ; envisager ensemble une préparation au
+mariage lorsque votre intention est claire ; attendre ou faire une
+pause pour clarifier ; renoncer à une relation. Aucune de ces issues
+ne se déduit du nombre de jours accomplis. Une préparation au mariage
+continue d’examiner librement le projet et ne vaut pas un consentement
+déjà donné à la célébration.
+
+Si aucune relation n’est en vue, poursuis ta vie avec Dieu, tes amitiés
+et tes responsabilités. Tu peux garder ton désir de mariage sans
+suspendre toute ta vie à sa réalisation. La fidélité à Dieu se vit
+aussi dans la prochaine démarche ordinaire.
+
+**Prier.** Père, merci de m’avoir accompagné au fil de ces journées.
+Je te remets ce que j’ai compris et ce qui reste incertain.
+Saint-Esprit, conduis ma prochaine étape dans la fidélité à ta Parole.
+Donne-moi le courage d’avancer lorsque cela est sage, la patience
+d’attendre et la liberté de renoncer lorsque c’est nécessaire.
+Bénis les personnes concernées et aide-moi à respecter leur chemin.
+Que ma confiance demeure en toi, quelle que soit l’issue de cette
+relation. Au nom de Jésus, amen.
+
+**Écouter.** Reste un moment dans la reconnaissance. N’essaie pas
+d’obtenir une confirmation finale à tout prix. Tu peux remettre
+ta décision à Dieu et continuer à l’examiner avec humilité.
+
+**Écrire dans mon carnet.**
+
+1. Qu’est-ce qui est devenu suffisamment clair pour une prochaine étape ?
+2. Que reste-t-il à connaître ou à travailler, personnellement ou ensemble ?
+3. Quelle démarche vais-je poser, avec quel soutien et à quel rythme ?
+
+**Un pas concret.** Complète le bilan ci-dessous, puis choisis une seule
+démarche réalisable. Si une relation existe, distingue ton souhait
+personnel de ce que vous avez tous deux exprimé. Toute étape commune
+demande votre consentement réciproque.
+
+**Pour approfondir.** Reprends un passage ou une ressource qui t’a aidé.
+Tu peux prolonger la prière et les conversations au-delà de ces 28 jours.
+
+
+## Mon bilan et ma prochaine démarche
+
+Ce bilan est personnel. Il ne sert ni à noter une personne ni à garantir
+l’issue d’une relation. Tu peux répondre brièvement et conserver tes notes
+dans un endroit adapté à ta situation.
+
+| Ce que je rassemble | Ma réponse |
+|---|---|
+| Ce que la Parole m’a appris ou rappelé | |
+| Une attitude dans laquelle je souhaite continuer à grandir | |
+| Les faits qui éclairent ma situation actuelle | |
+| Mon souhait personnel, distinct de celui de l’autre | |
+| Ce que nous avons librement exprimé tous les deux, si une relation existe | |
+| Une question importante qui reste ouverte | |
+| Une limite que je dois respecter ou faire respecter | |
+| Un conseil utile reçu, et ce que j’en retiens | |
+| Ma prochaine démarche concrète | |
+| Le soutien et le moment qui m’aideront à refaire le point | |
+
+### Quatre étapes possibles dans une relation
+
+| Étape | Ce que cela peut signifier concrètement |
+|---|---|
+| **Poursuivre la connaissance** | Nous souhaitons tous les deux nous connaître davantage, avec des intentions et des limites claires, sans promesse prématurée de mariage. |
+| **Envisager une préparation au mariage** | Nous exprimons librement une intention commune et souhaitons l’approfondir avec un accompagnement adapté. Les questions importantes continuent d’être examinées. |
+| **Attendre ou faire une pause** | Une question, un désaccord ou notre disponibilité demande du temps. Nous précisons ce que cette attente signifie ; personne n’est obligé d’attendre indéfiniment. |
+| **Renoncer à la relation** | Je ne souhaite pas poursuivre, ou l’autre ne le souhaite pas. La réponse est respectée, sans pression spirituelle ni tentative de forcer un changement d’avis. |
+
+Si aucune relation n’est en cours, note simplement une démarche personnelle
+qui soutient ta vie présente : une habitude de prière, une amitié, un service,
+une question à approfondir ou une aide à demander. Tu peux revenir à ce
+parcours lorsqu’une nouvelle situation le rendra utile.
+
+## Ressources pour prolonger la réflexion
+
+Les lectures bibliques suffisent pour suivre les 28 jours. Les ressources
+ci-dessous sont des compléments facultatifs. Elles présentent le travail
+et les interprétations de leurs auteurs ; elles restent à examiner à la
+lumière de l’Écriture. Aucun achat n’est nécessaire.
+
+| Thème et journées | Ressource | Utilisation proposée |
+|---|---|---|
+| Sagesse, lecture biblique et Saint-Esprit — jours 1–3, 22–24 | [BibleProject en français][bibleproject-fr] | Chercher « Sagesse — La série », « Comment lire la Bible » et « Le Saint-Esprit ». La page française répertorie ces contenus ; les vidéos n’ont pas toutes été visionnées pour cette rédaction. |
+| Célibat — jour 5 | [La famille chrétienne, Shepherds Global Classroom][sgc-fr], leçon 5 « Le célibat » | Piste de lecture : le sommaire français est confirmé. Le texte de cette leçon n’a pas pu être récupéré lors de cette vérification ; sa relecture reste à faire. |
+| Préparation, caractère et conseil — jours 8–12, 15–18, 24 | [La préparation au mariage, leçon 6 de Stephen Gibson][sgc-6-fr] | Des sections françaises ont été consultées. Les parties sur le choix, la prière et le conseil peuvent nourrir une discussion accompagnée. Lire la remarque ci-dessous avant de retenir cette ressource. |
+| Écoute et communication — jour 13 | Alpha, première journée du plan de cinq jours : [anglais][alpha-en], [espagnol][alpha-es], [portugais][alpha-pt] | Un complément pour un couple qui souhaite travailler ses conversations. La première journée a été consultée dans ces langues. Elle ne traite pas le choix entre plusieurs propositions. |
+| Protection — jour 25 | [Arrêtons les violences : violences au sein du couple][violences-fr] | Information publique française, principalement destinée aux femmes victimes de violences. Les dispositifs présentés concernent la France ; les autres lecteurs doivent chercher une aide adaptée à leur pays et à leur situation. |
+
+**À propos de la leçon 6 de Shepherds Global Classroom.** Le récit d’ouverture
+rapporte une conviction personnelle après une rencontre. Il ne faut pas en
+faire une méthode générale de discernement. La leçon développe également
+des positions sur les rôles conjugaux et l’autorité familiale. Une lecture
+accompagnée doit distinguer les textes bibliques de ces interprétations et
+préserver la liberté de refuser. Cette ressource constitue une piste
+complémentaire, avec ces points à relire avant sa recommandation dans l’app.
+
+Pour d’autres langues, le [répertoire de BibleProject][bibleproject-langues]
+permet de choisir une édition locale. Le
+[dossier des ressources dans les 16 langues de Pray for Me](C:/Users/T480s/Desktop/Ministry/projets/pray_for_me/docs/DISCERNMENT_RESOURCES_2026-09-03.md)
+précise les liens retrouvés, les contenus consultés et les vérifications
+encore nécessaires. Il recense des ressources existantes ; le présent
+parcours de 28 jours est rédigé en français.
+
+## Note pour la relecture éditoriale
+
+Ce manuscrit rassemble les 28 journées, y compris la première journée
+retravaillée dans le même format. Il est destiné à la relecture avant
+intégration dans Pray for Me. Les prières, méditations, questions et démarches
+sont des textes originaux d’accompagnement. Les passages bibliques sont
+indiqués par référence, sans reproduction ni traduction de leur texte.
+
+Le parcours porte sur le discernement avant l’engagement et complète la
+préparation personnelle au mariage déjà présente dans l’application.
+La rédaction de ce document ne constitue pas une approbation de publication.
+Les liens externes et les futures traductions demandent leur propre relecture.
+
+Les ressources ont été examinées le 3 septembre 2026, avec les limites
+indiquées dans ce document et dans le dossier multilingue. Les renvois vers
+l’AELF donnent accès au contexte de certains passages bibliques ; le lecteur
+peut utiliser sa traduction habituelle de la Bible.
+
+[bibleproject-fr]: https://bibleproject.com/francais/
+[bibleproject-langues]: https://bibleproject.com/languages/
+[romains-8]: https://www.aelf.org/bible/Rm/8
+[corinthiens-7]: https://www.aelf.org/bible/1Co/7
+[thessaloniciens-5]: https://www.aelf.org/bible/1Th/5
+[jacques-3]: https://www.aelf.org/bible/Jc/3
+[sgc-fr]: https://courses.shepherdsglobal.org/french/christian-family
+[sgc-6-fr]: https://courses.shepherdsglobal.org/french/christian-family/lesson/6-la-pr%C3%A9paration-au-mariage
+[alpha-en]: https://www.bible.com/reading-plans/22661-the-pre-marriage-course/day/1
+[alpha-es]: https://www.bible.com/es/reading-plans/22661-the-pre-marriage-course/day/1
+[alpha-pt]: https://www.bible.com/pt/reading-plans/22661-the-pre-marriage-course/day/1
+[violences-fr]: https://arretonslesviolences.gouv.fr/besoin-d-aide/violences-au-sein-du-couple

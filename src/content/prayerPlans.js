@@ -14,6 +14,7 @@
 // the per-day themes remain authored in all 16 languages.
 
 import { PREPARING_IN_PRAYER } from './plans/preparingInPrayer';
+import { DISCERNING_BEFORE_COMMITMENT } from './plans/discerningBeforeCommitment';
 import { PREPARING_FOR_COVENANT } from './plans/preparingForCovenant';
 import { PRAYING_FOR_OUR_MARRIAGE } from './plans/prayingForOurMarriage';
 import { FREEDOM_IN_CHRIST } from './plans/freedomInChrist';
@@ -241,6 +242,7 @@ export const PLANS = [
     ],
   },
   PREPARING_IN_PRAYER,
+  DISCERNING_BEFORE_COMMITMENT,
   PREPARING_FOR_COVENANT,
   PRAYING_FOR_OUR_MARRIAGE,
   FREEDOM_IN_CHRIST,

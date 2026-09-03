@@ -55,6 +55,7 @@ the older plans (theme + verse) render exactly as they always did.
   theme:          { en, fr, …16 languages },   // short day title
   ref:            'Colossians 1:9-12',         // PRIMARY passage
   related:        ['Philippians 1:9-11'],      // ≤3, kept visually secondary
+  readingRefs:    ['Ephesians 4:25'],          // optional additional main reading
   movement:       'intercede',                 // which movement this day is in
   reflection:     { en, fr },                  // 2-4 sentences of OUR commentary
   prompts:        [{ en, fr }, …],             // short prayer prompts
@@ -69,10 +70,21 @@ the older plans (theme + verse) render exactly as they always did.
   roles:          { husband: { en, fr, ref? }, // optional, opt-in only
                     wife:    { en, fr, ref? } },
   resourceTopics: ['future-spouse', 'prayer'], // taxonomy ids for "Go deeper"
+  discernment: {                              // full 28-day manuscript sections
+    reading: { en, fr }, prayer: { en, fr }, listening: { en, fr },
+    questions: [{ en, fr }, …], deeper: { en, fr },
+    journalNote: { en, fr }, review: { en, fr }, // optional safety note / final review
+  },
 }
 ```
 
 ### Scripture rule
+
+The full singles discernment curriculum (`discernment28`) and its 16-language
+review status are documented in `DISCERNMENT_IMPLEMENTATION.md`. Its longer
+reflections and complete prayers use the existing day engine. Commentary may
+mention the source's passage citations in context; structural references remain
+shared and are never taken from a translation overlay.
 
 **Bible text is never authored, translated or generated in this repo.** A day
 stores a *reference*; the text is resolved at render time through the existing

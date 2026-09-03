@@ -71,6 +71,18 @@ describe('plan translation overlays', () => {
             for (const question of day.study.questions) expect(typeof question).toBe('string');
           }
         }
+        if (day.discernment) {
+          expect(source.discernment, `${where}: source has no discernment`).toBeTruthy();
+          const allowed = ['reading', 'prayer', 'listening', 'deeper', 'journalNote', 'review', 'questions'];
+          for (const key of Object.keys(day.discernment)) {
+            expect(allowed, `${where}: unknown discernment field`).toContain(key);
+            expect(source.discernment[key], `${where}: missing discernment source ${key}`).toBeTruthy();
+            if (key === 'questions') {
+              expect(day.discernment.questions).toHaveLength(source.discernment.questions.length);
+              for (const question of day.discernment.questions) expect(typeof question).toBe('string');
+            } else expect(typeof day.discernment[key]).toBe('string');
+          }
+        }
         if (day.roles) {
           expect(source.roles, `${where}: source has no role reflections`).toBeTruthy();
           for (const role of Object.keys(day.roles)) {
@@ -80,7 +92,7 @@ describe('plan translation overlays', () => {
         }
         // Structure never moves: an overlay may not carry Scripture, ids,
         // movements or topics.
-        for (const forbidden of ['ref', 'related', 'movement', 'resourceTopics', 'theme', 'emphasis', 'lifeStage']) {
+        for (const forbidden of ['ref', 'related', 'readingRefs', 'movement', 'resourceTopics', 'theme', 'emphasis', 'lifeStage']) {
           expect(day[forbidden], `${where}: overlays must not carry "${forbidden}"`).toBeUndefined();
         }
       };
@@ -94,12 +106,31 @@ describe('plan translation overlays', () => {
     }
   });
 
-  it('never contains a Bible reference — Scripture stays in the source', () => {
-    // A chapter:verse citation in translated prose would mean someone moved a
-    // reference out of the source, where localizeRef can no longer reach it.
+  it('keeps Scripture references in the source and preserves manuscript citations', () => {
+    const ranges = (value) => [...JSON.stringify(value).matchAll(/\b(\d{1,3})[.:：](\d{1,3})\s*[-–—]\s*(\d{1,3})\b/g)]
+      .map((match) => match.slice(1).join(':'));
     for (const [lang, overlay] of entries) {
-      const prose = JSON.stringify(overlay);
-      expect(prose, `${lang}`).not.toMatch(/\b\d{1,3}:\d{1,3}\s*[-–]\s*\d{1,3}\b/);
+      for (const [planId, translated] of Object.entries(overlay)) {
+        if (planId === 'discernment28') {
+          // The full manuscript discusses passages in context. Localized prose
+          // may repeat their citations, but cannot invent a different range.
+          // Actual Scripture still resolves exclusively from the shared refs.
+          const source = PLANS_BY_ID[planId];
+          translated.days.forEach((day, index) => {
+            const allowed = new Set(ranges(source.days[index]));
+            const unknown = ranges(day).filter((citation) => !allowed.has(citation));
+            expect(unknown, `${lang}/${planId} day ${index + 1}: unknown passage range`).toEqual([]);
+          });
+          for (const field of ['intro', 'biblical', 'completion']) {
+            const allowed = new Set(ranges(source[field]));
+            expect(ranges(translated[field]).filter((citation) => !allowed.has(citation)), `${lang}/${planId}/${field}`).toEqual([]);
+          }
+        } else {
+          // Other plan overlays do not carry inline chapter:verse ranges.
+          const matches = JSON.stringify(translated).match(/\b\d{1,3}:\d{1,3}\s*[-–]\s*\d{1,3}\b/g) || [];
+          expect(matches, `${lang}/${planId}`).toEqual([]);
+        }
+      }
     }
   });
 });

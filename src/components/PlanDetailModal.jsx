@@ -85,7 +85,7 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
               <div id={`${disclosureId}-about`}>
                 {plan.intro && (
                   <p
-                    className="text-sm leading-relaxed"
+                    className="text-sm leading-relaxed whitespace-pre-line"
                     style={{
                       color: 'var(--text-2)',
                       ...(!showFullAbout && plan.biblical
@@ -102,7 +102,7 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
                 {showFullAbout && plan.biblical && (
                   <div className="rounded-xl p-3.5 mt-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
                     <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--accent)' }}>{t(lang, 'planInBible')}</h4>
-                    <p className="text-sm leading-relaxed mb-2.5" style={{ color: 'var(--text-1)' }}>{pick(plan.biblical.text, lang)}</p>
+                    <p className="text-sm leading-relaxed whitespace-pre-line mb-2.5" style={{ color: 'var(--text-1)' }}>{pick(plan.biblical.text, lang)}</p>
                     <VersePill reference={plan.biblical.ref} lang={lang} />
                   </div>
                 )}

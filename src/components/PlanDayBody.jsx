@@ -8,6 +8,7 @@ import { ROLES } from '../lib/planPrefs';
 import { hasReviewSignoff, isPlanPreviewOn } from '../lib/planReview';
 import DeliveranceDayGuide from './deliverance/DeliveranceDayGuide';
 import StudyDayGuide from './StudyDayGuide';
+import DiscernmentDayGuide from './DiscernmentDayGuide';
 
 // Everything a rich plan day says BELOW its title and primary passage:
 // reflection → prayer directions → an optional role reflection → one folded
@@ -33,6 +34,10 @@ export default function PlanDayBody({
 }) {
   const [afterPrayerOpen, setAfterPrayerOpen] = useState(false);
   if (!day) return null;
+
+  if (day.discernment) {
+    return <DiscernmentDayGuide day={day} lang={lang} resources={resources} idPrefix={idPrefix} onAddNote={onAddNote} />;
+  }
 
   const reflection = pick(day.reflection, lang);
   // Bible studies share the existing day, notes, references and resource shelf,

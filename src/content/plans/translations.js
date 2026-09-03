@@ -129,6 +129,13 @@ export function mergePlan(plan, overlay, lang) {
           }
           next.study.questions = (source.study.questions || []).map((q, j) => withLang(q, translated.study.questions?.[j], lang));
         }
+        if (source.discernment && translated.discernment) {
+          next.discernment = { ...source.discernment };
+          for (const key of ['reading', 'prayer', 'listening', 'deeper', 'journalNote', 'review']) {
+            if (source.discernment[key]) next.discernment[key] = withLang(source.discernment[key], translated.discernment[key], lang);
+          }
+          next.discernment.questions = source.discernment.questions.map((q, j) => withLang(q, translated.discernment.questions?.[j], lang));
+        }
         return next;
       };
       return mergeDay(day, dt);

@@ -25,11 +25,11 @@ vi.mock('../../content/prayerPlans', async (importOriginal) => {
 import PrayerJourneys from '../PrayerJourneys';
 import usePrayerStore from '../../store/prayerStore';
 import { PLANS } from '../../content/prayerPlans';
-import { setPlanPreview } from '../../lib/planReview';
+import { isPlanReviewed, setPlanPreview } from '../../lib/planReview';
 import { t } from '../../i18n';
 
 const lang = 'fr';
-const drafts = PLANS.filter((plan) => plan.review?.status === 'needs_review');
+const drafts = PLANS.filter((plan) => !isPlanReviewed(plan));
 const titleOf = (plan) => t(lang, plan.titleKey);
 
 const renderJourneys = () => render(<MemoryRouter><PrayerJourneys lang={lang} /></MemoryRouter>);
@@ -44,7 +44,7 @@ afterEach(() => { cleanup(); localStorage.clear(); vi.unstubAllEnvs(); });
 
 describe('approved and draft plans in the journey catalogue', () => {
   it('keeps a real negative fixture after the pending curricula are approved', () => {
-    expect(drafts.map((plan) => plan.id)).toEqual(['test-review-draft']);
+    expect(drafts.map((plan) => plan.id)).toEqual(['discernment28', 'test-review-draft']);
   });
 
   it('shows all four newly approved curricula to an ordinary reader', () => {
@@ -92,7 +92,7 @@ describe('approved and draft plans in the journey catalogue', () => {
     setPlanPreview(true);
     renderJourneys();
     openBrowse();
-    fireEvent.click(screen.getByText(titleOf(drafts[0])));
+    fireEvent.click(screen.getByText(titleOf(drafts.find((plan) => plan.id === 'test-review-draft'))));
 
     const dialog = screen.getByRole('dialog');
     expect(dialog.textContent).toContain(t(lang, 'planCoupleReviewHint'));

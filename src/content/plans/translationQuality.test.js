@@ -23,16 +23,18 @@ const overlayModules = import.meta.glob(['./translations/*.json', './translation
 
 // The day fields an overlay is allowed to translate.
 const FIELDS = ['reflection', 'selfPrompt', 'spousePrompt', 'marriagePrompt', 'childPrompt',
-  'practice', 'conversationPrompt', 'prayTogether', 'safetyNote'];
+  'practice', 'conversationPrompt', 'prayTogether', 'safetyNote', 'discernment.reading',
+  'discernment.prayer', 'discernment.listening', 'discernment.deeper', 'discernment.journalNote', 'discernment.review'];
 
 // How much of a value may be boilerplate shared with every other value before it
 // reads as a template rather than prose, and how many days must agree first.
 const MAX_SHARED_RATIO = 0.6;
 const MIN_DAYS_FOR_FRAME = 5;
 
-const sourceValue = (day, field) => (typeof day?.[field] === 'object' ? day[field].en : undefined);
+const atPath = (value, path) => path.split('.').reduce((current, key) => current?.[key], value);
+const sourceValue = (day, field) => atPath(day, field)?.en;
 const overlayValue = (overlay, i, field) => {
-  const value = field === 'prompts' ? overlay?.days?.[i]?.prompts?.[0] : overlay?.days?.[i]?.[field];
+  const value = field === 'prompts' ? overlay?.days?.[i]?.prompts?.[0] : atPath(overlay?.days?.[i], field);
   return typeof value === 'string' && value.trim() ? value : undefined;
 };
 
@@ -58,7 +60,7 @@ describe('guided-plan translation overlays', () => {
   // A plan whose overlays are all still stubs serves none of them and is
   // absent here on purpose — that is the point of the allow-list.
   it('serves overlays only for the plans that declare ready languages', () => {
-    expect(translatedPlans.map((p) => p.id).sort()).toEqual(['covenant21', 'preparing21']);
+    expect(translatedPlans.map((p) => p.id).sort()).toEqual(['covenant21', 'discernment28', 'preparing21']);
   });
 
   for (const plan of translatedPlans) {
