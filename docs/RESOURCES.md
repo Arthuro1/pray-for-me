@@ -22,8 +22,10 @@ verified on 2026-08-28. A verified link is not a theological endorsement and
 does not change review status.
 
 Material involving marriage roles, submission/authority, purity, or sexuality
-was moved back to `needs_review` and marked `sensitive`. It remains invisible
-until both named reviews below exist. No localized title, edition, ISBN, author,
+was moved back to `needs_review` and marked `sensitive`. Such entries remain
+invisible until both named reviews below exist. Paul's 2026-09-03 approval of
+resources associated with the four pending plans is documented below.
+No localized title, edition, ISBN, author,
 or URL was fabricated to fill a language gap.
 
 The publication gate has not moved; entries pass through it one at a time. Until a curator
@@ -33,13 +35,13 @@ section at all** — not an apology, not an empty state. `src/lib/resources.test
 asserts that an unreviewed entry resolves to nothing no matter what its editions
 claim, and that every approved edition carries a verified URL.
 
-`approved` is a promise that the entry is live, so it must never be set on
-something the resolver would drop. Three sensitive entries
+Content approval and edition availability are separate checks. Three sensitive entries
 (`piper-momentary-marriage`, `keller-meaning-of-marriage`,
 `elliot-passion-and-purity`) once carried `approved` with no sign-offs, which
 made them permanently invisible under an approval that was not true. Both
-reviews now exist for each of them, so they publish. A test rejects any
-`approved` entry the resolver refuses to display.
+reviews now exist for each of them, so they publish. Tests reject sensitive
+`approved` entries without both sign-offs. A verified available edition is
+also required; approval by itself never creates a usable link.
 
 That mistake has a mirror image, and it is just as quiet: an entry whose
 sign-offs are recorded but whose `status` is missing entirely is dropped too, so
@@ -48,13 +50,25 @@ every entry to state one of `RESOURCE_STATUSES`.
 
 ### What actually reaches a reader today
 
-Forty-five entries are displayable. Eight translated works now carry
-twenty-five verified localized editions; together with original-language works
-and the freedom-resource collection, the live catalogue covers twelve app
-languages: Arabic, Chinese, English, French, German, Hindi, Indonesian,
-Japanese, Korean, Portuguese, Russian and Spanish. Counting the days of each
-relationship plan that resolve to at least one resource with only that exact
-language enabled:
+As of **2026-09-03**, **89 entries are displayable**, subject to topic, domain,
+life-stage and language matching. The catalogue contains 102 entries in total:
+91 approved, ten awaiting review and one retired. Two previously approved
+deliverance entries still lack verified URLs and therefore do not display.
+
+Paul explicitly approved 36 additional associated resources, including the nine
+David-study sources. Five more associated contents received both sign-offs but
+retain `needs_review` because their current editions are unavailable. Existing
+approvals, unrelated candidates and the retired entry are unchanged. See
+`docs/CONTENT_APPROVAL_2026-09-03.md` for the exact scope and audit record.
+
+Displayable editions now cover fifteen app languages: Amharic, Arabic, Chinese,
+English, French, German, Hindi, Indonesian, Japanese, Korean, Portuguese,
+Russian, Spanish, Swahili and Tagalog. Farsi still has no displayable edition.
+
+The following table is the **historical relationship-language coverage snapshot
+from the 2026-08-28 translation pass**, before these approvals, not today's
+coverage totals. It counts days resolving at least one resource with only the
+specified language enabled:
 
 | Plan | days | ar | de | en | es | fr | id | ja | ko | pt | ru | zh |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -71,22 +85,20 @@ the publisher's own product page — Francke, Editorial Unilit, Editora Mundo
 Cristão, Editorial Portavoz and SCM Hänssler. Nothing was translated by us: a
 language key exists only where a real edition was found.
 
-The six other plans declare no `resourceTopics` on any day, so they never show a
+Six legacy plans declare no `resourceTopics` on any day, so they never show a
 "Go deeper" shelf in any language.
 
-Hindi's approved editions currently belong to the freedom-resource domain, not
-the relationship plans in the table. Amharic, Farsi, Swahili and Tagalog have no
-displayable edition anywhere in the catalogue, so they are not offered as
-additional Resource languages. If one is the app language it is still tried
-automatically; English is selected as an additional language for new readers
-and can be turned off.
+Only languages with a displayable edition are offered as additional Resource
+languages. The app language is always tried automatically; English is selected
+as an additional language for new readers and can be turned off.
 
-Two newly discovered multilingual studies are recorded as `needs_review`, not
-published: Family Discipleship Ministries' *Marriage Is a Ministry* (English,
+Two multilingual studies now have both of Paul's sign-offs dated 2026-09-03:
+Family Discipleship Ministries' *Marriage Is a Ministry* (English,
 Spanish, Hindi, Swahili and Amharic), and Shepherds Global Classroom's
 *Christian Family* (Simplified Chinese, Hindi and Tagalog). Both cover sensitive
-subjects such as sexuality, intimacy or marriage roles and remain invisible
-until both pastoral/content and safety reviews are signed.
+subjects such as sexuality, intimacy or marriage roles and remain classified
+as sensitive. Their verified editions add Amharic, Swahili and Tagalog coverage
+and Hindi resources for relationship plans.
 
 ---
 

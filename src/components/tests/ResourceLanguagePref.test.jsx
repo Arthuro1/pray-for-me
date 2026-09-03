@@ -17,23 +17,21 @@ describe('ResourceLanguagePref', () => {
     fireEvent.click(container.querySelector('[aria-controls="resource-languages-panel"]'));
 
     // These languages have at least one displayable resource somewhere in the
-    // bundled catalogue (Hindi currently comes from the freedom-plan domain).
-    expect(screen.getByRole('checkbox', { name: 'English' })).toBeTruthy();
-    expect(screen.getByRole('checkbox', { name: 'Deutsch' })).toBeTruthy();
-    expect(screen.getByRole('checkbox', { name: 'हिन्दी' })).toBeTruthy();
+    // bundled catalogue, including the newly approved family studies.
+    for (const label of ['English', 'Deutsch', 'हिन्दी', 'Kiswahili', 'አማርኛ', 'Tagalog']) {
+      expect(screen.getByRole('checkbox', { name: label }), label).toBeTruthy();
+    }
 
     // Draft or needs-review editions do not make a language selectable.
-    for (const label of ['Kiswahili', 'አማርኛ', 'Tagalog', 'فارسی']) {
-      expect(screen.queryByRole('checkbox', { name: label }), label).toBeNull();
-    }
+    expect(screen.queryByRole('checkbox', { name: 'فارسی' })).toBeNull();
   });
 
   it('does not summarize a stale stored language that no longer has coverage', () => {
-    localStorage.setItem('pfm_resource_langs', JSON.stringify(['en', 'sw']));
+    localStorage.setItem('pfm_resource_langs', JSON.stringify(['en', 'fa']));
     const { container } = render(<ResourceLanguagePref lang="fr" />);
 
     expect(container.textContent).toContain('English');
-    expect(container.textContent).not.toContain('Kiswahili');
+    expect(container.textContent).not.toContain('فارسی');
   });
 
   it('persists a supported additional language when it is checked', () => {

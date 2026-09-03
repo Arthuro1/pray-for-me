@@ -74,3 +74,8 @@ moins une édition affichable ; le persan n’en a pas encore.
 
 Cette opération modifie le projet local. Elle ne déploie pas l’application et
 ne change ni compte, ni base de données, ni réglage de production.
+
+Vérification finale : **195 fichiers de tests, 1 911 tests réussis** ; lint strict,
+typage, contrôle structurel des 16 langues et compilation de production réussis.
+Ces vérifications techniques ne constituent pas une relecture théologique ou
+linguistique supplémentaire.
