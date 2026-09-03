@@ -2,6 +2,7 @@
 -- computed offset pins the synthetic device's local clock to 12:00 regardless
 -- of when/where this test runs.
 begin;
+select plan(2);
 
 insert into auth.users (id, email, aud, role)
 values ('e1111111-1111-4111-8111-111111111111', 'reminder-test@example.invalid', 'authenticated', 'authenticated');
@@ -27,20 +28,21 @@ values
     true
   );
 
-do $$
-begin
-  assert exists (
+select ok(
+  exists (
     select 1 from public.push_subscriptions
     where id = 'e2222222-2222-4222-8222-222222222222'
       and last_daily_sent_on = (now() at time zone 'UTC')::date
-  ), 'enabling at a past local time should start tomorrow';
+  ), 'enabling at a past local time should start tomorrow'
+);
 
-  assert exists (
+select ok(
+  exists (
     select 1 from public.push_subscriptions
     where id = 'e3333333-3333-4333-8333-333333333333'
       and last_daily_sent_on is null
-  ), 'enabling before a future local time should remain eligible today';
-end;
-$$;
+  ), 'enabling before a future local time should remain eligible today'
+);
 
+select * from finish();
 rollback;

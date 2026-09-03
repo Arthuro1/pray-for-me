@@ -5,10 +5,15 @@ import PlanDetailModal from './PlanDetailModal';
 import { DISCERNING_BEFORE_COMMITMENT as plan } from '../content/plans/discerningBeforeCommitment';
 import { loadPlanTranslations, mergePlan } from '../content/plans/translations';
 import { loadLocale, t } from '../i18n';
+import { setPlanPreview } from '../lib/planReview';
 import { startGuidedPlan } from '../lib/startGuidedPlan';
 import '../index.css';
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllEnvs();
+  setPlanPreview(false);
+});
 
 describe('discernment on narrow RTL screens', () => {
   it.each(['ar', 'fa'])('keeps %s paragraphs and the final assessment readable', async (lang) => {
@@ -32,14 +37,19 @@ describe('discernment on narrow RTL screens', () => {
   });
 });
 
-it('starts the reviewed-preview curriculum as one 28-day prayer, without collecting relationship answers', async () => {
+it('starts the approved curriculum without preview as one 28-day prayer, without collecting relationship answers', async () => {
+  vi.stubEnv('DEV', false);
+  setPlanPreview(false);
   const addPrayer = vi.fn(async () => 'discernment-browser-prayer');
   const onClose = vi.fn();
   render(<PlanDetailModal plan={plan} lang="fr" onClose={onClose}
     onStart={(selected, startDate) => startGuidedPlan({ plan: selected, startDate, lang: 'fr', addPrayer })} />);
-  expect(screen.getByRole('dialog').textContent).toContain(t('fr', 'planCoupleReviewHint'));
+  expect(screen.getByRole('dialog').textContent).not.toContain(t('fr', 'planCoupleReviewHint'));
+  expect(screen.getByRole('dialog').textContent).not.toContain(t('fr', 'planCoupleReviewPending'));
   expect(screen.queryByRole('textbox')).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: t('fr', 'journeyStartToday') }));
+  const startButton = screen.getByRole('button', { name: t('fr', 'journeyStartToday') });
+  expect(startButton.disabled).toBe(false);
+  fireEvent.click(startButton);
   await waitFor(() => expect(onClose).toHaveBeenCalledOnce());
   expect(addPrayer).toHaveBeenCalledOnce();
   const [prayer] = addPrayer.mock.calls[0];
