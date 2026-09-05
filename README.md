@@ -12,12 +12,12 @@
 
 <br/>
 
-[![Live](https://img.shields.io/badge/Live-pray4me.space-6d28d9?style=for-the-badge&logo=vercel&logoColor=white)](https://pray4me.space)
+[![Live](https://img.shields.io/badge/Live-praystead.com-6d28d9?style=for-the-badge&logo=vercel&logoColor=white)](https://praystead.com)
 [![React](https://img.shields.io/badge/React_18-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Supabase](https://img.shields.io/badge/Supabase-3ecf8e?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
-[![PWA](https://img.shields.io/badge/PWA-ready-5a0fc8?style=for-the-badge&logo=pwa&logoColor=white)](https://pray4me.space)
+[![PWA](https://img.shields.io/badge/PWA-ready-5a0fc8?style=for-the-badge&logo=pwa&logoColor=white)](https://praystead.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge)](LICENSE)
 
 <br/>
@@ -220,7 +220,7 @@ React 18 · Tailwind CSS 3 · React Router 7 · Zustand 5 · Vite + vite-plugin-
 
 ## 🌐 Deployment
 
-Deployed at **[pray4me.space](https://pray4me.space)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies for Anthropic and YouVersion.
+Deployed at **[praystead.com](https://praystead.com)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies for Anthropic and YouVersion.
 
 ---
 
@@ -240,7 +240,7 @@ MIT — see `LICENSE`.
 
 <br/>
 
-Built with ❤️ and faith · [pray4me.space](https://pray4me.space)
+Built with ❤️ and faith · [praystead.com](https://praystead.com)
 
 *"I can do all things through him who strengthens me." — Philippians 4:13*
 

@@ -1,6 +1,6 @@
 {
   "packageId": "space.praystead.twa",
-  "host": "pray4me.space",
+  "host": "praystead.com",
   "name": "Praystead",
   "launcherName": "Praystead",
   "display": "standalone",
@@ -13,8 +13,8 @@
   "backgroundColor": "#6D28D9",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://pray4me.space/icons/icon-512.png",
-  "maskableIconUrl": "https://pray4me.space/icons/icon-maskable-512.png",
+  "iconUrl": "https://praystead.com/icons/icon-512.png",
+  "maskableIconUrl": "https://praystead.com/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\android-twa\\android.keystore",
@@ -24,7 +24,7 @@
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "unknown",
-  "webManifestUrl": "https://pray4me.space/manifest.json",
+  "webManifestUrl": "https://praystead.com/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,7 +33,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://pray4me.space/",
+  "fullScopeUrl": "https://praystead.com/",
   "minSdkVersion": 21,
   "orientation": "portrait",
   "fingerprints": [

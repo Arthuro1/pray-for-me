@@ -1,7 +1,7 @@
 # Google Play release runbook
 
 Ships the existing TWA wrapper in `android-twa/` (`space.praystead.twa`) as the
-Android build of `pray4me.space`. The TWA is a thin shell: it loads the live
+Android build of `praystead.com`. The TWA is a thin shell: it loads the live
 site, so **the production web deploy is the release**. The bundle only changes
 when the wrapper's manifest, icons, or SDK levels change.
 
@@ -100,8 +100,8 @@ before a production rollout:
 | Section | Answer |
 | --- | --- |
 | App category | Lifestyle |
-| Privacy policy | `https://pray4me.space/privacy.html` |
-| Account deletion URL | `https://pray4me.space/privacy.html#delete-account` |
+| Privacy policy | `https://praystead.com/privacy.html` |
+| Account deletion URL | `https://praystead.com/privacy.html#delete-account` |
 | Ads | No ads |
 | In-app purchases | None (donations go to an external PayPal link — see Risks) |
 | Target audience | 13+ (the privacy policy excludes under-13) |
@@ -131,7 +131,7 @@ deployed**, so a package rename means a web deploy, not just a commit.
    `public/.well-known/assetlinks.json`, keeping the upload fingerprint —
    locally built APKs still use it.
 3. Deploy the site, then confirm it is live:
-   `curl https://pray4me.space/.well-known/assetlinks.json`
+   `curl https://praystead.com/.well-known/assetlinks.json`
 4. Reinstall the app from Play and confirm no address bar appears.
 
 ## Risks to check before rollout

@@ -22,7 +22,7 @@ plugins {
 
 def twaManifest = [
     applicationId: 'space.praystead.twa',
-    hostName: 'pray4me.space', // The domain being opened in the TWA.
+    hostName: 'praystead.com', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Praystead', // The application name.
     launcherName: 'Praystead', // The name shown on the Android Launcher.
@@ -76,12 +76,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://pray4me.space/manifest.json'
+            resValue "string", "webManifestUrl", 'https://praystead.com/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://pray4me.space/'
+            resValue "string", "fullScopeUrl", 'https://praystead.com/'
         
 
         
