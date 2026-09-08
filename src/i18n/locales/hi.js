@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "बाइबलीय बुद्धि में बढ़ना",
+  "planWisdomSub": "नीतिवचन, सभोपदेशक और अय्यूब के साथ 42 दिन",
+  "planWisdomWeek1": "बुद्धि ग्रहण करना",
+  "planWisdomWeek2": "बुद्धि पर चलना",
+  "planWisdomWeek3": "महत्वपूर्ण बातों को पहचानना",
+  "planWisdomWeek4": "दुःख में परमेश्वर को खोजना",
+  "planWisdomWeek5": "विवेक में बढ़ना",
+  "planWisdomWeek6": "भरोसे के साथ चलना",
   // Bible-study journeys (David).
   "planCategoryStudy": "बाइबल अध्ययन",
   "planDavidTitle": "दाऊद: परमेश्वर के मन के अनुसार एक व्यक्ति",

@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Growing in biblical wisdom",
+  "planWisdomSub": "42 days through Proverbs, Ecclesiastes and Job",
+  "planWisdomWeek1": "Receive wisdom",
+  "planWisdomWeek2": "Practise wisdom",
+  "planWisdomWeek3": "Discern what matters",
+  "planWisdomWeek4": "Seek God in suffering",
+  "planWisdomWeek5": "Grow in discernment",
+  "planWisdomWeek6": "Walk in trust",
   // Bible-study journeys (David).
   "planCategoryStudy": "Bible studies",
   "planDavidTitle": "David: a man after God’s heart",

@@ -5,6 +5,8 @@
 // whole system: no hierarchy, no per-locale tag sets, nothing to maintain in 16
 // languages. Keep it short — a tag nobody uses is worse than no tag.
 export const RESOURCE_TOPICS = [
+  'wisdom-literature',
+  'wisdom-james',
   'prayer',
   'singleness',
   'identity',

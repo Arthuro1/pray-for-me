@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Crescer na sabedoria bíblica",
+  "planWisdomSub": "42 dias com Provérbios, Eclesiastes e Jó",
+  "planWisdomWeek1": "Receber sabedoria",
+  "planWisdomWeek2": "Praticar a sabedoria",
+  "planWisdomWeek3": "Discernir o que importa",
+  "planWisdomWeek4": "Buscar Deus no sofrimento",
+  "planWisdomWeek5": "Crescer em discernimento",
+  "planWisdomWeek6": "Caminhar com confiança",
   // Bible-study journeys (David).
   "planCategoryStudy": "Estudos bíblicos",
   "planDavidTitle": "Davi: um homem segundo o coração de Deus",

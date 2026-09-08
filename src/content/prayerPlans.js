@@ -19,6 +19,7 @@ import { PREPARING_FOR_COVENANT } from './plans/preparingForCovenant';
 import { PRAYING_FOR_OUR_MARRIAGE } from './plans/prayingForOurMarriage';
 import { FREEDOM_IN_CHRIST } from './plans/freedomInChrist';
 import { DAVID_HEART } from './plans/davidHeart';
+import { BIBLICAL_WISDOM } from './plans/biblicalWisdom';
 import { canUsePlan } from '../lib/planReview';
 
 // Plans are grouped in the UI by CATEGORY so the list stays browsable as it
@@ -247,6 +248,7 @@ export const PLANS = [
   PRAYING_FOR_OUR_MARRIAGE,
   FREEDOM_IN_CHRIST,
   DAVID_HEART,
+  BIBLICAL_WISDOM,
 ];
 
 export function getPlan(id, version = null) {

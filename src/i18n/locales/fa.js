@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "رشد در حکمت کتاب‌مقدس",
+  "planWisdomSub": "۴۲ روز با امثال، جامعه و ایوب",
+  "planWisdomWeek1": "دریافت حکمت",
+  "planWisdomWeek2": "عمل به حکمت",
+  "planWisdomWeek3": "تشخیص آنچه مهم است",
+  "planWisdomWeek4": "جستجوی خدا در رنج",
+  "planWisdomWeek5": "رشد در تشخیص",
+  "planWisdomWeek6": "گام برداشتن با اعتماد",
   // Bible-study journeys (David).
   "planCategoryStudy": "مطالعات کتاب‌مقدس",
   "planDavidTitle": "داوود: مردی موافق دل خدا",

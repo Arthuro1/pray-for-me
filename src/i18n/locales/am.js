@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "በመጽሐፍ ቅዱስ ጥበብ ማደግ",
+  "planWisdomSub": "ከምሳሌ፣ መክብብ እና ኢዮብ ጋር 42 ቀናት",
+  "planWisdomWeek1": "ጥበብን መቀበል",
+  "planWisdomWeek2": "ጥበብን በተግባር ማዋል",
+  "planWisdomWeek3": "አስፈላጊውን መለየት",
+  "planWisdomWeek4": "በመከራ ውስጥ እግዚአብሔርን መፈለግ",
+  "planWisdomWeek5": "በማስተዋል ማደግ",
+  "planWisdomWeek6": "በመታመን መጓዝ",
   // Bible-study journeys (David).
   "planCategoryStudy": "የመጽሐፍ ቅዱስ ጥናቶች",
   "planDavidTitle": "ዳዊት፦ እንደ እግዚአብሔር ልብ የሆነ ሰው",

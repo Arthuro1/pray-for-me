@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "聖書の知恵に成長する",
+  "planWisdomSub": "箴言・伝道者の書・ヨブ記を読む42日間",
+  "planWisdomWeek1": "知恵を受け取る",
+  "planWisdomWeek2": "知恵を実践する",
+  "planWisdomWeek3": "大切なことを見極める",
+  "planWisdomWeek4": "苦しみの中で神を求める",
+  "planWisdomWeek5": "識別力を養う",
+  "planWisdomWeek6": "信頼して歩む",
   // Bible-study journeys (David).
   "planCategoryStudy": "聖書研究",
   "planDavidTitle": "ダビデ：神の心にかなう人",

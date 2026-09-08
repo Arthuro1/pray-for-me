@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Bertumbuh dalam hikmat Alkitab",
+  "planWisdomSub": "42 hari bersama Amsal, Pengkhotbah, dan Ayub",
+  "planWisdomWeek1": "Menerima hikmat",
+  "planWisdomWeek2": "Mempraktikkan hikmat",
+  "planWisdomWeek3": "Membedakan yang penting",
+  "planWisdomWeek4": "Mencari Allah dalam penderitaan",
+  "planWisdomWeek5": "Bertumbuh dalam pertimbangan",
+  "planWisdomWeek6": "Berjalan dalam kepercayaan",
   // Bible-study journeys (David).
   "planCategoryStudy": "Studi Alkitab",
   "planDavidTitle": "Daud: seorang yang berkenan di hati Allah",

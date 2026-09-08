@@ -27,7 +27,9 @@ describe('Paul’s explicit 2026-09-03 approval', () => {
       expect(isPlanReviewed(plan)).toBe(true);
       expect(canUsePlan(plan, { preview: false })).toBe(true);
     }
-    expect(PLANS.filter((plan) => !isPlanReviewed(plan))).toEqual([]);
+    // Later curricula keep their own review state; this dated approval only
+    // attests to the plans explicitly named in the record.
+    expect(PLANS.filter((plan) => REVIEWED_PLAN_IDS.includes(plan.id)).every(isPlanReviewed)).toBe(true);
   });
 
   it('records the three optional role approvals without auto-enabling unfinished overlays', () => {

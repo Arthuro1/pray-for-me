@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "النمو في الحكمة الكتابية",
+  "planWisdomSub": "٤٢ يومًا مع الأمثال والجامعة وأيوب",
+  "planWisdomWeek1": "قبول الحكمة",
+  "planWisdomWeek2": "ممارسة الحكمة",
+  "planWisdomWeek3": "تمييز ما يهم",
+  "planWisdomWeek4": "طلب الله في الألم",
+  "planWisdomWeek5": "النمو في التمييز",
+  "planWisdomWeek6": "السير بثقة",
   // Bible-study journeys (David).
   "planCategoryStudy": "دراسات كتابية",
   "planDavidTitle": "داود: رجل بحسب قلب الله",

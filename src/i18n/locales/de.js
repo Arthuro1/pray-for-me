@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "In biblischer Weisheit wachsen",
+  "planWisdomSub": "42 Tage mit Sprüche, Prediger und Hiob",
+  "planWisdomWeek1": "Weisheit empfangen",
+  "planWisdomWeek2": "Weisheit leben",
+  "planWisdomWeek3": "Erkennen, was zählt",
+  "planWisdomWeek4": "Gott im Leiden suchen",
+  "planWisdomWeek5": "Urteilsvermögen entwickeln",
+  "planWisdomWeek6": "Im Vertrauen leben",
   // Bible-study journeys (David).
   "planCategoryStudy": "Bibelstudien",
   "planDavidTitle": "David: ein Mann nach Gottes Herzen",

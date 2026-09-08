@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Lumago sa karunungan ng Bibliya",
+  "planWisdomSub": "42 araw kasama ang Kawikaan, Mangangaral at Job",
+  "planWisdomWeek1": "Tumanggap ng karunungan",
+  "planWisdomWeek2": "Isabuhay ang karunungan",
+  "planWisdomWeek3": "Kilalanin ang mahalaga",
+  "planWisdomWeek4": "Hanapin ang Diyos sa pagdurusa",
+  "planWisdomWeek5": "Lumago sa pagkilatis",
+  "planWisdomWeek6": "Lumakad nang may pagtitiwala",
   // Bible-study journeys (David).
   "planCategoryStudy": "Mga pag-aaral ng Bibliya",
   "planDavidTitle": "David: isang taong ayon sa puso ng Diyos",

@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Kukua katika hekima ya Biblia",
+  "planWisdomSub": "Siku 42 na Mithali, Mhubiri na Ayubu",
+  "planWisdomWeek1": "Kupokea hekima",
+  "planWisdomWeek2": "Kutenda kwa hekima",
+  "planWisdomWeek3": "Kutambua yaliyo muhimu",
+  "planWisdomWeek4": "Kumtafuta Mungu katika mateso",
+  "planWisdomWeek5": "Kukua katika utambuzi",
+  "planWisdomWeek6": "Kutembea kwa tumaini",
   // Bible-study journeys (David).
   "planCategoryStudy": "Masomo ya Biblia",
   "planDavidTitle": "Daudi: mtu anayeupendeza moyo wa Mungu",

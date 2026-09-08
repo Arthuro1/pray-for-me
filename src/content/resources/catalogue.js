@@ -58,6 +58,7 @@ import { PAUL_RESOURCE_SIGNOFF } from '../reviews/paul20260903';
 import { RELATIONSHIP_BOOKS } from './relationshipBooks';
 import { DELIVERANCE_BOOKS } from './deliveranceBooks';
 import { DAVID_STUDY_RESOURCES } from './davidStudyResources';
+import { WISDOM_RESOURCES } from './wisdomResources';
 import { DISCERNMENT_RESOURCES } from './discernmentResources';
 
 export { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
@@ -388,6 +389,7 @@ export const RESOURCES = [
   // which languages have a verified edition and which deliberately have none.
   ...inDomain('freedom', DELIVERANCE_BOOKS),
   ...inDomain('bible-study', DAVID_STUDY_RESOURCES),
+  ...inDomain('bible-study', WISDOM_RESOURCES),
 ];
 
 export default RESOURCES;

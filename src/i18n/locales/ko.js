@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "성경의 지혜 안에서 성장하기",
+  "planWisdomSub": "잠언, 전도서, 욥기와 함께하는 42일",
+  "planWisdomWeek1": "지혜를 받기",
+  "planWisdomWeek2": "지혜를 실천하기",
+  "planWisdomWeek3": "중요한 것을 분별하기",
+  "planWisdomWeek4": "고난 속에서 하나님 찾기",
+  "planWisdomWeek5": "분별력 기르기",
+  "planWisdomWeek6": "신뢰하며 걷기",
   // Bible-study journeys (David).
   "planCategoryStudy": "성경 연구",
   "planDavidTitle": "다윗: 하나님의 마음에 합한 사람",

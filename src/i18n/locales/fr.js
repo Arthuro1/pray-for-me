@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Grandir dans la sagesse biblique",
+  "planWisdomSub": "42 jours avec les Proverbes, l’Ecclésiaste et Job",
+  "planWisdomWeek1": "Recevoir la sagesse",
+  "planWisdomWeek2": "Pratiquer la sagesse",
+  "planWisdomWeek3": "Discerner ce qui compte",
+  "planWisdomWeek4": "Chercher Dieu dans l’épreuve",
+  "planWisdomWeek5": "Grandir en discernement",
+  "planWisdomWeek6": "Marcher dans la confiance",
   // Bible-study journeys (David).
   "planCategoryStudy": "Études bibliques",
   "planDavidTitle": "David : un homme selon le cœur de Dieu",

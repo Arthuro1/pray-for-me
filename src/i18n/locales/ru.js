@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "Возрастать в библейской мудрости",
+  "planWisdomSub": "42 дня с Притчами, Екклесиастом и Иовом",
+  "planWisdomWeek1": "Принимать мудрость",
+  "planWisdomWeek2": "Применять мудрость",
+  "planWisdomWeek3": "Различать главное",
+  "planWisdomWeek4": "Искать Бога в страдании",
+  "planWisdomWeek5": "Учиться рассуждать",
+  "planWisdomWeek6": "Жить в доверии",
   // Bible-study journeys (David).
   "planCategoryStudy": "Изучение Библии",
   "planDavidTitle": "Давид: человек по сердцу Бога",

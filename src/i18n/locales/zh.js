@@ -1,4 +1,12 @@
 export default {
+  "planWisdomTitle": "在圣经智慧中成长",
+  "planWisdomSub": "42天阅读箴言、传道书和约伯记",
+  "planWisdomWeek1": "领受智慧",
+  "planWisdomWeek2": "实践智慧",
+  "planWisdomWeek3": "分辨重要的事",
+  "planWisdomWeek4": "在苦难中寻求神",
+  "planWisdomWeek5": "培养分辨力",
+  "planWisdomWeek6": "凭信靠而行",
   // Bible-study journeys (David).
   "planCategoryStudy": "圣经研读",
   "planDavidTitle": "大卫：合神心意的人",
