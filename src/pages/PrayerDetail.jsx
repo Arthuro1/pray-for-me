@@ -21,12 +21,15 @@ import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { planWeekDays, scheduleEnded } from '../lib/planner';
 import { occursOn } from '../lib/schedule';
-import { planDayNumber, parseKey } from '../lib/schedule';
+import { planDayNumber, toKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { getPlan } from '../content/prayerPlans';
 import { pick, localizeRef } from '../content/teaching';
 import { usePlanDay } from '../hooks/usePlanDay';
+import { usePlanDayPager } from '../hooks/usePlanDayPager';
 import PlanDayBody from '../components/PlanDayBody';
+import PlanDayDeck from '../components/plan/PlanDayDeck';
+import PlanDayTrace from '../components/plan/PlanDayTrace';
 import PlanCompletionCard from '../components/PlanCompletionCard';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 import { hasPersonalization, isCouplePlan, planPeopleFrom } from '../lib/planPersonalization';
@@ -121,7 +124,7 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 // before being rejected.
 const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
 
-export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null }) {
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null }) {
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
@@ -173,7 +176,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showReportConfirm, setShowReportConfirm] = useState(false);
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
 
-  const { categories, addPrayer, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore(
+  const { categories, addPrayer, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers, completions } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
       addPrayer: s.addPrayer,
@@ -198,6 +201,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       syncCategoriesFromCommunity: s.syncCategoriesFromCommunity,
       updatePrayer: s.updatePrayer,
       prayers: s.prayers,
+      completions: s.completions,
     }))
   );
   const { tr, translateTexts, translating } = useTranslationStore();
@@ -347,6 +351,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Everything else on this page — marking prayed, the follow-up, the series
   // summary — stays about TODAY. Only the plan day itself moves.
   const viewingOtherDay = planDayNo != null && viewedDayKey !== todayKey();
+  // The days on either side of the one on screen, so the reader can read back
+  // over what a day held or look ahead at what is coming without going out to
+  // the calendar and back for each one.
+  const { prevKey: prevDayKey, nextKey: nextDayKey } =
+    usePlanDayPager(livePrayer.schedule, livePrayer.schedule_overrides, viewedDayKey, planDayNo);
   const planVersion = livePrayer.schedule?.plan?.version || null;
   const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
   const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
@@ -444,6 +453,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     if (translationRelevant) return showTranslated ? tr(text, lang) : text;
     return isCommunity ? text : tr(text, lang);
   };
+
+  // ── What a past plan day held ────────────────────────────────────────────
+  // Paging back to a day already walked shows more than the day's reading: that
+  // it was prayed, and whatever was written that day. Locked rows are left to
+  // the activity list below, which knows how to explain them.
+  const pastPlanDay = viewingOtherDay && viewedDayKey < todayKey();
+  const planDayPrayed = pastPlanDay && (completions[livePrayer.id] || []).includes(viewedDayKey);
+  const planDayUpdates = !pastPlanDay ? [] : allUpdates
+    .filter((u) => u.text && !u._locked && u.created_at && toKey(new Date(u.created_at)) === viewedDayKey)
+    .map((u) => ({ id: u.id, text: loc(u.text) }));
 
   const handleToggleTranslate = async () => {
     if (showTranslated) {
@@ -941,65 +960,61 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           })()
         )}
 
-        {/* Guided plan: today's theme + passage (only on a plan day), and — for a
-            rich plan — its reflection, prompts, practice and "Go deeper". */}
+        {/* Guided plan: this day's theme + passage, and — for a rich plan — its
+            reflection, prompts, practice and "Go deeper". Arrows and a swipe
+            move between the days of the run: today's to begin with, any day
+            already walked, and the ones still to come. */}
         {planDay && (
-          <div className="rounded-2xl p-4 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>
-                {t(lang, 'planDayOf', { n: planDayNo, total: livePrayer.schedule.end?.count || '' })}
-              </p>
-              {viewingOtherDay && (
-                <div className="flex flex-wrap items-center justify-between gap-x-3 mb-1.5">
-                  <p className="text-[11px] first-letter:uppercase" style={{ color: 'var(--text-3)' }}>
-                    {t(lang, 'planViewingOtherDay')} · {parseKey(viewedDayKey).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' })}
-                  </p>
-                  {onShowToday && (
+          <PlanDayDeck
+            lang={lang}
+            dayNo={planDayNo}
+            total={livePrayer.schedule.end?.count || null}
+            dayKey={viewedDayKey}
+            isToday={!viewingOtherDay}
+            upcoming={viewingOtherDay && viewedDayKey > todayKey()}
+            prevKey={onGoToDay ? prevDayKey : null}
+            nextKey={onGoToDay ? nextDayKey : null}
+            onGoToDay={onGoToDay}
+            onShowToday={onShowToday}
+          >
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(planDay.theme, lang)}</p>
+                <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
+                  {({ toggle, expanded }) => (
                     <button
-                      type="button"
-                      onClick={onShowToday}
-                      className="pressable flex min-h-11 items-center text-[11px] font-medium"
+                      onClick={toggle}
+                      aria-expanded={expanded}
+                      className="text-xs flex items-center gap-1.5"
                       style={{ color: 'var(--accent)' }}
                     >
-                      {t(lang, 'planBackToToday')}
+                      <BookOpen size={12} /> {localizeRef(planDay.ref, lang)}
                     </button>
                   )}
-                </div>
+                </VerseAccordion>
+              </div>
+              <PlanDayBody
+                day={planDay}
+                lang={lang}
+                role={planRole}
+                resources={planResources}
+                idPrefix={`detail-plan-day-${viewedDayKey}`}
+                onAddNote={focusUpdateField}
+                onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
+              />
+              <PlanDayTrace lang={lang} prayed={planDayPrayed} updates={planDayUpdates} />
+              {canEditPersonalization && (
+                <button
+                  type="button"
+                  onClick={() => setEditingPersonalization(true)}
+                  className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
+                  style={{ color: 'var(--text-3)' }}
+                >
+                  <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
+                </button>
               )}
-              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(planDay.theme, lang)}</p>
-              <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
-                {({ toggle, expanded }) => (
-                  <button
-                    onClick={toggle}
-                    aria-expanded={expanded}
-                    className="text-xs flex items-center gap-1.5"
-                    style={{ color: 'var(--accent)' }}
-                  >
-                    <BookOpen size={12} /> {localizeRef(planDay.ref, lang)}
-                  </button>
-                )}
-              </VerseAccordion>
             </div>
-            <PlanDayBody
-              day={planDay}
-              lang={lang}
-              role={planRole}
-              resources={planResources}
-              idPrefix="detail-plan-day"
-              onAddNote={focusUpdateField}
-              onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
-            />
-            {canEditPersonalization && (
-              <button
-                type="button"
-                onClick={() => setEditingPersonalization(true)}
-                className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                style={{ color: 'var(--text-3)' }}
-              >
-                <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
-              </button>
-            )}
-          </div>
+          </PlanDayDeck>
         )}
 
         {editingPersonalization && (

@@ -150,6 +150,32 @@ export function nextOccurrence(s, fromKey, overrides = {}, horizonDays = 400) {
   return null;
 }
 
+// The earliest day this series can land on: its start, or an occurrence a
+// reader explicitly moved to before it.
+function seriesFloor(s, overrides) {
+  let floor = s.type === 'once' ? s.date : s.startDate;
+  for (const o of Object.values(overrides || {})) {
+    if (o?.movedTo && (!floor || o.movedTo < floor)) floor = o.movedTo;
+  }
+  return floor;
+}
+
+// Last occurrence on/before fromKey, or null — the mirror of nextOccurrence,
+// walking backwards. It stops at the start of the series rather than at the
+// horizon, so asking for the day before the first one costs a comparison
+// instead of a 400-day scan.
+export function prevOccurrence(s, fromKey, overrides = {}, horizonDays = 400) {
+  if (!s) return null;
+  const floor = seriesFloor(s, overrides);
+  let cursor = fromKey;
+  for (let i = 0; i < horizonDays; i++) {
+    if (floor && cursor < floor) return null;
+    if (occursOn(s, cursor, overrides)) return cursor;
+    cursor = addDays(cursor, -1);
+  }
+  return null;
+}
+
 // For plan-linked schedules: which day of the plan is `key` (1-based), e.g.
 // "Day 3 of 21". Based on the base pattern so skips don't shift the readings.
 export function planDayNumber(s, key) {

@@ -7,7 +7,7 @@
 // today with a way back, and a key the run does not actually contain changes
 // nothing rather than inventing a day.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 
 vi.mock('../lib/supabase', () => {
   const chain = {
@@ -53,6 +53,7 @@ const lang = 'fr';
 // A three-day fast that began the day before yesterday: today is day 3, and
 // day 1 is a day the reader has already passed.
 const START = addDays(todayKey(), -2);
+const DAY_2 = addDays(START, 1);
 const prayer = {
   id: 'p1',
   title: 'Jeûne de trois jours',
@@ -77,8 +78,10 @@ beforeEach(() => {
   useCommunityStore.setState({ groups: [], prayers: [], prayerShares: {}, testimonies: [], userReactions: new Set() });
 });
 
-const renderDetail = (props = {}) => {
-  usePrayerStore.setState({ prayers: [prayer], categories: [], completions: {}, settings: { language: lang } });
+const renderDetail = ({ store = {}, ...props } = {}) => {
+  usePrayerStore.setState({
+    prayers: [prayer], categories: [], completions: {}, settings: { language: lang }, ...store,
+  });
   return render(<PrayerDetail prayer={prayer} onBack={() => {}} onEdit={() => {}} lang={lang} {...props} />);
 };
 
@@ -116,5 +119,102 @@ describe('PrayerDetail — a plan day chosen on the calendar', () => {
   it('ignores a malformed day rather than breaking the page', () => {
     renderDetail({ planDayKey: 'not-a-date' });
     expect(screen.getByText(/Jour 3 sur 3/)).toBeTruthy();
+  });
+});
+
+// Reading back over a day already prayed, or ahead to one still to come, is a
+// pair of arrows on the day itself (and a swipe, covered in the browser spec) —
+// no trip out to the calendar and back for each day. What must hold: a step
+// only ever lands on a real day of THIS run, the ends of the plan are dead
+// ends, and the page around the day stays about today.
+describe('PrayerDetail — paging between the days of a plan', () => {
+  const prev = () => screen.getByRole('button', { name: new RegExp(t(lang, 'planPrevDay')) });
+  const next = () => screen.getByRole('button', { name: new RegExp(t(lang, 'planNextDay')) });
+
+  it('steps back to the day before the one on screen', () => {
+    const onGoToDay = vi.fn();
+    renderDetail({ onGoToDay });
+    fireEvent.click(prev());
+    expect(onGoToDay).toHaveBeenCalledWith(DAY_2);
+  });
+
+  it('steps forward to the next day of the run', () => {
+    const onGoToDay = vi.fn();
+    renderDetail({ planDayKey: START, onGoToDay });
+    fireEvent.click(next());
+    expect(onGoToDay).toHaveBeenCalledWith(DAY_2);
+  });
+
+  it('has no day before the first or after the last', () => {
+    const onGoToDay = vi.fn();
+    renderDetail({ planDayKey: START, onGoToDay });
+    expect(prev().disabled).toBe(true);
+    cleanup();
+    renderDetail({ onGoToDay }); // today is day 3 of 3
+    expect(next().disabled).toBe(true);
+    expect(onGoToDay).not.toHaveBeenCalled();
+  });
+
+  it('steps over a day that was skipped', () => {
+    const skipped = { ...prayer, schedule_overrides: { [DAY_2]: { skip: true } } };
+    const onGoToDay = vi.fn();
+    renderDetail({ prayer: skipped, store: { prayers: [skipped] }, onGoToDay });
+    fireEvent.click(prev());
+    expect(onGoToDay).toHaveBeenCalledWith(START);
+  });
+
+  it('moves between days with the arrow keys', () => {
+    const onGoToDay = vi.fn();
+    renderDetail({ onGoToDay });
+    // French reads left to right, so the left arrow is the day before.
+    fireEvent.keyDown(screen.getByText(/Jour 3 sur 3/).closest('section'), { key: 'ArrowLeft' });
+    expect(onGoToDay).toHaveBeenCalledWith(DAY_2);
+  });
+
+  it('offers nothing to page to when the host cannot open another day', () => {
+    renderDetail(); // no onGoToDay
+    expect(prev().disabled).toBe(true);
+    expect(next().disabled).toBe(true);
+  });
+
+  it('says plainly when the day on screen has not arrived yet', () => {
+    const starting = {
+      ...prayer,
+      schedule: { ...prayer.schedule, startDate: todayKey(), plan: { id: 'fast3', startDate: todayKey() } },
+    };
+    const tomorrow = addDays(todayKey(), 1);
+    renderDetail({ prayer: starting, store: { prayers: [starting] }, planDayKey: tomorrow });
+    expect(screen.getByText(new RegExp(t(lang, 'planDayUpcoming')))).toBeTruthy();
+    expect(screen.queryByText(new RegExp(t(lang, 'planViewingOtherDay')))).toBeNull();
+  });
+
+  it('shows what a past day held: that it was prayed, and what was written then', () => {
+    const withNote = {
+      ...prayer,
+      prayer_updates: [
+        { id: 'u1', text: 'Jour un: paix', created_at: `${START}T09:00:00` },
+        { id: 'u2', text: 'Écrit aujourd’hui', created_at: `${todayKey()}T09:00:00` },
+      ],
+    };
+    renderDetail({
+      prayer: withNote,
+      store: { prayers: [withNote], completions: { p1: [START] } },
+      planDayKey: START,
+    });
+    // The trace is a reminder of that day, not a second copy of the whole
+    // activity list: only the note actually written on day 1 appears in it.
+    const trace = screen.getByText(t(lang, 'planDayNotes')).closest('section');
+    expect(within(trace).getByText('Jour un: paix')).toBeTruthy();
+    expect(within(trace).queryByText('Écrit aujourd’hui')).toBeNull();
+    expect(within(trace).getByText(t(lang, 'prayedOnDay'))).toBeTruthy();
+  });
+
+  it('keeps the trace off today, where the activity list already carries it', () => {
+    const withNote = {
+      ...prayer,
+      prayer_updates: [{ id: 'u1', text: 'Note du jour', created_at: `${todayKey()}T09:00:00` }],
+    };
+    renderDetail({ prayer: withNote, store: { prayers: [withNote], completions: { p1: [todayKey()] } } });
+    expect(screen.queryByText(t(lang, 'planDayNotes'))).toBeNull();
   });
 });

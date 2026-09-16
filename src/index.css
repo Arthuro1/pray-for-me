@@ -3329,6 +3329,36 @@ html.constellation-auth-root[data-theme="dark"] body {
   }
 }
 
+/* One day of a guided plan, and the swipe that moves to the day before or
+   after it. `pan-y` keeps vertical page scrolling entirely native — only the
+   horizontal axis is ours — and the clip is what lets the day be dragged past
+   the edge of its card without widening the page. The incoming day is nudged in
+   from the side it was sent for rather than sliding the full width: a tall
+   column of reading text crossing the screen is heavier than the move deserves.
+   (The reduced-motion rule below flattens both to nothing.) */
+.plan-deck__viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.plan-deck__panel--from-right {
+  animation: plan-deck-in-right 0.22s ease-out;
+}
+
+.plan-deck__panel--from-left {
+  animation: plan-deck-in-left 0.22s ease-out;
+}
+
+@keyframes plan-deck-in-right {
+  from { transform: translateX(32%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes plan-deck-in-left {
+  from { transform: translateX(-32%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;

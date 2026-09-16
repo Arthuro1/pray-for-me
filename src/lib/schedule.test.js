@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   parseKey, toKey, addDays, diffDays,
-  occursOn, occurrencesInRange, nextOccurrence, seriesEnded,
+  occursOn, occurrencesInRange, nextOccurrence, prevOccurrence, seriesEnded,
   planDayNumber, rotationForDay, toRRule, normalizeSchedule,
 } from './schedule.js';
 
@@ -118,6 +118,34 @@ describe('ranges and next occurrence', () => {
   it('returns null when the series is over', () => {
     const done = { type: 'once', date: '2026-07-02' };
     expect(nextOccurrence(done, '2026-07-08')).toBeNull();
+  });
+});
+
+// Paging back through a plan asks this for the day before the one on screen.
+describe('prevOccurrence', () => {
+  const s = { type: 'recurring', freq: 'weekly', weekDays: [2, 5], startDate: '2026-07-01' };
+
+  it('finds the last occurrence on or before a day', () => {
+    expect(prevOccurrence(s, '2026-07-09')).toBe('2026-07-07');
+    expect(prevOccurrence(s, '2026-07-07')).toBe('2026-07-07');
+  });
+
+  it('stops at the start of the series rather than inventing an earlier day', () => {
+    expect(prevOccurrence(s, '2026-06-30')).toBeNull();
+  });
+
+  it('steps over a skipped day', () => {
+    const daily = { type: 'recurring', freq: 'daily', startDate: '2026-07-01' };
+    expect(prevOccurrence(daily, '2026-07-09', { '2026-07-09': { skip: true } })).toBe('2026-07-08');
+  });
+
+  it('follows an occurrence to where it was moved', () => {
+    const daily = { type: 'recurring', freq: 'daily', startDate: '2026-07-01' };
+    // Day 9 was moved back to the 6th, so the 8th is what precedes the 10th…
+    const overrides = { '2026-07-09': { movedTo: '2026-07-06' } };
+    expect(prevOccurrence(daily, '2026-07-09', overrides)).toBe('2026-07-08');
+    // …and a day moved before the start is still reachable.
+    expect(prevOccurrence(daily, '2026-06-28', { '2026-07-05': { movedTo: '2026-06-27' } })).toBe('2026-06-27');
   });
 });
 

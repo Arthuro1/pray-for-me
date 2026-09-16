@@ -141,6 +141,11 @@ function PersonalPrayerPage({ onEdit }) {
       lang={lang}
       planDayKey={searchParams.get('day')}
       onShowToday={() => navigate(`/prayers/${id}`, { replace: true })}
+      // Paging through a plan REPLACES the entry rather than stacking one per
+      // day: twenty days of reading ahead must not become twenty taps of Back
+      // before the reader is out of the prayer again (on Android that is the
+      // hardware button). "Back to today" is the way home instead.
+      onGoToDay={(dayKey) => navigate(`/prayers/${id}?day=${dayKey}`, { replace: true })}
       onBack={() => navigate(-1)}
       onEdit={onEdit}
     />
