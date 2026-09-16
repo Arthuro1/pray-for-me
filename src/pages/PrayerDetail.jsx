@@ -40,7 +40,7 @@ import { claimPlanCompletionReport, markPlanCompleted, savePlanPrefs } from '../
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
 import { canUsePlan } from '../lib/planReview';
-import { PACE_LABEL_KEYS, paceOf, planTotal } from '../lib/planTempo';
+import { PACE_LABEL_KEYS, paceOf, planTotal, upcomingPlanDay } from '../lib/planTempo';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
@@ -442,6 +442,28 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Pace is the reader's own to set on their own run: never on a community
   // prayer, and not once the prayer is answered or the plan is finished.
   const canEditPace = !!planId && !isCommunity && !isAnswered && !planFinished;
+  // ── What a guided plan run does NOT need ─────────────────────────────────
+  // A plan run is a different kind of page. Its day already names the theme,
+  // the passage and the prompts, and it comes back on the run's own rhythm — so
+  // the generic prayer machinery that used to sit around it (AI prayer-point
+  // suggestions, a second recurrence editor saying what the pace row already
+  // says, "find me a verse", a follow-up reminder) was duplicated ceremony, not
+  // choice. Each flag below hides only what a plan cannot use: anything the
+  // reader actually put there stays visible and stays editable.
+  const isPlanRun = !isCommunity && !!planDay;
+  // The pace row IS the run's recurrence editor, so ONE flag decides both it and
+  // the quiet schedule summary above it — the rhythm is then stated exactly
+  // once, and never left unstated on a run that has no pace row (finished,
+  // answered, or paused past its last day), which keeps the summary instead.
+  const paceRowShown = canEditPace && !!upcomingPlanDay(livePrayer.schedule, todayKey());
+  // The plan's day is the way to pray, so a plan run is never invited to author
+  // prayer points beside it. Points an older run already carries still render —
+  // decluttering hides affordances, never what someone wrote.
+  const offerPointAuthoring = !isPlanRun;
+  const showWaysToPray = !isPlanRun || (displayPrayer.prayer_points || []).length > 0;
+  // Same rule for the per-prayer follow-up: not offered on a run that already
+  // returns by itself, but never taken away from one that has a date set.
+  const followUpRelevant = !isPlanRun || !!followUps[livePrayer.id];
   // Rows whose content was fully deleted would render as bare author+date
   // shells — hide them. Locked E2EE rows stay visible with their placeholder.
   const hasContent = (row) => row._locked || row.text || row.content || (row.attachments || []).length > 0;
@@ -812,14 +834,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
               iconColor="var(--text-2)"
               items={[
-                { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
+                // The plan day leads with its own passage and its Go deeper —
+                // an AI scripture hunt for the run's title would only compete.
+                { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true), hidden: isPlanRun },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
                 // Scheduling lives here, out of the main flow — selecting it
                 // opens the planner as a contextual disclosure below the
                 // actions. Saved copies keep it too: WHEN you pray for a
                 // carried request is personal.
                 { key: 'schedule', icon: CalendarClock, label: t(lang, livePrayer.schedule ? 'editSchedule' : 'addSchedule'), onClick: () => setShowScheduleEdit((v) => !v), hidden: isAnswered },
-                { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered },
+                { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered || !followUpRelevant },
                 { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 },
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },
                 { key: 'delete', icon: Trash2, label: t(lang, savedCopy ? 'removeFromList' : 'delete'), danger: true, onClick: handleDelete },
@@ -995,7 +1019,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             onSave={(schedule) => updatePrayer(livePrayer.id, { schedule })}
           />
         ) : (
-          livePrayer.schedule && (() => {
+          livePrayer.schedule && !paceRowShown && (() => {
             const ended = !isAnswered && scheduleEnded(livePrayer, todayKey());
             return (
               <p
@@ -1067,7 +1091,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   reader who finds a plan too fast is looking at the day, not
                   hunting the ⋯ menu for a recurrence editor. Folded away behind
                   its own answer, so the day stays the point of the card. */}
-              {canEditPace && (
+              {paceRowShown && (
                 <div className="space-y-2 pt-1">
                   <DisclosureRow
                     label={t(lang, 'planPaceTitle')}
@@ -1176,11 +1200,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* ── Prayer points + AI suggestions (both modes) — kept directly after
             the request details so the "how to pray" points read right off the
-            description, before the pray-together / updates / calendar sections. ── */}
+            description, before the pray-together / updates / calendar sections.
+            A guided plan run is the exception: the day above already says how to
+            pray, so this panel appears only if that run carries points of its
+            own — and then without the affordances to author more. ── */}
+        {showWaysToPray && (
         <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="prayer-points-panel__header flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'waysToPray')}</p>
-            {(isCommunity || canAddContent) && (
+            {offerPointAuthoring && (isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={fetchRecs}
@@ -1339,7 +1367,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           {updateRecs.length > 0 && <AiDisclaimer lang={lang} className="mt-2" />}
 
           {/* Manual prayer point input */}
-          {canAddContent && (
+          {offerPointAuthoring && canAddContent && (
             showManualForm ? (
               <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'var(--surface-2)', border: '0.5px solid var(--border)' }}>
                 <input
@@ -1393,6 +1421,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )
           )}
         </div>
+        )}
 
         {/* ── Per-prayer follow-up reminder (own personal prayers only) ── */}
         {!isCommunity && !savedCopy && !isAnswered && (
@@ -1405,7 +1434,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         )}
 
         {/* Set / change this prayer's follow-up date (opened from the ⋯ menu). */}
-        {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && (
+        {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && followUpRelevant && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <FollowUpField
               value={followUps[livePrayer.id]?.date || null}
