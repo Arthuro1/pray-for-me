@@ -32,7 +32,6 @@ function renderDeck({ lang = 'fr', dir = 'ltr', children, ...props } = {}) {
         dayNo={4}
         total={21}
         dayKey={DAYS.today}
-        isToday
         prevKey={DAYS.prev}
         nextKey={DAYS.next}
         onGoToDay={onGoToDay}

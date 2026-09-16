@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, SkipForward, CalendarClock, Undo2, Sunrise, Sun, Moon, Clock, Users, CircleOff } from 'lucide-react';
 import { t } from '../i18n';
 import { parseKey, planDayNumber } from '../lib/schedule';
+import { planTotal } from '../lib/planTempo';
 import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { planDayContent } from '../content/prayerPlans';
 import { pick } from '../content/teaching';
@@ -78,7 +79,7 @@ export default function DayAgenda({
                               // selected day; other schedules show their summary.
                               const content = planDayNo && planDayContent(plan.id, planDayNo, null, plan.version || null);
                               if (content) {
-                                return `${t(lang, 'planDayOf', { n: planDayNo, total: prayer.schedule.end?.count || '' })} · ${pick(content.theme, lang)}`;
+                                return `${t(lang, 'planDayOf', { n: planDayNo, total: planTotal(prayer.schedule) || '' })} · ${pick(content.theme, lang)}`;
                               }
                               return scheduleSummary(prayer.schedule, lang);
                             })()}

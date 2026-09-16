@@ -6,6 +6,7 @@
 // persisted schedule (or null = follows the weekly category plan).
 import { t } from '../i18n';
 import { addDays, diffDays, nextOccurrence, normalizeSchedule, parseKey } from './schedule';
+import { PLAN_PAUSED, reanchorPlanSchedule, repacePlan } from './planTempo';
 import { todayKey } from './prayedLog';
 
 // ── Simple rhythm presets ────────────────────────────────────────────────────
@@ -82,8 +83,10 @@ export function draftFromSchedule(s) {
   const d = emptyDraft();
   if (!s) return d;
   // "No fixed schedule" is an explicit choice, not the absence of one — it opens
-  // on the same 'plan' row a null schedule does.
-  if (s.type === 'none') return d;
+  // on the same 'plan' row a null schedule does. A PAUSED guided plan is stored
+  // that way too, so its run comes along: picking a rhythm here resumes it where
+  // it stood instead of starting a bare prayer.
+  if (s.type === 'none') return { ...d, plan: s.plan };
   if (s.type === 'once') {
     return { ...d, mode: 'once', date: s.date, slot: s.slot || null };
   }
@@ -189,12 +192,18 @@ export function draftForEnd(endKind, d) {
 // dated day (it no longer inherits a category's weekdays — categories are labels).
 export function scheduleFromDraft(d, existing = null) {
   if (!d) return null;
-  if (d.mode === 'plan') return { type: 'none' };
+  // On a guided plan this row means PAUSE, not leave: the run keeps its place
+  // and its length, and simply lands on no date until a rhythm is picked again.
+  // It used to drop `schedule.plan` outright, which ended the run silently and
+  // handed the plan back to the catalogue as if it had never been started.
+  if (d.mode === 'plan') {
+    return (existing?.plan?.id && repacePlan(existing, PLAN_PAUSED)) || { type: 'none' };
+  }
   if (d.mode === 'once') {
     return normalizeSchedule({ type: 'once', date: d.date, slot: d.slot }, todayKey());
   }
   const yearly = d.yearlyDate ? parseKey(d.yearlyDate) : new Date();
-  return normalizeSchedule({
+  const next = normalizeSchedule({
     type: 'recurring',
     freq: d.freq,
     weekDays: d.weekDays,
@@ -208,6 +217,10 @@ export function scheduleFromDraft(d, existing = null) {
     end: { kind: d.endKind, date: d.endDate, count: d.endCount },
     plan: d.plan || existing?.plan,
   }, todayKey());
+  // Changing the RHYTHM of a running plan re-anchors it, so the day the reader
+  // is on survives the change (see lib/planTempo.js). A slot or an ending is
+  // not a change of rhythm and leaves the run exactly where it is.
+  return reanchorPlanSchedule(next, existing);
 }
 
 // ── Human-readable schedules ─────────────────────────────────────────────────

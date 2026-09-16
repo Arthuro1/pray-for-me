@@ -33,7 +33,7 @@ const AXIS_LOCK = 6; // px of movement before the gesture picks an axis
 const RUBBER_BAND = 0.35; // resistance when there is no day that way
 
 export default function PlanDayDeck({
-  lang, dayNo, total, dayKey, isToday, upcoming, prevKey, nextKey,
+  lang, dayNo, total, dayKey, note, homeLabel, prevKey, nextKey,
   onGoToDay, onShowToday, children,
 }) {
   const rtl = isRtl(lang);
@@ -127,7 +127,10 @@ export default function PlanDayDeck({
   };
 
   const dayLabel = t(lang, 'planDayOf', { n: dayNo, total: total || '' });
-  const dateLabel = parseKey(dayKey).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
+  // A paused run holds a day without holding a date, so there may be none.
+  const dateLabel = dayKey
+    ? parseKey(dayKey).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' })
+    : '';
 
   const arrow = (dir) => {
     const target = keyFor(dir);
@@ -164,7 +167,7 @@ export default function PlanDayDeck({
             belongs with the "not today" note below, next to the way back. */}
         <p role="status" aria-live="polite" className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
           {dayLabel}
-          <span className="sr-only">{` · ${dateLabel}`}</span>
+          {dateLabel && <span className="sr-only">{` · ${dateLabel}`}</span>}
         </p>
         <div className="flex shrink-0 items-center gap-1.5">
           {arrow('prev')}
@@ -174,11 +177,13 @@ export default function PlanDayDeck({
 
       {/* Paging moves the DAY, never the page: marking prayed, notes and the
           follow-up all stay about today, so a day that is not today says so and
-          offers the way back. */}
-      {!isToday && (
+          offers the way back. The host writes the note, because "not today" has
+          several honest meanings — a day paged to, a run that is resting between
+          its days, one that has not begun, one that is paused. */}
+      {note && (
         <div className="flex flex-wrap items-center justify-between gap-x-3">
           <p className="text-[11px] first-letter:uppercase" style={{ color: 'var(--text-3)' }}>
-            {t(lang, upcoming ? 'planDayUpcoming' : 'planViewingOtherDay')} · {dateLabel}
+            {dateLabel ? `${note} · ${dateLabel}` : note}
           </p>
           {onShowToday && (
             <button
@@ -187,7 +192,7 @@ export default function PlanDayDeck({
               className="pressable flex min-h-11 items-center text-[11px] font-medium"
               style={{ color: 'var(--accent)' }}
             >
-              {t(lang, 'planBackToToday')}
+              {homeLabel || t(lang, 'planBackToToday')}
             </button>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { addDays, nextOccurrence, prevOccurrence } from '../lib/schedule';
+import { planTotal } from '../lib/planTempo';
 
 // How far the pager looks for the neighbouring day. A guided plan runs daily,
 // so a neighbour is almost always one day away; the allowance is for a run
@@ -25,7 +26,10 @@ const NO_OVERRIDES = {};
 //
 // Safe to call unconditionally: a prayer with no plan day gets nulls back.
 export function usePlanDayPager(schedule, overrides = NO_OVERRIDES, viewedDayKey = null, dayNo = null) {
-  const total = schedule?.end?.kind === 'count' ? (schedule.end.count || null) : null;
+  // The plan's LENGTH, not the schedule's remaining count — a re-paced run
+  // counts only the days it has left, and paging would then stop short of the
+  // end (and "Day 16 of 15" would be printed on the way).
+  const total = planTotal(schedule) || null;
   return useMemo(() => {
     if (!schedule || !viewedDayKey || !dayNo) return { ...NONE, total };
     return {

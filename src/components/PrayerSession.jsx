@@ -7,6 +7,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
 import { planDayNumber } from '../lib/schedule';
+import { planTotal } from '../lib/planTempo';
 import { usePlanDay } from '../hooks/usePlanDay';
 import PlanDayBody from './PlanDayBody';
 import { pick, localizeRef } from '../content/teaching';
@@ -599,7 +600,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // the unchanging plan name on every day. Computed for today, matching the
   // detail page; off a plan day (planDayNumber null) it falls back to normal.
   const planContent = sessionPlanDay
-    ? { ...sessionPlanDay, n: sessionPlanDayNo, total: prayer.schedule.end?.count || '' }
+    ? { ...sessionPlanDay, n: sessionPlanDayNo, total: planTotal(prayer.schedule) || '' }
     : null;
   // The most recent meaningful update — the freshest thing to pray from,
   // especially for shared/intercession requests. Older updates stay on the

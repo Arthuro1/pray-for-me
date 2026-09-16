@@ -173,20 +173,37 @@ describe('runningPlanProgress', () => {
     expect(runningPlanProgress(prayers, '2026-07-12').marriage30.prayerId).toBe('live');
   });
 
-  // A moved or skipped occurrence leaves the plan running but off a plan day.
-  // Callers read a null day as "running, not today" — never as an error.
-  it('keeps the run but reports no day when today is not a plan day', () => {
-    const weekly = base({
-      id: 'p-1',
-      schedule: {
-        type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-07-06',
-        end: { kind: 'count', count: 10 },
-        plan: { id: 'altar7', startDate: '2026-07-06' },
-      },
-    });
-    const progress = runningPlanProgress([weekly], '2026-07-07'); // Tuesday
+  // A weekly rhythm, a skipped day or a moved occurrence leaves the plan running
+  // on a date it does not land on. It is still on the day it reached, and the
+  // catalogue card reports that — it used to report nothing, and the card's own
+  // fallback then claimed "Day 1" however far in the reader actually was.
+  const weeklyRun = (extra = {}) => base({
+    id: 'p-1',
+    schedule: {
+      type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-07-06',
+      end: { kind: 'count', count: 10 },
+      plan: { id: 'altar7', startDate: '2026-07-06' },
+      ...extra,
+    },
+  });
+
+  it('reports the day the run reached when today is not a plan day', () => {
+    const progress = runningPlanProgress([weeklyRun()], '2026-07-07'); // Tuesday
     expect(progress.altar7.prayerId).toBe('p-1');
-    expect(progress.altar7.day).toBeNull();
+    expect(progress.altar7.day).toBe(1);
+  });
+
+  it('does not fall back to day 1 once the run is weeks in', () => {
+    // Five Mondays on: day 5, read on the Thursday after it.
+    expect(runningPlanProgress([weeklyRun()], '2026-08-06').altar7.day).toBe(5);
+  });
+
+  it('reports the day a paused run is holding', () => {
+    const paused = base({
+      id: 'p-1',
+      schedule: { type: 'none', plan: { id: 'altar7', startDate: '2026-07-06', dayOffset: 4 } },
+    });
+    expect(runningPlanProgress([paused], '2026-08-06').altar7.day).toBe(5);
   });
 
   it('is empty when nothing is running', () => {

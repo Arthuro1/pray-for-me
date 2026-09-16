@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { t } from '../i18n';
 import { SLOTS } from '../lib/schedule';
 import DisclosureRow from './shared/DisclosureRow';
+import RadioRow from './shared/RadioRow';
 import {
   ADVANCED_CHOICES,
   RECURRENCE_CHOICES,
@@ -48,6 +49,17 @@ const MODE_ROWS = [
   { value: 'plan', labelKey: 'schedNoFixed', subKey: 'schedNoFixedSub' },
 ];
 
+// A prayer carrying a guided plan answers two of these questions differently.
+// "Pray once" is not something a 30-day run can become, so it is not offered;
+// and the third row is a PAUSE — the run keeps its place and comes back at
+// whatever rhythm is picked next — so it says so rather than reading like a way
+// to lose it. The ending is the plan's own length and is not asked at all.
+const PLAN_MODE_ROWS = MODE_ROWS
+  .filter((row) => row.value !== 'once')
+  .map((row) => (row.value === 'plan'
+    ? { ...row, labelKey: 'planPacePause', subKey: 'planPacePauseSub' }
+    : row));
+
 const RHYTHM_LABELS = {
   daily: 'schedEveryDay',
   weekly: 'schedOnceAWeek',
@@ -60,49 +72,14 @@ const RHYTHM_LABELS = {
 const END_KINDS = ['answered', 'date', 'count', 'never'];
 const END_LABELS = { answered: 'endMarkAnswered', date: 'endOnDate', count: 'endAfterCount', never: 'endNoAutoEnd' };
 
-// A real radio: the native input carries focus, arrow keys, Space and the
-// group semantics; the ring beside it only mirrors state, and states it with a
-// filled dot as well as colour so it doesn't rely on hue alone.
-function RadioRow({ id, name, checked, onChange, label, sub }) {
-  return (
-    <label
-      htmlFor={id}
-      className="flex items-start gap-3 w-full min-h-[44px] rounded-xl px-3 py-2.5 cursor-pointer"
-      style={checked
-        ? { background: 'var(--accent-soft)', border: '1.5px solid var(--accent)' }
-        : { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}
-    >
-      <span className="relative w-5 h-5 shrink-0 mt-0.5 flex items-center justify-center">
-        <input
-          id={id}
-          type="radio"
-          name={name}
-          checked={checked}
-          onChange={onChange}
-          className="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-        />
-        <span
-          aria-hidden="true"
-          className="w-5 h-5 rounded-full flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
-          style={{ background: 'var(--surface)', border: checked ? '1.5px solid var(--accent)' : '0.5px solid var(--input-border)' }}
-        >
-          {checked && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--accent)' }} />}
-        </span>
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-sm font-medium break-words" style={{ color: 'var(--text-1)' }}>{label}</span>
-        {sub && <span className="block text-xs mt-0.5 break-words" style={{ color: 'var(--text-3)' }}>{sub}</span>}
-      </span>
-    </label>
-  );
-}
-
 export default function ScheduleEditor({ draft, onChange, lang, planDays, idPrefix = 'sched' }) {
   const d = draft;
   const patch = (updates) => onChange({ ...d, ...updates });
   const mode = modeOf(d);
   const rhythm = recurrenceChoiceOf(d);
   const preview = scheduleFromDraft(d);
+  const planLinked = !!d?.plan?.id;
+  const modeRows = planLinked ? PLAN_MODE_ROWS : MODE_ROWS;
 
   // Only the uncommon rhythms open on their own — and only because the draft
   // already uses one, so reopening a monthly prayer never hides its own answer.
@@ -144,7 +121,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
         <legend className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>
           {t(lang, 'schedWhenAppear')}
         </legend>
-        {MODE_ROWS.map((row) => (
+        {modeRows.map((row) => (
           <div key={row.value} className="space-y-2">
             <RadioRow
               id={id(`mode-${row.value}`)}
@@ -312,7 +289,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
 
       {/* When the rhythm stops. Folded away, but its current answer is on the
           row, so an existing schedule never hides how it ends. */}
-      {mode === 'recurring' && (
+      {mode === 'recurring' && !planLinked && (
         <div className="space-y-2">
           <DisclosureRow
             label={t(lang, 'schedStopQuestion')}

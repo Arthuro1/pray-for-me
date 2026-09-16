@@ -15,7 +15,12 @@
 //     startDate: 'YYYY-MM-DD',
 //     slot?: string,
 //     end?: { kind: 'never'|'date'|'count'|'answered', date?: string, count?: number },
-//     plan?: { id: string, startDate: 'YYYY-MM-DD' } }
+//     plan?: { id: string, version?: number, startDate: 'YYYY-MM-DD',
+//              dayOffset?: number } }
+//
+// `plan.startDate` is the day the RUN began and never moves — it is the run's
+// identity. `startDate` above is the current anchor of the pattern, and moves
+// whenever the rhythm is re-paced (see `plan.dayOffset` on planDayNumber).
 //
 // Overrides (prayers.schedule_overrides) are per-occurrence exceptions:
 //   { 'YYYY-MM-DD': { skip: true } }              — this day only, skipped
@@ -178,9 +183,86 @@ export function prevOccurrence(s, fromKey, overrides = {}, horizonDays = 400) {
 
 // For plan-linked schedules: which day of the plan is `key` (1-based), e.g.
 // "Day 3 of 21". Based on the base pattern so skips don't shift the readings.
+//
+// `plan.dayOffset` is how many days the run had ALREADY walked when its rhythm
+// was last changed. Without it the day number is a pure function of the
+// recurrence rule, so re-pacing a run silently rewrote its history (a reader on
+// day 16 of a daily plan was sent back to day 3 by switching to weekly). The
+// offset pins that progress; `startDate` is re-anchored to the change date at
+// the same time, so the pattern counts only the days since. Absent on every run
+// that has never been re-paced, where it reads as the 0 it always was.
 export function planDayNumber(s, key) {
   if (!s || s.type !== 'recurring' || !matchesPattern(s, key)) return null;
-  return occurrenceIndex(s, key);
+  return (s.plan?.dayOffset || 0) + occurrenceIndex(s, key);
+}
+
+// How far a plan-linked schedule looks for a neighbouring day of its own run.
+// A year covers even a monthly cadence chosen from the full editor, and bounds
+// the walk so a finished run costs a scan rather than an open-ended one.
+const PLAN_HORIZON_DAYS = 366;
+
+// The first/last day of the run at or after (resp. before) `key`, as
+// { dayNo, dayKey } — or null when the run has none that way.
+//
+// Base pattern only, exactly like planDayNumber: a skipped or moved day never
+// renumbers the readings, so these answer "which day of the plan is the reader
+// on" rather than "what is on the calendar".
+//
+// Both walk FORWARD from the anchor once, counting as they go, rather than
+// testing each candidate day against the end condition — which would re-walk
+// the whole series per day, and is quadratic on a run opened long after it
+// finished.
+function planDayWalk(s, key, horizonDays, wantEarliest) {
+  if (!s || s.type !== 'recurring' || !s.startDate) return null;
+  const end = s.end || {};
+  const max = end.kind === 'count' ? (end.count || 1) : Infinity;
+  const until = end.kind === 'date' && end.date ? end.date : null;
+  const offset = s.plan?.dayOffset || 0;
+  let cursor = s.startDate;
+  let count = 0;
+  let last = null;
+  for (let i = 0; i < horizonDays && count < max; i++) {
+    if (until && cursor > until) break;
+    if (!wantEarliest && cursor > key) break;
+    if (matchesPattern(s, cursor)) {
+      count += 1;
+      const day = { dayNo: offset + count, dayKey: cursor };
+      if (wantEarliest && cursor >= key) return day;
+      last = day;
+    }
+    cursor = addDays(cursor, 1);
+  }
+  return wantEarliest ? null : last;
+}
+
+export function planDayAtOrAfter(s, key, horizonDays = PLAN_HORIZON_DAYS) {
+  return planDayWalk(s, key, horizonDays, true);
+}
+
+export function planDayAtOrBefore(s, key, horizonDays = PLAN_HORIZON_DAYS) {
+  if (!s?.startDate || key < s.startDate) return null;
+  return planDayWalk(s, key, horizonDays, false);
+}
+
+// WHERE A RUN IS SITTING on `key` — the day a screen should show when the
+// reader opens the prayer, whether or not the run lands on that date:
+//
+//   { dayNo, dayKey, state: 'today' | 'past' | 'upcoming' | 'paused' }
+//
+// A run only ever landed on `key` itself before, so every rhythm that isn't
+// daily — and every skipped or moved day — left the plan's own page blank. It
+// rests on the most recent day it reached, or on the first one still to come
+// when it hasn't started, or on the day it was paused holding.
+//
+// null when the prayer carries no plan, or when the run is finished.
+export function restingPlanDay(s, key) {
+  if (!s?.plan?.id) return null;
+  // Paused ("no fixed schedule"): no dates at all, holding the next day.
+  if (s.type === 'none') return { dayNo: (s.plan.dayOffset || 0) + 1, dayKey: null, state: 'paused' };
+  const past = planDayAtOrBefore(s, key);
+  if (past) return { ...past, state: past.dayKey === key ? 'today' : 'past' };
+  const ahead = planDayAtOrAfter(s, key);
+  return ahead ? { ...ahead, state: 'upcoming' } : null;
 }
 
 // ── Rotation ──────────────────────────────────────────────────────────────
@@ -250,6 +332,11 @@ export function normalizeSchedule(s, todayKeyStr) {
     id: s.plan.id,
     startDate: s.plan.startDate || out.startDate,
     ...(Number.isInteger(s.plan.version) && s.plan.version > 0 ? { version: s.plan.version } : {}),
+    // Progress already walked, and the run's full length, carried through every
+    // later edit — dropping either here would renumber the run (or lose its
+    // ending) the first time its rhythm was touched.
+    ...(Number.isInteger(s.plan.dayOffset) && s.plan.dayOffset > 0 ? { dayOffset: s.plan.dayOffset } : {}),
+    ...(Number.isInteger(s.plan.total) && s.plan.total > 0 ? { total: s.plan.total } : {}),
   };
   return out;
 }

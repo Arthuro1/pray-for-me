@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
@@ -21,7 +21,7 @@ import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { planWeekDays, scheduleEnded } from '../lib/planner';
 import { occursOn } from '../lib/schedule';
-import { planDayNumber, toKey } from '../lib/schedule';
+import { planDayNumber, restingPlanDay, toKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { getPlan } from '../content/prayerPlans';
 import { pick, localizeRef } from '../content/teaching';
@@ -29,6 +29,8 @@ import { usePlanDay } from '../hooks/usePlanDay';
 import { usePlanDayPager } from '../hooks/usePlanDayPager';
 import PlanDayBody from '../components/PlanDayBody';
 import PlanDayDeck from '../components/plan/PlanDayDeck';
+import PlanPaceRow from '../components/plan/PlanPaceRow';
+import DisclosureRow from '../components/shared/DisclosureRow';
 import PlanDayTrace from '../components/plan/PlanDayTrace';
 import PlanCompletionCard from '../components/PlanCompletionCard';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
@@ -38,6 +40,7 @@ import { claimPlanCompletionReport, markPlanCompleted, savePlanPrefs } from '../
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
 import { canUsePlan } from '../lib/planReview';
+import { PACE_LABEL_KEYS, paceOf, planTotal } from '../lib/planTempo';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
@@ -163,6 +166,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // to the ⋯ trigger it was opened from.
   const [showScheduleEdit, setShowScheduleEdit] = useState(false);
   const scheduleTriggerRef = useRef(null);
+  // How often a running plan comes back, folded away under its own summary row
+  // on the plan's card — the day is what the reader came for.
+  const [showPaceEdit, setShowPaceEdit] = useState(false);
 
   // ── Community mode state ─────────────────────────────────────────────────
   // (The encouragement timeline — communityUpdates/loadingUpdates — now lives in
@@ -346,16 +352,31 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const requestedDay = planId && DAY_KEY.test(planDayKey || '')
     && occursOn(livePrayer.schedule, planDayKey, livePrayer.schedule_overrides || {})
     ? planDayKey : null;
-  const viewedDayKey = requestedDay || todayKey();
-  const planDayNo = planId ? planDayNumber(livePrayer.schedule, viewedDayKey) : null;
+  // WHERE THE RUN IS SITTING today, which is only the same thing as "today's
+  // day" for a plan running daily. Every other rhythm — and any skipped or moved
+  // day — leaves most dates off the run, and the plan's whole card used to
+  // vanish on them: no theme, no passage, no way back in. It rests on the last
+  // day it reached instead (or the first still to come, or the day it was
+  // paused holding).
+  const resting = useMemo(
+    () => (planId ? restingPlanDay(livePrayer.schedule, todayKey()) : null),
+    [planId, livePrayer.schedule],
+  );
+  const viewedDayKey = requestedDay || resting?.dayKey || todayKey();
+  const planDayNo = requestedDay
+    ? planDayNumber(livePrayer.schedule, requestedDay)
+    : (resting?.dayNo ?? null);
   // Everything else on this page — marking prayed, the follow-up, the series
   // summary — stays about TODAY. Only the plan day itself moves.
   const viewingOtherDay = planDayNo != null && viewedDayKey !== todayKey();
+  // A paused run holds a day without holding a date: there is nothing to page
+  // through and nothing to date-stamp until it is given a rhythm again.
+  const deckDayKey = resting?.state === 'paused' ? null : viewedDayKey;
   // The days on either side of the one on screen, so the reader can read back
   // over what a day held or look ahead at what is coming without going out to
   // the calendar and back for each one.
   const { prevKey: prevDayKey, nextKey: nextDayKey } =
-    usePlanDayPager(livePrayer.schedule, livePrayer.schedule_overrides, viewedDayKey, planDayNo);
+    usePlanDayPager(livePrayer.schedule, livePrayer.schedule_overrides, deckDayKey, planDayNo);
   const planVersion = livePrayer.schedule?.plan?.version || null;
   const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
   const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
@@ -365,6 +386,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     });
   // The last day is behind them: the series can produce no more occurrences.
   const planFinished = !!plan?.completion && !isCommunity && scheduleEnded(livePrayer, todayKey());
+  // "Not today" has several honest meanings, and the card should say which one
+  // rather than claiming the reader paged here themselves.
+  const planDayNoteKey = (() => {
+    if (requestedDay) {
+      if (!viewingOtherDay) return null;
+      return requestedDay > todayKey() ? 'planDayUpcoming' : 'planViewingOtherDay';
+    }
+    if (!resting || resting.state === 'today') return null;
+    if (resting.state === 'paused') return 'planPacePausedNote';
+    return resting.state === 'upcoming' ? 'planDayUpcoming' : 'planPaceResting';
+  })();
   // A plan's answers used to be capturable only at the moment it started, behind
   // a sheet that stood between "Start" and the first day. They are asked here
   // instead — on the day itself, where the reader can see what an answer
@@ -392,6 +424,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   }, [completedEvent, livePrayer.id]);
 
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
+  // Pace is the reader's own to set on their own run: never on a community
+  // prayer, and not once the prayer is answered or the plan is finished.
+  const canEditPace = !!planId && !isCommunity && !isAnswered && !planFinished;
   // Rows whose content was fully deleted would render as bare author+date
   // shells — hide them. Locked E2EE rows stay visible with their placeholder.
   const hasContent = (row) => row._locked || row.text || row.content || (row.attachments || []).length > 0;
@@ -968,14 +1003,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <PlanDayDeck
             lang={lang}
             dayNo={planDayNo}
-            total={livePrayer.schedule.end?.count || null}
-            dayKey={viewedDayKey}
-            isToday={!viewingOtherDay}
-            upcoming={viewingOtherDay && viewedDayKey > todayKey()}
+            // The plan's own length, not the schedule's remaining count: once a
+            // run has been re-paced the count holds only the days still to come.
+            total={plan?.count || planTotal(livePrayer.schedule) || null}
+            dayKey={deckDayKey}
+            note={planDayNoteKey ? t(lang, planDayNoteKey) : null}
+            homeLabel={t(lang, resting?.state === 'today' ? 'planBackToToday' : 'planBackToCurrentDay')}
             prevKey={onGoToDay ? prevDayKey : null}
             nextKey={onGoToDay ? nextDayKey : null}
             onGoToDay={onGoToDay}
-            onShowToday={onShowToday}
+            onShowToday={requestedDay ? onShowToday : null}
           >
             <div className="space-y-3">
               <div>
@@ -1012,6 +1049,32 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 >
                   <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
                 </button>
+              )}
+              {/* How often this comes back, kept WITH the day it paces — a
+                  reader who finds a plan too fast is looking at the day, not
+                  hunting the ⋯ menu for a recurrence editor. Folded away behind
+                  its own answer, so the day stays the point of the card. */}
+              {canEditPace && (
+                <div className="space-y-2 pt-1">
+                  <DisclosureRow
+                    label={t(lang, 'planPaceTitle')}
+                    value={t(lang, PACE_LABEL_KEYS[paceOf(livePrayer.schedule)] || 'planPaceCustom')}
+                    action={t(lang, 'schedChange')}
+                    open={showPaceEdit}
+                    onToggle={() => setShowPaceEdit((v) => !v)}
+                    controlsId="detail-plan-pace"
+                  />
+                  {showPaceEdit && (
+                    <div id="detail-plan-pace">
+                      <PlanPaceRow
+                        schedule={livePrayer.schedule}
+                        lang={lang}
+                        planCount={plan?.count || null}
+                        onChange={(schedule) => updatePrayer(livePrayer.id, { schedule })}
+                      />
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </PlanDayDeck>
