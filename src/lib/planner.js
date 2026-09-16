@@ -147,7 +147,7 @@ export function runningPlanProgress(prayers, dayKey) {
   for (const p of prayers) {
     const id = p.schedule?.plan?.id;
     if (!id || p.status !== 'active' || !running.has(id) || out[id]) continue;
-    out[id] = { prayerId: p.id, day: restingPlanDay(p.schedule, dayKey)?.dayNo ?? null };
+    out[id] = { prayerId: p.id, day: restingPlanDay(p.schedule, dayKey, p.schedule_overrides || {})?.dayNo ?? null };
   }
   return out;
 }

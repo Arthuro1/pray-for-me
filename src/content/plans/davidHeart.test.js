@@ -114,7 +114,12 @@ describe('Scripture, study content and languages', () => {
 });
 
 describe('David’s historical resource shelf', () => {
-  const entries = RESOURCES.filter((r) => r.domains.includes('bible-study'));
+  // DAVID'S OWN SHELF, not the whole 'bible-study' domain. A second study plan
+  // (biblical wisdom) now shares that domain, so "every resource in the domain
+  // belongs to David" stopped being true — the isolation this guards is between
+  // TOPICS within the domain, which is what actually decides a day's shelf.
+  const davidIds = new Set(DAVID_STUDY_RESOURCES.map((r) => r.id));
+  const entries = RESOURCES.filter((r) => r.domains.includes('bible-study') && davidIds.has(r.id));
   const unreviewedFixture = entries.map((r) => ({ ...r, status: 'needs_review' }));
 
   it('records nine verified resources with Paul’s explicit approval', () => {
@@ -142,6 +147,12 @@ describe('David’s historical resource shelf', () => {
       expect(resolveResources({ topics: day.resourceTopics, domains: ['relationships'], catalogue: entries })).toEqual([]);
     }
     for (const r of entries) expect(plan.days.some((d) => d.resourceTopics.some((topic) => r.topics.includes(topic))), r.id).toBe(true);
+    // ...and nothing else in the domain reaches a day of this plan: a shelf
+    // belonging to another study must never surface on David's.
+    for (const day of plan.days) {
+      const rows = resolveResources({ topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'] });
+      for (const row of rows) expect(davidIds.has(row.id), `${row.id} on ${day.theme.en}`).toBe(true);
+    }
   });
 
   it('keeps both scholarly positions on the disputed Mesha reading together', () => {

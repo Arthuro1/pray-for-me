@@ -25,11 +25,16 @@ const NO_OVERRIDES = {};
 // last day of a run that ends on a count.
 //
 // Safe to call unconditionally: a prayer with no plan day gets nulls back.
-export function usePlanDayPager(schedule, overrides = NO_OVERRIDES, viewedDayKey = null, dayNo = null) {
+export function usePlanDayPager(schedule, overrides = NO_OVERRIDES, viewedDayKey = null, dayNo = null, planLength = null) {
   // The plan's LENGTH, not the schedule's remaining count — a re-paced run
   // counts only the days it has left, and paging would then stop short of the
   // end (and "Day 16 of 15" would be printed on the way).
-  const total = planTotal(schedule) || null;
+  //
+  // The caller passes it when it knows the plan's content, which is the only
+  // source that is always right: a run whose ending was never a count has no
+  // length in its schedule at all, and paging on past the last day of the plan
+  // lands on a day with no content — the card goes blank.
+  const total = planLength || planTotal(schedule) || null;
   return useMemo(() => {
     if (!schedule || !viewedDayKey || !dayNo) return { ...NONE, total };
     return {

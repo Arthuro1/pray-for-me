@@ -120,6 +120,20 @@ describe('PrayerDetail — a plan day chosen on the calendar', () => {
     renderDetail({ planDayKey: 'not-a-date' });
     expect(screen.getByText(/Jour 3 sur 3/)).toBeTruthy();
   });
+
+  // A day the reader MOVED on the calendar opens on the date they moved it to —
+  // which the recurrence pattern knows nothing about. Numbering it from the
+  // pattern alone gave day 2 the number of whatever day sits on that date, and
+  // when the plan has no such day the entire card disappeared, taking the way
+  // back with it.
+  it('opens a moved day as the day it still is', () => {
+    const TOMORROW = addDays(todayKey(), 1);
+    const movedPrayer = { ...prayer, schedule_overrides: { [DAY_2]: { movedTo: TOMORROW } } };
+    renderDetail({
+      prayer: movedPrayer, store: { prayers: [movedPrayer] }, planDayKey: TOMORROW,
+    });
+    expect(screen.getByText(/Jour 2 sur 3/)).toBeTruthy();
+  });
 });
 
 // Reading back over a day already prayed, or ahead to one still to come, is a

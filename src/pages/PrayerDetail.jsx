@@ -127,6 +127,10 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 // before being rejected.
 const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
 
+// A stable identity for "no exceptions", so a prayer that has never had a day
+// skipped or moved doesn't hand the memos below a fresh object every render.
+const EMPTY_OVERRIDES = {};
+
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null }) {
   const isCommunity = !!communityPrayer;
 
@@ -349,9 +353,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // plan. Only a real occurrence of THIS prayer's schedule is accepted, so a
   // stale link or a hand-typed date quietly falls back to today rather than
   // showing a day the run does not have.
+  // Overrides travel with the schedule everywhere below: a day the reader
+  // SKIPPED or MOVED is a fact about where the run has got to, and reading the
+  // pattern without them reports a day the calendar will not open.
+  const planOverrides = livePrayer.schedule_overrides || EMPTY_OVERRIDES;
   const requestedDay = planId && DAY_KEY.test(planDayKey || '')
-    && occursOn(livePrayer.schedule, planDayKey, livePrayer.schedule_overrides || {})
+    && occursOn(livePrayer.schedule, planDayKey, planOverrides)
     ? planDayKey : null;
+  const planVersion = livePrayer.schedule?.plan?.version || null;
+  const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
+  const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
+  // HOW LONG THE RUN IS, from the plan's own content first. The schedule's
+  // count is only what REMAINS once a run has been re-paced, and an older run
+  // may carry no count at all — either way the pager would then walk past the
+  // last day of the plan, where there is no content and the card simply
+  // vanishes. One number, so what the card prints and where paging stops can
+  // never disagree.
+  const planLength = (planId && (plan?.count || planTotal(livePrayer.schedule))) || null;
   // WHERE THE RUN IS SITTING today, which is only the same thing as "today's
   // day" for a plan running daily. Every other rhythm — and any skipped or moved
   // day — leaves most dates off the run, and the plan's whole card used to
@@ -359,12 +377,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // day it reached instead (or the first still to come, or the day it was
   // paused holding).
   const resting = useMemo(
-    () => (planId ? restingPlanDay(livePrayer.schedule, todayKey()) : null),
-    [planId, livePrayer.schedule],
+    () => (planId ? restingPlanDay(livePrayer.schedule, todayKey(), planOverrides) : null),
+    [planId, livePrayer.schedule, planOverrides],
   );
   const viewedDayKey = requestedDay || resting?.dayKey || todayKey();
   const planDayNo = requestedDay
-    ? planDayNumber(livePrayer.schedule, requestedDay)
+    ? planDayNumber(livePrayer.schedule, requestedDay, planOverrides)
     : (resting?.dayNo ?? null);
   // Everything else on this page — marking prayed, the follow-up, the series
   // summary — stays about TODAY. Only the plan day itself moves.
@@ -376,10 +394,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // over what a day held or look ahead at what is coming without going out to
   // the calendar and back for each one.
   const { prevKey: prevDayKey, nextKey: nextDayKey } =
-    usePlanDayPager(livePrayer.schedule, livePrayer.schedule_overrides, deckDayKey, planDayNo);
-  const planVersion = livePrayer.schedule?.plan?.version || null;
-  const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
-  const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
+    usePlanDayPager(livePrayer.schedule, planOverrides, deckDayKey, planDayNo, planLength);
   const { day: planDay, prefs: planPrefs, role: planRole, resources: planResources, reloadPrefs } =
     usePlanDay(planId, planDayNo, lang, {
       prayerId: livePrayer.id, ownerId: livePrayer.user_id, planVersion,
@@ -1003,9 +1018,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <PlanDayDeck
             lang={lang}
             dayNo={planDayNo}
-            // The plan's own length, not the schedule's remaining count: once a
-            // run has been re-paced the count holds only the days still to come.
-            total={plan?.count || planTotal(livePrayer.schedule) || null}
+            total={planLength}
             dayKey={deckDayKey}
             note={planDayNoteKey ? t(lang, planDayNoteKey) : null}
             homeLabel={t(lang, resting?.state === 'today' ? 'planBackToToday' : 'planBackToCurrentDay')}

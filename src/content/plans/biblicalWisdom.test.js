@@ -135,4 +135,17 @@ describe('42-day biblical wisdom curriculum', () => {
     expect(resolveResources({ ...options, languages: ['de'] })).toEqual([]);
     expect(resolveResources({ ...options, domains: ['relationships'], languages: ['fr', 'en'] })).toEqual([]);
   });
+
+  // The 'bible-study' domain is shared with David's study, so the shelves are
+  // kept apart by TOPIC alone. Asserted from this side too: a day of this plan
+  // may only ever offer this plan's own approved resources.
+  it('never surfaces another study’s shelf on one of its days', () => {
+    const own = new Set(WISDOM_APPROVED_RESOURCE_IDS);
+    for (const day of plan.days) {
+      const rows = resolveResources({
+        topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'],
+      });
+      for (const row of rows) expect(own.has(row.id), `${row.id} on day ${day.n || ''}`).toBe(true);
+    }
+  });
 });

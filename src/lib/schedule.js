@@ -191,9 +191,29 @@ export function prevOccurrence(s, fromKey, overrides = {}, horizonDays = 400) {
 // offset pins that progress; `startDate` is re-anchored to the change date at
 // the same time, so the pattern counts only the days since. Absent on every run
 // that has never been re-paced, where it reads as the 0 it always was.
-export function planDayNumber(s, key) {
-  if (!s || s.type !== 'recurring' || !matchesPattern(s, key)) return null;
-  return (s.plan?.dayOffset || 0) + occurrenceIndex(s, key);
+//
+// `overrides` is what lets the CALENDAR and the day number agree. Navigation
+// speaks dates (occursOn, nextOccurrence), and a day the reader moved lands on
+// a date the base pattern knows nothing about — so numbering it straight
+// returned null on every rhythm but daily, and the wrong day on that one. The
+// date is resolved back to the base day behind it first; the reading a reader
+// moved is still the reading they moved.
+export function planDayNumber(s, key, overrides = {}) {
+  if (!s || s.type !== 'recurring') return null;
+  const base = basePatternKey(s, key, overrides);
+  if (!matchesPattern(s, base)) return null;
+  return (s.plan?.dayOffset || 0) + occurrenceIndex(s, base);
+}
+
+// The base-pattern day behind a calendar date: the day a reader MOVED to `key`,
+// or `key` itself when nothing was moved there. Mirrors the precedence in
+// occursOn, which answers "the run lands here" for a moved-to date before it
+// ever looks at the pattern.
+export function basePatternKey(s, key, overrides = {}) {
+  for (const [from, o] of Object.entries(overrides || {})) {
+    if (o?.movedTo === key && matchesPattern(s, from)) return from;
+  }
+  return key;
 }
 
 // How far a plan-linked schedule looks for a neighbouring day of its own run.
@@ -255,12 +275,21 @@ export function planDayAtOrBefore(s, key, horizonDays = PLAN_HORIZON_DAYS) {
 // when it hasn't started, or on the day it was paused holding.
 //
 // null when the prayer carries no plan, or when the run is finished.
-export function restingPlanDay(s, key) {
+export function restingPlanDay(s, key, overrides = {}) {
   if (!s?.plan?.id) return null;
   // Paused ("no fixed schedule"): no dates at all, holding the next day.
   if (s.type === 'none') return { dayNo: (s.plan.dayOffset || 0) + 1, dayKey: null, state: 'paused' };
+  // The calendar has the last word on whether the run lands on `key`: a day
+  // moved HERE lands here, and one moved away (or skipped) does not. Without
+  // this the base-pattern walk below called a day "today" that the reader had
+  // already moved to tomorrow, and dated a day moved to today as last week's.
+  const lands = occursOn(s, key, overrides);
+  if (lands) {
+    const dayNo = planDayNumber(s, key, overrides);
+    if (dayNo) return { dayNo, dayKey: key, state: 'today' };
+  }
   const past = planDayAtOrBefore(s, key);
-  if (past) return { ...past, state: past.dayKey === key ? 'today' : 'past' };
+  if (past) return { ...past, state: lands && past.dayKey === key ? 'today' : 'past' };
   const ahead = planDayAtOrAfter(s, key);
   return ahead ? { ...ahead, state: 'upcoming' } : null;
 }
