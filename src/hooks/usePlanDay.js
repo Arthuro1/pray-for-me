@@ -79,5 +79,8 @@ export function usePlanDay(planId, dayNumber, lang, {
     });
   }, [day, plan, lang, additionalLanguageKey, prefs]);
 
-  return { day, prefs, role: prefs?.role || 'general', resources, reloadPrefs };
+  // `plan` is handed back too: a screen that needs the run's own length or name
+  // would otherwise look it up a second time and could disagree with the day it
+  // is rendering.
+  return { day, plan, prefs, role: prefs?.role || 'general', resources, reloadPrefs };
 }

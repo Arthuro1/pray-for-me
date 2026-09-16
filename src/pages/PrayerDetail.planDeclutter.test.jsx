@@ -2,16 +2,19 @@
 //
 // A guided plan run is a different kind of page from an ordinary prayer.
 //
-// The day on screen already names the theme, the passage and the prompts, and
-// the run comes back on its own rhythm — so everything the generic prayer page
-// wrapped around it was saying the same thing twice: an AI "ways to pray" panel
-// competing with the day's prompts, a recurrence summary repeating the pace row
-// right below it, a scripture hunt for a run that leads with Scripture, a
-// follow-up reminder for a prayer that returns by itself.
+// The day on screen already names the theme, the passage and the prompts; the
+// run comes back on its own rhythm; and none of the words on it were written by
+// the reader. So the generic prayer page around it was mostly saying the same
+// thing twice, or asking questions a plan cannot answer: an AI "ways to pray"
+// panel competing with the day's prompts, a recurrence summary repeating the
+// rhythm row below it, a scripture hunt for a run that leads with Scripture, a
+// follow-up reminder for a prayer that returns by itself, a translate toggle
+// over content that is already translated, and a privacy badge for content the
+// reader never authored.
 //
 // What must hold here: a plan run is stripped of exactly those, an ordinary
 // prayer keeps every one of them, and nothing a reader actually put on the
-// prayer (points, an existing follow-up) is ever hidden by the stripping.
+// prayer (points, notes, an existing follow-up) is ever hidden by the stripping.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -57,10 +60,14 @@ import { t } from '../i18n';
 
 const lang = 'fr';
 
+// Deliberately NOT the plan's own name: a run started in another language wrote
+// its title into the prayer, and the page must not keep showing that copy.
+const STALE_TITLE = 'Thirty Days For Others';
+
 const base = (extra = {}) => ({
   id: 'p1',
-  title: 'Trente jours pour les autres',
-  description: '',
+  title: STALE_TITLE,
+  description: 'Stale stored subtitle',
   status: 'active',
   created_at: '2026-07-01T00:00:00Z',
   prayer_categories: [],
@@ -132,55 +139,73 @@ describe('a plan run drops the generic ways-to-pray panel', () => {
   });
 });
 
+describe('a plan run is walked, not updated and answered', () => {
+  it('offers neither Add update nor Mark answered in the hero', () => {
+    renderDetail(planRun());
+    expect(screen.queryByText(t(lang, 'addUpdateBtn'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'markAnswered'))).toBeNull();
+    // Pray now is the one thing a plan day asks for.
+    expect(screen.getByRole('button', { name: t(lang, 'prayNow') })).toBeTruthy();
+  });
+
+  it('keeps both on an ordinary prayer', () => {
+    renderDetail(ordinary());
+    expect(screen.getByText(t(lang, 'addUpdateBtn'))).toBeTruthy();
+    expect(screen.getAllByText(t(lang, 'markAnswered')).length).toBe(1);
+  });
+
+  it('keeps the history and its composer — that is where a prayed note lands', () => {
+    // PlanDayTrace reads those notes back when the reader pages to a past day,
+    // so removing the timeline with the buttons would break both.
+    const { container } = renderDetail(planRun());
+    expect(screen.getByText(t(lang, 'evolutions'))).toBeTruthy();
+    expect(container.querySelector('#pd-updates [contenteditable]')).toBeTruthy();
+  });
+});
+
 describe('a plan run states its rhythm exactly once', () => {
-  it('drops the recurrence summary when the pace row is on screen', () => {
+  it('asks it on the plan card, not as a summary line above it', () => {
     renderDetail(planRun());
     expect(screen.getByText(t(lang, 'planPaceTitle'))).toBeTruthy();
-    // The pace row already reports "Every day"; the summary pill above it said
-    // the same thing in different words.
     expect(screen.queryByText(scheduleSummary(planRun().schedule, lang))).toBeNull();
   });
 
-  it('keeps the summary on an ordinary recurring prayer, which has no pace row', () => {
+  it('keeps the summary on an ordinary recurring prayer, which has no rhythm row', () => {
     renderDetail(ordinary());
     expect(screen.queryByText(t(lang, 'planPaceTitle'))).toBeNull();
     expect(screen.getByText(scheduleSummary(ordinary().schedule, lang))).toBeTruthy();
   });
 
-  it('never opens the pace disclosure onto an empty control', () => {
-    // A run whose last day is behind it has nothing left to re-pace: the row
-    // used to offer "Change" and then reveal nothing at all.
-    const OLD = addDays(todayKey(), -60);
-    renderDetail(base({
-      schedule: {
-        type: 'recurring', freq: 'daily', startDate: OLD,
-        end: { kind: 'count', count: 30 }, plan: { id: 'others30', startDate: OLD },
-      },
-    }));
-    expect(screen.queryByText(t(lang, 'planPaceTitle'))).toBeNull();
-    // …and the rhythm is still stated, so an ended run never goes silent.
-    expect(screen.getByText(t(lang, 'seriesEnded'))).toBeTruthy();
+  it('opens the ONE scheduler from that row — there is no second pace control', () => {
+    renderDetail(planRun());
+    fireEvent.click(screen.getByText(t(lang, 'planPaceTitle')));
+    // The ordinary scheduler, asking its ordinary question.
+    expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
+    expect(screen.getByRole('radio', { name: new RegExp(t(lang, 'planPacePause')) })).toBeTruthy();
   });
 });
 
 describe('the overflow menu on a plan run', () => {
-  it('drops the scripture hunt and the follow-up reminder', () => {
+  it('drops the scripture hunt, the follow-up, the editor and the second scheduler', () => {
     renderDetail(planRun());
     openMenu();
     expect(menuItem('viewScripture')).toBeNull();
     expect(menuItem('followUpTitle')).toBeNull();
-    // The rest of the menu is untouched — including the full scheduler, which
-    // is still the only way to ask for a rhythm the pace row cannot express.
+    // The plan's words are the plan's own, and the rhythm is asked on the card.
+    expect(menuItem('edit')).toBeNull();
+    expect(menuItem('editSchedule')).toBeNull();
+    // What is still the reader's own stays.
     expect(menuItem('pin')).toBeTruthy();
-    expect(menuItem('editSchedule')).toBeTruthy();
     expect(menuItem('delete')).toBeTruthy();
   });
 
-  it('keeps both on an ordinary prayer', () => {
+  it('keeps all of them on an ordinary prayer', () => {
     renderDetail(ordinary());
     openMenu();
     expect(menuItem('viewScripture')).toBeTruthy();
     expect(menuItem('followUpTitle')).toBeTruthy();
+    expect(menuItem('edit')).toBeTruthy();
+    expect(menuItem('editSchedule')).toBeTruthy();
   });
 
   it('never takes away a follow-up a plan run already has', () => {
@@ -188,5 +213,50 @@ describe('the overflow menu on a plan run', () => {
     renderDetail(planRun());
     openMenu();
     expect(menuItem('followUpTitle')).toBeTruthy();
+  });
+});
+
+describe('a plan run shows the plan’s own words, in the reader’s language', () => {
+  it('reads the title and subtitle from the plan, not the copy frozen at start', () => {
+    renderDetail(planRun());
+    expect(screen.getByText(t(lang, 'plan30Title'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'plan30Sub'))).toBeTruthy();
+    expect(screen.queryByText(STALE_TITLE)).toBeNull();
+  });
+
+  it('is not editable in place — the name belongs to the plan', () => {
+    const { container } = renderDetail(planRun());
+    fireEvent.click(screen.getByText(t(lang, 'plan30Title')));
+    expect(container.querySelector('.constellation-detail__title-input')).toBeNull();
+  });
+
+  it('an ordinary prayer keeps its own title, editable in place', () => {
+    const { container } = renderDetail(ordinary());
+    expect(screen.getByText(STALE_TITLE)).toBeTruthy();
+    fireEvent.click(screen.getByText(STALE_TITLE));
+    expect(container.querySelector('.constellation-detail__title-input')).toBeTruthy();
+  });
+});
+
+describe('neither privacy nor translation applies to plan content', () => {
+  it('shows no audience badge on a plan run', () => {
+    renderDetail(planRun());
+    expect(screen.queryByText(t(lang, 'audiencePrivate'))).toBeNull();
+  });
+
+  it('still shows it on an ordinary prayer', () => {
+    renderDetail(ordinary());
+    expect(screen.getByText(t(lang, 'audiencePrivate'))).toBeTruthy();
+  });
+
+  it('never offers to AI-translate a plan that is already translated', () => {
+    // content_language is what makes the toggle appear at all.
+    renderDetail(planRun({ content_language: 'de' }));
+    expect(screen.queryByText(t(lang, 'seeTranslation'))).toBeNull();
+  });
+
+  it('still offers it on an ordinary prayer written in another language', () => {
+    renderDetail(ordinary({ content_language: 'de' }));
+    expect(screen.getByText(t(lang, 'seeTranslation'))).toBeTruthy();
   });
 });

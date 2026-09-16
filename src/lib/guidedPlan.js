@@ -38,3 +38,19 @@ export function buildGuidedPlanPrayer(plan, startDate, lang) {
     },
   };
 }
+
+// What a running plan is CALLED on screen.
+//
+// The title and subtitle are WRITTEN INTO the prayer when the run is created, in
+// whatever language the reader was using at that moment. A reader who later
+// switched language was then left with a French plan name in a German app — and,
+// worse, the AI translation toggle appeared over a name that already has a
+// proper translation in all 16 locales. The plan owns its own name, so read it
+// from the plan content in the language being read, never from the stored copy.
+export function planPrayerText(plan, lang) {
+  if (!plan?.titleKey) return null;
+  return {
+    title: t(lang, plan.titleKey),
+    description: plan.subKey ? t(lang, plan.subKey) : '',
+  };
+}

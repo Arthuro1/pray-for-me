@@ -1,6 +1,9 @@
 // @vitest-environment jsdom
 //
-// The pace of a running plan, set on the plan's own card.
+// The rhythm of a running plan, asked on the plan's own card and answered by
+// the ORDINARY scheduler — there is no second pace control. For a plan-linked
+// draft that scheduler drops "Pray once" and offers Pause in its place, and it
+// re-anchors on save, which is what keeps the day on screen.
 //
 // Two things used to break the moment a reader changed the rhythm of a plan
 // they had already started: the day number was recounted from the new pattern
@@ -47,7 +50,8 @@ import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import useFollowUpStore from '../store/followUpStore';
-import { addDays, parseKey, planDayNumber, restingPlanDay } from '../lib/schedule';
+import { addDays, parseKey, restingPlanDay } from '../lib/schedule';
+import { upcomingPlanDay } from '../lib/planTempo';
 import { todayKey } from '../lib/prayedLog';
 import { t } from '../i18n';
 
@@ -106,8 +110,11 @@ const renderDetail = (prayer, { store = {}, ...props } = {}) => {
   return { updatePrayer };
 };
 
-const openPace = () => fireEvent.click(screen.getByText(t(lang, 'planPaceTitle')));
-const pick = (labelKey) => fireEvent.click(screen.getByText(t(lang, labelKey)));
+// The row on the plan's card opens the one scheduler; a choice is committed by
+// its own Save, exactly as it is everywhere else in the app.
+const openRhythm = () => fireEvent.click(screen.getByText(t(lang, 'planPaceTitle')));
+const choose = (labelKey) => fireEvent.click(screen.getByRole('radio', { name: new RegExp(t(lang, labelKey)) }));
+const save = () => fireEvent.click(screen.getByText(t(lang, 'schedUseRhythm')));
 
 describe('the plan card always has a day to show', () => {
   it('shows today’s day for a plan running daily, with no "not today" note', () => {
@@ -136,8 +143,8 @@ describe('the plan card always has a day to show', () => {
   });
 });
 
-describe('choosing a pace', () => {
-  it('reports the pace the run is actually on', () => {
+describe('choosing a rhythm', () => {
+  it('reports the rhythm the run is actually on', () => {
     renderDetail(daily);
     expect(screen.getByText(t(lang, 'planPaceDaily'))).toBeTruthy();
     cleanup();
@@ -145,23 +152,35 @@ describe('choosing a pace', () => {
     expect(screen.getAllByText(t(lang, 'planPaceSomeDays')).length).toBeGreaterThan(0);
   });
 
-  it('stores a schedule that keeps the reader on day 16', () => {
+  it('opens the ordinary scheduler, with Pause where "Pray once" would be', () => {
+    renderDetail(daily);
+    openRhythm();
+    expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
+    expect(screen.getByRole('radio', { name: new RegExp(t(lang, 'planPacePause')) })).toBeTruthy();
+    // A 30-day run is not something that can become a single date.
+    expect(screen.queryByText(t(lang, 'schedPrayOnce'))).toBeNull();
+  });
+
+  it('keeps the reader on day 16 when the rhythm changes', () => {
     const { updatePrayer } = renderDetail(daily);
-    openPace();
-    pick('planPaceAlternate');
+    openRhythm();
+    choose('schedOnceAWeek');
+    save();
     expect(updatePrayer).toHaveBeenCalledTimes(1);
     const [id, patch] = updatePrayer.mock.calls[0];
     expect(id).toBe('p1');
-    expect(patch.schedule.freq).toBe('interval');
-    expect(patch.schedule.interval).toBe(2);
-    expect(planDayNumber(patch.schedule, todayKey())).toBe(16);
+    expect(patch.schedule.freq).toBe('weekly');
+    // The promise the re-anchoring makes: the day the run would show next is
+    // still the day it shows next.
+    expect(upcomingPlanDay(patch.schedule, todayKey())).toBe(16);
     expect(patch.schedule.plan.startDate).toBe(START); // the run's own start never moves
   });
 
   it('pauses without losing the run', () => {
     const { updatePrayer } = renderDetail(daily);
-    openPace();
-    pick('planPacePause');
+    openRhythm();
+    choose('planPacePause');
+    save();
     const { schedule } = updatePrayer.mock.calls[0][1];
     expect(schedule.type).toBe('none');
     expect(schedule.plan.id).toBe('others30'); // the run used to be dropped here
@@ -170,11 +189,12 @@ describe('choosing a pace', () => {
 
   it('resumes a paused run on the day it was holding', () => {
     const { updatePrayer } = renderDetail(paused);
-    openPace();
-    pick('planPaceDaily');
+    openRhythm();
+    choose('schedOtherRhythm');
+    save();
     const { schedule } = updatePrayer.mock.calls[0][1];
     expect(schedule.type).toBe('recurring');
-    expect(planDayNumber(schedule, todayKey())).toBe(16);
+    expect(upcomingPlanDay(schedule, todayKey())).toBe(16);
     expect(schedule.end).toEqual({ kind: 'count', count: 15 });
   });
 
@@ -186,5 +206,15 @@ describe('choosing a pace', () => {
   it('is not offered once the prayer is answered', () => {
     renderDetail({ ...daily, status: 'answered' });
     expect(screen.queryByText(t(lang, 'planPaceTitle'))).toBeNull();
+  });
+
+  it('is not offered once the run has no days left — it says so instead', () => {
+    const OLD = addDays(todayKey(), -60);
+    renderDetail(withSchedule({
+      type: 'recurring', freq: 'daily', startDate: OLD,
+      end: { kind: 'count', count: 30 }, plan: { id: 'others30', startDate: OLD },
+    }));
+    expect(screen.queryByText(t(lang, 'planPaceTitle'))).toBeNull();
+    expect(screen.getByText(t(lang, 'seriesEnded'))).toBeTruthy();
   });
 });

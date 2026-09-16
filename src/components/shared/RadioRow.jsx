@@ -4,9 +4,9 @@
 // semantics; the ring beside it only mirrors state, and states it with a filled
 // dot as well as colour so it doesn't rely on hue alone.
 //
-// Shared by the full scheduler (ScheduleEditor) and the pace control on a
-// guided plan's own card (PlanPaceRow), so the two read as the same question
-// asked twice rather than as two different controls.
+// One row of the scheduler (ScheduleEditor), which a guided plan's own card
+// opens too - so the rhythm is one question, asked in one vocabulary, wherever
+// the reader answers it.
 export default function RadioRow({ id, name, checked, onChange, label, sub, disabled = false }) {
   return (
     <label

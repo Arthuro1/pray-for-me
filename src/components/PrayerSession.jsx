@@ -6,8 +6,9 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import { movementPassage } from '../lib/prayerMovements';
-import { planDayNumber } from '../lib/schedule';
+import { restingPlanDay } from '../lib/schedule';
 import { planTotal } from '../lib/planTempo';
+import { planPrayerText } from '../lib/guidedPlan';
 import { usePlanDay } from '../hooks/usePlanDay';
 import PlanDayBody from './PlanDayBody';
 import { pick, localizeRef } from '../content/teaching';
@@ -143,8 +144,17 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // a hook further down would not run on every render.
   const sessionPlanId = currentPrayer?.schedule?.plan?.id || null;
   const sessionPlanVersion = currentPrayer?.schedule?.plan?.version || null;
-  const sessionPlanDayNo = sessionPlanId ? planDayNumber(currentPrayer.schedule, todayKey()) : null;
-  const { day: sessionPlanDay, role: sessionPlanRole, resources: sessionPlanResources } =
+  // WHICH day of the run to pray. It used to be planDayNumber(schedule, today)
+  // alone, which is null on every date the pattern does not land on — a paused
+  // run, a weekly or every-other-day pace, a day skipped or moved. The session
+  // then silently dropped the whole day (theme, passage, reflection, prompts,
+  // Go deeper) and prayed the plan's bare title and subtitle instead. It rests
+  // on the day the run actually reached, exactly as the plan's own page does.
+  const sessionPlanResting = sessionPlanId
+    ? restingPlanDay(currentPrayer.schedule, todayKey(), currentPrayer.schedule_overrides || undefined)
+    : null;
+  const sessionPlanDayNo = sessionPlanResting?.dayNo ?? null;
+  const { day: sessionPlanDay, plan: sessionPlan, role: sessionPlanRole, resources: sessionPlanResources } =
     usePlanDay(sessionPlanId, sessionPlanDayNo, lang, {
       prayerId: currentPrayer?.id, ownerId: currentPrayer?.user_id, planVersion: sessionPlanVersion,
     });
@@ -600,7 +610,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // the unchanging plan name on every day. Computed for today, matching the
   // detail page; off a plan day (planDayNumber null) it falls back to normal.
   const planContent = sessionPlanDay
-    ? { ...sessionPlanDay, n: sessionPlanDayNo, total: planTotal(prayer.schedule) || '' }
+    ? { ...sessionPlanDay, n: sessionPlanDayNo, total: sessionPlan?.count || planTotal(prayer.schedule) || '' }
     : null;
   // The most recent meaningful update — the freshest thing to pray from,
   // especially for shared/intercession requests. Older updates stay on the
@@ -619,7 +629,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       >
         {planContent ? (
           <SectionLabel className="mb-4">
-            {t(lang, 'planDayOf', { n: planContent.n, total: planContent.total })} · {tr(prayer.title, lang)}
+            {t(lang, 'planDayOf', { n: planContent.n, total: planContent.total })} · {planPrayerText(sessionPlan, lang)?.title || tr(prayer.title, lang)}
           </SectionLabel>
         ) : showSupplicationLabel ? (
           <SectionLabel className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
@@ -680,7 +690,9 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           </div>
         )}
 
-        {prayer.description && (
+        {/* A plan run’s description is the plan’s unchanging subtitle — it would
+            repeat under every single day. The day above is the content. */}
+        {!planContent && prayer.description && (
           <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--text-2)' }} />
         )}
 
