@@ -1264,21 +1264,6 @@ export const RELATIONSHIP_BOOKS = [
     url: 'https://www.scm-shop.de/christliche-singles.html',
   }),
   relationshipBook({
-    id: 'faix-date-your-singles',
-    language: 'de',
-    topics: ['singleness', 'church', 'community'],
-    lifeStages: ['single'],
-    description: {
-      de: 'Für Gemeinden, die Singles übersehen – und für Singles, die dort ihre Erfahrung wiedererkennen und benennen möchten.',
-      en: 'For churches that overlook their singles — and for singles who want their experience named.',
-      fr: "Pour les Églises qui oublient leurs célibataires — et pour les célibataires qui veulent voir leur vécu nommé.",
-    },
-    title: 'Date Your Singles! Wie Gemeinden und Singles endlich zueinanderfinden',
-    author: 'Tobias Faix und Johanna Weddigen (Hrsg.)',
-    publisher: 'SCM R. Brockhaus',
-    url: 'https://www.scm-shop.de/date-your-singles.html',
-  }),
-  relationshipBook({
     id: 'buth-frau-sein',
     language: 'de',
     topics: ['sexuality', 'identity', 'singleness', 'marriage'],
