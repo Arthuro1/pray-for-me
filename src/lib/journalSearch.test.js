@@ -96,6 +96,28 @@ describe('journal retrieval filters', () => {
     expect(withFilter({ source: 'group:Hope Group' })).toEqual(['shared']);
   });
 
+  // A guided plan run is a prayer carrying schedule.plan, so it sits in Active
+  // beside ordinary requests. "Prayer plans" is how a reader asks for only the
+  // journeys they are walking.
+  it('filters down to guided plan runs', () => {
+    const withPlan = [
+      ...rows,
+      prayer('plan', {
+        schedule: {
+          type: 'recurring', freq: 'daily', startDate: '2026-01-01',
+          end: { kind: 'count', count: 3 },
+          plan: { id: 'fast3', startDate: '2026-01-01' },
+        },
+      }),
+    ];
+    expect(filterJournalPrayers({
+      prayers: withPlan,
+      status: 'active',
+      filters: { ...EMPTY_JOURNAL_FILTERS, source: 'plan' },
+    }).map(({ prayer: row }) => row.id)).toEqual(['plan']);
+    expect(journalFilterOptions(withPlan).hasPlans).toBe(true);
+  });
+
   it('filters answered prayers by this month or earlier', () => {
     const now = new Date('2026-07-23T12:00:00Z');
     const withDate = (answeredDate) => filterJournalPrayers({
@@ -114,6 +136,7 @@ describe('journal retrieval filters', () => {
       people: ['Anna', 'Marc'],
       groups: ['Hope Group'],
       hasPersonal: true,
+      hasPlans: false,
     });
   });
 

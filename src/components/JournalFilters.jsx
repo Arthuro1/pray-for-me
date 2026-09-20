@@ -14,6 +14,7 @@ export default function JournalFilters({
   people,
   groups,
   hasPersonal,
+  hasPlans,
   lang,
   tr,
   active,
@@ -95,7 +96,9 @@ export default function JournalFilters({
             </label>
           )}
 
-          {groups.length > 0 && (
+          {/* Source also answers "just my plans" — so it is offered to a reader
+              who runs plans but belongs to no group, who never saw it before. */}
+          {(groups.length > 0 || hasPlans) && (
             <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--text-2)' }}>
               {t(lang, 'journalSource')}
               <select
@@ -106,6 +109,7 @@ export default function JournalFilters({
               >
                 <option value="all">{t(lang, 'all')}</option>
                 {hasPersonal && <option value="personal">{t(lang, 'srcPersonal')}</option>}
+                {hasPlans && <option value="plan">{t(lang, 'plansTitle')}</option>}
                 {groups.map((group) => <option key={group} value={`group:${group}`}>{group}</option>)}
               </select>
             </label>

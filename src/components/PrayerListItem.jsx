@@ -3,6 +3,7 @@ import { t } from '../i18n';
 import { originAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { scheduleEnded } from '../lib/planner';
+import { planRowContext, planRowSummary } from '../lib/planRow';
 import { todayKey } from '../lib/prayedLog';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import Avatar from './shared/Avatar';
@@ -24,13 +25,24 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
   const authorName = oa ? (oa.anonymous ? '?' : oa.name) : currentUserName;
   const authorLabel = oa ? (oa.anonymous ? t(lang, 'anonymous') : oa.name) : t(lang, 'meAuthor');
   const totalPraying = groupShares.reduce((n, s) => n + (s.prayingCount || 0), 0);
+  // A guided plan run is a prayer like any other underneath, but it is not read
+  // like one: it is named by the plan (in the reader's language, not the one
+  // the run was started in) and placed by its day, not by a recurrence rule.
+  const planRow = planRowSummary(prayer, lang);
+  const title = planRow?.name || tr(prayer.title, lang);
 
   if (variant === 'constellation') {
+    // A running plan answers "how far in am I?", which is what the generic
+    // "Every day · 30 times" never said. A finished or answered one keeps the
+    // ordinary status wording — the run is over either way.
+    const planRhythm = planRow?.dayLabel
+      ? [planRow.dayLabel, planRow.paused ? t(lang, 'planPacePausedNote') : ''].filter(Boolean).join(' · ')
+      : '';
     const rhythm = isAnswered
       ? t(lang, 'answered')
       : isEnded
         ? t(lang, 'seriesEnded')
-        : scheduleSummary(prayer.schedule, lang) || t(lang, 'sentDaily');
+        : planRhythm || scheduleSummary(prayer.schedule, lang) || t(lang, 'sentDaily');
 
     return (
       <button
@@ -46,7 +58,7 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
         />
         <span className="constellation-journal-row__body">
           <span className="constellation-journal-row__title">
-            {tr(prayer.title, lang)}
+            {title}
           </span>
           <span className="constellation-journal-row__meta">
             <span className={isAnswered ? 'constellation-journal-row__answered' : ''}>
@@ -79,9 +91,15 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
   // Full authorship, schedule and sharing metadata remain available in Journal
   // and on the detail page, where that context belongs.
   if (variant === 'journal') {
-    const context = prayer.for_other && prayer.person_name
-      ? prayer.person_name
-      : prayer.origin_group_name || '';
+    // A plan run leads with the DAY'S THEME, because that is what changes: the
+    // plan's name is the same on day 12 as on day 1 and says nothing about what
+    // there is to pray. The plan and the day move to the line beneath, so two
+    // runs at once are still told apart. This is how the session already reads.
+    const context = planRow
+      ? planRowContext(planRow)
+      : prayer.for_other && prayer.person_name
+        ? prayer.person_name
+        : prayer.origin_group_name || '';
     return (
       <button
         type="button"
@@ -96,7 +114,7 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
         />
         <span className="min-w-0 flex-1">
           <span className="editorial block text-lg leading-snug" style={{ color: 'var(--text-1)' }}>
-            {tr(prayer.title, lang)}
+            {planRow?.theme || title}
           </span>
           {context && <span className="mt-1 block truncate text-xs" style={{ color: 'var(--text-3)' }}>{context}</span>}
         </span>
@@ -139,7 +157,7 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
         className="prayer-card__title text-[15px] font-medium leading-snug mb-2"
         style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}
       >
-        {tr(prayer.title, lang)}
+        {title}
       </p>
 
       {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (

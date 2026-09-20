@@ -21,6 +21,7 @@ import { useSuppressFab } from '../store/layoutStore';
 import { todayKey } from '../lib/prayedLog';
 import { nextReminder } from '../utils/reminder';
 import { groupBySlot, SLOT_ORDER } from '../lib/planner';
+import { planRowContext, planRowSummary } from '../lib/planRow';
 import { parseKey } from '../lib/schedule';
 import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
@@ -144,6 +145,15 @@ export default function HomeTab({ onAdd, onEdit }) {
   const hour = today.getHours();
   const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
 
+  // A guided plan run reads by its day, not by the name it was started under
+  // (see lib/planRow.js). The compact lists below want only the plan's name —
+  // they are a receipt and a to-do, not a place to read the day's theme.
+  const planName = (prayer) => planRowSummary(prayer, lang, dayKey)?.name || tr(prayer.title, lang);
+  // The hero leads the page, so when a plan day is what remains it says which
+  // plan and which day, and headlines the day's theme — the same reading as the
+  // row beneath it and the session its button opens.
+  const heroPlan = remainingPrayers.length > 0 ? planRowSummary(remainingPrayers[0], lang, dayKey) : null;
+
   // Open the immersive walk. A normal list marks each prayer prayed TODAY;
   // a catch-up walk passes dayById so each is recorded on the day it was
   // missed — the same day the per-item catch-up buttons record.
@@ -186,10 +196,10 @@ export default function HomeTab({ onAdd, onEdit }) {
           <PrayerSurface tone="focus" className="constellation-home__focus mb-6 p-6 sm:p-8">
             <div className="relative z-10">
               <p className="mb-5 text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.6)' }}>
-                {t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
+                {planRowContext(heroPlan) || t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
               </p>
               <p className="editorial max-w-xl text-2xl leading-snug sm:text-3xl" style={{ color: '#fff' }}>
-                {tr(remainingPrayers[0].title, lang)}
+                {heroPlan?.theme || heroPlan?.name || tr(remainingPrayers[0].title, lang)}
               </p>
               {remainingPrayers.length > 1 && (
                 <p className="mt-2 text-xs" style={{ color: 'rgba(255,255,255,.5)' }}>
@@ -328,7 +338,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                     style={{ background: 'var(--input-bg)' }}
                   >
                     <Check size={13} className="shrink-0" style={{ color: 'var(--success)' }} />
-                    <span className="flex-1 min-w-0 text-sm truncate" style={{ color: 'var(--text-2)' }}>{tr(prayer.title, lang)}</span>
+                    <span className="flex-1 min-w-0 text-sm truncate" style={{ color: 'var(--text-2)' }}>{planName(prayer)}</span>
                   </button>
                 ))}
               </div>
@@ -369,7 +379,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                   {catchUp.map(({ prayer, day }) => (
                     <div key={prayer.id} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: 'var(--input-bg)' }}>
                       <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-left">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
+                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{planName(prayer)}</p>
                         <p className="text-[10px]" style={{ color: 'var(--text-3)' }}>
                           {t(lang, 'missedOn', { date: parseKey(day).toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' }) })}
                         </p>

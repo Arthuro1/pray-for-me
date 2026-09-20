@@ -159,6 +159,7 @@ export default function PrayersTab({ onAdd }) {
     categories.length > 0
     || filterOptions.people.length > 0
     || filterOptions.groups.length > 0
+    || filterOptions.hasPlans
     || (segment === 'answered' && answeredCount > 0)
   );
   const resultsLabel = (count) => count === 1
@@ -408,6 +409,7 @@ export default function PrayersTab({ onAdd }) {
             people={filterOptions.people}
             groups={filterOptions.groups}
             hasPersonal={filterOptions.hasPersonal}
+            hasPlans={filterOptions.hasPlans}
             lang={lang}
             tr={tr}
             active={structuredFiltersActive}
