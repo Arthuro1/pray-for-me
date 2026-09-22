@@ -26,6 +26,8 @@ vi.mock('../../store/communityStore', () => ({ default: (select) => select(state
 import PlanSharePublicPage from './PlanSharePublicPage';
 import PlanJoinPage from './PlanJoinPage';
 import { PLANS } from '../../content/prayerPlans';
+import { PREPARING_IN_PRAYER } from '../../content/plans/preparingInPrayer';
+import { pick } from '../../content/teaching';
 import { savePendingPlanJoin } from '../../lib/planShareLink';
 import { todayKey } from '../../lib/prayedLog';
 import { t } from '../../i18n';
@@ -60,12 +62,24 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 
 describe('PlanSharePublicPage', () => {
-  it('shows the plan and who invites, before any account is asked for', async () => {
+  it('shows the whole plan and who invites, before any account is asked for', async () => {
     at(PATH, <PlanSharePublicPage lang={lang} onJoin={vi.fn()} onSignIn={vi.fn()} />);
     expect(await screen.findByText(t(lang, 'planShareInvitedBy', { name: 'Arthur' }))).toBeTruthy();
     expect(screen.getByText(t(lang, plan.titleKey))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'planDayLabel', { n: 1 }))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'planShareJoinFootnote', { name: 'Arthur' }))).toBeTruthy();
+    expect(screen.getByText(pick(plan.intro, lang))).toBeTruthy();
+    for (const day of plan.days) expect(screen.getByText(pick(day.theme, lang))).toBeTruthy();
+  });
+
+  it('previews a long plan the way the catalogue does: movements first, every day on request', async () => {
+    at(`/plans/${PREPARING_IN_PRAYER.id}`, <PlanSharePublicPage lang={lang} onJoin={vi.fn()} onSignIn={vi.fn()} />);
+    await waitFor(() => expect(screen.getByText(t(lang, 'planShareJoin')).closest('button').disabled).toBe(false));
+    for (const movement of PREPARING_IN_PRAYER.movements) expect(screen.getByText(t(lang, movement.titleKey))).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'previewAllDays') }));
+    expect(screen.getByText(pick(PREPARING_IN_PRAYER.days.at(-1).theme, lang))).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'gospelReadMore') }));
+    expect(screen.getByText(pick(PREPARING_IN_PRAYER.biblical.text, lang))).toBeTruthy();
   });
 
   it('remembers the choice across sign-up, then hands over to the account screen', async () => {

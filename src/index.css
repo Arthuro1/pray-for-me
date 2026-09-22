@@ -2967,7 +2967,8 @@ html.constellation-auth-root[data-theme="dark"] body {
   display: none;
 }
 
-.constellation-auth__sky {
+.constellation-auth__sky,
+.constellation-plan-share__sky {
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
@@ -2976,7 +2977,8 @@ html.constellation-auth-root[data-theme="dark"] body {
   pointer-events: none;
 }
 
-.constellation-auth__sky-image {
+.constellation-auth__sky-image,
+.constellation-plan-share__sky-image {
   position: absolute;
   inset-block-start: -1.5rem;
   inset-inline-start: 50%;
@@ -2987,17 +2989,20 @@ html.constellation-auth-root[data-theme="dark"] body {
 }
 
 .constellation-auth__sky-image--dark,
-.constellation-onboarding__sky-image--dark {
+.constellation-onboarding__sky-image--dark,
+.constellation-plan-share__sky-image--dark {
   display: none;
 }
 
 [data-theme="dark"] .constellation-auth__sky-image--light,
-[data-theme="dark"] .constellation-onboarding__sky-image--light {
+[data-theme="dark"] .constellation-onboarding__sky-image--light,
+[data-theme="dark"] .constellation-plan-share__sky-image--light {
   display: none;
 }
 
 [data-theme="dark"] .constellation-auth__sky-image--dark,
-[data-theme="dark"] .constellation-onboarding__sky-image--dark {
+[data-theme="dark"] .constellation-onboarding__sky-image--dark,
+[data-theme="dark"] .constellation-plan-share__sky-image--dark {
   display: block;
 }
 
@@ -3212,12 +3217,13 @@ html.constellation-auth-root[data-theme="dark"] body {
   color: var(--accent);
 }
 
-/* Public pray-first journey ------------------------------------------------
+/* Public pray-first journey and shared-plan page ---------------------------
    The landing page is rendered with inline theme tokens, then unmounts before
    GuestPrayerFlow appears. Re-declare that same constellation palette here so
-   capture, prayer, Amen, and save-decision screens never fall back to the older
-   cream/gold application colors. */
-.constellation-guest-flow {
+   capture, prayer, Amen, and save-decision screens — and a plan opened from a
+   share link — never fall back to the older cream/gold application colors. */
+.constellation-guest-flow,
+.constellation-plan-share {
   color-scheme: light;
   --background: #f8f7fd;
   --surface: #ffffff;
@@ -3250,7 +3256,8 @@ html.constellation-auth-root[data-theme="dark"] body {
   --success-border: #a9d8d4;
 }
 
-[data-theme="dark"] .constellation-guest-flow {
+[data-theme="dark"] .constellation-guest-flow,
+[data-theme="dark"] .constellation-plan-share {
   color-scheme: dark;
   --background: #120f1b;
   --surface: #171423;
@@ -3281,6 +3288,21 @@ html.constellation-auth-root[data-theme="dark"] body {
   --success: #63d1cb;
   --success-bg: var(--sage-soft);
   --success-border: #285b57;
+}
+
+.constellation-plan-share {
+  background: var(--background);
+  color: var(--ink);
+}
+
+.constellation-plan-share .section-label {
+  color: var(--accent);
+}
+
+.constellation-plan-share__actions {
+  border-block-start: 0.5px solid var(--border);
+  background: color-mix(in srgb, var(--background) 92%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 @media (max-width: 639px) {

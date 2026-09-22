@@ -144,7 +144,6 @@ export default function PlanJoinPage() {
             lang={lang}
             onJoin={(date) => begin(date)}
             busy={busy || invite.loading}
-            footnote={fromSomeoneElse && invite.firstName ? t(lang, 'planShareJoinFootnote', { name: invite.firstName }) : null}
           />
         )}
 

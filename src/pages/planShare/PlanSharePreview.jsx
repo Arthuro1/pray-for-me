@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { BookOpen, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { t } from '../../i18n';
-import { localizeRef, pick } from '../../content/teaching';
 import { useLocalizedPlan } from '../../hooks/useLocalizedPlan';
 import { todayKey } from '../../lib/prayedLog';
+import PlanOverview from '../../components/plan/PlanOverview';
 
 // What a shared plan link shows, signed in or not: who invites (first name
-// only, and only while the link is live), the plan, and its first day. Day 1,
-// not the sharer's current day — whoever joins starts at the beginning.
+// only, and only while the link is live), then the whole plan exactly as the
+// catalogue previews it — whoever joins starts at day 1, so they see it all.
 export function PlanSharePreview({ plan, lang, firstName }) {
   const localized = useLocalizedPlan(plan, lang);
-  const firstDay = localized.days?.[0] || null;
 
   return (
     <article>
@@ -18,7 +17,7 @@ export function PlanSharePreview({ plan, lang, firstName }) {
         {firstName ? t(lang, 'planShareInvitedBy', { name: firstName }) : t(lang, 'planShareInvited')}
       </p>
       <div className="flex items-start gap-3">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--accent-soft)' }} aria-hidden="true">
+        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }} aria-hidden="true">
           {localized.emoji}
         </span>
         <div className="min-w-0">
@@ -29,33 +28,16 @@ export function PlanSharePreview({ plan, lang, firstName }) {
         </div>
       </div>
 
-      {localized.intro && (
-        <p
-          className="mt-4 text-sm leading-relaxed"
-          style={{ color: 'var(--text-2)', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 5, overflow: 'hidden' }}
-        >
-          {pick(localized.intro, lang)}
-        </p>
-      )}
-
-      {firstDay && (
-        <div className="mt-5 rounded-xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-          <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>{t(lang, 'planDayLabel', { n: 1 })}</p>
-          <p className="text-sm font-medium leading-snug" style={{ color: 'var(--text-1)' }}>{pick(firstDay.theme, lang)}</p>
-          {firstDay.ref && (
-            <p className="mt-2 inline-flex items-center gap-1.5 text-xs" style={{ color: 'var(--accent)' }}>
-              <BookOpen size={12} aria-hidden="true" /> {localizeRef(firstDay.ref, lang)}
-            </p>
-          )}
-        </div>
-      )}
+      <div className="mt-6 space-y-5">
+        <PlanOverview plan={localized} lang={lang} />
+      </div>
     </article>
   );
 }
 
 // "Join this plan", today or on a chosen day — the same choice the catalogue
 // offers before a plan starts.
-export function PlanJoinControls({ lang, onJoin, busy = false, footnote = null }) {
+export function PlanJoinControls({ lang, onJoin, busy = false }) {
   const [startDate, setStartDate] = useState(todayKey());
   const [showStartDate, setShowStartDate] = useState(false);
 
@@ -91,7 +73,6 @@ export function PlanJoinControls({ lang, onJoin, busy = false, footnote = null }
       >
         {t(lang, showStartDate ? 'startTodayInstead' : 'startAnotherDay')}
       </button>
-      {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-3)' }}>{footnote}</p>}
     </div>
   );
 }
