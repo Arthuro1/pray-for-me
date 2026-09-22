@@ -233,6 +233,25 @@ export function resolveResources({
   return matches.slice(0, resultLimit);
 }
 
+// The languages a reader has NOT enabled that would add at least one work to
+// this shelf, each with how many. Takes the same query as resolveResources().
+//
+// This is what lets a shelf offer "+ Deutsch · 4" where the choice pays off,
+// instead of leaving the reader to guess in Settings which of eleven languages
+// has anything for today. Counted as NEW rows only: a language that would merely
+// swap the edition of a work already on the shelf adds nothing to read.
+export function resourceLanguageOffers({ languages = [], catalogue = RESOURCES, ...query } = {}) {
+  const current = resolveResources({ ...query, languages, catalogue }).length;
+  return availableResourceLanguages(catalogue)
+    .filter((code) => !languages.includes(code))
+    .map((code) => ({
+      lang: code,
+      count: resolveResources({ ...query, languages: [...languages, code], catalogue }).length - current,
+    }))
+    .filter((offer) => offer.count > 0)
+    .sort((a, b) => b.count - a.count || a.lang.localeCompare(b.lang));
+}
+
 // A retired entry can name its successor; follow that so a link that has died
 // is replaced rather than silently dropped. Returns null when the replacement is
 // missing, lacks a verified edition, or fails either publication review gate.

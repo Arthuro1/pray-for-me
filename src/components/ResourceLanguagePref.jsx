@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Check, ChevronDown, Library } from 'lucide-react';
+import { ChevronDown, Library } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
-import { getResourceFallbackLanguages, setResourceFallbackLanguages } from '../lib/planPrefs';
 import { availableResourceLanguages } from '../lib/resources';
+import { useResourceLanguages } from '../hooks/useResourceLanguages';
+import LanguageChip from './shared/LanguageChip';
 
 const DISPLAYABLE_RESOURCE_LANGUAGES = new Set(availableResourceLanguages());
 
@@ -27,15 +28,12 @@ const DISPLAYABLE_RESOURCE_LANGUAGES = new Set(availableResourceLanguages());
 // A language the reader deliberately ticks now outranks the one we ticked for
 // them. Ticking again moves it back to the front, which is how the order is
 // re-arranged; the numbered chain above the toggles shows where each one sits.
+//
+// The same choice can also be made from any plan day's "Go deeper" shelf, where
+// it is offered only for languages that would add something to that day.
 export default function ResourceLanguagePref({ lang }) {
   const [open, setOpen] = useState(false);
-  const [enabled, setEnabled] = useState(() => getResourceFallbackLanguages());
-
-  const toggle = (code) => {
-    const next = enabled.includes(code) ? enabled.filter((c) => c !== code) : [code, ...enabled];
-    setEnabled(next);
-    setResourceFallbackLanguages(next);
-  };
+  const { languages: enabled, toggle } = useResourceLanguages();
 
   const appLabel = LANGUAGES.find((l) => l.code === lang)?.label || lang;
   const extra = enabled
@@ -72,25 +70,9 @@ export default function ResourceLanguagePref({ lang }) {
         <div id="resource-languages-panel" className="mt-3">
           <p className="mb-2 text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'resourceLanguagesSub')}</p>
           <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
-            {LANGUAGES.filter((l) => l.code !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code)).map((l) => {
-              const on = enabled.includes(l.code);
-              return (
-                <button
-                  key={l.code}
-                  type="button"
-                  role="checkbox"
-                  aria-checked={on}
-                  onClick={() => toggle(l.code)}
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium"
-                  style={on
-                    ? { background: 'var(--accent-soft)', color: 'var(--accent)', border: '1px solid var(--accent-border)' }
-                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
-                >
-                  {on && <Check size={12} aria-hidden="true" />}
-                  {l.label}
-                </button>
-              );
-            })}
+            {LANGUAGES.filter((l) => l.code !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code)).map((l) => (
+              <LanguageChip key={l.code} label={l.label} on={enabled.includes(l.code)} onToggle={() => toggle(l.code)} />
+            ))}
           </div>
         </div>
       )}

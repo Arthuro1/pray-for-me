@@ -1212,7 +1212,8 @@ export default {
   "resourceTypeStudy": "Исследование",
   "resourceTypePrayerGuide": "Руководство по молитве",
   "resourceLanguagesTitle": "Языки материалов",
-  "resourceLanguagesSub": "Рекомендации отдают приоритет языку приложения и могут также включать материалы на любом другом выбранном языке. Английский выбран по умолчанию; отключи его, если не читаешь на нём.",
+  "resourceLanguagesSub": "Рекомендации отдают приоритет языку приложения и могут также включать материалы на любом другом выбранном языке. Английский выбран по умолчанию; отключи его, если не читаешь на нём.",
+  "resourceLanguageAdd": "Добавить {language} (+{count})",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Помолвленным: подготовка к браку",

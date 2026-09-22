@@ -22,6 +22,7 @@ vi.mock('../../lib/analytics', () => ({
 }));
 
 import PlanDayBody from '../PlanDayBody';
+import { useResourceLanguages } from '../../hooks/useResourceLanguages';
 import { t } from '../../i18n';
 
 const lang = 'fr'; // the always-loaded fallback locale
@@ -205,6 +206,56 @@ describe('Go deeper', () => {
     }));
     render(<PlanDayBody day={day} lang={lang} resources={resources} />);
     expect(screen.getByText('7')).toBeTruthy();
+  });
+
+  // Resource languages used to be reachable only from Settings. The shelf now
+  // offers the languages that would add to it — and only those — with how many.
+  it('offers, inside the open shelf, the languages that would add to it', () => {
+    render(<PlanDayBody day={day} lang={lang} resources={[resource]} resourceOffers={[{ lang: 'de', count: 3 }]} />);
+    expect(screen.queryByRole('group', { name: t(lang, 'resourceLanguagesTitle') })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+
+    const german = screen.getByRole('checkbox', { name: t(lang, 'resourceLanguageAdd', { language: 'Deutsch', count: 3 }) });
+    expect(german.getAttribute('aria-checked')).toBe('false');
+    expect(german.textContent).toContain('+3');
+    // The language already chosen sits beside it, so a choice is undone in place…
+    expect(screen.getByRole('checkbox', { name: 'English' }).getAttribute('aria-checked')).toBe('true');
+    // …and a language with nothing for today is not offered at all.
+    expect(screen.queryByRole('checkbox', { name: /Español/ })).toBeNull();
+  });
+
+  it('saves a language ticked on the shelf as the reader’s setting, ranked first', () => {
+    render(<PlanDayBody day={day} lang={lang} resources={[resource]} resourceOffers={[{ lang: 'de', count: 3 }]} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /Deutsch/ }));
+
+    expect(JSON.parse(localStorage.getItem('pfm_resource_langs'))).toEqual(['de', 'en']);
+    expect(screen.getByRole('checkbox', { name: 'Deutsch' }).getAttribute('aria-checked')).toBe('true');
+  });
+
+  // Unticking the only language that filled the shelf must not also remove the
+  // chip that brings it back.
+  it('stays on screen when a change empties it, so the change can be undone', () => {
+    function Host() {
+      const { languages } = useResourceLanguages();
+      const hasEnglish = languages.includes('en');
+      return (
+        <PlanDayBody
+          day={day}
+          lang={lang}
+          resources={hasEnglish ? [resource] : []}
+          resourceOffers={hasEnglish ? [] : [{ lang: 'en', count: 1 }]}
+        />
+      );
+    }
+    render(<Host />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'English' }));
+
+    expect(screen.queryByText('A verified title')).toBeNull();
+    const english = screen.getByRole('checkbox', { name: t(lang, 'resourceLanguageAdd', { language: 'English', count: 1 }) });
+    fireEvent.click(english);
+    expect(screen.getByText('A verified title')).toBeTruthy();
   });
 
   // The cover is the thing the eye lands on, so it should be the tap target too

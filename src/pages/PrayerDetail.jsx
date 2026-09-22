@@ -395,7 +395,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // the calendar and back for each one.
   const { prevKey: prevDayKey, nextKey: nextDayKey } =
     usePlanDayPager(livePrayer.schedule, planOverrides, deckDayKey, planDayNo, planLength);
-  const { day: planDay, prefs: planPrefs, role: planRole, resources: planResources, reloadPrefs } =
+  const {
+    day: planDay, prefs: planPrefs, role: planRole, resources: planResources, resourceOffers: planResourceOffers, reloadPrefs,
+  } =
     usePlanDay(planId, planDayNo, lang, {
       prayerId: livePrayer.id, ownerId: livePrayer.user_id, planVersion,
     });
@@ -1103,34 +1105,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 lang={lang}
                 role={planRole}
                 resources={planResources}
+                resourceOffers={planResourceOffers}
                 idPrefix={`detail-plan-day-${viewedDayKey}`}
                 onAddNote={focusUpdateField}
                 onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
               />
               <PlanDayTrace lang={lang} prayed={planDayPrayed} updates={planDayUpdates} />
-              {(canEditPersonalization || planShareable) && (
-                <div className="flex flex-wrap items-center gap-x-5">
-                  {canEditPersonalization && (
-                    <button
-                      type="button"
-                      onClick={() => setEditingPersonalization(true)}
-                      className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                      style={{ color: 'var(--text-3)' }}
-                    >
-                      <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
-                    </button>
-                  )}
-                  {planShareable && (
-                    <button
-                      type="button"
-                      onClick={() => setShowPlanShare(true)}
-                      className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                      style={{ color: 'var(--accent)' }}
-                    >
-                      <Share2 size={12} aria-hidden="true" /> {t(lang, 'planShareAction')}
-                    </button>
-                  )}
-                </div>
+              {/* Sharing the plan lives in the ⋯ menu only: on the day card it
+                  competed with the day itself for the reader's attention. */}
+              {canEditPersonalization && (
+                <button
+                  type="button"
+                  onClick={() => setEditingPersonalization(true)}
+                  className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
+                  style={{ color: 'var(--text-3)' }}
+                >
+                  <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
+                </button>
               )}
               {/* How often this comes back, kept WITH the day it paces — a
                   reader who finds a plan too fast is looking at the day, not

@@ -8,7 +8,7 @@ const prose = 'text-sm leading-relaxed whitespace-pre-line break-words';
 
 // Full manuscript sections on the existing prayer day. The journal uses the
 // existing private-note action; no relationship answers are collected here.
-export default function DiscernmentDayGuide({ day, lang, resources = [], idPrefix, onAddNote }) {
+export default function DiscernmentDayGuide({ day, lang, resources = [], resourceOffers = [], idPrefix, onAddNote }) {
   const content = day.discernment;
   const paragraphs = [
     ['reading', 'planDiscernmentReading', content.reading],
@@ -62,7 +62,7 @@ export default function DiscernmentDayGuide({ day, lang, resources = [], idPrefi
           </div>
         </div>
       </details>
-      {resources.length > 0 && <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />}
+      <GoDeeper resources={resources} languageOffers={resourceOffers} lang={lang} id={`${idPrefix}-go-deeper`} />
     </div>
   );
 }

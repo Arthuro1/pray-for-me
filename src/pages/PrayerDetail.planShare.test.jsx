@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 //
-// A plan can be passed on while it is running: the day card and the ⋯ menu both
-// open the Share sheet, and a run no longer offers to copy itself into a group
-// wall instead. Only signed-in readers share, and only a plan, never a prayer.
+// A plan can be passed on while it is running: the ⋯ menu opens the Share
+// sheet, and a run no longer offers to copy itself into a group wall instead.
+// The day card itself carries no share button — the menu is the one way in.
+// Only signed-in readers share, and only a plan, never a prayer.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -69,9 +70,11 @@ const openMenu = () => fireEvent.click(screen.getByRole('button', { name: t(lang
 const menuItem = (name) => screen.queryByRole('menuitem', { name });
 
 describe('sharing a running plan', () => {
-  it('offers the plan from its day card and opens the Share sheet', () => {
+  it('opens the Share sheet from the ⋯ menu, not from a button on the day card', () => {
     renderDetail(planRun());
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'planShareAction') }));
+    expect(screen.queryByRole('button', { name: t(lang, 'planShareAction') })).toBeNull();
+    openMenu();
+    fireEvent.click(menuItem(t(lang, 'planShareAction')));
     expect(screen.getByRole('dialog', { name: 'share others30' })).toBeTruthy();
   });
 
@@ -93,6 +96,7 @@ describe('sharing a running plan', () => {
   it('offers nothing to share without an account', () => {
     useAuthStore.setState({ user: null });
     renderDetail(planRun());
-    expect(screen.queryByRole('button', { name: t(lang, 'planShareAction') })).toBeNull();
+    openMenu();
+    expect(menuItem(t(lang, 'planShareAction'))).toBeNull();
   });
 });

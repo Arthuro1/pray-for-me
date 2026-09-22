@@ -1212,7 +1212,8 @@ export default {
   "resourceTypeStudy": "Estudo",
   "resourceTypePrayerGuide": "Guia de oração",
   "resourceLanguagesTitle": "Idiomas dos recursos",
-  "resourceLanguagesSub": "As recomendações priorizam o idioma do app e também podem incluir recursos em qualquer outro idioma selecionado. O inglês vem selecionado por padrão; desative-o se você não o lê.",
+  "resourceLanguagesSub": "As recomendações priorizam o idioma do app e também podem incluir recursos em qualquer outro idioma selecionado. O inglês vem selecionado por padrão; desative-o se você não o lê.",
+  "resourceLanguageAdd": "Adicionar {language} (+{count})",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Noivos: preparar-se para o casamento",

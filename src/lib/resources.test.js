@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   resolveResources, resourceLanguages, availableResourceLanguages, replacementFor, DEFAULT_RESOURCE_LIMIT,
-  isResourceApprovedForDisplay, isSensitiveResource,
+  isResourceApprovedForDisplay, isSensitiveResource, resourceLanguageOffers,
 } from './resources.js';
 import { RESOURCES, RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_REVIEW_LEVELS, RESOURCE_STATUSES } from '../content/resources/catalogue.js';
 import { RELATIONSHIP_BOOKS } from '../content/resources/relationshipBooks.js';
@@ -88,6 +88,31 @@ describe('resourceLanguages', () => {
 
   it('is just the app language when no additional language was enabled', () => {
     expect(resourceLanguages('de')).toEqual(['de']);
+  });
+});
+
+describe('resourceLanguageOffers', () => {
+  const offers = (languages, catalogue = CATALOGUE) => resourceLanguageOffers({
+    topics: ['marriage'], lifeStage: 'single', languages, catalogue,
+  });
+
+  it('offers each unused language with the number of works it would add to this shelf', () => {
+    // Nothing on a French shelf yet: English and German each bring two works
+    // (one of them shared), so both are worth offering.
+    expect(offers(['fr'])).toEqual([{ lang: 'de', count: 2 }, { lang: 'en', count: 2 }]);
+  });
+
+  it('counts only NEW works, never a different edition of one already shown', () => {
+    // With English on, the bilingual work is already on the shelf; German only
+    // adds the German original.
+    expect(offers(['fr', 'en'])).toEqual([{ lang: 'de', count: 1 }]);
+    const bilingualOnly = CATALOGUE.filter((r) => r.id === 'en-with-de-edition');
+    expect(offers(['fr', 'en'], bilingualOnly)).toEqual([]);
+  });
+
+  it('never offers an enabled language, or one with nothing verified for today', () => {
+    expect(offers(['fr', 'en', 'de'])).toEqual([]);
+    expect(offers(['fr'], [])).toEqual([]);
   });
 });
 

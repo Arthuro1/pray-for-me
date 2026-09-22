@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getPlan } from '../content/prayerPlans';
 import { useLocalizedPlanDay } from './useLocalizedPlan';
-import { getPlanPrefs, growthTopics, getResourceFallbackLanguages } from '../lib/planPrefs';
-import { resolveResources, resourceLanguages } from '../lib/resources';
+import { getPlanPrefs, growthTopics } from '../lib/planPrefs';
+import { resolveResources, resourceLanguages, resourceLanguageOffers } from '../lib/resources';
+import { useResourceLanguages } from './useResourceLanguages';
 import { loadPlanPersonalization } from '../lib/planPersonalizationStorage';
 import { isCouplePlan, personalizePlanDay, sanitizePlanPersonalization } from '../lib/planPersonalization';
 import { canUsePlan } from '../lib/planReview';
 
 // Everything a screen needs to render one day of a running guided plan:
 // the day (with the reader's language folded in), the role reflection they asked
-// for, and the approved resources — if any — for today's topics.
+// for, the approved resources — if any — for today's topics, and the languages
+// not yet chosen that would add to that shelf (`resourceOffers`).
 //
 // Safe to call unconditionally with a null planId, so a screen that only
 // sometimes sits on a plan day can still obey the rules of hooks.
@@ -57,12 +59,13 @@ export function usePlanDay(planId, dayNumber, lang, {
     [plan, sourceDay, privatePrefs, lang],
   );
   const prefs = isCouplePlan(plan) ? privatePrefs : singlesPrefs;
-  const additionalLanguages = fallbackLanguages || getResourceFallbackLanguages();
-  const additionalLanguageKey = additionalLanguages.join(',');
+  // Live, so a language added from the shelf itself refills the shelf at once.
+  const { languages: chosenLanguages } = useResourceLanguages();
+  const additionalLanguageKey = (fallbackLanguages || chosenLanguages).join(',');
 
-  const resources = useMemo(() => {
-    if (!day?.resourceTopics?.length) return [];
-    return resolveResources({
+  const { resources, resourceOffers } = useMemo(() => {
+    if (!day?.resourceTopics?.length) return { resources: [], resourceOffers: [] };
+    const query = {
       topics: day.resourceTopics,
       lifeStage: plan?.lifeStage || null,
       // The families of resources this plan draws from. Topic tags are shared
@@ -76,11 +79,12 @@ export function usePlanDay(planId, dayNumber, lang, {
       // (the deliverance plan puts African Pentecostal material first). Ordering
       // only: it never adds or removes an approved resource.
       perspectiveOrder: plan?.resourcePerspectives || [],
-    });
+    };
+    return { resources: resolveResources(query), resourceOffers: resourceLanguageOffers(query) };
   }, [day, plan, lang, additionalLanguageKey, prefs]);
 
   // `plan` is handed back too: a screen that needs the run's own length or name
   // would otherwise look it up a second time and could disagree with the day it
   // is rendering.
-  return { day, plan, prefs, role: prefs?.role || 'general', resources, reloadPrefs };
+  return { day, plan, prefs, role: prefs?.role || 'general', resources, resourceOffers, reloadPrefs };
 }

@@ -30,13 +30,17 @@ import DiscernmentDayGuide from './DiscernmentDayGuide';
 // and only a day that HAS such a reflection puts it on screen — so it is asked
 // on the first day it would change something, and never again after an answer.
 export default function PlanDayBody({
-  day, lang, role = 'general', resources = [], idPrefix = 'plan-day', onChooseRole, onAddNote,
+  day, lang, role = 'general', resources = [], resourceOffers = [], idPrefix = 'plan-day', onChooseRole, onAddNote,
 }) {
   const [afterPrayerOpen, setAfterPrayerOpen] = useState(false);
   if (!day) return null;
 
   if (day.discernment) {
-    return <DiscernmentDayGuide day={day} lang={lang} resources={resources} idPrefix={idPrefix} onAddNote={onAddNote} />;
+    return (
+      <DiscernmentDayGuide
+        day={day} lang={lang} resources={resources} resourceOffers={resourceOffers} idPrefix={idPrefix} onAddNote={onAddNote}
+      />
+    );
   }
 
   const reflection = pick(day.reflection, lang);
@@ -55,11 +59,7 @@ export default function PlanDayBody({
             </div>
           </section>
         )}
-        {resources.length > 0 && (
-          <div className="rounded-xl px-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-            <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
-          </div>
-        )}
+        <GoDeeper framed resources={resources} languageOffers={resourceOffers} lang={lang} id={`${idPrefix}-go-deeper`} />
       </div>
     );
   }
@@ -286,11 +286,7 @@ export default function PlanDayBody({
       {/* External reading stays last, but it gets its own single disclosure.
           Hiding it inside "After prayer" made a relevant book take two taps to
           discover and concealed the size of the shelf. */}
-      {resources.length > 0 && (
-        <div className="rounded-xl px-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-          <GoDeeper resources={resources} lang={lang} id={`${idPrefix}-go-deeper`} />
-        </div>
-      )}
+      <GoDeeper framed resources={resources} languageOffers={resourceOffers} lang={lang} id={`${idPrefix}-go-deeper`} />
     </div>
   );
 }

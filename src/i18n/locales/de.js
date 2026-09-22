@@ -1212,7 +1212,8 @@ export default {
   "resourceTypeStudy": "Studie",
   "resourceTypePrayerGuide": "Gebetsanleitung",
   "resourceLanguagesTitle": "Sprachen der Materialien",
-  "resourceLanguagesSub": "Empfehlungen bevorzugen deine App-Sprache und können auch Materialien in jeder weiteren Sprache enthalten, die du auswählst. Englisch ist standardmäßig ausgewählt; schalte es aus, wenn du es nicht liest.",
+  "resourceLanguagesSub": "Empfehlungen bevorzugen deine App-Sprache und können auch Materialien in jeder weiteren Sprache enthalten, die du auswählst. Englisch ist standardmäßig ausgewählt; schalte es aus, wenn du es nicht liest.",
+  "resourceLanguageAdd": "{language} hinzufügen (+{count})",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Verlobt: sich auf die Ehe vorbereiten",

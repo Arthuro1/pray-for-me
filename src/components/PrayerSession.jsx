@@ -154,7 +154,10 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     ? restingPlanDay(currentPrayer.schedule, todayKey(), currentPrayer.schedule_overrides || undefined)
     : null;
   const sessionPlanDayNo = sessionPlanResting?.dayNo ?? null;
-  const { day: sessionPlanDay, plan: sessionPlan, role: sessionPlanRole, resources: sessionPlanResources } =
+  const {
+    day: sessionPlanDay, plan: sessionPlan, role: sessionPlanRole,
+    resources: sessionPlanResources, resourceOffers: sessionPlanResourceOffers,
+  } =
     usePlanDay(sessionPlanId, sessionPlanDayNo, lang, {
       prayerId: currentPrayer?.id, ownerId: currentPrayer?.user_id, planVersion: sessionPlanVersion,
     });
@@ -684,6 +687,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
               lang={lang}
               role={sessionPlanRole}
               resources={sessionPlanResources}
+              resourceOffers={sessionPlanResourceOffers}
               idPrefix="session-plan-day"
               onAddNote={notesEnabled ? () => setNoteOpenSignal((n) => n + 1) : undefined}
             />

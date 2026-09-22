@@ -5,15 +5,18 @@ import { pick } from '../content/teaching';
 import { track, EVENTS } from '../lib/analytics';
 import { isLowDataMode } from '../lib/lowData';
 import { resolveResourceThumbnail } from '../lib/resourceThumbnail';
+import { availableResourceLanguages } from '../lib/resources';
+import { useResourceLanguages } from '../hooks/useResourceLanguages';
 import ResourceThumbnail from './shared/ResourceThumbnail';
+import LanguageChip from './shared/LanguageChip';
 
 // The collapsed "Go deeper" shelf under a plan day.
 //
 // It is deliberately the LAST thing on the day and visually the quietest: a
 // recommended book must never look like it carries the authority of the passage
-// above it. The caller resolves the resources (src/lib/resources.js) and simply
-// does not render this component when there are none — we never tell a reader
-// that their language has nothing, we just leave the section out.
+// above it. The caller resolves the resources (src/lib/resources.js); when there
+// are none the shelf renders nothing — we never tell a reader that their
+// language has nothing, we just leave the section out.
 //
 // ─────────────────────────────────────────────────────────────────────────────
 // WHY THE SHELF OPENS COMPLETE
@@ -101,15 +104,74 @@ function ResourceCard({ resource, lang, lowData = false }) {
   );
 }
 
-export default function GoDeeper({ resources, lang, id = 'plan-go-deeper' }) {
+// ─────────────────────────────────────────────────────────────────────────────
+// WHY THE SHELF CARRIES ITS OWN LANGUAGE CHOICE
+// ─────────────────────────────────────────────────────────────────────────────
+// Resource languages used to live only in Settings, next to the app language,
+// where a reader had no way to know which of eleven languages would bring
+// anything for today. Here the shelf offers exactly the languages that WOULD add
+// to it, each with how many works it adds, beside the ones already chosen so
+// an accidental tap is undone in place. It is the same device setting as in
+// Settings (a newly ticked language still goes first), so every shelf updates.
+const DISPLAYABLE_RESOURCE_LANGUAGES = new Set(availableResourceLanguages());
+
+function ShelfLanguages({ lang, enabled, offers, onToggle }) {
+  const gains = new Map(offers.map((offer) => [offer.lang, offer.count]));
+  // Stable catalogue order, not priority order, so a chip never jumps out from
+  // under the finger that just ticked it.
+  const shown = LANGUAGES.filter((l) => l.code !== lang
+    && (gains.has(l.code) || (enabled.includes(l.code) && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code))));
+  if (!shown.length) return null;
+
+  return (
+    <div className="mb-3">
+      <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+        {t(lang, 'resourceLanguagesTitle')}
+      </h4>
+      <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
+        {shown.map((l) => {
+          const on = enabled.includes(l.code);
+          const gain = on ? 0 : gains.get(l.code) || 0;
+          return (
+            <LanguageChip
+              key={l.code}
+              label={l.label}
+              on={on}
+              gain={gain}
+              ariaLabel={gain ? t(lang, 'resourceLanguageAdd', { language: l.label, count: gain }) : undefined}
+              onToggle={() => onToggle(l.code)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// `framed` draws the quiet card the plan day puts around the shelf; it lives
+// here so the frame disappears with the shelf instead of lingering empty.
+export default function GoDeeper({ resources, lang, id = 'plan-go-deeper', languageOffers = [], framed = false }) {
   const [open, setOpen] = useState(false);
+  // Once the reader has changed a language on this shelf it stays on screen,
+  // even if that emptied it: unticking the one language that filled it must not
+  // also take away the chip that brings it back.
+  const [adjusted, setAdjusted] = useState(false);
+  const { languages: enabled, toggle } = useResourceLanguages();
   // Read once for the whole shelf rather than per card — it is the same device
   // setting for all of them.
   const lowData = isLowDataMode();
-  if (!resources?.length) return null;
+  if (!resources?.length && !adjusted) return null;
+
+  const toggleLanguage = (code) => {
+    setAdjusted(true);
+    toggle(code);
+  };
 
   return (
-    <section>
+    <section
+      className={framed ? 'rounded-xl px-3' : undefined}
+      style={framed ? { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' } : undefined}
+    >
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -119,13 +181,15 @@ export default function GoDeeper({ resources, lang, id = 'plan-go-deeper' }) {
       >
         <span className="flex min-w-0 items-center gap-2">
           <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>{t(lang, 'goDeeper')}</span>
-          <span
-            aria-hidden="true"
-            className="inline-flex min-w-6 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
-          >
-            {resources.length}
-          </span>
+          {resources.length > 0 && (
+            <span
+              aria-hidden="true"
+              className="inline-flex min-w-6 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
+              style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+            >
+              {resources.length}
+            </span>
+          )}
         </span>
         <ChevronDown
           size={16}
@@ -136,6 +200,7 @@ export default function GoDeeper({ resources, lang, id = 'plan-go-deeper' }) {
       {open && (
         <div id={id} className="pb-3">
           <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'goDeeperNote')}</p>
+          <ShelfLanguages lang={lang} enabled={enabled} offers={languageOffers} onToggle={toggleLanguage} />
           <ul className="grid gap-2 sm:grid-cols-2">
             {resources.map((r) => <ResourceCard key={r.id} resource={r} lang={lang} lowData={lowData} />)}
           </ul>

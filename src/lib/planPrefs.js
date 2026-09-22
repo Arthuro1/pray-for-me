@@ -167,8 +167,31 @@ export function getResourceFallbackLanguages() {
   }
 }
 
+// The choice can be made from Settings or from any "Go deeper" shelf, so every
+// shelf on screen listens for it: a language added under one plan day is the
+// reader's setting, not that shelf's.
+const LANG_CHANGED = 'pfm:resource-langs';
+
 export function setResourceFallbackLanguages(codes) {
   try { localStorage.setItem(LANG_KEY, JSON.stringify([...new Set(codes || [])])); } catch { /* storage unavailable */ }
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(LANG_CHANGED));
+}
+
+export function subscribeResourceLanguages(onChange) {
+  if (typeof window === 'undefined') return () => {};
+  const onStorage = (e) => { if (e.key === LANG_KEY || e.key === null) onChange(); };
+  window.addEventListener(LANG_CHANGED, onChange);
+  window.addEventListener('storage', onStorage);
+  return () => {
+    window.removeEventListener(LANG_CHANGED, onChange);
+    window.removeEventListener('storage', onStorage);
+  };
+}
+
+// Ticking a language puts it FIRST (see above); unticking removes it. Ticking it
+// again later is therefore how a reader moves it back to the front.
+export function toggleResourceLanguage(enabled, code) {
+  return enabled.includes(code) ? enabled.filter((c) => c !== code) : [code, ...enabled];
 }
 
 // Resource topics the user's growth areas ask us to prefer. Used to rank, never

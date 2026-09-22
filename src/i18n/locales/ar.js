@@ -1212,7 +1212,8 @@ export default {
   "resourceTypeStudy": "دراسة",
   "resourceTypePrayerGuide": "دليل صلاة",
   "resourceLanguagesTitle": "لغات المصادر",
-  "resourceLanguagesSub": "تُفضّل التوصيات لغة التطبيق، وقد تتضمن أيضًا موارد بأي لغة أخرى تختارها. الإنجليزية محددة افتراضيًا؛ ألغِ تحديدها إذا كنت لا تقرؤها.",
+  "resourceLanguagesSub": "تُفضّل التوصيات لغة التطبيق، وقد تتضمن أيضًا موارد بأي لغة أخرى تختارها. الإنجليزية محددة افتراضيًا؛ ألغِ تحديدها إذا كنت لا تقرؤها.",
+  "resourceLanguageAdd": "إضافة {language} (+{count})",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "للمخطوبين: الاستعداد للزواج",
