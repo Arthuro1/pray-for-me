@@ -23,7 +23,8 @@ vi.mock('../../lib/analytics', () => ({
 
 import PlanDayBody from '../PlanDayBody';
 import { useResourceLanguages } from '../../hooks/useResourceLanguages';
-import { t } from '../../i18n';
+import { availableResourceLanguages } from '../../lib/resources';
+import { t, tp, LANGUAGES } from '../../i18n';
 
 const lang = 'fr'; // the always-loaded fallback locale
 const afterPrayerLabel = () => {
@@ -209,19 +210,48 @@ describe('Go deeper', () => {
   });
 
   // Resource languages used to be reachable only from Settings. The shelf now
-  // offers the languages that would add to it — and only those — with how many.
-  it('offers, inside the open shelf, the languages that would add to it', () => {
+  // leads with the languages that have something for today, with how many.
+  it('leads, inside the open shelf, with the languages that have works for today', () => {
     render(<PlanDayBody day={day} lang={lang} resources={[resource]} resourceOffers={[{ lang: 'de', count: 3 }]} />);
     expect(screen.queryByRole('group', { name: t(lang, 'resourceLanguagesTitle') })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
 
-    const german = screen.getByRole('checkbox', { name: t(lang, 'resourceLanguageAdd', { language: 'Deutsch', count: 3 }) });
+    const german = screen.getByRole('checkbox', { name: tp(lang, 'resourceLanguageOffer', 3, { language: 'Deutsch' }) });
     expect(german.getAttribute('aria-checked')).toBe('false');
-    expect(german.textContent).toContain('+3');
+    expect(german.textContent).toContain('3');
     // The language already chosen sits beside it, so a choice is undone in place…
     expect(screen.getByRole('checkbox', { name: 'English' }).getAttribute('aria-checked')).toBe('true');
-    // …and a language with nothing for today is not offered at all.
+    // …and a language with nothing for today waits behind one more tap.
     expect(screen.queryByRole('checkbox', { name: /Español/ })).toBeNull();
+  });
+
+  // Reported: a reader who wanted German AND English could not have both from
+  // the shelf. Every language Settings offers must be reachable here too, and
+  // ticking one must never make another disappear.
+  it('reaches every language, and keeps a chosen one on screen alongside the others', () => {
+    render(<PlanDayBody day={day} lang={lang} resources={[resource]} resourceOffers={[{ lang: 'de', count: 3 }]} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'resourceLanguagesMore') }));
+
+    for (const code of availableResourceLanguages().filter((c) => c !== lang)) {
+      const label = LANGUAGES.find((l) => l.code === code).label;
+      expect(screen.getByRole('checkbox', { name: new RegExp(label) }), code).toBeTruthy();
+    }
+    expect(screen.queryByRole('button', { name: t(lang, 'resourceLanguagesMore') })).toBeNull();
+
+    fireEvent.click(screen.getByRole('checkbox', { name: /Deutsch/ }));
+    expect(screen.getByRole('checkbox', { name: 'Deutsch' }).getAttribute('aria-checked')).toBe('true');
+    expect(screen.getByRole('checkbox', { name: 'English' }).getAttribute('aria-checked')).toBe('true');
+    expect(JSON.parse(localStorage.getItem('pfm_resource_langs'))).toEqual(['de', 'en']);
+  });
+
+  it('never drops a language the reader just unticked, even with nothing for today', () => {
+    localStorage.setItem('pfm_resource_langs', JSON.stringify(['ja', 'en']));
+    render(<PlanDayBody day={day} lang={lang} resources={[resource]} />);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'goDeeper') }));
+    fireEvent.click(screen.getByRole('checkbox', { name: '日本語' }));
+
+    expect(screen.getByRole('checkbox', { name: '日本語' }).getAttribute('aria-checked')).toBe('false');
   });
 
   it('saves a language ticked on the shelf as the reader’s setting, ranked first', () => {
@@ -253,7 +283,7 @@ describe('Go deeper', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: 'English' }));
 
     expect(screen.queryByText('A verified title')).toBeNull();
-    const english = screen.getByRole('checkbox', { name: t(lang, 'resourceLanguageAdd', { language: 'English', count: 1 }) });
+    const english = screen.getByRole('checkbox', { name: tp(lang, 'resourceLanguageOffer', 1, { language: 'English' }) });
     fireEvent.click(english);
     expect(screen.getByText('A verified title')).toBeTruthy();
   });

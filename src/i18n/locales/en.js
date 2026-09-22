@@ -1217,7 +1217,9 @@ export default {
   "resourceTypePrayerGuide": "Prayer guide",
   "resourceLanguagesTitle": "Resource languages",
   "resourceLanguagesSub": "Recommendations prefer your app language and may also include resources in any other language you select. English is selected by default; turn it off if you do not read it.",
-  "resourceLanguageAdd": "Add {language} (+{count})",
+  "resourceLanguageOffer_one": "Add {language} — {n} resource for today",
+  "resourceLanguageOffer_other": "Add {language} — {n} resources for today",
+  "resourceLanguagesMore": "More languages",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Engaged: Preparing for Marriage",

@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "기도 가이드",
   "resourceLanguagesTitle": "자료 언어",
   "resourceLanguagesSub": "추천 자료는 앱 언어를 우선하며, 선택한 다른 언어의 자료도 함께 표시될 수 있습니다. 영어는 기본으로 선택되어 있으므로 읽지 않는다면 꺼 주세요.",
-  "resourceLanguageAdd": "{language} 추가 (+{count})",
+  "resourceLanguageOffer_one": "{language} 추가 — 오늘의 자료 {n}개",
+  "resourceLanguageOffer_other": "{language} 추가 — 오늘의 자료 {n}개",
+  "resourceLanguagesMore": "다른 언어",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "약혼: 결혼을 준비하기",

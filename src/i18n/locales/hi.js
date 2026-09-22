@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "प्रार्थना मार्गदर्शिका",
   "resourceLanguagesTitle": "सामग्री की भाषाएँ",
   "resourceLanguagesSub": "सुझाव ऐप की भाषा को प्राथमिकता देते हैं और आपकी चुनी हुई किसी भी दूसरी भाषा के संसाधन भी शामिल कर सकते हैं। अंग्रेज़ी डिफ़ॉल्ट रूप से चुनी हुई है; अगर आप इसे नहीं पढ़ते हैं, तो इसे बंद कर दें।",
-  "resourceLanguageAdd": "{language} जोड़ें (+{count})",
+  "resourceLanguageOffer_one": "{language} जोड़ें — आज के लिए {n} सामग्री",
+  "resourceLanguageOffer_other": "{language} जोड़ें — आज के लिए {n} सामग्री",
+  "resourceLanguagesMore": "और भाषाएँ",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "मंगेतर: विवाह की तैयारी",

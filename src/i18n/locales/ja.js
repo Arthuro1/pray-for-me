@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "祈りのガイド",
   "resourceLanguagesTitle": "資料の言語",
   "resourceLanguagesSub": "おすすめはアプリの言語を優先し、選択したほかの言語の資料も表示されることがあります。英語は初期設定で選択されています。英語を読まない場合はオフにしてください。",
-  "resourceLanguageAdd": "{language}を追加(+{count})",
+  "resourceLanguageOffer_one": "{language}を追加 — 今日の資料 {n} 件",
+  "resourceLanguageOffer_other": "{language}を追加 — 今日の資料 {n} 件",
+  "resourceLanguagesMore": "ほかの言語",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "婚約中の方へ：結婚に備える",

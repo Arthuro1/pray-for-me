@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ExternalLink, ChevronDown } from 'lucide-react';
-import { t, LANGUAGES } from '../i18n';
+import { ExternalLink, ChevronDown, Plus } from 'lucide-react';
+import { t, tp, LANGUAGES } from '../i18n';
 import { pick } from '../content/teaching';
 import { track, EVENTS } from '../lib/analytics';
 import { isLowDataMode } from '../lib/lowData';
@@ -108,20 +108,32 @@ function ResourceCard({ resource, lang, lowData = false }) {
 // WHY THE SHELF CARRIES ITS OWN LANGUAGE CHOICE
 // ─────────────────────────────────────────────────────────────────────────────
 // Resource languages used to live only in Settings, next to the app language,
-// where a reader had no way to know which of eleven languages would bring
-// anything for today. Here the shelf offers exactly the languages that WOULD add
-// to it, each with how many works it adds, beside the ones already chosen so
-// an accidental tap is undone in place. It is the same device setting as in
-// Settings (a newly ticked language still goes first), so every shelf updates.
+// where a reader had no way to know which of eleven languages had anything for
+// today. Here the shelf leads with the languages already chosen and the ones
+// that have works for this day (with how many), and one more tap reveals every
+// other language — nothing a reader can pick in Settings is out of reach here.
+// It is the same device setting as in Settings (a newly ticked language still
+// goes first), so every shelf updates.
 const DISPLAYABLE_RESOURCE_LANGUAGES = new Set(availableResourceLanguages());
 
 function ShelfLanguages({ lang, enabled, offers, onToggle }) {
-  const gains = new Map(offers.map((offer) => [offer.lang, offer.count]));
-  // Stable catalogue order, not priority order, so a chip never jumps out from
-  // under the finger that just ticked it.
-  const shown = LANGUAGES.filter((l) => l.code !== lang
-    && (gains.has(l.code) || (enabled.includes(l.code) && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code))));
-  if (!shown.length) return null;
+  const [showAll, setShowAll] = useState(false);
+  // A chip the reader has touched stays where it is, whatever its count does
+  // next: a language must never vanish from under the finger that tapped it.
+  const [touched, setTouched] = useState(() => new Set());
+  const counts = new Map(offers.map((offer) => [offer.lang, offer.count]));
+  const choosable = LANGUAGES.filter((l) => l.code !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code));
+  const leading = (code) => enabled.includes(code) || counts.has(code) || touched.has(code);
+  // Stable catalogue order, not priority order, so a chip never jumps position
+  // either.
+  const shown = showAll ? choosable : choosable.filter((l) => leading(l.code));
+  const hiddenCount = choosable.length - shown.length;
+  if (!choosable.length) return null;
+
+  const toggle = (code) => {
+    setTouched((prev) => new Set(prev).add(code));
+    onToggle(code);
+  };
 
   return (
     <div className="mb-3">
@@ -131,18 +143,29 @@ function ShelfLanguages({ lang, enabled, offers, onToggle }) {
       <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
         {shown.map((l) => {
           const on = enabled.includes(l.code);
-          const gain = on ? 0 : gains.get(l.code) || 0;
+          const count = on ? 0 : counts.get(l.code) || 0;
           return (
             <LanguageChip
               key={l.code}
               label={l.label}
               on={on}
-              gain={gain}
-              ariaLabel={gain ? t(lang, 'resourceLanguageAdd', { language: l.label, count: gain }) : undefined}
-              onToggle={() => onToggle(l.code)}
+              count={count}
+              ariaLabel={count ? tp(lang, 'resourceLanguageOffer', count, { language: l.label }) : undefined}
+              onToggle={() => toggle(l.code)}
             />
           );
         })}
+        {hiddenCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowAll(true)}
+            className="pressable inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-medium"
+            style={{ color: 'var(--accent)', border: '0.5px dashed var(--input-border)' }}
+          >
+            <Plus size={12} aria-hidden="true" />
+            {t(lang, 'resourceLanguagesMore')}
+          </button>
+        )}
       </div>
     </div>
   );

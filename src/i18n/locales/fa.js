@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "راهنمای دعا",
   "resourceLanguagesTitle": "زبان‌های منابع",
   "resourceLanguagesSub": "پیشنهادها زبان برنامه را در اولویت قرار می‌دهند و ممکن است منابعی به هر زبان دیگری که انتخاب می‌کنی نیز داشته باشند. انگلیسی به‌طور پیش‌فرض انتخاب شده است؛ اگر آن را نمی‌خوانی، غیرفعالش کن.",
-  "resourceLanguageAdd": "افزودن {language} (+{count})",
+  "resourceLanguageOffer_one": "افزودن {language}: {n} منبع برای امروز",
+  "resourceLanguageOffer_other": "افزودن {language}: {n} منبع برای امروز",
+  "resourceLanguagesMore": "زبان‌های دیگر",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "نامزدها: آمادگی برای ازدواج",

@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "Panduan doa",
   "resourceLanguagesTitle": "Bahasa sumber",
   "resourceLanguagesSub": "Rekomendasi memprioritaskan bahasa aplikasi dan juga dapat menyertakan sumber dalam bahasa lain yang kamu pilih. Bahasa Inggris dipilih secara default; nonaktifkan jika kamu tidak membacanya.",
-  "resourceLanguageAdd": "Tambahkan {language} (+{count})",
+  "resourceLanguageOffer_one": "Tambahkan {language} — {n} sumber untuk hari ini",
+  "resourceLanguageOffer_other": "Tambahkan {language} — {n} sumber untuk hari ini",
+  "resourceLanguagesMore": "Bahasa lain",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Bertunangan: bersiap untuk pernikahan",

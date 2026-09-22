@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "Mwongozo wa maombi",
   "resourceLanguagesTitle": "Lugha za rasilimali",
   "resourceLanguagesSub": "Mapendekezo yanatanguliza lugha ya programu na yanaweza pia kujumuisha rasilimali katika lugha nyingine yoyote unayochagua. Kiingereza huchaguliwa kwa chaguomsingi; kizime ikiwa hukisomi.",
-  "resourceLanguageAdd": "Ongeza {language} (+{count})",
+  "resourceLanguageOffer_one": "Ongeza {language} — rasilimali {n} kwa leo",
+  "resourceLanguageOffer_other": "Ongeza {language} — rasilimali {n} kwa leo",
+  "resourceLanguagesMore": "Lugha zaidi",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "Wachumba: kujiandaa kwa ndoa",

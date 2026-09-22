@@ -233,20 +233,26 @@ export function resolveResources({
   return matches.slice(0, resultLimit);
 }
 
-// The languages a reader has NOT enabled that would add at least one work to
-// this shelf, each with how many. Takes the same query as resolveResources().
+// The languages a reader has NOT enabled that have something for this shelf,
+// each with how many of its works would be offered in that language once
+// ticked. Takes the same query as resolveResources().
 //
-// This is what lets a shelf offer "+ Deutsch · 4" where the choice pays off,
+// This is what lets a shelf offer "Deutsch 4" where the choice means something,
 // instead of leaving the reader to guess in Settings which of eleven languages
-// has anything for today. Counted as NEW rows only: a language that would merely
-// swap the edition of a work already on the shelf adds nothing to read.
+// has anything for today. It is counted the way ticking really behaves — a new
+// language goes straight after the app language — so a work already shown in
+// English that also has a German edition counts for German: ticking German
+// swaps it to the German one. Counting only brand-new works hid German from a
+// French reader as soon as English was on, although German was exactly what
+// they wanted to read.
 export function resourceLanguageOffers({ languages = [], catalogue = RESOURCES, ...query } = {}) {
-  const current = resolveResources({ ...query, languages, catalogue }).length;
+  const [appLang, ...chosen] = languages;
   return availableResourceLanguages(catalogue)
     .filter((code) => !languages.includes(code))
     .map((code) => ({
       lang: code,
-      count: resolveResources({ ...query, languages: [...languages, code], catalogue }).length - current,
+      count: resolveResources({ ...query, languages: [appLang, code, ...chosen], catalogue })
+        .filter((row) => row.lang === code).length,
     }))
     .filter((offer) => offer.count > 0)
     .sort((a, b) => b.count - a.count || a.lang.localeCompare(b.lang));

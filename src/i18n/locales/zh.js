@@ -1213,7 +1213,9 @@ export default {
   "resourceTypePrayerGuide": "祷告指南",
   "resourceLanguagesTitle": "资源语言",
   "resourceLanguagesSub": "推荐内容会优先使用应用语言，也可能包含你选择的其他语言的资源。英语默认已选中；如果你不阅读英语，可以将其关闭。",
-  "resourceLanguageAdd": "添加{language}(+{count})",
+  "resourceLanguageOffer_one": "添加{language}——今天有 {n} 项资源",
+  "resourceLanguageOffer_other": "添加{language}——今天有 {n} 项资源",
+  "resourceLanguagesMore": "更多语言",
 
   // Relationships & family plans — draft translations awaiting native review.
   "planCovenantTitle": "已订婚：为婚姻预备",

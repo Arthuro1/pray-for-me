@@ -96,18 +96,28 @@ describe('resourceLanguageOffers', () => {
     topics: ['marriage'], lifeStage: 'single', languages, catalogue,
   });
 
-  it('offers each unused language with the number of works it would add to this shelf', () => {
-    // Nothing on a French shelf yet: English and German each bring two works
-    // (one of them shared), so both are worth offering.
+  it('offers each unused language with how many of today’s works it would show', () => {
+    // Nothing on a French shelf yet: English and German each have two works
+    // (one of them the same bilingual book), so both are worth offering.
     expect(offers(['fr'])).toEqual([{ lang: 'de', count: 2 }, { lang: 'en', count: 2 }]);
   });
 
-  it('counts only NEW works, never a different edition of one already shown', () => {
-    // With English on, the bilingual work is already on the shelf; German only
-    // adds the German original.
-    expect(offers(['fr', 'en'])).toEqual([{ lang: 'de', count: 1 }]);
+  // Reported: with English ticked, German vanished from a French shelf because
+  // every German work there also had an English edition. Ticking German puts it
+  // ahead of English, so those works WOULD switch to German — it must stay.
+  it('keeps offering a language whose works are already shown in another one', () => {
+    expect(offers(['fr', 'en'])).toEqual([{ lang: 'de', count: 2 }]);
     const bilingualOnly = CATALOGUE.filter((r) => r.id === 'en-with-de-edition');
-    expect(offers(['fr', 'en'], bilingualOnly)).toEqual([]);
+    expect(offers(['fr', 'en'], bilingualOnly)).toEqual([{ lang: 'de', count: 1 }]);
+  });
+
+  it('never counts a work the app language already covers — that edition always wins', () => {
+    const french = [...CATALOGUE, {
+      id: 'fr-and-de', type: 'book', originalLanguage: 'fr', status: 'approved',
+      topics: ['marriage'], lifeStages: ['single'],
+      editions: { fr: edition({ title: 'Original français' }), de: edition({ title: 'Deutsche Ausgabe' }) },
+    }];
+    expect(offers(['fr', 'en'], french)).toEqual([{ lang: 'de', count: 2 }]);
   });
 
   it('never offers an enabled language, or one with nothing verified for today', () => {
