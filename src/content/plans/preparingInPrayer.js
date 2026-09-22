@@ -84,8 +84,8 @@ export const PREPARING_IN_PRAYER = {
   movements: MOVEMENTS,
   continueThemes: CONTINUE_THEMES,
   intro: {
-    en: "Twenty-one days to seek God in the season you are actually living. This is not a method for finding a spouse, and it promises nothing about whether you will marry. It is a Scripture-shaped journey: five days rooting your life in God, five days asking Him to form your own character, seven days praying for a person you may one day marry, and four days entrusting the whole future back to Him. If you never marry, every day of it still belongs to you.",
-    fr: "Vingt et un jours pour chercher Dieu dans la saison que tu vis vraiment. Ce n'est pas une méthode pour trouver un conjoint, et cela ne promet rien quant à un futur mariage. C'est un parcours façonné par l'Écriture : cinq jours pour enraciner ta vie en Dieu, cinq jours pour Lui demander de former ton propre caractère, sept jours pour prier pour une personne que tu épouseras peut-être un jour, et quatre jours pour Lui remettre tout l'avenir. Si tu ne te maries jamais, chacun de ces jours t'appartient quand même.",
+    en: "Twenty-one days to seek God in the season you are actually living. This is not a method for finding a spouse, and it promises nothing about whether you will marry. It is a Scripture-shaped journey: five days rooting your life in God, five days asking Him to form your own character, seven days praying for a person you may one day marry, and four days entrusting the whole future back to Him.",
+    fr: "Vingt et un jours pour chercher Dieu dans la saison que tu vis vraiment. Ce n'est pas une méthode pour trouver un conjoint, et cela ne promet rien quant à un futur mariage. C'est un parcours façonné par l'Écriture : cinq jours pour enraciner ta vie en Dieu, cinq jours pour Lui demander de former ton propre caractère, sept jours pour prier pour une personne que tu épouseras peut-être un jour, et quatre jours pour Lui remettre tout l'avenir.",
   },
   biblical: {
     ref: 'Matthew 6:31-34',
