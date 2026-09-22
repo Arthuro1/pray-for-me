@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { occursOn, planDayNumber, restingPlanDay } from './schedule';
 import {
   PLAN_PAUSED, paceOf, planTotal, repacePlan, upcomingPlanDay,
@@ -152,8 +152,16 @@ describe('the plan card always has a day to show', () => {
 
 // The full scheduler under the ⋯ menu offers rhythms the pace control does not.
 // It must re-anchor through the same rule — and must not re-anchor when the
-// reader only changed something that is not a rhythm.
+// reader only changed something that is not a rhythm. It takes no `today`: it
+// re-anchors from the real clock, so the clock is pinned to TODAY (local noon,
+// clear of any midnight/time-zone edge) or day 16 would drift with the calendar.
 describe('the full scheduler', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(`${TODAY}T12:00:00`)); // no offset: local time
+  });
+  afterEach(() => vi.useRealTimers());
+
   const edit = (schedule, changes) => scheduleFromDraft({ ...draftFromSchedule(schedule), ...changes }, schedule);
 
   it('re-anchors a rhythm it changed, keeping the reader on day 16', () => {
