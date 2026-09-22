@@ -8,9 +8,16 @@ describe('isInvitePath', () => {
     expect(isInvitePath('/community/add-friend/some-uuid')).toBe(true);
   });
 
+  it('matches a shared plan link, with or without the sharer token', () => {
+    expect(isInvitePath('/plans/altar7/AbCdEfGhIjKlMnOpQrStUv')).toBe(true);
+    expect(isInvitePath('/plans/altar7')).toBe(true);
+  });
+
   it('ignores ordinary routes so we never hijack normal navigation', () => {
     expect(isInvitePath('/community')).toBe(false);
     expect(isInvitePath('/community/group/g1')).toBe(false);
+    expect(isInvitePath('/plan')).toBe(false);
+    expect(isInvitePath('/plans')).toBe(false);
     expect(isInvitePath('/')).toBe(false);
     expect(isInvitePath('')).toBe(false);
     expect(isInvitePath(undefined)).toBe(false);

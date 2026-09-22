@@ -32,6 +32,7 @@ import PlanDayDeck from '../components/plan/PlanDayDeck';
 import DisclosureRow from '../components/shared/DisclosureRow';
 import PlanDayTrace from '../components/plan/PlanDayTrace';
 import PlanCompletionCard from '../components/PlanCompletionCard';
+import PlanShareSheet from '../components/plan/PlanShareSheet';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 import { hasPersonalization, isCouplePlan, planPeopleFrom } from '../lib/planPersonalization';
 import { savePlanPersonalization } from '../lib/planPersonalizationStorage';
@@ -39,6 +40,7 @@ import { claimPlanCompletionReport, markPlanCompleted, savePlanPrefs } from '../
 import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
 import { canUsePlan } from '../lib/planReview';
+import { isPlanShareable } from '../lib/planShareLink';
 import { planPrayerText } from '../lib/guidedPlan';
 import { PACE_LABEL_KEYS, paceOf, planTotal } from '../lib/planTempo';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
@@ -159,6 +161,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showPlanShare, setShowPlanShare] = useState(false);
   const [showScripture, setShowScripture] = useState(false);
   // "Pray now" on this one prayer — a real session, so completion is recorded
   // through the same per-prayer completion log as Today's sessions.
@@ -491,6 +494,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // A saved copy follows the shared content read-only: it pulls the author's/
   // group's latest, but isn't edited here (open it in Community to contribute).
   const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
+  // Any run of a plan — upcoming, in progress or finished — can pass the plan
+  // on. What is shared is the plan, never this run or anything prayed in it.
+  const planShareable = !isCommunity && !savedCopy && !!user?.id && isPlanShareable(plan);
   const canAddContent = !isAnswered && (isCommunity || !savedCopy);
   const canRemoveContent = !isAnswered && (isCommunity || !savedCopy);
   // Fold in group activity for both saved copies and owned source prayers. For an
@@ -748,6 +754,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           onCancel={() => setShowAiConsent(false)}
         />
       )}
+      {showPlanShare && (
+        <PlanShareSheet plan={plan} lang={lang} userId={user.id} onClose={() => setShowPlanShare(false)} />
+      )}
       {showShareModal && (
         <PrayerShareModal
           prayer={livePrayer}
@@ -868,7 +877,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 // carried request is personal.
                 { key: 'schedule', icon: CalendarClock, label: t(lang, livePrayer.schedule ? 'editSchedule' : 'addSchedule'), onClick: () => setShowScheduleEdit((v) => !v), hidden: isAnswered || planScheduleRow },
                 { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered || !followUpRelevant },
-                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 },
+                // A plan run shares the PLAN (link, friends, groups), not a copy
+                // of this prayer into a group wall — unless it already was, which
+                // stays manageable here.
+                { key: 'sharePlan', icon: Share2, label: t(lang, 'planShareAction'), onClick: () => setShowPlanShare(true), hidden: !planShareable },
+                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 || (!!plan && sharedGroups.length === 0) },
                 // A plan run's words are the plan's own — there is nothing here to edit.
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy || isPlanRun },
                 { key: 'delete', icon: Trash2, label: t(lang, savedCopy ? 'removeFromList' : 'delete'), danger: true, onClick: handleDelete },
@@ -1095,15 +1108,29 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
               />
               <PlanDayTrace lang={lang} prayed={planDayPrayed} updates={planDayUpdates} />
-              {canEditPersonalization && (
-                <button
-                  type="button"
-                  onClick={() => setEditingPersonalization(true)}
-                  className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                  style={{ color: 'var(--text-3)' }}
-                >
-                  <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
-                </button>
+              {(canEditPersonalization || planShareable) && (
+                <div className="flex flex-wrap items-center gap-x-5">
+                  {canEditPersonalization && (
+                    <button
+                      type="button"
+                      onClick={() => setEditingPersonalization(true)}
+                      className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
+                      style={{ color: 'var(--text-3)' }}
+                    >
+                      <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
+                    </button>
+                  )}
+                  {planShareable && (
+                    <button
+                      type="button"
+                      onClick={() => setShowPlanShare(true)}
+                      className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      <Share2 size={12} aria-hidden="true" /> {t(lang, 'planShareAction')}
+                    </button>
+                  )}
+                </div>
               )}
               {/* How often this comes back, kept WITH the day it paces — a
                   reader who finds a plan too fast is looking at the day, not
@@ -1159,6 +1186,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <PlanCompletionCard
             plan={plan}
             lang={lang}
+            onShare={planShareable ? () => setShowPlanShare(true) : undefined}
             onContinue={async (themes) => {
               for (const theme of themes) {
                 await addPrayer({

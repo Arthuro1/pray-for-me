@@ -29,6 +29,8 @@ const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
+const PlanSharePublicPage = lazy(() => import('./pages/planShare/PlanSharePublicPage'));
+const PlanJoinPage = lazy(() => import('./pages/planShare/PlanJoinPage'));
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
@@ -46,6 +48,7 @@ import { initPrayerNotes } from './lib/prayerNotes';
 import { resolvePwaShortcut } from './lib/pwaInstall';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
+import { hasPendingPlanJoin, isPlanSharePath } from './lib/planShareLink';
 import { normalizeTheme } from './utils/theme';
 import { importGuestPrayerOnce } from './lib/guestPrayerImport';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
@@ -289,7 +292,8 @@ export default function AuthenticatedApp({
       // Don't show the standard first-run onboarding while a guest-prayer import
       // is pending — that visitor already prayed and is about to have their prayer
       // imported (see the import effect below). The sync marker avoids a flash.
-      if (!localStorage.getItem('pfm_onboarded') && !hasPendingGuestDraftSync()) setShowOnboarding(true);
+      // Nor while a shared plan is waiting to start: its first day IS the first prayer.
+      if (!localStorage.getItem('pfm_onboarded') && !hasPendingGuestDraftSync() && !hasPendingPlanJoin()) setShowOnboarding(true);
     }
   }, [user?.id, loadData, loadTranslations, fetchPendingCount]);
 
@@ -430,10 +434,17 @@ export default function AuthenticatedApp({
       <Suspense fallback={<PageLoader />}>
         {guestView === 'auth'
           ? <AuthPage intent={authIntent} onBack={() => setGuestView(authIntent === 'save-prayer' ? 'prayer' : 'landing')} />
-          : <LandingPage
-              onBeginPrayer={() => setGuestView('prayer')}
-              onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
-            />}
+          : isPlanSharePath(location.pathname)
+            // A shared plan link: the plan itself, readable before any account.
+            ? <PlanSharePublicPage
+                lang={lang}
+                onJoin={() => { setAuthIntent('join-plan'); setGuestView('auth'); }}
+                onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
+              />
+            : <LandingPage
+                onBeginPrayer={() => setGuestView('prayer')}
+                onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
+              />}
       </Suspense>
     );
   }
@@ -487,6 +498,7 @@ export default function AuthenticatedApp({
               <Route path="/community" element={<CommunityTab />} />
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
+              <Route path="/plans/:planId/:token?" element={<PlanJoinPage />} />
               <Route path="/community/group/:groupId" element={<CommunityTab />} />
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
               <Route path="/calendar" element={<CalendarTab />} />

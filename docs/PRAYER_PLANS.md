@@ -214,6 +214,11 @@ approved resources, language coverage and Paul's dated approval record.
    `EVENTS` allowlist in `src/lib/analytics.js` (they are plain strings in the
    content file so it stays free of app imports).
 7. Add content tests. `preparingInPrayer.test.js` is the template.
+8. Refresh what a shared link to it shows on WhatsApp / Facebook / X (the plan's
+   public page needs nothing): `npx vitest run api/planPreview.test.js -u`
+   regenerates `api/_planPreviewData.js`, then `npm run build:plan-og` draws
+   `public/og/plans/<id>.png`. The preview test fails until the data is current.
+   A plan is only ever shareable once `isPlanReviewed` passes.
 
 ---
 

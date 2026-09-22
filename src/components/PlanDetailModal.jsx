@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { X, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, Check, ChevronDown, ChevronUp, Share2 } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
@@ -8,6 +8,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useLocalizedPlan } from '../hooks/useLocalizedPlan';
 import VersePill from './shared/VersePill';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
+import { isPlanShareable } from '../lib/planShareLink';
 
 // Explains a guided plan before the user commits to it: what the journey is
 // (intro), the Scripture story it follows — when and how it was prayed/fasted in
@@ -19,7 +20,8 @@ import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 //   ctaLabel     — overrides the primary "Start" label (e.g. "Start for the group")
 //   runningLabel — overrides the disabled/started label (e.g. "The group is already praying this")
 //   footnote     — a small line under the actions (e.g. what starting shares with the group)
-export default function PlanDetailModal({ plan: source, lang, running, onStart, onClose, ctaLabel, runningLabel, footnote }) {
+//   onShare      — shows a "Share this plan" action in the header (signed-in catalogue only)
+export default function PlanDetailModal({ plan: source, lang, running, onStart, onClose, ctaLabel, runningLabel, footnote, onShare }) {
   // Rich plans carry prose in more languages than the source file authors; the
   // overlay folds in on demand and the day themes are already localized.
   const plan = useLocalizedPlan(source, lang);
@@ -63,6 +65,11 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
               <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{t(lang, 'planCoupleReviewPending')}</p>
             )}
           </div>
+          {onShare && isPlanShareable(source) && (
+            <button type="button" onClick={onShare} aria-label={t(lang, 'planShareAction')} title={t(lang, 'planShareAction')} className="phase-icon-button shrink-0">
+              <Share2 size={17} aria-hidden="true" />
+            </button>
+          )}
           <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
         </div>
 

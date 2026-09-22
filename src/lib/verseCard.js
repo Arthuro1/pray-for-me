@@ -18,6 +18,9 @@
 //   3. The sky is deterministic. The starfield is seeded by the day, exactly like
 //      the verse pick, so everyone who shares today shares the same sky.
 import { isRtl } from '../i18n';
+import { constellationFigure, starField } from './cardSky';
+
+export { constellationFigure, starField };
 
 export const CARD_SIZES = Object.freeze({
   // Square travels everywhere — chat bubbles, feeds, a screenshot into a
@@ -229,55 +232,11 @@ export function layoutVerseCard({
   };
 }
 
-// A calm, deterministic starfield. Seeded by the day like the verse itself, so the
-// sky never flickers between two renders of the same card.
-function mulberry32(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function hashSeed(value) {
-  const text = String(value ?? '');
-  let hash = 2166136261;
-  for (let i = 0; i < text.length; i += 1) {
-    hash ^= text.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-// One star per column, jittered vertically, then joined in order — a wandering
-// line that reads as a constellation instead of a scribble.
-export function constellationFigure({ seed, box, count = 6 }) {
-  const random = mulberry32(hashSeed(`figure:${seed}`));
-  const column = box.width / count;
-  return Array.from({ length: count }, (_unused, index) => ({
-    x: Math.round(box.x + column * (index + 0.5) + (random() - 0.5) * column * 0.6),
-    y: Math.round(box.y + box.height * (0.15 + random() * 0.7)),
-    radius: 2.4 + random() * 2.6,
-  }));
-}
-
-export function starField({ seed, width, height, count }) {
-  const random = mulberry32(hashSeed(seed));
-  return Array.from({ length: count }, () => ({
-    x: Math.round(random() * width),
-    y: Math.round(random() * height),
-    radius: 1 + random() * 2.4,
-    alpha: 0.25 + random() * 0.6,
-  }));
-}
-
 // ── palette ──────────────────────────────────────────────────────────────────
 // Straight from the Constellation card tokens, so the exported image is the app's
 // own sky rather than a second palette that can drift away from index.css. One
 // committed look in both themes: Light and Dark differ only in the sky's depth.
-function withAlpha(hex, alpha) {
+export function withAlpha(hex, alpha) {
   const value = String(hex).trim().replace('#', '');
   const full = value.length === 3 ? value.split('').map((c) => c + c).join('') : value;
   const int = Number.parseInt(full, 16);
@@ -310,7 +269,7 @@ const FAMILIES = Object.freeze({
 
 // Prefer the live stacks so the card tracks index.css, and fall back to the same
 // values inline when the tokens aren't readable (tests, detached documents).
-function fontStacks(root) {
+export function fontStacks(root) {
   if (typeof getComputedStyle !== 'function' || !root) return FAMILIES;
   const styles = getComputedStyle(root);
   const read = (name, fallback) => (styles.getPropertyValue(name) || '').trim() || fallback;
@@ -320,10 +279,8 @@ function fontStacks(root) {
   };
 }
 
-export function drawVerseCard(ctx, layout, palette, { seed = 0, stacks = FAMILIES } = {}) {
-  const { width, height } = layout;
-  const font = (size, family, weight = '400') => `${weight} ${size}px ${stacks[family]}`;
-
+// The sky every shared card stands on: the gradient and its seeded starfield.
+export function drawSky(ctx, { width, height }, palette, seed) {
   const sky = ctx.createLinearGradient(0, 0, width, height);
   sky.addColorStop(0, palette.sky[0]);
   sky.addColorStop(1, palette.sky[1]);
@@ -338,29 +295,37 @@ export function drawVerseCard(ctx, layout, palette, { seed = 0, stacks = FAMILIE
     ctx.fill();
   }
   ctx.globalAlpha = 1;
+}
+
+export function drawConstellation(ctx, box, palette, { seed, count = 6 }) {
+  const points = constellationFigure({ seed, box, count });
+  ctx.strokeStyle = withAlpha(palette.star, 0.28);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  points.forEach((point, index) => {
+    if (index === 0) ctx.moveTo(point.x, point.y);
+    else ctx.lineTo(point.x, point.y);
+  });
+  ctx.stroke();
+  ctx.fillStyle = palette.star;
+  for (const point of points) {
+    ctx.globalAlpha = 0.95;
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+export function drawVerseCard(ctx, layout, palette, { seed = 0, stacks = FAMILIES } = {}) {
+  const font = (size, family, weight = '400') => `${weight} ${size}px ${stacks[family]}`;
+
+  drawSky(ctx, layout, palette, seed);
 
   ctx.textBaseline = 'alphabetic';
   ctx.direction = layout.dir;
 
-  if (layout.figure) {
-    const points = constellationFigure({ seed, box: layout.figure });
-    ctx.strokeStyle = withAlpha(palette.star, 0.28);
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    points.forEach((point, index) => {
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-    ctx.stroke();
-    ctx.fillStyle = palette.star;
-    for (const point of points) {
-      ctx.globalAlpha = 0.95;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-  }
+  if (layout.figure) drawConstellation(ctx, layout.figure, palette, { seed });
 
   const line = (part, family, color, weight = '400', spacing = '0px') => {
     if (!part?.text) return;

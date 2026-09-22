@@ -67,6 +67,11 @@ export const EVENTS = Object.freeze({
   GROUP_JOINED: 'group_joined',
   PRAYER_SHARED: 'prayer_shared',
   VERSE_SHARED: 'verse_shared',
+  // A plan's public link going out, and someone beginning a plan through one.
+  // Never WHICH plan: a plan someone chooses can say something personal about
+  // their life, so these carry at most the share channel.
+  PLAN_LINK_SHARED: 'plan_link_shared',
+  PLAN_LINK_JOINED: 'plan_link_joined',
   DATA_EXPORTED: 'data_exported',
   ACCOUNT_DELETED_STARTED: 'account_deleted_started',
   PRIVACY_CENTER_OPENED: 'privacy_center_opened',

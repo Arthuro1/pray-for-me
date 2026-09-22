@@ -99,7 +99,10 @@ export default defineConfig(({ mode }) => {
         // The much smaller `landing-<lang>` marketing chunks are intentionally
         // named differently and remain precached so every landing language works
         // offline immediately after installation.
-        globIgnores: ['**/assets/{ar,de,es,fa,hi,id,ja,ko,pt,ru,sw,tl,zh,am,en}-*.js'],
+        // The plan link-preview pictures (public/og/plans) are for WhatsApp and
+        // Facebook's crawlers, never shown in the app — not worth ~900 KB of
+        // every install.
+        globIgnores: ['**/assets/{ar,de,es,fa,hi,id,ja,ko,pt,ru,sw,tl,zh,am,en}-*.js', 'og/**'],
         // Pull our Web Push handlers into the generated service worker.
         importScripts: ['push-sw.js'],
         runtimeCaching: [

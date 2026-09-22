@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Sprout } from 'lucide-react';
+import { Check, Share2, Sprout } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 
@@ -15,7 +15,7 @@ import { pick } from '../content/teaching';
 // asked where it can finally do something. It used to be put at the START of the
 // plan as well, and the only thing that answer ever did was pre-tick these boxes
 // three weeks later — so it is asked once, here, with everything offered.
-export default function PlanCompletionCard({ plan, lang, onContinue, onRelationshipNext }) {
+export default function PlanCompletionCard({ plan, lang, onContinue, onRelationshipNext, onShare }) {
   const themes = plan.continueThemes || [];
   // Recurring prayers are a lasting choice, so completion never opts the
   // reader into all of them by default.
@@ -116,6 +116,19 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
         >
           {t(lang, relationshipActionKey)}
         </Link>
+      )}
+
+      {/* Passing the plan on is always the quiet, last option — never a second
+          primary action competing with the ones above. */}
+      {onShare && (
+        <button
+          type="button"
+          onClick={onShare}
+          className="pressable mt-3 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium"
+          style={{ color: 'var(--accent)' }}
+        >
+          <Share2 size={15} aria-hidden="true" /> {t(lang, 'planShareWithSomeone')}
+        </button>
       )}
     </section>
   );

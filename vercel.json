@@ -4,6 +4,18 @@
       "source": "/.well-known/assetlinks.json",
       "destination": "/assetlinks.json"
     },
+    {
+      "source": "/plans/:planId",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|Slack-ImgProxy|Discordbot|LinkedInBot|SkypeUriPreview|Pinterestbot|redditbot|Applebot|Googlebot|bingbot|Embedly|vkShare|Iframely|Mastodon|Bluesky|DuckDuckBot|YandexBot).*" }],
+      "missing": [{ "type": "query", "key": "app" }],
+      "destination": "/api/plan-preview?planId=:planId"
+    },
+    {
+      "source": "/plans/:planId/:token",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(facebookexternalhit|Facebot|WhatsApp|TelegramBot|Twitterbot|Slackbot|Slack-ImgProxy|Discordbot|LinkedInBot|SkypeUriPreview|Pinterestbot|redditbot|Applebot|Googlebot|bingbot|Embedly|vkShare|Iframely|Mastodon|Bluesky|DuckDuckBot|YandexBot).*" }],
+      "missing": [{ "type": "query", "key": "app" }],
+      "destination": "/api/plan-preview?planId=:planId&token=:token"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

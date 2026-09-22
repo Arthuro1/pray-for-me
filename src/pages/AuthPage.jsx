@@ -45,11 +45,15 @@ export default function AuthPage({ onBack, intent }) {
   // in a place where it means something. "I already have an account" stays one
   // tap away throughout.
   const savePrayerIntent = intent === 'save-prayer';
+  // `join-plan` follows "Join this plan" on a shared plan link. Most people who
+  // arrive that way are new, so it opens on Sign up and says what happens next:
+  // the plan they chose begins as soon as they are in.
+  const joinPlanIntent = intent === 'join-plan';
   // 'login' is the default view; 'register' is the secondary option; 'link' is the
   // passwordless email path (the save-a-prayer default); 'forgot' is the
   // password-reset sub-view. The selected app language (carried over from the
   // landing page via the shared settings store) drives every string here.
-  const [mode, setMode] = useState(savePrayerIntent ? 'link' : 'login');
+  const [mode, setMode] = useState(savePrayerIntent ? 'link' : joinPlanIntent ? 'register' : 'login');
   const [form, setForm] = useState({ email: '', password: '', fullName: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -255,6 +259,13 @@ export default function AuthPage({ onBack, intent }) {
               <div className="mb-5 text-center">
                 <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authKeepPrayerTitle')}</h2>
                 <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authKeepPrayerBody')}</p>
+              </div>
+            )}
+
+            {joinPlanIntent && (
+              <div className="mb-5 text-center">
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authJoinPlanTitle')}</h2>
+                <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authJoinPlanBody')}</p>
               </div>
             )}
 

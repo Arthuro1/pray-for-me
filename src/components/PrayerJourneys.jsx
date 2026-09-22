@@ -1,27 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Check, ChevronDown, ChevronRight, HandHeart, HeartHandshake } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, HandHeart, Share2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { plansByCategory } from '../content/prayerPlans';
-import { planById } from '../lib/guidedPlan';
+import { formatPlanStartDate, planById } from '../lib/guidedPlan';
 import { runningPlanIds, runningPlanProgress } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { needsPreStartPersonalization, startGuidedPlan } from '../lib/startGuidedPlan';
 import { track } from '../lib/analytics';
 import PlanDetailModal from './PlanDetailModal';
-import PlanInviteModal from './PlanInviteModal';
+import PlanShareSheet from './plan/PlanShareSheet';
 import PlanPersonalizeModal from './PlanPersonalizeModal';
-
-function formatJourneyDate(key, lang) {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || '');
-  if (!match) return key || '';
-  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-  try { return date.toLocaleDateString(lang, { month: 'short', day: 'numeric' }); } catch { return key; }
-}
 
 function JourneyCard({ plan, lang, running, progress, onOpen }) {
   return (
@@ -61,7 +54,7 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
   const location = useLocation();
   const [detailJourney, setDetailJourney] = useState(null);
   const [personalizeTarget, setPersonalizeTarget] = useState(null);
-  const [inviteTarget, setInviteTarget] = useState(null);
+  const [shareTarget, setShareTarget] = useState(null);
   const [startedJourney, setStartedJourney] = useState(null);
   const [browseOpen, setBrowseOpen] = useState(false);
 
@@ -128,6 +121,7 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
           lang={lang}
           running={activeIds.has(detailJourney.id)}
           onStart={startJourney}
+          onShare={user?.id ? () => { setShareTarget({ journey: detailJourney, startDate: todayKey() }); setDetailJourney(null); } : undefined}
           onClose={() => setDetailJourney(null)}
         />
       )}
@@ -145,13 +139,13 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
           onClose={() => setPersonalizeTarget(null)}
         />
       )}
-      {inviteTarget && user?.id && (
-        <PlanInviteModal
-          plan={inviteTarget.journey}
-          startDate={inviteTarget.startDate}
+      {shareTarget && user?.id && (
+        <PlanShareSheet
+          plan={shareTarget.journey}
+          startDate={shareTarget.startDate}
           lang={lang}
           userId={user.id}
-          onClose={() => setInviteTarget(null)}
+          onClose={() => setShareTarget(null)}
         />
       )}
 
@@ -173,7 +167,7 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
               <p className="font-semibold" style={{ color: 'var(--text-1)' }}>
                 {startedJourney.startDate === todayKey()
                   ? t(lang, 'journeyBeginsToday')
-                  : t(lang, 'groupPlanStartsOn', { date: formatJourneyDate(startedJourney.startDate, lang) })}
+                  : t(lang, 'groupPlanStartsOn', { date: formatPlanStartDate(startedJourney.startDate, lang) })}
               </p>
               <p className="mt-1 text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, startedJourney.journey.titleKey)}</p>
             </div>
@@ -182,8 +176,8 @@ export default function PrayerJourneys({ lang, showRecommendation = true }) {
             <HandHeart size={16} aria-hidden="true" /> {t(lang, 'beginDayOne')}
           </button>
           {user?.id && (
-            <button type="button" onClick={() => setInviteTarget(startedJourney)} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-              <HeartHandshake size={15} aria-hidden="true" /> {t(lang, 'journeyInviteSomeone')}
+            <button type="button" onClick={() => setShareTarget(startedJourney)} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+              <Share2 size={15} aria-hidden="true" /> {t(lang, 'planShareAction')}
             </button>
           )}
         </div>

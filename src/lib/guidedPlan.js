@@ -54,3 +54,11 @@ export function planPrayerText(plan, lang) {
     description: plan.subKey ? t(lang, plan.subKey) : '',
   };
 }
+
+// A plan's start day as the reader says it ("25 Sept"), for "Starts {date}".
+export function formatPlanStartDate(key, lang) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || '');
+  if (!match) return key || '';
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  try { return date.toLocaleDateString(lang, { month: 'short', day: 'numeric' }); } catch { return key; }
+}
