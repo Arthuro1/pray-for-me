@@ -20,8 +20,7 @@ import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { planWeekDays, scheduleEnded } from '../lib/planner';
-import { occursOn } from '../lib/schedule';
-import { planDayNumber, restingPlanDay, toKey } from '../lib/schedule';
+import { isPlanDay, planDayNumber, restingPlanDay, toKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { getPlan } from '../content/prayerPlans';
 import { pick, localizeRef } from '../content/teaching';
@@ -351,15 +350,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // WHICH day of the plan is on screen. Today's, unless the calendar handed over
   // another day of the same run (`?day=` → planDayKey): that is how a reader
   // returns to a day they missed, or reads the next one, without leaving the
-  // plan. Only a real occurrence of THIS prayer's schedule is accepted, so a
-  // stale link or a hand-typed date quietly falls back to today rather than
-  // showing a day the run does not have.
+  // plan. Only a real day of THIS run is accepted — on its calendar, or walked
+  // before its pace last changed — so a stale link or a hand-typed date quietly
+  // falls back to today rather than showing a day the run does not have.
   // Overrides travel with the schedule everywhere below: a day the reader
   // SKIPPED or MOVED is a fact about where the run has got to, and reading the
   // pattern without them reports a day the calendar will not open.
   const planOverrides = livePrayer.schedule_overrides || EMPTY_OVERRIDES;
   const requestedDay = planId && DAY_KEY.test(planDayKey || '')
-    && occursOn(livePrayer.schedule, planDayKey, planOverrides)
+    && isPlanDay(livePrayer.schedule, planDayKey, planOverrides)
     ? planDayKey : null;
   const planVersion = livePrayer.schedule?.plan?.version || null;
   const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
@@ -388,9 +387,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // Everything else on this page — marking prayed, the follow-up, the series
   // summary — stays about TODAY. Only the plan day itself moves.
   const viewingOtherDay = planDayNo != null && viewedDayKey !== todayKey();
-  // A paused run holds a day without holding a date: there is nothing to page
-  // through and nothing to date-stamp until it is given a rhythm again.
-  const deckDayKey = resting?.state === 'paused' ? null : viewedDayKey;
+  // A paused run holds a day without holding a date: nothing to date-stamp
+  // until it is given a rhythm again — though the days it already walked still
+  // have theirs, and can be paged back to.
+  const deckDayKey = requestedDay || (resting?.state === 'paused' ? null : viewedDayKey);
   // The days on either side of the one on screen, so the reader can read back
   // over what a day held or look ahead at what is coming without going out to
   // the calendar and back for each one.

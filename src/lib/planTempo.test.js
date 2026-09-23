@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { occursOn, planDayNumber, restingPlanDay } from './schedule';
+import {
+  addDays, isPlanDay, normalizeSchedule, occursOn, planDayNumber, restingPlanDay, walkedPlanDays,
+} from './schedule';
 import {
   PLAN_PAUSED, paceOf, planTotal, repacePlan, upcomingPlanDay,
 } from './planTempo';
@@ -118,6 +120,74 @@ describe('pausing', () => {
     const resumed = repacePlan(paused(), 'daily', { today: '2026-10-05' });
     expect(planDayNumber(resumed, '2026-10-05')).toBe(16);
     expect(resumed.end).toEqual({ kind: 'count', count: 15 });
+  });
+});
+
+// Re-anchoring moves the pattern's start to the day of the change, so the days
+// before it stop being occurrences of anything. They used to be lost with it: a
+// reader who paused on day 4 and came back could never page back to days 1–3.
+// The run now keeps where each of them fell.
+describe('the days already walked', () => {
+  const daysFrom = (start, n) => Array.from({ length: n }, (_, i) => addDays(start, i));
+
+  it('are recorded, day 1 first, when the pace changes', () => {
+    const next = repacePlan(dailyRun(), 'alternate', { today: TODAY });
+    expect(next.plan.walked).toEqual(daysFrom(START, 15));
+    expect(walkedPlanDays(next)).toEqual(daysFrom(START, 15));
+  });
+
+  it('keep their day numbers and stay days of the run, though off its calendar', () => {
+    const next = repacePlan(dailyRun(), 'alternate', { today: TODAY });
+    expect(planDayNumber(next, START)).toBe(1);
+    expect(planDayNumber(next, '2026-09-15')).toBe(15);
+    expect(occursOn(next, START)).toBe(false); // nothing is put back on the calendar
+    expect(isPlanDay(next, START)).toBe(true);
+    expect(isPlanDay(next, addDays(START, -1))).toBe(false);
+  });
+
+  it('survive a pause and the resumption after it', () => {
+    const paused = repacePlan(dailyRun(), PLAN_PAUSED, { today: TODAY });
+    expect(planDayNumber(paused, '2026-09-02')).toBe(2);
+    const resumed = repacePlan(paused, 'daily', { today: '2026-10-05' });
+    expect(resumed.plan.walked).toEqual(daysFrom(START, 15));
+    expect(planDayNumber(resumed, '2026-09-02')).toBe(2);
+  });
+
+  it('stay exact through a second change of pace, where a guess would drift', () => {
+    const weekly = repacePlan(dailyRun(), 'someDays', { today: TODAY, weekDays: [1, 3, 5] });
+    const daily = repacePlan(weekly, 'daily', { today: '2026-09-30' });
+    // Days 16–21 fell on the Mondays, Wednesdays and Fridays in between.
+    const weeklyDays = ['2026-09-16', '2026-09-18', '2026-09-21', '2026-09-23', '2026-09-25', '2026-09-28'];
+    expect(daily.plan.walked).toEqual([...daysFrom(START, 15), ...weeklyDays]);
+    expect(planDayNumber(daily, '2026-09-18')).toBe(17);
+    expect(planDayNumber(daily, '2026-09-17')).toBe(null);
+    expect(planDayNumber(daily, '2026-09-30')).toBe(22);
+  });
+
+  it('are read as daily from the start on a run re-paced before they were recorded', () => {
+    const next = repacePlan(dailyRun(), PLAN_PAUSED, { today: TODAY });
+    const { walked, ...legacyPlan } = next.plan;
+    expect(walked).toHaveLength(15);
+    const legacy = { ...next, plan: legacyPlan };
+    expect(walkedPlanDays(legacy)).toEqual(daysFrom(START, 15));
+    expect(planDayNumber(legacy, '2026-09-03')).toBe(3);
+  });
+
+  it('are ignored when the record does not match the days walked', () => {
+    const next = repacePlan(dailyRun(), 'daily', { today: TODAY });
+    const short = { ...next, plan: { ...next.plan, walked: ['2026-09-01'] } };
+    expect(walkedPlanDays(short)).toEqual(daysFrom(START, 15)); // falls back, never misnumbers
+  });
+
+  it('are carried through an edit that is not a change of rhythm', () => {
+    const next = repacePlan(dailyRun(), 'daily', { today: TODAY });
+    const edited = normalizeSchedule({ ...next, slot: 'evening' }, TODAY);
+    expect(edited.plan.walked).toEqual(next.plan.walked);
+  });
+
+  it('are nothing on a run that was never re-paced', () => {
+    expect(walkedPlanDays(dailyRun())).toEqual([]);
+    expect(dailyRun().plan.walked).toBeUndefined();
   });
 });
 

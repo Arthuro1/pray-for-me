@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { addDays, nextOccurrence, prevOccurrence } from '../lib/schedule';
+import { addDays, nextOccurrence, prevOccurrence, walkedPlanDays } from '../lib/schedule';
 import { planTotal } from '../lib/planTempo';
 
 // How far the pager looks for the neighbouring day. A guided plan runs daily,
@@ -13,12 +13,40 @@ const HORIZON_DAYS = 62;
 const NONE = { prevKey: null, nextKey: null, total: null };
 const NO_OVERRIDES = {};
 
+// Is the day on screen one the run walked before its current pace began?
+const isWalkedDay = (walked, dayKey, dayNo) => !!dayKey && walked[dayNo - 1] === dayKey;
+
+// The day before: the walked day before a walked one; otherwise the previous
+// day of the current pace, and past its first day, the last day walked before
+// it. A paused run has no date on screen, so it steps straight to that one.
+function dayBefore(schedule, overrides, dayKey, dayNo, walked) {
+  if (isWalkedDay(walked, dayKey, dayNo)) return walked[dayNo - 2] || null;
+  const inPace = dayKey && prevOccurrence(schedule, addDays(dayKey, -1), overrides, HORIZON_DAYS);
+  return inPace || walked[walked.length - 1] || null;
+}
+
+// The day after — the mirror of dayBefore. From the last day walked it crosses
+// to the current pace's first day, looked for from the pace's anchor: scanning
+// the gap day by day, a run paused for months would outrun the horizon.
+function dayAfter(schedule, overrides, dayKey, dayNo, walked) {
+  if (!dayKey) return null; // paused: no dated day ahead of the one it holds
+  if (!isWalkedDay(walked, dayKey, dayNo)) {
+    return nextOccurrence(schedule, addDays(dayKey, 1), overrides, HORIZON_DAYS);
+  }
+  if (dayNo < walked.length) return walked[dayNo];
+  if (schedule.type !== 'recurring') return null;
+  const from = schedule.startDate > dayKey ? schedule.startDate : addDays(dayKey, 1);
+  return nextOccurrence(schedule, from, overrides, HORIZON_DAYS);
+}
+
 // Which days of a running plan sit on either side of the one on screen.
 //
-// Both neighbours are real occurrences of THIS run — a skipped day is stepped
-// over, a moved day is followed to where it went, and a day the run does not
-// contain is never offered — so paging can only ever reach a day the calendar
-// would also have opened.
+// Both neighbours are real days of THIS run — a skipped day is stepped over, a
+// moved day is followed to where it went, and a day the run does not contain
+// is never offered — so paging can only ever reach a day the page would also
+// open. That includes the days walked before the run was last re-paced or
+// paused (walkedPlanDays): they are no longer on its calendar, but they are
+// still days 1, 2, 3 of the plan.
 //
 // Day numbers come from the base pattern (see planDayNumber), which is what
 // bounds the walk exactly: there is nothing before day 1, and nothing after the
@@ -36,15 +64,12 @@ export function usePlanDayPager(schedule, overrides = NO_OVERRIDES, viewedDayKey
   // lands on a day with no content — the card goes blank.
   const total = planLength || planTotal(schedule) || null;
   return useMemo(() => {
-    if (!schedule || !viewedDayKey || !dayNo) return { ...NONE, total };
+    if (!schedule || !dayNo) return { ...NONE, total };
+    const walked = walkedPlanDays(schedule);
     return {
       total,
-      prevKey: dayNo <= 1
-        ? null
-        : prevOccurrence(schedule, addDays(viewedDayKey, -1), overrides, HORIZON_DAYS),
-      nextKey: total && dayNo >= total
-        ? null
-        : nextOccurrence(schedule, addDays(viewedDayKey, 1), overrides, HORIZON_DAYS),
+      prevKey: dayNo <= 1 ? null : dayBefore(schedule, overrides, viewedDayKey, dayNo, walked),
+      nextKey: total && dayNo >= total ? null : dayAfter(schedule, overrides, viewedDayKey, dayNo, walked),
     };
   }, [schedule, overrides, viewedDayKey, dayNo, total]);
 }

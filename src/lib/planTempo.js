@@ -11,6 +11,7 @@
 // Re-pacing therefore never edits the pattern in place. It RE-ANCHORS:
 //
 //   plan.dayOffset ← the days already walked     (progress, pinned)
+//   plan.walked    ← the dates they fell on      (so they can still be re-read)
 //   startDate      ← today                       (the new pattern starts here)
 //   end.count      ← the days that remain        (so the run still ends once)
 //
@@ -19,7 +20,7 @@
 // NEXT is the day it shows next afterwards — nothing is consumed, nothing is
 // repeated. Everything here is pure and additive; `schedule` is jsonb, so no
 // migration and no server change (the reminder function reads occursOn only).
-import { parseKey, planDayAtOrAfter } from './schedule';
+import { parseKey, planDayAtOrAfter, planDaysBefore } from './schedule';
 import { todayKey } from './prayedLog';
 
 // The three paces offered on the plan's own card, in the vocabulary the rest of
@@ -91,14 +92,15 @@ function seedWeekDays(schedule, requested, anchorKey) {
 }
 
 // The plan record carried into the re-anchored schedule: the run's identity and
-// original start (never moved), plus the progress and length that the new
-// pattern can no longer describe on its own.
-function planRecord(plan, { fallbackStart, dayOffset, total }) {
+// original start (never moved), plus the progress, its dates and the length
+// that the new pattern can no longer describe on its own.
+function planRecord(plan, { fallbackStart, dayOffset, walked, total }) {
   return {
     id: plan.id,
     startDate: plan.startDate || fallbackStart,
     ...(Number.isInteger(plan.version) && plan.version > 0 ? { version: plan.version } : {}),
     ...(dayOffset > 0 ? { dayOffset } : {}),
+    ...(dayOffset > 0 && walked.length === dayOffset ? { walked } : {}),
     ...(total > 0 ? { total } : {}),
   };
 }
@@ -117,7 +119,8 @@ export function repacePlan(schedule, pace, { today = todayKey(), total = null, w
   const dayOffset = upcoming - 1;
   const runTotal = total > 0 ? total : planTotal(schedule);
   const fallbackStart = schedule.startDate || today;
-  const record = planRecord(plan, { fallbackStart, dayOffset, total: runTotal });
+  const walked = planDaysBefore(schedule, today);
+  const record = planRecord(plan, { fallbackStart, dayOffset, walked, total: runTotal });
 
   if (pace === PLAN_PAUSED) return { type: 'none', plan: record };
   if (!PLAN_PACES.includes(pace)) return null;
@@ -173,7 +176,10 @@ export function reanchorPlanSchedule(next, existing, today = todayKey()) {
     startDate: existing.startDate > today ? existing.startDate : today,
     ...(remaining > 0 ? { end: { kind: 'count', count: remaining } } : {}),
     plan: planRecord(existing.plan, {
-      fallbackStart: existing.startDate || today, dayOffset, total: runTotal,
+      fallbackStart: existing.startDate || today,
+      dayOffset,
+      walked: planDaysBefore(existing, today),
+      total: runTotal,
     }),
   };
 }

@@ -16,11 +16,12 @@
 //     slot?: string,
 //     end?: { kind: 'never'|'date'|'count'|'answered', date?: string, count?: number },
 //     plan?: { id: string, version?: number, startDate: 'YYYY-MM-DD',
-//              dayOffset?: number } }
+//              dayOffset?: number, walked?: 'YYYY-MM-DD'[] } }
 //
 // `plan.startDate` is the day the RUN began and never moves — it is the run's
 // identity. `startDate` above is the current anchor of the pattern, and moves
 // whenever the rhythm is re-paced (see `plan.dayOffset` on planDayNumber).
+// `plan.walked` is where the days before that anchor fell (see walkedPlanDays).
 //
 // Overrides (prayers.schedule_overrides) are per-occurrence exceptions:
 //   { 'YYYY-MM-DD': { skip: true } }              — this day only, skipped
@@ -198,11 +199,65 @@ export function prevOccurrence(s, fromKey, overrides = {}, horizonDays = 400) {
 // returned null on every rhythm but daily, and the wrong day on that one. The
 // date is resolved back to the base day behind it first; the reading a reader
 // moved is still the reading they moved.
+//
+// A date before the anchor is one of the days the run walked under an earlier
+// pace, numbered from where that day fell (walkedPlanDays) — paused runs too.
 export function planDayNumber(s, key, overrides = {}) {
-  if (!s || s.type !== 'recurring') return null;
-  const base = basePatternKey(s, key, overrides);
-  if (!matchesPattern(s, base)) return null;
-  return (s.plan?.dayOffset || 0) + occurrenceIndex(s, base);
+  if (!s) return null;
+  if (s.type === 'recurring') {
+    const base = basePatternKey(s, key, overrides);
+    if (matchesPattern(s, base)) return (s.plan?.dayOffset || 0) + occurrenceIndex(s, base);
+  }
+  const walked = walkedPlanDays(s).indexOf(key);
+  return walked >= 0 ? walked + 1 : null;
+}
+
+const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
+
+// A recorded `plan.walked` is trusted only when it accounts for exactly the
+// days the offset says were walked — anything else would misnumber the run.
+function hasWalkedRecord(plan) {
+  return Array.isArray(plan?.walked)
+    && plan.walked.length === plan.dayOffset
+    && plan.walked.every((key) => DAY_KEY.test(key));
+}
+
+// WHERE THE DAYS BEFORE THE CURRENT PACE FELL, day 1 first — one date for each
+// of the `plan.dayOffset` days the run had already walked when it was last
+// re-paced or paused.
+//
+// Re-anchoring moves the pattern's start to the change date, so those days are
+// no longer occurrences of anything, and the reader could not page back to
+// them: a run paused on day 4 lost days 1–3 for good. They are recorded on the
+// plan at every re-anchor (planTempo.js). A run re-anchored before that record
+// existed is read as daily from the day it began — how every run starts
+// (guidedPlan.js) — which is exact for a run re-paced once, and always lands
+// before the current anchor, never on a day of the current pace.
+export function walkedPlanDays(s) {
+  const plan = s?.plan;
+  const walked = plan?.dayOffset || 0;
+  if (!walked) return [];
+  if (hasWalkedRecord(plan)) return plan.walked;
+  if (!plan.startDate) return [];
+  return Array.from({ length: walked }, (_, i) => addDays(plan.startDate, i));
+}
+
+// Is `key` a day of this run — one still on its calendar, or one it walked
+// before its pace last changed?
+export function isPlanDay(s, key, overrides = {}) {
+  return occursOn(s, key, overrides) || walkedPlanDays(s).includes(key);
+}
+
+// Every date the run has walked before `key`, day 1 first: the days of earlier
+// paces, then the current pace's own. What a re-anchor records as `plan.walked`.
+export function planDaysBefore(s, key) {
+  const days = [...walkedPlanDays(s)];
+  if (s?.type !== 'recurring' || !s.startDate) return days;
+  for (const { dayKey } of runDays(s)) {
+    if (dayKey >= key) break;
+    days.push(dayKey);
+  }
+  return days;
 }
 
 // The base-pattern day behind a calendar date: the day a reader MOVED to `key`,
@@ -228,40 +283,45 @@ const PLAN_HORIZON_DAYS = 366;
 // renumbers the readings, so these answer "which day of the plan is the reader
 // on" rather than "what is on the calendar".
 //
-// Both walk FORWARD from the anchor once, counting as they go, rather than
-// testing each candidate day against the end condition — which would re-walk
-// the whole series per day, and is quadratic on a run opened long after it
-// finished.
-function planDayWalk(s, key, horizonDays, wantEarliest) {
-  if (!s || s.type !== 'recurring' || !s.startDate) return null;
+// The days of the run's CURRENT pace, first to last, as { dayNo, dayKey } —
+// walked FORWARD from the anchor once, counting as it goes, rather than testing
+// each candidate day against the end condition, which would re-walk the whole
+// series per day and is quadratic on a run opened long after it finished.
+function* runDays(s, horizonDays = PLAN_HORIZON_DAYS) {
   const end = s.end || {};
   const max = end.kind === 'count' ? (end.count || 1) : Infinity;
   const until = end.kind === 'date' && end.date ? end.date : null;
   const offset = s.plan?.dayOffset || 0;
   let cursor = s.startDate;
   let count = 0;
-  let last = null;
   for (let i = 0; i < horizonDays && count < max; i++) {
-    if (until && cursor > until) break;
-    if (!wantEarliest && cursor > key) break;
+    if (until && cursor > until) return;
     if (matchesPattern(s, cursor)) {
       count += 1;
-      const day = { dayNo: offset + count, dayKey: cursor };
-      if (wantEarliest && cursor >= key) return day;
-      last = day;
+      yield { dayNo: offset + count, dayKey: cursor };
     }
     cursor = addDays(cursor, 1);
   }
-  return wantEarliest ? null : last;
 }
 
+const walksPattern = (s) => s?.type === 'recurring' && !!s.startDate;
+
 export function planDayAtOrAfter(s, key, horizonDays = PLAN_HORIZON_DAYS) {
-  return planDayWalk(s, key, horizonDays, true);
+  if (!walksPattern(s)) return null;
+  for (const day of runDays(s, horizonDays)) {
+    if (day.dayKey >= key) return day;
+  }
+  return null;
 }
 
 export function planDayAtOrBefore(s, key, horizonDays = PLAN_HORIZON_DAYS) {
-  if (!s?.startDate || key < s.startDate) return null;
-  return planDayWalk(s, key, horizonDays, false);
+  if (!walksPattern(s) || key < s.startDate) return null;
+  let last = null;
+  for (const day of runDays(s, horizonDays)) {
+    if (day.dayKey > key) break;
+    last = day;
+  }
+  return last;
 }
 
 // WHERE A RUN IS SITTING on `key` — the day a screen should show when the
@@ -366,6 +426,9 @@ export function normalizeSchedule(s, todayKeyStr) {
     // ending) the first time its rhythm was touched.
     ...(Number.isInteger(s.plan.dayOffset) && s.plan.dayOffset > 0 ? { dayOffset: s.plan.dayOffset } : {}),
     ...(Number.isInteger(s.plan.total) && s.plan.total > 0 ? { total: s.plan.total } : {}),
+    // Where those walked days fell — without it, the reader could not page
+    // back to them after an edit that is not a change of rhythm.
+    ...(hasWalkedRecord(s.plan) ? { walked: [...s.plan.walked] } : {}),
   };
   return out;
 }

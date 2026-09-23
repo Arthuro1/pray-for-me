@@ -45,6 +45,7 @@ import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import useFollowUpStore from '../store/followUpStore';
 import { addDays } from '../lib/schedule';
+import { PLAN_PAUSED, repacePlan } from '../lib/planTempo';
 import { todayKey } from '../lib/prayedLog';
 import { t } from '../i18n';
 
@@ -221,6 +222,60 @@ describe('PrayerDetail — paging between the days of a plan', () => {
     expect(within(trace).getByText('Jour un: paix')).toBeTruthy();
     expect(within(trace).queryByText('Écrit aujourd’hui')).toBeNull();
     expect(within(trace).getByText(t(lang, 'prayedOnDay'))).toBeTruthy();
+  });
+
+  // Pausing (or re-pacing) re-anchors the run on the day of the change, so the
+  // days before it are no longer on its calendar. The back arrow used to stop
+  // dead on the first day after the change: days walked before it were gone.
+  describe('on a run that was paused and then resumed', () => {
+    // Paused holding day 2, resumed today: day 1 was walked, today is day 2.
+    const resumedPrayer = {
+      ...prayer,
+      schedule: repacePlan(
+        repacePlan(prayer.schedule, PLAN_PAUSED, { today: DAY_2 }),
+        'daily',
+        { today: todayKey() },
+      ),
+    };
+    const renderResumed = (props) => renderDetail({
+      prayer: resumedPrayer, store: { prayers: [resumedPrayer] }, ...props,
+    });
+
+    it('steps back past the resumption to the day walked before it', () => {
+      const onGoToDay = vi.fn();
+      renderResumed({ onGoToDay });
+      expect(screen.getByText(/Jour 2 sur 3/)).toBeTruthy();
+      fireEvent.click(prev());
+      expect(onGoToDay).toHaveBeenCalledWith(START);
+    });
+
+    it('opens that day as day 1, and steps forward from it to the resumption', () => {
+      const onGoToDay = vi.fn();
+      renderResumed({ planDayKey: START, onGoToDay });
+      expect(screen.getByText(/Jour 1 sur 3/)).toBeTruthy();
+      expect(screen.getByText(new RegExp(t(lang, 'planViewingOtherDay')))).toBeTruthy();
+      expect(prev().disabled).toBe(true);
+      fireEvent.click(next());
+      expect(onGoToDay).toHaveBeenCalledWith(todayKey());
+    });
+
+    it('still refuses a date in the gap, which was never a day of the run', () => {
+      renderResumed({ planDayKey: DAY_2 });
+      expect(screen.getByText(/Jour 2 sur 3/)).toBeTruthy();
+      expect(screen.queryByText(new RegExp(t(lang, 'planViewingOtherDay')))).toBeNull();
+    });
+
+    it('pages back from a run still paused, though the day it holds has no date', () => {
+      const paused = { ...prayer, schedule: repacePlan(prayer.schedule, PLAN_PAUSED, { today: todayKey() }) };
+      const onGoToDay = vi.fn();
+      renderDetail({ prayer: paused, store: { prayers: [paused] }, onGoToDay });
+      expect(screen.getByText(/Jour 3 sur 3/)).toBeTruthy();
+      fireEvent.click(prev());
+      expect(onGoToDay).toHaveBeenCalledWith(DAY_2);
+      cleanup();
+      renderDetail({ prayer: paused, store: { prayers: [paused] }, planDayKey: DAY_2, onGoToDay });
+      expect(screen.getByText(/Jour 2 sur 3/)).toBeTruthy();
+    });
   });
 
   it('keeps the trace off today, where the activity list already carries it', () => {
