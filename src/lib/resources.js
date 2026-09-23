@@ -39,7 +39,7 @@ export const DEFAULT_RESOURCE_LIMIT = Number.POSITIVE_INFINITY;
 export const SENSITIVE_RESOURCE_TOPICS = new Set([
   'sexuality', 'sexual-intimacy', 'purity', 'infertility', 'miscarriage', 'marriage-crisis',
   'abuse-safety', 'trauma', 'divorce', 'pornography', 'addiction',
-  'infidelity', 'illness', 'marriage-roles',
+  'infidelity', 'illness', 'marriage-roles', 'mental-health',
   // Every deliverance topic is sensitive without exception. Material on demons,
   // curses, generational curses, covenants, ancestral practices, witchcraft,
   // occult activity, deliverance, exorcism, spiritual warfare, evil altars or

@@ -11,8 +11,15 @@ import { RESOURCES, RESOURCE_TOPICS } from '../resources/catalogue';
 import { isResourceApprovedForDisplay, resolveResources } from '../../lib/resources';
 import { startGuidedPlan } from '../../lib/startGuidedPlan';
 import { WISDOM_PLAN_SIGNOFF, WISDOM_RESOURCE_SIGNOFF, WISDOM_APPROVED_RESOURCE_IDS } from '../reviews/paulWisdom20260908';
+import { AUTHOR_BOOKS_APPROVED_IDS } from '../reviews/paulAuthorBooks20260923';
 
 afterEach(() => vi.unstubAllEnvs());
+
+// The shelf Paul signed on 2026-09-08, plus the wisdom-literature books he
+// approved later with the author collections (Poonen's Proverbs commentary).
+const LATER_WISDOM_IDS = AUTHOR_BOOKS_APPROVED_IDS
+  .filter((id) => RESOURCES.find((resource) => resource.id === id)?.topics.includes('wisdom-literature'));
+const WISDOM_SHELF_IDS = [...WISDOM_APPROVED_RESOURCE_IDS, ...LATER_WISDOM_IDS];
 
 const refs = plan.days.flatMap((day) => [day.ref, ...day.related]);
 
@@ -131,7 +138,7 @@ describe('42-day biblical wisdom curriculum', () => {
       .toEqual(['bibleproject-wisdom-videos', 'evangile21-james-resources']);
     expect(french.every((resource) => resource.lang === 'fr')).toBe(true);
     const bilingual = resolveResources({ ...options, languages: ['fr', 'en'] });
-    expect(bilingual.map((resource) => resource.id).sort()).toEqual([...WISDOM_APPROVED_RESOURCE_IDS].sort());
+    expect(bilingual.map((resource) => resource.id).sort()).toEqual([...WISDOM_SHELF_IDS].sort());
     expect(resolveResources({ ...options, languages: ['de'] })).toEqual([]);
     expect(resolveResources({ ...options, domains: ['relationships'], languages: ['fr', 'en'] })).toEqual([]);
   });
@@ -140,7 +147,7 @@ describe('42-day biblical wisdom curriculum', () => {
   // kept apart by TOPIC alone. Asserted from this side too: a day of this plan
   // may only ever offer this plan's own approved resources.
   it('never surfaces another study’s shelf on one of its days', () => {
-    const own = new Set(WISDOM_APPROVED_RESOURCE_IDS);
+    const own = new Set(WISDOM_SHELF_IDS);
     for (const day of plan.days) {
       const rows = resolveResources({
         topics: day.resourceTopics, domains: plan.resourceDomains, languages: ['fr', 'en'],

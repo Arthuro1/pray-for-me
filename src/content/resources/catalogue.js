@@ -60,6 +60,7 @@ import { DELIVERANCE_BOOKS } from './deliveranceBooks';
 import { DAVID_STUDY_RESOURCES } from './davidStudyResources';
 import { WISDOM_RESOURCES } from './wisdomResources';
 import { DISCERNMENT_RESOURCES } from './discernmentResources';
+import { AUTHOR_BOOKS } from './authorBooks';
 
 export { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
@@ -390,6 +391,8 @@ export const RESOURCES = [
   ...inDomain('freedom', DELIVERANCE_BOOKS),
   ...inDomain('bible-study', DAVID_STUDY_RESOURCES),
   ...inDomain('bible-study', WISDOM_RESOURCES),
+  // Spans all three shelves, so every entry names its own domains.
+  ...AUTHOR_BOOKS,
 ];
 
 export default RESOURCES;

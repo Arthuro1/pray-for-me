@@ -100,6 +100,31 @@ subjects such as sexuality, intimacy or marriage roles and remain classified
 as sensitive. Their verified editions add Amharic, Swahili and Tagalog coverage
 and Hindi resources for relationship plans.
 
+### 2026-09-23: books by five requested authors
+
+`src/content/resources/authors/` (one file per author, gathered by
+`authorBooks.js`) holds the catalogues of Myles Munroe, Nicky & Sila Lee,
+Mohammed & Lilliane Sanogo, Zac Poonen (with Annie and Santosh Poonen) and
+Reinhold Ruthe. Paul approved all 154 on 2026-09-23, sensitive titles
+included. Approval is the closed list in
+`src/content/reviews/paulAuthorBooks20260923.js`: an entry whose id is not on
+it stays `needs_review` with no sign-off, and a title added to those files
+later is never approved by default. A `// Sensitive:` comment on an entry
+names the subject that needs both reviews.
+
+Books that fit a current plan sit on its shelf. The rest — calling,
+leadership, holiness, blessing, the Kingdom, pastoral care — sit on the new
+`christian-living` domain, which no current plan reads, so they cannot crowd
+an existing shelf. A new plan opts in with `resourceDomains:
+['christian-living']` and the topics added for it in `topics.js` (`gospel`,
+`calling`, `leadership`, `holiness`, `wisdom`, `worship`, `blessing`,
+`kingdom-of-god`, `end-times`, `bible-overview`, `pastoral-care`,
+`mental-health`). `mental-health` is a sensitive topic. Three Poonen Bible
+commentaries wait the same way on the `bible-study` shelf.
+
+Zac Poonen's books are free to read on his church's sites, which adds Hindi,
+Korean, Japanese, Chinese and Amharic editions to several shelves.
+
 ---
 
 ## The model

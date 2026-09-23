@@ -93,6 +93,22 @@ export const RESOURCE_TOPICS = [
   'kingship',
   'philistines',
   'ancient-worship',
+  // General Christian life, added 2026-09-23 with the author collections in
+  // ./authors/ for plans that are still being written. No current plan day
+  // uses these yet; the first plan about calling, leadership, holiness and so
+  // on should reuse them rather than invent near-duplicates.
+  'gospel',
+  'calling',
+  'leadership',
+  'holiness',
+  'wisdom',
+  'worship',
+  'blessing',
+  'kingdom-of-god',
+  'end-times',
+  'bible-overview',
+  'pastoral-care',
+  'mental-health',
 ];
 
 // The FAMILY OF PLANS a resource belongs on.
@@ -110,7 +126,12 @@ export const RESOURCE_TOPICS = [
 // the domains it draws from (`resourceDomains`), an entry declares the domains
 // it belongs to (`domains`), and a plan that declares neither stays unscoped
 // and matches on topics alone. See resolveResources() in src/lib/resources.js.
-export const RESOURCE_DOMAINS = ['relationships', 'freedom', 'bible-study'];
+//
+// `christian-living` is general discipleship — prayer, calling, holiness,
+// leadership — held for plans that are still being written. No current plan
+// draws from it, so nothing on it can crowd an existing shelf; a new plan opts
+// in by naming it in `resourceDomains`.
+export const RESOURCE_DOMAINS = ['relationships', 'freedom', 'bible-study', 'christian-living'];
 
 // The theological tradition a resource comes out of. This is CONTEXT for a
 // reader, never a judgement: labelling a book "african-pentecostal" says where
