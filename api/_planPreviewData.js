@@ -80,9 +80,9 @@ export default {
     "altar7": {
       "count": 7,
       "title": {
-        "fr": "Rallume l'autel — 7 jours",
+        "fr": "Rallumer l’autel — 7 jours",
         "en": "Rekindle the altar — 7 days",
-        "de": "Entfache den Altar neu — 7 Tage",
+        "de": "Den Altar neu entfachen — 7 Tage",
         "pt": "Reacenda o altar — 7 dias",
         "zh": "重燃祭坛——7 天",
         "es": "Reaviva el altar — 7 días",
@@ -100,7 +100,7 @@ export default {
       "sub": {
         "fr": "Une semaine pour revenir à la présence de Dieu et raviver la faim de Lui",
         "en": "A week to return to God's presence and stir fresh hunger for Him",
-        "de": "Eine Woche, um in Gottes Gegenwart zurückzukehren und den Hunger nach Ihm neu zu entfachen",
+        "de": "Eine Woche, um in Gottes Gegenwart zurückzukehren und den Hunger nach ihm neu zu entfachen",
         "pt": "Uma semana para voltar à presença de Deus e reavivar a fome por Ele",
         "zh": "用一周回到神的同在，重新点燃对祂的渴慕",
         "es": "Una semana para volver a la presencia de Dios y avivar el hambre de Él",
@@ -326,7 +326,7 @@ export default {
         "fa": "۳۰ روز برای دیگران"
       },
       "sub": {
-        "fr": "Un mois d'intercession pour ceux qui t'entourent",
+        "fr": "Un mois d’intercession pour ceux qui vous entourent",
         "en": "A month of intercession for people around you",
         "de": "Ein Monat Fürbitte für Menschen um dich herum",
         "pt": "Um mês de intercessão pelas pessoas ao seu redor",
@@ -383,9 +383,9 @@ export default {
         "fa": "مجردها: آماده‌شدن برای ازدواج در دعا"
       },
       "sub": {
-        "fr": "Grandir en Christ et confier ton avenir à Dieu",
+        "fr": "Grandir en Christ et confier votre avenir à Dieu",
         "en": "Grow in Christ and entrust your future to God",
-        "de": "Wachse in Christus und vertraue Gott deine Zukunft an",
+        "de": "In Christus wachsen und Gott die Zukunft anvertrauen",
         "pt": "Cresça em Cristo e confie o seu futuro a Deus",
         "zh": "在基督里成长，把未来交托给神",
         "es": "Crece en Cristo y confía tu futuro a Dios",
@@ -554,7 +554,7 @@ export default {
         "fa": "متأهل‌ها: دعا برای ازدواجمان"
       },
       "sub": {
-        "fr": "Prie avec intention pour ton conjoint, pour toi-même et pour ton mariage.",
+        "fr": "Priez résolument pour votre conjoint, pour vous-même et pour votre mariage.",
         "en": "Pray intentionally for your spouse, yourself, and your marriage.",
         "de": "Bete bewusst für deinen Ehepartner, für dich selbst und für eure Ehe.",
         "pt": "Ore com intenção por seu cônjuge, por você e pelo seu casamento.",
@@ -597,7 +597,7 @@ export default {
         "en": "Freedom & Deliverance in Christ",
         "de": "Freiheit und Befreiung in Christus",
         "pt": "Liberdade e libertação em Cristo",
-        "zh": "在基督裡的自由與釋放",
+        "zh": "在基督里的自由与释放",
         "es": "Libertad y liberación en Cristo",
         "hi": "मसीह में स्वतंत्रता और छुटकारा",
         "ja": "キリストにある自由と解放",
@@ -613,9 +613,9 @@ export default {
       "sub": {
         "fr": "L'Écriture, la repentance, le renoncement et la marche dans la liberté",
         "en": "Scripture, repentance, renunciation and walking in freedom",
-        "de": "Schrift, Umkehr, Absage und ein Leben in Freiheit",
+        "de": "Schrift, Umkehr, Lossagung und ein Leben in Freiheit",
         "pt": "Escritura, arrependimento, renúncia e andar em liberdade",
-        "zh": "聖經、悔改、棄絕，並在自由中行走",
+        "zh": "圣经、悔改、弃绝，并在自由中行走",
         "es": "Escritura, arrepentimiento, renuncia y andar en libertad",
         "hi": "पवित्रशास्त्र, मन फिराव, त्याग और स्वतंत्रता में चलना",
         "ja": "聖書・悔い改め・断ち切り・自由に歩むこと",

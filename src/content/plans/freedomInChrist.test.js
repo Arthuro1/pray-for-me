@@ -154,7 +154,7 @@ describe('Praystead guides; it never diagnoses', () => {
 
   it('introduces category examples as illustrative rather than definitive', async () => {
     await loadLocale('en');
-    expect(t('en', 'freedomExamplesHeading')).toMatch(/can include/i);
+    expect(t('en', 'freedomExamplesHeading')).toMatch(/for example|can include|such as/i);
     for (const day of plan.days) {
       for (const example of day.freedom?.examples || []) {
         expect(pick(example, 'en'), pick(day.theme, 'en')).not.toMatch(/definitely|always means|proves/i);

@@ -13,10 +13,7 @@ import { setPlanPreview } from '../../lib/planReview';
 import { t } from '../../i18n';
 
 const lang = 'fr';
-const afterPrayerLabel = () => {
-  const requested = t(lang, 'planAfterPrayer');
-  return requested === 'planAfterPrayer' ? t(lang, 'moreOptionsLabel') : requested;
-};
+const afterPrayerLabel = () => t(lang, 'planAfterPrayer');
 afterEach(() => { cleanup(); localStorage.clear(); });
 
 describe('relationship plan day sections', () => {

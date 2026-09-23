@@ -1,0 +1,134 @@
+{
+  "locale": "ru",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "молитвенная просьба",
+      "allowed": [],
+      "avoid": [],
+      "example": "молитвенная просьба",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "ответ на молитву",
+      "allowed": [],
+      "avoid": [],
+      "example": "ответ на молитву",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "свидетельство",
+      "allowed": [],
+      "avoid": [],
+      "example": "свидетельство",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "ходатайственная молитва",
+      "allowed": [],
+      "avoid": [],
+      "example": "ходатайственная молитва",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "духовное различение",
+      "allowed": [],
+      "avoid": [],
+      "example": "духовное различение",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "завет",
+      "allowed": [],
+      "avoid": [],
+      "example": "завет",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "покаяние",
+      "allowed": [],
+      "avoid": [],
+      "example": "покаяние",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "спасение",
+      "allowed": [],
+      "avoid": [],
+      "example": "спасение",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "благодать",
+      "allowed": [],
+      "avoid": [],
+      "example": "благодать",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "Святой Дух",
+      "allowed": [],
+      "avoid": [],
+      "example": "Святой Дух",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "Священное Писание",
+      "allowed": [],
+      "avoid": [],
+      "example": "Священное Писание",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "пост",
+      "allowed": [],
+      "avoid": [],
+      "example": "пост",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "верность",
+      "allowed": [],
+      "avoid": [],
+      "example": "верность",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "молитвенный дневник",
+      "allowed": [
+        "дневник"
+      ],
+      "avoid": [],
+      "example": "Сохраните эту нужду в молитвенном дневнике.",
+      "note": "Вкладка может называться «Журнал»; в предложениях — «молитвенный дневник»."
+    },
+    "update": {
+      "preferred": "новость",
+      "allowed": [
+        "обновление"
+      ],
+      "avoid": [],
+      "example": "Добавьте новость, когда что-то изменится.",
+      "note": "Новости о молитвенной нужде."
+    },
+    "thanksgiving": {
+      "preferred": "благодарение",
+      "allowed": [
+        "благодарность"
+      ],
+      "avoid": [],
+      "example": "Завершите благодарением.",
+      "note": "Церковный термин для этапа благодарения."
+    },
+    "renunciation": {
+      "preferred": "отречение",
+      "allowed": [
+        "отказ от"
+      ],
+      "avoid": [],
+      "example": "В молитве отречения вы называете то, от чего отворачиваетесь.",
+      "note": "Лексика служения освобождения."
+    }
+  }
+}

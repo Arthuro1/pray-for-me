@@ -92,10 +92,11 @@ describe('GrowTab — recommendation lives in the Pray segment only', () => {
 });
 
 describe('Prayer-format language — beginner friendly', () => {
-  it('describes ACTS as a structured biblical pattern, not just the acronym', () => {
+  it('describes ACTS by its four movements, not just the acronym', () => {
     // The descriptions live in the locale files; assert the copy the session
     // will render so a beginner can choose without knowing the term "ACTS".
-    expect(t(lang, 'modeActsDesc').toLowerCase()).toContain('biblique');
+    const acts = t(lang, 'modeActsDesc').toLowerCase();
+    for (const movement of ['adoration', 'confession', 'action de grâces', 'supplication']) expect(acts).toContain(movement);
     expect(t(lang, 'modeGuidedDesc').length).toBeGreaterThan(10);
     expect(t(lang, 'modeRequestsDesc').toLowerCase()).toContain('cœur');
   });

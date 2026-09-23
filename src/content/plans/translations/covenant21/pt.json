@@ -92,7 +92,8 @@
         ],
         "selfPrompt": "Que pedido de perdão requer mudança minha?",
         "practice": "Pede perdão de modo específico, se for seguro e adequado.",
-        "conversationPrompt": "O que torna sincero um pedido de perdão e real uma reparação?"
+        "conversationPrompt": "O que torna sincero um pedido de perdão e real uma reparação?",
+        "safetyNote": "O perdão nunca exige silêncio sobre abuso, confiança imediata ou permanência no perigo. Segurança, responsabilidade e apoio qualificado podem acompanhar a oração."
       },
       {
         "reflection": "A verdade pertence à vida em Cristo. A confiança cresce por atos confiáveis, não por vigilância ou revelações forçadas.",
@@ -114,7 +115,8 @@
         ],
         "selfPrompt": "Minhas escolhas respeitam a liberdade do outro?",
         "practice": "Considera um limite que favoreça respeito.",
-        "conversationPrompt": "Como falar de intimidade, consentimento e limites sem pressão?"
+        "conversationPrompt": "Como falar de intimidade, consentimento e limites sem pressão?",
+        "safetyNote": "O noivado ou o casamento nunca dão direito ao corpo de outra pessoa. O consentimento deve ser livre, sem pressão nem coação. Procure apoio confiável e qualificado, se precisar."
       },
       {
         "reflection": "Jesus liga o tesouro ao coração. Falem de dinheiro como algo confiado aos seus cuidados, não como identidade ou segurança.",
@@ -147,7 +149,8 @@
         ],
         "selfPrompt": "Onde preciso falar com clareza e gentileza?",
         "practice": "Nomeia um limite que possas tratar com segurança.",
-        "conversationPrompt": "O que esperamos sobre feriados, cuidados e privacidade familiar?"
+        "conversationPrompt": "O que esperamos sobre feriados, cuidados e privacidade familiar?",
+        "safetyNote": "Honrar a família não exige aceitar abuso nem abrir mão da privacidade. Estabelecer limites pode exigir o apoio de serviços pastorais, profissionais ou de proteção confiáveis."
       },
       {
         "reflection": "Eclesiastes valoriza companhia e ajuda. A amizade cresce com atenção, alegria e curiosidade pelo outro.",
@@ -158,7 +161,8 @@
         ],
         "selfPrompt": "Quando escutei apenas para conhecer melhor?",
         "practice": "Compartilhem uma atividade agradável se ambos quiserem.",
-        "conversationPrompt": "Que momentos simples gostamos de viver juntos?"
+        "conversationPrompt": "Que momentos simples gostamos de viver juntos?",
+        "prayTogether": "Se ambos quiserem, agradeçam juntos a Deus por uma alegria simples da amizade de vocês."
       },
       {
         "reflection": "Paulo descreve uma comunidade formada pela palavra de Cristo e gratidão. Hábitos espirituais comuns podem ser simples e diferentes.",
@@ -169,7 +173,8 @@
         ],
         "selfPrompt": "Convido à fé comum ou imponho meu jeito?",
         "practice": "Experimentem um pequeno hábito espiritual.",
-        "conversationPrompt": "Que ritmo comum nos nutriria sem pressão?"
+        "conversationPrompt": "Que ritmo comum nos nutriria sem pressão?",
+        "prayTogether": "Se ambos quiserem, leiam o trecho e façam cada um uma oração curta. Diferentes maneiras de orar são bem-vindas."
       },
       {
         "reflection": "Hebreus chama os crentes a encorajar-se em amor. O casamento precisa de amizades e comunidade cristã, não isolamento.",
@@ -191,7 +196,8 @@
         ],
         "selfPrompt": "Que suposição sobre filhos não expressei?",
         "practice": "Conversem sem exigir uma decisão.",
-        "conversationPrompt": "Que esperanças, medos ou dúvidas temos sobre filhos ou criação?"
+        "conversationPrompt": "Que esperanças, medos ou dúvidas temos sobre filhos ou criação?",
+        "safetyNote": "Um casamento sem filhos já é uma família. Não pressionem um ao outro sobre fertilidade, adoção ou acolhimento. Esses caminhos não são garantidos e podem precisar de apoio especializado."
       },
       {
         "reflection": "Paulo une esperança, paciência e oração na dificuldade. Atravessá-la juntos inclui receber ajuda, não carregar tudo sozinhos.",
@@ -202,7 +208,8 @@
         ],
         "selfPrompt": "Que ajuda reluto em receber?",
         "practice": "Oferece ajuda prática sem tentar resolver tudo.",
-        "conversationPrompt": "O que nos ajuda a receber cuidado em tempos difíceis?"
+        "conversationPrompt": "O que nos ajuda a receber cuidado em tempos difíceis?",
+        "prayTogether": "Se ambos quiserem, compartilhem apenas o que escolherem livremente e peçam juntos a ajuda de Deus."
       },
       {
         "reflection": "Pedro relaciona hospitalidade e serviço. Um lar generoso acolhe dentro dos seus limites e recursos reais.",
@@ -228,7 +235,8 @@
         "roles": {
           "husband": "Preparar-se como marido inclui amor abnegado, escuta, arrependimento e serviço, não exigir controle.",
           "wife": "Preparar-se como esposa inclui sabedoria, força, voz sincera e bondade, não esconder necessidades nem aceitar dano."
-        }
+        },
+        "safetyNote": "O serviço à maneira de Cristo nunca justifica dominação, coação ou abuso. As reflexões opcionais sobre papéis exigem revisão teológica e não dão controle sobre outra pessoa."
       },
       {
         "reflection": "O salmo coloca a obra humana sob Deus. Entreguem-Lhe seu casamento; a cerimônia começa uma vida fiel, não a completa.",
@@ -239,7 +247,8 @@
         ],
         "selfPrompt": "Que hábito de oração quero continuar?",
         "practice": "Escolhe um modo simples de seguir orando.",
-        "conversationPrompt": "Por que agradecemos e o que ainda confiamos a Deus?"
+        "conversationPrompt": "Por que agradecemos e o que ainda confiamos a Deus?",
+        "prayTogether": "Se ambos quiserem, agradeçam juntos a Deus e entreguem a Ele o futuro casamento de vocês, sem fazer promessas sobre o resultado."
       }
     ]
   }

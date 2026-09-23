@@ -5,6 +5,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { pick, localizeRef } from '../content/teaching';
 import VerseAccordion from './VerseAccordion';
+import ReportWordingLink from './ReportWordingLink';
 
 // A dedicated, read-only reader for the gospel journey — a gentle, Scripture-first
 // walk for someone new to prayer or exploring the Christian faith. It reuses the
@@ -264,6 +265,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
               >
                 {t(lang, 'gospelReturnToGrow')}
               </button>
+              <div className="flex justify-center"><ReportWordingLink lang={lang} surface={`gospel/${journey.id}`} /></div>
             </>
           )}
         </div>

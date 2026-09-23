@@ -8,8 +8,15 @@ export const DISCERNMENT_REVIEWED_LOCALES = [
 export const DISCERNMENT_PLAN_SIGNOFF = {
   status: 'approved', reviewer: 'Paul', reviewedAt: '2026-09-03',
 };
+// The 2026-09-23 wording pass changed text after Paul signed. The plan stays
+// live on his sign-off; only Paul re-approving clears this note.
+export const DISCERNMENT_REREVIEW_PENDING = {
+  since: '2026-09-23',
+  changed: 'EN and FR reading prompts on days 4 and 7; 93 DE corrections (two truncated entries completed, calques, „“ quotes, du-form prayers ending „Im Namen Jesu“); DE label for the reflection section.',
+};
 export const DISCERNMENT_PLAN_APPROVAL = {
   status: 'approved', contentVersion: 1,
+  rereviewPending: DISCERNMENT_REREVIEW_PENDING,
   theology: { ...DISCERNMENT_PLAN_SIGNOFF },
   safety: { ...DISCERNMENT_PLAN_SIGNOFF },
   locales: Object.fromEntries(DISCERNMENT_REVIEWED_LOCALES.map((lang) => [lang, {

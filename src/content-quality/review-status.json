@@ -1,0 +1,3527 @@
+{
+  "version": 1,
+  "semanticSource": "en",
+  "note": "Editorial review only. Existing runtime release sign-offs remain in src/content/reviews and plan.review; they are not independent native-language audits. AI work never grants human approval.",
+  "bundles": {
+    "fr/ui": {
+      "status": "needs-review",
+      "contentHash": "83bb2f262145f3ce085bb8d9ba80bf45cb2e04a9f344d2e99828ac0da378ebec",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "fr/landing": {
+      "status": "needs-review",
+      "contentHash": "86b1f2c46a6241a830ca0d13aa9108247883ab3b94160ef55694e97b81624626",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "fr/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "5c237a1e80d8b3f30377c43c5705da5d5e4853c127e689dd4770da69e9dbd8e6",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "fr/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "cd89f54fc17365dc96c65e8781b712fd56191b52410d107b396233f15e49de7a",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "fr/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "d177a64c553f3c41d5d5dc555be4d6a70e37ef38369fbcdac52a428199bb700a",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "fr/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "48b652f179a6153d6dac7dfc81d0187ea36fbb3275f600378f3cd020397ba11d",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "fr/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "11be1d16742d72843d5a0b80b63c04e2d7f23a4d1d71d353e45f5b466bb468f1",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "fr/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "5c18ed5e418b15058a8125fbacda420f6664066ec28b315ecc5cb9632860a7de",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "fr/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "375583558862fe0eba5e9aec0173ee95fdba3bd6838241996fe94552e82d9e6c",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "fr/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "177832a4f7f2c8440d497a91b0f60d0c50f3235bcf7155399ad6edd19f58037c",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "fr/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "522ab4a97ee63e0f80790741786b3acf5f38f6fdacd1ac66c8953d6457ed9108",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "fr/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "f82f6954e663dd6c341ac7771b71eb22c41ad0e2021d86079b34fb059729d2d3",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "fr/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "b19df2d145688b1596af2161a7506b3782e8f8263f3e71fd1c3b95139523514f",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "fr/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "a1b01d6c3962e236f4304957df8c7c3507fb126f547a9abe5003d7816182e480",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "fr/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "e163ae50346cb01db39e9415af525f0ac703d26bb9f7c42ed4eeefa1cec704f1",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "fr/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "23fdddb831abb944814640a0005988c61c524e33ed5bdd35419daa04a84eff6e",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "fr/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "2a2c1d7cd3384630c7c474401247174ea5c8f0f6a5092e9ed9edf077c2f21518",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "fr/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "43326b70b3230d7c249e845fab105f0cec9eed16c31ed74737b944e037292ef6",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "fr/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "842d9593536df5ffc59c8927d2e60d4eca3b7beba055779ff0e490b6c3c9f0cb",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "fr/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "945af13e40f994134bde83b0551d9554c37c1ddfd7238f05a829d6aa3322f3f7",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "fr/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "273fcf92567fada686c11bf2d86c6ce27de755ae3125db7f620ce87cf08ee4fa",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "fr/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "9872793c3b5d84579ca71484808362e2a5fcaf5fd71832df5a3c0df185518486",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "fr/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "03393608fcbdb60d54101f707aa23d63986c5759e16d82c2f1c32e81527e6695",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "fr/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "9176fb0e245e6a7123e856c0a0b898dd4076d8c73004ecd43ba2877ab7c0ee74",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "fr/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "377fe286d359832adfeec375a65e1d487dd2e6fea072b27f61f6ff7287edadf8",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "fr/theology/love": {
+      "status": "needs-review",
+      "contentHash": "d80c0f8edc897cd692860f537278e6bded8ff8de6a80e4fe6fb92cad7ded70e6",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "fr/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "f2822f3b22578826762afc9bc273073d2ddb3bf7569ba9f022dbf3effebacf91",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "fr/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "5e51f0b589eadf0e2e5c307bd7cbf68fd3018b8fa2b45b24c22528c2c181276c",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "fr/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "475b42e65ec464624b01091ca2d3b5f4e9483bbd5d733a549731f7fa3b9ead64",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "fr/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "751b7a8de05784424004c4dfb6177ae9889638c5eec835c9bccf6a15f0ee31d5",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "fr/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "ec25fcec2f33d5fae50b5abce6b3878087c45b19996b5ce5ad0dfddd1ad7c10f",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "fr/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "351e821ac9529398040d4b9f12999eb3db0dae108f9f186b18070ec97069f2e3",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "fr/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "44baf4313037b856383f84609a6b47e646530639d952daba4b66c3e429f512b4",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "fr/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "78a5ae1fbf4fc40c163b18405dd7527ed80803fc2dbdffea7b0fa863e865e72a",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "fr/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "e9aabb339e7095628a16de94800aa7b2e17c6c3ded84a51d9d861c97191baaf7",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "fr/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "c8145723b0844fee0631d6c9471f76dbba7d948e3d558286224e418e30f6181b",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "fr/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "863bd75672f36cf54837a059e5168a515d1838f30ac4d175152cb517716ba61b",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "fr/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "189b9b84a244627a7d3df75f40d70753d959177a5da43cccedace8c9333f15c0",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "fr/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "b5fe10bcfc38d145b29e33bd48cbdae3fcf8a720baff9c134cb0ff865a28f5be",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "fr/guides/church": {
+      "status": "needs-review",
+      "contentHash": "8b6e2b1577df746478038106ef84d8b29f50f47ec45519fdaa16fadb454b3d49",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "fr/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "64fd405ffb189d31c792325f3b2d59eef881cddb36249b32b1b4522808b90b8f",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "fr/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "b199742bab43db8eca86607ac9a1149018a41d34641b7a0cdf0a9320fed3a22c",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "fr/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "44dea409925416aab0810b2f02a292b1b2c65110cd29e04a7ddc5c0b829971e7",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "fr/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "08ecf12f9ff832ca59bc08107e0d69a7a6974db99a040b437e2c1c6a883d1840",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "en/ui": {
+      "status": "needs-review",
+      "contentHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "en/landing": {
+      "status": "needs-review",
+      "contentHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "en/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "en/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "en/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "en/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "en/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "en/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "en/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "en/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "en/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "en/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "en/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "en/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "en/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "en/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "en/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "en/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "en/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "en/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "en/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "en/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "en/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "en/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "en/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "en/theology/love": {
+      "status": "needs-review",
+      "contentHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "en/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "en/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "en/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "en/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "en/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "en/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "en/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "en/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "en/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "en/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "en/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "en/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "en/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "en/guides/church": {
+      "status": "needs-review",
+      "contentHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "en/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "en/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "en/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "en/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "de/ui": {
+      "status": "needs-review",
+      "contentHash": "18a7be0d0078b41c83482d412e9c9c16173d87815adeacff2e49775a5e683fb6",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "de/landing": {
+      "status": "needs-review",
+      "contentHash": "7a4e263fd12bc934c41ef53a745f84a5419d09d4aff64dec88787ab17942377b",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "de/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "9c800ae23cccc2e187bb2d410455b434abf079099cf74d4f5298f883570c4cd6",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "de/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "19a999bf4dbc589c54de42b0d2e5890b97c9cdca304553ce1ef7997aa063bccc",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "de/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "d00889a7e361a5ea32d0bdba57cb3ca5ef23111af378725b6283a078c7846ed4",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "de/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "40d6cefa356737d5abb0c303082eac69dc9f360c5c169ef4b97745ce41d2b979",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "de/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "0b03a91fe862e13beccf1b9e04fd756a8aaca8c1ed758a7d66e130692b79289d",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "de/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "60842ab768c38acd7f7774f0adb2d62132597bec090edfa87aabd4f105c0b134",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "de/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "3c3a00fb3d5bc9ab6525116f9d72473b103ee01900eb77be2c969c11e4be7ebf",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "de/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "cd433e767e82b3f9eec0164c3a344fdf5d3485008415a6b890b4099888f115f0",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "de/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "748e2503a5c0f2df4351d0b41c88422942000f03cd5ef726b2f2eb3249c74332",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "de/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "5ac2def28597d04c5ecde7afae85fa35eabc1bacab4de6608cdbd50c9bcbd0ab",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "de/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "59e5593556029ccec5f20dfb30ebcfcd0f18358a3010c01a409b3b44869a59e7",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "de/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "fa724c9c23c67c2d2b2fe06cc151743cfa1c855122f5210c9bbabf376f1c81f4",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "de/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "de/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "6e8ee7cb75ee88fb26d7dd4d306081d3327605931b9b0295ab27bfb34730ba38",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "de/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "3fe7a064a653051a6301a3ca9568364094a21f374fc5662acc8f08bf4eae2c72",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "de/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "3213ca89cb6c7fd7a887ad3056d716c3ccdefa4491d14fdf14252bcbeb241c50",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "de/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "739d0472f0ea426b8cfbb13c97ce5470dbdfdabbfd81dbd01ed65c2012247d5b",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "de/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "ade85a494f4cb42f16a7443097d7f0a398497c5fc29c8d9c80f55e43d85b2c13",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "de/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "c142617a72f2222df672578d68ae2d9110f3eb544e25f09ec92a41353df64cd7",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "de/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "b77dd7663489704ffaf3fb0a873ba46d2c4c6c29e837970f7547d96b125bf11c",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "de/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "91f0431dcbd6da0d011fdca0310de51f95ba7113e1d92eed62fab78b6d5bb72a",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "de/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "88c080baa214a3ec9bb605e68ca193bb6688c0966a1bfa26fd1a8424b687864f",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "de/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "ab4610cbb303d72a6f30e6c6d098a2778ccdd7e1e0289f2fc58bc24ab1a77d40",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "de/theology/love": {
+      "status": "needs-review",
+      "contentHash": "7fca5a5b80ac8f6813c687d2994fd182e135e06bd06ce6a7b6925ca81372cc50",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "de/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "fbf5fb0b8942c4d7fbb72af6d1a6f8cad267e096ef95208393cc7a312e02b7e8",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "de/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "3c0317115947c61558121cabc13104981bbab0d07a0ecd9c4e97cfee6a5efa06",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "de/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "f1a3bf90b326bd823dd6de19a646c18562c83eadd9e28593e966af72fbeccbad",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "de/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "97a518979045ed635e1bb1ac6b27cc98aace28920fa6e46e7f50e30f4a4f1dc8",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "de/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "aa32b78a2d208cdf929ca7e93fedcf4ae12c6628e2d8ea6aeaa2a466c7e547bf",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "de/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "7ab93976a63965a4dd7fe22d1c10382a7de8b911cd9671e02f4fdd08351cd4c5",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "de/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "3820ffe1acbf73dc1927a57414209bb7fdecfcb7f5b2bad3764b9fd3c50873d0",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "de/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "746a3d84946cae2ba5090cd7e6a475e1d27c529606e1d73a9db267c573d94b58",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "de/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "5b0e8b7d456f82de03bdd30dac18407eccdef0fae8d5c813f0420ee1aaecf76c",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "de/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "b9787d0f34bd7dce17852034ccdf18a6567636d4f2c03ed6b74a77cc5fbb90fb",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "de/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "db3cf56364692fc683b4dd6d1e8b2cad9e2e314364c8ff90bdd006c5b81bd120",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "de/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "4972d6023a8a5be3dddc00dd0d872e1ed92b9846791c9cbadf6c34a9a6b96cd9",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "de/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "2cfc09ef0dcc3f91ae0f086c21399827091a95a45ac18a60e3fcd9112676a91e",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "de/guides/church": {
+      "status": "needs-review",
+      "contentHash": "9b066ae32277956450674b4c685f5b9aa5318b10372c6801b67bc897627027ac",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "de/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "6371661d16ae939f890425525c0547ce3d93bfb890c5bdfaf7830a0cb4e06f03",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "de/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "e8f3bed743348abc43cbb9afaffc6bc0ad53282749e9015696ef3d4a6058b8c4",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "de/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "2d4a496837fd71b717eeabc56f6a5d58544bf6326adee9a2ac9eea6a770068e2",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "de/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "fd462f238df3347aa75566bc2c5bc8632e690b4315bf06f84dacf108bbfbd80a",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "pt/ui": {
+      "status": "needs-review",
+      "contentHash": "918d2b5e534d18d40eb01b87d5214aa79375c6f107c1e0a827c8dd9f3b24b023",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "pt/landing": {
+      "status": "needs-review",
+      "contentHash": "065c429b40ab619e057d973448cd89cb0f76a5fb4b63158cff2c0fc07d0e9d39",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "pt/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "88bda07483a9097dab10be6867f068af4dd317452cd7050ac3f781a5c964903b",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "pt/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "33d9312dc1cfc0f688203a3e604a25b09a7c3f550eebdce83db5263edb1208b6",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "pt/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "619aa105f70ee211edd3f21d2fbc5c2645bfa69d8b66a68015a4c38d60d26137",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "pt/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "53c9edd4023f40e744b537b7cc46ba7d7db8a5d2682bce7dc57233caacb7cbd4",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "pt/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "0fde4f0e878b0cf2a675052a947b67fa98fd986a0b495faf9fa53bac2d997649",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "pt/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "415adea3dee8a6510e29b6aed49aef9b7bd76732a48966cf79a8e1948aed6245",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "pt/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "4c004140cf6b89e96dba17d9874bec37421b5bb3c7f80cc00bd15835a2d3db07",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "pt/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "fd653466fc39511193f68c1d6b48c0d3a25ba857295a131b7ac0eab05f341a88",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "pt/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "6abb8a8aeebf98601633360b16934f828ef296ac43ffaf3c147ffa8206d229b1",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "pt/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "5d67e448f9a185c23a84919ee38afe5bacfda86890f17b39ed32da23b8d116e2",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "pt/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "b38b125ac36b6e9fea2e60261eb6aeff0726745b671334ed9dfedfe1d3afe8ba",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "pt/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "5fd400d57b0dfc9c061aa56d0408e5bc81ec0bc916a6ea97aa061931793f806e",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "pt/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "pt/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "5711ca6a58d9d31669abffeddd6fc2780fcca20c5ce95f811c59c86fb9256a7a",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "pt/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "72d3056c07600363ec124ce55a00c010e21316263bfa7217fa7839167a87f3d1",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "pt/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "75b580627ceee551198cfe06b357fb4463aeda6e91d38048d48e0aefc2aa0cce",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "pt/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "b211d5099fa98ae071158fb067cf8b0f2540d3cc057c7ede69e23c7e85119b44",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "pt/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "9b9b4f8e567d6a5320827589b483234afd599b6e70bbbee22533ae90827506cb",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "pt/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "bd2878ad65160abc5df438afc3140586ea844fcbbf8887557a16efd8cea51160",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "pt/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "886c3c05d1630f2eb948ebb4de88bd172e3dc9eb7d0d2037caceb0bd093ee882",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "pt/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "a2e3a001d7b5e9f2fe58bb5ad1bdd1b3e088722edf5dafafaf9573c49eba80ac",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "pt/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "fd916e8977247217ad4493bfd80e581ba322d3561f8c95f6dc94e0f5f2d7b743",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "pt/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "fc6b55d60f16e14ffc532932048b9b3d33f2007bc0a2255172dd6cde600aaea6",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "pt/theology/love": {
+      "status": "needs-review",
+      "contentHash": "ef6ba907a4d5cbfb283327f81aec8101685c20735dfe608c6c24a95414bb7061",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "pt/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "69d1c06b4c53a746451a42519d7c18628b55defd064049017b497d430e0dbd97",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "pt/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "b4ce859db422cb9cb4391250b2c5f0734f11df86cb2c8846d64282545fd6f8ef",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "pt/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "7518234e3f4298b200863e351b15e19d71219ca82871dfa7f6d2b4fae6462212",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "pt/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "b71d45d614a7bcd5042417677ded03e2cf10070002c9161e5545c38b74b43a71",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "pt/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "03b94fe0ad1f47e38a5566da863ab81f3786442e85182bca01bf8c19fb362a28",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "pt/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "be2eda71f423343692d7f402fb5fc3b3b5f57740a22ab941567ea3d39cfd9475",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "pt/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "455d1a0a7d1f158478894847d9f71d0bed854fd860cc5ef4372ec965aff0c3a4",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "pt/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "c10e7886ccff9ab55f3001b9e499c5e12f6447d482949b69609572523848fd1c",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "pt/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "1382215af1116119dbcc00234ba58b6e3f9465d83665fb80289e5947ca868956",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "pt/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "db750d101aa0d8178d0aff33d4d1143e94f335cb14be262f5f86975903ed8ede",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "pt/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "39cf63425e52d2b7191a4a9b1b091a93ca02aef546f5b5f880ecf5ffe7ee99b7",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "pt/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "8b7a7200315058d7fee06347b8c5fdd3e0702c6b1f65d0aef4f8fb4f00c0d12c",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "pt/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "4abaf63e35137367fd144128535fd542d5f78301c6f9466b4501e59d73663e8a",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "pt/guides/church": {
+      "status": "needs-review",
+      "contentHash": "acb4eec4a7d075dc15b3ac789a1bf91e90bf4cfc4f993d9ea4566be2e58ddfd1",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "pt/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "fae51a239cdaa49c02fdbbd42d4c05147e104cdf007d5d89b86d36be713cc036",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "pt/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "4a063df3c56e0a096ea55f3c7ef4318b7720af5a406a32715940df42bc2ac5c6",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "pt/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "2364fe481976533e539a80fbbc7dc68b17743993ad831063f491172040915205",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "pt/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "50f999b6b0448ee0928e35c99be7fa3d46691680605a262900d1a7950310b80b",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "zh/ui": {
+      "status": "needs-review",
+      "contentHash": "85bd8d7755fb59c6275a5edd9dfbd0bec1bb3e28156ecff99e8dae9415f1b3dd",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "zh/landing": {
+      "status": "needs-review",
+      "contentHash": "e23ff452a51e2b2cb4f11968fff51574a98701f0b4fe9e551aff0b51f54da653",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "zh/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "64bcfe7e05e49cc1d12088d6fd4e688b0a39e8e73c8732c216c2d780daf5ebaa",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "zh/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "e1832cc5ae5ceebe5c3070422496f9befe52cc0d7e79262c4e6dcfe1d502b89b",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "zh/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "8f9aa699b232a2ce0fb61b9364ceb7b754c6928582630fe56202e608a41ba050",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "zh/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "acbed70e03dceb23fc3851e9f99beeee3a1b6198142d2ea32073a28e80d47a31",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "zh/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "a0f83cdd63fa5eaa2b5cecd95a0507c05c3944975ff3fe41776125d86045dc08",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "zh/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "16925b6bcf73a48873bd072a7719de3e3d79638eba989b2d94d9da54e75be7b1",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "zh/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "1502b90a840a35b055f4330d5773b121aff7134c248e70404f8a0644b540fc5e",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "zh/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "b4dd3d6130dbc2a35c49490064ce96bbb5d9fc3cf1640f28d76a2e8d68adfedb",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "zh/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "1d174ece2222cc11f7f76780041692556188ab70ed8b5634bb6c3acea4ef2a08",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "zh/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "919db77df98c2c0812f80f6879d959e716aaa6070f1930dacbcd929013eb50a2",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "zh/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "60c4b07f87c88c6091f1360e0cd128ca20a642133fe65cce63f02dafac37f51c",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "zh/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "481afd41461e35e9393129ac9fcb9e9cedb4180bd6703656b031bc45d90b098f",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "zh/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "zh/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "e7305a0adf56437736a4d93c3db36d014822aa7ff7bdb815957159c00a588c7d",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "zh/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "6032213163ecd51e0d6398ed3acec6bc83947a960f9cc9cc22866ea14c0a856c",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "zh/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "28d9031b87f85e4e22ec45a81de004a60f2b2d5b8a15e6677d9460ed9755642e",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "zh/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "dadb9281859c86b6903cdc3b97e899dec81ce9a6043f949e83b58cb251b1b514",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "zh/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "c2da5926e9546fdc061844af5fef9ce82f1130253b5dcb57fd45ad8bc0bb0dbe",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "zh/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "95b68907956dd5abe974890ab0aa4ad45ed516e60ef63ceb25c1bdf0da9c2b49",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "zh/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "611f7296a3aa53cd1dfabd872675f4ba4822a5dddd1338c72712260af388de21",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "zh/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "bf6c6fabbcadc04a7ab5bf62dbee9bf8f8a1bbbb84412a25ad1ff10252409f65",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "zh/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "cbcdb01d62aeab1999068c7caa5f203e25394e68fcaddb166a5cc3979b9fa0dc",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "zh/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "3b1afc8077c72bb795a1c9e9a631eb03515ee1d0bad8be5115a81c6f2661fb10",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "zh/theology/love": {
+      "status": "needs-review",
+      "contentHash": "9f49248802678753e723aeed90e8862de56d0894126124f6aaac8c6a5d2a4efa",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "zh/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "d05bfed92baac1aba9074d1819fa27d289ecc56a8f3ea70c4f2f420166000cab",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "zh/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "072c0cf834d68646f6a9b1013147d26b4f6fe7d0b1331437b4321460677e2480",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "zh/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "e161d7d8bf2b98d8b0253a2b1e89a4fcde9cae7d94c47bbe45cd33963f0f6e91",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "zh/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "9b16fc0ecd921e7a071ee1dec1802d7461b925a640b0fd7a62ef65dd431e4be7",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "zh/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "ffe88986f2e9fac23512e4039656ef33730987e91472f411090b76198d6b630f",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "zh/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "454946879adfaee540f8447dc3d1eed43d49cbb284ca9a115cc3d55d1840e963",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "zh/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "06db604b1c5ddabf4656181719f41c7667018e854c74685c8755855aa3676920",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "zh/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "3ac88e217a5046a54ae6cbe1dcc7bdad65b4426e78ffc900427874f920b1999e",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "zh/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "1f7f2449fccc994dad52442111a8ae586274bc5bdb48b81b0aca9885ef9824b6",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "zh/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "40d301a0223d8884db0ed43f0600b12f0ea00f1c43901e8efd0bbfa6b5d8d39d",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "zh/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "b88a3f64c954cc590d88b0af17723f7554996ae8db6e0544592e795ffc2ac1e8",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "zh/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "6e6f09566ab0a3582e062f1f392fb73d5feff9a43c8252949988be4e8b5c4e53",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "zh/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "694963b66068caf5b806a3f475beeda50f2146fb2d2244216335684424ac9963",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "zh/guides/church": {
+      "status": "needs-review",
+      "contentHash": "15346772409f434efad455bedb906605ba7ec3e230db0bd1da7a73f8aa14fef4",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "zh/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "e4a90c0f5dd6072efac39c22538a8e5abd18b36a98e10edbf8a591323b655b7d",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "zh/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "5b5248b4107ae90c43313d85bdf0ff6ad181dbfe3027691afda7f8a4c597658b",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "zh/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "b9a234122f392616ec2b3f8cd82f8c5d690f90951c23bcd6d9e298375b7a99de",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "zh/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "e85b246cd6b2bc2d0fb85de7b9b32ebf328603f429600d21489718d0528c0786",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "es/ui": {
+      "status": "needs-review",
+      "contentHash": "a7aaaf1c88ea32cc4f1c114a5424dad14eef68050a021774d676afe1b3717066",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "es/landing": {
+      "status": "needs-review",
+      "contentHash": "0bde0c1f8e129f947497fb10f0d7a8b9207f7b00a1c45edfaaf7d30f72f3c544",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "es/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "65209e97ca57bfa034b2687c05f3f4bfc2512d5ea984f0e2a02d81d5afff5775",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "es/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "517ed52747ee49bf67e18f3cdaf0a844863ac7aac21d0acd9953f3f8aee9af8f",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "es/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "2288140dc28f6158971161a176a0a9054203e3eac34637c9c4e54ccccf994198",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "es/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "abccad5d3e1941ec98ab11eed21541150daedb467084874214bdf915bac2f35a",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "es/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "8d8e7f4418174de4ca0142b3fefea712b5db57424197b7fcfd04f66897c0b5e8",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "es/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "7f1a562e175511ecfec82745b87894f304987c23a5840ae646fd648f44d69196",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "es/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "873a078a31ef518b1d802521f697693dbef590b4bb6c335c9beff567885541a0",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "es/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "2b0d020ef4b26ea9f42b00b65589a59b2d17cd8b8e2f29f2efd60f156bcc49fa",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "es/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "0d955ec156465938824701486e6f32da70f9374bdc373800b855d0dc61ce4b0b",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "es/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "a65ca106dec00b789e1ba019cc6a17459d0de706311ca50caf09398395810200",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "es/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "fecbba25226022fab443859a74bc841fa424ad2e87a84920297130b8cf337c46",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "es/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "daa34293ecde581573df44a1482c6464c771122667aeb841a09a91bbdc07e892",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "es/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "es/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "f7171ae4638f180dcb985a5cc2da8317d9d16c406698e06f436fe5067fb5d924",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "es/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "5d25f672232a8ac95d517513702b497403fbc2a526e1098191ce49c93d497695",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "es/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "bbf1f0be16002a2a813fb5bca29f9e1d835958f3d13df171a437a4fb531dc950",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "es/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "0d8ac86ad4d74068f0e6ee3db5ce0a24e62659ec49c81fd6a298862b59b920c7",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "es/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "82adbec505f6e89b788d61d793e4a2a3fc343dc805965db03ac55592d211d0a8",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "es/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "beecb7cf96a3465a5baa24b6787b3e32b2928b7926a6a4e5cd0685d1db7d65b5",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "es/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "ebb36da6fd4b41c7ebed3636b3c5d9425df9e83542f2f58be0b0fa0b8917ed9e",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "es/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "82e74b2f5c2690bde0151b97b3cd3498c57813f71144d5eb9b005f84f0c08c92",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "es/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "eaa46a120c3d2f3310a548331b0159cc6d66e3ac4fa16c142cac3a3f68e4b549",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "es/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "60fa4bd708626977e1cb5b9e288b6f5c106859bd606bff1b8a989aabaa8b5922",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "es/theology/love": {
+      "status": "needs-review",
+      "contentHash": "6ad9e04ea097abf06f05d252ae6ffa993a9a492aa64c49e19f7dd025cfdba100",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "es/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "780403376fa271a78cfabf5b14fa0055b4619fec3e50b66efbc593ce3c1269d9",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "es/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "8327cf7699762797956913e4ccb3af70d53200a14dcaec62eca81147cb47b5dc",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "es/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "87adbf4e137571cf0343032611773606b796f82aa0ea6ca8602fdfb3417e431d",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "es/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "287b91eaba6af904e1ff8ca964c70d8bbca2cf239e64d27c132364924e2d07ca",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "es/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "47b95fe70cfdb306d6f5233a890bf3981e1e533d6e4866c2135fa48d75aafd2c",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "es/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "27673bc580ca83fe37144bf04f2bac55e6157bbab90695609e61a5acbfc39f62",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "es/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "6c500b7ff5b0b66de01004a2766fe1ca0683a0a903e164e026650327a10d261d",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "es/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "ea34fbca9254f87964f7250f310badad6c09677b8ffd5a97d5d1fda85f2878bf",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "es/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "090178befbfa6dfdf4d0ca7bd63615ceb82e9586e2680f0f4e6caec780f6ac44",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "es/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "ad6d5d34369f6671f75de90163dedf7fbcf574200c1e0e324b4374fa00a3edae",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "es/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "ef9e4e75266231fcbaeb5b502ab6a846855565f7dd7cb9b0148dcf8f86e49931",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "es/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "d76621c2ad1b9be2677d2c2ee3eb64b19190c5361735f0b4e692178a625e0fc8",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "es/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "3f7f6238706abfc8b670b82240572006515b2b16d650c48b9799a318d46e3ece",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "es/guides/church": {
+      "status": "needs-review",
+      "contentHash": "737b343940579d026126707cf2180e094721f14e829ad605e272559a8376c900",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "es/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "db61010506e5cad908d156481a6ba27bdbb69f235793ca3c25c6013531fde3ea",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "es/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "c4a087f88eadf6dedd77fc3e65772311df70d475414e951f40e78510af71b78f",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "es/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "d5165658643bf294c9526cf1d611cb4f80e9f8c5533705b663e37eafc8095162",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "es/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "c073cc6882083ecef4a1891950fe162041b9c539b5d4d71364cc30c0b0dbd778",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "hi/ui": {
+      "status": "needs-review",
+      "contentHash": "88528589a394d01df48c5362f5b730d735b15f01e09907dbf22c7aa88a9bd12c",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "hi/landing": {
+      "status": "needs-review",
+      "contentHash": "bd97ae1d52ebe3c06f8906faf2c4fb115ca2fe0ce2d1409aafae803f6f13a3f7",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "hi/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "ab4cadb1894ad0dda3a089f385a3a0152a904c964c03f8f86a566f63b2002557",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "hi/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "909b880a91f83cce59a20a781d69d18e85351b4f2bccf0e980a74511f669c9fe",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "hi/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "007410e1bea499ea91c3a8639746c91e077ce9baec45e76aabaa8525c89d0e5f",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "hi/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "adcb4cfd1d31ada99ffc91a94b56784b127ce27bd3792c9a38b64112cf311302",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "hi/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "adfe34d7c7f75b8a33d5649d8b382a46a7e32a308b3c76f0b4ce08359b9f217b",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "hi/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "0d1f39d3049dfd828a47cc4f01af5193d8f2f31f13a74bcbfe2462370510a745",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "hi/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "261d27b457cfc45cd4d21f06e56f223d881b049133a68a947a9c8415b96c8aba",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "hi/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "5a9f862dd6998bba42ad3b64838e3348a83ca14aae607ae809ee6c7dd97fec5b",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "hi/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "4545237958992b6e101eec9690fea57138f677e98cb9384628450e302807e865",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "hi/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "2e1c244364babe28d3bbc69c46d1964d6ad3cb8bad114a861aa5e7f4ebaa9e33",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "hi/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "dd4ca677f7f0137a4785a99e86d9c193bfdc0914b506abaa6fb823fbac627d80",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "hi/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "7983e1a9cf279f339045cadad513a0b441e74195f679abe862616c6359231ebd",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "hi/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "hi/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "e21d8f6c640f6026f64664a16202d28e90c174e4c76ac9e404e57e386f941b13",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "hi/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "e692fcafcde73e00bed49eba351594dc63a98fab41ce89fc3c875bd871722ec5",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "hi/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "f29ccfa35759d840da0f581ebfc02363e47395d59ccc04043b8f766327a50329",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "hi/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "cbdbedd3241ae18d48165ecaf8c91368273f27f8ca66af56a5b44e20121bcc5e",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "hi/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "88a04ffc7fec86d77c1bc6a348ce84299773d3663012b5f6d5e097eb176c9488",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "hi/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "b1bfe52c983640259d941fb27fbfe0b7c28195cf96b3182a434c9ca0aef04ea0",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "hi/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "5bec187af47c40824f9baa63f8df545b02dbd15b99722227baae32bfdd740c2a",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "hi/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "a9d85fa74801456dc93ce35aba0c4e8052715f2f56a748328dca654d201434af",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "hi/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "229dc9784817402e80247696cc2aa497bc064f6ed5c289fb308f575ab5e877dc",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "hi/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "5dd5bd2a5393386d07bbef52c293a8fd3aa187d71b23e4b31282151625066fd4",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "hi/theology/love": {
+      "status": "needs-review",
+      "contentHash": "92d93dd55d30d159ed6c67928248365096c27bd1d58939bd892384f71495c27f",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "hi/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "2ee5ebbe03e7f93e5e3a68aee68c3120c0963b12cc1e4e0e763d1e1cb83455cf",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "hi/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "b1e66479452fcb7b70da3207bd6bae6c244e9e0c3dc82785d9fdd1f2fb8ff47e",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "hi/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "83c8f078d2a44183929f754f63bacc2b2581aafc5c209f282c6986fffcd4ffaa",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "hi/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "a564d2b551aa8b0892a2621c610f2e6c3841d14572105db7721a2a214e50e90e",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "hi/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "17464381bf814f64040864fe55381716ab495db95e3dc87a159d4b63d62f4169",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "hi/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "207cf1ab1678eed35978a327228700f26c814845d37bf036b0798f2b7e2562f6",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "hi/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "cc32bceb1b59aa4ec3e430b96ca10290fe3cc2260c69c43bc34a11860a61e59c",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "hi/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "ea358e87ebdb216c1dcc98115bae68176f0743607eff2ea1d48d71b48ff76878",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "hi/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "e87017c9e630e23ea53ba5269ad27f0c64af52e51ba66496bdb4dc1cc80ecae0",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "hi/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "187f1305b0185ced50ae56755d6634280e8849a6838de827f9f96de123dad916",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "hi/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "95e4735e08af332b5a256168f76e3913208f2c5f7af7204af9c3de20ac3d0b5c",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "hi/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "fb7f956172cda7cb38b316e0597fe3f270bbab89434b7c338e0bda1d7245509e",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "hi/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "88a3e9d11191f0ab459282411ed43b668fc6e656063dd0cbfae4a5b2a1acad22",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "hi/guides/church": {
+      "status": "needs-review",
+      "contentHash": "b476492ac54f31abee492dc519ef9f20d8126090d43358a735d127b6743df9ce",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "hi/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "540dcff29edae2e32d6e1415d1c6062c5e19203bb5d254e68e1d2215adc59c1a",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "hi/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "5c0cdcba171397b07eff0788336bb93c2197b593cf9cbbda84cc56688791d7de",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "hi/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "feac27e4516a2ea197f463d514d546a7ef779e402eb5e0dc13eb32b704e2df52",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "hi/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "4b30f473759c5a7bb854a18dcd92629eae30a8bc32f76e0d0d12ddd777992553",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "ja/ui": {
+      "status": "needs-review",
+      "contentHash": "0bbcb813c13d28048a7d80bbe0edf860b2782ed8099d062ced3210f77d2941c4",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "ja/landing": {
+      "status": "needs-review",
+      "contentHash": "8561bede2afa219776fde1559c78de4a93657299e3ce8805ed0b6dda312e075a",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "ja/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "98250d21824f5e18c10deb958d5aa8278cc1caa9cbce244d085ca84b86ed63f7",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "ja/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "b9dbad7f594c42fd38cc27e390089db6165aed836593e370576ad91fbb4d01be",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "ja/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "6481b69bb5132470245dd07d39a919bef1887cc5566fcc5627b4fae28e727dcc",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "ja/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "65b013ded34fbd0795701f04d7f6d35bf8c24afe02cf21ccd69751125916bb03",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "ja/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "d4bd1a628a4c58124d5e07b6a5b3d02fab6710c40e2e4247b92d6cd5bdaf4f87",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "ja/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "0013ad93253563b86fd3c91f1edb827e132f74bb02d87e66185a5b6dfa158566",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "ja/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "771a01c679c7acef6cc2a7a0930430054fa78a9bc1ea88ab71d57f37930da410",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "ja/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "566964fcfec27448cc187e0d84d072d7bab20b1b203c4f953bf66a3cd6163434",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "ja/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "ff2aa35a692dc55cea76c5dfec9910f58f613a70a2aef3d6cb0b07eef36bdefa",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "ja/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "ebe31eac3a9a0d462213bb73e248c652d02e3dd38c51fab860d171f64d75d4c8",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "ja/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "01b4a44911eb2435dfe4f037bb87631ee5b36ed361ffc1c6e637d3acd1817961",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "ja/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "66ce27840bb1b0337e26e4dd4a496f73a40552cc066bf19ea0b63eb98513674b",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "ja/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ja/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "3e8b37eb801f63a2dc7256de2909af073bd9856d92178aa4227daa93cd891cfc",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "ja/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "e6c9c0ed222ffef45138902dcb250490a219fc42d38d9023df60a6bdd6f25844",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "ja/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "f74304bd1aa24da3fca53bc28d4d9a71b0e39e8693573a057f470805e87c9555",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "ja/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "c18ffd562b41691e344c91d43f66d5228a634c76f52d723db8904c7f99c9c6e6",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "ja/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "753ae87e80ab99cfafd9ad1a9e9ed6191359f6394196fc453cadf5a536906fd0",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "ja/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "84e29b73ce66da0535eee45641dfa0774e3c82d9556c1a21cf6e080aaad6cc25",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "ja/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "45b921e1b12871b49524397256c388cea28b50c663813195ffd828419d27ecb0",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "ja/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "43ef326056c4b29ac2e64a1e69e755c958d9810fe140c27fb07cb00cd101dfb7",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "ja/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "cf0e29ba79bc7f89631bfe8f3ee5b6f24861be2bdf60cb9f950e55ba65be3b6f",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "ja/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "78832990a3bc83285471714bb40ccef893c2f93f06ae728f2625f70dce1941ab",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "ja/theology/love": {
+      "status": "needs-review",
+      "contentHash": "b56226a420badcb700db16715b87654d09798c91ed1a744c89e71ec55a987ac5",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "ja/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "3ca7abec47a8c7cc7a62cce07084f7848498e4fc8e45c44fc914c00c009cb9ec",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "ja/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "0183c49e437369809d16ad97fae14ac9f0c818b2c0923892be015d3ac6bc2624",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "ja/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "dc9cd13098630d58b28c2ee8276c577fc34829d8acf16e504c5f6dc72cb7cdb1",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "ja/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "a4f635f06637ea94932f171ffad1c2bf0e2a8c2081e262e3b0c5cc7eaebb2655",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "ja/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "ddad9c23c0ff28587a1704e6a91ec10fdb4ed58b517e307878798cc451f55244",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "ja/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "62058a855104f1c92c29c8b57f126c952075b57cdb3f581a9eb0f3daa8e06d78",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "ja/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "0f9751a6c48f77810b51bacd7ada8e8bd7085e5fb50fa9bf83fca450749bad87",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "ja/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "10098c67dc7fff877aeac6e8bd84f4d0a52f55e4a55aadadb3cb76e9802faef1",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "ja/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "dd8b1b8e2fa33f711996ade1eb3947a6767cecb4d8dc055bc4417acd9ab8490f",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "ja/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "f3159181d289e69d8e1ac407861e60c61b4f9a64f9eca93eb4d34c59d56f7d95",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "ja/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "c005d8b4ab9c110f79cf1707de816b0690bd3c1c2628c22295be0bb2554e198b",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "ja/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "f5d11c9a2ae29587b1342a9cdb85132e8b4a4d6d3cdf11eae3bce072a54863a5",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "ja/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "5f4a868e764e7c0b3c13b8a1a6548693e2d3661090ddb5d87f26c43e9fbfc502",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "ja/guides/church": {
+      "status": "needs-review",
+      "contentHash": "0e07539efe847f38136877cddcbb76247d663bf7be1bf7cfe739430254aed515",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "ja/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "2165befd3f202a456fe89e4f51ce1d56e32c54b4f65fc7ef36051e594c928957",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "ja/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "b73125cf1ccca089feed63fae7adf8145f5d8b0d60781b947eb05997a5280284",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "ja/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "9a9e341660f4bdbf26402c46f146c3b26589fe92ea0eb626a5da757ebb100682",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "ja/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "80b13946b5a63754c88dc0c43071f20cabdd7d336bab9818c103c5f16b47d49f",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "sw/ui": {
+      "status": "needs-review",
+      "contentHash": "aff098e802d354f7204ce4d4d5af37ad1c483906ddf26f25995093c01e9bab12",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "sw/landing": {
+      "status": "needs-review",
+      "contentHash": "035fb3c5ccde0bc1bd32bf9d0a18e302ef1ba69c4df14a1bbea99dd72d3ef0c7",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "sw/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "7d3b4468c19ed51a43d50a10a2036d803b8f7f444f2602f2be5f15639659efb2",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "sw/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "e3c48c46943443baa60761ca5fee72cffe4ab8c45befabc3e503c36c9e0af50b",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "sw/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "ab1571347626198e1dac5e4fe50eadfdb04fcf294f417ea6ca8ca5f15ce20709",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "sw/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "843ce22a3fc5a8b8c4946ddd6637e9933ee27c7007cffd8a98d87fdec3708627",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "sw/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "72630225ce870c4a493b89c939f433025bee31473c42fa4d4b00e05ed212ffc3",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "sw/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "e29a7dc78918d126ec1d6e07634136d6aba1f41985508866fd012aee7b9d75cf",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "sw/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "e1b169cc7e1f161c59dbfe6cf52af9756a6cb0c9432dd125e5ff85eea5be6404",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "sw/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "21c07d3b93601f8e7f657d54e4d1566c66161d0a9d1137089fd158d98e5ebf2e",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "sw/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "433d7e11ff933c36e3aa9335c0709c690f41cf6adaa1b014382a6a3b786822f5",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "sw/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "3cfa65bae924352dc3990e1121a59fdbd900fbfc7f81880105597fa4611ec0d7",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "sw/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "de6c2787d5c9ba9e65734cf8b85498898e50a0c2ad7a4ffea8d2d14521524ccb",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "sw/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "c0c740c80c9da158f72361bc81ac6bc7568db174701a790ae848b0a73a98d8c2",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "sw/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "sw/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "82e69a1a618e5d85e6045c6e19a4789764a15e22718b2386e99f58e94b40f3c8",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "sw/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "53bef1f92b20dc384341248b6925d7aaa414d0b185ee2185f0ddd0840b0032ae",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "sw/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "56da77da1160ba347badbf23a67b8a19cf6bd42a535ca095074e6ffd44c7dedb",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "sw/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "a2387d20416ad336c6f4c8996b6aa14ac9dc8856370062ebd328e49df06def7c",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "sw/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "46a128ba3a8191a1746895b9aebadcce48f739fc43603b3d08d8fe2610ba09f1",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "sw/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "5bdf37fa7b5cb23ea46937d158d76a0a54de2e24592dcd035a46bdacaf3f6d81",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "sw/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "665eeb74b65513bbac99c4c3ffb7863f662735413d268d2b4e3819a101b3b377",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "sw/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "aa57f1f0b6b0df470c92b4154f4e64943203b4214752389286a711504c0f934f",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "sw/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "a97d083ba24c07b83f9ce793e38c6194aaa4f1ded9daa59adab94674acfc815e",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "sw/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "63825be1db0ae0b483b34aaa5a05886e42ead1d56c106505370832130b8c76db",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "sw/theology/love": {
+      "status": "needs-review",
+      "contentHash": "9f7710a9afc1a0ae1a84eb90c2e1c6485d648823eb479964f4ba1acd80dfbe57",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "sw/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "a921102dad66f228459a6a4a2988fd76837e10f7fd4bb629efdf33ba2fa05ce0",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "sw/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "469951335689feef7246615d2f70aaec83c3e5beede82b8facacb65762ec2d0d",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "sw/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "799fa3d6b9ef4c46cda012344d9b621aec53856e40124fde5710a52fe9f2098e",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "sw/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "52fcff5d3c2b5ddfbccec550eca4e1b63b77323576cd2456f54ce19e0ccb9575",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "sw/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "477c32f48d186780969edc1c576c961d08f9d83eb84d75183c45bfffad2af386",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "sw/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "899cc76717f6e3e501af805f58116ac7ea214bc350154f39882ce9865fbd0ab8",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "sw/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "62945f6b2b8a8b495877f2f3aa5308220e4bd9cc731676ec441ad4dd1e36c1c9",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "sw/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "2308709d8b8c5c17a1058c45e44728854d6f1cea776c683baf251badf5487fa2",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "sw/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "bd5c28abdbbd4a2ff950b9dd178cd4f77cc1da9901952135bfe9ca5a3c7b56ff",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "sw/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "9221fd84079e03174069e2036fdbb62651d8183b963c868dbf9e311b28f0c895",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "sw/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "5162cbb842f12e1cf59a8296266eb23c1c2520981cae117d51b72ebe001af460",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "sw/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "d99ab62606e9145a231c9527d671c2c9308808e0e0e13333d2c4ab1114c2d4c9",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "sw/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "87c40ede3b00f4c0300166d0b10c4982b56b64b8efc8655f7e584da3a058d598",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "sw/guides/church": {
+      "status": "needs-review",
+      "contentHash": "f8aec2e637a87e41f426363500210bbed4ddf352c006b1a67cb7b81741c78ac4",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "sw/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "d108086bed8f6295060171b47cfb72383d5a0a3b06f9341ec72a966da8b531fb",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "sw/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "f23146d67c1596c8560382d80591e0c83212635cf44fc2aa9b5e48431966c17e",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "sw/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "97338401554a84e50d1576e837a8bf73bad553a283482d0c08a4f66b1ad794c4",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "sw/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "e2616e18c921f7288ef2b4b3e80157ba594b624f7ec498701651f782d8cd1936",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "am/ui": {
+      "status": "needs-review",
+      "contentHash": "790a02d94f5984f2d7dd8317468ca2d2224dc16f7adade335172433d05b78776",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "am/landing": {
+      "status": "needs-review",
+      "contentHash": "1eb6f04be5da5cd9bac928b725bd031156f98b9e5359d41b8477ead68a803be1",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "am/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "8a4639128ec4074e952becb5c9c3ad318a436d85bec1b73ccd5420955e969b5b",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "am/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "424256589ac56a787159ee230e7427660b941f8585d9056cad017aa88dde048f",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "am/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "fe74fe8e938a9ffc2b0df3d4a653c732a330dfa89705cbfd0b54e81ecf9c4d9e",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "am/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "4f93181a509ed7cb7b59703bd7d7bb08dda511f1b72af5e1908f195574a86d30",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "am/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "e562fc2797c8a3044ad85cbf5211816862d31808e7749e545c3209e2e746c6db",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "am/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "2909cf2069ab99e8a3d914524d08f612ad4133e38d288fcd2eb8911f0e1a727b",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "am/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "7c6baf73ec776a590211b90d73ed9fde64ef4e96c5c3f1286e8bc56cba6879de",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "am/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "0322d0a65d514bd11ef5544d8600b5ae8ac9b04077b435c5061b7df0992731db",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "am/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "60734769ff3ee47db60152da3cbc8bd4d8b3bb019d67f2fb45185c0401063818",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "am/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "cae850fa269baf4fc57360d26eb2ff9409b195c60940fdf82974b0943658d68c",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "am/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "c475dd31ee5cd13110a6273bddd2d1064a341ff8069b97cd9efb5371efb53fc7",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "am/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "5e8e65fe5f81de70cc7a6319a18eccb5eb14ee5d249975b6fc416726b51c1b3b",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "am/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "am/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "7d4c138651b45f0dd36e28536a9060251eb62c89f73bbc5014996f574fa0461b",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "am/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "be9b4ae3fc155f3293a6aff0bd276f7c74e39a93ad19aaa39a038bbec23f96b2",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "am/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "6a3d7c6776fc46b3b4ccc787b2a77f60e09669168a7528d2f1c2244b41ed37b4",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "am/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "584bbdbb345f570ca52113c6ce91b859618a32fb5d7076691bfee89cd8b120e7",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "am/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "42713849bb6d35ae881a34280e41a7f9d8359fb44fa8e8aa68c560333d3f0f45",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "am/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "af13af896e2209989120560f5d30183e94c43526cc5ae286f65ff1496508afe0",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "am/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "c62e23fa3acbff366d807845a482433270f26a1a939c5ce36b557b669de36685",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "am/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "47b41b80a1e51cd9d48aac9fe6a0f227d0754bbb32c9f7e662db2801b4216759",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "am/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "1bc4c991cb51ec3595607e78c23127900165b05e8bc5bd9b83e8bc46fa5c9dd6",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "am/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "814f045b5b85d5fb7797062e94085d01e8482fb4789e5179d61788b49c030c6e",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "am/theology/love": {
+      "status": "needs-review",
+      "contentHash": "485c829059fd496cb740e86bce89ccc713da3706c5a27b5808d122eeed913fc9",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "am/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "1b397fd2a5aa91f19a869d0f432f6315eb379df80009905e66ae684cc2118e65",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "am/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "ddce43a0f4cfc6f70244b52e92ffa896ee0313aa18dfcf982b2a38cec456ad71",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "am/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "2228ad24114854e081bfcddefe8639a3d307f155813a2ba2b93f4ba4d864ce9f",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "am/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "2034f5e374290643bd0b61ad5233a5139e8d3dd99ae15eb5a90e358d25dbfb25",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "am/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "83922333b2caa6ccde1a93f734e9d9e8865c322c0052ad4e07252ce97a777040",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "am/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "92a70d98d71fe0767f9356abc02715356d61e4ce7fb78b65152af973c56dc829",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "am/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "608366de22edb824606f7144566bf843e60a2313d37f49feb9046d147a32eb89",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "am/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "bca3b1c02b72a30754cd47aed1d07436dd97d74cd837ad1a09356cb921f6b2e9",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "am/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "ee8e86b7baeac09e706bc2ef5160d5d265c6adfef54e1609f5c7caae4af567b8",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "am/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "7fad3b82f3734ba4eb7271e92371962743aeca4d66d4604c59533afdce56fe41",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "am/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "ca6f50c8cc82c251e91d52ef96bbc08887bcd8ea10dc749996614c2af248c96a",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "am/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "b1e9f1a45071bc0477ae9e95629a1a43e1e047a1ac511855ffd6ac654575caf7",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "am/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "41087dd435fc6992f117107821a9ad436430b786335d5ba974b1d244c6ececfc",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "am/guides/church": {
+      "status": "needs-review",
+      "contentHash": "af552cc61765820a7675f1136bf1cd43add118d413f2fe1e6c9a8bab879559b1",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "am/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "288ed30f07cf56e6e0c675678a676019bb49e075d8ef8902440030a570118270",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "am/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "46445ae2643bd57fa077db64a8a33bd6546876568413d494e687323bde836931",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "am/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "ba1d4e16a8b466cc7e62116538e0e7b65b52d2ac993fbdccaa1524aa9053302f",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "am/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "a7a89e94c7cb85ed22f102a0bca149ef6bf7661cfdcd4cb79be2ef47ad1800c4",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "id/ui": {
+      "status": "needs-review",
+      "contentHash": "9e1c89912b92fc02dede635e793fd2847f6da3a3fc8abffacfcecd937907dcea",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "id/landing": {
+      "status": "needs-review",
+      "contentHash": "82c35d0e2216c76a9acd3de54170925b3287d6b56ebd30218c95726824bad63f",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "id/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "70dedc130b1c2a2784018858f688b93a86ce5414d09f5e43f0e397f79849dc87",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "id/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "9a3efab21aaa04fcf6909e5d04260530dbc98e71b55a48f1b7ae895f12ef253e",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "id/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "fbdf926226187a22852a5466caa467b9c95abe53d2700de55429278fad20b0ba",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "id/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "f02262674e626a0174bafb219ed2f27f3d90a04f03ab134551fdba34c2997ccd",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "id/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "929b513be06e89a16c526cc1da938315db2bdf7b18ca62dec797aa3a8bf9ca6c",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "id/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "49f201aba9fba9a559518990c00235debaf49f7eaa12c85c85314434b5544a20",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "id/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "227022c1b2e945c967d65a6922e9d588b20bd64b7828ceaecaf70b64fd2c308f",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "id/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "f7a7f4c720e0af50618e7653d699759e2984372c536a44d0ac9dbd9a45a2049a",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "id/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "0f0c32c735895702a33d9cefea0a33772b9fbc23b97b602639f9fdeae975dd3a",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "id/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "972a508153bdacc2f2dcfce315180f4ff2e04579530d5278dfe5123c2adb7b34",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "id/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "ddf3541b6fa64428839bcb14dcf540751a90b25dba5bcf6af2e60c50f99e5e5c",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "id/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "76071db3bb8566aa35688a16924d17af5770a3db9afca573742758bc8cfd850a",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "id/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "id/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "d58afeba7a42865e6237955883328c9509dcf93b1a8788d43d60d141f7d2f8c0",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "id/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "6d9dc3f7de2536b59b3313c0275c59f8cf2d513f1ee35a84526f6e134a41d087",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "id/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "6eded99d34c2d24444dc5bd58e378b0535b70a9d43ff56ed4145f149a4202f26",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "id/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "6ba08a4bd5867aee511d5f86c5dd776e2964694fd1e238445a1ae7e083f8463b",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "id/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "1c233b88e57a94944dd14d4f5d00380e52a16b9204345957127b27419403ba52",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "id/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "bb80b1be70f9a54cc218ecb9e58fabf384479a4e76e9b6079c6609aeb42979d8",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "id/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "7ef741e00dbbf1831b4765181e00b80789b469a6195d62f261c33d3a311a8752",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "id/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "2360abd4bf31fdcb2f1edb6a900c7d3f08b11d883877a233daef6a9c4a5196cc",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "id/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "b48bac364a42463643a6d0ce40647f66bab0d4f8454d19880e662f7439a31254",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "id/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "9098370eb55d1871ee60e37d9cd2ce8aae7187e5b338c5d028cb8203c7160445",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "id/theology/love": {
+      "status": "needs-review",
+      "contentHash": "a966ab3d5e04be4f80d820a7bc397c606d6776c9d2448770c2a572f371bea321",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "id/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "bd370831da9a39e721b9190c3acc1574253c8fccbe7904fd9c51569d6530d41e",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "id/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "a583e075721c9e414faf449d3abf29608700efaa306a98ed67f58d6b2ab99352",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "id/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "f3da8fba9a1446b922cf56c11c658f868c610ea71f67eef93e5e2d8eccac3eea",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "id/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "47383e8555a77fa6eedf0ea5c5c9fd6c0aa3f2d7664851495d8ca042b2089709",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "id/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "b00e158b7b3b5103dec597f51430a0b501ece72f0e6daf0087cabb30ae09d88c",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "id/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "db970a87d4a006aff12125d3038f18759edb82667918f236723d1a68aaf2691d",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "id/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "e59e5a793fb36c340acc77c515f11526b27664bb3651f61c4a33d0b61ae5ed4c",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "id/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "2f5abebba46865a6c392dccc326753778fb933c6e10eac8eb721316eb4e4de0d",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "id/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "6116a8aa807122c23d8a34b454bf35a8f00f3c11aa3ab0209544c0b3f5816508",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "id/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "00ffdef322150f449ca5beb0db41a771c71652666e5131a53b7ebd26cb4e71c9",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "id/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "04584e61166919d30f77d41171f3ffd2b27491c8406be902cb6f6c9faaa2adb3",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "id/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "a6a414b089081c28640674e94c78cdb4a42f488b642c802298796af8b77b4a68",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "id/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "e4a80a7c9c694377fd2b7687c7a18c4a9226a0a7e69f698de91606bf896274c5",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "id/guides/church": {
+      "status": "needs-review",
+      "contentHash": "e6e712a295723103676623304e3b6f7151b413c2d823c76019a8f0a25a7b01ef",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "id/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "ebf40880236daeaaff90fbd43f8770853ea160f12667b79b6e23481fd8daecd1",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "id/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "e2583fc50b4a059b3f5ceefb9ce7bbe643038278b8883775c1dcec53a180c815",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "id/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "6b15f61cffb1688739dd6cb655d771f7d71c66438f1034235d9a9ee6f1c9a9fc",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "id/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "bb4aa2f9cc779fbad433b962f4a855b631d0d660cdf7ea234cc64e33f576786a",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "tl/ui": {
+      "status": "needs-review",
+      "contentHash": "4f265a2bb87c821f6fb6c9a49680d5ccfe53cf82d99ee5d9a42bbfb95c12b64e",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "tl/landing": {
+      "status": "needs-review",
+      "contentHash": "8132097c3daabe0c794245b04f75d83d625c1200aa728d92193dc272003c7fc9",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "tl/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "c49ec8f822fc8d8b7637d64c05befd9d7c378b3ed0ce37b59fa547fe7170bd6b",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "tl/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "c419f3ad6f14257aaf2685ab6eb88050fd7258369f268056fe3f1ad87840552a",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "tl/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "06d98ff995e312ea9de122b7e7188f18aaea25626c61bc2c64647cc53e7b13d4",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "tl/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "7798e1b874939cec5cda613d251e9639cce1bb4d54a6f7505a417423da9d571f",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "tl/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "3d3dc94b2a404166d33b638c2399268e661aff8b7980ce3b044edcf2893ba958",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "tl/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "7bbc10f88c4a5793b7f22345dd52e86ae3f42ecac1bf4c21a86f2d2a1538e753",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "tl/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "128e72f22a9b0e22a2284a6213bf5112e4b6e6c8e21a236e8899d14f36cfbc33",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "tl/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "6165786ccecedeca3b814da69fec73e73e783d4e0e878058cf6ce735f3345a68",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "tl/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "9cf86627ceacfa57fa70cfbf0313f3c6713258afcb5a4a700b2cefbe46e758b4",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "tl/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "fd722788240d2d8c6cd754e557bc21169d6baebd0116790910037d192212b43c",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "tl/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "b34904851164d216ed718ad0f2a7298ead2011a432725760d0dd36520409ff17",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "tl/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "afbb0e311705beb98bc12ba2568e774dc957e736e4dbb908bc33077f541e8f56",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "tl/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "tl/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "caf48d88e2b0b9242d4178129d1067260cf07c347a879cd75fb6ea575725ac71",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "tl/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "ff00255dcadb8be9d5e1bcb4270d060382740885c08bc4ff5e8ec67ca8b0eebd",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "tl/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "42d63dcd761ccfec461d9ccd0eebca2643e2b39ae6337cbc4112620eaf3509d2",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "tl/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "e4a18444056f0f6010c56e43e910700f7a729634e2dc59c4947511e6e9190901",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "tl/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "59ad8140c677a1e7eb9a87d3d805f7303a0cb554cc4f655020cc7c32616da1da",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "tl/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "d3272d7a23510bed031f648e4c8953e355ce4395b0b886467bee97b875d4d901",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "tl/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "dfaee44e89d13d1b6f29091cd499e52025ab01284c0463734ebb47beed21bc9a",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "tl/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "4fcc4dc274e3d30c4e3af6547637ac59882078636d58c119816538356c4c2a06",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "tl/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "a5b0a393fdb84e7597c1f523913ed7fa4b60bad9933d7ddb07e3d85f1199e08e",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "tl/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "98c31002f225ec8516f130ce02acafd1c4d63ef733cbc3b019bfd9de1254c0da",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "tl/theology/love": {
+      "status": "needs-review",
+      "contentHash": "69a8c568a2ef1d63e43872892afb9c86b0dfd47f6985647135a162682b0e2dc4",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "tl/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "7d0f932838ac4e72ca07c011976bf88c913db852ee7a7676241d418c8904c578",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "tl/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "d58dcf5daf08b2c3c84cf98763f2705a9fe2a947fc92daba9854b38af52d8233",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "tl/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "185d0b3ae837727496fb79dee9b532b3f9c77234295199c607374b15678e913e",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "tl/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "c5bb99d4cad430474dd0c20c984cc570c0efb4e81bf6894063a0fde6337134ec",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "tl/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "e7e6cbd32a750e977941bb70d150cf4f677ccf415f5c83964f8932fdec66e7e4",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "tl/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "7819563f0fed6af58b75d2ad2e14cccdeae8b945486c87b2765aa3250accbfa9",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "tl/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "85206aabb6d6f73dda5a060727faa4ed72bc7aeac5bf4076c3e26f38a208181f",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "tl/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "5ecdfd55af54b7033efb271ac49db55a127c55fccade6a3d35202d8a98cc4f73",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "tl/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "c663a63c5e59712a58b4b9b1c67360eae740c70c0a5a103186f509e21c4ff519",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "tl/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "545e6d45a6fc059d475f3a6913630068b51095888d418e936943c0439f8617dd",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "tl/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "215e58bb9b55c5d7bcc6b235f8ca66d795cb040569d1f45d1d86462c500c4a34",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "tl/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "67be9a4b6f31d089d3a1ab5a2feea5a58624ed762fcce668b62b50068bbf6410",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "tl/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "01d35dc36528329fa10d37325637f74e4922e74670eb8d287884eabe2865e488",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "tl/guides/church": {
+      "status": "needs-review",
+      "contentHash": "a9241a9465aaaaf625b6c3547c0e71f5d1df23a9f58a25ce3311a764da0718da",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "tl/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "7b607094df175d70fa6dcba7d2bb530bc3330706f817272c3e0b8d04889a309d",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "tl/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "e5722f568e929b629ac40e626973851f8fc7ddd754a3221f856fd542a11da0f7",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "tl/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "3f20f35e78f8b53b1d30db67503e9e1863f8dbcba76f84362c02daae5bdaaf25",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "tl/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "7db262cc98c666eacf2315e8c6616ff0ef0c3daff71d9b01a61b2e279d116543",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "ko/ui": {
+      "status": "needs-review",
+      "contentHash": "e0e20a941f785c22932ad33d3cd2f10b821b86ac57701cb04f9b8356b779a88a",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "ko/landing": {
+      "status": "needs-review",
+      "contentHash": "bf20d568fb59b3052aa193e66b74d6d27cddf0310f27e2b1645cecbdb4ddf93d",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "ko/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "43dbc138d3e68520736b1c673b08553f61c437d68b425a4aa53a17533754b188",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "ko/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "b01024d879b683dfe7d6d8a89fdaf980ceaf9a787a4d0e9655b0a7abe2cf0b1b",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "ko/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "68402ca97768702846963009be63221786c8ec5f8f1b56601dafc6a8e407f801",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "ko/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "dd505b0014de98ccb7bb212422e51b675d4cb676996a21f896ccb479532f24bc",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "ko/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "2dec650681ad4951f14e7be7db1b6826d24a20ab0b03b0fb3fce71fcfc383657",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "ko/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "df866d8463eb00f39fcb9275c1d5bc3323e3ab917d1ba3ba62aae55ba61b5a6c",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "ko/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "940a3ed7a7ced80b4ff9b284dff8f9d5d7c5b0abe2575e66352ab41dd9f353c0",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "ko/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "c1c7c9ec4cba8b3e6261323f831369817096dd1abb24a3119eb57c3a7f3538cf",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "ko/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "a817bd574650bdd552ad48aed27ee045c5127e453709c84b1cc71a411465e357",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "ko/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "806d923773758a7c0d9f6af9379e7a3db9107192f6371cf7a9abffbf61c28786",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "ko/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "f0bbbe52ac81f980c93667d7a31f2bbf2e200f1154fc6f9a7d33695f565619ef",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "ko/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "cc1f1db19779f79b4036acd8f44d65cb37599642dfe1a561d72e12bc112f7559",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "ko/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ko/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "ab105386b39a20d8eb909ec68c5984df5cb870176b44aa6fc36dcf623a7d49de",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "ko/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "f0408fd5fbc460c8f3d91b7d9b2314ec6d67cd9842694a899a3b9393f089d116",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "ko/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "6bc545798a4380f6e28b3457e9c5a5ebb78508872117fddb04ee0f3b9fdbeadb",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "ko/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "96ce94aee8430a2fcc41cb8423e1374c6ae7c242648c63eb68089d47a4fd7bf8",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "ko/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "f1d11e1f12f3e9a1dc11fbd73a9520f857231da9666f778109c039a01584e3f6",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "ko/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "0f892eae81177d083a20084468f262470c445cf6494979c0ea5070718443faea",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "ko/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "dda877fecaf984e35c252f5a88ac2c606eb22728025f50039c5a988886345669",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "ko/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "b4d6f594cd7a61bfb91da31c1b14c141739eb67a8c57eee6280ad8fc0f9128c2",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "ko/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "38f3908d4462ad380385ee3b8b8d678ea5fa36ba0e910c65dcc274896a8e70a6",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "ko/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "2f9784b39421928228fb47b8c6c52c4ae2c63bc9c83099f5236ef850bc424069",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "ko/theology/love": {
+      "status": "needs-review",
+      "contentHash": "c776d41c678ff30ed24410656aec16731e88721bfcd222203c4bd2f0053c19b4",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "ko/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "d7d1e75e00258a50c722169e000abb205d2c76f24e10dfd10d1e9fa01bcec29b",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "ko/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "6fef2efbde0e0ab10f79a02a9bed061040db47aacd7a19fb3c82a2787c566c87",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "ko/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "ce2bd21b08f2be1412c70c375b548c00801249d23dd3cbaf394e3c038ff871db",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "ko/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "a44599ff547cf1cc256b7f4875ad06d9f2b46d1717a88f52226935553fa59fa3",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "ko/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "4ce342e259b5fab3cfa4c1a45b37019b9119970e882b804dd85b218eaede3cc4",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "ko/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "3bd0e60dc1dfe60640e93802bc8208ab475d1904fbb97c173df1de31afa3319e",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "ko/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "c900f6664b3ae93ecee18b2192d58b85210fa5236f09ccceaf5730645f7e9398",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "ko/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "05f891f450354251b92d306b2e77a33427dfee0582cf162de3e9038cb0039b71",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "ko/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "327263af7badd2b532d80a560010d08f1f33f9eb53526c8809948820ab3c623c",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "ko/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "d72cb86a300c1f17276d4249c87fbd0d5f759420c23bb41bbea7b2d9bcaaa47e",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "ko/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "0eccdfb8ea2fcddd3178b1fff9b7b789260c2283720da17f6e4c4fccf462464c",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "ko/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "ff5bb1bc98875436fcfccc45d0abfc2466d1940fb3fea03a6d09c013cedcfe44",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "ko/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "9afae9de8674ee40e80a887969e0b89a4b6db707cdf357b9012ce570481f6603",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "ko/guides/church": {
+      "status": "needs-review",
+      "contentHash": "ec076edb96af2cbbc00e0c8d6a4276ef9d4615b9134150d9a43eaaff6ad06cde",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "ko/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "f7ff15f6da2edad5fd33f3f4b953fc7bd40037fead440e5475fb5c9b66b166a8",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "ko/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "4db23fed168cb46c4eb76cf778d4ef9e210cddb429a31b187ee10c71e917e20b",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "ko/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "08870acdb5c8ca3ff5a5694b222bfd91eb7ff632297337b70662fc409ccb6280",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "ko/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "576ad2509aedd4b2801b3f226c1e7fc71d9729dc892dab128fcc2998e5bd6b55",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "ru/ui": {
+      "status": "needs-review",
+      "contentHash": "9e8d2b308c346239dea392978d04e0e1c1925ab3b9c455ec87bd64498be5e1ad",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "ru/landing": {
+      "status": "needs-review",
+      "contentHash": "595480e91a6c6b1df65a045e64ebbcd454fe0d1d8cfc387ae876080e4bf60c61",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "ru/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "a40066811e1ec1e1b17f77cf6c703b3240dca70e28c32d1a6308a066038133fb",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "ru/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "e02fecfad7afb8247a0be8d21c27398b8cc46c2fd292402f0dc3c046bf6f7a1d",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "ru/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "e1ee7840bc901e25e604e94cc090dc773b394301ce96c3a53c4e0e6a42b577d1",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "ru/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "499be5524e394f4976f6c480a838490ebc03066348df9cfffaf736364023d4ed",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "ru/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "91d5f30be072ca6f7ac55741232fe46c1ac3b6c75a6ed5eeb251362c9f2d30c4",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "ru/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "3a4717ef8e46443ca51107adcdd397207b79155f90aa757b1cab83309a6f7af6",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "ru/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "9e1a9e3b98450c8e3bff2d4eebbae82975720ff37b2b6e9afad299661423c7d6",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "ru/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "d2c6db1f60d9e18d9fef9bf9148adc76cf0e32c82f8cb13258896a9ba9cf2c66",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "ru/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "e908d4354317849889149f3acde887665baa9ccec54d4caf130042596db14b8a",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "ru/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "357088031587e165dc3f7d69a8855cc5672317a710441a7ee38a91b1812bdb83",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "ru/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "538f9af149158f19a98f7b2b4edff7fce99df3622795db94905be8bbbf764153",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "ru/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "e765a47c87ff4a0176b7afa49a4d6ba4ecccbcdbae9bdde493da6d5933be6ff9",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "ru/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ru/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "a2d6e8bbaaadcf2bd16bdf249f85b538b687ffe341238d3de26749ddf3dcd21f",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "ru/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "81bf38658a656cab5b801ca41b435051d37c4ca18d22656f600dfeda452a3219",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "ru/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "69c22b0b65fae9d80ea9a6ed9bf0d247a1fae4544d6feca14ebff062f23afc2d",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "ru/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "4af3d6cbc28547f52ea5595ca5db7e46cdea083a8d54501a367ad85367b9599c",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "ru/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "866478afe446a9aabc188ead2fda9fde4e23ccece017a8cef5e4b4b4a55aea18",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "ru/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "4041b7a897774d587f61027d7ea477b45adc8499967e8873081e2b6fdeec7570",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "ru/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "d5450580c6ba77ff0321e40a61f004acfc18de20cb9d083ac4bad618afdf4bf0",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "ru/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "22735b24c6ad89b08bcf4ff179c55d3e0a96589762d88f2abc41a82b80ea32bd",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "ru/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "3d9c855020df9098198343174da6b98ac45bce6ca22cfd334acdb152a3aaf1eb",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "ru/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "015dead92497a9bad8f8383ad4c1d09535e947a305f38c0e3d506235b0ad2c88",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "ru/theology/love": {
+      "status": "needs-review",
+      "contentHash": "6be888d3fce0dd12646bbb71b8775fce873277f2690992796c186be2072b9530",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "ru/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "c819b59b58ad7fca9a19c051a1ea39605714f0933ca2d3446ec3cff0576651d4",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "ru/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "04100791dc16201a8e7e1755b72e7eba6c3521c70cabf253adc6528a0e2e2fb2",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "ru/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "3bd22f54dd0f66d77337375d10180f140aa7553dec81b632f0bb23c2868b920b",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "ru/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "febf668bcaf35b66134d03de39ce7e15c149f76b6d214fda65bd0a189a726426",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "ru/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "584f99351a666dca17636ae2913d427ce5d5b8c8a28b7857a82be845894d7adf",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "ru/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "7dad6998fbd074e0e778038013f0e8dd80d2b2bfedc0578b070b39e17ebe22c9",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "ru/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "206623608de4901ec0e87430dc2a16b2647f9ac80653801d9bf976e757501c3d",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "ru/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "69f1b1e4f35dc1fb337dce7c9ac3f74540a7738d43988cabaa67e5f5c9f2b051",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "ru/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "6b9316e5206f1330b2d5874dd9cbae45958546694922c0564cc5e81cc2912457",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "ru/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "cd5f47775b361f199f87974cdcd80e437431371bbd7b1cd90b12b0bcd5405b27",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "ru/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "12c7e98b15ce7509895d57fab6814dff06e38947e0cab31d1848419a7e188bea",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "ru/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "21757bb8fcc6e5bba79e6d66db7a211c14a9fda09d3d72398f3e2a27e710721c",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "ru/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "22d6752b2486a4df3dcc111bec18635d16319620365bbd66247cca47685cc70f",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "ru/guides/church": {
+      "status": "needs-review",
+      "contentHash": "9a061cc0ee781f4c07d27fb95dd300583644049c346491b2e35aa3c610f5b661",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "ru/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "b04394bb646e46240c40007c180ea43a278c6b8e236f1d495746e27eaf6d88da",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "ru/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "735be6744516aae369cb67215499bdd6636e67d2318d1da4871b1e90d589b243",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "ru/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "74ad0ef0d8c4f91727103d28c3174215560a6d4d9e710b7a3d624b02f524df78",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "ru/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "46f2d527c44e06f232a71f886876f54b894c8546cdfe079c990e6c999c5e214c",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "ar/ui": {
+      "status": "needs-review",
+      "contentHash": "e6a8023843f9af6bab6ac4770ec5f567ed9ae2ff879eb044698f3fb38f704b1b",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "ar/landing": {
+      "status": "needs-review",
+      "contentHash": "8e97315d2828ca335d4aad8464e77d80e61379e7e013f2a3ba93d9b91d0c0ade",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "ar/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "63ddf6731ee37add6ff22765e1d52b7a8133d1f1b994e564fbbd9e530d5568f6",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "ar/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "e4d67a149d477ec51d6b122a04973188dfeae1634e180108f2f54516291e026d",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "ar/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "549300b704ebad3e2d3b28d7c7f45b9b9bb81eec44a96ed319ed52250c38e172",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "ar/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "3acc8469464f435531bfd28c38212d310ff7e1f07327dbb7065eac386df96cb2",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "ar/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "59fffa9195995fa4dcc5ee50d8d61093e59e8eba0fd796cb8bee55137c79f682",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "ar/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "0d15b60eb273a98c6b7aa112173c8b9b1ba9791dbd43fa153b6bed3ecf417ccc",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "ar/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "480a948c534a3b22b75d02195b685912678dcb49cbcbf20878c64e0e8ae813ba",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "ar/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "2e83afc120cc2aa28dab312ac577b7814eb63c21bde87ac8886ab7636dbe89d0",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "ar/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "eb94f8f16dca89b81f512973c9640938ace53e1aa5421ce80158df2060581dde",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "ar/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "9947f10e048181819d849b50279be0a3b24de8bd5c141426feaa904acddfbae5",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "ar/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "9f79339fff9306bdf5c84fa8569e2a400b3255cb1501a6923e823e53fc617784",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "ar/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "ee3ddf4572649e06c39276accf0395f4bb5bef723211ccc45cbe0a4ad8aded21",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "ar/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ar/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "99b97f9f8145ade9ae9912c581c0c75052691ce01a8fde6acb822bcb14203c3b",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "ar/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "dd2c6a1676125f1c579a1fe7eb232ce59478fb8d34dd59651b06d610b2a72816",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "ar/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "a47dfd4c9bde0cf94d1b5b18b97dd6819b7257ad2e0c25ca9c673c4e5e32cb02",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "ar/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "0f37e4a857fc1f8292e58410bca0e592ce2a729de21060be386c45e7e0787417",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "ar/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "5311a16e6774a4eccbdb0089056843cb35736fbe70c2006353237b1b0d9a9ce1",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "ar/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "5194cfcda5e778c50169f6490f33aefc1f9ebfb90d9a47c31ecf78d9dd120cd4",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "ar/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "7fdf42fa2f539a2d3c3bbf87962ea39a30ddfb8f857e140e41a36f322e8e4a13",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "ar/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "1accb8765a68f40d6f856a3656be3739ba7bc90ce335d37472a3ae1824512d8d",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "ar/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "9e149b1dd42f91841c9f7cde63c5b55bde30cc171564fe0f0db5051c4e0c3c15",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "ar/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "187f17c30ce030cbe147a733f66434ba691ce1e4da91c82a314718fc37178344",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "ar/theology/love": {
+      "status": "needs-review",
+      "contentHash": "2249bd174af4f4357bf9fe388489f29a49e134be9736861fa344ce4bb039ff4e",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "ar/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "d94e609a6e684d16aa16da8aa6d2d2b508ddedb4f64ecf93ca51a90809cbeff2",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "ar/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "9c437237707303d7bebda15153526265ffeee3a90c398f0869bfcba965ddea01",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "ar/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "da2d8ecaf933a7e8616a2ef2b521a8cfc3f8e949c6019bf9e92d1ce7520af869",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "ar/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "8c9598ee660ba0f1234d67c7f810734bbdc0b77839d2bf92d865e1139b2ceac0",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "ar/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "580ef06d1da94d28ad20c25f753baa433bde119b0eaa2b9a09a1eb1651383456",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "ar/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "4ad910f7d0b2c406f0826f734c0d269f141cad58ae9b49b0d618b1e1c1c479a1",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "ar/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "3e911a2e91c5f8ec5522ec0c3345e0b16afb18d9cfb51d809159994d83cbf149",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "ar/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "10cf2b72168f592171086a7f1a694f2ad9a35be6a933a812592b16916764c805",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "ar/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "39670f1078e092931875318f3c6ec76ca47d084952a9a42ff1787c1c2a2ef8b5",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "ar/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "89dbffd855b4e53cc058ba02bd7283e185b0c8be9f07a0b10ea6c3e518818b2c",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "ar/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "7625ea532df4d2e1a7d645d01895d306618767f9df35fde099cd27d496394134",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "ar/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "f553eb17c6370bae077723fc3f082ad0474a8b321e5a3dd32dbdf9dc641d654c",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "ar/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "990dc7d7f411293a7cf99d66069c810ef34cec4ef755a9129c202ec779116155",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "ar/guides/church": {
+      "status": "needs-review",
+      "contentHash": "ad29089c68af733cc300500dd83a00b8c928a58ea879f67e615e889264a39fe2",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "ar/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "58f79737c9158e4dec60ebe7744ba88d3ae573638ee9319d356473ef373b9ccf",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "ar/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "d7808d1531e2033b89238dfea015523705260eba4fbb311d5fe7150d219b45d9",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "ar/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "b8fd86933e6cc6a2bce3f2b16235011ef71f1b6385ed4c558cd6d2f748d1abda",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "ar/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "5f0c79f87377a43d13dcfd45083b87eab3fd19b7a9217e509c4be4467cbd754e",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "fa/ui": {
+      "status": "needs-review",
+      "contentHash": "21d2c37676bc9eac98e7cfda7fee53586d46d7c6fce1802f24655200b968c31a",
+      "sourceHash": "e4a07387e731c4a9f6f87b5c4b9f773b03b54ce7bd9f7bf660940617a0cd92e6"
+    },
+    "fa/landing": {
+      "status": "needs-review",
+      "contentHash": "729327bf29a0190b2cc98c407ba729dd80d4b0b9efbe89b99f9895dd591a7954",
+      "sourceHash": "f4b2e11f2f14ec4a3ea0d112302f27c6d2dcc9da7768fbcceaeedc996a3b051f"
+    },
+    "fa/plans/fast3": {
+      "status": "needs-review",
+      "contentHash": "7b009d3eb1990ed1e75522905a4824838754cd5e492cab9467fbebf7fb24df8c",
+      "sourceHash": "dfb7bfa83aaab43ebb31759ec94804eef96c23d3da1fb772a635a66a9ac908cf"
+    },
+    "fa/plans/altar7": {
+      "status": "needs-review",
+      "contentHash": "e1c6dc3969164a829cf306c9eab52a6563ec1f237f2ebd8f49df9ea8b718b8f2",
+      "sourceHash": "eeefe0de700eec937550a4c0a61e7192a87d5e448a5862b65932b13efcf9d8fe"
+    },
+    "fa/plans/gratitude7": {
+      "status": "needs-review",
+      "contentHash": "8a9971569fb827570a7b6a40fce6d09fcc85813186451ad69cd9d7cb92c5c46d",
+      "sourceHash": "5f610742a91d9dc5f211b93af949e8a1e4cb22926433818456b3291304b5d62b"
+    },
+    "fa/plans/upperRoom10": {
+      "status": "needs-review",
+      "contentHash": "86aea0963100b8edbfc41477607668e914fe45d25e9aa8eab5fd6683979ed827",
+      "sourceHash": "1acc87ef3ac7272912a84ec1195947251b7f618d85447ec653f481ad618e769e"
+    },
+    "fa/plans/breakthrough21": {
+      "status": "needs-review",
+      "contentHash": "fe9d30a72b6df6d57abf7b0e1c1f9eeaa0b5a25be6fcd29c48a97e0799470b49",
+      "sourceHash": "875d6e185cbf887c21d07d0c0300c0a0debed9dac8d5df618ec905c3397c2b97"
+    },
+    "fa/plans/others30": {
+      "status": "needs-review",
+      "contentHash": "ed0ea9c75f1c48921cccb35456085c0fb84f39d19dd6e387e765787f68c1e077",
+      "sourceHash": "5bccdd8a10195ef1c713bf0b4944646c77e2e1acd77d6be185dbae617c9f485c"
+    },
+    "fa/plans/preparing21": {
+      "status": "needs-review",
+      "contentHash": "7e406258b87aab2062c48724e08fc99cec1f0aca00ad8fc9722a414ee9aebd4f",
+      "sourceHash": "48d5a18d5025878d269cd09c08c65d7a09fae00f4ef5f8e5dae0b01458b67885"
+    },
+    "fa/plans/discernment28": {
+      "status": "needs-review",
+      "contentHash": "8aa95e14c2a9f8c4bf389dabdd67b946bae2120286ef1a0789a43d71304b5335",
+      "sourceHash": "25a32277eca5d004411519cb67367355177054b4cd5b82b2b180ba0b7ce66aac"
+    },
+    "fa/plans/covenant21": {
+      "status": "needs-review",
+      "contentHash": "a0ab56e059d0713774cc78df4c261e1c2b69e6510470298a838ba96204671888",
+      "sourceHash": "e5738dc0d528a1d7c3eef1944ce3e8b59e93c6f55cb04bffb09d4b8104f91741"
+    },
+    "fa/plans/marriage30": {
+      "status": "needs-review",
+      "contentHash": "db8c71c8e380473fadb535d600c6880623e93c54f348eeaf167615e69d74ed77",
+      "sourceHash": "075ad4e6df1864e03eb334b0c577eaaa80923f3a76c63f63bd09d2f7ce28928e"
+    },
+    "fa/plans/freedom30": {
+      "status": "needs-review",
+      "contentHash": "17e9b697c79a92c406b3c8b9c775d0d91dcf9f48e748c7cea04bebde301f86d7",
+      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+    },
+    "fa/plans/david12": {
+      "status": "needs-review",
+      "contentHash": "a57014719eee6341306630a135404fce00a372bab5abf68b1c7c760da7b09bea",
+      "sourceHash": "f5b49684dd397b965ba878f0c5a86c83f0373a0b7b2b1e493c8f31fe5003ec85"
+    },
+    "fa/plans/wisdom42": {
+      "status": "needs-review",
+      "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
+      "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "fa/theology/why-pray": {
+      "status": "needs-review",
+      "contentHash": "1a5474d9780ae668b44ff97e1be653c50183a53687ad87b18ce35a3192dda996",
+      "sourceHash": "4454479ef57b0e497fecd24e04a7892d1f9e5c22ca0aa5a785843079e3eff5b4"
+    },
+    "fa/theology/jesus-taught": {
+      "status": "needs-review",
+      "contentHash": "f39151821592983be53a48fa627a3335d29e9954877a1c1ce6cdfdbe8d520ca8",
+      "sourceHash": "06b9a28c08e48467570faf39e0bd799a1e42bc3232f97ec28d556490b2b672fb"
+    },
+    "fa/theology/lords-prayer": {
+      "status": "needs-review",
+      "contentHash": "294c1327b557b92056067f249e52c4700e2a5a9c13708e0d627ef6eb58eba687",
+      "sourceHash": "e2942e3aed82795c039df77ec4ef3c143a042ad27342c915561867fc2b3af853"
+    },
+    "fa/theology/intercession": {
+      "status": "needs-review",
+      "contentHash": "dbb8d05934e80b886b400fc9b8547000db8a5de6d9558a7bba11116f7c6a1849",
+      "sourceHash": "28e794e73d7a7ca785ff530ee1810635a4f670aa65935de422c00416157e4287"
+    },
+    "fa/theology/confession": {
+      "status": "needs-review",
+      "contentHash": "ffb32180c7bf42d260f9d2bed6094f9a625963fcb35bb5187afb611aa338972c",
+      "sourceHash": "68abb1e6d65bb4efc65bf92ded95f8b0675a628d7e15fc22801becb7c909fe76"
+    },
+    "fa/theology/repentance": {
+      "status": "needs-review",
+      "contentHash": "547f7e2099093464201493a30668101d7c6f0441b8996c58e264da1e1800cbae",
+      "sourceHash": "2be6cf060e634ad65523c5b861fad67cc396447216b10ad0b529228056aff55a"
+    },
+    "fa/theology/thanksgiving": {
+      "status": "needs-review",
+      "contentHash": "43d16b16c84e70edc3a6c717fbe1e9dfb58e902168b487b6b97622ba2b077994",
+      "sourceHash": "2a1ac6ba05aa60ab83e5fea83fafc51866cf581642501e8bd3f66217022416c7"
+    },
+    "fa/theology/lament": {
+      "status": "needs-review",
+      "contentHash": "2a463a158fb697728abbeecbeabaedcbd9a8f5fe3c16abc96000419b39289875",
+      "sourceHash": "e1560f607c1481a1514b62db3df43fbd09040742c177172d1909699ef358d5da"
+    },
+    "fa/theology/faith": {
+      "status": "needs-review",
+      "contentHash": "21d7d23862760c0d6b66a08e1124054872893a4fdfd2dcf689dc421531bcf03c",
+      "sourceHash": "de6ce89bf3e0e7a8a33a9504221468e5e0a6d632ad958adbc93202ee94e14085"
+    },
+    "fa/theology/hope": {
+      "status": "needs-review",
+      "contentHash": "4f711db8d6d8d5263b42b05e5c4b1efde002daa3e2481c1b3c1e9f0c16f4920c",
+      "sourceHash": "30e5859394a6b109067cd71930cbbe0437b61b09035ba313df32f5fae6271c57"
+    },
+    "fa/theology/love": {
+      "status": "needs-review",
+      "contentHash": "37033b9d7c59b9391bc7133879900e89bb6d5e181b4a1967583eb2feb8eaec9a",
+      "sourceHash": "16b09784e42660153b9be33d14b7b7186bbd854149f2d2075c87e8179508d890"
+    },
+    "fa/theology/grace": {
+      "status": "needs-review",
+      "contentHash": "5e1f7c6b895c548e288826ddbafeacddabc75161c733a589cb117c3aa38cd11e",
+      "sourceHash": "aa46ca8a69d2a6f52d1afebb6c0a2c0b530bd5245c742db5a120d8d1262c9d1e"
+    },
+    "fa/theology/sanctification": {
+      "status": "needs-review",
+      "contentHash": "e50c82edb9c78b1bd5998cd0005a9e370106a855f583b3eb0ac58a101f6efa6c",
+      "sourceHash": "45a193b4dd48da4279c6785d790f8513be5a32ba63dc132076a4e286a240bb0f"
+    },
+    "fa/theology/holy-spirit-prayer": {
+      "status": "needs-review",
+      "contentHash": "659cac4e8f18c805b34131afafad966974e0ea44c0204abc742dc0b52a81f145",
+      "sourceHash": "27ceff33c463356c3d394842fea525de864acea5fa05363abe4ca9be2c3120c6"
+    },
+    "fa/theology/unanswered": {
+      "status": "needs-review",
+      "contentHash": "fbf2b6f47ece19a703b16738a2dd1f93c11d8983531bb25c99a1329a7a01517a",
+      "sourceHash": "7c166b69547555ddd66575c53f82f8f150126c7e9773cb9c5332f880a110115f"
+    },
+    "fa/theology/suffering-life": {
+      "status": "needs-review",
+      "contentHash": "bac9cf4aad78dcc6377e0d50dcdd03060e57b314b3560b9f8bd9e2a182701667",
+      "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "fa/guides/acts": {
+      "status": "needs-review",
+      "contentHash": "dd33e90ab30351e121af09af62f8888aba6a476eb6d23c388060ac2491ac6edb",
+      "sourceHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6"
+    },
+    "fa/guides/psalms": {
+      "status": "needs-review",
+      "contentHash": "ad2cb9f99a93e1775b4f52ecc4630671e0556e155c52150f6d471f8cf36ccf5d",
+      "sourceHash": "08193d02f57f67af6ff9154ecdd25808e6e9d90a6353b9f8879a794f45025e62"
+    },
+    "fa/guides/scripture": {
+      "status": "needs-review",
+      "contentHash": "647b3cc2f4dd762e2d077beabf7f131e949f8234c5a6b54fc62769d5e2d50715",
+      "sourceHash": "22b50a41130481b74f9d1c1b7d184a0788df842c7defb701d6bf331766486245"
+    },
+    "fa/guides/promises": {
+      "status": "needs-review",
+      "contentHash": "1974dbcfe8c19f67fe6daabfd7355455751237eef3f90b9d7e693b7560b526b9",
+      "sourceHash": "2c454bd20da993dd7def30df299e979197d73cfa552c4b210322819128d595ef"
+    },
+    "fa/guides/wisdom": {
+      "status": "needs-review",
+      "contentHash": "5e5e26c3e8d49e18aab44ede2f796014b035e0fb9b7157ff1ccd406b52201a9b",
+      "sourceHash": "b309a8714e013ebb442c1a2d600935d5245bbb0f12e07a2866c4320b54ca5e34"
+    },
+    "fa/guides/enemies": {
+      "status": "needs-review",
+      "contentHash": "b108de34fdeef3bd0da15c924d446fa658a22f0ad916dcb2442640a3a1efeafc",
+      "sourceHash": "16d7fbbb67235ef86cfa2f5f491dfce5341deb680ced6288858abac24b69e64c"
+    },
+    "fa/guides/authorities": {
+      "status": "needs-review",
+      "contentHash": "fd95e16fdd20cdf2d8f04ac3aac4458c44eeb6b59308e53d1bc61bcef8d98726",
+      "sourceHash": "ae157851245f86339e51aa9b0a1ac4a9537c03581057ee8eebb9bdcc2885abf2"
+    },
+    "fa/guides/missionaries": {
+      "status": "needs-review",
+      "contentHash": "fe4892938177a9cc4238c107702f35f26b6614ae165c561ca9a9cc8a9732462a",
+      "sourceHash": "22229b3640ac80a3c420557bfb954fd93ef64bf02b4e3906fe8c3450a8740240"
+    },
+    "fa/guides/church": {
+      "status": "needs-review",
+      "contentHash": "d04f9a9ee7951faefe065d57bd2d1932c66c3454777fa3dce7569b8c9790440d",
+      "sourceHash": "fb5bbcb5db09e01cf54590f9bbc6f01faa92dbe60947b8e9bde3692dd23be423"
+    },
+    "fa/guides/unbelievers": {
+      "status": "needs-review",
+      "contentHash": "6ff7035fd5b9b607efd70062b52a00039e326681123504e4c008691005de3667",
+      "sourceHash": "23e9b1a6310c0c5248dcf9e560ccf526d2cacb71626a63429eafdfe388ca3376"
+    },
+    "fa/guides/suffering": {
+      "status": "needs-review",
+      "contentHash": "e561819528b035257282c52c10ce7ea61f5f6c27c5524a2c48dcfb49c29c196b",
+      "sourceHash": "5e8f972a4e80ba1380e9d07bb2574ecac843035f90007dcaeb417e97c73f1a9a"
+    },
+    "fa/guides/temptation": {
+      "status": "needs-review",
+      "contentHash": "48767df7cf0e132875dd83e0d81e6ef820fbacebf19c99a7e3829da0d76ca90f",
+      "sourceHash": "439ac04b7b9c76a540a4356f60f31355ba9c9c20ea66fcfcabea9708a8f5e0b6"
+    },
+    "fa/gospel/hope-behind-prayer": {
+      "status": "needs-review",
+      "contentHash": "23bc5511adc60b4e91b8ca37ecfe1e61537fb368bc71be090613226db7bf192e",
+      "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    }
+  }
+}

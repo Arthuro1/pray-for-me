@@ -12,14 +12,14 @@ const guides = [
     emoji: '🙌',
     minutes: 8, // authored duration — shown as "About N min"
     theme: 'foundations',
-    title: { en: 'The ACTS pattern', fr: 'Le modèle ACTS' },
+    title: { en: 'The ACTS pattern', fr: 'Prier en quatre temps' },
     summary: {
       en: 'Adoration, Confession, Thanksgiving, Supplication — a simple shape for a full prayer.',
-      fr: 'Adoration, Confession, Action de grâce, Supplication — une trame simple pour une prière complète.',
+      fr: 'Adoration, confession, action de grâces, supplication — une trame simple pour une prière complète.',
     },
     intro: {
       en: 'ACTS is not a formula that earns God\'s ear; it is a help to keep prayer from collapsing into a list of wants. We begin where Scripture begins — with God Himself — before we bring our needs.',
-      fr: 'ACTS n\'est pas une formule qui force l\'oreille de Dieu ; c\'est une aide pour que la prière ne se réduise pas à une liste de demandes. Nous commençons là où l\'Écriture commence — par Dieu lui-même — avant d\'apporter nos besoins.',
+      fr: 'Ce modèle n’est pas une formule qui force l’oreille de Dieu ; c’est une aide pour que la prière ne se réduise pas à une liste de demandes. Nous commençons là où l’Écriture commence — par Dieu lui-même — avant d’apporter nos besoins.',
     },
     steps: [
       {
@@ -49,7 +49,7 @@ const guides = [
         passage: '1 John 1:8-9',
       },
       {
-        title: { en: 'Thanksgiving', fr: 'Action de grâce' },
+        title: { en: 'Thanksgiving', fr: 'Action de grâces' },
         prompt: {
           en: 'Name specific mercies from today and this week. Gratitude steadies the heart before it asks for anything.',
           fr: 'Nomme des grâces précises d\'aujourd\'hui et de cette semaine. La reconnaissance affermit le cœur avant même de demander quoi que ce soit.',
@@ -131,7 +131,7 @@ const guides = [
     },
     intro: {
       en: 'Praying Scripture keeps us asking for the things God has promised to give. Paul\'s prayers in his letters are a wonderful place to learn — pray them for yourself and for others.',
-      fr: 'Prier la Parole nous garde à demander ce que Dieu a promis de donner. Les prières de Paul dans ses lettres sont un excellent point de départ — prie-les pour toi et pour les autres.',
+      fr: 'Prier la Parole nous aide à demander ce que Dieu a promis de donner. Les prières de Paul dans ses lettres sont un excellent point de départ — prie-les pour toi et pour les autres.',
     },
     steps: [
       {
@@ -207,8 +207,8 @@ const guides = [
     theme: 'requests',
     title: { en: 'Praying for wisdom', fr: 'Prier pour la sagesse' },
     summary: {
-      en: 'When you don\'t know what to do, God invites you to ask Him for wisdom — generously given.',
-      fr: 'Quand tu ne sais que faire, Dieu t\'invite à lui demander la sagesse — donnée généreusement.',
+      en: 'When you don’t know what to do, God invites you to ask Him for wisdom, which He gives generously.',
+      fr: 'Quand tu ne sais que faire, Dieu t’invite à lui demander la sagesse ; il la donne généreusement.',
     },
     intro: {
       en: 'Wisdom is not merely cleverness; it is the skill of living God\'s way in God\'s world. James says God gives it freely to those who ask in faith.',
@@ -232,7 +232,7 @@ const guides = [
         passage: 'Proverbs 9:10',
       },
       {
-        title: { en: 'Trust, don\'t lean', fr: 'Confie-toi, ne t\'appuie pas' },
+        title: { en: 'Trust Him, not your own understanding', fr: 'Confie-toi en lui, pas en ta propre sagesse' },
         prompt: {
           en: 'Surrender your own understanding. Ask God to direct your paths as you walk forward.',
           fr: 'Renonce à ta propre intelligence. Demande à Dieu d\'aplanir tes sentiers tandis que tu avances.',
@@ -506,7 +506,7 @@ const guides = [
     },
     steps: [
       {
-        title: { en: 'Admit it to God', fr: 'Avoue-le à Dieu' },
+        title: { en: 'Admit it to God', fr: 'Avoue-la à Dieu' },
         prompt: {
           en: 'Name the temptation honestly before Him. Bringing it into the light loosens its grip.',
           fr: 'Nomme honnêtement la tentation devant lui. L\'amener à la lumière en desserre l\'emprise.',

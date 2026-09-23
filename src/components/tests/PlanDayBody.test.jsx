@@ -27,10 +27,7 @@ import { availableResourceLanguages } from '../../lib/resources';
 import { t, tp, LANGUAGES } from '../../i18n';
 
 const lang = 'fr'; // the always-loaded fallback locale
-const afterPrayerLabel = () => {
-  const requested = t(lang, 'planAfterPrayer');
-  return requested === 'planAfterPrayer' ? t(lang, 'moreOptionsLabel') : requested;
-};
+const afterPrayerLabel = () => t(lang, 'planAfterPrayer');
 afterEach(() => { cleanup(); trackMock.mockClear(); localStorage.clear(); });
 
 const day = {

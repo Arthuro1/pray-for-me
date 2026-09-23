@@ -74,7 +74,7 @@ describe('SettingsTab — grouped sections', () => {
     renderSettings();
     const privacy = document.getElementById('privacy');
     expect(privacy).toBeTruthy();
-    for (const key of ['privacyCenterTitle', 'vaultTitle', 'notifPreviewTitle', 'lowDataTitle', 'exportData', 'dangerZone', 'deleteAccount']) {
+    for (const key of ['privacyCenterTitle', 'privacyRowVault', 'notifPreviewTitle', 'lowDataTitle', 'exportData', 'dangerZone', 'deleteAccount']) {
       expect(privacy.textContent, `privacy section should contain ${key}`).toContain(t(lang, key));
     }
   });
@@ -109,7 +109,7 @@ describe('SettingsTab — grouped sections', () => {
     renderSettings();
     expect(screen.getByRole('button', { name: t(lang, 'themeLight') })).toBeTruthy();
     expect(screen.getByRole('button', { name: t(lang, 'themeDark') })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: t(lang, 'themeNight') })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Nuit' })).toBeNull();
   });
 
   it('personal prayers stay private by default: the preview choice defaults to generic', () => {

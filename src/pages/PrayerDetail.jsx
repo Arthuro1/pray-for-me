@@ -28,6 +28,7 @@ import { pick, localizeRef } from '../content/teaching';
 import { usePlanDay } from '../hooks/usePlanDay';
 import { usePlanDayPager } from '../hooks/usePlanDayPager';
 import PlanDayBody from '../components/PlanDayBody';
+import ReportWordingLink from '../components/ReportWordingLink';
 import PlanDayDeck from '../components/plan/PlanDayDeck';
 import DisclosureRow from '../components/shared/DisclosureRow';
 import PlanDayTrace from '../components/plan/PlanDayTrace';
@@ -1146,6 +1147,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {showScheduleEdit && <div id="detail-plan-schedule">{schedulePlanner}</div>}
                 </div>
               )}
+              <ReportWordingLink lang={lang} surface={`plans/${plan.id}`} />
             </div>
           </PlanDayDeck>
         )}

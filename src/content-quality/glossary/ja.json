@@ -1,0 +1,132 @@
+{
+  "locale": "ja",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "祈りの課題",
+      "allowed": [],
+      "avoid": [],
+      "example": "祈りの課題",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "聞き届けられた祈り",
+      "allowed": [],
+      "avoid": [],
+      "example": "聞き届けられた祈り",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "証し",
+      "allowed": [],
+      "avoid": [],
+      "example": "証し",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "とりなしの祈り",
+      "allowed": [],
+      "avoid": [],
+      "example": "とりなしの祈り",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "霊的な識別",
+      "allowed": [],
+      "avoid": [],
+      "example": "霊的な識別",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "契約",
+      "allowed": [],
+      "avoid": [],
+      "example": "契約",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "悔い改め",
+      "allowed": [],
+      "avoid": [],
+      "example": "悔い改め",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "救い",
+      "allowed": [],
+      "avoid": [],
+      "example": "救い",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "恵み",
+      "allowed": [],
+      "avoid": [],
+      "example": "恵み",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "聖霊",
+      "allowed": [],
+      "avoid": [],
+      "example": "聖霊",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "聖書",
+      "allowed": [],
+      "avoid": [],
+      "example": "聖書",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "断食",
+      "allowed": [],
+      "avoid": [],
+      "example": "断食",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "真実",
+      "allowed": [],
+      "avoid": [],
+      "example": "真実",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "祈りの記録",
+      "allowed": [
+        "日記"
+      ],
+      "avoid": [],
+      "example": "この祈りの課題を祈りの記録に残しましょう。",
+      "note": "タブ名は「記録」。"
+    },
+    "update": {
+      "preferred": "近況",
+      "allowed": [
+        "更新"
+      ],
+      "avoid": [],
+      "example": "状況が変わったら近況を加えましょう。",
+      "note": "祈りの課題についての知らせ。"
+    },
+    "thanksgiving": {
+      "preferred": "感謝",
+      "allowed": [],
+      "avoid": [],
+      "example": "最後に感謝をささげましょう。",
+      "note": "神に感謝をささげる祈りの段階。"
+    },
+    "renunciation": {
+      "preferred": "断ち切り",
+      "allowed": [
+        "放棄"
+      ],
+      "avoid": [],
+      "example": "断ち切りの祈りで、離れるものを言い表します。",
+      "note": "解放のミニストリーの用語。ネイティブ確認が必要。"
+    }
+  }
+}

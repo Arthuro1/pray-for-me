@@ -1,0 +1,130 @@
+{
+  "locale": "en",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "prayer request",
+      "allowed": [],
+      "avoid": [],
+      "example": "Bring your prayer request to God.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "answeredPrayer": {
+      "preferred": "answered prayer",
+      "allowed": [],
+      "avoid": [],
+      "example": "Remember an answered prayer.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "testimony": {
+      "preferred": "testimony",
+      "allowed": [],
+      "avoid": [],
+      "example": "Share your testimony.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "intercession": {
+      "preferred": "intercession",
+      "allowed": [],
+      "avoid": [],
+      "example": "Make time for intercession.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "discernment": {
+      "preferred": "discernment",
+      "allowed": [],
+      "avoid": [],
+      "example": "Ask God for discernment.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "covenant": {
+      "preferred": "covenant",
+      "allowed": [],
+      "avoid": [],
+      "example": "God keeps His covenant.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "repentance": {
+      "preferred": "repentance",
+      "allowed": [],
+      "avoid": [],
+      "example": "Turn to God in repentance.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "salvation": {
+      "preferred": "salvation",
+      "allowed": [],
+      "avoid": [],
+      "example": "Give thanks for salvation in Christ.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "grace": {
+      "preferred": "grace",
+      "allowed": [],
+      "avoid": [],
+      "example": "Receive God’s grace.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "holySpirit": {
+      "preferred": "the Holy Spirit",
+      "allowed": [],
+      "avoid": [],
+      "example": "Ask the Holy Spirit to guide you.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "scripture": {
+      "preferred": "Scripture",
+      "allowed": [],
+      "avoid": [],
+      "example": "Read the passage in Scripture.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "fasting": {
+      "preferred": "fasting",
+      "allowed": [],
+      "avoid": [],
+      "example": "Set aside time for fasting and prayer.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "faithfulness": {
+      "preferred": "faithfulness",
+      "allowed": [],
+      "avoid": [],
+      "example": "Remember God’s faithfulness.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "prayerJournal": {
+      "preferred": "prayer journal",
+      "allowed": [],
+      "avoid": [],
+      "example": "Keep this request in your prayer journal.",
+      "note": "The nav tab may say “Journal”; sentences say “prayer journal” when the context is not already clear."
+    },
+    "update": {
+      "preferred": "update",
+      "allowed": [
+        "news"
+      ],
+      "avoid": [],
+      "example": "Add an update when something changes.",
+      "note": "News on a prayer request. App software updates are a different, technical word."
+    },
+    "thanksgiving": {
+      "preferred": "thanksgiving",
+      "allowed": [
+        "gratitude"
+      ],
+      "avoid": [],
+      "example": "End with thanksgiving for what God has done.",
+      "note": "The prayer stage of thanking God; “gratitude” for the feeling."
+    },
+    "renunciation": {
+      "preferred": "renunciation",
+      "allowed": [],
+      "avoid": [],
+      "example": "A prayer of renunciation names what you turn away from.",
+      "note": "Deliverance vocabulary: a spoken turning away in Christ’s name, not self-denial in general."
+    }
+  }
+}

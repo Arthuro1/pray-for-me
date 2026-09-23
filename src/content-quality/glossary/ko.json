@@ -1,0 +1,132 @@
+{
+  "locale": "ko",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "기도 제목",
+      "allowed": [],
+      "avoid": [],
+      "example": "기도 제목",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "응답받은 기도",
+      "allowed": [],
+      "avoid": [],
+      "example": "응답받은 기도",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "간증",
+      "allowed": [],
+      "avoid": [],
+      "example": "간증",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "중보기도",
+      "allowed": [],
+      "avoid": [],
+      "example": "중보기도",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "영적 분별",
+      "allowed": [],
+      "avoid": [],
+      "example": "영적 분별",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "언약",
+      "allowed": [],
+      "avoid": [],
+      "example": "언약",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "회개",
+      "allowed": [],
+      "avoid": [],
+      "example": "회개",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "구원",
+      "allowed": [],
+      "avoid": [],
+      "example": "구원",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "은혜",
+      "allowed": [],
+      "avoid": [],
+      "example": "은혜",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "성령",
+      "allowed": [],
+      "avoid": [],
+      "example": "성령",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "성경",
+      "allowed": [],
+      "avoid": [],
+      "example": "성경",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "금식",
+      "allowed": [],
+      "avoid": [],
+      "example": "금식",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "신실하심",
+      "allowed": [],
+      "avoid": [],
+      "example": "신실하심",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "기도 기록",
+      "allowed": [
+        "기도 일기"
+      ],
+      "avoid": [],
+      "example": "이 기도 제목을 기도 기록에 남기세요.",
+      "note": "탭 이름은 “기록”."
+    },
+    "update": {
+      "preferred": "소식",
+      "allowed": [
+        "업데이트"
+      ],
+      "avoid": [],
+      "example": "상황이 바뀌면 소식을 더하세요.",
+      "note": "기도 제목에 관한 새 소식."
+    },
+    "thanksgiving": {
+      "preferred": "감사",
+      "allowed": [],
+      "avoid": [],
+      "example": "감사로 기도를 마치세요.",
+      "note": "하나님께 감사드리는 기도 단계."
+    },
+    "renunciation": {
+      "preferred": "끊음",
+      "allowed": [
+        "끊어냄"
+      ],
+      "avoid": [],
+      "example": "끊음의 기도에서 떠날 것을 입으로 고백합니다.",
+      "note": "축사·해방 사역 용어. 원어민 확인 필요."
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "locale": "ar",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "طلب صلاة",
+      "allowed": [],
+      "avoid": [],
+      "example": "طلب صلاة",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "صلاة مستجابة",
+      "allowed": [],
+      "avoid": [],
+      "example": "صلاة مستجابة",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "شهادة",
+      "allowed": [],
+      "avoid": [],
+      "example": "شهادة",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "صلاة لأجل الآخرين",
+      "allowed": [],
+      "avoid": [],
+      "example": "صلاة لأجل الآخرين",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "تمييز روحي",
+      "allowed": [],
+      "avoid": [],
+      "example": "تمييز روحي",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "عهد",
+      "allowed": [],
+      "avoid": [],
+      "example": "عهد",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "توبة",
+      "allowed": [],
+      "avoid": [],
+      "example": "توبة",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "خلاص",
+      "allowed": [],
+      "avoid": [],
+      "example": "خلاص",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "نعمة",
+      "allowed": [],
+      "avoid": [],
+      "example": "نعمة",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "الروح القدس",
+      "allowed": [],
+      "avoid": [],
+      "example": "الروح القدس",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "الكتاب المقدس",
+      "allowed": [],
+      "avoid": [],
+      "example": "الكتاب المقدس",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "صوم",
+      "allowed": [],
+      "avoid": [],
+      "example": "صوم",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "أمانة",
+      "allowed": [],
+      "avoid": [],
+      "example": "أمانة",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "سجل الصلاة",
+      "allowed": [
+        "دفتر الصلاة"
+      ],
+      "avoid": [],
+      "example": "احفظ هذه الطلبة في سجل الصلاة.",
+      "note": "قد يكون اسم التبويب «السجل»."
+    },
+    "update": {
+      "preferred": "مستجدات",
+      "allowed": [
+        "تحديث"
+      ],
+      "avoid": [],
+      "example": "أضف المستجدات عندما يتغير شيء.",
+      "note": "أخبار عن طلبة صلاة."
+    },
+    "thanksgiving": {
+      "preferred": "الشكر",
+      "allowed": [
+        "تقديم الشكر"
+      ],
+      "avoid": [],
+      "example": "اختم صلاتك بالشكر.",
+      "note": "مرحلة شكر الله في الصلاة."
+    },
+    "renunciation": {
+      "preferred": "التبرؤ",
+      "allowed": [
+        "الرفض"
+      ],
+      "avoid": [],
+      "example": "في صلاة التبرؤ تسمّي ما تتركه.",
+      "note": "مفردات خدمة التحرير. تحتاج مراجعة من متحدث أصلي."
+    }
+  }
+}

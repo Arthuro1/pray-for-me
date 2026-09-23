@@ -2,108 +2,103 @@
 export default {
   "content": {
     "signIn": "Se connecter",
-    "badge": "Votre compagnon de prière",
-    "h1a": "N'oubliez jamais une prière.",
-    "h1b": "Tracez chaque réponse.",
-    "subtitle": "Un journal de prière gratuit et privé : notez une demande en quelques secondes, voyez quoi prier aujourd'hui et gardez chaque réponse.",
-    "cta": "Commencez votre journal de prière privé",
+    "badge": "Journal de prière",
     "howItWorks": "Voir comment ça marche",
-    "verse": "\"La prière fervante du juste est d'une grande efficacité.\" — Jacques 5:16",
-    "featuresTitle": "Tout ce dont votre vie de prière a besoin",
-    "featuresSub": "Conçu pour les chrétiens qui veulent prier avec intention et suivre la fidélité de Dieu.",
+    "verse": "« La prière fervente du juste a une grande efficace. » — Jacques 5:16",
+    "featuresTitle": "Votre vie de prière, au même endroit",
+    "featuresSub": "Vos sujets, vos temps de prière et les prières exaucées, réunis.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
-        "title": "Priez ensemble",
-        "desc": "Rejoignez des groupes et des amis, partagez des demandes (ou restez anonyme), priez les uns pour les autres et célébrez les prières exaucées ensemble."
+        "title": "Prier ensemble",
+        "desc": "Partagez vos sujets avec des amis ou un groupe et priez les uns pour les autres."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
         "title": "Journal de prière",
-        "desc": "Notez chaque demande de prière — pour vous ou pour d'autres. Ajoutez des détails, suivez les évolutions, n'oubliez jamais qui vous avez promis de prier."
+        "desc": "Notez des sujets pour vous et pour d'autres, et ajoutez des nouvelles au fil du temps."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Planifiez vos prières",
-        "desc": "Programmez chaque prière — ponctuelle ou récurrente (quotidienne, jours choisis, tous les N jours, mensuelle, annuelle), voire « jusqu'à la réponse ». Calendrier mensuel, rattrapage en douceur, chaînes de prière en groupe et export .ics vers Google/Apple/Outlook."
+        "title": "Planifier la prière",
+        "desc": "Choisissez quand prier pour chaque sujet : une fois, chaque jour ou certains jours."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Galerie de prières exaucées",
-        "desc": "Marquez les prières comme exaucées et enregistrez votre témoignage. Regardez la fidélité de Dieu s'accumuler au fil du temps."
+        "title": "Galerie des prières exaucées",
+        "desc": "Toutes vos prières exaucées et vos témoignages dans une galerie."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Grandir dans la prière",
-        "desc": "Une bibliothèque enracinée dans l'Écriture : 12 guides de prière à prier (les Psaumes, les promesses de Dieu, pour vos ennemis…) et de courtes lectures sur la prière et la vie chrétienne."
+        "desc": "Des plans de prière guidés, des guides et de courtes lectures enracinés dans la Parole de Dieu."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
         "title": "Rappels de prière",
-        "desc": "Une notification quotidienne avec vos sujets du jour, et de doux rappels de suivi pour prendre des nouvelles de ceux pour qui vous priez — même app fermée."
+        "desc": "Un rappel quotidien pour prier, et un autre pour prendre des nouvelles de ceux pour qui vous priez."
       },
       {
         "icon": "Smartphone",
         "color": "#4f46e5",
-        "title": "Installez-la partout",
-        "desc": "Une vraie app sur Android, iOS et ordinateur. Fonctionne hors ligne — ajoutez et modifiez vos prières sans connexion, tout se synchronise à votre retour."
+        "title": "Installer partout",
+        "desc": "Installez-la sur votre téléphone ou votre ordinateur. Elle fonctionne aussi hors connexion."
       },
       {
         "icon": "Globe",
         "color": "#db2777",
         "title": "16 langues",
-        "desc": "Interface complète en français, anglais, allemand, portugais, chinois, espagnol, hindi, japonais, swahili, amharique, indonésien, tagalog, coréen, russe, arabe et persan. Changez à tout moment."
+        "desc": "Changez de langue à tout moment."
       },
       {
         "icon": "Lock",
         "color": "#6d28d9",
-        "title": "Privé & transparent",
-        "desc": "Vos prières sont sécurisées — seul vous pouvez les voir. Vos prières privées sont chiffrées de bout en bout par défaut, dès votre connexion — sans configuration ni phrase secrète à retenir. Ajoutez une phrase secrète et un code de récupération facultatifs pour ouvrir un nouvel appareil. Les fonctionnalités IA n'envoient que le titre de la prière — nous sommes transparents sur ce qui est partagé."
+        "title": "Privé par défaut",
+        "desc": "Les prières privées sont chiffrées de bout en bout. Vous décidez de ce que vous partagez."
       }
     ],
     "stepsTitle": "Comment ça marche",
-    "stepsSub": "De votre première prière à un témoignage grandissant de la fidélité de Dieu — en trois étapes simples.",
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Notez une prière",
-        "desc": "Écrivez ce qui est sur votre cœur."
+        "title": "Notez un sujet",
+        "desc": "Quelques mots suffisent. Vous pourrez ajouter des détails plus tard."
       },
       {
         "emoji": "🙏",
-        "title": "Priez ce qui compte aujourd'hui",
-        "desc": "Ouvrez l'app et commencez d'un seul geste."
+        "title": "Priez chaque jour",
+        "desc": "Ouvrez l'application et touchez Prier maintenant."
       },
       {
         "emoji": "🎉",
-        "title": "Souvenez-vous de la fidélité de Dieu",
-        "desc": "Consignez les réponses et témoignages au fil du temps."
+        "title": "Notez l'exaucement",
+        "desc": "Quand Dieu exauce votre prière, marquez-la et notez ce qu'Il a fait."
       }
     ],
     "calloutBadge": "Suggestions de versets",
-    "calloutTitle": "Trouvez le bon verset pour chaque prière",
-    "calloutDesc": "Vous ne savez pas comment prier pour une situation ? Utilisez le chercheur de versets et obtenez 3 à 4 angles de prière, chacun avec des passages bibliques pertinents et leur texte complet — touchez un verset pour le lire directement dans l'application.",
-    "calloutDisclaimer": "Les suggestions présentent des passages bibliques — vous discernez ce qui parle à votre situation. L'Esprit conduit ; cet outil vous aide à chercher les Écritures.",
+    "calloutTitle": "Prier avec la Parole",
+    "calloutDesc": "Trouvez des passages bibliques liés à votre prière et lisez-les dans l'application.",
+    "calloutDisclaimer": "Ces suggestions ne sont qu'un point de départ. Lisez chaque passage dans son contexte.",
     "calloutPreviewLabel": "Suggestions de versets",
     "faqTitle": "Questions",
     "faqs": [
       {
-        "q": "Mes données sont-elles privées ?",
-        "a": "Oui. Chaque prière est stockée dans votre propre compte avec Row Level Security — personne d'autre ne peut voir vos données, pas même nous."
+        "q": "Mes prières sont-elles privées ?",
+        "a": "Oui. Les prières privées sont chiffrées de bout en bout par défaut. Pour les ouvrir sur un nouvel appareil, ajoutez une phrase secrète et un code de récupération."
       },
       {
         "q": "Ai-je besoin d'un compte ?",
-        "a": "Non — vous pouvez prier une première prière sans compte, et elle reste sur votre appareil. Un compte gratuit ne sert qu'à enregistrer vos prières et à les synchroniser entre vos appareils ; inscrivez-vous avec Google en un tap ou par email/mot de passe."
+        "a": "Non. Votre première prière ne demande aucun compte et reste sur cet appareil. Un compte gratuit vous permet de garder vos prières et de les retrouver sur tous vos appareils."
       },
       {
-        "q": "Comment fonctionne le chercheur de versets ?",
-        "a": "Vous entrez le sujet de votre prière et l'app suggère des versets bibliques pertinents avec leur texte complet. Vous choisissez ce qui résonne avec votre situation."
+        "q": "Comment fonctionnent les suggestions de versets ?",
+        "a": "Quand vous demandez des suggestions, le titre et les détails de la prière sont envoyés à un service d'IA, qui propose des passages bibliques. Vous lisez chaque passage et discernez ce qui s'applique."
       },
       {
         "q": "Quelles langues sont supportées ?",
@@ -111,27 +106,25 @@ export default {
       },
       {
         "q": "Est-ce gratuit ?",
-        "a": "Oui, entièrement gratuit. L'application est open source."
+        "a": "Oui. Elle est gratuite et son code est open source."
       }
     ],
-    "ctaTitle": "Commencez votre journal de prière aujourd'hui",
-    "ctaSub": "Aucun compte requis pour commencer — votre prière reste sur cet appareil jusqu'à ce que vous choisissiez de l'enregistrer. Gratuit, privé et disponible en 16 langues.",
-    "ctaBtn": "Commencez votre journal de prière privé",
-    "ctaVerse": "\"Priez sans cesse.\" — 1 Thessaloniciens 5:17",
-    "footerBuilt": "Built with ❤️ and faith"
+    "ctaTitle": "Qu'avez-vous sur le cœur aujourd'hui ?",
+    "ctaVerse": "« Priez sans cesse. » — 1 Thessaloniciens 5:17",
+    "footerBuilt": "Fait avec foi · Open source · Licence MIT"
   },
   "benefits": [
     {
-      "title": "Retenez chaque prière",
-      "desc": "Gardez qui et quoi vous priez en un seul endroit privé — sans jamais rien oublier."
+      "title": "Rien n'est oublié",
+      "desc": "Gardez en mémoire tous ceux pour qui vous avez promis de prier."
     },
     {
       "title": "Sachez quoi prier aujourd'hui",
-      "desc": "Ouvrez l'app : les prières du jour vous attendent — commencez d'un seul geste."
+      "desc": "Chaque jour ramène les sujets que vous avez prévu de porter dans la prière."
     },
     {
-      "title": "Consignez chaque réponse",
-      "desc": "Marquez les prières exaucées et voyez grandir une galerie de la fidélité de Dieu."
+      "title": "Souvenez-vous de la fidélité de Dieu",
+      "desc": "Gardez vos prières exaucées et vos témoignages comme un mémorial de ce que Dieu a fait."
     }
   ],
   "explore": {
@@ -142,14 +135,12 @@ export default {
   "languageMenuLabel": "Langue",
   "translationInProgress": "Traduction en cours",
   "heroReassurance": "Aucun compte requis. Rien ne quitte cet appareil, sauf si vous choisissez de l'enregistrer.",
-  "calloutBegin": "Commencez une prière",
   "hero": {
-    "title": "Apportez ce que vous avez sur le cœur.",
+    "title": "Confiez à Dieu ce que vous avez sur le cœur.",
     "promise": "Priez fidèlement. Souvenez-vous de la fidélité de Dieu.",
-    "subtitle": "Un journal de prière privé qui fait revenir les bonnes demandes au bon moment."
+    "subtitle": "Notez vos sujets de prière. Chacun revient les jours où vous choisissez de prier pour lui."
   },
   "samplePrayerTitle": "La paix pour notre famille",
-  "privacyFaq": "Oui. Les prières privées sont chiffrées de bout en bout par défaut. Vous pouvez ajouter une phrase secrète et un code de récupération à usage unique pour ouvrir un nouvel appareil.",
   "scripturePreviewPoints": [
     "La paix qui surpasse tout entendement",
     "Faire confiance au temps de Dieu"

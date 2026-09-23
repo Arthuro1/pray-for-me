@@ -1,7 +1,7 @@
 // Supabase Edge Function: send-daily-reminder
 // Invoked every minute by its own pg_cron job. Finds subscriptions whose local
 // time has reached their reminder_time and sends a localized, once-per-day
-// "you have N prayer subjects today" Web Push. Independent of, and runs
+// "prayers for today: N" Web Push. Independent of, and runs
 // alongside, send-follow-up-reminder (split so each reminder type has its
 // own cron schedule and can be deployed/toggled on its own).
 //

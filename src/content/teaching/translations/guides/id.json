@@ -6,19 +6,23 @@
     "steps": [
       {
         "title": "Penyembahan",
-        "prompt": "Pujilah Allah karena siapa Dia, bukan hanya karena apa yang Dia berikan. Bacalah mazmur itu perlahan dan kembalikan kata-kata-Nya kepada-Nya."
+        "prompt": "Pujilah Allah karena siapa Dia, bukan hanya karena apa yang Dia berikan. Bacalah mazmur itu perlahan dan kembalikan kata-kata-Nya kepada-Nya.",
+        "why": "Memulai dengan siapa Allah itu mengangkat doa melampaui kekhawatiran kita dan mengingatkan kepada siapa kita berbicara. Doa-doa dalam Alkitab hampir selalu dimulai di sini."
       },
       {
         "title": "Pengakuan",
-        "prompt": "Akuilah dosamu dengan jujur di hadapan Allah. Ia setia dan adil untuk mengampuni — pengakuan adalah pulang ke rumah, bukan mengupayakan kasih."
+        "prompt": "Akuilah dosamu dengan jujur di hadapan Allah. Ia setia dan adil untuk mengampuni — pengakuan adalah pulang ke rumah, bukan mengupayakan kasih.",
+        "why": "Kejujuran tentang dosa membuka jalan bagi semua yang berikutnya — kita meminta dengan bebas karena kita datang sebagai orang yang diampuni, bukan bersembunyi."
       },
       {
         "title": "Ucapan syukur",
-        "prompt": "Sebutkanlah belas kasihan yang nyata dari hari ini dan minggu ini. Rasa syukur meneguhkan hati sebelum ia meminta apa pun."
+        "prompt": "Sebutkanlah belas kasihan yang nyata dari hari ini dan minggu ini. Rasa syukur meneguhkan hati sebelum ia meminta apa pun.",
+        "why": "Mengingat apa yang telah Allah lakukan membangun iman untuk apa yang akan kita minta. Ucapan syukur mengubah permohonan menjadi kepercayaan."
       },
       {
         "title": "Permohonan",
-        "prompt": "Kini bawalah permohonanmu — bagi dirimu dan bagi orang lain — dengan keyakinan, karena siapa Dia. Berdoalah melalui beban-beban hatimu."
+        "prompt": "Kini bawalah permohonanmu — bagi dirimu dan bagi orang lain — dengan keyakinan, karena siapa Dia. Berdoalah melalui beban-beban hatimu.",
+        "why": "Permohonan datang terakhir bukan karena kurang penting, melainkan karena hati yang berlabuh dalam pujian, kejujuran, dan ucapan syukur meminta dengan lebih bebas."
       }
     ]
   },
@@ -29,7 +33,8 @@
     "steps": [
       {
         "title": "Baca seluruhnya",
-        "prompt": "Bacalah mazmur itu sekali, perlahan, hanya mendengarkan. Perhatikan apa yang dikatakan penulisnya kepada Allah dan tentang Allah."
+        "prompt": "Bacalah mazmur itu sekali, perlahan, hanya mendengarkan. Perhatikan apa yang dikatakan penulisnya kepada Allah dan tentang Allah.",
+        "why": "Mendengar sebelum berbicara membiarkan Allah menentukan nada doa. Mazmur memberi kita kata-kata yang tidak akan kita temukan sendiri."
       },
       {
         "title": "Doakan kembali",
@@ -81,7 +86,7 @@
   },
   "wisdom": {
     "title": "Berdoa memohon hikmat",
-    "summary": "Ketika kau tidak tahu harus berbuat apa, Allah mengundangmu untuk meminta hikmat kepada-Nya — diberikan dengan murah hati.",
+    "summary": "Ketika Anda tidak tahu harus berbuat apa, Allah mengundang Anda untuk meminta hikmat kepada-Nya, dan Ia memberikannya dengan murah hati.",
     "intro": "Hikmat bukan sekadar kepintaran; ia adalah kecakapan menjalani jalan Allah di dunia Allah. Yakobus berkata bahwa Allah memberikannya dengan limpah kepada yang meminta dengan iman.",
     "steps": [
       {
@@ -93,7 +98,7 @@
         "prompt": "Hikmat dimulai dengan hormat kepada Allah. Mintalah agar Ia membuatmu menginginkan kehendak-Nya lebih daripada kehendakmu sendiri."
       },
       {
-        "title": "Percaya, jangan bersandar",
+        "title": "Percayalah kepada-Nya, bukan pada pengertianmu sendiri",
         "prompt": "Serahkan pengertianmu sendiri. Mintalah Allah meluruskan jalan-jalanmu saat kau melangkah maju."
       }
     ]

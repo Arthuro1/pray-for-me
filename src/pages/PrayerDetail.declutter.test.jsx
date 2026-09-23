@@ -92,7 +92,7 @@ describe('PrayerDetail — leads with prayer', () => {
       schedule: { type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-01-01' },
     }));
     const hero = container.querySelector('.constellation-detail__hero');
-    expect(hero.textContent).not.toContain(t(lang, 'restUnderSky'));
+    expect(hero.textContent).not.toContain('Reposez-vous sous le ciel');
     expect(hero.querySelector('.constellation-detail__meta').textContent).toBe(timeAgo('2026-07-01T00:00:00Z', lang));
     expect(hero.querySelector('.constellation-detail__pray')).toBeTruthy();
   });

@@ -35,7 +35,7 @@ const gospelJourney = {
   sections: [
     {
       id: 'come-honestly',
-      heading: { en: 'You can come honestly', fr: 'Tu peux venir honnêtement' },
+      heading: { en: 'You can come as you are', fr: 'Tu peux venir tel que tu es' },
       body: {
         en: 'You do not need perfect words, impressive prayers, or a religious background to speak honestly to God. Christians believe God already sees our fears, our questions, our suffering, our guilt, and our deepest needs — and still invites us to come to Him just as we are. Prayer is not a reward for those who have it all together; it is a door opened to the weary. (This does not mean every request will be answered the way we hope — but it does mean we are truly heard.)',
         fr: 'Tu n\'as pas besoin de mots parfaits, de prières impressionnantes ou d\'un passé religieux pour parler honnêtement à Dieu. Les chrétiens croient que Dieu voit déjà nos peurs, nos questions, notre souffrance, notre culpabilité et nos besoins les plus profonds — et qu\'il nous invite pourtant à venir à lui tels que nous sommes. La prière n\'est pas une récompense pour ceux qui ont tout réglé ; c\'est une porte ouverte à ceux qui sont fatigués. (Cela ne veut pas dire que chaque demande recevra la réponse espérée — mais que nous sommes vraiment entendus.)',

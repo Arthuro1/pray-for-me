@@ -50,7 +50,7 @@ describe('CommunityTab — empty state consolidation', () => {
     // (with its second Join button) is gone.
     expect(screen.getAllByText(t(lang, 'joinGroupCta'))).toHaveLength(1);
     expect(screen.queryByText(t(lang, 'myGroups'))).toBeNull();
-    expect(screen.queryByText(t(lang, 'noGroups'))).toBeNull();
+    expect(screen.queryByText("Aucun groupe pour l'instant")).toBeNull();
     // Create group and Add friend are present, secondary and quiet.
     expect(screen.getAllByText(t(lang, 'createGroup'))).toHaveLength(1);
     expect(screen.getAllByText(t(lang, 'addFriend'))).toHaveLength(1);

@@ -286,10 +286,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     explore,
     beginLabel,
     heroReassurance,
-    calloutBegin,
     hero,
     samplePrayerTitle,
-    privacyFaq,
     scripturePreviewPoints,
     scriptureReferences,
     stepLabel,
@@ -547,7 +545,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <section id="how-it-works" className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24">
         <div className="constellation-landing__section-heading text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
-          <p className="text-sm" style={{ color: T.textFaint }}>{c.stepsSub}</p>
         </div>
         <div className="border-block" style={{ borderColor: T.border }}>
           {c.steps.map(({ title, desc }, i) => {
@@ -583,7 +580,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.76)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
             <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.52)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
             <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}>
-              {calloutBegin}
+              {beginLabel}
             </button>
           </div>
           <div className="w-full md:w-64 rounded-2xl p-4 shrink-0" style={{ background: T.previewBg, border: `0.5px solid ${T.border}` }}>
@@ -608,8 +605,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <h2 className="text-3xl font-bold mb-3">{c.faqTitle}</h2>
         </div>
         <div className="space-y-2">
-          {c.faqs.map((faq, i) => (
-            <FAQ key={faq.q} {...faq} a={i === 0 ? privacyFaq : faq.a} T={T} />
+          {c.faqs.map((faq) => (
+            <FAQ key={faq.q} {...faq} T={T} />
           ))}
         </div>
       </section>
@@ -618,10 +615,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <section className="constellation-landing__final relative px-6 py-20 text-center overflow-hidden">
         <div className="relative max-w-xl mx-auto">
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
-          <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-8">{c.ctaTitle}</h2>
           <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
-            {c.ctaBtn}
+            {beginLabel}
           </button>
           <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
         </div>

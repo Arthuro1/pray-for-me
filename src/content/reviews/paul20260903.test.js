@@ -7,8 +7,10 @@ import { resolveResources } from '../../lib/resources';
 import { startGuidedPlan } from '../../lib/startGuidedPlan';
 import {
   REVIEWED_PLAN_IDS, REVIEWED_LOCALES, PLAN_APPROVALS, PAUL_PLAN_SIGNOFF,
-  PAUL_RESOURCE_SIGNOFF, APPROVED_RESOURCE_IDS, CONTENT_ONLY_RESOURCE_IDS,
+  PAUL_RESOURCE_SIGNOFF, APPROVED_RESOURCE_IDS, CONTENT_ONLY_RESOURCE_IDS, PAUL_REREVIEW_PENDING,
 } from './paul20260903';
+import { DISCERNMENT_REREVIEW_PENDING } from './paulDiscernment20260903';
+import { WISDOM_REREVIEW_PENDING } from './paulWisdom20260908';
 
 afterEach(() => vi.unstubAllEnvs());
 
@@ -30,6 +32,19 @@ describe('Paul’s explicit 2026-09-03 approval', () => {
     // Later curricula keep their own review state; this dated approval only
     // attests to the plans explicitly named in the record.
     expect(PLANS.filter((plan) => REVIEWED_PLAN_IDS.includes(plan.id)).every(isPlanReviewed)).toBe(true);
+  });
+
+  it('keeps every signed plan live beside its open re-review note, without touching the sign-off', () => {
+    const notes = { ...PAUL_REREVIEW_PENDING, discernment28: DISCERNMENT_REREVIEW_PENDING, wisdom42: WISDOM_REREVIEW_PENDING };
+    for (const [id, note] of Object.entries(notes)) {
+      const plan = getPlan(id);
+      expect(plan.review.rereviewPending, id).toBe(note);
+      expect(note.since).toBe('2026-09-23');
+      expect(note.changed.length).toBeGreaterThan(10);
+      expect(plan.review.theology.reviewer).toBe('Paul');
+      expect(plan.review.theology.reviewedAt).not.toBe(note.since);
+      expect(canUsePlan(plan, { preview: false }), id).toBe(true);
+    }
   });
 
   it('records the three optional role approvals without auto-enabling unfinished overlays', () => {

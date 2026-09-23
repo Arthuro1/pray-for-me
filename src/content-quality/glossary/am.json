@@ -1,0 +1,132 @@
+{
+  "locale": "am",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "የጸሎት ርዕስ",
+      "allowed": [],
+      "avoid": [],
+      "example": "የጸሎት ርዕስ",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "የተመለሰ ጸሎት",
+      "allowed": [],
+      "avoid": [],
+      "example": "የተመለሰ ጸሎት",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "ምስክርነት",
+      "allowed": [],
+      "avoid": [],
+      "example": "ምስክርነት",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "ምልጃ",
+      "allowed": [],
+      "avoid": [],
+      "example": "ምልጃ",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "መንፈሳዊ መለየት",
+      "allowed": [],
+      "avoid": [],
+      "example": "መንፈሳዊ መለየት",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "ቃል ኪዳን",
+      "allowed": [],
+      "avoid": [],
+      "example": "ቃል ኪዳን",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "ንስሐ",
+      "allowed": [],
+      "avoid": [],
+      "example": "ንስሐ",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "ድነት",
+      "allowed": [],
+      "avoid": [],
+      "example": "ድነት",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "ጸጋ",
+      "allowed": [],
+      "avoid": [],
+      "example": "ጸጋ",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "መንፈስ ቅዱስ",
+      "allowed": [],
+      "avoid": [],
+      "example": "መንፈስ ቅዱስ",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "ቅዱሳት መጻሕፍት",
+      "allowed": [],
+      "avoid": [],
+      "example": "ቅዱሳት መጻሕፍት",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "ጾም",
+      "allowed": [],
+      "avoid": [],
+      "example": "ጾም",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "ታማኝነት",
+      "allowed": [],
+      "avoid": [],
+      "example": "ታማኝነት",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "የጸሎት ማስታወሻ",
+      "allowed": [
+        "መዝገብ"
+      ],
+      "avoid": [],
+      "example": "ይህን የጸሎት ርዕስ በጸሎት ማስታወሻህ ውስጥ አስቀምጥ።",
+      "note": "የትሩ ስም “መዝገብ” ሊሆን ይችላል።"
+    },
+    "update": {
+      "preferred": "አዲስ መረጃ",
+      "allowed": [
+        "ዝማኔ"
+      ],
+      "avoid": [],
+      "example": "አንድ ነገር ሲለወጥ አዲስ መረጃ ጨምር።",
+      "note": "ስለ ጸሎት ርዕስ የሚመጣ ዜና።"
+    },
+    "thanksgiving": {
+      "preferred": "ምስጋና",
+      "allowed": [],
+      "avoid": [],
+      "example": "ጸሎትህን በምስጋና ጨርስ።",
+      "note": "እግዚአብሔርን የማመስገን የጸሎት ክፍል።"
+    },
+    "renunciation": {
+      "preferred": "መተው",
+      "allowed": [
+        "መካድ"
+      ],
+      "avoid": [],
+      "example": "በመተው ጸሎት የምትተወውን ትጠራለህ።",
+      "note": "የነጻነት አገልግሎት ቃል። የአፍ መፍቻ ተናጋሪ ግምገማ ያስፈልጋል።"
+    }
+  }
+}

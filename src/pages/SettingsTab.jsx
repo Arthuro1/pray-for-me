@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
@@ -12,6 +12,9 @@ import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
 import { track, EVENTS } from '../lib/analytics';
 import FeedbackModal from '../components/FeedbackModal';
+import { canReviewWording } from '../lib/wordingReports';
+const WordingReportModal = lazy(() => import('../components/WordingReportModal'));
+const WordingReviewModal = lazy(() => import('../components/WordingReviewModal'));
 import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
@@ -172,6 +175,7 @@ export default function SettingsTab() {
   const { user, signOut, deleteAccount } = useAuthStore();
   const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);
+  const [wordingMode, setWordingMode] = useState(null);
   const [showDonate, setShowDonate] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
@@ -796,6 +800,10 @@ export default function SettingsTab() {
 
         {/* ── Support & feedback ── */}
         <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
+          {user?.id && !user.is_anonymous && <div className="rounded-2xl p-4 mb-3 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <button className="wording-action" onClick={() => setWordingMode('report')}>{t(lang, 'wordingReport')}</button>
+            {canReviewWording(user) && <button className="wording-action" onClick={() => setWordingMode('review')}>{t(lang, 'wordingReview')}</button>}
+          </div>}
           {/* Feedback */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-1">
@@ -840,6 +848,9 @@ export default function SettingsTab() {
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
+      {wordingMode && <Suspense fallback={<p role="status">{t(lang, 'wordingLoading')}</p>}>
+        {wordingMode === 'report' ? <WordingReportModal key={lang} lang={lang} onClose={() => setWordingMode(null)} /> : <WordingReviewModal lang={lang} onClose={() => setWordingMode(null)} />}
+      </Suspense>}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
       {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
       {vaultMode && (

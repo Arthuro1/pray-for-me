@@ -38,8 +38,8 @@ describe('LandingPage — nothing waits for a dictionary', () => {
     localStorage.setItem('pfm_language', 'en');
     renderLanding();
     // Synchronously — no findBy, no await.
-    expect(screen.getByText('Begin with a prayer')).toBeTruthy();
-    expect(screen.getByText('Bring what is on your heart.')).toBeTruthy();
+    expect(screen.getAllByText('Begin with a prayer').length).toBeGreaterThan(0);
+    expect(screen.getByText('Bring what is on your heart to God.')).toBeTruthy();
     expect(document.querySelector('[aria-busy="true"]')).toBeNull();
   });
 
@@ -47,7 +47,7 @@ describe('LandingPage — nothing waits for a dictionary', () => {
     localStorage.setItem('pfm_language', 'fr');
     renderLanding();
     // The French chunk has not resolved, yet the page is fully usable.
-    expect(screen.getByText('Begin with a prayer')).toBeTruthy();
+    expect(screen.getAllByText('Begin with a prayer').length).toBeGreaterThan(0);
     // …and it is labelled as the English it actually is, so a screen reader is
     // never asked to pronounce English words as French.
     expect(document.documentElement.lang).toBe('en');
@@ -61,7 +61,7 @@ describe('LandingPage — nothing waits for a dictionary', () => {
     renderLanding();
     await deliverFrench();
 
-    await waitFor(() => expect(screen.getByText(FR_COPY.beginLabel)).toBeTruthy());
+    await waitFor(() => expect(screen.getAllByText(FR_COPY.beginLabel).length).toBeGreaterThan(0));
     expect(document.documentElement.lang).toBe('fr');
   });
 });
@@ -70,19 +70,19 @@ describe('LandingPage — changing language keeps the page', () => {
   it('never blanks what is on screen while the new copy loads', async () => {
     localStorage.setItem('pfm_language', 'en');
     renderLanding();
-    const before = screen.getByText('Begin with a prayer');
+    const [before] = screen.getAllByText('Begin with a prayer');
 
     fireEvent.click(screen.getByRole('button', { name: /English/ }));
     fireEvent.click(await screen.findByRole('menuitemradio', { name: /Français/ }));
 
     // Still reading the English page — nothing was torn down.
     expect(before.isConnected).toBe(true);
-    expect(screen.getByText('Begin with a prayer')).toBeTruthy();
+    expect(screen.getAllByText('Begin with a prayer').length).toBeGreaterThan(0);
     // Only the language control reports that it is working.
     expect(screen.getByRole('button', { name: /Français/ }).getAttribute('aria-busy')).toBe('true');
 
     await deliverFrench();
-    await waitFor(() => expect(screen.getByText(FR_COPY.beginLabel)).toBeTruthy());
+    await waitFor(() => expect(screen.getAllByText(FR_COPY.beginLabel).length).toBeGreaterThan(0));
     expect(screen.getByRole('button', { name: /Français/ }).getAttribute('aria-busy')).toBeNull();
   });
 });

@@ -3389,3 +3389,21 @@ html.constellation-auth-root[data-theme="dark"] body {
     animation-iteration-count: 1 !important;
   }
 }
+/* Published-wording report and editorial review controls. */
+.wording-control {
+  display: block;
+  width: 100%;
+  margin-top: .35rem;
+  padding: .65rem;
+  border-radius: .6rem;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-1);
+}
+.wording-action {
+  border-radius: .6rem;
+  padding: .6rem .9rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.wording-action:disabled { opacity: .5; }

@@ -18,10 +18,10 @@ beforeEach(() => {
 describe('LandingPage — simplified hero', () => {
   it('surfaces the three core benefits up front', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    expect(await screen.findByText('Capture what is on your heart')).toBeTruthy();
+    expect(await screen.findByText('Nothing forgotten')).toBeTruthy();
     expect(screen.getAllByText('Know what to pray today').length).toBeGreaterThan(0);
     expect(screen.getAllByText("Remember God's faithfulness").length).toBeGreaterThan(0);
-    expect(screen.getByText('Bring what is on your heart.')).toBeTruthy();
+    expect(screen.getByText('Bring what is on your heart to God.')).toBeTruthy();
     expect(screen.getByText('Pray faithfully. Remember God’s faithfulness.')).toBeTruthy();
   });
 
@@ -38,7 +38,7 @@ describe('LandingPage — simplified hero', () => {
 
   it('shows no example statistics at all (strip removed entirely)', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    await screen.findByText('Begin with a prayer');
+    await screen.findAllByText('Begin with a prayer');
     // Neither the fake numbers nor their "illustrative data" caption render.
     expect(screen.queryByText(/illustrative data/i)).toBeNull();
     expect(screen.queryByText('Active prayers')).toBeNull();
@@ -47,18 +47,18 @@ describe('LandingPage — simplified hero', () => {
   it('puts the device-local reassurance before the primary action', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
     const reassurance = await screen.findByText('No account needed. Nothing leaves this device unless you choose to save it.');
-    const begin = screen.getByText('Begin with a prayer');
+    const [begin] = screen.getAllByText('Begin with a prayer');
 
     expect(reassurance.compareDocumentPosition(begin) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
 
 describe('LandingPage — simplified product story', () => {
-  it('explains the product in three steps (capture → pray today → remember)', async () => {
+  it('explains the product in three steps (write → pray each day → record the answer)', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    expect(await screen.findByText('Capture a prayer')).toBeTruthy();
-    expect(screen.getByText('Pray what matters today')).toBeTruthy();
-    expect(screen.getAllByText("Remember God's faithfulness").length).toBeGreaterThan(0);
+    expect(await screen.findByText('Write a request')).toBeTruthy();
+    expect(screen.getByText('Pray each day')).toBeTruthy();
+    expect(screen.getByText('Record the answer')).toBeTruthy();
     // The old category/weekly-plan setup steps are gone.
     expect(screen.queryByText('Set your plan')).toBeNull();
     expect(screen.queryByText(/assign a category/i)).toBeNull();
@@ -70,15 +70,15 @@ describe('LandingPage — simplified product story', () => {
     const onSignIn = vi.fn();
     render(<LandingPage onBeginPrayer={onBeginPrayer} onSignIn={onSignIn} />);
     // The primary hero CTA invites a prayer moment, not a signup.
-    const begin = await screen.findByText('Begin with a prayer');
+    const [begin] = await screen.findAllByText('Begin with a prayer');
     fireEvent.click(begin);
     expect(onBeginPrayer).toHaveBeenCalled();
     expect(onSignIn).not.toHaveBeenCalled();
     // Existing users keep a direct "Sign in" path.
     fireEvent.click(screen.getAllByText('Sign in')[0]);
     expect(onSignIn).toHaveBeenCalled();
-    // The outcome-focused journal CTA still appears further down the page.
-    expect(screen.getAllByText('Start your private prayer journal').length).toBeGreaterThan(0);
+    // One invitation, worded the same everywhere: hero, Scripture callout, closing section.
+    expect(screen.getAllByText('Begin with a prayer')).toHaveLength(3);
   });
 
   it('starts the guest prayer flow from the product-preview Pray now button', async () => {
@@ -108,7 +108,7 @@ describe('LandingPage legacy Night theme', () => {
     localStorage.setItem('pfm_theme', 'night');
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
 
-    await screen.findByText('Begin with a prayer');
+    await screen.findAllByText('Begin with a prayer');
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(localStorage.getItem('pfm_theme')).toBe('dark');
 
@@ -121,7 +121,7 @@ describe('LandingPage legacy Night theme', () => {
 describe('LandingPage language picker', () => {
   it('uses native names, explains partial translations, and closes on Escape', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    await screen.findByText('Begin with a prayer');
+    await screen.findAllByText('Begin with a prayer');
 
     const toggle = screen.getByRole('button', { name: 'Language: English' });
     fireEvent.click(toggle);

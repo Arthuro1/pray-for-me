@@ -29,8 +29,8 @@ export const DAYS = [
     ref: 'Psalm 73:25-26',
     related: ['Psalm 63:1-3'],
     reflection: {
-      en: "Begin where the psalmist ended up: with God Himself. Asaph had watched everyone else get what he wanted and had almost lost his footing over it — then he came into God's presence and found that the One he already had was the One he most needed. Before this journey asks God for anything about marriage, it asks for Him.",
-      fr: "Commence là où le psalmiste est arrivé : auprès de Dieu lui-même. Asaph avait vu tous les autres obtenir ce qu'il désirait et avait failli perdre pied — puis il est entré dans la présence de Dieu et a découvert que Celui qu'il avait déjà était Celui dont il avait le plus besoin. Avant de demander quoi que ce soit au sujet du mariage, ce parcours Le demande, Lui.",
+      en: "Asaph almost lost his footing as he envied others. In God's presence, he discovered that God Himself was his deepest need. Begin this journey by seeking God before asking Him about marriage.",
+      fr: "Asaph a failli perdre pied en enviant les autres. Dans la présence de Dieu, il a découvert que son besoin le plus profond était Dieu lui-même. Commence ce parcours en cherchant Dieu avant de Lui parler du mariage.",
     },
     prompts: [
       { en: 'Tell God honestly that you want Him more than anything He could give.', fr: "Dis honnêtement à Dieu que tu Le veux, Lui, plus que tout ce qu'Il pourrait donner." },
@@ -224,7 +224,7 @@ export const DAYS = [
   },
   {
     movement: 'becoming',
-    theme: { en: 'Wisdom and discernment', fr: 'Sagesse et discernement', es: 'Sabiduría y discernimiento', pt: 'Sabedoria e discernimento', de: 'Weisheit und Unterscheidungsvermögen', ru: 'Мудрость и рассудительность', zh: '智慧与分辨', ja: '知恵と識別', ko: '지혜와 분별', ar: 'الحكمة والتمييز', fa: 'حکمت و تشخیص', hi: 'बुद्धि और विवेक', id: 'Hikmat dan pertimbangan', sw: 'Hekima na busara', tl: 'Karunungan at pagkilatis', am: 'ጥበብና ማስተዋል' },
+    theme: { en: 'Wisdom and discernment', fr: 'Sagesse et discernement', es: 'Sabiduría y discernimiento', pt: 'Sabedoria e discernimento', de: 'Weisheit und geistliche Unterscheidung', ru: 'Мудрость и рассудительность', zh: '智慧与分辨', ja: '知恵と識別', ko: '지혜와 분별', ar: 'الحكمة والتمييز', fa: 'حکمت و تشخیص', hi: 'बुद्धि और विवेक', id: 'Hikmat dan pertimbangan', sw: 'Hekima na busara', tl: 'Karunungan at pagkilatis', am: 'ጥበብና ማስተዋል' },
     ref: 'James 1:5',
     related: ['Proverbs 4:23', 'Proverbs 13:20'],
     reflection: {
@@ -500,7 +500,7 @@ export const DAYS = [
     related: ['Matthew 5:14-16'],
     reflection: {
       en: 'Marriage in Scripture is never an escape from the world into two people; it is two people made more useful to God together. Pray for a shared usefulness — hospitality, mission, care for the church — and start practising it single.',
-      fr: "Dans l'Écriture, le mariage n'est jamais une fuite du monde à deux ; ce sont deux personnes rendues plus utiles à Dieu ensemble. Prie pour une utilité partagée — hospitalité, mission, soin de l'Église — et commence à l'exercer célibataire.",
+      fr: "Dans l'Écriture, le mariage n'est jamais une fuite du monde à deux ; ce sont deux personnes rendues plus utiles à Dieu ensemble. Prie pour une utilité partagée — hospitalité, mission, soin de l'Église — et commence dès maintenant à l'exercer, en tant que célibataire.",
     },
     prompts: [
       { en: 'Ask God to make you useful to others, married or not.', fr: 'Demande à Dieu de te rendre utile aux autres, marié ou non.' },

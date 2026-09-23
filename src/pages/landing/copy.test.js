@@ -37,7 +37,7 @@ describe('landing locale chunks', () => {
       expect(copy.scripturePreviewPoints, `${code}: Scripture points`).toHaveLength(2);
       expect(copy.scriptureReferences, `${code}: Scripture references`).toHaveLength(2);
       expect(copy.heroReassurance, `${code}: device-local promise`).toEqual(expect.any(String));
-      expect(copy.privacyFaq, `${code}: privacy promise`).toEqual(expect.any(String));
+      expect(copy.content.faqs[0].a, `${code}: privacy promise`).toEqual(expect.any(String));
       expect(copy.todayLabel, `${code}: today label`).toEqual(expect.any(String));
       expect(copy.prayNowLabel, `${code}: pray-now label`).toEqual(expect.any(String));
       expect(copy.languageMenuLabel, `${code}: language menu label`).toEqual(expect.any(String));

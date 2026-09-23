@@ -58,7 +58,7 @@ export const DAYS = [
   day({
     theme: title('Gratitude for my spouse', 'Reconnaissance pour mon conjoint', 'Gratitud por mi cónyuge', 'Gratidão pelo meu cônjuge', 'Dankbarkeit für meinen Ehepartner', 'Благодарность за супруга', '为配偶感恩', '配偶への感謝', '배우자를 향한 감사', 'الامتنان لشريك حياتي', 'شکرگزاری برای همسرم', 'जीवनसाथी के लिए कृतज्ञता', 'Bersyukur atas pasangan', 'Shukrani kwa mwenzi wangu', 'Pasasalamat para sa asawa ko', 'ለትዳር አጋሬ ምስጋና'),
     ref: 'Philippians 1:3-6',
-    reflection: ['Gratitude notices grace without pretending that either spouse is perfect. Thank God for the real person beside you.', 'La reconnaissance remarque la grâce sans prétendre qu’aucun conjoint est parfait. Remercie Dieu pour la personne réelle à tes côtés.'],
+    reflection: ['Gratitude notices grace without pretending that either spouse is perfect. Thank God for the real person beside you.', 'La reconnaissance remarque la grâce sans prétendre qu’aucun conjoint soit parfait. Remercie Dieu pour la personne réelle à tes côtés.'],
     prompt: ['Open my eyes to gifts I have started to overlook.', 'Ouvre mes yeux aux dons que j’ai commencé à ne plus voir.'],
     spouse: ['Thank You for {partner}; continue the good work You have begun.', 'Merci pour {partner} ; poursuis l’œuvre bonne que Tu as commencée.'],
     self: ['Free me from entitlement and train me to express thanks.', 'Libère-moi de l’exigence et apprends-moi à exprimer ma gratitude.'],
@@ -101,7 +101,7 @@ export const DAYS = [
     reflection: ['Truth and kindness belong together. The goal of communication is not merely to be heard, but to serve the other person’s good.', 'La vérité et la bonté vont ensemble. Le but de la communication n’est pas seulement d’être entendu, mais de servir le bien de l’autre.'],
     prompt: ['Guard our words from contempt, exaggeration, and needless harm.', 'Garde nos paroles du mépris, de l’exagération et des blessures inutiles.'],
     spouse: ['Give {partner} freedom to speak honestly and be received with care.', 'Donne à {partner} la liberté de parler avec sincérité et d’être accueilli avec soin.'],
-    self: ['Show me how pride, distraction, or defensiveness shapes my speech.', 'Montre-moi comment l’orgueil, la distraction ou la défensive façonnent mes paroles.'],
+    self: ['Show me how pride, distraction, or defensiveness shapes my speech.', 'Montre-moi comment l’orgueil, la distraction ou l’attitude défensive façonnent mes paroles.'],
     marriage: ['Make our communication truthful, gracious, and safe.', 'Rends notre communication vraie, pleine de grâce et sûre.'],
     practice: ['Replace one sharp or vague sentence with a clear, kind one.', 'Remplace une phrase dure ou vague par une parole claire et bienveillante.'],
     conversation: ['What helps you feel safe enough to say something difficult?', 'Qu’est-ce qui t’aide à te sentir assez en sécurité pour dire quelque chose de difficile ?'],

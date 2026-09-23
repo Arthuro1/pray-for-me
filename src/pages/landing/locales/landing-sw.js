@@ -2,108 +2,103 @@
 export default {
   "content": {
     "signIn": "Ingia",
-    "badge": "Msaidizi wako wa kibinafsi wa maombi",
-    "h1a": "Usisahau maombi yoyote.",
-    "h1b": "Rekodi kila jibu.",
-    "subtitle": "Shajara ya maombi ya bure na ya faragha: andika maombi kwa sekunde, jua la kuombea leo, na kumbuka kila jibu.",
-    "cta": "Anza shajara yako ya maombi ya faragha",
+    "badge": "Jarida la maombi",
     "howItWorks": "Angalia jinsi inavyofanya kazi",
-    "verse": "\"Maombi ya mtu mwenye haki yana nguvu nyingi.\" — Yakobo 5:16",
-    "featuresTitle": "Kila kitu maisha yako ya maombi yanahitaji",
-    "featuresSub": "Imeundwa kwa Wakristo wanaotaka kuomba kwa makusudi na kufuatilia uaminifu wa Mungu.",
+    "verse": "“Maombi ya mtu mwenye haki yana nguvu nyingi.” — Yakobo 5:16",
+    "featuresTitle": "Maisha yako ya maombi mahali pamoja",
+    "featuresSub": "Mahitaji yako, nyakati za maombi na maombi yaliyojibiwa, pamoja.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Ombeni pamoja",
-        "desc": "Jiunge na vikundi na marafiki, shiriki maombi (au baki bila kujulikana), ombeaneni, na shangilieni maombi yaliyojibiwa pamoja."
+        "desc": "Shiriki mahitaji ya maombi na marafiki au kikundi, na muombeane."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
         "title": "Jarida la maombi",
-        "desc": "Rekodi kila ombi — kwa ajili yako au wengine. Ongeza maelezo, fuatilia maendeleo, usisahau uliyomwahidi kuomba."
+        "desc": "Andika mahitaji yako na ya wengine, na uongeze habari mpya kadiri muda unavyokwenda."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
         "title": "Ratiba ya maombi",
-        "desc": "Panga kila ombi — mara moja au kwa kujirudia (kila siku, siku ulizochagua, kila siku N, kila mwezi, kila mwaka), hata \"hadi lijibiwe\". Kalenda ya mwezi, minyororo ya maombi ya kikundi, na hamishi .ics kwa Google/Apple/Outlook."
+        "desc": "Chagua lini kuombea kila hitaji: mara moja, kila siku au siku maalum."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Galeria ya maombi yaliyojibiwa",
-        "desc": "Weka alama maombi kama yaliyojibiwa na rekodi ushuhuda wako. Angalia uaminifu wa Mungu ukikusanyika baada ya muda."
+        "title": "Maombi yaliyojibiwa",
+        "desc": "Maombi yako yote yaliyojibiwa na shuhuda zako mahali pamoja."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Kua katika maombi",
-        "desc": "Maktaba iliyojikita katika Maandiko: miongozo 12 ya maombi ya kuomba (Zaburi, ahadi za Mungu, kwa ajili ya adui…) na masomo mafupi kuhusu maombi na maisha ya Kikristo."
+        "desc": "Mipango ya maombi, miongozo ya maombi na masomo mafupi yaliyojengwa juu ya Neno la Mungu."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
         "title": "Vikumbusho vya maombi",
-        "desc": "Arifa ya kila siku yenye maombi ya leo, na vikumbusho vya kufuatilia wale unaowaombea — hata app ikiwa imefungwa."
+        "desc": "Kikumbusho cha kila siku cha kuomba, na cha kuwajulia hali watu unaowaombea."
       },
       {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Sakinisha popote",
-        "desc": "App kamili kwa Android, iOS na kompyuta. Inafanya kazi bila mtandao — kila kitu kinasawazishwa unaporudi mtandaoni."
+        "desc": "Isakinishe kwenye simu au kompyuta. Inafanya kazi hata bila mtandao."
       },
       {
         "icon": "Globe",
         "color": "#db2777",
         "title": "Lugha 16",
-        "desc": "Kiswahili, Kiingereza, Kifaransa, na lugha nyingine 13. Badilisha wakati wowote."
+        "desc": "Badilisha lugha wakati wowote."
       },
       {
         "icon": "Lock",
         "color": "#6d28d9",
-        "title": "Ya siri na salama",
-        "desc": "Maombi yako hayatoki kamwe katika akaunti yako. Maombi ya faragha husimbwa kutoka mwanzo hadi mwisho kwa chaguo-msingi, tangu unapoingia — bila usanidi wala neno la siri la kukumbuka. Ongeza neno la siri na msimbo wa kurejesha wa hiari ili kufungua kifaa kipya."
+        "title": "Faragha kwa chaguo-msingi",
+        "desc": "Maombi ya faragha yamesimbwa kutoka mwanzo hadi mwisho. Wewe ndiye unayeamua unachoshiriki."
       }
     ],
     "stepsTitle": "Jinsi inavyofanya kazi",
-    "stepsSub": "Kutoka ombi la kwanza hadi kumbukumbu inayokua ya uaminifu wa Mungu — katika hatua tatu rahisi.",
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Andika ombi",
-        "desc": "Andika kilicho moyoni mwako."
+        "title": "Andika hitaji la maombi",
+        "desc": "Maneno machache yanatosha. Unaweza kuongeza maelezo baadaye."
       },
       {
         "emoji": "🙏",
-        "title": "Omba yaliyo muhimu leo",
-        "desc": "Fungua programu na uanze kwa mguso mmoja."
+        "title": "Omba kila siku",
+        "desc": "Fungua programu na ubonyeze Omba sasa."
       },
       {
         "emoji": "🎉",
-        "title": "Kumbuka uaminifu wa Mungu",
-        "desc": "Andika majibu na shuhuda kadiri muda unavyopita."
+        "title": "Andika jibu",
+        "desc": "Mungu anapojibu, weka alama kwenye ombi na uandike alichofanya."
       }
     ],
     "calloutBadge": "Mapendekezo ya mistari",
-    "calloutTitle": "Pata mstari unaofaa kwa kila ombi",
-    "calloutDesc": "Hujui jinsi ya kuomba kwa hali fulani? Tumia kitafuta cha mistari na upate pembe 3-4 za maombi, kila moja na vifungu vya Biblia vinavyohusiana.",
-    "calloutDisclaimer": "Mapendekezo yanawasilisha vifungu vya Biblia — wewe unatambua kinachosema kwa hali yako. Roho anaongoza; chombo hiki kinakusaidia kutafuta Maandiko.",
+    "calloutTitle": "Omba kwa Neno la Mungu",
+    "calloutDesc": "Pata vifungu vya Biblia vinavyohusiana na ombi lako na uvisome ndani ya programu.",
+    "calloutDisclaimer": "Mapendekezo ni mwanzo tu. Soma kila kifungu katika muktadha wake.",
     "calloutPreviewLabel": "Mapendekezo ya mistari",
     "faqTitle": "Maswali",
     "faqs": [
       {
-        "q": "Je, data yangu ni ya siri?",
-        "a": "Ndiyo. Kila ombi linahifadhiwa katika akaunti yako mwenyewe — hakuna mtu mwingine anayeweza kuona data yako, hata sisi."
+        "q": "Je, maombi yangu ni ya faragha?",
+        "a": "Ndiyo. Maombi ya faragha yamesimbwa kutoka mwanzo hadi mwisho. Ili kuyafungua kwenye kifaa kipya, ongeza nenosiri na msimbo wa kurejesha."
       },
       {
         "q": "Je, ninahitaji akaunti?",
-        "a": "Hapana — unaweza kuomba ombi la kwanza bila akaunti, nalo linabaki kwenye kifaa chako. Akaunti ya bure inahitajika tu kuhifadhi maombi na kuyasawazisha kwenye vifaa vyako; jisajili na Google kwa kugonga mara moja au tumia barua pepe/neno la siri."
+        "a": "Hapana. Ombi lako la kwanza halihitaji akaunti na linabaki kwenye kifaa hiki. Akaunti ya bure hukuwezesha kuhifadhi maombi yako na kuyatumia kwenye vifaa vyako vyote."
       },
       {
-        "q": "Je, kitafutaji cha Maandiko hufanyaje kazi?",
-        "a": "Unaingiza kichwa cha ombi lako na programu hupendekeza mistari ya Biblia inayohusiana pamoja na maandishi yake kamili. Wewe huchagua inayoendana na hali yako."
+        "q": "Mapendekezo ya mistari hufanyaje kazi?",
+        "a": "Unapoomba mapendekezo, kichwa na maelezo ya ombi hutumwa kwa huduma ya AI, inayopendekeza vifungu vya Biblia. Wewe unasoma kila kifungu na kupambanua kinachofaa."
       },
       {
         "q": "Ni lugha zipi zinazotumika?",
@@ -111,27 +106,25 @@ export default {
       },
       {
         "q": "Je, ni bure?",
-        "a": "Ndiyo, bure kabisa. Programu hii ni chanzo wazi."
+        "a": "Ndiyo. Ni bure, na msimbo wake ni chanzo wazi."
       }
     ],
-    "ctaTitle": "Anza jarida lako la maombi leo",
-    "ctaSub": "Hakuna akaunti inayohitajika kuanza — ombi lako linabaki kwenye kifaa hiki hadi uchague kulihifadhi. Bure, ya siri, na inapatikana katika lugha 16.",
-    "ctaBtn": "Anza shajara yako ya maombi ya faragha",
-    "ctaVerse": "\"Ombeni bila kukoma.\" — 1 Wathesalonike 5:17",
+    "ctaTitle": "Una nini moyoni leo?",
+    "ctaVerse": "“Ombeni bila kukoma.” — 1 Wathesalonike 5:17",
     "footerBuilt": "Imejengwa kwa imani · Chanzo wazi · Leseni ya MIT"
   },
   "benefits": [
     {
-      "title": "Kumbuka kila ombi",
-      "desc": "Weka unayemwombea na unachokiombea mahali pamoja pa faragha — bila kusahau."
+      "title": "Hakuna kinachosahaulika",
+      "desc": "Wakumbuke wote uliowaahidi kuwaombea."
     },
     {
       "title": "Jua la kuombea leo",
-      "desc": "Fungua programu na maombi ya leo yako tayari — anza kwa mguso mmoja."
+      "desc": "Kila siku inarudisha mahitaji uliyopanga kuyaombea."
     },
     {
-      "title": "Andika kila jibu",
-      "desc": "Weka alama maombi yaliyojibiwa na uone ghala la uaminifu wa Mungu likikua."
+      "title": "Kumbuka uaminifu wa Mungu",
+      "desc": "Hifadhi maombi yaliyojibiwa na shuhuda kama ukumbusho wa aliyoyatenda Mungu."
     }
   ],
   "explore": {
@@ -142,14 +135,12 @@ export default {
   "languageMenuLabel": "Lugha",
   "translationInProgress": "Tafsiri inaendelea",
   "heroReassurance": "Hakuna akaunti inayohitajika. Hakuna kinachoondoka kwenye kifaa hiki hadi uchague kukihifadhi.",
-  "calloutBegin": "Anza kwa sala",
   "hero": {
-    "title": "Usisahau maombi yoyote.",
-    "promise": "Rekodi kila jibu.",
-    "subtitle": "Shajara ya maombi ya bure na ya faragha: andika maombi kwa sekunde, jua la kuombea leo, na kumbuka kila jibu."
+    "title": "Mpelekee Mungu yaliyo moyoni mwako.",
+    "promise": "Omba kwa uaminifu. Kumbuka uaminifu wa Mungu.",
+    "subtitle": "Andika mahitaji yako ya maombi. Kila moja linarudi siku unazochagua kuliombea."
   },
   "samplePrayerTitle": "Amani kwa familia yetu",
-  "privacyFaq": "Ndiyo. Maombi ya faragha husimbwa kutoka mwanzo hadi mwisho kwa chaguo-msingi. Unaweza kuongeza kaulisiri na msimbo wa urejeshaji wa mara moja kwa kifaa kipya.",
   "scripturePreviewPoints": [
     "Amani ipitayo ufahamu wote",
     "Amini wakati wa Mungu"

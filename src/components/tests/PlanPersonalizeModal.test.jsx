@@ -28,12 +28,12 @@ describe('the questions', () => {
       plan={PREPARING_IN_PRAYER}
       lang={lang}
       mode="start"
-      ctaKey="planStart"
+      ctaKey="journeyStart"
       onSave={vi.fn()}
       onClose={vi.fn()}
     />);
     expect(screen.getByText(t(lang, PREPARING_IN_PRAYER.titleKey), { exact: false })).toBeTruthy();
-    expect(screen.getByRole('button', { name: t(lang, 'planStart') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'journeyStart') })).toBeTruthy();
   });
 
   // The season and the emphasis used to be asked here too. A season was stored

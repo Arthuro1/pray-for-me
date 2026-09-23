@@ -160,10 +160,7 @@ describe('PrayerSession — guided plan day content', () => {
     expect(screen.getByText(t(lang, 'planPrayerPrompts'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'planPrayForYourself'))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'planPracticeToday'))).toBeNull();
-    const requestedAfterPrayerLabel = t(lang, 'planAfterPrayer');
-    const afterPrayerLabel = requestedAfterPrayerLabel === 'planAfterPrayer'
-      ? t(lang, 'moreOptionsLabel')
-      : requestedAfterPrayerLabel;
+    const afterPrayerLabel = t(lang, 'planAfterPrayer');
     fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel }));
     expect(screen.getByText(t(lang, 'planPracticeToday'))).toBeTruthy();
     // Still the ORDINARY session underneath: the same closing action, and the

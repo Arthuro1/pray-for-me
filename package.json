@@ -18,7 +18,9 @@
     "test": "vitest run",
     "test:browser": "vitest run --config vitest.browser.config.js",
     "test:db": "supabase test db",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:content": "node scripts/audit-copy.mjs",
+    "review:translations": "node scripts/review-translations.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.10",

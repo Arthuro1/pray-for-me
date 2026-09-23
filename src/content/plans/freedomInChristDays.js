@@ -49,7 +49,7 @@ export const DAYS = [
   // ── Movement 1 · Established in Christ ────────────────────────────────────
   {
     movement: 'established',
-    theme: { en: 'The victory of Jesus Christ', fr: 'La victoire de Jésus-Christ', es: 'La victoria de Jesucristo', pt: 'A vitória de Jesus Cristo', de: 'Der Sieg Jesu Christi', ru: 'Победа Иисуса Христа', zh: '耶穌基督的得勝', ja: 'イエス・キリストの勝利', ko: '예수 그리스도의 승리', ar: 'انتصار يسوع المسيح', fa: 'پیروزی عیسی مسیح', hi: 'यीशु मसीह की विजय', id: 'Kemenangan Yesus Kristus', sw: 'Ushindi wa Yesu Kristo', tl: 'Ang tagumpay ni Jesu-Cristo', am: 'የኢየሱስ ክርስቶስ ድል' },
+    theme: { en: 'The victory of Jesus Christ', fr: 'La victoire de Jésus-Christ', es: 'La victoria de Jesucristo', pt: 'A vitória de Jesus Cristo', de: 'Der Sieg Jesu Christi', ru: 'Победа Иисуса Христа', zh: '耶稣基督的得胜', ja: 'イエス・キリストの勝利', ko: '예수 그리스도의 승리', ar: 'انتصار يسوع المسيح', fa: 'پیروزی عیسی مسیح', hi: 'यीशु मसीह की विजय', id: 'Kemenangan Yesus Kristus', sw: 'Ushindi wa Yesu Kristo', tl: 'Ang tagumpay ni Jesu-Cristo', am: 'የኢየሱስ ክርስቶስ ድል' },
     ref: 'Colossians 2:13-15',
     related: ['Colossians 1:13-14', 'Hebrews 2:14-15'],
     reflection: {
@@ -77,7 +77,7 @@ export const DAYS = [
   },
   {
     movement: 'established',
-    theme: { en: 'Delivered from darkness', fr: 'Délivré des ténèbres', es: 'Librados de las tinieblas', pt: 'Libertos das trevas', de: 'Aus der Finsternis befreit', ru: 'Избавлен от тьмы', zh: '從黑暗中被拯救', ja: '闇から救い出された', ko: '어둠에서 건짐받다', ar: 'مُنقَذ من الظلمة', fa: 'رهایی از تاریکی', hi: 'अंधकार से छुड़ाया गया', id: 'Dilepaskan dari kegelapan', sw: 'Umeokolewa kutoka gizani', tl: 'Iniligtas mula sa kadiliman', am: 'ከጨለማ የተላቀቅህ' },
+    theme: { en: 'Delivered from darkness', fr: 'Délivré des ténèbres', es: 'Librados de las tinieblas', pt: 'Libertos das trevas', de: 'Aus der Finsternis befreit', ru: 'Избавлен от тьмы', zh: '从黑暗中被拯救', ja: '闇から救い出された', ko: '어둠에서 건짐받다', ar: 'مُنقَذ من الظلمة', fa: 'رهایی از تاریکی', hi: 'अंधकार से छुड़ाया गया', id: 'Dilepaskan dari kegelapan', sw: 'Umeokolewa kutoka gizani', tl: 'Iniligtas mula sa kadiliman', am: 'ከጨለማ የተላቀቅህ' },
     ref: 'Colossians 1:13-14',
     related: ['2 Corinthians 5:17', 'Romans 8:1-2'],
     reflection: {
@@ -100,7 +100,7 @@ export const DAYS = [
   },
   {
     movement: 'established',
-    theme: { en: 'The Holy Spirit leads into truth', fr: "L'Esprit conduit dans la vérité", es: 'El Espíritu guía a la verdad', pt: 'O Espírito guia à verdade', de: 'Der Geist führt in die Wahrheit', ru: 'Дух наставляет на истину', zh: '聖靈引導進入真理', ja: '御霊は真理に導く', ko: '성령이 진리로 인도하신다', ar: 'الروح يرشد إلى الحق', fa: 'روح‌القدس به راستی هدایت می‌کند', hi: 'पवित्र आत्मा सत्य में ले चलता है', id: 'Roh Kudus memimpin ke dalam kebenaran', sw: 'Roho Mtakatifu huongoza katika kweli', tl: 'Ang Espiritu ang umaakay sa katotohanan', am: 'መንፈስ ቅዱስ ወደ እውነት ይመራል' },
+    theme: { en: 'The Holy Spirit leads into truth', fr: "L'Esprit conduit dans la vérité", es: 'El Espíritu guía a la verdad', pt: 'O Espírito guia à verdade', de: 'Der Geist führt in die Wahrheit', ru: 'Дух наставляет на истину', zh: '圣灵引导进入真理', ja: '御霊は真理に導く', ko: '성령이 진리로 인도하신다', ar: 'الروح يرشد إلى الحق', fa: 'روح‌القدس به راستی هدایت می‌کند', hi: 'पवित्र आत्मा सत्य में ले चलता है', id: 'Roh Kudus memimpin ke dalam kebenaran', sw: 'Roho Mtakatifu huongoza katika kweli', tl: 'Ang Espiritu ang umaakay sa katotohanan', am: 'መንፈስ ቅዱስ ወደ እውነት ይመራል' },
     ref: 'John 16:13',
     related: ['John 14:26', 'Romans 8:14', 'Psalm 139:23-24'],
     reflection: {
@@ -127,7 +127,7 @@ export const DAYS = [
   },
   {
     movement: 'established',
-    theme: { en: 'Confession, cleansing and grace', fr: 'Confession, purification et grâce', es: 'Confesión, limpieza y gracia', pt: 'Confissão, purificação e graça', de: 'Bekenntnis, Reinigung und Gnade', ru: 'Исповедание, очищение и благодать', zh: '認罪、潔淨與恩典', ja: '告白、きよめ、恵み', ko: '고백과 정결함과 은혜', ar: 'الاعتراف والتطهير والنعمة', fa: 'اعتراف، پاکی و فیض', hi: 'अंगीकार, शुद्धि और अनुग्रह', id: 'Pengakuan, penyucian, dan anugerah', sw: 'Kuungama, kutakaswa na neema', tl: 'Pag-amin, paglilinis at biyaya', am: 'መናዘዝ፣ መንጻትና ጸጋ' },
+    theme: { en: 'Confession, cleansing and grace', fr: 'Confession, purification et grâce', es: 'Confesión, limpieza y gracia', pt: 'Confissão, purificação e graça', de: 'Bekenntnis, Reinigung und Gnade', ru: 'Исповедание, очищение и благодать', zh: '认罪、洁净与恩典', ja: '告白、きよめ、恵み', ko: '고백과 정결함과 은혜', ar: 'الاعتراف والتطهير والنعمة', fa: 'اعتراف، پاکی و فیض', hi: 'अंगीकार, शुद्धि और अनुग्रह', id: 'Pengakuan, penyucian, dan anugerah', sw: 'Kuungama, kutakaswa na neema', tl: 'Pag-amin, paglilinis at biyaya', am: 'መናዘዝ፣ መንጻትና ጸጋ' },
     ref: '1 John 1:7-9',
     related: ['Psalm 51:1-12', 'Romans 8:1'],
     reflection: {
@@ -152,7 +152,7 @@ export const DAYS = [
   },
   {
     movement: 'established',
-    theme: { en: 'Forgiveness', fr: 'Le pardon', es: 'El perdón', pt: 'O perdão', de: 'Vergebung', ru: 'Прощение', zh: '饒恕', ja: '赦し', ko: '용서', ar: 'المغفرة', fa: 'بخشش', hi: 'क्षमा', id: 'Pengampunan', sw: 'Msamaha', tl: 'Kapatawaran', am: 'ይቅርታ' },
+    theme: { en: 'Forgiveness', fr: 'Le pardon', es: 'El perdón', pt: 'O perdão', de: 'Vergebung', ru: 'Прощение', zh: '饶恕', ja: '赦し', ko: '용서', ar: 'المغفرة', fa: 'بخشش', hi: 'क्षमा', id: 'Pengampunan', sw: 'Msamaha', tl: 'Kapatawaran', am: 'ይቅርታ' },
     ref: 'Ephesians 4:31-32',
     related: ['Colossians 3:12-14', 'Romans 12:17-21'],
     reflection: {
@@ -178,7 +178,7 @@ export const DAYS = [
   // ── Movement 2 · Personal repentance & renunciation ───────────────────────
   {
     movement: 'repentance',
-    theme: { en: 'Renouncing idolatry', fr: "Renoncer à l'idolâtrie", es: 'Renunciar a la idolatría', pt: 'Renunciar à idolatria', de: 'Dem Götzendienst absagen', ru: 'Отречение от идолопоклонства', zh: '棄絕拜偶像', ja: '偶像礼拝を退ける', ko: '우상숭배를 끊다', ar: 'التبرؤ من عبادة الأوثان', fa: 'ترک بت‌پرستی', hi: 'मूर्तिपूजा का त्याग', id: 'Meninggalkan penyembahan berhala', sw: 'Kukataa ibada ya sanamu', tl: 'Pagtalikod sa pagsamba sa diyus-diyosan', am: 'ጣዖት አምልኮን መተው' },
+    theme: { en: 'Renouncing idolatry', fr: "Renoncer à l'idolâtrie", es: 'Renunciar a la idolatría', pt: 'Renunciar à idolatria', de: 'Dem Götzendienst absagen', ru: 'Отречение от идолопоклонства', zh: '弃绝拜偶像', ja: '偶像礼拝を退ける', ko: '우상숭배를 끊다', ar: 'التبرؤ من عبادة الأوثان', fa: 'ترک بت‌پرستی', hi: 'मूर्तिपूजा का त्याग', id: 'Meninggalkan penyembahan berhala', sw: 'Kukataa ibada ya sanamu', tl: 'Pagtalikod sa pagsamba sa diyus-diyosan', am: 'ጣዖት አምልኮን መተው' },
     ref: '1 Corinthians 10:14-22',
     related: ['Exodus 20:3-6', 'Acts 19:18-20'],
     reflection: {
@@ -211,7 +211,7 @@ export const DAYS = [
   },
   {
     movement: 'repentance',
-    theme: { en: 'Divination and occult consultation', fr: 'Divination et consultation occulte', es: 'Adivinación y consulta oculta', pt: 'Adivinhação e consulta oculta', de: 'Wahrsagerei und okkulte Beratung', ru: 'Гадание и оккультные обращения', zh: '占卜與求問邪靈', ja: '占いと霊媒への相談', ko: '점술과 영매 상담', ar: 'العرافة واستشارة الأرواح', fa: 'فالگیری و مشورت با ارواح', hi: 'भविष्यवाणी और तांत्रिक परामर्श', id: 'Ramalan dan konsultasi okultisme', sw: 'Uaguzi na kutafuta mizimu', tl: 'Panghuhula at pagsangguni sa espiritu', am: 'ጥንቆላና የመናፍስት ምክር' },
+    theme: { en: 'Divination and occult consultation', fr: 'Divination et consultation occulte', es: 'Adivinación y consulta oculta', pt: 'Adivinhação e consulta oculta', de: 'Wahrsagerei und okkulte Beratung', ru: 'Гадание и оккультные обращения', zh: '占卜与求问邪灵', ja: '占いと霊媒への相談', ko: '점술과 영매 상담', ar: 'العرافة واستشارة الأرواح', fa: 'فالگیری و مشورت با ارواح', hi: 'भविष्यवाणी और तांत्रिक परामर्श', id: 'Ramalan dan konsultasi okultisme', sw: 'Uaguzi na kutafuta mizimu', tl: 'Panghuhula at pagsangguni sa espiritu', am: 'ጥንቆላና የመናፍስት ምክር' },
     ref: 'Deuteronomy 18:9-14',
     related: ['Acts 19:18-20', 'Isaiah 8:19-20'],
     reflection: {
@@ -245,7 +245,7 @@ export const DAYS = [
   },
   {
     movement: 'repentance',
-    theme: { en: 'Spiritual oaths, vows and covenants', fr: 'Serments, vœux et alliances spirituels', es: 'Juramentos, votos y pactos espirituales', pt: 'Juramentos, votos e pactos espirituais', de: 'Geistliche Eide, Gelübde und Bündnisse', ru: 'Духовные клятвы, обеты и союзы', zh: '屬靈的誓言、許願與盟約', ja: '霊的な誓い・誓願・契約', ko: '영적 맹세와 서원과 언약', ar: 'الأقسام والنذور والعهود الروحية', fa: 'سوگندها، نذرها و عهدهای روحانی', hi: 'आत्मिक शपथ, मन्नत और वाचा', id: 'Sumpah, nazar, dan perjanjian rohani', sw: 'Viapo, nadhiri na maagano ya kiroho', tl: 'Espirituwal na sumpa, panata at tipan', am: 'መንፈሳዊ መሐላ፣ ስእለትና ቃል ኪዳን' },
+    theme: { en: 'Spiritual oaths, vows and covenants', fr: 'Serments, vœux et alliances spirituels', es: 'Juramentos, votos y pactos espirituales', pt: 'Juramentos, votos e pactos espirituais', de: 'Geistliche Eide, Gelübde und Bündnisse', ru: 'Духовные клятвы, обеты и союзы', zh: '属灵的誓言、许愿与盟约', ja: '霊的な誓い・誓願・契約', ko: '영적 맹세와 서원과 언약', ar: 'الأقسام والنذور والعهود الروحية', fa: 'سوگندها، نذرها و عهدهای روحانی', hi: 'आत्मिक शपथ, मन्नत और वाचा', id: 'Sumpah, nazar, dan perjanjian rohani', sw: 'Viapo, nadhiri na maagano ya kiroho', tl: 'Espirituwal na sumpa, panata at tipan', am: 'መንፈሳዊ መሐላ፣ ስእለትና ቃል ኪዳን' },
     ref: 'Matthew 5:33-37',
     related: ['Romans 6:11-14', '2 Corinthians 6:14-18'],
     reflection: {
@@ -279,7 +279,7 @@ export const DAYS = [
   },
   {
     movement: 'repentance',
-    theme: { en: 'Dedications and initiations', fr: 'Consécrations et initiations', es: 'Dedicaciones e iniciaciones', pt: 'Dedicações e iniciações', de: 'Weihen und Initiationen', ru: 'Посвящения и инициации', zh: '獻身與入會禮', ja: '奉献と入門儀礼', ko: '바침과 입문 의식', ar: 'التكريسات والطقوس الابتدائية', fa: 'وقف‌ها و آیین‌های تشرف', hi: 'समर्पण और दीक्षा', id: 'Persembahan dan inisiasi', sw: 'Kuwekwa wakfu na kutawazwa', tl: 'Mga paghahandog at inisasyon', am: 'ስጦታዎችና የመግቢያ ሥርዓቶች' },
+    theme: { en: 'Dedications and initiations', fr: 'Consécrations et initiations', es: 'Dedicaciones e iniciaciones', pt: 'Dedicações e iniciações', de: 'Weihen und Initiationen', ru: 'Посвящения и инициации', zh: '献身与入会礼', ja: '奉献と入門儀礼', ko: '바침과 입문 의식', ar: 'التكريسات والطقوس الابتدائية', fa: 'وقف‌ها و آیین‌های تشرف', hi: 'समर्पण और दीक्षा', id: 'Persembahan dan inisiasi', sw: 'Kuwekwa wakfu na kutawazwa', tl: 'Mga paghahandog at inisasyon', am: 'ስጦታዎችና የመግቢያ ሥርዓቶች' },
     ref: 'Romans 12:1-2',
     related: ['1 Corinthians 6:19-20', '1 Peter 2:9'],
     reflection: {
@@ -312,7 +312,7 @@ export const DAYS = [
   },
   {
     movement: 'repentance',
-    theme: { en: 'Secret societies and ritual allegiance', fr: 'Sociétés secrètes et allégeance rituelle', es: 'Sociedades secretas y lealtad ritual', pt: 'Sociedades secretas e lealdade ritual', de: 'Geheimbünde und rituelle Bindungen', ru: 'Тайные общества и ритуальная верность', zh: '秘密結社與儀式效忠', ja: '秘密結社と儀礼的忠誠', ko: '비밀 결사와 의식적 충성', ar: 'الجمعيات السرية والولاء الطقسي', fa: 'انجمن‌های سری و بیعت آیینی', hi: 'गुप्त संगठन और अनुष्ठानिक निष्ठा', id: 'Perkumpulan rahasia dan kesetiaan ritual', sw: 'Vyama vya siri na kiapo cha kiibada', tl: 'Lihim na samahan at ritwal na katapatan', am: 'ምስጢራዊ ማኅበራትና የሥርዓት ታማኝነት' },
+    theme: { en: 'Secret societies and ritual allegiance', fr: 'Sociétés secrètes et allégeance rituelle', es: 'Sociedades secretas y lealtad ritual', pt: 'Sociedades secretas e lealdade ritual', de: 'Geheimbünde und rituelle Bindungen', ru: 'Тайные общества и ритуальная верность', zh: '秘密结社与仪式效忠', ja: '秘密結社と儀礼的忠誠', ko: '비밀 결사와 의식적 충성', ar: 'الجمعيات السرية والولاء الطقسي', fa: 'انجمن‌های سری و بیعت آیینی', hi: 'गुप्त संगठन और अनुष्ठानिक निष्ठा', id: 'Perkumpulan rahasia dan kesetiaan ritual', sw: 'Vyama vya siri na kiapo cha kiibada', tl: 'Lihim na samahan at ritwal na katapatan', am: 'ምስጢራዊ ማኅበራትና የሥርዓት ታማኝነት' },
     ref: '2 Corinthians 6:14-18',
     related: ['Ephesians 5:8-14', 'John 18:19-21'],
     reflection: {
@@ -347,7 +347,7 @@ export const DAYS = [
   // ── Movement 3 · Family foundations, covenants & curses ───────────────────
   {
     movement: 'family',
-    theme: { en: 'My family history before Christ', fr: 'Mon histoire familiale devant Christ', es: 'Mi historia familiar ante Cristo', pt: 'Minha história familiar diante de Cristo', de: 'Meine Familiengeschichte vor Christus', ru: 'Моя семейная история пред Христом', zh: '把家族歷史帶到基督面前', ja: '家族の歴史をキリストの前に', ko: '내 가족의 역사를 그리스도 앞에', ar: 'تاريخ عائلتي أمام المسيح', fa: 'تاریخ خانوادگی‌ام در حضور مسیح', hi: 'मसीह के सामने मेरे परिवार का इतिहास', id: 'Sejarah keluargaku di hadapan Kristus', sw: 'Historia ya familia yangu mbele za Kristo', tl: 'Ang kasaysayan ng pamilya ko sa harap ni Cristo', am: 'የቤተሰቤ ታሪክ በክርስቶስ ፊት' },
+    theme: { en: 'My family history before Christ', fr: 'Mon histoire familiale devant Christ', es: 'Mi historia familiar ante Cristo', pt: 'Minha história familiar diante de Cristo', de: 'Meine Familiengeschichte vor Christus', ru: 'Моя семейная история пред Христом', zh: '把家族历史带到基督面前', ja: '家族の歴史をキリストの前に', ko: '내 가족의 역사를 그리스도 앞에', ar: 'تاريخ عائلتي أمام المسيح', fa: 'تاریخ خانوادگی‌ام در حضور مسیح', hi: 'मसीह के सामने मेरे परिवार का इतिहास', id: 'Sejarah keluargaku di hadapan Kristus', sw: 'Historia ya familia yangu mbele za Kristo', tl: 'Ang kasaysayan ng pamilya ko sa harap ni Cristo', am: 'የቤተሰቤ ታሪክ በክርስቶስ ፊት' },
     ref: '1 Peter 1:18-19',
     related: ['Ezekiel 18:19-20', '2 Corinthians 5:17', 'Colossians 1:13-14'],
     reflection: {
@@ -375,7 +375,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Family ancestral and spirit worship', fr: 'Culte familial des ancêtres et des esprits', es: 'Culto familiar a ancestros y espíritus', pt: 'Culto familiar a ancestrais e espíritos', de: 'Ahnen- und Geisterverehrung in der Familie', ru: 'Семейное почитание предков и духов', zh: '家族祭祖與拜靈', ja: '家系の先祖・霊への礼拝', ko: '가문의 조상·영 숭배', ar: 'عبادة الأسلاف والأرواح في العائلة', fa: 'پرستش نیاکان و ارواح در خانواده', hi: 'पारिवारिक पूर्वज व आत्मा पूजा', id: 'Pemujaan leluhur dan roh dalam keluarga', sw: 'Ibada ya mizimu na mababu katika familia', tl: 'Pagsamba ng pamilya sa ninuno at espiritu', am: 'የቤተሰብ የአባቶችና የመናፍስት አምልኮ' },
+    theme: { en: 'Family ancestral and spirit worship', fr: 'Culte familial des ancêtres et des esprits', es: 'Culto familiar a ancestros y espíritus', pt: 'Culto familiar a ancestrais e espíritos', de: 'Ahnen- und Geisterverehrung in der Familie', ru: 'Семейное почитание предков и духов', zh: '家族祭祖与拜灵', ja: '家系の先祖・霊への礼拝', ko: '가문의 조상·영 숭배', ar: 'عبادة الأسلاف والأرواح في العائلة', fa: 'پرستش نیاکان و ارواح در خانواده', hi: 'पारिवारिक पूर्वज व आत्मा पूजा', id: 'Pemujaan leluhur dan roh dalam keluarga', sw: 'Ibada ya mizimu na mababu katika familia', tl: 'Pagsamba ng pamilya sa ninuno at espiritu', am: 'የቤተሰብ የአባቶችና የመናፍስት አምልኮ' },
     ref: 'Joshua 24:14-15',
     related: ['Deuteronomy 18:9-14', '1 Corinthians 10:20-21'],
     reflection: {
@@ -406,7 +406,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Family dedications and initiations', fr: 'Consécrations et initiations familiales', es: 'Dedicaciones e iniciaciones familiares', pt: 'Dedicações e iniciações familiares', de: 'Familiäre Weihen und Initiationen', ru: 'Семейные посвящения и инициации', zh: '家族的獻身與入會禮', ja: '家系による奉献と入門儀礼', ko: '가문의 바침과 입문 의식', ar: 'التكريسات والطقوس العائلية', fa: 'وقف‌ها و آیین‌های تشرف خانوادگی', hi: 'पारिवारिक समर्पण और दीक्षा', id: 'Persembahan dan inisiasi keluarga', sw: 'Kuwekwa wakfu na kutawazwa kwa kifamilia', tl: 'Mga paghahandog at inisasyon ng pamilya', am: 'የቤተሰብ ስጦታዎችና የመግቢያ ሥርዓቶች' },
+    theme: { en: 'Family dedications and initiations', fr: 'Consécrations et initiations familiales', es: 'Dedicaciones e iniciaciones familiares', pt: 'Dedicações e iniciações familiares', de: 'Familiäre Weihen und Initiationen', ru: 'Семейные посвящения и инициации', zh: '家族的献身与入会礼', ja: '家系による奉献と入門儀礼', ko: '가문의 바침과 입문 의식', ar: 'التكريسات والطقوس العائلية', fa: 'وقف‌ها و آیین‌های تشرف خانوادگی', hi: 'पारिवारिक समर्पण और दीक्षा', id: 'Persembahan dan inisiasi keluarga', sw: 'Kuwekwa wakfu na kutawazwa kwa kifamilia', tl: 'Mga paghahandog at inisasyon ng pamilya', am: 'የቤተሰብ ስጦታዎችና የመግቢያ ሥርዓቶች' },
     ref: '1 Corinthians 6:19-20',
     related: ['Romans 6:12-14', 'Colossians 1:13-14'],
     reflection: {
@@ -438,7 +438,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Family covenants, oaths and vows', fr: 'Alliances, serments et vœux familiaux', es: 'Pactos, juramentos y votos familiares', pt: 'Pactos, juramentos e votos familiares', de: 'Familiäre Bündnisse, Eide und Gelübde', ru: 'Семейные заветы, клятвы и обеты', zh: '家族的盟約、誓言與許願', ja: '家系の契約・誓い・誓願', ko: '가문의 언약과 맹세와 서원', ar: 'العهود والأقسام والنذور العائلية', fa: 'عهدها، سوگندها و نذرهای خانوادگی', hi: 'पारिवारिक वाचा, शपथ और मन्नत', id: 'Perjanjian, sumpah, dan nazar keluarga', sw: 'Maagano, viapo na nadhiri za familia', tl: 'Mga tipan, sumpa at panata ng pamilya', am: 'የቤተሰብ ቃል ኪዳን፣ መሐላና ስእለት' },
+    theme: { en: 'Family covenants, oaths and vows', fr: 'Alliances, serments et vœux familiaux', es: 'Pactos, juramentos y votos familiares', pt: 'Pactos, juramentos e votos familiares', de: 'Familiäre Bündnisse, Eide und Gelübde', ru: 'Семейные заветы, клятвы и обеты', zh: '家族的盟约、誓言与许愿', ja: '家系の契約・誓い・誓願', ko: '가문의 언약과 맹세와 서원', ar: 'العهود والأقسام والنذور العائلية', fa: 'عهدها، سوگندها و نذرهای خانوادگی', hi: 'पारिवारिक वाचा, शपथ और मन्नत', id: 'Perjanjian, sumpah, dan nazar keluarga', sw: 'Maagano, viapo na nadhiri za familia', tl: 'Mga tipan, sumpa at panata ng pamilya', am: 'የቤተሰብ ቃል ኪዳን፣ መሐላና ስእለት' },
     ref: 'Romans 14:7-9',
     related: ['Matthew 5:33-37', 'Ezekiel 18:19-20'],
     reflection: {
@@ -446,7 +446,7 @@ export const DAYS = [
       fr: "L'argument de Paul règle la question de l'appartenance : aucun de nous ne vit pour lui-même, et soit que nous vivions soit que nous mourions, nous sommes au Seigneur — car Christ est mort et ressuscité précisément pour être le Seigneur des morts et des vivants. Quoi qu'aient convenu ceux qui t'ont précédé, celui qui a désormais un droit sur toi, c'est Lui.",
     },
     prompts: [
-      { en: 'Ask the Holy Spirit to bring to mind what is relevant and known — and not to invent what He has not brought into the light.', fr: "Demande au Saint-Esprit de te rappeler ce qui est pertinent et connu — et de ne pas inventer ce qu'Il n'a pas mis en lumière." },
+      { en: 'Ask the Holy Spirit to bring to mind what is relevant and known — and to keep you from inventing what He has not brought into the light.', fr: "Demande au Saint-Esprit de te rappeler ce qui est pertinent et connu — et de te garder d’inventer ce qu’Il n’a pas mis en lumière." },
       { en: 'Renounce any continuing agreement of your own with what you know of.', fr: "Renonce à tout accord personnel que tu maintiendrais avec ce que tu connais." },
       { en: 'Declare before God that you are the Lord’s, in life and in death.', fr: "Déclare devant Dieu que tu appartiens au Seigneur, dans la vie et dans la mort." },
     ],
@@ -470,7 +470,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Family shrines, altars and objects', fr: 'Sanctuaires, autels et objets familiaux', es: 'Santuarios, altares y objetos familiares', pt: 'Santuários, altares e objetos familiares', de: 'Familiäre Schreine, Altäre und Gegenstände', ru: 'Семейные святилища, жертвенники и предметы', zh: '家族的神壇、祭壇與器物', ja: '家系の祠・祭壇・器物', ko: '가문의 신당과 제단과 물건', ar: 'المزارات والمذابح والأشياء العائلية', fa: 'زیارتگاه‌ها، مذبح‌ها و اشیای خانوادگی', hi: 'पारिवारिक स्थान, वेदी और वस्तुएं', id: 'Tempat pemujaan, mezbah, dan benda keluarga', sw: 'Madhabahu, vizingiti na vitu vya familia', tl: 'Mga dambana, altar at bagay ng pamilya', am: 'የቤተሰብ መቅደሶች፣ መሠዊያዎችና ዕቃዎች' },
+    theme: { en: 'Family shrines, altars and objects', fr: 'Sanctuaires, autels et objets familiaux', es: 'Santuarios, altares y objetos familiares', pt: 'Santuários, altares e objetos familiares', de: 'Familiäre Schreine, Altäre und Gegenstände', ru: 'Семейные святилища, жертвенники и предметы', zh: '家族的神坛、祭坛与器物', ja: '家系の祠・祭壇・器物', ko: '가문의 신당과 제단과 물건', ar: 'المزارات والمذابح والأشياء العائلية', fa: 'زیارتگاه‌ها، مذبح‌ها و اشیای خانوادگی', hi: 'पारिवारिक स्थान, वेदी और वस्तुएं', id: 'Tempat pemujaan, mezbah, dan benda keluarga', sw: 'Madhabahu, vizingiti na vitu vya familia', tl: 'Mga dambana, altar at bagay ng pamilya', am: 'የቤተሰብ መቅደሶች፣ መሠዊያዎችና ዕቃዎች' },
     ref: 'Deuteronomy 12:2-4',
     related: ['2 Corinthians 6:16', 'Acts 19:18-20'],
     reflection: {
@@ -507,7 +507,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Curses and spoken pronouncements', fr: 'Malédictions et paroles prononcées', es: 'Maldiciones y pronunciamientos', pt: 'Maldições e pronunciamentos', de: 'Flüche und ausgesprochene Verwünschungen', ru: 'Проклятия и произнесённые слова', zh: '咒詛與宣告的話', ja: 'のろいと宣言されたことば', ko: '저주와 선언된 말', ar: 'اللعنات والأقوال المنطوقة', fa: 'لعنت‌ها و سخنان اعلام‌شده', hi: 'श्राप और बोले गए वचन', id: 'Kutuk dan ucapan yang dinyatakan', sw: 'Laana na maneno yaliyotamkwa', tl: 'Mga sumpa at binigkas na pahayag', am: 'እርግማንና የተነገሩ ቃላት' },
+    theme: { en: 'Curses and spoken pronouncements', fr: 'Malédictions et paroles prononcées', es: 'Maldiciones y pronunciamientos', pt: 'Maldições e pronunciamentos', de: 'Flüche und ausgesprochene Verwünschungen', ru: 'Проклятия и произнесённые слова', zh: '咒诅与宣告的话', ja: 'のろいと宣言されたことば', ko: '저주와 선언된 말', ar: 'اللعنات والأقوال المنطوقة', fa: 'لعنت‌ها و سخنان اعلام‌شده', hi: 'श्राप और बोले गए वचन', id: 'Kutuk dan ucapan yang dinyatakan', sw: 'Laana na maneno yaliyotamkwa', tl: 'Mga sumpa at binigkas na pahayag', am: 'እርግማንና የተነገሩ ቃላት' },
     ref: 'Galatians 3:13-14',
     related: ['Colossians 2:13-15', 'Romans 8:31-39'],
     reflection: {
@@ -540,7 +540,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Family occult and divination history', fr: 'Occultisme et divination dans la famille', es: 'Historia familiar de ocultismo y adivinación', pt: 'História familiar de ocultismo e adivinhação', de: 'Okkultismus und Wahrsagerei in der Familie', ru: 'Оккультизм и гадание в семье', zh: '家族的邪術與占卜歷史', ja: '家系のオカルト・占いの歴史', ko: '가문의 오컬트·점술 이력', ar: 'تاريخ العائلة مع السحر والعرافة', fa: 'سابقهٔ خانوادگی جادو و فالگیری', hi: 'परिवार में तंत्र-मंत्र का इतिहास', id: 'Riwayat okultisme dan ramalan keluarga', sw: 'Historia ya uchawi na uaguzi katika familia', tl: 'Kasaysayan ng okultismo at panghuhula sa pamilya', am: 'የቤተሰብ ጥንቆላና ምዋርት ታሪክ' },
+    theme: { en: 'Family occult and divination history', fr: 'Occultisme et divination dans la famille', es: 'Historia familiar de ocultismo y adivinación', pt: 'História familiar de ocultismo e adivinhação', de: 'Okkultismus und Wahrsagerei in der Familie', ru: 'Оккультизм и гадание в семье', zh: '家族的邪术与占卜历史', ja: '家系のオカルト・占いの歴史', ko: '가문의 오컬트·점술 이력', ar: 'تاريخ العائلة مع السحر والعرافة', fa: 'سابقهٔ خانوادگی جادو و فالگیری', hi: 'परिवार में तंत्र-मंत्र का इतिहास', id: 'Riwayat okultisme dan ramalan keluarga', sw: 'Historia ya uchawi na uaguzi katika familia', tl: 'Kasaysayan ng okultismo at panghuhula sa pamilya', am: 'የቤተሰብ ጥንቆላና ምዋርት ታሪክ' },
     ref: 'Acts 19:18-20',
     related: ['Deuteronomy 18:9-14', '1 John 4:1-4'],
     reflection: {
@@ -568,7 +568,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Names, ceremonies and dedications', fr: 'Noms, cérémonies et consécrations', es: 'Nombres, ceremonias y dedicaciones', pt: 'Nomes, cerimônias e dedicações', de: 'Namen, Zeremonien und Weihen', ru: 'Имена, обряды и посвящения', zh: '名字、儀式與獻身', ja: '名前・儀式・奉献', ko: '이름과 의식과 바침', ar: 'الأسماء والمراسم والتكريسات', fa: 'نام‌ها، مراسم و وقف‌ها', hi: 'नाम, समारोह और समर्पण', id: 'Nama, upacara, dan persembahan', sw: 'Majina, sherehe na kuwekwa wakfu', tl: 'Mga pangalan, seremonya at paghahandog', am: 'ስሞች፣ ሥርዓቶችና ስጦታዎች' },
+    theme: { en: 'Names, ceremonies and dedications', fr: 'Noms, cérémonies et consécrations', es: 'Nombres, ceremonias y dedicaciones', pt: 'Nomes, cerimônias e dedicações', de: 'Namen, Zeremonien und Weihen', ru: 'Имена, обряды и посвящения', zh: '名字、仪式与献身', ja: '名前・儀式・奉献', ko: '이름과 의식과 바침', ar: 'الأسماء والمراسم والتكريسات', fa: 'نام‌ها، مراسم و وقف‌ها', hi: 'नाम, समारोह और समर्पण', id: 'Nama, upacara, dan persembahan', sw: 'Majina, sherehe na kuwekwa wakfu', tl: 'Mga pangalan, seremonya at paghahandog', am: 'ስሞች፣ ሥርዓቶችና ስጦታዎች' },
     ref: 'Isaiah 43:1',
     related: ['Revelation 2:17', '1 Peter 2:9-10'],
     reflection: {
@@ -597,7 +597,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Destructive generational patterns', fr: 'Schémas destructeurs de génération en génération', es: 'Patrones destructivos generacionales', pt: 'Padrões destrutivos entre gerações', de: 'Zerstörerische Muster über Generationen', ru: 'Разрушительные родовые схемы', zh: '世代相傳的破壞性模式', ja: '世代を越えた破壊的パターン', ko: '대를 잇는 파괴적 패턴', ar: 'أنماط مدمّرة متوارثة', fa: 'الگوهای ویرانگر نسلی', hi: 'पीढ़ियों से चले आ रहे विनाशकारी ढर्रे', id: 'Pola merusak antar-generasi', sw: 'Mifumo haribifu ya vizazi', tl: 'Mapanirang mga ugali sa mga henerasyon', am: 'ከትውልድ ትውልድ የሚተላለፉ ጎጂ ልማዶች' },
+    theme: { en: 'Destructive generational patterns', fr: 'Schémas destructeurs de génération en génération', es: 'Patrones destructivos generacionales', pt: 'Padrões destrutivos entre gerações', de: 'Zerstörerische Muster über Generationen', ru: 'Разрушительные родовые схемы', zh: '世代相传的破坏性模式', ja: '世代を越えた破壊的パターン', ko: '대를 잇는 파괴적 패턴', ar: 'أنماط مدمّرة متوارثة', fa: 'الگوهای ویرانگر نسلی', hi: 'पीढ़ियों से चले आ रहे विनाशकारी ढर्रे', id: 'Pola merusak antar-generasi', sw: 'Mifumo haribifu ya vizazi', tl: 'Mapanirang mga ugali sa mga henerasyon', am: 'ከትውልድ ትውልድ የሚተላለፉ ጎጂ ልማዶች' },
     ref: 'Ezekiel 18:20',
     related: ['1 Peter 1:18-19', 'Romans 12:1-2'],
     reflection: {
@@ -622,7 +622,7 @@ export const DAYS = [
   },
   {
     movement: 'family',
-    theme: { en: 'Standing free: the family line in prayer', fr: 'Debout et libre : la lignée dans la prière', es: 'Libres en pie: el linaje en oración', pt: 'De pé e livre: a linhagem em oração', de: 'Frei stehen: die Familienlinie im Gebet', ru: 'Стоять свободным: род в молитве', zh: '站立得自由：為家族禱告', ja: '自由に立つ——家系を祈る', ko: '자유롭게 서다: 가문을 위한 기도', ar: 'الوقوف في الحرية: العائلة في الصلاة', fa: 'ایستادن در آزادی: خاندان در دعا', hi: 'स्वतंत्र खड़े होना: वंश के लिए प्रार्थना', id: 'Berdiri merdeka: garis keluarga dalam doa', sw: 'Kusimama huru: ukoo katika maombi', tl: 'Malayang tumayo: ang angkan sa panalangin', am: 'በነጻነት መቆም፦ የቤተሰብ ሐረግ በጸሎት' },
+    theme: { en: 'Standing free: the family line in prayer', fr: 'Debout et libre : la lignée dans la prière', es: 'Libres en pie: el linaje en oración', pt: 'De pé e livre: a linhagem em oração', de: 'Frei stehen: die Familienlinie im Gebet', ru: 'Стоять свободным: род в молитве', zh: '站立得自由：为家族祷告', ja: '自由に立つ——家系を祈る', ko: '자유롭게 서다: 가문을 위한 기도', ar: 'الوقوف في الحرية: العائلة في الصلاة', fa: 'ایستادن در آزادی: خاندان در دعا', hi: 'स्वतंत्र खड़े होना: वंश के लिए प्रार्थना', id: 'Berdiri merdeka: garis keluarga dalam doa', sw: 'Kusimama huru: ukoo katika maombi', tl: 'Malayang tumayo: ang angkan sa panalangin', am: 'በነጻነት መቆም፦ የቤተሰብ ሐረግ በጸሎት' },
     ref: 'Romans 8:31-39',
     related: ['Galatians 3:13-14', 'Colossians 2:13-15', '2 Corinthians 5:17'],
     reflection: {
@@ -654,7 +654,7 @@ export const DAYS = [
   // ── Movement 4 · Standing in spiritual warfare ────────────────────────────
   {
     movement: 'warfare',
-    theme: { en: 'Pulling down strongholds', fr: 'Renverser les forteresses', es: 'Derribar fortalezas', pt: 'Derrubar fortalezas', de: 'Festungen niederreißen', ru: 'Разрушение твердынь', zh: '攻破堅固的營壘', ja: '要塞を打ち倒す', ko: '견고한 진을 무너뜨리다', ar: 'هدم الحصون', fa: 'ویران کردن قلعه‌ها', hi: 'गढ़ों को ढाना', id: 'Meruntuhkan benteng', sw: 'Kubomoa ngome', tl: 'Pagbagsak ng mga muog', am: 'ምሽጎችን ማፍረስ' },
+    theme: { en: 'Pulling down strongholds', fr: 'Renverser les forteresses', es: 'Derribar fortalezas', pt: 'Derrubar fortalezas', de: 'Festungen niederreißen', ru: 'Разрушение твердынь', zh: '攻破坚固的营垒', ja: '要塞を打ち倒す', ko: '견고한 진을 무너뜨리다', ar: 'هدم الحصون', fa: 'ویران کردن قلعه‌ها', hi: 'गढ़ों को ढाना', id: 'Meruntuhkan benteng', sw: 'Kubomoa ngome', tl: 'Pagbagsak ng mga muog', am: 'ምሽጎችን ማፍረስ' },
     ref: '2 Corinthians 10:3-5',
     related: ['Romans 12:2', 'John 8:31-32'],
     reflection: {
@@ -678,7 +678,7 @@ export const DAYS = [
   },
   {
     movement: 'warfare',
-    theme: { en: 'Fear, oppression and intimidation', fr: 'Peur, oppression et intimidation', es: 'Miedo, opresión e intimidación', pt: 'Medo, opressão e intimidação', de: 'Furcht, Bedrückung und Einschüchterung', ru: 'Страх, угнетение и запугивание', zh: '懼怕、壓制與威嚇', ja: '恐れ・圧迫・脅し', ko: '두려움과 억압과 위협', ar: 'الخوف والاضطهاد والترهيب', fa: 'ترس، فشار و ارعاب', hi: 'भय, दबाव और धमकी', id: 'Ketakutan, tekanan, dan intimidasi', sw: 'Hofu, dhiki na vitisho', tl: 'Takot, pang-aapi at pananakot', am: 'ፍርሃት፣ ጭቆናና ማስፈራራት' },
+    theme: { en: 'Fear, oppression and intimidation', fr: 'Peur, oppression et intimidation', es: 'Miedo, opresión e intimidación', pt: 'Medo, opressão e intimidação', de: 'Furcht, Bedrückung und Einschüchterung', ru: 'Страх, угнетение и запугивание', zh: '惧怕、压制与威吓', ja: '恐れ・圧迫・脅し', ko: '두려움과 억압과 위협', ar: 'الخوف والاضطهاد والترهيب', fa: 'ترس، فشار و ارعاب', hi: 'भय, दबाव और धमकी', id: 'Ketakutan, tekanan, dan intimidasi', sw: 'Hofu, dhiki na vitisho', tl: 'Takot, pang-aapi at pananakot', am: 'ፍርሃት፣ ጭቆናና ማስፈራራት' },
     ref: '2 Timothy 1:7',
     related: ['Psalm 27:1-3', 'Romans 8:31-39'],
     reflection: {
@@ -705,7 +705,7 @@ export const DAYS = [
   },
   {
     movement: 'warfare',
-    theme: { en: 'The armour of God', fr: "L'armure de Dieu", es: 'La armadura de Dios', pt: 'A armadura de Deus', de: 'Die Waffenrüstung Gottes', ru: 'Всеоружие Божие', zh: '神所賜的全副軍裝', ja: '神の武具', ko: '하나님의 전신갑주', ar: 'سلاح الله الكامل', fa: 'اسلحهٔ کامل خدا', hi: 'परमेश्वर के सारे हथियार', id: 'Perlengkapan senjata Allah', sw: 'Silaha zote za Mungu', tl: 'Ang baluti ng Diyos', am: 'የእግዚአብሔር የጦር ዕቃ' },
+    theme: { en: 'The armour of God', fr: "L'armure de Dieu", es: 'La armadura de Dios', pt: 'A armadura de Deus', de: 'Die Waffenrüstung Gottes', ru: 'Всеоружие Божие', zh: '神所赐的全副军装', ja: '神の武具', ko: '하나님의 전신갑주', ar: 'سلاح الله الكامل', fa: 'اسلحهٔ کامل خدا', hi: 'परमेश्वर के सारे हथियार', id: 'Perlengkapan senjata Allah', sw: 'Silaha zote za Mungu', tl: 'Ang baluti ng Diyos', am: 'የእግዚአብሔር የጦር ዕቃ' },
     ref: 'Ephesians 6:10-18',
     related: ['Isaiah 59:17', '1 Thessalonians 5:8'],
     reflection: {
@@ -724,7 +724,7 @@ export const DAYS = [
   },
   {
     movement: 'warfare',
-    theme: { en: 'Submit to God, resist the devil', fr: 'Se soumettre à Dieu, résister au diable', es: 'Sométanse a Dios, resistan al diablo', pt: 'Sujeitem-se a Deus, resistam ao diabo', de: 'Gott unterordnen, dem Teufel widerstehen', ru: 'Покоритесь Богу, противостаньте диаволу', zh: '順服神，抵擋魔鬼', ja: '神に従い、悪魔に立ち向かう', ko: '하나님께 복종하고 마귀를 대적하라', ar: 'اخضعوا لله وقاوموا إبليس', fa: 'تسلیم خدا شوید، در برابر ابلیس بایستید', hi: 'परमेश्वर के अधीन हों, शैतान का सामना करें', id: 'Tunduk kepada Allah, lawan Iblis', sw: 'Mtii Mungu, mpingeni Ibilisi', tl: 'Pasakop sa Diyos, labanan ang diyablo', am: 'ለእግዚአብሔር ተገዙ፣ ዲያብሎስን ተቃወሙ' },
+    theme: { en: 'Submit to God, resist the devil', fr: 'Se soumettre à Dieu, résister au diable', es: 'Sométanse a Dios, resistan al diablo', pt: 'Sujeitem-se a Deus, resistam ao diabo', de: 'Gott unterordnen, dem Teufel widerstehen', ru: 'Покоритесь Богу, противостаньте диаволу', zh: '顺服神，抵挡魔鬼', ja: '神に従い、悪魔に立ち向かう', ko: '하나님께 복종하고 마귀를 대적하라', ar: 'اخضعوا لله وقاوموا إبليس', fa: 'تسلیم خدا شوید، در برابر ابلیس بایستید', hi: 'परमेश्वर के अधीन हों, शैतान का सामना करें', id: 'Tunduk kepada Allah, lawan Iblis', sw: 'Mtii Mungu, mpingeni Ibilisi', tl: 'Pasakop sa Diyos, labanan ang diyablo', am: 'ለእግዚአብሔር ተገዙ፣ ዲያብሎስን ተቃወሙ' },
     ref: 'James 4:7-8',
     related: ['1 Peter 5:6-9', 'Ephesians 4:26-27'],
     reflection: {
@@ -744,7 +744,7 @@ export const DAYS = [
   },
   {
     movement: 'warfare',
-    theme: { en: 'Protection and confidence in God', fr: 'Protection et assurance en Dieu', es: 'Protección y confianza en Dios', pt: 'Proteção e confiança em Deus', de: 'Schutz und Zuversicht bei Gott', ru: 'Защита и упование на Бога', zh: '神的保護與信靠', ja: '神の守りと確信', ko: '하나님의 보호와 확신', ar: 'الحماية والثقة بالله', fa: 'حفاظت و اطمینان در خدا', hi: 'परमेश्वर में सुरक्षा और भरोसा', id: 'Perlindungan dan keyakinan pada Allah', sw: 'Ulinzi na tumaini kwa Mungu', tl: 'Proteksiyon at pagtitiwala sa Diyos', am: 'በእግዚአብሔር ጥበቃና እምነት' },
+    theme: { en: 'Protection and confidence in God', fr: 'Protection et assurance en Dieu', es: 'Protección y confianza en Dios', pt: 'Proteção e confiança em Deus', de: 'Schutz und Zuversicht bei Gott', ru: 'Защита и упование на Бога', zh: '神的保护与信靠', ja: '神の守りと確信', ko: '하나님의 보호와 확신', ar: 'الحماية والثقة بالله', fa: 'حفاظت و اطمینان در خدا', hi: 'परमेश्वर में सुरक्षा और भरोसा', id: 'Perlindungan dan keyakinan pada Allah', sw: 'Ulinzi na tumaini kwa Mungu', tl: 'Proteksiyon at pagtitiwala sa Diyos', am: 'በእግዚአብሔር ጥበቃና እምነት' },
     ref: 'Psalm 91:1-16',
     related: ['Psalm 121:1-8', 'Romans 8:31-39'],
     reflection: {
@@ -764,7 +764,7 @@ export const DAYS = [
   },
   {
     movement: 'warfare',
-    theme: { en: 'Praying and proclaiming the Word', fr: 'Prier et proclamer la Parole', es: 'Orar y proclamar la Palabra', pt: 'Orar e proclamar a Palavra', de: 'Das Wort beten und bekennen', ru: 'Молиться и провозглашать Слово', zh: '禱告並宣講神的話', ja: 'みことばを祈り、宣言する', ko: '말씀으로 기도하고 선포하라', ar: 'الصلاة بالكلمة وإعلانها', fa: 'دعا و اعلام کلام', hi: 'वचन से प्रार्थना और घोषणा', id: 'Berdoa dan memberitakan Firman', sw: 'Kuomba na kutangaza Neno', tl: 'Ipanalangin at ipahayag ang Salita', am: 'ቃሉን መጸለይና ማወጅ' },
+    theme: { en: 'Praying and proclaiming the Word', fr: 'Prier et proclamer la Parole', es: 'Orar y proclamar la Palabra', pt: 'Orar e proclamar a Palavra', de: 'Das Wort beten und bekennen', ru: 'Молиться и провозглашать Слово', zh: '祷告并宣讲神的话', ja: 'みことばを祈り、宣言する', ko: '말씀으로 기도하고 선포하라', ar: 'الصلاة بالكلمة وإعلانها', fa: 'دعا و اعلام کلام', hi: 'वचन से प्रार्थना और घोषणा', id: 'Berdoa dan memberitakan Firman', sw: 'Kuomba na kutangaza Neno', tl: 'Ipanalangin at ipahayag ang Salita', am: 'ቃሉን መጸለይና ማወጅ' },
     ref: 'Ephesians 6:17-18',
     related: ['Hebrews 4:12', 'Psalm 119:9-11'],
     reflection: {
@@ -789,7 +789,7 @@ export const DAYS = [
   // ── Movement 5 · Filled, restored & walking in freedom ────────────────────
   {
     movement: 'walking',
-    theme: { en: 'Be filled with the Holy Spirit', fr: "Être rempli du Saint-Esprit", es: 'Sean llenos del Espíritu Santo', pt: 'Sejam cheios do Espírito Santo', de: 'Erfüllt werden mit dem Heiligen Geist', ru: 'Исполняйтесь Духом Святым', zh: '被聖靈充滿', ja: '聖霊に満たされる', ko: '성령으로 충만하라', ar: 'امتلئوا بالروح القدس', fa: 'از روح‌القدس پر شوید', hi: 'पवित्र आत्मा से परिपूर्ण होना', id: 'Dipenuhi Roh Kudus', sw: 'Kujazwa Roho Mtakatifu', tl: 'Mapuspos ng Espiritu Santo', am: 'በመንፈስ ቅዱስ መሞላት' },
+    theme: { en: 'Be filled with the Holy Spirit', fr: "Être rempli du Saint-Esprit", es: 'Sean llenos del Espíritu Santo', pt: 'Sejam cheios do Espírito Santo', de: 'Erfüllt werden mit dem Heiligen Geist', ru: 'Исполняйтесь Духом Святым', zh: '被圣灵充满', ja: '聖霊に満たされる', ko: '성령으로 충만하라', ar: 'امتلئوا بالروح القدس', fa: 'از روح‌القدس پر شوید', hi: 'पवित्र आत्मा से परिपूर्ण होना', id: 'Dipenuhi Roh Kudus', sw: 'Kujazwa Roho Mtakatifu', tl: 'Mapuspos ng Espiritu Santo', am: 'በመንፈስ ቅዱስ መሞላት' },
     ref: 'Ephesians 5:18-20',
     related: ['Galatians 5:22-25', 'Romans 8:14'],
     reflection: {
@@ -808,7 +808,7 @@ export const DAYS = [
   },
   {
     movement: 'walking',
-    theme: { en: 'Replacing what was pulled down', fr: 'Remplacer ce qui a été renversé', es: 'Reemplazar lo que fue derribado', pt: 'Substituir o que foi derrubado', de: 'Ersetzen, was niedergerissen wurde', ru: 'Заменить то, что разрушено', zh: '用美善填補拆毀之處', ja: '取り除いた場所を満たす', ko: '허문 자리를 채우라', ar: 'استبدال ما هُدم', fa: 'جایگزینی آنچه ویران شد', hi: 'जो ढाया गया उसकी जगह भरना', id: 'Mengganti yang telah diruntuhkan', sw: 'Kujaza mahali palipobomolewa', tl: 'Palitan ang binuwag', am: 'የፈረሰውን መተካት' },
+    theme: { en: 'Replacing what was pulled down', fr: 'Remplacer ce qui a été renversé', es: 'Reemplazar lo que fue derribado', pt: 'Substituir o que foi derrubado', de: 'Ersetzen, was niedergerissen wurde', ru: 'Заменить то, что разрушено', zh: '用美善填补拆毁之处', ja: '取り除いた場所を満たす', ko: '허문 자리를 채우라', ar: 'استبدال ما هُدم', fa: 'جایگزینی آنچه ویران شد', hi: 'जो ढाया गया उसकी जगह भरना', id: 'Mengganti yang telah diruntuhkan', sw: 'Kujaza mahali palipobomolewa', tl: 'Palitan ang binuwag', am: 'የፈረሰውን መተካት' },
     ref: 'Philippians 4:8-9',
     related: ['Romans 12:1-2', 'Ephesians 4:22-32'],
     reflection: {
@@ -832,7 +832,7 @@ export const DAYS = [
   },
   {
     movement: 'walking',
-    theme: { en: 'Community, confession and support', fr: 'Communauté, confession et soutien', es: 'Comunidad, confesión y apoyo', pt: 'Comunidade, confissão e apoio', de: 'Gemeinschaft, Bekenntnis und Beistand', ru: 'Общение, исповедь и поддержка', zh: '團契、認罪與扶持', ja: '交わり・告白・支え', ko: '공동체와 고백과 지지', ar: 'الشركة والاعتراف والسند', fa: 'جماعت، اعتراف و پشتیبانی', hi: 'संगति, अंगीकार और सहारा', id: 'Persekutuan, pengakuan, dan dukungan', sw: 'Ushirika, kuungama na msaada', tl: 'Pagsasama, pag-amin at suporta', am: 'ኅብረት፣ መናዘዝና ድጋፍ' },
+    theme: { en: 'Community, confession and support', fr: 'Communauté, confession et soutien', es: 'Comunidad, confesión y apoyo', pt: 'Comunidade, confissão e apoio', de: 'Gemeinschaft, Bekenntnis und Beistand', ru: 'Общение, исповедь и поддержка', zh: '团契、认罪与扶持', ja: '交わり・告白・支え', ko: '공동체와 고백과 지지', ar: 'الشركة والاعتراف والسند', fa: 'جماعت، اعتراف و پشتیبانی', hi: 'संगति, अंगीकार और सहारा', id: 'Persekutuan, pengakuan, dan dukungan', sw: 'Ushirika, kuungama na msaada', tl: 'Pagsasama, pag-amin at suporta', am: 'ኅብረት፣ መናዘዝና ድጋፍ' },
     ref: 'James 5:16',
     related: ['Hebrews 10:24-25', 'Galatians 6:1-2'],
     reflection: {
@@ -856,7 +856,7 @@ export const DAYS = [
   },
   {
     movement: 'walking',
-    theme: { en: 'Abide in Christ and walk free', fr: 'Demeurer en Christ et marcher libre', es: 'Permanecer en Cristo y andar en libertad', pt: 'Permanecer em Cristo e andar livre', de: 'In Christus bleiben und frei leben', ru: 'Пребывать во Христе и ходить свободным', zh: '住在基督裡，自由而行', ja: 'キリストにとどまり、自由に歩む', ko: '그리스도 안에 거하며 자유롭게 걸으라', ar: 'اثبتوا في المسيح واسلكوا أحرارًا', fa: 'در مسیح بمانید و آزاد گام بردارید', hi: 'मसीह में बने रहें और स्वतंत्र चलें', id: 'Tinggal dalam Kristus dan hidup merdeka', sw: 'Kukaa ndani ya Kristo na kutembea huru', tl: 'Manatili kay Cristo at lumakad nang malaya', am: 'በክርስቶስ መኖርና በነጻነት መራመድ' },
+    theme: { en: 'Abide in Christ and walk free', fr: 'Demeurer en Christ et marcher libre', es: 'Permanecer en Cristo y andar en libertad', pt: 'Permanecer em Cristo e andar livre', de: 'In Christus bleiben und frei leben', ru: 'Пребывать во Христе и ходить свободным', zh: '住在基督里，自由而行', ja: 'キリストにとどまり、自由に歩む', ko: '그리스도 안에 거하며 자유롭게 걸으라', ar: 'اثبتوا في المسيح واسلكوا أحرارًا', fa: 'در مسیح بمانید و آزاد گام بردارید', hi: 'मसीह में बने रहें और स्वतंत्र चलें', id: 'Tinggal dalam Kristus dan hidup merdeka', sw: 'Kukaa ndani ya Kristo na kutembea huru', tl: 'Manatili kay Cristo at lumakad nang malaya', am: 'በክርስቶስ መኖርና በነጻነት መራመድ' },
     ref: 'John 15:1-11',
     related: ['Galatians 5:1', 'Colossians 2:6-7'],
     reflection: {

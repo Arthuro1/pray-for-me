@@ -1,0 +1,138 @@
+{
+  "locale": "fr",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "sujet de prière",
+      "allowed": [
+        "intention de prière",
+        "demande de prière"
+      ],
+      "avoid": [],
+      "example": "Confie ton sujet de prière à Dieu.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "answeredPrayer": {
+      "preferred": "prière exaucée",
+      "allowed": [],
+      "avoid": [],
+      "example": "Souviens-toi d’une prière exaucée.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "testimony": {
+      "preferred": "témoignage",
+      "allowed": [],
+      "avoid": [],
+      "example": "Partage ton témoignage.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "intercession": {
+      "preferred": "intercession",
+      "allowed": [],
+      "avoid": [],
+      "example": "Prends un temps d’intercession.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "discernment": {
+      "preferred": "discernement",
+      "allowed": [],
+      "avoid": [],
+      "example": "Demande à Dieu du discernement.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "covenant": {
+      "preferred": "alliance",
+      "allowed": [],
+      "avoid": [],
+      "example": "Dieu reste fidèle à son alliance.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "repentance": {
+      "preferred": "repentance",
+      "allowed": [],
+      "avoid": [],
+      "example": "Tourne-toi vers Dieu dans la repentance.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "salvation": {
+      "preferred": "salut",
+      "allowed": [],
+      "avoid": [],
+      "example": "Remercie Dieu pour le salut en Christ.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "grace": {
+      "preferred": "grâce",
+      "allowed": [],
+      "avoid": [],
+      "example": "Accueille la grâce de Dieu.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "holySpirit": {
+      "preferred": "le Saint-Esprit",
+      "allowed": [],
+      "avoid": [],
+      "example": "Demande au Saint-Esprit de te guider.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "scripture": {
+      "preferred": "les Écritures",
+      "allowed": [],
+      "avoid": [],
+      "example": "Lis ce passage dans les Écritures.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "fasting": {
+      "preferred": "jeûne",
+      "allowed": [],
+      "avoid": [],
+      "example": "Prends un temps de jeûne et de prière.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "faithfulness": {
+      "preferred": "fidélité",
+      "allowed": [],
+      "avoid": [],
+      "example": "Souviens-toi de la fidélité de Dieu.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "prayerJournal": {
+      "preferred": "journal de prière",
+      "allowed": [
+        "journal"
+      ],
+      "avoid": [],
+      "example": "Garde ce sujet dans ton journal de prière.",
+      "note": "L’onglet peut dire « Journal » ; dans une phrase, précisez si le contexte ne le fait pas."
+    },
+    "update": {
+      "preferred": "nouvelle",
+      "allowed": [
+        "nouvelles"
+      ],
+      "avoid": [],
+      "example": "Ajoutez une nouvelle quand la situation change.",
+      "note": "Nouvelles d’un sujet de prière. « Mise à jour » reste réservé aux mises à jour de l’application."
+    },
+    "thanksgiving": {
+      "preferred": "action de grâces",
+      "allowed": [
+        "reconnaissance"
+      ],
+      "avoid": [],
+      "example": "Termine par l’action de grâces.",
+      "note": "Terme d’Église pour l’étape de louange et de remerciement ; « reconnaissance » pour le sentiment."
+    },
+    "renunciation": {
+      "preferred": "renonciation",
+      "allowed": [
+        "renoncement",
+        "renoncer à"
+      ],
+      "avoid": [],
+      "example": "Dans une prière de renonciation, tu nommes ce que tu rejettes.",
+      "note": "Vocabulaire de délivrance ; « renoncement » peut aussi signifier l’abnégation, vérifier le contexte."
+    }
+  }
+}

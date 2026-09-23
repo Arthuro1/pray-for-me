@@ -9,8 +9,15 @@ export const WISDOM_REVIEWED_LOCALES = [
 export const WISDOM_PLAN_SIGNOFF = {
   status: 'approved', reviewer: 'Paul', reviewedAt: '2026-09-08',
 };
+// The 2026-09-23 wording pass changed text after Paul signed. The plan stays
+// live on his sign-off; only Paul re-approving clears this note.
+export const WISDOM_REREVIEW_PENDING = {
+  since: '2026-09-23',
+  changed: 'DE title of week 5.',
+};
 export const WISDOM_PLAN_APPROVAL = {
   status: 'approved', contentVersion: 1,
+  rereviewPending: WISDOM_REREVIEW_PENDING,
   theology: { ...WISDOM_PLAN_SIGNOFF },
   safety: { ...WISDOM_PLAN_SIGNOFF },
   locales: Object.fromEntries(WISDOM_REVIEWED_LOCALES.map((lang) => [lang, {

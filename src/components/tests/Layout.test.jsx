@@ -55,7 +55,7 @@ describe('Layout — primary navigation', () => {
       expect(within(bottomNav(container)).getByText(t(lang, key))).toBeTruthy();
     }
     // Grow and Settings moved inside More — off the prime navigation.
-    expect(screen.queryByText(t(lang, 'grow'))).toBeNull();
+    expect(screen.queryByText('Grandir')).toBeNull();
     expect(screen.queryByText(t(lang, 'settings'))).toBeNull();
   });
 

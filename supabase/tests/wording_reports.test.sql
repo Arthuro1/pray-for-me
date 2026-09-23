@@ -1,0 +1,25 @@
+begin;
+select plan(15);
+insert into auth.users (id, instance_id, aud, role, email, encrypted_password, created_at, updated_at)
+values ('d1111111-1111-4111-8111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'wording@example.test', 'x', now(), now());
+select ok((select relrowsecurity from pg_class where oid = 'public.wording_reports'::regclass), 'RLS enabled');
+select ok(not has_table_privilege('anon','public.wording_reports','SELECT,INSERT,UPDATE,DELETE'), 'no anonymous table privileges');
+select ok(not has_column_privilege('authenticated','public.wording_reports','user_id','INSERT'), 'reporter identity is server assigned');
+select ok(not has_column_privilege('authenticated','public.wording_reports','status','INSERT'), 'cannot submit an already resolved report');
+select ok(not has_column_privilege('authenticated','public.wording_reports','current_string','UPDATE'), 'editors cannot rewrite submitted text');
+select ok(not has_table_privilege('authenticated','public.wording_reports','DELETE'), 'clients cannot delete reports');
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"d1111111-1111-4111-8111-111111111111","role":"authenticated","user_metadata":{"content_reviewer":true}}', true);
+select lives_ok($$insert into public.wording_reports (locale, translation_key, screen, current_string, issue_type) values ('de','ui:save','ui','Speichern','unclear')$$, 'signed-in user submits published wording');
+select is((select count(*) from public.wording_reports), 0::bigint, 'user metadata cannot grant read access');
+select results_eq($$update public.wording_reports set status = 'resolved' returning status$$, array[]::text[], 'ordinary user cannot update reports');
+select throws_ok($$insert into public.wording_reports (locale, translation_key, screen, current_string, issue_type) values ('xx','ui:save','ui','Text','unclear')$$, '23514', null, 'invalid locale rejected');
+select throws_ok($$insert into public.wording_reports (locale, translation_key, screen, current_string, issue_type, suggested_wording) values ('de','ui:save','ui','Text','unclear', repeat('x',2001))$$, '23514', null, 'oversized correction rejected');
+select set_config('request.jwt.claims', '{"sub":"d1111111-1111-4111-8111-111111111111","role":"authenticated","is_anonymous":true}', true);
+select throws_ok($$insert into public.wording_reports (locale, translation_key, screen, current_string, issue_type) values ('de','ui:save','ui','Text','unclear')$$, '42501', null, 'anonymous sign-in cannot submit');
+select set_config('request.jwt.claims', '{"sub":"d1111111-1111-4111-8111-111111111111","role":"authenticated","app_metadata":{"content_reviewer":true}}', true);
+select is((select count(*) from public.wording_reports), 1::bigint, 'trusted editor sees queue');
+select lives_ok($$update public.wording_reports set status = 'reviewing'$$, 'trusted editor updates status');
+select is((select status from public.wording_reports limit 1), 'reviewing', 'editor update persisted');
+select * from finish();
+rollback;

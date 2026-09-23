@@ -6,19 +6,23 @@
     "steps": [
       {
         "title": "Kuabudu",
-        "prompt": "Msifu Mungu kwa vile alivyo, si kwa vile atoavyo tu. Soma zaburi polepole na umrudishie maneno yake."
+        "prompt": "Msifu Mungu kwa vile alivyo, si kwa vile atoavyo tu. Soma zaburi polepole na umrudishie maneno yake.",
+        "why": "Kuanza na jinsi Mungu alivyo huyainua maombi juu ya wasiwasi wetu na hutukumbusha tunazungumza na nani. Maombi ya Biblia karibu kila mara huanzia hapa."
       },
       {
         "title": "Kuungama",
-        "prompt": "Kubaliana na Mungu kwa uaminifu kuhusu dhambi yako. Yeye ni mwaminifu na wa haki kusamehe — kuungama ni kurudi nyumbani, si kujipatia upendo."
+        "prompt": "Kubaliana na Mungu kwa uaminifu kuhusu dhambi yako. Yeye ni mwaminifu na wa haki kusamehe — kuungama ni kurudi nyumbani, si kujipatia upendo.",
+        "why": "Kuwa wazi kuhusu dhambi hufungua njia kwa yote yanayofuata — tunaomba kwa uhuru kwa sababu tunakuja tukiwa tumesamehewa, bila kujificha."
       },
       {
         "title": "Kushukuru",
-        "prompt": "Taja rehema mahususi za leo na za wiki hii. Shukrani huutuliza moyo kabla haujaomba lolote."
+        "prompt": "Taja rehema mahususi za leo na za wiki hii. Shukrani huutuliza moyo kabla haujaomba lolote.",
+        "why": "Kukumbuka yale ambayo Mungu ameshatenda hujenga imani kwa yale tunayokaribia kuomba. Shukrani hugeuza maombi kuwa tumaini."
       },
       {
         "title": "Kuomba",
-        "prompt": "Sasa leta maombi yako — kwa ajili yako na wengine — kwa ujasiri, kwa sababu ya vile alivyo. Omba kwa ajili ya mizigo ya moyo wako."
+        "prompt": "Sasa leta maombi yako — kwa ajili yako na wengine — kwa ujasiri, kwa sababu ya vile alivyo. Omba kwa ajili ya mizigo ya moyo wako.",
+        "why": "Maombi ya mahitaji huja mwisho si kwa sababu hayana maana, bali kwa sababu moyo uliotia nanga katika sifa, uwazi na shukrani huomba kwa uhuru zaidi."
       }
     ]
   },
@@ -29,7 +33,8 @@
     "steps": [
       {
         "title": "Isome yote",
-        "prompt": "Soma zaburi mara moja, polepole, ukisikiliza tu. Angalia mwandishi anamwambia nini Mungu na anasema nini kuhusu Mungu."
+        "prompt": "Soma zaburi mara moja, polepole, ukisikiliza tu. Angalia mwandishi anamwambia nini Mungu na anasema nini kuhusu Mungu.",
+        "why": "Kusikiliza kabla ya kuongea humwachia Mungu kuweka mwelekeo wa maombi. Zaburi hutupa maneno ambayo tusingeyapata wenyewe."
       },
       {
         "title": "Irudishe katika sala",
@@ -81,7 +86,7 @@
   },
   "wisdom": {
     "title": "Kuomba hekima",
-    "summary": "Usipojua la kufanya, Mungu anakualika umwombe hekima — inayotolewa kwa ukarimu.",
+    "summary": "Usipojua la kufanya, Mungu anakualika umwombe hekima, naye huitoa kwa ukarimu.",
     "intro": "Hekima si werevu tu; ni ustadi wa kuishi kwa njia ya Mungu katika ulimwengu wa Mungu. Yakobo anasema Mungu anaitoa kwa wingi kwa wale waombao kwa imani.",
     "steps": [
       {
@@ -93,7 +98,7 @@
         "prompt": "Hekima huanza kwa kumcha Mungu. Mwombe akufanye utamani mapenzi yake kuliko yako."
       },
       {
-        "title": "Tumaini, usitegemee",
+        "title": "Mtumaini Yeye, si akili zako mwenyewe",
         "prompt": "Achilia ufahamu wako mwenyewe. Mwombe Mungu anyoshe njia zako unapoendelea mbele."
       }
     ]

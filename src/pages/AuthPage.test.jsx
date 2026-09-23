@@ -148,7 +148,7 @@ describe('AuthPage', () => {
       expect(screen.getByText(t('fr', 'authKeepPrayerTitle'))).toBeTruthy();
       expect(screen.getByText(t('fr', 'authKeepPrayerBody'))).toBeTruthy();
       // The old registration framing is gone.
-      expect(screen.queryByText(t('fr', 'authSavePrayerTitle'))).toBeNull();
+      expect(screen.queryByText('Enregistrez votre prière en privé')).toBeNull();
       expect(document.querySelector('.auth-mode-switch')).toBeNull();
     });
 

@@ -30,8 +30,8 @@ export const PRAYING_FOR_OUR_MARRIAGE = {
     completed: 'marriage_plan_completed',
   },
   intro: {
-    en: 'Thirty days of Scripture and prayer for your spouse, your own growth, and your marriage. This is a renewable rhythm, not a score or diagnosis. A married couple is already a family; children are an optional layer and the whole plan remains complete without them. You may use shared activities when both of you wish, while Prayer Notes and voice notes remain private.',
-    fr: 'Trente jours de lecture biblique et de prière pour ton conjoint, ta propre croissance et votre mariage. C’est un rythme que vous pouvez reprendre, pas un score ni un diagnostic. Un couple marié est déjà une famille ; les enfants sont une dimension facultative et le parcours reste complet sans eux. Vous pouvez choisir certaines activités à deux lorsque vous le souhaitez tous les deux, tandis que les notes écrites et vocales restent privées.',
+    en: 'Thirty days of Scripture and prayer for your spouse, your own growth, and your marriage. This is a renewable rhythm, not a score or diagnosis. A married couple is already a family; the prayers for children are optional, and the plan is complete without them. You may use shared activities when both of you wish, while prayer notes and voice notes remain private.',
+    fr: 'Trente jours de lecture biblique et de prière pour ton conjoint, ta propre croissance et votre mariage. C’est un rythme que vous pouvez reprendre, pas un score ni un diagnostic. Un couple marié est déjà une famille ; les prières pour les enfants sont facultatives et le parcours reste complet sans elles. Vous pouvez choisir certaines activités à deux lorsque vous le souhaitez tous les deux, tandis que les notes écrites et vocales restent privées.',
   },
   biblical: {
     ref: 'Colossians 3:12-15',
