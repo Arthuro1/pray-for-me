@@ -7,6 +7,10 @@ export default function ContextualNudgeCard({
   dismissLabel,
   onDismiss,
   titleId,
+  // An optional quiet text link under the body — a second way in, never a
+  // second button competing with the action.
+  secondaryLabel,
+  onSecondary,
   ...sectionProps
 }) {
   return (
@@ -27,9 +31,19 @@ export default function ContextualNudgeCard({
         <h2 id={titleId} className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
           {title}
         </h2>
-        <p className="mt-1 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+        <div className="mt-1 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
           {body}
-        </p>
+        </div>
+        {secondaryLabel && (
+          <button
+            type="button"
+            onClick={onSecondary}
+            className="mt-1 inline-flex min-h-11 items-center text-xs font-semibold underline-offset-2 hover:underline"
+            style={{ color: 'var(--accent)' }}
+          >
+            {secondaryLabel}
+          </button>
+        )}
       </div>
       <div className="mt-4 flex items-center gap-2 sm:mt-0 sm:shrink-0">
         <button

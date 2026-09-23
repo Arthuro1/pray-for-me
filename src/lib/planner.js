@@ -128,6 +128,20 @@ export function runningPlanIds(prayers, dayKey) {
   return ids;
 }
 
+// Guided plans walked to their last day and not running again, in the order the
+// runs were started. A run stopped part-way (answered, deleted) never counts —
+// only a series that actually reached its end, the same test PrayerDetail uses
+// for "plan finished".
+export function finishedPlanIds(prayers, dayKey) {
+  const running = runningPlanIds(prayers, dayKey);
+  const ids = [];
+  for (const p of prayers) {
+    const id = p.schedule?.plan?.id;
+    if (id && !running.has(id) && !ids.includes(id) && scheduleEnded(p, dayKey)) ids.push(id);
+  }
+  return ids;
+}
+
 // Where each running plan has GOT TO on `dayKey`, keyed by plan id:
 //
 //   { marriage30: { prayerId: 'p-1', day: 12 } }

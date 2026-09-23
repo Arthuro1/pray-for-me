@@ -13,6 +13,7 @@
 import { buildGuidedPlanPrayer } from './guidedPlan';
 import { canUsePlan } from './planReview';
 import { savePlanPrefs } from './planPrefs';
+import { trackPlanStarted } from './planAnalytics';
 
 export function needsPreStartPersonalization(plan) {
   return plan?.lifeStage === 'single' && !!plan?.onboarding;
@@ -22,11 +23,15 @@ export function needsPreStartPersonalization(plan) {
 //   { ok: false, reason: 'unavailable' } content review has not passed
 //   { ok: false, reason: 'personalize' } the singles choices must be collected
 //   { ok: false, reason: 'create' }      the prayer could not be created
-export async function startGuidedPlan({ plan, startDate, lang, addPrayer, prefs = null }) {
+//
+// `source` names the door the person came through (lib/planAnalytics.js), so
+// the one place a plan starts is also the one place a start is counted.
+export async function startGuidedPlan({ plan, startDate, lang, addPrayer, prefs = null, source }) {
   if (!canUsePlan(plan)) return { ok: false, reason: 'unavailable' };
   if (needsPreStartPersonalization(plan) && !prefs) return { ok: false, reason: 'personalize' };
   const prayerId = await addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
   if (!prayerId) return { ok: false, reason: 'create' };
   if (needsPreStartPersonalization(plan)) savePlanPrefs(plan.id, prefs);
+  trackPlanStarted(plan, source);
   return { ok: true, prayerId };
 }

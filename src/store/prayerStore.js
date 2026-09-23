@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { communityToPersonalInsert, mirrorSavedCopy, sortByOrder } from '../utils/prayer';
 import { prayersForDay, sortEntries, catchUpPrayers, migrateLegacySchedules } from '../lib/planner';
 import { resolveCategoryColor } from '../lib/categoryColor';
-import { addDays } from '../lib/schedule';
+import { addDays, planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { removeAttachmentFiles } from '../lib/attachments';
@@ -11,6 +11,7 @@ import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
 import { track, EVENTS } from '../lib/analytics';
 import { getPlan } from '../content/prayerPlans';
+import { trackPlanDayCompleted } from '../lib/planAnalytics';
 import { ensurePushSubscription } from '../push';
 import { isEventPushEnabled } from '../lib/notificationPrefs';
 import { resolveLanguage } from '../i18n';
@@ -846,9 +847,14 @@ const usePrayerStore = create((set, get) => ({
     // A guided plan that opts in also reports THAT one of its days was walked —
     // no day number, no plan progress, nothing the person wrote (see the
     // `analyticsEvents` note in src/content/plans/preparingInPrayer.js).
-    const planSchedule = get().prayers.find((p) => p.id === prayerId)?.schedule?.plan;
-    const dayEvent = planSchedule?.id && getPlan(planSchedule.id, planSchedule.version || null)?.analyticsEvents?.dayCompleted;
-    if (dayEvent) track(dayEvent);
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const planSchedule = prayer?.schedule?.plan;
+    const plan = planSchedule?.id ? getPlan(planSchedule.id, planSchedule.version || null) : null;
+    if (!plan) return;
+    if (plan.analyticsEvents?.dayCompleted) track(plan.analyticsEvents.dayCompleted);
+    // Every plan also feeds the discovery funnel ("did they come back for day
+    // 2?"); lib/planAnalytics.js strips the day number for the personal plans.
+    trackPlanDayCompleted(plan, planDayNumber(prayer.schedule, dayKey, prayer.schedule_overrides || {}));
   },
 
   unmarkPrayedOn: (prayerId, dayKey) => {

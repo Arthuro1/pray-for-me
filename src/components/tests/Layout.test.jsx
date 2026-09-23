@@ -47,13 +47,14 @@ describe('Layout — primary navigation', () => {
     expect(screen.queryByText(t(lang, 'prayers'))).toBeNull();
   });
 
-  it('renders exactly four primary destinations (Today · Journal · Together · More)', () => {
+  it('renders exactly five primary destinations (Today · Journal · Plans · Together · More)', () => {
     const { container } = renderNav();
     const links = within(bottomNav(container)).getAllByRole('link');
-    expect(links).toHaveLength(4);
-    for (const key of ['today', 'journal', 'together', 'moreTab']) {
-      expect(within(bottomNav(container)).getByText(t(lang, key))).toBeTruthy();
-    }
+    expect(links).toHaveLength(5);
+    // In this order: the reader's own prayer life, then community, then More.
+    expect(links.map((link) => link.textContent)).toEqual(
+      ['today', 'journal', 'navPlans', 'together', 'moreTab'].map((key) => t(lang, key)),
+    );
     // Grow and Settings moved inside More — off the prime navigation.
     expect(screen.queryByText('Grandir')).toBeNull();
     expect(screen.queryByText(t(lang, 'settings'))).toBeNull();
@@ -97,6 +98,16 @@ describe('Layout — active destination & aria-current', () => {
       expect(currentPage(container, 'moreTab')).toBe('page');
       // Today must NOT also light up on those routes.
       expect(currentPage(container, 'today')).toBeNull();
+      cleanup();
+    }
+  });
+
+  it('lights Plans — and not More — on the plans catalogue and a shared plan page', () => {
+    for (const route of ['/plans', '/plans/gratitude7', '/plans/gratitude7/tok123']) {
+      const { container } = renderNav(route);
+      expect(currentPage(container, 'navPlans'), route).toBe('page');
+      // `/plan` (the old Calendar route) is a More path; it must not claim `/plans`.
+      expect(currentPage(container, 'moreTab'), route).toBeNull();
       cleanup();
     }
   });
@@ -199,10 +210,10 @@ describe('Layout — long localized labels & RTL', () => {
     expect(community.closest('a').className).toMatch(/min-w-0/);
   });
 
-  it('renders all four destinations under a right-to-left locale (Arabic)', () => {
+  it('renders all five destinations under a right-to-left locale (Arabic)', () => {
     const { container } = renderNav('/', 'ar');
     const links = within(bottomNav(container)).getAllByRole('link');
-    expect(links).toHaveLength(4);
+    expect(links).toHaveLength(5);
     expect(within(bottomNav(container)).getByText(t('ar', 'together'))).toBeTruthy();
     // Direction is owned by <html dir>, never duplicated onto the nav itself —
     // the nav relies on logical CSS (insetInlineEnd) to mirror instead.

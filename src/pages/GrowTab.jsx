@@ -12,7 +12,6 @@ import GuideReader from '../components/GuideReader';
 import ArticleReader from '../components/ArticleReader';
 import GospelJourneyReader from '../components/GospelJourneyReader';
 import { PageHeader } from '../components/shared/Primitives';
-import PrayerJourneys from '../components/PrayerJourneys';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 
@@ -66,7 +65,8 @@ function Disclosure({ id, label, open, onToggle, count }) {
 // purely from on-device progress (no questionnaire). The rest of the library
 // waits behind "Browse all guides", and completed guides fold into a collapsed
 // History, so a growing believer always faces one understandable step instead
-// of a grid of equally-weighted options.
+// of a grid of equally-weighted options. Multi-day prayer plans are a
+// destination of their own (pages/PlansTab.jsx), not a section of this path.
 //
 // Near the bottom sits one gentle, optional invitation for people new to prayer
 // or exploring the faith: the gospel journey. It never auto-opens, never blocks
@@ -102,7 +102,7 @@ export default function GrowTab({ onCreatePrayer }) {
   const hasActiveJourney = runningPlanIds(prayers, todayKey()).size > 0;
   // The browsable rest: everything not already surfaced by the next-step card
   // and not completed (those live in History).
-  const browsable = guides.filter((g) => (hasActiveJourney || g.id !== recommendation?.guide?.id) && !completedIds.has(g.id));
+  const browsable = guides.filter((g) => g.id !== recommendation?.guide?.id && !completedIds.has(g.id));
 
   const REC_DESC_KEYS = { continue: 'growContinueDesc', new: 'growNewDesc', again: 'growAgainDesc' };
 
@@ -186,7 +186,7 @@ export default function GrowTab({ onCreatePrayer }) {
             {/* ONE recommended next step, from existing progress — an
                 in-progress guide always outranks anything new. It lives INSIDE
                 the Pray segment so Learn stays focused on learning content. */}
-            {recommendation && !hasActiveJourney && (
+            {recommendation && (
               <div className="mb-5">
                 <p className="section-label mb-2">
                   {t(lang, 'growNextStep')}
@@ -255,10 +255,6 @@ export default function GrowTab({ onCreatePrayer }) {
               ))}
             </div>
           </>
-        )}
-
-        {view === 'pray' && (
-          <PrayerJourneys lang={lang} showRecommendation={hasActiveJourney || !recommendation} />
         )}
 
         {/* Gentle, optional invitation for those new to prayer or exploring

@@ -36,6 +36,12 @@ export const PLAN_CATEGORIES = [
 // disappears from the list just because categories were introduced.
 export const DEFAULT_PLAN_CATEGORY = 'seeking';
 
+// The one plan offered to someone who has never followed one — on Today and at
+// the top of the Plans page. A gentle, universal week of thanksgiving, not a
+// fast or a plan about a particular stage of life. Nothing is personalized, so
+// the app calls it "Start here", never "Recommended for you".
+export const STARTER_PLAN_ID = 'gratitude7';
+
 export const PLANS = [
 
   {

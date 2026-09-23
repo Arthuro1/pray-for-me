@@ -5,15 +5,22 @@
 // Starting a guided plan creates ONE recurring daily prayer capped after N
 // occurrences; schedule.plan = { id, version?, startDate } lets the engine number the days
 // and prayerPlans.js supply each day's theme (see src/lib/planner.js).
-import { PLANS } from '../content/prayerPlans';
+import { PLANS, STARTER_PLAN_ID } from '../content/prayerPlans';
 import { t } from '../i18n';
 import { todayKey } from './prayedLog';
-import { canUsePlan } from './planReview';
+import { canUsePlan, isPlanReviewed } from './planReview';
 
 // Look up a PLANS entry by its content id (e.g. 'fast3'); null if unknown.
 export function planById(id) {
   const plan = PLANS.find((p) => p.id === id) || null;
   return canUsePlan(plan) ? plan : null;
+}
+
+// The one plan put forward as "Start here" — and only once it has passed
+// review, so a draft is never what the app offers a newcomer.
+export function starterPlan() {
+  const plan = planById(STARTER_PLAN_ID);
+  return isPlanReviewed(plan) ? plan : null;
 }
 
 // The personal-prayer payload for addPrayer() that represents "running this

@@ -28,6 +28,9 @@ import { guides, pick } from '../content/teaching';
 import { markGuideStarted, markGuideCompleted } from '../lib/guideProgress';
 import { guideDurationMinutes } from '../lib/guideMeta';
 import { t } from '../i18n';
+import { PLANS } from '../content/prayerPlans';
+import { buildGuidedPlanPrayer } from '../lib/guidedPlan';
+import { todayKey } from '../lib/prayedLog';
 
 const lang = 'fr';
 
@@ -40,6 +43,15 @@ beforeEach(() => {
 const renderGrow = () => render(<MemoryRouter><GrowTab /></MemoryRouter>);
 
 describe('GrowTab — one recommended next step', () => {
+  // Plans have their own tab now; a running plan no longer pushes the guide aside.
+  it('keeps its guide first while a plan is running, and holds no plan catalogue', () => {
+    const run = { ...buildGuidedPlanPrayer(PLANS.find((plan) => plan.id === 'altar7'), todayKey(), lang), id: 'run', status: 'active' };
+    usePrayerStore.setState({ prayers: [run] });
+    renderGrow();
+    expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'journeysTitle'))).toBeNull();
+  });
+
   it('leads with exactly one next-step card (the first new guide) and folds the rest away', () => {
     renderGrow();
     expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();

@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal } from 'lucide-react';
+import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal, Route } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import useLayoutStore from '../store/layoutStore';
@@ -72,14 +72,17 @@ export default function Layout({ children, onAddPrayer }) {
     }
   }, [sidebarWidth, isMd]);
 
-  // Four destinations, so the daily prayer rhythm stays front-and-centre:
-  // Today, Journal, Together and More. Guidance, Calendar, Settings, data export and
-  // support all live inside More — Settings no longer occupies prime
-  // bottom-navigation space.
+  // Five destinations, with the daily prayer rhythm front-and-centre: Today,
+  // Journal, Plans, Together and More. Prayer plans earned a place of their own
+  // once they became a main way the app guides prayer — reached through More
+  // they sat four taps deep. Guidance, Calendar, Settings, data export and
+  // support live inside More. `state.source` tells the Plans page it was
+  // opened from the navigation (lib/planAnalytics.js).
   const tabs = [
     { id: 'home', path: '/', label: t(lang, 'today'), icon: Home },
     // Label reads "Journal" (all requests + history); route/id stay `prayers`.
     { id: 'prayers', path: '/prayers', label: t(lang, 'journal'), icon: BookOpen },
+    { id: 'plans', path: '/plans', label: t(lang, 'navPlans'), icon: Route, state: { source: 'tab' } },
     { id: 'community', path: '/community', label: t(lang, 'together'), icon: Users, badge: pendingCount },
     { id: 'more', path: '/more', label: t(lang, 'moreTab'), icon: MoreHorizontal },
   ];
@@ -87,11 +90,15 @@ export default function Layout({ children, onAddPrayer }) {
   // Destinations reached THROUGH More keep the More tab lit, so the user always
   // knows the way back to them.
   const MORE_PATHS = ['/more', '/guidance', '/calendar', '/grow', '/plan', '/settings', '/notifications'];
+  // A route and everything nested under it — segment-wise, so the old `/plan`
+  // (now Calendar) never claims `/plans`.
+  const within = (base) => pathname === base || pathname.startsWith(`${base}/`);
   const isActive = (path) => {
     if (path === '/') return pathname === '/';
-    if (path === '/more') return MORE_PATHS.some((p) => pathname.startsWith(p));
-    // startsWith keeps Community lit on its nested group and prayer routes.
-    return pathname.startsWith(path);
+    if (path === '/more') return MORE_PATHS.some(within);
+    // Nested routes keep their tab lit: Community's group and prayer pages,
+    // and a shared plan's page under Plans.
+    return within(path);
   };
 
   // A destination's accessible name. When it carries pending items we fold the
@@ -147,12 +154,13 @@ export default function Layout({ children, onAddPrayer }) {
         )}
 
         <nav className="flex flex-col gap-1 flex-1 px-2" aria-label={t(lang, 'primaryNav')}>
-          {tabs.map(({ id, path, label, icon: Icon, badge }) => {
+          {tabs.map(({ id, path, label, icon: Icon, badge, state }) => {
             const active = isActive(path);
             return (
               <Link
                 key={id}
                 to={path}
+                state={state}
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 title={collapsed ? label : undefined}
@@ -277,12 +285,13 @@ export default function Layout({ children, onAddPrayer }) {
             paddingBottom: 'env(safe-area-inset-bottom)',
           }}
         >
-          {tabs.map(({ id, path, label, icon: Icon, badge }) => {
+          {tabs.map(({ id, path, label, icon: Icon, badge, state }) => {
             const active = isActive(path);
             return (
               <Link
                 key={id}
                 to={path}
+                state={state}
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 className="pressable flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"

@@ -2321,6 +2321,7 @@ html.constellation-app body {
 }
 
 .constellation-grow .grow-card,
+.constellation-plans .grow-card,
 .constellation-plan .plan-card,
 .constellation-settings .rounded-2xl,
 .constellation-notifications .rounded-xl {

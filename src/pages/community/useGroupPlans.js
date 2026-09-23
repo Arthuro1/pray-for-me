@@ -8,6 +8,7 @@ import { toast } from '../../store/toastStore';
 import { planById } from '../../lib/guidedPlan';
 import { canUsePlan } from '../../lib/planReview';
 import { startGuidedPlan } from '../../lib/startGuidedPlan';
+import { PLAN_SOURCES } from '../../lib/planAnalytics';
 import { runningPlanIds } from '../../lib/planner';
 import { todayKey } from '../../lib/prayedLog';
 
@@ -57,9 +58,10 @@ export default function useGroupPlans({ groupId, user, lang }) {
     if (runningPlanIds(mine, todayKey()).has(plan.id)) return { ok: true, alreadyRunning: true };
     const result = await startGuidedPlan({
       plan, startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
+      source: PLAN_SOURCES.GROUP,
     });
     if (!result.ok && result.reason === 'personalize') {
-      navigate('/guidance', { state: { guidedJourneyStart: { planId: plan.id, startDate } } });
+      navigate('/plans', { state: { source: PLAN_SOURCES.GROUP, guidedJourneyStart: { planId: plan.id, startDate } } });
       return { ok: true, handedOff: true };
     }
     return result;

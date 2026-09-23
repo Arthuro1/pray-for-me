@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds, runningPlanProgress } from './planner.js';
+import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds, runningPlanProgress, finishedPlanIds } from './planner.js';
 
 // 2026-07-06 is a Monday (weekday 1); 2026-07-07 a Tuesday (weekday 2).
 const cats = [
@@ -139,6 +139,31 @@ describe('scheduleEnded / runningPlanIds', () => {
   it('answered and unscheduled prayers never claim a plan', () => {
     const prayers = [planPrayer('a', '2026-07-01', 21, { status: 'answered' }), base({ id: 'c' })];
     expect(runningPlanIds(prayers, '2026-07-10').size).toBe(0);
+  });
+
+  // The Plans page's "Completed" section: walked to the end, not merely stopped.
+  it('a plan counts as finished only once its run reached its last day', () => {
+    const prayers = [
+      planPrayer('a', '2026-07-01', 7),                          // ended 07-07
+      planPrayer('b', '2026-07-05', 21),                         // still running
+      planPrayer('c', '2026-07-08', 21, { status: 'answered' }), // stopped part-way
+    ];
+    expect(finishedPlanIds(prayers, '2026-07-10')).toEqual(['plan-a']);
+  });
+
+  it('a finished plan walked again is running, not finished — and each plan is listed once', () => {
+    // A second run of the same plan: same plan id, its own prayer.
+    const rerun = (id, planId, startDate, count) => {
+      const p = planPrayer(id, startDate, count);
+      return { ...p, schedule: { ...p.schedule, plan: { id: planId, startDate } } };
+    };
+    const prayers = [
+      planPrayer('a', '2026-06-01', 7),
+      rerun('a2', 'plan-a', '2026-07-08', 7), // plan-a is being prayed again
+      planPrayer('d', '2026-06-01', 3),
+      rerun('d2', 'plan-d', '2026-06-20', 3), // plan-d finished twice
+    ];
+    expect(finishedPlanIds(prayers, '2026-07-10')).toEqual(['plan-d']);
   });
 });
 

@@ -22,6 +22,7 @@ import { todayKey } from '../lib/prayedLog';
 import { nextReminder } from '../utils/reminder';
 import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { planRowContext, planRowSummary } from '../lib/planRow';
+import { PLAN_SOURCES } from '../lib/planAnalytics';
 import { parseKey } from '../lib/schedule';
 import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
@@ -256,6 +257,7 @@ export default function HomeTab({ onAdd, onEdit }) {
               lang={lang}
               onEditPrayer={onEdit}
               onOpenReminders={() => navigate('/settings#notifications')}
+              onOpenPlans={(openPlanId) => navigate('/plans', { state: { source: PLAN_SOURCES.TODAY_CARD, openPlanId } })}
             />
             {pwaInstallAllowed({ activationStep }) && <PwaInstallNudge lang={lang} />}
           </>
@@ -274,8 +276,8 @@ export default function HomeTab({ onAdd, onEdit }) {
               actionLabel={t(lang, 'emptyAddManual')}
               onAction={onAdd}
               actionIcon={Plus}
-              secondaryLabel={t(lang, 'guidance')}
-              onSecondary={() => navigate('/guidance')}
+              secondaryLabel={t(lang, 'journeysTitle')}
+              onSecondary={() => navigate('/plans', { state: { source: PLAN_SOURCES.EMPTY_DAY } })}
             />
             <Encouragement lang={lang} className="mx-auto mb-7 max-w-sm px-6 text-center" />
           </PrayerSurface>

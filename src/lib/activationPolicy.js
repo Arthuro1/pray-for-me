@@ -38,6 +38,7 @@ const ORGANIZE_MIN_PRAYERS = 3;
 const RETURNING_MIN_DAYS = 2;
 
 const isActive = (prayer) => prayer?.status !== 'answered';
+const followsAPlan = (prayer) => !!prayer?.schedule?.plan?.id;
 
 function hasOrganization(prayer) {
   return !!(
@@ -75,6 +76,9 @@ export function nextActivationStep({
   sessionCompleted = progress.signals.includes(SESSION_COMPLETED),
   legacyReminderHandled = legacyReminderSuggested(),
   handledThisVisit = educationHandledThisVisit(),
+  // Whether there is a plan to offer at all (the starter plan passed review).
+  // The caller decides; this file stays free of plan content.
+  plansAvailable = false,
 } = {}) {
   // Something was already offered and answered in this visit. Praying is the
   // point of coming back; one invitation per visit is the whole budget.
@@ -83,6 +87,18 @@ export function nextActivationStep({
   const done = new Set(handled);
   const active = prayers.filter(isActive);
   const returning = returningDayCount(completions) >= RETURNING_MIN_DAYS;
+
+  // Plans — an invitation to pray, not setup work, so it leads. It still waits
+  // for a first prayer session, and never shows to anyone who has already
+  // chosen a plan (running or finished): that choice has answered it.
+  if (
+    plansAvailable
+    && sessionCompleted
+    && !done.has(ACTIVATION_STEPS.PLANS)
+    && !prayers.some(followsAPlan)
+  ) {
+    return ACTIVATION_STEPS.PLANS;
+  }
 
   // Rhythm — only once there is something a rhythm would actually help with:
   // more than one prayer, a person who keeps coming back, or a prayer that has

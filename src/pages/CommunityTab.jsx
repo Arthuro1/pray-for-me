@@ -23,6 +23,7 @@ import AvatarEditor from '../components/shared/AvatarEditor';
 import { avatarConfigFrom, canEditGroupAvatar } from '../lib/avatar';
 import { planById } from '../lib/guidedPlan';
 import { startGuidedPlan } from '../lib/startGuidedPlan';
+import { PLAN_SOURCES } from '../lib/planAnalytics';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 import { plansByCategory } from '../content/prayerPlans';
@@ -131,14 +132,15 @@ function CommunityHub({ lang, userId, onViewGroup }) {
     const personal = usePrayerStore.getState().prayers;
     if (runningPlanIds(personal, todayKey()).has(plan.id)) {
       toast.success(t(lang, 'planRunning'));
-      navigate('/guidance');
+      navigate('/plans', { state: { source: PLAN_SOURCES.INVITATION } });
       return {};
     }
     const started = await startGuidedPlan({
       plan, startDate: res.startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
+      source: PLAN_SOURCES.INVITATION,
     });
     if (!started.ok && started.reason === 'personalize') {
-      navigate('/guidance', { state: { guidedJourneyStart: { planId: plan.id, startDate: res.startDate } } });
+      navigate('/plans', { state: { source: PLAN_SOURCES.INVITATION, guidedJourneyStart: { planId: plan.id, startDate: res.startDate } } });
       return {};
     }
     if (!started.ok) { toast.error(t(lang, 'errorGeneric')); return {}; }

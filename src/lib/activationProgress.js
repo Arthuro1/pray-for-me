@@ -9,6 +9,7 @@ export const ACTIVATION_STORAGE_KEY = 'pfm_activation_progress_v1';
 export const EDUCATION_VISIT_KEY = 'pfm_education_handled';
 
 export const ACTIVATION_STEPS = Object.freeze({
+  PLANS: 'plans',
   RHYTHM: 'rhythm',
   REMINDER: 'reminder',
   ORGANIZE: 'organize',

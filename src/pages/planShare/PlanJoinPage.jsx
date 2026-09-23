@@ -13,6 +13,7 @@ import { todayKey } from '../../lib/prayedLog';
 import { parsePlanSharePath, takePendingPlanJoin } from '../../lib/planShareLink';
 import { recordPlanShareJoin } from '../../lib/planShareApi';
 import { startGuidedPlan } from '../../lib/startGuidedPlan';
+import { PLAN_SOURCES } from '../../lib/planAnalytics';
 import { usePlanShareInvite } from '../../hooks/usePlanShareInvite';
 import PlanPersonalizeModal from '../../components/PlanPersonalizeModal';
 import { PlanJoinControls, PlanSharePreview } from './PlanSharePreview';
@@ -54,7 +55,7 @@ export default function PlanJoinPage() {
 
   const begin = useCallback(async (startDate, prefs = null) => {
     setBusy(true);
-    const result = await startGuidedPlan({ plan, startDate, lang, addPrayer, prefs });
+    const result = await startGuidedPlan({ plan, startDate, lang, addPrayer, prefs, source: PLAN_SOURCES.SHARE_LINK });
     setBusy(false);
     if (result.reason === 'personalize') { setPersonalizeDate(startDate); return; }
     if (!result.ok) { toast.error(t(lang, 'errorGeneric')); return; }

@@ -35,6 +35,44 @@ beforeEach(() => {
   sessionStorage.clear();
 });
 
+// A plan is an invitation to pray, not setup work: it leads the queue, but it
+// still waits for a first prayer session and never repeats a choice already made.
+describe('the prayer plan invitation', () => {
+  const plansReady = { plansAvailable: true, sessionCompleted: true };
+
+  it('is offered once the first prayer session is done', () => {
+    expect(nextActivationStep({ prayers: [prayer('p1')], completions: ONE_DAY, ...plansReady }))
+      .toBe(ACTIVATION_STEPS.PLANS);
+  });
+
+  it('comes before a rhythm prompt that is due at the same time', () => {
+    expect(nextActivationStep({ prayers: [prayer('p1'), prayer('p2')], completions: RETURNED, ...plansReady }))
+      .toBe(ACTIVATION_STEPS.PLANS);
+  });
+
+  it('waits for the first prayer session', () => {
+    expect(nextActivationStep({ prayers: [prayer('p1')], plansAvailable: true, sessionCompleted: false })).toBeNull();
+  });
+
+  it('never shows to someone who has already chosen a plan, running or finished', () => {
+    const planRun = prayer('p2', { schedule: { type: 'recurring', plan: { id: 'altar7' } } });
+    expect(nextActivationStep({ prayers: [prayer('p1'), planRun], completions: ONE_DAY, ...plansReady }))
+      .not.toBe(ACTIVATION_STEPS.PLANS);
+    const finishedRun = prayer('p3', { status: 'answered', schedule: { type: 'recurring', plan: { id: 'fast3' } } });
+    expect(nextActivationStep({ prayers: [prayer('p1'), finishedRun], completions: ONE_DAY, ...plansReady }))
+      .not.toBe(ACTIVATION_STEPS.PLANS);
+  });
+
+  it('stays gone once answered — acted on or dismissed', () => {
+    markActivationStepHandled(ACTIVATION_STEPS.PLANS);
+    expect(nextActivationStep({ prayers: [prayer('p1')], completions: ONE_DAY, ...plansReady })).toBeNull();
+  });
+
+  it('is never offered when there is no plan to offer', () => {
+    expect(nextActivationStep({ prayers: [prayer('p1')], completions: ONE_DAY, sessionCompleted: true })).toBeNull();
+  });
+});
+
 describe('the first prayer is left alone', () => {
   it('teaches nothing to someone with one prayer in their first session', () => {
     expect(nextActivationStep({ prayers: [prayer('p1')] })).toBeNull();

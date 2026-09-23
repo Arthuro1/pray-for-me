@@ -5,7 +5,11 @@
 // reported success while creating nothing. Everything comes through
 // startGuidedPlan, and these are the guarantees that makes.
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('./planAnalytics', () => ({ trackPlanStarted: vi.fn() }));
+
 import { startGuidedPlan } from './startGuidedPlan';
+import { trackPlanStarted } from './planAnalytics';
 import { getPlanPrefs } from './planPrefs';
 
 const marriage = {
@@ -21,7 +25,7 @@ const plain = { id: 'fast3', count: 3, titleKey: 'planFast3Title', subKey: 'plan
 
 const addPrayer = () => vi.fn(async (prayer) => prayer.id || 'new-prayer-id');
 const run = (overrides) => startGuidedPlan({ startDate: '2026-09-01', lang: 'en', ...overrides });
-afterEach(() => localStorage.clear());
+afterEach(() => { localStorage.clear(); vi.mocked(trackPlanStarted).mockClear(); });
 
 describe('startGuidedPlan', () => {
   // canUsePlan() is what decides this, and planReview.test.js owns its rules.
@@ -32,6 +36,17 @@ describe('startGuidedPlan', () => {
     const result = await run({ plan: null, addPrayer: create });
     expect(result).toEqual({ ok: false, reason: 'unavailable' });
     expect(create).not.toHaveBeenCalled();
+  });
+
+  // The one place a plan starts is the one place a start is counted, with the
+  // door the person came through.
+  it('counts a start with its source, and never counts a failed one', async () => {
+    await run({ plan: plain, addPrayer: addPrayer(), source: 'group' });
+    expect(trackPlanStarted).toHaveBeenCalledWith(plain, 'group');
+    vi.mocked(trackPlanStarted).mockClear();
+    await run({ plan: null, addPrayer: addPrayer(), source: 'group' });
+    await run({ plan: plain, addPrayer: vi.fn(async () => null), source: 'group' });
+    expect(trackPlanStarted).not.toHaveBeenCalled();
   });
 
   it('starts a plan that asks nothing', async () => {

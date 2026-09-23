@@ -104,6 +104,14 @@ describe('sanitizeProps — the privacy guard', () => {
     })).toBeUndefined();
   });
 
+  it('keeps a day number only on the funnel event that never names a plan', () => {
+    expect(sanitizeProps({ day: 2, planId: 'gratitude7' }, EVENTS.PLAN_DAY_COMPLETED)).toEqual({ day: 2 });
+    // A plan-specific event names its plan by being sent at all: no day on it.
+    expect(sanitizeProps({ day: 2 }, EVENTS.SINGLES_PLAN_DAY_COMPLETED)).toBeUndefined();
+    expect(sanitizeProps({ day: 2 }, EVENTS.DELIVERANCE_PLAN_DAY_COMPLETED)).toBeUndefined();
+    expect(sanitizeProps({ day: 2 })).toBeUndefined();
+  });
+
   it('carries nothing identifying about an opened resource', () => {
     expect(sanitizeProps({
       resourceId: 'keller-meaning-of-marriage', title: 'The Meaning of Marriage',

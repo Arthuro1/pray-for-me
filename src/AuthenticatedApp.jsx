@@ -23,6 +23,7 @@ const PrayersTab = lazy(() => import('./pages/PrayersTab'));
 const MoreTab = lazy(() => import('./pages/MoreTab'));
 const CalendarTab = lazy(() => import('./pages/PlanTab'));
 const GuidanceTab = lazy(() => import('./pages/GrowTab'));
+const PlansTab = lazy(() => import('./pages/PlansTab'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
 const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
@@ -498,6 +499,7 @@ export default function AuthenticatedApp({
               <Route path="/community" element={<CommunityTab />} />
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
+              <Route path="/plans" element={<PlansTab />} />
               <Route path="/plans/:planId/:token?" element={<PlanJoinPage />} />
               <Route path="/community/group/:groupId" element={<CommunityTab />} />
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />

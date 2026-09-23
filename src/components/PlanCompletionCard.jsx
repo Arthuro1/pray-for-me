@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Check, Share2, Sprout } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
+import { PLAN_SOURCES } from '../lib/planAnalytics';
 
 // What a rich plan says once its last day is behind the reader.
 //
@@ -106,7 +107,8 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           never presents two competing primary actions. */}
       {relationshipActionKey && (
         <Link
-          to="/guidance"
+          to="/plans"
+          state={{ source: PLAN_SOURCES.COMPLETION }}
           onClick={onRelationshipNext}
           data-emphasis={continuationChoiceOpen ? 'secondary' : 'primary'}
           className="block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"

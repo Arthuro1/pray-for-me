@@ -2,6 +2,7 @@
 //
 // Real approved plans are visible without preview. A test-only draft keeps the
 // negative publication checks alive even when no production plan is pending.
+// The Plans page shows its whole catalogue open — there is no Browse step.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
@@ -12,6 +13,11 @@ vi.mock('../../lib/verseText', () => ({
 }));
 vi.mock('../../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 vi.mock('../../lib/analytics', () => ({ track: vi.fn(), EVENTS: { RESOURCE_OPENED: 'resource_opened' } }));
+vi.mock('../../lib/planAnalytics', () => ({
+  planSource: (value) => value || 'direct',
+  trackPlansPageViewed: vi.fn(),
+  trackPlanDetailOpened: vi.fn(),
+}));
 vi.mock('../../content/prayerPlans', async (importOriginal) => {
   const actual = await importOriginal();
   const fixture = {
@@ -22,7 +28,7 @@ vi.mock('../../content/prayerPlans', async (importOriginal) => {
   return { ...actual, PLANS: plans, plansByCategory: (input = plans) => actual.plansByCategory(input) };
 });
 
-import PrayerJourneys from '../PrayerJourneys';
+import PlansTab from '../../pages/PlansTab';
 import usePrayerStore from '../../store/prayerStore';
 import { PLANS } from '../../content/prayerPlans';
 import { isPlanReviewed, setPlanPreview } from '../../lib/planReview';
@@ -32,8 +38,7 @@ const lang = 'fr';
 const drafts = PLANS.filter((plan) => !isPlanReviewed(plan));
 const titleOf = (plan) => t(lang, plan.titleKey);
 
-const renderJourneys = () => render(<MemoryRouter><PrayerJourneys lang={lang} /></MemoryRouter>);
-const openBrowse = () => fireEvent.click(screen.getByRole('button', { name: t(lang, 'browseJourneys') }));
+const renderJourneys = () => render(<MemoryRouter><PlansTab /></MemoryRouter>);
 
 beforeEach(() => {
   localStorage.clear();
@@ -49,7 +54,6 @@ describe('approved and draft plans in the journey catalogue', () => {
 
   it('shows all five approved curricula to an ordinary reader', () => {
     renderJourneys();
-    openBrowse();
     for (const id of ['covenant21', 'marriage30', 'freedom30', 'david12', 'discernment28']) {
       expect(screen.getByText(titleOf(PLANS.find((plan) => plan.id === id))), id).toBeTruthy();
     }
@@ -58,7 +62,6 @@ describe('approved and draft plans in the journey catalogue', () => {
 
   it.each(['covenant21', 'marriage30', 'freedom30', 'david12', 'discernment28'])('opens %s without a draft warning or preview flag', (id) => {
     renderJourneys();
-    openBrowse();
     fireEvent.click(screen.getByText(titleOf(PLANS.find((plan) => plan.id === id))));
     const dialog = screen.getByRole('dialog');
     expect(dialog.textContent).not.toContain(t(lang, 'planCoupleReviewHint'));
@@ -67,31 +70,27 @@ describe('approved and draft plans in the journey catalogue', () => {
 
   it('shows an ordinary reader none of them', () => {
     renderJourneys();
-    openBrowse();
     for (const plan of drafts) expect(screen.queryByText(titleOf(plan)), plan.id).toBeNull();
   });
 
   it('shows every one of them to a reviewer, each marked as a draft', () => {
     setPlanPreview(true);
     renderJourneys();
-    openBrowse();
 
     for (const plan of drafts) expect(screen.getByText(titleOf(plan)), plan.id).toBeTruthy();
     expect(screen.getAllByText(t(lang, 'planCoupleReviewPending')).length).toBe(drafts.length);
   });
 
-  it('still never puts a draft forward as the recommendation', () => {
+  it('still never puts a draft forward as the plan to start with', () => {
     setPlanPreview(true);
     renderJourneys();
-    // The one journey offered before Browse is opened is a reviewed one.
-    const featured = screen.getByText(t(lang, 'guidanceForYou')).closest('div');
+    const featured = screen.getByRole('region', { name: t(lang, 'plansStartHere') });
     for (const plan of drafts) expect(featured.textContent, plan.id).not.toContain(titleOf(plan));
   });
 
   it('opens a draft for reading, and says why it is not shipped', () => {
     setPlanPreview(true);
     renderJourneys();
-    openBrowse();
     fireEvent.click(screen.getByText(titleOf(drafts.find((plan) => plan.id === 'test-review-draft'))));
 
     const dialog = screen.getByRole('dialog');

@@ -6,7 +6,9 @@ import {
   ACTIVATION_STEPS,
   markActivationSessionCompleted,
   markActivationStepHandled,
+  readActivationProgress,
 } from '../../lib/activationProgress';
+import { PLANS, STARTER_PLAN_ID } from '../../content/prayerPlans';
 import { t } from '../../i18n';
 
 const lang = 'fr';
@@ -22,6 +24,46 @@ const prayer = (id) => ({
 beforeEach(() => {
   localStorage.clear();
   sessionStorage.clear();
+});
+
+describe('ActivationNudge — the prayer plan invitation', () => {
+  const starter = PLANS.find((plan) => plan.id === STARTER_PLAN_ID);
+  const renderInvite = (props = {}) => {
+    markActivationSessionCompleted();
+    return render(<ActivationNudge prayers={[prayer('p1')]} settings={{}} lang={lang} {...props} />);
+  };
+
+  it('names one real plan to someone who has prayed, one tap from its details', () => {
+    const onOpenPlans = vi.fn();
+    renderInvite({ onOpenPlans });
+    expect(screen.getByText(t(lang, 'planStarterTitle'))).toBeTruthy();
+    expect(screen.getByText(t(lang, starter.titleKey))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'planStarterView')));
+    expect(onOpenPlans).toHaveBeenCalledWith(STARTER_PLAN_ID);
+    // Answered for good: it retires, and nothing replaces it in this visit.
+    expect(screen.queryByText(t(lang, 'planStarterTitle'))).toBeNull();
+    expect(readActivationProgress().handled).toContain(ACTIVATION_STEPS.PLANS);
+  });
+
+  it('also offers the whole catalogue, which answers the invitation too', () => {
+    const onOpenPlans = vi.fn();
+    renderInvite({ onOpenPlans });
+    fireEvent.click(screen.getByText(t(lang, 'planStarterAll')));
+    expect(onOpenPlans).toHaveBeenCalledWith();
+    expect(readActivationProgress().handled).toContain(ACTIVATION_STEPS.PLANS);
+  });
+
+  it('can be dismissed for good', () => {
+    renderInvite({ onOpenPlans: vi.fn() });
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'onboardLater') }));
+    expect(screen.queryByText(t(lang, 'planStarterTitle'))).toBeNull();
+    expect(readActivationProgress().handled).toContain(ACTIVATION_STEPS.PLANS);
+  });
+
+  it('offers no plan where there is no way to open one', () => {
+    const { container } = renderInvite();
+    expect(container.firstChild).toBeNull();
+  });
 });
 
 describe('ActivationNudge', () => {
