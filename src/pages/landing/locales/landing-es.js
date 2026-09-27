@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Instálala donde quieras",
-        "desc": "Instálala en tu teléfono o computadora. También funciona sin conexión."
+        "desc": "Descarga la aplicación para Android en Google Play, o instálala desde tu navegador en tu teléfono o computadora. También funciona sin conexión."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Mostrar menos"
   },
   "beginLabel": "Comienza con una oración",
+  "playStore": {
+    "announcement": "Ya disponible en Google Play",
+    "cta": "Descárgala en Google Play"
+  },
   "languageMenuLabel": "Idioma",
   "translationInProgress": "Traducción en curso",
   "heroReassurance": "Sin cuenta. Nada sale de este dispositivo a menos que elijas guardarlo.",

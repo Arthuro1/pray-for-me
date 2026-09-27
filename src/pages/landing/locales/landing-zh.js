@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "随处安装",
-        "desc": "安装在手机或电脑上，离线也能使用。"
+        "desc": "从 Google Play 下载 Android 应用，或通过浏览器安装到手机或电脑上。离线也能使用。"
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "收起"
   },
   "beginLabel": "从一个祷告开始",
+  "playStore": {
+    "announcement": "现已上架 Google Play",
+    "cta": "从 Google Play 下载"
+  },
   "languageMenuLabel": "语言",
   "translationInProgress": "翻译进行中",
   "heroReassurance": "无需账户。除非您选择保存，否则任何内容都不会离开此设备。",

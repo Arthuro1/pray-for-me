@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "कहीं भी इंस्टॉल करें",
-        "desc": "इसे फ़ोन या कंप्यूटर पर इंस्टॉल करें। यह ऑफ़लाइन भी चलता है।"
+        "desc": "Google Play से Android ऐप डाउनलोड करें, या इसे अपने ब्राउज़र से फ़ोन या कंप्यूटर पर इंस्टॉल करें। यह ऑफ़लाइन भी चलता है।"
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "कम दिखाएँ"
   },
   "beginLabel": "एक प्रार्थना से शुरू करें",
+  "playStore": {
+    "announcement": "अब Google Play पर उपलब्ध है",
+    "cta": "Google Play से डाउनलोड करें"
+  },
   "languageMenuLabel": "भाषा",
   "translationInProgress": "अनुवाद जारी है",
   "heroReassurance": "किसी खाते की ज़रूरत नहीं। जब तक आप सहेजना न चुनें, कुछ भी इस डिवाइस से बाहर नहीं जाता।",

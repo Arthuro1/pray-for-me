@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "どこでもインストール",
-        "desc": "スマートフォンやパソコンにインストールできます。オフラインでも使えます。"
+        "desc": "Android アプリを Google Play からダウンロードするか、ブラウザからスマートフォンやパソコンにインストールできます。オフラインでも使えます。"
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "表示を減らす"
   },
   "beginLabel": "祈りから始める",
+  "playStore": {
+    "announcement": "Google Play で配信開始",
+    "cta": "Google Play で入手"
+  },
   "languageMenuLabel": "言語",
   "translationInProgress": "翻訳作業中",
   "heroReassurance": "アカウント不要。保存を選ぶまで、何もこの端末の外には出ません。",

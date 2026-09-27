@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "어디서나 설치",
-        "desc": "휴대폰이나 컴퓨터에 설치하세요. 오프라인에서도 작동합니다."
+        "desc": "Google Play에서 Android 앱을 다운로드하거나 브라우저를 통해 휴대폰이나 컴퓨터에 설치하세요. 오프라인에서도 작동합니다."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "간략히 보기"
   },
   "beginLabel": "기도로 시작하기",
+  "playStore": {
+    "announcement": "이제 Google Play에서 만나보세요",
+    "cta": "Google Play에서 다운로드"
+  },
   "languageMenuLabel": "언어",
   "translationInProgress": "번역 진행 중",
   "heroReassurance": "계정이 필요하지 않습니다. 저장을 선택하기 전까지 어떤 내용도 이 기기를 떠나지 않습니다.",

@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Install it anywhere",
-        "desc": "Install it on your phone or computer. It also works offline."
+        "desc": "Get the Android app on Google Play, or install it from your browser on your phone or computer. It also works offline."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Show fewer"
   },
   "beginLabel": "Begin with a prayer",
+  "playStore": {
+    "announcement": "Now available on Google Play",
+    "cta": "Get it on Google Play"
+  },
   "languageMenuLabel": "Language",
   "translationInProgress": "Translation in progress",
   "heroReassurance": "No account needed. Nothing leaves this device unless you choose to save it.",

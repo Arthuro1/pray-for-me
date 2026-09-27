@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "نصب در هر جا",
-        "desc": "آن را روی تلفن یا رایانه نصب کنید. بدون اینترنت هم کار می‌کند."
+        "desc": "نسخهٔ Android را از Google Play دریافت کنید، یا آن را از طریق مرورگر روی تلفن یا رایانهٔ خود نصب کنید. بدون اینترنت هم کار می‌کند."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "نمایش کمتر"
   },
   "beginLabel": "با یک دعا آغاز کنید",
+  "playStore": {
+    "announcement": "اکنون در Google Play در دسترس است",
+    "cta": "از Google Play دریافت کنید"
+  },
   "languageMenuLabel": "زبان",
   "translationInProgress": "ترجمه در حال انجام است",
   "heroReassurance": "نیازی به حساب نیست. تا زمانی که ذخیره‌کردن را انتخاب نکنید، چیزی از این دستگاه خارج نمی‌شود.",

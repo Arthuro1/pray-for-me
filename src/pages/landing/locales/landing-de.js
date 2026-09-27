@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Überall installieren",
-        "desc": "Installiere sie auf Handy oder Computer. Sie funktioniert auch offline."
+        "desc": "Lade die Android-App bei Google Play herunter oder installiere sie über deinen Browser auf deinem Handy oder Computer. Sie funktioniert auch offline."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Weniger anzeigen"
   },
   "beginLabel": "Mit einem Gebet beginnen",
+  "playStore": {
+    "announcement": "Jetzt bei Google Play verfügbar",
+    "cta": "Bei Google Play herunterladen"
+  },
   "languageMenuLabel": "Sprache",
   "translationInProgress": "Übersetzung in Arbeit",
   "heroReassurance": "Kein Konto nötig. Nichts verlässt dieses Gerät, außer du entscheidest dich, es zu speichern.",

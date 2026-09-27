@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Sakinisha popote",
-        "desc": "Isakinishe kwenye simu au kompyuta. Inafanya kazi hata bila mtandao."
+        "desc": "Pakua programu ya Android kutoka Google Play, au isakinishe kupitia kivinjari kwenye simu au kompyuta yako. Inafanya kazi hata bila mtandao."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Onyesha kidogo"
   },
   "beginLabel": "Anza kwa sala",
+  "playStore": {
+    "announcement": "Sasa inapatikana kwenye Google Play",
+    "cta": "Pakua kwenye Google Play"
+  },
   "languageMenuLabel": "Lugha",
   "translationInProgress": "Tafsiri inaendelea",
   "heroReassurance": "Hakuna akaunti inayohitajika. Hakuna kinachoondoka kwenye kifaa hiki hadi uchague kukihifadhi.",

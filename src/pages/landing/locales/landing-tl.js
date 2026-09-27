@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "I-install kahit saan",
-        "desc": "I-install sa iyong phone o computer. Gumagana rin ito kahit offline."
+        "desc": "I-download ang Android app sa Google Play, o i-install ito gamit ang browser sa iyong phone o computer. Gumagana rin ito kahit offline."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Magpakita ng mas kaunti"
   },
   "beginLabel": "Magsimula sa panalangin",
+  "playStore": {
+    "announcement": "Available na sa Google Play",
+    "cta": "I-download sa Google Play"
+  },
   "languageMenuLabel": "Wika",
   "translationInProgress": "Isinasalin pa",
   "heroReassurance": "Walang account na kailangan. Walang lalabas sa device na ito hanggang piliin mong i-save ito.",

@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Installer partout",
-        "desc": "Installez-la sur votre téléphone ou votre ordinateur. Elle fonctionne aussi hors connexion."
+        "desc": "Téléchargez l’application Android sur Google Play, ou installez-la depuis votre navigateur sur votre téléphone ou votre ordinateur. Elle fonctionne aussi hors connexion."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Afficher moins"
   },
   "beginLabel": "Commencez par une prière",
+  "playStore": {
+    "announcement": "Maintenant disponible sur Google Play",
+    "cta": "Télécharger sur Google Play"
+  },
   "languageMenuLabel": "Langue",
   "translationInProgress": "Traduction en cours",
   "heroReassurance": "Aucun compte requis. Rien ne quitte cet appareil, sauf si vous choisissez de l'enregistrer.",

@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Pasang di mana saja",
-        "desc": "Pasang di ponsel atau komputer. Aplikasi ini juga bisa dipakai tanpa internet."
+        "desc": "Unduh aplikasi Android di Google Play, atau pasang melalui browser di ponsel atau komputer Anda. Aplikasi ini juga bisa dipakai tanpa internet."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Tampilkan lebih sedikit"
   },
   "beginLabel": "Mulai dengan doa",
+  "playStore": {
+    "announcement": "Kini tersedia di Google Play",
+    "cta": "Unduh di Google Play"
+  },
   "languageMenuLabel": "Bahasa",
   "translationInProgress": "Terjemahan sedang berlangsung",
   "heroReassurance": "Tidak perlu akun. Tidak ada yang meninggalkan perangkat ini sampai Anda memilih untuk menyimpannya.",

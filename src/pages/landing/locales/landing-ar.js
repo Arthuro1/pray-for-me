@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "ثبّته في أي مكان",
-        "desc": "ثبّته على هاتفك أو حاسوبك. ويعمل أيضًا دون اتصال."
+        "desc": "حمّل تطبيق Android من Google Play، أو ثبّته من المتصفح على هاتفك أو حاسوبك. ويعمل أيضًا دون اتصال."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "عرض أقل"
   },
   "beginLabel": "ابدأ بصلاة",
+  "playStore": {
+    "announcement": "متاح الآن على Google Play",
+    "cta": "حمّله من Google Play"
+  },
   "languageMenuLabel": "اللغة",
   "translationInProgress": "الترجمة قيد العمل",
   "heroReassurance": "لا تحتاج إلى حساب. لا يغادر أي شيء هذا الجهاز إلا إذا اخترت حفظه.",

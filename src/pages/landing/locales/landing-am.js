@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "በየትም ይጫኑ",
-        "desc": "በስልክዎ ወይም በኮምፒውተርዎ ላይ ይጫኑት። ያለ ኢንተርኔትም ይሠራል።"
+        "desc": "የAndroid መተግበሪያውን ከGoogle Play ያግኙ፣ ወይም በአሳሽዎ በኩል በስልክዎ ወይም በኮምፒውተርዎ ላይ ይጫኑት። ያለ ኢንተርኔትም ይሠራል።"
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "ያነሰ አሳይ"
   },
   "beginLabel": "በጸሎት ይጀምሩ",
+  "playStore": {
+    "announcement": "አሁን በGoogle Play ላይ ይገኛል",
+    "cta": "ከGoogle Play ያግኙት"
+  },
   "languageMenuLabel": "ቋንቋ",
   "translationInProgress": "ትርጉሙ በሂደት ላይ ነው",
   "heroReassurance": "መለያ አያስፈልግም። ለማስቀመጥ እስኪመርጡ ድረስ ምንም ነገር ከዚህ መሣሪያ አይወጣም።",

@@ -48,7 +48,7 @@ export default {
         "icon": "Smartphone",
         "color": "#4f46e5",
         "title": "Установка где угодно",
-        "desc": "Установите на телефон или компьютер. Работает и без интернета."
+        "desc": "Скачайте приложение для Android в Google Play или установите его через браузер на телефон или компьютер. Работает и без интернета."
       },
       {
         "icon": "Globe",
@@ -132,6 +132,10 @@ export default {
     "less": "Свернуть"
   },
   "beginLabel": "Начните с молитвы",
+  "playStore": {
+    "announcement": "Теперь доступно в Google Play",
+    "cta": "Скачать в Google Play"
+  },
   "languageMenuLabel": "Язык",
   "translationInProgress": "Перевод в процессе",
   "heroReassurance": "Аккаунт не нужен. Ничего не покинет это устройство, пока вы не решите сохранить молитву.",

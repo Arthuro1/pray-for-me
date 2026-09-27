@@ -14,6 +14,7 @@ const LANGS = LANGUAGES.map((language) => ({
 }));
 
 const ALL_CODES = LANGS.map(l => l.code);
+const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=space.praystead.twa';
 
 // The three things Praystead does, surfaced right under the hero. Icons/colours are
 // language-independent (defined once); the copy lives in one shared map with an
@@ -118,6 +119,21 @@ const THEMES = {
     ctaShadowBig: '0 18px 42px rgba(48,33,63,0.22)',
   },
 };
+
+function GooglePlayLink({ label, T }) {
+  return (
+    <a
+      href={GOOGLE_PLAY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pressable inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl px-5 py-3 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+      style={{ background: T.surface, color: T.text, border: `1px solid ${T.borderStrong}` }}
+    >
+      <Smartphone size={20} className="shrink-0" aria-hidden="true" />
+      {label}
+    </a>
+  );
+}
 
 function FAQ({ q, a, T }) {
   const [open, setOpen] = useState(false);
@@ -285,7 +301,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     benefits,
     explore,
     beginLabel,
-    heroReassurance,
+    playStore,
     hero,
     samplePrayerTitle,
     scripturePreviewPoints,
@@ -401,9 +417,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       {/* Hero: lived prayer experience first, product preview second. */}
       <section className="constellation-landing__hero relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
         <div className="constellation-landing__hero-copy relative min-w-0">
-          <div className="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em]" style={{ color: T.gold }}>
-            <Feather size={14} strokeWidth={1.7} /> {c.badge}
-          </div>
           <h1 className="editorial-heading text-5xl leading-[1.02] sm:text-6xl lg:text-7xl" style={{ color: T.text }}>
             {hero.title}
           </h1>
@@ -411,25 +424,23 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             {hero.promise}
           </p>
           <p className="mt-5 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
-          <p className="mt-4 flex max-w-lg items-start gap-2 text-xs" style={{ color: T.textFaint, lineHeight: 1.65 }}>
-            <Lock size={13} className="mt-0.5 shrink-0" /> {heroReassurance}
-          </p>
-          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <button
               onClick={onBeginPrayer}
-              className="pressable min-h-[52px] rounded-xl px-7 text-sm font-bold text-white"
+              className="pressable min-h-[52px] rounded-xl px-7 py-3 text-sm font-bold text-white"
               style={{ background: T.primaryBg, boxShadow: T.ctaShadow }}
             >
               {beginLabel}
             </button>
-            <button
-              onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-              className="pressable min-h-[52px] rounded-xl px-6 text-sm font-semibold"
-              style={{ color: T.textSoft, border: `1px solid ${T.borderStrong}` }}
-            >
-              {c.howItWorks}
-            </button>
+            <GooglePlayLink label={playStore.cta} T={T} />
           </div>
+          <button
+            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+            className="pressable mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold"
+            style={{ color: T.textSoft }}
+          >
+            {c.howItWorks} <ChevronDown size={15} aria-hidden="true" />
+          </button>
         </div>
 
         {/* A truthful preview of the actual journey: Today → focused prayer →
@@ -498,7 +509,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
         <div className="constellation-landing__section-heading text-center mb-8">
           <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
-          <p className="text-sm" style={{ color: T.textFaint }}>{c.featuresSub}</p>
         </div>
         {!showAllFeatures ? (
           <div className="text-center">
@@ -616,9 +626,12 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         <div className="relative max-w-xl mx-auto">
           <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-bold mb-8">{c.ctaTitle}</h2>
-          <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
-            {beginLabel}
-          </button>
+          <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
+              {beginLabel}
+            </button>
+            <GooglePlayLink label={playStore.cta} T={T} />
+          </div>
           <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
         </div>
       </section>
