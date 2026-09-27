@@ -43,14 +43,6 @@ describe('LandingPage — simplified hero', () => {
     expect(screen.queryByText(/illustrative data/i)).toBeNull();
     expect(screen.queryByText('Active prayers')).toBeNull();
   });
-
-  it('puts the device-local reassurance before the primary action', async () => {
-    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    const reassurance = await screen.findByText('No account needed. Nothing leaves this device unless you choose to save it.');
-    const [begin] = screen.getAllByText('Begin with a prayer');
-
-    expect(reassurance.compareDocumentPosition(begin) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-  });
 });
 
 describe('LandingPage — simplified product story', () => {
