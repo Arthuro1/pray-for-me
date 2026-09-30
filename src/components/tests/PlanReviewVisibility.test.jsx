@@ -32,7 +32,6 @@ import PlansTab from '../../pages/PlansTab';
 import usePrayerStore from '../../store/prayerStore';
 import { PLANS } from '../../content/prayerPlans';
 import { isPlanReviewed, setPlanPreview } from '../../lib/planReview';
-import { NEW_PLAN_IDS } from '../../content/reviews/pendingPlans20260923';
 import { t } from '../../i18n';
 
 const lang = 'fr';
@@ -49,10 +48,10 @@ beforeEach(() => {
 afterEach(() => { cleanup(); localStorage.clear(); vi.unstubAllEnvs(); });
 
 describe('approved and draft plans in the journey catalogue', () => {
-  // The only drafts are the synthetic fixture and the curricula whose review
-  // record is still pending — so the negative case survives every approval.
+  // The only draft left is the synthetic fixture, so the negative case
+  // survives every approval.
   it('keeps a real negative fixture after the pending curricula are approved', () => {
-    expect(drafts.map((plan) => plan.id).sort()).toEqual(['test-review-draft', ...NEW_PLAN_IDS].sort());
+    expect(drafts.map((plan) => plan.id)).toEqual(['test-review-draft']);
   });
 
   it('shows all five approved curricula to an ordinary reader', () => {

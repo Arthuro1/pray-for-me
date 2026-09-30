@@ -270,10 +270,11 @@ export const SANOGO_BOOKS = [
     editions: { fr: mohammed('Devenir un intime de Dieu pour manifester sa gloire', 'devenir-un-intime-de-dieu-pour-manifester-sa-gloire-mohammed-sanogo') },
   }),
 
-  // The fruit of the Spirit ("À son image pour dominer")
+  // The fruit of the Spirit ("À son image pour dominer"); fruit-of-the-spirit
+  // added 2026-09-30 (curator proposal, fruit10).
   later({
     id: 'sanogo-les-fruits-d-une-vie-ordonnee-la-paix',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On God’s peace as part of being transformed into the image of Christ.',
       fr: 'Sur la paix de Dieu dans la transformation à l’image de Christ.',
@@ -282,7 +283,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-les-fruits-d-une-vie-ordonnee-la-joie',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On a joy from God that does not depend on circumstances.',
       fr: 'Sur une joie qui vient de Dieu et ne dépend pas des circonstances.',
@@ -291,7 +292,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-le-mystere-de-la-joie-divine',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On joy as a fruit of God’s love at work in the believer.',
       fr: 'Sur la joie comme fruit de l’amour de Dieu à l’œuvre dans le croyant.',
@@ -300,7 +301,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-reflete-la-paix-divine',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On acting from God’s rest rather than from inner agitation.',
       fr: 'Sur une action qui naît du repos de Dieu plutôt que de l’agitation intérieure.',
@@ -309,7 +310,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-la-patience-divine',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On patience as the fruit that lets God’s promises ripen in their time.',
       fr: 'Sur la patience, fruit qui laisse mûrir les promesses de Dieu en leur temps.',
@@ -318,7 +319,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-manifeste-la-bonte-comme-dieu',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On goodness as God’s character at work in good deeds, in two parts.',
       fr: 'Sur la bonté, caractère de Dieu à l’œuvre dans les bonnes œuvres, en deux parties.',
@@ -327,7 +328,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-la-benignite',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On kindness as God’s character in us, learned through testing, in two parts.',
       fr: 'Sur la bénignité, caractère de Dieu en nous, apprise dans l’épreuve, en deux parties.',
@@ -336,7 +337,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-la-fidelite',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On faithfulness in small things, in money and in love, in two parts.',
       fr: 'Sur la fidélité dans les petites choses, dans l’argent et dans l’amour, en deux parties.',
@@ -345,7 +346,7 @@ export const SANOGO_BOOKS = [
   }),
   later({
     id: 'sanogo-aimer-comme-christ',
-    topics: ['character', 'spiritual-formation'],
+    topics: ['character', 'spiritual-formation', 'fruit-of-the-spirit'],
     description: {
       en: 'On love as the mark of being made in God’s image (1 John 4:7–8).',
       fr: 'Sur l’amour comme marque de l’image de Dieu en nous (1 Jean 4.7-8).',

@@ -2,12 +2,12 @@
 // (docs/NEW_PLANS_2026-09-23.md). One file per plan in ./newPlans/, with its
 // verification worksheet in docs/resources/candidates/<plan-id>.md.
 //
-// NONE of these is approved. Every entry leaves this module as `needs_review`
-// with no content or safety sign-off, whatever a candidate file says, so the
-// resolver never shows it. Approval will come the same way it came for the
-// author collections: a dated review record naming the exact ids a human
-// approved (see src/content/reviews/paulAuthorBooks20260923.js) — never a
-// default, never an AI.
+// Approval is the closed list in src/content/reviews/paulNewPlans20260930.js
+// (Paul, 2026-09-30). An entry on it leaves this module approved with content
+// and safety sign-offs; any other entry leaves as `needs_review` with no
+// sign-off, whatever a candidate file says, so a candidate added later is
+// never approved by default.
+import { NEW_PLAN_RESOURCE_APPROVED_IDS, NEW_PLAN_RESOURCE_SIGNOFF } from '../reviews/paulNewPlans20260930';
 import { CHILDREN21_CANDIDATES } from './newPlans/children21';
 import { CHURCH_HURT_21_CANDIDATES } from './newPlans/churchHurt21';
 import { FRUIT10_CANDIDATES } from './newPlans/fruit10';
@@ -61,8 +61,19 @@ function mergeCandidate(first, other) {
   };
 }
 
-// Pending by construction: status forced to needs_review, sign-offs removed.
-function asPending(entry) {
+const APPROVED = new Set(NEW_PLAN_RESOURCE_APPROVED_IDS);
+
+// Review state comes only from the closed list: a candidate file can neither
+// approve itself nor keep a stale sign-off.
+function withReview(entry) {
+  if (APPROVED.has(entry.id)) {
+    return {
+      ...entry,
+      status: 'approved',
+      contentReview: { ...NEW_PLAN_RESOURCE_SIGNOFF },
+      safetyReview: { ...NEW_PLAN_RESOURCE_SIGNOFF },
+    };
+  }
   const pending = { ...entry, status: 'needs_review' };
   delete pending.contentReview;
   delete pending.safetyReview;
@@ -75,7 +86,7 @@ export function mergeCandidates(collections) {
     const known = byId.get(entry.id);
     byId.set(entry.id, known ? mergeCandidate(known, entry) : entry);
   }
-  return [...byId.values()].map(asPending);
+  return [...byId.values()].map(withReview);
 }
 
 export const NEW_PLAN_RESOURCES = mergeCandidates(COLLECTIONS);

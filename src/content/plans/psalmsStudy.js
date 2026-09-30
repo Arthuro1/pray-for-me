@@ -35,7 +35,7 @@
 // reviewed). Scripture is stored as references only — no Bible text is ever
 // authored here.
 import { DAYS } from './psalmsStudyDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'praise', from: 1, to: 7, titleKey: 'planPsalmsMovementPraise' },
@@ -57,7 +57,7 @@ export const PSALMS_STUDY = {
   titleKey: 'planPsalmsTitle',
   subKey: 'planPsalmsSub',
   proseTranslations: [],
-  review: pendingPlanReview('psalms42'),
+  review: NEW_PLAN_APPROVALS.psalms42,
   movements: MOVEMENTS,
   intro: {
     en: 'For six weeks you will study one psalm a day and discover how the Psalms give God’s people words for everything: praise, trust, fear, grief, anger, repentance, justice, thanksgiving, waiting and worship. Each week follows one family of psalms, and each day offers some context, a caution about what not to over-read, three questions and a short prayer; allow about twenty minutes with your Bible open. The study will not force every psalm towards a happy ending — some end in darkness, and they are left that way — and it does not turn the Psalter’s confident lines into guarantees of health, wealth or safety. It is an invitation to pray honestly to the God the Psalms reveal, in the company of Jesus, who prayed them too.',

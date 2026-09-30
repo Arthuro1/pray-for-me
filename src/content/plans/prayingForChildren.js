@@ -33,7 +33,7 @@
 // authored in en + fr (`proseTranslations: []`), other languages fall back to
 // English through pick(). Scripture is stored as references only.
 import { DAYS } from './prayingForChildrenDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'belonging', from: 1, to: 5, titleKey: 'planChildrenMovementBelonging' },
@@ -52,7 +52,7 @@ export const PRAYING_FOR_CHILDREN = {
   titleKey: 'planChildrenTitle',
   subKey: 'planChildrenSub',
   proseTranslations: [],
-  review: pendingPlanReview('children21'),
+  review: NEW_PLAN_APPROVALS.children21,
   movements: MOVEMENTS,
   intro: {
     en: "This plan is for anyone who loves children and wants to pray for them: parents, grandparents, guardians, godparents, teachers, mentors, spiritual parents and every Christian who cares about the next generation. Over 21 days, about ten minutes a day, you will read a passage in its context, pray for children's faith, character, relationships and calling, and then turn each day's prayer back on your own heart. The children you pray for belong to God; we are stewards, not owners of their future. Prayer is trust, not leverage: it does not guarantee a child's faith, safety, health or success, and a child's choices are not a verdict on you. If you long for children, have lost a child, or love one who is far from God or from you, you are welcome here as you are.",

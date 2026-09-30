@@ -28,7 +28,9 @@ export const DISCERNMENT_RESOURCES = [
   },
   {
     id: 'bibleproject-holy-spirit', type: 'video', originalLanguage: 'en',
-    ...signoffs(), topics: ['prayer', 'spiritual-formation'], lifeStages: ['single', 'dating', 'engaged', 'married'],
+    // holy-spirit + christian-living added 2026-09-30 (curator proposal, holySpirit21/fruit10).
+    domains: ['relationships', 'christian-living'],
+    ...signoffs(), topics: ['prayer', 'spiritual-formation', 'holy-spirit'], lifeStages: ['single', 'dating', 'engaged', 'married'],
     description: {
       en: 'An overview of the Spirit’s work in the biblical story, to deepen prayer and attentive reading.',
       fr: 'Un aperçu de l’action de l’Esprit dans le récit biblique, pour approfondir la prière et la lecture attentive.',

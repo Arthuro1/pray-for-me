@@ -34,7 +34,7 @@
 // VERSIONING: bump `version` whenever a day's meaning changes (see
 // docs/PRAYER_PLANS.md). Day numbering, ids and references are the stable part.
 import { DAYS } from './prayingForUnbornChildDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'known', from: 1, to: 5, titleKey: 'planUnbornMovementKnown' },
@@ -53,7 +53,7 @@ export const PRAYING_FOR_UNBORN_CHILD = {
   titleKey: 'planUnbornTitle',
   subKey: 'planUnbornSub',
   proseTranslations: [],
-  review: pendingPlanReview('unborn21'),
+  review: NEW_PLAN_APPROVALS.unborn21,
   movements: MOVEMENTS,
   intro: {
     en: "Pray for a child still in the womb over twenty-one days: for the child, the mother, the father or other parent, the wider family, those who give care and the future, before entrusting it all to God. Mothers, fathers, adoptive or foster parents-to-be, grandparents and friends can all pray it; where a prompt names the mother and you are she, pray it for yourself. Each day takes about ten minutes. Prayer goes hand in hand with prenatal and medical care, so keep every appointment and tell your midwife or doctor about anything that worries you. This plan does not promise a healthy pregnancy or a particular birth outcome, and if this pregnancy ends in loss you may pause or stop at any point; that is not a failure of faith.",

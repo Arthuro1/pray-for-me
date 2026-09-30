@@ -34,7 +34,7 @@
 // VERSIONING: bump `version` whenever a day's meaning changes (see
 // docs/PRAYER_PLANS.md). Day numbers and references are the stable part.
 import { DAYS } from './identityInChristDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'rescued', from: 1, to: 5, titleKey: 'planIdentityMovementRescued' },
@@ -53,7 +53,7 @@ export const IDENTITY_IN_CHRIST = {
   titleKey: 'planIdentityTitle',
   subKey: 'planIdentitySub',
   proseTranslations: [],
-  review: pendingPlanReview('identity21'),
+  review: NEW_PLAN_APPROVALS.identity21,
   movements: MOVEMENTS,
   intro: {
     en: "A 21-day journey through what Scripture says is true of you because you belong to Jesus Christ: created in God's image, rescued by grace, united with Christ, adopted, joined to His people and sent. It is for new believers, and for long-time Christians whose sense of worth has quietly drifted onto work, looks, relationships, approval or ministry results. Each day takes about ten to fifteen minutes: a passage, a short reflection, prayer and one small practice. This is not a self-esteem course, and it does not promise that you will feel different. It invites you to trust what God has done in Christ and to keep growing in it, alongside your church.",

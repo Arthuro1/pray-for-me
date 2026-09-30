@@ -36,7 +36,7 @@
 //
 // VERSIONING: bump `version` when a day's meaning changes (docs/PRAYER_PLANS.md).
 import { DAYS } from './intimacyWithTheSpiritDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'know', from: 1, to: 5, titleKey: 'planHolySpiritMovementKnow' },
@@ -56,7 +56,7 @@ export const INTIMACY_WITH_THE_SPIRIT = {
   titleKey: 'planHolySpiritTitle',
   subKey: 'planHolySpiritSub',
   proseTranslations: [],
-  review: pendingPlanReview('holySpirit21'),
+  review: NEW_PLAN_APPROVALS.holySpirit21,
   movements: MOVEMENTS,
   intro: {
     en: 'A 21-day journey into fellowship with the Holy Spirit — not a technique for experiences, but getting to know a Person: God Himself, living in everyone who belongs to Christ. You will move from who the Spirit is to walking with Him, praying with His help, growing in His fruit and gifts, and living by His power in the church and in the world. Each day takes about 10 to 15 minutes: a passage to read, a short reflection, prayer prompts and one small practice. Written from a Pentecostal and charismatic heart, it names fairly where Christians read Scripture differently. It promises no particular experience, gift or feeling; it invites you to seek God and to trust Him with the answer.',

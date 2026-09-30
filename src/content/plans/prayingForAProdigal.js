@@ -30,11 +30,11 @@
 // in en + fr and falls back through pick() elsewhere (`proseTranslations: []`
 // until overlays exist). Scripture is stored as references only.
 //
-// REVIEW: drafted with AI assistance on 2026-09-23 and gated by `review` until
-// a human theology reviewer and a safety reviewer sign it off — see
+// REVIEW: drafted with AI assistance on 2026-09-23; approved by Paul on
+// 2026-09-30 (src/content/reviews/paulNewPlans20260930.js). Reviewer notes:
 // docs/plans/prodigal30.md.
 import { DAYS } from './prayingForAProdigalDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'father', from: 1, to: 7, titleKey: 'planProdigalMovementFather' },
@@ -53,7 +53,7 @@ export const PRAYING_FOR_A_PRODIGAL = {
   titleKey: 'planProdigalTitle',
   subKey: 'planProdigalSub',
   proseTranslations: [],
-  review: pendingPlanReview('prodigal30'),
+  review: NEW_PLAN_APPROVALS.prodigal30,
   movements: MOVEMENTS,
   intro: {
     en: "These thirty days are for anyone carrying someone who once walked with Christ or His people and has since drifted or walked away: a son or daughter, a spouse, a brother or sister, a parent, a friend. You will pray through Luke 15 and the Scriptures around it — the Father's heart, persistent intercession, your own heart, and hope held with wisdom and surrender. Each day takes ten to fifteen minutes and turns every prayer for them back on you as well. The plan does not assume you know why they left, and it will never ask you to pressure them. Nor does it promise that they will return during these thirty days or at any set time; it is a way to keep loving, keep praying and entrust them to God.",

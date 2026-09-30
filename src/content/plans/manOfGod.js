@@ -32,10 +32,10 @@
 // in English + French and falls back through pick() for the other languages
 // (`proseTranslations: []` until reviewed overlays exist).
 //
-// REVIEW: gated by pendingPlanReview — readable in preview only until a named
-// theology and safety reviewer sign it off.
+// REVIEW: drafted with AI assistance on 2026-09-23; approved by Paul on
+// 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { DAYS } from './manOfGodDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'before', from: 1, to: 5, titleKey: 'planManOfGodMovementBefore' },
@@ -54,7 +54,7 @@ export const MAN_OF_GOD = {
   titleKey: 'planManOfGodTitle',
   subKey: 'planManOfGodSub',
   proseTranslations: [],
-  review: pendingPlanReview('manOfGod21'),
+  review: NEW_PLAN_APPROVALS.manOfGod21,
   movements: MOVEMENTS,
   intro: {
     en: "A 21-day journey for men who want to live before God and be shaped, slowly, into the likeness of Christ. It is for single and married men, fathers and men without children, young and old, men who lead and men who hold no title at all. Each day takes ten to fifteen minutes: a passage read in its context, a short reflection, three prayer prompts and one small practice. You will walk with Adam, Jesus, Peter, Joseph, David, Jonathan, Nehemiah, Daniel, Paul and Timothy. The plan offers no formula for success and no promise of quick change — only a place to pray honestly and keep walking.",

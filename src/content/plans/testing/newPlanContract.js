@@ -9,12 +9,11 @@ import { getPlan, planDayContent, plansByCategory } from '../../prayerPlans';
 import { usfmFromReference } from '../../../lib/bibleRef';
 import { localizeRef, pick } from '../../teaching/pick';
 import { canUsePlan, isPlanReviewed } from '../../../lib/planReview';
-import { startGuidedPlan } from '../../../lib/startGuidedPlan';
 import { LANG_CODES } from '../../../i18n';
 import { RESOURCE_DOMAINS, RESOURCE_TOPICS } from '../../resources/topics';
 import { RESOURCES } from '../../resources/catalogue';
 import { resolveResources } from '../../../lib/resources';
-import { NEW_PLAN_IDS } from '../../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS, NEW_PLAN_IDS } from '../../reviews/paulNewPlans20260930';
 import rules from '../../../content-quality/content-rules.json';
 
 const SOURCE_LANGS = ['en', 'fr'];
@@ -86,23 +85,16 @@ export function runNewPlanContract(plan, spec) {
       expect(typeof plan.emoji).toBe('string');
     });
 
-    it('stays review-gated: readable in preview, never public, never startable in production', async () => {
-      expect(plan.review?.status).toBe('needs_review');
+    it("carries Paul's dated sign-off and is public in production", () => {
+      expect(plan.review).toBe(NEW_PLAN_APPROVALS[spec.id]);
+      expect(plan.review.status).toBe('approved');
       expect(plan.review.contentVersion).toBe(plan.version);
-      expect(isPlanReviewed(plan)).toBe(false);
-      expect(canUsePlan(plan, { preview: false })).toBe(false);
-      expect(canUsePlan(plan, { preview: true })).toBe(true);
-      // No AI-written attestation may ever sit in the record.
-      for (const gate of [plan.review.theology, plan.review.safety, ...Object.values(plan.review.locales || {})]) {
-        expect(gate?.status).not.toBe('approved');
-        expect(gate?.reviewer).toBeUndefined();
-      }
+      expect(isPlanReviewed(plan)).toBe(true);
+      expect(canUsePlan(plan, { preview: false })).toBe(true);
       vi.stubEnv('DEV', false);
-      expect(planDayContent(spec.id, 1)).toBeNull();
-      const addPrayer = vi.fn(async () => 'never');
-      expect(await startGuidedPlan({ plan, startDate: '2026-09-23', lang: 'en', addPrayer }))
-        .toEqual({ ok: false, reason: 'unavailable' });
-      expect(addPrayer).not.toHaveBeenCalled();
+      expect(planDayContent(spec.id, 1)).not.toBeNull();
+      // Every gate counts: without the safety sign-off it is a draft again.
+      expect(isPlanReviewed({ ...plan, review: { ...plan.review, safety: null } })).toBe(false);
     });
 
     it('divides the days into contiguous movements that every day names', () => {

@@ -32,7 +32,7 @@
 // authored in en + fr and falls back through pick() elsewhere
 // (`proseTranslations: []`). References resolve through the verse pipeline.
 import { DAYS } from './yourKingdomComeDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'father', from: 1, to: 6, titleKey: 'planKingdomMovementFather' },
@@ -50,7 +50,7 @@ export const YOUR_KINGDOM_COME = {
   titleKey: 'planKingdomTitle',
   subKey: 'planKingdomSub',
   proseTranslations: [],
-  review: pendingPlanReview('kingdomCome14'),
+  review: NEW_PLAN_APPROVALS.kingdomCome14,
   movements: MOVEMENTS,
   intro: {
     en: "Fourteen days praying the prayer Jesus taught His disciples, one petition at a time. Each day offers a short reflection on a passage, prayers for others and for the world, and one question that brings your own life under the reign you are asking for. Allow about fifteen minutes. The plan is for anyone who wants their prayer shaped less by their own list and more by God's name, kingdom and will. It does not promise that any prayer will be answered in a particular way; it invites you to pray as Jesus taught and to trust the Father with the rest.",

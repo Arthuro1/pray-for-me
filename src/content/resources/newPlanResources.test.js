@@ -1,8 +1,8 @@
 // Resource candidates for the plans drafted 2026-09-23. What this file proves:
-// nothing here can reach a reader before a human approves it; every entry is
-// well-formed and verified on a real page; each one would land on a day of the
-// plan it was researched for — and only on plans of its own family — once it
-// IS approved.
+// exactly the ids on Paul's closed list (2026-09-30) reach a reader, with both
+// sign-offs; every entry is well-formed and verified on a real page; each one
+// lands on a day of the plan it was researched for — and only on plans of its
+// own family.
 import { describe, expect, it } from 'vitest';
 import { NEW_PLAN_RESOURCES, mergeCandidates } from './newPlanResources.js';
 import { RESOURCES } from './catalogue.js';
@@ -11,7 +11,7 @@ import {
 } from './topics.js';
 import { isResourceApprovedForDisplay, isSensitiveResource, resolveResources } from '../../lib/resources.js';
 import { PLANS } from '../prayerPlans.js';
-import { NEW_PLAN_IDS } from '../reviews/pendingPlans20260923.js';
+import { NEW_PLAN_IDS, NEW_PLAN_RESOURCE_APPROVED_IDS, NEW_PLAN_RESOURCE_SIGNOFF } from '../reviews/paulNewPlans20260930.js';
 import { LANG_CODES } from '../../i18n.js';
 
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -43,12 +43,15 @@ describe('resource candidates for the new plans', () => {
     }
   });
 
-  it('can never reach a reader: needs_review, no sign-off, not displayable', () => {
+  it('are approved exactly by the closed list, with both sign-offs', () => {
+    const approved = new Set(NEW_PLAN_RESOURCE_APPROVED_IDS);
+    expect(approved.size).toBe(NEW_PLAN_RESOURCE_APPROVED_IDS.length);
+    expect(NEW_PLAN_RESOURCES.map((entry) => entry.id).sort()).toEqual([...approved].sort());
     for (const entry of NEW_PLAN_RESOURCES) {
-      expect(entry.status, entry.id).toBe('needs_review');
-      expect(entry.contentReview, entry.id).toBeUndefined();
-      expect(entry.safetyReview, entry.id).toBeUndefined();
-      expect(isResourceApprovedForDisplay(entry), entry.id).toBe(false);
+      expect(entry.status, entry.id).toBe('approved');
+      expect(entry.contentReview, entry.id).toEqual(NEW_PLAN_RESOURCE_SIGNOFF);
+      expect(entry.safetyReview, entry.id).toEqual(NEW_PLAN_RESOURCE_SIGNOFF);
+      expect(isResourceApprovedForDisplay(entry), entry.id).toBe(true);
     }
   });
 

@@ -38,10 +38,10 @@
 // falls back through pick() for the other languages (`proseTranslations: []`
 // until reviewed overlays exist).
 //
-// REVIEW: gated by pendingPlanReview — readable in preview only until a named
-// theology and safety reviewer sign it off.
+// REVIEW: drafted with AI assistance on 2026-09-23; approved by Paul on
+// 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { DAYS } from './womanOfGodDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'before', from: 1, to: 5, titleKey: 'planWomanOfGodMovementBefore' },
@@ -60,7 +60,7 @@ export const WOMAN_OF_GOD = {
   titleKey: 'planWomanOfGodTitle',
   subKey: 'planWomanOfGodSub',
   proseTranslations: [],
-  review: pendingPlanReview('womanOfGod21'),
+  review: NEW_PLAN_APPROVALS.womanOfGod21,
   movements: MOVEMENTS,
   intro: {
     en: "Woman of God is a 21-day journey through the lives of women in Scripture — Eve and Hagar, Ruth and Naomi, Abigail, Esther, Mary, Anna, Mary Magdalene and others — read in context, to see what it means to live as a woman before God. It is written for every woman: single, married or widowed, with or without children, young or older, working in the home or outside it. Each day takes about ten minutes: a passage, a short reflection, three prayer prompts and one small practice. It offers no single model of womanhood to copy and no checklist to meet, and it promises no particular outcome. Where Christians disagree about roles in marriage and in the church, it says so fairly and keeps to what they share.",

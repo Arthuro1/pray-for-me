@@ -126,7 +126,8 @@ export const POONEN_BOOKS = [
   authorBook({
     id: 'poonen-living-as-jesus-lived',
     language: 'en',
-    domains: ['freedom'],
+    // christian-living added 2026-09-30 (curator proposal, holySpirit21/fruit10).
+    domains: ['freedom', 'christian-living'],
     perspective: EVANGELICAL,
     topics: ['discipleship', 'holy-spirit', 'spiritual-formation'],
     description: describe('Jesus as the example of a life lived in the Spirit and in obedience to the Father.', 'Jésus comme modèle d’une vie menée par l’Esprit dans l’obéissance au Père.'),
@@ -316,6 +317,8 @@ export const POONEN_BOOKS = [
   // The gospel and the foundations of faith
   later({
     id: 'poonen-the-real-truth',
+    // mission added 2026-09-30 (curator proposal: its Amharic edition serves unbelievers30).
+    domains: ['christian-living', 'mission'],
     topics: ['gospel'],
     description: describe('The message of salvation explained simply, for someone who knows nothing of the Christian faith.', 'Le message du salut expliqué simplement, pour qui ne connaît rien de la foi chrétienne.'),
     editions: {

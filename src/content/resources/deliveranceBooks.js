@@ -382,6 +382,8 @@ export const DELIVERANCE_BOOKS = [
   {
     id: 'prince-holy-spirit-in-you',
     type: 'book',
+    // christian-living added 2026-09-30 (curator proposal, holySpirit21).
+    domains: ['freedom', 'christian-living'],
     originalLanguage: 'en',
     perspective: ['pentecostal', 'charismatic'],
     topics: ['holy-spirit', 'discipleship', 'prayer', 'discernment'],

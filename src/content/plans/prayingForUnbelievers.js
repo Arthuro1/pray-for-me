@@ -36,7 +36,7 @@
 // prose is authored in en + fr and falls back through pick() elsewhere
 // (`proseTranslations: []`). Scripture is referenced, never quoted.
 import { DAYS } from './prayingForUnbelieversDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'heart', from: 1, to: 7, titleKey: 'planUnbelieversMovementHeart' },
@@ -55,7 +55,7 @@ export const PRAYING_FOR_UNBELIEVERS = {
   titleKey: 'planUnbelieversTitle',
   subKey: 'planUnbelieversSub',
   proseTranslations: [],
-  review: pendingPlanReview('unbelievers30'),
+  review: NEW_PLAN_APPROVALS.unbelievers30,
   movements: MOVEMENTS,
   intro: {
     en: "For thirty days you will pray for people you love who do not yet know Christ — a friend, a relative, a colleague, a neighbour — and for the wider world beyond them. Each day takes about ten minutes: a passage, a short reflection, three prayers for others and one for yourself, and a small practice. The plan moves from God's heart for the lost to prayer for understanding, for witnesses and conversations, and for mission across the world. It treats the people you pray for as neighbours to love, never as projects, and it respects their freedom. Prayer is trust, not leverage: no plan can promise anyone's conversion, and faithful prayer is worth offering whatever you see. If the person on your heart once followed Christ and has drifted away, a separate plan is written for that.",

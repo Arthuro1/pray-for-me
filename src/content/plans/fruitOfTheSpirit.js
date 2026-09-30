@@ -36,7 +36,7 @@
 // VERSIONING: bump `version` whenever a day's meaning changes (see
 // docs/PRAYER_PLANS.md). Research note: docs/plans/fruit10.md.
 import { DAYS } from './fruitOfTheSpiritDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'spirit', from: 1, to: 4, titleKey: 'planFruitMovementSpirit' },
@@ -54,7 +54,7 @@ export const FRUIT_OF_THE_SPIRIT = {
   titleKey: 'planFruitTitle',
   subKey: 'planFruitSub',
   proseTranslations: [],
-  review: pendingPlanReview('fruit10'),
+  review: NEW_PLAN_APPROVALS.fruit10,
   movements: MOVEMENTS,
   intro: {
     en: "Ten days in Galatians 5 and the passages around it: one day on life in the Spirit, then one for each part of the fruit Paul names. It is for any believer who wants to grow in Christlike character — not by working harder through a checklist, but by walking with the Spirit who produces it. Each day takes about ten to fifteen minutes: a short reflection, a moment of honest self-examination, prayer, and one small practice. It makes no promise about how you will feel after ten days; fruit grows slowly, and it is the Spirit's work, not a score to keep.",

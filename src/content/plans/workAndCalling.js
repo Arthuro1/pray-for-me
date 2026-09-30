@@ -34,10 +34,10 @@
 // authored in English + French only (`proseTranslations: []`), so the other
 // languages fall back to English through pick(). No Bible text is stored.
 //
-// REVIEW: gated by pendingPlanReview('work21') until a human theology and
-// safety review signs it off. Never write an approval here.
+// REVIEW: drafted with AI assistance on 2026-09-23; approved by Paul on
+// 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { DAYS } from './workAndCallingDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'stewardship', from: 1, to: 5, titleKey: 'planWorkMovementStewardship' },
@@ -56,7 +56,7 @@ export const WORK_AND_CALLING = {
   titleKey: 'planWorkTitle',
   subKey: 'planWorkSub',
   proseTranslations: [],
-  review: pendingPlanReview('work21'),
+  review: NEW_PLAN_APPROVALS.work21,
   movements: MOVEMENTS,
   intro: {
     en: "A 21-day journey that brings your work under Christ — paid or unpaid: a job, your studies, caring for a household or for someone in need, running a business, serving in ministry, looking for work or living in retirement. Each day offers a passage to read, a short reflection, a few prayers and one small practice; allow ten to fifteen minutes. The days move from work as God's good gift, through character and calling, to limits, generosity, witness and rest. This plan does not promise success, wealth or a new job, and it will not uncover one hidden career you must find; it invites you to follow Jesus faithfully where you are.",

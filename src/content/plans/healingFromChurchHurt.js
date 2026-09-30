@@ -42,11 +42,11 @@
 // in en + fr and falls back through pick() elsewhere (`proseTranslations: []`
 // until overlays exist). Scripture is stored as references only.
 //
-// REVIEW: drafted with AI assistance on 2026-09-23 and gated by `review` until
-// a human theology reviewer and a safety reviewer sign it off — see
+// REVIEW: drafted with AI assistance on 2026-09-23; approved by Paul on
+// 2026-09-30 (src/content/reviews/paulNewPlans20260930.js). Reviewer notes:
 // docs/plans/churchHurt21.md.
 import { DAYS } from './healingFromChurchHurtDays';
-import { pendingPlanReview } from '../reviews/pendingPlans20260923';
+import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
 
 export const MOVEMENTS = [
   { id: 'lament', from: 1, to: 5, titleKey: 'planChurchHurtMovementLament' },
@@ -65,7 +65,7 @@ export const HEALING_FROM_CHURCH_HURT = {
   titleKey: 'planChurchHurtTitle',
   subKey: 'planChurchHurtSub',
   proseTranslations: [],
-  review: pendingPlanReview('churchHurt21'),
+  review: NEW_PLAN_APPROVALS.churchHurt21,
   movements: MOVEMENTS,
   intro: {
     en: 'A 21-day prayer journey for anyone carrying a wound connected to a church, a ministry or a Christian leader, whether it came from disappointment and conflict or from spiritual, emotional, sexual or financial abuse. You will lament honestly, look again at Jesus the Good Shepherd, think through forgiveness, justice and boundaries, and consider, without pressure, what safe community could look like. Each day takes about ten minutes: a short reflection on a passage, a few prayer prompts and one small, optional practice. You may pause or stop at any time, and you never have to share your story. This plan does not promise a particular outcome, it will never ask you to go back to an unsafe place, and it does not replace pastoral care, counselling, medical help, legal advice or safeguarding services.',

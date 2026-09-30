@@ -20,7 +20,7 @@ import { PRAYING_FOR_OUR_MARRIAGE } from './plans/prayingForOurMarriage';
 import { FREEDOM_IN_CHRIST } from './plans/freedomInChrist';
 import { DAVID_HEART } from './plans/davidHeart';
 import { BIBLICAL_WISDOM } from './plans/biblicalWisdom';
-// Drafted 2026-09-23 and review-gated (src/content/reviews/pendingPlans20260923.js).
+// Drafted 2026-09-23; approved 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { IDENTITY_IN_CHRIST } from './plans/identityInChrist';
 import { FRUIT_OF_THE_SPIRIT } from './plans/fruitOfTheSpirit';
 import { INTIMACY_WITH_THE_SPIRIT } from './plans/intimacyWithTheSpirit';
