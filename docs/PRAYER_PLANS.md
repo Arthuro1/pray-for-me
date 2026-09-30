@@ -338,6 +338,28 @@ rules, the localization decision and the release checklist.
 
 ---
 
+## Thirteen plans drafted 2026-09-23 (review pending)
+
+`identity21`, `fruit10`, `holySpirit21`, `kingdomCome14`, `work21`,
+`manOfGod21`, `womanOfGod21` (new category `formation`, "Growing in Christ"),
+`unbelievers30`, `prodigal30`, `children21`, `unborn21`, `churchHurt21` and the
+study `psalms42`. All carry `pendingPlanReview(id)` and are visible only in
+review preview. See `docs/NEW_PLANS_2026-09-23.md` for the table, the owner
+decisions they follow and the review list, and `docs/plans/<id>.md` for each
+plan's research note.
+
+For any future plan built the same way:
+
+- give it a pending record rather than no `review` at all — a plan without one
+  counts as published under the legacy rule in `isPlanReviewed()`;
+- call `runNewPlanContract(plan, spec)` from
+  `src/content/plans/testing/newPlanContract.js` in its test, then add the
+  guardrails its subject needs;
+- a study day may carry `safetyNote` (rendered under the study guide);
+- a reference to a book missing from `BOOK_NAMES` fails `pick.test.js` for the
+  non-Latin languages — add the book in all 16 languages first;
+- single-chapter books need the chapter: `Jude 1:20-21`, `3 John 1:9-11`.
+
 See `docs/RESOURCES.md` for the separate review the "Go deeper" catalogue needs.
 See `docs/RELATIONSHIP_FAMILY_PLANS.md` for the engaged/married implementation,
 privacy boundary, optional child layer, and release checklist.

@@ -22,6 +22,7 @@ import PlansTab from './PlansTab';
 import usePrayerStore from '../store/prayerStore';
 import { PLANS, PLAN_CATEGORIES, STARTER_PLAN_ID } from '../content/prayerPlans';
 import { buildGuidedPlanPrayer } from '../lib/guidedPlan';
+import { isPlanReviewed } from '../lib/planReview';
 import { trackPlanDetailOpened, trackPlansPageViewed } from '../lib/planAnalytics';
 import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';
@@ -56,13 +57,27 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
 
 describe('PlansTab', () => {
-  it('shows every plan at once, grouped by need, each exactly once', () => {
+  it('shows every published plan at once, grouped by need, each exactly once', () => {
     renderPlans();
-    for (const plan of PLANS) expect(screen.getAllByText(titleOf(plan.id)), plan.id).toHaveLength(1);
-    for (const category of PLAN_CATEGORIES) {
+    const published = PLANS.filter(isPlanReviewed);
+    for (const plan of published) expect(screen.getAllByText(titleOf(plan.id)), plan.id).toHaveLength(1);
+    for (const category of PLAN_CATEGORIES.filter(({ id }) => published.some((plan) => plan.category === id))) {
       expect(screen.getByRole('heading', { name: t(lang, category.labelKey) }), category.id).toBeTruthy();
     }
     expect(screen.queryByRole('button', { name: t(lang, 'browseJourneys') })).toBeNull();
+  });
+
+  // A draft stays in the data catalogue for review preview, but a production
+  // reader never sees it — nor a heading that would have nothing under it.
+  it('keeps plans awaiting review, and their empty headings, out of production', () => {
+    renderPlans();
+    const drafts = PLANS.filter((plan) => !isPlanReviewed(plan));
+    expect(drafts.length).toBeGreaterThan(0);
+    for (const plan of drafts) expect(screen.queryByText(titleOf(plan.id)), plan.id).toBeNull();
+    const published = PLANS.filter(isPlanReviewed);
+    for (const category of PLAN_CATEGORIES.filter(({ id }) => !published.some((plan) => plan.category === id))) {
+      expect(screen.queryByRole('heading', { name: t(lang, category.labelKey) }), category.id).toBeNull();
+    }
   });
 
   it('offers the gentle starter plan — not a fast — to someone new to plans', () => {

@@ -20,12 +20,29 @@ import { PRAYING_FOR_OUR_MARRIAGE } from './plans/prayingForOurMarriage';
 import { FREEDOM_IN_CHRIST } from './plans/freedomInChrist';
 import { DAVID_HEART } from './plans/davidHeart';
 import { BIBLICAL_WISDOM } from './plans/biblicalWisdom';
+// Drafted 2026-09-23 and review-gated (src/content/reviews/pendingPlans20260923.js).
+import { IDENTITY_IN_CHRIST } from './plans/identityInChrist';
+import { FRUIT_OF_THE_SPIRIT } from './plans/fruitOfTheSpirit';
+import { INTIMACY_WITH_THE_SPIRIT } from './plans/intimacyWithTheSpirit';
+import { YOUR_KINGDOM_COME } from './plans/yourKingdomCome';
+import { WORK_AND_CALLING } from './plans/workAndCalling';
+import { MAN_OF_GOD } from './plans/manOfGod';
+import { WOMAN_OF_GOD } from './plans/womanOfGod';
+import { PRAYING_FOR_UNBELIEVERS } from './plans/prayingForUnbelievers';
+import { PRAYING_FOR_A_PRODIGAL } from './plans/prayingForAProdigal';
+import { PRAYING_FOR_CHILDREN } from './plans/prayingForChildren';
+import { PRAYING_FOR_UNBORN_CHILD } from './plans/prayingForUnbornChild';
+import { HEALING_FROM_CHURCH_HURT } from './plans/healingFromChurchHurt';
+import { PSALMS_STUDY } from './plans/psalmsStudy';
 import { canUsePlan } from '../lib/planReview';
 
 // Plans are grouped in the UI by CATEGORY so the list stays browsable as it
 // grows. `id` is stable; the label is an i18n key resolved at render.
 export const PLAN_CATEGORIES = [
   { id: 'seeking', labelKey: 'planCategorySeeking' },
+  // Spiritual formation: identity, character, calling and life in the Spirit.
+  // These plans read the `christian-living` resource domain.
+  { id: 'formation', labelKey: 'planCategoryFormation' },
   { id: 'others', labelKey: 'planCategoryOthers' },
   { id: 'relationships', labelKey: 'planCategoryRelationships' },
   { id: 'freedom', labelKey: 'planCategoryFreedom' },
@@ -255,6 +272,20 @@ export const PLANS = [
   FREEDOM_IN_CHRIST,
   DAVID_HEART,
   BIBLICAL_WISDOM,
+  // Order within a category is display order.
+  IDENTITY_IN_CHRIST,
+  FRUIT_OF_THE_SPIRIT,
+  INTIMACY_WITH_THE_SPIRIT,
+  YOUR_KINGDOM_COME,
+  WORK_AND_CALLING,
+  MAN_OF_GOD,
+  WOMAN_OF_GOD,
+  PRAYING_FOR_UNBELIEVERS,
+  PRAYING_FOR_A_PRODIGAL,
+  PRAYING_FOR_CHILDREN,
+  PRAYING_FOR_UNBORN_CHILD,
+  HEALING_FROM_CHURCH_HURT,
+  PSALMS_STUDY,
 ];
 
 export function getPlan(id, version = null) {

@@ -125,6 +125,27 @@ commentaries wait the same way on the `bible-study` shelf.
 Zac Poonen's books are free to read on his church's sites, which adds Hindi,
 Korean, Japanese, Chinese and Amharic editions to several shelves.
 
+### 2026-09-29: candidates for the thirteen new plans
+
+254 researched candidates (58 sensitive) for the plans drafted 2026-09-23 live
+in `src/content/resources/newPlans/<plan-id>.js`, each with a verification
+worksheet in `docs/resources/candidates/<plan-id>.md`.
+`src/content/resources/newPlanResources.js` gathers them, merges a work found
+for two plans into one entry and forces every entry to `needs_review` with no
+sign-off, so **none is shown** until a human approves it through a dated review
+record listing exact ids (as `paulAuthorBooks20260923.js` does). The rules are
+tested in `newPlanResources.test.js`.
+
+Three new domains came with those plans: `intercession` (praying for a loved
+one who has wandered — prodigal30), `mission` (praying for and witnessing to
+people who do not yet believe — unbelievers30) and `care` (church hurt and
+spiritual abuse — kept away from the deliverance shelf). The "Growing in
+Christ" plans read `christian-living`. `church-hurt`, `spiritual-abuse` and
+`prophecy` joined `SENSITIVE_RESOURCE_TOPICS`. Two approved entries gained a
+domain, each with its reason beside it: `ortlund-gentle-and-lowly` (+`care`)
+and `cloud-townsend-boundaries` (+`intercession`). Coverage per plan, flags
+and curator proposals: `docs/NEW_PLANS_2026-09-23.md` §Resource research.
+
 ---
 
 ## The model

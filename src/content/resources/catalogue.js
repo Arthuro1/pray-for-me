@@ -61,6 +61,7 @@ import { DAVID_STUDY_RESOURCES } from './davidStudyResources';
 import { WISDOM_RESOURCES } from './wisdomResources';
 import { DISCERNMENT_RESOURCES } from './discernmentResources';
 import { AUTHOR_BOOKS } from './authorBooks';
+import { NEW_PLAN_RESOURCES } from './newPlanResources';
 
 export { RESOURCE_TOPICS, RESOURCE_DOMAINS, LIFE_STAGES, RESOURCE_TYPES, RESOURCE_STATUSES, RESOURCE_REVIEW_LEVELS };
 
@@ -285,7 +286,13 @@ const CORE_RESOURCES = [
     // discipleship material" that plan's resourcePerspectives asks for. It was
     // already on that shelf before domains existed; only the dating and marriage
     // titles beside it were wrong.
-    domains: ['relationships', 'freedom'],
+    // `care` (2026-09-28): a book on Christ's gentleness toward the wounded is
+    // exactly what the Good Shepherd movement of "Healing from Church Hurt"
+    // points readers to, and it teaches nothing about submission, reconciliation
+    // or deliverance that could press a church-hurt reader back toward harm.
+    // Recommended independently by that plan's author and its resource research
+    // (docs/resources/candidates/churchHurt21.md). Paul's approval is unchanged.
+    domains: ['relationships', 'freedom', 'care'],
     topics: ['healing', 'identity', 'spiritual-formation'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     status: 'approved',
@@ -393,6 +400,9 @@ export const RESOURCES = [
   ...inDomain('bible-study', WISDOM_RESOURCES),
   // Spans all three shelves, so every entry names its own domains.
   ...AUTHOR_BOOKS,
+  // Candidates for the plans drafted 2026-09-23: every one needs_review, and
+  // every one names its own domains (see ./newPlanResources.js).
+  ...NEW_PLAN_RESOURCES,
 ];
 
 export default RESOURCES;

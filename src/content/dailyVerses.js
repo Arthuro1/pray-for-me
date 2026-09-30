@@ -80,6 +80,18 @@ export const BOOK_NAMES = {
   '2PE': { fr: '2 Pierre', en: '2 Peter', de: '2. Petrus', pt: '2 Pedro', zh: '彼得后书', es: '2 Pedro', hi: '2 पतरस', ja: '2ペテロ', sw: '2 Petro', am: '2ኛ ጴጥሮስ', id: '2 Petrus', tl: '2 Pedro', ko: '베드로후서', ru: '2 Петра', ar: '2 بطرس', fa: 'دوم پطرس' },
   EZK: { fr: 'Ézéchiel', en: 'Ezekiel', de: 'Hesekiel', pt: 'Ezequiel', zh: '以西结书', es: 'Ezequiel', hi: 'यहेजकेल', ja: 'エゼキエル書', sw: 'Ezekieli', am: 'ሕዝቅኤል', id: 'Yehezkiel', tl: 'Ezekiel', ko: '에스겔', ru: 'Иезекииль', ar: 'حزقيال', fa: 'حزقیال' },
   REV: { fr: 'Apocalypse', en: 'Revelation', de: 'Offenbarung', pt: 'Apocalipse', zh: '启示录', es: 'Apocalipsis', hi: 'प्रकाशितवाक्य', ja: '黙示録', sw: 'Ufunuo', am: 'ራእይ', id: 'Wahyu', tl: 'Pahayag', ko: '요한계시록', ru: 'Откровение', ar: 'رؤيا', fa: 'مکاشفه' },
+  // Added 2026-09-28 for the plans drafted on 2026-09-23 (Psalms study, Woman of
+  // God, Holy Spirit, prodigal, church hurt…). Russian follows the Synodal
+  // names, so 2 Kings is "4 Царств" like 1 Kings is "3 Царств".
+  JDG: { fr: 'Juges', en: 'Judges', de: 'Richter', pt: 'Juízes', zh: '士师记', es: 'Jueces', hi: 'न्यायियों', ja: '士師記', sw: 'Waamuzi', am: 'መሳፍንት', id: 'Hakim-hakim', tl: 'Mga Hukom', ko: '사사기', ru: 'Судей', ar: 'القضاة', fa: 'داوران' },
+  RUT: { fr: 'Ruth', en: 'Ruth', de: 'Rut', pt: 'Rute', zh: '路得记', es: 'Rut', hi: 'रूत', ja: 'ルツ記', sw: 'Ruthu', am: 'ሩት', id: 'Rut', tl: 'Ruth', ko: '룻기', ru: 'Руфь', ar: 'راعوث', fa: 'روت' },
+  '2KI': { fr: '2 Rois', en: '2 Kings', de: '2. Könige', pt: '2 Reis', zh: '列王纪下', es: '2 Reyes', hi: '2 राजा', ja: '列王記第二', sw: '2 Wafalme', am: '2ኛ ነገሥት', id: '2 Raja-raja', tl: '2 Mga Hari', ko: '열왕기하', ru: '4 Царств', ar: '2 ملوك', fa: 'دوم پادشاهان' },
+  EZR: { fr: 'Esdras', en: 'Ezra', de: 'Esra', pt: 'Esdras', zh: '以斯拉记', es: 'Esdras', hi: 'एज्रा', ja: 'エズラ記', sw: 'Ezra', am: 'ዕዝራ', id: 'Ezra', tl: 'Ezra', ko: '에스라', ru: 'Ездра', ar: 'عزرا', fa: 'عزرا' },
+  HOS: { fr: 'Osée', en: 'Hosea', de: 'Hosea', pt: 'Oseias', zh: '何西阿书', es: 'Oseas', hi: 'होशे', ja: 'ホセア書', sw: 'Hosea', am: 'ሆሴዕ', id: 'Hosea', tl: 'Oseas', ko: '호세아', ru: 'Осия', ar: 'هوشع', fa: 'هوشع' },
+  '2TH': { fr: '2 Thessaloniciens', en: '2 Thessalonians', de: '2. Thessalonicher', pt: '2 Tessalonicenses', zh: '帖撒罗尼迦后书', es: '2 Tesalonicenses', hi: '2 थिस्सलुनीकियों', ja: '2テサロニケ', sw: '2 Wathesalonike', am: '2ኛ ተሰሎንቄ', id: '2 Tesalonika', tl: '2 Tesalonica', ko: '데살로니가후서', ru: '2 Фессалоникийцам', ar: '2 تسالونيكي', fa: 'دوم تسالونیکیان' },
+  TIT: { fr: 'Tite', en: 'Titus', de: 'Titus', pt: 'Tito', zh: '提多书', es: 'Tito', hi: 'तीतुस', ja: 'テトス', sw: 'Tito', am: 'ቲቶ', id: 'Titus', tl: 'Tito', ko: '디도서', ru: 'Титу', ar: 'تيطس', fa: 'تیطس' },
+  '3JN': { fr: '3 Jean', en: '3 John', de: '3. Johannes', pt: '3 João', zh: '约翰三书', es: '3 Juan', hi: '3 यूहन्ना', ja: '3ヨハネ', sw: '3 Yohana', am: '3ኛ ዮሐንስ', id: '3 Yohanes', tl: '3 Juan', ko: '요한삼서', ru: '3 Иоанна', ar: '3 يوحنا', fa: 'سوم یوحنا' },
+  JUD: { fr: 'Jude', en: 'Jude', de: 'Judas', pt: 'Judas', zh: '犹大书', es: 'Judas', hi: 'यहूदा', ja: 'ユダ', sw: 'Yuda', am: 'ይሁዳ', id: 'Yudas', tl: 'Judas', ko: '유다서', ru: 'Иуды', ar: 'يهوذا', fa: 'یهودا' },
 };
 
 // Vetted, prayer/faith/trust/thanksgiving-themed references grouped by book so

@@ -47,10 +47,21 @@ export default function PlanDayBody({
   // Bible studies share the existing day, notes, references and resource shelf,
   // but never hide their questions behind "After prayer" or require prayer.
   if (day.study) {
+    const studySafetyNote = pick(day.safetyNote, lang);
     return (
       <div className="space-y-4">
         {reflection && <p dir="auto" className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{reflection}</p>}
         <StudyDayGuide study={day.study} lang={lang} onAddNote={onAddNote} />
+        {/* A study of lament or of a psalm of despair can reach a reader in
+            danger; the same safety aside a prayer day carries is shown here. */}
+        {studySafetyNote && (
+          <aside className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+            <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+              {t(lang, 'planCoupleSafetyHeading')}
+            </h4>
+            <p dir="auto" className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{studySafetyNote}</p>
+          </aside>
+        )}
         {(day.related || []).length > 0 && (
           <section>
             <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'studyRelated')}</h4>

@@ -94,9 +94,8 @@ export const RESOURCE_TOPICS = [
   'philistines',
   'ancient-worship',
   // General Christian life, added 2026-09-23 with the author collections in
-  // ./authors/ for plans that are still being written. No current plan day
-  // uses these yet; the first plan about calling, leadership, holiness and so
-  // on should reuse them rather than invent near-duplicates.
+  // ./authors/. The "Growing in Christ" plans reuse them rather than invent
+  // near-duplicates.
   'gospel',
   'calling',
   'leadership',
@@ -109,6 +108,30 @@ export const RESOURCE_TOPICS = [
   'bible-overview',
   'pastoral-care',
   'mental-health',
+  // Added 2026-09-23 for the thirteen plans in docs/NEW_PLANS_2026-09-23.md.
+  // Each one names a subject that recurs across several plans or resources;
+  // none of them is a per-plan label. Existing tags were preferred wherever
+  // they already fit (identity, calling, work, holy-spirit, kingdom-of-god,
+  // parenting, children, forgiveness, grief, discernment…).
+  'intercession',        // praying for others as a discipline (prodigals, unbelievers, the kingdom)
+  'evangelism',          // personal witness and gospel conversations, not mission agencies
+  'apologetics',         // answering questions about the faith with gentleness
+  'persecution',         // the persecuted church and suffering for the faith
+  'prodigals',           // loved ones who have wandered from faith they once held
+  'pregnancy',           // expecting a child; loss and infertility keep their own sensitive tags
+  'manhood',             // what Scripture says about living as a man — roles stay on marriage-roles
+  'womanhood',           // what Scripture says about living as a woman — roles stay on marriage-roles
+  'fruit-of-the-spirit', // Galatians 5 and the character the Spirit produces
+  'spiritual-gifts',     // Romans 12, 1 Corinthians 12–14, Ephesians 4
+  'spirit-baptism',      // filling, baptism in the Spirit and tongues — disputed, described fairly
+  'prophecy',            // sensitive: prophetic ministry and testing it
+  'psalms',              // the Psalter as a book and as a prayer book
+  'lament',              // honest complaint and grief brought to God
+  'lords-prayer',        // the prayer Jesus taught (Matthew 6, Luke 11)
+  'justice',             // God's justice, oppression, wrongdoing and its victims
+  'sabbath',             // rest, limits and Sabbath rhythms
+  'church-hurt',         // sensitive: wounds received in a church or ministry
+  'spiritual-abuse',     // sensitive: coercive or abusive spiritual leadership
 ];
 
 // The FAMILY OF PLANS a resource belongs on.
@@ -128,10 +151,27 @@ export const RESOURCE_TOPICS = [
 // and matches on topics alone. See resolveResources() in src/lib/resources.js.
 //
 // `christian-living` is general discipleship — prayer, calling, holiness,
-// leadership — held for plans that are still being written. No current plan
-// draws from it, so nothing on it can crowd an existing shelf; a new plan opts
-// in by naming it in `resourceDomains`.
-export const RESOURCE_DOMAINS = ['relationships', 'freedom', 'bible-study', 'christian-living'];
+// leadership. It was held back for plans still being written; since 2026-09-23
+// the "Growing in Christ" plans (category `formation`) read it, and only they
+// do. A plan in any other category that names it is a test failure.
+//
+// `intercession` is praying for a loved one in a particular need — first of
+// all a prodigal who has wandered from faith — so the shelf helps the one
+// praying without pulling in books written for the person prayed for.
+//
+// `mission` is praying for, and witnessing to, people who do not yet believe:
+// evangelism, apologetics with gentleness, unreached peoples, the persecuted
+// church. It is separate from `intercession` because both shelves share
+// generic tags ('intercession', 'prayer', 'family', 'trust'): on one shelf a
+// parent praying for a wandering son was offered "unreached people group of
+// the day" guides, and the unbelievers plan was offered books on wayward children.
+//
+// `care` holds wounds, recovery and safeguarding: church hurt and spiritual
+// abuse first. It exists because 'forgiveness', 'identity' and 'healing' on
+// the freedom shelf mean renouncing, deliverance and strongholds — a reader
+// recovering from an abusive church must not be handed a deliverance book on
+// the strength of a shared tag.
+export const RESOURCE_DOMAINS = ['relationships', 'freedom', 'bible-study', 'christian-living', 'intercession', 'mission', 'care'];
 
 // The theological tradition a resource comes out of. This is CONTEXT for a
 // reader, never a judgement: labelling a book "african-pentecostal" says where

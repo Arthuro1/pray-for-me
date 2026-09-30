@@ -29,11 +29,15 @@ function relationshipBook({
   // an unavailable edition, so this records the title for a human curator
   // without ever sending a reader to something they cannot get.
   available = true,
+  // Only for a book that genuinely belongs on another family of plans as well;
+  // the collection stamps `relationships` on everything else.
+  domains,
 }) {
   return {
     id,
     type: 'book',
     originalLanguage: language,
+    ...(domains ? { domains } : {}),
     topics,
     lifeStages,
     status,
@@ -213,6 +217,11 @@ export const RELATIONSHIP_BOOKS = [
   }),
   relationshipBook({
     id: 'cloud-townsend-boundaries',
+    // Also on the intercession shelf (2026-09-28): "Praying for a Prodigal"
+    // day 26 ("Love can say no") teaches that love may refuse money, lies or
+    // abuse. This book is the standard evangelical treatment of exactly that
+    // and was already approved; see docs/resources/candidates/prodigal30.md.
+    domains: ['relationships', 'intercession'],
     topics: ['boundaries', 'family-of-origin', 'character', 'healing'],
     lifeStages: ['single', 'dating', 'engaged', 'married'],
     description: {

@@ -40,6 +40,10 @@ export const SENSITIVE_RESOURCE_TOPICS = new Set([
   'sexuality', 'sexual-intimacy', 'purity', 'infertility', 'miscarriage', 'marriage-crisis',
   'abuse-safety', 'trauma', 'divorce', 'pornography', 'addiction',
   'infidelity', 'illness', 'marriage-roles', 'mental-health',
+  // Church wounds and abusive leadership are safeguarding subjects: a book that
+  // tells a victim to submit, stay silent or reconcile with an unsafe leader
+  // does real harm. Prophecy can be used to coerce ("God told me you must…").
+  'church-hurt', 'spiritual-abuse', 'prophecy',
   // Every deliverance topic is sensitive without exception. Material on demons,
   // curses, generational curses, covenants, ancestral practices, witchcraft,
   // occult activity, deliverance, exorcism, spiritual warfare, evil altars or

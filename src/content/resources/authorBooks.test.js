@@ -1,7 +1,8 @@
 // The books requested by author on 2026-09-23. What this file proves: every
-// book either reaches a day of a current plan or waits on a shelf no current
-// plan reads, approval comes only from the closed review record, and every
-// approved book can actually be shown.
+// book either reaches a day of a current plan or waits for a plan that does
+// not use its subject yet, the christian-living shelf reaches only the
+// formation plans, approval comes only from the closed review record, and
+// every approved book can actually be shown.
 import { describe, it, expect } from 'vitest';
 import { AUTHOR_BOOKS } from './authorBooks.js';
 import { RESOURCES } from './catalogue.js';
@@ -67,11 +68,17 @@ describe('where they land', () => {
     }
   });
 
-  it('keep the christian-living shelf away from every current plan', () => {
-    for (const plan of PLANS) expect(plan.resourceDomains || [], plan.id).not.toContain('christian-living');
+  // The christian-living shelf is read by the "Growing in Christ" plans and by
+  // nothing else, so a general discipleship book can never crowd a
+  // relationship, deliverance or Bible-study day.
+  it('keep the christian-living shelf to the formation plans', () => {
+    const formation = new Set(PLANS.filter((plan) => plan.category === 'formation').map((plan) => plan.id));
+    for (const plan of PLANS) {
+      expect((plan.resourceDomains || []).includes('christian-living'), plan.id).toBe(formation.has(plan.id));
+    }
     for (const book of AUTHOR_BOOKS.filter(({ domains }) => domains.includes('christian-living'))) {
       expect(book.domains, book.id).toEqual(['christian-living']);
-      for (const shelf of shelves.filter(({ domains }) => domains.length)) {
+      for (const shelf of shelves.filter(({ domains, plan }) => domains.length && !formation.has(plan))) {
         expect(fits(book, shelf), `${book.id} on ${shelf.plan}`).toBe(false);
       }
     }

@@ -8,6 +8,20 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ### Added
 
+- Drafted thirteen new guided plans, all held behind content review (visible
+  only with `?planPreview=1` until a named human signs theology, safety and
+  every locale): Identity in Christ, The Fruit of the Spirit, Intimacy with the
+  Holy Spirit, Your Kingdom Come, Work, Calling & Faithfulness, Man of God and
+  Woman of God under a new "Growing in Christ" category; Praying for Those Who
+  Don't Yet Believe and Praying for a Prodigal; Praying for Children & the Next
+  Generation and Praying for Your Unborn Child; Healing from Church Hurt; and a
+  42-day study, Psalms: Learning to Pray Everything. Prose is authored in
+  English and French, day and plan titles in all 16 languages (native review
+  pending). Each plan has its own safety guardrail tests. New resource domains
+  (`intercession`, `care`) and topics, study-day safety notes, and localized
+  names for nine more Bible books. No schema change. See
+  `docs/NEW_PLANS_2026-09-23.md`.
+
 - Added "Preparing in Prayer", a 21-day guided prayer plan for single believers,
   under a new "Relationships & family" category on the Plan tab. It runs on the
   existing plan engine (one recurring prayer capped after 21 days), so Pray now,
