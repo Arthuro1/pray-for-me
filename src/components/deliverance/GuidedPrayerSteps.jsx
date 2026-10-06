@@ -51,7 +51,7 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
     >
       <header className="flex items-center justify-between gap-3 px-5 py-4" style={{ borderBlockEnd: '0.5px solid var(--q-border)' }}>
         <div className="min-w-0">
-          <p className="truncate text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+          <p className="section-label truncate">
             {dayTitle}
           </p>
           {/* Progress announced politely: a screen-reader user hears "Step 3 of 9"
@@ -82,7 +82,7 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
           {t(lang, step.titleKey)}
         </h2>
 
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+        <p className="section-label mb-2">
           {t(lang, 'freedomGuidedPrayerLabel')}
         </p>
         <p className="mb-6 text-lg leading-relaxed" style={{ color: 'var(--q-text)' }}>
@@ -91,11 +91,11 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
 
         {step.refs?.length > 0 && (
           <section>
-            <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+            <h3 className="section-label mb-2">
               {t(lang, 'planRelatedScripture')}
             </h3>
             <div className="flex flex-wrap gap-1.5">
-              {step.refs.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
+              {step.refs.map((ref) => <VersePill key={ref} reference={ref} lang={lang} />)}
             </div>
           </section>
         )}

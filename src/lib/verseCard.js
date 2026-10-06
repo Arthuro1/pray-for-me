@@ -7,20 +7,21 @@
 //
 // Three rules shape this module:
 //
-//   1. Nothing is fetched at render time. The colours are the live Constellation
-//      tokens from index.css and the type is the same font stacks the app uses,
+//   1. Nothing is fetched at render time. The colours are the live Qetoret
+//      tokens (styles/tokens.css) and the type is the same font stacks the app uses,
 //      so the card matches whatever theme the sharer is in, renders offline, and
 //      works in all 16 scripts — the device supplies the face, canvas needs no
 //      webfont.
 //   2. Layout is pure. `layoutVerseCard` takes a `measure` callback and returns
 //      plain geometry, so the type ramp, the wrapping and the right-to-left flip
 //      are unit-testable with no canvas in sight.
-//   3. The sky is deterministic. The starfield is seeded by the day, exactly like
-//      the verse pick, so everyone who shares today shares the same sky.
+//   3. One figure, no decoration. The card is deep violet with alabaster type;
+//      the only drawing is the Rise Mark (cardRise.js), set where a short verse
+//      leaves room — never stars, never a sky.
 import { isRtl } from '../i18n';
-import { constellationFigure, starField } from './cardSky';
+import { RISE_PATH, riseFigure } from './cardRise';
 
-export { constellationFigure, starField };
+export { riseFigure };
 
 export const CARD_SIZES = Object.freeze({
   // Square travels everywhere — chat bubbles, feeds, a screenshot into a
@@ -36,8 +37,8 @@ export const CARD_MARK = 'praystead.com';
 // artwork and the card shows the reference alone instead.
 const TYPE_RAMP = Object.freeze([[40, 84], [90, 64], [160, 52], [260, 44]]);
 export const VERSE_TEXT_LIMIT = TYPE_RAMP[TYPE_RAMP.length - 1][0];
-// At or under this the verse needs only a couple of lines, and the sky it leaves
-// empty gets a small drawn constellation.
+// At or under this the verse needs only a couple of lines, and the space it
+// leaves empty takes the Rise Mark.
 const FIGURE_LIMIT = TYPE_RAMP[0][0];
 
 const LABEL_SIZE = 22;
@@ -198,10 +199,9 @@ export function layoutVerseCard({
   const blockTop = areaTop + Math.max(0, Math.round((areaBottom - areaTop - blockHeight) / 2));
   const firstBaseline = baselineIn(blockTop, lineHeight, fontSize);
 
-  // A short verse leaves a band of empty sky above it. Rather than pad it out,
-  // draw into it: a small constellation, on the side the text doesn't occupy, in
-  // the app's own visual language. Deterministic, and free of any one font's
-  // idea of what a quotation mark looks like.
+  // A short verse leaves a band of empty space above it. Rather than pad it out,
+  // let the Rise Mark stand in it, on the side the text doesn't occupy — the
+  // app's own sign, and free of any one font's idea of a quotation mark.
   const figureWidth = Math.round(width * 0.42);
   const figureTop = labelBaseline + 44;
   const figureHeight = blockTop - 40 - figureTop;
@@ -233,9 +233,9 @@ export function layoutVerseCard({
 }
 
 // ── palette ──────────────────────────────────────────────────────────────────
-// Straight from the Constellation card tokens, so the exported image is the app's
-// own sky rather than a second palette that can drift away from index.css. One
-// committed look in both themes: Light and Dark differ only in the sky's depth.
+// Straight from the Qetoret tokens, so the exported image wears the app's own
+// deep violet rather than a second palette that can drift away. One committed
+// look in both themes.
 export function withAlpha(hex, alpha) {
   const value = String(hex).trim().replace('#', '');
   const full = value.length === 3 ? value.split('').map((c) => c + c).join('') : value;
@@ -250,14 +250,13 @@ export function readCardPalette(root = document.documentElement) {
   const ink = token('--q-text-inverse', '#F7F5EF');
   const accent = token('--q-gold-inverse', '#C6A15C');
   return {
-    sky: [token('--q-surface-inverse', '#29213F'), token('--q-surface-inverse', '#29213F')],
+    ground: token('--q-royal-deep', '#29213F'),
     ink,
     label: accent,
     reference: accent,
-    star: ink,
+    rise: accent,
     mark: withAlpha(ink, 0.6),
     rule: withAlpha(ink, 0.24),
-    starCount: 64,
   };
 }
 
@@ -279,53 +278,34 @@ export function fontStacks(root) {
   };
 }
 
-// The sky every shared card stands on: the gradient and its seeded starfield.
-export function drawSky(ctx, { width, height }, palette, seed) {
-  const sky = ctx.createLinearGradient(0, 0, width, height);
-  sky.addColorStop(0, palette.sky[0]);
-  sky.addColorStop(1, palette.sky[1]);
-  ctx.fillStyle = sky;
+// The ground every shared card stands on: one flat deep violet, no gradient.
+export function drawGround(ctx, { width, height }, palette) {
+  ctx.fillStyle = palette.ground;
   ctx.fillRect(0, 0, width, height);
-
-  ctx.fillStyle = palette.star;
-  for (const star of starField({ seed, width, height, count: palette.starCount })) {
-    ctx.globalAlpha = star.alpha;
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
 }
 
-export function drawConstellation(ctx, box, palette, { seed, count = 6 }) {
-  const points = constellationFigure({ seed, box, count });
-  ctx.strokeStyle = withAlpha(palette.star, 0.28);
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  points.forEach((point, index) => {
-    if (index === 0) ctx.moveTo(point.x, point.y);
-    else ctx.lineTo(point.x, point.y);
-  });
-  ctx.stroke();
-  ctx.fillStyle = palette.star;
-  for (const point of points) {
-    ctx.globalAlpha = 0.95;
-    ctx.beginPath();
-    ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.globalAlpha = 1;
+// The Rise Mark in gold, fitted into `box`. Skipped where Path2D is missing
+// (a test double), since it is the one drawing that needs it.
+export function drawRise(ctx, box, palette, { maxHeight } = {}) {
+  if (typeof Path2D === 'undefined') return;
+  const figure = riseFigure({ box, maxHeight });
+  ctx.save();
+  ctx.translate(figure.x, figure.y);
+  ctx.scale(figure.scale, figure.scale);
+  ctx.fillStyle = palette.rise;
+  ctx.fill(new Path2D(RISE_PATH));
+  ctx.restore();
 }
 
-export function drawVerseCard(ctx, layout, palette, { seed = 0, stacks = FAMILIES } = {}) {
+export function drawVerseCard(ctx, layout, palette, { stacks = FAMILIES } = {}) {
   const font = (size, family, weight = '400') => `${weight} ${size}px ${stacks[family]}`;
 
-  drawSky(ctx, layout, palette, seed);
+  drawGround(ctx, layout, palette);
 
   ctx.textBaseline = 'alphabetic';
   ctx.direction = layout.dir;
 
-  if (layout.figure) drawConstellation(ctx, layout.figure, palette, { seed });
+  if (layout.figure) drawRise(ctx, layout.figure, palette, { maxHeight: 300 });
 
   const line = (part, family, color, weight = '400', spacing = '0px') => {
     if (!part?.text) return;
@@ -374,7 +354,6 @@ export async function renderVerseCard({
   invite,
   lang = 'fr',
   size = 'square',
-  seed = 0,
   root = typeof document === 'undefined' ? null : document.documentElement,
 }) {
   if (typeof document === 'undefined') return null;
@@ -398,7 +377,7 @@ export async function renderVerseCard({
       return ctx.measureText(text).width;
     },
   });
-  drawVerseCard(ctx, layout, readCardPalette(root), { seed, stacks });
+  drawVerseCard(ctx, layout, readCardPalette(root), { stacks });
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob || null), 'image/png');

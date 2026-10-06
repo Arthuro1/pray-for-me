@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Share2, Sprout } from 'lucide-react';
+import { Check, Share2 } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import { PLAN_SOURCES } from '../lib/planAnalytics';
+import RiseMark from './shared/RiseMark';
+import { PrimaryButton, QuietButton } from './shared/Primitives';
 
 // What a rich plan says once its last day is behind the reader.
 //
@@ -32,11 +34,10 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
   const continuationChoiceOpen = themes.length > 0 && !done;
 
   return (
-    <section className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-      <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
-        <Sprout size={13} aria-hidden="true" /> {t(lang, 'planCompleteHeading', { n: plan.count })}
-      </p>
-      <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{pick(plan.completion, lang)}</p>
+    <section className="plan-complete">
+      <RiseMark motion="still" size={36} />
+      <p className="section-label section-label--sacred mt-4">{t(lang, 'planCompleteHeading', { n: plan.count })}</p>
+      <p className="plan-complete__body">{pick(plan.completion, lang)}</p>
 
       {/* "Look back" — questions to sit with, not a form to fill in. A plan that
           declares them gets them; the others render nothing here. They ask about
@@ -44,13 +45,13 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           about what supposedly left the reader. */}
       {(plan.lookBack || []).length > 0 && (
         <section className="mb-4">
-          <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+          <h4 className="section-label mb-2">
             {t(lang, 'planLookBackHeading')}
           </h4>
           <ul className="space-y-1.5">
             {plan.lookBack.map((key) => (
-              <li key={key} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
-                <span aria-hidden="true" style={{ color: 'var(--q-royal-text)' }}>•</span>
+              <li key={key} className="plan-day__item">
+                <span aria-hidden="true" className="plan-day__bullet" />
                 <span className="min-w-0">{t(lang, key)}</span>
               </li>
             ))}
@@ -60,8 +61,8 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
 
       {themes.length > 0 && !done && (
         <>
-          <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'planContinueHeading')}</h4>
-          <div role="group" aria-label={t(lang, 'planContinueHeading')} className="mb-3 flex flex-col gap-2">
+          <h4 className="plan-complete__question">{t(lang, 'planContinueHeading')}</h4>
+          <div role="group" aria-label={t(lang, 'planContinueHeading')} className="plan-complete__themes">
             {themes.map((th) => {
               const on = selected.includes(th.id);
               return (
@@ -71,31 +72,28 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
                   role="checkbox"
                   aria-checked={on}
                   onClick={() => toggle(th.id)}
-                  className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-start text-sm"
-                  style={on
-                    ? { background: 'var(--q-selected)', color: 'var(--q-text)', border: '1px solid var(--q-selected-border)' }
-                    : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
+                  className="plan-complete__theme pressable"
                 >
+                  <span className="q-check__box" aria-hidden="true" style={on ? { borderColor: 'var(--q-action-primary)', background: 'var(--q-action-primary)' } : undefined}>
+                    {on && <Check size={14} strokeWidth={2.5} />}
+                  </span>
                   <span className="min-w-0">{t(lang, th.titleKey)}</span>
-                  {on && <Check size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />}
                 </button>
               );
             })}
           </div>
-          <button
-            type="button"
+          <PrimaryButton
             onClick={async () => { await onContinue(chosen); setDone(true); }}
             disabled={chosen.length === 0}
-            className={`${relationshipActionKey ? 'mb-3 ' : ''}w-full rounded-xl px-3 py-2.5 text-sm font-semibold disabled:opacity-50`}
-            style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
+            className={`${relationshipActionKey ? 'mb-3 ' : ''}w-full`}
           >
             {t(lang, 'planContinueCta')}
-          </button>
+          </PrimaryButton>
         </>
       )}
 
       {done && (
-        <p className={relationshipActionKey ? 'mb-3 text-sm font-medium' : 'text-sm font-medium'} style={{ color: 'var(--q-success)' }}>
+        <p className={`plan-complete__added ${relationshipActionKey ? 'mb-3' : ''}`} role="status">
           {t(lang, 'planContinueAdded')}
         </p>
       )}
@@ -111,10 +109,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           state={{ source: PLAN_SOURCES.COMPLETION }}
           onClick={onRelationshipNext}
           data-emphasis={continuationChoiceOpen ? 'secondary' : 'primary'}
-          className="block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"
-          style={continuationChoiceOpen
-            ? { background: 'var(--q-field)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }
-            : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
+          className={`${continuationChoiceOpen ? 'secondary-button' : 'primary-button'} pressable w-full no-underline`}
         >
           {t(lang, relationshipActionKey)}
         </Link>
@@ -123,14 +118,9 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
       {/* Passing the plan on is always the quiet, last option — never a second
           primary action competing with the ones above. */}
       {onShare && (
-        <button
-          type="button"
-          onClick={onShare}
-          className="pressable mt-3 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium"
-          style={{ color: 'var(--q-royal-text)' }}
-        >
-          <Share2 size={15} aria-hidden="true" /> {t(lang, 'planShareWithSomeone')}
-        </button>
+        <QuietButton icon={Share2} iconSize={16} onClick={onShare} className="mt-3 w-full">
+          {t(lang, 'planShareWithSomeone')}
+        </QuietButton>
       )}
     </section>
   );

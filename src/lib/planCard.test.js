@@ -10,7 +10,6 @@ const base = {
   title: 'Seven Days at the Altar',
   meta: '7 days',
   sub: 'A week of daily surrender before God',
-  count: 7,
   measure,
 };
 
@@ -66,12 +65,6 @@ describe('layoutPlanCard', () => {
     expect(layout.title.align).toBe('right');
     expect(layout.title.x).toBe(CARD_SIZES.square.width - CARD_SIZES.square.margin);
     expect(layout.figure.x).toBe(CARD_SIZES.square.margin);
-  });
-
-  it('draws a constellation of the plan length, within a readable range', () => {
-    expect(layoutPlanCard({ ...base, count: 7 }).figure.count).toBe(7);
-    expect(layoutPlanCard({ ...base, count: 42 }).figure.count).toBe(12);
-    expect(layoutPlanCard({ ...base, count: 1 }).figure.count).toBe(3);
   });
 
   it('omits the subtitle cleanly when there is none', () => {

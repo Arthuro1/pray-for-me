@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Check, HandHeart, Share2, Users } from 'lucide-react';
+import { Share2, Users } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
@@ -13,7 +13,8 @@ import { canUsePlan } from '../lib/planReview';
 import { needsPreStartPersonalization, startGuidedPlan } from '../lib/startGuidedPlan';
 import { track } from '../lib/analytics';
 import { planSource, trackPlanDetailOpened, trackPlansPageViewed } from '../lib/planAnalytics';
-import { PageHeader } from '../components/shared/Primitives';
+import { PageHeader, PrimaryButton, QuietButton } from '../components/shared/Primitives';
+import RiseMark from '../components/shared/RiseMark';
 import PlanCard from '../components/plan/PlanCard';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanShareSheet from '../components/plan/PlanShareSheet';
@@ -21,9 +22,9 @@ import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 
 function PlanSection({ id, label, children }) {
   return (
-    <section aria-labelledby={id} className="mb-7">
-      <h2 id={id} className="section-label mb-2">{label}</h2>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">{children}</div>
+    <section aria-labelledby={id} className="plan-section">
+      <h2 id={id} className="section-label">{label}</h2>
+      <div className="plan-list">{children}</div>
     </section>
   );
 }
@@ -129,7 +130,7 @@ export default function PlansTab() {
   );
 
   return (
-    <div className="phase-page constellation-plans">
+    <div className="phase-page plans">
       {detailPlan && (
         <PlanDetailModal
           plan={detailPlan}
@@ -168,47 +169,41 @@ export default function PlansTab() {
         <PageHeader title={t(lang, 'journeysTitle')} subtitle={t(lang, 'journeysSub')} />
       </div>
 
-      <div className="phase-content max-w-2xl">
+      <div className="phase-content">
+        {/* A plan just begun: a calm status and the one next step — not a
+            green success card. */}
         {started && (
-          <div className="phase-card mb-7 p-5" role="status" style={{ borderColor: 'var(--q-success)' }}>
-            <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)' }}>
-                <Check size={18} aria-hidden="true" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="font-semibold" style={{ color: 'var(--q-text)' }}>
-                  {started.startDate === todayKey()
-                    ? t(lang, 'journeyBeginsToday')
-                    : t(lang, 'groupPlanStartsOn', { date: formatPlanStartDate(started.startDate, lang) })}
-                </p>
-                <p className="mt-1 text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, started.plan.titleKey)}</p>
-              </div>
+          <section className="plan-started" role="status">
+            <RiseMark motion="still" size={36} />
+            <p className="plan-started__title">
+              {started.startDate === todayKey()
+                ? t(lang, 'journeyBeginsToday')
+                : t(lang, 'groupPlanStartsOn', { date: formatPlanStartDate(started.startDate, lang) })}
+            </p>
+            <p className="q-meta">{t(lang, started.plan.titleKey)}</p>
+            <div className="plan-started__actions">
+              <PrimaryButton onClick={() => navigate(`/prayers/${started.prayerId}`)}>{t(lang, 'beginDayOne')}</PrimaryButton>
+              {user?.id && (
+                <QuietButton icon={Share2} iconSize={16} onClick={() => setShareTarget(started)}>{t(lang, 'planShareAction')}</QuietButton>
+              )}
             </div>
-            <button type="button" onClick={() => navigate(`/prayers/${started.prayerId}`)} className="primary-button mt-4 flex w-full items-center justify-center gap-2 px-4">
-              <HandHeart size={16} aria-hidden="true" /> {t(lang, 'beginDayOne')}
-            </button>
-            {user?.id && (
-              <button type="button" onClick={() => setShareTarget(started)} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
-                <Share2 size={15} aria-hidden="true" /> {t(lang, 'planShareAction')}
-              </button>
-            )}
-          </div>
+          </section>
         )}
 
         {running.length > 0 && (
           <PlanSection id="plans-continue" label={t(lang, 'guidanceContinue')}>
-            {running.map((plan) => card(plan))}
+            {running.map((plan) => card(plan, { featured: true }))}
           </PlanSection>
         )}
 
         {starter && (
           <PlanSection id="plans-start-here" label={t(lang, 'plansStartHere')}>
-            {card(starter)}
+            {card(starter, { featured: true })}
           </PlanSection>
         )}
 
-        <p className="mb-7 flex items-start gap-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>
-          <Users size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+        <p className="plan-hint">
+          <Users size={14} aria-hidden="true" />
           <span>{t(lang, 'plansTogetherHint')}</span>
         </p>
 

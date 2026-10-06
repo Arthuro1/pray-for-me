@@ -47,7 +47,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
     let objectUrl = null;
     let cancelled = false;
     setRendering(true);
-    renderVerseCard({ label, verse: verse.text, reference: cardReference, invite, lang, size, seed: dayKey })
+    renderVerseCard({ label, verse: verse.text, reference: cardReference, invite, lang, size })
       .then((blob) => {
         if (cancelled) return;
         if (blob) {

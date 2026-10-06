@@ -11,20 +11,9 @@
 @import './styles/prayer.css';
 @import './styles/altar.css';
 @import './styles/together.css';
+@import './styles/formation.css';
 
 /* ── Screens ───────────────────────────────────────────────────────────── */
-.community-card,
-.plan-card,
-.grow-card {
-  transition: border-color var(--q-motion-standard) var(--q-ease), background-color var(--q-motion-standard) var(--q-ease), transform var(--q-motion-standard) var(--q-ease), box-shadow var(--q-motion-standard) var(--q-ease);
-}
-
-.community-card:hover,
-.plan-card:hover,
-.grow-card:hover {
-  border-color: var(--q-border-strong);
-  transform: translateY(-1px);
-}
 
 /* Update composer: never wider than its column. */
 .update-composer,
@@ -372,14 +361,6 @@
 }
 
 /* Grow and Plan */
-.grow-next-card {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(1.15rem, 4vw, 1.5rem);
-  background: var(--q-surface);
-  border: 1px solid color-mix(in srgb, var(--q-gold) 32%, var(--q-border));
-  border-radius: var(--q-radius-surface);
-}
 
 .grow-phase-header h2 {
   margin: 0;
@@ -690,9 +671,6 @@
   visibility: hidden;
 }
 
-.constellation-grow .grow-card,
-.constellation-plans .grow-card,
-.constellation-plan .plan-card,
 .constellation-settings .rounded-2xl,
 .constellation-notifications .rounded-xl {
   box-shadow: none !important;
@@ -1045,32 +1023,25 @@ html.constellation-auth-root body {
   color: var(--q-royal-text);
 }
 
-/* Public pray-first journey and shared-plan page ---------------------------
-   The landing page is rendered with inline theme tokens, then unmounts before
-   GuestPrayerFlow appears. Re-declare that same constellation palette here so
-   capture, prayer, Amen, and save-decision screens — and a plan opened from a
-   share link — never fall back to the older cream/gold application colors. */
+/* Public pray-first journey and shared-plan page: outside the signed-in
+   shell, so each declares its own colour scheme and ground. */
 .constellation-guest-flow,
-.constellation-plan-share {
+.plan-share {
   color-scheme: light;
 }
 
 [data-theme="dark"] .constellation-guest-flow,
-[data-theme="dark"] .constellation-plan-share {
+[data-theme="dark"] .plan-share {
   color-scheme: dark;
 }
 
-.constellation-plan-share {
+.plan-share {
   background: var(--q-canvas);
   color: var(--q-text);
 }
 
-.constellation-plan-share .section-label {
-  color: var(--q-royal-text);
-}
-
-.constellation-plan-share__actions {
-  border-block-start: 0.5px solid var(--q-border);
+.plan-share__actions {
+  border-block-start: 1px solid var(--q-border);
   background: var(--q-canvas);
 }
 

@@ -9,7 +9,8 @@ import VersePill from '../shared/VersePill';
 // the days hold no surprises. Longer journeys lead with their movements and keep
 // the full syllabus one tap away. Shared by the catalogue's PlanDetailModal and
 // the public page a shared plan link opens, so both read the same. `plan` is
-// already localized (useLocalizedPlan).
+// already localized (useLocalizedPlan). Read as a page of a prayer book: prose
+// in the serif, days as rows divided by hairlines, Scripture in gold.
 export default function PlanOverview({ plan, lang }) {
   const [showFullAbout, setShowFullAbout] = useState(false);
   const [showAllDays, setShowAllDays] = useState(false);
@@ -21,24 +22,16 @@ export default function PlanOverview({ plan, lang }) {
   return (
     <>
       {plan.mode === 'study' && (
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'studyPace')}</p>
+        <p className="q-meta">{t(lang, 'studyPace')}</p>
       )}
 
       {/* What this journey is */}
       {(plan.intro || plan.biblical) && (
-        <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planAbout')}</h4>
+        <section className="plan-overview__section">
+          <h3 className="section-label">{t(lang, 'planAbout')}</h3>
           <div id={`${disclosureId}-about`}>
             {plan.intro && (
-              <p
-                className="text-sm leading-relaxed whitespace-pre-line"
-                style={{
-                  color: 'var(--q-text-secondary)',
-                  ...(!showFullAbout && plan.biblical
-                    ? { display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }
-                    : {}),
-                }}
-              >
+              <p className={`plan-overview__intro ${!showFullAbout && plan.biblical ? 'line-clamp-3' : ''}`}>
                 {pick(plan.intro, lang)}
               </p>
             )}
@@ -46,9 +39,9 @@ export default function PlanOverview({ plan, lang }) {
             {/* Keep the longer biblical context available without making it
                 part of the first-use scan. */}
             {showFullAbout && plan.biblical && (
-              <div className="rounded-xl p-3.5 mt-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-                <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'planInBible')}</h4>
-                <p className="text-sm leading-relaxed whitespace-pre-line mb-2.5" style={{ color: 'var(--q-text)' }}>{pick(plan.biblical.text, lang)}</p>
+              <div className="plan-overview__bible">
+                <h4 className="section-label section-label--sacred">{t(lang, 'planInBible')}</h4>
+                <p className="plan-overview__bible-text">{pick(plan.biblical.text, lang)}</p>
                 <VersePill reference={plan.biblical.ref} lang={lang} />
               </div>
             )}
@@ -59,52 +52,45 @@ export default function PlanOverview({ plan, lang }) {
               aria-expanded={showFullAbout}
               aria-controls={`${disclosureId}-about`}
               onClick={() => setShowFullAbout((open) => !open)}
-              className="mt-2 min-h-11 inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg"
-              style={{ color: 'var(--q-royal-text)' }}
+              className="quiet-button pressable -ms-3"
             >
-              {showFullAbout ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
-              {t(lang, showFullAbout ? 'tipCollapse' : 'gospelReadMore')}
+              {showFullAbout ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+              <span>{t(lang, showFullAbout ? 'tipCollapse' : 'gospelReadMore')}</span>
             </button>
           )}
         </section>
       )}
 
       {/* Long journeys reveal their shape before their full syllabus. */}
-      <section>
-        <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>
+      <section className="plan-overview__section">
+        <h3 className="section-label">
           {t(lang, movementFirst && !showAllDays ? 'journeyWalkThrough' : 'journeyDayPreview')}
-        </h4>
+        </h3>
         {movementFirst && !showAllDays && (
-          <ol className="space-y-2">
+          <ol className="plan-overview__list">
             {plan.movements.map((movement, index) => {
               const next = plan.movements[index + 1];
               const to = next ? next.from - 1 : plan.count;
               return (
-                <li key={`${movement.from}-${movement.titleKey}`} className="flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-                  <span className="w-14 shrink-0 text-xs font-semibold" style={{ color: 'var(--q-royal-text)' }}>{movement.from}–{to}</span>
-                  <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, movement.titleKey)}</span>
+                <li key={`${movement.from}-${movement.titleKey}`} className="plan-overview__movement">
+                  <span className="plan-overview__span" dir="ltr">{movement.from}–{to}</span>
+                  <span className="plan-overview__movement-title">{t(lang, movement.titleKey)}</span>
                 </li>
               );
             })}
           </ol>
         )}
-        <ol id={`${disclosureId}-days`} className="space-y-2">
+        <ol id={`${disclosureId}-days`} className="plan-overview__list">
           {visibleDays.map((day, i) => {
             // A movement heading appears on the day it starts, so the shape
             // of a longer journey reads without adding a second list level.
             const movement = plan.movements?.find((m) => m.from === i + 1);
             return (
-              <li key={i}>
-                {movement && (
-                  <p className="mb-1.5 mt-3 first:mt-0 text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
-                    {t(lang, movement.titleKey)}
-                  </p>
-                )}
-                <div className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'planDayLabel', { n: i + 1 })}</p>
-                  <p className="text-sm font-medium mb-2 leading-snug" style={{ color: 'var(--q-text)' }}>{pick(day.theme, lang)}</p>
-                  <VersePill reference={day.ref} lang={lang} />
-                </div>
+              <li key={i} className="plan-overview__day">
+                {movement && <p className="section-label plan-overview__movement-head">{t(lang, movement.titleKey)}</p>}
+                <p className="plan-overview__day-label">{t(lang, 'planDayLabel', { n: i + 1 })}</p>
+                <p className="plan-overview__theme">{pick(day.theme, lang)}</p>
+                <VersePill reference={day.ref} lang={lang} />
               </li>
             );
           })}
@@ -116,11 +102,10 @@ export default function PlanOverview({ plan, lang }) {
             aria-controls={`${disclosureId}-days`}
             aria-label={t(lang, showAllDays ? 'tipCollapse' : 'previewAllDays')}
             onClick={() => setShowAllDays((open) => !open)}
-            className="mt-3 w-full min-h-11 rounded-xl inline-flex items-center justify-center gap-1.5 text-sm font-semibold"
-            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
+            className="secondary-button pressable mt-4 w-full"
           >
             {showAllDays ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
-            {showAllDays ? t(lang, 'tipCollapse') : t(lang, 'previewAllDays')}
+            <span>{showAllDays ? t(lang, 'tipCollapse') : t(lang, 'previewAllDays')}</span>
           </button>
         )}
       </section>

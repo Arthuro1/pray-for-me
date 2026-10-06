@@ -137,7 +137,7 @@ function ShelfLanguages({ lang, enabled, offers, onToggle }) {
 
   return (
     <div className="mb-3">
-      <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+      <h4 className="section-label mb-1.5">
         {t(lang, 'resourceLanguagesTitle')}
       </h4>
       <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
@@ -171,7 +171,7 @@ function ShelfLanguages({ lang, enabled, offers, onToggle }) {
   );
 }
 
-// `framed` draws the quiet card the plan day puts around the shelf; it lives
+// `framed` draws the hairlines the plan day puts around the shelf; it lives
 // here so the frame disappears with the shelf instead of lingering empty.
 export default function GoDeeper({ resources, lang, id = 'plan-go-deeper', languageOffers = [], framed = false }) {
   const [open, setOpen] = useState(false);
@@ -191,10 +191,7 @@ export default function GoDeeper({ resources, lang, id = 'plan-go-deeper', langu
   };
 
   return (
-    <section
-      className={framed ? 'rounded-xl px-3' : undefined}
-      style={framed ? { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' } : undefined}
-    >
+    <section className={framed ? 'plan-day__fold' : undefined}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

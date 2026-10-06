@@ -1,5 +1,6 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
-// /detail, /session, /bring, /circles, /tend, /carry, /together and /group render the REAL screens inside
+// /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
+// /plans, /plan, /grow and /guide render the REAL screens inside
 // the real app shell with sample prayers. Every store write is replaced by a local no-op first, so
 // nothing is queued, synced, encrypted or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
@@ -16,6 +17,12 @@ import PrayerForm from '../components/PrayerForm';
 import TendAltar from '../components/TendAltar';
 import PrayTogetherCard from '../components/PrayTogetherCard';
 import CommunityTab from '../pages/CommunityTab';
+import PlansTab from '../pages/PlansTab';
+import GrowTab from '../pages/GrowTab';
+import PlanDetailModal from '../components/PlanDetailModal';
+import GuideReader from '../components/GuideReader';
+import { planById } from '../lib/guidedPlan';
+import { guides } from '../content/teaching';
 import CirclePicker from '../components/CirclePicker';
 import { Modal, PageHeader } from '../components/shared/Primitives';
 import { dirFor, isLocaleLoaded, loadLocale } from '../i18n';
@@ -76,7 +83,7 @@ function seed() {
   useCommunityStore.setState({ ...stubbed, prayerShares: { d1: [{ groupId: 'g1', groupName: 'Home group', prayingCount: 8 }] }, groups: [], prayers: [], testimonies: [], pendingCount: 0 });
 }
 
-const SCREENS = ['today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group'];
+const SCREENS = ['today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group', 'plans', 'plan', 'grow', 'guide'];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
 
@@ -192,6 +199,14 @@ export default function DesignScreens({ screen }) {
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
       {screen === 'carry' && <CarryPreview lang={lang} />}
+      {(screen === 'plans' || screen === 'plan') && <PlansTab />}
+      {screen === 'plan' && planById('altar7') && (
+        <PlanDetailModal plan={planById('altar7')} lang={lang} running={false} onStart={() => {}} onShare={() => {}} onClose={() => navigate('/__design/plans')} />
+      )}
+      {(screen === 'grow' || screen === 'guide') && <GrowTab onCreatePrayer={() => {}} />}
+      {screen === 'guide' && guides[0] && (
+        <GuideReader guide={guides[0]} lang={lang} onClose={() => navigate('/__design/grow')} onStarted={() => {}} onCompleted={() => {}} />
+      )}
       {(screen === 'together' || screen === 'group') && <TogetherPreview screen={screen} />}
       {screen === 'circles' && <CirclesPreview lang={lang} />}
       {screen === 'tend' && <PrayersTab onAdd={() => {}} />}

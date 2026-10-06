@@ -74,7 +74,7 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
 
       {/* "What this can mean" + examples — folded away by default. */}
       {(understand || examples.length > 0) && (
-        <section className="rounded-xl px-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+        <section className="plan-day__fold">
           <button
             type="button"
             onClick={() => setUnderstandOpen((v) => !v)}
@@ -92,20 +92,20 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
           {understandOpen && (
             <div id={`${idPrefix}-understand`} className="space-y-3 pb-3">
               {understand && (
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{understand}</p>
+                <p className="plan-day__text">{understand}</p>
               )}
               {examples.length > 0 && (
                 <section>
                   {/* "Examples can include" — illustrative, never diagnostic. The
                       heading itself carries that, so no single line can be read
                       as a claim about the reader. */}
-                  <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+                  <h4 className="section-label mb-1.5">
                     {t(lang, 'freedomExamplesHeading')}
                   </h4>
                   <ul className="space-y-1.5">
                     {examples.map((text, i) => (
-                      <li key={i} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
-                        <span aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }}>•</span>
+                      <li key={i} className="plan-day__item">
+                        <span aria-hidden="true" className="plan-day__bullet" />
                         <span className="min-w-0">{text}</span>
                       </li>
                     ))}
@@ -118,13 +118,13 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
       )}
 
       {/* Invite the Holy Spirit — every day, before anything is examined. */}
-      <section className="rounded-xl p-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-        <h4 className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
+      <section className="plan-day__aside plan-day__aside--royal">
+        <h4 className="section-label mb-1.5 flex items-center gap-1.5">
           <Sparkles size={12} aria-hidden="true" /> {t(lang, 'freedomStepInviteSpirit')}
         </h4>
-        <p className="mb-2 text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>{pick(invite.body, lang)}</p>
+        <p className="plan-day__text plan-day__text--strong mb-2">{pick(invite.body, lang)}</p>
         <div className="mb-3 flex flex-wrap gap-1.5">
-          {invite.refs.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
+          {invite.refs.map((ref) => <VersePill key={ref} reference={ref} lang={lang} />)}
         </div>
 
         <p className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'freedomQuietSpace')}</p>
@@ -151,10 +151,10 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
         {/* Nothing coming to mind is a complete answer, and the app says so out
             loud rather than leaving a reader to assume they failed. */}
         {(remembrance === 'nothing' || remembrance === 'unsure') && (
-          <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'freedomNothingReassurance')}</p>
+          <p className="plan-day__note mt-2">{t(lang, 'freedomNothingReassurance')}</p>
         )}
         {remembrance === 'note' && (
-          <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'freedomNoteHint')}</p>
+          <p className="plan-day__note mt-2">{t(lang, 'freedomNoteHint')}</p>
         )}
       </section>
 
@@ -162,7 +162,7 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
       {freedom.inventory && (
         <section>
           <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'freedomCertaintyQuestion')}</h4>
-          <div role="radiogroup" aria-label={t(lang, 'freedomCertaintyQuestion')} className="flex flex-col gap-1.5">
+          <div role="radiogroup" aria-label={t(lang, 'freedomCertaintyQuestion')} className="circle-options">
             {CERTAINTY_LEVELS.map((level) => {
               const on = certainty === level.id;
               return (
@@ -172,24 +172,15 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
                   role="radio"
                   aria-checked={on}
                   onClick={() => setCertainty(level.id)}
-                  className="flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3 py-2 text-start text-sm"
-                  style={on
-                    ? { background: 'var(--q-selected)', color: 'var(--q-text)', border: '1px solid var(--q-selected-border)' }
-                    : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
+                  className="circle-option circle-option--compact pressable"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="grid h-4 w-4 shrink-0 place-items-center rounded-full"
-                    style={{ border: `1.5px solid ${on ? 'var(--q-royal)' : 'var(--q-field-border)'}` }}
-                  >
-                    {on && <span className="h-2 w-2 rounded-full" style={{ background: 'var(--q-action-primary)' }} />}
-                  </span>
-                  <span className="min-w-0">{t(lang, level.labelKey)}</span>
+                  <span className="circle-option__ring" aria-hidden="true" />
+                  <span className="circle-option__title min-w-0">{t(lang, level.labelKey)}</span>
                 </button>
               );
             })}
           </div>
-          <p className="mt-1.5 text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'freedomCertaintyPrivacy')}</p>
+          <p className="plan-day__note mt-1.5">{t(lang, 'freedomCertaintyPrivacy')}</p>
         </section>
       )}
 
@@ -197,7 +188,7 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
           reader who has never prayed a prayer like this. */}
       <section>
         <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'freedomModeQuestion')}</h4>
-        <div role="group" aria-label={t(lang, 'freedomModeQuestion')} className="flex flex-col gap-1.5">
+        <div role="group" aria-label={t(lang, 'freedomModeQuestion')} className="circle-options">
           {MODES.map((m) => {
             const on = mode === m.id;
             const recommended = m.id === 'guided';
@@ -207,20 +198,20 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
                 type="button"
                 onClick={() => chooseMode(m.id)}
                 aria-pressed={on}
-                className="flex min-h-11 w-full flex-col items-start rounded-xl px-3 py-2 text-start"
-                style={on || recommended
-                  ? { background: 'var(--q-selected)', border: `${on ? 1 : 0.5}px solid var(--q-selected-border)` }
-                  : { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
+                className="circle-option pressable"
               >
-                <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>
-                  {t(lang, m.labelKey)}
-                  {recommended && (
-                    <span className="ms-1.5 text-[11px] font-semibold" style={{ color: 'var(--q-royal-text)' }}>
-                      {t(lang, 'freedomModeRecommended')}
-                    </span>
-                  )}
+                <span className="circle-option__ring" aria-hidden="true" />
+                <span className="min-w-0">
+                  <span className="circle-option__title">
+                    {t(lang, m.labelKey)}
+                    {recommended && (
+                      <span className="ms-1.5 text-[0.75rem] font-semibold" style={{ color: 'var(--q-royal-text)' }}>
+                        {t(lang, 'freedomModeRecommended')}
+                      </span>
+                    )}
+                  </span>
+                  <span className="circle-option__description">{t(lang, m.descKey)}</span>
                 </span>
-                <span className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, m.descKey)}</span>
               </button>
             );
           })}
@@ -230,13 +221,13 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
       {/* Prayer points: the day's own prompts, revealed only when asked for. */}
       {mode === 'points' && prompts.length > 0 && (
         <section>
-          <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+          <h4 className="section-label mb-1.5">
             {t(lang, 'planPrayerPrompts')}
           </h4>
           <ul className="space-y-1.5">
             {prompts.map((text, i) => (
-              <li key={i} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>
-                <span aria-hidden="true" style={{ color: 'var(--q-royal-text)' }}>•</span>
+              <li key={i} className="plan-day__item">
+                <span aria-hidden="true" className="plan-day__bullet" />
                 <span className="min-w-0">{text}</span>
               </li>
             ))}
@@ -245,15 +236,14 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
       )}
 
       {mode === 'free' && (
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'freedomModeFreeHint')}</p>
+        <p className="plan-day__text">{t(lang, 'freedomModeFreeHint')}</p>
       )}
 
       {mode === 'guided' && !stepsOpen && (
         <button
           type="button"
           onClick={() => setStepsOpen(true)}
-          className="pressable min-h-11 w-full rounded-xl px-3 text-sm font-semibold text-white"
-          style={{ background: 'var(--q-action-primary)' }}
+          className="primary-button pressable w-full"
         >
           {t(lang, 'freedomResumeGuided')}
         </button>
@@ -262,11 +252,11 @@ export default function DeliveranceDayGuide({ day, lang, prompts = [], idPrefix 
       {/* Fasting is offered, never prescribed, and never tied to whether prayer
           "works". No duration, no food requirement, and an explicit alternative. */}
       {freedom.fasting && (
-        <aside className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-          <h4 className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
+        <aside className="plan-day__aside">
+          <h4 className="section-label mb-1 flex items-center gap-1.5">
             <Utensils size={12} aria-hidden="true" /> {t(lang, 'freedomFastHeading')}
           </h4>
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'freedomFastBody')}</p>
+          <p className="plan-day__note">{t(lang, 'freedomFastBody')}</p>
         </aside>
       )}
     </div>

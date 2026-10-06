@@ -1,8 +1,8 @@
 // A guided plan drawn as a shareable image, for Stories, Status and feeds.
 //
-// The same sky as the verse card (see verseCard.js) and the same three rules:
-// nothing is fetched, layout is pure, the sky is seeded. The seed is the plan
-// id, so every picture of one plan stands under the same stars.
+// The same ground as the verse card (see verseCard.js) and the same three
+// rules: nothing is fetched, layout is pure, one figure — the Rise Mark above
+// the plan's name.
 //
 // What goes on it is only what the plan's public page shows: its name, its
 // length and its subtitle. The link does not fit in a picture, so the footer
@@ -11,8 +11,8 @@ import { isRtl } from '../i18n';
 import {
   CARD_MARK,
   CARD_SIZES,
-  drawConstellation,
-  drawSky,
+  drawGround,
+  drawRise,
   fontStacks,
   readCardPalette,
   weightedLength,
@@ -52,7 +52,7 @@ function baselineIn(top, lineHeight, fontSize) {
 
 // Geometry for one plan card. `measure(text, fontSize, family)` is its only
 // view of type, so tests pass their own metrics.
-export function layoutPlanCard({ label, title, meta, sub, mark = CARD_MARK, count = 6, lang = 'fr', size = 'square', measure }) {
+export function layoutPlanCard({ label, title, meta, sub, mark = CARD_MARK, lang = 'fr', size = 'square', measure }) {
   const { width, height, margin } = CARD_SIZES[size] || CARD_SIZES.square;
   const story = size === 'story';
   const rtl = isRtl(lang);
@@ -86,7 +86,7 @@ export function layoutPlanCard({ label, title, meta, sub, mark = CARD_MARK, coun
     : [];
 
   // Title, then the length, then the subtitle, as one block sat low in the
-  // frame; the constellation takes the sky above it.
+  // frame; the Rise Mark stands in the space above it.
   const metaGap = 36;
   const subGap = 28;
   const blockHeight = titleLines.length * titleLineHeight
@@ -108,7 +108,7 @@ export function layoutPlanCard({ label, title, meta, sub, mark = CARD_MARK, coun
     dir: rtl ? 'rtl' : 'ltr',
     label: { text: label, size: LABEL_SIZE, x: leadX, y: labelBaseline, align: lead },
     figure: figureHeight >= 120
-      ? { x: rtl ? margin : width - margin - figureWidth, y: figureTop, width: figureWidth, height: figureHeight, count: Math.max(3, Math.min(count, 12)) }
+      ? { x: rtl ? margin : width - margin - figureWidth, y: figureTop, width: figureWidth, height: figureHeight }
       : null,
     title: { lines: titleLines, size: titleSize, lineHeight: titleLineHeight, x: leadX, y: baselineIn(titleTop, titleLineHeight, titleSize), align: lead },
     meta: { text: meta, size: META_SIZE, x: leadX, y: metaBaseline, align: lead },
@@ -122,13 +122,13 @@ export function layoutPlanCard({ label, title, meta, sub, mark = CARD_MARK, coun
   };
 }
 
-export function drawPlanCard(ctx, layout, palette, { seed = 0, stacks }) {
+export function drawPlanCard(ctx, layout, palette, { stacks }) {
   const font = (size, family, weight = '400') => `${weight} ${size}px ${stacks[family]}`;
 
-  drawSky(ctx, layout, palette, seed);
+  drawGround(ctx, layout, palette);
   ctx.textBaseline = 'alphabetic';
   ctx.direction = layout.dir;
-  if (layout.figure) drawConstellation(ctx, layout.figure, palette, { seed, count: layout.figure.count });
+  if (layout.figure) drawRise(ctx, layout.figure, palette, { maxHeight: 360 });
 
   const text = (part, family, color, weight = '400', spacing = '0px') => {
     if (!part?.text) return;
@@ -168,10 +168,8 @@ export async function renderPlanCard({
   title,
   meta,
   sub,
-  count,
   lang = 'fr',
   size = 'square',
-  seed = 0,
   root = typeof document === 'undefined' ? null : document.documentElement,
 }) {
   if (typeof document === 'undefined') return null;
@@ -188,7 +186,6 @@ export async function renderPlanCard({
     title,
     meta,
     sub,
-    count,
     lang,
     size,
     measure: (value, fontSize, family) => {
@@ -196,7 +193,7 @@ export async function renderPlanCard({
       return ctx.measureText(value).width;
     },
   });
-  drawPlanCard(ctx, layout, readCardPalette(root), { seed, stacks });
+  drawPlanCard(ctx, layout, readCardPalette(root), { stacks });
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob || null), 'image/png');

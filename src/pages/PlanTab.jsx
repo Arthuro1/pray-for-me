@@ -88,7 +88,7 @@ export default function CalendarTab() {
   };
 
   return (
-    <div className="phase-page constellation-plan">
+    <div className="phase-page plan-tab">
       <div className="phase-page__shell">
         <PageHeader
           eyebrow={t(lang, 'calendar')}

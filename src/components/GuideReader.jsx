@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
+import { X, Check, ChevronLeft, ChevronDown, BookOpen } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -7,6 +7,13 @@ import { pick, localizeRef } from '../content/teaching';
 import { guideDurationMinutes } from '../lib/guideMeta';
 import VerseAccordion from './VerseAccordion';
 import ReportWordingLink from './ReportWordingLink';
+import RiseMark from './shared/RiseMark';
+import { PrimaryButton, SecondaryButton } from './shared/Primitives';
+
+// Back points the reading direction's way.
+function BackChevron(props) {
+  return <ChevronLeft className="rtl-mirror" {...props} />;
+}
 
 // A pray-through reader for a prayer guide: an intro, then one step at a time.
 // Each step gives a heading and a gentle prompt, and (usually) points to a
@@ -40,57 +47,47 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
   // intro so the whole guide stays re-readable in either direction.
   const back = () => { setWhyOpen(false); setIndex((i) => i - 1); };
 
+  // The same deep-violet place to pray as the prayer session: a guide is
+  // prayed through, not read past.
   const overlay = (children) => (
-    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--q-canvas)' }}>
-      <div ref={trapRef} role="dialog" aria-modal="true" aria-label={pick(guide.title, lang)} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
+    <div className="reader q-immersive">
+      <div ref={trapRef} role="dialog" aria-modal="true" aria-label={pick(guide.title, lang)} tabIndex={-1} className="reader__dialog">
         {children}
       </div>
     </div>
   );
 
   const closeButton = (
-    <button onClick={onClose} aria-label={t(lang, 'close')} className="w-11 h-11 flex items-center justify-center rounded-full shrink-0" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
-      <X size={16} />
+    <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 shrink-0">
+      <X size={20} aria-hidden="true" />
     </button>
   );
 
   const advanceButton = (label, last) => (
-    <button
-      onClick={advance}
-      className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-      style={{ background: 'var(--q-action-primary)' }}
-    >
-      {last ? <><Check size={16} /> {t(lang, 'amenBtn')}</> : <>{label} <ChevronRight size={16} /></>}
-    </button>
+    <PrimaryButton onClick={advance} icon={last ? Check : undefined}>
+      {last ? t(lang, 'amenBtn') : label}
+    </PrimaryButton>
   );
 
   const backButton = (
-    <button
-      onClick={back}
-      className="shrink-0 whitespace-nowrap flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
-      style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)' }}
-    >
-      <ChevronLeft size={16} /> {t(lang, 'backBtn')}
-    </button>
+    <SecondaryButton onClick={back} icon={BackChevron}>{t(lang, 'backBtn')}</SecondaryButton>
   );
 
   // Intro: name the guide and its biblical purpose before praying.
   if (onIntro) {
     return overlay(
       <>
-        <div className="shrink-0 px-5 pt-4 flex justify-end">{closeButton}</div>
-        <div className="flex-1 overflow-y-auto px-6 pb-8 max-w-xl mx-auto w-full">
-          <div className="text-center mb-6">
-            <div className="text-5xl mb-3">{guide.emoji}</div>
-            <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--q-text)' }}>{pick(guide.title, lang)}</h2>
-            {duration && (
-              <p className="text-xs font-medium" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aboutMinutes', { n: duration })}</p>
-            )}
+        <div className="reader__bar"><div className="reader__bar-row"><span />{closeButton}</div></div>
+        <div className="reader__scroll">
+          <div className="reader__page">
+            <RiseMark motion="still" size={44} />
+            <h2 className="reader__title mt-6">{pick(guide.title, lang)}</h2>
+            {duration && <p className="reader__meta">{t(lang, 'aboutMinutes', { n: duration })}</p>}
+            <p className="reader__lede">{pick(guide.intro, lang)}</p>
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{pick(guide.intro, lang)}</p>
         </div>
-        <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--q-border)' }}>
-          {advanceButton(t(lang, 'guideBegin'), false)}
+        <div className="reader__footer">
+          <div className="reader__footer-row">{advanceButton(t(lang, 'guideBegin'), false)}</div>
         </div>
       </>
     );
@@ -98,14 +95,14 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
 
   if (done) {
     return overlay(
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-3">
-        <div className="text-6xl mb-1">🙏</div>
-        <h2 className="text-xl font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'guideDoneTitle')}</h2>
-        <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'guideDoneSub')}</p>
-        <button onClick={onClose} className="mt-4 px-6 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--q-action-primary)' }}>
-          {t(lang, 'close')}
-        </button>
-        <ReportWordingLink lang={lang} surface={`guides/${guide.id}`} />
+      <div className="reader__scroll">
+        <div className="reader__done" role="status">
+          <RiseMark size={56} />
+          <p className="reader__done-title">{t(lang, 'guideDoneTitle')}</p>
+          <p className="reader__lede mt-0">{t(lang, 'guideDoneSub')}</p>
+          <PrimaryButton onClick={onClose} className="mt-6 min-w-40">{t(lang, 'remainFinish')}</PrimaryButton>
+          <ReportWordingLink lang={lang} surface={`guides/${guide.id}`} />
+        </div>
       </div>
     );
   }
@@ -114,67 +111,58 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
 
   return overlay(
     <>
-      <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--q-surface-inverse)' }}>
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            {index + 1} / {total}
-          </span>
-          {closeButton}
-        </div>
-        <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.2)' }}>
-          <div className="h-full rounded-full transition-all duration-300" style={{ width: `${((index + 1) / total) * 100}%`, background: '#fff' }} />
+      <div className="reader__bar">
+        <div className="reader__bar-row"><span />{closeButton}</div>
+        <div className="reader__progress-row">
+          <span className="reader__track" aria-hidden="true"><span style={{ width: `${((index + 1) / total) * 100}%` }} /></span>
+          <p className="reader__progress"><span dir="ltr">{index + 1} / {total}</span></p>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 py-8 max-w-xl mx-auto w-full">
-        <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--q-text)' }}>{pick(step.title, lang)}</h2>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--q-text-secondary)' }}>{pick(step.prompt, lang)}</p>
+      <div className="reader__scroll">
+        <div className="reader__page" key={index}>
+          <h2 className="reader__title">{pick(step.title, lang)}</h2>
+          <p className="reader__lede mb-6">{pick(step.prompt, lang)}</p>
 
-        {/* Optional authored "why this step" — a collapsed one-liner that never
-            blocks Continue and simply doesn't exist for unexplained steps.
-            Scripture below stays its own separate expandable. */}
-        {step.why && (
-          <div className="mb-6">
-            <button
-              type="button"
-              onClick={() => setWhyOpen((v) => !v)}
-              aria-expanded={whyOpen}
-              aria-controls="guide-step-why"
-              className="min-h-[44px] flex items-center gap-1.5 text-xs font-medium"
-              style={{ color: 'var(--q-royal-text)' }}
-            >
-              <ChevronDown size={13} aria-hidden="true" style={{ transform: whyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
-              {t(lang, 'whyThisStep')}
-            </button>
-            {whyOpen && (
-              <p id="guide-step-why" className="text-xs leading-relaxed pl-5" style={{ color: 'var(--q-text-tertiary)' }}>
-                {pick(step.why, lang)}
-              </p>
-            )}
-          </div>
-        )}
-
-        {ref && (
-          <VerseAccordion reference={ref} lang={lang}>
-            {({ toggle }) => (
+          {/* Optional authored "why this step" — a collapsed one-liner that never
+              blocks Continue and simply doesn't exist for unexplained steps.
+              Scripture below stays its own separate expandable. */}
+          {step.why && (
+            <div className="mb-6">
               <button
-                onClick={toggle}
-                className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
-                style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
+                type="button"
+                onClick={() => setWhyOpen((v) => !v)}
+                aria-expanded={whyOpen}
+                aria-controls="guide-step-why"
+                className="quiet-button pressable -ms-3"
               >
-                <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--q-text)' }}>
-                  <BookOpen size={15} style={{ color: 'var(--q-royal-text)' }} /> {ref}
-                </span>
-                <span className="text-xs shrink-0" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'readFullPassage')}</span>
+                <ChevronDown size={16} aria-hidden="true" style={{ transform: whyOpen ? 'rotate(180deg)' : 'none', transition: 'transform var(--q-motion-standard) var(--q-ease)' }} />
+                {t(lang, 'whyThisStep')}
               </button>
-            )}
-          </VerseAccordion>
-        )}
+              {whyOpen && (
+                <p id="guide-step-why" className="reader__why">{pick(step.why, lang)}</p>
+              )}
+            </div>
+          )}
+
+          {ref && (
+            <VerseAccordion reference={ref} lang={lang}>
+              {({ toggle }) => (
+                <button type="button" onClick={toggle} className="scripture-passage pressable">
+                  <span className="scripture-passage__ref">{ref}</span>
+                  <span className="scripture-passage__action"><BookOpen size={14} aria-hidden="true" /> {t(lang, 'readFullPassage')}</span>
+                </button>
+              )}
+            </VerseAccordion>
+          )}
+        </div>
       </div>
 
-      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--q-border)' }}>
-        {backButton}
-        {advanceButton(t(lang, 'continueBtn'), isLastStep)}
+      <div className="reader__footer">
+        <div className="reader__footer-row">
+          {backButton}
+          {advanceButton(t(lang, 'continueBtn'), isLastStep)}
+        </div>
       </div>
     </>
   );

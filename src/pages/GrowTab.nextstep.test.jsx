@@ -74,7 +74,7 @@ describe('GrowTab — one recommended next step', () => {
     renderGrow();
     // Not recommended, not visible until History is expanded.
     expect(screen.queryByText(pick(guides[0].title, lang))).toBeNull();
-    const history = screen.getByRole('button', { name: `${t(lang, 'growHistory')} (1)` });
+    const history = screen.getByRole('button', { name: `${t(lang, 'growHistory')} · 1` });
     expect(history.getAttribute('aria-expanded')).toBe('false');
     fireEvent.click(history);
     expect(history.getAttribute('aria-expanded')).toBe('true');

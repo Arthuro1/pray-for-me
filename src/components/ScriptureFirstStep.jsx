@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, BookOpen, Sparkles, Check, WifiOff, RefreshCw } from 'lucide-react';
+import { X, BookOpen, Check, Plus, WifiOff, RefreshCw } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
@@ -12,6 +12,7 @@ import AiDisclaimer from './shared/AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
 import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
+import { PrimaryButton, QuietButton, SecondaryButton } from './shared/Primitives';
 
 // One suggested passage: reference, why it speaks to the request, an inline
 // "read in app" expansion, and an opt-in "add as prayer point". The Bible text
@@ -19,34 +20,26 @@ import RichText from './rich/RichText';
 // never from the AI, even for guidance saved before the AI stopped sending it.
 function Passage({ p, lang, added, onAdd }) {
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-      <p className="text-sm font-semibold flex items-center gap-1.5 mb-1" style={{ color: 'var(--q-royal-text)' }}>
-        <BookOpen size={14} /> {p.ref}
-      </p>
-      {p.why && <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{p.why}</p>}
+    <li className="scripture-guide__passage">
+      <p className="scripture-guide__ref">{p.ref}</p>
+      {p.why && <p className="scripture-guide__why">{p.why}</p>}
       <VerseAccordion reference={p.ref} lang={lang}>
         {({ toggle }) => (
-          <div className="flex items-center justify-between gap-2">
-            <button onClick={toggle} className="text-xs font-medium" style={{ color: 'var(--q-royal-text)' }}>
-              {t(lang, 'readInApp')} →
+          <div className="flex flex-wrap items-center justify-between gap-x-4">
+            <button type="button" onClick={toggle} className="scripture-ref">
+              <BookOpen size={13} aria-hidden="true" /> {t(lang, 'readInApp')}
             </button>
             {added ? (
-              <span className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--q-royal-text)' }}>
-                <Check size={13} /> {t(lang, 'addedPoint')}
+              <span className="q-meta inline-flex min-h-11 items-center gap-1.5" role="status">
+                <Check size={14} aria-hidden="true" /> {t(lang, 'addedPoint')}
               </span>
             ) : (
-              <button
-                onClick={onAdd}
-                className="text-xs font-medium px-3 py-1.5 rounded-full"
-                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-              >
-                + {t(lang, 'addAsPoint')}
-              </button>
+              <QuietButton icon={Plus} iconSize={16} onClick={onAdd} className="-me-3">{t(lang, 'addAsPoint')}</QuietButton>
             )}
           </div>
         )}
       </VerseAccordion>
-    </div>
+    </li>
   );
 }
 
@@ -99,9 +92,9 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
   const body = () => {
     if (status === 'offline') {
       return (
-        <div className="flex flex-col items-center text-center gap-3 py-10 px-4">
-          <WifiOff size={28} style={{ color: 'var(--q-text-tertiary)' }} />
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'scriptureOffline')}</p>
+        <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
+          <WifiOff size={24} style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
+          <p className="text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'scriptureOffline')}</p>
         </div>
       );
     }
@@ -109,27 +102,21 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     if (status === 'loading') {
       return (
         <div className="flex flex-col items-center text-center gap-3 py-12">
-          <RefreshCw size={22} className="animate-spin" style={{ color: 'var(--q-royal-text)' }} />
-          <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'scriptureFinding')}</p>
+          <RefreshCw size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
+          <p className="q-meta">{t(lang, 'scriptureFinding')}</p>
         </div>
       );
     }
 
     if (status === 'intro') {
       return (
-        <div className="flex flex-col gap-4 py-4">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'scriptureFirstIntro')}</p>
-          <div className="rounded-2xl px-4 py-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-            <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{title}</p>
-            {description && <RichText text={description} className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }} />}
+        <div className="flex flex-col gap-5 py-2">
+          <p className="text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'scriptureFirstIntro')}</p>
+          <div className="scripture-guide__prayer">
+            <p className="scripture-guide__prayer-title">{title}</p>
+            {description && <RichText text={description} className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }} />}
           </div>
-          <button
-            onClick={fetchGuidance}
-            className="flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-            style={{ background: 'var(--q-action-primary)' }}
-          >
-            <Sparkles size={16} /> {t(lang, 'findScripture')}
-          </button>
+          <SecondaryButton icon={BookOpen} onClick={fetchGuidance}>{t(lang, 'findScripture')}</SecondaryButton>
           <AiDisclaimer lang={lang} className="justify-center" />
         </div>
       );
@@ -139,96 +126,73 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     if (!guidance) {
       return (
         <div className="flex flex-col items-center text-center gap-3 py-10 px-4">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{error || t(lang, 'scriptureNone')}</p>
-          <button
-            onClick={fetchGuidance}
-            className="text-xs font-medium px-4 py-2 rounded-full flex items-center gap-1.5"
-            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-          >
-            <RefreshCw size={13} /> {t(lang, 'retryScripture')}
-          </button>
+          <p className="text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{error || t(lang, 'scriptureNone')}</p>
+          <QuietButton icon={RefreshCw} iconSize={16} onClick={fetchGuidance}>{t(lang, 'retryScripture')}</QuietButton>
         </div>
       );
     }
 
     return (
-      <div className="flex flex-col gap-4 py-3">
+      <div className="flex flex-col gap-6 py-2">
         <AiDisclaimer lang={lang} />
 
-        <div className="space-y-3">
+        <ul className="scripture-guide__passages">
           {guidance.passages.map((p, i) => (
             <Passage key={p.ref || i} p={p} lang={lang} added={!!added[p.ref]} onAdd={() => addPassage(p)} />
           ))}
-        </div>
+        </ul>
 
         {guidance.context && (
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'contextLabel')}</p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{guidance.context}</p>
-          </div>
+          <section>
+            <h3 className="section-label mb-2">{t(lang, 'contextLabel')}</h3>
+            <p className="text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{guidance.context}</p>
+          </section>
         )}
 
         {guidance.themes.length > 0 && (
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'biblicalThemes')}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {guidance.themes.map((th, i) => (
-                <span key={i} className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>{th}</span>
-              ))}
-            </div>
-          </div>
+          <section>
+            <h3 className="section-label mb-2">{t(lang, 'biblicalThemes')}</h3>
+            <p className="text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{guidance.themes.join(' · ')}</p>
+          </section>
         )}
 
         {guidance.reflections.length > 0 && (
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'reflectLabel')}</p>
-            <ul className="space-y-1.5">
-              {guidance.reflections.map((q, i) => (
-                <li key={i} className="text-sm leading-relaxed flex gap-2" style={{ color: 'var(--q-text-secondary)' }}>
-                  <span style={{ color: 'var(--q-royal-text)' }}>•</span> {q}
-                </li>
-              ))}
+          <section>
+            <h3 className="section-label mb-2">{t(lang, 'reflectLabel')}</h3>
+            <ul className="scripture-guide__reflections">
+              {guidance.reflections.map((q, i) => <li key={i}>{q}</li>)}
             </ul>
-          </div>
+          </section>
         )}
       </div>
     );
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end justify-center md:items-center md:p-6" onClick={onClose}>
       <div
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={t(lang, 'scriptureFirstTitle')}
-        className="w-full max-w-lg mx-auto rounded-t-3xl md:rounded-3xl max-h-[92vh] flex flex-col md:shadow-2xl"
-        style={{ background: 'var(--q-canvas)' }}
+        aria-labelledby="scripture-first-title"
+        className="q-dialog prayer-form mx-auto flex w-full max-w-lg flex-col"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex justify-center pt-3 pb-1 shrink-0">
-          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--q-border)' }} />
-        </div>
-        <div className="flex items-center justify-between px-5 py-3 shrink-0">
-          <h2 className="font-semibold text-lg flex items-center gap-2" style={{ color: 'var(--q-text)' }}>
-            <BookOpen size={18} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'scriptureFirstTitle')}
-          </h2>
-          <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1.5 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-            <X size={16} />
+        <div className="prayer-form__grip" aria-hidden="true" />
+        <div className="prayer-form__header shrink-0">
+          <div className="min-w-0">
+            <h2 id="scripture-first-title" className="prayer-form__title">{t(lang, 'scriptureFirstTitle')}</h2>
+          </div>
+          <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 shrink-0">
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
 
-        <div className="px-5 overflow-y-auto flex-1">{body()}</div>
+        <div className="min-h-0 flex-1 overflow-y-auto px-6">{body()}</div>
 
-        <div className="px-5 py-4 shrink-0" style={{ borderTop: '0.5px solid var(--q-border)' }}>
-          <button
-            onClick={onClose}
-            className="w-full rounded-xl py-3 text-sm font-semibold text-white"
-            style={{ background: 'var(--q-action-primary)' }}
-          >
-            {t(lang, 'prayNowCta')}
-          </button>
+        <div className="shrink-0 border-t px-6 py-4" style={{ borderColor: 'var(--q-border)', paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+          <PrimaryButton onClick={onClose} className="w-full">{t(lang, 'prayNowCta')}</PrimaryButton>
         </div>
       </div>
 

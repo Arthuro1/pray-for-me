@@ -5,10 +5,9 @@
 import { describe, it, expect } from 'vitest';
 import {
   CARD_SIZES,
-  constellationFigure,
   VERSE_TEXT_LIMIT,
   layoutVerseCard,
-  starField,
+  riseFigure,
   verseFontSize,
   weightedLength,
   wrapLines,
@@ -83,7 +82,7 @@ describe('layoutVerseCard — square', () => {
     expect(card.rule.y).toBeLessThan(card.mark.y);
   });
 
-  it('draws a constellation into the sky a short verse leaves empty', () => {
+  it('sets the Rise Mark in the space a short verse leaves empty', () => {
     const short = layout({ verse: 'Priez sans cesse.' });
     expect(short.figure).toBeTruthy();
     // On the side the text doesn't occupy, and clear of both the label and the verse.
@@ -112,7 +111,7 @@ describe('layoutVerseCard — right to left', () => {
     expect(card.mark.align).toBe('right');
   });
 
-  it('moves the constellation to the side the right-aligned verse leaves free', () => {
+  it('moves the Rise Mark to the side the right-aligned verse leaves free', () => {
     const card = layout({ lang: 'ar', verse: 'صلوا بلا انقطاع.' });
     expect(card.figure.x).toBe(CARD_SIZES.square.margin);
   });
@@ -150,37 +149,20 @@ describe('layoutVerseCard — reference only', () => {
   });
 });
 
-describe('starField', () => {
-  it('is the same sky for everyone on the same day', () => {
-    const args = { width: 1080, height: 1080, count: 12 };
-    expect(starField({ seed: '2026-08-25', ...args })).toEqual(starField({ seed: '2026-08-25', ...args }));
-    expect(starField({ seed: '2026-08-26', ...args })).not.toEqual(starField({ seed: '2026-08-25', ...args }));
-  });
-
-  it('stays inside the canvas', () => {
-    for (const star of starField({ seed: 'x', width: 1080, height: 1920, count: 40 })) {
-      expect(star.x).toBeGreaterThanOrEqual(0);
-      expect(star.x).toBeLessThanOrEqual(1080);
-      expect(star.y).toBeGreaterThanOrEqual(0);
-      expect(star.y).toBeLessThanOrEqual(1920);
-    }
-  });
-});
-
-describe('constellationFigure', () => {
+describe('riseFigure', () => {
   const box = { x: 500, y: 200, width: 400, height: 260 };
 
-  it('keeps every star inside the space the layout set aside', () => {
-    for (const point of constellationFigure({ seed: '2026-08-25', box })) {
-      expect(point.x).toBeGreaterThanOrEqual(box.x);
-      expect(point.x).toBeLessThanOrEqual(box.x + box.width);
-      expect(point.y).toBeGreaterThanOrEqual(box.y);
-      expect(point.y).toBeLessThanOrEqual(box.y + box.height);
-    }
+  it('keeps the Rise Mark inside the space the layout set aside', () => {
+    const { bounds } = riseFigure({ box });
+    expect(bounds.x).toBeGreaterThanOrEqual(box.x);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(box.x + box.width);
+    expect(bounds.y).toBeGreaterThanOrEqual(box.y);
+    expect(bounds.y + bounds.height).toBeCloseTo(box.y + box.height);
   });
 
-  it('wanders left to right, so the joining line never doubles back', () => {
-    const xs = constellationFigure({ seed: 'a', box }).map((point) => point.x);
-    expect([...xs].sort((a, b) => a - b)).toEqual(xs);
+  it('rises from the bottom of the space, centred across it, and never taller than asked', () => {
+    const { bounds } = riseFigure({ box, maxHeight: 120 });
+    expect(bounds.height).toBe(120);
+    expect(bounds.x + bounds.width / 2).toBeCloseTo(box.x + box.width / 2);
   });
 });

@@ -3,7 +3,7 @@ import { pick } from '../content/teaching/pick';
 import VersePill from './shared/VersePill';
 import GoDeeper from './GoDeeper';
 
-const heading = 'mb-2 text-[11px] font-semibold uppercase tracking-widest';
+const heading = 'section-label mb-2';
 const prose = 'text-sm leading-relaxed whitespace-pre-line break-words';
 
 // Full manuscript sections on the existing prayer day. The journal uses the
@@ -20,17 +20,17 @@ export default function DiscernmentDayGuide({ day, lang, resources = [], resourc
     <div className="space-y-5" data-testid="discernment-day">
       {paragraphs.map(([key, label, value]) => (
         <section key={key}>
-          <h4 className={heading} style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, label)}</h4>
+          <h4 className={heading}>{t(lang, label)}</h4>
           <p dir="auto" className={prose} style={{ color: key === 'prayer' ? 'var(--q-text)' : 'var(--q-text-secondary)' }}>{key === 'reading' ? pick(value, lang).replace(/^[,،，]\s*/, '') : pick(value, lang)}</p>
           {key === 'reading' && day.readingRefs?.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {day.readingRefs.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
+              {day.readingRefs.map((ref) => <VersePill key={ref} reference={ref} lang={lang} />)}
             </div>
           )}
         </section>
       ))}
       <section>
-        <h4 className={heading} style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planDiscernmentJournal')}</h4>
+        <h4 className={heading}>{t(lang, 'planDiscernmentJournal')}</h4>
         {content.journalNote && <p dir="auto" className={`${prose} mb-2`} style={{ color: 'var(--q-text-secondary)' }}>{pick(content.journalNote, lang)}</p>}
         <ol className="list-decimal space-y-2 ps-5">
           {content.questions.map((question, index) => (
@@ -38,27 +38,27 @@ export default function DiscernmentDayGuide({ day, lang, resources = [], resourc
           ))}
         </ol>
         {onAddNote && (
-          <button type="button" onClick={onAddNote} className="mt-3 min-h-11 rounded-lg px-3 text-sm font-semibold" style={{ color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
+          <button type="button" onClick={onAddNote} className="secondary-button pressable mt-3">
             {t(lang, 'studyAddNote')}
           </button>
         )}
       </section>
-      <section className="rounded-xl p-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-        <h4 className={heading} style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'planPracticeToday')}</h4>
+      <section className="plan-day__aside plan-day__aside--royal">
+        <h4 className={heading}>{t(lang, 'planPracticeToday')}</h4>
         <p dir="auto" className={prose} style={{ color: 'var(--q-text)' }}>{pick(day.practice, lang)}</p>
       </section>
       {content.review && (
-        <details className="rounded-xl px-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-          <summary className="min-h-11 cursor-pointer py-3 text-start text-sm font-semibold" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planDiscernmentReview')}</summary>
+        <details className="plan-day__fold">
+          <summary className="plan-day__summary">{t(lang, 'planDiscernmentReview')}</summary>
           <p dir="auto" className={`${prose} pb-3`} style={{ color: 'var(--q-text-secondary)' }}>{pick(content.review, lang)}</p>
         </details>
       )}
-      <details className="rounded-xl px-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-        <summary className="min-h-11 cursor-pointer py-3 text-start text-sm font-semibold" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planDiscernmentDeeper')}</summary>
+      <details className="plan-day__fold">
+        <summary className="plan-day__summary">{t(lang, 'planDiscernmentDeeper')}</summary>
         <div className="space-y-3 pb-3">
           <p dir="auto" className={prose} style={{ color: 'var(--q-text-secondary)' }}>{pick(content.deeper, lang)}</p>
           <div className="flex flex-wrap gap-1.5">
-            {(day.related || []).map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
+            {(day.related || []).map((ref) => <VersePill key={ref} reference={ref} lang={lang} />)}
           </div>
         </div>
       </details>

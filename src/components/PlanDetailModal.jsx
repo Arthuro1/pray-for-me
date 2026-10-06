@@ -8,6 +8,7 @@ import { useLocalizedPlan } from '../hooks/useLocalizedPlan';
 import PlanOverview from './plan/PlanOverview';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { isPlanShareable } from '../lib/planShareLink';
+import { PrimaryButton, QuietButton, StatusLabel } from './shared/Primitives';
 
 // Explains a guided plan before the user commits to it (PlanOverview: the
 // intro, its Scripture story and a day-by-day preview) with a single Start
@@ -30,103 +31,84 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
   const usable = canUsePlan(source);
 
   return (
-    <div
-      className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-      onClick={onClose}
-    >
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center" onClick={onClose}>
       <div
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, plan.titleKey)}
-        className="editorial-dialog w-full max-w-md max-h-[85vh] min-h-0 overflow-hidden flex flex-col"
+        className="q-dialog flex max-h-[88vh] min-h-0 w-full max-w-lg flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="p-5 pb-4 flex items-start gap-3 shrink-0" style={{ borderBottom: '0.5px solid var(--q-border)' }}>
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--q-selected)' }}>
-            {plan.emoji}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, plan.titleKey)}</h3>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
-              {t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}
-            </p>
+        {/* Header: the plan's length, its name in the serif, what it is. */}
+        <div className="plan-detail__header shrink-0">
+          <div className="min-w-0 flex-1">
+            <p className="section-label">{t(lang, 'planDays', { n: plan.count })}</p>
+            <h2 className="plan-detail__title">{t(lang, plan.titleKey)}</h2>
+            <p className="plan-detail__sub">{t(lang, plan.subKey)}</p>
             {!isPlanReviewed(source) && (
-              <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--q-gold-text)' }}>{t(lang, 'planCoupleReviewPending')}</p>
+              <StatusLabel tone="sacred" className="mt-2">{t(lang, 'planCoupleReviewPending')}</StatusLabel>
             )}
           </div>
-          {onShare && isPlanShareable(source) && (
-            <button type="button" onClick={onShare} aria-label={t(lang, 'planShareAction')} title={t(lang, 'planShareAction')} className="phase-icon-button shrink-0">
-              <Share2 size={17} aria-hidden="true" />
-            </button>
-          )}
-          <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
+          <div className="flex shrink-0 items-center gap-1 -me-2 -mt-2">
+            {onShare && isPlanShareable(source) && (
+              <button type="button" onClick={onShare} aria-label={t(lang, 'planShareAction')} title={t(lang, 'planShareAction')} className="icon-button pressable">
+                <Share2 size={18} aria-hidden="true" />
+              </button>
+            )}
+            <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable"><X size={18} aria-hidden="true" /></button>
+          </div>
         </div>
 
-        {usable ? (<div className="min-h-0 flex-1 overflow-y-auto p-5 pb-8 space-y-5">
-          {/* Opened in review mode (or a dev build): say plainly that what
-              follows is a draft, not only that a review is outstanding. */}
-          {!isPlanReviewed(source) && (
-            <p className="rounded-xl p-3 text-xs leading-relaxed" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}>
-              {t(lang, 'planCoupleReviewHint')}
-            </p>
-          )}
-          <PlanOverview plan={plan} lang={lang} />
-        </div>) : (
-          <div className="min-h-0 flex-1 overflow-y-auto p-5 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
+        {usable ? (
+          <div className="plan-detail__body min-h-0 flex-1 overflow-y-auto">
+            {/* Opened in review mode (or a dev build): say plainly that what
+                follows is a draft, not only that a review is outstanding. */}
+            {!isPlanReviewed(source) && (
+              <p className="nudge__body mb-6">{t(lang, 'planCoupleReviewHint')}</p>
+            )}
+            <PlanOverview plan={plan} lang={lang} />
+          </div>
+        ) : (
+          <div className="plan-detail__body min-h-0 flex-1 overflow-y-auto text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
             {t(lang, 'planCoupleReviewHint')}
           </div>
         )}
 
         {/* Start action lives with the explanation: read, then choose when to begin */}
-        <div
-          className="shrink-0 p-5 pt-4 space-y-3"
-          style={{
-            background: 'var(--q-surface)',
-            borderTop: '0.5px solid var(--q-border)',
-            paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
-          }}
-        >
+        <div className="plan-detail__footer shrink-0">
           {!running && usable && showStartDate && (
-            <label className="flex items-center justify-between gap-3">
-              <span className="text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planStartDate')}</span>
+            <label className="mb-3 flex items-center justify-between gap-3">
+              <span className="q-field__label">{t(lang, 'planStartDate')}</span>
               <input
                 type="date"
                 value={startDate}
                 min={todayKey()}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="text-sm rounded-lg px-2.5 py-1.5"
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)', colorScheme: 'light dark' }}
+                className="q-input w-auto"
+                style={{ colorScheme: 'light dark' }}
               />
             </label>
           )}
-          <button
+          <PrimaryButton
             // Hand back the SOURCE plan, not the localized copy, so callers keep the canonical PLANS entry.
             onClick={() => { if (!running && usable) { onStart(source, startDate || todayKey()); onClose(); } }}
             disabled={running || !usable}
-            className="w-full text-sm font-semibold px-3 py-3 rounded-xl disabled:opacity-60"
-            style={running
-              ? { background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }
-              : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
+            icon={running ? Check : undefined}
+            className="w-full"
           >
             {/* A short label, not the explanation — that already sits in the
                 body of this modal, right above. */}
             {!usable ? t(lang, 'planCoupleReviewPending') : running
-              ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {runningLabel || t(lang, 'planRunning')}</span>
+              ? (runningLabel || t(lang, 'planRunning'))
               : (ctaLabel || t(lang, showStartDate ? 'journeyStart' : 'journeyStartToday'))}
-          </button>
-          {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{footnote}</p>}
+          </PrimaryButton>
+          {footnote && <p className="q-meta mt-3 text-center">{footnote}</p>}
           {!running && usable && !ctaLabel && (
-            <button
-              type="button"
-              onClick={() => setShowStartDate((open) => !open)}
-              className="w-full min-h-11 text-sm font-medium"
-              style={{ color: 'var(--q-royal-text)' }}
-            >
+            <QuietButton onClick={() => setShowStartDate((open) => !open)} className="mt-1 w-full">
               {t(lang, showStartDate ? 'startTodayInstead' : 'startAnotherDay')}
-            </button>
+            </QuietButton>
           )}
         </div>
       </div>

@@ -98,15 +98,10 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 
   return (
     <div className="group/verse inline-flex items-start gap-1">
-      <VerseAccordion reference={ref} lang={lang} initialText={text} panelStyle={{ background: 'var(--q-gold-soft)', border: '1px solid color-mix(in srgb, var(--q-gold) 28%, var(--q-border))' }}>
+      <VerseAccordion reference={ref} lang={lang} initialText={text}>
         {({ toggle }) => (
-          <button
-            onClick={toggle}
-            title={t(lang, 'tipVerseToggle')}
-            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-            style={{ background: 'var(--q-gold-soft)', color: 'var(--q-gold-text)' }}
-          >
-            <BookOpen size={9} /> {ref}
+          <button type="button" onClick={toggle} title={t(lang, 'tipVerseToggle')} className="scripture-ref">
+            <BookOpen size={13} aria-hidden="true" /> {ref}
           </button>
         )}
       </VerseAccordion>
@@ -117,10 +112,10 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
           onClick={onRemove}
           aria-label={t(lang, 'tipRemoveVerse')}
           title={t(lang, 'tipRemoveVerse')}
-          className="opacity-0 group-hover/verse:opacity-100 focus-visible:opacity-100 transition-opacity mt-1.5 shrink-0"
-          style={{ color: '#c04040' }}
+          className="icon-button opacity-0 group-hover/verse:opacity-100 focus-visible:opacity-100 transition-opacity shrink-0"
+          style={{ color: 'var(--q-danger)' }}
         >
-          <Trash2 size={11} aria-hidden="true" />
+          <Trash2 size={14} aria-hidden="true" />
         </button>
       )}
     </div>
@@ -1108,13 +1103,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <p className="text-sm font-medium mb-2" style={{ color: 'var(--q-text)' }}>{pick(planDay.theme, lang)}</p>
                 <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
                   {({ toggle, expanded }) => (
-                    <button
-                      onClick={toggle}
-                      aria-expanded={expanded}
-                      className="text-xs flex items-center gap-1.5"
-                      style={{ color: 'var(--q-royal-text)' }}
-                    >
-                      <BookOpen size={12} /> {localizeRef(planDay.ref, lang)}
+                    <button type="button" onClick={toggle} aria-expanded={expanded} className="scripture-ref">
+                      <BookOpen size={13} aria-hidden="true" /> {localizeRef(planDay.ref, lang)}
                     </button>
                   )}
                 </VerseAccordion>
@@ -1403,15 +1393,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 {(rec.verses || []).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {rec.verses.map((v, i) => (
-                      <VerseAccordion key={i} reference={v.ref} lang={lang} panelStyle={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-selected-border)' }}>
+                      <VerseAccordion key={i} reference={v.ref} lang={lang}>
                         {({ toggle }) => (
-                          <button
-                            onClick={toggle}
-                            title={t(lang, 'tipVerseToggle')}
-                            className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-                            style={{ background: 'var(--q-selected-border)', color: 'var(--q-royal-text)' }}
-                          >
-                            <BookOpen size={9} /> {v.ref}
+                          <button type="button" onClick={toggle} title={t(lang, 'tipVerseToggle')} className="scripture-ref">
+                            <BookOpen size={13} aria-hidden="true" /> {v.ref}
                           </button>
                         )}
                       </VerseAccordion>

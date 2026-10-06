@@ -555,6 +555,72 @@ a.prayer-row:hover { background: var(--q-hover); }
 }
 
 
+/* A Scripture reference you can open: gold text, never a filled pill. */
+.scripture-ref {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  color: var(--q-gold-text);
+  font-size: var(--q-type-meta);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-align: start;
+}
+
+.scripture-ref:hover { text-decoration: underline; text-underline-offset: 3px; }
+.scripture-ref svg { flex: 0 0 auto; }
+
+/* A passage to open, as its own line: reference in the serif on a gold rule. */
+.scripture-passage {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--q-space-2) var(--q-space-4);
+  padding-block: var(--q-space-1);
+  padding-inline: var(--q-space-5) 0;
+  border-inline-start: 2px solid var(--q-gold);
+  text-align: start;
+}
+
+.scripture-passage__ref { color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.125rem; }
+.scripture-passage__action { display: inline-flex; align-items: center; gap: 6px; color: var(--q-gold-text); font-size: var(--q-type-meta); font-weight: 600; }
+
+/* The opened passage, wherever it opens — one panel: a gold rule, the text in
+   the serif, its edition and the way into the whole chapter. */
+.scripture-panel {
+  margin-block: var(--q-space-2) var(--q-space-3);
+  padding-block: var(--q-space-1);
+  padding-inline: var(--q-space-5) 0;
+  border-inline-start: 2px solid var(--q-gold);
+}
+
+.scripture-panel__text {
+  margin: 0 0 var(--q-space-2);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.scripture-panel__note { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
+.scripture-panel__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--q-space-1) var(--q-space-4); }
+.scripture-panel__edition { color: var(--q-text-tertiary); font-size: 0.75rem; }
+
+.scripture-panel__link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  color: var(--q-royal-text);
+  font-size: var(--q-type-meta);
+  font-weight: 600;
+}
+
 /* ── Rise Mark ───────────────────────────────────────────────────────────── */
 .rise-mark { display: block; flex: 0 0 auto; color: var(--q-gold); }
 

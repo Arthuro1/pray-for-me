@@ -27,10 +27,8 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
       title,
       meta: t(lang, 'planDays', { n: plan.count }),
       sub: t(lang, plan.subKey),
-      count: plan.count,
       lang,
       size,
-      seed: plan.id,
     })
       .then((blob) => {
         if (cancelled) return;
