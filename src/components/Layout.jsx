@@ -129,7 +129,7 @@ export default function Layout({ children, onAddPrayer }) {
           {!collapsed && (
             <div className="flex items-center gap-2.5 overflow-hidden">
               <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg shrink-0" />
-              <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
+              <span className="brand-wordmark text-base whitespace-nowrap" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
             </div>
           )}
           {collapsed && <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg mx-auto" />}
@@ -219,7 +219,7 @@ export default function Layout({ children, onAddPrayer }) {
         >
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt={APP_NAME} className="w-7 h-7 rounded-lg" />
-            <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
+            <span className="brand-wordmark text-base" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
           </div>
           <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
         </header>

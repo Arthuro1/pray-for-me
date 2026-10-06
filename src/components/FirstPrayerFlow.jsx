@@ -183,9 +183,9 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         className="first-prayer-panel"
       >
         <header className="flex min-h-11 items-center justify-between">
-          <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
+          <div className="flex items-center gap-2.5">
             <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
-            {APP_NAME}
+            <span className="brand-wordmark text-base">{APP_NAME}</span>
           </div>
           <button
             type="button"

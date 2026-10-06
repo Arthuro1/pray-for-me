@@ -18,7 +18,7 @@ Audit date: 2026-10-06. Classes:
 |---|---|
 | `index.html` | `<title>`, description, Open Graph / Twitter titles, `apple-mobile-web-app-title` |
 | `public/manifest.json` | `name`, `short_name`, `description`, shortcut names/descriptions (shortcut URLs unchanged) |
-| `public/logo.svg` + `npm run build:icons` | New mark: a Q whose tail rises like incense. All PWA, Play listing and Android launcher/splash rasters are regenerated from it |
+| `public/logo.svg` + `npm run build:icons` | New mark: a gold serif Q on plum, a censer standing on its tail and incense smoke rising through its open top. All PWA, Play listing and Android launcher/splash rasters are regenerated from it; `public/brand/` holds the colour-on-light and monochrome marks |
 | `public/privacy.html`, `public/terms.html` | Product name in the legal pages |
 | `public/push-sw.js`, `supabase/functions/_shared/eventNotify.ts` | Default notification title (the edge function needs a redeploy to pick it up) |
 | `api/plan-preview.js` | Link-preview title and `og:site_name` |

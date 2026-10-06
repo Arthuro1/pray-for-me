@@ -33,7 +33,7 @@ export default function PlanSharePublicPage({ lang, onJoin, onSignIn }) {
 
       <header className="relative mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
         <a href="/" className="flex min-h-11 items-center gap-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
-          <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" /> {APP_NAME}
+          <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" /> <span className="brand-wordmark text-base">{APP_NAME}</span>
         </a>
         <button type="button" onClick={onSignIn} className="min-h-11 px-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           {t(lang, 'authLogIn')}

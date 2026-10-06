@@ -7,8 +7,9 @@
  * drift away from the vector the app itself ships.
  *
  * Three variants come out of the same artwork:
- *   rounded  - the logo exactly as designed. Used for the PWA "any" icons, the
- *              Android launcher and the splash, where no extra mask is applied.
+ *   rounded  - the logo exactly as designed, artwork where the SVG puts it.
+ *              Used for the PWA "any" icons, the Android launcher and the
+ *              splash, where no extra mask is applied.
  *   square   - full-bleed, the logo's own corner radius dropped. Used for the
  *              Play Store listing icon, because Play applies its own corner mask
  *              and would otherwise round an already-rounded icon.
@@ -64,8 +65,8 @@ const compose = (...layers) => Buffer.from(`${head}${layers.join('')}</svg>`)
 const densityFor = (size) => Math.max(72, Math.ceil((72 * size) / CANVAS))
 
 // Measure the artwork rather than relying on coordinates from the current logo.
-// Its rectangular bounds are not a good optical centre: the narrow speech-tail
-// and diffuse shadow reach much farther down than the dominant bubble body.
+// Its rectangular bounds are not a good optical centre for the maskable icon:
+// the thin smoke and the long tail reach much farther out than the letter's body.
 const probe = await sharp(compose(art), { density: densityFor(CANVAS) })
   .resize(CANVAS, CANVAS)
   .png()
@@ -75,7 +76,7 @@ const { info: bounds } = await sharp(probe)
   .toBuffer({ resolveWithObject: true })
 
 // Use the alpha-weighted centroid of the substantially opaque pixels. This
-// follows the visual mass of the mark while excluding the soft drop shadow.
+// follows the visual mass of the mark while excluding the translucent smoke.
 const { data: pixels, info: pixelInfo } = await sharp(probe)
   .ensureAlpha()
   .raw()
@@ -107,8 +108,8 @@ const placeAtCentre = (artScale) =>
   `translate(${-opticalCentreX},${-opticalCentreY})">${art}</g>`
 
 const variant = {
-  rounded: compose(backdrop[0], placeAtCentre(1)),
-  square: compose(fullBleed, placeAtCentre(1)),
+  rounded: compose(backdrop[0], art),
+  square: compose(fullBleed, art),
   maskable: compose(fullBleed, placeAtCentre(scale)),
 }
 

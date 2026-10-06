@@ -9,9 +9,11 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 ### Changed — Praystead becomes Qetoret
 
 - **New name and identity.** The app is now **Qetoret** — *Let your prayers
-  rise. Build a life of prayer before God.* New mark (a Q whose tail rises like
-  incense), warm-neutral / royal-plum / restrained-gold palette in light and
-  dark, one "rise" motion that respects reduced motion. Product constitution:
+  rise. Build a life of prayer before God.* New mark (a serif Q with a censer
+  on its tail and incense rising through it; colour, on-light and monochrome
+  versions in `public/brand/`), warm-neutral / royal-plum / restrained-gold
+  palette in light and dark, one "rise" motion that respects reduced motion.
+  Product constitution:
   `docs/QETORET_IDENTITY.md`. Rename map: `docs/QETORET_MIGRATION.md`.
   **Compatibility:** internal identifiers are unchanged on purpose — `pfm_*`
   storage keys, the `praystead.com` domain and the Android package

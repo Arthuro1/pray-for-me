@@ -1431,6 +1431,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .auth-brand h1 { font-family: var(--font-editorial); letter-spacing: -.025em; }
 
+/* "Qetoret" set beside the logo, in the serif of the brand lockup. */
+.brand-wordmark { font-family: var(--font-editorial); font-weight: 600; letter-spacing: .01em; }
+
 .auth-sheet {
   position: relative;
   z-index: 2;
