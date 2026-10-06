@@ -5,6 +5,7 @@ import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 
+import { BrandMark, Wordmark } from '../components/shared/Brand';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Map a raw Supabase auth error to a friendly, localized, actionable message.
@@ -196,8 +197,8 @@ export default function AuthPage({ onBack, intent }) {
 
       {/* Logo */}
       <div className="auth-brand">
-        <img src="/logo.svg" alt={APP_NAME} className="w-12 h-12 mb-3 rounded-xl" />
-        <h1 className="text-2xl font-semibold" style={{ color: 'var(--q-text)' }}>{APP_NAME}</h1>
+        <BrandMark size={52} className="mb-3" />
+        <h1 className="m-0"><Wordmark height={30} title={APP_NAME} /></h1>
         <p className="text-xs mt-1 italic" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authTagline')}</p>
       </div>
 

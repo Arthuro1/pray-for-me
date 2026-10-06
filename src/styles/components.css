@@ -563,3 +563,24 @@ a.prayer-row:hover { background: var(--q-hover); }
   color: var(--q-on-action);
   box-shadow: var(--q-elevation);
 }
+
+/* ── Brand mark ──────────────────────────────────────────────────────────── */
+.brand-mark,
+.brand-wordmark-art { display: inline-block; flex: 0 0 auto; overflow: visible; }
+.brand-lockup { display: inline-flex; align-items: center; gap: 10px; }
+
+/* Loaders: the incense rises, fades and rises again — the only brand motion. */
+.brand-mark--rising .brand-mark__incense {
+  transform-box: fill-box;
+  animation: q-incense-rise 2.6s var(--q-ease) infinite;
+}
+
+@keyframes q-incense-rise {
+  0% { opacity: 0; transform: translateY(10%); }
+  40%, 70% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-6%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark--rising .brand-mark__incense { animation: none; opacity: 1; transform: none; }
+}

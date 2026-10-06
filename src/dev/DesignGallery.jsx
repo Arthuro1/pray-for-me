@@ -23,6 +23,7 @@ import {
   Textarea,
 } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
+import { BrandLockup, BrandMark, Wordmark } from '../components/shared/Brand';
 
 const SWATCHES = [
   ['canvas', '--q-canvas'], ['surface', '--q-surface'], ['surface-muted', '--q-surface-muted'], ['inverse', '--q-surface-inverse'],
@@ -78,6 +79,25 @@ export default function DesignGallery() {
       </div>
 
       <div className="phase-content">
+        <Section title="Brand">
+          <div className="flex flex-wrap items-end gap-8">
+            <BrandMark size={96} title="Qetoret" />
+            <BrandMark size={40} />
+            <BrandMark size={24} />
+            <BrandMark size={64} rising />
+            <Wordmark height={44} />
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-8">
+            <BrandLockup size={30} />
+            <span className="q-inverse inline-flex items-center gap-6 rounded-surface p-5">
+              <BrandMark size={56} tone="inverse" />
+              <BrandLockup size={28} tone="inverse" />
+            </span>
+          </div>
+        </Section>
+
+        <SectionDivider />
+
         <Section title="Tokens">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {SWATCHES.map(([name, token]) => (

@@ -3,6 +3,7 @@ import useAuthStore from '../store/authStore';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 
+import { BrandMark } from './shared/Brand';
 // Safe availability gate used when the app cannot verify whether encrypted
 // server state already exists. Retrying is the only in-app recovery action: no
 // key is generated or replaced while the answer is unknown.
@@ -12,7 +13,7 @@ export default function AccountKeyUnavailableScreen({ lang = 'fr', onRetry }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10" style={{ background: 'var(--q-canvas)' }}>
       <div className="w-full max-w-sm flex flex-col items-center">
-        <img src="/logo.svg" alt={APP_NAME} className="w-12 h-12 rounded-2xl mb-6" />
+        <BrandMark size={48} title={APP_NAME} className="mb-6" />
 
         <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ background: 'var(--q-selected)' }}>
           <ShieldAlert size={24} style={{ color: 'var(--q-royal-text)' }} />

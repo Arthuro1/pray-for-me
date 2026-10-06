@@ -5,8 +5,8 @@
   "description": "A Scripture-first prayer companion for building a faithful life of prayer and intercession.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#30213f",
-  "theme_color": "#30213f",
+  "background_color": "#3A2D5C",
+  "theme_color": "#29213F",
   "scope": "/",
   "lang": "en",
   "icons": [

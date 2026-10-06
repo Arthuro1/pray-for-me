@@ -19,6 +19,7 @@ import PrayerMusicControl from './PrayerMusicControl';
 import RiseMark from './shared/RiseMark';
 import { APP_NAME } from '../lib/brand';
 
+import { BrandLockup } from './shared/Brand';
 // The guest prayer moment intentionally has no imports from prayerStore,
 // Supabase, Scripture lookup, authenticated crypto, community, or reminders.
 // The visitor's text remains encrypted on this device until they explicitly
@@ -215,10 +216,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         className="first-prayer-panel"
       >
         <header className="flex min-h-11 items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
-            <span className="brand-wordmark text-base">{APP_NAME}</span>
-          </div>
+          <BrandLockup size={30} />
           <button
             type="button"
             onClick={onFinish}

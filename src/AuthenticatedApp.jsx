@@ -58,6 +58,7 @@ import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
 import { Loader2 } from 'lucide-react';
 import { APP_NAME } from './lib/brand';
 
+import { BrandLoader } from './components/shared/Brand';
 // Fallback shown while a lazily-loaded route chunk is fetched.
 function PageLoader() {
   return (
@@ -413,12 +414,7 @@ export default function AuthenticatedApp({
 
   if (authLoading || !localeReady || (user && !vaultChecked)) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--q-royal-deep)' }}>
-        <div className="text-center text-white">
-          <img src="/logo.svg" alt={APP_NAME} className="w-16 h-16 rounded-2xl mx-auto mb-4" />
-          <Loader2 className="animate-spin mx-auto" size={24} />
-        </div>
-      </div>
+      <BrandLoader label={APP_NAME} />
     );
   }
 

@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   isLocaleLoaded,
@@ -10,6 +9,7 @@ import { shouldLoadAuthenticatedShell } from './lib/authSessionHint';
 import { pwaShortcutAction } from './lib/pwaInstall';
 import { APP_NAME } from './lib/brand';
 
+import { BrandLoader } from './components/shared/Brand';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const GuestPrayerFlow = lazy(() => import('./components/GuestPrayerFlow'));
 const AuthenticatedApp = lazy(() => import('./AuthenticatedApp'));
@@ -18,14 +18,7 @@ const AuthenticatedApp = lazy(() => import('./AuthenticatedApp'));
 const DesignGallery = import.meta.env.DEV ? lazy(() => import('./dev/DesignGallery')) : null;
 
 function AppLoader() {
-  return (
-    <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--q-royal-deep)' }}>
-      <div className="text-center text-white">
-        <img src="/logo.svg" alt={APP_NAME} className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
-        <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
-      </div>
-    </div>
-  );
+  return <BrandLoader label={APP_NAME} />;
 }
 
 function anonymousLanguage() {

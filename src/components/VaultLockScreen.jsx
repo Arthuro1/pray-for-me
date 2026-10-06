@@ -4,6 +4,7 @@ import VaultModal from './VaultModal';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 
+import { BrandMark } from './shared/Brand';
 // The full-screen gate shown when a Prayer Vault exists but is locked. It is a
 // hard gate (encrypted content must never render without the key), but instead
 // of a bare modal it explains WHY the app is locked, reassures the user about
@@ -16,7 +17,7 @@ export default function VaultLockScreen({ lang = 'fr' }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10" style={{ background: 'var(--q-canvas)' }}>
       <div className="w-full max-w-sm flex flex-col items-center">
-        <img src="/logo.svg" alt={APP_NAME} className="w-12 h-12 rounded-2xl mb-6" />
+        <BrandMark size={48} title={APP_NAME} className="mb-6" />
 
         <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ background: 'var(--q-selected)' }}>
           <Lock size={24} style={{ color: 'var(--q-royal-text)' }} />

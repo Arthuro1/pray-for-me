@@ -8,6 +8,7 @@ import NotificationBell from './NotificationBell';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 
+import { BrandLockup, BrandMark } from './shared/Brand';
 // A small count badge. The number itself is announced through the destination's
 // aria-label (e.g. "Community, 3 pending"), so the visual pill is aria-hidden to
 // avoid a screen reader reading the digits twice. Royal purple, not an alarm
@@ -126,13 +127,8 @@ export default function Layout({ children, onAddPrayer }) {
         }}
       >
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
-          {!collapsed && (
-            <div className="flex items-center gap-2.5 overflow-hidden">
-              <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg shrink-0" />
-              <span className="brand-wordmark text-base whitespace-nowrap" style={{ color: 'var(--q-text)' }}>{APP_NAME}</span>
-            </div>
-          )}
-          {collapsed && <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg mx-auto" />}
+          {!collapsed && <BrandLockup size={30} className="overflow-hidden" />}
+          {collapsed && <BrandMark size={30} title={APP_NAME} className="mx-auto" />}
           <div className="flex items-center gap-1 shrink-0">
             {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--q-text-tertiary)' }} />}
             <button
@@ -217,10 +213,7 @@ export default function Layout({ children, onAddPrayer }) {
             borderBottom: '1px solid var(--q-border)',
           }}
         >
-          <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt={APP_NAME} className="w-7 h-7 rounded-lg" />
-            <span className="brand-wordmark text-base" style={{ color: 'var(--q-text)' }}>{APP_NAME}</span>
-          </div>
+          <BrandLockup size={28} />
           <NotificationBell className="w-9 h-9" style={{ color: 'var(--q-text-secondary)' }} />
         </header>
       )}

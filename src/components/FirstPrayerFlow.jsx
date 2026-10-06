@@ -16,6 +16,7 @@ import PrayerSession from './PrayerSession';
 import { PrimaryButton, SecondaryButton, SectionLabel } from './shared/Primitives';
 import { APP_NAME } from '../lib/brand';
 
+import { BrandLockup } from './shared/Brand';
 // The first prayer, in two modes:
 //
 //   member — the signed-in first-run experience (unchanged): one screen asks what
@@ -172,10 +173,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         className="first-prayer-panel"
       >
         <header className="flex min-h-11 items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
-            <span className="brand-wordmark text-base">{APP_NAME}</span>
-          </div>
+          <BrandLockup size={30} />
           <button
             type="button"
             onClick={onFinish}

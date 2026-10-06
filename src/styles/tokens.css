@@ -29,6 +29,9 @@
   --q-gold-text: #856126;
   --q-gold-soft: #E3D2AE;
   --q-gold-inverse: #C6A15C;
+  /* The brand mark: a purple Q with gold incense on light; alabaster on dark. */
+  --q-mark: var(--q-royal);
+  --q-mark-incense: var(--q-gold);
 
   /* Actions */
   --q-action-primary: var(--q-royal);
@@ -112,6 +115,7 @@
   --q-royal-text: #9486C8;
   --q-royal-light: #9486C8;
   --q-royal-deep: #211A37;
+  --q-mark: #F1EEE8;
   --q-gold: #C6A15C;
   --q-gold-text: #C6A15C;
   --q-gold-soft: #443821;

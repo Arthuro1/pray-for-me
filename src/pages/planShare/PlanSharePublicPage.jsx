@@ -4,8 +4,8 @@ import { planById } from '../../lib/guidedPlan';
 import { parsePlanSharePath, savePendingPlanJoin } from '../../lib/planShareLink';
 import { usePlanShareInvite } from '../../hooks/usePlanShareInvite';
 import { PlanJoinControls, PlanSharePreview } from './PlanSharePreview';
-import { APP_NAME } from '../../lib/brand';
 
+import { BrandLockup } from '../../components/shared/Brand';
 // What someone without an account sees when they open a shared plan link:
 // the plan itself, readable before anything is asked of them, and one action.
 // "Join this plan" remembers their choice on this device and leads to sign-up;
@@ -28,7 +28,7 @@ export default function PlanSharePublicPage({ lang, onJoin, onSignIn }) {
     <div className="constellation-plan-share relative flex min-h-screen flex-col">
       <header className="relative mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
         <a href="/" className="flex min-h-11 items-center gap-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
-          <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" /> <span className="brand-wordmark text-base">{APP_NAME}</span>
+          <BrandLockup size={30} />
         </a>
         <button type="button" onClick={onSignIn} className="min-h-11 px-2 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
           {t(lang, 'authLogIn')}

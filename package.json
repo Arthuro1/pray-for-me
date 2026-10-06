@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:verses": "node scripts/build-verse-bundle.mjs",
     "build:covers": "node scripts/build-covers.mjs",
+    "build:brand": "node scripts/build-brand.mjs",
     "build:icons": "node scripts/build-icons.mjs",
     "build:plan-og": "node scripts/build-plan-og.mjs",
     "check:locales": "node scripts/check-locales.mjs",

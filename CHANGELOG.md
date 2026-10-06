@@ -31,15 +31,21 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   local data (a merge dropped `clearAiEphemeralState`); AI prayer points are
   cached again; the "review what's sent to the AI" step renders again, with its
   strings restored in all 16 languages.
+- **New logo** (`docs/BRAND.md`): an elegant serif Q, open at the top, with
+  gold incense rising through it, redrawn as plain vector strokes from the
+  approved reference; Cormorant-based wordmark, lockups, monochrome and a
+  small-size cut, all generated from one master geometry (`npm run
+  build:brand`). App icon on `#3A2D5C`; favicon, PWA, Android launcher, splash
+  and store icons regenerated; theme colours updated (manifest, page, TWA). In
+  the app the mark is drawn inline and recolours for dark mode; loaders show
+  the incense rising. **Android:** the new launcher icon ships with the next AAB.
 - Dev builds only: `/__design` renders every primitive in light, dark and RTL.
 
 ### Changed — Praystead becomes Qetoret
 
 - **New name and identity.** The app is now **Qetoret** — *Let your prayers
-  rise. Build a life of prayer before God.* New mark (a serif Q with a censer
-  on its tail and incense rising through it; colour, on-light and monochrome
-  versions in `public/brand/`), warm-neutral / royal-plum / restrained-gold
-  palette in light and dark, one "rise" motion that respects reduced motion.
+  rise. Build a life of prayer before God.* New mark (superseded by the
+  redrawn logo above), one "rise" motion that respects reduced motion.
   Product constitution:
   `docs/QETORET_IDENTITY.md`. Rename map: `docs/QETORET_MIGRATION.md`.
   **Compatibility:** internal identifiers are unchanged on purpose — `pfm_*`
