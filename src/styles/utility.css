@@ -287,3 +287,79 @@
   .notif-panel-backdrop { align-items: flex-start; justify-content: flex-end; padding: 4rem var(--q-space-4) var(--q-space-4); }
   .notif-panel { width: 24rem; max-height: 70vh; border-block-end: 1px solid var(--q-border); border-radius: var(--q-radius-dialog); }
 }
+
+/* ── Sign in: the logo, one line, one clean sheet ───────────────────────── */
+html.auth-root body { background: var(--q-canvas); }
+
+.auth-experience {
+  position: relative;
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  padding: 9rem var(--q-space-4) var(--q-space-8);
+  background: var(--q-canvas);
+  color: var(--q-text);
+}
+
+.auth-back { position: fixed; z-index: 10; inset-block-start: max(var(--q-space-3), env(safe-area-inset-top)); inset-inline-start: var(--q-space-3); }
+
+.auth-brand {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: max(2.25rem, env(safe-area-inset-top));
+  inset-inline: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--q-space-2);
+  padding-inline: var(--q-space-4);
+  pointer-events: none;
+  text-align: center;
+}
+
+.auth-brand__line { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.4; }
+
+.auth-sheet {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 29rem);
+  padding: var(--q-space-6) clamp(var(--q-space-5), 5vw, var(--q-space-8)) max(var(--q-space-6), env(safe-area-inset-bottom));
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-dialog);
+  background: var(--q-surface);
+}
+
+.auth-sheet__title { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
+.auth-sheet__intro { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
+.auth-intent { margin-block-end: var(--q-space-5); text-align: center; }
+
+.auth-mode-switch { display: flex; width: 100%; margin-block-end: var(--q-space-5); }
+.auth-mode-switch button { min-height: 44px; flex: 1 1 0; }
+
+.auth-google { width: 100%; }
+.auth-google > span,
+.auth-form .primary-button > span { display: inline-flex; align-items: center; gap: var(--q-space-3); }
+
+.auth-or { display: flex; align-items: center; gap: var(--q-space-3); margin: var(--q-space-4) 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+.auth-or::before,
+.auth-or::after { height: 1px; flex: 1 1 auto; background: var(--q-border); content: ''; }
+
+.auth-form { display: grid; gap: var(--q-space-4); }
+.auth-field { position: relative; }
+.auth-field__icon { position: absolute; inset-block-start: 50%; inset-inline-start: 14px; color: var(--q-text-tertiary); pointer-events: none; transform: translateY(-50%); }
+.auth-field__input { padding-inline-start: 42px; }
+.auth-field__input--end { padding-inline-end: 48px; }
+.auth-field__toggle { position: absolute; inset-block-start: 50%; inset-inline-end: 2px; transform: translateY(-50%); }
+.auth-privacy { margin: var(--q-space-5) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; text-align: center; }
+
+@media (max-width: 639px) {
+  .auth-experience { place-items: end center; padding: 8rem 0 0; }
+  .auth-sheet { border-inline: 0; border-block-end: 0; border-radius: var(--q-radius-dialog) var(--q-radius-dialog) 0 0; }
+}
+
+/* A short phone: a smaller mark, and the sheet starts higher. */
+@media (max-width: 639px) and (max-height: 720px) {
+  .auth-experience { place-items: start center; padding-block-start: 7rem; }
+  .auth-brand { inset-block-start: max(var(--q-space-3), env(safe-area-inset-top)); gap: var(--q-space-1); }
+  .auth-brand .brand-mark { width: 36px; height: 36px; }
+}

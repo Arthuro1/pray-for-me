@@ -515,53 +515,6 @@
   outline-offset: 2px;
 }
 
-/* Auth and modal language */
-.auth-experience {
-  position: relative;
-  min-height: 100dvh;
-  display: grid;
-  place-items: end center;
-  overflow: hidden;
-  padding: 7.5rem 0 0;
-  background: var(--q-canvas);
-}
-
-.auth-brand {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: max(3.25rem, env(safe-area-inset-top));
-  inset-inline: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pointer-events: none;
-}
-
-.auth-brand h1 { font-family: var(--q-font-editorial); letter-spacing: -.025em; }
-
-.auth-sheet {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 30rem);
-  padding: 1.5rem clamp(1.25rem, 6vw, 2rem) max(2rem, env(safe-area-inset-bottom));
-  background: var(--q-surface);
-  border: 1px solid var(--q-border);
-  border-block-end: 0;
-  border-radius: var(--q-radius-dialog) var(--q-radius-dialog) 0 0;
-  box-shadow: var(--q-elevation);
-}
-
-.auth-sheet h2 { font-family: var(--q-font-editorial); font-size: 1.4rem; }
-.auth-field-icon { position: absolute; inset-inline-start: .8rem; top: 50%; transform: translateY(-50%); }
-.auth-field { min-height: 48px; padding-inline: 2.5rem .8rem; }
-.auth-password-toggle { position: absolute; inset-inline-end: .25rem; top: 50%; width: 44px; transform: translateY(-50%); }
-.auth-primary { background: var(--q-action-primary) !important; }
-
-@media (min-width: 640px) {
-  .auth-experience { place-items: center; padding: 8rem 1.5rem 1.5rem; }
-  .auth-sheet { border-block-end: 1px solid var(--q-border); border-radius: var(--q-radius-dialog); }
-}
-
 .first-prayer-experience {
   position: fixed;
   z-index: 60;
@@ -767,132 +720,7 @@ html.constellation-landing-root body {
   }
 }
 
-/* Constellation authentication and onboarding --------------------------- */
-html.constellation-auth-root body {
-  background: var(--q-canvas);
-}
-
-.constellation-auth.auth-experience {
-  place-items: center;
-  padding: 8.5rem 1rem 2rem;
-  background: var(--q-canvas);
-}
-
-.constellation-auth .auth-brand {
-  inset-block-start: max(2.5rem, env(safe-area-inset-top));
-}
-
-.constellation-auth .auth-brand h1 {
-  font-size: 1.65rem;
-  font-weight: 600;
-}
-
-.constellation-auth .auth-sheet {
-  width: min(100%, 29rem);
-  padding: 1.4rem clamp(1.15rem, 5vw, 1.8rem) max(1.5rem, env(safe-area-inset-bottom));
-  border: 1px solid var(--q-border);
-  border-radius: var(--q-radius-dialog);
-  background: var(--q-surface);
-  box-shadow: none;
-}
-
-.constellation-auth .auth-sheet h2 {
-  font-size: 1.55rem;
-  font-weight: 600;
-}
-
-.constellation-auth .auth-field {
-  border-radius: var(--q-radius-control) !important;
-}
-
-.constellation-auth .auth-field-label {
-  display: block;
-  margin-block-end: .35rem;
-  color: var(--q-text-secondary);
-  font-size: .75rem;
-  font-weight: 650;
-}
-
-.constellation-auth .auth-field-hint {
-  margin-block-start: .35rem;
-  color: var(--q-text-tertiary);
-  font-size: .7rem;
-  line-height: 1.45;
-}
-
-.constellation-auth .auth-field[aria-invalid="true"] {
-  border-color: var(--q-danger) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--q-danger) 18%, transparent);
-}
-
-.constellation-auth .auth-primary {
-  min-height: 3rem;
-  border-radius: var(--q-radius-control) !important;
-  background: var(--q-action-primary) !important;
-  box-shadow: none;
-}
-
-.constellation-auth .auth-mode-switch {
-  display: flex;
-  gap: .3rem;
-  padding: .3rem;
-  background: var(--q-surface-muted);
-  border: 1px solid var(--q-border-strong);
-  border-radius: var(--q-radius-control);
-}
-
-.constellation-auth .auth-mode-switch__option {
-  position: relative;
-  min-height: 2.8rem;
-  flex: 1;
-  padding-inline: .8rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--q-radius-control);
-  color: var(--q-text-secondary);
-  font-size: .875rem;
-  font-weight: 650;
-  transition:
-    background-color var(--q-motion-standard) var(--q-ease),
-    border-color var(--q-motion-standard) var(--q-ease),
-    color var(--q-motion-standard) var(--q-ease),
-    box-shadow var(--q-motion-standard) var(--q-ease);
-}
-
-.constellation-auth .auth-mode-switch__option[aria-pressed="true"] {
-  background: var(--q-surface);
-  border-color: var(--q-border);
-  color: var(--q-text);
-  font-weight: 650;
-}
-
-.constellation-auth .auth-mode-switch__option[aria-pressed="false"]:hover {
-  background: var(--q-selected);
-  border-color: var(--q-selected-border);
-  color: var(--q-royal-text);
-}
-
-.constellation-auth .auth-mode-switch__option:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--q-royal) 38%, transparent);
-  outline-offset: 2px;
-}
-
-.constellation-auth .auth-sheet > .flex:first-of-type,
-.constellation-auth .auth-sheet form + p {
-  border-color: var(--q-border);
-}
-
-.constellation-auth .phase-icon-button {
-  border-color: transparent;
-  background: transparent;
-  color: var(--q-text);
-}
-
-.constellation-auth .phase-icon-button:hover {
-  background: var(--q-selected);
-  color: var(--q-royal-text);
-}
-
+/* First prayer and the pray-first journey ------------------------------ */
 .constellation-onboarding.first-prayer-experience {
   background: var(--q-canvas);
   color: var(--q-text);
@@ -989,48 +817,12 @@ html.constellation-auth-root body {
 }
 
 @media (max-width: 639px) {
-  .constellation-auth.auth-experience {
-    place-items: end center;
-    padding: 7.25rem 0 0;
-  }
-
-  .constellation-auth .auth-sheet {
-    border-inline: 0;
-    border-block-end: 0;
-    border-radius: var(--q-radius-dialog) var(--q-radius-dialog) 0 0;
-  }
-
   .constellation-onboarding .first-prayer-panel {
     padding-inline: 1.35rem;
   }
 
   .constellation-onboarding .first-prayer-panel h2 {
     font-size: 2.65rem;
-  }
-}
-
-@media (max-width: 639px) and (max-height: 720px) {
-  .constellation-auth.auth-experience {
-    place-items: start center;
-    padding-block-start: 6.5rem;
-  }
-
-  .constellation-auth .auth-brand {
-    inset-block-start: max(.75rem, env(safe-area-inset-top));
-  }
-
-  .constellation-auth .auth-brand img {
-    width: 2.25rem;
-    height: 2.25rem;
-    margin-block-end: .2rem;
-  }
-
-  .constellation-auth .auth-brand h1 {
-    font-size: 1.3rem;
-  }
-
-  .constellation-auth .auth-brand p {
-    margin-block-start: 0;
   }
 }
 

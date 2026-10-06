@@ -494,6 +494,11 @@ a.prayer-row:hover { background: var(--q-hover); }
 .q-check:has(input:disabled) .q-check__control input { cursor: default; }
 .q-check:has(input:disabled) .q-check__box { opacity: 0.55; }
 
+/* A message about what just happened: an error, or a step that worked. */
+.q-notice { margin: 0; padding: var(--q-space-2) var(--q-space-3); border-radius: var(--q-radius-control); font-size: var(--q-type-meta); line-height: 1.5; }
+.q-notice--error { background: var(--q-danger-soft); color: var(--q-danger); }
+.q-notice--success { background: var(--q-success-soft); color: var(--q-success); }
+
 /* Waiting on something small: one quiet spinner, centred. */
 .q-loading { display: flex; justify-content: center; padding-block: var(--q-space-6); color: var(--q-text-tertiary); }
 

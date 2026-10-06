@@ -164,6 +164,14 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   - *Shared controls* — `Switch` draws from classes and now moves its knob
     the right way in Arabic and Persian; navigation items, tabs and counts
     in the app shell moved from inline styles to classes.
+  - *Sign in* — the logo, one line — "Come before God. Carry what matters."
+    (replacing a quoted verse, 1 Thess. 5:17, written into our translation
+    files; drafted in all 16 languages, needs a native read) — then one clean
+    sheet: Log in / Sign up as a segmented control, Google as a secondary
+    button, fields with their icon inside, one primary action, quiet text
+    links. About 250 lines of `constellation-auth` styling are gone.
+  - *Emoji* — the decorative 🙏 / 🔒 at the end of 15 messages (toasts, the
+    privacy line, the test notification) are removed in every language.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.

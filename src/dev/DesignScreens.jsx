@@ -1,7 +1,7 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
 // /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
-// /about, /settings and /inbox render the REAL screens inside the real app shell with
+// /about, /settings, /inbox, /auth and /auth-save render the REAL screens inside the real app shell with
 // sample prayers. Every store write is replaced by a local no-op first, and
 // every database query answers empty, so nothing is queued, synced, encrypted
 // or sent anywhere. Never shipped.
@@ -25,6 +25,7 @@ import MoreTab from '../pages/MoreTab';
 import AboutTab from '../pages/AboutTab';
 import SettingsTab from '../pages/SettingsTab';
 import NotificationsPage from '../pages/NotificationsPage';
+import AuthPage from '../pages/AuthPage';
 import useNotificationStore from '../store/notificationStore';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
@@ -113,7 +114,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox',
+  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -282,6 +283,11 @@ export default function DesignScreens({ screen }) {
       {SCREENS.map((s) => <Link key={s} to={`/__design/${s}`} className="rounded px-2 py-1" style={{ color: s === screen ? 'var(--q-royal-text)' : 'var(--q-text-secondary)' }}>{s}</Link>)}
     </p>
   );
+
+  // Sign-in is outside the app shell, as it is in the real app.
+  if (screen === 'auth' || screen === 'auth-save') {
+    return <AuthPage onBack={() => navigate('/__design')} intent={screen === 'auth-save' ? 'save-prayer' : undefined} />;
+  }
 
   if (screen === 'session') {
     return <PrayerSession prayers={usePrayerStore.getState().prayers.slice(0, 3)} categories={[]} lang={lang} tr={(text) => text} onClose={() => navigate('/__design/today')} />;

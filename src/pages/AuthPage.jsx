@@ -6,6 +6,7 @@ import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 
 import { BrandMark, Wordmark } from '../components/shared/Brand';
+import { Input, PrimaryButton, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Map a raw Supabase auth error to a friendly, localized, actionable message.
@@ -35,7 +36,20 @@ function friendlyAuthError(error) {
   return { key: 'errorGeneric' };
 }
 
-const inputStyle = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
+// A labelled field with a leading icon, and an optional control at its end.
+function AuthField({ id, label, icon: Icon, inputRef, end = null, hint = null, ...input }) {
+  return (
+    <div className="q-field">
+      <label htmlFor={id} className="q-field__label">{label}</label>
+      <div className="auth-field">
+        <Icon size={16} className="auth-field__icon" aria-hidden="true" />
+        <Input ref={inputRef} id={id} className={end ? 'auth-field__input auth-field__input--end' : 'auth-field__input'} {...input} />
+        {end}
+      </div>
+      {hint && <p id={hint.id} className="q-field__hint">{hint.text}</p>}
+    </div>
+  );
+}
 
 export default function AuthPage({ onBack, intent }) {
   // `intent === 'save-prayer'` is the contextual auth that follows the pray-first
@@ -73,8 +87,8 @@ export default function AuthPage({ onBack, intent }) {
   } = useAuthStore();
 
   useEffect(() => {
-    document.documentElement.classList.add('constellation-auth-root');
-    return () => document.documentElement.classList.remove('constellation-auth-root');
+    document.documentElement.classList.add('auth-root');
+    return () => document.documentElement.classList.remove('auth-root');
   }, []);
 
   const patch = (updates) => setForm((f) => ({ ...f, ...updates }));
@@ -181,88 +195,79 @@ export default function AuthPage({ onBack, intent }) {
     if (error) { showError(error); setLoading(false); }
   };
 
+  const notices = (
+    <>
+      {error && <p id="auth-form-error" role="alert" className="q-notice q-notice--error">{error}</p>}
+      {success && <p role="status" className="q-notice q-notice--success">{success}</p>}
+    </>
+  );
+
+  const submitLabel = (label) => (
+    <>
+      {loading && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+      {label}
+    </>
+  );
+
+  const emailField = (id, extra = {}) => (
+    <AuthField
+      id={id}
+      label={t(lang, 'authEmail')}
+      icon={Mail}
+      inputRef={emailRef}
+      type="email"
+      value={form.email}
+      onChange={(e) => patchField('email', e.target.value)}
+      placeholder={t(lang, 'authEmail')}
+      aria-invalid={errorField === 'email'}
+      aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
+      {...extra}
+    />
+  );
+
   return (
-    <div className="auth-experience constellation-auth">
+    <div className="auth-experience">
       {/* Back to landing page */}
       {onBack && (
-        <button
-          onClick={onBack}
-          aria-label={t(lang, 'authBackHome')}
-          className="phase-icon-button fixed top-4 z-10 flex items-center gap-1.5 text-sm font-medium px-3"
-          style={{ insetInlineStart: '1rem', width: 'auto' }}
-        >
-          <ArrowLeft size={16} /> <span className="hidden sm:inline">{t(lang, 'authBackHome')}</span>
-        </button>
+        <QuietButton icon={ArrowLeft} iconSize={16} onClick={onBack} aria-label={t(lang, 'authBackHome')} className="auth-back">
+          <span className="hidden sm:inline">{t(lang, 'authBackHome')}</span>
+        </QuietButton>
       )}
 
-      {/* Logo */}
+      {/* The logo and one line — then the sheet. */}
       <div className="auth-brand">
-        <BrandMark size={52} className="mb-3" />
-        <h1 className="m-0"><Wordmark height={30} title={APP_NAME} /></h1>
-        <p className="text-xs mt-1 italic" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authTagline')}</p>
+        <BrandMark size={48} />
+        <h1 className="m-0"><Wordmark height={28} title={APP_NAME} /></h1>
+        <p className="auth-brand__line">{t(lang, 'authTagline')}</p>
       </div>
 
-      {/* Bottom sheet */}
       <div className="auth-sheet">
         {mode === 'forgot' ? (
-          <form onSubmit={handleForgot} noValidate className="space-y-4">
+          <form onSubmit={handleForgot} noValidate className="auth-form">
             <div>
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'authResetTitle')}</h2>
-              <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authResetIntro')}</p>
+              <h2 className="auth-sheet__title">{t(lang, 'authResetTitle')}</h2>
+              <p className="auth-sheet__intro">{t(lang, 'authResetIntro')}</p>
             </div>
-            <div>
-              <label htmlFor="auth-reset-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
-              <div className="relative">
-                <Mail size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
-                <input
-                  ref={emailRef}
-                  id="auth-reset-email"
-                  type="email"
-                  autoFocus
-                  value={form.email}
-                  onChange={(e) => patchField('email', e.target.value)}
-                  placeholder={t(lang, 'authEmail')}
-                  aria-invalid={errorField === 'email'}
-                  aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
-                  className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                  style={inputStyle}
-                />
-              </div>
-            </div>
-            {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>}
-            {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-success)', background: 'var(--q-success-soft)' }}>{success}</p>}
-            <button
-              type="submit"
-              disabled={loading}
-              className="auth-primary w-full rounded-xl px-5 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
-            >
-              {loading && <Loader2 size={14} className="animate-spin" />}
-              {t(lang, 'authResetSend')}
-            </button>
-            <button
-              type="button"
-              onClick={() => switchMode('login')}
-              className="w-full text-center text-sm font-medium"
-              style={{ color: 'var(--q-royal-text)' }}
-            >
-              {t(lang, 'authBackToLogin')}
-            </button>
+            {emailField('auth-reset-email', { autoFocus: true })}
+            {notices}
+            <PrimaryButton type="submit" disabled={loading} className="w-full">{submitLabel(t(lang, 'authResetSend'))}</PrimaryButton>
+            <QuietButton onClick={() => switchMode('login')} className="w-full">{t(lang, 'authBackToLogin')}</QuietButton>
           </form>
         ) : (
           <>
             {/* Pray-first contextual header: the task is still "keep this prayer",
                 and the account is explained as what makes that possible. */}
             {savePrayerIntent && (
-              <div className="mb-5 text-center">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'authKeepPrayerTitle')}</h2>
-                <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authKeepPrayerBody')}</p>
+              <div className="auth-intent">
+                <h2 className="auth-sheet__title">{t(lang, 'authKeepPrayerTitle')}</h2>
+                <p className="auth-sheet__intro">{t(lang, 'authKeepPrayerBody')}</p>
               </div>
             )}
 
             {joinPlanIntent && (
-              <div className="mb-5 text-center">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'authJoinPlanTitle')}</h2>
-                <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authJoinPlanBody')}</p>
+              <div className="auth-intent">
+                <h2 className="auth-sheet__title">{t(lang, 'authJoinPlanTitle')}</h2>
+                <p className="auth-sheet__intro">{t(lang, 'authJoinPlanBody')}</p>
               </div>
             )}
 
@@ -272,232 +277,111 @@ export default function AuthPage({ onBack, intent }) {
                 and starts being about an app. That path is still one tap away,
                 as a plain sentence under the form. */}
             {!savePrayerIntent && (
-              <div
-                className="auth-mode-switch mb-5"
-                aria-label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
-              >
-                {['login', 'register'].map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => switchMode(m)}
-                    aria-pressed={mode === m}
-                    className="auth-mode-switch__option"
-                  >
-                    {m === 'login' ? t(lang, 'authLogIn') : t(lang, 'authSignUp')}
-                  </button>
-                ))}
-              </div>
+              <SegmentedControl
+                className="auth-mode-switch"
+                label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
+                value={mode === 'register' ? 'register' : 'login'}
+                onChange={switchMode}
+                options={[
+                  { value: 'login', label: t(lang, 'authLogIn') },
+                  { value: 'register', label: t(lang, 'authSignUp') },
+                ]}
+              />
             )}
 
             {/* Google */}
-            <button
-              type="button"
-              onClick={handleGoogle}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-3 rounded-xl py-3 text-sm font-medium mb-4 transition-colors disabled:opacity-50"
-              style={{ border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)', background: 'var(--q-surface-muted)' }}
-            >
+            <SecondaryButton onClick={handleGoogle} disabled={loading} className="auth-google">
               <img src="/assets/google-g.png" alt="" className="h-[18px] w-[18px]" aria-hidden="true" />
               {t(lang, 'authContinueGoogle')}
-            </button>
+            </SecondaryButton>
 
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex-1 h-px" style={{ background: 'var(--q-border)' }} />
-              <span className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authOr')}</span>
-              <div className="flex-1 h-px" style={{ background: 'var(--q-border)' }} />
-            </div>
+            <p className="auth-or">{t(lang, 'authOr')}</p>
 
             {mode === 'link' ? (
-              <form onSubmit={handleEmailLink} noValidate className="space-y-3">
-                <div>
-                  <label htmlFor="auth-link-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
-                  <div className="relative">
-                    <Mail size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
-                    <input
-                      ref={emailRef}
-                      id="auth-link-email"
-                      type="email"
-                      autoComplete="email"
-                      value={form.email}
-                      onChange={(e) => patchField('email', e.target.value)}
-                      placeholder={t(lang, 'authEmail')}
-                      aria-invalid={errorField === 'email'}
-                      aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
-                      className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                      style={inputStyle}
-                    />
-                  </div>
-                </div>
-
-                {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>}
-                {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-success)', background: 'var(--q-success-soft)' }}>{success}</p>}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="auth-primary w-full rounded-xl px-5 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
-                >
-                  {loading && <Loader2 size={14} className="animate-spin" />}
-                  {t(lang, 'authEmailLinkCta')}
-                </button>
-
+              <form onSubmit={handleEmailLink} noValidate className="auth-form">
+                {emailField('auth-link-email', { autoComplete: 'email' })}
+                {notices}
+                <PrimaryButton type="submit" disabled={loading} className="w-full">{submitLabel(t(lang, 'authEmailLinkCta'))}</PrimaryButton>
                 {/* Both escape hatches, plainly worded — no tab bar needed. */}
-                <button
-                  type="button"
-                  onClick={() => switchMode('register')}
-                  className="w-full text-center text-xs font-medium"
-                  style={{ color: 'var(--q-royal-text)' }}
-                >
-                  {t(lang, 'authUsePasswordInstead')}
-                </button>
+                <QuietButton onClick={() => switchMode('register')} className="w-full">{t(lang, 'authUsePasswordInstead')}</QuietButton>
               </form>
             ) : (
-            <form onSubmit={handleSubmit} noValidate className="space-y-3">
-              {/* A display name is never needed to keep a prayer. It is asked for
-                  later, where it means something (sharing with a group). */}
-              {mode === 'register' && !savePrayerIntent && (
-                <div>
-                  <label htmlFor="auth-name" className="auth-field-label">{t(lang, 'authNamePlaceholder')}</label>
-                  <div className="relative">
-                    <User size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
-                    <input
-                      id="auth-name"
-                      type="text"
-                      value={form.fullName}
-                      onChange={(e) => patchField('fullName', e.target.value)}
-                      placeholder={t(lang, 'authNamePlaceholder')}
-                      className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                      style={inputStyle}
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="auth-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
-                <div className="relative">
-                  <Mail size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
-                  <input
-                    ref={emailRef}
-                    id="auth-email"
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => patchField('email', e.target.value)}
-                    placeholder={t(lang, 'authEmail')}
-                    aria-invalid={errorField === 'email'}
-                    aria-describedby={errorField === 'email' ? 'auth-form-error' : undefined}
-                    className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                    style={inputStyle}
+              <form onSubmit={handleSubmit} noValidate className="auth-form">
+                {/* A display name is never needed to keep a prayer. It is asked for
+                    later, where it means something (sharing with a group). */}
+                {mode === 'register' && !savePrayerIntent && (
+                  <AuthField
+                    id="auth-name"
+                    label={t(lang, 'authNamePlaceholder')}
+                    icon={User}
+                    type="text"
+                    value={form.fullName}
+                    onChange={(e) => patchField('fullName', e.target.value)}
+                    placeholder={t(lang, 'authNamePlaceholder')}
                   />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="auth-password" className="auth-field-label">{t(lang, 'authPassword')}</label>
-                <div className="relative">
-                  <Lock size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
-                  <input
-                    ref={passwordRef}
-                    id="auth-password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={form.password}
-                    onChange={(e) => patchField('password', e.target.value)}
-                    placeholder={t(lang, 'authPassword')}
-                    aria-invalid={errorField === 'password'}
-                    aria-describedby={[
-                      mode === 'register' ? 'auth-password-hint' : null,
-                      errorField === 'password' ? 'auth-form-error' : null,
-                    ].filter(Boolean).join(' ') || undefined}
-                    className="auth-field w-full rounded-xl text-sm focus:outline-none"
-                    style={inputStyle}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={t(lang, 'authPassword')}
-                    aria-pressed={showPassword}
-                    className="auth-password-toggle"
-                    style={{ color: 'var(--q-text-tertiary)' }}
-                  >
-                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                  </button>
-                </div>
-                {mode === 'register' && (
-                  <p id="auth-password-hint" className="auth-field-hint">{t(lang, 'authErrWeakPass')}</p>
                 )}
-              </div>
 
-              {mode === 'login' && (
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => switchMode('forgot')}
-                    className="text-xs font-medium"
-                    style={{ color: 'var(--q-royal-text)' }}
-                  >
-                    {t(lang, 'authForgotPassword')}
-                  </button>
-                </div>
-              )}
+                {emailField('auth-email')}
 
-              {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>}
-              {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-success)', background: 'var(--q-success-soft)' }}>{success}</p>}
+                <AuthField
+                  id="auth-password"
+                  label={t(lang, 'authPassword')}
+                  icon={Lock}
+                  inputRef={passwordRef}
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={(e) => patchField('password', e.target.value)}
+                  placeholder={t(lang, 'authPassword')}
+                  aria-invalid={errorField === 'password'}
+                  aria-describedby={[
+                    mode === 'register' ? 'auth-password-hint' : null,
+                    errorField === 'password' ? 'auth-form-error' : null,
+                  ].filter(Boolean).join(' ') || undefined}
+                  hint={mode === 'register' ? { id: 'auth-password-hint', text: t(lang, 'authErrWeakPass') } : null}
+                  end={(
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={t(lang, 'authPassword')}
+                      aria-pressed={showPassword}
+                      className="icon-button auth-field__toggle"
+                    >
+                      {showPassword ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+                    </button>
+                  )}
+                />
 
-              {canResend && (
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={loading}
-                  className="w-full text-center text-xs font-medium disabled:opacity-60"
-                  style={{ color: 'var(--q-royal-text)' }}
-                >
-                  {t(lang, 'authResend')}
-                </button>
-              )}
+                {mode === 'login' && (
+                  <QuietButton onClick={() => switchMode('forgot')} className="-me-3 justify-self-end">{t(lang, 'authForgotPassword')}</QuietButton>
+                )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="auth-primary w-full rounded-xl px-5 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60"
-              >
-                {loading && <Loader2 size={14} className="animate-spin" />}
-                {mode === 'login'
-                  ? t(lang, 'authLogIn')
-                  : t(lang, savePrayerIntent ? 'authSavePrayerCta' : 'authCreateAccount')}
-              </button>
+                {notices}
 
-              {savePrayerIntent && (
-                <button
-                  type="button"
-                  onClick={() => switchMode('link')}
-                  className="w-full text-center text-xs font-medium"
-                  style={{ color: 'var(--q-royal-text)' }}
-                >
-                  {t(lang, 'authUseLinkInstead')}
-                </button>
-              )}
-            </form>
+                {canResend && (
+                  <QuietButton onClick={handleResend} disabled={loading} className="w-full">{t(lang, 'authResend')}</QuietButton>
+                )}
+
+                <PrimaryButton type="submit" disabled={loading} className="w-full">
+                  {submitLabel(mode === 'login'
+                    ? t(lang, 'authLogIn')
+                    : t(lang, savePrayerIntent ? 'authSavePrayerCta' : 'authCreateAccount'))}
+                </PrimaryButton>
+
+                {savePrayerIntent && (
+                  <QuietButton onClick={() => switchMode('link')} className="w-full">{t(lang, 'authUseLinkInstead')}</QuietButton>
+                )}
+              </form>
             )}
 
             {/* Always one tap away, in every save-prayer sub-view — the prayer
                 is waiting on this device either way. */}
             {savePrayerIntent && mode !== 'login' && (
-              <button
-                type="button"
-                onClick={() => switchMode('login')}
-                className="mt-4 w-full text-center text-sm font-medium"
-                style={{ color: 'var(--q-royal-text)' }}
-              >
-                {t(lang, 'authHaveAccount')}
-              </button>
+              <QuietButton onClick={() => switchMode('login')} className="mt-3 w-full">{t(lang, 'authHaveAccount')}</QuietButton>
             )}
           </>
         )}
 
-        <p className="text-center text-xs mt-4" style={{ color: 'var(--q-text-tertiary)' }}>
-          {t(lang, 'authPrivacyNote')}
-        </p>
+        <p className="auth-privacy">{t(lang, 'authPrivacyNote')}</p>
       </div>
     </div>
   );
