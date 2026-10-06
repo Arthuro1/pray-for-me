@@ -555,7 +555,6 @@ export default {
   "testNotif": "ማሳወቂያ ሙከራ",
   "language": "ቋንቋ",
   "private": "ጸሎቶችዎ የግል እና ደህንነቱ የተጠበቀ ነው 🔒",
-  "motto": "«የጻድቅ ሰው ጸሎት ብዙ ያደርጋል»",
   "appearance": "መልክ",
   "themeLight": "ብርሃን",
   "themeDark": "ጨለማ",

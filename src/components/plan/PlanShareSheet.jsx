@@ -125,7 +125,7 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                 <SectionLabel>{t(lang, 'planShareAnywhere')}</SectionLabel>
 
                 {link.status === 'loading' && (
-                  <div className="plan-share__loading"><Loader2 size={20} className="animate-spin" aria-hidden="true" /></div>
+                  <div className="q-loading"><Loader2 size={20} className="animate-spin" aria-hidden="true" /></div>
                 )}
 
                 {link.status === 'stopped' && (

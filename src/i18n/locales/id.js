@@ -555,7 +555,6 @@ export default {
   "testNotif": "Uji notifikasi",
   "language": "Bahasa",
   "private": "Doa Anda bersifat pribadi dan aman 🔒",
-  "motto": "“Doa orang yang benar, bila dengan yakin didoakan, sangat besar kuasanya”",
   "appearance": "Tampilan",
   "themeLight": "Terang",
   "themeDark": "Gelap",

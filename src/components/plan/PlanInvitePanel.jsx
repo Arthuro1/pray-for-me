@@ -82,7 +82,7 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
         </p>
 
         {loading ? (
-          <div className="plan-share__loading"><Loader2 size={20} className="animate-spin" aria-hidden="true" /></div>
+          <div className="q-loading"><Loader2 size={20} className="animate-spin" aria-hidden="true" /></div>
         ) : nothingToInvite ? (
           <EmptyState compact title={t(lang, 'planInviteEmpty')} />
         ) : (

@@ -555,7 +555,6 @@ export default {
   "testNotif": "Probar notificación",
   "language": "Idioma",
   "private": "Tus oraciones son privadas y seguras 🔒",
-  "motto": "«La oración ferviente del justo puede mucho»",
   "appearance": "Apariencia",
   "themeLight": "Claro",
   "themeDark": "Oscuro",

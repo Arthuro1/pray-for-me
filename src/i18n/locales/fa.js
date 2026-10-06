@@ -555,7 +555,6 @@ export default {
   "testNotif": "تست اعلان",
   "language": "زبان",
   "private": "دعاهای شما خصوصی و امن است 🔒",
-  "motto": "«دعای مرد عادل تأثیر عظیمی دارد»",
   "appearance": "ظاهر",
   "themeLight": "روشن",
   "themeDark": "تیره",

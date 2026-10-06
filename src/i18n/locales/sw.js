@@ -555,7 +555,6 @@ export default {
   "testNotif": "Jaribu arifa",
   "language": "Lugha",
   "private": "Maombi yako ni ya siri na salama 🔒",
-  "motto": "“Maombi ya mtu mwenye haki yana nguvu nyingi”",
   "appearance": "Muonekano",
   "themeLight": "Mwanga",
   "themeDark": "Giza",

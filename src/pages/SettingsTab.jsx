@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, LogOut, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
+import { Bell, BookOpen, ChevronDown, Download, Heart, KeyRound, Lock, LogOut, Mail, MessageSquare, MessageSquareText, RefreshCw, Shield, ShieldCheck, Sun, Trash2, Unlock, UserRound, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import ResourceLanguagePref from '../components/ResourceLanguagePref';
 import { toast } from '../store/toastStore';
@@ -24,7 +24,11 @@ import NotificationPreferences from '../components/NotificationPreferences';
 import Switch from '../components/shared/Switch';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
-import { PageHeader } from '../components/shared/Primitives';
+import { Input, PageHeader, QuietButton, SecondaryButton, SegmentedControl, StatusLabel } from '../components/shared/Primitives';
+import RadioRow from '../components/shared/RadioRow';
+import RiseMark from '../components/shared/RiseMark';
+import VerseAccordion from '../components/VerseAccordion';
+import { localizeRef } from '../content/teaching';
 import Avatar from '../components/shared/Avatar';
 import AvatarEditor from '../components/shared/AvatarEditor';
 import { fetchMyAvatar, saveMyAvatar } from '../lib/profileAvatars';
@@ -34,21 +38,19 @@ import { APP_NAME, FILE_PREFIX } from '../lib/brand';
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
 const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '1.0.0';
+// The verse the app was named under ("the prayer of a righteous person").
+const MOTTO_REF = 'James 5:16';
 
-function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
+// A setting with an optional switch, and whatever it opens underneath.
+function Row({ label, sub, enabled, onToggle, children }) {
   return (
-    <div className="settings-row" style={{ borderBottom: '0.5px solid var(--q-border)', paddingBottom: '14px', marginBottom: '14px' }}>
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 min-w-0">
-          {Icon && <Icon size={15} className="shrink-0" style={{ color: 'var(--q-text-tertiary)' }} />}
-          <div className="min-w-0">
-            <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{label}</p>
-            {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{sub}</p>}
-          </div>
+    <div className="settings-row">
+      <div className="settings-row__main">
+        <div className="min-w-0">
+          <p className="settings-row__label">{label}</p>
+          {sub && <p className="settings-row__sub">{sub}</p>}
         </div>
-        {onToggle !== undefined && (
-          <span className="shrink-0"><Switch checked={!!enabled} onChange={onToggle} label={label} /></span>
-        )}
+        {onToggle !== undefined && <Switch checked={!!enabled} onChange={onToggle} label={label} />}
       </div>
       {children}
     </div>
@@ -56,30 +58,37 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
 }
 
 // One compact row inside Privacy & Security: label + chevron, expanding to the
-// full card content on demand. Proper disclosure semantics (aria-expanded /
+// full content on demand. Proper disclosure semantics (aria-expanded /
 // aria-controls) and a ≥44px row — the section reads as a short list instead
 // of a long card stack.
 function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
   return (
-    <div style={{ borderBottom: '0.5px solid var(--q-border)' }}>
+    <div className="settings-disclosure">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={`${id}-body`}
-        className="w-full min-h-[48px] flex items-center gap-2.5 px-1 py-2 text-start"
+        className="settings-disclosure__trigger"
       >
-        <Icon size={15} className="shrink-0" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
-        <span className="flex-1 text-sm font-medium" style={{ color: 'var(--q-text)' }}>{label}</span>
-        <ChevronDown
-          size={14}
-          aria-hidden="true"
-          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
-        />
+        <Icon size={18} strokeWidth={1.85} aria-hidden="true" />
+        <span>{label}</span>
+        <ChevronDown size={16} aria-hidden="true" />
       </button>
-      <div id={`${id}-body`} hidden={!open} className="px-1 pb-3">
+      <div id={`${id}-body`} hidden={!open} className="settings-disclosure__body">
         {children}
       </div>
+    </div>
+  );
+}
+
+// A labelled group of settings inside a section, set off by a hairline.
+function Group({ title, sub, tone, children }) {
+  return (
+    <div className="settings-group">
+      {title && <h3 className={`settings-group__title ${tone === 'danger' ? 'settings-group__title--danger' : ''}`}>{title}</h3>}
+      {sub && <p className="settings-group__sub">{sub}</p>}
+      {children}
     </div>
   );
 }
@@ -89,27 +98,26 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
 // the reader asks for it.
 const CAP_OPTIONS = [null, 3, 5, 10];
 
-// A collapsible, labelled group of settings cards. Progressive disclosure: the
-// header stays visible so nothing is hidden from discovery, and the panel is
+// A collapsible, labelled group of settings. Progressive disclosure: the
+// heading stays visible so nothing is hidden from discovery, and the panel is
 // `hidden` when collapsed so its controls drop out of the tab order too. The
 // `id` doubles as the deep-link anchor (e.g. /settings#notifications).
 function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
   return (
     <section id={id} className="settings-section">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls={`${id}-panel`}
-        className="settings-section__trigger flex items-center gap-2.5"
-      >
-        <Icon size={16} style={{ color: 'var(--q-royal-text)' }} />
-        <h2 className="text-sm font-bold flex-1 text-left" style={{ color: 'var(--q-text)' }}>{title}</h2>
-        <ChevronDown
-          size={16}
-          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
-        />
-      </button>
+      <h2 className="settings-section__heading">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-controls={`${id}-panel`}
+          className="settings-section__trigger"
+        >
+          <Icon size={20} strokeWidth={1.85} aria-hidden="true" />
+          <span>{title}</span>
+          <ChevronDown size={18} aria-hidden="true" />
+        </button>
+      </h2>
       <div id={`${id}-panel`} hidden={!open} className="settings-section__panel">
         {children}
       </div>
@@ -134,30 +142,20 @@ function LanguageDropdown({ lang, onChange }) {
 
   return (
     <div className="relative" ref={ref}>
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 text-sm rounded-xl px-3 py-2 focus:outline-none"
-        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-      >
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="language-picker">
         <span>{active?.flag}</span>
         <span>{active?.label}</span>
-        <ChevronDown size={14} style={{ opacity: 0.6 }} />
+        <ChevronDown size={14} aria-hidden="true" />
       </button>
       {open && (
-        <div
-          className="absolute right-0 mt-1 rounded-xl overflow-hidden overflow-y-auto z-50"
-          style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', minWidth: '160px', maxHeight: '260px', boxShadow: '0 8px 24px rgba(0,0,0,0.25)' }}
-        >
+        <div className="q-menu language-picker__menu">
           {LANGUAGES.map((l) => (
             <button
               key={l.code}
               type="button"
               onClick={() => { onChange(l.code); setOpen(false); }}
-              className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors"
-              style={l.code === lang
-                ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)' }
-                : { color: 'var(--q-text-secondary)' }}
+              aria-current={l.code === lang ? 'true' : undefined}
+              className="q-menu__item"
             >
               <span>{l.flag}</span>
               <span>{l.label}</span>
@@ -388,347 +386,230 @@ export default function SettingsTab() {
     : null;
 
   return (
-    <div className="phase-page constellation-settings">
-      {/* Header */}
+    <div className="phase-page">
       <div className="phase-page__shell">
         <PageHeader
-          eyebrow={t(lang, 'settingsSecAccount')}
           title={t(lang, 'settings')}
-          subtitle={memberSince ? `${t(lang, 'memberSince')} ${memberSince}` : undefined}
           backTo="/more"
           backLabel={t(lang, 'moreTab')}
           backAriaLabel={`${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`}
-          aside={<Avatar name={displayName || ''} avatar={myAvatar} size={56} />}
         />
-        <div className="settings-profile phase-card phase-card--quiet px-4 py-3 mb-5">
-          <div className="min-w-0">
-            <p className="font-semibold truncate" style={{ color: 'var(--q-text)' }}>{displayName}</p>
-            <p className="text-xs truncate mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{user?.email}</p>
-          </div>
-        </div>
       </div>
 
       <div className="phase-content max-w-3xl">
-
-        {/* ── Account & privacy ── */}
-        <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={Shield} open={openSections.account} onToggle={() => toggleSection('account')}>
-          {/* Avatar — three controls, deliberately not a profile screen. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'profileAvatar')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'profileAvatarHint')}</p>
-            <AvatarEditor
-              lang={lang}
-              kind="user"
-              name={displayName || ''}
-              avatar={myAvatar}
-              ownerId={user?.id}
-              identityPhotoUrl={identityPhotoUrlFrom(user)}
-              onSave={handleSaveAvatar}
-            />
+        <div className="settings-profile">
+          <Avatar name={displayName || ''} avatar={myAvatar} size={56} />
+          <div className="min-w-0">
+            <p className="settings-profile__name">{displayName}</p>
+            <p className="q-meta truncate">{user?.email}</p>
+            {memberSince && <p className="q-meta">{t(lang, 'memberSince')} {memberSince}</p>}
           </div>
+        </div>
 
-          {/* Account info */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'account')}</p>
-            <div className="space-y-2.5 mb-4">
-              <div className="flex items-center gap-2.5">
-                <Mail size={14} style={{ color: 'var(--q-text-tertiary)' }} />
-                <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{user?.email}</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Shield size={14} style={{ color: 'var(--q-text-tertiary)' }} />
-                <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
-              </div>
-            </div>
-            <button
-              onClick={signOut}
-              title={t(lang, 'tipSignOut')}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ border: '1px solid color-mix(in srgb, var(--q-danger) 28%, var(--q-border))', color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}
-            >
-              <LogOut size={14} />
-              {t(lang, 'signOut')}
-            </button>
-          </div>
-        </SettingsSection>
+        <div className="settings-sections">
+          {/* ── Account ── */}
+          <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={UserRound} open={openSections.account} onToggle={() => toggleSection('account')}>
+            {/* Avatar — three controls, deliberately not a profile screen. */}
+            <Group title={t(lang, 'profileAvatar')} sub={t(lang, 'profileAvatarHint')}>
+              <AvatarEditor
+                lang={lang}
+                kind="user"
+                name={displayName || ''}
+                avatar={myAvatar}
+                ownerId={user?.id}
+                identityPhotoUrl={identityPhotoUrlFrom(user)}
+                onSave={handleSaveAvatar}
+              />
+            </Group>
 
-        {/* ── Privacy & Security — the ONE consolidated destination. Inside, a
-            compact list of disclosure ROWS instead of a long card stack; only
-            Delete account stays apart, at the bottom. ── */}
-        <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
-          <div className="rounded-2xl px-3 py-1 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            {/* Privacy Center — plain-language explanation of storage & sharing.
-                Basic privacy is free for everyone; this is never gated. */}
-            <PrivacyRow id="privacy-overview" icon={ShieldCheck} label={t(lang, 'privacyRowOverview')} open={!!openPrivacyRows.overview} onToggle={() => togglePrivacyRow('overview')}>
-              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'privacyCenterSub')}</p>
-              <button
-                onClick={() => setShowPrivacy(true)}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-              >
-                <ShieldCheck size={14} />
-                {t(lang, 'privacyCenterBtn')}
-              </button>
-            </PrivacyRow>
+            <Group title={t(lang, 'account')}>
+              <dl className="settings-facts">
+                <div><dt><Mail size={16} aria-hidden="true" /></dt><dd>{user?.email}</dd></div>
+                <div><dt><Shield size={16} aria-hidden="true" /></dt><dd>{t(lang, 'via')} <strong>{providerLabel}</strong></dd></div>
+              </dl>
+              <SecondaryButton icon={LogOut} iconSize={16} onClick={signOut} title={t(lang, 'tipSignOut')} className="mt-4">
+                {t(lang, 'signOut')}
+              </SecondaryButton>
+            </Group>
+          </SettingsSection>
 
-            {/* Prayer Vault */}
-            <PrivacyRow id="privacy-vault" icon={vaultInitialized && !vaultUnlocked ? Lock : Shield} label={t(lang, 'privacyRowVault')} open={!!openPrivacyRows.vault} onToggle={() => togglePrivacyRow('vault')}>
-              <div className="flex items-center gap-2 mb-2">
-                <p className="text-xs flex-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'vaultManageSub')}</p>
-                {vaultInitialized && (
-                  <span className="text-xs px-2 py-0.5 rounded-full shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                    {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
-                  </span>
+          {/* ── Privacy & Security — the ONE consolidated destination. Inside, a
+              compact list of disclosure ROWS instead of a long card stack; only
+              Delete account stays apart, at the bottom. ── */}
+          <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
+            <div className="settings-disclosures">
+              {/* Privacy Center — plain-language explanation of storage & sharing.
+                  Basic privacy is free for everyone; this is never gated. */}
+              <PrivacyRow id="privacy-overview" icon={ShieldCheck} label={t(lang, 'privacyRowOverview')} open={!!openPrivacyRows.overview} onToggle={() => togglePrivacyRow('overview')}>
+                <p className="settings-group__sub">{t(lang, 'privacyCenterSub')}</p>
+                <SecondaryButton icon={ShieldCheck} iconSize={16} onClick={() => setShowPrivacy(true)}>{t(lang, 'privacyCenterBtn')}</SecondaryButton>
+              </PrivacyRow>
+
+              {/* Prayer Vault */}
+              <PrivacyRow id="privacy-vault" icon={vaultInitialized && !vaultUnlocked ? Lock : Shield} label={t(lang, 'privacyRowVault')} open={!!openPrivacyRows.vault} onToggle={() => togglePrivacyRow('vault')}>
+                <p className="settings-group__sub">
+                  {t(lang, 'vaultManageSub')}
+                  {vaultInitialized && (
+                    <StatusLabel tone="royal" className="ms-2">{t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}</StatusLabel>
+                  )}
+                </p>
+
+                {!vaultInitialized && (
+                  <SecondaryButton icon={Shield} iconSize={16} onClick={() => setVaultMode('setup')}>
+                    {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
+                  </SecondaryButton>
                 )}
-              </div>
 
-              {!vaultInitialized && (
-                <button
-                  onClick={() => setVaultMode('setup')}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-                >
-                  <Shield size={14} />
-                  {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
-                </button>
-              )}
+                {vaultInitialized && !vaultUnlocked && (
+                  <SecondaryButton icon={Unlock} iconSize={16} onClick={() => setVaultMode('unlock')}>{t(lang, 'vaultUnlock')}</SecondaryButton>
+                )}
 
-              {vaultInitialized && !vaultUnlocked && (
-                <button
-                  onClick={() => setVaultMode('unlock')}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-                >
-                  <Unlock size={14} />
-                  {t(lang, 'vaultUnlock')}
-                </button>
-              )}
+                {vaultInitialized && vaultUnlocked && (
+                  <>
+                    <div className="settings-actions">
+                      <SecondaryButton icon={Lock} iconSize={16} onClick={handleLockVault}>{t(lang, 'vaultLockNow')}</SecondaryButton>
+                      <SecondaryButton icon={KeyRound} iconSize={16} onClick={() => setVaultMode('change')}>{t(lang, 'vaultChangePass')}</SecondaryButton>
+                      <SecondaryButton icon={RefreshCw} iconSize={16} onClick={() => setVaultMode('rotate')}>{t(lang, 'vaultRotateCode')}</SecondaryButton>
+                    </div>
+                    <VaultMigrationStatus lang={lang} />
+                  </>
+                )}
+              </PrivacyRow>
 
-              {vaultInitialized && vaultUnlocked && (
-                <>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={handleLockVault}
-                      className="flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                    >
-                      <Lock size={14} />
-                      {t(lang, 'vaultLockNow')}
-                    </button>
-                    <button
-                      onClick={() => setVaultMode('change')}
-                      className="flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                    >
-                      <KeyRound size={14} />
-                      {t(lang, 'vaultChangePass')}
-                    </button>
-                    <button
-                      onClick={() => setVaultMode('rotate')}
-                      className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                    >
-                      <RefreshCw size={14} />
-                      {t(lang, 'vaultRotateCode')}
-                    </button>
-                  </div>
-                  <VaultMigrationStatus lang={lang} />
-                </>
-              )}
-            </PrivacyRow>
-
-            {/* Notification privacy — what a push may reveal. Native radios; the
-                choice syncs account-wide and every scheduler honours it. Generic
-                previews stay the safest default. */}
-            <PrivacyRow id="privacy-notif" icon={Bell} label={t(lang, 'privacyRowNotif')} open={!!openPrivacyRows.notif} onToggle={() => togglePrivacyRow('notif')}>
-              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifPreviewSub')}</p>
-              <div role="radiogroup" aria-label={t(lang, 'notifPreviewTitle')} className="space-y-1.5">
-                {[
-                  { value: 'generic', labelKey: 'notifPreviewGeneric' },
-                  { value: 'count', labelKey: 'notifPreviewCount' },
-                ].map(({ value, labelKey }) => (
-                  <label key={value} className="flex items-center gap-2.5 min-h-[44px] px-2 rounded-xl cursor-pointer" style={{ background: 'var(--q-field)' }}>
-                    <input
-                      type="radio"
+              {/* Notification privacy — what a push may reveal. Native radios; the
+                  choice syncs account-wide and every scheduler honours it. Generic
+                  previews stay the safest default. */}
+              <PrivacyRow id="privacy-notif" icon={Bell} label={t(lang, 'privacyRowNotif')} open={!!openPrivacyRows.notif} onToggle={() => togglePrivacyRow('notif')}>
+                <p className="settings-group__sub">{t(lang, 'notifPreviewSub')}</p>
+                <div role="radiogroup" aria-label={t(lang, 'notifPreviewTitle')} className="grid gap-2">
+                  {[
+                    { value: 'generic', labelKey: 'notifPreviewGeneric' },
+                    { value: 'count', labelKey: 'notifPreviewCount' },
+                  ].map(({ value, labelKey }) => (
+                    <RadioRow
+                      key={value}
+                      id={`notification-detail-${value}`}
                       name="notification-detail"
-                      value={value}
+                      label={t(lang, labelKey)}
                       checked={(settings.notificationDetail || 'generic') === value}
                       onChange={() => {
                         updateSettings({ notificationDetail: value });
                         updatePushPrefs(user?.id, { notificationDetail: value }).catch(() => { /* best-effort */ });
                       }}
                     />
-                    <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, labelKey)}</span>
-                  </label>
-                ))}
-              </div>
-            </PrivacyRow>
+                  ))}
+                </div>
+              </PrivacyRow>
 
-            {/* Low data mode — device-local; defers nonessential fetches only. */}
-            <PrivacyRow id="privacy-lowdata" icon={WifiOff} label={t(lang, 'privacyRowLowData')} open={!!openPrivacyRows.lowdata} onToggle={() => togglePrivacyRow('lowdata')}>
-              <div className="flex items-start justify-between gap-3">
-                <p className="text-xs flex-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'lowDataSub')}</p>
-                <Switch
-                  checked={!!settings.lowDataMode}
-                  onChange={() => updateSettings({ lowDataMode: !settings.lowDataMode })}
-                  label={t(lang, 'lowDataTitle')}
-                />
-              </div>
-            </PrivacyRow>
-
-            {/* AI assistance — data use and consent. */}
-            <PrivacyRow id="privacy-ai" icon={Sparkles} label={t(lang, 'privacyRowAi')} open={!!openPrivacyRows.ai} onToggle={() => togglePrivacyRow('ai')}>
-              <AiDisclaimer lang={lang} variant="full" className="mb-3" />
-
-              {/* Outgoing-data preferences (mirrored from the per-request preview).
-                  The title is always sent; description is opt-in. */}
-              <div className="rounded-xl p-3 mb-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-                <p className="text-xs font-semibold mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aiDataPrefsTitle')}</p>
-                <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiDataPrefsSub')}</p>
-                <div className="flex items-center justify-between gap-3 py-1">
-                  <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aiPreviewIncludeDescription')}</span>
+              {/* Low data mode — device-local; defers nonessential fetches only. */}
+              <PrivacyRow id="privacy-lowdata" icon={WifiOff} label={t(lang, 'privacyRowLowData')} open={!!openPrivacyRows.lowdata} onToggle={() => togglePrivacyRow('lowdata')}>
+                <div className="settings-row__main">
+                  <p className="settings-group__sub mb-0">{t(lang, 'lowDataSub')}</p>
                   <Switch
-                    checked={!!settings.aiSendDescription}
-                    onChange={() => updateSettings({ aiSendDescription: !settings.aiSendDescription })}
-                    label={t(lang, 'aiPreviewIncludeDescription')}
+                    checked={!!settings.lowDataMode}
+                    onChange={() => updateSettings({ lowDataMode: !settings.lowDataMode })}
+                    label={t(lang, 'lowDataTitle')}
                   />
                 </div>
-              </div>
+              </PrivacyRow>
 
-              {aiOn ? (
-                <button
-                  onClick={handleRevokeAi}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                  style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                >
-                  <Sparkles size={14} />
-                  {t(lang, 'aiRevoke')}
-                </button>
-              ) : (
-                <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiCurrentlyOff')}</p>
-              )}
-            </PrivacyRow>
+              {/* AI assistance — data use and consent. */}
+              <PrivacyRow id="privacy-ai" icon={MessageSquareText} label={t(lang, 'privacyRowAi')} open={!!openPrivacyRows.ai} onToggle={() => togglePrivacyRow('ai')}>
+                <AiDisclaimer lang={lang} variant="full" className="mb-4" />
 
-            {/* Data export — your prayers belong to you. The ONE export surface
-                (More links here; no duplicate row elsewhere). */}
-            <PrivacyRow id="privacy-export" icon={Download} label={t(lang, 'privacyRowExport')} open={!!openPrivacyRows.export} onToggle={() => togglePrivacyRow('export')}>
-              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'exportDataSub')}</p>
-              <button
-                onClick={handleExport}
-                disabled={prayers.length === 0}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium disabled:opacity-40"
-                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-              >
-                <Download size={14} />
-                {t(lang, 'exportData')}
-              </button>
-            </PrivacyRow>
-          </div>
+                {/* Outgoing-data preferences (mirrored from the per-request preview).
+                    The title is always sent; description is opt-in. */}
+                <Row label={t(lang, 'aiDataPrefsTitle')} sub={t(lang, 'aiDataPrefsSub')} />
+                <Row
+                  label={t(lang, 'aiPreviewIncludeDescription')}
+                  enabled={settings.aiSendDescription}
+                  onToggle={() => updateSettings({ aiSendDescription: !settings.aiSendDescription })}
+                />
 
-          {/* Danger zone — irreversible account deletion (right to erasure),
-              kept APART at the bottom of the section and gated by ConfirmDialog. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '1px solid color-mix(in srgb, var(--q-danger) 28%, var(--q-border))' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--q-danger)' }}>{t(lang, 'dangerZone')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'deleteAccountSub')}</p>
-            <button
-              onClick={handleDeleteAccount}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-              style={{ border: '1px solid color-mix(in srgb, var(--q-danger) 28%, var(--q-border))', color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}
-            >
-              <Trash2 size={14} />
-              {t(lang, 'deleteAccount')}
-            </button>
-          </div>
-        </SettingsSection>
+                {aiOn ? (
+                  <SecondaryButton onClick={handleRevokeAi} className="mt-4">{t(lang, 'aiRevoke')}</SecondaryButton>
+                ) : (
+                  <p className="q-meta mt-4">{t(lang, 'aiCurrentlyOff')}</p>
+                )}
+              </PrivacyRow>
 
-        {/* ── Prayer reminders (deep-link id stays `notifications`) ── */}
-        <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
-          {/* A few per day — one calm global cap on how many prayers Today asks
-              for, so a long list stays coverable. Off = show everything. It used
-              to sit on the Plan tab between the day agenda and the plan
-              catalogue, which is a content surface, not a place for a standing
-              preference. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'perDayTitle')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'perDaySub')}</p>
-            <div className="flex gap-2 flex-wrap" role="group" aria-label={t(lang, 'perDayTitle')}>
-              {CAP_OPTIONS.map((n) => {
-                const active = (settings.maxPerDay || null) === n;
-                return (
-                  <button
-                    key={n ?? 'off'}
-                    onClick={() => updateSettings({ maxPerDay: n })}
-                    aria-pressed={active}
-                    className="min-h-[44px] px-4 rounded-xl text-sm font-medium transition-colors"
-                    style={active
-                      ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', border: '1.5px solid var(--q-royal)' }
-                      : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                  >
-                    {n ?? t(lang, 'perDayOff')}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Daily + follow-up reminders */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <div className="flex items-center gap-2 mb-4">
-              <Bell size={16} style={{ color: 'var(--q-royal-text)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'remindersTitle')}</h3>
+              {/* Data export — your prayers belong to you. The ONE export surface
+                  (More links here; no duplicate row elsewhere). */}
+              <PrivacyRow id="privacy-export" icon={Download} label={t(lang, 'privacyRowExport')} open={!!openPrivacyRows.export} onToggle={() => togglePrivacyRow('export')}>
+                <p className="settings-group__sub">{t(lang, 'exportDataSub')}</p>
+                <SecondaryButton icon={Download} iconSize={16} onClick={handleExport} disabled={prayers.length === 0}>{t(lang, 'exportData')}</SecondaryButton>
+              </PrivacyRow>
             </div>
 
-            <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
-              {settings.dailyReminderEnabled && (
-                <div className="mt-3">
-                  <div className="flex items-center gap-2">
-                    <Clock size={13} style={{ color: 'var(--q-text-tertiary)' }} />
-                    <input
+            {/* Danger zone — irreversible account deletion (right to erasure),
+                kept APART at the bottom of the section and gated by ConfirmDialog. */}
+            <Group title={t(lang, 'dangerZone')} sub={t(lang, 'deleteAccountSub')} tone="danger">
+              <SecondaryButton icon={Trash2} iconSize={16} danger onClick={handleDeleteAccount}>{t(lang, 'deleteAccount')}</SecondaryButton>
+            </Group>
+          </SettingsSection>
+
+          {/* ── Prayer reminders (deep-link id stays `notifications`) ── */}
+          <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
+            {/* A few per day — one calm global cap on how many prayers Today asks
+                for, so a long list stays coverable. Off = show everything. It used
+                to sit on the Plan tab between the day agenda and the plan
+                catalogue, which is a content surface, not a place for a standing
+                preference. */}
+            <Group title={t(lang, 'perDayTitle')} sub={t(lang, 'perDaySub')}>
+              <SegmentedControl
+                label={t(lang, 'perDayTitle')}
+                value={settings.maxPerDay || 'off'}
+                onChange={(n) => updateSettings({ maxPerDay: n === 'off' ? null : n })}
+                options={CAP_OPTIONS.map((n) => ({ value: n ?? 'off', label: n ?? t(lang, 'perDayOff') }))}
+              />
+            </Group>
+
+            {/* Daily + follow-up reminders */}
+            <Group title={t(lang, 'remindersTitle')}>
+              <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
+                {settings.dailyReminderEnabled && (
+                  <div className="settings-row__extra">
+                    <Input
                       type="time"
+                      aria-label={t(lang, 'dailyReminder')}
                       value={settings.dailyReminderTime}
                       onChange={(e) => handleReminderTimeChange(e.target.value)}
-                      className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                      style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
+                      className="w-auto"
                     />
+                    {(() => {
+                      const r = nextReminder(settings.dailyReminderTime);
+                      return (
+                        <p className="q-meta mt-2">
+                          {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
+                        </p>
+                      );
+                    })()}
                   </div>
-                  {(() => {
-                    const r = nextReminder(settings.dailyReminderTime);
-                    return (
-                      <p className="text-xs mt-2" style={{ color: 'var(--q-text-tertiary)' }}>
-                        {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
-                      </p>
-                    );
-                  })()}
-                </div>
-              )}
-            </Row>
+                )}
+              </Row>
 
-            <div style={{ paddingBottom: 0, marginBottom: 0, borderBottom: 'none' }}>
-              <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} icon={Calendar} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
+              <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
                 {settings.followUpEnabled && (
-                  <div className="mt-3">
-                    <div className="flex items-center gap-2 flex-wrap">
+                  <div className="settings-row__extra">
+                    <div className="flex flex-wrap items-center gap-2">
                       <select
+                        aria-label={t(lang, 'followUp')}
                         value={settings.followUpDays}
                         onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
-                        className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
+                        className="q-input w-auto"
                       >
                         <option value={3}>{t(lang, 'every3days')}</option>
                         <option value={7}>{t(lang, 'everyWeek')}</option>
                         <option value={14}>{t(lang, 'every2weeks')}</option>
                         <option value={30}>{t(lang, 'everyMonth')}</option>
                       </select>
-                      <div className="flex items-center gap-2">
-                        <Clock size={13} style={{ color: 'var(--q-text-tertiary)' }} />
-                        <input
-                          type="time"
-                          value={settings.followUpTime || '07:00'}
-                          onChange={(e) => handleFollowUpTimeChange(e.target.value)}
-                          className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                          style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-                        />
-                      </div>
+                      <Input
+                        type="time"
+                        aria-label={t(lang, 'followUp')}
+                        value={settings.followUpTime || '07:00'}
+                        onChange={(e) => handleFollowUpTimeChange(e.target.value)}
+                        className="w-auto"
+                      />
                     </div>
                     {(() => {
                       const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.followUpTime);
@@ -738,7 +619,7 @@ export default function SettingsTab() {
                           ? t(lang, 'tomorrow')
                           : nf.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
                       return (
-                        <p className="text-xs mt-2" style={{ color: 'var(--q-text-tertiary)' }}>
+                        <p className="q-meta mt-2">
                           {t(lang, 'nextReminder')} · {dayLabel} {nf.time}
                         </p>
                       );
@@ -746,122 +627,91 @@ export default function SettingsTab() {
                   </div>
                 )}
               </Row>
-            </div>
 
-            {settings.notificationsGranted && (
-              <button
-                onClick={() => new Notification(`${APP_NAME} 🙏`, { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
-                title={t(lang, 'tipTestNotif')}
-                className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
-                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-              >
-                {t(lang, 'testNotif')}
+              {settings.notificationsGranted && (
+                <QuietButton
+                  onClick={() => new Notification(APP_NAME, { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
+                  title={t(lang, 'tipTestNotif')}
+                  className="-ms-3 mt-2"
+                >
+                  {t(lang, 'testNotif')}
+                </QuietButton>
+              )}
+            </Group>
+
+            {/* Community notification preferences (in-app inbox + push per type) */}
+            <Group title={t(lang, 'notifPrefsTitle')} sub={t(lang, 'notifPrefsSub')}>
+              <NotificationPreferences />
+            </Group>
+          </SettingsSection>
+
+          {/* ── Appearance & language ── */}
+          <SettingsSection id="appearance" title={t(lang, 'settingsSecAppearance')} icon={Sun} open={openSections.appearance} onToggle={() => toggleSection('appearance')}>
+            <Group title={t(lang, 'appearance')}>
+              <SegmentedControl
+                label={t(lang, 'appearance')}
+                value={settings.theme === 'dark' ? 'dark' : 'light'}
+                onChange={(value) => updateSettings({ theme: value })}
+                options={[
+                  { value: 'light', label: t(lang, 'themeLight') },
+                  { value: 'dark', label: t(lang, 'themeDark') },
+                ]}
+              />
+            </Group>
+
+            <Group>
+              <div className="settings-row__main">
+                <h3 className="settings-group__title">{t(lang, 'language')}</h3>
+                <LanguageDropdown
+                  lang={lang}
+                  onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
+                />
+              </div>
+            </Group>
+
+            {/* Which languages recommended resources may be offered in. The app
+                language is always included, so this needs no setup to work. */}
+            <Group>
+              <ResourceLanguagePref lang={lang} />
+            </Group>
+          </SettingsSection>
+
+          {/* ── Support & feedback ── */}
+          <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
+            {user?.id && !user.is_anonymous && (
+              <Group>
+                <div className="settings-actions">
+                  <SecondaryButton onClick={() => setWordingMode('report')}>{t(lang, 'wordingReport')}</SecondaryButton>
+                  {canReviewWording(user) && <SecondaryButton onClick={() => setWordingMode('review')}>{t(lang, 'wordingReview')}</SecondaryButton>}
+                </div>
+              </Group>
+            )}
+
+            <Group title={t(lang, 'feedbackTitle')} sub={t(lang, 'feedbackSub')}>
+              <SecondaryButton icon={MessageSquare} iconSize={16} onClick={() => setShowFeedback(true)}>{t(lang, 'feedbackBtn')}</SecondaryButton>
+            </Group>
+
+            {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
+                never unlocks features and the whole app works without it. */}
+            <Group title={t(lang, 'donateTitle')} sub={t(lang, 'donateSub')}>
+              <SecondaryButton icon={Heart} iconSize={16} onClick={() => setShowDonate(true)}>{t(lang, 'donateBtn')}</SecondaryButton>
+            </Group>
+          </SettingsSection>
+        </div>
+
+        {/* The verse behind the app, by reference: its words come from the
+            reader's own Bible through the verse pipeline, never from our copy. */}
+        <footer className="settings-footer">
+          <RiseMark animate={false} size={24} />
+          <VerseAccordion reference={localizeRef(MOTTO_REF, lang)} lang={lang} className="settings-footer__verse">
+            {({ toggle, expanded }) => (
+              <button type="button" onClick={toggle} aria-expanded={expanded} className="scripture-ref">
+                <BookOpen size={13} aria-hidden="true" /> {localizeRef(MOTTO_REF, lang)}
               </button>
             )}
-          </div>
-
-          {/* Community notification preferences (in-app inbox + push per type) */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Bell size={16} style={{ color: 'var(--q-royal-text)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'notifPrefsTitle')}</h3>
-            </div>
-            <p className="text-xs mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifPrefsSub')}</p>
-            <NotificationPreferences />
-          </div>
-        </SettingsSection>
-
-        {/* ── Appearance & language ── */}
-        <SettingsSection id="appearance" title={t(lang, 'settingsSecAppearance')} icon={Sun} open={openSections.appearance} onToggle={() => toggleSection('appearance')}>
-          {/* Theme */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <div className="flex items-center gap-2 mb-3">
-              {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--q-royal-text)' }} /> : <Sun size={16} style={{ color: 'var(--q-royal-text)' }} />}
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'appearance')}</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }].map(({ value, icon: Icon, labelKey }) => (
-                <button
-                  key={value}
-                  onClick={() => updateSettings({ theme: value })}
-                  className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all"
-                  style={settings.theme === value
-                    ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }
-                    : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                >
-                  <Icon size={15} />
-                  {t(lang, labelKey)}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Language */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Globe size={16} style={{ color: 'var(--q-royal-text)' }} />
-                <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'language')}</h3>
-              </div>
-              <LanguageDropdown
-                lang={lang}
-                onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
-              />
-            </div>
-          </div>
-
-          {/* Which languages recommended resources may be offered in. The app
-              language is always included, so this needs no setup to work. */}
-          <ResourceLanguagePref lang={lang} />
-        </SettingsSection>
-
-        {/* ── Support & feedback ── */}
-        <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
-          {user?.id && !user.is_anonymous && <div className="rounded-2xl p-4 mb-3 space-y-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <button className="wording-action" onClick={() => setWordingMode('report')}>{t(lang, 'wordingReport')}</button>
-            {canReviewWording(user) && <button className="wording-action" onClick={() => setWordingMode('review')}>{t(lang, 'wordingReview')}</button>}
-          </div>}
-          {/* Feedback */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <MessageSquare size={16} style={{ color: 'var(--q-royal-text)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'feedbackTitle')}</h3>
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'feedbackSub')}</p>
-            <button
-              onClick={() => setShowFeedback(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-            >
-              <MessageSquare size={14} />
-              {t(lang, 'feedbackBtn')}
-            </button>
-          </div>
-
-          {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
-              never unlocks features and the whole app works without it. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Heart size={16} style={{ color: 'var(--q-success)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'donateTitle')}</h3>
-            </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'donateSub')}</p>
-            <button
-              onClick={() => setShowDonate(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)', border: '1px solid var(--q-success-border)' }}
-            >
-              <Heart size={14} />
-              {t(lang, 'donateBtn')}
-            </button>
-          </div>
-        </SettingsSection>
-
-        <div className="rounded-2xl px-6 py-5 mt-2 text-center" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-          <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'motto')}</p>
-          <p className="text-xs font-medium" style={{ color: 'var(--q-royal-text)', opacity: 0.6 }}>James 5:16</p>
-        </div>
-        <p className="text-center text-xs mt-3" style={{ color: 'var(--q-text-tertiary)' }}>{APP_NAME} v{APP_VERSION}</p>
+          </VerseAccordion>
+          <p className="q-meta">{APP_NAME} v{APP_VERSION}</p>
+        </footer>
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}

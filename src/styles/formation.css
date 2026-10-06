@@ -386,7 +386,6 @@
 
 .plan-share__more { display: grid; grid-template-columns: 1fr 1fr; gap: var(--q-space-2); }
 .plan-share__returns { margin-block-start: var(--q-space-6); padding-block-start: var(--q-space-4); border-block-start: 1px solid var(--q-border); }
-.plan-share__loading { display: flex; justify-content: center; padding-block: var(--q-space-6); color: var(--q-text-tertiary); }
 
 .plan-invite__who { display: flex; min-width: 0; align-items: center; gap: var(--q-space-3); }
 .plan-invite__who > span:last-child { overflow: hidden; color: var(--q-text); text-overflow: ellipsis; white-space: nowrap; }

@@ -555,7 +555,6 @@ export default {
   "testNotif": "测试通知",
   "language": "语言",
   "private": "您的祷告是私密且安全的 🔒",
-  "motto": "“义人祈祷所发的力量是大有功效的”",
   "appearance": "外观",
   "themeLight": "亮色",
   "themeDark": "暗色",

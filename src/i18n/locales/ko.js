@@ -555,7 +555,6 @@ export default {
   "testNotif": "알림 테스트",
   "language": "언어",
   "private": "당신의 기도는 비공개이고 안전합니다 🔒",
-  "motto": "“의인의 간구는 역사하는 힘이 큼이니라”",
   "appearance": "외관",
   "themeLight": "밝음",
   "themeDark": "어두움",

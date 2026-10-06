@@ -527,7 +527,6 @@ export default {
   "testNotif": "Tester une notification",
   "language": "Langue",
   "private": "Vos prières sont privées et sécurisées 🔒",
-  "motto": "« La prière fervente du juste a une grande efficace »",
   "appearance": "Apparence",
   "themeLight": "Clair",
   "themeDark": "Sombre",

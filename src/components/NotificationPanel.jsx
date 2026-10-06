@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, CheckCheck, X, Bell } from 'lucide-react';
+import { Loader2, CheckCheck, X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useNotificationStore from '../store/notificationStore';
 import useAuthStore from '../store/authStore';
@@ -10,6 +10,8 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { t } from '../i18n';
 import NotificationRow from './NotificationRow';
 import useGroupLookup from '../hooks/useGroupLookup';
+import { QuietButton, SecondaryButton } from './shared/Primitives';
+import EmptyState from './shared/EmptyState';
 
 // A dropdown-style panel (bottom sheet on mobile) listing the most recent
 // notifications. Clicking one marks it read and deep-links to the relevant page.
@@ -42,74 +44,53 @@ export default function NotificationPanel({ onClose }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end md:items-start md:justify-end p-0 md:p-4 md:pt-16"
-      style={{ background: 'rgba(0,0,0,0.4)' }}
-      onClick={onClose}
-    >
+    <div className="dialog-backdrop notif-panel-backdrop" onClick={onClose}>
       <div
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, 'inbox')}
-        className="w-full md:w-96 rounded-t-2xl md:rounded-2xl max-h-[80vh] md:max-h-[70vh] flex flex-col"
-        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
+        className="notif-panel"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--q-border)' }}>
-          <h2 className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--q-text)' }}>
-            <Bell size={16} /> {t(lang, 'inbox')}
-          </h2>
+        <div className="notif-panel__header">
+          <h2 className="q-dialog__title">{t(lang, 'inbox')}</h2>
           <div className="flex items-center gap-1">
             {unreadCount > 0 && (
-              <button
-                onClick={markAllRead}
-                className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg"
-                style={{ color: 'var(--q-royal-text)' }}
-              >
-                <CheckCheck size={14} /> {t(lang, 'markAllRead')}
-              </button>
+              <QuietButton icon={CheckCheck} iconSize={16} onClick={markAllRead}>{t(lang, 'markAllRead')}</QuietButton>
             )}
-            <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1 rounded-lg" style={{ color: 'var(--q-text-tertiary)' }}>
-              <X size={16} />
+            <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2">
+              <X size={18} aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        <div className="notif-panel__body">
           {loading && notifications.length === 0 ? (
-            <div className="flex justify-center py-10">
-              <Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />
-            </div>
+            <div className="q-loading py-10"><Loader2 size={20} className="animate-spin" aria-hidden="true" /></div>
           ) : error ? (
-            <div className="text-center py-10">
-              <p className="text-sm mb-3" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'notifError')}</p>
-              <button onClick={() => user?.id && fetchNotifications(user.id)} className="text-sm font-medium px-4 py-2 rounded-xl" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                {t(lang, 'retry')}
-              </button>
+            <div className="notif-error">
+              <p>{t(lang, 'notifError')}</p>
+              <SecondaryButton onClick={() => user?.id && fetchNotifications(user.id)}>{t(lang, 'retry')}</SecondaryButton>
             </div>
           ) : recent.length === 0 ? (
-            <div className="text-center py-12">
-              <Bell size={28} className="mx-auto mb-3" style={{ color: 'var(--q-text-tertiary)', opacity: 0.5 }} />
-              <p className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'notifEmpty')}</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifEmptySub')}</p>
-            </div>
+            <EmptyState compact title={t(lang, 'notifEmpty')} subtitle={t(lang, 'notifEmptySub')} />
           ) : (
-            recent.map((n) => (
-              <NotificationRow key={n.id} notification={n} lang={lang} onActivate={handleActivate} group={groupFor(n.group_id)} />
-            ))
+            <ul className="notif-list">
+              {recent.map((n) => (
+                <li key={n.id}>
+                  <NotificationRow notification={n} lang={lang} onActivate={handleActivate} group={groupFor(n.group_id)} />
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 
-        <div className="px-4 py-3 border-t" style={{ borderColor: 'var(--q-border)' }}>
-          <button
-            onClick={() => { onClose(); navigate('/notifications'); }}
-            className="w-full text-center text-sm font-medium py-2 rounded-xl"
-            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
-          >
+        <div className="notif-panel__footer">
+          <SecondaryButton onClick={() => { onClose(); navigate('/notifications'); }} className="w-full">
             {t(lang, 'seeAllNotifications')}
-          </button>
+          </SecondaryButton>
         </div>
       </div>
     </div>

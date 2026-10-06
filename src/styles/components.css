@@ -44,6 +44,14 @@
 
 .secondary-button:hover:not(:disabled) { background: var(--q-hover); }
 
+/* Irreversible actions say so in their colour, not in a filled red slab. */
+.secondary-button--danger {
+  border-color: color-mix(in srgb, var(--q-danger) 40%, var(--q-border));
+  color: var(--q-danger);
+}
+
+.secondary-button--danger:hover:not(:disabled) { background: var(--q-danger-soft); }
+
 .quiet-button {
   padding-inline: var(--q-space-3);
   background: transparent;
@@ -422,6 +430,7 @@ a.prayer-row:hover { background: var(--q-hover); }
 }
 
 .q-menu__item:hover { background: var(--q-hover); }
+.q-menu__item[aria-current="true"] { background: var(--q-selected); color: var(--q-royal-text); }
 .q-menu__item svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
 .q-menu__item--danger,
 .q-menu__item--danger svg { color: var(--q-danger); }
@@ -454,6 +463,9 @@ a.prayer-row:hover { background: var(--q-hover); }
   font-size: 1.125rem;
 }
 
+/* A small inline choice beside its label (a delivery mode, a unit). */
+.q-input--compact { min-height: 40px; padding: 8px 12px; font-size: 0.875rem; }
+
 .q-input[aria-invalid="true"],
 .q-textarea[aria-invalid="true"] { border-color: var(--q-danger); }
 
@@ -481,6 +493,49 @@ a.prayer-row:hover { background: var(--q-hover); }
 .q-check:has(input:disabled) { cursor: default; }
 .q-check:has(input:disabled) .q-check__control input { cursor: default; }
 .q-check:has(input:disabled) .q-check__box { opacity: 0.55; }
+
+/* Waiting on something small: one quiet spinner, centred. */
+.q-loading { display: flex; justify-content: center; padding-block: var(--q-space-6); color: var(--q-text-tertiary); }
+
+/* ── Switch ──────────────────────────────────────────────────────────────── */
+.q-switch {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin: calc(-1 * var(--q-space-3));
+  padding: var(--q-space-3);
+  border-radius: var(--q-radius-pill);
+}
+
+.q-switch:disabled { cursor: not-allowed; opacity: 0.4; }
+.q-switch:focus-visible { outline: 2px solid var(--q-focus); outline-offset: -4px; }
+
+.q-switch__track {
+  display: inline-flex;
+  width: 44px;
+  height: 24px;
+  align-items: center;
+  border-radius: var(--q-radius-pill);
+  background: color-mix(in srgb, var(--q-text-tertiary) 60%, var(--q-canvas));
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+
+.q-switch__knob {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--q-on-action);
+  transform: translateX(4px);
+  transition: transform var(--q-motion-standard) var(--q-ease);
+}
+
+.q-switch[aria-checked="true"] .q-switch__track { background: var(--q-action-primary); }
+.q-switch[aria-checked="true"] .q-switch__knob { transform: translateX(24px); }
+[dir="rtl"] .q-switch__knob { transform: translateX(-4px); }
+[dir="rtl"] .q-switch[aria-checked="true"] .q-switch__knob { transform: translateX(-24px); }
 
 /* ── Intercession circle option ──────────────────────────────────────────── */
 .circle-options {
@@ -840,9 +895,75 @@ label.circle-option { cursor: pointer; }
 .app-mobile-bar,
 .app-bottom-nav { background: var(--q-canvas); }
 
-.app-nav-item { transition: background-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease); }
+.app-sidebar { inset-inline-start: 0; overflow: hidden; border-inline-end: 1px solid var(--q-border); transition: width var(--q-motion-standard) var(--q-ease); }
+.app-sidebar__head { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: var(--q-space-1); margin-block-end: var(--q-space-8); padding-inline: var(--q-space-4) var(--q-space-2); }
+.app-sidebar--collapsed .app-sidebar__head { flex-direction: column; padding-inline: var(--q-space-2); }
+
+.app-nav-item {
+  position: relative;
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding: 10px 12px;
+  border-radius: var(--q-radius-control);
+  color: var(--q-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease);
+}
+
 .app-nav-item:hover { background: var(--q-hover); color: var(--q-text); }
-.app-nav-item[aria-current="page"]:hover { color: var(--q-royal-text); }
+.app-nav-item[aria-current="page"],
+.app-nav-item[aria-current="page"]:hover { color: var(--q-royal-text); font-weight: 650; }
+.app-sidebar--collapsed .app-nav-item { justify-content: center; gap: 0; padding-inline: 0; }
+
+.app-sidebar__add { justify-content: flex-start; padding-inline: 14px; }
+.app-sidebar--collapsed .app-sidebar__add { justify-content: center; padding-inline: 0; }
+
+/* Mobile: a top bar that clears the status bar of an installed app, and five
+   flat tabs above the home indicator. */
+.app-mobile-bar { height: calc(3rem + env(safe-area-inset-top)); padding-block-start: env(safe-area-inset-top); border-block-end: 1px solid var(--q-border); }
+.app-bottom-nav { padding-block-end: env(safe-area-inset-bottom); border-block-start: 1px solid var(--q-border); }
+
+.app-tab {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--q-text-tertiary);
+  text-decoration: none;
+  transition: color var(--q-motion-micro) var(--q-ease);
+}
+
+.app-tab[aria-current="page"] { color: var(--q-royal-text); }
+.app-tab__icon { position: relative; display: flex; width: 40px; height: 28px; align-items: center; justify-content: center; }
+.app-tab__label { max-width: 100%; overflow: hidden; padding-inline: 2px; font-size: 11px; line-height: 1.1; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
+.app-tab[aria-current="page"] .app-tab__label { font-weight: 600; }
+
+/* A count: royal purple, never an alarm red — an invitation to return. */
+.nav-badge {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 5px;
+  border-radius: var(--q-radius-pill);
+  background: var(--q-action-primary);
+  color: var(--q-on-action);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nav-badge--corner { position: absolute; inset-block-start: -8px; inset-inline-end: -8px; }
+.icon-button > .nav-badge--corner { inset-block-start: 4px; inset-inline-end: 4px; }
+.app-tab__icon > .nav-badge--corner { inset-block-start: -2px; inset-inline-end: 2px; }
 
 .app-nav-item__mark {
   position: absolute;
@@ -855,6 +976,7 @@ label.circle-option { cursor: pointer; }
 
 /* The one floating Add: a quiet violet square, not a social compose bubble. */
 .app-add-button {
+  inset-inline-end: 20px;
   width: 52px;
   height: 52px;
   border-radius: var(--q-radius-surface);

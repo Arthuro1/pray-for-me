@@ -527,7 +527,6 @@ export default {
   "testNotif": "Test notification",
   "language": "Language",
   "private": "Your prayers are private and secure 🔒",
-  "motto": "“The fervent prayer of a righteous person is powerful and effective”",
   "appearance": "Appearance",
   "themeLight": "Light",
   "themeDark": "Dark",

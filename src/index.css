@@ -12,6 +12,7 @@
 @import './styles/altar.css';
 @import './styles/together.css';
 @import './styles/formation.css';
+@import './styles/utility.css';
 
 /* ── Screens ───────────────────────────────────────────────────────────── */
 
@@ -514,42 +515,6 @@
   outline-offset: 2px;
 }
 
-/* Settings */
-.settings-profile {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.settings-section {
-  margin-block-end: .8rem;
-  background: var(--q-surface);
-  border: 1px solid var(--q-border);
-  border-radius: var(--q-radius-surface);
-  scroll-margin-block-start: 5rem;
-}
-
-.settings-section__trigger {
-  width: 100%;
-  padding: .8rem 1rem;
-  color: var(--q-text);
-}
-
-.settings-section__trigger h2 {
-  font-family: var(--q-font-editorial);
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-.settings-section__panel { padding: 0 .75rem .75rem; }
-
-.settings-section__panel > .rounded-2xl {
-  border-radius: var(--q-radius-surface);
-  box-shadow: none;
-}
-
-.settings-row { padding-block: .2rem; }
-
 /* Auth and modal language */
 .auth-experience {
   position: relative;
@@ -652,28 +617,6 @@
 .first-prayer-quiet:hover:not(:disabled) {
   background: color-mix(in srgb, var(--q-text-inverse) 8%, transparent);
   color: var(--q-text-inverse);
-}
-
-/* Secondary destinations ------------------------------------------------- */
-.constellation-menu {
-  border-block: 1px solid var(--q-border);
-}
-
-.constellation-menu__row {
-  min-height: 4.4rem !important;
-}
-
-.constellation-menu__row:hover {
-  background: var(--q-hover);
-}
-
-.constellation-more .page-header__eyebrow {
-  visibility: hidden;
-}
-
-.constellation-settings .rounded-2xl,
-.constellation-notifications .rounded-xl {
-  box-shadow: none !important;
 }
 
 /* Public Constellation landing ------------------------------------------- */

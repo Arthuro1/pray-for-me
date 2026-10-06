@@ -43,44 +43,25 @@ export default function NotificationRow({ notification, lang, onActivate, group 
       type="button"
       onClick={() => onActivate(notification)}
       aria-label={notificationLabel(notification, lang)}
-      className="w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors"
-      style={{
-        background: unread ? 'var(--q-selected)' : 'var(--q-surface)',
-        border: '0.5px solid var(--q-border)',
-      }}
+      className={`notif-row ${unread ? 'notif-row--unread' : ''}`}
     >
       {group ? (
         // Group context: the group's tile leads, with the type icon as a small
         // badge so the KIND of notification stays glanceable too.
-        <span className="relative shrink-0 mt-0.5" aria-hidden="true">
+        <span className="notif-row__mark notif-row__mark--group" aria-hidden="true">
           <Avatar kind="group" name={group.name} avatar={avatarConfigFrom(group)} size={36} />
-          <span
-            className="absolute -bottom-1 flex items-center justify-center w-4 h-4 rounded-full"
-            style={{ insetInlineEnd: '-0.25rem', background: 'var(--q-surface)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-border)' }}
-          >
-            <Icon size={10} strokeWidth={2.4} />
-          </span>
+          <span className="notif-row__badge"><Icon size={10} strokeWidth={2.4} /></span>
         </span>
       ) : (
-        <span
-          className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center mt-0.5"
-          style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
-          aria-hidden="true"
-        >
-          <Icon size={17} strokeWidth={2} />
+        <span className="notif-row__mark" aria-hidden="true">
+          <Icon size={17} strokeWidth={1.85} />
         </span>
       )}
-      <span className="min-w-0 flex-1">
-        <span className="block text-sm" style={{ color: 'var(--q-text)', fontWeight: unread ? 600 : 400 }}>
-          {t(lang, meta.labelKey)}
-        </span>
-        <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
-          {timeAgo(notification.created_at, lang)}
-        </span>
+      <span className="notif-row__body">
+        <span className="notif-row__label">{t(lang, meta.labelKey)}</span>
+        <span className="notif-row__time">{timeAgo(notification.created_at, lang)}</span>
       </span>
-      {unread && (
-        <span className="shrink-0 mt-2 w-2 h-2 rounded-full" style={{ background: 'var(--q-action-primary)' }} aria-hidden="true" />
-      )}
+      {unread && <span className="notif-row__dot" aria-hidden="true" />}
     </button>
   );
 }

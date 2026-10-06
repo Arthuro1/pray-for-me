@@ -555,7 +555,6 @@ export default {
   "testNotif": "通知テスト",
   "language": "言語",
   "private": "あなたの祈りはプライベートで安全です 🔒",
-  "motto": "「義人の祈りは大いに力があり、効果があります」",
   "appearance": "外観",
   "themeLight": "ライト",
   "themeDark": "ダーク",

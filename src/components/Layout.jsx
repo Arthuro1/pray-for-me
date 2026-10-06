@@ -13,17 +13,9 @@ import { BrandLockup, BrandMark } from './shared/Brand';
 // aria-label (e.g. "Community, 3 pending"), so the visual pill is aria-hidden to
 // avoid a screen reader reading the digits twice. Royal purple, not an alarm
 // red: an ordinary count is an invitation to return, not an emergency.
-function Badge({ count, className = '', style = {} }) {
+function Badge({ count, className = '' }) {
   if (!count) return null;
-  return (
-    <span
-      aria-hidden="true"
-      className={`flex items-center justify-center text-[10px] font-bold rounded-full ${className}`}
-      style={{ minWidth: 18, height: 18, padding: '0 5px', background: 'var(--q-action-primary)', color: 'var(--q-on-action)', ...style }}
-    >
-      {count > 9 ? '9+' : count}
-    </span>
-  );
+  return <span aria-hidden="true" className={`nav-badge ${className}`}>{count > 9 ? '9+' : count}</span>;
 }
 
 const SIDEBAR_FULL = 220;
@@ -110,31 +102,23 @@ export default function Layout({ children, onAddPrayer }) {
     badge ? `${label}, ${t(lang, 'navPending', { count: badge })}` : undefined;
 
   return (
-    <div
-      className={`layout-shell layout-shell--${routeName} min-h-screen flex`}
-      style={{ background: 'transparent' }}
-    >
+    <div className={`layout-shell layout-shell--${routeName} min-h-screen flex`}>
 
       {/* ── Sidebar (md+) ── */}
       <aside
-        className="app-sidebar hidden md:flex flex-col fixed top-0 h-full z-20 py-6"
-        style={{
-          width: `${sidebarWidth}px`,
-          insetInlineStart: 0,
-          borderInlineEnd: '1px solid var(--q-border)',
-          overflow: 'hidden',
-          transition: 'width var(--q-motion-standard) var(--q-ease)',
-        }}
+        className={`app-sidebar ${collapsed ? 'app-sidebar--collapsed' : ''} hidden md:flex flex-col fixed top-0 h-full z-20 py-6`}
+        style={{ width: `${sidebarWidth}px` }}
       >
-        <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
+        <div className="app-sidebar__head">
           {!collapsed && <BrandLockup size={30} className="overflow-hidden" />}
           {collapsed && <BrandMark size={30} title={APP_NAME} className="mx-auto" />}
           <div className="flex items-center gap-1 shrink-0">
-            {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--q-text-tertiary)' }} />}
+            {!collapsed && <NotificationBell />}
             <button
+              type="button"
               onClick={() => setCollapsed(!collapsed)}
-              className="pressable flex h-11 w-11 items-center justify-center rounded-full transition-colors"
-              style={{ color: 'var(--q-text-tertiary)', marginLeft: collapsed ? 0 : 4 }}
+              className="icon-button pressable"
+              aria-label={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
               title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
             >
               {collapsed ? <ChevronRight className="rtl-mirror" size={16} /> : <ChevronLeft className="rtl-mirror" size={16} />}
@@ -146,7 +130,7 @@ export default function Layout({ children, onAddPrayer }) {
             centered row so a collapsed power-user never loses access to it. */}
         {collapsed && (
           <div className="flex justify-center mb-3">
-            <NotificationBell className="w-9 h-9" style={{ color: 'var(--q-text-tertiary)' }} />
+            <NotificationBell />
           </div>
         )}
 
@@ -161,23 +145,16 @@ export default function Layout({ children, onAddPrayer }) {
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 title={collapsed ? label : undefined}
-                className="app-nav-item pressable relative flex min-h-11 items-center rounded-control text-sm no-underline"
-                style={{
-                  gap: collapsed ? 0 : 12,
-                  padding: collapsed ? '10px 0' : '10px 12px',
-                  justifyContent: collapsed ? 'center' : 'flex-start',
-                  color: active ? 'var(--q-royal-text)' : 'var(--q-text-secondary)',
-                  fontWeight: active ? 650 : 500,
-                }}
+                className="app-nav-item pressable"
               >
                 {/* Active: purple text and a 2px gold line — never a filled card. */}
                 {active && <span aria-hidden="true" className="app-nav-item__mark" />}
                 <span className="relative flex items-center">
                   <Icon size={18} strokeWidth={active ? 2.1 : 1.8} aria-hidden="true" />
-                  {collapsed && <Badge count={badge} className="absolute" style={{ top: -8, insetInlineEnd: -8 }} />}
+                  {collapsed && <Badge count={badge} className="nav-badge--corner" />}
                 </span>
                 {!collapsed && <span>{label}</span>}
-                {!collapsed && <Badge count={badge} className="ml-auto" />}
+                {!collapsed && <Badge count={badge} className="ms-auto" />}
               </Link>
             );
           })}
@@ -187,12 +164,8 @@ export default function Layout({ children, onAddPrayer }) {
           <button
             onClick={onAddPrayer}
             title={t(lang, "tipAddPrayer")}
-            className="primary-button pressable w-full"
-            style={{
-              gap: collapsed ? 0 : 10,
-              padding: collapsed ? '12px 0' : '12px 14px',
-              justifyContent: collapsed ? 'center' : 'flex-start',
-            }}
+            aria-label={collapsed ? t(lang, 'newPrayer') : undefined}
+            className="primary-button app-sidebar__add pressable w-full"
           >
             <Plus size={18} strokeWidth={2.1} aria-hidden="true" />
             {!collapsed && <span>{t(lang, 'newPrayer')}</span>}
@@ -206,15 +179,10 @@ export default function Layout({ children, onAddPrayer }) {
           normal browser tab, the notch/status-bar height when installed. */}
       {!hasOwnMobileHeader && (
         <header
-          className="app-mobile-bar md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4"
-          style={{
-            height: 'calc(3rem + env(safe-area-inset-top))',
-            paddingTop: 'env(safe-area-inset-top)',
-            borderBottom: '1px solid var(--q-border)',
-          }}
+          className="app-mobile-bar md:hidden fixed top-0 left-0 right-0 z-30 flex items-center justify-between ps-4 pe-1"
         >
           <BrandLockup size={28} />
-          <NotificationBell className="w-9 h-9" style={{ color: 'var(--q-text-secondary)' }} />
+          <NotificationBell />
         </header>
       )}
 
@@ -247,13 +215,10 @@ export default function Layout({ children, onAddPrayer }) {
           onClick={onAddPrayer}
           title={t(lang, "tipAddPrayer")}
           aria-label={t(lang, "tipAddPrayer")}
+          // Floats clear of the nav bar AND the bottom safe-area inset, at the
+          // inline end (so it mirrors to the left in RTL).
           className="app-add-button pressable md:hidden fixed z-20 flex items-center justify-center"
-          style={{
-            // Float clear of the nav bar AND the bottom safe-area inset.
-            // insetInlineEnd (not right) mirrors the FAB to the left in RTL.
-            bottom: `calc(${BOTTOM_NAV_H + 16}px + env(safe-area-inset-bottom))`,
-            insetInlineEnd: '20px',
-          }}
+          style={{ bottom: `calc(${BOTTOM_NAV_H + 16}px + env(safe-area-inset-bottom))` }}
         >
           <Plus size={24} strokeWidth={2} aria-hidden="true" />
         </button>
@@ -268,10 +233,6 @@ export default function Layout({ children, onAddPrayer }) {
         <nav
           className="app-bottom-nav md:hidden fixed bottom-0 left-0 right-0 flex z-10"
           aria-label={t(lang, 'primaryNav')}
-          style={{
-            borderTop: '1px solid var(--q-border)',
-            paddingBottom: 'env(safe-area-inset-bottom)',
-          }}
         >
           {tabs.map(({ id, path, label, icon: Icon, badge, state }) => {
             const active = isActive(path);
@@ -282,19 +243,14 @@ export default function Layout({ children, onAddPrayer }) {
                 state={state}
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
-                className="pressable flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"
-                style={{ minHeight: BOTTOM_NAV_H, color: active ? 'var(--q-royal-text)' : 'var(--q-text-tertiary)' }}
+                className="app-tab pressable"
+                style={{ minHeight: BOTTOM_NAV_H }}
               >
-                <span className="relative flex h-7 w-10 items-center justify-center">
+                <span className="app-tab__icon">
                   <Icon size={22} strokeWidth={active ? 2.1 : 1.75} aria-hidden="true" />
-                  <Badge count={badge} className="absolute" style={{ top: -2, insetInlineEnd: 2 }} />
+                  <Badge count={badge} className="nav-badge--corner" />
                 </span>
-                <span
-                  className="truncate max-w-full text-center px-0.5"
-                  style={{ fontSize: 11, lineHeight: 1.1, fontWeight: active ? 600 : 400 }}
-                >
-                  {label}
-                </span>
+                <span className="app-tab__label">{label}</span>
               </Link>
             );
           })}

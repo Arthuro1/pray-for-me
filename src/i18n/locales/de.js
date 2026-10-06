@@ -556,7 +556,6 @@ export default {
   "testNotif": "Benachrichtigung testen",
   "language": "Sprache",
   "private": "Deine Gebete sind privat und sicher 🔒",
-  "motto": "„Das flehentliche Gebet eines Gerechten vermag viel“",
   "appearance": "Erscheinungsbild",
   "themeLight": "Hell",
   "themeDark": "Dunkel",

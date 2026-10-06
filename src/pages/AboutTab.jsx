@@ -5,7 +5,7 @@ import { APP_NAME } from '../lib/brand';
 import { CIRCLES, circleLabelKey } from '../lib/circles';
 import { localizeRef } from '../content/teaching';
 import { bibleLink } from '../utils/bibleLink';
-import { CIRCLE_ICONS } from '../components/shared/circleIcons';
+import CircleGlyph from '../components/shared/CircleGlyph';
 import { PageHeader } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 
@@ -24,31 +24,22 @@ const SECTIONS = [
 
 function References({ refs, lang }) {
   return (
-    <ul className="mt-3 flex flex-wrap gap-2">
-      {refs.map((ref) => {
-        const label = localizeRef(ref, lang);
-        return (
-          <li key={ref}>
-            <a
-              href={bibleLink(ref, lang)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium"
-              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
-            >
-              <BookOpen size={11} aria-hidden="true" /> {label}
-            </a>
-          </li>
-        );
-      })}
+    <ul className="about__refs">
+      {refs.map((ref) => (
+        <li key={ref}>
+          <a href={bibleLink(ref, lang)} target="_blank" rel="noopener noreferrer" className="scripture-ref">
+            <BookOpen size={13} aria-hidden="true" /> {localizeRef(ref, lang)}
+          </a>
+        </li>
+      ))}
     </ul>
   );
 }
 
 function Section({ title, children, labelledBy }) {
   return (
-    <section className="mb-8" aria-labelledby={labelledBy}>
-      <h2 id={labelledBy} className="editorial-heading mb-2 text-2xl" style={{ color: 'var(--q-text)' }}>{title}</h2>
+    <section className="about__section" aria-labelledby={labelledBy}>
+      <h2 id={labelledBy} className="q-section-title">{title}</h2>
       {children}
     </section>
   );
@@ -59,50 +50,44 @@ export default function AboutTab() {
   const lang = settings.language || 'fr';
 
   return (
-    <div className="phase-page constellation-more">
+    <div className="phase-page">
       <div className="phase-page__shell">
         <PageHeader eyebrow={APP_NAME} title={t(lang, 'aboutTitle')} />
       </div>
 
       <div className="phase-content max-w-2xl">
-        <div className="mb-8 flex items-center gap-3">
-          <RiseMark animate={false} size={32} />
-          <p className="editorial text-xl" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'aboutTagline')}</p>
-        </div>
+        <p className="about__tagline">
+          <RiseMark animate={false} size={28} />
+          <span>{t(lang, 'aboutTagline')}</span>
+        </p>
 
         {SECTIONS.map(({ id, titleKey, bodyKey, refs }) => (
           <Section key={id} title={t(lang, titleKey)} labelledBy={`about-${id}`}>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, bodyKey)}</p>
+            <p className="about__body">{t(lang, bodyKey)}</p>
             <References refs={refs} lang={lang} />
           </Section>
         ))}
 
         <Section title={t(lang, 'aboutMovementsTitle')} labelledBy="about-movements">
-          <ol className="space-y-2">
-            {MOVEMENTS.map((m) => (
-              <li key={m} className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
-                {t(lang, `aboutMove_${m}`)}
+          <ol className="about__list">
+            {MOVEMENTS.map((m) => <li key={m}>{t(lang, `aboutMove_${m}`)}</li>)}
+          </ol>
+        </Section>
+
+        <Section title={t(lang, 'aboutCirclesTitle')} labelledBy="about-circles">
+          <p className="about__body">{t(lang, 'aboutCirclesBody')}</p>
+          <ol className="about__list about__list--circles">
+            {CIRCLES.map((circle) => (
+              <li key={circle}>
+                <CircleGlyph circle={circle} size={22} />
+                {t(lang, circleLabelKey(circle))}
               </li>
             ))}
           </ol>
         </Section>
 
-        <Section title={t(lang, 'aboutCirclesTitle')} labelledBy="about-circles">
-          <p className="mb-3 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aboutCirclesBody')}</p>
-          <ol className="flex flex-wrap gap-2">
-            {CIRCLES.map((circle) => {
-              const Icon = CIRCLE_ICONS[circle];
-              return (
-                <li key={circle} className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium" style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border)', color: 'var(--q-text-secondary)' }}>
-                  <Icon size={13} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} /> {t(lang, circleLabelKey(circle))}
-                </li>
-              );
-            })}
-          </ol>
-        </Section>
-
         <Section title={t(lang, 'aboutPromisesTitle')} labelledBy="about-promises">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aboutPromisesBody')}</p>
+          <p className="about__body">{t(lang, 'aboutPromisesBody')}</p>
         </Section>
       </div>
     </div>

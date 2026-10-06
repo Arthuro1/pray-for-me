@@ -555,7 +555,6 @@ export default {
   "testNotif": "Testar notificação",
   "language": "Idioma",
   "private": "Suas orações são privadas e seguras 🔒",
-  "motto": "“A oração fervorosa de uma pessoa justa é poderosa e eficaz”",
   "appearance": "Aparência",
   "themeLight": "Claro",
   "themeDark": "Escuro",

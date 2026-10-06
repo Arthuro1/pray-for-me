@@ -28,36 +28,34 @@ export default function MoreTab() {
   };
 
   return (
-    <div className="phase-page constellation-more">
+    <div className="phase-page">
       <div className="phase-page__shell">
-        <PageHeader
-          eyebrow={t(lang, 'moreTab')}
-          title={t(lang, 'moreTab')}
-        />
+        <PageHeader title={t(lang, 'moreTab')} />
       </div>
 
       <div className="phase-content max-w-2xl">
-        <div className="constellation-menu">
-          {items.map(({ key, icon: Icon, label, description, to }, i) => (
-            <button
-              key={key}
-              onClick={() => go(to)}
-              // Stated explicitly so the row reads as one thing — "Grow — guides
-              // and ideas to help you pray" — rather than two run-together spans.
-              aria-label={`${label} — ${description}`}
-              className="constellation-menu__row w-full flex items-center gap-3 px-1 py-3.5 text-start transition-colors"
-              style={i > 0 ? { borderTop: '0.5px solid var(--q-border)' } : {}}
-            >
-              <Icon size={18} className="shrink-0" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
-              <span className="min-w-0 flex-1">
-                <span className="block text-sm font-medium" style={{ color: 'var(--q-text)' }}>{label}</span>
-                {/* What you'll find there — one quiet line, never a second label. */}
-                <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{description}</span>
-              </span>
-              <ChevronRight size={15} className="shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
-            </button>
+        <ul className="menu-list">
+          {items.map(({ key, icon: Icon, label, description, to }) => (
+            <li key={key}>
+              <button
+                type="button"
+                onClick={() => go(to)}
+                // Stated explicitly so the row reads as one thing — "Grow — guides
+                // and ideas to help you pray" — rather than two run-together spans.
+                aria-label={`${label} — ${description}`}
+                className="menu-row"
+              >
+                <Icon size={20} strokeWidth={1.85} aria-hidden="true" />
+                <span className="menu-row__body">
+                  <span className="menu-row__title">{label}</span>
+                  {/* What you'll find there — one quiet line, never a second label. */}
+                  <span className="menu-row__description">{description}</span>
+                </span>
+                <ChevronRight className="rtl-mirror" size={16} aria-hidden="true" />
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

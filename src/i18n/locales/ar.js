@@ -555,7 +555,6 @@ export default {
   "testNotif": "اختبار الإشعار",
   "language": "اللغة",
   "private": "صلواتك خاصة وآمنة 🔒",
-  "motto": "«صلاة البار تقتدر كثيراً في فعلها»",
   "appearance": "المظهر",
   "themeLight": "فاتح",
   "themeDark": "داكن",

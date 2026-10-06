@@ -555,7 +555,6 @@ export default {
   "testNotif": "Subukan ang notification",
   "language": "Wika",
   "private": "Ang iyong mga panalangin ay pribado at ligtas 🔒",
-  "motto": "“Ang taimtim na panalangin ng taong matuwid ay may malaking kapangyarihan”",
   "appearance": "Hitsura",
   "themeLight": "Maliwanag",
   "themeDark": "Madilim",

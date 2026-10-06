@@ -137,6 +137,33 @@ and rollback notes. Unreleased entries are moved into a dated version at release
     now come from the system (tokens and classes, no inline colours), so the
     rhythm question looks the same in every form.
   - No new strings.
+- **Utility screens — software that still belongs to the prayer book** (`src/styles/utility.css`):
+  - *More* — four destinations as rows (icon, name, what is behind it); the
+    duplicated eyebrow is gone.
+  - *About Qetoret* — sections divided by hairlines with serif headings;
+    references are gold Scripture links to the reader's own Bible; the seven
+    circles are listed with their circle glyph instead of pills.
+  - *Settings* — the profile as a plain line (photo, name, email, member
+    since); five collapsible sections as hairline rows with serif titles
+    (each heading now wraps its button, as an accordion should); the cards
+    inside became flat groups; theme and "a few per day" are segmented
+    controls; notification previews use the shared choice rows; every button
+    is one of the three kinds, and deleting the account is a quiet red
+    outline instead of a filled slab. Donate is no longer green (green is
+    kept for answered prayer).
+  - *The verse under Settings* — the footer used to quote James 5:16 from
+    our own translation files in 16 languages; it now shows the reference,
+    and opening it fetches the words from the reader's Bible through the
+    verse pipeline. The `motto` string is removed from every locale.
+  - *Notifications* — the inbox and the bell's panel are rows, not tinted
+    cards: unread is a weight and a royal dot; the empty inbox is the shared
+    calm empty state; the panel is the shared sheet. The bell is a 44px
+    control (it was 32–36px) and its count sits at the inline end in RTL.
+    Notification preferences use the shared switch (the old one had no
+    switch semantics), fields and rows.
+  - *Shared controls* — `Switch` draws from classes and now moves its knob
+    the right way in Arabic and Persian; navigation items, tabs and counts
+    in the app shell moved from inline styles to classes.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.

@@ -8,7 +8,7 @@ import NotificationPanel from './NotificationPanel';
 // The notification bell + unread badge. Opens the NotificationPanel overlay.
 // Rendered in the app header (see Layout) — one instance for desktop, one for
 // mobile; only one is visible at a time via responsive classes.
-export default function NotificationBell({ className = '', style = {} }) {
+export default function NotificationBell({ className = '' }) {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const unreadCount = useNotificationStore((s) => s.unreadCount);
   const [open, setOpen] = useState(false);
@@ -19,16 +19,11 @@ export default function NotificationBell({ className = '', style = {} }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={unreadCount > 0 ? t(lang, 'notifUnreadLabel', { n: unreadCount }) : t(lang, 'inbox')}
-        className={`relative flex items-center justify-center rounded-lg transition-colors ${className}`}
-        style={style}
+        className={`icon-button pressable relative ${className}`}
       >
-        <Bell size={20} strokeWidth={1.8} />
+        <Bell size={20} strokeWidth={1.8} aria-hidden="true" />
         {unreadCount > 0 && (
-          <span
-            className="absolute flex items-center justify-center text-[10px] font-bold text-white rounded-full"
-            style={{ top: -4, right: -4, minWidth: 16, height: 16, padding: '0 4px', background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
-            aria-hidden="true"
-          >
+          <span className="nav-badge nav-badge--corner" aria-hidden="true">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

@@ -1,9 +1,10 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
 // /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
-// /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow and /guide render
-// the REAL screens inside the real app shell with sample prayers. Every store
-// write is replaced by a local no-op first, so nothing is queued, synced,
-// encrypted or sent anywhere. Never shipped.
+// /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
+// /about, /settings and /inbox render the REAL screens inside the real app shell with
+// sample prayers. Every store write is replaced by a local no-op first, and
+// every database query answers empty, so nothing is queued, synced, encrypted
+// or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
@@ -20,6 +21,11 @@ import PrayTogetherCard from '../components/PrayTogetherCard';
 import CommunityTab from '../pages/CommunityTab';
 import PlansTab from '../pages/PlansTab';
 import GrowTab from '../pages/GrowTab';
+import MoreTab from '../pages/MoreTab';
+import AboutTab from '../pages/AboutTab';
+import SettingsTab from '../pages/SettingsTab';
+import NotificationsPage from '../pages/NotificationsPage';
+import useNotificationStore from '../store/notificationStore';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 import PlanShareSheet from '../components/plan/PlanShareSheet';
@@ -58,8 +64,26 @@ function samplePrayers() {
   ];
 }
 
-// Seed the stores and swap every write for a local, in-memory version.
+// A query that answers empty however it is chained — `.select().eq()…` and an
+// `await` at the end all resolve to { data: null, error: null }.
+function offlineQuery() {
+  const result = Promise.resolve({ data: null, error: null });
+  const chain = new Proxy(() => {}, {
+    get: (_, prop) => {
+      if (prop === 'then') return result.then.bind(result);
+      if (prop === 'catch') return result.catch.bind(result);
+      return () => chain;
+    },
+    apply: () => chain,
+  });
+  return chain;
+}
+
+// Seed the stores and swap every write for a local, in-memory version. The
+// gallery never reaches the database: every query answers empty, right here.
 function seed() {
+  supabase.rpc = async () => ({ data: null, error: { message: 'design preview' } });
+  supabase.from = () => offlineQuery();
   const today = todayKey();
   const noop = async () => ({ error: null });
   const prayers = samplePrayers();
@@ -89,7 +113,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide',
+  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -182,6 +206,25 @@ function PlanTailorPreview({ lang }) {
   return plan && <PlanPersonalizeModal plan={plan} lang={lang} mode="start" ctaKey="journeyStart" onSave={() => {}} onClose={() => navigate('/__design/plans')} />;
 }
 
+// The inbox with a few reminders, two unread. Rows carry only a type and a
+// time — never content — exactly as the real ones do.
+function InboxPreview() {
+  useState(() => {
+    const noop = async () => {};
+    useNotificationStore.setState({
+      notifications: [
+        { id: 'n1', type: 'reaction_bucket', group_id: null, created_at: hoursAgo(1), read_at: null },
+        { id: 'n2', type: 'plan_invitation', group_id: null, created_at: hoursAgo(5), read_at: null },
+        { id: 'n3', type: 'testimony', group_id: null, created_at: hoursAgo(28), read_at: hoursAgo(20) },
+        { id: 'n4', type: 'friend_request', group_id: null, created_at: hoursAgo(70), read_at: hoursAgo(60) },
+      ],
+      unreadCount: 2, loading: false, error: null, hasMore: false,
+      fetchNotifications: noop, fetchMoreNotifications: noop, markRead: noop, markAllRead: noop,
+    });
+  });
+  return <NotificationsPage />;
+}
+
 // The circle picker on its own: in the real form it appears only once the
 // vault is unlocked, which a preview must never fake on a shared dev origin.
 function CirclesPreview({ lang }) {
@@ -262,6 +305,10 @@ export default function DesignScreens({ screen }) {
       )}
       {(screen === 'together' || screen === 'group') && <TogetherPreview screen={screen} />}
       {screen === 'circles' && <CirclesPreview lang={lang} />}
+      {screen === 'more' && <MoreTab />}
+      {screen === 'about' && <AboutTab />}
+      {screen === 'settings' && <SettingsTab />}
+      {screen === 'inbox' && <InboxPreview />}
       {screen === 'tend' && <PrayersTab onAdd={() => {}} />}
       {screen === 'tend' && (
         <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />

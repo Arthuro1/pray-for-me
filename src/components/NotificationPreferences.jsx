@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
-import { BellRing, Moon, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import { fetchNotificationPrefs, savePref, currentTimezone, NOTIF_TYPES, defaultMode } from '../lib/notificationPrefs';
 import { subscribeDeviceForPush } from '../push';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
+import Switch from './shared/Switch';
+import { Input } from './shared/Primitives';
 
 const TYPE_LABEL = {
   friend_request: 'notifFriendRequest',
@@ -19,15 +21,15 @@ const TYPE_LABEL = {
 
 function Toggle({ enabled, onToggle, label, sub }) {
   return (
-    <button onClick={onToggle} className="flex items-start justify-between gap-3 w-full py-2.5 text-left">
-      <span className="min-w-0">
-        <span className="block text-sm" style={{ color: 'var(--q-text)' }}>{label}</span>
-        {sub && <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{sub}</span>}
-      </span>
-      <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors mt-0.5" style={{ background: enabled ? 'var(--q-action-primary)' : 'var(--q-field-border)' }}>
-        <span className="block w-5 h-5 rounded-full bg-white transition-transform" style={{ transform: enabled ? 'translateX(16px)' : 'translateX(0)' }} />
-      </span>
-    </button>
+    <div className="settings-row">
+      <div className="settings-row__main">
+        <div className="min-w-0">
+          <p className="settings-row__label">{label}</p>
+          {sub && <p className="settings-row__sub">{sub}</p>}
+        </div>
+        <Switch checked={enabled} onChange={onToggle} label={label} />
+      </div>
+    </div>
   );
 }
 
@@ -84,8 +86,8 @@ export default function NotificationPreferences() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-6">
-        <Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />
+      <div className="q-loading">
+        <Loader2 size={18} className="animate-spin" aria-hidden="true" />
       </div>
     );
   }
@@ -106,57 +108,52 @@ export default function NotificationPreferences() {
       />
 
       {/* Quiet hours */}
-      <div className="py-3 border-t mt-1" style={{ borderColor: 'var(--q-border)' }}>
-        <div className="flex items-center gap-2 mb-2">
-          <Moon size={14} style={{ color: 'var(--q-text-tertiary)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'quietHours')}</span>
+      <div className="settings-subgroup">
+        <h4 className="settings-row__label">{t(lang, 'quietHours')}</h4>
+        <p className="settings-group__sub">{t(lang, 'quietHoursSub')}</p>
+        <div className="settings-times">
+          <label>
+            <span>{t(lang, 'quietFrom')}</span>
+            <Input
+              type="time"
+              value={acct.quiet_hours_start || ''}
+              onChange={(e) => persist('_account', { quiet_hours_start: e.target.value || null, timezone: tz }, { quiet_hours_start: e.target.value })}
+              className="w-auto"
+            />
+          </label>
+          <label>
+            <span>{t(lang, 'quietTo')}</span>
+            <Input
+              type="time"
+              value={acct.quiet_hours_end || ''}
+              onChange={(e) => persist('_account', { quiet_hours_end: e.target.value || null, timezone: tz }, { quiet_hours_end: e.target.value })}
+              className="w-auto"
+            />
+          </label>
         </div>
-        <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'quietHoursSub')}</p>
-        <div className="flex items-center gap-2 flex-wrap">
-          <label className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'quietFrom')}</label>
-          <input
-            type="time"
-            value={acct.quiet_hours_start || ''}
-            onChange={(e) => persist('_account', { quiet_hours_start: e.target.value || null, timezone: tz }, { quiet_hours_start: e.target.value })}
-            className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-          />
-          <label className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'quietTo')}</label>
-          <input
-            type="time"
-            value={acct.quiet_hours_end || ''}
-            onChange={(e) => persist('_account', { quiet_hours_end: e.target.value || null, timezone: tz }, { quiet_hours_end: e.target.value })}
-            className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-          />
-        </div>
-        {tz && <p className="text-xs mt-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'timezone')}: {tz}</p>}
+        {tz && <p className="q-meta mt-2">{t(lang, 'timezone')}: {tz}</p>}
       </div>
 
       {/* Per-type delivery mode */}
-      <div className="py-2 border-t mt-1" style={{ borderColor: 'var(--q-border)' }}>
-        <div className="flex items-center gap-2 mb-2 mt-1">
-          <BellRing size={14} style={{ color: 'var(--q-text-tertiary)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'notifByType')}</span>
-        </div>
-        <div className="space-y-1.5">
+      <div className="settings-subgroup">
+        <h4 className="settings-row__label">{t(lang, 'notifByType')}</h4>
+        <ul className="settings-types">
           {NOTIF_TYPES.map((type) => (
-            <div key={type} className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-sm min-w-0 truncate" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, TYPE_LABEL[type])}</span>
+            <li key={type}>
+              <span>{t(lang, TYPE_LABEL[type])}</span>
               <select
                 value={modeFor(type)}
                 onChange={(e) => persist(type, { delivery_mode: e.target.value }, { delivery_mode: e.target.value })}
                 aria-label={t(lang, TYPE_LABEL[type])}
-                className="text-xs rounded-lg px-2 py-1.5 focus:outline-none shrink-0"
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
+                className="q-input q-input--compact"
               >
                 <option value="immediate">{t(lang, 'modeImmediate')}</option>
                 <option value="digest">{t(lang, 'modeDigest')}</option>
                 <option value="off">{t(lang, 'modeOff')}</option>
               </select>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, cleanup, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { readFileSync } from 'node:fs';
 
 // NotificationBell subscribes to realtime on mount; stub it so the nav renders
 // in isolation.
@@ -182,8 +183,13 @@ describe('Layout — safe-area & separation', () => {
   it('separates the bottom nav from scrolling content with a hairline, not a shadow', () => {
     const { container } = renderNav();
     const nav = bottomNav(container);
-    expect(nav.style.borderTop).toContain('var(--q-border)');
-    expect(nav.style.boxShadow).toBe('');
+    expect(nav.className).toContain('app-bottom-nav');
+    // The shell is styled by its primitive class (components.css): one hairline
+    // on top, and no shadow anywhere in its rules.
+    const css = readFileSync('src/styles/components.css', 'utf8');
+    const rules = css.match(/\.app-bottom-nav \{[^}]*\}/g).join(' ');
+    expect(rules).toContain('border-block-start: 1px solid var(--q-border)');
+    expect(rules).not.toContain('box-shadow');
   });
 
   it('pads the main content clear of the nav and the bottom inset on mobile', () => {
@@ -207,8 +213,12 @@ describe('Layout — long localized labels & RTL', () => {
   it('guards every label against wrapping (truncate + a min-w-0 cell)', () => {
     const { container } = renderNav('/', 'de');
     const community = within(bottomNav(container)).getByText(t('de', 'together'));
-    expect(community.className).toMatch(/truncate/);
-    expect(community.closest('a').className).toMatch(/min-w-0/);
+    expect(community.className).toContain('app-tab__label');
+    expect(community.closest('a').className).toContain('app-tab');
+    // One line, cut with an ellipsis, inside a cell allowed to shrink.
+    const css = readFileSync('src/styles/components.css', 'utf8');
+    expect(css).toMatch(/\.app-tab__label \{[^}]*overflow: hidden;[^}]*text-overflow: ellipsis;[^}]*white-space: nowrap;/);
+    expect(css).toMatch(/\.app-tab \{[^}]*min-width: 0;/);
   });
 
   it('renders all five destinations under a right-to-left locale (Arabic)', () => {
