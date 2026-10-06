@@ -92,7 +92,7 @@ export default function DesignScreens({ screen }) {
   const prayer = usePrayerStore.getState().prayers.find((p) => p.id === 'd1');
 
   const nav = (
-    <p className="fixed bottom-24 end-3 z-[80] flex gap-1 rounded-control p-1 text-xs" style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border)' }}>
+    <p data-design-nav className="fixed bottom-24 end-3 z-[80] flex gap-1 rounded-control p-1 text-xs" style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border)' }}>
       {SCREENS.map((s) => <Link key={s} to={`/__design/${s}`} className="rounded px-2 py-1" style={{ color: s === screen ? 'var(--q-royal-text)' : 'var(--q-text-secondary)' }}>{s}</Link>)}
     </p>
   );
