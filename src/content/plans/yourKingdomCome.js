@@ -46,6 +46,8 @@ export const YOUR_KINGDOM_COME = {
   count: 14,
   emoji: '👑',
   category: 'formation',
+  primaryCircle: 'kingdom',
+  circles: ['kingdom', 'church', 'nations'],
   resourceDomains: ['christian-living'],
   titleKey: 'planKingdomTitle',
   subKey: 'planKingdomSub',

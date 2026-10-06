@@ -8,6 +8,8 @@ export const BIBLICAL_WISDOM = {
   count: 42,
   emoji: '📖',
   category: 'bible-study',
+  primaryCircle: 'self',
+  circles: ['self'],
   mode: 'study',
   resourceDomains: ['bible-study'],
   titleKey: 'planWisdomTitle',

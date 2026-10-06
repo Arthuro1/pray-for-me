@@ -96,6 +96,8 @@ export const FREEDOM_IN_CHRIST = {
   count: 30,
   version: 1,
   category: 'freedom',
+  primaryCircle: 'self',
+  circles: ['self'],
   titleKey: 'planFreedomTitle',
   subKey: 'planFreedomSub',
   // Prose stays in the authored English and French until competent speakers have

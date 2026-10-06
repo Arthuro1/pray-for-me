@@ -50,6 +50,8 @@ export const FRUIT_OF_THE_SPIRIT = {
   count: 10,
   emoji: '🍇',
   category: 'formation',
+  primaryCircle: 'self',
+  circles: ['self'],
   resourceDomains: ['christian-living'],
   titleKey: 'planFruitTitle',
   subKey: 'planFruitSub',

@@ -49,6 +49,8 @@ export const PRAYING_FOR_UNBORN_CHILD = {
   count: 21,
   emoji: '🤰',
   category: 'relationships',
+  primaryCircle: 'household',
+  circles: ['household'],
   resourceDomains: ['relationships'],
   titleKey: 'planUnbornTitle',
   subKey: 'planUnbornSub',

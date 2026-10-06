@@ -8,6 +8,8 @@ export const DAVID_HEART = {
   count: 12,
   emoji: '📖',
   category: 'bible-study',
+  primaryCircle: 'self',
+  circles: ['self'],
   mode: 'study',
   resourceDomains: ['bible-study'],
   titleKey: 'planDavidTitle',

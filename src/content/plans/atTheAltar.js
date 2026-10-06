@@ -52,6 +52,8 @@ export const AT_THE_ALTAR = {
   count: 10,
   emoji: '🕯️',
   category: 'formation',
+  primaryCircle: 'self',
+  circles: ['self', 'people', 'household', 'kingdom'],
   resourceDomains: ['christian-living'],
   titleKey: 'planZechariahTitle',
   subKey: 'planZechariahSub',

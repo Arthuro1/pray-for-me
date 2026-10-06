@@ -84,6 +84,8 @@ import { decryptJson } from '../lib/crypto/e2ee';
 import { getMasterKey } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
 import useCommunityStore from './communityStore';
+import { decryptPrayerFromStorage, encryptPrayerForStorage, encryptPrayersForCache } from '../lib/crypto/prayerCrypto';
+import { circleOf, groupByCircle } from '../lib/circles';
 
 // The flush is kicked off (un-awaited) by enqueue; drain it deterministically.
 async function drainQueue() {
@@ -457,5 +459,81 @@ describe('the Intercession Circle never reaches Supabase in plaintext', () => {
     await usePrayerStore.getState().addPrayer({ title: 'odd', circle: 'top-intercessor' });
     await drainQueue();
     expect(usePrayerStore.getState().prayers[0].circle).toBeUndefined();
+  });
+
+  it('comes back from the stored row on the load path', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'For our city', circle: 'nations' });
+    await drainQueue();
+
+    const stored = columnWrites().find((w) => w.payload?.encrypted_payload).payload;
+    const loaded = await decryptPrayerFromStorage(stored);
+    expect(loaded._locked).toBe(false);
+    expect(circleOf(loaded)).toBe('nations');
+  });
+
+  it('is never written in plaintext to the on-device cache', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'Kept on this phone', circle: 'household' });
+    const [prayer] = usePrayerStore.getState().prayers;
+
+    const [cached] = await encryptPrayersForCache([prayer]);
+    expect(cached).not.toHaveProperty('circle');
+    expect(JSON.stringify(cached)).not.toContain('household');
+    expect(circleOf(await decryptPrayerFromStorage(cached))).toBe('household');
+  });
+
+  it('survives an offline queue replay without ever becoming a column', async () => {
+    await createVault('pass');
+    globalThis.navigator.onLine = false;
+    try {
+      await usePrayerStore.getState().addPrayer({ title: 'Written on the train', circle: 'people' });
+      await flushQueue();
+      expect(pendingCount()).toBeGreaterThan(0);
+      expect(columnWrites()).toHaveLength(0);
+    } finally {
+      globalThis.navigator.onLine = true;
+    }
+    await drainQueue();
+
+    const write = columnWrites().find((w) => w.payload?.encrypted_payload);
+    expect(write.payload).not.toHaveProperty('circle');
+    expect(circleOf(await decryptPrayerFromStorage(write.payload))).toBe('people');
+  });
+
+  it('reads an unknown value back as unplaced without rewriting it', async () => {
+    await createVault('pass');
+    // A circle from a newer build, or a damaged payload.
+    const row = await encryptPrayerForStorage({ id: 'p-future', user_id: 'user-1', title: 'Later', circle: 'galaxies' });
+    const loaded = await decryptPrayerFromStorage(row);
+
+    expect(loaded.circle).toBe('galaxies'); // the stored value is kept as it was…
+    expect(circleOf(loaded)).toBeNull(); // …but this build treats it as unplaced
+    expect(groupByCircle([loaded])).toEqual([{ circle: null, prayers: [loaded] }]);
+  });
+
+  it('changes independently of categories and the prayer rhythm', async () => {
+    await createVault('pass');
+    const schedule = { type: 'weekly', days: [1] };
+    await usePrayerStore.getState().addPrayer({ title: 'Our marriage', circle: 'household', categoryIds: ['cat-1'], schedule });
+    await drainQueue();
+    const id = usePrayerStore.getState().prayers[0].id;
+    rec.writes.length = 0;
+
+    // A new circle leaves labels and rhythm untouched…
+    await usePrayerStore.getState().updatePrayer(id, { circle: 'self' });
+    await drainQueue();
+    let prayer = usePrayerStore.getState().prayers[0];
+    expect(prayer.prayer_categories).toEqual([{ category_id: 'cat-1' }]);
+    expect(prayer.schedule).toEqual(schedule);
+    expect(rec.writes.some((w) => w.table === 'prayer_categories')).toBe(false);
+    for (const w of columnWrites()) expect(w.payload).not.toHaveProperty('schedule');
+
+    // …and new labels leave the circle where it is.
+    await usePrayerStore.getState().updatePrayer(id, { categoryIds: ['cat-2'] });
+    await drainQueue();
+    prayer = usePrayerStore.getState().prayers[0];
+    expect(prayer.circle).toBe('self');
+    expect(prayer.prayer_categories).toEqual([{ category_id: 'cat-2' }]);
   });
 });

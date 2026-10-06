@@ -49,6 +49,8 @@ export const IDENTITY_IN_CHRIST = {
   count: 21,
   emoji: '✝️',
   category: 'formation',
+  primaryCircle: 'self',
+  circles: ['self'],
   resourceDomains: ['christian-living'],
   titleKey: 'planIdentityTitle',
   subKey: 'planIdentitySub',

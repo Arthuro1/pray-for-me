@@ -6,6 +6,29 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Added — Intercession Circles, Milestone A (`docs/INTERCESSION_CIRCLES.md`)
+
+- **One canonical circle model** (`src/lib/circles.js`): definitions derived
+  from the seven stable ids, read-time `normalizeCircle` (an unknown value is
+  read as unplaced and never rewritten), `circlesWithin` for the ring art, and
+  `planCircles` for optional plan metadata.
+- **Circle teaching as content, not components**
+  (`src/content/intercessionCircles/`): a short layer per circle (formation
+  statement, heading, summary, themes, Scripture anchors, call to pray) and
+  My heart's deep layer (meaning, Qetoret's seven foundations, the fruit of the
+  Spirit, prayer prompts, reflection). References only; the contract test
+  rejects quoted Scripture.
+- **Review gate for deep teaching** (`src/lib/circleReview.js`): a deep layer
+  is a draft, visible only in development or review mode (`?planPreview=1`),
+  until a named human signs theology, safety, English and French.
+- **Plans carry optional circles** (`primaryCircle`, `circles`) beside their
+  category; 18 journeys mapped, the rest deliberately left for a human call.
+- **Suggestions only from authored themes** (`src/lib/circleContext.js`); a
+  person's own labels are never interpreted.
+- **Privacy guards** extended: the circle survives the load path, the device
+  cache and offline replay without ever becoming a column, and changes
+  independently of labels and rhythm.
+
 ### Changed — Qetoret design system ("Modern Royal Priesthood")
 
 - **One token layer** (`src/styles/tokens.css`): alabaster, royal violet,

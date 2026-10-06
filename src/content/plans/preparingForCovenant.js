@@ -9,6 +9,8 @@ export const PREPARING_FOR_COVENANT = {
   count: 21,
   version: 1,
   category: 'relationships',
+  primaryCircle: 'household',
+  circles: ['household'],
   // Relationship material only: deliverance and freedom titles share topics like
   // 'healing', 'forgiveness' and 'family-line' with these days, and belong on
   // their own plan's shelf rather than this one.

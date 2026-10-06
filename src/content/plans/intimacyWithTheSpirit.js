@@ -52,6 +52,8 @@ export const INTIMACY_WITH_THE_SPIRIT = {
   count: 21,
   emoji: '🌬️',
   category: 'formation',
+  primaryCircle: 'self',
+  circles: ['self'],
   resourceDomains: ['christian-living'],
   titleKey: 'planHolySpiritTitle',
   subKey: 'planHolySpiritSub',

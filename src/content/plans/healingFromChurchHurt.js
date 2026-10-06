@@ -61,6 +61,8 @@ export const HEALING_FROM_CHURCH_HURT = {
   count: 21,
   emoji: '🩹',
   category: 'freedom',
+  primaryCircle: 'church',
+  circles: ['church', 'self'],
   resourceDomains: ['care'],
   titleKey: 'planChurchHurtTitle',
   subKey: 'planChurchHurtSub',

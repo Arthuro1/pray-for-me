@@ -51,6 +51,8 @@ export const PRAYING_FOR_UNBELIEVERS = {
   count: 30,
   emoji: '🌍',
   category: 'others',
+  primaryCircle: 'people',
+  circles: ['people', 'kingdom'],
   resourceDomains: ['mission'],
   titleKey: 'planUnbelieversTitle',
   subKey: 'planUnbelieversSub',

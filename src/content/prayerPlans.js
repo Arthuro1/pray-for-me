@@ -54,6 +54,12 @@ export const PLAN_CATEGORIES = [
 // disappears from the list just because categories were introduced.
 export const DEFAULT_PLAN_CATEGORY = 'seeking';
 
+// A category says what KIND of journey a plan is; its optional Intercession
+// Circles say where it shapes a life of prayer (`primaryCircle`, plus every
+// circle it touches in `circles`). Both stay: a circle never replaces a
+// category. The metadata is optional and read through planCircles()
+// (lib/circles.js), so a plan without it works exactly as before.
+
 // The one plan offered to someone who has never followed one — on Today and at
 // the top of the Plans page. A gentle, universal week of thanksgiving, not a
 // fast or a plan about a particular stage of life. Nothing is personalized, so
@@ -218,6 +224,8 @@ export const PLANS = [
   {
     id: 'others30',
     category: 'others',
+    primaryCircle: 'people',
+    circles: ['people', 'household', 'nations'],
     emoji: '🤝',
     count: 30,
     titleKey: 'plan30Title',

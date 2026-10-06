@@ -50,6 +50,8 @@ export const MAN_OF_GOD = {
   count: 21,
   emoji: '🌳',
   category: 'formation',
+  primaryCircle: 'self',
+  circles: ['self'],
   resourceDomains: ['christian-living'],
   titleKey: 'planManOfGodTitle',
   subKey: 'planManOfGodSub',

@@ -48,6 +48,8 @@ export const PRAYING_FOR_CHILDREN = {
   count: 21,
   emoji: '🧒',
   category: 'relationships',
+  primaryCircle: 'household',
+  circles: ['household'],
   resourceDomains: ['relationships'],
   titleKey: 'planChildrenTitle',
   subKey: 'planChildrenSub',

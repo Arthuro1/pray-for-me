@@ -49,6 +49,8 @@ export const PRAYING_FOR_A_PRODIGAL = {
   count: 30,
   emoji: '🏡',
   category: 'others',
+  primaryCircle: 'household',
+  circles: ['household', 'people'],
   resourceDomains: ['intercession'],
   titleKey: 'planProdigalTitle',
   subKey: 'planProdigalSub',
