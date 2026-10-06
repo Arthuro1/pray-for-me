@@ -1,76 +1,69 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { t } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
-import { DOT_COLORS, monthDayKeys } from '../lib/monthCalendar';
+import { DOT_KINDS, monthDayKeys } from '../lib/monthCalendar';
 
-// Month grid with per-day dots. `dots` maps dayKey -> { once, recurring, plan,
+// Month grid with per-day marks. `dots` maps dayKey -> { once, recurring, plan,
 // group } counts (see planner.monthDots; `group` is added by the community
 // commitments). Presentation-only: selection and month paging live upstream.
-// The DOT_COLORS map and monthDayKeys() helper live in lib/monthCalendar.js.
+// The DOT_KINDS list and monthDayKeys() helper live in lib/monthCalendar.js.
+
+const LEGEND = [['recurring', 'legendRecurring'], ['once', 'legendOnce'], ['plan', 'legendPlan'], ['group', 'legendGroup']];
 
 export default function MonthCalendar({ monthDate, dots, selectedKey, onSelect, onMonthChange, lang }) {
   const DAYS = t(lang, 'days');
   const keys = monthDayKeys(monthDate);
   const leading = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1).getDay();
   const today = todayKey();
-  const monthLabel = monthDate.toLocaleDateString(lang, { month: 'long', year: 'numeric' });
+  const monthOf = (delta) => new Date(monthDate.getFullYear(), monthDate.getMonth() + delta, 1);
+  const label = (date) => date.toLocaleDateString(lang, { month: 'long', year: 'numeric' });
 
-  const move = (delta) => onMonthChange(new Date(monthDate.getFullYear(), monthDate.getMonth() + delta, 1));
+  // Each arrow is named by the month it leads to, in the reader's language.
+  const arrow = (delta, Icon) => (
+    <button type="button" onClick={() => onMonthChange(monthOf(delta))} aria-label={label(monthOf(delta))} className="icon-button pressable">
+      <Icon className="rtl-mirror" size={18} aria-hidden="true" />
+    </button>
+  );
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-      <div className="flex items-center justify-between mb-3">
-        <button onClick={() => move(-1)} aria-label="←" className="p-1.5 rounded-lg" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
-          <ChevronLeft size={15} />
-        </button>
-        <p className="text-sm font-semibold capitalize" style={{ color: 'var(--q-text)' }}>{monthLabel}</p>
-        <button onClick={() => move(1)} aria-label="→" className="p-1.5 rounded-lg" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
-          <ChevronRight size={15} />
-        </button>
+    <section className="calendar">
+      <div className="calendar__head">
+        {arrow(-1, ChevronLeft)}
+        <h2 className="calendar__month">{label(monthDate)}</h2>
+        {arrow(1, ChevronRight)}
       </div>
 
-      <div className="grid grid-cols-7 gap-1 mb-1">
-        {DAYS.map((d, i) => (
-          <p key={i} className="text-center text-[10px] font-medium" style={{ color: 'var(--q-text-tertiary)' }}>{d}</p>
-        ))}
+      <div className="calendar__weekdays" aria-hidden="true">
+        {DAYS.map((d, i) => <span key={i}>{d}</span>)}
       </div>
 
-      <div className="grid grid-cols-7 gap-1">
-        {Array.from({ length: leading }).map((_, i) => <div key={`b${i}`} />)}
+      <div className="calendar__grid">
+        {Array.from({ length: leading }).map((_, i) => <span key={`b${i}`} />)}
         {keys.map((key) => {
           const d = dots[key];
-          const isToday = key === today;
-          const isSelected = key === selectedKey;
           return (
             <button
               key={key}
+              type="button"
               onClick={() => onSelect(key)}
-              className="flex flex-col items-center rounded-lg py-1 transition-colors"
-              style={{
-                background: isSelected ? 'var(--q-selected)' : 'transparent',
-                border: isSelected ? '1px solid var(--q-selected-border)' : isToday ? '1px solid var(--q-border)' : '1px solid transparent',
-              }}
+              aria-pressed={key === selectedKey}
+              aria-current={key === today ? 'date' : undefined}
+              className="calendar__day"
             >
-              <span className="text-xs" style={{ color: isSelected ? 'var(--q-royal-text)' : 'var(--q-text-secondary)', fontWeight: isToday || isSelected ? 700 : 400 }}>
-                {parseInt(key.slice(8, 10), 10)}
-              </span>
-              <span className="flex gap-0.5 mt-0.5" style={{ height: 4 }}>
-                {d && ['recurring', 'once', 'plan', 'group'].filter((k) => d[k]).slice(0, 4).map((k) => (
-                  <span key={k} className="rounded-full" style={{ width: 4, height: 4, background: DOT_COLORS[k] }} />
-                ))}
+              <span className="calendar__num">{parseInt(key.slice(8, 10), 10)}</span>
+              <span className="calendar__dots" aria-hidden="true">
+                {d && DOT_KINDS.filter((k) => d[k]).map((k) => <span key={k} className={`cal-dot cal-dot--${k}`} />)}
               </span>
             </button>
           );
         })}
       </div>
 
-      <div className="flex flex-wrap gap-x-3 gap-y-1 mt-3 pt-2" style={{ borderTop: '0.5px solid var(--q-border)' }}>
-        {[['recurring', 'legendRecurring'], ['once', 'legendOnce'], ['plan', 'legendPlan'], ['group', 'legendGroup']].map(([k, labelKey]) => (
-          <span key={k} className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--q-text-tertiary)' }}>
-            <span className="rounded-full" style={{ width: 5, height: 5, background: DOT_COLORS[k] }} /> {t(lang, labelKey)}
-          </span>
+      <ul className="calendar__legend">
+        {LEGEND.map(([k, labelKey]) => (
+          <li key={k}><span className={`cal-dot cal-dot--${k}`} aria-hidden="true" /> {t(lang, labelKey)}</li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 }

@@ -190,6 +190,20 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   - *Toasts and errors* — toasts are a plain surface with the overlay
     elevation and rise in; an ordinary success is royal, not green; the
     error fallback uses the shared buttons.
+  - *First prayer* — onboarding and the pray-first guest journey keep their
+    alabaster page but now come from one set of styles (the leftover
+    "constellation" overrides are gone); the save decision shows the Rise
+    Mark instead of a feather in a bubble; "later" is a quiet button.
+  - *Calendar* — the month sits between hairlines with the month name in the
+    serif; arrows are named by the month they lead to; today is outlined and
+    the chosen day is royal. Day marks no longer use amber, slate and cyan:
+    a royal dot (a rhythm), a royal ring (once), gold (a Scripture plan) and
+    a small square (a group day) — different shapes, not colour alone. The
+    day's prayers are rows with a 44px "prayed" control that fills royal;
+    the 🕊️ is gone. The prayer-chain calendar on a group request uses the
+    same pieces and buttons.
+  - *Answered* — the unused "gallery" behind the Journal's Answered view (it
+    only ever showed its empty state) is replaced by that empty state alone.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.

@@ -2,7 +2,8 @@
 // /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
-// /vault-setup, /privacy, /feedback, /donate, /ai-consent and /confirm render
+// /vault-setup, /privacy, /feedback, /donate, /ai-consent, /confirm,
+// /first-prayer and /calendar render
 // the REAL screens inside the real app shell with sample prayers (the vault and
 // key gates replace the shell, as in the app). Every store write is replaced
 // by a local no-op first, and
@@ -27,8 +28,10 @@ import GrowTab from '../pages/GrowTab';
 import MoreTab from '../pages/MoreTab';
 import AboutTab from '../pages/AboutTab';
 import SettingsTab from '../pages/SettingsTab';
+import PlanTab from '../pages/PlanTab';
 import NotificationsPage from '../pages/NotificationsPage';
 import AuthPage from '../pages/AuthPage';
+import GuestPrayerFlow from '../components/GuestPrayerFlow';
 import VaultLockScreen from '../components/VaultLockScreen';
 import AccountKeyRecoveryScreen from '../components/AccountKeyRecoveryScreen';
 import VaultModal from '../components/VaultModal';
@@ -125,7 +128,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm',
+  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -302,6 +305,8 @@ export default function DesignScreens({ screen }) {
 
   // The key and vault gates replace the whole app, as they do for real.
   if (screen === 'vault-lock') return <VaultLockScreen lang={lang} />;
+  // The pray-first capture; nothing is stored unless the form is submitted.
+  if (screen === 'first-prayer') return <GuestPrayerFlow lang={lang} onFinish={() => navigate('/__design')} onRequestSave={() => {}} />;
   if (screen === 'key-missing') return <AccountKeyRecoveryScreen lang={lang} onResolved={() => {}} />;
 
   if (screen === 'session') {
@@ -329,6 +334,7 @@ export default function DesignScreens({ screen }) {
       {screen === 'more' && <MoreTab />}
       {screen === 'about' && <AboutTab />}
       {screen === 'settings' && <SettingsTab />}
+      {screen === 'calendar' && <PlanTab />}
       {screen === 'inbox' && <InboxPreview />}
       {['vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm'].includes(screen) && <SettingsTab />}
       {screen === 'vault-setup' && <VaultModal lang={lang} initialMode="setup" userId="design-user" onClose={() => navigate('/__design/settings')} />}

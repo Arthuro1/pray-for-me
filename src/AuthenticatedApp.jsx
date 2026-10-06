@@ -235,14 +235,6 @@ export default function AuthenticatedApp({
     document.documentElement.dir = dirFor(lang);
   }, [lang]);
 
-  // The signed-in product uses the approved Constellation visual system. Keep
-  // the class on <html> so sheets, dialogs and prayer sessions rendered beside
-  // Layout inherit the same tokens; remove it for the public landing/auth flow.
-  useEffect(() => {
-    document.documentElement.classList.toggle('constellation-app', !!user);
-    return () => document.documentElement.classList.remove('constellation-app');
-  }, [user]);
-
   useEffect(() => {
     init();
     const saved = normalizeTheme(localStorage.getItem('pfm_theme'));

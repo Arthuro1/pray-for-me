@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Lock, HandHeart, Loader2, X, Feather } from 'lucide-react';
+import { Lock, HandHeart, Loader2, X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
@@ -13,9 +13,10 @@ import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { track, EVENTS } from '../lib/analytics';
 import PrayerSession from './PrayerSession';
-import { PrimaryButton, SecondaryButton, SectionLabel } from './shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, SectionLabel } from './shared/Primitives';
 import { APP_NAME } from '../lib/brand';
 
+import RiseMark from './shared/RiseMark';
 import { BrandLockup } from './shared/Brand';
 // The first prayer, in two modes:
 //
@@ -128,30 +129,28 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
   // the prayer is still device-local here; account encryption happens on save.
   if (phase === 'decide') {
     return (
-      <div className="first-prayer-experience constellation-onboarding">
+      <div className="first-prayer">
         <div
           ref={trapRef}
           tabIndex={-1}
           role="dialog"
           aria-modal="true"
           aria-label={t(lang, 'firstPrayerSaveTitle')}
-          className="first-prayer-panel items-center justify-center text-center"
+          className="first-prayer__panel first-prayer__panel--center"
         >
-          <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
-            <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
-          </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--q-gold-text)' }}>{APP_NAME}</SectionLabel>
-          <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
+          <RiseMark motion="still" size={40} className="mb-6" />
+          <SectionLabel sacred className="mb-3">{APP_NAME}</SectionLabel>
+          <h2 className="first-prayer__title">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
-          <p className="constellation-onboarding__note mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed">
+          <p className="first-prayer__note">
             <Lock size={14} aria-hidden="true" /> {t(lang, 'firstPrayerDeviceNote')}
           </p>
-          <div className="mt-10 w-full max-w-sm space-y-3">
-            <PrimaryButton onClick={requestSave} icon={HandHeart} className="first-prayer-primary w-full min-h-[52px]">
+          <div className="first-prayer__actions">
+            <PrimaryButton onClick={requestSave} icon={HandHeart} className="first-prayer__primary">
               {t(lang, 'firstPrayerSaveBtn')}
             </PrimaryButton>
-            <SecondaryButton onClick={onFinish} className="first-prayer-quiet w-full">
+            <SecondaryButton onClick={onFinish} className="w-full">
               {t(lang, 'firstPrayerFinishBtn')}
             </SecondaryButton>
           </div>
@@ -162,7 +161,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
 
   // Capture: the single question that matters.
   return (
-    <div className="first-prayer-experience constellation-onboarding">
+    <div className="first-prayer">
       <form
         ref={trapRef}
         tabIndex={-1}
@@ -170,7 +169,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         aria-modal="true"
         aria-labelledby="first-prayer-question"
         onSubmit={submitCapture}
-        className="first-prayer-panel"
+        className="first-prayer__panel"
       >
         <header className="flex min-h-11 items-center justify-between">
           <BrandLockup size={30} />
@@ -178,7 +177,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
             type="button"
             onClick={onFinish}
             aria-label={t(lang, 'close')}
-            className="constellation-onboarding__close pressable flex h-11 w-11 items-center justify-center rounded-full"
+            className="icon-button icon-button--outlined pressable"
           >
             <X size={18} aria-hidden="true" />
           </button>
@@ -186,10 +185,10 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
           <SectionLabel className="mb-4">{APP_NAME}</SectionLabel>
-          <h2 id="first-prayer-question" className="editorial-heading rise-in max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+          <h2 id="first-prayer-question" className="first-prayer__question rise-in">
             {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
           </h2>
-          <p className="editorial rise-in rise-in--late mt-3 text-xl" style={{ color: 'var(--q-text-secondary)' }}>
+          <p className="first-prayer__lede rise-in rise-in--late">
             {t(lang, 'firstPrayerBring')}
           </p>
 
@@ -200,33 +199,29 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
             placeholder={t(lang, 'onboardCapturePlaceholder')}
             aria-label={t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
             rows={4}
-            className="first-prayer-journal mt-7"
+            className="first-prayer__journal"
           />
 
-          <p className="constellation-onboarding__note mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm">
+          <p className="first-prayer__note">
             <Lock size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
             {t(lang, isGuest ? 'firstPrayerDeviceNote' : 'onboardPrivateNote')}
           </p>
         </div>
 
-        <div className="w-full space-y-3">
+        <div className="first-prayer__actions">
           <PrimaryButton
             type="submit"
             disabled={!text.trim() || saving}
-            className="first-prayer-primary w-full min-h-[54px]"
+            className="first-prayer__primary"
           >
             <span className="inline-flex items-center gap-2 whitespace-nowrap">
               {saving ? <Loader2 size={17} className="animate-spin" aria-hidden="true" /> : <HandHeart size={17} aria-hidden="true" />}
               {t(lang, isGuest ? 'firstPrayerPrayCta' : 'onboardSaveAndPray')}
             </span>
           </PrimaryButton>
-          <button
-            type="button"
-            onClick={onFinish}
-            className="constellation-onboarding__later pressable min-h-11 w-full text-sm font-semibold"
-          >
+          <QuietButton onClick={onFinish} className="w-full">
             {t(lang, isGuest ? 'authBackHome' : 'onboardLater')}
-          </button>
+          </QuietButton>
         </div>
       </form>
     </div>

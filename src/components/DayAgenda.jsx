@@ -8,7 +8,8 @@ import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { planDayContent } from '../content/prayerPlans';
 import { pick } from '../content/teaching';
 import { scheduleSummary } from '../lib/scheduleDraft';
-import { DOT_COLORS } from '../lib/monthCalendar';
+import { dotKind } from '../lib/monthCalendar';
+import { Input, SectionLabel } from './shared/Primitives';
 import OverflowMenu from './shared/OverflowMenu';
 
 // Agenda for one selected day: planned prayers grouped by prayer-time slot,
@@ -18,8 +19,8 @@ import OverflowMenu from './shared/OverflowMenu';
 
 const SLOT_ICONS = { morning: Sunrise, midday: Sun, evening: Moon, anytime: Clock };
 
-function SourceDot({ source }) {
-  return <span className="rounded-full shrink-0" style={{ width: 6, height: 6, background: DOT_COLORS[source === 'days' || source === 'category' ? 'plan' : source] }} />;
+function SourceDot({ kind }) {
+  return <span className={`cal-dot cal-dot--${kind}`} aria-hidden="true" />;
 }
 
 export default function DayAgenda({
@@ -33,12 +34,10 @@ export default function DayAgenda({
   const isEmpty = entries.length === 0 && commitments.length === 0;
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-      <p className="text-sm font-semibold capitalize mb-2" style={{ color: 'var(--q-text)' }}>{dayLabel}</p>
+    <section className="agenda">
+      <h2 className="agenda__day">{dayLabel}</h2>
 
-      {isEmpty && (
-        <p className="text-xs text-center py-4" style={{ color: 'var(--q-text-tertiary)' }}>🕊️ {t(lang, 'noPrayersThisDay')}</p>
-      )}
+      {isEmpty && <p className="agenda__empty">{t(lang, 'noPrayersThisDay')}</p>}
 
       {SLOT_ORDER.map((slot) => {
         const slotEntries = groups[slot];
@@ -46,13 +45,13 @@ export default function DayAgenda({
         const Icon = SLOT_ICONS[slot];
         const showHeader = entries.some((e) => e.slot); // headers only once slots are in use
         return (
-          <div key={slot} className="mb-2">
+          <div key={slot} className="agenda__slot">
             {showHeader && (
-              <p className="text-[10px] font-semibold uppercase tracking-widest mb-1.5 flex items-center gap-1" style={{ color: 'var(--q-text-tertiary)' }}>
-                <Icon size={11} /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
-              </p>
+              <SectionLabel className="agenda__slot-label">
+                <Icon size={12} aria-hidden="true" /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
+              </SectionLabel>
             )}
-            <div className="space-y-1.5">
+            <ul className="agenda__list">
               {slotEntries.map(({ prayer, source }) => {
                 const prayed = (completions[prayer.id] || []).includes(dayKey);
                 const hasSchedule = !!prayer.schedule;
@@ -65,15 +64,13 @@ export default function DayAgenda({
                 const planDayNo = plan ? planDayNumber(prayer.schedule, dayKey) : null;
                 const href = planDayNo ? `/prayers/${prayer.id}?day=${dayKey}` : `/prayers/${prayer.id}`;
                 return (
-                  <div key={prayer.id} className="rounded-xl px-3 py-2.5" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-                    <div className="flex items-center gap-2.5">
-                      <SourceDot source={source} />
-                      <button onClick={() => navigate(href)} className="flex-1 min-w-0 text-start">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)', textDecoration: prayed ? 'line-through' : 'none', opacity: prayed ? 0.6 : 1 }}>
-                          {tr(prayer.title, lang)}
-                        </p>
+                  <li key={prayer.id} className={`agenda-row ${prayed ? 'agenda-row--prayed' : ''}`}>
+                    <div className="agenda-row__main">
+                      <SourceDot kind={dotKind(source)} />
+                      <button type="button" onClick={() => navigate(href)} className="agenda-row__open">
+                        <span className="agenda-row__title">{tr(prayer.title, lang)}</span>
                         {hasSchedule && (
-                          <p className="text-[10px] truncate" style={{ color: 'var(--q-text-tertiary)' }}>
+                          <span className="agenda-row__meta">
                             {(() => {
                               // Plan prayers show "Day n of N · theme" for the
                               // selected day; other schedules show their summary.
@@ -83,19 +80,18 @@ export default function DayAgenda({
                               }
                               return scheduleSummary(prayer.schedule, lang);
                             })()}
-                          </p>
+                          </span>
                         )}
                       </button>
                       <button
+                        type="button"
                         onClick={() => onTogglePrayed(prayer.id, dayKey, prayed)}
                         title={t(lang, prayed ? 'prayedOnDay' : 'markPrayed')}
                         aria-label={t(lang, prayed ? 'prayedOnDay' : 'markPrayed')}
-                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all"
-                        style={prayed
-                          ? { background: 'var(--q-success-soft)', color: 'var(--q-success)', boxShadow: 'inset 0 0 0 1px var(--q-success-border)' }
-                          : { background: 'var(--q-surface)', border: '1.5px solid var(--q-field-border)', color: 'var(--q-text-tertiary)' }}
+                        aria-pressed={prayed}
+                        className="agenda-check pressable"
                       >
-                        <Check size={13} />
+                        <span aria-hidden="true"><Check size={14} strokeWidth={2.4} /></span>
                       </button>
                       {hasSchedule && (
                         // Occurrence edit scopes: skip/move = "this day only",
@@ -103,8 +99,7 @@ export default function DayAgenda({
                         // schedule itself from the prayer's edit form.
                         <OverflowMenu
                           lang={lang}
-                          triggerClassName="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-                          triggerStyle={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-tertiary)' }}
+                          triggerClassName="icon-button pressable"
                           items={[
                             { key: 'skip', icon: SkipForward, label: t(lang, 'skipThisDay'), onClick: () => onSkip(prayer.id, dayKey), hidden: prayed || !!override },
                             { key: 'move', icon: CalendarClock, label: t(lang, 'moveThisDay'), onClick: () => setMovingId(prayer.id), hidden: prayed || !!override },
@@ -115,49 +110,50 @@ export default function DayAgenda({
                       )}
                     </div>
                     {movingId === prayer.id && (
-                      <input
+                      <Input
                         type="date"
                         autoFocus
+                        aria-label={t(lang, 'moveThisDay')}
                         onChange={(e) => {
                           if (!e.target.value || e.target.value === dayKey) return;
                           onMove(prayer.id, dayKey, e.target.value);
                           setMovingId(null);
                         }}
-                        className="w-full mt-2 text-sm rounded-lg px-3 py-2 focus:outline-none"
-                        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
+                        className="agenda-row__move"
                       />
                     )}
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         );
       })}
 
       {commitments.length > 0 && (
-        <div className="mt-3 pt-2" style={{ borderTop: '0.5px solid var(--q-border)' }}>
-          <p className="text-[10px] font-semibold uppercase tracking-widest mb-1.5 flex items-center gap-1" style={{ color: DOT_COLORS.group }}>
-            <Users size={11} /> {t(lang, 'myCommitments')}
-          </p>
-          <div className="space-y-1.5">
+        <div className="agenda__slot">
+          <SectionLabel className="agenda__slot-label">
+            <Users size={12} aria-hidden="true" /> {t(lang, 'myCommitments')}
+          </SectionLabel>
+          <ul className="agenda__list">
             {commitments.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => navigate(`/community/group/${c.group_id}/prayer/${c.community_prayer_id}`)}
-                className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-start"
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
-              >
-                <span className="rounded-full shrink-0" style={{ width: 6, height: 6, background: DOT_COLORS.group }} />
-                <span className="flex-1 min-w-0">
-                  <span className="block text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{c.title}</span>
-                  {c.group_name && <span className="block text-[10px] truncate" style={{ color: 'var(--q-text-tertiary)' }}>{c.group_name}</span>}
-                </span>
-              </button>
+              <li key={c.id} className="agenda-row">
+                <div className="agenda-row__main">
+                  <SourceDot kind="group" />
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/community/group/${c.group_id}/prayer/${c.community_prayer_id}`)}
+                    className="agenda-row__open"
+                  >
+                    <span className="agenda-row__title">{c.title}</span>
+                    {c.group_name && <span className="agenda-row__meta">{c.group_name}</span>}
+                  </button>
+                </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
-    </div>
+    </section>
   );
 }

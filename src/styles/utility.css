@@ -428,3 +428,84 @@ a.menu-row { text-decoration: none; }
 .error-fallback { display: flex; min-height: 60vh; align-items: center; justify-content: center; padding: var(--q-space-6); background: var(--q-canvas); }
 .error-fallback__inner { width: 100%; max-width: 24rem; text-align: center; }
 .error-fallback__title { margin: 0 0 var(--q-space-2); font-family: var(--q-font-editorial); font-size: var(--q-type-section); font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
+
+/* ── Calendar (More → Calendar, and a group request's prayer chain) ────── */
+.calendar { padding-block: var(--q-space-2) var(--q-space-4); border-block: 1px solid var(--q-border); }
+.calendar__head { display: flex; align-items: center; justify-content: space-between; gap: var(--q-space-2); margin-block-end: var(--q-space-2); }
+.calendar__month { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.25rem; font-weight: 500; text-transform: capitalize; }
+.calendar__weekdays,
+.calendar__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; }
+.calendar__weekdays { margin-block-end: var(--q-space-1); }
+.calendar__weekdays > span { color: var(--q-text-tertiary); font-size: 0.6875rem; font-weight: 600; text-align: center; }
+
+.calendar__day {
+  display: flex;
+  min-height: 44px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid transparent;
+  border-radius: var(--q-radius-control);
+  color: var(--q-text-secondary);
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+
+.calendar__day:hover { background: var(--q-hover); }
+.calendar__day[aria-current="date"] { border-color: var(--q-border-strong); color: var(--q-text); font-weight: 700; }
+.calendar__day[aria-pressed="true"] { border-color: var(--q-royal); background: var(--q-selected); color: var(--q-royal-text); font-weight: 700; }
+.calendar__num { font-size: 0.8125rem; font-variant-numeric: tabular-nums; line-height: 1; }
+.calendar__dots { display: flex; height: 5px; align-items: center; gap: 2px; }
+
+.calendar__legend { display: flex; flex-wrap: wrap; gap: var(--q-space-1) var(--q-space-4); margin: var(--q-space-3) 0 0; padding: var(--q-space-3) 0 0; border-block-start: 1px solid var(--q-border); color: var(--q-text-tertiary); font-size: 0.6875rem; list-style: none; }
+.calendar__legend > li { display: inline-flex; align-items: center; gap: 6px; }
+
+/* The four kinds of day, told apart by shape as well as colour: a filled
+   dot (a rhythm), a ring (once), gold (a Scripture plan), a square (a day
+   claimed with a group). */
+.cal-dot { display: inline-block; width: 5px; height: 5px; flex: 0 0 auto; border-radius: 50%; background: var(--q-royal); }
+.cal-dot--once { background: transparent; box-shadow: inset 0 0 0 1.25px var(--q-royal); }
+.cal-dot--plan { background: var(--q-gold); }
+.cal-dot--group { border-radius: 1px; background: var(--q-text-tertiary); }
+.agenda .cal-dot,
+.calendar__legend .cal-dot { width: 7px; height: 7px; }
+
+/* One day: its prayers as rows, grouped by the time of day when used. */
+.agenda { padding-block-end: var(--q-space-4); }
+.agenda__day { margin: var(--q-space-2) 0 var(--q-space-3); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.25rem; font-weight: 500; text-transform: capitalize; }
+.agenda__day--small { margin-block: var(--q-space-4) var(--q-space-2); font-size: 1.0625rem; }
+.agenda__empty { margin: 0; padding-block: var(--q-space-6); color: var(--q-text-tertiary); font-size: 0.875rem; text-align: center; }
+.agenda__slot + .agenda__slot { margin-block-start: var(--q-space-4); }
+.agenda__slot-label { display: flex; align-items: center; gap: 6px; margin-block-end: var(--q-space-1); }
+.agenda__list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+
+.agenda-row { border-block-end: 1px solid var(--q-border); }
+.agenda-row__main { display: flex; min-height: 56px; align-items: center; gap: var(--q-space-3); }
+.agenda-row__open { display: grid; min-width: 0; flex: 1 1 auto; gap: 2px; padding-block: var(--q-space-2); text-align: start; }
+.agenda-row__title { overflow: hidden; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.agenda-row__meta { overflow: hidden; color: var(--q-text-tertiary); font-size: 0.75rem; text-overflow: ellipsis; white-space: nowrap; }
+.agenda-row--prayed .agenda-row__title { color: var(--q-text-tertiary); }
+.agenda-row__move { margin-block: 0 var(--q-space-3); }
+
+/* Mark prayed: a 44px target around a quiet ring that fills royal once prayed. */
+.agenda-check { display: inline-flex; width: 44px; height: 44px; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: 50%; }
+
+.agenda-check > span {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--q-border-strong);
+  border-radius: 50%;
+  color: var(--q-text-tertiary);
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease);
+}
+
+.agenda-check:hover > span { border-color: var(--q-royal); color: var(--q-royal-text); }
+.agenda-check[aria-pressed="true"] > span { border-color: var(--q-action-primary); background: var(--q-action-primary); color: var(--q-on-action); }
+.agenda-check:focus-visible { outline: 2px solid var(--q-focus); outline-offset: -2px; }
+
+.group-calendar { padding-block: var(--q-space-2); }
+.group-calendar__day { display: grid; gap: var(--q-space-2); }
+.group-calendar__who { display: flex; flex-wrap: wrap; gap: var(--q-space-1) var(--q-space-3); margin: 0 0 var(--q-space-2); padding: 0; color: var(--q-text-secondary); font-size: 0.875rem; list-style: none; }

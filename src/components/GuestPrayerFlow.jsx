@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Check, Feather, HandHeart, Loader2, Lock, X } from 'lucide-react';
+import { Check, HandHeart, Loader2, Lock, X } from 'lucide-react';
 import { t, tp } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
@@ -13,7 +13,7 @@ import { markActivationSessionCompleted } from '../lib/activationProgress';
 import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { EVENTS, track } from '../lib/analytics';
-import { PrimaryButton, SecondaryButton, SectionLabel } from './shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, SectionLabel } from './shared/Primitives';
 import PrayerMusicControl from './PrayerMusicControl';
 import RiseMark from './shared/RiseMark';
 import { APP_NAME } from '../lib/brand';
@@ -35,7 +35,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
   };
 
   return (
-    <div className="prayer-session q-immersive constellation-onboarding constellation-guest-flow">
+    <div className="prayer-session q-immersive public-surface">
       <div
         ref={trapRef}
         role="dialog"
@@ -155,30 +155,28 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
 
   if (phase === 'decide') {
     return (
-      <div className="first-prayer-experience constellation-onboarding constellation-guest-flow">
+      <div className="first-prayer public-surface">
         <div
           ref={trapRef}
           tabIndex={-1}
           role="dialog"
           aria-modal="true"
           aria-label={t(lang, 'firstPrayerSaveTitle')}
-          className="first-prayer-panel items-center justify-center text-center"
+          className="first-prayer__panel first-prayer__panel--center"
         >
-          <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
-            <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
-          </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--q-gold-text)' }}>{APP_NAME}</SectionLabel>
-          <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
+          <RiseMark motion="still" size={40} className="mb-6" />
+          <SectionLabel sacred className="mb-3">{APP_NAME}</SectionLabel>
+          <h2 className="first-prayer__title">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
-          <p className="constellation-onboarding__note mt-4 flex max-w-sm items-center justify-center gap-2 text-sm leading-relaxed">
+          <p className="first-prayer__note">
             <Lock size={14} aria-hidden="true" /> {t(lang, 'firstPrayerDeviceNote')}
           </p>
-          <div className="mt-10 w-full max-w-sm space-y-3">
-            <PrimaryButton onClick={requestSave} icon={HandHeart} className="first-prayer-primary min-h-[52px] w-full">
+          <div className="first-prayer__actions">
+            <PrimaryButton onClick={requestSave} icon={HandHeart} className="first-prayer__primary">
               {t(lang, 'firstPrayerSaveBtn')}
             </PrimaryButton>
-            <SecondaryButton onClick={onFinish} className="first-prayer-quiet w-full">
+            <SecondaryButton onClick={onFinish} className="w-full">
               {t(lang, 'firstPrayerFinishBtn')}
             </SecondaryButton>
           </div>
@@ -188,7 +186,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
   }
 
   return (
-    <div className="first-prayer-experience constellation-onboarding constellation-guest-flow">
+    <div className="first-prayer public-surface">
       <form
         ref={trapRef}
         tabIndex={-1}
@@ -196,7 +194,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         aria-modal="true"
         aria-labelledby="guest-prayer-question"
         onSubmit={submitCapture}
-        className="first-prayer-panel"
+        className="first-prayer__panel"
       >
         <header className="flex min-h-11 items-center justify-between">
           <BrandLockup size={30} />
@@ -204,7 +202,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
             type="button"
             onClick={onFinish}
             aria-label={t(lang, 'close')}
-            className="constellation-onboarding__close pressable flex h-11 w-11 items-center justify-center rounded-full"
+            className="icon-button icon-button--outlined pressable"
           >
             <X size={18} aria-hidden="true" />
           </button>
@@ -212,10 +210,10 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
           <SectionLabel className="mb-4">{APP_NAME}</SectionLabel>
-          <h2 id="guest-prayer-question" className="editorial-heading rise-in max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+          <h2 id="guest-prayer-question" className="first-prayer__question rise-in">
             {t(lang, 'firstPrayerQuestion')}
           </h2>
-          <p className="editorial rise-in rise-in--late mt-3 text-xl" style={{ color: 'var(--q-text-secondary)' }}>
+          <p className="first-prayer__lede rise-in rise-in--late">
             {t(lang, 'firstPrayerBring')}
           </p>
 
@@ -226,20 +224,20 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
             placeholder={t(lang, 'onboardCapturePlaceholder')}
             aria-label={t(lang, 'firstPrayerQuestion')}
             rows={4}
-            className="first-prayer-journal mt-7"
+            className="first-prayer__journal"
           />
 
-          <p className="constellation-onboarding__note mt-4 flex items-start gap-2 text-xs leading-relaxed sm:text-sm">
+          <p className="first-prayer__note">
             <Lock size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
             {t(lang, 'firstPrayerDeviceNote')}
           </p>
         </div>
 
-        <div className="w-full space-y-3">
+        <div className="first-prayer__actions">
           <PrimaryButton
             type="submit"
             disabled={!text.trim() || saving}
-            className="first-prayer-primary min-h-[54px] w-full"
+            className="first-prayer__primary"
           >
             <span className="inline-flex items-center gap-2 whitespace-nowrap">
               {saving
@@ -248,13 +246,9 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
               {t(lang, 'firstPrayerPrayCta')}
             </span>
           </PrimaryButton>
-          <button
-            type="button"
-            onClick={onFinish}
-            className="constellation-onboarding__later pressable min-h-11 w-full text-sm font-semibold"
-          >
+          <QuietButton onClick={onFinish} className="w-full">
             {t(lang, 'authBackHome')}
-          </button>
+          </QuietButton>
         </div>
       </form>
     </div>

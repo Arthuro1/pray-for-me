@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, HandHeart, X, Users } from 'lucide-react';
+import { Loader2, HandHeart, X } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
@@ -10,6 +10,7 @@ import usePrayerStore from '../store/prayerStore';
 import { monthDots } from '../lib/planner';
 import { monthDayKeys } from '../lib/monthCalendar';
 import MonthCalendar from './MonthCalendar';
+import { PrimaryButton, SecondaryButton } from './shared/Primitives';
 
 // Prayer-chain calendar on a community prayer: members claim days ("I'll pray
 // this day") so the group covers the request continuously. Claimed days land
@@ -36,7 +37,7 @@ export default function GroupPrayerCalendar({ communityPrayer, groupId, lang, us
   useEffect(() => { reload(); }, [reload]);
 
   if (commitments === null) {
-    return <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>;
+    return <div className="q-loading"><Loader2 size={18} className="animate-spin" aria-hidden="true" /></div>;
   }
 
   // Merge this prayer's own schedule (recurring / one-time / weekly plan) with the
@@ -78,11 +79,9 @@ export default function GroupPrayerCalendar({ communityPrayer, groupId, lang, us
   };
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-      <p className="text-sm font-semibold flex items-center gap-1.5 mb-0.5" style={{ color: 'var(--q-text)' }}>
-        <Users size={14} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'groupCalendarTitle')}
-      </p>
-      <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupCalendarSub')}</p>
+    <section className="group-calendar">
+      <h3 className="settings-group__title">{t(lang, 'groupCalendarTitle')}</h3>
+      <p className="settings-group__sub">{t(lang, 'groupCalendarSub')}</p>
 
       <MonthCalendar
         monthDate={monthDate}
@@ -93,40 +92,26 @@ export default function GroupPrayerCalendar({ communityPrayer, groupId, lang, us
         lang={lang}
       />
 
-      <div className="mt-3">
-        <p className="text-xs font-semibold capitalize mb-1.5" style={{ color: 'var(--q-text)' }}>{dayLabel}</p>
-        {commitments.length === 0 && (
-          <p className="text-xs mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noCommitmentsYet')}</p>
-        )}
+      <div className="group-calendar__day">
+        <p className="agenda__day agenda__day--small">{dayLabel}</p>
+        {commitments.length === 0 && <p className="q-meta">{t(lang, 'noCommitmentsYet')}</p>}
         {dayCommitments.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-2">
+          <ul className="group-calendar__who">
             {dayCommitments.map((c) => (
-              <span key={c.id} className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
-                🙏 {c.user_id === user?.id ? getAuthorName(user) : (c.user_name || '?')}
-              </span>
+              <li key={c.id}>{c.user_id === user?.id ? getAuthorName(user) : (c.user_name || '?')}</li>
             ))}
-          </div>
+          </ul>
         )}
         {mine ? (
-          <button
-            onClick={release}
-            disabled={busy}
-            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-medium disabled:opacity-60"
-            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
-          >
-            <X size={13} /> {t(lang, 'removeCommitmentBtn')}
-          </button>
+          <SecondaryButton icon={X} iconSize={16} onClick={release} disabled={busy} className="w-full">
+            {t(lang, 'removeCommitmentBtn')}
+          </SecondaryButton>
         ) : (
-          <button
-            onClick={claim}
-            disabled={busy || selectedKey < todayKey()}
-            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold text-white disabled:opacity-50"
-            style={{ background: 'var(--q-action-primary)' }}
-          >
-            <HandHeart size={13} /> {t(lang, 'commitToPray')}
-          </button>
+          <PrimaryButton icon={HandHeart} iconSize={16} onClick={claim} disabled={busy || selectedKey < todayKey()} className="w-full">
+            {t(lang, 'commitToPray')}
+          </PrimaryButton>
         )}
       </div>
-    </div>
+    </section>
   );
 }

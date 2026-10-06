@@ -3,14 +3,15 @@
 // PlanTab / DayAgenda can import these without pulling in React.
 import { toKey } from './schedule';
 
-// Dot colours by schedule kind. `dots` (see planner.monthDots) maps a day key to
-// { once, recurring, plan, group } counts; `group` comes from community commitments.
-export const DOT_COLORS = {
-  recurring: 'var(--q-royal)',
-  once: '#d97706',
-  plan: '#94a3b8',
-  group: '#0891b2',
-};
+// The kinds of day marks, in the order they are drawn. `dots` (see
+// planner.monthDots) maps a day key to { once, recurring, plan, group } counts;
+// `group` comes from community commitments. Each kind is styled by
+// `.cal-dot--<kind>` (utility.css): told apart by shape as well as colour.
+export const DOT_KINDS = ['recurring', 'once', 'plan', 'group'];
+
+// The mark for a planner entry's source: a weekly "days" or category rhythm
+// reads as part of a plan.
+export const dotKind = (source) => (source === 'days' || source === 'category' ? 'plan' : source);
 
 // The date keys for every day in a given month (1..last), in order.
 export function monthDayKeys(monthDate) {

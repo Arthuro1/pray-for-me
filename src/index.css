@@ -515,63 +515,6 @@
   outline-offset: 2px;
 }
 
-.first-prayer-experience {
-  position: fixed;
-  z-index: 60;
-  inset: 0;
-  min-height: 100dvh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  background: var(--q-surface-inverse);
-  color: var(--q-text-inverse);
-}
-
-.first-prayer-panel {
-  position: relative;
-  display: flex;
-  width: min(100%, 44rem);
-  min-height: 100dvh;
-  flex-direction: column;
-  margin-inline: auto;
-  padding: max(1.25rem, env(safe-area-inset-top)) clamp(1.25rem, 6vw, 3.5rem) max(1.5rem, env(safe-area-inset-bottom));
-}
-
-.first-prayer-journal {
-  width: 100%;
-  min-height: 9rem;
-  max-height: 38dvh;
-  padding: 1.15rem 0;
-  resize: none;
-  border: 0;
-  border-block-end: 1px solid color-mix(in srgb, var(--q-text-inverse) 34%, transparent);
-  border-radius: 0;
-  background: transparent;
-  color: var(--q-text-inverse);
-  font-family: var(--q-font-editorial);
-  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
-  line-height: 1.55;
-  caret-color: var(--q-gold-inverse);
-}
-
-.first-prayer-journal::placeholder { color: var(--q-text-inverse-tertiary); }
-.first-prayer-journal:focus { outline: 0; border-block-end-color: var(--q-gold-inverse); }
-
-.first-prayer-primary {
-  background: var(--q-text-inverse);
-  color: var(--q-royal-deep);
-}
-
-.first-prayer-quiet {
-  background: transparent;
-  border-color: color-mix(in srgb, var(--q-text-inverse) 24%, transparent);
-  color: var(--q-text-inverse-secondary);
-}
-
-.first-prayer-quiet:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--q-text-inverse) 8%, transparent);
-  color: var(--q-text-inverse);
-}
-
 /* Public Constellation landing ------------------------------------------- */
 html.constellation-landing-root body {
   background: var(--q-canvas);
@@ -720,88 +663,14 @@ html.constellation-landing-root body {
   }
 }
 
-/* First prayer and the pray-first journey ------------------------------ */
-.constellation-onboarding.first-prayer-experience {
-  background: var(--q-canvas);
-  color: var(--q-text);
-}
-
-.constellation-onboarding .first-prayer-panel {
-  z-index: 1;
-}
-
-.constellation-onboarding .first-prayer-panel h2 {
-  max-width: 12ch;
-  font-weight: 600;
-  letter-spacing: -.035em;
-  text-wrap: balance;
-}
-
-.constellation-onboarding .section-label {
-  color: var(--q-royal-text);
-}
-
-.constellation-onboarding .first-prayer-journal {
-  min-height: 8rem;
-  border-block-end-color: var(--q-border-strong);
-  color: var(--q-text);
-  caret-color: var(--q-royal-text);
-}
-
-.constellation-onboarding .first-prayer-journal::placeholder {
-  color: var(--q-text-tertiary);
-}
-
-.constellation-onboarding .first-prayer-journal:focus {
-  border-block-end-color: var(--q-royal);
-}
-
-.constellation-onboarding .first-prayer-primary {
-  border-radius: var(--q-radius-control) !important;
-  background: var(--q-action-primary);
-  color: var(--q-on-action);
-}
-
-.constellation-onboarding .first-prayer-primary:hover:not(:disabled) {
-  background: var(--q-royal-deep);
-}
-
-.constellation-onboarding .first-prayer-quiet {
-  border-color: var(--q-border);
-  background: transparent;
-  color: var(--q-text-secondary);
-}
-
-.constellation-onboarding .first-prayer-quiet:hover:not(:disabled) {
-  background: var(--q-selected);
-  color: var(--q-royal-text);
-}
-
-.constellation-onboarding__close {
-  border: 1px solid var(--q-border);
-  background: var(--q-surface);
-  color: var(--q-text);
-}
-
-.constellation-onboarding__note,
-.constellation-onboarding__later {
-  color: var(--q-text-secondary);
-}
-
-.constellation-onboarding__decision-icon {
-  border: 1px solid var(--q-selected-border);
-  background: var(--q-selected);
-  color: var(--q-royal-text);
-}
-
 /* Public pray-first journey and shared-plan page: outside the signed-in
    shell, so each declares its own colour scheme and ground. */
-.constellation-guest-flow,
+.public-surface,
 .plan-share {
   color-scheme: light;
 }
 
-[data-theme="dark"] .constellation-guest-flow,
+[data-theme="dark"] .public-surface,
 [data-theme="dark"] .plan-share {
   color-scheme: dark;
 }
@@ -814,16 +683,6 @@ html.constellation-landing-root body {
 .plan-share__actions {
   border-block-start: 1px solid var(--q-border);
   background: var(--q-canvas);
-}
-
-@media (max-width: 639px) {
-  .constellation-onboarding .first-prayer-panel {
-    padding-inline: 1.35rem;
-  }
-
-  .constellation-onboarding .first-prayer-panel h2 {
-    font-size: 2.65rem;
-  }
 }
 
 /* Published-wording report and editorial review controls. */

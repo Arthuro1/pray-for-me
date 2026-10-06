@@ -10,7 +10,7 @@ import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
-import AnsweredGallery from '../components/AnsweredGallery';
+import AnsweredEmpty from '../components/AnsweredEmpty';
 import JournalFilters from '../components/JournalFilters';
 import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, Check } from 'lucide-react';
 import { t, tp } from '../i18n';
@@ -514,7 +514,7 @@ export default function PrayersTab({ onAdd }) {
               <FilterStatus lang={lang} count={filteredEntries.length} label={resultsLabel(filteredEntries.length)} onClear={clearFilters} />
             )}
             {answeredCount === 0 && !filtersActive ? (
-              <AnsweredGallery prayers={[]} showCount={false} showReflection={false} />
+              <AnsweredEmpty lang={lang} />
             ) : filtersActive && answeredCount > 0 && filteredEntries.length === 0 ? (
               <div className="journal__no-match">
                 <p className="mb-4 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>

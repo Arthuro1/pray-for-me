@@ -96,7 +96,7 @@ async function prayAsGuest() {
   // The session opens on the just-typed prayer.
   expect(await screen.findByText('La paix dans notre foyer')).toBeTruthy();
   expect(document.querySelector('.prayer-session')).toBeTruthy();
-  expect(document.querySelector('.constellation-guest-flow')).toBeTruthy();
+  expect(document.querySelector('.public-surface')).toBeTruthy();
   expect(document.querySelector('.prayer-session__title')).toBeTruthy();
   // Pray through it (single request → Amen), then close the done screen.
   fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
@@ -109,8 +109,8 @@ describe('GuestPrayerFlow', () => {
   it('asks the one question with an honest device-local reassurance', () => {
     const { container } = render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
     expect(screen.getByRole('dialog', { name: t(lang, 'firstPrayerQuestion') })).toBeTruthy();
-    expect(container.querySelector('.constellation-onboarding')).toBeTruthy();
-    expect(container.querySelector('.constellation-guest-flow')).toBeTruthy();
+    expect(container.querySelector('.first-prayer')).toBeTruthy();
+    expect(container.querySelector('.public-surface')).toBeTruthy();
     // Qetoret has no celestial art: no sky, no stars behind the prayer.
     expect(container.querySelector('[class*="sky"]')).toBeNull();
     expect(screen.getByText(t(lang, 'firstPrayerQuestion'))).toBeTruthy();
@@ -130,7 +130,7 @@ describe('GuestPrayerFlow', () => {
     expect(guestAudio.start).not.toHaveBeenCalled();
 
     // The decision screen offers Save / Finish without saving.
-    expect(document.querySelector('.constellation-onboarding__decision-icon')).toBeTruthy();
+    expect(document.querySelector('.first-prayer__panel--center [data-testid="rise-mark"]')).toBeTruthy();
     expect(screen.getByText(t(lang, 'firstPrayerSaveBtn'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'firstPrayerFinishBtn'))).toBeTruthy();
 
