@@ -21,7 +21,7 @@ import { t } from '../i18n';
 // author (onEdit) — the WhatsApp "edit message" gesture. A word can be removed
 // as a whole by its author or a group admin (isAdmin) via onDelete — the same
 // trash affordance used on prayer points. Attachments render read-only.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, onSend, onDelete, onEdit }) {
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, avatarFor, onSend, onDelete, onEdit }) {
   const [anon, setAnon] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -53,7 +53,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
         <div className="prayer-activity-list">
           {updates.map((u) => (
             <div key={u.id} className="prayer-activity-item prayer-activity-item--community group flex gap-2.5">
-              <Avatar name={u.is_anonymous ? '?' : u.author_name} size={28} anonymous={u.is_anonymous} />
+              <Avatar name={u.is_anonymous ? '?' : u.author_name} avatar={u.is_anonymous ? null : avatarFor?.(u.user_id)} size={28} anonymous={u.is_anonymous} />
               <div className="prayer-activity-item__body min-w-0 flex-1">
                 <p className="prayer-activity-item__meta">
                   {communityAuthor(u, userId, lang)}{' · '}{timeAgo(u.created_at, lang)}

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Download, Share, SquarePlus } from 'lucide-react';
 import { t } from '../i18n';
-import { readActivationProgress } from '../lib/activationProgress';
+import { markEducationHandledForVisit, readActivationProgress } from '../lib/activationProgress';
+import { pwaInstallAllowed } from '../lib/activationPolicy';
 import {
   markContextualPromptShownForVisit,
   pwaInstallMode,
@@ -13,8 +14,12 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { BottomSheet, PrimaryButton } from './shared/Primitives';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
+import { useContextualNudgeSlot } from './shared/contextualNudge';
 
 function currentInstallMode() {
+  // Installing is education too: it waits behind the same one-prompt-per-visit
+  // rule as the activation cards, on top of pwaInstall's own conditions.
+  if (!pwaInstallAllowed()) return null;
   const progress = readActivationProgress();
   return pwaInstallMode({
     sessionCompleted: progress.signals.includes('session_completed'),
@@ -25,6 +30,7 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
   const [mode, setMode] = useState(() => modeOverride || currentInstallMode());
   const [showIosHelp, setShowIosHelp] = useState(false);
   const sheetRef = useFocusTrap(showIosHelp);
+  const { visible, complete } = useContextualNudgeSlot('pwa-install', !!mode || showIosHelp, 30);
 
   useEffect(() => {
     if (modeOverride) return undefined;
@@ -35,10 +41,14 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
   }, [mode]);
   useEscapeKey(showIosHelp ? () => setShowIosHelp(false) : null);
 
-  if (!mode && !showIosHelp) return null;
+  if (!visible) return null;
 
   const dismiss = () => {
     snoozePwaInstallPrompt();
+    // Answering this ends education for the visit, so declining the install
+    // never uncovers an activation card in its place.
+    markEducationHandledForVisit();
+    complete();
     setShowIosHelp(false);
     setMode(null);
   };
@@ -49,6 +59,7 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
       return;
     }
     await requestNativePwaInstall();
+    complete();
     setMode(null);
   };
 

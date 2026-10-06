@@ -34,8 +34,15 @@ vi.mock('../supabase', () => ({
   },
 }));
 
-import { ensureAccountCryptoReady, startFreshEncryption, CRYPTO_STATUS } from './accountKey';
-import { isUnlocked, isVaultInitialized, getMasterKey, lock, destroyVault, createVault } from './keyManager';
+import {
+  ensureAccountCryptoReady,
+  lockAccountKey,
+  rememberAccountKey,
+  startFreshEncryption,
+  CRYPTO_STATUS,
+} from './accountKey';
+import { VAULT_SYNC } from '../vaultSync';
+import { isUnlocked, isVaultInitialized, getMasterKey, lock, unlock, destroyVault, createVault } from './keyManager';
 import { encryptJsonLegacy, decryptJson } from './e2ee';
 import { clearUserKeyCache } from './userKeys';
 
@@ -94,6 +101,19 @@ describe('ensureAccountCryptoReady', () => {
     expect(isUnlocked()).toBe(false);
   });
 
+  it('keeps an explicit account lock in force until a successful passphrase unlock', async () => {
+    await createVault('lock-me');
+    await lockAccountKey('user-1');
+    expect(globalThis.localStorage.getItem('pfm_ak_locked_user-1')).toBeTruthy();
+
+    expect(await ensureAccountCryptoReady('user-1', VAULT_SYNC.PRESENT)).toBe(CRYPTO_STATUS.LOCKED);
+    expect(isUnlocked()).toBe(false);
+
+    expect(await unlock('lock-me')).toBe(true);
+    await rememberAccountKey('user-1', { clearLock: true });
+    expect(globalThis.localStorage.getItem('pfm_ak_locked_user-1')).toBe(null);
+  });
+
   it('does NOT silently mint a key when the server already holds encrypted data', async () => {
     // A device with no local key and no recovery record, but the user already
     // provisioned encryption elsewhere (an identity keypair exists server-side).
@@ -113,6 +133,27 @@ describe('ensureAccountCryptoReady', () => {
 
     expect(status).toBe(CRYPTO_STATUS.UNAVAILABLE);
     expect(isUnlocked()).toBe(false);
+  });
+
+  it('does NOT offer to start fresh when the recovery lookup failed', async () => {
+    // Same shape as the ORPHANED case, except the caller could not read
+    // vault_keys. A recovery record may well exist, so the honest answer is the
+    // retry screen — not the one that says none was set up and offers to
+    // discard everything encrypted under the missing key.
+    db.user_crypto_keys.set('user-1', { user_id: 'user-1', public_key_jwk: {}, encrypted_private_key: {} });
+
+    const status = await ensureAccountCryptoReady('user-1', VAULT_SYNC.UNKNOWN);
+
+    expect(status).toBe(CRYPTO_STATUS.UNAVAILABLE);
+    expect(isUnlocked()).toBe(false);
+  });
+
+  it('still surfaces ORPHANED when the server confirms there is no recovery record', async () => {
+    db.user_crypto_keys.set('user-1', { user_id: 'user-1', public_key_jwk: {}, encrypted_private_key: {} });
+
+    const status = await ensureAccountCryptoReady('user-1', VAULT_SYNC.ABSENT);
+
+    expect(status).toBe(CRYPTO_STATUS.ORPHANED);
   });
 });
 

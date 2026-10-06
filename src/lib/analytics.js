@@ -29,12 +29,59 @@ export const EVENTS = Object.freeze({
   REMINDER_SET: 'reminder_set',
   PRAYER_PRAYED: 'prayer_prayed',
   PRAYER_UPDATED: 'prayer_updated',
+  // Prayer-session notes. Content-free by construction — THAT someone captured
+  // something while praying, never a word of what they wrote, recorded, or
+  // prayed about.
+  PRAYER_NOTE_STARTED: 'prayer_note_started',
+  PRAYER_NOTE_SAVED: 'prayer_note_saved',
+  PRAYER_NOTE_VOICE_USED: 'prayer_note_voice_used',
   PRAYER_ANSWERED: 'prayer_answered',
+  // Guided prayer plans. A plan a person chooses can say something personal
+  // about their life (the singles plan is the obvious case), so these events
+  // record only THAT a plan of that KIND was started, walked or finished —
+  // never a day's reflection, a prompt, a note, an onboarding answer, or
+  // anything the person typed. Only plans that opt in (see `analyticsEvents`
+  // on a PLANS entry) emit these named events; every plan is also counted,
+  // never named, by the discovery funnel below.
+  SINGLES_PLAN_STARTED: 'singles_plan_started',
+  SINGLES_PLAN_DAY_COMPLETED: 'singles_plan_day_completed',
+  SINGLES_PLAN_COMPLETED: 'singles_plan_completed',
+  ENGAGED_PLAN_STARTED: 'engaged_plan_started',
+  ENGAGED_PLAN_DAY_COMPLETED: 'engaged_plan_day_completed',
+  ENGAGED_PLAN_COMPLETED: 'engaged_plan_completed',
+  // The deliverance plan. What someone selects, remembers, writes or renounces
+  // inside it is the most sensitive thing this app could hold, so these three
+  // events carry NO properties at all — not a day number, not a movement, not a
+  // category, and never a certainty level.
+  DELIVERANCE_PLAN_STARTED: 'deliverance_plan_started',
+  DELIVERANCE_PLAN_DAY_COMPLETED: 'deliverance_plan_day_completed',
+  DELIVERANCE_PLAN_COMPLETED: 'deliverance_plan_completed',
+  MARRIAGE_PLAN_STARTED: 'marriage_plan_started',
+  MARRIAGE_PLAN_DAY_COMPLETED: 'marriage_plan_day_completed',
+  MARRIAGE_PLAN_COMPLETED: 'marriage_plan_completed',
+  // That a recommended resource was opened — never which topic surfaced it, and
+  // never anything about the reader.
+  RESOURCE_OPENED: 'resource_opened',
   VAULT_ENABLED: 'vault_enabled',
   AI_CONSENT_ENABLED: 'ai_consent_enabled',
   AI_CONSENT_REVOKED: 'ai_consent_revoked',
   GROUP_JOINED: 'group_joined',
   PRAYER_SHARED: 'prayer_shared',
+  VERSE_SHARED: 'verse_shared',
+  // A plan's public link going out, and someone beginning a plan through one.
+  // Never WHICH plan: a plan someone chooses can say something personal about
+  // their life, so these carry at most the share channel.
+  PLAN_LINK_SHARED: 'plan_link_shared',
+  PLAN_LINK_JOINED: 'plan_link_joined',
+  // The plan discovery funnel: does a person find a plan, start it, and come
+  // back for the next day? Never WHICH plan — at most where the person came
+  // from (`source`) and, for a day walked, its number (`day`). A plan with its
+  // own dedicated events above is counted here with no properties at all (see
+  // lib/planAnalytics.js).
+  PLANS_PAGE_VIEWED: 'plans_page_viewed',
+  PLAN_DETAIL_OPENED: 'plan_detail_opened',
+  PLAN_STARTED: 'plan_started',
+  PLAN_DAY_COMPLETED: 'plan_day_completed',
   DATA_EXPORTED: 'data_exported',
   ACCOUNT_DELETED_STARTED: 'account_deleted_started',
   PRIVACY_CENTER_OPENED: 'privacy_center_opened',
@@ -55,6 +102,13 @@ const ALLOWED_PROP_KEYS = new Set([
   'enabled',      // boolean toggle state
 ]);
 
+// Keys safe on ONE event only. A plan day number means nothing without a plan,
+// so `day` rides only on the funnel event that never names one — a
+// plan-specific event (e.g. a relationship plan's day event) still drops it.
+const EVENT_PROP_KEYS = Object.freeze({
+  [EVENTS.PLAN_DAY_COMPLETED]: new Set(['day']),
+});
+
 const MAX_STRING_LEN = 64;
 
 export function isEventAllowed(name) {
@@ -63,11 +117,13 @@ export function isEventAllowed(name) {
 
 // Keep only allowlisted keys whose value is a safe scalar. Returns a new object;
 // returns undefined when there's nothing safe to send (so callers can omit props).
-export function sanitizeProps(props) {
+// `eventName` unlocks that event's own extra keys (EVENT_PROP_KEYS), nothing more.
+export function sanitizeProps(props, eventName) {
   if (!props || typeof props !== 'object') return undefined;
+  const eventKeys = EVENT_PROP_KEYS[eventName];
   const out = {};
   for (const key of Object.keys(props)) {
-    if (!ALLOWED_PROP_KEYS.has(key)) continue;
+    if (!ALLOWED_PROP_KEYS.has(key) && !eventKeys?.has(key)) continue;
     const value = props[key];
     if (typeof value === 'number' && Number.isFinite(value)) out[key] = value;
     else if (typeof value === 'boolean') out[key] = value;
@@ -92,7 +148,7 @@ export function isAnalyticsEnabled() {
 export function track(name, props) {
   try {
     if (!isEventAllowed(name) || !isAnalyticsEnabled()) return;
-    const safe = sanitizeProps(props);
+    const safe = sanitizeProps(props, name);
     if (safe) vercelTrack(name, safe);
     else vercelTrack(name);
   } catch (e) {

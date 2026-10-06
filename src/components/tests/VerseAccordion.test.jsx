@@ -17,7 +17,7 @@ import { fetchScriptureText, fetchVerseText } from '../../lib/verseText';
 import { t } from '../../i18n';
 
 const lang = 'fr';
-const trigger = ({ toggle }) => <button onClick={toggle}>{t(lang, 'openInBible')}</button>;
+const trigger = ({ toggle }) => <button onClick={toggle}>{t(lang, 'readInApp')}</button>;
 
 beforeEach(() => {
   // Default: no authoritative text available (drives the reference-only path).
@@ -30,7 +30,7 @@ describe('VerseAccordion — reference-only fallback', () => {
   it('shows the reference note + Bible link and no invented verse text', async () => {
     render(<VerseAccordion reference="Jean 3:16" lang={lang}>{trigger}</VerseAccordion>);
 
-    fireEvent.click(screen.getByText(t(lang, 'openInBible')));
+    fireEvent.click(screen.getByText(t(lang, 'readInApp')));
 
     // The reference-only note appears once the (mocked) fetches resolve to nothing.
     expect(await screen.findByText(t(lang, 'scriptureRefOnly'))).toBeTruthy();
@@ -47,7 +47,7 @@ describe('VerseAccordion — passage change', () => {
     const { rerender } = render(
       <VerseAccordion reference="Jean 3:16" lang={lang}>{trigger}</VerseAccordion>
     );
-    fireEvent.click(screen.getByText(t(lang, 'openInBible')));
+    fireEvent.click(screen.getByText(t(lang, 'readInApp')));
     expect(await screen.findByText(/WORD Jean 3:16/)).toBeTruthy();
 
     // Advance to the next slide on the same instance.
@@ -55,7 +55,7 @@ describe('VerseAccordion — passage change', () => {
     // The panel collapses and the stale text is gone (no first-slide leak).
     expect(screen.queryByText(/WORD Jean 3:16/)).toBeNull();
 
-    fireEvent.click(screen.getByText(t(lang, 'openInBible')));
+    fireEvent.click(screen.getByText(t(lang, 'readInApp')));
     expect(await screen.findByText(/WORD Romains 8:28/)).toBeTruthy();
   });
 });

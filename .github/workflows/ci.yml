@@ -41,6 +41,9 @@ jobs:
       - name: Check locale structure
         run: npm run check:locales
 
+      - name: Check content quality
+        run: npm run check:content
+
       - name: Unit and integration tests
         run: npm test
 

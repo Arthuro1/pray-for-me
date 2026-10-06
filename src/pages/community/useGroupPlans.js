@@ -1,10 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import useCommunityStore from '../../store/communityStore';
 import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
 import { toast } from '../../store/toastStore';
-import { planById, buildGuidedPlanPrayer } from '../../lib/guidedPlan';
+import { planById } from '../../lib/guidedPlan';
+import { canUsePlan } from '../../lib/planReview';
+import { startGuidedPlan } from '../../lib/startGuidedPlan';
+import { PLAN_SOURCES } from '../../lib/planAnalytics';
 import { runningPlanIds } from '../../lib/planner';
 import { todayKey } from '../../lib/prayedLog';
 
@@ -14,6 +18,7 @@ import { todayKey } from '../../lib/prayedLog';
 // mutations (with optimistic "who's praying" count updates). Lifted out of
 // GroupView, which was carrying ~90 lines of plan logic on top of the prayer wall.
 export default function useGroupPlans({ groupId, user, lang }) {
+  const navigate = useNavigate();
   const { fetchGroupPlans, startGroupPlan, joinGroupPlan, leaveGroupPlan, endGroupPlan, subscribeGroupPlans } = useCommunityStore(
     useShallow((s) => ({
       fetchGroupPlans: s.fetchGroupPlans,
@@ -44,24 +49,45 @@ export default function useGroupPlans({ groupId, user, lang }) {
   }, [groupId, loadGroupPlans, subscribeGroupPlans]);
 
   // Start the guided plan on MY own calendar (unless I'm already running it).
-  // Shared by "join a group plan" and "adopt a plan for the group".
+  // Shared by "join a group plan" and "adopt a plan for the group". The slim
+  // singles choices are owned by the Plan tab, so that one plan is handed over
+  // there while every other plan starts in place.
   const startPlanOnMyCalendar = async (plan, startDate) => {
+    if (!plan) return { ok: false, reason: 'unavailable' };
     const mine = usePrayerStore.getState().prayers;
-    if (plan && !runningPlanIds(mine, todayKey()).has(plan.id)) {
-      await usePrayerStore.getState().addPrayer(buildGuidedPlanPrayer(plan, startDate, lang));
+    if (runningPlanIds(mine, todayKey()).has(plan.id)) return { ok: true, alreadyRunning: true };
+    const result = await startGuidedPlan({
+      plan, startDate, lang, addPrayer: usePrayerStore.getState().addPrayer,
+      source: PLAN_SOURCES.GROUP,
+    });
+    if (!result.ok && result.reason === 'personalize') {
+      navigate('/plans', { state: { source: PLAN_SOURCES.GROUP, guidedJourneyStart: { planId: plan.id, startDate } } });
+      return { ok: true, handedOff: true };
     }
+    return result;
   };
 
-  // Join a plan the group is praying: it lands on my calendar and I'm counted
-  // among those praying it. Optimistically reflect the new joined state + count.
+  // Join a plan the group is praying: I'm counted among those praying it, and it
+  // lands on my calendar. Optimistically reflect the new joined state + count.
   const handleJoinGroupPlan = async (gp) => {
     setBusyPlanId(gp.id);
-    await startPlanOnMyCalendar(planById(gp.plan_id), gp.start_date);
+    const plan = planById(gp.plan_id);
+    if (!plan) {
+      setBusyPlanId(null);
+      toast.error(t(lang, 'planCoupleReviewHint'));
+      return;
+    }
+    // Membership first: it is the shared signal, and it must not depend on
+    // whether this member's own copy could be created.
     const res = await joinGroupPlan(gp.id, groupId, user.id);
-    setBusyPlanId(null);
-    if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
+    if (res?.error) { setBusyPlanId(null); toast.error(t(lang, 'errorGeneric')); return; }
     setGroupPlans((prev) => prev.map((p) => (p.id === gp.id && !p.joinedByMe)
       ? { ...p, joinedByMe: true, participantCount: p.participantCount + 1 } : p));
+
+    const started = await startPlanOnMyCalendar(plan, gp.start_date);
+    setBusyPlanId(null);
+    if (!started.ok) { toast.error(t(lang, 'errorGeneric')); return; }
+    if (started.handedOff) return;
     toast.success(t(lang, 'planStarted'));
   };
 
@@ -90,6 +116,11 @@ export default function useGroupPlans({ groupId, user, lang }) {
   // Adopt a plan for the group (picker → PlanDetailModal): it becomes visible to
   // everyone and also starts on the adopter's own calendar.
   const handleAdoptGroupPlan = async (plan, startDate) => {
+    // The start boundary, not just the button's disabled state. Adopting wrote
+    // the group_plans row BEFORE startGuidedPlan() checked the review gate, so a
+    // plan awaiting sign-off could be pinned to a whole group's wall even though
+    // no member could ever pray a day of it.
+    if (!canUsePlan(plan)) { toast.error(t(lang, 'planCoupleReviewHint')); return; }
     const res = await startGroupPlan({ groupId, planId: plan.id, startDate, userId: user.id });
     if (res?.error) { toast.error(t(lang, 'errorGeneric')); return; }
     await startPlanOnMyCalendar(plan, startDate);

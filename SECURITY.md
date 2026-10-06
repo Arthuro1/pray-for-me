@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Please report vulnerabilities privately to
-[arthur.meteng@gmail.com](mailto:arthur.meteng@gmail.com) with “Pray4Me security”
+[arthur.meteng@gmail.com](mailto:arthur.meteng@gmail.com) with “Praystead security”
 in the subject. Do not open a public issue for a suspected vulnerability.
 
 Include the affected version/URL, impact, minimal reproduction, and any suggested

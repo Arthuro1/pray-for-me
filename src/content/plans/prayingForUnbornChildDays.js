@@ -1,0 +1,347 @@
+// The 21 days of "Praying for Your Unborn Child" (see ./prayingForUnbornChild.js
+// for the plan meta, the movements and the guardrails this content is held to).
+//
+// Prayer during pregnancy: requests and thanksgiving, never predictions. Every
+// day turns its intercession back on the one praying (`selfPrompt`). Safety
+// notes sit on days 1 (worrying symptoms), 8 (abuse at home), 16 (loss) and
+// 20 (low mood after birth or loss).
+// Prose is authored in en + fr; `theme` is authored in all 16 languages.
+// Scripture is stored as references only — no Bible text lives in this file.
+// `resourceTopics` stay on pregnancy / children plus tags that pull nothing
+// adult: in the relationships domain, `parenting`, `family`, `prayer`, `trust`,
+// `character`, `community`, `grief`, `suffering`, `illness` and `abuse-safety`
+// all pull couples', dating or marriage books onto the shelf (checked with
+// resolveResources; the test guards it). The sensitive tags are confined to
+// one day each: `miscarriage` on day 16, `mental-health` on day 20. Days 16,
+// 20 and 21 must also serve a reader after a loss, so they carry no
+// `children` tag: general parenting books stay off those shelves.
+const L = (en, fr) => ({ en, fr });
+const T = (en, fr, es, pt, de, ru, zh, ja, ko, ar, fa, hi, id, sw, tl, am) => ({ en, fr, es, pt, de, ru, zh, ja, ko, ar, fa, hi, id, sw, tl, am });
+
+export const DAYS = [
+  {
+    movement: 'known',
+    theme: T('Known before we can see', 'Connu avant nos regards', 'Conocido antes de verlo', 'Conhecido antes de vermos', 'Gekannt, bevor wir sehen', 'Известен Богу ещё до рождения', '未见之先已被认识', '見える前から知られている', '보이기 전부터 아시는 생명', 'معروف قبل أن نراه', 'شناخته‌شده پیش از دیدن ما', 'हमारे देखने से पहले जाना हुआ', 'Dikenal sebelum terlihat', 'Anajulikana kabla hatujamwona', 'Kilala bago pa natin makita', 'ከማየታችን በፊት የታወቀ'),
+    ref: 'Psalm 139:13-18',
+    related: [],
+    reflection: L("The psalmist looks back to life in the womb as part of God's intimate knowledge of him. This child does not need to become visible to us before mattering to God. Begin with wonder and an honest request for care; the psalm gives language for worship, not a forecast of how a pregnancy will unfold.", "Le psalmiste évoque sa vie dans le ventre maternel pour célébrer combien Dieu le connaît. Cet enfant compte pour Dieu avant même que nous puissions le voir. Commence par l'émerveillement et une demande sincère de protection ; ce psaume nourrit l'adoration sans annoncer comment une grossesse se déroulera."),
+    prompts: [
+      L('Thank God for knowing this child before anyone else can.', 'Remercie Dieu de connaître cet enfant avant tous les autres.'),
+      L('Ask Him to care for the developing child and the mother today.', "Demande-Lui de prendre soin aujourd'hui de l'enfant qui se développe et de sa mère."),
+      L('Bring Him the hope or uncertainty you are carrying into this prayer.', "Confie-Lui l'espoir ou l'incertitude que tu portes en commençant cette prière."),
+    ],
+    selfPrompt: L('Ask Christ to meet you with grace when you cannot find reassuring words.', 'Demande au Christ de te rejoindre par sa grâce quand les mots rassurants te manquent.'),
+    practice: L('If useful, save the maternity care contact number where you can find it quickly, or offer to help the mother do so.', "Si cela peut aider, enregistre le numéro du suivi de grossesse à un endroit facile à retrouver, ou propose à la mère de l'aider."),
+    safetyNote: L('For bleeding, severe pain, reduced baby movements or any worrying symptom, contact your midwife or doctor now; use emergency services for an emergency. Prayer and medical care belong together.', "En cas de saignements, de douleur intense, de diminution des mouvements du bébé ou de symptôme inquiétant, contacte ta sage-femme ou ton médecin maintenant ; en cas d'urgence, appelle les secours. La prière accompagne les soins médicaux."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'known',
+    theme: T('Life received as a gift', 'La vie reçue comme un don', 'La vida recibida como regalo', 'A vida recebida como dádiva', 'Leben als Geschenk empfangen', 'Жизнь как дар', '领受生命的礼物', '賜物として受け取る命', '선물로 받는 생명', 'الحياة عطية نتلقاها', 'زندگی، هدیه‌ای دریافت‌شده', 'जीवन को उपहार मानना', 'Hidup sebagai anugerah', 'Uhai ni zawadi', 'Buhay na kaloob', 'ሕይወትን እንደ ስጦታ መቀበል'),
+    ref: 'Genesis 1:26-28',
+    related: [],
+    reflection: L("Genesis places human dignity in God's image, before achievements, abilities or other people's expectations. Receive this developing life with gratitude without deciding what sort of person the child must become. The blessing given to humanity is not a fertility guarantee for each individual, and a pregnancy is not a measure of anyone's worth or God's favour.", "Dans la Genèse, la dignité humaine vient de l'image de Dieu, avant les réussites, les capacités ou les attentes des autres. Accueille cette vie en devenir avec reconnaissance, sans décider à l'avance de ce que l'enfant devra devenir. La bénédiction donnée à l'humanité ne garantit pas la fécondité de chaque personne ; une grossesse ne mesure ni sa valeur ni la faveur de Dieu."),
+    prompts: [
+      L('Praise the Creator for the dignity of the child and the mother alike.', "Loue le Créateur pour la dignité de l'enfant comme pour celle de sa mère."),
+      L('Ask Him to free the family from comparisons about appearance, sex or ability.', "Demande-Lui de libérer la famille des comparaisons concernant l'apparence, le sexe ou les capacités."),
+      L('Pray for tenderness toward those for whom pregnancy news brings complicated feelings.', "Prie pour accueillir avec douceur les personnes que l'annonce d'une grossesse bouleverse."),
+    ],
+    selfPrompt: L('Ask God to ground your own worth in His grace, beyond your hopes about parenthood.', 'Demande à Dieu de fonder ta propre valeur sur sa grâce, au-delà de tes espoirs de parentalité.'),
+    practice: L('You could write one sentence of thanks that places no expectation on the child.', "Tu peux écrire une phrase de reconnaissance qui n'impose aucune attente à l'enfant."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'known',
+    theme: T('Small and dependent', 'Petit et dépendant', 'Pequeño y dependiente', 'Pequeno e dependente', 'Klein und angewiesen', 'Маленький и нуждающийся в заботе', '微小而需要照顾', '小さく、支えを必要として', '작고 돌봄이 필요한 생명', 'صغير ويحتاج إلى الرعاية', 'کوچک و نیازمند مراقبت', 'छोटा और देखभाल पर निर्भर', 'Kecil dan membutuhkan pertolongan', 'Mdogo na anayehitaji matunzo', 'Maliit at nangangailangan ng alaga', 'ትንሽ እና እንክብካቤ የሚሻ'),
+    ref: 'Psalm 71:5-9',
+    related: ['Ecclesiastes 11:5'],
+    reflection: L("An older worshipper remembers dependence on God from the beginning of life and still asks for help as strength fades. Dependence is woven into human life; it is not a defect. Pray for the child's development in the womb and for attentive care at each stage, without treating bodily strength as the measure of a precious life.", "Une personne âgée se souvient d'avoir dépendu de Dieu dès le début de sa vie et demande encore son aide quand ses forces diminuent. Avoir besoin des autres fait partie de la vie humaine ; ce n'est pas un défaut. Prie pour le développement de l'enfant dans le ventre maternel et pour des soins attentifs à chaque étape, sans mesurer sa valeur à sa force physique."),
+    prompts: [
+      L('Ask God to sustain this child through every stage of development.', 'Demande à Dieu de soutenir cet enfant à chaque étape de son développement.'),
+      L('Pray for careful monitoring and clear explanations at prenatal appointments.', 'Prie pour un suivi attentif et des explications claires lors des consultations prénatales.'),
+      L('Thank Him that needing help never takes away human dignity.', "Remercie-Le : avoir besoin d'aide n'enlève rien à la dignité humaine."),
+    ],
+    selfPrompt: L('Tell God where you find it difficult to depend on others, and ask for humility to receive help.', "Dis à Dieu où tu trouves difficile de dépendre des autres et demande l'humilité de recevoir de l'aide."),
+    practice: L('If you are involved in care, note one question about development to ask the maternity team at the next appointment.', "Si tu participes aux soins, note une question sur le développement de l'enfant à poser à l'équipe lors du prochain rendez-vous."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'known',
+    theme: T('Joy shared with someone safe', 'Une joie partagée en confiance', 'Alegría compartida en confianza', 'Alegria partilhada com confiança', 'Freude in sicherer Gemeinschaft', 'Радость с тем, кому доверяешь', '与可信的人分享喜乐', '信頼できる人と喜びを分かち合う', '믿을 만한 이와 나누는 기쁨', 'فرح نشاركه مع شخص أمين', 'شادی در کنار فردی مطمئن', 'भरोसेमंद व्यक्ति के साथ खुशी', 'Berbagi sukacita dengan orang tepercaya', 'Furaha pamoja na mtu salama', 'Galak na ibinabahagi sa mapagkakatiwalaan', 'ደስታን ከታመነ ሰው ጋር መካፈል'),
+    ref: 'Luke 1:39-45',
+    related: [],
+    reflection: L("Mary's visit to Elizabeth holds joy, welcome and the Holy Spirit's work within the unique story of Jesus and John. Their experience is not a pattern every pregnancy must reproduce. Let this meeting turn your attention toward Christ and toward people who can receive your news kindly, without requiring excitement or a spiritual experience from you.", "La visite de Marie à Élisabeth réunit joie, accueil et action du Saint-Esprit dans l'histoire unique de Jésus et de Jean. Leur expérience n'est pas un modèle à reproduire dans chaque grossesse. Que cette rencontre tourne ton regard vers le Christ et vers des personnes capables d'accueillir ta nouvelle avec bonté, sans exiger de toi de l'enthousiasme ou une expérience spirituelle."),
+    prompts: [
+      L('Thank Jesus for entering our human life with its vulnerability.', "Remercie Jésus d'être entré dans notre vie humaine et sa vulnérabilité."),
+      L('Ask the Holy Spirit to surround the mother with wise and gentle encouragement.', 'Demande au Saint-Esprit de susciter autour de la mère des encouragements sages et doux.'),
+      L('Pray for freedom to share news at a pace that respects the family’s privacy.', 'Prie pour pouvoir partager les nouvelles à un rythme qui respecte la vie privée de la famille.'),
+    ],
+    selfPrompt: L('Ask God to make you a listener who can welcome mixed feelings without correcting them.', "Demande à Dieu de t'apprendre à écouter des sentiments mêlés sans chercher à les corriger."),
+    practice: L('If welcome, arrange a short call with someone trustworthy; share only what you choose to share.', "Si tu le souhaites, prévois un court appel avec une personne de confiance ; ne partage que ce que tu choisis."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'known',
+    theme: T('Not forgotten', 'Pas oublié', 'No olvidado', 'Não esquecido', 'Nicht vergessen', 'Не забыт', '没有被遗忘', '忘れられていない', '잊히지 않은 존재', 'لست منسيًا', 'فراموش نشده', 'भुलाए नहीं गए', 'Tidak dilupakan', 'Hujasahaulika', 'Hindi nakalimutan', 'ያልተረሳ'),
+    ref: 'Isaiah 49:13-16',
+    related: [],
+    reflection: L("Zion voices the fear of being forgotten, and God answers with an image of care deeper than even a mother's love. Isaiah is addressing God's afflicted people, not promising each reader a particular family story. His compassion gives room to bring loneliness honestly, including when support is thin or pregnancy has awakened painful memories.", "Sion exprime la peur d'être oubliée, et Dieu répond par l'image d'une sollicitude plus profonde encore que l'amour d'une mère. Ésaïe s'adresse au peuple de Dieu éprouvé, sans promettre à chaque lecteur une histoire familiale précise. Sa compassion permet de Lui confier la solitude, notamment quand le soutien manque ou que la grossesse réveille des souvenirs douloureux."),
+    prompts: [
+      L('Tell God where the mother or family feels overlooked.', 'Dis à Dieu où la mère ou la famille se sent délaissée.'),
+      L('Ask Him to make His compassion known through reliable people.', 'Demande-Lui de faire connaître sa compassion par des personnes fiables.'),
+      L('Pray for families facing pregnancy without the support they hoped for.', "Prie pour les familles qui vivent une grossesse sans le soutien qu'elles espéraient."),
+    ],
+    selfPrompt: L('Bring your own loneliness to God, and ask for courage to name one need to a trustworthy person.', 'Confie ta propre solitude à Dieu et demande le courage de dire un besoin à une personne de confiance.'),
+    practice: L('You could identify one person or local service able to offer practical support this week.', 'Tu peux repérer une personne ou un service local capable de proposer une aide concrète cette semaine.'),
+    resourceTopics: ['pregnancy', 'pastoral-care'],
+  },
+
+  // ── Pregnancy, family and care ─────────────────────────────────────────────
+  {
+    movement: 'care',
+    theme: T('Strength for a tired body', 'De la force pour un corps fatigué', 'Fuerza para un cuerpo cansado', 'Força para um corpo cansado', 'Kraft für einen müden Körper', 'Сила для уставшего тела', '为疲惫的身体求力量', '疲れた体に力を', '지친 몸에 힘을', 'قوة لجسد متعب', 'قوت برای بدنی خسته', 'थके शरीर के लिए बल', 'Kekuatan bagi tubuh yang lelah', 'Nguvu kwa mwili uliochoka', 'Lakas para sa pagod na katawan', 'ለደከመ ሰውነት ብርታት'),
+    ref: 'Isaiah 40:28-31',
+    related: ['Isaiah 40:11'],
+    reflection: L("Isaiah admits what every pregnant woman knows: even the young and strong grow tired and stumble. The Creator, by contrast, never tires, and He gives strength to the weary; a few verses earlier He is the shepherd who gently leads the ewes that have young. Hoping in Him is not a technique for making fatigue, nausea or pain vanish. It is leaning on the One who does not run out while the mother's body does its costly work.", "Ésaïe reconnaît ce que toute femme enceinte sait bien : même les jeunes gens se fatiguent et chancellent. Le Créateur, Lui, ne se lasse jamais, et Il donne de la force à celui qui est fatigué ; quelques versets plus haut, Il est le berger qui conduit avec douceur les brebis qui allaitent. Espérer en Lui n'est pas une technique pour faire disparaître la fatigue, les nausées ou la douleur. C'est s'appuyer sur Celui qui ne s'épuise pas pendant que le corps de la mère accomplit un travail exigeant."),
+    prompts: [
+      L("Ask God to sustain the mother's body today: sleep, appetite, energy and whatever is hardest right now.", "Demande à Dieu de soutenir aujourd'hui le corps de la mère : son sommeil, son appétit, son énergie et ce qui lui pèse le plus en ce moment."),
+      L('Pray for courage to tell the midwife or doctor about anything that seems wrong, without waiting for certainty.', "Prie pour avoir le courage de signaler à la sage-femme ou au médecin tout ce qui semble anormal, sans attendre d'avoir une certitude."),
+      L('Thank the Shepherd for every kind of practical help that lightens the load this week.', 'Remercie le Berger pour chaque aide concrète qui allège la charge cette semaine.'),
+    ],
+    selfPrompt: L('Where are you running on empty? Admit it to the Lord, and ask Him for the humility to rest rather than prove your strength.', "Où es-tu à bout de forces ? Reconnais-le devant le Seigneur, et demande-Lui l'humilité de te reposer plutôt que de prouver ta force."),
+    practice: L('Take over one tiring task for the mother this week; if you are the mother, hand one task to someone else.', "Prends en charge cette semaine une tâche fatigante à la place de la mère ; si tu es la mère, confie une tâche à quelqu'un d'autre."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'care',
+    theme: T('The father, and all who stand by', 'Le père, et tous ceux qui soutiennent', 'El padre y quienes acompañan', 'O pai e quem está ao lado', 'Der Vater und alle, die beistehen', 'Отец и все, кто рядом', '父亲和身边扶持的人', '父親と、そばで支える人々', '아버지와 곁을 지키는 이들', 'الأب وكل من يساند', 'پدر و همهٔ کسانی که در کنارند', 'पिता और साथ खड़े लोग', 'Sang ayah dan yang mendampingi', 'Baba na wote wanaosimama karibu', 'Ang ama at ang mga umaalalay', 'አባትና አብረው የሚቆሙ ሁሉ'),
+    ref: 'Matthew 1:18-25',
+    related: ['Psalm 103:13'],
+    reflection: L("Matthew tells of Jesus' birth through Joseph, a man whose plans were overturned. He chose to shield Mary from shame, listened when God spoke, took her home, and named a child who was not biologically his. His dream and his role are unique, yet his quiet faithfulness honours every father, adoptive parent and step-parent who chooses to protect and provide. Where a father is absent, the compassion that Psalm 103 compares to a father's is not.", "Matthieu raconte la naissance de Jésus du point de vue de Joseph, un homme dont les projets ont été bouleversés. Il a choisi de protéger Marie de la honte, il a écouté quand Dieu a parlé, il l'a prise chez lui et il a donné son nom à un enfant qui n'était pas biologiquement le sien. Son songe et sa mission sont uniques, mais sa fidélité discrète honore chaque père, parent adoptif ou beau-parent qui choisit de protéger et de pourvoir. Là où un père est absent, la compassion que le Psaume 103 compare à celle d'un père, elle, ne manque pas."),
+    prompts: [
+      L("Pray for the child's father by name: for tenderness, steadiness and readiness to carry his share.", "Prie pour le père de l'enfant en le nommant : pour sa tendresse, sa stabilité et sa disponibilité à porter sa part."),
+      L("Ask God to give the father, or another parent, Joseph's courage to protect and stay close when plans change.", "Demande à Dieu de donner au père, ou à l'autre parent, le courage de Joseph : protéger et rester proche quand les projets changent."),
+      L('If the father is absent or unsafe, pray for the people God may raise up to stand with mother and child.', "Si le père est absent ou n'est pas un soutien sûr, prie pour les personnes que Dieu peut susciter afin d'entourer la mère et l'enfant."),
+    ],
+    selfPrompt: L('Ask the Lord where He is inviting you to protect and provide quietly, as Joseph did, without needing credit.', 'Demande au Seigneur où Il t’invite à protéger et à pourvoir discrètement, comme Joseph, sans chercher la reconnaissance.'),
+    practice: L('If it is safe and wise, send the father or other parent a short note of encouragement, or ask what would help most right now.', "Si c'est sûr et sage, envoie au père ou à l'autre parent un petit mot d'encouragement, ou demande-lui ce qui l'aiderait le plus en ce moment."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'care',
+    theme: T('A home to welcome this child', 'Un foyer pour accueillir cet enfant', 'Un hogar para recibir a este niño', 'Um lar para receber esta criança', 'Ein Zuhause für dieses Kind', 'Дом, готовый принять ребёнка', '预备迎接孩子的家', 'この子を迎える家庭', '아이를 맞이할 가정', 'بيت يستقبل هذا الطفل', 'خانه‌ای برای پذیرفتن این کودک', 'इस बच्चे का स्वागत करने वाला घर', 'Rumah yang menyambut anak ini', 'Nyumba ya kumpokea mtoto huyu', 'Tahanang sasalubong sa batang ito', 'ይህን ልጅ የሚቀበል ቤት'),
+    ref: 'Psalm 127',
+    related: ['Proverbs 24:3-4'],
+    reflection: L("Before Psalm 127 calls children a heritage, it speaks of a house that only the LORD can truly build and guard. Proverbs adds that a house is built by wisdom and its rooms filled through knowledge, not by square metres or new furniture. Whatever the size of the flat or the budget, the deepest preparation is a household where God is welcomed, where everyone is safe, and where tired adults can still speak kindly.", "Avant d'appeler les enfants un héritage, le Psaume 127 parle d'une maison que seul l'Éternel peut vraiment bâtir et garder. Les Proverbes ajoutent qu'une maison se bâtit par la sagesse et que ses chambres se remplissent par la connaissance, non par les mètres carrés ou les meubles neufs. Quelle que soit la taille du logement ou du budget, la préparation la plus profonde est un foyer où Dieu est accueilli, où chacun est en sécurité et où des adultes fatigués savent encore se parler avec douceur."),
+    prompts: [
+      L('Ask the Lord to build this household, its habits, its words and its peace, beyond anything you can arrange.', "Demande au Seigneur de bâtir ce foyer, ses habitudes, ses paroles et sa paix, au-delà de tout ce que tu peux organiser."),
+      L("Pray that this child's home would be a safe place, free from violence, fear and contempt.", "Prie pour que le foyer de cet enfant soit un lieu sûr, libre de violence, de peur et de mépris."),
+      L('Bring to God any tension already present at home, and ask for help to face it before the birth.', "Présente à Dieu les tensions déjà présentes à la maison, et demande de l'aide pour y faire face avant la naissance."),
+    ],
+    selfPrompt: L('Ask God what your own presence brings into a home, and invite the Holy Spirit to make your words gentler.', 'Demande à Dieu ce que ta présence apporte dans un foyer, et invite le Saint-Esprit à rendre tes paroles plus douces.'),
+    practice: L('Choose one simple step toward a calmer home this week, such as preparing a corner for rest or agreeing on a time to pray together.', 'Choisis cette semaine un pas simple vers un foyer plus paisible : préparer un coin pour se reposer ou convenir d’un moment pour prier ensemble.'),
+    safetyNote: L('If someone at home is hurting, threatening or controlling you, you do not have to carry it alone or keep it secret. You can tell your midwife or doctor in confidence, contact a domestic abuse helpline, or call emergency services if you are in danger.', "Si quelqu'un chez toi te fait du mal, te menace ou te contrôle, tu n'as pas à porter cela sans aide ni à le garder secret. Tu peux en parler en toute confidentialité à ta sage-femme ou à ton médecin, contacter une ligne d'aide aux victimes de violences conjugales, ou appeler les secours si tu es en danger."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'care',
+    theme: T('A family making room', 'Une famille qui fait de la place', 'Una familia que hace espacio', 'Uma família que abre espaço', 'Eine Familie, die Platz macht', 'Семья, в которой есть место', '为新生命腾出位置的家人', '場所を空けて迎える家族', '자리를 내어 주는 가족', 'عائلة تفسح المكان', 'خانواده‌ای که جا باز می‌کند', 'जगह बनाता परिवार', 'Keluarga yang memberi ruang', 'Familia inayotoa nafasi', 'Pamilyang nagbibigay ng puwang', 'ቦታ የሚሰጥ ቤተሰብ'),
+    ref: 'Ruth 4:13-17',
+    related: ['2 Timothy 1:5'],
+    reflection: L("At the end of Ruth, a grieving grandmother holds a newborn in her lap while the women of the town praise God with her. Naomi's bitterness had been real; the child does not erase her losses, but a whole community gathers around new life. Paul notes that Timothy's faith lived first in his grandmother Lois and his mother Eunice. Grandparents, siblings, aunts and uncles all shape a child's world, and each may need grace for the changes a birth brings.", "À la fin du livre de Ruth, une grand-mère endeuillée tient un nouveau-né sur ses genoux pendant que les femmes de la ville louent Dieu avec elle. L'amertume de Naomi était réelle ; l'enfant n'efface pas ses pertes, mais toute une communauté se rassemble autour d'une vie nouvelle. Paul note que la foi de Timothée a d'abord habité sa grand-mère Loïs et sa mère Eunice. Grands-parents, frères et sœurs, oncles et tantes façonnent le monde d'un enfant, et chacun peut avoir besoin de grâce face aux changements qu'apporte une naissance."),
+    prompts: [
+      L('Pray for any brothers or sisters of this child, that they would feel secure and loved as the family changes.', "Prie pour les frères et sœurs de cet enfant, afin qu'ils se sentent aimés et en sécurité pendant que la famille change."),
+      L("Ask God to give grandparents both wisdom to help and grace to respect the parents' choices.", "Demande à Dieu de donner aux grands-parents la sagesse d'aider et la grâce de respecter les choix des parents."),
+      L('Bring Him the family relationships that feel strained, and ask for peace where there is old hurt.', "Confie-Lui les relations familiales tendues, et demande la paix là où il y a d'anciennes blessures."),
+    ],
+    selfPrompt: L('Whose faith first reached you? Thank God for them, and ask Him to make your own faith sincere enough to pass on.', "Par qui la foi est-elle d'abord arrivée jusqu'à toi ? Remercie Dieu pour ces personnes, et demande-Lui une foi assez sincère pour être transmise."),
+    practice: L('If there is an older child, plan ten minutes of undivided attention with them this week; otherwise, call a grandparent-to-be and ask how they are.', "S'il y a un enfant plus âgé, prévois cette semaine dix minutes d'attention rien que pour lui ; sinon, appelle un futur grand-parent et demande-lui comment il va."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'care',
+    theme: T('Midwives, doctors and every carer', 'Sages-femmes, médecins et soignants', 'Parteras, médicos y cuidadores', 'Parteiras, médicos e cuidadores', 'Hebammen, Ärzte und Pflegende', 'Акушерки, врачи и все, кто помогает', '助产士、医生和所有护理人员', '助産師、医師、すべての医療者', '조산사와 의사, 모든 돌보는 이', 'القابلات والأطباء وكل مقدّمي الرعاية', 'ماماها، پزشکان و همهٔ مراقبان', 'दाइयाँ, डॉक्टर और सभी देखभालकर्ता', 'Bidan, dokter, dan semua perawat', 'Wakunga, madaktari na wahudumu wote', 'Mga komadrona, doktor at tagapag-alaga', 'አዋላጆች፣ ሐኪሞችና ተንከባካቢዎች ሁሉ'),
+    ref: 'Exodus 1:15-21',
+    related: ['Colossians 4:14'],
+    reflection: L("Two midwives, Shiphrah and Puah, are among the first heroes of Exodus. Ordered by Pharaoh to kill newborn boys, they feared God and protected life, and Scripture records that God was kind to them. Paul, too, mentions Luke the doctor with evident affection. Skilled care is not a rival to faith but one of the ways God looks after mothers and children, so it deserves both our prayers and our cooperation.", "Deux sages-femmes, Schiphra et Pua, comptent parmi les premiers héros de l'Exode. Sommées par le pharaon de tuer les nouveau-nés garçons, elles ont craint Dieu et protégé la vie, et l'Écriture rapporte que Dieu leur fit du bien. Paul, lui aussi, mentionne avec affection Luc le médecin. Des soins compétents ne sont pas les rivaux de la foi : ils font partie des moyens par lesquels Dieu prend soin des mères et des enfants. Ils méritent donc nos prières et notre coopération."),
+    prompts: [
+      L('Pray for the midwives, doctors, nurses and sonographers involved in this pregnancy: for skill, attentiveness and rest.', 'Prie pour les sages-femmes, médecins, infirmiers et échographistes qui suivent cette grossesse : pour leur compétence, leur attention et leur repos.'),
+      L('Ask God for clear communication at appointments, so that questions are asked and answers understood.', 'Demande à Dieu une communication claire lors des rendez-vous, pour que les questions soient posées et les réponses comprises.'),
+      L('Thank Him for medical knowledge and for those who use it with compassion.', 'Remercie-Le pour les connaissances médicales et pour ceux qui les mettent en œuvre avec compassion.'),
+    ],
+    selfPrompt: L('Ask the Lord to free you from any sense that seeking medical help shows weak faith; receiving care can be an act of trust.', "Demande au Seigneur de te libérer de l'idée que recourir aux soins serait un manque de foi ; recevoir de l'aide peut être un acte de confiance."),
+    practice: L('Keep every appointment, and before the next one write down your questions, including anything you have hesitated to mention.', 'Honore chaque rendez-vous et, avant le prochain, note tes questions, y compris ce que tu hésitais à mentionner.'),
+    resourceTopics: ['pregnancy', 'intercession'],
+  },
+
+  // ── The child's future ─────────────────────────────────────────────────────
+  {
+    movement: 'future',
+    theme: T("God's purposes, not our script", 'Les desseins de Dieu, pas nos plans', 'Los propósitos de Dios, no los nuestros', 'Os propósitos de Deus, não os nossos', 'Gottes Absichten, nicht unser Drehbuch', 'Божий замысел, а не наш сценарий', '是神的旨意，不是我们的安排', '私たちの筋書きではなく神の御心', '우리의 계획이 아닌 하나님의 뜻', 'مقاصد الله لا خططنا', 'مقصود خدا، نه نقشهٔ ما', 'हमारी योजना नहीं, परमेश्वर का उद्देश्य', 'Rencana Allah, bukan skenario kita', 'Makusudi ya Mungu, si mipango yetu', 'Layunin ng Diyos, hindi ang ating plano', 'የእኛ ዕቅድ ሳይሆን የእግዚአብሔር ዓላማ'),
+    ref: 'Jeremiah 1:4-5',
+    related: ['1 Samuel 3:8-10'],
+    reflection: L("Jeremiah was told that God knew him before he was formed and set him apart as a prophet before his birth. That appointment was Jeremiah's own calling, not a promise that every child will be a prophet or have a particular destiny. What the passage does show is that God's knowledge and purposes come before our plans. Samuel, still a boy, learned to answer God's call with a listening heart; that openness is something we can ask for any child.", "Jérémie a appris que Dieu le connaissait avant de le former et l'avait mis à part comme prophète avant sa naissance. Cette mission était la vocation propre de Jérémie : ce n'est pas une promesse que chaque enfant sera prophète ou connaîtra une destinée particulière. Le passage montre en revanche que la connaissance et les desseins de Dieu précèdent nos projets. Samuel, encore enfant, a appris à répondre à l'appel de Dieu avec un cœur à l'écoute ; c'est cette disponibilité que nous pouvons demander pour tout enfant."),
+    prompts: [
+      L('Thank God that His knowledge of this child comes before every plan and expectation of ours.', 'Remercie Dieu : sa connaissance de cet enfant précède tous nos projets et toutes nos attentes.'),
+      L("Ask Him to guard you from scripting this child's future, and to teach you to pray with open hands.", "Demande-Lui de te garder d'écrire d'avance l'avenir de cet enfant, et de t'apprendre à prier les mains ouvertes."),
+      L('Pray that this child may one day learn, like Samuel, to listen for God and answer Him freely.', 'Prie pour que cet enfant apprenne un jour, comme Samuel, à écouter Dieu et à Lui répondre librement.'),
+    ],
+    selfPrompt: L('Is there a call of God on your own life that you have been slow to answer? Tell Him honestly, and ask for a listening heart.', "Y a-t-il un appel de Dieu sur ta propre vie auquel tu tardes à répondre ? Dis-le-Lui honnêtement, et demande un cœur à l'écoute."),
+    practice: L('Write down one hope you hold for this child, and beside it note that you place it in God’s hands.', "Écris un espoir que tu portes pour cet enfant, et note à côté que tu le remets entre les mains de Dieu."),
+    resourceTopics: ['children', 'intercession'],
+  },
+  {
+    movement: 'future',
+    theme: T('A faith of their own', 'Une foi personnelle', 'Una fe propia', 'Uma fé própria', 'Ein eigener Glaube', 'Своя собственная вера', '属于自己的信心', '自分自身の信仰', '자기 자신의 믿음', 'إيمان شخصي', 'ایمانی از آنِ خود', 'अपना निजी विश्वास', 'Iman yang menjadi miliknya', 'Imani yake mwenyewe', 'Sariling pananampalataya', 'የግል እምነት'),
+    ref: '2 Timothy 3:14-15',
+    related: ['Deuteronomy 6:4-7'],
+    reflection: L("Timothy had known the Scriptures since infancy, and Paul says those writings could lead him to salvation through trusting Christ. The goal was never mere familiarity, but trust in a person. Deuteronomy pictures faith being shared in ordinary moments: at home, on the road, at bedtime and on waking. No parent can hand faith down like an heirloom; what they can do is let a child grow up near the Word and near people who love Jesus.", "Timothée connaissait les Écritures depuis sa petite enfance, et Paul affirme qu'elles pouvaient le conduire au salut par la foi en Jésus-Christ. Le but n'a jamais été une simple familiarité, mais la confiance en une personne. Le Deutéronome montre cette foi transmise dans les moments ordinaires : à la maison, en chemin, au coucher et au lever. Aucun parent ne peut léguer la foi comme un bijou de famille ; il peut en revanche laisser un enfant grandir près de la Parole et près de personnes qui aiment Jésus."),
+    prompts: [
+      L('Pray that this child would one day come to trust Jesus personally, not only know about Him.', 'Prie pour que cet enfant en vienne un jour à faire personnellement confiance à Jésus, et pas seulement à Le connaître de nom.'),
+      L("Ask the Holy Spirit to make Scripture, prayer and worship a natural part of the home's ordinary days.", "Demande au Saint-Esprit de faire de l'Écriture, de la prière et de la louange une part naturelle des jours ordinaires du foyer."),
+      L('Entrust to God the freedom this child will need to ask questions and wrestle honestly with faith.', 'Confie à Dieu la liberté dont cet enfant aura besoin pour poser des questions et se débattre honnêtement avec la foi.'),
+    ],
+    selfPrompt: L('Is your own faith living trust or mostly habit? Ask Christ to renew your first love for Him.', 'Ta propre foi est-elle une confiance vivante ou surtout une habitude ? Demande au Christ de raviver ton premier amour pour Lui.'),
+    practice: L('Read a psalm aloud today, and consider making it a habit that a child could grow up hearing.', "Lis un psaume à voix haute aujourd'hui, et pense à en faire une habitude qu'un enfant pourrait entendre en grandissant."),
+    resourceTopics: ['children', 'scripture-prayer'],
+  },
+  {
+    movement: 'future',
+    theme: T('Growing in wisdom and stature', 'Grandir en sagesse et en stature', 'Crecer en sabiduría y estatura', 'Crescer em sabedoria e estatura', 'Wachsen an Weisheit und Gnade', 'Возрастать в мудрости и росте', '在智慧和身量上增长', '知恵と背丈の成長', '지혜와 키가 자라도록', 'النمو في الحكمة والقامة', 'رشد در حکمت و قامت', 'बुद्धि और डील-डौल में बढ़ना', 'Bertambah hikmat dan besar', 'Kukua katika hekima na kimo', 'Lumago sa karunungan at pangangatawan', 'በጥበብና በቁመት ማደግ'),
+    ref: 'Luke 2:52',
+    related: ['Galatians 5:22-23'],
+    reflection: L("Luke sums up Jesus' hidden years in a single line: He grew wiser and taller, and was loved by God and by people. The Son of God shared ordinary human growth in body, mind and relationships, over time. Character in a child grows slowly too, and the fruit Paul describes in Galatians (love, joy, patience, kindness, self-control and more) is the work of the Spirit, not a parenting achievement. Pray for the whole person, not only for talents or success.", "Luc résume les années cachées de Jésus en une seule phrase : Il a grandi en sagesse et en taille, et Il était aimé de Dieu et des gens. Le Fils de Dieu a partagé une croissance humaine ordinaire, du corps, de l'intelligence et des relations, au fil du temps. Chez un enfant aussi, le caractère se forme lentement, et le fruit que Paul décrit dans Galates (amour, joie, patience, bonté, maîtrise de soi…) est l'œuvre de l'Esprit, non une réussite éducative. Prie pour la personne tout entière, pas seulement pour ses talents ou sa réussite."),
+    prompts: [
+      L("Pray for this child's whole growth: body, mind, friendships and a heart turned toward God.", "Prie pour la croissance entière de cet enfant : son corps, son intelligence, ses amitiés et un cœur tourné vers Dieu."),
+      L('Ask the Holy Spirit to grow kindness, honesty and self-control in this child over the years.', "Demande au Saint-Esprit de faire grandir en cet enfant, au fil des années, la bonté, l'honnêteté et la maîtrise de soi."),
+      L('Ask God to free this child from being measured by milestones, grades or comparison with others.', "Demande à Dieu de libérer cet enfant du poids des comparaisons, des étapes à franchir et des notes."),
+    ],
+    selfPrompt: L('Which fruit of the Spirit is thinnest in your own life right now? Name it before God and ask Him to grow it.', "Quel fruit de l'Esprit est le plus fragile dans ta vie en ce moment ? Nomme-le devant Dieu et demande-Lui de le faire grandir."),
+    practice: L('Write down one trait of character you would love this child to see in you, and practise it once today.', "Note un trait de caractère que tu aimerais que cet enfant voie en toi, et mets-le en pratique une fois aujourd'hui."),
+    resourceTopics: ['children', 'intercession'],
+  },
+  {
+    movement: 'future',
+    theme: T('Wisdom for raising a child', 'La sagesse pour élever un enfant', 'Sabiduría para criar a un hijo', 'Sabedoria para criar um filho', 'Weisheit für die Erziehung', 'Мудрость для воспитания', '养育孩子的智慧', '子育てのための知恵', '자녀 양육을 위한 지혜', 'حكمة لتربية الطفل', 'حکمت برای تربیت فرزند', 'बच्चे के पालन-पोषण के लिए बुद्धि', 'Hikmat untuk membesarkan anak', 'Hekima ya kulea mtoto', 'Karunungan sa pagpapalaki ng anak', 'ልጅን ለማሳደግ ጥበብ'),
+    ref: 'James 1:5',
+    related: ['Ephesians 6:4'],
+    reflection: L("James writes to believers under pressure and invites anyone who lacks wisdom to ask God, who gives generously and does not scold the one who asks. That is good news for parents-to-be who feel unqualified: no book, course or relative can answer every question ahead of time. Paul adds a caution for parents, to raise children in the Lord's ways without crushing or provoking them. Wisdom will be needed daily, and it may be asked for daily.", "Jacques écrit à des croyants éprouvés et invite quiconque manque de sagesse à la demander à Dieu, qui donne avec générosité et ne rabroue pas celui qui demande. C'est une bonne nouvelle pour les futurs parents qui se sentent dépassés : aucun livre, aucune formation, aucun proche ne peut répondre d'avance à toutes les questions. Paul ajoute une mise en garde : élever les enfants dans les voies du Seigneur, sans les écraser ni les irriter. La sagesse sera nécessaire chaque jour, et elle peut être demandée chaque jour."),
+    prompts: [
+      L('Ask God for wisdom for the decisions ahead, from feeding and sleep to faith and discipline.', "Demande à Dieu la sagesse pour les décisions à venir, de l'alimentation et du sommeil jusqu'à la foi et à la discipline."),
+      L('Pray that this child would be raised with patience and firm love, never with harshness or contempt.', 'Prie pour que cet enfant soit élevé avec patience et un amour ferme, jamais avec dureté ou mépris.'),
+      L('Pray for parents who feel unprepared, including adoptive and foster parents, and for grace to ask for help.', "Prie pour les parents qui se sentent mal préparés, y compris les parents adoptifs et les familles d'accueil, et pour la grâce de demander de l'aide."),
+    ],
+    selfPrompt: L('Where do you lack wisdom today, in any part of your life? Ask God plainly; He does not scold those who ask.', 'Où manques-tu de sagesse aujourd’hui, dans quelque domaine que ce soit ? Demande-la simplement à Dieu : Il ne rabroue pas ceux qui demandent.'),
+    practice: L('Ask a parent you respect what they wish they had known before their first child, and note one thing they say.', "Demande à un parent que tu respectes ce qu'il aurait aimé savoir avant son premier enfant, et note une chose qu'il te dit."),
+    resourceTopics: ['children', 'wisdom'],
+  },
+  {
+    movement: 'future',
+    theme: T('A church family around the child', "Une famille d'Église autour de l'enfant", 'Una iglesia que rodea al niño', 'Uma igreja ao redor da criança', 'Eine Gemeinde, die das Kind umgibt', 'Церковная семья рядом с ребёнком', '围绕孩子的教会家庭', '子どもを囲む教会の家族', '아이를 품는 교회 공동체', 'عائلة الكنيسة حول الطفل', 'خانوادهٔ کلیسا در کنار کودک', 'बच्चे के चारों ओर कलीसिया परिवार', 'Keluarga jemaat di sekitar anak', 'Familia ya kanisa inayomzunguka mtoto', 'Pamilya ng iglesya sa paligid ng bata', 'ልጁን የሚከብብ የቤተ ክርስቲያን ቤተሰብ'),
+    ref: 'Luke 2:25-38',
+    related: ['Galatians 6:2'],
+    reflection: L("When Mary and Joseph brought the infant Jesus to the temple, two elderly believers were waiting. Simeon, led by the Spirit, took the child in his arms and praised God; Anna, a widow who had worshipped with fasting and prayer for decades, gave thanks and spoke of Him to others. Their meeting with the Messiah was unique, yet it shows what a praying community can be for a young family: people who notice, bless, and keep praying long after the visit.", "Quand Marie et Joseph ont présenté l'enfant Jésus au temple, deux croyants âgés les attendaient. Siméon, conduit par l'Esprit, a pris l'enfant dans ses bras et a loué Dieu ; Anne, une veuve qui servait Dieu depuis des décennies dans le jeûne et la prière, a rendu grâce et a parlé de Lui à d'autres. Leur rencontre avec le Messie est unique, mais elle montre ce qu'une communauté qui prie peut être pour une jeune famille : des personnes qui remarquent, bénissent et continuent de prier bien après la visite."),
+    prompts: [
+      L('Thank God for the believers who have prayed for you and your family, and pray that this child would have such people too.', 'Remercie Dieu pour les croyants qui ont prié pour toi et ta famille, et prie pour que cet enfant ait, lui aussi, de telles personnes.'),
+      L('Ask the Lord to lead your church to support this family in practical ways in the months ahead.', 'Demande au Seigneur de conduire ton Église à soutenir concrètement cette famille dans les mois à venir.'),
+      L('Pray for older believers like Simeon and Anna who will keep this child in faithful prayer.', 'Prie pour que des croyants plus âgés, comme Siméon et Anne, portent fidèlement cet enfant dans la prière.'),
+    ],
+    selfPrompt: L('Could you be a Simeon or an Anna for another family? Ask God which child He may be inviting you to pray for faithfully.', 'Pourrais-tu être un Siméon ou une Anne pour une autre famille ? Demande à Dieu pour quel enfant Il t’invite peut-être à prier fidèlement.'),
+    practice: L('Ask one or two mature believers whether they would pray regularly for this child, sharing only what the family is happy to share.', "Demande à un ou deux croyants mûrs s'ils accepteraient de prier régulièrement pour cet enfant, en ne partageant que ce que la famille souhaite partager."),
+    resourceTopics: ['children', 'intercession'],
+  },
+
+  // ── Preparing, trusting and surrendering ───────────────────────────────────
+  {
+    movement: 'trust',
+    theme: T('Peace in the not-knowing', "La paix au cœur de l'incertitude", 'Paz en medio de la incertidumbre', 'Paz em meio à incerteza', 'Frieden im Ungewissen', 'Мир среди неизвестности', '在未知中得平安', '分からない中での平安', '알 수 없는 가운데 누리는 평안', 'سلام وسط المجهول', 'آرامش در میان ندانستن', 'अनिश्चितता में शांति', 'Damai di tengah ketidakpastian', 'Amani katikati ya kutojua', 'Kapayapaan sa gitna ng di-alam', 'ባለማወቅ መካከል ሰላም'),
+    ref: 'Philippians 4:6-7',
+    related: ['1 Samuel 1:15-18'],
+    reflection: L("Paul wrote about peace from prison, with his own future uncertain. He does not say that prayer secures the outcome we want; he says that bringing every request to God with thanksgiving opens the way for God's peace, greater than our understanding, to guard our hearts in Christ. Hannah poured out her anguish so openly that the priest misjudged her; she left the temple able to eat again, still not knowing what would happen. Fear can be spoken to God rather than hidden from Him.", "Paul a écrit sur la paix depuis sa prison, alors que son propre avenir était incertain. Il ne dit pas que la prière assure l'issue que nous voulons ; il dit que présenter chaque demande à Dieu avec des actions de grâces ouvre la voie à la paix de Dieu, plus grande que ce que nous comprenons, pour garder nos cœurs en Christ. Anne, la mère de Samuel, a épanché sa détresse si ouvertement que le prêtre l'a mal jugée ; elle est repartie du temple capable de manger à nouveau, sans savoir encore ce qui arriverait. La peur peut être dite à Dieu plutôt que cachée devant Lui."),
+    prompts: [
+      L('Name before God each fear you carry about this pregnancy, one by one, and hand each one to Him.', 'Nomme devant Dieu, une à une, les peurs que tu portes au sujet de cette grossesse, et remets-Lui chacune d’elles.'),
+      L("Ask for the peace of Christ to guard the mother's mind, especially at night and before appointments or results.", 'Demande que la paix du Christ garde les pensées de la mère, surtout la nuit et avant les rendez-vous ou les résultats.'),
+      L('Thank God for one good gift of today, even while the future remains unknown.', "Remercie Dieu pour un bienfait d'aujourd'hui, même si l'avenir reste inconnu."),
+    ],
+    selfPrompt: L('What fear do you rarely admit, even to yourself? Tell God about it plainly, as Hannah did, and let Him hold it.', 'Quelle peur avoues-tu rarement, même à toi-même ? Dis-la simplement à Dieu, comme Anne, et laisse-Le la porter.'),
+    practice: L('Share one specific fear with a trusted person or your midwife today, rather than carrying it alone.', "Confie aujourd'hui une peur précise à une personne de confiance ou à ta sage-femme, plutôt que de la garder pour toi."),
+    safetyNote: L('If you have lost a pregnancy before, or if this pregnancy ends in loss, it is not your fault and it is not a failure of faith. You do not have to grieve alone: a pastor, a trusted believer and bereavement support services can walk with you, and your midwife or doctor can point you to them.', "Si tu as déjà perdu une grossesse, ou si cette grossesse se termine par une perte, ce n'est pas ta faute et ce n'est pas un échec de ta foi. Tu n'as pas à traverser ce deuil sans soutien : un pasteur, un croyant de confiance et des services d'accompagnement du deuil périnatal peuvent marcher avec toi, et ta sage-femme ou ton médecin peut t'orienter vers eux."),
+    resourceTopics: ['fear', 'miscarriage', 'lament'],
+  },
+  {
+    movement: 'trust',
+    theme: T('Enough for today', "Assez pour aujourd'hui", 'Suficiente para hoy', 'O suficiente para hoje', 'Genug für heute', 'Достаточно на сегодня', '今日所需已足够', '今日の分は十分に', '오늘을 위한 넉넉한 공급', 'ما يكفي لليوم', 'کافی برای امروز', 'आज के लिए पर्याप्त', 'Cukup untuk hari ini', 'Ya kutosha kwa leo', 'Sapat para sa araw na ito', 'ለዛሬ የሚበቃ'),
+    ref: 'Matthew 6:25-34',
+    related: ['Acts 4:32-35'],
+    reflection: L("A baby on the way raises practical questions: money, space, leave from work, equipment, childcare. Jesus does not call those needs unimportant; He says the Father knows them. He points to birds and wildflowers, invites His followers to seek God's kingdom first, and admits honestly that every day has its own troubles. In Acts, God's provision often arrived through believers who shared what they had. Worry borrows tomorrow's load; prayer brings today's needs to a Father who knows.", "L'arrivée d'un bébé soulève des questions pratiques : l'argent, la place, le congé, l'équipement, la garde. Jésus ne dit pas que ces besoins sont sans importance ; Il dit que le Père les connaît. Il montre les oiseaux et les fleurs des champs, invite ses disciples à chercher d'abord le royaume de Dieu, et reconnaît honnêtement que chaque jour a ses propres difficultés. Dans les Actes, la provision de Dieu passait souvent par des croyants qui partageaient ce qu'ils avaient. L'inquiétude emprunte le fardeau de demain ; la prière confie les besoins d'aujourd'hui à un Père qui sait."),
+    prompts: [
+      L('Tell the Father plainly what this family needs, from money and housing to rest and time off work.', "Dis simplement au Père ce dont cette famille a besoin, de l'argent et du logement jusqu'au repos et au temps libéré du travail."),
+      L('Ask Him to meet those needs through His people, and to give the family humility to receive.', "Demande-Lui de pourvoir à ces besoins par l'intermédiaire de son peuple, et de donner à la famille l'humilité de recevoir."),
+      L('Pray for parents expecting a child in poverty, displacement or war, who have far less than they need.', "Prie pour les parents qui attendent un enfant dans la pauvreté, l'exil ou la guerre, et qui manquent de l'essentiel."),
+    ],
+    selfPrompt: L("Which tomorrow are you trying to carry today? Seek God's kingdom first in that area, and leave tomorrow with Him.", 'Quel lendemain essaies-tu de porter aujourd’hui ? Cherche d’abord le royaume de Dieu dans ce domaine, et laisse-Lui demain.'),
+    practice: L('Make a short list of practical needs for the coming months, and share one of them with someone who could help.', "Dresse une courte liste des besoins concrets des prochains mois, et partage-en un avec quelqu'un qui pourrait aider."),
+    resourceTopics: ['pregnancy'],
+  },
+  {
+    movement: 'trust',
+    theme: T('Kept by the One who never sleeps', 'Gardé par Celui qui ne dort pas', 'Guardado por quien nunca duerme', 'Guardado por quem nunca dorme', 'Behütet von dem, der nicht schläft', 'Хранимые Тем, Кто не дремлет', '被那不打盹的主保守', 'まどろむことのない方に守られて', '졸지 않으시는 분의 지키심', 'محفوظ بمن لا ينام', 'در پناه آن که نمی‌خوابد', 'उसकी रखवाली में जो कभी नहीं सोता', 'Dijaga oleh Dia yang tak pernah tidur', 'Kulindwa na yeye asiyelala', 'Iniingatan ng hindi natutulog', 'በማያንቀላፋው የሚጠበቅ'),
+    ref: 'Psalm 121',
+    related: [],
+    reflection: L("Psalm 121 was sung by pilgrims on a road with real dangers: heat by day, fear at night, a foot that could slip. Its confidence rests on the Maker of heaven and earth, who never dozes while His people sleep. The psalm is a song of trust, not a guarantee that nothing hard will ever happen; other psalms lament troubles that did come. Yet it teaches us to ask boldly for protection and to rest in the One who keeps watch over every departure and return.", "Le Psaume 121 était chanté par des pèlerins sur une route pleine de dangers réels : la chaleur du jour, les peurs de la nuit, un pied qui peut glisser. Sa confiance repose sur le Créateur du ciel et de la terre, qui ne s'assoupit pas pendant que son peuple dort. Ce psaume est un chant de confiance, non l'assurance que rien de difficile n'arrivera jamais ; d'autres psaumes crient des épreuves bien réelles. Il nous apprend pourtant à demander hardiment la protection et à nous reposer en Celui qui veille sur chaque départ et chaque retour."),
+    prompts: [
+      L('Ask the Lord to watch over this child and the mother by day and by night.', 'Demande au Seigneur de veiller sur cet enfant et sur sa mère, le jour comme la nuit.'),
+      L('Pray for protection from harm, and for quick, wise responses if anything goes wrong.', 'Prie pour qu’ils soient protégés du mal, et pour des réactions rapides et sages si quelque chose se passe mal.'),
+      L('Thank God that He never sleeps, so that tired parents can.', 'Remercie Dieu : Il ne dort jamais, et les parents fatigués peuvent donc dormir.'),
+    ],
+    selfPrompt: L("Where do you stay on guard because you trust no one else to keep watch? Ask God to teach you to rest in His keeping.", "Où restes-tu sur le qui-vive parce que tu ne fais confiance à personne d'autre pour veiller ? Demande à Dieu de t'apprendre à te reposer sous sa garde."),
+    practice: L('Pray Psalm 121 slowly tonight before sleep; if you wake anxious, turn one line of it into a short prayer.', "Prie lentement le Psaume 121 ce soir avant de dormir ; si l'inquiétude te réveille, fais d'une de ses phrases une courte prière."),
+    resourceTopics: ['pregnancy', 'psalms'],
+  },
+  {
+    movement: 'trust',
+    theme: T('The day of birth', 'Le jour de la naissance', 'El día del parto', 'O dia do parto', 'Der Tag der Geburt', 'День родов', '分娩的日子', '出産の日', '출산의 날', 'يوم الولادة', 'روز زایمان', 'जन्म का दिन', 'Hari persalinan', 'Siku ya kujifungua', 'Ang araw ng panganganak', 'የወሊድ ቀን'),
+    ref: 'Psalm 22:9-10',
+    related: ['Isaiah 46:3-4'],
+    reflection: L("Psalm 22 begins with the cry Jesus prayed on the cross, and in the middle of that anguish David remembers that God brought him out of the womb and was his God from birth. Birth is one of the most vulnerable moments of any life, and Scripture does not pretend otherwise. Isaiah pictures God carrying His people from birth to old age. Whether labour follows the birth plan or changes suddenly, mother and child are not beyond His reach, and no way of giving birth is a spiritual failure.", "Le Psaume 22 commence par le cri que Jésus a prié sur la croix, et au cœur de cette détresse, David se souvient que Dieu l'a fait sortir du ventre maternel et qu'Il a été son Dieu dès sa naissance. La naissance est l'un des moments les plus vulnérables d'une vie, et l'Écriture ne prétend pas le contraire. Ésaïe dépeint Dieu portant son peuple depuis la naissance jusqu'à la vieillesse. Que l'accouchement suive le projet de naissance ou change soudain, la mère et l'enfant ne sont pas hors de sa portée, et aucune manière d'accoucher n'est un échec spirituel."),
+    prompts: [
+      L('Pray for labour and delivery: for strength, for the right timing, and for mother and child to be kept safe.', "Prie pour le travail et l'accouchement : pour la force, pour le bon moment, et pour que la mère et l'enfant soient gardés."),
+      L('Ask God to give the birth team clear judgement and steady hands, especially if decisions must be made quickly.', "Demande à Dieu de donner à l'équipe présente un jugement clair et des gestes sûrs, surtout si des décisions doivent être prises rapidement."),
+      L('Pray for the birth partner or companion, that they would be calm, present and kind.', "Prie pour la personne qui accompagnera l'accouchement, afin qu'elle soit calme, présente et bienveillante."),
+    ],
+    selfPrompt: L('Tell God about a moment you dread, in this birth or in your own life, and ask Him to be your God in it.', 'Parle à Dieu du moment que tu redoutes, dans cet accouchement ou dans ta propre vie, et demande-Lui d’être ton Dieu au cœur de ce moment.'),
+    practice: L("Make sure the maternity unit's number and a bag are ready, and treat the birth plan as a list of hopes, not a test.", "Veille à ce que le numéro de la maternité et un sac soient prêts, et considère le projet de naissance comme une liste de souhaits, non comme un examen."),
+    resourceTopics: ['pregnancy', 'fear'],
+  },
+  {
+    movement: 'trust',
+    theme: T('Care for the weeks that follow', 'Prendre soin des semaines qui suivent', 'Cuidado en las semanas siguientes', 'Cuidado nas semanas seguintes', 'Fürsorge für die Wochen danach', 'Забота в последующие недели', '之后几周的照料', 'その後の数週間へのいたわり', '그 후 몇 주를 위한 돌봄', 'الرعاية في الأسابيع التالية', 'مراقبت در هفته‌های پس از آن', 'बाद के हफ़्तों की देखभाल', 'Perawatan pada minggu-minggu sesudahnya', 'Utunzaji katika wiki zinazofuata', 'Pag-aalaga sa mga linggong kasunod', 'በሚከተሉት ሳምንታት እንክብካቤ'),
+    ref: '1 Kings 19:4-8',
+    related: ['Mark 6:30-32'],
+    reflection: L("After a great strain, Elijah lay down exhausted and told God he had had enough. God's first answer was not a rebuke or a sermon but sleep, food, water and a gentle touch, twice. The weeks after a birth can bring joy alongside exhaustion, pain, hormonal upheaval and tears, and none of these is a sign of weak faith; the same is true after a loss. Jesus once told His busy disciples to come away and rest. Caring for the body is part of caring for the soul.", "Après une épreuve intense, Élie s'est couché, épuisé, et a dit à Dieu qu'il n'en pouvait plus. La première réponse de Dieu n'a été ni un reproche ni un sermon, mais du sommeil, de la nourriture, de l'eau et un toucher plein de douceur, à deux reprises. Les semaines qui suivent une naissance peuvent mêler la joie à l'épuisement, à la douleur, aux bouleversements hormonaux et aux larmes, et rien de tout cela n'est le signe d'une foi faible ; il en va de même après une perte. Jésus a un jour invité ses disciples débordés à se retirer pour se reposer. Prendre soin du corps fait partie du soin de l'âme."),
+    prompts: [
+      L("Pray ahead for the weeks after birth: recovery for the mother's body, sleep for the household and patience with one another.", "Prie dès maintenant pour les semaines après la naissance : le rétablissement du corps de la mère, du sommeil pour toute la maison et de la patience les uns envers les autres."),
+      L('Ask God to surround the family with people who bring meals, share the chores and ask how the mother is really doing.', "Demande à Dieu d'entourer la famille de personnes qui apportent des repas, prennent le relais pour les tâches et demandent à la mère comment elle va vraiment."),
+      L('Pray that low mood or anxiety, if it comes, would be noticed early and met with help rather than shame.', "Prie pour que la déprime ou l'anxiété, si elles surviennent, soient repérées tôt et accueillies par de l'aide plutôt que par la honte."),
+    ],
+    selfPrompt: L('When you are worn out, do you hide it or push through? Let God care for your body today, and accept the help that is offered.', "Quand tes forces s'épuisent, le caches-tu ou continues-tu coûte que coûte ? Laisse Dieu prendre soin de ton corps aujourd'hui, et accepte l'aide qu'on te propose."),
+    practice: L('Arrange now who could bring meals or help at home in the first weeks, and write down the number to call if low mood or anxiety sets in.', "Organise dès maintenant qui pourrait apporter des repas ou aider à la maison les premières semaines, et note le numéro à appeler si la déprime ou l'anxiété s'installent."),
+    safetyNote: L('Low mood, anxiety or frightening thoughts after a birth or after a loss are common and treatable, and they are not a failure of faith. Tell your midwife or doctor soon. If you have thoughts of harming yourself or your baby, contact your doctor or emergency services immediately.', "La déprime, l'anxiété ou des pensées effrayantes après une naissance ou après une perte sont fréquentes et se soignent ; elles ne sont pas un échec de la foi. Parles-en rapidement à ta sage-femme ou à ton médecin. Si tu as des pensées de te faire du mal ou de faire du mal à ton bébé, contacte immédiatement ton médecin ou les secours."),
+    resourceTopics: ['mental-health'],
+  },
+  {
+    movement: 'trust',
+    theme: T('Entrusted to the love of Christ', "Confié à l'amour du Christ", 'Confiado al amor de Cristo', 'Confiado ao amor de Cristo', 'Der Liebe Christi anvertraut', 'Вверены любви Христа', '交托在基督的爱里', 'キリストの愛にゆだねて', '그리스도의 사랑에 맡기며', 'في عهدة محبة المسيح', 'سپرده به محبت مسیح', 'मसीह के प्रेम को सौंपा गया', 'Diserahkan kepada kasih Kristus', 'Kukabidhiwa kwa upendo wa Kristo', 'Ipinagkatiwala sa pag-ibig ni Cristo', 'ለክርስቶስ ፍቅር የተሰጠ'),
+    ref: 'Romans 8:31-39',
+    related: ['Romans 8:26-28'],
+    reflection: L("Romans 8:28 is often quoted as if it promised that everything will turn out as we hope. In context, Paul has just described creation, believers and even the Spirit groaning, and the good he names is being shaped into the likeness of Christ. He then lists real hardships (trouble, hunger, danger, death) and declares that none of them can separate God's people from His love in Christ Jesus. Whatever this pregnancy holds, the child and everyone you have carried in prayer can be entrusted to the God who gave up His own Son for us.", "Le verset 28 de Romains 8 est souvent cité comme la promesse que tout finira comme nous l'espérons. Dans son contexte, Paul vient de décrire la création, les croyants et même l'Esprit qui gémissent, et le bien dont il parle, c'est d'être rendus semblables au Christ. Il énumère ensuite des épreuves bien réelles (détresse, faim, danger, mort) et déclare qu'aucune ne peut séparer le peuple de Dieu de son amour en Jésus-Christ. Quoi que cette grossesse réserve, l'enfant et tous ceux que tu as portés dans la prière peuvent être confiés au Dieu qui a livré son propre Fils pour nous."),
+    prompts: [
+      L('Entrust this child to God, with or without a name yet, and place the unknown future in His hands.', "Confie cet enfant à Dieu, qu'il ait déjà un prénom ou non, et remets entre ses mains l'avenir encore inconnu."),
+      L("When you do not know what to pray, rest in the Spirit's intercession and simply stay in God's presence.", "Quand tu ne sais plus quoi demander, repose-toi sur l'intercession de l'Esprit et demeure simplement devant Dieu."),
+      L('Thank Christ that no outcome, fear or loss can separate those who belong to Him from His love.', 'Remercie le Christ : aucune issue, aucune peur, aucune perte ne peut séparer de son amour ceux qui Lui appartiennent.'),
+    ],
+    selfPrompt: L('Place yourself in the same hands. Whatever these weeks have stirred in you, tell Christ, and receive His love as meant for you.', "Remets-toi entre les mêmes mains. Quoi que ces semaines aient remué en toi, dis-le au Christ, et reçois son amour comme un amour pour toi."),
+    practice: L('Decide how you will keep praying after today, perhaps once a week for this family, and put it in your calendar or Journal now.', "Décide comment tu continueras à prier après aujourd'hui, par exemple une fois par semaine pour cette famille, et inscris-le dès maintenant dans ton agenda ou ton journal de prière."),
+    resourceTopics: ['intercession'],
+  },
+];

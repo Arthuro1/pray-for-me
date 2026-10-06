@@ -6,6 +6,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { pick, localizeRef } from '../content/teaching';
 import { guideDurationMinutes } from '../lib/guideMeta';
 import VerseAccordion from './VerseAccordion';
+import ReportWordingLink from './ReportWordingLink';
 
 // A pray-through reader for a prayer guide: an intro, then one step at a time.
 // Each step gives a heading and a gentle prompt, and (usually) points to a
@@ -104,6 +105,7 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
         <button onClick={onClose} className="mt-4 px-6 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
           {t(lang, 'close')}
         </button>
+        <ReportWordingLink lang={lang} surface={`guides/${guide.id}`} />
       </div>
     );
   }

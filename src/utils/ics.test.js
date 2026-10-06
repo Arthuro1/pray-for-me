@@ -13,7 +13,7 @@ describe('buildICS', () => {
     expect(ics).toContain('BEGIN:VCALENDAR');
     expect(ics).toContain('DTSTART;VALUE=DATE:20260704');
     expect(ics).toContain('RRULE:FREQ=WEEKLY;BYDAY=TU,FR;COUNT=8');
-    expect(ics).toContain('UID:p1@pray4me.space');
+    expect(ics).toContain('UID:p1@praystead.com');
     expect(ics.trim().endsWith('END:VCALENDAR')).toBe(true);
   });
 
@@ -36,7 +36,7 @@ describe('buildICS', () => {
     );
     expect(ics).not.toContain('No schedule');
     expect(ics).not.toContain('Exam');
-    expect(ics).toContain('UID:commitment-c1@pray4me.space');
+    expect(ics).toContain('UID:commitment-c1@praystead.com');
     expect(ics).toContain('DESCRIPTION:Cell group');
   });
 });

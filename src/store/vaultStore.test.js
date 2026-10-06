@@ -2,8 +2,9 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // vaultStore → vaultSync imports the real Supabase client, which builds its
 // realtime/WebSocket layer at construct time and throws on Node < 22 in CI.
-// This suite only exercises local crypto; the vault's sync calls are
-// fire-and-forget, so stub the client to a no-op (mirrors noPlaintextLeak.test).
+// This suite only exercises local crypto, so stub the client: `getUser` returns
+// nobody, which makes every sync call report `synced: false` (mirrors
+// noPlaintextLeak.test). The sync path itself is covered in vaultSync.test.js.
 vi.mock('../lib/supabase', () => {
   const chain = {
     upsert: () => Promise.resolve({ data: null, error: null }),
@@ -44,7 +45,7 @@ describe('vaultStore', () => {
     const s = useVaultStore.getState();
     expect(s.initialized).toBe(false);
 
-    const code = await s.createVault('passphrase-1');
+    const { code } = await s.createVault('passphrase-1');
     expect(typeof code).toBe('string');
     expect(useVaultStore.getState().initialized).toBe(true);
     expect(useVaultStore.getState().unlocked).toBe(true);

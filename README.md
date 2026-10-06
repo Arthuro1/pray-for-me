@@ -2,9 +2,9 @@
 
 <br/>
 
-<img src="public/logo.svg" alt="Pray4Me" width="80" height="80" />
+<img src="public/logo.svg" alt="Praystead" width="80" height="80" />
 
-# Pray4Me
+# Praystead
 
 ### Your personal Christian prayer companion
 
@@ -12,12 +12,12 @@
 
 <br/>
 
-[![Live](https://img.shields.io/badge/Live-pray4me.space-6d28d9?style=for-the-badge&logo=vercel&logoColor=white)](https://pray4me.space)
+[![Live](https://img.shields.io/badge/Live-praystead.com-6d28d9?style=for-the-badge&logo=vercel&logoColor=white)](https://praystead.com)
 [![React](https://img.shields.io/badge/React_18-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Supabase](https://img.shields.io/badge/Supabase-3ecf8e?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
-[![PWA](https://img.shields.io/badge/PWA-ready-5a0fc8?style=for-the-badge&logo=pwa&logoColor=white)](https://pray4me.space)
+[![PWA](https://img.shields.io/badge/PWA-ready-5a0fc8?style=for-the-badge&logo=pwa&logoColor=white)](https://praystead.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge)](LICENSE)
 
 <br/>
@@ -36,6 +36,7 @@
 - **🗂️ Prayer journal** — capture a request in a single field (your very first prayer *is* the onboarding — write it, save it, pray it); organizing with categories, people and prayer rhythms is optional and one tap away. Add updates and prayer points with Bible verses, mark prayers answered, and revisit testimonies in the Journal's **Active | Answered** segments. Updates and testimonies support **simple formatting** (bold, italic, lists, auto-linked URLs) and **media** — photos, voice notes, video and links — with every file **encrypted on-device before upload** (per-file AES-GCM key, private storage bucket that only ever holds ciphertext). An author can later remove a single attachment or the text from a posted update, and the entry disappears once nothing remains — the answered side is a reflection gallery of God's faithfulness. An optional **People view** appears once several prayers name people, grouping requests by person with latest updates and follow-up dates (pastoral follow-up without a CRM)
 - **🤝 Community** — prayer groups (invite code, link, or QR) with **multiple admins** (promote/demote members, owner & admin badges), a dismissible **first-group checklist** that walks a new leader from invite to praying together (it never offers an action it can't honour — with no requests yet the row reads "Add a request first" and goes there — and its **Invite** step ticks itself off as soon as another member joins, re-checked when the app returns to the foreground rather than by polling), a **Needs attention** row for invitations awaiting you, friends (including a view of your own still-pending outgoing requests, with one-tap cancel), anonymous sharing with a **share preview** that names its audience before you publish, "I'm praying" reactions, member updates and testimonies (with the same formatting and encrypted media as personal updates), two-way sync between your prayer and its shared copies, and translation controls that appear only when a request's language differs from yours — new content stores its **source language** (`content_language`), so even a three-word request in another language reliably offers translation; the original is always preserved behind "Show original", the choice is remembered per group (per prayer for personal ones), and Scripture text never goes through AI translation. The language is **defaulted from the one you're using, and correctable** — bilingual writers get a quiet "Written in English · Change" line inside the existing Organize/advanced disclosure (never a new form field, and nobody is ever asked to pick a language for a prayer). An explicit choice always beats the on-device heuristic; when the heuristic confidently disagrees it *offers* its reading, and only applies it if you tap it. Corrections travel with the prayer through edits, sharing, saving a group request personally, and the offline queue
 - **🙌 Intercession queue** — the requests you *explicitly* took on (prayers for someone, requests saved from groups) gather in one Community section. The default session covers only what is **due today** — per-prayer schedules and claimed prayer-chain days, via the same planner as Today; legacy unscheduled requests keep their daily fallback — while **"View all requests I'm carrying"** stays one tap away behind a collapsed disclosure. Sessions resume where you left off, completions feed the same per-prayer log as Today, and a fully-prayed day collapses to a quiet "✓ prayed today" row instead of a dashboard card
+- **👤 Avatars** — an identity aid, not a profile. A person or a group is a coloured tile with initials or one of eight line symbols, derived deterministically from the display name so every account and every group is already recognisable with nothing configured. Optionally, upload a **photo**: it is cropped, resized to 512×512 and re-encoded **on the device** — a canvas redraw, so EXIF (GPS, device, timestamp, embedded thumbnail) simply does not survive — then stored in a private bucket under an opaque object id with **no public URL**, readable only by the people who could already see that person or group (yourself, an accepted friend, a member of a shared group; for a group, its members and pending invitees). If you signed in with Google, your **account picture is the default** without anything being stored — it is read from your own session at render time, so it can never be looked up for anyone else — and any explicit choice you make always beats it. There are no public profiles, no directories, and no avatar browsing
 - **🌱 Grow** — a path, not a catalogue: ONE recommended next step from your own progress (continue an in-progress guide, or the next new one), with the full library of 12 prayer guides and 16 short readings behind "Browse all" and completed guides in a collapsed history — all localized, plus an optional **gospel journey** for anyone exploring the hope behind prayer
 - **📅 Prayer scheduling** — one gentle question ("How often should this return?") with everyday rhythm presets — daily, weekly, occasionally — and a **Custom** editor for the full engine: once or recurring (chosen weekdays, every N days, monthly, yearly) into morning / midday / evening slots, with four end conditions including *until answered* (the prayer retires itself when God answers); a month/week calendar with per-occurrence skips & moves, gentle **catch-up** for days missed (grace, not guilt), **rotation lists** to pray large lists round-robin, guided **prayer plans** (gratitude, the upper room, 21-day breakthrough…), group **prayer chains** (members claim days), and one-click **.ics** export to Google/Apple/Outlook. The recurrence engine is a pure, fully offline module ([`src/lib/schedule.js`](./src/lib/schedule.js)). **New prayers default to a bounded weekly rhythm** (seeded on the weekday they were written); **legacy unscheduled prayers keep their fallback** — they show up daily, or follow the weekly category plan once categories exist (assign categories to days, per-prayer overrides)
 - **🤖 AI, humbly & self-hosted** — a **self-hosted open model** (Ollama + Qwen, on infrastructure you control) suggests prayer angles with Bible **references** in your language, behind theological guardrails (never speaks for God, always points back to Scripture, never generates verse text) and a one-tap opt-out. **No prayer content is ever sent to an external AI provider** (Anthropic, OpenAI, Google, …). Requests go to a private **AI gateway** that verifies your session, owns the prompts/model, validates output, and is session-gated and rate-limited. See [`services/ai-gateway`](../pray-for-me-ai/services/ai-gateway) in the AI backend repo
@@ -44,7 +45,7 @@
 - **📬 Notifications** — a durable in-app inbox with a live unread badge, deep links, and privacy-safe Web Push for community events (friend requests, group invitations, prayer updates, answered prayers). Per-type preferences, quiet hours, and per-prayer follow; payloads never carry prayer content. [How it works →](./docs/NOTIFICATIONS.md)
 - **📱 PWA & offline** — installable on Android, iOS, and desktop; create and edit prayers offline with a durable IndexedDB write queue that replays on reconnect
 - **🌍 16 languages** — full UI in French, English, German, Portuguese, Chinese, Spanish, Hindi, Japanese, Swahili, Amharic, Indonesian, Tagalog, Korean, Russian, Arabic, and Persian; dynamic content translated via AI and cached. A device-local **Low data mode** (Privacy & Security) defers nonessential fetches for expensive connections — verse text falls back to a reference + link, while capture, Today and sessions keep working offline
-- **🔐 Encryption by default** — private prayers, updates, points, testimonies, and attachments are encrypted in the browser with AES-256-GCM. The raw account content key is intentionally retained in user-scoped IndexedDB for same-device access and mirrored in tab-scoped `sessionStorage` while unlocked; it survives sign-out, while user snapshots, queues, and legacy service-worker caches are cleared. Optional passphrase recovery syncs only wrapped key material and uses a 128-bit Crockford Base32 recovery code (`XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`, shown once). New version-2 ciphertext is bound to its owner, record, parent, field, and key version. Community content uses per-group keys; member removal rotates the key for future content but cannot revoke historical keys already obtained. See [`docs/ENCRYPTION.md`](./docs/ENCRYPTION.md) for the exact guarantees and limitations
+- **🔐 Encryption by default** — private prayers, updates, points, testimonies, and attachments are encrypted in the browser with AES-256-GCM. The raw account content key is intentionally retained in user-scoped IndexedDB for same-device access and mirrored in tab-scoped `sessionStorage` while unlocked; it normally survives sign-out, while an explicit vault lock removes the device/session copies and stays locked across refresh until the passphrase or recovery flow succeeds. Optional passphrase recovery syncs only wrapped key material and uses a 128-bit Crockford Base32 recovery code (`XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`, shown once). New version-2 ciphertext is bound to its owner, record, parent, field, and key version. Community content uses per-group keys; member removal rotates the key for future content but cannot revoke historical keys already obtained. See [`docs/ENCRYPTION.md`](./docs/ENCRYPTION.md) for the exact guarantees and limitations
 - **🔒 Security & privacy at a glance** — Supabase Auth (Google or email/password), Row Level Security, server-only secrets, strict CSP; full threat model in [`docs/THREAT_MODEL.md`](./docs/THREAT_MODEL.md). Every prayer carries a compact **audience label** (Private / Shared with … / From \<group\>) in the form, the saved confirmation, the detail page and the share preview, with encryption shown as a **separate, smaller protection status** — never as a different audience. **Protection is determined per prayer, not by whether the vault is unlocked**: a prayer reads "Encrypted" only when its own stored row says so (`encryption_version` / an encrypted payload / the explicit marker recorded when it was written), so a legacy plaintext prayer is never relabelled just because the device key is available — unlocking lets ciphertext be *read*, it does not retroactively encrypt anything. While creating, the form states the intent ("Will be encrypted"); the saved confirmation switches to the fact, read from the prayer that was actually created. An encrypted prayer that can't be opened on this device says "Encrypted · locked here" rather than implying it is readable; a consolidated **Privacy & Security** settings section (from More) opens as a compact list of disclosure rows — Privacy Center, vault, notification privacy (pushes are generic by default — titles and names never leave the server), low data mode, AI consent, export — with account deletion kept apart at the bottom
 - Light & dark mode, accessible modals (Esc-to-close, focus trap), JSON export of your data
 
@@ -180,7 +181,7 @@ The daily verse is client-side: a curated pool of ~200 vetted references rotated
 
 | Function | Purpose |
 |---|---|
-| `send-daily-reminder` | Daily Web Push with today's prayer subjects, at each user's local reminder time (`pg_cron`, every 15 min) |
+| `send-daily-reminder` | Daily Web Push with today's prayer subjects, at each user's local reminder time (`pg_cron`, every minute; once-per-local-day idempotency) |
 | `send-follow-up-reminder` | Follow-up Web Push every `follow_up_days`, at each user's chosen time (`pg_cron`, every 15 min) |
 | `send-event-notifications` | Privacy-safe Web Push for community events (friend requests, invitations, prayer updates, answered). Claims durable notification rows via a Database Webhook (fast) + retry cron (backstop). [Docs](./docs/NOTIFICATIONS.md) |
 
@@ -197,7 +198,7 @@ npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJEC
 
 ## 💛 No paid feature gating
 
-Pray4Me currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, end-to-end encryption, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
+Praystead currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, end-to-end encryption, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
 
 Some of the richer flows use a **Simple vs Advanced** split purely to keep new users from being overloaded — it is a UX distinction, **not** a plan distinction:
 
@@ -220,7 +221,7 @@ React 18 · Tailwind CSS 3 · React Router 7 · Zustand 5 · Vite + vite-plugin-
 
 ## 🌐 Deployment
 
-Deployed at **[pray4me.space](https://pray4me.space)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies for the self-hosted AI gateway (`api/ai.js`, forwards to `AI_GATEWAY_URL`) and YouVersion. The AI gateway + Ollama are deployed separately (see [`pray-for-me-ai/services/ai-gateway`](../pray-for-me-ai/services/ai-gateway)).
+Deployed at **[praystead.com](https://praystead.com)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies for Anthropic and YouVersion.
 
 ---
 
@@ -240,7 +241,7 @@ MIT — see `LICENSE`.
 
 <br/>
 
-Built with ❤️ and faith · [pray4me.space](https://pray4me.space)
+Built with ❤️ and faith · [praystead.com](https://praystead.com)
 
 *"I can do all things through him who strengthens me." — Philippians 4:13*
 

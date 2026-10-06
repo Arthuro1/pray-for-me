@@ -4,6 +4,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { pick, localizeRef } from '../content/teaching';
 import VerseAccordion from './VerseAccordion';
+import ReportWordingLink from './ReportWordingLink';
 
 // A read-only reader for a theology explanation. Each section is short prose
 // followed by the Scripture references it rests on — rendered as links so the
@@ -88,6 +89,7 @@ export default function ArticleReader({ article, lang, onClose, onOpenJourney })
           <p className="text-xs text-center mt-10 mb-2 leading-relaxed" style={{ color: 'var(--text-3)' }}>
             {t(lang, 'growScriptureNote')}
           </p>
+          <div className="flex justify-center"><ReportWordingLink lang={lang} surface={`theology/${article.id}`} /></div>
         </div>
       </div>
     </div>

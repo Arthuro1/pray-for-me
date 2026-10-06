@@ -6,19 +6,23 @@
     "steps": [
       {
         "title": "Pagsamba",
-        "prompt": "Purihin ang Diyos dahil sa kung sino Siya, hindi lamang sa kung ano ang Kaniyang ibinibigay. Basahin ang salmo nang dahan-dahan at isauli sa Kaniya ang Kaniyang mga salita."
+        "prompt": "Purihin ang Diyos dahil sa kung sino Siya, hindi lamang sa kung ano ang Kaniyang ibinibigay. Basahin ang salmo nang dahan-dahan at isauli sa Kaniya ang Kaniyang mga salita.",
+        "why": "Ang pagsisimula sa kung sino ang Diyos ay nag-aangat sa panalangin nang higit sa ating mga alalahanin at nagpapaalala kung sino ang ating kinakausap. Halos laging dito nagsisimula ang mga panalangin sa Biblia."
       },
       {
         "title": "Pagtatapat",
-        "prompt": "Matapat na sumang-ayon sa Diyos tungkol sa iyong kasalanan. Siya ay tapat at matuwid upang magpatawad — ang pagtatapat ay pag-uwi, hindi pagkamit ng pag-ibig."
+        "prompt": "Matapat na sumang-ayon sa Diyos tungkol sa iyong kasalanan. Siya ay tapat at matuwid upang magpatawad — ang pagtatapat ay pag-uwi, hindi pagkamit ng pag-ibig.",
+        "why": "Ang katapatan tungkol sa kasalanan ay nagbubukas ng daan para sa lahat ng susunod — malaya tayong humihiling dahil lumalapit tayong pinatawad na, hindi nagtatago."
       },
       {
         "title": "Pasasalamat",
-        "prompt": "Pangalanan ang mga tiyak na kaawaan mula ngayong araw at ngayong linggo. Ang pasasalamat ay nagpapatatag sa puso bago ito humingi ng anuman."
+        "prompt": "Pangalanan ang mga tiyak na kaawaan mula ngayong araw at ngayong linggo. Ang pasasalamat ay nagpapatatag sa puso bago ito humingi ng anuman.",
+        "why": "Ang pag-alala sa nagawa na ng Diyos ay nagpapatibay ng pananampalataya para sa ating hihilingin. Ginagawang pagtitiwala ng pasasalamat ang mga kahilingan."
       },
       {
         "title": "Pagsusumamo",
-        "prompt": "Ngayon dalhin ang iyong mga kahilingan — para sa iyong sarili at para sa iba — nang may pagtitiwala, dahil sa kung sino Siya. Ipanalangin ang mga pasanin ng iyong puso."
+        "prompt": "Ngayon dalhin ang iyong mga kahilingan — para sa iyong sarili at para sa iba — nang may pagtitiwala, dahil sa kung sino Siya. Ipanalangin ang mga pasanin ng iyong puso.",
+        "why": "Huli ang mga kahilingan hindi dahil hindi sila gaanong mahalaga, kundi dahil mas malayang humihiling ang pusong nakaangkla sa papuri, katapatan, at pasasalamat."
       }
     ]
   },
@@ -29,7 +33,8 @@
     "steps": [
       {
         "title": "Basahin nang buo",
-        "prompt": "Basahin ang salmo minsan, dahan-dahan, nakikinig lamang. Pansinin kung ano ang sinasabi ng may-akda sa Diyos at tungkol sa Diyos."
+        "prompt": "Basahin ang salmo minsan, dahan-dahan, nakikinig lamang. Pansinin kung ano ang sinasabi ng may-akda sa Diyos at tungkol sa Diyos.",
+        "why": "Ang pakikinig bago magsalita ay hinahayaan ang Diyos na magtakda ng himig ng panalangin. Binibigyan tayo ng Awit ng mga salitang hindi natin matatagpuan nang mag-isa."
       },
       {
         "title": "Isauli ito sa panalangin",
@@ -81,7 +86,7 @@
   },
   "wisdom": {
     "title": "Pananalangin para sa karunungan",
-    "summary": "Kapag hindi mo alam kung ano ang gagawin, iniimbitahan ka ng Diyos na humingi sa Kaniya ng karunungan — ibinibigay nang saganang-sagana.",
+    "summary": "Kapag hindi mo alam ang gagawin, inaanyayahan ka ng Diyos na humingi sa Kanya ng karunungan, at masagana Niya itong ibinibigay.",
     "intro": "Ang karunungan ay hindi lamang katalinuhan; ito ang kasanayang mamuhay ayon sa paraan ng Diyos sa daigdig ng Diyos. Sinasabi ni Santiago na ibinibigay ito ng Diyos nang malaya sa mga humihingi nang may pananampalataya.",
     "steps": [
       {
@@ -93,7 +98,7 @@
         "prompt": "Ang karunungan ay nagsisimula sa paggalang sa Diyos. Hilingin sa Kaniya na gawin kang mas nagnanais ng Kaniyang kalooban kaysa sa iyong sarili."
       },
       {
-        "title": "Magtiwala, huwag umasa sa sarili",
+        "title": "Magtiwala sa Kanya, hindi sa sarili mong unawa",
         "prompt": "Isuko ang iyong sariling pang-unawa. Hilingin sa Diyos na ituwid ang iyong mga landas habang ikaw ay sumusulong."
       }
     ]

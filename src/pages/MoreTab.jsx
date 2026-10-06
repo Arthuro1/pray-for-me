@@ -1,26 +1,20 @@
 import { useNavigate } from 'react-router-dom';
-import { Sprout, CalendarDays, Settings, Heart, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Compass, CalendarDays, Settings, ChevronRight } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { PageHeader } from '../components/shared/Primitives';
 
-// Everything that matters but isn't daily: Grow, planning, privacy & security,
-// settings and support live here so the bottom navigation stays about
-// Today / Journal / Community. Each row is a plain destination — no state, no
-// logic. The inbox is NOT duplicated here (the bell in the header is its one
-// way in), and neither is Export — it lives inside Privacy & Security.
+// More is a short bridge to three secondary destinations. It does not mirror
+// Settings sections or duplicate the notification inbox.
 export default function MoreTab() {
   const navigate = useNavigate();
   const settings = usePrayerStore((s) => s.settings);
   const lang = settings.language || 'fr';
 
   const items = [
-    { key: 'grow', icon: Sprout, label: t(lang, 'grow'), to: '/grow' },
-    { key: 'plan', icon: CalendarDays, label: t(lang, 'plan'), to: '/plan' },
-    // Deep links force-open their Settings section (see SettingsTab hash effect).
-    { key: 'privacy', icon: ShieldCheck, label: t(lang, 'privacySecurity'), to: '/settings#privacy' },
-    { key: 'settings', icon: Settings, label: t(lang, 'settings'), to: '/settings' },
-    { key: 'support', icon: Heart, label: t(lang, 'settingsSecSupport'), to: '/settings#support' },
+    { key: 'guidance', icon: Compass, label: t(lang, 'guidance'), description: t(lang, 'moreGuidanceDesc'), to: '/guidance' },
+    { key: 'calendar', icon: CalendarDays, label: t(lang, 'calendar'), description: t(lang, 'moreCalendarDesc'), to: '/calendar' },
+    { key: 'settings', icon: Settings, label: t(lang, 'settingsAndHelp'), description: t(lang, 'moreSettingsHelpDesc'), to: '/settings' },
   ];
 
   const go = (to) => {
@@ -42,16 +36,23 @@ export default function MoreTab() {
 
       <div className="phase-content max-w-2xl">
         <div className="constellation-menu">
-          {items.map(({ key, icon: Icon, label, to }, i) => (
+          {items.map(({ key, icon: Icon, label, description, to }, i) => (
             <button
               key={key}
               onClick={() => go(to)}
-              className="constellation-menu__row w-full flex items-center gap-3 px-1 py-4 text-left transition-colors"
+              // Stated explicitly so the row reads as one thing — "Grow — guides
+              // and ideas to help you pray" — rather than two run-together spans.
+              aria-label={`${label} — ${description}`}
+              className="constellation-menu__row w-full flex items-center gap-3 px-1 py-3.5 text-start transition-colors"
               style={i > 0 ? { borderTop: '0.5px solid var(--border)' } : {}}
             >
-              <Icon size={18} style={{ color: 'var(--accent)' }} />
-              <span className="flex-1 text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</span>
-              <ChevronRight size={15} style={{ color: 'var(--text-3)' }} />
+              <Icon size={18} className="shrink-0" style={{ color: 'var(--accent)' }} aria-hidden="true" />
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</span>
+                {/* What you'll find there — one quiet line, never a second label. */}
+                <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{description}</span>
+              </span>
+              <ChevronRight size={15} className="shrink-0" style={{ color: 'var(--text-3)' }} aria-hidden="true" />
             </button>
           ))}
         </div>

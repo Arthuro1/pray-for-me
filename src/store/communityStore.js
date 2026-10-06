@@ -5,6 +5,15 @@ import { devError } from '../lib/logger';
 import { track, EVENTS } from '../lib/analytics';
 import { ensureGroupKey, groupKeyResolver, revokeMemberAndRotate } from '../lib/crypto/groupKeys';
 import { autoFollowOnReaction } from '../lib/prayerFollow';
+import { avatarColumns, avatarConfigFrom } from '../lib/avatar';
+import { fetchProfileAvatars } from '../lib/profileAvatars';
+import {
+  acceptedPlanFromInvitation,
+  buildGroupPlanMembershipRow,
+  buildPlanInvitationRow,
+  groupPlanMembershipTarget,
+  summarizePlanParticipation,
+} from '../lib/planSharing';
 import {
   encryptCommunityPrayer,
   encryptCommunityUpdate,
@@ -80,16 +89,23 @@ async function fetchPrayerWithCounts(prayerId) {
   return decryptCommunityRow(groupKeyResolver(data.group_id), data);
 }
 
-// Looks up display names for the given user ids and returns a resolver
-// nameOf(id) that falls back to '?' for unknown ids.
-async function resolveNames(ids) {
-  const unique = [...new Set(ids.filter(Boolean))];
-  let byId = {};
-  if (unique.length > 0) {
-    const { data } = await supabase.from('profiles').select('id, full_name').in('id', unique);
-    byId = Object.fromEntries((data || []).map(p => [p.id, p.full_name]));
-  }
-  return (id) => byId[id] || '?';
+// Looks up the display names AND avatar presets for the given user ids, and
+// returns resolvers that fall back safely for unknown ids: '?' for a name, null
+// for an avatar (which the Avatar component then derives from the name).
+//
+// The two reads are deliberately different shapes. A display name is readable
+// for any signed-in user — a friend request has to be able to name a stranger.
+// An avatar is not: it comes from a relationship-scoped RPC, so someone with no
+// group or friendship in common simply gets the deterministic fallback.
+async function resolveProfiles(ids) {
+  const unique = [...new Set((ids || []).filter(Boolean))];
+  if (unique.length === 0) return { nameOf: () => '?', avatarOf: () => null };
+  const [{ data }, avatars] = await Promise.all([
+    supabase.from('profiles').select('id, full_name').in('id', unique),
+    fetchProfileAvatars(unique),
+  ]);
+  const names = Object.fromEntries((data || []).map(p => [p.id, p.full_name]));
+  return { nameOf: (id) => names[id] || '?', avatarOf: (id) => avatars[id] || null };
 }
 
 const useCommunityStore = create((set, get) => ({
@@ -103,6 +119,14 @@ const useCommunityStore = create((set, get) => ({
   pendingCount: 0,
   // { [sourcePrayerId]: [{ groupId, groupName }] } — where each personal prayer is shared.
   prayerShares: {},
+  // { [userId]: {type,value,color} } for people the user shares a group with, so
+  // a member's chosen avatar is the SAME on the wall, in the member list and on
+  // a prayer they authored — instead of the wall silently falling back to the
+  // name-derived one. Accumulated across groups; only ever holds preset keys.
+  memberAvatars: {},
+  // Group ids already looked up, so re-entering a group (or opening several of
+  // its prayers) doesn't re-query on every render.
+  loadedAvatarGroups: new Set(),
   // The user's upcoming group-calendar commitments (joined with title/group),
   // merged into the personal calendar as 'group' entries.
   myCommitments: [],
@@ -284,11 +308,31 @@ const useCommunityStore = create((set, get) => ({
     get().fetchTestimonies(id);
   },
 
+  // Avatars for everyone in a group, in one relationship-scoped call. Called on
+  // entering a group; the result merges into memberAvatars so any surface can
+  // look a member up by id without its own query.
+  fetchMemberAvatars: async (groupId) => {
+    if (!groupId || get().loadedAvatarGroups.has(groupId)) return;
+    // Marked before the await so two components mounting together don't both
+    // fire the query; a failed lookup simply leaves the deterministic fallback.
+    set((state) => ({ loadedAvatarGroups: new Set(state.loadedAvatarGroups).add(groupId) }));
+    const { data } = await supabase.from('group_members').select('user_id').eq('group_id', groupId);
+    const avatars = await fetchProfileAvatars((data || []).map((m) => m.user_id));
+    set((state) => ({ memberAvatars: { ...state.memberAvatars, ...avatars } }));
+  },
+
   fetchGroups: async (userId) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('group_members')
       .select('role, groups(*)')
       .eq('user_id', userId);
+    // A failed read is not an empty membership. Swallowing it silently leaves the
+    // list at [], which is indistinguishable from "my groups were deleted" — so
+    // keep whatever we already have and say out loud why the refresh failed.
+    if (error) {
+      console.error('[community] could not load groups:', error.message);
+      return toError(error);
+    }
     if (!data) return;
     const { data: prefs } = await supabase
       .from('group_member_prefs')
@@ -342,6 +386,18 @@ const useCommunityStore = create((set, get) => ({
     const { error } = await supabase.from('groups').update({ name: trimmed }).eq('id', groupId);
     if (error) return toError(error);
     set(state => ({ groups: state.groups.map(g => g.id === groupId ? { ...g, name: trimmed } : g) }));
+    return {};
+  },
+
+  // Restyle a group's avatar (admins only — enforced by the same RLS policy as
+  // rename). Values are normalised by avatarColumns() so nothing outside the
+  // preset list can be written, and the local list is patched so every surface
+  // showing this group updates at once.
+  updateGroupAvatar: async (groupId, config) => {
+    const cols = avatarColumns(config);
+    const { error } = await supabase.from('groups').update(cols).eq('id', groupId);
+    if (error) return toError(error);
+    set(state => ({ groups: state.groups.map(g => g.id === groupId ? { ...g, ...cols } : g) }));
     return {};
   },
 
@@ -516,8 +572,8 @@ const useCommunityStore = create((set, get) => ({
       .eq('community_prayer_id', prayerId);
     if (error) return { reactors: [] };
     const ids = (data || []).map(r => r.user_id);
-    const nameOf = await resolveNames(ids);
-    return { reactors: ids.map(id => ({ user_id: id, name: nameOf(id) })) };
+    const { nameOf, avatarOf } = await resolveProfiles(ids);
+    return { reactors: ids.map(id => ({ user_id: id, name: nameOf(id), avatar: avatarOf(id) })) };
   },
 
   toggleReaction: async (prayerId, userId) => {
@@ -842,8 +898,8 @@ const useCommunityStore = create((set, get) => ({
     const pending = new Set((reqs || []).flatMap((r) => [r.from_user_id, r.to_user_id]));
 
     const ids = candidates.filter((id) => !friendIds.has(id) && !pending.has(id));
-    const nameOf = await resolveNames(ids);
-    return { suggestions: ids.map((id) => ({ id, name: nameOf(id) })) };
+    const { nameOf, avatarOf } = await resolveProfiles(ids);
+    return { suggestions: ids.map((id) => ({ id, name: nameOf(id), avatar: avatarOf(id) })) };
   },
 
   acceptFriendRequest: async (requestId) => {
@@ -892,8 +948,8 @@ const useCommunityStore = create((set, get) => ({
       .or(`user_id.eq.${userId},friend_id.eq.${userId}`);
     if (error) return { error: error.message };
     const ids = data.map(f => f.user_id === userId ? f.friend_id : f.user_id);
-    const nameOf = await resolveNames(ids);
-    return { friends: ids.map(id => ({ id, name: nameOf(id) })) };
+    const { nameOf, avatarOf } = await resolveProfiles(ids);
+    return { friends: ids.map(id => ({ id, name: nameOf(id), avatar: avatarOf(id) })) };
   },
 
   // Incoming friend requests enriched with the sender's display name.
@@ -903,8 +959,8 @@ const useCommunityStore = create((set, get) => ({
       .select('*')
       .eq('to_user_id', userId);
     if (error) return { error: error.message };
-    const nameOf = await resolveNames((data || []).map(r => r.from_user_id));
-    return { requests: (data || []).map(r => ({ ...r, fromName: nameOf(r.from_user_id) })) };
+    const { nameOf, avatarOf } = await resolveProfiles((data || []).map(r => r.from_user_id));
+    return { requests: (data || []).map(r => ({ ...r, fromName: nameOf(r.from_user_id), fromAvatar: avatarOf(r.from_user_id) })) };
   },
 
   // Outgoing requests the user has sent that haven't been accepted yet,
@@ -916,8 +972,8 @@ const useCommunityStore = create((set, get) => ({
       .select('*')
       .eq('from_user_id', userId);
     if (error) return { error: error.message };
-    const nameOf = await resolveNames((data || []).map(r => r.to_user_id));
-    return { requests: (data || []).map(r => ({ ...r, toName: nameOf(r.to_user_id) })) };
+    const { nameOf, avatarOf } = await resolveProfiles((data || []).map(r => r.to_user_id));
+    return { requests: (data || []).map(r => ({ ...r, toName: nameOf(r.to_user_id), toAvatar: avatarOf(r.to_user_id) })) };
   },
 
   // Idempotent: re-inviting someone who already has a pending invitation is a
@@ -947,16 +1003,19 @@ const useCommunityStore = create((set, get) => ({
   fetchGroupInvitations: async (userId) => {
     const { data, error } = await supabase
       .from('group_invitations')
-      .select('*, groups(name)')
+      .select('*, groups(name, avatar_type, avatar_value, avatar_color, avatar_photo_path)')
       .eq('invited_user_id', userId);
     if (error) return { error: error.message };
-    const nameOf = await resolveNames((data || []).map(i => i.invited_by));
+    const { nameOf } = await resolveProfiles((data || []).map(i => i.invited_by));
     const invitations = (data || []).map(i => {
       const inviter = nameOf(i.invited_by);
       return {
         ...i,
         // Null (not "?") when unresolved so the UI can show meaningful fallback copy.
         groupName: i.groups?.name || null,
+        // The invitee is not a member yet; the invitee read policy on groups is
+        // what makes the group's own avatar (not a member's) visible here.
+        groupAvatar: avatarConfigFrom(i.groups),
         inviterName: inviter && inviter !== '?' ? inviter : null,
       };
     });
@@ -1019,8 +1078,8 @@ const useCommunityStore = create((set, get) => ({
       }
     }
     if (targets.size === 0) return { invited: 0 };
-    const rows = [...targets].map(([uid, gid]) => ({
-      plan_id: planId, start_date: startDate, invited_user_id: uid, invited_by: invitedBy, group_id: gid,
+    const rows = [...targets].map(([uid, gid]) => buildPlanInvitationRow({
+      planId, startDate, invitedUserId: uid, invitedBy, groupId: gid,
     }));
     const { error } = await supabase
       .from('plan_invitations')
@@ -1055,7 +1114,7 @@ const useCommunityStore = create((set, get) => ({
       .order('created_at', { ascending: false });
     if (error) return { error: error.message };
     const rows = data || [];
-    const nameOf = await resolveNames(rows.map((i) => i.invited_by));
+    const { nameOf } = await resolveProfiles(rows.map((i) => i.invited_by));
     const groupIds = [...new Set(rows.map((i) => i.group_id).filter(Boolean))];
     let groupNameById = {};
     if (groupIds.length > 0) {
@@ -1081,7 +1140,7 @@ const useCommunityStore = create((set, get) => ({
       .from('plan_invitations').select('plan_id, start_date').eq('id', inviteId).single();
     if (error) return toError(error);
     await supabase.from('plan_invitations').delete().eq('id', inviteId);
-    return { planId: invite.plan_id, startDate: invite.start_date };
+    return acceptedPlanFromInvitation(invite);
   },
 
   declinePlanInvitation: async (inviteId) => {
@@ -1112,7 +1171,7 @@ const useCommunityStore = create((set, get) => ({
     return {
       plans: (plans || []).map((p) => {
         const parts = byPlan[p.id] || [];
-        return { ...p, participantCount: parts.length, joinedByMe: parts.includes(userId) };
+        return { ...p, ...summarizePlanParticipation(parts, userId) };
       }),
     };
   },
@@ -1142,15 +1201,16 @@ const useCommunityStore = create((set, get) => ({
   joinGroupPlan: async (groupPlanId, groupId, userId) => {
     const { error } = await supabase
       .from('group_plan_members')
-      .upsert({ group_plan_id: groupPlanId, group_id: groupId, user_id: userId },
+      .upsert(buildGroupPlanMembershipRow({ groupPlanId, groupId, userId }),
         { onConflict: 'group_plan_id,user_id', ignoreDuplicates: true });
     return error ? toError(error) : {};
   },
 
   // Stop praying a group plan (removes only the caller's participation).
   leaveGroupPlan: async (groupPlanId, userId) => {
+    const target = groupPlanMembershipTarget({ groupPlanId, userId });
     const { error } = await supabase
-      .from('group_plan_members').delete().eq('group_plan_id', groupPlanId).eq('user_id', userId);
+      .from('group_plan_members').delete().eq('group_plan_id', target.groupPlanId).eq('user_id', target.userId);
     return error ? toError(error) : {};
   },
 
@@ -1180,8 +1240,8 @@ const useCommunityStore = create((set, get) => ({
       .select('user_id, role')
       .eq('group_id', groupId);
     if (error) return { error: error.message };
-    const nameOf = await resolveNames((data || []).map(m => m.user_id));
-    return { members: (data || []).map(m => ({ ...m, name: nameOf(m.user_id) })) };
+    const { nameOf, avatarOf } = await resolveProfiles((data || []).map(m => m.user_id));
+    return { members: (data || []).map(m => ({ ...m, name: nameOf(m.user_id), avatar: avatarOf(m.user_id) })) };
   },
 
   // Promote a member to admin or demote a non-owner admin back to member.

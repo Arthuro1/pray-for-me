@@ -48,7 +48,7 @@ describe('PrayersTab — simplified header', () => {
     // The three large statistic cards no longer exist. ("Active"/"Answered"
     // legitimately remain as the segment labels, so assert on the third card's
     // unique label and value instead.)
-    expect(screen.queryByText(t(lang, 'thisWeek'))).toBeNull();
+    expect(screen.queryByText('cette semaine')).toBeNull();
     expect(screen.queryByText('+1')).toBeNull();
   });
 

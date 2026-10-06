@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds } from './planner.js';
+import { prayersForDay, groupBySlot, catchUpPrayers, monthDots, scheduleEnded, runningPlanIds, runningPlanProgress, finishedPlanIds } from './planner.js';
 
 // 2026-07-06 is a Monday (weekday 1); 2026-07-07 a Tuesday (weekday 2).
 const cats = [
@@ -139,6 +139,100 @@ describe('scheduleEnded / runningPlanIds', () => {
   it('answered and unscheduled prayers never claim a plan', () => {
     const prayers = [planPrayer('a', '2026-07-01', 21, { status: 'answered' }), base({ id: 'c' })];
     expect(runningPlanIds(prayers, '2026-07-10').size).toBe(0);
+  });
+
+  // The Plans page's "Completed" section: walked to the end, not merely stopped.
+  it('a plan counts as finished only once its run reached its last day', () => {
+    const prayers = [
+      planPrayer('a', '2026-07-01', 7),                          // ended 07-07
+      planPrayer('b', '2026-07-05', 21),                         // still running
+      planPrayer('c', '2026-07-08', 21, { status: 'answered' }), // stopped part-way
+    ];
+    expect(finishedPlanIds(prayers, '2026-07-10')).toEqual(['plan-a']);
+  });
+
+  it('a finished plan walked again is running, not finished — and each plan is listed once', () => {
+    // A second run of the same plan: same plan id, its own prayer.
+    const rerun = (id, planId, startDate, count) => {
+      const p = planPrayer(id, startDate, count);
+      return { ...p, schedule: { ...p.schedule, plan: { id: planId, startDate } } };
+    };
+    const prayers = [
+      planPrayer('a', '2026-06-01', 7),
+      rerun('a2', 'plan-a', '2026-07-08', 7), // plan-a is being prayed again
+      planPrayer('d', '2026-06-01', 3),
+      rerun('d2', 'plan-d', '2026-06-20', 3), // plan-d finished twice
+    ];
+    expect(finishedPlanIds(prayers, '2026-07-10')).toEqual(['plan-d']);
+  });
+});
+
+// A running plan used to be a dead end: its catalogue card said "Running" and
+// opened a preview whose Start button was disabled. It now has to say WHICH day
+// the reader is on and which prayer is carrying the run.
+describe('runningPlanProgress', () => {
+  const run = (id, planId, startDate, count, over = {}) => base({
+    id,
+    schedule: {
+      type: 'recurring', freq: 'daily', startDate,
+      end: { kind: 'count', count },
+      plan: { id: planId, startDate },
+    },
+    ...over,
+  });
+
+  it('reports the day a run has reached, and the prayer carrying it', () => {
+    const progress = runningPlanProgress([run('p-1', 'marriage30', '2026-07-01', 30)], '2026-07-12');
+    expect(progress).toEqual({ marriage30: { prayerId: 'p-1', day: 12 } });
+  });
+
+  it('says nothing about a plan whose last day is behind the reader', () => {
+    expect(runningPlanProgress([run('p-1', 'fast3', '2026-07-01', 3)], '2026-07-05')).toEqual({});
+  });
+
+  it('ignores a run that is no longer active, so the card cannot point at it', () => {
+    const prayers = [
+      run('archived', 'marriage30', '2026-07-01', 30, { status: 'answered' }),
+      run('live', 'marriage30', '2026-07-01', 30),
+    ];
+    expect(runningPlanProgress(prayers, '2026-07-12').marriage30.prayerId).toBe('live');
+  });
+
+  // A weekly rhythm, a skipped day or a moved occurrence leaves the plan running
+  // on a date it does not land on. It is still on the day it reached, and the
+  // catalogue card reports that — it used to report nothing, and the card's own
+  // fallback then claimed "Day 1" however far in the reader actually was.
+  const weeklyRun = (extra = {}) => base({
+    id: 'p-1',
+    schedule: {
+      type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-07-06',
+      end: { kind: 'count', count: 10 },
+      plan: { id: 'altar7', startDate: '2026-07-06' },
+      ...extra,
+    },
+  });
+
+  it('reports the day the run reached when today is not a plan day', () => {
+    const progress = runningPlanProgress([weeklyRun()], '2026-07-07'); // Tuesday
+    expect(progress.altar7.prayerId).toBe('p-1');
+    expect(progress.altar7.day).toBe(1);
+  });
+
+  it('does not fall back to day 1 once the run is weeks in', () => {
+    // Five Mondays on: day 5, read on the Thursday after it.
+    expect(runningPlanProgress([weeklyRun()], '2026-08-06').altar7.day).toBe(5);
+  });
+
+  it('reports the day a paused run is holding', () => {
+    const paused = base({
+      id: 'p-1',
+      schedule: { type: 'none', plan: { id: 'altar7', startDate: '2026-07-06', dayOffset: 4 } },
+    });
+    expect(runningPlanProgress([paused], '2026-08-06').altar7.day).toBe(5);
+  });
+
+  it('is empty when nothing is running', () => {
+    expect(runningPlanProgress([base({ id: 'plain' })], '2026-07-06')).toEqual({});
   });
 });
 

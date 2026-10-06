@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { EVENTS, isEventAllowed, sanitizeProps } from './analytics';
+import { PLANS } from '../content/prayerPlans';
 
 describe('isEventAllowed', () => {
   it('accepts declared events and rejects anything else', () => {
@@ -83,6 +84,39 @@ describe('sanitizeProps — the privacy guard', () => {
     expect(sanitizeProps(null)).toBeUndefined();
     expect(sanitizeProps({})).toBeUndefined();
     expect(sanitizeProps('nope')).toBeUndefined();
+  });
+
+  // Guided plans opt into analytics by naming events in their content file
+  // (they are plain strings there, so the content module stays import-free).
+  // Every one of those names must be on the allowlist, or the event silently
+  // never fires.
+  it('allowlists every event a shipped plan declares', () => {
+    const declared = PLANS.flatMap((p) => Object.values(p.analyticsEvents || {}));
+    expect(declared.length).toBeGreaterThan(0);
+    for (const name of declared) expect(isEventAllowed(name), name).toBe(true);
+  });
+
+  it('carries no plan content on a plan event', () => {
+    // Even if a call site tried, none of these keys is allowlisted.
+    expect(sanitizeProps({
+      planId: 'preparing21', day: 11, theme: 'Their walk with God',
+      reflection: 'a reflection', note: 'what I prayed', season: 'hope', role: 'wife',
+    })).toBeUndefined();
+  });
+
+  it('keeps a day number only on the funnel event that never names a plan', () => {
+    expect(sanitizeProps({ day: 2, planId: 'gratitude7' }, EVENTS.PLAN_DAY_COMPLETED)).toEqual({ day: 2 });
+    // A plan-specific event names its plan by being sent at all: no day on it.
+    expect(sanitizeProps({ day: 2 }, EVENTS.SINGLES_PLAN_DAY_COMPLETED)).toBeUndefined();
+    expect(sanitizeProps({ day: 2 }, EVENTS.DELIVERANCE_PLAN_DAY_COMPLETED)).toBeUndefined();
+    expect(sanitizeProps({ day: 2 })).toBeUndefined();
+  });
+
+  it('carries nothing identifying about an opened resource', () => {
+    expect(sanitizeProps({
+      resourceId: 'keller-meaning-of-marriage', title: 'The Meaning of Marriage',
+      topic: 'marriage', url: 'https://example.org', lang: 'de',
+    })).toBeUndefined();
   });
 
   it('drops NaN / infinite numbers', () => {

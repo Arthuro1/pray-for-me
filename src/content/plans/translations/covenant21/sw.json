@@ -1,0 +1,256 @@
+{
+  "covenant21": {
+    "intro": "Siku ishirini na moja za kuandaa ndoa, si sherehe tu. Someni Maandiko, ombeaneni na kuomba ukuaji wenu, na mzungumze kwa uaminifu. Mnaweza kuomba faraghani au kuchagua shughuli pamoja; maelezo hubaki binafsi. Ndoa ni mazingira ya kumfuata Kristo, si cheo cha kiroho kuliko useja.",
+    "biblical": "Yesu anaweka Ufalme wa Mungu kwanza. Mwanzo unaeleza nyumba mpya yenye agano; Wafilipi inaelekeza kwenye unyenyekevu na huduma ya Kristo. Maandiko haya yanaita maandalizi ya uaminifu bila kufanya uchumba kuwa hakikisho la Mungu la matokeo fulani.",
+    "completion": "Mmetumia siku hizi kuomba, kuzungumza mlipochagua, na kuandaa ndoa. Mshukuruni Mungu na kumkabidhi yaliyobaki. Harusi huanza maisha ya uaminifu; kumaliza mpango si cheti cha utayari. Mnaweza kuendelea kuiombea ndoa. Historia huhifadhiwa na hali ya uhusiano haibadiliki moja kwa moja.",
+    "days": [
+      {
+        "reflection": "Leo tafakari “Kristo awe kiini” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kristo awe kiini”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kristo awe kiini”?",
+        "prayTogether": "Mkikubali wote, ombeni kwa kifupi kwa hoja za leo; akaunti ya pili haihitajiki."
+      },
+      {
+        "reflection": "Leo tafakari “Agano zaidi ya hisia za mapenzi” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Agano zaidi ya hisia za mapenzi”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Agano zaidi ya hisia za mapenzi”?"
+      },
+      {
+        "reflection": "Leo tafakari “Kujuana na kutumikiana” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kujuana na kutumikiana”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kujuana na kutumikiana”?"
+      },
+      {
+        "reflection": "Leo tafakari “Tabia katika maisha ya kila siku” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Tabia katika maisha ya kila siku”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Tabia katika maisha ya kila siku”?"
+      },
+      {
+        "reflection": "Leo tafakari “Kusema matarajio yetu” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kusema matarajio yetu”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kusema matarajio yetu”?"
+      },
+      {
+        "reflection": "Leo tafakari “Maneno yanayojenga” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Maneno yanayojenga”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Maneno yanayojenga”?"
+      },
+      {
+        "reflection": "Leo tafakari “Kukabili migogoro kwa kujali” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kukabili migogoro kwa kujali”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kukabili migogoro kwa kujali”?",
+        "safetyNote": "Maombi hayadai kuvumilia madhara, udhibiti au shinikizo. Tanguliza usalama na utafute msaada wa kuaminika wenye utaalamu."
+      },
+      {
+        "reflection": "Leo tafakari “Toba na msamaha” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Toba na msamaha”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Toba na msamaha”?",
+        "safetyNote": "Maombi hayadai kuvumilia madhara, udhibiti au shinikizo. Tanguliza usalama na utafute msaada wa kuaminika wenye utaalamu."
+      },
+      {
+        "reflection": "Leo tafakari “Uaminifu na ukweli” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Uaminifu na ukweli”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Uaminifu na ukweli”?"
+      },
+      {
+        "reflection": "Leo tafakari “Ukaribu wenye heshima” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Ukaribu wenye heshima”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Ukaribu wenye heshima”?",
+        "safetyNote": "Maombi hayadai kuvumilia madhara, udhibiti au shinikizo. Tanguliza usalama na utafute msaada wa kuaminika wenye utaalamu."
+      },
+      {
+        "reflection": "Leo tafakari “Fedha na uwakili” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Fedha na uwakili”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Fedha na uwakili”?"
+      },
+      {
+        "reflection": "Leo tafakari “Kazi, wito na mapumziko” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kazi, wito na mapumziko”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kazi, wito na mapumziko”?"
+      },
+      {
+        "reflection": "Leo tafakari “Mahusiano ya kifamilia na mipaka” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Mahusiano ya kifamilia na mipaka”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Mahusiano ya kifamilia na mipaka”?",
+        "safetyNote": "Maombi hayadai kuvumilia madhara, udhibiti au shinikizo. Tanguliza usalama na utafute msaada wa kuaminika wenye utaalamu."
+      },
+      {
+        "reflection": "Leo tafakari “Urafiki katika ndoa” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Urafiki katika ndoa”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Urafiki katika ndoa”?",
+        "prayTogether": "Mkikubali wote, ombeni kwa kifupi kwa hoja za leo; akaunti ya pili haihitajiki."
+      },
+      {
+        "reflection": "Leo tafakari “Mazoea ya kiroho pamoja” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Mazoea ya kiroho pamoja”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Mazoea ya kiroho pamoja”?",
+        "prayTogether": "Mkikubali wote, ombeni kwa kifupi kwa hoja za leo; akaunti ya pili haihitajiki."
+      },
+      {
+        "reflection": "Leo tafakari “Kujikita katika jumuiya ya Kikristo” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kujikita katika jumuiya ya Kikristo”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kujikita katika jumuiya ya Kikristo”?"
+      },
+      {
+        "reflection": "Leo tafakari “Matumaini kuhusu watoto” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Matumaini kuhusu watoto”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Matumaini kuhusu watoto”?",
+        "safetyNote": "Maombi hayadai kuvumilia madhara, udhibiti au shinikizo. Tanguliza usalama na utafute msaada wa kuaminika wenye utaalamu."
+      },
+      {
+        "reflection": "Leo tafakari “Kubeba nyakati ngumu” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kubeba nyakati ngumu”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kubeba nyakati ngumu”?",
+        "prayTogether": "Mkikubali wote, ombeni kwa kifupi kwa hoja za leo; akaunti ya pili haihitajiki."
+      },
+      {
+        "reflection": "Leo tafakari “Nyumba inayokaribisha” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Nyumba inayokaribisha”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Nyumba inayokaribisha”?"
+      },
+      {
+        "reflection": "Leo tafakari “Kujiandaa kutumikia kwa uaminifu” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kujiandaa kutumikia kwa uaminifu”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kujiandaa kutumikia kwa uaminifu”?",
+        "safetyNote": "Maombi hayadai kuvumilia madhara, udhibiti au shinikizo. Tanguliza usalama na utafute msaada wa kuaminika wenye utaalamu.",
+        "roles": {
+          "husband": "Kujiandaa kuwa mume ni kujifunza upendo wa kujitoa, kusikiliza, kutubu na kutumikia, si kudai udhibiti.",
+          "wife": "Kujiandaa kuwa mke ni kukuza hekima, nguvu, sauti ya kweli na wema, si kuficha mahitaji au kukubali madhara."
+        }
+      },
+      {
+        "reflection": "Leo tafakari “Kumkabidhi Mungu ndoa” kwa Maandiko na maombi.",
+        "prompts": [
+          "Mungu, tuongoze katika “Kumkabidhi Mungu ndoa”.",
+          "Kwa {partner}: mpe hekima na neema.",
+          "Tujenge kuwa waaminifu."
+        ],
+        "selfPrompt": "Ni nini ndani yangu kinahitaji kubadilika?",
+        "practice": "Chukua hatua moja ndogo leo.",
+        "conversationPrompt": "Tunahitaji kuzungumza nini kwa uaminifu kuhusu “Kumkabidhi Mungu ndoa”?",
+        "prayTogether": "Mkikubali wote, ombeni kwa kifupi kwa hoja za leo; akaunti ya pili haihitajiki."
+      }
+    ]
+  }
+}
+

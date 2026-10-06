@@ -3,6 +3,7 @@ import { useShallow } from 'zustand/react/shallow';
 import useCommunityStore from '../../store/communityStore';
 import usePrayerStore from '../../store/prayerStore';
 import { markGroupSeen } from './seen';
+import useMemberAvatars from '../../hooks/useMemberAvatars';
 
 // GroupView's shared read-model + live sync, lifted out so GroupView is left with
 // its tabs, modals and layout. Owns: the group's prayers/testimonies/loading, the
@@ -25,6 +26,8 @@ export default function useGroupWall({ groupId, user }) {
       setGroupAutoAdd: s.setGroupAutoAdd,
     }))
   );
+  // Member avatars for every author tile on the wall (one lookup per group).
+  const avatarFor = useMemberAvatars(groupId);
   const addFromCommunity = usePrayerStore((s) => s.addFromCommunity);
   const reconciledRef = useRef(null);
 
@@ -80,5 +83,5 @@ export default function useGroupWall({ groupId, user }) {
     if (next) await reconcileAutoAdd();
   };
 
-  return { group, isAdmin, prayers, testimonies, loading, hasPrayedInGroup, handleToggleAutoAdd };
+  return { group, isAdmin, prayers, testimonies, loading, hasPrayedInGroup, handleToggleAutoAdd, avatarFor };
 }

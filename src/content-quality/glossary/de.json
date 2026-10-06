@@ -1,0 +1,147 @@
+{
+  "locale": "de",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "Gebetsanliegen",
+      "allowed": [],
+      "avoid": [
+        "Gebetsanfrage"
+      ],
+      "example": "Vertraue Gott dein Gebetsanliegen an.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "answeredPrayer": {
+      "preferred": "erhörtes Gebet",
+      "allowed": [
+        "Gebetserhörung"
+      ],
+      "avoid": [
+        "beantwortetes Gebet"
+      ],
+      "example": "Erinnere dich an ein erhörtes Gebet.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "testimony": {
+      "preferred": "Zeugnis",
+      "allowed": [],
+      "avoid": [],
+      "example": "Teile dein Zeugnis.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "intercession": {
+      "preferred": "Fürbitte",
+      "allowed": [],
+      "avoid": [],
+      "example": "Nimm dir Zeit für Fürbitte.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "discernment": {
+      "preferred": "geistliche Unterscheidung",
+      "allowed": [],
+      "avoid": [],
+      "example": "Bitte Gott um geistliche Unterscheidung.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "covenant": {
+      "preferred": "Bund",
+      "allowed": [],
+      "avoid": [],
+      "example": "Gott hält seinen Bund.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "repentance": {
+      "preferred": "Umkehr",
+      "allowed": [
+        "Buße"
+      ],
+      "avoid": [],
+      "example": "Umkehr heißt, sich Gott neu zuzuwenden.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "salvation": {
+      "preferred": "Errettung",
+      "allowed": [
+        "Heil",
+        "Rettung"
+      ],
+      "avoid": [],
+      "example": "Danke Gott für die Errettung durch Christus.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "grace": {
+      "preferred": "Gnade",
+      "allowed": [],
+      "avoid": [],
+      "example": "Vertraue auf Gottes Gnade.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "holySpirit": {
+      "preferred": "der Heilige Geist",
+      "allowed": [],
+      "avoid": [],
+      "example": "Bitte den Heiligen Geist um Leitung.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "scripture": {
+      "preferred": "die Heilige Schrift",
+      "allowed": [],
+      "avoid": [],
+      "example": "Lies den Abschnitt in der Heiligen Schrift.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "fasting": {
+      "preferred": "Fasten",
+      "allowed": [],
+      "avoid": [],
+      "example": "Nimm dir Zeit zum Fasten und Beten.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "faithfulness": {
+      "preferred": "Treue",
+      "allowed": [],
+      "avoid": [],
+      "example": "Erinnere dich an Gottes Treue.",
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+    },
+    "prayerJournal": {
+      "preferred": "Gebetstagebuch",
+      "allowed": [
+        "Journal"
+      ],
+      "avoid": [
+        "Gebetsjournal"
+      ],
+      "example": "Bewahre dein Anliegen im Gebetstagebuch auf.",
+      "note": "Der Navigations-Tab heißt „Journal“; Sätze sagen „Gebetstagebuch“."
+    },
+    "update": {
+      "preferred": "Neuigkeit",
+      "allowed": [
+        "Neuigkeiten"
+      ],
+      "avoid": [],
+      "example": "Teile eine Neuigkeit, wenn sich etwas ändert.",
+      "note": "Neuigkeiten zu einem Gebetsanliegen; „Update“ nur für App-Aktualisierungen."
+    },
+    "thanksgiving": {
+      "preferred": "Danksagung",
+      "allowed": [
+        "Dank"
+      ],
+      "avoid": [],
+      "example": "Schließe mit Danksagung für das, was Gott getan hat.",
+      "note": "Gebetsschritt des Dankens; „Dankbarkeit“ für das Gefühl."
+    },
+    "renunciation": {
+      "preferred": "Lossagung",
+      "allowed": [
+        "sich lossagen"
+      ],
+      "avoid": [],
+      "example": "Im Gebet der Lossagung benennst du, wovon du dich abwendest.",
+      "note": "Befreiungsdienst-Vokabular. Nicht „Absage“ für die Lossagung verwenden (klingt nach einem abgesagten Termin); als Ablehnung einer Anfrage ist „Absage“ richtig."
+    }
+  }
+}

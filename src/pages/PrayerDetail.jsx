@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -8,7 +8,7 @@ import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
-import { testimonyList } from '../utils/prayer';
+import { testimonyList, recoverLockedPrayerPoints, mergeSharedPrayerUpdates } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
 import { t } from '../i18n';
 import { toast } from '../store/toastStore';
@@ -22,10 +22,29 @@ import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { planWeekDays, scheduleEnded } from '../lib/planner';
-import { planDayNumber } from '../lib/schedule';
+import { isPlanDay, planDayNumber, restingPlanDay, toKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
-import { planDayContent } from '../content/prayerPlans';
+import { getPlan } from '../content/prayerPlans';
 import { pick, localizeRef } from '../content/teaching';
+import { usePlanDay } from '../hooks/usePlanDay';
+import { usePlanDayPager } from '../hooks/usePlanDayPager';
+import PlanDayBody from '../components/PlanDayBody';
+import ReportWordingLink from '../components/ReportWordingLink';
+import PlanDayDeck from '../components/plan/PlanDayDeck';
+import DisclosureRow from '../components/shared/DisclosureRow';
+import PlanDayTrace from '../components/plan/PlanDayTrace';
+import PlanCompletionCard from '../components/PlanCompletionCard';
+import PlanShareSheet from '../components/plan/PlanShareSheet';
+import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
+import { hasPersonalization, isCouplePlan, planPeopleFrom } from '../lib/planPersonalization';
+import { savePlanPersonalization } from '../lib/planPersonalizationStorage';
+import { claimPlanCompletionReport, markPlanCompleted, savePlanPrefs } from '../lib/planPrefs';
+import { defaultNewSchedule } from '../lib/scheduleDraft';
+import { track } from '../lib/analytics';
+import { canUsePlan } from '../lib/planReview';
+import { isPlanShareable } from '../lib/planShareLink';
+import { planPrayerText } from '../lib/guidedPlan';
+import { PACE_LABEL_KEYS, paceOf, planTotal } from '../lib/planTempo';
 import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
 import PrayTogetherCard from '../components/PrayTogetherCard';
@@ -33,11 +52,13 @@ import FollowPrayerButton from '../components/FollowPrayerButton';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
 import CommunityUpdates from '../components/CommunityUpdates';
+import useMemberAvatars from '../hooks/useMemberAvatars';
 import CommunityTestimonies from '../components/CommunityTestimonies';
 import UpdateComposer from '../components/rich/UpdateComposer';
 import RichText from '../components/rich/RichText';
 import RemovableText from '../components/rich/RemovableText';
 import AttachmentList from '../components/rich/AttachmentList';
+import { useSessionNoteIds } from '../hooks/useSessionNoteIds';
 import DeleteButton from '../components/rich/DeleteButton';
 import EditButton from '../components/rich/EditButton';
 import MessageEditor from '../components/rich/MessageEditor';
@@ -105,7 +126,16 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 }
 
 // communityPrayer prop switches the component to community mode
-export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en' }) {
+// `?day=` arrives from a URL, so it is checked for shape before it is asked
+// about: without this a hand-typed value walks the occurrence scan to its guard
+// before being rejected.
+const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
+
+// A stable identity for "no exceptions", so a prayer that has never had a day
+// skipped or moved doesn't hand the memos below a fresh object every render.
+const EMPTY_OVERRIDES = {};
+
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null }) {
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
@@ -134,6 +164,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showPlanShare, setShowPlanShare] = useState(false);
   const [showScripture, setShowScripture] = useState(false);
   // "Pray now" on this one prayer — a real session, so completion is recorded
   // through the same per-prayer completion log as Today's sessions.
@@ -158,9 +189,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showReportConfirm, setShowReportConfirm] = useState(false);
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
 
-  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers } = usePrayerStore(
+  const { categories, addPrayer, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers, completions } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
+      addPrayer: s.addPrayer,
       markAnswered: s.markAnswered,
       markActive: s.markActive,
       markPrayedOn: s.markPrayedOn,
@@ -182,6 +214,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       syncCategoriesFromCommunity: s.syncCategoriesFromCommunity,
       updatePrayer: s.updatePrayer,
       prayers: s.prayers,
+      completions: s.completions,
     }))
   );
   const { tr, translateTexts, translating } = useTranslationStore();
@@ -301,7 +334,151 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
+  // An owned prayer can contain older child rows encrypted under an account key
+  // this device no longer holds, while its group-key snapshot remains readable.
+  // Recover matching points for display only; the original ciphertext is never
+  // overwritten and every recovered row stays read-only below.
+  const visiblePrayerPoints = isCommunity
+    ? (livePrayer.prayer_points || [])
+    : recoverLockedPrayerPoints(livePrayer.prayer_points || [], sharedActivity.prayers || []);
+  const displayPrayer = visiblePrayerPoints === livePrayer.prayer_points
+    ? livePrayer
+    : { ...livePrayer, prayer_points: visiblePrayerPoints };
+  // ── Guided plan ──────────────────────────────────────────────────────────
+  // Which day of a running plan today is, the day's content with the reader's
+  // language folded in, and any APPROVED resources for its topics. Called
+  // unconditionally (a null plan id resolves to null) so the rules of hooks hold
+  // for the many prayers that are not part of a plan.
+  const planId = livePrayer.schedule?.plan?.id || null;
+  // WHICH day of the plan is on screen. Today's, unless the calendar handed over
+  // another day of the same run (`?day=` → planDayKey): that is how a reader
+  // returns to a day they missed, or reads the next one, without leaving the
+  // plan. Only a real day of THIS run is accepted — on its calendar, or walked
+  // before its pace last changed — so a stale link or a hand-typed date quietly
+  // falls back to today rather than showing a day the run does not have.
+  // Overrides travel with the schedule everywhere below: a day the reader
+  // SKIPPED or MOVED is a fact about where the run has got to, and reading the
+  // pattern without them reports a day the calendar will not open.
+  const planOverrides = livePrayer.schedule_overrides || EMPTY_OVERRIDES;
+  const requestedDay = planId && DAY_KEY.test(planDayKey || '')
+    && isPlanDay(livePrayer.schedule, planDayKey, planOverrides)
+    ? planDayKey : null;
+  const planVersion = livePrayer.schedule?.plan?.version || null;
+  const resolvedPlan = planId ? getPlan(planId, planVersion) : null;
+  const plan = canUsePlan(resolvedPlan) ? resolvedPlan : null;
+  // HOW LONG THE RUN IS, from the plan's own content first. The schedule's
+  // count is only what REMAINS once a run has been re-paced, and an older run
+  // may carry no count at all — either way the pager would then walk past the
+  // last day of the plan, where there is no content and the card simply
+  // vanishes. One number, so what the card prints and where paging stops can
+  // never disagree.
+  const planLength = (planId && (plan?.count || planTotal(livePrayer.schedule))) || null;
+  // WHERE THE RUN IS SITTING today, which is only the same thing as "today's
+  // day" for a plan running daily. Every other rhythm — and any skipped or moved
+  // day — leaves most dates off the run, and the plan's whole card used to
+  // vanish on them: no theme, no passage, no way back in. It rests on the last
+  // day it reached instead (or the first still to come, or the day it was
+  // paused holding).
+  const resting = useMemo(
+    () => (planId ? restingPlanDay(livePrayer.schedule, todayKey(), planOverrides) : null),
+    [planId, livePrayer.schedule, planOverrides],
+  );
+  const viewedDayKey = requestedDay || resting?.dayKey || todayKey();
+  const planDayNo = requestedDay
+    ? planDayNumber(livePrayer.schedule, requestedDay, planOverrides)
+    : (resting?.dayNo ?? null);
+  // Everything else on this page — marking prayed, the follow-up, the series
+  // summary — stays about TODAY. Only the plan day itself moves.
+  const viewingOtherDay = planDayNo != null && viewedDayKey !== todayKey();
+  // A paused run holds a day without holding a date: nothing to date-stamp
+  // until it is given a rhythm again — though the days it already walked still
+  // have theirs, and can be paged back to.
+  const deckDayKey = requestedDay || (resting?.state === 'paused' ? null : viewedDayKey);
+  // The days on either side of the one on screen, so the reader can read back
+  // over what a day held or look ahead at what is coming without going out to
+  // the calendar and back for each one.
+  const { prevKey: prevDayKey, nextKey: nextDayKey } =
+    usePlanDayPager(livePrayer.schedule, planOverrides, deckDayKey, planDayNo, planLength);
+  const {
+    day: planDay, prefs: planPrefs, role: planRole, resources: planResources, resourceOffers: planResourceOffers, reloadPrefs,
+  } =
+    usePlanDay(planId, planDayNo, lang, {
+      prayerId: livePrayer.id, ownerId: livePrayer.user_id, planVersion,
+    });
+  // The last day is behind them: the series can produce no more occurrences.
+  const planFinished = !!plan?.completion && !isCommunity && scheduleEnded(livePrayer, todayKey());
+  // "Not today" has several honest meanings, and the card should say which one
+  // rather than claiming the reader paged here themselves.
+  const planDayNoteKey = (() => {
+    if (requestedDay) {
+      if (!viewingOtherDay) return null;
+      return requestedDay > todayKey() ? 'planDayUpcoming' : 'planViewingOtherDay';
+    }
+    if (!resting || resting.state === 'today') return null;
+    if (resting.state === 'paused') return 'planPacePausedNote';
+    return resting.state === 'upcoming' ? 'planDayUpcoming' : 'planPaceResting';
+  })();
+  // A plan's answers used to be capturable only at the moment it started, behind
+  // a sheet that stood between "Start" and the first day. They are asked here
+  // instead — on the day itself, where the reader can see what an answer
+  // changes — and stay correctable for the life of the run.
+  const [editingPersonalization, setEditingPersonalization] = useState(false);
+  const canEditPersonalization = !isCommunity && !planFinished
+    && hasPersonalization(plan) && (!isCouplePlan(plan) || !!livePrayer.user_id);
+  // A couple run's answers are private to that run; a single reader's stay on
+  // the device under the plan's own id.
+  const savePersonalization = async (prefs) => {
+    if (!isCouplePlan(plan)) { savePlanPrefs(plan.id, prefs); return; }
+    await savePlanPersonalization(livePrayer.user_id, livePrayer.id, prefs);
+  };
+  // The husband/wife question, offered inline on the first day that actually
+  // carries such a reflection — and only until it has been answered, so
+  // "keep it general" silences it just as firmly as choosing one.
+  const offerRoleChoice = canEditPersonalization && !isCouplePlan(plan) && !planPrefs?.role;
+
+  // Completion is reported when the last day is actually behind the reader, not
+  // when they happen to tap a follow-up action. claimPlanCompletionReport()
+  // makes it once per run, so re-opening the finished prayer counts nothing.
+  const completedEvent = planFinished ? plan?.analyticsEvents?.completed : null;
+  useEffect(() => {
+    if (completedEvent && claimPlanCompletionReport(livePrayer.id)) track(completedEvent);
+  }, [completedEvent, livePrayer.id]);
+
   const isAnswered = isCommunity ? !!livePrayer.is_answered : livePrayer.status === 'answered';
+  // The run's rhythm is the reader's own to set: never on a community prayer,
+  // and not once the prayer is answered or the plan is finished.
+  const canEditPace = !!planId && !isCommunity && !isAnswered && !planFinished;
+  // ── What a guided plan run does NOT need ─────────────────────────────────
+  // A plan run is a different kind of page. Its day already names the theme,
+  // the passage and the prompts; it comes back on the run's own rhythm; and not
+  // one word on it was written by the reader. So most of the generic prayer
+  // machinery around it was either duplicated ceremony or a question a plan
+  // cannot answer. Each flag below hides only what a plan cannot use: anything
+  // the reader actually put there stays visible and stays editable.
+  const isPlanRun = !isCommunity && !!planDay;
+  // The series can produce no more days. Read once, because it decides both
+  // whether the rhythm is still worth asking about and what the quiet summary
+  // line says.
+  const seriesEnded = !isAnswered && scheduleEnded(livePrayer, todayKey());
+  // Rhythm is asked ONCE, on the plan's own card, and what that row opens is the
+  // ordinary scheduler — which for a plan-linked draft already drops "Pray once",
+  // offers Pause in its place, and re-anchors so the day on screen survives the
+  // change (see ScheduleEditor's PLAN_MODE_ROWS). There is no second pace editor,
+  // and while this row is showing the ⋯ menu's Schedule action stands down.
+  const planScheduleRow = isPlanRun && canEditPace && !seriesEnded;
+  // The plan's day is the way to pray, so a plan run is never invited to author
+  // prayer points beside it. Points an older run already carries still render —
+  // decluttering hides affordances, never what someone wrote.
+  const offerPointAuthoring = !isPlanRun;
+  const showWaysToPray = !isPlanRun || (displayPrayer.prayer_points || []).length > 0;
+  // Same rule for the per-prayer follow-up: not offered on a run that already
+  // returns by itself, but never taken away from one that has a date set.
+  const followUpRelevant = !isPlanRun || !!followUps[livePrayer.id];
+  // A plan run's name and subtitle belong to the PLAN, not to the reader. They
+  // are read in the language being read — the copy written into the prayer at
+  // creation is stuck in whichever language it was started in — so they are not
+  // edited here and never routed through the AI translation toggle.
+  const planText = isPlanRun ? planPrayerText(plan, lang) : null;
   // Rows whose content was fully deleted would render as bare author+date
   // shells — hide them. Locked E2EE rows stay visible with their placeholder.
   const hasContent = (row) => row._locked || row.text || row.content || (row.attachments || []).length > 0;
@@ -310,6 +487,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const prayerCategoryIds = isCommunity ? (livePrayer.category_ids || []) : (livePrayer.prayer_categories || []).map(pc => pc.category_id);
   const prayerCategories = categories.filter(c => prayerCategoryIds.includes(c.id));
   const isGroupAdmin = isCommunity && groups.find(g => g.id === communityPrayer.group_id)?.role === 'admin';
+  // Members' chosen avatars for this group, so an author tile here matches the
+  // one on the group wall instead of falling back to the name-derived default.
+  const memberAvatarFor = useMemberAvatars(isCommunity ? communityPrayer.group_id : null);
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
   const constellationPrayerCount = isCommunity
@@ -320,16 +500,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // A saved copy follows the shared content read-only: it pulls the author's/
   // group's latest, but isn't edited here (open it in Community to contribute).
   const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
+  // Any run of a plan — upcoming, in progress or finished — can pass the plan
+  // on. What is shared is the plan, never this run or anything prayed in it.
+  const planShareable = !isCommunity && !savedCopy && !!user?.id && isPlanShareable(plan);
   const canAddContent = !isAnswered && (isCommunity || !savedCopy);
   const canRemoveContent = !isAnswered && (isCommunity || !savedCopy);
-  // Author copies already have member updates synced into prayer_updates; saved
-  // copies don't, so fold the group's updates into the displayed list for them.
+  // Fold in group activity for both saved copies and owned source prayers. For an
+  // older locked personal row, a matching readable group mirror supplies a
+  // display-only fallback instead of the misleading permanent sync placeholder.
   const allUpdates = (!isCommunity
-    ? [...(livePrayer.prayer_updates || []), ...(savedCopy ? sharedActivity.updates : [])]
+    ? mergeSharedPrayerUpdates(livePrayer.prayer_updates || [], sharedActivity.updates || [])
     : []).filter(hasContent);
   // You can post updates/testimonies and mark answered only on prayers you own —
   // a saved-from-community copy is read-only (you follow the author's prayer).
   const canManage = !savedCopy;
+  const sessionNoteIds = useSessionNoteIds();
 
   // The translation control appears only on a KNOWN or probable language
   // mismatch — explicit `content_language` metadata (stamped at creation, so
@@ -359,6 +544,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     return isCommunity ? text : tr(text, lang);
   };
 
+  // ── What a past plan day held ────────────────────────────────────────────
+  // Paging back to a day already walked shows more than the day's reading: that
+  // it was prayed, and whatever was written that day. Locked rows are left to
+  // the activity list below, which knows how to explain them.
+  const pastPlanDay = viewingOtherDay && viewedDayKey < todayKey();
+  const planDayPrayed = pastPlanDay && (completions[livePrayer.id] || []).includes(viewedDayKey);
+  const planDayUpdates = !pastPlanDay ? [] : allUpdates
+    .filter((u) => u.text && !u._locked && u.created_at && toKey(new Date(u.created_at)) === viewedDayKey)
+    .map((u) => ({ id: u.id, text: loc(u.text) }));
+
   const handleToggleTranslate = async () => {
     if (showTranslated) {
       setShowTranslated(false);
@@ -369,7 +564,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     // authoritative verse text comes from useLocalizedVerse (bundle /
     // YouVersion) or stays with its original reference.
     const texts = [livePrayer.title, livePrayer.description];
-    (livePrayer.prayer_points || []).forEach(pp => texts.push(pp.title));
+    (displayPrayer.prayer_points || []).forEach(pp => texts.push(pp.title));
     if (isCommunity) {
       communityUpdates.forEach(u => texts.push(u.text));
       prayerTestimonies.forEach(tm => texts.push(tm.content));
@@ -507,7 +702,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
   // Inline title edit — own personal prayers only (community has its own edit;
   // a saved copy follows the author's title).
-  const canEditTitle = !isCommunity && !savedCopy && !livePrayer._locked;
+  const canEditTitle = !isCommunity && !savedCopy && !livePrayer._locked && !isPlanRun;
   const startEditTitle = () => { setTitleDraft(livePrayer.title || ''); titleCancelRef.current = false; setEditingTitle(true); };
   const saveTitle = () => {
     if (titleCancelRef.current) { titleCancelRef.current = false; setEditingTitle(false); return; }
@@ -517,6 +712,24 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   };
 
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
+
+  // The recurrence editor, declared once and placed twice: on a plan run it sits
+  // inside the plan's own card (where the pace question used to be), otherwise
+  // in the main flow under the ⋯ menu's Schedule action. Only the menu needs its
+  // focus handed back — the plan card's disclosure keeps focus on its own row.
+  const schedulePlanner = (
+    <SchedulePlanner
+      schedule={livePrayer.schedule || null}
+      lang={lang}
+      planDays={planWeekDays(categories, prayerCategoryIds, livePrayer.week_days)}
+      defaultEditing
+      onDone={() => {
+        setShowScheduleEdit(false);
+        if (!planScheduleRow) scheduleTriggerRef.current?.focus();
+      }}
+      onSave={(schedule) => updatePrayer(livePrayer.id, { schedule })}
+    />
+  );
 
   return (
     <div className="detail-page phase-page constellation-detail">
@@ -534,7 +747,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           Today, so praying from here counts everywhere. */}
       {showPraySession && (
         <PrayerSession
-          prayers={[livePrayer]}
+          prayers={[displayPrayer]}
           categories={categories}
           lang={lang}
           tr={tr}
@@ -559,15 +772,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           onCancel={() => setShowAiConsent(false)}
         />
       )}
-      {showAiPreview && (
-        <AiOutgoingPreview
-          lang={lang}
-          title={livePrayer.title}
-          description={recsDescription()}
-          update={recsLatestUpdate()}
-          onSend={() => { setShowAiPreview(false); markOutgoingReviewed(livePrayer.id); runRecs(); }}
-          onCancel={() => setShowAiPreview(false)}
-        />
+      {showPlanShare && (
+        <PlanShareSheet plan={plan} lang={lang} userId={user.id} onClose={() => setShowPlanShare(false)} />
       )}
       {showShareModal && (
         <PrayerShareModal
@@ -679,16 +885,23 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
               iconColor="var(--text-2)"
               items={[
-                { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true) },
+                // The plan day leads with its own passage and its Go deeper —
+                // an AI scripture hunt for the run's title would only compete.
+                { key: 'scripture', icon: BookOpen, label: t(lang, 'viewScripture'), onClick: () => setShowScripture(true), hidden: isPlanRun },
                 { key: 'pin', icon: Pin, label: t(lang, livePrayer.pinned ? 'unpin' : 'pin'), onClick: () => togglePin(livePrayer.id) },
                 // Scheduling lives here, out of the main flow — selecting it
                 // opens the planner as a contextual disclosure below the
                 // actions. Saved copies keep it too: WHEN you pray for a
                 // carried request is personal.
-                { key: 'schedule', icon: CalendarClock, label: t(lang, livePrayer.schedule ? 'editSchedule' : 'addSchedule'), onClick: () => setShowScheduleEdit((v) => !v), hidden: isAnswered },
-                { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered },
-                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 },
-                { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy },
+                { key: 'schedule', icon: CalendarClock, label: t(lang, livePrayer.schedule ? 'editSchedule' : 'addSchedule'), onClick: () => setShowScheduleEdit((v) => !v), hidden: isAnswered || planScheduleRow },
+                { key: 'followup', icon: Bell, label: t(lang, 'followUpTitle'), onClick: () => setShowFollowUpEdit((v) => !v), hidden: savedCopy || isAnswered || !followUpRelevant },
+                // A plan run shares the PLAN (link, friends, groups), not a copy
+                // of this prayer into a group wall — unless it already was, which
+                // stays manageable here.
+                { key: 'sharePlan', icon: Share2, label: t(lang, 'planShareAction'), onClick: () => setShowPlanShare(true), hidden: !planShareable },
+                { key: 'share', icon: Share2, label: sharedGroups.length > 0 ? `${t(lang, 'shareWithGroup')} (${sharedGroups.length})` : t(lang, 'shareWithGroup'), onClick: () => setShowShareModal(true), hidden: savedCopy || groups.length === 0 || (!!plan && sharedGroups.length === 0) },
+                // A plan run's words are the plan's own — there is nothing here to edit.
+                { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => onEdit(livePrayer), hidden: savedCopy || isPlanRun },
                 { key: 'delete', icon: Trash2, label: t(lang, savedCopy ? 'removeFromList' : 'delete'), danger: true, onClick: handleDelete },
               ]}
             />
@@ -730,15 +943,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               className={`constellation-detail__title ${canEditTitle ? 'cursor-text' : ''}`}
               style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
             >
-              <span>{livePrayer._locked ? t(lang, 'contentLocked') : loc(livePrayer.title)}</span>
+              <span>{livePrayer._locked ? t(lang, 'contentLocked') : (planText?.title || loc(livePrayer.title))}</span>
               {canEditTitle && <Edit2 size={15} className="shrink-0 opacity-40" aria-hidden="true" />}
             </h1>
           )}
 
           {livePrayer._locked ? (
             <LockedNotice lang={lang} />
-          ) : livePrayer.description ? (
-            <RichText text={loc(livePrayer.description)} className="constellation-detail__description" />
+          ) : (planText?.description || livePrayer.description) ? (
+            <RichText text={planText?.description || loc(livePrayer.description)} className="constellation-detail__description" />
           ) : null}
 
           <div className="constellation-detail__meta">
@@ -772,7 +985,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* On-demand translation toggle — only when the content's language
             plausibly differs from the interface's. Translated content is
             labelled, and the original always stays one tap away. */}
-        {translationRelevant && (
+        {translationRelevant && !isPlanRun && (
           <div className="flex items-center gap-2">
             <button
               onClick={handleToggleTranslate}
@@ -795,7 +1008,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             every personal prayer, saved-from-community copies included, always
             visible (never buried in a menu). Encryption renders as a smaller
             separate protection status, never as a different audience. */}
-        {!isCommunity && (
+        {!isCommunity && !isPlanRun && (
           <AudienceBadge
             audience={audienceOf(livePrayer, sharedGroups)}
             protection={protectionOf(livePrayer)}
@@ -820,8 +1033,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* The hero leads with prayer. Management stays secondary here. */}
-        {!isCommunity && !isAnswered && !livePrayer._locked && (
+        {/* The hero leads with prayer. Management stays secondary here — and a
+            plan run has none of it: a plan is walked, not updated and answered.
+            Anything written while praying still lands in the history below. */}
+        {!isCommunity && !isAnswered && !livePrayer._locked && !isPlanRun && (
           canManage && (
               // Beside Pray now on any width that fits, stacked when the
               // translated labels need the room — so the hierarchy stays
@@ -851,57 +1066,149 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* Scheduling stays OUT of the main flow: the ⋯ menu's Schedule action
             opens the planner here as a contextual disclosure; otherwise a set
-            schedule reads as one quiet summary line. */}
-        {!isCommunity && !isAnswered && showScheduleEdit ? (
-          <SchedulePlanner
-            schedule={livePrayer.schedule || null}
-            lang={lang}
-            planDays={planWeekDays(categories, prayerCategoryIds, livePrayer.week_days)}
-            defaultEditing
-            onDone={() => { setShowScheduleEdit(false); scheduleTriggerRef.current?.focus(); }}
-            onSave={(schedule) => updatePrayer(livePrayer.id, { schedule })}
-          />
+            schedule reads as one quiet summary line. A plan run asks the same
+            question on its own card instead, so this whole block stands down. */}
+        {!isCommunity && !isAnswered && !planScheduleRow && showScheduleEdit ? (
+          schedulePlanner
         ) : (
-          livePrayer.schedule && (() => {
-            const ended = !isAnswered && scheduleEnded(livePrayer, todayKey());
-            return (
-              <p
-                className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
-                style={ended
-                  ? { background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }
-                  : { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
-              >
-                <Repeat size={12} className="shrink-0" /> {ended ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
-              </p>
-            );
-          })()
+          livePrayer.schedule && !planScheduleRow && (
+            <p
+              className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
+              style={seriesEnded
+                ? { background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }
+                : { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            >
+              <Repeat size={12} className="shrink-0" /> {seriesEnded ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
+            </p>
+          )
         )}
 
-        {/* Guided plan: today's theme + passage (only on a plan day) */}
-        {livePrayer.schedule?.plan && (() => {
-          const n = planDayNumber(livePrayer.schedule, todayKey());
-          const content = n ? planDayContent(livePrayer.schedule.plan.id, n) : null;
-          if (!content) return null;
-          return (
-            <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>
-                {t(lang, 'planDayOf', { n, total: livePrayer.schedule.end?.count || '' })}
-              </p>
-              <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(content.theme, lang)}</p>
-              <VerseAccordion reference={localizeRef(content.ref, lang)} lang={lang}>
-                {({ toggle }) => (
-                  <button
-                    onClick={toggle}
-                    className="text-xs flex items-center gap-1.5"
-                    style={{ color: 'var(--accent)' }}
-                  >
-                    <BookOpen size={12} /> {localizeRef(content.ref, lang)}
-                  </button>
-                )}
-              </VerseAccordion>
+        {/* Guided plan: this day's theme + passage, and — for a rich plan — its
+            reflection, prompts, practice and "Go deeper". Arrows and a swipe
+            move between the days of the run: today's to begin with, any day
+            already walked, and the ones still to come. */}
+        {planDay && (
+          <PlanDayDeck
+            lang={lang}
+            dayNo={planDayNo}
+            total={planLength}
+            dayKey={deckDayKey}
+            note={planDayNoteKey ? t(lang, planDayNoteKey) : null}
+            homeLabel={t(lang, resting?.state === 'today' ? 'planBackToToday' : 'planBackToCurrentDay')}
+            prevKey={onGoToDay ? prevDayKey : null}
+            nextKey={onGoToDay ? nextDayKey : null}
+            onGoToDay={onGoToDay}
+            onShowToday={requestedDay ? onShowToday : null}
+          >
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(planDay.theme, lang)}</p>
+                <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
+                  {({ toggle, expanded }) => (
+                    <button
+                      onClick={toggle}
+                      aria-expanded={expanded}
+                      className="text-xs flex items-center gap-1.5"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      <BookOpen size={12} /> {localizeRef(planDay.ref, lang)}
+                    </button>
+                  )}
+                </VerseAccordion>
+              </div>
+              <PlanDayBody
+                day={planDay}
+                lang={lang}
+                role={planRole}
+                resources={planResources}
+                resourceOffers={planResourceOffers}
+                idPrefix={`detail-plan-day-${viewedDayKey}`}
+                onAddNote={focusUpdateField}
+                onChooseRole={offerRoleChoice ? (chosen) => { savePlanPrefs(plan.id, { role: chosen }); reloadPrefs(); } : undefined}
+              />
+              <PlanDayTrace lang={lang} prayed={planDayPrayed} updates={planDayUpdates} />
+              {/* Sharing the plan lives in the ⋯ menu only: on the day card it
+                  competed with the day itself for the reader's attention. */}
+              {canEditPersonalization && (
+                <button
+                  type="button"
+                  onClick={() => setEditingPersonalization(true)}
+                  className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
+                  style={{ color: 'var(--text-3)' }}
+                >
+                  <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
+                </button>
+              )}
+              {/* How often this comes back, kept WITH the day it paces — a
+                  reader who finds a plan too fast is looking at the day, not
+                  hunting the ⋯ menu for a recurrence editor. It opens the one
+                  scheduler the rest of the app uses, which for a run offers
+                  Pause where "Pray once" would be and keeps the day on screen
+                  whatever rhythm is chosen. Folded away behind its own answer,
+                  so the day stays the point of the card. */}
+              {planScheduleRow && (
+                <div className="space-y-2 pt-1">
+                  {/* The row reports the PACE vocabulary, not the full schedule
+                      summary: the card already prints "Day 16 of 30", so
+                      repeating the run’s length here would only be noise. */}
+                  <DisclosureRow
+                    label={t(lang, 'planPaceTitle')}
+                    value={t(lang, PACE_LABEL_KEYS[paceOf(livePrayer.schedule)] || 'planPaceCustom')}
+                    action={t(lang, 'schedChange')}
+                    open={showScheduleEdit}
+                    onToggle={() => setShowScheduleEdit((v) => !v)}
+                    controlsId="detail-plan-schedule"
+                  />
+                  {showScheduleEdit && <div id="detail-plan-schedule">{schedulePlanner}</div>}
+                </div>
+              )}
+              <ReportWordingLink lang={lang} surface={`plans/${plan.id}`} />
             </div>
-          );
-        })()}
+          </PlanDayDeck>
+        )}
+
+        {editingPersonalization && (
+          <PlanPersonalizeModal
+            plan={plan}
+            lang={lang}
+            initial={isCouplePlan(plan) ? planPrefs : null}
+            people={planPeopleFrom(prayers)}
+            onClose={() => setEditingPersonalization(false)}
+            onSave={async (prefs) => {
+              setEditingPersonalization(false);
+              try {
+                await savePersonalization(prefs);
+                reloadPrefs();
+              } catch {
+                // Storage refused the private record. The run keeps the answers
+                // it already had rather than losing them to a failed write.
+                toast.error(t(lang, 'errorGeneric'));
+              }
+            }}
+          />
+        )}
+
+        {/* The last day is behind them — a calm close, and an optional way to
+            carry some of the themes on as ordinary recurring prayers. */}
+        {planFinished && (
+          <PlanCompletionCard
+            plan={plan}
+            lang={lang}
+            onShare={planShareable ? () => setShowPlanShare(true) : undefined}
+            onContinue={async (themes) => {
+              for (const theme of themes) {
+                await addPrayer({
+                  title: t(lang, theme.titleKey),
+                  description: t(lang, theme.descKey),
+                  categoryIds: [],
+                  schedule: defaultNewSchedule(),
+                });
+              }
+              markPlanCompleted(plan.id);
+              toast.success(t(lang, 'planContinueAdded'));
+            }}
+          />
+        )}
         {savedCopy && categories.length > 0 && (
           <div>
             <div className="flex flex-wrap gap-1.5 items-center">
@@ -944,41 +1251,48 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* ── Prayer points + AI suggestions (both modes) — kept directly after
             the request details so the "how to pray" points read right off the
-            description, before the pray-together / updates / calendar sections. ── */}
+            description, before the pray-together / updates / calendar sections.
+            A guided plan run is the exception: the day above already says how to
+            pray, so this panel appears only if that run carries points of its
+            own — and then without the affordances to author more. ── */}
+        {showWaysToPray && (
         <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
           <div className="prayer-points-panel__header flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiSubjects')}</p>
-            {(isCommunity || canAddContent) && (
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'waysToPray')}</p>
+            {offerPointAuthoring && (isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={fetchRecs}
                   disabled={loadingRecs}
                   title={t(lang, 'tipAiSuggest')}
-                  className="flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 font-medium disabled:opacity-50 text-white"
-                  style={{ background: 'var(--accent)' }}
+                  className="flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium disabled:opacity-50"
+                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
                 >
                   {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
-                  {t(lang, 'aiSuggest')}
+                  {t(lang, 'prayerSuggestionsCta')}
                 </button>
               </div>
             )}
           </div>
 
-          {(livePrayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
-            <p className="text-sm italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPlaceholder')}</p>
+          {(displayPrayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
+            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'needHelpFindingWords')}</p>
           )}
 
           <div className="prayer-points-panel__list">
-            {(livePrayer.prayer_points || []).map(pp => {
+            {(displayPrayer.prayer_points || []).map(pp => {
               // Support both new `verses` array and legacy `verse`/`verse_text` fields
               const verses = pp.verses?.length
                 ? pp.verses
                 : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
+              const pointReadOnly = !!(pp._locked || pp._communityFallback);
               return (
                 <div key={pp.id} className="prayer-point-card group rounded-xl">
                   <div className="flex items-start gap-2">
-                    <p className="flex-1 text-sm leading-snug" style={{ color: 'var(--text-1)' }}>{loc(pp.title)}</p>
-                    {canRemoveContent && (
+                    <p className="flex-1 text-sm leading-snug" style={{ color: pp._locked ? 'var(--text-3)' : 'var(--text-1)' }}>
+                      {pp._locked ? t(lang, 'contentLocked') : loc(pp.title)}
+                    </p>
+                    {canRemoveContent && !pointReadOnly && (
                       <button
                         onClick={() => setConfirmRemovePoint(pp)}
                         aria-label={t(lang, 'tipRemovePoint')}
@@ -999,7 +1313,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           key={i}
                           verse={v}
                           lang={lang}
-                          canRemove={canRemoveContent}
+                          canRemove={canRemoveContent && !pointReadOnly}
                           onRemove={() => handleRemoveVerse(pp.id, v.ref)}
                         />
                       ))}
@@ -1007,7 +1321,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   )}
 
                   {/* Add verse inline form */}
-                  {canAddContent && (
+                  {canAddContent && !pointReadOnly && (
                     addingVerseTo === pp.id ? (
                       <div className="mt-2 space-y-1.5">
                         <input
@@ -1110,7 +1424,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           {updateRecs.length > 0 && <AiDisclaimer lang={lang} className="mt-2" />}
 
           {/* Manual prayer point input */}
-          {canAddContent && (
+          {offerPointAuthoring && canAddContent && (
             showManualForm ? (
               <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'var(--surface-2)', border: '0.5px solid var(--border)' }}>
                 <input
@@ -1164,6 +1478,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             )
           )}
         </div>
+        )}
 
         {/* ── Per-prayer follow-up reminder (own personal prayers only) ── */}
         {!isCommunity && !savedCopy && !isAnswered && (
@@ -1176,7 +1491,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         )}
 
         {/* Set / change this prayer's follow-up date (opened from the ⋯ menu). */}
-        {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && (
+        {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && followUpRelevant && (
           <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <FollowUpField
               value={followUps[livePrayer.id]?.date || null}
@@ -1233,6 +1548,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             lang={lang}
             userId={user?.id}
             isAdmin={isGroupAdmin}
+            avatarFor={memberAvatarFor}
             onSend={handleSendWord}
             onDelete={handleDeleteWord}
             onEdit={handleEditWord}
@@ -1312,6 +1628,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <div key={u.id} className="prayer-activity-item prayer-activity-item--personal group flex gap-3">
                 <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div className="prayer-activity-item__body min-w-0 flex-1">
+                  {/* An entry captured while praying reads as part of the
+                      prayer's story, not as a different kind of thing — the same
+                      row, with a quiet line saying where it came from. */}
+                  {sessionNoteIds.has(u.id) && !u._locked && (
+                    <p className="prayer-activity-item__meta mb-1">
+                      {t(lang, 'noteLabel')} · {t(lang, 'noteDuringPrayer')}
+                    </p>
+                  )}
                   {u._locked ? (
                     <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
                   ) : editingUpdateId === u.id ? (
@@ -1329,13 +1653,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         lang={lang}
                         className="text-sm leading-snug"
                         style={{ color: 'var(--text-1)' }}
-                        onRemove={canManage ? () => removeUpdateText(livePrayer.id, u.id) : null}
+                        onRemove={canManage && !u._communityFallback ? () => removeUpdateText(livePrayer.id, u.id) : null}
                       />
                       <AttachmentList
                         attachments={u.attachments}
                         lang={lang}
                         className={u.text ? 'mt-1.5' : ''}
-                        onRemove={canManage ? (att) => removeUpdateAttachment(livePrayer.id, u.id, att.id) : null}
+                        onRemove={canManage && !u._communityFallback ? (att) => removeUpdateAttachment(livePrayer.id, u.id, att.id) : null}
                       />
                     </>
                   )}
@@ -1347,7 +1671,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 </div>
                 {/* Author-only edit + delete cluster (own personal updates), hidden
                     while this row's inline editor is open. Edit needs text to edit. */}
-                {editingUpdateId !== u.id && canManage && !u._locked && (
+                {editingUpdateId !== u.id && canManage && !u._locked && !u._communityFallback && (
                   <div className="prayer-activity-item__actions flex items-start gap-1.5 self-start mt-1.5">
                     {!!u.text && (
                       <EditButton onEdit={() => setEditingUpdateId(u.id)} label={t(lang, 'editUpdate')} />

@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal } from 'lucide-react';
+import { Home, BookOpen, Plus, ChevronLeft, ChevronRight, Users, MoreHorizontal, Route } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import useLayoutStore from '../store/layoutStore';
@@ -72,26 +72,33 @@ export default function Layout({ children, onAddPrayer }) {
     }
   }, [sidebarWidth, isMd]);
 
-  // Four destinations, so the daily prayer rhythm stays front-and-centre:
-  // Today, Journal, Community and More. Grow, Plan, Settings, data export and
-  // support all live inside More — Settings no longer occupies prime
-  // bottom-navigation space.
+  // Five destinations, with the daily prayer rhythm front-and-centre: Today,
+  // Journal, Plans, Together and More. Prayer plans earned a place of their own
+  // once they became a main way the app guides prayer — reached through More
+  // they sat four taps deep. Guidance, Calendar, Settings, data export and
+  // support live inside More. `state.source` tells the Plans page it was
+  // opened from the navigation (lib/planAnalytics.js).
   const tabs = [
     { id: 'home', path: '/', label: t(lang, 'today'), icon: Home },
     // Label reads "Journal" (all requests + history); route/id stay `prayers`.
     { id: 'prayers', path: '/prayers', label: t(lang, 'journal'), icon: BookOpen },
-    { id: 'community', path: '/community', label: t(lang, 'community'), icon: Users, badge: pendingCount },
+    { id: 'plans', path: '/plans', label: t(lang, 'navPlans'), icon: Route, state: { source: 'tab' } },
+    { id: 'community', path: '/community', label: t(lang, 'together'), icon: Users, badge: pendingCount },
     { id: 'more', path: '/more', label: t(lang, 'moreTab'), icon: MoreHorizontal },
   ];
 
   // Destinations reached THROUGH More keep the More tab lit, so the user always
   // knows the way back to them.
-  const MORE_PATHS = ['/more', '/grow', '/plan', '/settings', '/notifications'];
+  const MORE_PATHS = ['/more', '/guidance', '/calendar', '/grow', '/plan', '/settings', '/notifications'];
+  // A route and everything nested under it — segment-wise, so the old `/plan`
+  // (now Calendar) never claims `/plans`.
+  const within = (base) => pathname === base || pathname.startsWith(`${base}/`);
   const isActive = (path) => {
     if (path === '/') return pathname === '/';
-    if (path === '/more') return MORE_PATHS.some((p) => pathname.startsWith(p));
-    // startsWith keeps Community lit on its nested group and prayer routes.
-    return pathname.startsWith(path);
+    if (path === '/more') return MORE_PATHS.some(within);
+    // Nested routes keep their tab lit: Community's group and prayer pages,
+    // and a shared plan's page under Plans.
+    return within(path);
   };
 
   // A destination's accessible name. When it carries pending items we fold the
@@ -120,11 +127,11 @@ export default function Layout({ children, onAddPrayer }) {
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
           {!collapsed && (
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <img src="/logo-constellation.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg shrink-0" />
-              <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>Pray4Me</span>
+              <img src="/logo.svg" alt="Praystead" className="w-8 h-8 rounded-lg shrink-0" />
+              <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>Praystead</span>
             </div>
           )}
-          {collapsed && <img src="/logo-constellation.svg" alt="Pray4Me" className="w-8 h-8 rounded-lg mx-auto" />}
+          {collapsed && <img src="/logo.svg" alt="Praystead" className="w-8 h-8 rounded-lg mx-auto" />}
           <div className="flex items-center gap-1 shrink-0">
             {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--text-3)' }} />}
             <button
@@ -147,12 +154,13 @@ export default function Layout({ children, onAddPrayer }) {
         )}
 
         <nav className="flex flex-col gap-1 flex-1 px-2" aria-label={t(lang, 'primaryNav')}>
-          {tabs.map(({ id, path, label, icon: Icon, badge }) => {
+          {tabs.map(({ id, path, label, icon: Icon, badge, state }) => {
             const active = isActive(path);
             return (
               <Link
                 key={id}
                 to={path}
+                state={state}
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 title={collapsed ? label : undefined}
@@ -209,8 +217,8 @@ export default function Layout({ children, onAddPrayer }) {
           }}
         >
           <div className="flex items-center gap-2">
-            <img src="/logo-constellation.svg" alt="Pray4Me" className="w-7 h-7 rounded-lg" />
-            <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>Pray4Me</span>
+            <img src="/logo.svg" alt="Praystead" className="w-7 h-7 rounded-lg" />
+            <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>Praystead</span>
           </div>
           <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
         </header>
@@ -277,12 +285,13 @@ export default function Layout({ children, onAddPrayer }) {
             paddingBottom: 'env(safe-area-inset-bottom)',
           }}
         >
-          {tabs.map(({ id, path, label, icon: Icon, badge }) => {
+          {tabs.map(({ id, path, label, icon: Icon, badge, state }) => {
             const active = isActive(path);
             return (
               <Link
                 key={id}
                 to={path}
+                state={state}
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 className="pressable flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"

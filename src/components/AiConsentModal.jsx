@@ -8,12 +8,11 @@ import AiDisclaimer from './shared/AiDisclaimer';
 // The consent read/grant/revoke helpers (hasAiConsent, grantAiConsent,
 // revokeAiConsent) live in lib/aiConsent.js.
 
-// context: 'prayer' = sends prayer title + last update, 'home' = sends category names
+// Every AI feature sends one prayer's title plus its details or latest update;
+// `context` only scopes the stored consent.
 export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {
   useEscapeKey(onCancel);
   const trapRef = useFocusTrap();
-  const noticeKey = context === 'home' ? 'aiConsentNoticeHome' : 'aiConsentNoticePrayer';
-  const bodyKey = context === 'home' ? 'aiConsentBodyHome' : 'aiConsentBodyPrayer';
 
   return (
     <div className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4">
@@ -33,12 +32,12 @@ export default function AiConsentModal({ lang = 'en', context = 'prayer', onAcce
         <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
           <Shield size={15} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} />
           <p className="text-xs leading-relaxed" style={{ color: 'var(--accent)' }}>
-            {t(lang, noticeKey)}
+            {t(lang, 'aiConsentNoticePrayer')}
           </p>
         </div>
 
         <p className="text-sm leading-relaxed mb-5" style={{ color: 'var(--text-2)' }}>
-          {t(lang, bodyKey)}
+          {t(lang, 'aiConsentBodyPrayer')}
         </p>
 
         <div className="flex gap-2">

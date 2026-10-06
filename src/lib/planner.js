@@ -2,7 +2,7 @@
 // the new per-prayer schedules (src/lib/schedule.js) and the legacy weekly
 // category plan (categories.week_days / prayers.week_days). Pure functions so
 // the store, Home, and the calendar all agree on what "today" means.
-import { occursOn, rotationForDay, addDays, seriesEnded, normalizeSchedule } from './schedule';
+import { occursOn, rotationForDay, addDays, seriesEnded, normalizeSchedule, restingPlanDay } from './schedule';
 import { prayerPriority } from '../utils/prayer';
 
 // Every planned entry for a day:
@@ -126,6 +126,44 @@ export function runningPlanIds(prayers, dayKey) {
     if (p.status === 'active' && p.schedule?.plan?.id && !scheduleEnded(p, dayKey)) ids.add(p.schedule.plan.id);
   }
   return ids;
+}
+
+// Guided plans walked to their last day and not running again, in the order the
+// runs were started. A run stopped part-way (answered, deleted) never counts —
+// only a series that actually reached its end, the same test PrayerDetail uses
+// for "plan finished".
+export function finishedPlanIds(prayers, dayKey) {
+  const running = runningPlanIds(prayers, dayKey);
+  const ids = [];
+  for (const p of prayers) {
+    const id = p.schedule?.plan?.id;
+    if (id && !running.has(id) && !ids.includes(id) && scheduleEnded(p, dayKey)) ids.push(id);
+  }
+  return ids;
+}
+
+// Where each running plan has GOT TO on `dayKey`, keyed by plan id:
+//
+//   { marriage30: { prayerId: 'p-1', day: 12 } }
+//
+// So a plan catalogue can say "Day 12 of 30" and send the reader to the prayer
+// that is actually carrying the run, instead of offering a preview whose Start
+// button is disabled because they already started it.
+//
+// `day` is where the run has actually got to, whether or not it lands on
+// `dayKey` — a plan running weekly, or paused, or with the day skipped, is still
+// on the day it reached, and the card said "Day 1" for all three before. null
+// only when there is no run to report. The first prayer wins if a plan somehow
+// has two runs, so the card is stable rather than flickering between them.
+export function runningPlanProgress(prayers, dayKey) {
+  const running = runningPlanIds(prayers, dayKey);
+  const out = {};
+  for (const p of prayers) {
+    const id = p.schedule?.plan?.id;
+    if (!id || p.status !== 'active' || !running.has(id) || out[id]) continue;
+    out[id] = { prayerId: p.id, day: restingPlanDay(p.schedule, dayKey, p.schedule_overrides || {})?.dayNo ?? null };
+  }
+  return out;
 }
 
 // Which weekdays a plan-following (unscheduled) prayer actually lands on, read

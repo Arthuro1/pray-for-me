@@ -1,0 +1,256 @@
+{
+  "covenant21": {
+    "intro": "Dalawampu’t isang araw upang ihanda ang pagsasama, hindi lamang ang kasal. Basahin ang Kasulatan, ipanalangin ang isa’t isa at sariling paglago, at mag-usap nang tapat. Maaaring manalangin nang pribado o kusang gumawa nang magkasama; pribado ang mga tala. Ang pag-aasawa ay kalagayan ng pagsunod kay Cristo, hindi mas mataas na antas kaysa pagiging walang asawa.",
+    "biblical": "Inuuna ni Jesus ang kaharian ng Diyos. Inilalarawan ng Genesis ang bagong tahanang may pangako; itinuturo ng Filipos ang pagpapakumbaba at paglilingkod ni Cristo. Inaanyayahan ng mga talata ang tapat na paghahanda nang hindi ginagawang garantiya ng Diyos ang engagement.",
+    "completion": "Ginugol ninyo ang mga araw sa panalangin, kusang pag-uusap, at paghahanda. Magpasalamat at ipagkatiwala sa Diyos ang natitira. Simula ng tapat na buhay ang kasal; hindi sertipiko ng kahandaan ang pagtatapos. Maaaring patuloy na ipanalangin ang pagsasama. Nananatili ang history at hindi awtomatikong nagbabago ang relationship status.",
+    "days": [
+      {
+        "reflection": "Pagbulayan ngayon ang “Si Cristo ang sentro” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Si Cristo ang sentro”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Si Cristo ang sentro”?",
+        "prayTogether": "Kung gusto ninyong dalawa, manalangin nang maikli gamit ang mga paksa ngayon; hindi kailangan ng ikalawang account."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Tipan na higit sa romansa” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Tipan na higit sa romansa”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Tipan na higit sa romansa”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Kilalanin at paglingkuran ang isa’t isa” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Kilalanin at paglingkuran ang isa’t isa”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Kilalanin at paglingkuran ang isa’t isa”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Ugali sa araw-araw” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Ugali sa araw-araw”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Ugali sa araw-araw”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Sabihin ang mga inaasahan” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Sabihin ang mga inaasahan”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Sabihin ang mga inaasahan”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Mga salitang nagpapatibay” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Mga salitang nagpapatibay”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Mga salitang nagpapatibay”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Harapin ang alitan nang may malasakit” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Harapin ang alitan nang may malasakit”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Harapin ang alitan nang may malasakit”?",
+        "safetyNote": "Hindi hinihingi ng panalangin ang pagtitiis ng pinsala, pagkontrol, o pamimilit. Unahin ang kaligtasan at humingi ng mapagkakatiwalaang propesyonal na tulong."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Pagsisisi at pagpapatawad” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Pagsisisi at pagpapatawad”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Pagsisisi at pagpapatawad”?",
+        "safetyNote": "Hindi hinihingi ng panalangin ang pagtitiis ng pinsala, pagkontrol, o pamimilit. Unahin ang kaligtasan at humingi ng mapagkakatiwalaang propesyonal na tulong."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Tiwala at katapatan” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Tiwala at katapatan”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Tiwala at katapatan”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Pagpapalagayang may dignidad” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Pagpapalagayang may dignidad”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Pagpapalagayang may dignidad”?",
+        "safetyNote": "Hindi hinihingi ng panalangin ang pagtitiis ng pinsala, pagkontrol, o pamimilit. Unahin ang kaligtasan at humingi ng mapagkakatiwalaang propesyonal na tulong."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Pera at responsableng pamamahala” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Pera at responsableng pamamahala”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Pera at responsableng pamamahala”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Trabaho, tawag, at pahinga” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Trabaho, tawag, at pahinga”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Trabaho, tawag, at pahinga”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Ugnayan sa pamilya at mga hangganan” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Ugnayan sa pamilya at mga hangganan”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Ugnayan sa pamilya at mga hangganan”?",
+        "safetyNote": "Hindi hinihingi ng panalangin ang pagtitiis ng pinsala, pagkontrol, o pamimilit. Unahin ang kaligtasan at humingi ng mapagkakatiwalaang propesyonal na tulong."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Pagkakaibigan sa pagsasama” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Pagkakaibigan sa pagsasama”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Pagkakaibigan sa pagsasama”?",
+        "prayTogether": "Kung gusto ninyong dalawa, manalangin nang maikli gamit ang mga paksa ngayon; hindi kailangan ng ikalawang account."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Sama-samang mga gawi sa pananampalataya” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Sama-samang mga gawi sa pananampalataya”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Sama-samang mga gawi sa pananampalataya”?",
+        "prayTogether": "Kung gusto ninyong dalawa, manalangin nang maikli gamit ang mga paksa ngayon; hindi kailangan ng ikalawang account."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Nakaugat sa pamayanang Kristiyano” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Nakaugat sa pamayanang Kristiyano”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Nakaugat sa pamayanang Kristiyano”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Mga pag-asa tungkol sa mga anak” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Mga pag-asa tungkol sa mga anak”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Mga pag-asa tungkol sa mga anak”?",
+        "safetyNote": "Hindi hinihingi ng panalangin ang pagtitiis ng pinsala, pagkontrol, o pamimilit. Unahin ang kaligtasan at humingi ng mapagkakatiwalaang propesyonal na tulong."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Pagharap sa mahihirap na panahon” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Pagharap sa mahihirap na panahon”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Pagharap sa mahihirap na panahon”?",
+        "prayTogether": "Kung gusto ninyong dalawa, manalangin nang maikli gamit ang mga paksa ngayon; hindi kailangan ng ikalawang account."
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Tahanang mapagpatuloy” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Tahanang mapagpatuloy”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Tahanang mapagpatuloy”?"
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Paghahandang maglingkod nang tapat” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Paghahandang maglingkod nang tapat”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Paghahandang maglingkod nang tapat”?",
+        "safetyNote": "Hindi hinihingi ng panalangin ang pagtitiis ng pinsala, pagkontrol, o pamimilit. Unahin ang kaligtasan at humingi ng mapagkakatiwalaang propesyonal na tulong.",
+        "roles": {
+          "husband": "Ang paghahandang maging asawa ay may mapagbigay na pag-ibig, pakikinig, pagsisisi, at paglilingkod, hindi paghingi ng kontrol.",
+          "wife": "Ang paghahandang maging asawa ay may karunungan, lakas, tapat na tinig, at kabutihan, hindi pagtatago ng pangangailangan o pagtanggap ng pinsala."
+        }
+      },
+      {
+        "reflection": "Pagbulayan ngayon ang “Ipagkatiwala sa Diyos ang pagsasama” sa Kasulatan at panalangin.",
+        "prompts": [
+          "Diyos, gabayan kami sa “Ipagkatiwala sa Diyos ang pagsasama”.",
+          "Para kay {partner}: magbigay ng karunungan at biyaya.",
+          "Hubugin kaming tapat."
+        ],
+        "selfPrompt": "Ano sa akin ang kailangang magbago?",
+        "practice": "Gumawa ngayon ng isang maliit na hakbang.",
+        "conversationPrompt": "Ano ang kailangan naming tapat na pag-usapan tungkol sa “Ipagkatiwala sa Diyos ang pagsasama”?",
+        "prayTogether": "Kung gusto ninyong dalawa, manalangin nang maikli gamit ang mga paksa ngayon; hindi kailangan ng ikalawang account."
+      }
+    ]
+  }
+}
+

@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -12,6 +12,7 @@ import SyncIndicator from './components/shared/SyncIndicator';
 import Onboarding from './components/Onboarding';
 import FirstPrayerFlow from './components/FirstPrayerFlow';
 import RecoveryPromptBanner from './components/RecoveryPromptBanner';
+import { ContextualNudgeProvider } from './components/shared/ContextualNudgeCoordinator';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
 import useAuthStore from './store/authStore';
@@ -20,14 +21,17 @@ import useAuthStore from './store/authStore';
 const HomeTab = lazy(() => import('./pages/HomeTab'));
 const PrayersTab = lazy(() => import('./pages/PrayersTab'));
 const MoreTab = lazy(() => import('./pages/MoreTab'));
-const PlanTab = lazy(() => import('./pages/PlanTab'));
-const GrowTab = lazy(() => import('./pages/GrowTab'));
+const CalendarTab = lazy(() => import('./pages/PlanTab'));
+const GuidanceTab = lazy(() => import('./pages/GrowTab'));
+const PlansTab = lazy(() => import('./pages/PlansTab'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
 const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
+const PlanSharePublicPage = lazy(() => import('./pages/planShare/PlanSharePublicPage'));
+const PlanJoinPage = lazy(() => import('./pages/planShare/PlanJoinPage'));
 import usePrayerStore from './store/prayerStore';
 import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
@@ -41,9 +45,11 @@ import { ensureAccountCryptoReady, rememberAccountKey, CRYPTO_STATUS } from './l
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
+import { initPrayerNotes } from './lib/prayerNotes';
 import { resolvePwaShortcut } from './lib/pwaInstall';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
+import { hasPendingPlanJoin, isPlanSharePath } from './lib/planShareLink';
 import { normalizeTheme } from './utils/theme';
 import { importGuestPrayerOnce } from './lib/guestPrayerImport';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
@@ -122,13 +128,32 @@ function AddFriendPage() {
 function PersonalPrayerPage({ onEdit }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  // `?day=YYYY-MM-DD` opens one particular day of a guided plan instead of
+  // today's — that is how the calendar hands a day over (PlanTab → DayAgenda).
+  // It is read here and passed down as a prop so PrayerDetail stays free of the
+  // router. An unusable value changes nothing: PrayerDetail falls back to today.
+  const [searchParams] = useSearchParams();
   const { prayers, settings } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, settings: s.settings }))
   );
   const lang = settings.language || 'fr';
   const prayer = prayers.find((p) => p.id === id);
   if (!prayer) return <Navigate to="/prayers" replace />;
-  return <PrayerDetail prayer={prayer} lang={lang} onBack={() => navigate(-1)} onEdit={onEdit} />;
+  return (
+    <PrayerDetail
+      prayer={prayer}
+      lang={lang}
+      planDayKey={searchParams.get('day')}
+      onShowToday={() => navigate(`/prayers/${id}`, { replace: true })}
+      // Paging through a plan REPLACES the entry rather than stacking one per
+      // day: twenty days of reading ahead must not become twenty taps of Back
+      // before the reader is out of the prayer again (on Android that is the
+      // hardware button). "Back to today" is the way home instead.
+      onGoToDay={(dayKey) => navigate(`/prayers/${id}?day=${dayKey}`, { replace: true })}
+      onBack={() => navigate(-1)}
+      onEdit={onEdit}
+    />
+  );
 }
 
 export default function AuthenticatedApp({
@@ -226,6 +251,9 @@ export default function AuthenticatedApp({
       if (uid) usePrayerStore.getState().loadData(uid);
     });
     initQueue();
+    // Prayer notes held back by an offline recording finish promoting on the
+    // same reconnect triggers as the mutation queue.
+    initPrayerNotes();
   }, [init]);
 
   // Manifest shortcut: signed-out visitors enter the existing private guest
@@ -265,7 +293,8 @@ export default function AuthenticatedApp({
       // Don't show the standard first-run onboarding while a guest-prayer import
       // is pending — that visitor already prayed and is about to have their prayer
       // imported (see the import effect below). The sync marker avoids a flash.
-      if (!localStorage.getItem('pfm_onboarded') && !hasPendingGuestDraftSync()) setShowOnboarding(true);
+      // Nor while a shared plan is waiting to start: its first day IS the first prayer.
+      if (!localStorage.getItem('pfm_onboarded') && !hasPendingGuestDraftSync() && !hasPendingPlanJoin()) setShowOnboarding(true);
     }
   }, [user?.id, loadData, loadTranslations, fetchPendingCount]);
 
@@ -283,17 +312,20 @@ export default function AuthenticatedApp({
     if (pending) navigate(pending, { replace: true });
   }, [user?.id, navigate]);
 
-  // Pull any (wrapped) recovery record synced from another device, then make the
-  // account key ready: this auto-provisions encryption transparently on first
-  // use, restores the device-local key on later boots, or leaves it locked when
-  // a recovery-protected key exists elsewhere (new device → VaultLockScreen).
+  // Reconcile the (wrapped) recovery record with the server — pulling one synced
+  // from another device, or re-pushing one an earlier failed sync stranded here —
+  // then make the account key ready: this auto-provisions encryption
+  // transparently on first use, restores the device-local key on later boots, or
+  // leaves it locked when a recovery-protected key exists elsewhere (new device
+  // → VaultLockScreen). The sync result is passed on so a FAILED lookup gates on
+  // the retry screen instead of being read as "no recovery was ever set up".
   // Gates the splash until the crypto state is known.
   useEffect(() => {
     if (!user?.id) { setVaultChecked(false); setCryptoStatus(null); return undefined; }
     let cancelled = false;
     (async () => {
-      await pullVaultRecord();
-      const status = await ensureAccountCryptoReady(user.id);
+      const recoverySync = await pullVaultRecord();
+      const status = await ensureAccountCryptoReady(user.id, recoverySync);
       if (cancelled) return;
       setCryptoStatus(status);
       useVaultStore.getState().refresh();
@@ -377,7 +409,7 @@ export default function AuthenticatedApp({
     return (
       <div className="min-h-screen bg-indigo-700 flex items-center justify-center">
         <div className="text-center text-white">
-          <img src="/logo-constellation.svg" alt="Pray4Me" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
+          <img src="/logo.svg" alt="Praystead" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <Loader2 className="animate-spin mx-auto" size={24} />
         </div>
       </div>
@@ -403,10 +435,17 @@ export default function AuthenticatedApp({
       <Suspense fallback={<PageLoader />}>
         {guestView === 'auth'
           ? <AuthPage intent={authIntent} onBack={() => setGuestView(authIntent === 'save-prayer' ? 'prayer' : 'landing')} />
-          : <LandingPage
-              onBeginPrayer={() => setGuestView('prayer')}
-              onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
-            />}
+          : isPlanSharePath(location.pathname)
+            // A shared plan link: the plan itself, readable before any account.
+            ? <PlanSharePublicPage
+                lang={lang}
+                onJoin={() => { setAuthIntent('join-plan'); setGuestView('auth'); }}
+                onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
+              />
+            : <LandingPage
+                onBeginPrayer={() => setGuestView('prayer')}
+                onSignIn={() => { setAuthIntent('sign-in'); setGuestView('auth'); }}
+              />}
       </Suspense>
     );
   }
@@ -444,11 +483,12 @@ export default function AuthenticatedApp({
 
   return (
     <>
-      <Layout onAddPrayer={openAdd}>
-        <RecoveryPromptBanner lang={lang} />
-        <ErrorBoundary lang={lang} resetKey={location.pathname}>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+      <ContextualNudgeProvider key={location.pathname}>
+        <Layout onAddPrayer={openAdd}>
+          <RecoveryPromptBanner lang={lang} />
+          <ErrorBoundary lang={lang} resetKey={location.pathname}>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
               <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} />} />
               <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
               <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
@@ -459,17 +499,24 @@ export default function AuthenticatedApp({
               <Route path="/community" element={<CommunityTab />} />
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
+              <Route path="/plans" element={<PlansTab />} />
+              <Route path="/plans/:planId/:token?" element={<PlanJoinPage />} />
               <Route path="/community/group/:groupId" element={<CommunityTab />} />
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
-              <Route path="/plan" element={<PlanTab />} />
-              <Route path="/grow" element={<GrowTab onCreatePrayer={openCreatePrayer} />} />
+              <Route path="/calendar" element={<CalendarTab />} />
+              <Route path="/guidance" element={<GuidanceTab onCreatePrayer={openCreatePrayer} />} />
+              {/* Legacy destinations remain valid without keeping the old
+                  overloaded product concepts in navigation or page copy. */}
+              <Route path="/plan" element={<Navigate to="/calendar" replace />} />
+              <Route path="/grow" element={<Navigate to="/guidance" replace />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/settings" element={<SettingsTab />} />
               <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
-        </ErrorBoundary>
-      </Layout>
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </Layout>
+      </ContextualNudgeProvider>
       {showForm && (
         <PrayerForm
           onClose={() => {

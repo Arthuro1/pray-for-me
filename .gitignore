@@ -42,3 +42,6 @@ android-twa/KEYSTORE_CREDENTIALS.txt
 *.sw?
 scripts/seed-demo-account.mjs
 public/screenshots/more.jpeg
+
+# Local editorial review packages
+reports/content-review/

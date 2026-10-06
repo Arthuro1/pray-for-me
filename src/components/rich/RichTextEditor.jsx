@@ -35,6 +35,21 @@ function caretToEnd(el) {
   } catch { /* selection API unavailable (non-browser env) */ }
 }
 
+// The inline commands whose on/off state the toolbar reports. `removeFormat` is
+// an action, not a toggle, so it has no state.
+const TOGGLE_COMMANDS = ['bold', 'italic', 'underline', 'insertUnorderedList', 'insertOrderedList'];
+
+// Which of those currently apply at the caret. Guarded: queryCommandState is
+// unimplemented in some environments (jsdom) and throws for unknown commands.
+function readActiveFormats() {
+  const out = {};
+  if (typeof document === 'undefined' || typeof document.queryCommandState !== 'function') return out;
+  for (const cmd of TOGGLE_COMMANDS) {
+    try { out[cmd] = document.queryCommandState(cmd); } catch { /* unsupported here */ }
+  }
+  return out;
+}
+
 const exec = (cmd) => {
   try {
     document.execCommand('styleWithCSS', false, false); // prefer <b>/<i> over inline styles
@@ -47,7 +62,7 @@ const exec = (cmd) => {
 // clipped by an `overflow-hidden` ancestor (e.g. the inline MessageEditor pill)
 // nor buried under the input's stacking context. `pos.below` flips it under the
 // selection, where it clears the OS cut/copy/paste bubble that always sits above.
-function SelectionToolbar({ pos, lang, onFormat }) {
+function SelectionToolbar({ pos, lang, onFormat, active = {} }) {
   const btn = (icon, label, cmd) => {
     const Icon = icon;
     return (
@@ -57,6 +72,7 @@ function SelectionToolbar({ pos, lang, onFormat }) {
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => onFormat(cmd)}
         aria-label={label}
+        aria-pressed={typeof active[cmd] === 'boolean' ? active[cmd] : undefined}
         title={label}
         className="w-9 h-9 flex items-center justify-center rounded-lg"
         style={{ color: 'var(--text-1)' }}
@@ -111,6 +127,7 @@ export default function RichTextEditor({
   // fight the caret).
   const lastMd = useRef(value || '');
   const [toolbar, setToolbar] = useState(null); // { top, left } | null
+  const [activeFormats, setActiveFormats] = useState({}); // command → on/off at the caret
 
   const isEmpty = !(value && value.trim());
 
@@ -140,6 +157,10 @@ export default function RichTextEditor({
   const syncToolbar = useCallback(() => {
     const el = ref.current;
     const sel = typeof window !== 'undefined' ? window.getSelection() : null;
+    // Toggle state is reported whenever the caret is inside this editor, whether
+    // or not anything is selected — "bold is on" is true while typing too.
+    const inside = !!el && !!sel && sel.rangeCount > 0 && el.contains(sel.getRangeAt(0).commonAncestorContainer);
+    setActiveFormats(inside ? readActiveFormats() : {});
     if (!el || !sel || sel.rangeCount === 0 || sel.isCollapsed) { setToolbar(null); return; }
     const range = sel.getRangeAt(0);
     if (!el.contains(range.commonAncestorContainer)) { setToolbar(null); return; }
@@ -221,10 +242,10 @@ export default function RichTextEditor({
           aria-label={t(lang, 'formatToolbar')}
           className="flex items-center gap-0.5 px-1.5 pb-1.5"
         >
-          <FormatToolbar lang={lang} onFormat={applyFormat} />
+          <FormatToolbar lang={lang} onFormat={applyFormat} active={activeFormats} />
         </div>
       )}
-      {toolbar && !showToolbar && <SelectionToolbar pos={toolbar} lang={lang} onFormat={applyFormat} />}
+      {toolbar && !showToolbar && <SelectionToolbar pos={toolbar} lang={lang} onFormat={applyFormat} active={activeFormats} />}
     </div>
   );
 }

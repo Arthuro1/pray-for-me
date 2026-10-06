@@ -24,6 +24,8 @@ import { t } from '../../i18n';
 beforeEach(() => {
   cleanup();
   localStorage.clear();
+  // A dismissed prompt ends education for the VISIT — each test gets a fresh one.
+  sessionStorage.clear();
   mocks.mode = 'ios';
   mocks.markShown.mockClear();
   mocks.requestNative.mockReset();

@@ -3,13 +3,15 @@ import { supabase } from '../lib/supabase';
 import { communityToPersonalInsert, mirrorSavedCopy, sortByOrder } from '../utils/prayer';
 import { prayersForDay, sortEntries, catchUpPrayers, migrateLegacySchedules } from '../lib/planner';
 import { resolveCategoryColor } from '../lib/categoryColor';
-import { addDays } from '../lib/schedule';
+import { addDays, planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
 import { removeAttachmentFiles } from '../lib/attachments';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
 import { track, EVENTS } from '../lib/analytics';
+import { getPlan } from '../content/prayerPlans';
+import { trackPlanDayCompleted } from '../lib/planAnalytics';
 import { ensurePushSubscription } from '../push';
 import { isEventPushEnabled } from '../lib/notificationPrefs';
 import { resolveLanguage } from '../i18n';
@@ -29,6 +31,7 @@ import {
 import { isUnlocked } from '../lib/crypto/keyManager';
 import { groupKeyResolver } from '../lib/crypto/groupKeys';
 import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
+import { clearPlanPersonalization } from '../lib/planPersonalizationStorage';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -389,25 +392,30 @@ const usePrayerStore = create((set, get) => ({
     }));
   },
 
-  // Fetch testimonies + member updates posted on the community copies of a
-  // personal prayer (whether it's the shared source or a saved copy), so they
-  // can be shown read-only in the personal prayer detail.
+  // Fetch the readable community snapshots, testimonies and member updates for a
+  // personal prayer (whether it's the shared source or a saved copy). Besides
+  // showing group activity, the snapshots provide a display-only fallback when
+  // an older personal child row cannot be opened with this device's account key.
   fetchSharedActivity: async (prayer) => {
     // The community copies whose activity we display, each with its group so the
     // rows can be decrypted under the right group key.
     const col = prayer.community_origin_id ? 'id' : 'source_prayer_id';
     const val = prayer.community_origin_id || prayer.id;
-    const { data: copies } = await supabase.from('community_prayers').select('id, group_id').eq(col, val);
-    if (!copies || copies.length === 0) return { testimonies: [], updates: [] };
+    const { data: copies } = await supabase
+      .from('community_prayers')
+      .select('id, group_id, prayer_points, encrypted_payload, encryption_version, key_version')
+      .eq(col, val);
+    if (!copies || copies.length === 0) return { prayers: [], testimonies: [], updates: [] };
     const ids = copies.map((c) => c.id);
     const groupByCp = Object.fromEntries(copies.map((c) => [c.id, c.group_id]));
     const [tRes, uRes] = await Promise.all([
       supabase.from('testimonies').select('*').in('community_prayer_id', ids).order('created_at'),
       supabase.from('community_updates').select('*').in('community_prayer_id', ids).order('created_at', { ascending: true }),
     ]);
+    const prayers = await Promise.all(copies.map((copy) => decryptCommunityRow(groupKeyResolver(copy.group_id), copy)));
     const testimonies = await Promise.all((tRes.data || []).map((t) => decryptCommunityRow(groupKeyResolver(t.group_id), t)));
     const updates = await Promise.all((uRes.data || []).map((u) => decryptCommunityRow(groupKeyResolver(groupByCp[u.community_prayer_id]), u)));
-    return { testimonies, updates };
+    return { prayers, testimonies, updates };
   },
 
   // One-way pull for prayers saved from the community: refresh the saved copy's
@@ -840,6 +848,17 @@ const usePrayerStore = create((set, get) => ({
     }));
     enqueue('logCompletion', { row, last_prayed_at: now });
     track(EVENTS.PRAYER_PRAYED); // deduped above — one event per prayer per day
+    // A guided plan that opts in also reports THAT one of its days was walked —
+    // no day number, no plan progress, nothing the person wrote (see the
+    // `analyticsEvents` note in src/content/plans/preparingInPrayer.js).
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    const planSchedule = prayer?.schedule?.plan;
+    const plan = planSchedule?.id ? getPlan(planSchedule.id, planSchedule.version || null) : null;
+    if (!plan) return;
+    if (plan.analyticsEvents?.dayCompleted) track(plan.analyticsEvents.dayCompleted);
+    // Every plan also feeds the discovery funnel ("did they come back for day
+    // 2?"); lib/planAnalytics.js strips the day number for the personal plans.
+    trackPlanDayCompleted(plan, planDayNumber(prayer.schedule, dayKey, prayer.schedule_overrides || {}));
   },
 
   unmarkPrayedOn: (prayerId, dayKey) => {
@@ -897,8 +916,10 @@ const usePrayerStore = create((set, get) => ({
 
   // Immediate delete (callers warn the user first). Optimistic + offline-queued.
   deletePrayer: async (id) => {
+    const ownerId = get().userId;
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
     enqueue('deletePrayer', { id });
+    await clearPlanPersonalization(ownerId, id);
   },
 
   // Optimistically hide a prayer and defer the real delete, so an "Undo" toast
@@ -910,6 +931,7 @@ const usePrayerStore = create((set, get) => ({
     const timer = setTimeout(() => {
       pendingDeletes.delete(id);
       enqueue('deletePrayer', { id });
+      clearPlanPersonalization(get().userId, id);
     }, UNDO_WINDOW_MS);
     pendingDeletes.set(id, { prayer, timer });
     return prayer;
@@ -929,8 +951,13 @@ const usePrayerStore = create((set, get) => ({
   // ─── Updates ─────────────────────────────────────────────────
   // Routed through sync_add_update so the update also fans out to any shared
   // community copies. For non-shared prayers it just writes prayer_updates.
-  addUpdate: async (prayerId, text, authorName = '', attachments = []) => {
-    const id = crypto.randomUUID();
+  // `options.id` lets a caller supply the row id up front (prayer-session notes
+  // mint one before the write so a retried promotion upserts the SAME row).
+  // Re-calling with an id that already exists locally is therefore a no-op
+  // rather than a duplicate entry.
+  addUpdate: async (prayerId, text, authorName = '', attachments = [], options = {}) => {
+    const id = options.id || crypto.randomUUID();
+    if (options.id && (get().prayers.find((p) => p.id === prayerId)?.prayer_updates || []).some((u) => u.id === id)) return;
     const row = { id, prayer_id: prayerId, text, attachments, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString(), content_language: get().settings.language || null };
     set((state) => ({
       prayers: state.prayers.map((p) =>

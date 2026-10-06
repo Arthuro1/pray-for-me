@@ -80,8 +80,10 @@ export function journalFilterOptions(prayers, prayerShares = {}) {
   const people = new Map();
   const groups = new Map();
   let hasPersonal = false;
+  let hasPlans = false;
   for (const prayer of prayers || []) {
     if (!prayer?.community_origin_id && !prayer?.origin_group_name) hasPersonal = true;
+    if (prayer?.schedule?.plan?.id) hasPlans = true;
     if (!prayer?._locked) {
       const personKey = normalize(prayer.person_name);
       if (personKey && !people.has(personKey)) people.set(personKey, prayer.person_name.trim());
@@ -96,6 +98,7 @@ export function journalFilterOptions(prayers, prayerShares = {}) {
     people: [...people.values()].sort(byLabel),
     groups: [...groups.values()].sort(byLabel),
     hasPersonal,
+    hasPlans,
   };
 }
 
@@ -115,6 +118,11 @@ function prayerMatchesFilters(prayer, filters, prayerShares, status, now) {
   if (filters.person !== 'all' && normalize(prayer.person_name) !== normalize(filters.person)) return false;
   if (filters.source === 'personal') {
     if (prayer.community_origin_id || prayer.origin_group_name) return false;
+  } else if (filters.source === 'plan') {
+    // A guided plan run is a prayer carrying schedule.plan — the same test the
+    // planner and the row rendering use, so "Prayer plans" lists exactly the
+    // rows that read as plans.
+    if (!prayer.schedule?.plan?.id) return false;
   } else if (filters.source.startsWith('group:')) {
     const selected = normalize(filters.source.slice('group:'.length));
     if (!prayerGroupNames(prayer, prayerShares).some((name) => normalize(name) === selected)) return false;

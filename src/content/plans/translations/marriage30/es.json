@@ -1,0 +1,347 @@
+{
+  "marriage30": {
+    "days": [
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Cristo en el centro». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Cristo en el centro; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Gratitud por mi cónyuge». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Gratitud por mi cónyuge; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Amistad en el matrimonio». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Amistad en el matrimonio; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Carácter en el hogar». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Carácter en el hogar; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "roles": {
+          "husband": "Como esposo, pide amor humilde que se entrega y servicio responsable, nunca control.",
+          "wife": "Como esposa, pide amor valiente que se entrega y sabiduría, sin renunciar a tu voz, dignidad ni seguridad."
+        }
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Palabras que edifican». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Palabras que edifican; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Escuchar antes de responder». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Escuchar antes de responder; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Conflicto sin desprecio». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Conflicto sin desprecio; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?",
+        "safetyNote": "La oración nunca exige silencio, coerción ni permanecer en peligro. Busca ayuda profesional, pastoral, médica, legal o de protección de confianza cuando corresponda; este plan no puede diagnosticar riesgos."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Perdón y reparación». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Perdón y reparación; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte.",
+        "safetyNote": "La oración nunca exige silencio, coerción ni permanecer en peligro. Busca ayuda profesional, pastoral, médica, legal o de protección de confianza cuando corresponda; este plan no puede diagnosticar riesgos."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Confianza mediante la honestidad». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Confianza mediante la honestidad; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Cercanía emocional». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Cercanía emocional; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Intimidad mutua y fiel». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Intimidad mutua y fiel; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?",
+        "safetyNote": "La oración nunca exige silencio, coerción ni permanecer en peligro. Busca ayuda profesional, pastoral, médica, legal o de protección de confianza cuando corresponda; este plan no puede diagnosticar riesgos."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Fidelidad en cada decisión». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Fidelidad en cada decisión; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "safetyNote": "La oración nunca exige silencio, coerción ni permanecer en peligro. Busca ayuda profesional, pastoral, médica, legal o de protección de confianza cuando corresponda; este plan no puede diagnosticar riesgos."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «El dinero como mayordomía». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en El dinero como mayordomía; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Trabajo y descanso». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Trabajo y descanso; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Ritmos espirituales juntos». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Ritmos espirituales juntos; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Orar juntos». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Orar juntos; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Arraigados en la iglesia y la comunidad». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Arraigados en la iglesia y la comunidad; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Límites familiares con sabiduría». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Límites familiares con sabiduría; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?",
+        "safetyNote": "La oración nunca exige silencio, coerción ni permanecer en peligro. Busca ayuda profesional, pastoral, médica, legal o de protección de confianza cuando corresponda; este plan no puede diagnosticar riesgos."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Un hogar hospitalario». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Un hogar hospitalario; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Servir lado a lado». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Servir lado a lado; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "roles": {
+          "husband": "Como esposo, pide amor humilde que se entrega y servicio responsable, nunca control.",
+          "wife": "Como esposa, pide amor valiente que se entrega y sabiduría, sin renunciar a tu voz, dignidad ni seguridad."
+        }
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Fieles en tiempos difíciles». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Fieles en tiempos difíciles; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte.",
+        "safetyNote": "La oración nunca exige silencio, coerción ni permanecer en peligro. Busca ayuda profesional, pastoral, médica, legal o de protección de confianza cuando corresponda; este plan no puede diagnosticar riesgos."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Salud y fortaleza con humildad». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Salud y fortaleza con humildad; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Sueños y decisiones». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Sueños y decisiones; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Contentamiento en la vida cotidiana». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Contentamiento en la vida cotidiana; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Proteger el tiempo juntos». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Proteger el tiempo juntos; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Sabiduría para quienes cuidamos». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Sabiduría para quienes cuidamos; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "withChildren": {
+          "reflection": "Cada niño es conocido por Dios. Ora con esperanza y humildad, sin tratar la oración como garantía ni medio de control.",
+          "childPrompt": "Da a {child} relaciones sabias, valor y gracia; haznos padres atentos que guían sin controlar.",
+          "practice": "Da a cada niño un momento breve de atención sin distracciones y escucha."
+        }
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Cada persona conocida por Dios». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Cada persona conocida por Dios; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?",
+        "withChildren": {
+          "reflection": "Cada niño es conocido por Dios. Ora con esperanza y humildad, sin tratar la oración como garantía ni medio de control.",
+          "childPrompt": "Da a {child} relaciones sabias, valor y gracia; haznos padres atentos que guían sin controlar.",
+          "practice": "Da a cada niño un momento breve de atención sin distracciones y escucha."
+        }
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «La cultura de nuestro hogar». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en La cultura de nuestro hogar; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "conversationPrompt": "Si ambos lo desean y se sienten seguros: ¿cómo afecta este tema a nuestra vida ahora?"
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Generosidad y misión». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Generosidad y misión; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      },
+      {
+        "reflection": "Hoy la Escritura dirige nuestra atención a «Nuestro matrimonio en manos abiertas». Presentamos esta parte de la vida matrimonial ante Dios con humildad, verdad y cuidado.",
+        "prompts": [
+          "Guíanos en Nuestro matrimonio en manos abiertas; mantén la oración centrada en Tu gracia y no en controlar al otro."
+        ],
+        "spousePrompt": "Fortalece a {partner} con sabiduría, dignidad y gracia en esta área.",
+        "selfPrompt": "Muéstrame lo que debe cambiar en mí y hazme humilde, responsable y dispuesto a reparar.",
+        "marriagePrompt": "Forma amor fiel, seguridad y cuidado mutuo en nuestro matrimonio.",
+        "practice": "Elige hoy una acción pequeña y libre que ponga esta oración en práctica.",
+        "prayTogether": "Si ambos lo desean y se sienten seguros, oren una frase cada uno. Nada se graba ni se comparte."
+      }
+    ],
+    "intro": "Treinta días de Escritura y oración por tu cónyuge, tu propio crecimiento y tu matrimonio. Es un ritmo renovable, no una puntuación ni un diagnóstico. Una pareja casada ya es una familia; los hijos son opcionales y las notas privadas siguen siendo privadas.",
+    "biblical": "El Nuevo Testamento llama a cada creyente a la compasión, humildad, paciencia, perdón, amor y paz. Ora por tu cónyuge, por tu propia conversión y por el matrimonio; no pidas simplemente que Dios arregle a la otra persona.",
+    "completion": "Has orado por tu cónyuge, por tu propio crecimiento y por tu matrimonio durante treinta días. Esto no mide la salud de la relación. Puedes comenzar de nuevo cuando lo elijas; el historial anterior permanece intacto."
+  }
+}

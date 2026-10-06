@@ -61,6 +61,8 @@ export const BOOK_NAMES = {
   // English/French. Non-en/fr names follow the same conventions as the rows above
   // (German Pentateuch "N. Mose", Persian spelled-out ordinals, Russian Synodal
   // numbering where 1 Kings = 3 Царств); AI-drafted, pending native review.
+  '1SA': { fr: '1 Samuel', en: '1 Samuel', de: '1. Samuel', pt: '1 Samuel', zh: '撒母耳记上', es: '1 Samuel', hi: '1 शमूएल', ja: 'サムエル記第一', sw: '1 Samweli', am: '1ኛ ሳሙኤል', id: '1 Samuel', tl: '1 Samuel', ko: '사무엘상', ru: '1 Царств', ar: '1 صموئيل', fa: 'اول سموئیل' },
+  '2SA': { fr: '2 Samuel', en: '2 Samuel', de: '2. Samuel', pt: '2 Samuel', zh: '撒母耳记下', es: '2 Samuel', hi: '2 शमूएल', ja: 'サムエル記第二', sw: '2 Samweli', am: '2ኛ ሳሙኤል', id: '2 Samuel', tl: '2 Samuel', ko: '사무엘하', ru: '2 Царств', ar: '2 صموئيل', fa: 'دوم سموئیل' },
   GEN: { fr: 'Genèse', en: 'Genesis', de: '1. Mose', pt: 'Gênesis', zh: '创世记', es: 'Génesis', hi: 'उत्पत्ति', ja: '創世記', sw: 'Mwanzo', am: 'ዘፍጥረት', id: 'Kejadian', tl: 'Genesis', ko: '창세기', ru: 'Бытие', ar: 'تكوين', fa: 'پیدایش' },
   EXO: { fr: 'Exode', en: 'Exodus', de: '2. Mose', pt: 'Êxodo', zh: '出埃及记', es: 'Éxodo', hi: 'निर्गमन', ja: '出エジプト記', sw: 'Kutoka', am: 'ዘጸአት', id: 'Keluaran', tl: 'Exodo', ko: '출애굽기', ru: 'Исход', ar: 'خروج', fa: 'خروج' },
   LEV: { fr: 'Lévitique', en: 'Leviticus', de: '3. Mose', pt: 'Levítico', zh: '利未记', es: 'Levítico', hi: 'लैव्यव्यवस्था', ja: 'レビ記', sw: 'Mambo ya Walawi', am: 'ዘሌዋውያን', id: 'Imamat', tl: 'Levitico', ko: '레위기', ru: 'Левит', ar: 'اللاويين', fa: 'لاویان' },
@@ -71,11 +73,25 @@ export const BOOK_NAMES = {
   JOB: { fr: 'Job', en: 'Job', de: 'Hiob', pt: 'Jó', zh: '约伯记', es: 'Job', hi: 'अय्यूब', ja: 'ヨブ記', sw: 'Ayubu', am: 'ኢዮብ', id: 'Ayub', tl: 'Job', ko: '욥기', ru: 'Иов', ar: 'أيوب', fa: 'ایوب' },
   ECC: { fr: 'Ecclésiaste', en: 'Ecclesiastes', de: 'Prediger', pt: 'Eclesiastes', zh: '传道书', es: 'Eclesiastés', hi: 'सभोपदेशक', ja: '伝道者の書', sw: 'Mhubiri', am: 'መክብብ', id: 'Pengkhotbah', tl: 'Mangangaral', ko: '전도서', ru: 'Екклесиаст', ar: 'الجامعة', fa: 'جامعه' },
   JOL: { fr: 'Joël', en: 'Joel', de: 'Joel', pt: 'Joel', zh: '约珥书', es: 'Joel', hi: 'योएल', ja: 'ヨエル書', sw: 'Yoeli', am: 'ኢዮኤል', id: 'Yoël', tl: 'Joel', ko: '요엘', ru: 'Иоиль', ar: 'يوئيل', fa: 'یوئیل' },
+  MIC: { fr: 'Michée', en: 'Micah', de: 'Micha', pt: 'Miqueias', zh: '弥迦书', es: 'Miqueas', hi: 'मीका', ja: 'ミカ書', sw: 'Mika', am: 'ሚክያስ', id: 'Mikha', tl: 'Mikas', ko: '미가', ru: 'Михей', ar: 'ميخا', fa: 'میکاه' },
   HAB: { fr: 'Habacuc', en: 'Habakkuk', de: 'Habakuk', pt: 'Habacuque', zh: '哈巴谷书', es: 'Habacuc', hi: 'हबक्कूक', ja: 'ハバクク書', sw: 'Habakuki', am: 'ዕንባቆም', id: 'Habakuk', tl: 'Habacuc', ko: '하박국', ru: 'Аввакум', ar: 'حبقوق', fa: 'حبقوق' },
   DAN: { fr: 'Daniel', en: 'Daniel', de: 'Daniel', pt: 'Daniel', zh: '但以理书', es: 'Daniel', hi: 'दानिय्येल', ja: 'ダニエル書', sw: 'Danieli', am: 'ዳንኤል', id: 'Daniel', tl: 'Daniel', ko: '다니엘', ru: 'Даниил', ar: 'دانيال', fa: 'دانیال' },
   ACT: { fr: 'Actes', en: 'Acts', de: 'Apostelgeschichte', pt: 'Atos', zh: '使徒行传', es: 'Hechos', hi: 'प्रेरितों के काम', ja: '使徒の働き', sw: 'Matendo', am: 'የሐዋርያት ሥራ', id: 'Kisah Para Rasul', tl: 'Mga Gawa', ko: '사도행전', ru: 'Деяния', ar: 'أعمال الرسل', fa: 'اعمال رسولان' },
   '2PE': { fr: '2 Pierre', en: '2 Peter', de: '2. Petrus', pt: '2 Pedro', zh: '彼得后书', es: '2 Pedro', hi: '2 पतरस', ja: '2ペテロ', sw: '2 Petro', am: '2ኛ ጴጥሮስ', id: '2 Petrus', tl: '2 Pedro', ko: '베드로후서', ru: '2 Петра', ar: '2 بطرس', fa: 'دوم پطرس' },
+  EZK: { fr: 'Ézéchiel', en: 'Ezekiel', de: 'Hesekiel', pt: 'Ezequiel', zh: '以西结书', es: 'Ezequiel', hi: 'यहेजकेल', ja: 'エゼキエル書', sw: 'Ezekieli', am: 'ሕዝቅኤል', id: 'Yehezkiel', tl: 'Ezekiel', ko: '에스겔', ru: 'Иезекииль', ar: 'حزقيال', fa: 'حزقیال' },
   REV: { fr: 'Apocalypse', en: 'Revelation', de: 'Offenbarung', pt: 'Apocalipse', zh: '启示录', es: 'Apocalipsis', hi: 'प्रकाशितवाक्य', ja: '黙示録', sw: 'Ufunuo', am: 'ራእይ', id: 'Wahyu', tl: 'Pahayag', ko: '요한계시록', ru: 'Откровение', ar: 'رؤيا', fa: 'مکاشفه' },
+  // Added 2026-09-28 for the plans drafted on 2026-09-23 (Psalms study, Woman of
+  // God, Holy Spirit, prodigal, church hurt…). Russian follows the Synodal
+  // names, so 2 Kings is "4 Царств" like 1 Kings is "3 Царств".
+  JDG: { fr: 'Juges', en: 'Judges', de: 'Richter', pt: 'Juízes', zh: '士师记', es: 'Jueces', hi: 'न्यायियों', ja: '士師記', sw: 'Waamuzi', am: 'መሳፍንት', id: 'Hakim-hakim', tl: 'Mga Hukom', ko: '사사기', ru: 'Судей', ar: 'القضاة', fa: 'داوران' },
+  RUT: { fr: 'Ruth', en: 'Ruth', de: 'Rut', pt: 'Rute', zh: '路得记', es: 'Rut', hi: 'रूत', ja: 'ルツ記', sw: 'Ruthu', am: 'ሩት', id: 'Rut', tl: 'Ruth', ko: '룻기', ru: 'Руфь', ar: 'راعوث', fa: 'روت' },
+  '2KI': { fr: '2 Rois', en: '2 Kings', de: '2. Könige', pt: '2 Reis', zh: '列王纪下', es: '2 Reyes', hi: '2 राजा', ja: '列王記第二', sw: '2 Wafalme', am: '2ኛ ነገሥት', id: '2 Raja-raja', tl: '2 Mga Hari', ko: '열왕기하', ru: '4 Царств', ar: '2 ملوك', fa: 'دوم پادشاهان' },
+  EZR: { fr: 'Esdras', en: 'Ezra', de: 'Esra', pt: 'Esdras', zh: '以斯拉记', es: 'Esdras', hi: 'एज्रा', ja: 'エズラ記', sw: 'Ezra', am: 'ዕዝራ', id: 'Ezra', tl: 'Ezra', ko: '에스라', ru: 'Ездра', ar: 'عزرا', fa: 'عزرا' },
+  HOS: { fr: 'Osée', en: 'Hosea', de: 'Hosea', pt: 'Oseias', zh: '何西阿书', es: 'Oseas', hi: 'होशे', ja: 'ホセア書', sw: 'Hosea', am: 'ሆሴዕ', id: 'Hosea', tl: 'Oseas', ko: '호세아', ru: 'Осия', ar: 'هوشع', fa: 'هوشع' },
+  '2TH': { fr: '2 Thessaloniciens', en: '2 Thessalonians', de: '2. Thessalonicher', pt: '2 Tessalonicenses', zh: '帖撒罗尼迦后书', es: '2 Tesalonicenses', hi: '2 थिस्सलुनीकियों', ja: '2テサロニケ', sw: '2 Wathesalonike', am: '2ኛ ተሰሎንቄ', id: '2 Tesalonika', tl: '2 Tesalonica', ko: '데살로니가후서', ru: '2 Фессалоникийцам', ar: '2 تسالونيكي', fa: 'دوم تسالونیکیان' },
+  TIT: { fr: 'Tite', en: 'Titus', de: 'Titus', pt: 'Tito', zh: '提多书', es: 'Tito', hi: 'तीतुस', ja: 'テトス', sw: 'Tito', am: 'ቲቶ', id: 'Titus', tl: 'Tito', ko: '디도서', ru: 'Титу', ar: 'تيطس', fa: 'تیطس' },
+  '3JN': { fr: '3 Jean', en: '3 John', de: '3. Johannes', pt: '3 João', zh: '约翰三书', es: '3 Juan', hi: '3 यूहन्ना', ja: '3ヨハネ', sw: '3 Yohana', am: '3ኛ ዮሐንስ', id: '3 Yohanes', tl: '3 Juan', ko: '요한삼서', ru: '3 Иоанна', ar: '3 يوحنا', fa: 'سوم یوحنا' },
+  JUD: { fr: 'Jude', en: 'Jude', de: 'Judas', pt: 'Judas', zh: '犹大书', es: 'Judas', hi: 'यहूदा', ja: 'ユダ', sw: 'Yuda', am: 'ይሁዳ', id: 'Yudas', tl: 'Judas', ko: '유다서', ru: 'Иуды', ar: 'يهوذا', fa: 'یهودا' },
 };
 
 // Vetted, prayer/faith/trust/thanksgiving-themed references grouped by book so

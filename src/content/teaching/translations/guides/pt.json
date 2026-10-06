@@ -6,19 +6,23 @@
     "steps": [
       {
         "title": "Adoração",
-        "prompt": "Louva a Deus por quem Ele é, não só pelo que Ele dá. Lê o salmo devagar e devolve-lhe as suas próprias palavras."
+        "prompt": "Louva a Deus por quem Ele é, não só pelo que Ele dá. Lê o salmo devagar e devolve-lhe as suas próprias palavras.",
+        "why": "Começar por quem Deus é eleva a oração acima das nossas preocupações e nos lembra com quem estamos falando. As orações da Bíblia quase sempre começam aqui."
       },
       {
         "title": "Confissão",
-        "prompt": "Concorda com Deus acerca do teu pecado com sinceridade. Ele é fiel e justo para perdoar — confessar é voltar para casa, não merecer amor."
+        "prompt": "Concorda com Deus acerca do teu pecado com sinceridade. Ele é fiel e justo para perdoar — confessar é voltar para casa, não merecer amor.",
+        "why": "A sinceridade sobre o pecado abre caminho para tudo o que vem depois — pedimos com liberdade porque chegamos perdoados, sem nos esconder."
       },
       {
         "title": "Ação de graças",
-        "prompt": "Nomeia misericórdias concretas de hoje e desta semana. A gratidão firma o coração antes de pedir seja o que for."
+        "prompt": "Nomeia misericórdias concretas de hoje e desta semana. A gratidão firma o coração antes de pedir seja o que for.",
+        "why": "Lembrar o que Deus já fez fortalece a fé para o que estamos prestes a pedir. A gratidão transforma pedidos em confiança."
       },
       {
         "title": "Súplica",
-        "prompt": "Traz agora os teus pedidos — por ti e pelos outros — com confiança, por causa de quem Ele é. Ora através dos fardos do teu coração."
+        "prompt": "Traz agora os teus pedidos — por ti e pelos outros — com confiança, por causa de quem Ele é. Ora através dos fardos do teu coração.",
+        "why": "Os pedidos vêm por último não porque importam menos, mas porque um coração ancorado no louvor, na sinceridade e na gratidão pede com mais liberdade."
       }
     ]
   },
@@ -29,7 +33,8 @@
     "steps": [
       {
         "title": "Lê-o por inteiro",
-        "prompt": "Lê o salmo uma vez, devagar, apenas escutando. Repara no que o autor diz a Deus e sobre Deus."
+        "prompt": "Lê o salmo uma vez, devagar, apenas escutando. Repara no que o autor diz a Deus e sobre Deus.",
+        "why": "Ouvir antes de falar deixa Deus dar o tom da oração. O salmo nos dá palavras que não teríamos encontrado sozinhos."
       },
       {
         "title": "Devolve-o em oração",
@@ -81,7 +86,7 @@
   },
   "wisdom": {
     "title": "Orar por sabedoria",
-    "summary": "Quando não sabes o que fazer, Deus convida-te a pedir-lhe sabedoria — dada com generosidade.",
+    "summary": "Quando você não sabe o que fazer, Deus o convida a pedir sabedoria a Ele, que a dá generosamente.",
     "intro": "A sabedoria não é mera esperteza; é a arte de viver ao modo de Deus no mundo de Deus. Tiago diz que Deus a dá livremente a quem pede com fé.",
     "steps": [
       {
@@ -93,7 +98,7 @@
         "prompt": "A sabedoria começa com reverência a Deus. Pede-Lhe que te faça desejar a Sua vontade mais do que a tua."
       },
       {
-        "title": "Confia, não te apoies",
+        "title": "Confie nele, não no seu próprio entendimento",
         "prompt": "Renuncia à tua própria compreensão. Pede a Deus que endireite as tuas veredas enquanto avanças."
       }
     ]

@@ -9,14 +9,20 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { todayKey } from '../lib/prayedLog';
+import { nextReturnLabel } from '../lib/scheduleDraft';
 import PrayerSession from './PrayerSession';
 
-// Shown right after a new personal prayer is saved: a calm "Saved privately"
-// confirmation with ONE decision — pray now, or be done. "Pray now" opens a real
-// prayer session on the prayer that was just written (not a mere modal close).
-// Scripture, reminders and sharing are surfaced later, from the prayer detail
-// page, so this moment stays about praying rather than configuring.
-export default function PrayerSavedStep({ prayerId, title, description, encrypted = false, lang, onClose }) {
+// Shown right after a new personal prayer is saved: a calm confirmation with ONE
+// decision — pray now, or be done. "Pray now" opens a real prayer session on the
+// prayer that was just written (not a mere modal close). Scripture, reminders and
+// sharing are surfaced later, from the prayer detail page, so this moment stays
+// about praying rather than configuring.
+//
+// Privacy is stated ONCE here, as the quiet audience badge. The save toast has
+// already said "Saved privately", so this panel leads with the prayer itself and
+// with when it comes back — repeating the reassurance a third time would only
+// make a private prayer feel riskier than it is.
+export default function PrayerSavedStep({ prayerId, title, description, encrypted = false, schedule = null, lang, onClose }) {
   const [praying, setPraying] = useState(false);
   const { prayers, categories, markPrayedOn } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, categories: s.categories, markPrayedOn: s.markPrayedOn }))
@@ -32,6 +38,11 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
   // status is a fact about this prayer rather than a guess.
   const savedPrayer = prayers.find((p) => p.id === prayerId)
     || { id: prayerId, title, description, _encrypted: encrypted, prayer_categories: [], prayer_points: [] };
+
+  // The next day this prayer returns, AFTER today — null when there is none to
+  // name (a one-off due today, "no fixed schedule"), in which case we say nothing
+  // rather than hedge.
+  const nextReturn = nextReturnLabel(schedule ?? savedPrayer.schedule, lang);
 
   if (praying) {
     const prayer = savedPrayer;
@@ -54,7 +65,7 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={t(lang, 'savedPrivately')}
+        aria-label={t(lang, 'prayerSavedTitle')}
         className="w-full max-w-md mx-auto rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
         style={{ background: 'var(--surface)' }}
         onClick={(e) => e.stopPropagation()}
@@ -79,8 +90,15 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
           <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--success-soft, #e8f5ed)' }}>
             <Check size={26} style={{ color: 'var(--success)' }} />
           </div>
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'savedPrivately')}</h2>
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayerSavedTitle')}</h2>
           <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'savedOnToday')}</p>
+          {/* When it comes back — the one thing this moment can usefully add,
+              and only when the schedule really has a next day to name. */}
+          {nextReturn && (
+            <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
+              {t(lang, 'nextPrayerLabel', { when: nextReturn })}
+            </p>
+          )}
           {/* The prayer's audience and protection, computed from the ACTUAL
               saved prayer and stated the same way they read everywhere else —
               a new personal prayer is Private, with encryption shown as a

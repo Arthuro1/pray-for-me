@@ -1,0 +1,132 @@
+{
+  "locale": "zh",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "代祷事项",
+      "allowed": [],
+      "avoid": [],
+      "example": "代祷事项",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "蒙应允的祷告",
+      "allowed": [],
+      "avoid": [],
+      "example": "蒙应允的祷告",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "见证",
+      "allowed": [],
+      "avoid": [],
+      "example": "见证",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "代祷",
+      "allowed": [],
+      "avoid": [],
+      "example": "代祷",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "属灵分辨",
+      "allowed": [],
+      "avoid": [],
+      "example": "属灵分辨",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "盟约",
+      "allowed": [],
+      "avoid": [],
+      "example": "盟约",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "悔改",
+      "allowed": [],
+      "avoid": [],
+      "example": "悔改",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "救恩",
+      "allowed": [],
+      "avoid": [],
+      "example": "救恩",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "恩典",
+      "allowed": [],
+      "avoid": [],
+      "example": "恩典",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "圣灵",
+      "allowed": [],
+      "avoid": [],
+      "example": "圣灵",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "圣经",
+      "allowed": [],
+      "avoid": [],
+      "example": "圣经",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "禁食",
+      "allowed": [],
+      "avoid": [],
+      "example": "禁食",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "信实",
+      "allowed": [],
+      "avoid": [],
+      "example": "信实",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "祷告日记",
+      "allowed": [
+        "日志"
+      ],
+      "avoid": [],
+      "example": "把这个代祷事项记在你的祷告日记里。",
+      "note": "导航标签可以是“日志”。"
+    },
+    "update": {
+      "preferred": "近况",
+      "allowed": [
+        "更新"
+      ],
+      "avoid": [],
+      "example": "情况有变化时，添加一条近况。",
+      "note": "代祷事项的最新消息。"
+    },
+    "thanksgiving": {
+      "preferred": "感恩",
+      "allowed": [
+        "感谢"
+      ],
+      "avoid": [],
+      "example": "最后以感恩结束祷告。",
+      "note": "祷告中感谢神的部分。"
+    },
+    "renunciation": {
+      "preferred": "弃绝",
+      "allowed": [],
+      "avoid": [],
+      "example": "在弃绝的祷告中，你说出要离弃的事。",
+      "note": "释放事工用语。"
+    }
+  }
+}

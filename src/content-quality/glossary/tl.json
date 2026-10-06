@@ -1,0 +1,132 @@
+{
+  "locale": "tl",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "kahilingan sa panalangin",
+      "allowed": [],
+      "avoid": [],
+      "example": "kahilingan sa panalangin",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "sinagot na panalangin",
+      "allowed": [],
+      "avoid": [],
+      "example": "sinagot na panalangin",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "patotoo",
+      "allowed": [],
+      "avoid": [],
+      "example": "patotoo",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "pananalangin para sa iba",
+      "allowed": [],
+      "avoid": [],
+      "example": "pananalangin para sa iba",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "espirituwal na pagkilatis",
+      "allowed": [],
+      "avoid": [],
+      "example": "espirituwal na pagkilatis",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "tipan",
+      "allowed": [],
+      "avoid": [],
+      "example": "tipan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "pagsisisi",
+      "allowed": [],
+      "avoid": [],
+      "example": "pagsisisi",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "kaligtasan",
+      "allowed": [],
+      "avoid": [],
+      "example": "kaligtasan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "biyaya",
+      "allowed": [],
+      "avoid": [],
+      "example": "biyaya",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "ang Espiritu Santo",
+      "allowed": [],
+      "avoid": [],
+      "example": "ang Espiritu Santo",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "Banal na Kasulatan",
+      "allowed": [],
+      "avoid": [],
+      "example": "Banal na Kasulatan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "pag-aayuno",
+      "allowed": [],
+      "avoid": [],
+      "example": "pag-aayuno",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "katapatan",
+      "allowed": [],
+      "avoid": [],
+      "example": "katapatan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "talaan ng panalangin",
+      "allowed": [
+        "talaarawan"
+      ],
+      "avoid": [],
+      "example": "Itago ang hiling na ito sa iyong talaan ng panalangin.",
+      "note": "Ang tab ay maaaring “Talaan”."
+    },
+    "update": {
+      "preferred": "balita",
+      "allowed": [
+        "update"
+      ],
+      "avoid": [],
+      "example": "Magdagdag ng balita kapag may nagbago.",
+      "note": "Balita tungkol sa isang hiling sa panalangin."
+    },
+    "thanksgiving": {
+      "preferred": "pasasalamat",
+      "allowed": [],
+      "avoid": [],
+      "example": "Tapusin sa pasasalamat.",
+      "note": "Bahagi ng panalangin na nagpapasalamat sa Diyos."
+    },
+    "renunciation": {
+      "preferred": "pagtalikod",
+      "allowed": [
+        "pagtakwil"
+      ],
+      "avoid": [],
+      "example": "Sa panalangin ng pagtalikod, pinangangalanan mo ang iyong iniiwan.",
+      "note": "Salita sa ministeryo ng paglaya. Kailangan ng katutubong tagasuri."
+    }
+  }
+}

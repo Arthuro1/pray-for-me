@@ -7,6 +7,7 @@ import useNotificationStore from '../store/notificationStore';
 import { notificationRoute } from '../lib/notificationRoutes';
 import { t } from '../i18n';
 import NotificationRow from '../components/NotificationRow';
+import useGroupLookup from '../hooks/useGroupLookup';
 import { PageHeader } from '../components/shared/Primitives';
 
 // The Inbox at /notifications — the bell's full destination, with keyset
@@ -15,6 +16,7 @@ export default function NotificationsPage() {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const groupFor = useGroupLookup();
   const {
     notifications, unreadCount, loading, error, hasMore,
     fetchNotifications, fetchMoreNotifications, markRead, markAllRead,
@@ -84,7 +86,7 @@ export default function NotificationsPage() {
           <>
             <div className="space-y-2">
               {notifications.map((n) => (
-                <NotificationRow key={n.id} notification={n} lang={lang} onActivate={handleActivate} />
+                <NotificationRow key={n.id} notification={n} lang={lang} onActivate={handleActivate} group={groupFor(n.group_id)} />
               ))}
             </div>
             {hasMore && (

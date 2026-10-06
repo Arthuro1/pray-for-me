@@ -1,0 +1,227 @@
+{
+  "preparing21": {
+    "intro": "Siku ishirini na moja za kumtafuta Mungu katika msimu unaouishi kwa kweli. Huu si mbinu ya kutafuta mwenzi, wala hauahidi lolote kuhusu kama utaoa au kuolewa. Ni safari iliyoundwa na Maandiko: siku tano za kuiotesha mizizi ya maisha yako katika Mungu, siku tano za kumwomba akuunde tabia yako mwenyewe, siku saba za kumwombea mtu ambaye labda utaoana naye siku moja, na siku nne za kumrudishia wakati wako wote ujao. Kama hutaoa wala kuolewa kamwe, kila siku ya safari hii bado ni yako.",
+    "biblical": "Kwa umati uliokuwa na wasiwasi juu ya walichokosa, Yesu alisema: utafuteni kwanza ufalme wa Mungu na haki yake, na hayo yote mtaongezewa (Mathayo 6:33). Maandiko hayafanyi ndoa kuwa lengo la maisha. Paulo anaita ndoa na useja vyote kuwa karama, na anamwambia kila mwamini aenende katika maisha ambayo Bwana amemgawia (1 Wakorintho 7:7, 17). Zaburi 37 inatualika kumfurahia BWANA na kumkabidhi njia yetu badala ya kunyakua tunachotaka. Kwa hiyo safari hii inaomba kwa uaminifu kuhusu ndoa — na bado inaweka ufalme kwanza.",
+    "completion": "Siku ishirini na moja za kumtafuta Mungu, kumruhusu afanye kazi ndani ya moyo wako mwenyewe, na kuomba kuhusu ndoa ambayo inaweza kuja au isije. Hakuna kitu hapa kinachomlazimisha Mungu, na hakuna kilichopotea. Umezoea kuomba kwa Maandiko, kutaja matamanio yako bila kuyakumbatia, na kumweka Kristo katikati. Lolote atakaloandika baadaye, mazoea hayo ni yako.",
+    "days": [
+      {
+        "reflection": "Anza pale mtunga-zaburi alipoishia: kwa Mungu mwenyewe. Asafu alikuwa ameona kila mtu mwingine akipata alichokitaka, na karibu ateleze kwa sababu hiyo — kisha akaingia mbele za Mungu na kugundua kwamba Yule aliyekuwa naye tayari ndiye aliyemhitaji zaidi. Kabla ya kumwomba Mungu chochote kuhusu ndoa, safari hii inamwomba Yeye mwenyewe.",
+        "prompts": [
+          "Mwambie Mungu kwa uaminifu kwamba unamtaka Yeye kuliko chochote anachoweza kutoa.",
+          "Mshukuru kwa kuwa nguvu yako wakati moyo wako mwenyewe unaposhindwa.",
+          "Mwombe akutoshe leo, katika maisha uliyo nayo kwa kweli."
+        ],
+        "selfPrompt": "Angalia ni kitu gani ulikigeukia kwanza asubuhi ya leo. Kilete kwa Mungu kabla ya kumletea ombi.",
+        "practice": "Tumia mwanzo wa maombi ya leo kumshukuru Mungu, kabla ya kumwomba chochote kuhusu ndoa."
+      },
+      {
+        "reflection": "Paulo anasema uzima wako umefichwa pamoja na Kristo katika Mungu. Hilo linamaliza swali la wewe ni nani kabla mtu yeyote hajakuchagua — na halibadiliki kama hakuna atakayekuchagua. Hali ya uhusiano ni mazingira. Haikuwa kamwe utambulisho.",
+        "prompts": [
+          "Mwombe Mungu ayaelekeze mawazo yako kwenye yaliyo juu badala ya yale unayokosa.",
+          "Mshukuru kwa kuwa tayari u wake, umechaguliwa na kupendwa katika Kristo.",
+          "Taja ulinganisho mmoja unaoendelea kuufanya, na umkabidhi."
+        ],
+        "selfPrompt": "Ni wapi unaruhusu useja — au kuchaguliwa na mtu — kuamua thamani yako?",
+        "roles": {
+          "husband": "Kujiandaa kuwa mume kunaanza hapa, si kwa kutoa mahitaji wala kwa kuamua. Mwanaume aliye salama katika Kristo hana cha kuthibitisha, na kwa hiyo yuko huru kutumika. Mwombe Mungu aikite usalama huo ndani sana kiasi kwamba usiwahi kumhitaji mke akupe.",
+          "wife": "Mithali inamalizia picha yake ya mwanamke hodari kwa kutaja kile kinachodumu kweli: si uzuri wa sura, si urembo, bali kumcha BWANA. Mwombe Mungu aiotesha mizizi ya usalama wako ndani yake, ili kuchaguliwa na mtu kusiwe kamwe kile kinachokuambia wewe ni nani."
+        }
+      },
+      {
+        "reflection": "Paulo anasema alijifunza kuridhika — haikuwa tabia yake ya asili. Naye anazungumzia useja si kama chumba cha kusubiria, bali kama uhuru usiogawanyika kwa ajili ya Bwana. Leo si sehemu ya maisha yako inayotangulia kuanza kwa maisha yako.",
+        "prompts": [
+          "Mwombe Mungu akufundishe kuridhika, kama jambo linalojifunzwa na si linalohisiwa tu.",
+          "Mshukuru kwa jambo ambalo ni msimu huu pekee unaliwezesha.",
+          "Mpe uangalifu usiogawanyika ulio nao sasa hivi."
+        ],
+        "selfPrompt": "Taja jambo moja unaloliahirisha hadi utakapooa au kuolewa. Uliza kama Mungu analiomba sasa.",
+        "practice": "Taja zawadi tatu njema ambazo Mungu amekupa katika msimu huu, na umshukuru kwa kila moja."
+      },
+      {
+        "reflection": "Kumkabidhi Mungu nyakati si sawa na kuambiwa matokeo. Katika Maandiko, kumngojea BWANA si ahadi juu ya kinachofika mwisho wa kungoja — ni ahadi juu ya yule anayekushika njia yote.",
+        "prompts": [
+          "Mwambie Mungu ni wapi unategemea akili zako mwenyewe.",
+          "Mwombe azinyoshe njia zako, hata kama si njia uliyoiwaza.",
+          "Omba ujasiri wa leo badala ya uhakika juu ya siku zijazo."
+        ],
+        "selfPrompt": "Ni nini unachokiita “kungoja” ambacho Mungu labda anakiita “kuishi” tu?"
+      },
+      {
+        "reflection": "Kumfurahia BWANA si mbinu ya kupata matamanio ya moyo; ndicho kinachoyaunda upya. Lete tamaa ya ndoa wazi mbele za Mungu. Si jambo la aibu — wala si mungu.",
+        "prompts": [
+          "Sema tamaa hiyo kwa sauti mbele za Mungu, kwa unyofu, bila kuipamba.",
+          "Mwombe aunde upya kile kilichokuwa sanamu ndani yake kimyakimya.",
+          "Mkabidhi njia yako na uache matokeo mikononi mwake."
+        ],
+        "selfPrompt": "Kama Mungu hataitoa kamwe, bado ungemwamini? Mwambie jibu la kweli."
+      },
+      {
+        "reflection": "Ni rahisi kuandika orodha ya unachotaka kwa mtu mwingine kuliko kumwacha Mungu aiandike orodha hiyo juu yako. Tunda la Roho si orodha ya kupimia watu wengine; ni kile anachokiotesha kwa uvumilivu ndani ya yeyote anayekubali kufanyiwa kazi.",
+        "prompts": [
+          "Mwombe Mungu akuze ndani yako tunda moja la Roho ambalo linaonekana wazi kukosekana.",
+          "Mwombe akufanye mtu ambaye ni vizuri kuishi naye.",
+          "Mshukuru kwa kuwa anaunda tabia kwa uvumilivu, si usiku mmoja."
+        ],
+        "selfPrompt": "Isome orodha tena polepole na uiache ikueleze wewe, badala ya mtu unayetumaini kukutana naye.",
+        "practice": "Chagua tunda moja la Roho na ulioombee kwa ajili yako leo — lilelile ungependa kuliona kwa mwenzi.",
+        "roles": {
+          "husband": "Yesu aliwalinganisha watawala wanaowatawala watu kwa nguvu na njia yake mwenyewe: kati yenu, aliye mkubwa hutumika. Kujiandaa kuwa mume ni kujifunza kubeba wajibu na kutumika kwanza, muda mrefu kabla mtu hajatazama — si kujifunza kuwa na mamlaka.",
+          "wife": "Nguvu na heshima ndilo vazi lake, naye hufumbua kinywa chake kwa hekima. Kujiandaa kuwa mke ni kukua katika nguvu, hekima na wema — si katika ukimya, sura, wala maonyesho."
+        }
+      },
+      {
+        "reflection": "Yeye huwaponya waliovunjika moyo na kuyafunga majeraha yao. Sehemu ya kile ungeingia nacho katika uhusiano wa baadaye kiliwekwa hapo na uhusiano wa zamani, na familia, au na kukataliwa ambako hujawahi kukusema kwa sauti. Hakuna hata kimoja kinachomwaibisha Mungu. Maombi ndipo hapa panapoanzia — hayachukui nafasi ya msaada wa mchungaji au mshauri pale unapohitajika.",
+        "prompts": [
+          "Mtajie Mungu jeraha moja waziwazi, badala ya kuomba kulizunguka.",
+          "Mwombe alifunge kile kinachovuja damu bado, kwa kasi yake.",
+          "Omba neema ya kumsamehe mtu ambaye hujamsamehe."
+        ],
+        "selfPrompt": "Je, kuna jambo hapa ambalo unapaswa pia kulizungumza na mchungaji, rafiki mkomavu, au mshauri?"
+      },
+      {
+        "reflection": "Paulo anaeleza usafi kama heshima badala ya karaha: kujifunza kuutendea mwili wako mwenyewe, na watu wengine, kwa heshima badala ya kuwatumia. Huu ni uaminifu wa mtu mzima — unachokitazama, unachokisema, unachokifanya na moyo wa mtu mwingine — nao unaombwa kwa walioolewa na waseja sawasawa. Kama tayari umeshindwa hapa, neno la Injili kwa hilo ni msamaha, si kufukuzwa.",
+        "prompts": [
+          "Mwombe Mungu heshima katika jinsi unavyoutendea mwili wako na watu wengine.",
+          "Lete eneo moja mahususi nuruni badala ya kulishughulikia peke yako.",
+          "Mshukuru kwa kuwa wito wake wa utakatifu unakuja na Roho wake."
+        ],
+        "selfPrompt": "Uaminifu ni tabia muda mrefu kabla ya kuwa kiapo cha ndoa. Chaguo dogo la leo liko wapi?",
+        "practice": "Piga hatua moja ya kweli ya uwajibikaji leo — mazungumzo, mpaka, au mpangilio uliobadilishwa."
+      },
+      {
+        "reflection": "Mungu hutoa hekima kwa ukarimu na bila lawama — huhitaji kuona aibu kuomba. Busara hapa si mfumo wa kupanga alama za kuwahukumu watu. Ni kujifunza kuona wazi: nini kilicho salama, ushauri wa nani unafaa kufuatwa, na wapi moyo wako mwenyewe haukuambii ukweli.",
+        "prompts": [
+          "Mwombe Mungu hekima kwa unyofu, na uamini kwamba anaitoa bila kukemea.",
+          "Omba marafiki wanyofu watakaokuambia yale ambayo ungependa usiyasikie.",
+          "Mwombe aulinde moyo wako, kwa kuwa kila unachokifanya hutoka humo."
+        ],
+        "selfPrompt": "Ushauri wa nani umekuwa ukiukwepa kwa sababu tayari unakisia atakachosema?"
+      },
+      {
+        "reflection": "Hakuna mwenzi anayeweza kubeba uzito wa kuwa ndipo pekee mtu anapokuwa wake. Maandiko huwaweka waamini katika kanisa, katika urafiki, katika mwili mmoja — na yule aliyejifunza kupenda na kujulikana huko huingia na kitu katika ndoa, badala ya kuhitaji ndoa imwokoe kutoka upweke.",
+        "prompts": [
+          "Mwombe Mungu urafiki ambapo unajulikana kwa kweli.",
+          "Mwombe akufanye kuwa rafiki wa aina unayotumaini kumpata.",
+          "Liombee kanisa lako, kwa jina."
+        ],
+        "selfPrompt": "Je, kuna mtu uliyejiondoa kwake kimyakimya? Zungumza na Mungu kuhusu hilo.",
+        "practice": "Mtie moyo au muulize hali mtu mmoja katika kanisa au jumuiya yako leo."
+      },
+      {
+        "reflection": "Kuanzia leo safari hii inamwombea mtu ambaye labda utaoana naye siku moja — nayo inaanza pale Paulo anapoanzia: si kwa jinsi mtu huyo alivyo, bali kwa kama anamjua Mungu. Hufikirii mtu yeyote hasa. Unamwomba Mungu kile kinachomaanisha zaidi kuhusu mtu usiyemjua, na kila moja ya maombi haya imekusudiwa kuombwa juu yako pia.",
+        "prompts": [
+          "Wakuze katika kukujua Wewe.",
+          "Wape hekima kwa maamuzi yaliyo mbele yao.",
+          "Maisha yao na yazae matunda mema, nawe uwape uvumilivu na saburi."
+        ],
+        "selfPrompt": "Sasa yaombe mambo hayohayo matatu kwa ajili yako, kwa maneno yaleyale.",
+        "practice": "Kabla ya kuombea safari ya mtu mwingine na Mungu, iombee mara moja juu ya yako mwenyewe."
+      },
+      {
+        "reflection": "Mika anapunguza maisha yote kuwa mambo matatu: kutenda haki, kupenda rehema, na kwenda kwa unyenyekevu na Mungu wako. Yaombe hayo kwa mtu ambaye labda utaoana naye siku moja — kisha uone jinsi maombi hayo yanavyogeuka haraka kuwa maombi kwa ajili yako mwenyewe. Kioo hicho si hila; ndilo lengo.",
+        "prompts": [
+          "Wafanye kuwa wenye haki, wenye rehema na wanyenyekevu mbele zako.",
+          "Walinde na kiburi na kujifanya.",
+          "Kuza ndani yao unyenyekevu unaowahesabu wengine kuwa bora."
+        ],
+        "selfPrompt": "Je, mtu unayemwombea angeyatambua mambo hayohayo matatu ndani yako?"
+      },
+      {
+        "reflection": "Yeye aliyeanza kazi njema ataimaliza. Hujui chochote kuhusu hadithi ya mtu huyu, kwa hiyo iombee kazi ya Mungu ndani yake bila kumbunia jeraha, historia, au vita. Kumkabidhi Mungu mtu usiyeweza kumwazia ni mazoezi mazuri kabla ya kumkabidhi mtu unayemwona.",
+        "prompts": [
+          "Imalize kazi njema uliyoianza ndani yao.",
+          "Wakute leo popote walipo, katika yote unayoyajua tayari.",
+          "Wape watu wanaowaelekeza kwako tena."
+        ],
+        "selfPrompt": "Mwombe Mungu aimalize kazi yake njema ndani yako, kwa kasi yake na si yako."
+      },
+      {
+        "reflection": "Sisi ni kazi ya mikono yake, tuliumbwa kwa matendo mema aliyoyatangulia kuyatengeneza. Ndoa si wito wa maisha ya Kikristo; uaminifu ndio wito. Omba kwamba nyote wawili mtumie vyema kile Mungu alichowakabidhi — kazi, karama, fedha, wakati — hata kama njia zenu hazitakutana kamwe.",
+        "prompts": [
+          "Waache waenende katika matendo mema uliyoyaandaa kwa ajili yao.",
+          "Wafanye kuwa mawakili waaminifu wa kila ulichowakabidhi.",
+          "Walinde wasipime maisha yao kwa kuoa au kutokuoa."
+        ],
+        "selfPrompt": "Ni nini Mungu amekukabidhi sasa hivi ambacho bado hukitumii vyema?"
+      },
+      {
+        "reflection": "Mwepesi wa kusikia, si mwepesi wa kusema, si mwepesi wa hasira. Hakuna anayekuwa msikilizaji mzuri siku ya harusi yake; anafika akiwa vile alivyojizoeza. Yaombe haya kwa mtu ambaye labda utaoana naye siku moja — kisha uyazoeze katika mazungumzo utakayokuwa nayo leo kweli.",
+        "prompts": [
+          "Wafanye kuwa wepesi wa kusikiliza na si wepesi wa hasira.",
+          "Wape maneno yanayojenga badala ya kubomoa.",
+          "Wafundishe kujibu kwa upole wanapochokozwa."
+        ],
+        "selfPrompt": "Yaombe mambo hayohayo matatu kwa ajili yako — na ulimaanishe la kwanza.",
+        "practice": "Angalia leo kama unasikiliza ili kuelewa au unasikiliza ili kujibu.",
+        "roles": {
+          "husband": "Petro anawaambia waume waishi na wake zao kwa ufahamu na kuwapa heshima kama warithi pamoja wa neema ya uzima. Ufahamu hujifunzwa kwa kuwa makini. Mwombe Mungu akufanye mwanaume anayesikiliza kwa makini na kuheshimu kwa sauti — kuanzia sasa, na watu waliokuzunguka tayari.",
+          "wife": "Kusema kweli katika upendo si maelewano kati ya unyofu na wema; ni vyote viwili kwa pamoja. Mwombe Mungu ujasiri wa kusema kilicho kweli badala ya kuhifadhi uchungu, na upole wa kukisema vizuri."
+        }
+      },
+      {
+        "reflection": "Kila ndoa ni kati ya watu wawili watakaoumizana. Paulo halaambii kanisa likwepe migogoro; anaiambia ijivike huruma, utu wema, unyenyekevu na uvumilivu, na kusamehe kama Bwana alivyosamehe. Yote hayo yanaweza kujifunzwa sasa, kwa watu waliomo tayari maishani mwako.",
+        "prompts": [
+          "Wafundishe kusamehe kama walivyosamehewa.",
+          "Walinde na uchungu na kuhesabu makosa.",
+          "Wape unyenyekevu wa kuwa wa kwanza kuomba radhi."
+        ],
+        "selfPrompt": "Ni nani unayemhesabia makosa sasa hivi? Mtajie Mungu jina.",
+        "roles": {
+          "husband": "Kristo hakuyashikilia haki zake; alijinyenyekeza. Kwa mume, kutubu si udhaifu — kukataa kutubu ndiko udhaifu. Mwombe Mungu uwe mwepesi kukiri lililo lako, bila visingizio na bila hotuba.",
+          "wife": "Kuwahesabu wengine kuwa bora si kujifuta — Kristo alifanya hivyo bila kuacha kuwa Yeye mwenyewe. Mwombe Mungu unyenyekevu unaotumika na unyofu unaosema bado kilicho kweli."
+        }
+      },
+      {
+        "reflection": "Picha ya Paulo ya upendo wa Kikristo ni Kristo akijitoa kwa ajili yetu — agano lililoshikwa, si hisia iliyodumishwa. Ndoa katika Maandiko hupimwa kwa hilo, jambo linaloifanya kuwa nzito zaidi, na yenye wema zaidi, kuliko toleo linalouzwa na utamaduni.",
+        "prompts": [
+          "Wafundishe upendo unaojitoa.",
+          "Wafanye kuwa waaminifu katika wanachoahidi, tangu mambo madogo.",
+          "Walinde na upendo unaotafuta zaidi kuridhika kwa nafsi."
+        ],
+        "selfPrompt": "Ni wapi tayari umevunja ahadi ndogo wiki hii?",
+        "roles": {
+          "husband": "Waume wanaambiwa wapende kama Kristo alivyolipenda kanisa na kujitoa kwa ajili yake — kipimo ni msalaba, si kiti cha enzi. Mwombe Mungu upendo wa kujitoa uwe silika yako, na akulinde usichanganye kamwe upendo na kutawala.",
+          "wife": "Upendo wa Kikristo ni kujitoa kwa watu wote wawili katika ndoa, si kwa mmoja tu. Mwombe Mungu akuze ndani yako upendo unaotoa kwa uhuru na kwa kweli — kamwe si upendo unaokufuta, wala unaonuia kumtengeneza upya mtu mwingine."
+        }
+      },
+      {
+        "reflection": "Mimi na nyumba yangu, tutamtumikia BWANA. Nyumba si jengo wala si ukubwa wa familia — ni yeyote aliye chini ya paa lako na jinsi Mungu anavyoheshimiwa humo. Ukarimu, maombi, ukarimu wa moyo na amani vyote vinaweza kuzoezwa katika mahali unapoishi sasa.",
+        "prompts": [
+          "Mwombe Mungu kwamba nyumba yoyote utakayopewa imtumikie Yeye.",
+          "Omba ukarimu kwa fedha na milango wazi kwa watu.",
+          "Omba kwamba Neno lake liwe mazungumzo ya kawaida humo, si tukio."
+        ],
+        "selfPrompt": "Ni nini kingepaswa kubadilika katika jinsi unavyoishi sasa ili hilo liwe kweli baadaye?",
+        "practice": "Fanya jambo moja leo linalofanya mahali unapoishi pawe pa kukaribisha zaidi kwa mtu mwingine."
+      },
+      {
+        "reflection": "Kama BWANA hataijenga nyumba, wajengao hufanya kazi bure — na watoto, pale wanapokuja, wanaitwa zawadi wala si mafanikio. Si kila ndoa ina watoto, si kila anayewatamani anaweza kuwapata, na hakuna ndoa isiyokamilika bila wao. Omba hapa kwa mikono wazi, na kwa upole.",
+        "prompts": [
+          "Mwombe Mungu aijenge mwenyewe nyumba atakayokupa.",
+          "Kama watoto ni sehemu ya wakati wako ujao, omba hekima na uaminifu.",
+          "Omba neema ya kupokea kile anachotoa, na kuomboleza kwa uaminifu kile asichotoa."
+        ],
+        "selfPrompt": "Ni sehemu gani ya wakati wako ujao unayoishika kwa nguvu zaidi? Mwambie Mungu."
+      },
+      {
+        "reflection": "Katika Maandiko ndoa haijawahi kuwa njia ya kuukimbia ulimwengu na kuingia ndani ya watu wawili; ni watu wawili wanaofanywa kuwa na manufaa zaidi kwa Mungu pamoja. Omba kwa ajili ya manufaa ya pamoja — ukarimu, utume, kulitunza kanisa — na uanze kuyazoeza ukiwa mseja.",
+        "prompts": [
+          "Mwombe Mungu akufanye wa manufaa kwa wengine, ukiwa umeoa au la.",
+          "Omba kwamba ndoa yoyote ya baadaye iwatumikie watu nje yake yenyewe.",
+          "Mwombe aiweke nuru yako mahali wengine wanapoweza kuiona."
+        ],
+        "selfPrompt": "Ni nani Mungu anayemweka mbele yako sasa hivi ili umtumikie?"
+      },
+      {
+        "reflection": "Safari inaishia pale ilipoanzia: kwa Mungu. Utafute kwanza ufalme wake; kila siku inatosha na shida zake. Chochote kitakachofuata — ndoa, au maisha ya useja yanayoishiwa kikamilifu kwa ajili yake — maombi ni yaleyale.",
+        "prompts": [
+          "Utafute kwanza ufalme wake — kwa sauti, kama uamuzi wa kesho.",
+          "Mkabidhi ndoa — na umkabidhi useja pia.",
+          "Mshukuru kwa kuwa bado anatosha, sawasawa na siku ya kwanza."
+        ],
+        "selfPrompt": "Sema kwa unyofu: nisaidie nikutafute Wewe kwanza na nikukabidhi lolote utakaloandika katika wakati wangu ujao.",
+        "practice": "Andika sentensi moja unayotaka kuendelea kuiomba baada ya leo, na uiongeze kwenye maombi yako."
+      }
+    ]
+  }
+}

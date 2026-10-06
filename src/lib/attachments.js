@@ -8,6 +8,7 @@
 //   { id, type: 'link', url }
 import { supabase } from './supabase';
 import { encryptBlob, decryptToBlob } from './crypto/mediaCrypto';
+import { prepareVideoFile } from './videoTranscode';
 
 export const ATTACHMENTS_BUCKET = 'attachments';
 
@@ -60,8 +61,19 @@ export async function uploadAttachment(file, userId) {
   const type = attachmentType(file.type);
   if (!type) return { error: 'attachUnsupported' };
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return { error: 'attachOffline' };
+  // Never feed an oversized source into the in-memory video converter. Images
+  // remain exempt because their normal path intentionally shrinks camera files
+  // before enforcing the encrypted-upload cap.
+  if (type !== 'image' && file.size > MAX_BYTES[type]) return { error: 'attachTooLarge' };
 
-  const prepared = type === 'image' ? await prepareImage(file) : file;
+  let prepared;
+  try {
+    prepared = type === 'image'
+      ? await prepareImage(file)
+      : type === 'video' ? await prepareVideoFile(file) : file;
+  } catch {
+    return { error: 'attachUnsupported' };
+  }
   if (prepared.size > MAX_BYTES[type]) return { error: 'attachTooLarge' };
 
   const id = crypto.randomUUID();
@@ -76,7 +88,8 @@ export async function uploadAttachment(file, userId) {
       .upload(path, bytes, { contentType: 'application/octet-stream' });
     if (error) return { error: 'uploadFailed' };
     return {
-      attachment: { id, type, path, mime: prepared.type, name: file.name || '', size: prepared.size, key, iv, encryptionVersion },
+      attachment: { id, type, path, mime: prepared.type, name: prepared.name || file.name || '', size: prepared.size, key, iv, encryptionVersion },
+      previewFile: prepared,
     };
   } catch {
     return { error: 'uploadFailed' };

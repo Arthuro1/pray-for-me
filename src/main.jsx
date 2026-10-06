@@ -6,12 +6,17 @@ import { registerSW } from 'virtual:pwa-register'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import { initPwaInstallCapture, recordPwaVisit } from './lib/pwaInstall.js'
+import { syncPlanPreviewFromUrl } from './lib/planReview.js'
 import './index.css'
 
 // Capture installability before lazy app routes mount, and count this browsing
 // session as one content-free visit. Neither action touches prayer content.
 initPwaInstallCapture()
 recordPwaVisit()
+
+// `?planPreview=1` puts this browser in review mode so a human can read the
+// plans still awaiting theology, safety and language sign-off; `0` leaves it.
+syncPlanPreviewFromUrl()
 
 // Register the PWA service worker and re-check for a new one hourly. The
 // precached index.html is served WITH the response headers captured at

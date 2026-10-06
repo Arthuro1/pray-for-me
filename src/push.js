@@ -15,6 +15,20 @@ function urlBase64ToUint8Array(base64String) {
 
 const tzOffset = () => -new Date().getTimezoneOffset(); // minutes to add to UTC for local time
 
+const localDayKey = (now = new Date()) => {
+  const pad = (value) => String(value).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+
+// Enabling a reminder after today's chosen minute must schedule tomorrow, not
+// fire immediately on the scheduler's next retry pass.
+export function dailyReminderStartDay(reminderTime, now = new Date()) {
+  const [hour, minute] = String(reminderTime || '07:00').split(':').map(Number);
+  const target = (Number.isFinite(hour) ? hour : 7) * 60 + (Number.isFinite(minute) ? minute : 0);
+  const current = now.getHours() * 60 + now.getMinutes();
+  return current >= target ? localDayKey(now) : undefined;
+}
+
 // IANA timezone (e.g. 'Europe/Berlin'). This is the primary timezone
 // representation for notification scheduling / quiet hours — it stays correct
 // across daylight-saving changes, unlike a fixed numeric offset. tz_offset is
@@ -57,7 +71,7 @@ function boundToCurrentKey(sub) {
 // only when explicitly passed (leaving any existing value untouched), so
 // enabling the daily reminder alone doesn't clobber the follow-up reminder's
 // independent state on their shared subscription row.
-function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays, followUpTime }) {
+function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays, followUpTime, lastDailySentOn }) {
   const json = sub.toJSON();
   const row = {
     user_id: userId,
@@ -74,6 +88,7 @@ function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', ena
   if (followUpEnabled !== undefined) row.follow_up_enabled = followUpEnabled;
   if (followUpDays !== undefined) row.follow_up_days = followUpDays;
   if (followUpTime !== undefined) row.follow_up_time = followUpTime;
+  if (lastDailySentOn !== undefined) row.last_daily_sent_on = lastDailySentOn;
   return row;
 }
 
@@ -81,7 +96,7 @@ function subscriptionRow(userId, sub, { reminderTime = '07:00', lang = 'en', ena
 // in Supabase. Returns { error } on failure ('denied' | 'unsupported' | 'failed').
 // Never hangs or throws. Safe to call repeatedly. Callers must pass the current
 // `enabled` explicitly to preserve it (see subscriptionRow).
-export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays, followUpTime } = {}) {
+export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', enabled, followUpEnabled, followUpDays, followUpTime, lastDailySentOn } = {}) {
   if (!pushSupported() || !VAPID_PUBLIC_KEY || !userId) return { error: 'unsupported' };
 
   let permission;
@@ -107,7 +122,7 @@ export async function enablePush(userId, { reminderTime = '07:00', lang = 'en', 
       applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     });
     const { error } = await supabase.from('push_subscriptions').upsert(
-      subscriptionRow(userId, sub, { reminderTime, lang, enabled, followUpEnabled, followUpDays, followUpTime }),
+      subscriptionRow(userId, sub, { reminderTime, lang, enabled, followUpEnabled, followUpDays, followUpTime, lastDailySentOn }),
       { onConflict: 'endpoint' }
     );
     return { error: error ? 'failed' : undefined };
@@ -236,6 +251,7 @@ export async function updatePushPrefs(userId, prefs = {}) {
   if (prefs.followUpEnabled !== undefined) patch.follow_up_enabled = prefs.followUpEnabled;
   if (prefs.followUpDays !== undefined) patch.follow_up_days = prefs.followUpDays;
   if (prefs.followUpTime) patch.follow_up_time = prefs.followUpTime;
+  if (prefs.lastDailySentOn !== undefined) patch.last_daily_sent_on = prefs.lastDailySentOn;
   // Notification privacy: what a push may reveal ('generic' | 'count'). Mirrored
   // onto every device row so the schedulers read it per-send (notify.ts).
   if (prefs.notificationDetail) patch.notification_detail = prefs.notificationDetail;

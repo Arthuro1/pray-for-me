@@ -1,0 +1,134 @@
+{
+  "locale": "hi",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "प्रार्थना निवेदन",
+      "allowed": [],
+      "avoid": [],
+      "example": "प्रार्थना निवेदन",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "उत्तर मिली प्रार्थना",
+      "allowed": [],
+      "avoid": [],
+      "example": "उत्तर मिली प्रार्थना",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "गवाही",
+      "allowed": [],
+      "avoid": [],
+      "example": "गवाही",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "मध्यस्थता की प्रार्थना",
+      "allowed": [],
+      "avoid": [],
+      "example": "मध्यस्थता की प्रार्थना",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "आत्मिक परख",
+      "allowed": [],
+      "avoid": [],
+      "example": "आत्मिक परख",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "वाचा",
+      "allowed": [],
+      "avoid": [],
+      "example": "वाचा",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "मन फिराना",
+      "allowed": [],
+      "avoid": [],
+      "example": "मन फिराना",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "उद्धार",
+      "allowed": [],
+      "avoid": [],
+      "example": "उद्धार",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "अनुग्रह",
+      "allowed": [],
+      "avoid": [],
+      "example": "अनुग्रह",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "पवित्र आत्मा",
+      "allowed": [],
+      "avoid": [],
+      "example": "पवित्र आत्मा",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "पवित्रशास्त्र",
+      "allowed": [],
+      "avoid": [],
+      "example": "पवित्रशास्त्र",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "उपवास",
+      "allowed": [],
+      "avoid": [],
+      "example": "उपवास",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "विश्वासयोग्यता",
+      "allowed": [],
+      "avoid": [],
+      "example": "विश्वासयोग्यता",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "प्रार्थना डायरी",
+      "allowed": [
+        "डायरी"
+      ],
+      "avoid": [],
+      "example": "इस प्रार्थना विषय को अपनी प्रार्थना डायरी में रखें।",
+      "note": "टैब का नाम “डायरी” हो सकता है।"
+    },
+    "update": {
+      "preferred": "नई जानकारी",
+      "allowed": [
+        "अपडेट"
+      ],
+      "avoid": [],
+      "example": "कुछ बदले तो नई जानकारी जोड़ें।",
+      "note": "प्रार्थना विषय के बारे में समाचार।"
+    },
+    "thanksgiving": {
+      "preferred": "धन्यवाद",
+      "allowed": [
+        "आभार"
+      ],
+      "avoid": [],
+      "example": "प्रार्थना को धन्यवाद के साथ समाप्त करें।",
+      "note": "परमेश्वर को धन्यवाद देने का चरण।"
+    },
+    "renunciation": {
+      "preferred": "त्याग",
+      "allowed": [
+        "इनकार"
+      ],
+      "avoid": [],
+      "example": "त्याग की प्रार्थना में आप उस बात का नाम लेते हैं जिससे आप मुड़ते हैं।",
+      "note": "छुटकारे की सेवकाई का शब्द। मूल वक्ता से जाँच आवश्यक।"
+    }
+  }
+}

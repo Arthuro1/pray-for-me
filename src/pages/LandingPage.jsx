@@ -2,7 +2,7 @@
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2 } from 'lucide-react';
 import { dirFor, LANGUAGES } from '../i18n';
 import { normalizeTheme } from '../utils/theme';
-import { loadLandingCopy } from './landing/copy';
+import { cachedLandingCopy, FALLBACK_LANDING_COPY, FALLBACK_LANDING_LANG, resolveLandingCopy } from './landing/copy';
 
 // Keep native language names in the shared registry. Languages whose longer
 // marketing copy is still abbreviated show a clear, translated status label.
@@ -14,8 +14,9 @@ const LANGS = LANGUAGES.map((language) => ({
 }));
 
 const ALL_CODES = LANGS.map(l => l.code);
+const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=space.praystead.twa';
 
-// The three things Pray4Me does, surfaced right under the hero. Icons/colours are
+// The three things Praystead does, surfaced right under the hero. Icons/colours are
 // language-independent (defined once); the copy lives in one shared map with an
 // English fallback, so all 16 languages keep working even where the per-language
 // CONTENT below is still an abbreviated placeholder.
@@ -119,6 +120,21 @@ const THEMES = {
   },
 };
 
+function GooglePlayLink({ label, T }) {
+  return (
+    <a
+      href={GOOGLE_PLAY_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pressable inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl px-5 py-3 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+      style={{ background: T.surface, color: T.text, border: `1px solid ${T.borderStrong}` }}
+    >
+      <Smartphone size={20} className="shrink-0" aria-hidden="true" />
+      {label}
+    </a>
+  );
+}
+
 function FAQ({ q, a, T }) {
   const [open, setOpen] = useState(false);
   return (
@@ -148,7 +164,19 @@ function FAQ({ q, a, T }) {
 // preserved for people who already have an account.
 export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [lang, setLang] = useState(detectLang);
-  const [copyState, setCopyState] = useState(null);
+  // What is ON SCREEN right now, and which language it is really in. The page
+  // never waits behind a dictionary: English is bundled, so the first frame is
+  // the real landing page, and the visitor's language replaces it a moment
+  // later. Switching languages keeps the current copy up until the new one is
+  // in hand — replacing a whole page with a spinner to change a language reads
+  // as a slower site than simply letting the words change.
+  const [rendered, setRendered] = useState(() => {
+    const initial = detectLang();
+    const ready = cachedLandingCopy(initial);
+    return ready
+      ? { lang: initial, copy: ready }
+      : { lang: FALLBACK_LANDING_LANG, copy: FALLBACK_LANDING_COPY };
+  });
   const [langOpen, setLangOpen] = useState(false);
   const langMenuRef = useRef(null);
   const langButtonRef = useRef(null);
@@ -164,26 +192,35 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const activeLang = LANGS.find(l => l.code === lang);
 
   // Fetch only the selected landing dictionary. A stale request cannot overwrite
-  // a newer language selection.
+  // a newer language selection. resolveLandingCopy reports the language the copy
+  // is genuinely in, so a chunk that fails to load leaves the page labelled
+  // English rather than claiming to be a language it is not showing.
   useEffect(() => {
+    if (rendered.lang === lang) return undefined;
     let current = true;
-    loadLandingCopy(lang).then((copy) => {
-      if (current) setCopyState({ lang, copy });
+    resolveLandingCopy(lang).then((next) => {
+      if (current) setRendered(next);
     });
     return () => { current = false; };
-  }, [lang]);
+  }, [lang, rendered.lang]);
 
   // Reflect the visitor's language on <html> so screen readers pronounce the
   // marketing copy correctly and Arabic/Persian render right-to-left. Mirrors the
   // in-app effect in App.jsx, which takes over once the visitor signs in.
+  //
+  // The two attributes deliberately follow different things. `dir` follows the
+  // SELECTED language and is set immediately, so the layout is already correct
+  // and never flips once the translated copy arrives. `lang` follows the copy
+  // actually on screen, so a screen reader is never told to pronounce English
+  // words as Arabic during the moment before the real dictionary lands.
   useEffect(() => {
-    document.documentElement.lang = lang;
+    document.documentElement.lang = rendered.lang;
     document.documentElement.dir = dirFor(lang);
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.classList.add('constellation-landing-root');
     localStorage.setItem('pfm_theme', theme);
     return () => document.documentElement.classList.remove('constellation-landing-root');
-  }, [lang, theme]);
+  }, [lang, rendered.lang, theme]);
 
   useEffect(() => {
     if (!langOpen) return undefined;
@@ -254,32 +291,19 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     document.documentElement.setAttribute('data-theme', next);
   };
 
-  const copy = copyState?.lang === lang ? copyState.copy : null;
-  if (!copy) {
-    return (
-      <div
-        aria-busy="true"
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: T.bg, color: T.text }}
-      >
-        <div className="text-center">
-          <img src="/logo-constellation.svg" alt="Pray4Me" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
-          <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
-        </div>
-      </div>
-    );
-  }
+  const copy = rendered.copy;
+  // A language was asked for and its words have not arrived yet. The page stays
+  // exactly as it is; only the language control says it is working.
+  const copyPending = rendered.lang !== lang;
 
   const {
     content: c,
     benefits,
     explore,
     beginLabel,
-    heroReassurance,
-    calloutBegin,
+    playStore,
     hero,
     samplePrayerTitle,
-    privacyFaq,
     scripturePreviewPoints,
     scriptureReferences,
     stepLabel,
@@ -295,8 +319,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       {/* Nav */}
       <nav className="constellation-landing__nav mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
         <div className="flex items-center gap-2.5 shrink-0">
-          <img src="/logo-constellation.svg" alt="" className="w-8 h-8 rounded-lg" />
-          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Pray4Me</span>
+          <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
+          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Praystead</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -326,12 +350,18 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               aria-haspopup="menu"
               aria-controls="landing-language-menu"
               aria-label={`${languageMenuLabel}: ${activeLang?.label}`}
+              // The ONLY thing that reports a language still loading. The page
+              // itself keeps its words; a whole-page spinner to change a
+              // language is what made the site feel slow.
+              aria-busy={copyPending || undefined}
               className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-all"
               style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
             >
               <span>{activeLang?.flag}</span>
               <span>{activeLang?.shortLabel}</span>
-              <ChevronDown size={13} style={{ opacity: 0.6 }} />
+              {copyPending
+                ? <Loader2 size={13} className="animate-spin" aria-hidden="true" style={{ opacity: 0.6 }} />
+                : <ChevronDown size={13} aria-hidden="true" style={{ opacity: 0.6 }} />}
             </button>
 
             {langOpen && (
@@ -387,9 +417,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       {/* Hero: lived prayer experience first, product preview second. */}
       <section className="constellation-landing__hero relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
         <div className="constellation-landing__hero-copy relative min-w-0">
-          <div className="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.14em]" style={{ color: T.gold }}>
-            <Feather size={14} strokeWidth={1.7} /> {c.badge}
-          </div>
           <h1 className="editorial-heading text-5xl leading-[1.02] sm:text-6xl lg:text-7xl" style={{ color: T.text }}>
             {hero.title}
           </h1>
@@ -397,36 +424,34 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             {hero.promise}
           </p>
           <p className="mt-5 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
-          <p className="mt-4 flex max-w-lg items-start gap-2 text-xs" style={{ color: T.textFaint, lineHeight: 1.65 }}>
-            <Lock size={13} className="mt-0.5 shrink-0" /> {heroReassurance}
-          </p>
-          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <button
               onClick={onBeginPrayer}
-              className="pressable min-h-[52px] rounded-xl px-7 text-sm font-bold text-white"
+              className="pressable min-h-[52px] rounded-xl px-7 py-3 text-sm font-bold text-white"
               style={{ background: T.primaryBg, boxShadow: T.ctaShadow }}
             >
               {beginLabel}
             </button>
-            <button
-              onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-              className="pressable min-h-[52px] rounded-xl px-6 text-sm font-semibold"
-              style={{ color: T.textSoft, border: `1px solid ${T.borderStrong}` }}
-            >
-              {c.howItWorks}
-            </button>
+            <GooglePlayLink label={playStore.cta} T={T} />
           </div>
+          <button
+            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+            className="pressable mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold"
+            style={{ color: T.textSoft }}
+          >
+            {c.howItWorks} <ChevronDown size={15} aria-hidden="true" />
+          </button>
         </div>
 
         {/* A truthful preview of the actual journey: Today → focused prayer →
             remembrance. Its Pray now action enters the same guest flow as the
             primary CTA; no fabricated usage statistics. */}
-        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Pray4Me product preview">
+        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Praystead product preview">
           <div className="constellation-landing__preview-frame relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
             <div className="flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2.5">
-                <img src="/logo-constellation.svg" alt="" className="h-7 w-7 rounded-lg" />
-                <span className="text-xs font-bold" style={{ color: T.text }}>Pray4Me</span>
+                <img src="/logo.svg" alt="" className="h-7 w-7 rounded-lg" />
+                <span className="text-xs font-bold" style={{ color: T.text }}>Praystead</span>
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
             </div>
@@ -459,7 +484,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         </div>
       </section>
 
-      {/* Core benefits — the three things Pray4Me does, up front, before the
+      {/* Core benefits — the three things Praystead does, up front, before the
           longer feature list. Centered so it reads cleanly in RTL too. */}
       <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6">
         <div className="constellation-landing__benefits grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
@@ -484,7 +509,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
         <div className="constellation-landing__section-heading text-center mb-8">
           <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
-          <p className="text-sm" style={{ color: T.textFaint }}>{c.featuresSub}</p>
         </div>
         {!showAllFeatures ? (
           <div className="text-center">
@@ -531,7 +555,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <section id="how-it-works" className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24">
         <div className="constellation-landing__section-heading text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
-          <p className="text-sm" style={{ color: T.textFaint }}>{c.stepsSub}</p>
         </div>
         <div className="border-block" style={{ borderColor: T.border }}>
           {c.steps.map(({ title, desc }, i) => {
@@ -567,7 +590,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.76)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
             <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.52)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
             <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}>
-              {calloutBegin}
+              {beginLabel}
             </button>
           </div>
           <div className="w-full md:w-64 rounded-2xl p-4 shrink-0" style={{ background: T.previewBg, border: `0.5px solid ${T.border}` }}>
@@ -592,8 +615,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <h2 className="text-3xl font-bold mb-3">{c.faqTitle}</h2>
         </div>
         <div className="space-y-2">
-          {c.faqs.map((faq, i) => (
-            <FAQ key={faq.q} {...faq} a={i === 0 ? privacyFaq : faq.a} T={T} />
+          {c.faqs.map((faq) => (
+            <FAQ key={faq.q} {...faq} T={T} />
           ))}
         </div>
       </section>
@@ -601,12 +624,14 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       {/* Final CTA */}
       <section className="constellation-landing__final relative px-6 py-20 text-center overflow-hidden">
         <div className="relative max-w-xl mx-auto">
-          <img src="/logo-constellation.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{c.ctaTitle}</h2>
-          <p className="text-sm mb-8" style={{ color: T.textMuted, lineHeight: 1.7 }}>{c.ctaSub}</p>
-          <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
-            {c.ctaBtn}
-          </button>
+          <img src="/logo.svg" alt="" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
+          <h2 className="text-3xl md:text-4xl font-bold mb-8">{c.ctaTitle}</h2>
+          <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
+              {beginLabel}
+            </button>
+            <GooglePlayLink label={playStore.cta} T={T} />
+          </div>
           <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
         </div>
       </section>
@@ -615,8 +640,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <footer className="constellation-landing__footer px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: T.border }}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <img src="/logo-constellation.svg" alt="" className="w-6 h-6 rounded-md" />
-            <span className="text-sm font-medium" style={{ color: T.text }}>Pray4Me</span>
+            <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />
+            <span className="text-sm font-medium" style={{ color: T.text }}>Praystead</span>
           </div>
           <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
           <button onClick={onSignIn} className="pressable min-h-11 rounded-xl px-4 py-2 text-xs font-medium" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>

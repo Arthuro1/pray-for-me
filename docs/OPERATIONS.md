@@ -54,13 +54,33 @@ synthetic fixtures with retained test keys, and document recovery time/objective
 Delete the isolated restore after sign-off. A backup that has never been restored
 is not considered verified.
 
+## Avatar storage
+
+Avatar objects in the private `avatars` bucket are owned by exactly one profile
+or group, and every deletion path targets that owner's folder alone. There is no
+bucket-wide cleanup job, and none should be written.
+
+Replacing an avatar uploads the new object, points the row at it, and only then
+deletes the old one, so a failed upload or a failed database write can never cost
+someone the picture they already had. The cost of that ordering is that a failure
+between the last two steps leaves an unreferenced object behind. Deleting a
+profile or a group also removes the `storage.objects` rows for its folder through
+a before-delete trigger — which revokes all access immediately — but the file in
+the storage backend is only reclaimed through the Storage API.
+
+Quarterly, or after a storage incident, reconcile: list the bucket and compare
+each object against `profiles.avatar_photo_path` and `groups.avatar_photo_path`.
+Delete only objects that no row references AND whose owner folder is older than
+the last successful reconciliation, so an upload in flight is never collected.
+Log counts, never object names.
+
 ## Monitoring and privacy-safe health checks
 
 Alert on frontend error rate/release regressions, serverless 4xx/5xx and latency,
 Supabase connection/RLS/RPC failures, failed migrations, Edge invocation and cron
 misses, push rejection/dead-subscription rates, AI 429/5xx/cost and global quota,
-decrypt/AAD failure counts, orphaned group-key versions, and offline queue
-permanent failures. Use counts, task IDs, status codes, hashed release IDs, and
+decrypt/AAD failure counts, orphaned group-key versions, unreferenced avatar
+objects, avatar upload rejection rates, and offline queue permanent failures. Use counts, task IDs, status codes, hashed release IDs, and
 synthetic record IDs—never prayer titles/text, attachment names, email addresses,
 tokens, ciphertext, key material, prompts, model output, invite codes, or full
 URLs containing identifiers.

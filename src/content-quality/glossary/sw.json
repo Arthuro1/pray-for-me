@@ -1,0 +1,137 @@
+{
+  "locale": "sw",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "hitaji la maombi",
+      "allowed": [
+        "ombi",
+        "mahitaji ya maombi"
+      ],
+      "avoid": [
+        "ombi la maombi"
+      ],
+      "example": "Mkabidhi Mungu hitaji lako la maombi.",
+      "note": "“Ombi la maombi” is a calque of “prayer request”; Swahili churches say hitaji la maombi."
+    },
+    "answeredPrayer": {
+      "preferred": "maombi yaliyojibiwa",
+      "allowed": [],
+      "avoid": [],
+      "example": "maombi yaliyojibiwa",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "ushuhuda",
+      "allowed": [],
+      "avoid": [],
+      "example": "ushuhuda",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "maombezi",
+      "allowed": [],
+      "avoid": [],
+      "example": "maombezi",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "utambuzi wa kiroho",
+      "allowed": [],
+      "avoid": [],
+      "example": "utambuzi wa kiroho",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "agano",
+      "allowed": [],
+      "avoid": [],
+      "example": "agano",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "toba",
+      "allowed": [],
+      "avoid": [],
+      "example": "toba",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "wokovu",
+      "allowed": [],
+      "avoid": [],
+      "example": "wokovu",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "neema",
+      "allowed": [],
+      "avoid": [],
+      "example": "neema",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "Roho Mtakatifu",
+      "allowed": [],
+      "avoid": [],
+      "example": "Roho Mtakatifu",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "Maandiko Matakatifu",
+      "allowed": [],
+      "avoid": [],
+      "example": "Maandiko Matakatifu",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "kufunga",
+      "allowed": [],
+      "avoid": [],
+      "example": "kufunga",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "uaminifu",
+      "allowed": [],
+      "avoid": [],
+      "example": "uaminifu",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "shajara ya maombi",
+      "allowed": [
+        "shajara"
+      ],
+      "avoid": [],
+      "example": "Hifadhi hitaji hili katika shajara yako ya maombi.",
+      "note": "Kichupo kwa sasa kinaitwa “Jarida”; mhakiki asilia athibitishe."
+    },
+    "update": {
+      "preferred": "habari mpya",
+      "allowed": [
+        "mabadiliko"
+      ],
+      "avoid": [],
+      "example": "Ongeza habari mpya kitu kinapobadilika.",
+      "note": "Habari kuhusu hitaji la maombi."
+    },
+    "thanksgiving": {
+      "preferred": "shukrani",
+      "allowed": [],
+      "avoid": [],
+      "example": "Maliza kwa shukrani.",
+      "note": "Hatua ya kumshukuru Mungu katika maombi."
+    },
+    "renunciation": {
+      "preferred": "kukataa",
+      "allowed": [
+        "kujitenga na"
+      ],
+      "avoid": [],
+      "example": "Katika maombi ya kukataa unataja kile unachokiacha.",
+      "note": "Msamiati wa huduma ya ukombozi. Unahitaji mhakiki asilia."
+    }
+  }
+}

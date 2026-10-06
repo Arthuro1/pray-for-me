@@ -16,7 +16,7 @@ const articles = [
     title: { en: 'Why Christians pray', fr: 'Pourquoi les chrétiens prient' },
     summary: {
       en: 'Prayer is not informing a distant God of our needs, but communing with a Father who invites us near.',
-      fr: 'La prière n\'est pas informer un Dieu lointain de nos besoins, mais communier avec un Père qui nous invite auprès de lui.',
+      fr: 'Prier, ce n’est pas informer un Dieu lointain de nos besoins, mais communier avec un Père qui nous invite auprès de lui.',
     },
     sections: [
       {
@@ -28,7 +28,7 @@ const articles = [
         refs: ['Hebrews 4:14-16', 'Romans 8:15'],
       },
       {
-        heading: { en: 'It is dependence, not performance', fr: 'C\'est de la dépendance, non de la performance' },
+        heading: { en: 'It is dependence, not performance', fr: 'Une question de dépendance, non de performance' },
         body: {
           en: 'Prayer confesses that we are not self-sufficient. Jesus says our Father already knows what we need — so we ask not to inform Him but to depend on Him.',
           fr: 'La prière confesse que nous ne nous suffisons pas à nous-mêmes. Jésus dit que notre Père sait déjà ce dont nous avons besoin — nous demandons donc non pour l\'informer, mais pour dépendre de lui.',
@@ -104,16 +104,16 @@ const articles = [
       {
         heading: { en: 'Our daily needs', fr: 'Nos besoins quotidiens' },
         body: {
-          en: 'Then we ask for daily bread, for forgiveness as we forgive others, and for deliverance from temptation and evil. God cares about ordinary, daily dependence.',
-          fr: 'Puis nous demandons le pain quotidien, le pardon comme nous pardonnons aux autres, et la délivrance de la tentation et du mal. Dieu se soucie de la dépendance ordinaire et quotidienne.',
+          en: 'Then we ask for daily bread, for forgiveness as we forgive others, and for deliverance from temptation and evil. God cares about our ordinary, daily needs.',
+          fr: 'Puis nous demandons le pain quotidien, le pardon comme nous pardonnons aux autres, et la délivrance de la tentation et du mal. Dieu se soucie de nos besoins ordinaires, jour après jour.',
         },
         refs: ['Matthew 6:11-13'],
       },
       {
         heading: { en: 'A pattern, not a script', fr: 'Un modèle, non une formule' },
         body: {
-          en: 'You can pray these very words, or use them as a frame to expand in your own. Either way, let them reorder your priorities God-ward.',
-          fr: 'Tu peux prier ces paroles mêmes, ou t\'en servir comme cadre à développer avec tes mots. Dans les deux cas, laisse-les réordonner tes priorités vers Dieu.',
+          en: 'You can pray these very words, or use them as a frame to fill with your own. Either way, let them put God first again in your priorities.',
+          fr: 'Tu peux prier ces paroles mêmes, ou t’en servir comme cadre à remplir avec tes mots. Dans les deux cas, laisse-les remettre Dieu à la première place dans tes priorités.',
         },
         refs: ['Luke 11:1-4'],
       },
@@ -213,7 +213,7 @@ const articles = [
     id: 'thanksgiving',
     emoji: '🌾',
     theme: 'practices',
-    title: { en: 'Thanksgiving', fr: 'L\'action de grâce' },
+    title: { en: 'Thanksgiving', fr: 'L’action de grâces' },
     summary: {
       en: 'Gratitude is the natural breath of a heart that knows everything it has is grace.',
       fr: 'La reconnaissance est le souffle naturel d\'un cœur qui sait que tout ce qu\'il a est grâce.',
@@ -223,7 +223,7 @@ const articles = [
         heading: { en: 'Give thanks in everything', fr: 'Rendez grâce en toute chose' },
         body: {
           en: 'Scripture calls us to give thanks in all circumstances — not for evil, but trusting God\'s good purpose even in hard places. Thanksgiving guards us from grumbling and fear.',
-          fr: 'L\'Écriture nous appelle à rendre grâce en toute circonstance — non pour le mal, mais en nous confiant au bon dessein de Dieu, même dans les épreuves. L\'action de grâce nous garde du murmure et de la peur.',
+          fr: 'L’Écriture nous appelle à rendre grâce en toute circonstance — non pour le mal, mais en nous confiant au bon dessein de Dieu, même dans les épreuves. L’action de grâces nous garde du murmure et de la peur.',
         },
         refs: ['1 Thessalonians 5:16-18', 'Philippians 4:6'],
       },

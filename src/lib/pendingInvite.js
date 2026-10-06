@@ -1,17 +1,20 @@
 // Bridges a deep-link "join intent" across the auth/registration boundary.
 //
-// An anonymous visitor who opens an invite link (/community/join/:code or
-// /community/add-friend/:id) is shown the auth screen, which discards the URL —
+// An anonymous visitor who opens an invite link (/community/join/:code,
+// /community/add-friend/:id, or a shared plan at /plans/:planId/:token) is shown
+// the landing or auth screen, which discards the URL —
 // and email confirmation / OAuth then redirect to the site root, losing it for
 // good. We stash the intended path here so it can be replayed once the visitor
 // finishes signing in, completing the join they originally clicked.
+import { isPlanSharePath } from './planShareLink';
+
 const KEY = 'pfm_pending_invite';
 
 const INVITE_RE = /^\/community\/(join|add-friend)\//;
 
 // True for the routes an anonymous visitor might land on from a shared link.
 export function isInvitePath(path) {
-  return INVITE_RE.test(path || '');
+  return INVITE_RE.test(path || '') || isPlanSharePath(path);
 }
 
 export function savePendingInvite(path) {

@@ -1,6 +1,6 @@
 # Threat model
 
-Last reviewed: 2026-08-04. This document describes the implementation, not an
+Last reviewed: 2026-08-26. This document describes the implementation, not an
 aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 
 ## Assets and trust boundaries
@@ -24,11 +24,13 @@ Group members see content explicitly shared with their group.
   raw Base64 representation is stored in user-scoped IndexedDB as
   `pfm_ak_<user-id>`. An unlocked raw key is also mirrored in tab-scoped
   `sessionStorage` as `pfm_vault_session` so refresh does not re-lock it.
-- The account key survives sign-out by design. Sign-out removes the encrypted
-  offline snapshot, mutation queue, and legacy service-worker caches. Account
-  deletion removes the account key.
-- Default idle auto-lock is disabled (`0`). Explicit lock removes the in-memory
-  and session copy, but the device key remains available for the next sign-in.
+- The account key normally survives sign-out by design. Sign-out removes the
+  encrypted offline snapshot, mutation queue, and legacy service-worker caches.
+  Account deletion removes the account key.
+- Default idle auto-lock is disabled (`0`). Explicit lock removes the in-memory,
+  session, and raw device copies and persists a user-scoped lock marker. The
+  account stays locked across refresh/sign-in until a successful credential
+  flow restores the same key and clears that marker.
 - Optional recovery wraps the same key under a passphrase and a recovery code.
   Only wrapped blobs and salts are synced in `vault_keys`. A recovery code is
   128 random bits encoded as 26 Crockford Base32 characters, formatted
@@ -38,6 +40,24 @@ Group members see content explicitly shared with their group.
   encryption schema, entity, owner/group, record, parent, key version, and field.
   Moving ciphertext to a different context fails authentication. Version 1 is
   still readable and personal content is rewritten only after verified decrypt.
+- A prayer note captured during a session is held on device as ciphertext under
+  a non-extractable key (`pfm_note_draft:<prayer-id>`) until it is promoted into
+  the prayer's update history; see [ENCRYPTION.md](./ENCRYPTION.md). Which
+  updates came from a session is recorded device-locally as a list of update IDs
+  (`pfm_session_note_ids`) — IDs only, never content — so the timeline label
+  needs no schema and reveals nothing if read.
+- Avatar photos are the one category of user-uploaded media stored in the clear.
+  They are readable pictures by definition, so instead of encryption they are
+  protected by authorization: a private bucket, opaque object names, no public
+  URL, short-lived signed URLs, and read policies scoped to the same relationship
+  rule as the rest of a profile (self, accepted friend, shared group) or to group
+  membership. Uploads are decoded and redrawn on a canvas before leaving the
+  device, so EXIF — GPS, device, timestamp, embedded thumbnail — does not survive.
+- An OAuth identity provider's account picture is display metadata, never stored.
+  It is resolved from the caller's own session at render time and can therefore
+  only ever resolve for its owner; no Praystead row, RPC, or lookup can return
+  another person's provider picture, and the `<img>` is loaded with
+  `referrerPolicy="no-referrer"`.
 - Group key version creation and the creator's wrapped key are one transaction.
   Removal and forward rotation are one transaction. Removed members retain any
   historical group keys or plaintext they already obtained; rotation protects
@@ -58,51 +78,8 @@ Group members see content explicitly shared with their group.
 | AI relay/cost abuse | Supabase JWT verification at the self-hosted gateway; server-defined tasks/prompts/model/token budgets; strict Zod input + structured-output validation; Bible-verse-text rejection; per-task limits; per-minute and atomic daily user/global quotas; gateway concurrency gate + bounded queue + request timeout; `AI_PROXY_DISABLED` breaker; no-content logging | Authorized inputs are decrypted on-device and processed by the Pray4Me-operated gateway + local model after explicit consent — never by an external AI provider. A server administrator can read process memory; a compromised AI host can expose active requests |
 | Sensitive data in AI input | Browser-side redaction of emails/phones/addresses/secrets/sensitive URLs before transmission; minimum-data default (title sent, description opt-in); optional name hiding | Redaction is best-effort; names are sent by default because they are often central to the prayer |
 | Community abuse/sensitive disclosure | Audience preview, local contact-detail warning/ack, report/block RPCs, restrictive blocking RLS, DB insert-rate triggers, moderator deletion | Moderators need human escalation processes; automated detection is intentionally limited and does not judge prayer/theology |
-| Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Pray4Me sent a notification |
-
-## AI processing boundary (self-hosted)
-
-Pray4Me runs AI on operator-controlled infrastructure — a private **AI gateway**
-(Node/TypeScript) that talks to a **local Ollama model** — instead of an external
-provider. The trust boundaries for the AI path are:
-
-- **The browser is the decryption boundary.** Prayer content is decrypted on the
-  user's device. Only the content the user consents to (title by default;
-  description opt-in), after browser-side redaction of high-confidence sensitive
-  tokens, leaves the device.
-- **The AI gateway is a plaintext-processing boundary.** It receives decrypted
-  text over TLS, verifies the user's Supabase JWT, builds fixed prompts, runs the
-  local model, validates the output, and returns references-only results. It does
-  not persist prayer content and does not log it.
-- **Ollama and the local model are trusted infrastructure** on the same private
-  server/container network as the gateway. Ollama is never exposed publicly.
-
-Precise statement (use this wording; do **not** call the design “zero
-knowledge”):
-
-> Prayer content selected for AI assistance is decrypted on the user's device and
-> processed by Pray4Me-operated infrastructure. It is not sent to an external AI
-> provider.
-
-What this does and does not protect:
-
-- **Does not** protect against malicious deployed JavaScript in the app origin —
-  JS that runs in the page can already read displayed plaintext and keys.
-- **Server administrators can access process memory** on the gateway/Ollama host
-  and could, in principle, observe a request while it is being processed.
-- **A compromised AI host can expose active requests** (the ones in flight); it
-  cannot expose past prayer content, which is never stored there.
-- **Protections in place:** full-disk encryption on the AI host, TLS in transit,
-  host access controls, private-only Ollama, and no-content logging across the
-  reverse proxy, Node server, and Ollama.
-- **Residual risks** live mostly on the user side: a compromised user device, XSS
-  or a malicious browser extension in the app origin, screenshots, and text the
-  user copies out of the app are all outside these controls.
-
-Machine **translations** of prayer content are cached encrypted (AES-GCM under
-the account or group key, keyed for lookup by a keyed HMAC of the source); the
-source text and translated text are never stored in plaintext. See
-[ENCRYPTION.md](./ENCRYPTION.md).
+| Avatar photo disclosure | Private bucket; no public URL; opaque object names; short-lived signed URLs; storage read policies scoped to friendship/shared group (profiles) or membership/pending invitation (groups); a row's photo key is pinned to its own folder by check constraint; on-device redraw strips EXIF; 512 KB / webp-jpeg-only bucket limits and a 20-object cap per folder | A photo shown to a legitimate viewer can be screenshotted or re-shared; a signed URL remains usable until it expires; the provider still sees a request when an account picture is loaded from its CDN |
+| Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Praystead sent a notification |
 
 ## Terminology
 

@@ -5,7 +5,8 @@
 // A DRAFT is the editor's working shape; scheduleFromDraft() turns it into the
 // persisted schedule (or null = follows the weekly category plan).
 import { t } from '../i18n';
-import { normalizeSchedule, parseKey } from './schedule';
+import { addDays, diffDays, nextOccurrence, normalizeSchedule, parseKey } from './schedule';
+import { PLAN_PAUSED, reanchorPlanSchedule, repacePlan } from './planTempo';
 import { todayKey } from './prayedLog';
 
 // ── Simple rhythm presets ────────────────────────────────────────────────────
@@ -82,8 +83,10 @@ export function draftFromSchedule(s) {
   const d = emptyDraft();
   if (!s) return d;
   // "No fixed schedule" is an explicit choice, not the absence of one — it opens
-  // on the same 'plan' row a null schedule does.
-  if (s.type === 'none') return d;
+  // on the same 'plan' row a null schedule does. A PAUSED guided plan is stored
+  // that way too, so its run comes along: picking a rhythm here resumes it where
+  // it stood instead of starting a bare prayer.
+  if (s.type === 'none') return { ...d, plan: s.plan };
   if (s.type === 'once') {
     return { ...d, mode: 'once', date: s.date, slot: s.slot || null };
   }
@@ -189,12 +192,18 @@ export function draftForEnd(endKind, d) {
 // dated day (it no longer inherits a category's weekdays — categories are labels).
 export function scheduleFromDraft(d, existing = null) {
   if (!d) return null;
-  if (d.mode === 'plan') return { type: 'none' };
+  // On a guided plan this row means PAUSE, not leave: the run keeps its place
+  // and its length, and simply lands on no date until a rhythm is picked again.
+  // It used to drop `schedule.plan` outright, which ended the run silently and
+  // handed the plan back to the catalogue as if it had never been started.
+  if (d.mode === 'plan') {
+    return (existing?.plan?.id && repacePlan(existing, PLAN_PAUSED)) || { type: 'none' };
+  }
   if (d.mode === 'once') {
     return normalizeSchedule({ type: 'once', date: d.date, slot: d.slot }, todayKey());
   }
   const yearly = d.yearlyDate ? parseKey(d.yearlyDate) : new Date();
-  return normalizeSchedule({
+  const next = normalizeSchedule({
     type: 'recurring',
     freq: d.freq,
     weekDays: d.weekDays,
@@ -208,6 +217,10 @@ export function scheduleFromDraft(d, existing = null) {
     end: { kind: d.endKind, date: d.endDate, count: d.endCount },
     plan: d.plan || existing?.plan,
   }, todayKey());
+  // Changing the RHYTHM of a running plan re-anchors it, so the day the reader
+  // is on survives the change (see lib/planTempo.js). A slot or an ending is
+  // not a change of rhythm and leaves the run exactly where it is.
+  return reanchorPlanSchedule(next, existing);
 }
 
 // ── Human-readable schedules ─────────────────────────────────────────────────
@@ -329,4 +342,40 @@ export function scheduleSentence(s, lang, { planDays } = {}) {
     .filter(Boolean)
     .join(t(lang, 'sentJoin'));
   return t(lang, 'schedWillAppear', { detail });
+}
+
+// ── "When does this come back?" ──────────────────────────────────────────────
+// The one-line rhythm summary the Add-prayer form shows under the subject field,
+// so the rhythm a new prayer silently receives is READABLE before saving rather
+// than hidden inside a collapsed section.
+//
+// It reuses the very sentence fragments the confirmation sentence is built from
+// ("every Thursday", "every day", "once on 12 September"), so the quiet line and
+// the scheduler can never describe different things. No recurrence vocabulary
+// leaks out: the reader sees "Returns every Thursday", never a freq or a mode.
+export function returnsSummary(s, lang, { planDays } = {}) {
+  if (s && s.type === 'none') return t(lang, 'noFixedSchedule');
+  // A null schedule is the legacy "follows my weekly plan" state, only reachable
+  // while editing an older prayer — it still has real days, so say which.
+  const phrase = s ? rhythmPhrase(s, lang, true) : planSummary(planDays, lang);
+  if (!phrase) return '';
+  return t(lang, 'rhythmReturns', { phrase });
+}
+
+// The FIRST return after today, as a short human "when" ("tomorrow", "Thursday",
+// "12 September") — the one useful fact a saved confirmation can add. Today is
+// deliberately excluded: the prayer is on screen right now, so "today" answers
+// nothing. Returns null when the schedule has no further occurrence (a one-off
+// already due, a finished series, "no fixed schedule"), so callers can simply
+// omit the line rather than print a hedge.
+export function nextReturnLabel(s, lang, { fromKey = todayKey(), overrides = {} } = {}) {
+  if (!s) return null;
+  const key = nextOccurrence(s, addDays(fromKey, 1), overrides);
+  if (!key) return null;
+  const delta = diffDays(fromKey, key);
+  if (delta === 1) return t(lang, 'tomorrow');
+  // Inside the coming week a weekday name is the clearest answer; past that it
+  // stops being unambiguous and a date reads better.
+  if (delta <= 7) return weekdayName(lang, parseKey(key).getDay());
+  return parseKey(key).toLocaleDateString(lang, { day: 'numeric', month: 'long' });
 }

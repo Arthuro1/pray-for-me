@@ -35,7 +35,7 @@ export function buildICS(prayers = [], commitments = []) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Pray4Me//Prayer Schedule//EN',
+    'PRODID:-//Praystead//Prayer Schedule//EN',
     'CALSCALE:GREGORIAN',
   ];
   for (const p of prayers) {
@@ -44,7 +44,7 @@ export function buildICS(prayers = [], commitments = []) {
     const day = s.type === 'once' ? s.date : s.startDate;
     if (!day) continue;
     lines.push(...vevent({
-      uid: `${p.id}@pray4me.space`,
+      uid: `${p.id}@praystead.com`,
       day,
       title: `🙏 ${p.title}`,
       description: p.description,
@@ -53,7 +53,7 @@ export function buildICS(prayers = [], commitments = []) {
   }
   for (const c of commitments) {
     lines.push(...vevent({
-      uid: `commitment-${c.id}@pray4me.space`,
+      uid: `commitment-${c.id}@praystead.com`,
       day: c.day,
       title: `🙏 ${c.title}`,
       description: c.group_name,

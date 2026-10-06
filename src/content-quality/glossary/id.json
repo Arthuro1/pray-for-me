@@ -1,0 +1,135 @@
+{
+  "locale": "id",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "pokok doa",
+      "allowed": [],
+      "avoid": [],
+      "example": "pokok doa",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "doa yang dijawab",
+      "allowed": [],
+      "avoid": [],
+      "example": "doa yang dijawab",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "kesaksian",
+      "allowed": [],
+      "avoid": [],
+      "example": "kesaksian",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "doa syafaat",
+      "allowed": [],
+      "avoid": [],
+      "example": "doa syafaat",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "kepekaan rohani",
+      "allowed": [],
+      "avoid": [],
+      "example": "kepekaan rohani",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "perjanjian",
+      "allowed": [],
+      "avoid": [],
+      "example": "perjanjian",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "pertobatan",
+      "allowed": [],
+      "avoid": [],
+      "example": "pertobatan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "keselamatan",
+      "allowed": [],
+      "avoid": [],
+      "example": "keselamatan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "anugerah",
+      "allowed": [],
+      "avoid": [],
+      "example": "anugerah",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "Roh Kudus",
+      "allowed": [],
+      "avoid": [],
+      "example": "Roh Kudus",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "Kitab Suci",
+      "allowed": [],
+      "avoid": [],
+      "example": "Kitab Suci",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "puasa",
+      "allowed": [],
+      "avoid": [],
+      "example": "puasa",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "kesetiaan",
+      "allowed": [],
+      "avoid": [],
+      "example": "kesetiaan",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "jurnal doa",
+      "allowed": [
+        "jurnal"
+      ],
+      "avoid": [],
+      "example": "Simpan pokok doa ini di jurnal doamu.",
+      "note": "Nama tab dapat berupa “Jurnal”."
+    },
+    "update": {
+      "preferred": "kabar terbaru",
+      "allowed": [
+        "pembaruan"
+      ],
+      "avoid": [],
+      "example": "Tambahkan kabar terbaru saat ada perubahan.",
+      "note": "Kabar tentang pokok doa."
+    },
+    "thanksgiving": {
+      "preferred": "ucapan syukur",
+      "allowed": [
+        "syukur"
+      ],
+      "avoid": [],
+      "example": "Akhiri dengan ucapan syukur.",
+      "note": "Tahap bersyukur kepada Allah dalam doa."
+    },
+    "renunciation": {
+      "preferred": "penolakan",
+      "allowed": [
+        "menolak",
+        "melepaskan diri dari"
+      ],
+      "avoid": [],
+      "example": "Dalam doa penolakan kamu menyebut apa yang kamu tinggalkan.",
+      "note": "Kosakata pelayanan pelepasan. Perlu tinjauan penutur asli."
+    }
+  }
+}

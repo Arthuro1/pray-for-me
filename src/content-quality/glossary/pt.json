@@ -1,0 +1,134 @@
+{
+  "locale": "pt",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "pedido de oração",
+      "allowed": [],
+      "avoid": [],
+      "example": "pedido de oração",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "oração respondida",
+      "allowed": [],
+      "avoid": [],
+      "example": "oração respondida",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "testemunho",
+      "allowed": [],
+      "avoid": [],
+      "example": "testemunho",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "intercessão",
+      "allowed": [],
+      "avoid": [],
+      "example": "intercessão",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "discernimento",
+      "allowed": [],
+      "avoid": [],
+      "example": "discernimento",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "aliança",
+      "allowed": [],
+      "avoid": [],
+      "example": "aliança",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "arrependimento",
+      "allowed": [],
+      "avoid": [],
+      "example": "arrependimento",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "salvação",
+      "allowed": [],
+      "avoid": [],
+      "example": "salvação",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "graça",
+      "allowed": [],
+      "avoid": [],
+      "example": "graça",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "o Espírito Santo",
+      "allowed": [],
+      "avoid": [],
+      "example": "o Espírito Santo",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "as Escrituras",
+      "allowed": [],
+      "avoid": [],
+      "example": "as Escrituras",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "jejum",
+      "allowed": [],
+      "avoid": [],
+      "example": "jejum",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "fidelidade",
+      "allowed": [],
+      "avoid": [],
+      "example": "fidelidade",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "diário de oração",
+      "allowed": [
+        "diário"
+      ],
+      "avoid": [],
+      "example": "Guarde este pedido no seu diário de oração.",
+      "note": "A aba pode dizer «Diário»."
+    },
+    "update": {
+      "preferred": "novidade",
+      "allowed": [
+        "atualização"
+      ],
+      "avoid": [],
+      "example": "Acrescente uma novidade quando algo mudar.",
+      "note": "Notícias sobre um pedido de oração."
+    },
+    "thanksgiving": {
+      "preferred": "ação de graças",
+      "allowed": [
+        "gratidão"
+      ],
+      "avoid": [],
+      "example": "Termine com ação de graças.",
+      "note": "Termo eclesial para a etapa de agradecer; «gratidão» para o sentimento."
+    },
+    "renunciation": {
+      "preferred": "renúncia",
+      "allowed": [
+        "renunciar a"
+      ],
+      "avoid": [],
+      "example": "Numa oração de renúncia você nomeia aquilo de que se afasta.",
+      "note": "Vocabulário de libertação."
+    }
+  }
+}

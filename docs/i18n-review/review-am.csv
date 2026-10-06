@@ -51,15 +51,15 @@ activationRhythmTitle,Choose how this prayer returns,Choisissez quand retrouver 
 activationRhythmBody,Every prayer can have its own rhythm. Review when this one should return so it fits your life.,Chaque prière peut avoir son propre rythme. Choisissez quand retrouver celle-ci pour l'adapter à votre quotidien.,እያንዳንዱ ጸሎት የራሱ ልማድ ሊኖረው ይችላል። ይህ ጸሎት ከሕይወትዎ ጋር እንዲስማማ መቼ እንደሚመለስ ይመልከቱ።
 activationRhythmCta,Review rhythm,Voir le rythme,ልማዱን ይመልከቱ
 activationReminderTitle,Would a gentle reminder help?,Un doux rappel vous aiderait-il ?,ለስላሳ ማስታወሻ ይረዳል?
-activationReminderBody,Choose a time and Pray4Me can bring today's prayers back to you.,Choisissez une heure et Pray4Me pourra vous ramener aux prières du jour.,ሰዓት ይምረጡ፣ Pray4Me የዛሬን ጸሎቶች እንደገና ያቀርብልዎታል።
+activationReminderBody,Choose a time and Praystead can bring today's prayers back to you.,Choisissez une heure et Praystead pourra vous ramener aux prières du jour.,ሰዓት ይምረጡ፣ Praystead የዛሬን ጸሎቶች እንደገና ያቀርብልዎታል።
 activationOrganizeTitle,Make a growing journal easier to revisit,Retrouvez plus facilement un journal qui grandit,እያደገ ያለውን የጸሎት ማስታወሻ ለመመልከት ቀላል ያድርጉ
 activationOrganizeBody,Add a person or category to one prayer. More organization appears only when it becomes useful.,Ajoutez une personne ou une catégorie à une prière. L'organisation n'apparaît que lorsqu'elle devient utile.,ለአንድ ጸሎት ሰው ወይም ምድብ ያክሉ። ተጨማሪ አደረጃጀት ጠቃሚ ሲሆን ብቻ ይታያል።
 activationOrganizeCta,Organize a prayer,Organiser une prière,ጸሎትን ያደራጁ
-pwaInstallTitle,Keep Pray4Me close,Gardez Pray4Me à portée de main,Pray4Meን በቅርብ ያቆዩ
+pwaInstallTitle,Keep Praystead close,Gardez Praystead à portée de main,Praysteadን በቅርብ ያቆዩ
 pwaInstallBody,Open today's prayers in one tap and keep the app available when your connection is unsteady.,Ouvrez les prières du jour en un geste et gardez l’application disponible même avec une connexion instable.,የዛሬን ጸሎቶች በአንድ ንክኪ ይክፈቱ፤ ግንኙነቱ ሲዳከምም መተግበሪያውን ይጠቀሙ።
-pwaInstallCta,Install Pray4Me,Installer Pray4Me,Pray4Meን ጫን
+pwaInstallCta,Install Praystead,Installer Praystead,Praysteadን ጫን
 pwaInstallLater,Not now,Pas maintenant,አሁን አይደለም
-pwaIosTitle,Add Pray4Me to your Home Screen,Ajouter Pray4Me à l’écran d’accueil,Pray4Meን ወደ መነሻ ማያ ገጽ ያክሉ
+pwaIosTitle,Add Praystead to your Home Screen,Ajouter Praystead à l’écran d’accueil,Praysteadን ወደ መነሻ ማያ ገጽ ያክሉ
 pwaIosBody,"In your browser, tap Share, then choose Add to Home Screen.","Dans votre navigateur, touchez Partager, puis Ajouter à l’écran d’accueil.",በአሳሹ ውስጥ ማጋራትን ይንኩ፣ ከዚያ ወደ መነሻ ማያ ገጽ አክልን ይምረጡ።
 pwaIosAddAction,Add to Home Screen,Ajouter à l’écran d’accueil,ወደ መነሻ ማያ ገጽ አክል
 authLogIn,Log in,Se connecter,ግባ
@@ -203,7 +203,7 @@ vaultLockedSignedInAs,Signed in as {email},Connecté en tant que {email},እን�
 contentLocked,Unavailable on this device,Indisponible sur cet appareil,በዚህ መሣሪያ ላይ አይገኝም
 contentLockedHint,"This prayer is end-to-end encrypted and can't be opened with this device's key. Open it where you first created it, or set up recovery to read it here.","Cette prière est chiffrée de bout en bout et ne peut pas être ouverte avec la clé de cet appareil. Ouvrez-la là où vous l'avez créée, ou configurez la récupération pour la lire ici.",ይህ ጸሎት ከጫፍ እስከ ጫፍ የተመሰጠረ ሲሆን በዚህ መሣሪያ ቁልፍ ሊከፈት አይችልም። በፈጠሩበት ቦታ ይክፈቱት፣ ወይም እዚህ ለማንበብ መልሶ ማግኛን ያዋቅሩ።
 keyMissingHeading,We can't unlock your prayers here,Impossible de déverrouiller vos prières ici,ጸሎቶችዎን እዚህ መክፈት አልቻልንም
-keyMissingBody,"Your prayers are end-to-end encrypted with a key that isn't on this device, and no recovery code was set up. If you still have the device or browser where you created them, open Pray4Me there and set up recovery to bring them here.","Vos prières sont chiffrées de bout en bout avec une clé qui n'est pas sur cet appareil, et aucun code de récupération n'a été configuré. Si vous avez encore l'appareil ou le navigateur sur lequel vous les avez créées, ouvrez-y Pray4Me et configurez la récupération pour les retrouver ici.",ጸሎቶችዎ በዚህ መሣሪያ ላይ በሌለ ቁልፍ ከጫፍ እስከ ጫፍ የተመሰጠሩ ናቸው፣ እና ምንም የመልሶ ማግኛ ኮድ አልተዋቀረም። የፈጠሩበት መሣሪያ ወይም አሳሽ አሁንም ካለዎት፣ Pray4Meን እዚያ ይክፈቱ እና እዚህ ለማምጣት መልሶ ማግኛን ያዋቅሩ።
+keyMissingBody,"Your prayers are end-to-end encrypted with a key that isn't on this device, and no recovery code was set up. If you still have the device or browser where you created them, open Praystead there and set up recovery to bring them here.","Vos prières sont chiffrées de bout en bout avec une clé qui n'est pas sur cet appareil, et aucun code de récupération n'a été configuré. Si vous avez encore l'appareil ou le navigateur sur lequel vous les avez créées, ouvrez-y Praystead et configurez la récupération pour les retrouver ici.",ጸሎቶችዎ በዚህ መሣሪያ ላይ በሌለ ቁልፍ ከጫፍ እስከ ጫፍ የተመሰጠሩ ናቸው፣ እና ምንም የመልሶ ማግኛ ኮድ አልተዋቀረም። የፈጠሩበት መሣሪያ ወይም አሳሽ አሁንም ካለዎት፣ Praysteadን እዚያ ይክፈቱ እና እዚህ ለማምጣት መልሶ ማግኛን ያዋቅሩ።
 keyMissingReassure,Not even we can read your prayers — that's why only your device's key or your recovery code can open them.,Même nous ne pouvons pas lire vos prières — c'est pourquoi seule la clé de votre appareil ou votre code de récupération peut les ouvrir.,እኛም እንኳ ጸሎቶችዎን ማንበብ አንችልም — ለዚህ ነው የመሣሪያዎ ቁልፍ ወይም የመልሶ ማግኛ ኮድዎ ብቻ ሊከፍታቸው የሚችለው።
 keyMissingRetry,I'll use my original device,J'utiliserai mon appareil d'origine,የመጀመሪያ መሣሪያዬን እጠቀማለሁ
 keyMissingStartFresh,Start fresh on this device,Repartir de zéro sur cet appareil,በዚህ መሣሪያ ላይ አዲስ ጀምር
@@ -274,7 +274,7 @@ postTestimony,Post a testimony,Partager un témoignage,ምስክርነት አጋ
 anonymous,Post anonymously,Publier anonymement,ስም ሳይገልጽ ልጥፍ
 anonymousAuthor,Anonymous,Anonyme,ስም አልባ
 shareWithGroup,Share with group,Partager avec le groupe,ከቡድኑ ጋር አጋራ
-shareGroupInfo,This prayer will be readable by members of this group. Pray4Me stores the shared content encrypted.,Cette prière sera lisible par les membres de ce groupe. Pray4Me stocke le contenu partagé de façon chiffrée.,ይህ ጸሎት በዚህ ቡድን አባላት ሊነበብ ይችላል። Pray4Me የተጋራውን ይዘት ተመስጥሮ ያስቀምጣል።
+shareGroupInfo,This prayer will be readable by members of this group. Praystead stores the shared content encrypted.,Cette prière sera lisible par les membres de ce groupe. Praystead stocke le contenu partagé de façon chiffrée.,ይህ ጸሎት በዚህ ቡድን አባላት ሊነበብ ይችላል። Praystead የተጋራውን ይዘት ተመስጥሮ ያስቀምጣል።
 shareAnonNote,"Your name will be hidden from group members, but they can still read the prayer content.","Votre nom sera masqué pour les membres du groupe, mais ils pourront quand même lire le contenu de la prière.",ስምዎ ከቡድኑ አባላት ይደበቃል፣ ነገር ግን የጸሎቱን ይዘት አሁንም ማንበብ ይችላሉ።
 sharePreviewLabel,Your group will see,Votre groupe verra,ቡድንዎ የሚያዩት
 groupCode,Group code,Code du groupe,የቡድን ኮድ
@@ -797,9 +797,9 @@ privacyCenterSub,Understand exactly how your prayers are stored and shared — i
 privacyCenterBtn,Open Privacy Center,Ouvrir le Centre de confidentialité,የግላዊነት ማዕከልን ክፈት
 pcIntro,Here's what leaves your device — and what stays encrypted.,Voici ce qui quitte ton appareil — et ce qui reste chiffré.,ጸሎቶችህ የግልህ ናቸው። በእነሱ ላይ ምን እንደሚሆንና ለአንተ ብቻ ምን እንደሚቀር እነሆ።
 pcPrivateTitle,Private prayers,Prières privées,የግል ጸሎቶች
-pcPrivateBody,"Encrypted on your device before they're stored. Pray4Me keeps the encrypted content, not readable prayer text — so private prayers are encrypted for you.","Chiffrées sur ton appareil avant d'être stockées. Pray4Me conserve le contenu chiffré, pas le texte lisible de tes prières — tes prières privées sont chiffrées pour toi.",ለራስህ የምታስቀምጣቸው ጸሎቶች በመለያህ ውስጥ ተከማችተው ለአንተ ብቻ ይታያሉ። ካልመረጥህ በስተቀር በየትኛውም ቡድን ውስጥ ፈጽሞ አይለጠፉም።
+pcPrivateBody,"Encrypted on your device before they're stored. Praystead keeps the encrypted content, not readable prayer text — so private prayers are encrypted for you.","Chiffrées sur ton appareil avant d'être stockées. Praystead conserve le contenu chiffré, pas le texte lisible de tes prières — tes prières privées sont chiffrées pour toi.",ለራስህ የምታስቀምጣቸው ጸሎቶች በመለያህ ውስጥ ተከማችተው ለአንተ ብቻ ይታያሉ። ካልመረጥህ በስተቀር በየትኛውም ቡድን ውስጥ ፈጽሞ አይለጠፉም።
 pcSharedTitle,Community prayers,Prières communautaires,የተጋሩና የቡድን ጸሎቶች
-pcSharedBody,"Encrypted before they're stored, and readable by the members of the group you share them with. Community prayers are encrypted for those group members — not for Pray4Me.","Chiffrées avant d'être stockées, et lisibles par les membres du groupe avec qui tu les partages. Les prières communautaires sont chiffrées pour ces membres — pas pour Pray4Me.",ለቡድን የምታጋራው ጸሎት በንድፉ ለዚያ ቡድን ይታያል — ይህ በአንድነት የመጸለይ ልብ ነው። የምታጋራው ማንኛውም ነገር ከግል ቦታህ ይወጣል፣ ስለዚህ ሌሎች ሲያዩት ሰላም የሚሰማህን ብቻ አጋራ።
+pcSharedBody,"Encrypted before they're stored, and readable by the members of the group you share them with. Community prayers are encrypted for those group members — not for Praystead.","Chiffrées avant d'être stockées, et lisibles par les membres du groupe avec qui tu les partages. Les prières communautaires sont chiffrées pour ces membres — pas pour Praystead.",ለቡድን የምታጋራው ጸሎት በንድፉ ለዚያ ቡድን ይታያል — ይህ በአንድነት የመጸለይ ልብ ነው። የምታጋራው ማንኛውም ነገር ከግል ቦታህ ይወጣል፣ ስለዚህ ሌሎች ሲያዩት ሰላም የሚሰማህን ብቻ አጋራ።
 pcAiTitle,AI guidance,Aide de l'IA,በ AI የተደገፉ ጥቆማዎች
 pcAiBody,"Optional, and off until you turn it on. Only the information needed for that feature is sent, with your consent. The AI can suggest Bible references but never generates Scripture text — that always comes from a trusted source or a link to your own Bible.","Optionnelle, et désactivée tant que tu ne l'actives pas. Seules les informations nécessaires à la fonction sont envoyées, avec ton consentement. L'IA peut suggérer des références bibliques mais ne génère jamais le texte de l'Écriture — celui-ci provient toujours d'une source fiable ou d'un lien vers ta propre Bible.",የ AI ባህሪያት እስክታበራቸው ድረስ ጠፍተው ይቆያሉ። ያለ ግልጽ ፈቃድህ ስለ ጸሎት ምንም ነገር ወደ AI አይላክም፣ እና AI ፈጽሞ የመጽሐፍ ቅዱስ ጥቅስ ጽሑፍ አይፈጥርም — ቅዱሳት መጻሕፍት ሁልጊዜ ከታመነ ምንጭ ወይም ወደ ራስህ መጽሐፍ ቅዱስ ከሚወስድ አገናኝ ይመጣሉ።
 pcPushTitle,Prayer reminders,Rappels de prière,የግፋ ማስታወሻዎች
@@ -810,7 +810,7 @@ pcExportTitle,Exporting your data,Exporter tes données,ውሂብህን ላክ
 pcExportBody,You can download all your prayers as a file at any time. Your data is yours.,Tu peux télécharger toutes tes prières dans un fichier à tout moment. Tes données t'appartiennent.,ጸሎቶችህን ሁሉ በማንኛውም ጊዜ እንደ ፋይል ማውረድ ትችላለህ። ውሂብህ የአንተ ነው።
 pcDeleteTitle,Deleting your account,Supprimer ton compte,መለያህን ሰርዝ
 pcDeleteBody,You can permanently delete your account and its data whenever you want. This can't be undone.,Tu peux supprimer définitivement ton compte et ses données quand tu le souhaites. Cette action est irréversible.,መለያህንና ውሂቡን በፈለግህ ጊዜ ለዘላለም መሰረዝ ትችላለህ። ይህ መቀልበስ አይቻልም።
-pcSecurityNote,"No app can promise perfect security, but Pray4Me is built to keep your prayers private by default.","Aucune application ne peut promettre une sécurité parfaite, mais Pray4Me est conçu pour garder tes prières privées par défaut.",ማንም መተግበሪያ ፍጹም ደህንነትን ሊያረጋግጥ አይችልም፣ ነገር ግን Pray4Me ጸሎቶችህን በነባሪነት የግል አድርጎ ለማቆየት የተሠራ ነው።
+pcSecurityNote,"No app can promise perfect security, but Praystead is built to keep your prayers private by default.","Aucune application ne peut promettre une sécurité parfaite, mais Praystead est conçu pour garder tes prières privées par défaut.",ማንም መተግበሪያ ፍጹም ደህንነትን ሊያረጋግጥ አይችልም፣ ነገር ግን Praystead ጸሎቶችህን በነባሪነት የግል አድርጎ ለማቆየት የተሠራ ነው።
 planFast3Title,3 days of fasting & prayer,3 jours de jeûne et de prière,የ3 ቀን ጾምና ጸሎት
 planFast3Sub,A biblical three-day fast to seek God,Un jeûne biblique de trois jours pour chercher Dieu,እግዚአብሔርን ለመፈለግ የሦስት ቀን መጽሐፍ ቅዱሳዊ ጾም
 planAbout,About this plan,À propos de ce plan,ስለዚህ ዕቅድ

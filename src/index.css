@@ -762,6 +762,325 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   overflow: hidden;
 }
 
+/* Rich media -------------------------------------------------------------
+   Attachments are actual content, not filename metadata. These cards are
+   shared by the composer preview and posted activity, with 44px playback/link
+   targets and restrained surfaces that remain legible in every theme. */
+.attachment-list {
+  display: grid;
+  min-width: 0;
+  gap: .55rem;
+}
+
+.attachment-list__item {
+  position: relative;
+  width: min(100%, 28rem);
+  min-width: 0;
+}
+
+.attachment-list__item--image {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.attachment-load-state {
+  display: flex;
+  min-height: 4.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .75rem;
+  color: var(--text-faint);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: .9rem;
+  font-size: .75rem;
+  font-style: italic;
+}
+
+.attachment-load-state--video {
+  min-height: 9rem;
+}
+
+.attachment-image {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: .9rem;
+}
+
+.attachment-image img {
+  display: block;
+  max-width: 100%;
+  max-height: 15rem;
+  object-fit: cover;
+}
+
+.attachment-audio {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: .65rem;
+  min-height: 4.75rem;
+  padding: .65rem .75rem;
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent-border) 76%, var(--border));
+  border-radius: .95rem;
+}
+
+.attachment-audio > audio {
+  display: none;
+}
+
+.attachment-audio__play {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline-start: .1rem;
+  color: var(--badge-text);
+  background: var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.attachment-audio__body {
+  min-width: 0;
+}
+
+.attachment-audio__heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .35rem;
+  margin-block-end: .35rem;
+  color: var(--text-1);
+  font-size: .76rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.attachment-audio__name {
+  overflow: hidden;
+  color: var(--text-faint);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-audio__timeline {
+  display: grid;
+  grid-template-columns: 2.35rem minmax(3rem, 1fr) 2.35rem;
+  align-items: center;
+  gap: .4rem;
+  color: var(--text-faint);
+  font-size: .64rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.attachment-audio__timeline span:last-child {
+  text-align: end;
+}
+
+.attachment-audio__timeline input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.attachment-audio__timeline input[type="range"]:disabled {
+  cursor: default;
+  opacity: .5;
+}
+
+.attachment-video {
+  overflow: hidden;
+  background: #09090b;
+  border: 1px solid var(--border-strong);
+  border-radius: .95rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.attachment-video__heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .35rem;
+  padding: .55rem .7rem;
+  overflow: hidden;
+  color: var(--text-2);
+  background: var(--surface-muted);
+  font-size: .72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.attachment-video__heading span:last-child {
+  overflow: hidden;
+  color: var(--text-faint);
+  font-weight: 500;
+  text-overflow: ellipsis;
+}
+
+.attachment-video video {
+  display: block;
+  width: 100%;
+  max-height: 22rem;
+  background: #000;
+}
+
+.attachment-video__stage {
+  position: relative;
+  min-height: 8rem;
+  background: #000;
+}
+
+.attachment-video__play {
+  position: absolute;
+  z-index: 1;
+  inset: 50% auto auto 50%;
+  display: inline-flex;
+  width: 3.5rem;
+  height: 3.5rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline-start: .15rem;
+  color: #fff;
+  background: color-mix(in srgb, var(--accent) 88%, #000);
+  border: 2px solid rgba(255, 255, 255, .82);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .42);
+  transform: translate(-50%, -50%);
+}
+
+.attachment-video__error {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  min-height: 8rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  padding: 1rem;
+  color: rgba(255, 255, 255, .82);
+  background: rgba(8, 8, 10, .9);
+  font-size: .72rem;
+  text-align: center;
+}
+
+.attachment-video__error button {
+  min-height: 2.25rem;
+  padding: .35rem .8rem;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.attachment-link {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  min-height: 3.65rem;
+  align-items: center;
+  gap: .65rem;
+  padding: .6rem .75rem;
+  color: var(--text-1);
+  background: color-mix(in srgb, var(--accent-soft) 48%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent-border) 76%, var(--border));
+  border-radius: .9rem;
+  text-decoration: none;
+  transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease), transform var(--motion) var(--ease);
+}
+
+.attachment-link__icon {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: .7rem;
+}
+
+.attachment-link__copy {
+  display: grid;
+  min-width: 0;
+  gap: .08rem;
+}
+
+.attachment-link__copy strong,
+.attachment-link__copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-link__copy strong {
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.attachment-link__copy span {
+  color: var(--text-faint);
+  font-size: .68rem;
+}
+
+.attachment-link__arrow {
+  color: var(--accent);
+}
+
+.attachment-list__remove,
+.attachment-list__status {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: .45rem;
+  inset-inline-end: .45rem;
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.attachment-list__status {
+  color: var(--accent);
+}
+
+.attachment-list__item--removable .attachment-audio__heading,
+.attachment-list__item--removable .attachment-video__heading,
+.attachment-list__item--removable .attachment-link {
+  padding-inline-end: 3rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .attachment-link:hover {
+    background: color-mix(in srgb, var(--accent-soft) 72%, var(--surface));
+    border-color: var(--accent-border);
+    transform: translateY(-1px);
+  }
+
+  .attachment-audio__play:hover,
+  .attachment-list__remove:hover {
+    filter: brightness(1.06);
+  }
+}
+
 .update-composer--labelled .update-composer__input {
   min-height: 44px;
 }
@@ -910,25 +1229,136 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   color: var(--ink);
 }
 
+/* Avatars — one tile for people and groups. The fills are chosen so white
+   glyphs clear 4.5:1 in every theme; the inset hairline keeps the tile's own
+   edge visible against a dark ground, where a dark fill would otherwise melt
+   into the page. Logical properties only, so it mirrors cleanly in RTL. */
+.avatar {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22);
+}
+
+.avatar--anonymous {
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+/* A photo covers the preset that is already drawn underneath, so the tile is
+   correct before the image arrives and stays correct if it never does. `inset`
+   rather than left/right, so the square mirrors cleanly in RTL. */
+.avatar__photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The avatar editor: a quiet row of swatches and symbols, sized as real touch
+   targets and marked with a ring (never colour alone) when selected. */
+.avatar-option {
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: .75rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-2);
+}
+
+.avatar-option[aria-checked="true"],
+.avatar-option[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft), 0 0 0 3px var(--accent);
+  color: var(--accent);
+}
+
+.avatar-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Photo actions sit above the preset rows: full-width rows rather than tiles,
+   because they are verbs ("upload a photo") and not choices of symbol. */
+.avatar-action {
+  display: flex;
+  min-height: 2.75rem;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  border-radius: .75rem;
+  padding-inline: .75rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-2);
+  font-size: .8125rem;
+  font-weight: 500;
+}
+
+.avatar-action:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.avatar-action:disabled { opacity: .4; }
+
+/* The crop window. `touch-action: none` so a drag frames the photo instead of
+   scrolling the sheet underneath it on a phone. */
+.avatar-crop-frame {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 15rem;
+  aspect-ratio: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 0.5px solid var(--border);
+  cursor: grab;
+  touch-action: none;
+}
+
+.avatar-crop-frame:active { cursor: grabbing; }
+
+.avatar-crop-frame:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.avatar-crop-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-crop-zoom {
+  min-height: 2.75rem;
+  accent-color: var(--accent);
+}
+
+.avatar-crop-zoom:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* Settings */
 .settings-profile {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.settings-avatar {
-  display: flex;
-  width: 3.5rem;
-  height: 3.5rem;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
-  border-radius: 50%;
-  color: var(--plum);
 }
 
 .settings-section {
@@ -1164,7 +1594,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 /* Constellation app -------------------------------------------------------
-   The approved Light/Dark system is scoped to signed-in Pray4Me by the
+   The approved Light/Dark system is scoped to signed-in Praystead by the
    constellation-app class on <html>. Public landing/auth surfaces keep their
    existing palette, while every authenticated route, sheet and prayer moment
    shares one calm sky. */
@@ -1194,6 +1624,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   --border-soft: #e7e1f1;
   --header: linear-gradient(145deg, #30215e 0%, #5d43a7 100%);
   --header-answered: linear-gradient(145deg, #1d5f5b 0%, #279e98 100%);
+  /* The shared verse-of-the-day image wears the same sky as the Home hero, in both
+     themes — a near-white card would vanish against half the chat backgrounds it
+     lands on. Its whole palette lives here so the exported card can never drift
+     from the system; Light and Dark differ only in how deep the sky goes. */
+  --card-sky-from: #30215e;
+  --card-sky-to: #5d43a7;
+  --card-sky-ink: #f8f5ff;
+  --card-sky-accent: #cbb6f2;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
@@ -1246,6 +1684,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   --border-soft: #2c263a;
   --header: linear-gradient(145deg, #19132f 0%, #4a3190 100%);
   --header-answered: linear-gradient(145deg, #153532 0%, #23635f 100%);
+  --card-sky-from: #19132f;
+  --card-sky-to: #4a3190;
+  --card-sky-accent: #b19aeb;
   --accent: var(--plum);
   --accent-2: #b19aeb;
   --accent-soft: #28203d;
@@ -1880,6 +2321,7 @@ html.constellation-app body {
 }
 
 .constellation-grow .grow-card,
+.constellation-plans .grow-card,
 .constellation-plan .plan-card,
 .constellation-settings .rounded-2xl,
 .constellation-notifications .rounded-xl {
@@ -2029,6 +2471,48 @@ html.constellation-app body {
   display: flex;
   align-items: center;
   gap: .4rem;
+}
+
+/* A tool button that carries a short label wherever the layout has room for
+   one. Below 30rem the label is dropped and the control falls back to the plain
+   44px icon button, so the mobile header never grows a row of text. The
+   accessible name comes from aria-label either way, so nothing is lost when the
+   label is not painted. */
+.constellation-journal__labelled {
+  width: 44px;
+  min-width: 44px;
+  gap: .4rem;
+}
+
+.constellation-journal__button-label {
+  display: none;
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (min-width: 30rem) {
+  .constellation-journal__labelled {
+    width: auto;
+    padding-inline: .7rem;
+  }
+
+  .constellation-journal__button-label {
+    display: inline;
+  }
+}
+
+/* One-time introduction to a Journal tool — a quiet line, not a card competing
+   with the prayers underneath it. */
+.constellation-journal__hint {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-block-end: .75rem;
+  padding: .1rem .75rem;
+  border: 0.5px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
 }
 
 .constellation-journal__people-label {
@@ -2484,7 +2968,8 @@ html.constellation-auth-root[data-theme="dark"] body {
   display: none;
 }
 
-.constellation-auth__sky {
+.constellation-auth__sky,
+.constellation-plan-share__sky {
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
@@ -2493,7 +2978,8 @@ html.constellation-auth-root[data-theme="dark"] body {
   pointer-events: none;
 }
 
-.constellation-auth__sky-image {
+.constellation-auth__sky-image,
+.constellation-plan-share__sky-image {
   position: absolute;
   inset-block-start: -1.5rem;
   inset-inline-start: 50%;
@@ -2504,17 +2990,20 @@ html.constellation-auth-root[data-theme="dark"] body {
 }
 
 .constellation-auth__sky-image--dark,
-.constellation-onboarding__sky-image--dark {
+.constellation-onboarding__sky-image--dark,
+.constellation-plan-share__sky-image--dark {
   display: none;
 }
 
 [data-theme="dark"] .constellation-auth__sky-image--light,
-[data-theme="dark"] .constellation-onboarding__sky-image--light {
+[data-theme="dark"] .constellation-onboarding__sky-image--light,
+[data-theme="dark"] .constellation-plan-share__sky-image--light {
   display: none;
 }
 
 [data-theme="dark"] .constellation-auth__sky-image--dark,
-[data-theme="dark"] .constellation-onboarding__sky-image--dark {
+[data-theme="dark"] .constellation-onboarding__sky-image--dark,
+[data-theme="dark"] .constellation-plan-share__sky-image--dark {
   display: block;
 }
 
@@ -2729,12 +3218,13 @@ html.constellation-auth-root[data-theme="dark"] body {
   color: var(--accent);
 }
 
-/* Public pray-first journey ------------------------------------------------
+/* Public pray-first journey and shared-plan page ---------------------------
    The landing page is rendered with inline theme tokens, then unmounts before
    GuestPrayerFlow appears. Re-declare that same constellation palette here so
-   capture, prayer, Amen, and save-decision screens never fall back to the older
-   cream/gold application colors. */
-.constellation-guest-flow {
+   capture, prayer, Amen, and save-decision screens — and a plan opened from a
+   share link — never fall back to the older cream/gold application colors. */
+.constellation-guest-flow,
+.constellation-plan-share {
   color-scheme: light;
   --background: #f8f7fd;
   --surface: #ffffff;
@@ -2767,7 +3257,8 @@ html.constellation-auth-root[data-theme="dark"] body {
   --success-border: #a9d8d4;
 }
 
-[data-theme="dark"] .constellation-guest-flow {
+[data-theme="dark"] .constellation-guest-flow,
+[data-theme="dark"] .constellation-plan-share {
   color-scheme: dark;
   --background: #120f1b;
   --surface: #171423;
@@ -2798,6 +3289,21 @@ html.constellation-auth-root[data-theme="dark"] body {
   --success: #63d1cb;
   --success-bg: var(--sage-soft);
   --success-border: #285b57;
+}
+
+.constellation-plan-share {
+  background: var(--background);
+  color: var(--ink);
+}
+
+.constellation-plan-share .section-label {
+  color: var(--accent);
+}
+
+.constellation-plan-share__actions {
+  border-block-start: 0.5px solid var(--border);
+  background: color-mix(in srgb, var(--background) 92%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 @media (max-width: 639px) {
@@ -2846,6 +3352,36 @@ html.constellation-auth-root[data-theme="dark"] body {
   }
 }
 
+/* One day of a guided plan, and the swipe that moves to the day before or
+   after it. `pan-y` keeps vertical page scrolling entirely native — only the
+   horizontal axis is ours — and the clip is what lets the day be dragged past
+   the edge of its card without widening the page. The incoming day is nudged in
+   from the side it was sent for rather than sliding the full width: a tall
+   column of reading text crossing the screen is heavier than the move deserves.
+   (The reduced-motion rule below flattens both to nothing.) */
+.plan-deck__viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.plan-deck__panel--from-right {
+  animation: plan-deck-in-right 0.22s ease-out;
+}
+
+.plan-deck__panel--from-left {
+  animation: plan-deck-in-left 0.22s ease-out;
+}
+
+@keyframes plan-deck-in-right {
+  from { transform: translateX(32%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes plan-deck-in-left {
+  from { transform: translateX(-32%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;
@@ -2854,3 +3390,21 @@ html.constellation-auth-root[data-theme="dark"] body {
     animation-iteration-count: 1 !important;
   }
 }
+/* Published-wording report and editorial review controls. */
+.wording-control {
+  display: block;
+  width: 100%;
+  margin-top: .35rem;
+  padding: .65rem;
+  border-radius: .6rem;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-1);
+}
+.wording-action {
+  border-radius: .6rem;
+  padding: .6rem .9rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.wording-action:disabled { opacity: .5; }

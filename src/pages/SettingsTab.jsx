@@ -1,16 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, Clock, Calendar, LogOut, User, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
+import { Bell, Clock, Calendar, LogOut, Mail, Shield, ShieldCheck, Globe, Sun, Moon, MessageSquare, Heart, Download, Lock, Unlock, KeyRound, RefreshCw, Trash2, Sparkles, ChevronDown, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
+import ResourceLanguagePref from '../components/ResourceLanguagePref';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
-import { enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
+import { dailyReminderStartDay, enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
 import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
 import { track, EVENTS } from '../lib/analytics';
 import FeedbackModal from '../components/FeedbackModal';
+import { canReviewWording } from '../lib/wordingReports';
+const WordingReportModal = lazy(() => import('../components/WordingReportModal'));
+const WordingReviewModal = lazy(() => import('../components/WordingReviewModal'));
 import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
@@ -21,6 +25,10 @@ import Switch from '../components/shared/Switch';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 import { PageHeader } from '../components/shared/Primitives';
+import Avatar from '../components/shared/Avatar';
+import AvatarEditor from '../components/shared/AvatarEditor';
+import { fetchMyAvatar, saveMyAvatar } from '../lib/profileAvatars';
+import { identityPhotoUrlFrom, withIdentityPhoto } from '../lib/identityPhoto';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
@@ -74,6 +82,11 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
     </div>
   );
 }
+
+// The "a few per day" options: off, or a small cap on how many prayers Today
+// asks for. Off is first because it is the default — nothing is hidden unless
+// the reader asks for it.
+const CAP_OPTIONS = [null, 3, 5, 10];
 
 // A collapsible, labelled group of settings cards. Progressive disclosure: the
 // header stays visible so nothing is hidden from discovery, and the panel is
@@ -162,10 +175,14 @@ export default function SettingsTab() {
   const { user, signOut, deleteAccount } = useAuthStore();
   const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);
+  const [wordingMode, setWordingMode] = useState(null);
   const [showDonate, setShowDonate] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
+  // The user's own avatar preset. Read through the same relationship-scoped RPC
+  // as everyone else's (the caller is always allowed to see their own).
+  const [myAvatar, setMyAvatar] = useState(null);
   // Settings reads as a short list of destinations: every section starts
   // collapsed and opens on demand. A deep-link (below) force-opens its target.
   // Privacy & Security is ONE consolidated section (visibility, vault,
@@ -192,6 +209,25 @@ export default function SettingsTab() {
     return () => { cancelled = true; };
   }, [settings.followUpEnabled, user?.id]);
 
+  useEffect(() => {
+    if (!user?.id) return undefined;
+    let cancelled = false;
+    fetchMyAvatar(user.id).then((cfg) => { if (!cancelled) setMyAvatar(cfg); });
+    return () => { cancelled = true; };
+  }, [user?.id]);
+
+  // Persist the chosen avatar, then reflect it locally so the header tile and
+  // the editor preview agree immediately without a refetch. The editor owns the
+  // toast, so this only reports whether the write landed. The account picture is
+  // re-attached because it is never stored: clearing an explicit choice is
+  // exactly what makes it the default again.
+  const handleSaveAvatar = async (config) => {
+    const { error } = await saveMyAvatar(user?.id, config);
+    if (error) return { error };
+    setMyAvatar(withIdentityPhoto(user?.id, config));
+    return {};
+  };
+
   // Deep-link into a section (e.g. /settings#notifications from the inbox):
   // expand the matching section first, then scroll it into view next frame.
   useEffect(() => {
@@ -208,8 +244,8 @@ export default function SettingsTab() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const handleLockVault = () => {
-    lockVault();
+  const handleLockVault = async () => {
+    await lockVault(user?.id);
     toast.success(t(lang, 'vaultLockedToast'));
   };
 
@@ -219,8 +255,9 @@ export default function SettingsTab() {
       // as best-effort. Only an explicit permission denial reverts it.
       updateSettings({ dailyReminderEnabled: true });
       track(EVENTS.REMINDER_SET, { method: 'daily' });
+      const lastDailySentOn = dailyReminderStartDay(settings.dailyReminderTime);
       let res;
-      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); }
+      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true, lastDailySentOn }); }
       catch { res = { error: 'failed' }; }
       if (res?.error === 'denied') {
         updateSettings({ dailyReminderEnabled: false });
@@ -236,7 +273,7 @@ export default function SettingsTab() {
         }
         // The toggle is account-level: align every other signed-in device's
         // subscription row too (enablePush only wrote this one's).
-        try { await updatePushPrefs(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true }); } catch { /* best-effort */ }
+        try { await updatePushPrefs(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true, lastDailySentOn }); } catch { /* best-effort */ }
       }
     } else {
       updateSettings({ dailyReminderEnabled: false });
@@ -320,7 +357,7 @@ export default function SettingsTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `pray4me-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `praystead-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     track(EVENTS.DATA_EXPORTED);
@@ -344,7 +381,6 @@ export default function SettingsTab() {
   };
   const provider = user?.app_metadata?.provider;
   const providerLabel = provider === 'google' ? 'Google' : t(lang, 'providerEmail');
-  const avatarUrl = user?.user_metadata?.avatar_url;
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
   const memberSince = user?.created_at
     ? new Date(user.created_at).toLocaleDateString(lang, { month: 'long', year: 'numeric' })
@@ -358,15 +394,10 @@ export default function SettingsTab() {
           eyebrow={t(lang, 'settingsSecAccount')}
           title={t(lang, 'settings')}
           subtitle={memberSince ? `${t(lang, 'memberSince')} ${memberSince}` : undefined}
-          aside={(
-            <div className="settings-avatar">
-          {avatarUrl ? (
-              <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
-          ) : (
-              <User size={24} aria-hidden="true" />
-          )}
-            </div>
-          )}
+          backTo="/more"
+          backLabel={t(lang, 'moreTab')}
+          backAriaLabel={`${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`}
+          aside={<Avatar name={displayName || ''} avatar={myAvatar} size={56} />}
         />
         <div className="settings-profile phase-card phase-card--quiet px-4 py-3 mb-5">
           <div className="min-w-0">
@@ -380,6 +411,21 @@ export default function SettingsTab() {
 
         {/* ── Account & privacy ── */}
         <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={Shield} open={openSections.account} onToggle={() => toggleSection('account')}>
+          {/* Avatar — three controls, deliberately not a profile screen. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'profileAvatar')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'profileAvatarHint')}</p>
+            <AvatarEditor
+              lang={lang}
+              kind="user"
+              name={displayName || ''}
+              avatar={myAvatar}
+              ownerId={user?.id}
+              identityPhotoUrl={identityPhotoUrlFrom(user)}
+              onSave={handleSaveAvatar}
+            />
+          </div>
+
           {/* Account info */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'account')}</p>
@@ -596,6 +642,34 @@ export default function SettingsTab() {
 
         {/* ── Prayer reminders (deep-link id stays `notifications`) ── */}
         <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
+          {/* A few per day — one calm global cap on how many prayers Today asks
+              for, so a long list stays coverable. Off = show everything. It used
+              to sit on the Plan tab between the day agenda and the plan
+              catalogue, which is a content surface, not a place for a standing
+              preference. */}
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'perDayTitle')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'perDaySub')}</p>
+            <div className="flex gap-2 flex-wrap" role="group" aria-label={t(lang, 'perDayTitle')}>
+              {CAP_OPTIONS.map((n) => {
+                const active = (settings.maxPerDay || null) === n;
+                return (
+                  <button
+                    key={n ?? 'off'}
+                    onClick={() => updateSettings({ maxPerDay: n })}
+                    aria-pressed={active}
+                    className="min-h-[44px] px-4 rounded-xl text-sm font-medium transition-colors"
+                    style={active
+                      ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
+                      : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  >
+                    {n ?? t(lang, 'perDayOff')}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Daily + follow-up reminders */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-4">
@@ -675,7 +749,7 @@ export default function SettingsTab() {
 
             {settings.notificationsGranted && (
               <button
-                onClick={() => new Notification('Pray4Me 🙏', { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
+                onClick={() => new Notification('Praystead 🙏', { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
                 title={t(lang, 'tipTestNotif')}
                 className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
@@ -734,10 +808,18 @@ export default function SettingsTab() {
               />
             </div>
           </div>
+
+          {/* Which languages recommended resources may be offered in. The app
+              language is always included, so this needs no setup to work. */}
+          <ResourceLanguagePref lang={lang} />
         </SettingsSection>
 
         {/* ── Support & feedback ── */}
         <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
+          {user?.id && !user.is_anonymous && <div className="rounded-2xl p-4 mb-3 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+            <button className="wording-action" onClick={() => setWordingMode('report')}>{t(lang, 'wordingReport')}</button>
+            {canReviewWording(user) && <button className="wording-action" onClick={() => setWordingMode('review')}>{t(lang, 'wordingReview')}</button>}
+          </div>}
           {/* Feedback */}
           <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-1">
@@ -778,14 +860,17 @@ export default function SettingsTab() {
           <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>
           <p className="text-xs font-medium" style={{ color: 'var(--accent)', opacity: 0.6 }}>James 5:16</p>
         </div>
-        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Pray4Me v{APP_VERSION}</p>
+        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Praystead v{APP_VERSION}</p>
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
+      {wordingMode && <Suspense fallback={<p role="status">{t(lang, 'wordingLoading')}</p>}>
+        {wordingMode === 'report' ? <WordingReportModal key={lang} lang={lang} onClose={() => setWordingMode(null)} /> : <WordingReviewModal lang={lang} onClose={() => setWordingMode(null)} />}
+      </Suspense>}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
       {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
       {vaultMode && (
-        <VaultModal lang={lang} initialMode={vaultMode} onClose={() => setVaultMode(null)} />
+        <VaultModal lang={lang} initialMode={vaultMode} userId={user?.id} onClose={() => setVaultMode(null)} />
       )}
     </div>
   );

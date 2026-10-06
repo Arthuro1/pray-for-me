@@ -32,7 +32,7 @@ describe('buildExport', () => {
 
   it('carries an app tag and category list, and is empty-safe', () => {
     const out = buildExport();
-    expect(out.app).toBe('Pray4Me');
+    expect(out.app).toBe('Praystead');
     expect(out.prayers).toEqual([]);
     expect(out.categories).toEqual([]);
   });

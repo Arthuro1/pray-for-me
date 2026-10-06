@@ -47,15 +47,16 @@ describe('Layout — primary navigation', () => {
     expect(screen.queryByText(t(lang, 'prayers'))).toBeNull();
   });
 
-  it('renders exactly four primary destinations (Today · Journal · Community · More)', () => {
+  it('renders exactly five primary destinations (Today · Journal · Plans · Together · More)', () => {
     const { container } = renderNav();
     const links = within(bottomNav(container)).getAllByRole('link');
-    expect(links).toHaveLength(4);
-    for (const key of ['today', 'journal', 'community', 'moreTab']) {
-      expect(within(bottomNav(container)).getByText(t(lang, key))).toBeTruthy();
-    }
+    expect(links).toHaveLength(5);
+    // In this order: the reader's own prayer life, then community, then More.
+    expect(links.map((link) => link.textContent)).toEqual(
+      ['today', 'journal', 'navPlans', 'together', 'moreTab'].map((key) => t(lang, key)),
+    );
     // Grow and Settings moved inside More — off the prime navigation.
-    expect(screen.queryByText(t(lang, 'grow'))).toBeNull();
+    expect(screen.queryByText('Grandir')).toBeNull();
     expect(screen.queryByText(t(lang, 'settings'))).toBeNull();
   });
 
@@ -81,7 +82,7 @@ describe('Layout — active destination & aria-current', () => {
     const { container } = renderNav('/');
     expect(currentPage(container, 'today')).toBe('page');
     expect(currentPage(container, 'journal')).toBeNull();
-    expect(currentPage(container, 'community')).toBeNull();
+    expect(currentPage(container, 'together')).toBeNull();
     expect(currentPage(container, 'moreTab')).toBeNull();
   });
 
@@ -92,7 +93,7 @@ describe('Layout — active destination & aria-current', () => {
   });
 
   it('keeps More active on every descendant route reached through it', () => {
-    for (const route of ['/more', '/grow', '/plan', '/settings', '/notifications']) {
+    for (const route of ['/more', '/guidance', '/calendar', '/grow', '/plan', '/settings', '/notifications']) {
       const { container } = renderNav(route);
       expect(currentPage(container, 'moreTab')).toBe('page');
       // Today must NOT also light up on those routes.
@@ -101,10 +102,20 @@ describe('Layout — active destination & aria-current', () => {
     }
   });
 
+  it('lights Plans — and not More — on the plans catalogue and a shared plan page', () => {
+    for (const route of ['/plans', '/plans/gratitude7', '/plans/gratitude7/tok123']) {
+      const { container } = renderNav(route);
+      expect(currentPage(container, 'navPlans'), route).toBe('page');
+      // `/plan` (the old Calendar route) is a More path; it must not claim `/plans`.
+      expect(currentPage(container, 'moreTab'), route).toBeNull();
+      cleanup();
+    }
+  });
+
   it('keeps Community active on nested group and prayer routes', () => {
     for (const route of ['/community', '/community/group/g1', '/community/group/g1/prayer/p1']) {
       const { container } = renderNav(route);
-      expect(currentPage(container, 'community')).toBe('page');
+      expect(currentPage(container, 'together')).toBe('page');
       cleanup();
     }
   });
@@ -114,7 +125,7 @@ describe('Layout — community pending badge', () => {
   it('shows no badge when there is nothing pending', () => {
     useCommunityStore.setState({ pendingCount: 0 });
     const { container } = renderNav('/');
-    const community = within(bottomNav(container)).getByText(t(lang, 'community')).closest('a');
+    const community = within(bottomNav(container)).getByText(t(lang, 'together')).closest('a');
     // No count folded into the name, and no visible badge digits.
     expect(community.getAttribute('aria-label')).toBeNull();
     expect(within(community).queryByText(/\d/)).toBeNull();
@@ -123,9 +134,9 @@ describe('Layout — community pending badge', () => {
   it('announces the pending count in the destination name and shows the pill', () => {
     useCommunityStore.setState({ pendingCount: 3 });
     const { container } = renderNav('/');
-    const community = within(bottomNav(container)).getByText(t(lang, 'community')).closest('a');
+    const community = within(bottomNav(container)).getByText(t(lang, 'together')).closest('a');
     // The count rides in the accessible name…
-    expect(community.getAttribute('aria-label')).toBe(`${t(lang, 'community')}, ${t(lang, 'navPending', { count: 3 })}`);
+    expect(community.getAttribute('aria-label')).toBe(`${t(lang, 'together')}, ${t(lang, 'navPending', { count: 3 })}`);
     // …while the visual pill is present but hidden from the a11y tree (no double read).
     const pill = within(community).getByText('3');
     expect(pill.getAttribute('aria-hidden')).toBe('true');
@@ -134,7 +145,7 @@ describe('Layout — community pending badge', () => {
   it('caps the visible badge at 9+ but still announces the real count', () => {
     useCommunityStore.setState({ pendingCount: 12 });
     const { container } = renderNav('/');
-    const community = within(bottomNav(container)).getByText(t(lang, 'community')).closest('a');
+    const community = within(bottomNav(container)).getByText(t(lang, 'together')).closest('a');
     expect(within(community).getByText('9+')).toBeTruthy();
     expect(community.getAttribute('aria-label')).toContain('12');
   });
@@ -194,16 +205,16 @@ describe('Layout — safe-area & separation', () => {
 describe('Layout — long localized labels & RTL', () => {
   it('guards every label against wrapping (truncate + a min-w-0 cell)', () => {
     const { container } = renderNav('/', 'de');
-    const community = within(bottomNav(container)).getByText(t('de', 'community'));
+    const community = within(bottomNav(container)).getByText(t('de', 'together'));
     expect(community.className).toMatch(/truncate/);
     expect(community.closest('a').className).toMatch(/min-w-0/);
   });
 
-  it('renders all four destinations under a right-to-left locale (Arabic)', () => {
+  it('renders all five destinations under a right-to-left locale (Arabic)', () => {
     const { container } = renderNav('/', 'ar');
     const links = within(bottomNav(container)).getAllByRole('link');
-    expect(links).toHaveLength(4);
-    expect(within(bottomNav(container)).getByText(t('ar', 'community'))).toBeTruthy();
+    expect(links).toHaveLength(5);
+    expect(within(bottomNav(container)).getByText(t('ar', 'together'))).toBeTruthy();
     // Direction is owned by <html dir>, never duplicated onto the nav itself —
     // the nav relies on logical CSS (insetInlineEnd) to mirror instead.
     expect(container.querySelector('[dir]')).toBeNull();

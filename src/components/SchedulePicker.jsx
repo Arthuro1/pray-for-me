@@ -18,7 +18,7 @@ import { modeOf, planSummary, scheduleFromDraft, scheduleSummary } from '../lib/
 // Works on a DRAFT (lib/scheduleDraft.js) and commits through onCommit, so the
 // host owns the value and the persisted shape is unchanged. Edits happen on a
 // COPY: Cancel drops them, "Use this rhythm" commits them once.
-export default function SchedulePicker({ draft, onCommit, lang, planDays, idPrefix = 'sched' }) {
+export default function SchedulePicker({ draft, onCommit, lang, planDays, idPrefix = 'sched', focusSignal = 0 }) {
   const [open, setOpen] = useState(false);
   const [working, setWorking] = useState(draft);
   const triggerRef = useRef(null);
@@ -32,6 +32,18 @@ export default function SchedulePicker({ draft, onCommit, lang, planDays, idPref
       triggerRef.current?.focus();
     }
   }, [open]);
+
+  // A host can ask for this control by name (the form's one-line rhythm summary
+  // has a "Change" action). Bumping the signal brings the row into view and
+  // gives it focus, so the answer to "where do I change this?" is under the
+  // cursor rather than somewhere further down the form.
+  useEffect(() => {
+    if (!focusSignal) return;
+    const row = triggerRef.current;
+    if (!row) return;
+    row.scrollIntoView?.({ block: 'nearest' });
+    row.focus();
+  }, [focusSignal]);
 
   const start = () => { setWorking(draft); setOpen(true); };
   const close = () => { returnFocus.current = true; setOpen(false); };

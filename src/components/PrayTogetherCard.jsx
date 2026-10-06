@@ -39,8 +39,8 @@ export default function PrayTogetherCard({ communityPrayer, count, hasReacted, b
         {faces.length > 0 && (
           <div className="flex">
             {faces.map((r, i) => (
-              <div key={r.user_id} className="rounded-full" style={{ marginLeft: i === 0 ? 0 : -8, boxShadow: '0 0 0 2px var(--surface)' }}>
-                <Avatar name={nameFor(r)} size={28} />
+              <div key={r.user_id} className="rounded-full" style={{ marginInlineStart: i === 0 ? 0 : -8, boxShadow: '0 0 0 2px var(--surface)' }}>
+                <Avatar name={nameFor(r)} avatar={r.avatar} size={28} />
               </div>
             ))}
           </div>

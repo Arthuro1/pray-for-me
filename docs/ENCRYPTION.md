@@ -12,7 +12,10 @@ JavaScript, device compromise, or another person using an unlocked profile.
 Sign-out clears user-scoped offline snapshots, mutation queues, in-memory data,
 and legacy Workbox caches. The account key remains for the next sign-in on that
 device. Account deletion removes it. Idle auto-lock is disabled by default;
-explicit lock clears memory/session state.
+explicit lock clears memory/session state, removes that account's raw device
+copy, and records a user-scoped lock marker. Refresh and sign-in therefore stay
+locked until the passphrase or recovery flow succeeds; a successful unlock
+stores the same account key on the device again.
 
 ## Optional passphrase recovery
 
@@ -28,6 +31,12 @@ and display as `XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`. The code is displayed once;
 users must store it separately. Version 1 records accept their legacy
 16-character codes. A successful rotation preserves the content key, writes a
 version 2 recovery wrapper, and invalidates the prior code.
+
+Every new or changed wrapped record carries a monotonic revision and modification
+timestamp. Startup reconciliation imports the newer local/server revision (or
+re-pushes a newer local revision after an interrupted upload), and credential
+operations re-read IndexedDB so a change made in another browser tab is not
+silently replaced by a stale in-memory wrapper. Malformed wrappers fail closed.
 
 Cross-device recovery requires the synced wrapped record plus either the
 passphrase or recovery code. If no recovery record exists, only a device that
@@ -48,8 +57,32 @@ authenticated decryption; a failed or locked row is never rewritten. Community
 v1 content remains readable and is upgraded on a later safe content rewrite.
 
 The binding covers personal prayers, updates, points and testimonies; guest
-drafts; identity private keys; attachment blobs/metadata; community prayers,
-updates and testimonies; and wrapped group-key envelope identity.
+drafts; prayer-session note drafts; identity private keys; attachment
+blobs/metadata; community prayers, updates and testimonies; and wrapped
+group-key envelope identity.
+
+## Prayer-session note drafts
+
+A note captured during a prayer session is personal content that may not have
+reached the server yet, so its device-local draft is encrypted at rest with the
+same guarantees as the guest prayer draft:
+
+- One record per prayer in IndexedDB (`pfm_note_draft:<prayer-id>`), holding the
+  note text as an AES-GCM payload and the recording as separately encrypted raw
+  bytes. Nothing is written to `localStorage`.
+- The key is a **non-extractable** `CryptoKey` persisted alongside the ciphertext
+  by structured clone. Where that clone is unavailable the module falls back to
+  memory-only rather than downgrading to plaintext at rest.
+- Both fields are v2 context-bound: entity `prayer-note-draft`, owner `device`,
+  record = prayer ID, field `note-text` / `note-voice`.
+- Plaintext metadata is limited to the prayer ID, timestamps, commit status and
+  the reserved update ID. Records expire after seven days, and an expired,
+  malformed or undecryptable draft is deleted rather than trusted.
+
+Promotion writes the note through the ordinary `addUpdate` path, so the stored
+entry inherits the prayer's own protection (account-key ciphertext for a private
+prayer), and the recording goes through the ordinary encrypted attachment
+pipeline. The local draft is deleted only after the update genuinely exists.
 
 ## Encrypted translation cache
 

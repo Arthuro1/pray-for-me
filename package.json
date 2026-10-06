@@ -1,5 +1,5 @@
 {
-  "name": "pray_for_me",
+  "name": "praystead",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "build:verses": "node scripts/build-verse-bundle.mjs",
+    "build:covers": "node scripts/build-covers.mjs",
     "build:icons": "node scripts/build-icons.mjs",
+    "build:plan-og": "node scripts/build-plan-og.mjs",
     "check:locales": "node scripts/check-locales.mjs",
     "lint": "eslint . --ext js,jsx,mjs,ts,tsx --report-unused-disable-directives",
     "lint:strict": "eslint . --ext js,jsx,mjs,ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -16,9 +18,13 @@
     "test": "vitest run",
     "test:browser": "vitest run --config vitest.browser.config.js",
     "test:db": "supabase test db",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:content": "node scripts/audit-copy.mjs",
+    "review:translations": "node scripts/review-translations.mjs"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
     "@supabase/supabase-js": "^2.108.2",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",

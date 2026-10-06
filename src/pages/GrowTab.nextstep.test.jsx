@@ -5,6 +5,7 @@
 // and the format descriptions read beginner-friendly (no ACTS jargon required).
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../lib/supabase', () => {
   const chain = {
@@ -27,18 +28,32 @@ import { guides, pick } from '../content/teaching';
 import { markGuideStarted, markGuideCompleted } from '../lib/guideProgress';
 import { guideDurationMinutes } from '../lib/guideMeta';
 import { t } from '../i18n';
+import { PLANS } from '../content/prayerPlans';
+import { buildGuidedPlanPrayer } from '../lib/guidedPlan';
+import { todayKey } from '../lib/prayedLog';
 
 const lang = 'fr';
 
 afterEach(cleanup);
 beforeEach(() => {
   localStorage.clear();
-  usePrayerStore.setState({ settings: { language: lang } });
+  usePrayerStore.setState({ settings: { language: lang }, prayers: [], completions: {}, categories: [] });
 });
 
+const renderGrow = () => render(<MemoryRouter><GrowTab /></MemoryRouter>);
+
 describe('GrowTab — one recommended next step', () => {
+  // Plans have their own tab now; a running plan no longer pushes the guide aside.
+  it('keeps its guide first while a plan is running, and holds no plan catalogue', () => {
+    const run = { ...buildGuidedPlanPrayer(PLANS.find((plan) => plan.id === 'altar7'), todayKey(), lang), id: 'run', status: 'active' };
+    usePrayerStore.setState({ prayers: [run] });
+    renderGrow();
+    expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'journeysTitle'))).toBeNull();
+  });
+
   it('leads with exactly one next-step card (the first new guide) and folds the rest away', () => {
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
     // The recommended guide appears once; the others wait behind Browse all.
     expect(screen.getAllByText(pick(guides[0].title, lang))).toHaveLength(1);
@@ -49,14 +64,14 @@ describe('GrowTab — one recommended next step', () => {
 
   it('current progress takes priority: a started guide is the recommendation', () => {
     markGuideStarted(guides[2].id);
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.getByText(pick(guides[2].title, lang))).toBeTruthy();
     expect(screen.getByText(t(lang, 'growContinueDesc'))).toBeTruthy();
   });
 
   it('completed guides move into a collapsed History section', () => {
     markGuideCompleted(guides[0].id);
-    render(<GrowTab />);
+    renderGrow();
     // Not recommended, not visible until History is expanded.
     expect(screen.queryByText(pick(guides[0].title, lang))).toBeNull();
     const history = screen.getByRole('button', { name: `${t(lang, 'growHistory')} (1)` });
@@ -71,13 +86,13 @@ describe('GrowTab — one recommended next step', () => {
 
 describe('GrowTab — recommendation lives in the Pray segment only', () => {
   it('shows the next step in Pray and an authored duration with it', () => {
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.getByText(t(lang, 'growNextStep'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'aboutMinutes', { n: guideDurationMinutes(guides[0]) }))).toBeTruthy();
   });
 
   it('switching to Learn removes the guide recommendation — learning content stands alone', () => {
-    render(<GrowTab />);
+    renderGrow();
     fireEvent.click(screen.getByText(t(lang, 'growLearn')));
     expect(screen.queryByText(t(lang, 'growNextStep'))).toBeNull();
     expect(screen.queryByText(pick(guides[0].title, lang))).toBeNull();
@@ -89,10 +104,11 @@ describe('GrowTab — recommendation lives in the Pray segment only', () => {
 });
 
 describe('Prayer-format language — beginner friendly', () => {
-  it('describes ACTS as a structured biblical pattern, not just the acronym', () => {
+  it('describes ACTS by its four movements, not just the acronym', () => {
     // The descriptions live in the locale files; assert the copy the session
     // will render so a beginner can choose without knowing the term "ACTS".
-    expect(t(lang, 'modeActsDesc').toLowerCase()).toContain('biblique');
+    const acts = t(lang, 'modeActsDesc').toLowerCase();
+    for (const movement of ['adoration', 'confession', 'action de grâces', 'supplication']) expect(acts).toContain(movement);
     expect(t(lang, 'modeGuidedDesc').length).toBeGreaterThan(10);
     expect(t(lang, 'modeRequestsDesc').toLowerCase()).toContain('cœur');
   });

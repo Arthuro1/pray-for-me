@@ -1,0 +1,227 @@
+{
+  "preparing21": {
+    "intro": "Dalawampu't isang araw upang hanapin ang Diyos sa panahong talagang kinalalagyan mo. Hindi ito paraan para makakita ng mapapangasawa, at wala itong ipinapangako tungkol sa kung ikakasal ka o hindi. Isa itong paglalakbay na hinubog ng Kasulatan: limang araw upang iugat ang buhay mo sa Diyos, limang araw upang hilinging hubugin Niya ang sarili mong karakter, pitong araw upang ipanalangin ang taong maaaring pakasalan mo balang araw, at apat na araw upang ibalik sa Kanya ang buong kinabukasan. Kung hindi ka man mag-asawa kailanman, sa iyo pa rin ang bawat araw nito.",
+    "biblical": "Sa isang pulutong na nag-aalala sa kanilang kakulangan, sinabi ni Jesus: hanapin muna ninyo ang kaharian ng Diyos at ang Kanyang katuwiran, at ang lahat ng bagay na ito ay idaragdag sa inyo (Mateo 6:33). Hindi kailanman ginagawa ng Kasulatan na layunin ng buhay ang pag-aasawa. Tinatawag ni Pablo na kaloob kapwa ang pag-aasawa at ang pagiging walang asawa, at sinasabi niya sa bawat mananampalataya na lumakad sa buhay na itinakda sa kanya ng Panginoon (1 Corinto 7:7, 17). Inaanyayahan tayo ng Awit 37 na magalak sa PANGINOON at ipagkatiwala sa Kanya ang ating lakad sa halip na agawin ang gusto natin. Kaya't ang paglalakbay na ito ay nananalangin nang tapat tungkol sa pag-aasawa — at inuuna pa rin ang kaharian.",
+    "completion": "Dalawampu't isang araw ng paghahanap sa Diyos, ng pagpapagawa sa Kanya sa sarili mong puso, at ng panalangin tungkol sa pag-aasawang maaaring dumating o hindi. Walang anuman dito na pumipilit sa Diyos, at walang anuman dito ang nasayang. Nasanay kang ipanalangin ang Kasulatan, pangalanan ang mga hangarin mo nang hindi kinukuyom, at panatilihin si Cristo sa gitna. Anuman ang Kanyang isulat kasunod, sa iyo ang mga gawing iyon.",
+    "days": [
+      {
+        "reflection": "Magsimula sa kinahantungan ng salmista: sa Diyos mismo. Nakita ni Asaf na nakukuha ng lahat ng iba ang gusto niya at halos madulas siya dahil doon — pagkatapos ay pumasok siya sa harapan ng Diyos at natuklasang ang Isa na nasa kanya na pala ang siyang pinakakailangan niya. Bago humingi ng anuman tungkol sa pag-aasawa, ang Kanya mismo ang hinihingi ng paglalakbay na ito.",
+        "prompts": [
+          "Sabihin mo sa Diyos nang tapat na Siya ang gusto mo higit sa anumang maibibigay Niya.",
+          "Pasalamatan Siya sa pagiging lakas mo kapag nanghihina ang sarili mong puso.",
+          "Hilingin mong sapat Siya sa iyo ngayon, sa buhay na talagang mayroon ka."
+        ],
+        "selfPrompt": "Pansinin kung ano ang unang inabot mo kaninang umaga. Dalhin iyon sa Diyos bago ka magdala ng hiling.",
+        "practice": "Ilaan ang simula ng panalangin ngayon sa pagpapasalamat sa Diyos, bago ka humingi ng anuman tungkol sa pag-aasawa."
+      },
+      {
+        "reflection": "Sabi ni Pablo, nakatago ang buhay mo kasama ni Cristo sa Diyos. Napagpapasyahan nito kung sino ka bago ka pa piliin ninuman — at hindi ito nagbabago kung wala mang pumili sa iyo kailanman. Ang kalagayan sa relasyon ay isang sitwasyon lamang. Hindi ito kailanman naging pagkatao.",
+        "prompts": [
+          "Hilingin sa Diyos na ituon ang isip mo sa mga bagay sa itaas sa halip na sa kulang sa iyo.",
+          "Pasalamatan Siya dahil sa Kanya ka na, pinili at minamahal kay Cristo.",
+          "Pangalanan ang isang paghahambing na paulit-ulit mong ginagawa, at iabot iyon sa Kanya."
+        ],
+        "selfPrompt": "Saan mo hinahayaang ang pagiging walang asawa — o ang mapili — ang magpasya sa halaga mo?",
+        "roles": {
+          "husband": "Dito nagsisimula ang paghahandang maging asawang lalaki, hindi sa paglalaan o sa pagpapasya. Ang lalaking panatag kay Cristo ay walang kailangang patunayan, at kaya malaya siyang maglingkod. Hilingin sa Diyos na ilalim nang husto ang katatagang iyon upang hindi mo kailanman kailanganin ang isang asawa para ibigay iyon.",
+          "wife": "Tinatapos ng Kawikaan ang larawan nito ng malakas na babae sa pamamagitan ng pagpangalan sa talagang nananatili: hindi ang kariktan, hindi ang kagandahan, kundi ang pagkatakot sa PANGINOON. Hilingin sa Diyos na iugat ang katatagan mo sa Kanya, upang hindi kailanman ang pagiging pinili ng iba ang magsabi sa iyo kung sino ka."
+        }
+      },
+      {
+        "reflection": "Sabi ni Pablo, natutuhan niya ang kasiyahan — hindi ito likas na ugali niya. At ang pagiging walang asawa ay tinutukoy niya hindi bilang silid-hintayan kundi bilang hindi nahahating kalayaan para sa Panginoon. Ang araw na ito ay hindi ang bahagi ng buhay mo na nangyayari bago magsimula ang buhay mo.",
+        "prompts": [
+          "Hilingin sa Diyos na turuan ka ng kasiyahan, bilang isang natututuhan at hindi lamang nararamdaman.",
+          "Pasalamatan Siya sa isang bagay na ang panahong ito lamang ang gumagawang posible.",
+          "Ialay sa Kanya ang hindi nahahating atensyong nasa iyo ngayon."
+        ],
+        "selfPrompt": "Pangalanan ang isang bagay na ipinagpapaliban mo hanggang sa ikasal ka. Itanong kung hinihingi na iyon ng Diyos ngayon.",
+        "practice": "Pangalanan ang tatlong mabuting kaloob na ibinigay sa iyo ng Diyos sa panahong ito, at pasalamatan Siya sa bawat isa."
+      },
+      {
+        "reflection": "Ang pagtitiwala sa Diyos sa panahon ay hindi katulad ng pagkaalam sa magiging kalalabasan. Sa Kasulatan, ang paghihintay sa PANGINOON ay hindi kailanman pangako tungkol sa dumarating sa dulo ng paghihintay — pangako ito tungkol sa kung sino ang humahawak sa iyo sa buong daan.",
+        "prompts": [
+          "Sabihin sa Diyos kung saan ka umaasa sa sarili mong pang-unawa.",
+          "Hilingin sa Kanyang ituwid ang mga landas mo, kahit hindi iyon ang daang inisip mo.",
+          "Humingi ng lakas ng loob para sa araw na ito sa halip ng katiyakan tungkol sa hinaharap."
+        ],
+        "selfPrompt": "Ano ang tinatawag mong “paghihintay” na maaaring tawagin lamang ng Diyos na “pamumuhay”?"
+      },
+      {
+        "reflection": "Ang paggalak sa PANGINOON ay hindi pamamaraan upang makuha ang mga hangarin ng puso; ito ang humuhubog muli sa mga ito. Ilantad ang hangaring mag-asawa sa harap ng Diyos. Hindi ito nakakahiya — at hindi ito diyos.",
+        "prompts": [
+          "Sabihin nang malakas sa Diyos ang hangaring iyon, simple, nang hindi pinapaganda.",
+          "Hilingin sa Kanyang hubugin muli ang anumang tahimik nang naging diyus-diyusan doon.",
+          "Ipagkatiwala sa Kanya ang lakad mo at iwan sa Kanyang kamay ang kalalabasan."
+        ],
+        "selfPrompt": "Kung hindi Niya ito ipagkaloob kailanman, magtitiwala ka pa rin ba sa Kanya? Sabihin mo sa Kanya ang tapat na sagot."
+      },
+      {
+        "reflection": "Mas madaling isulat ang listahan ng gusto mo sa ibang tao kaysa hayaang isulat ng Diyos ang listahang iyon tungkol sa iyo. Ang bunga ng Espiritu ay hindi listahan ng pansala para sa ibang tao; ito ang matiyagang pinatutubo Niya kaninumang pumapayag na hubugin.",
+        "prompts": [
+          "Hilingin sa Diyos na patubuin sa iyo ang isang bunga ng Espiritu na malinaw na kulang.",
+          "Hilingin sa Kanyang gawin kang taong mabuting kasama sa buhay.",
+          "Pasalamatan Siya dahil matiyaga Niyang hinuhubog ang karakter, hindi magdamag."
+        ],
+        "selfPrompt": "Basahin muli ang listahan nang dahan-dahan at hayaang ilarawan ka nito, sa halip na ang taong inaasahan mong makilala.",
+        "practice": "Pumili ng isang bunga ng Espiritu at ipanalangin mo iyon para sa iyong sarili ngayon — ang mismong hinahangad mo sa isang asawa.",
+        "roles": {
+          "husband": "Ipinaghambing ni Jesus ang mga pinunong nagpapasunod sa tao sa Kanyang sariling daan: sa inyo, ang pinakadakila ay naglilingkod. Ang paghahandang maging asawang lalaki ay pag-aaral na umako ng pananagutan at maglingkod muna, matagal bago may makakita — hindi pag-aaral na mamuno nang may kapangyarihan.",
+          "wife": "Kalakasan at karangalan ang kanyang kasuotan, at binubuka niya ang kanyang bibig nang may karunungan. Ang paghahandang maging asawang babae ay paglago sa lakas, karunungan at kabaitan — hindi sa katahimikan, hitsura, o pagpapakita."
+        }
+      },
+      {
+        "reflection": "Pinagagaling Niya ang mga durog ang puso at binibigkisan ang kanilang mga sugat. May bahagi ng dadalhin mo sana sa isang relasyon sa hinaharap na inilagay doon ng isang lumang relasyon, ng isang pamilya, o ng isang pagtanggi na hindi mo kailanman nasabi nang malakas. Wala sa mga iyon ang nakakahiya sa Diyos. Dito nagsisimula ang panalangin — hindi ito kapalit ng tulong ng isang pastor o tagapayo kung kailangan iyon.",
+        "prompts": [
+          "Pangalanan sa Diyos ang isang sugat nang simple, sa halip na manalangin sa paligid nito.",
+          "Hilingin sa Kanyang bigkisan ang tumutulo pa rin, sa Kanyang bilis.",
+          "Humingi ng biyaya upang patawarin ang isang hindi mo pa napapatawad."
+        ],
+        "selfPrompt": "May bagay ba rito na dapat mo ring pag-usapan sa isang pastor, isang may gulang na kaibigan, o isang tagapayo?"
+      },
+      {
+        "reflection": "Ipinapakita ni Pablo ang kalinisan bilang karangalan sa halip na pandidiri: pag-aaral na igalang ang sarili mong katawan, at ang ibang tao, sa halip na gamitin sila. Ito ay katapatan ng buong pagkatao — ang tinitingnan mo, ang sinasabi mo, ang ginagawa mo sa puso ng iba — at hinihingi ito sa may-asawa at sa walang asawa nang pantay. Kung nagkamali ka na rito, ang salita ng ebanghelyo para diyan ay kapatawaran, hindi pagtataboy.",
+        "prompts": [
+          "Humingi sa Diyos ng karangalan sa paraan ng pakikitungo mo sa sarili mong katawan at sa iba.",
+          "Ilabas sa liwanag ang isang tiyak na bahagi sa halip na pamahalaan itong mag-isa.",
+          "Pasalamatan Siya dahil ang tawag Niya sa kabanalan ay kasama ng Kanyang Espiritu."
+        ],
+        "selfPrompt": "Ang katapatan ay gawi bago pa ito maging panata sa kasal. Nasaan ang maliit na pagpiling kailangan ngayon?",
+        "practice": "Gumawa ngayon ng isang tapat na hakbang ng pananagutan — isang pag-uusap, isang hangganan, isang setting na binago."
+      },
+      {
+        "reflection": "Nagbibigay ang Diyos ng karunungan nang sagana at walang panunumbat — hindi mo kailangang mahiyang humingi. Ang pagkilatis dito ay hindi sistema ng pagmamarka para husgahan ang tao. Ito ay pag-aaral na makakita nang malinaw: kung ano ang malusog, kaninong payo ang sulit sundin, at saan hindi sinasabi sa iyo ng sarili mong puso ang totoo.",
+        "prompts": [
+          "Humingi sa Diyos ng karunungan nang simple, at maniwalang ibinibigay Niya iyon nang hindi nanunumbat.",
+          "Humingi ng tapat na mga kaibigang magsasabi sa iyo ng ayaw mong marinig.",
+          "Hilingin sa Kanyang ingatan ang puso mo, dahil doon bumubukal ang lahat ng ginagawa mo."
+        ],
+        "selfPrompt": "Kaninong payo ang iniiwasan mo dahil nahuhulaan mo na ang sasabihin niya?"
+      },
+      {
+        "reflection": "Walang asawang kayang pasanin ang bigat ng pagiging buong kinabibilangan ng isang tao. Inilalagay ng Kasulatan ang mga mananampalataya sa isang iglesia, sa mga pagkakaibigan, sa isang katawan — at ang natutong magmahal at makilala roon ay may dinadala sa isang pag-aasawa, sa halip na kailanganin ang isa para iligtas siya sa kalungkutan.",
+        "prompts": [
+          "Humingi sa Diyos ng mga pagkakaibigan kung saan tunay kang kilala.",
+          "Hilingin sa Kanyang gawin kang uri ng kaibigang inaasam mong matagpuan.",
+          "Ipanalangin ang iyong iglesia, sa pangalan."
+        ],
+        "selfPrompt": "May tao bang tahimik mong nilayuan? Kausapin ang Diyos tungkol doon.",
+        "practice": "Palakasin ang loob o kumustahin ang isang tao sa iyong iglesia o komunidad ngayong araw."
+      },
+      {
+        "reflection": "Mula ngayon, ipinapanalangin ng planong ito ang taong maaaring pakasalan mo balang araw — at nagsisimula ito kung saan nagsisimula si Pablo: hindi sa kung ano siya, kundi sa kung kilala niya ang Diyos. Wala kang iniisip na sinuman. Hinihingi mo sa Diyos ang pinakamahalaga tungkol sa isang hindi mo kilala, at bawat isa sa mga panalanging ito ay para ipanalangin din sa iyo.",
+        "prompts": [
+          "Palaguin sila sa pagkakakilala sa Iyo.",
+          "Bigyan sila ng karunungan para sa mga pasyang nasa harap nila.",
+          "Nawa'y mamunga ng mabuti ang buhay nila, at bigyan Mo sila ng tiyaga at pagtitiis."
+        ],
+        "selfPrompt": "Ngayon ay ipanalangin ang tatlong bagay ding iyon para sa sarili mo, sa parehong mga salita.",
+        "practice": "Bago ipanalangin ang paglakad ng iba kasama ng Diyos, ipanalangin muna iyon minsan sa sarili mo."
+      },
+      {
+        "reflection": "Iniikli ni Mikas ang buong buhay sa tatlong bagay: gumawa ng makatarungan, ibigin ang kaawaan, at lumakad nang may kapakumbabaan kasama ng iyong Diyos. Hilingin iyon para sa taong maaaring pakasalan mo balang araw — at pansinin kung gaano kabilis nagiging panalangin para sa sarili mo. Ang salaming iyon ay hindi panlilinlang; iyon mismo ang punto.",
+        "prompts": [
+          "Gawin silang makatarungan, maawain at mapagpakumbaba sa harap Mo.",
+          "Ingatan sila sa pagmamataas at sa pagpapanggap.",
+          "Palaguin sa kanila ang kapakumbabaang nagtuturing sa iba na higit."
+        ],
+        "selfPrompt": "Makikilala kaya ng taong ipinapanalangin mo ang tatlong bagay ding iyon sa iyo?"
+      },
+      {
+        "reflection": "Ang nagsimula ng mabuting gawa ang siyang magtatapos nito. Wala kang alam sa kuwento ng taong ito, kaya ipanalangin ang gawa ng Diyos doon nang hindi ka nag-iimbento ng sugat, nakaraan o pakikibaka para sa kanya. Ang pagtitiwala sa Diyos sa isang hindi mo maisip ay mabuting pagsasanay bago ipagkatiwala ang isang nakikita mo.",
+        "prompts": [
+          "Tapusin Mo ang mabuting gawang sinimulan Mo sa kanila.",
+          "Salubungin Mo sila ngayon kung nasaan man sila, sa lahat ng alam Mo na.",
+          "Bigyan Mo sila ng mga taong magtuturo sa kanila pabalik sa Iyo."
+        ],
+        "selfPrompt": "Hilingin sa Diyos na tapusin ang Kanyang mabuting gawa sa iyo, sa Kanyang bilis at hindi sa iyo."
+      },
+      {
+        "reflection": "Tayo ay Kanyang gawa, nilikha para sa mabubuting gawang inihanda Niya nang una pa. Hindi pag-aasawa ang tawag ng buhay Kristiyano; ang katapatan iyon. Ipanalanging gamitin ninyong dalawa nang mabuti ang anumang ipinagkatiwala ng Diyos — trabaho, kaloob, pera, panahon — magkasalubong man ang landas ninyo o hindi.",
+        "prompts": [
+          "Nawa'y lumakad sila sa mabubuting gawang inihanda Mo para sa kanila.",
+          "Gawin silang tapat na katiwala ng lahat ng ipinagkatiwala Mo sa kanila.",
+          "Ingatan sila sa pagsukat ng buhay nila batay sa pag-aasawa."
+        ],
+        "selfPrompt": "Ano ang ipinagkatiwala sa iyo ng Diyos ngayon na hindi mo pa magamit nang mabuti?"
+      },
+      {
+        "reflection": "Maagap sa pakikinig, mabagal sa pagsasalita, mabagal sa pagkagalit. Walang nagiging mahusay na tagapakinig sa araw ng kasal; dumarating siya bilang kung ano ang naisanay niya. Ipanalangin ito para sa taong maaaring pakasalan mo balang araw — at pagkatapos ay isanay mo ito sa mga pag-uusap na talagang mangyayari ngayon.",
+        "prompts": [
+          "Gawin silang maagap sa pakikinig at mabagal sa pagkagalit.",
+          "Bigyan sila ng mga salitang nagpapatibay sa halip na nagwawasak.",
+          "Turuan silang sumagot nang malumanay kapag inuudyukan."
+        ],
+        "selfPrompt": "Ipanalangin ang tatlong bagay ding iyon para sa sarili mo — at seryosohin ang una.",
+        "practice": "Pansinin ngayon kung nakikinig ka para umunawa o nakikinig ka para sumagot.",
+        "roles": {
+          "husband": "Sinasabi ni Pedro sa mga asawang lalaki na mamuhay kasama ng kanilang asawa nang may pang-unawa at parangalan sila bilang kasamang tagapagmana ng biyaya ng buhay. Ang pang-unawa ay natututuhan sa pagbibigay-pansin. Hilingin sa Diyos na gawin kang lalaking nakikinig nang mabuti at nagpaparangal nang malakas — simula ngayon, sa mga taong nakapaligid na sa iyo.",
+          "wife": "Ang pagsasabi ng katotohanan sa pag-ibig ay hindi kompromiso sa pagitan ng katapatan at kabaitan; kapwa ito nang sabay. Hilingin sa Diyos ang lakas ng loob na sabihin ang totoo sa halip na mag-ipon ng sama ng loob, at ang hinahon na sabihin iyon nang maayos."
+        }
+      },
+      {
+        "reflection": "Bawat pag-aasawa ay sa pagitan ng dalawang taong magsasaktan sa isa't isa. Hindi sinasabi ni Pablo sa iglesia na iwasan ang alitan; sinasabi niyang magbihis ng habag, kabaitan, kapakumbabaan at pagtitiis, at magpatawad gaya ng pagpapatawad ng Panginoon. Lahat iyon ay matututuhan ngayon, sa mga taong nasa buhay mo na.",
+        "prompts": [
+          "Turuan silang magpatawad gaya ng pagpapatawad sa kanila.",
+          "Ingatan sila sa pait at sa pagbibilang ng kasalanan.",
+          "Bigyan sila ng kapakumbabaang maunang humingi ng tawad."
+        ],
+        "selfPrompt": "Kanino ka nagbibilang ng kasalanan ngayon? Sabihin ang pangalan sa Diyos.",
+        "roles": {
+          "husband": "Hindi kinapit ni Cristo ang Kanyang mga karapatan; hinubad Niya ang Kanyang sarili. Para sa asawang lalaki, ang pagsisisi ay hindi kahinaan — ang pagtangging magsisi ang kahinaan. Hilingin sa Diyos na maging mabilis kang umako ng sa iyo, walang dahilan at walang talumpati.",
+          "wife": "Ang pagtuturing sa iba na higit ay hindi pagbura sa sarili — ginawa iyon ni Cristo nang hindi tumigil na maging Siya. Hilingin sa Diyos ang kapakumbabaang naglilingkod at ang katapatang nagsasabi pa rin ng totoo."
+        }
+      },
+      {
+        "reflection": "Ang larawan ni Pablo ng pag-ibig Kristiyano ay si Cristo na ibinibigay ang Kanyang sarili para sa atin — isang tipang tinutupad, hindi isang damdaming pinapanatili. Sa Kasulatan, sa ganitong sukatan tinitimbang ang pag-aasawa, at kaya ito higit na seryoso, at higit na mabait, kaysa sa bersyong ibinebenta ng kultura.",
+        "prompts": [
+          "Turuan sila ng pag-ibig na nagbibigay ng sarili.",
+          "Gawin silang tapat sa kanilang ipinapangako, mula pa sa maliliit na bagay.",
+          "Ingatan sila sa pag-ibig na higit na naghahanap ng sariling kasiyahan."
+        ],
+        "selfPrompt": "Saan ka na nakasira ng maliit na pangako ngayong linggo?",
+        "roles": {
+          "husband": "Sinasabi sa mga asawang lalaki na umibig gaya ng pag-ibig ni Cristo sa iglesia at pagbibigay ng Kanyang sarili para rito — krus ang sukatan, hindi trono. Hilingin sa Diyos na maging likas sa iyo ang pag-ibig na nagsasakripisyo, at ingatan ka Niya na huwag kailanman ipagkamali ang pag-ibig sa pagkontrol.",
+          "wife": "Ang pag-ibig Kristiyano ay pagbibigay ng sarili para sa dalawang tao sa isang pag-aasawa, hindi kailanman para sa isa lamang. Hilingin sa Diyos na palaguin sa iyo ang pag-ibig na nagbibigay nang malaya at totoo — hindi kailanman pag-ibig na bumubura sa iyo, at hindi kailanman isang naglalayong baguhin ang iba."
+        }
+      },
+      {
+        "reflection": "Ako at ang aking sambahayan, kami ay maglilingkod sa PANGINOON. Ang tahanan ay hindi gusali at hindi laki ng pamilya — ito ay kung sino ang nasa ilalim ng bubong mo at kung paano pinararangalan doon ang Diyos. Ang pagiging mapagpatuloy, ang panalangin, ang kagandahang-loob at ang kapayapaan ay maisasanay na sa tinitirhan mo ngayon.",
+        "prompts": [
+          "Hilingin sa Diyos na anumang tahanang ibigay sa iyo ay maglingkod sa Kanya.",
+          "Humingi ng kagandahang-loob sa pera at bukas na pinto sa mga tao.",
+          "Hilingin na ang Kanyang Salita ay maging karaniwang usapan doon, hindi isang okasyon."
+        ],
+        "selfPrompt": "Ano ang kailangang magbago sa paraan ng pamumuhay mo ngayon upang maging totoo iyon balang araw?",
+        "practice": "Gumawa ng isang bagay ngayon na magpapamalagi sa tinitirhan mo bilang mas mapagpatuloy para sa iba."
+      },
+      {
+        "reflection": "Malibang ang PANGINOON ang magtayo ng bahay, walang kabuluhan ang paggawa ng mga nagtatayo — at ang mga anak, kung saan sila dumarating, ay tinatawag na kaloob at hindi tagumpay. Hindi lahat ng pag-aasawa ay may anak, hindi lahat ng naghahangad ay makakaroon, at walang pag-aasawang kulang kung wala sila. Manalangin dito nang bukas ang palad, at nang malumanay.",
+        "prompts": [
+          "Hilingin sa Diyos na Siya mismo ang magtayo ng bahay na ibibigay Niya sa iyo.",
+          "Kung bahagi ng kinabukasan mo ang mga anak, humingi ng karunungan at katapatan.",
+          "Humingi ng biyayang tanggapin ang ibinibigay Niya, at magluksa nang tapat sa hindi Niya ibinibigay."
+        ],
+        "selfPrompt": "Aling bahagi ng kinabukasan mo ang pinakamahigpit mong hawak? Sabihin mo iyon sa Diyos."
+      },
+      {
+        "reflection": "Sa Kasulatan, ang pag-aasawa ay hindi kailanman pagtakas mula sa mundo tungo sa dalawang tao; ito ay dalawang taong ginawang higit na kapaki-pakinabang sa Diyos nang magkasama. Ipanalangin ang magkatuwang na pagiging kapaki-pakinabang — pagiging mapagpatuloy, misyon, pag-aalaga sa iglesia — at simulang isanay ito habang walang asawa.",
+        "prompts": [
+          "Hilingin sa Diyos na gawin kang kapaki-pakinabang sa iba, may asawa ka man o wala.",
+          "Hilingin na anumang pag-aasawa sa hinaharap ay maglingkod sa mga taong nasa labas nito.",
+          "Hilingin sa Kanyang panatilihin ang liwanag mo kung saan ito makikita ng iba."
+        ],
+        "selfPrompt": "Sino ang inilalagay ng Diyos sa harap mo ngayon upang paglingkuran mo?"
+      },
+      {
+        "reflection": "Ang plano ay nagtatapos kung saan ito nagsimula: sa Diyos. Hanapin muna ang Kanyang kaharian; sapat na sa araw ang kanyang sariling suliranin. Anuman ang susunod — isang pag-aasawa, o isang buhay na walang asawa na buong ibinuhos para sa Kanya — iisa lang ang panalangin.",
+        "prompts": [
+          "Hanapin muna ang Kanyang kaharian — nang malakas, bilang pasya para bukas.",
+          "Ipagkatiwala sa Kanya ang pag-aasawa — at ipagkatiwala rin sa Kanya ang pagiging walang asawa.",
+          "Pasalamatan Siya dahil sapat pa rin Siya, gaya noong unang araw."
+        ],
+        "selfPrompt": "Sabihin nang simple: tulungan Mo akong hanapin Ka muna at ipagkatiwala sa Iyo ang anumang isusulat Mo sa kinabukasan ko.",
+        "practice": "Isulat ang isang pangungusap na nais mong ipagpatuloy na ipanalangin pagkatapos ng araw na ito, at idagdag mo iyon sa mga panalangin mo."
+      }
+    ]
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "marriage30": {
+    "days": [
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kristo awe kiini”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kristo awe kiini; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Shukrani kwa mwenzi wangu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Shukrani kwa mwenzi wangu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Urafiki katika ndoa”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Urafiki katika ndoa; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Tabia nyumbani”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Tabia nyumbani; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "roles": {
+          "husband": "Kama mume, omba upendo wa unyenyekevu na kujitoa pamoja na huduma yenye wajibu, si udhibiti.",
+          "wife": "Kama mke, omba upendo wa ujasiri na kujitoa pamoja na hekima, bila kuacha sauti, heshima au usalama wako."
+        }
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Maneno yanayojenga”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Maneno yanayojenga; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kusikiliza kabla ya kujibu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kusikiliza kabla ya kujibu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Migogoro bila dharau”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Migogoro bila dharau; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?",
+        "safetyNote": "Maombi hayadai ukimya, kulazimishwa au kubaki hatarini. Tafuta msaada wa kitaalamu, kichungaji, kitabibu, kisheria au wa ulinzi unaoaminika inapohitajika; mpango huu hauwezi kutambua hatari."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Msamaha na kurekebisha”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Msamaha na kurekebisha; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa.",
+        "safetyNote": "Maombi hayadai ukimya, kulazimishwa au kubaki hatarini. Tafuta msaada wa kitaalamu, kichungaji, kitabibu, kisheria au wa ulinzi unaoaminika inapohitajika; mpango huu hauwezi kutambua hatari."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Uaminifu kupitia ukweli”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Uaminifu kupitia ukweli; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Ukaribu wa kihisia”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Ukaribu wa kihisia; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Ukaribu wa kuheshimiana na uaminifu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Ukaribu wa kuheshimiana na uaminifu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?",
+        "safetyNote": "Maombi hayadai ukimya, kulazimishwa au kubaki hatarini. Tafuta msaada wa kitaalamu, kichungaji, kitabibu, kisheria au wa ulinzi unaoaminika inapohitajika; mpango huu hauwezi kutambua hatari."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Uaminifu katika kila uamuzi”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Uaminifu katika kila uamuzi; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "safetyNote": "Maombi hayadai ukimya, kulazimishwa au kubaki hatarini. Tafuta msaada wa kitaalamu, kichungaji, kitabibu, kisheria au wa ulinzi unaoaminika inapohitajika; mpango huu hauwezi kutambua hatari."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Fedha kama dhamana”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Fedha kama dhamana; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kazi na pumziko”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kazi na pumziko; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Mizani ya kiroho pamoja”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Mizani ya kiroho pamoja; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kuomba pamoja”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kuomba pamoja; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kukita mizizi kanisani na katika jumuiya”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kukita mizizi kanisani na katika jumuiya; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Mipaka ya kifamilia yenye hekima”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Mipaka ya kifamilia yenye hekima; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?",
+        "safetyNote": "Maombi hayadai ukimya, kulazimishwa au kubaki hatarini. Tafuta msaada wa kitaalamu, kichungaji, kitabibu, kisheria au wa ulinzi unaoaminika inapohitajika; mpango huu hauwezi kutambua hatari."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Nyumba yenye ukarimu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Nyumba yenye ukarimu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kutumikia pamoja”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kutumikia pamoja; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "roles": {
+          "husband": "Kama mume, omba upendo wa unyenyekevu na kujitoa pamoja na huduma yenye wajibu, si udhibiti.",
+          "wife": "Kama mke, omba upendo wa ujasiri na kujitoa pamoja na hekima, bila kuacha sauti, heshima au usalama wako."
+        }
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Uaminifu katika nyakati ngumu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Uaminifu katika nyakati ngumu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa.",
+        "safetyNote": "Maombi hayadai ukimya, kulazimishwa au kubaki hatarini. Tafuta msaada wa kitaalamu, kichungaji, kitabibu, kisheria au wa ulinzi unaoaminika inapohitajika; mpango huu hauwezi kutambua hatari."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Afya na nguvu kwa unyenyekevu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Afya na nguvu kwa unyenyekevu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Ndoto na maamuzi”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Ndoto na maamuzi; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kuridhika katika maisha ya kawaida”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kuridhika katika maisha ya kawaida; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kulinda wakati wa pamoja”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kulinda wakati wa pamoja; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Hekima kwa walio chini ya uangalizi wetu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Hekima kwa walio chini ya uangalizi wetu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "withChildren": {
+          "reflection": "Kila mtoto anajulikana na Mungu. Omba kwa tumaini na unyenyekevu bila kufanya maombi kuwa dhamana au chombo cha kudhibiti.",
+          "childPrompt": "Mpe {child} mahusiano yenye hekima, ujasiri na neema; tufanye wazazi makini wanaoongoza bila kudhibiti.",
+          "practice": "Mpe kila mtoto muda mfupi wa umakini kamili na usikilize."
+        }
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Kila mtu anajulikana na Mungu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Kila mtu anajulikana na Mungu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?",
+        "withChildren": {
+          "reflection": "Kila mtoto anajulikana na Mungu. Omba kwa tumaini na unyenyekevu bila kufanya maombi kuwa dhamana au chombo cha kudhibiti.",
+          "childPrompt": "Mpe {child} mahusiano yenye hekima, ujasiri na neema; tufanye wazazi makini wanaoongoza bila kudhibiti.",
+          "practice": "Mpe kila mtoto muda mfupi wa umakini kamili na usikilize."
+        }
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Utamaduni wa nyumba yetu”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Utamaduni wa nyumba yetu; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "conversationPrompt": "Ikiwa sote tunataka na tunajisikia salama: mada hii inaathirije maisha yetu sasa?"
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Ukarimu na utume”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Ukarimu na utume; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      },
+      {
+        "reflection": "Leo Maandiko yanaelekeza fikira zetu kwenye “Ndoa yetu mikononi mwako”. Tunaleta sehemu hii ya maisha ya ndoa mbele za Mungu kwa unyenyekevu, ukweli na kujali.",
+        "prompts": [
+          "Tuongoze katika Ndoa yetu mikononi mwako; elekeza maombi yetu kwenye neema Yako badala ya kudhibiti kila mmoja."
+        ],
+        "spousePrompt": "Mpe {partner} nguvu, hekima, heshima na neema katika eneo hili.",
+        "selfPrompt": "Nionyeshe kinachopaswa kubadilika ndani yangu na unifanye mnyenyekevu, mwajibikaji na tayari kurekebisha.",
+        "marriagePrompt": "Jenga upendo wa uaminifu, usalama na kujaliana katika ndoa yetu.",
+        "practice": "Chagua tendo moja dogo la hiari leo linaloweka ombi hili katika vitendo.",
+        "prayTogether": "Ikiwa sote tunataka na tunajisikia salama, kila mmoja aombe sentensi moja. Hakuna kinachorekodiwa au kushirikiwa."
+      }
+    ],
+    "intro": "Siku thelathini za Maandiko na maombi kwa ajili ya mwenzi wako, ukuaji wako na ndoa yenu. Huu ni utaratibu unaoweza kurudiwa, si alama wala utambuzi. Wenzi wa ndoa tayari ni familia; watoto ni sehemu ya hiari na madokezo binafsi hubaki binafsi.",
+    "biblical": "Agano Jipya linamwita kila mwamini kwenye huruma, unyenyekevu, subira, msamaha, upendo na amani. Ombea mwenzi, toba yako na ndoa yenu, si kumwomba Mungu amrekebishe mtu mwingine tu.",
+    "completion": "Umeomba kwa siku thelathini kwa ajili ya mwenzi, ukuaji wako na ndoa yenu. Hii haipimi afya ya uhusiano. Unaweza kuanza tena unapochagua; historia ya awali hubaki salama."
+  }
+}

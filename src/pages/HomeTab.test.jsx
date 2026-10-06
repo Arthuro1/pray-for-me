@@ -6,7 +6,7 @@
 // complete status with an explicit "Pray again" that walks the whole day.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 vi.mock('../lib/supabase', () => {
   const chain = {
@@ -164,6 +164,20 @@ describe('HomeTab — remaining vs completed', () => {
     renderHome();
     expect(screen.getByText(t(lang, 'emptyAddManual'))).toBeTruthy();
     expect(useLayoutStore.getState().fabSuppressed).toBe(true);
+  });
+
+  it('empty Today: offers prayer plans as the other way in', () => {
+    usePrayerStore.setState({ prayers: [], completions: {} });
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<HomeTab onAdd={() => {}} />} />
+          <Route path="/plans" element={<p>plans page</p>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByText(t(lang, 'journeysTitle')));
+    expect(screen.getByText('plans page')).toBeTruthy();
   });
 
   it('non-empty Today releases the FAB', () => {

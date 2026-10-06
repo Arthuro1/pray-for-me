@@ -5,7 +5,7 @@ import { testimonyList } from './prayer';
 export function buildExport(prayers = [], categories = []) {
   const catName = Object.fromEntries(categories.map((c) => [c.id, c.name]));
   return {
-    app: 'Pray4Me',
+    app: 'Praystead',
     version: 1,
     exported_at: new Date().toISOString(),
     categories: categories.map((c) => ({

@@ -7,6 +7,7 @@
 // it; unrelated ones must not.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 vi.mock('../lib/supabase', () => {
   const chain = {
@@ -32,7 +33,11 @@ const lang = 'fr';
 const title = (id) => pick(articles.find((a) => a.id === id).title, lang);
 
 afterEach(cleanup);
-beforeEach(() => usePrayerStore.setState({ settings: { language: lang } }));
+beforeEach(() => usePrayerStore.setState({ settings: { language: lang }, prayers: [], completions: {}, categories: [] }));
+
+const renderGrow = (props = {}) => render(
+  <MemoryRouter><GrowTab {...props} /></MemoryRouter>,
+);
 
 const openJourneyToEnd = () => {
   fireEvent.click(screen.getByText(t(lang, 'growSeekerTitle')));
@@ -41,8 +46,16 @@ const openJourneyToEnd = () => {
 };
 
 describe('GrowTab — seeker card', () => {
+  it('offers a direct way back to the More choices', () => {
+    renderGrow();
+    const backLink = screen.getByRole('link', {
+      name: `${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`,
+    });
+    expect(backLink.getAttribute('href')).toBe('/more');
+  });
+
   it('renders the seeker card below the guides, not above the selector', () => {
-    render(<GrowTab />);
+    renderGrow();
     const card = screen.getByText(t(lang, 'growSeekerTitle'));
     const selector = screen.getByText(t(lang, 'growPray'));
     // The segmented selector appears before the card in document order.
@@ -50,19 +63,19 @@ describe('GrowTab — seeker card', () => {
   });
 
   it('does not open the journey automatically', () => {
-    render(<GrowTab />);
+    renderGrow();
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('opens the journey only when the card is selected', () => {
-    render(<GrowTab />);
+    renderGrow();
     fireEvent.click(screen.getByText(t(lang, 'growSeekerTitle')));
     const dialog = screen.getByRole('dialog');
     expect(dialog.getAttribute('aria-label')).toBe(pick(gospelJourney.title, lang));
   });
 
   it('keeps the Pray and Learn sections working alongside the card', () => {
-    render(<GrowTab />);
+    renderGrow();
     // Pray (default) lists prayer guides.
     expect(screen.getByText(pick(guides[0].title, lang))).toBeTruthy();
     // Switch to Learn → theology articles.
@@ -71,7 +84,7 @@ describe('GrowTab — seeker card', () => {
   });
 
   it('returns focus to the card after the journey closes', () => {
-    render(<GrowTab />);
+    renderGrow();
     const card = screen.getByText(t(lang, 'growSeekerTitle')).closest('button');
     card.focus();
     fireEvent.click(card);
@@ -83,7 +96,7 @@ describe('GrowTab — seeker card', () => {
 
   it('hands the "create a private prayer" step to the existing prayer flow', () => {
     const onCreatePrayer = vi.fn();
-    render(<GrowTab onCreatePrayer={onCreatePrayer} />);
+    renderGrow({ onCreatePrayer });
     openJourneyToEnd();
     fireEvent.click(screen.getByText(t(lang, 'gospelCreatePrayer')));
     expect(onCreatePrayer).toHaveBeenCalledTimes(1);
@@ -95,7 +108,7 @@ describe('GrowTab — seeker card', () => {
 
 describe('GrowTab — article ↔ journey links', () => {
   it('lets a related Learn article open the gospel journey', () => {
-    render(<GrowTab />);
+    renderGrow();
     fireEvent.click(screen.getByText(t(lang, 'growLearn')));
     fireEvent.click(screen.getByText(title('grace')));
     // The related article shows a single, subtle invitation.
@@ -106,7 +119,7 @@ describe('GrowTab — article ↔ journey links', () => {
   });
 
   it('does not add a gospel prompt to unrelated articles', () => {
-    render(<GrowTab />);
+    renderGrow();
     fireEvent.click(screen.getByText(t(lang, 'growLearn')));
     fireEvent.click(screen.getByText(title('lament')));
     expect(screen.queryByText(t(lang, 'gospelInviteLabel'))).toBeNull();

@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "semanticSource": "en",
+  "runtimeFallback": "unchanged",
+  "maxShortLength": 48,
+  "shortKeys": [
+    "beginLabel",
+    "prayNowLabel",
+    "content.signIn",
+    "content.howItWorks",
+    "explore.more",
+    "explore.less",
+    "save",
+    "cancel",
+    "close",
+    "delete",
+    "wordingReport",
+    "wordingReview"
+  ],
+  "untranslatedMinLength": 80,
+  "duplicateMinLength": 120,
+  "forbiddenPhrases": {
+    "en": [
+      "God's faithfulness accumulate"
+    ],
+    "de": [
+      "Gottes Treue, die sich über die Zeit aufbaut",
+      "Gottes Timing"
+    ],
+    "fr": [
+      "la fidélité de Dieu s'accumuler"
+    ]
+  },
+  "forbiddenCharacters": {
+    "zh": {
+      "message": "Traditional character in the Simplified Chinese locale.",
+      "chars": "們這說對會從還國過學關體點變讓誰請願寫記錄歸惡愛禮結難義數當應開門問題見語謝處後裡樣長東車書顯驗傳導稱務憐憫揀選權勢罰贖詛約屬戰滿際間實現給號將師錢銀歲遠邊達運連進適續練組織總線級終統繼網羅聯職聽臉興舉藝節範樂標檢歡歷氣沒淚淨減濟滅潔熱爾獨獲環畫發盡監眾確穩窮筆紀紙細維緊編績聞聰聲腦臨舊華萬葉蓋藥蘇虛衛補裝製複覺觀觸計訂訓設許訴評詞詩該詳誠誤課調論講證譯議護豐負財貧貨責貴買費資賞賢賣質購贈趕跡踐軍較載輕輪輸轉辦辭農週遊違遲遷遺鄉醫針錯鍵鎖鏡鐘鐵閃閉閱陣陰陳陸陽隊階隨險隱雖雙雜雲電靜響頁頂項須頌預頓領頭額顏類顧風飛飯飲養餘館馬驚鬥魚鳥黃齊龍穌禱聖經靈饒團親讀試順離討為個絕爭復釋與"
+    }
+  }
+}

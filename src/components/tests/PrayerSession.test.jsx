@@ -42,6 +42,7 @@ import PrayerSession from '../PrayerSession';
 import { fetchScriptureText, fetchVerseText } from '../../lib/verseText';
 import { readActivationProgress } from '../../lib/activationProgress';
 import { todayKey } from '../../lib/prayedLog';
+import { addDays, parseKey } from '../../lib/schedule';
 import { t } from '../../i18n';
 
 const lang = 'en';
@@ -65,6 +66,7 @@ beforeEach(() => {
   localStorage.clear();
   backgroundAudioMocks.start.mockClear();
   backgroundAudioMocks.stop.mockClear();
+  vi.mocked(fetchScriptureText).mockClear();
   // Only the Psalm resolves to authoritative English text; everything else has
   // none, exercising the "keep the original pair" fallback.
   vi.mocked(fetchScriptureText).mockImplementation(async ({ reference }) =>
@@ -126,6 +128,126 @@ describe('PrayerSession — guided plan day content', () => {
     expect(screen.getByText(/Consecrate the fast/)).toBeTruthy();
     // The day's passage is offered to read in place.
     expect(screen.getByText(/Joel 2:12/)).toBeTruthy();
+  });
+
+  // The older plans carry a theme and a verse only — the rich sections a plan
+  // like "Preparing in Prayer" adds must stay absent for them.
+  it('adds no reflection, prompts or practice to a plain theme-and-verse plan', () => {
+    render(<PrayerSession prayers={[planPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.queryByText(t(lang, 'planPrayerPrompts'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'planPrayForYourself'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'planPracticeToday'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'goDeeper'))).toBeNull();
+  });
+
+  // A rich plan day walks through the SAME session — same prayer, same
+  // completion, same notes — while exercises wait until after prayer.
+  it('walks a rich plan day through the ordinary session and keeps practice optional', () => {
+    const richPrayer = {
+      ...planPrayer,
+      id: 'plan2',
+      title: 'Preparing in Prayer',
+      schedule: {
+        type: 'recurring', freq: 'daily', startDate: todayKey(),
+        end: { kind: 'count', count: 21 },
+        plan: { id: 'preparing21', startDate: todayKey() },
+      },
+    };
+    render(<PrayerSession prayers={[richPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.getByText(new RegExp(t(lang, 'planDayOf', { n: 1, total: 21 })))).toBeTruthy();
+    expect(screen.getByText(/God is enough|Dieu suffit/)).toBeTruthy();
+    expect(screen.getByText(/Psalm 73:25-26|Psaume 73:25-26/)).toBeTruthy();
+    expect(screen.getByText(t(lang, 'planPrayerPrompts'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'planPrayForYourself'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'planPracticeToday'))).toBeNull();
+    const afterPrayerLabel = t(lang, 'planAfterPrayer');
+    fireEvent.click(screen.getByRole('button', { name: afterPrayerLabel }));
+    expect(screen.getByText(t(lang, 'planPracticeToday'))).toBeTruthy();
+    // Still the ORDINARY session underneath: the same closing action, and the
+    // same optional prayer note (so notes, voice notes and completion all keep
+    // working on a plan day exactly as they do on any other prayer).
+    expect(screen.getByRole('button', { name: t(lang, 'amenBtn') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'noteAdd') })).toBeTruthy();
+  });
+
+  it.each([
+    ['covenant21', 21, 1, 'Matthew 6:33', 'Christ at the center'],
+    ['marriage30', 30, 1, 'Matthew 6:33', 'Christ at the center'],
+  ])('walks %s through the same PrayerSession and Scripture reader', async (planId, total, version, ref, theme) => {
+    const relationshipPrayer = {
+      ...planPrayer,
+      id: `${planId}-run`,
+      title: planId,
+      schedule: {
+        type: 'recurring', freq: 'daily', startDate: todayKey(),
+        end: { kind: 'count', count: total },
+        plan: { id: planId, version, startDate: todayKey() },
+      },
+    };
+    render(<PrayerSession prayers={[relationshipPrayer]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.getByText(new RegExp(t(lang, 'planDayOf', { n: 1, total })))).toBeTruthy();
+    expect(screen.getByText(theme)).toBeTruthy();
+    const scriptureTrigger = screen.getByText(ref).closest('button');
+    expect(scriptureTrigger).toBeTruthy();
+    fireEvent.click(scriptureTrigger);
+    await waitFor(() => expect(fetchScriptureText).toHaveBeenCalledWith({ reference: ref, lang }));
+    expect(screen.getByRole('button', { name: t(lang, 'amenBtn') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'noteAdd') })).toBeTruthy();
+  });
+});
+
+// The day a plan shows in the session used to be planDayNumber(schedule, today)
+// alone, which is null on every date the pattern does not land on. Praying a run
+// from its own page on such a date — a paused run, a weekly or every-other-day
+// pace, a day skipped or moved — silently dropped the whole day and prayed the
+// plan's bare title and subtitle instead. The session rests on the day the run
+// actually reached, exactly as the plan's own page does.
+describe('PrayerSession — a plan day that today does not land on', () => {
+  const runOf = (schedule) => ({
+    id: 'resting-run',
+    title: 'Three-Day Fast',
+    description: 'A short, focused fast',
+    prayer_categories: [],
+    for_other: false,
+    prayer_points: [],
+    schedule,
+  });
+
+  const RUN_START = addDays(todayKey(), -9);
+  // Re-paced two days ago onto the weekday that fell two days ago: exactly one
+  // day of the run has landed since, and TODAY is not one of its days.
+  const PACED_ON = addDays(todayKey(), -2);
+  const weeklyRun = runOf({
+    type: 'recurring', freq: 'weekly', weekDays: [parseKey(PACED_ON).getDay()],
+    startDate: PACED_ON, end: { kind: 'count', count: 2 },
+    plan: { id: 'fast3', startDate: RUN_START, dayOffset: 1, total: 3 },
+  });
+
+  const pausedRun = runOf({
+    type: 'none',
+    plan: { id: 'fast3', startDate: RUN_START, dayOffset: 1, total: 3 },
+  });
+
+  it.each([
+    ['a run whose pace misses today', weeklyRun],
+    ['a paused run, on the day it is holding', pausedRun],
+  ])('prays the day the run reached — %s', (_label, run) => {
+    render(<PrayerSession prayers={[run]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    // Day 2 of three, with its own theme and passage — not the plan's name.
+    expect(screen.getByText(new RegExp(t(lang, 'planDayOf', { n: 2, total: 3 })))).toBeTruthy();
+    expect(screen.getByText(/Choose the fast God loves/)).toBeTruthy();
+    expect(screen.getByText(/Isaiah 58:6/)).toBeTruthy();
+  });
+
+  it('counts out of the plan’s own length, never the days it has left', () => {
+    // The weekly run's own schedule says 2 — that is the REMAINDER.
+    render(<PrayerSession prayers={[weeklyRun]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.queryByText(new RegExp(t(lang, 'planDayOf', { n: 2, total: 2 })))).toBeNull();
+  });
+
+  it('does not repeat the plan’s subtitle under every day', () => {
+    render(<PrayerSession prayers={[weeklyRun]} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />);
+    expect(screen.queryByText('A short, focused fast')).toBeNull();
   });
 });
 

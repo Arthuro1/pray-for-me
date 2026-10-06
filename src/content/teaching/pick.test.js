@@ -65,7 +65,10 @@ function allAuthoredRefs() {
   const refs = [];
   for (const plan of PLANS) {
     if (plan.biblical?.ref) refs.push(plan.biblical.ref);
-    for (const day of plan.days) if (day.ref) refs.push(day.ref);
+    for (const day of plan.days) {
+      if (day.ref) refs.push(day.ref);
+      refs.push(...(day.related || []));
+    }
   }
   for (const article of articles) {
     for (const section of article.sections) refs.push(...(section.refs || []));

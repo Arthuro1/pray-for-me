@@ -1,0 +1,78 @@
+{
+  "_readme": [
+    "Build-time provenance for the cover files under public/resources/covers/.",
+    "",
+    "These third-party URLs live HERE and never in src/. The catalogue only ever",
+    "holds the local path we serve ourselves, so no publisher URL can reach a",
+    "reader's browser (see docs/RESOURCES.md, Privacy).",
+    "",
+    "`licence` is the human gate, exactly like `status` in the catalogue:",
+    "  unreviewed  nobody has checked whether we may use this artwork - SKIPPED",
+    "  cleared     a person confirmed the licence, press kit or written permission",
+    "  declined    checked and we may not use it; kept so nobody re-checks it",
+    "",
+    "`npm run build:covers` fetches only `cleared` entries. Everything else is a",
+    "worksheet, and a resource with no cover file draws its generated tile.",
+    "",
+    "`source` must be the publisher's own product image on the `page` below it."
+  ],
+  "covers": [
+    {
+      "id": "ortlund-gentle-and-lowly",
+      "lang": "en",
+      "licence": "cleared",
+      "_note": "Already shipping, but frozen at 132x180 before the shelf tile grew. Re-freeze at 216x324 with `npm run build:covers -- --force`. Crossway publishes a media pack for this title (static.crossway.org/excerpt/gentle-and-lowly-media-pack.zip), which is the licence basis.",
+      "page": "https://www.crossway.org/books/gentle-and-lowly-hcj/",
+      "source": "https://static.crossway.org/studio-files/media/f2a2b3eb5b4dd66372e942a49efcc036dcbce03c.jpg"
+    },
+    {
+      "id": "chapman-five-love-languages",
+      "lang": "de",
+      "licence": "unreviewed",
+      "page": "https://www.francke-buch.de/buecher/0/450/0/gary-chapman-die-5-sprachen-der-liebe/",
+      "source": "https://www.francke-buch.de/img/cover/print/1588673270-750619.jpg"
+    },
+    {
+      "id": "chapman-five-love-languages",
+      "lang": "es",
+      "licence": "unreviewed",
+      "page": "https://www.editorialunilit.com/los-cinco-lenguajes-del-amor",
+      "source": "https://www.editorialunilit.com/media/catalog/product/cache/9d67210b621ff3b6ad53b5eedab90ab7/9/7/9780789923738.MAIN_1.jpeg"
+    },
+    {
+      "id": "chapman-five-love-languages",
+      "lang": "pt",
+      "licence": "unreviewed",
+      "page": "https://www.mundocristao.com.br/produto/as-5-linguagens-do-amor-3a-edicao/",
+      "source": "https://www.mundocristao.com.br/wp-content/uploads/2021/12/5-linguagens-do-amor-scaled.jpg"
+    },
+    {
+      "id": "chapman-five-love-languages-singles",
+      "lang": "de",
+      "licence": "unreviewed",
+      "page": "https://www.francke-buch.de/buecher/0/573/0/gary-chapman-die-5-sprachen-der-liebe-fuer-singles/",
+      "source": "https://www.francke-buch.de/img/cover/print/1588673270-750620.jpg"
+    },
+    {
+      "id": "chapman-five-love-languages-singles",
+      "lang": "es",
+      "licence": "unreviewed",
+      "page": "https://www.editorialunilit.com/cinco-lenguajes-del-amor-para-solteros-los",
+      "source": "https://www.editorialunilit.com/media/catalog/product/cache/9d67210b621ff3b6ad53b5eedab90ab7/9/7/9780789924179.jpg"
+    },
+    {
+      "id": "chapman-five-love-languages-singles",
+      "lang": "pt",
+      "licence": "unreviewed",
+      "page": "https://www.mundocristao.com.br/produto/as-5-linguagens-do-amor-para-solteiros/",
+      "source": "https://www.mundocristao.com.br/wp-content/uploads/2021/12/As-5-linguagens-do-amor-para-solteiros.png"
+    },
+    {
+      "id": "chapman-things-before-married",
+      "lang": "es",
+      "licence": "unreviewed",
+      "page": "https://www.portavoz.com/lo-que-me-hubiera-gustado-saber-antes-de-casarme",
+      "source": "https://www.portavoz.com/media/catalog/product/cache/ed664db693ba75f6b565684b432e5290/9/7/9780825412295_3.jpg"
+    }
+  ]
+}

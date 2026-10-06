@@ -39,7 +39,10 @@ describe('PrivacyCenter', () => {
     expect(shared.toLowerCase()).toContain('membres du groupe');
     expect(shared.toLowerCase()).not.toContain('toi seul');
 
-    // Reminders are generic by default (opt-in for detail), not "never".
-    expect(t(lang, 'pcPushBody').toLowerCase()).toContain('par défaut');
+    // Reminders never carry prayer content: the server's only opt-in is a count
+    // ('titles' is treated as 'count' in supabase/functions/_shared/notify.ts).
+    const push = t(lang, 'pcPushBody').toLowerCase();
+    expect(push).toContain('jamais inclus');
+    expect(push).toContain('nombre de prières');
   });
 });

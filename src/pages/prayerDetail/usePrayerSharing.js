@@ -23,7 +23,7 @@ export default function usePrayerSharing({ prayer, isCommunity, user }) {
       fetchSharedActivity: s.fetchSharedActivity,
     }))
   );
-  const [sharedActivity, setSharedActivity] = useState({ testimonies: [], updates: [] });
+  const [sharedActivity, setSharedActivity] = useState({ prayers: [], testimonies: [], updates: [] });
 
   // Load the user's groups and existing share map so the share button and badges
   // reflect reality even if the Community tab was never opened. `groups.length` is

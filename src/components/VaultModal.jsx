@@ -41,6 +41,7 @@ function PassField({ value, onChange, placeholder, autoFocus }) {
 function PrimaryButton({ onClick, disabled, busy, children }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled || busy}
       className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40"
@@ -58,13 +59,17 @@ function PrimaryButton({ onClick, disabled, busy, children }) {
 // `embedded=true` renders just the card (no fixed overlay/backdrop) so a host
 // like VaultLockScreen can place it inside its own friendlier layout while still
 // reusing the unlock + recovery-code logic here.
-export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false }) {
+export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false, userId }) {
   const { createVault, setUpRecovery, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode, unlocked } = useVaultStore();
   const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change | rotate
   const [pass, setPass] = useState('');
   const [confirm, setConfirm] = useState('');
   const [code, setCode] = useState('');
   const [recoveryCode, setRecoveryCode] = useState('');
+  // False when the wrapped record didn't reach the server: the code works here,
+  // but no other device can use it until this one syncs (which it retries on the
+  // next launch). Saying nothing would promise cross-device recovery we haven't got.
+  const [codeSynced, setCodeSynced] = useState(true);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -90,54 +95,81 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     // THAT key under the passphrase — never mint a new one, which would orphan
     // every prayer already encrypted under the current key. createVault is only
     // for the (rare) case where no key exists yet.
-    const rc = unlocked ? await setUpRecovery(pass) : await createVault(pass);
-    setBusy(false);
-    if (!rc) return setError(t(lang, 'errorGeneric'));
-    setRecoveryCode(rc);
-    setPass(''); setConfirm('');
-    setMode('recovery');
+    try {
+      const { code: rc, synced } = unlocked ? await setUpRecovery(pass) : await createVault(pass);
+      if (!rc) return setError(t(lang, 'errorGeneric'));
+      setRecoveryCode(rc);
+      setCodeSynced(synced);
+      setPass(''); setConfirm('');
+      setMode('recovery');
+    } catch {
+      setError(t(lang, 'errorGeneric'));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleUnlock = async () => {
     setError('');
     setBusy(true);
-    const ok = await unlock(pass);
-    setBusy(false);
-    if (!ok) return setError(t(lang, 'vaultWrongPass'));
-    setPass('');
-    done('vaultUnlockedToast');
+    try {
+      const ok = await unlock(pass, userId);
+      if (!ok) return setError(t(lang, 'vaultWrongPass'));
+      setPass('');
+      done('vaultUnlockedToast');
+    } catch {
+      setError(t(lang, 'errorGeneric'));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleReset = async () => {
     setError('');
     if (pass.length < MIN_PASSPHRASE) return setError(t(lang, 'vaultPassTooShort'));
     setBusy(true);
-    const ok = await resetPassphrase(code, pass);
-    setBusy(false);
-    if (!ok) return setError(t(lang, 'vaultWrongCode'));
-    setPass(''); setCode('');
-    done('vaultResetDoneToast');
+    try {
+      const ok = await resetPassphrase(code, pass, userId);
+      if (!ok) return setError(t(lang, 'vaultWrongCode'));
+      setPass(''); setCode('');
+      done('vaultResetDoneToast');
+    } catch {
+      setError(t(lang, 'errorGeneric'));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleChange = async () => {
     setError('');
     if (pass.length < MIN_PASSPHRASE) return setError(t(lang, 'vaultPassTooShort'));
     setBusy(true);
-    const ok = await changePassphrase(confirm, pass); // confirm holds the current passphrase
-    setBusy(false);
-    if (!ok) return setError(t(lang, 'vaultWrongPass'));
-    setPass(''); setConfirm('');
-    done('vaultChangedToast');
+    try {
+      const ok = await changePassphrase(confirm, pass, userId); // confirm holds the current passphrase
+      if (!ok) return setError(t(lang, 'vaultWrongPass'));
+      setPass(''); setConfirm('');
+      done('vaultChangedToast');
+    } catch {
+      setError(t(lang, 'errorGeneric'));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleRotate = async () => {
     setError('');
     setBusy(true);
-    const rc = await rotateRecoveryCode();
-    setBusy(false);
-    if (!rc) return setError(t(lang, 'vaultWrongPass')); // locked or no vault
-    setRecoveryCode(rc);
-    setMode('recovery');
+    try {
+      const { code: rc, synced } = await rotateRecoveryCode();
+      if (!rc) return setError(t(lang, 'vaultWrongPass')); // locked or no vault
+      setRecoveryCode(rc);
+      setCodeSynced(synced);
+      setMode('recovery');
+    } catch {
+      setError(t(lang, 'errorGeneric'));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const copyCode = async () => {
@@ -190,6 +222,9 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </button>
             </div>
+            {!codeSynced && (
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--danger)' }}>{t(lang, 'vaultCodeNotSynced')}</p>
+            )}
             <PrimaryButton onClick={() => done()}>{t(lang, 'vaultRecoverySaved')}</PrimaryButton>
           </div>
         )}

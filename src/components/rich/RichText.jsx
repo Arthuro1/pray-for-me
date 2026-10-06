@@ -5,7 +5,30 @@
 // update readable without migration.
 import { Fragment } from 'react';
 
-const URL_RE = /https?:\/\/[^\s<>()]+[^\s<>().,;:!?'"]/g;
+// Recognise the forms people naturally paste into messages: full http(s)
+// links, www-prefixed links, and bare domains with optional paths. Protocols
+// other than http(s) are intentionally excluded.
+const URL_RE = /\b(?:(?:https?:\/\/|www\.)[^\s<>()"']+|(?:[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?\.)+[a-z]{2,63}(?::\d{2,5})?(?:\/[^\s<>()"']*)?)/gi;
+
+function trimUrlPunctuation(value) {
+  let url = value.replace(/[.,;:!?]+$/g, '');
+  // Keep balanced closing delimiters that belong to a URL, while leaving
+  // sentence punctuation outside the anchor.
+  for (const [open, close] of [['(', ')'], ['[', ']'], ['{', '}']]) {
+    while (url.endsWith(close) && url.split(close).length > url.split(open).length) url = url.slice(0, -1);
+  }
+  return url;
+}
+
+function hrefForUrl(value) {
+  const candidate = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    const parsed = new URL(candidate);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.href : null;
+  } catch {
+    return null;
+  }
+}
 
 // Inline emphasis over one line: longest marker first so ** wins over *.
 const INLINE_RE = /(\*\*([^*]+)\*\*|\+\+([^+]+)\+\+|\*([^*]+)\*|_([^_]+)_)/;
@@ -15,20 +38,24 @@ function linkify(text, keyBase) {
   let last = 0;
   let i = 0;
   for (const m of text.matchAll(URL_RE)) {
+    if (m.index > 0 && text[m.index - 1] === '@') continue; // domain part of an email
+    const label = trimUrlPunctuation(m[0]);
+    const href = hrefForUrl(label);
+    if (!href) continue;
     if (m.index > last) nodes.push(text.slice(last, m.index));
     nodes.push(
       <a
         key={`${keyBase}-a${i++}`}
-        href={m[0]}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         className="underline break-all"
         style={{ color: 'var(--accent)' }}
       >
-        {m[0]}
+        {label}
       </a>
     );
-    last = m.index + m[0].length;
+    last = m.index + label.length;
   }
   if (last < text.length) nodes.push(text.slice(last));
   return nodes;

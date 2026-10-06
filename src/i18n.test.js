@@ -7,6 +7,24 @@ import fr from './i18n/locales/fr.js';
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 const LOCALE_CODES = LANGUAGES.map((l) => l.code);
+const COUPLE_PLAN_KEYS = [
+  'planCovenantTitle', 'planCovenantSub',
+  'planMarriageTitle', 'planMarriageSub',
+  'planPersonalizeTitle', 'planCoupleFianceQ',
+  'planCoupleSpouseQ', 'planCoupleDisplayName', 'planCoupleModeQ',
+  'planCoupleModePrivate', 'planCoupleModeTogether', 'planCoupleIncludeQ',
+  'planCoupleIncludeChildren', 'planCoupleIncludeHome',
+  'planCoupleIncludeExtendedFamily', 'planCoupleIncludeHint', 'planCoupleAddChild',
+  'planCoupleRemoveChild', 'planCoupleChildName', 'planCouplePrivacy',
+  'planCoupleRoleQ', 'planCoupleRoleHusband', 'planCoupleRoleWife',
+  'planCouplePartnerEngaged', 'planCouplePartnerMarried', 'planTalkTogether',
+  'planPrayTogether', 'planPrayForSpouse', 'planPrayForNamedPerson',
+  'planPrayForMarriage', 'planPrayForChild', 'planCoupleHomePrayer',
+  'planCoupleExtendedFamilyPrayer', 'planCoupleSafetyHeading',
+  'planCoupleReviewPending', 'planCoupleReviewHint', 'planCoupleContinueMarriage',
+  'planCoupleRepeat', 'planCoupleTogetherHint',
+  'planCoupleRoleReviewPending',
+];
 
 function sourceFiles(dir, acc = []) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -101,6 +119,31 @@ describe('locale coverage', () => {
       const locale = (await import(`./i18n/locales/${code}.js`)).default;
       const missing = frKeys.filter((k) => !(k in locale));
       expect(missing, `${code}.js is missing keys: ${missing.join(', ')}`).toEqual([]);
+    }
+  });
+});
+
+describe('relationships and family plan localization', () => {
+  // The season question is gone: it asked a reader where they were romantically,
+  // stored the answer, and nothing ever read it. Its copy went with it, and no
+  // locale may quietly keep a string for it.
+  it('no longer ships copy for questions that changed nothing', async () => {
+    const en = (await import('./i18n/locales/en.js')).default;
+    const retired = Object.keys(en).filter((key) => /^planPrep(Season|Emphasis)/.test(key));
+    expect(retired).toEqual([]);
+    for (const code of LOCALE_CODES) {
+      const locale = code === 'fr' ? fr : (await import(`./i18n/locales/${code}.js`)).default;
+      const stale = Object.keys(locale).filter((key) => /^planPrep(Season|Emphasis)/.test(key));
+      expect(stale, `${code}.js still ships retired keys: ${stale.join(', ')}`).toEqual([]);
+    }
+  });
+
+  it('provides every couple-plan key in all 16 locales', async () => {
+    expect(new Set(COUPLE_PLAN_KEYS).size).toBe(COUPLE_PLAN_KEYS.length);
+    for (const code of LOCALE_CODES) {
+      const locale = code === 'fr' ? fr : (await import(`./i18n/locales/${code}.js`)).default;
+      const missing = COUPLE_PLAN_KEYS.filter((key) => typeof locale[key] !== 'string' || !locale[key].trim());
+      expect(missing, `${code}.js is missing couple-plan keys: ${missing.join(', ')}`).toEqual([]);
     }
   });
 });

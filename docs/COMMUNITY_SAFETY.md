@@ -1,6 +1,6 @@
 # Community safety model
 
-Pray4Me offers prayer support, not emergency, medical, legal, mental-health, or
+Praystead offers prayer support, not emergency, medical, legal, mental-health, or
 safeguarding services. It does not automatically judge prayer content or make
 spiritual/theological moderation decisions.
 

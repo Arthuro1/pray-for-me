@@ -125,6 +125,22 @@ describe('AI proxy structured task boundary', () => {
     expect(sent.messages).toHaveLength(1);
     expect(sent.messages[0].content).toContain(injection);
   });
+
+  it('gives the model the locale glossary, register and brevity rules', async () => {
+    const systemFor = async (body) => {
+      global.fetch.mockClear();
+      await handler(req({ body }), mockRes());
+      const upstream = global.fetch.mock.calls.find(([url]) => String(url).includes('api.anthropic.com'));
+      return JSON.parse(upstream[1].body).system[0].text;
+    };
+    const german = await systemFor({ task: 'prayer_recommendations', input: { title: 'Arbeit', description: '', lang: 'de', kind: 'new' } });
+    expect(german).toContain('prayer request = Gebetsanliegen (not Gebetsanfrage)');
+    expect(german).toContain('“du”');
+    expect(german).toContain('short, plain sentences');
+    const french = await systemFor({ task: 'translate_texts', input: { texts: ['Pray for my exam'], lang: 'fr' } });
+    expect(french).toContain('prayer request = sujet de prière');
+    expect(french).toContain('not a word-for-word rendering');
+  });
 });
 
 describe('AI proxy quotas and failure handling', () => {

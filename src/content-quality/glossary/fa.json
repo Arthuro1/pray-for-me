@@ -1,0 +1,132 @@
+{
+  "locale": "fa",
+  "status": "draft",
+  "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "terms": {
+    "prayerRequest": {
+      "preferred": "درخواست دعا",
+      "allowed": [],
+      "avoid": [],
+      "example": "درخواست دعا",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "answeredPrayer": {
+      "preferred": "دعای اجابت‌شده",
+      "allowed": [],
+      "avoid": [],
+      "example": "دعای اجابت‌شده",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "testimony": {
+      "preferred": "شهادت",
+      "allowed": [],
+      "avoid": [],
+      "example": "شهادت",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "intercession": {
+      "preferred": "دعای شفاعتی",
+      "allowed": [],
+      "avoid": [],
+      "example": "دعای شفاعتی",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "discernment": {
+      "preferred": "تشخیص روحانی",
+      "allowed": [],
+      "avoid": [],
+      "example": "تشخیص روحانی",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "covenant": {
+      "preferred": "عهد",
+      "allowed": [],
+      "avoid": [],
+      "example": "عهد",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "repentance": {
+      "preferred": "توبه",
+      "allowed": [],
+      "avoid": [],
+      "example": "توبه",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "salvation": {
+      "preferred": "نجات",
+      "allowed": [],
+      "avoid": [],
+      "example": "نجات",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "grace": {
+      "preferred": "فیض",
+      "allowed": [],
+      "avoid": [],
+      "example": "فیض",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "holySpirit": {
+      "preferred": "روح‌القدس",
+      "allowed": [],
+      "avoid": [],
+      "example": "روح‌القدس",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "scripture": {
+      "preferred": "کتاب‌مقدس",
+      "allowed": [],
+      "avoid": [],
+      "example": "کتاب‌مقدس",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "fasting": {
+      "preferred": "روزه",
+      "allowed": [],
+      "avoid": [],
+      "example": "روزه",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "faithfulness": {
+      "preferred": "وفاداری",
+      "allowed": [],
+      "avoid": [],
+      "example": "وفاداری",
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+    },
+    "prayerJournal": {
+      "preferred": "دفترچهٔ دعا",
+      "allowed": [
+        "دفترچه"
+      ],
+      "avoid": [],
+      "example": "این درخواست دعا را در دفترچهٔ دعا نگه دار.",
+      "note": "نام زبانه می‌تواند «دفترچه» باشد."
+    },
+    "update": {
+      "preferred": "خبر تازه",
+      "allowed": [
+        "به‌روزرسانی"
+      ],
+      "avoid": [],
+      "example": "وقتی چیزی تغییر کرد، خبر تازه‌ای اضافه کن.",
+      "note": "خبر دربارهٔ یک درخواست دعا."
+    },
+    "thanksgiving": {
+      "preferred": "شکرگزاری",
+      "allowed": [],
+      "avoid": [],
+      "example": "دعایت را با شکرگزاری تمام کن.",
+      "note": "مرحلهٔ شکر از خدا در دعا."
+    },
+    "renunciation": {
+      "preferred": "ترک",
+      "allowed": [
+        "انکار"
+      ],
+      "avoid": [],
+      "example": "در دعای ترک، آنچه را از آن رو برمی‌گردانی نام می‌بری.",
+      "note": "واژهٔ خدمت رهایی. نیاز به بازبینی گویشور بومی."
+    }
+  }
+}
