@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { KeyRound, ShieldCheck } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 import ConfirmDialog from './shared/ConfirmDialog';
 import { startFreshEncryption } from '../lib/crypto/accountKey';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
-import { APP_NAME } from '../lib/brand';
+import AccountGate from './AccountGate';
+import { SecondaryButton } from './shared/Primitives';
 
-import { BrandMark } from './shared/Brand';
 // Full-screen gate for the ORPHANED crypto state: the server holds prayers
 // encrypted with a key that isn't on this device, and there's no recovery record
 // to unlock it. Rather than silently minting a new key (which would strand that
@@ -29,45 +28,17 @@ export default function AccountKeyRecoveryScreen({ lang = 'fr', onResolved }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-5 py-10" style={{ background: 'var(--q-canvas)' }}>
-      <div className="w-full max-w-sm flex flex-col items-center">
-        <BrandMark size={48} title={APP_NAME} className="mb-6" />
-
-        <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4" style={{ background: 'var(--q-selected)' }}>
-          <KeyRound size={24} style={{ color: 'var(--q-royal-text)' }} />
-        </div>
-
-        <h1 className="text-xl font-semibold text-center mb-2" style={{ color: 'var(--q-text)' }}>
-          {t(lang, 'keyMissingHeading')}
-        </h1>
-        <p className="text-sm text-center leading-relaxed mb-4" style={{ color: 'var(--q-text-secondary)' }}>
-          {t(lang, 'keyMissingBody')}
-        </p>
-
-        <p className="flex items-start gap-2 text-xs text-center leading-relaxed mb-6 px-2" style={{ color: 'var(--q-text-tertiary)' }}>
-          <ShieldCheck size={14} className="shrink-0 mt-0.5" style={{ color: 'var(--q-royal-text)' }} />
-          <span>{t(lang, 'keyMissingReassure')}</span>
-        </p>
-
-        <button
-          onClick={() => setConfirming(true)}
-          className="w-full py-2.5 rounded-xl text-sm font-medium"
-          style={{ background: 'var(--q-field)', color: 'var(--q-danger)', border: '1px solid color-mix(in srgb, var(--q-danger) 30%, var(--q-border))' }}
-        >
-          {t(lang, 'keyMissingStartFresh')}
-        </button>
-
-        <div className="mt-6 text-center">
-          {user?.email && (
-            <p className="text-xs mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>
-              {t(lang, 'vaultLockedSignedInAs', { email: user.email })}
-            </p>
-          )}
-          <button onClick={signOut} className="text-xs font-medium" style={{ color: 'var(--q-royal-text)' }}>
-            {t(lang, 'keyMissingRetry')}
-          </button>
-        </div>
-      </div>
+    <AccountGate
+      lang={lang}
+      title={t(lang, 'keyMissingHeading')}
+      body={t(lang, 'keyMissingBody')}
+      reassure={t(lang, 'keyMissingReassure')}
+      exitLabel={t(lang, 'keyMissingRetry')}
+      onExit={signOut}
+    >
+      <SecondaryButton danger onClick={() => setConfirming(true)} className="w-full">
+        {t(lang, 'keyMissingStartFresh')}
+      </SecondaryButton>
 
       {confirming && (
         <ConfirmDialog
@@ -81,6 +52,6 @@ export default function AccountKeyRecoveryScreen({ lang = 'fr', onResolved }) {
           onCancel={() => setConfirming(false)}
         />
       )}
-    </div>
+    </AccountGate>
   );
 }

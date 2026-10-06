@@ -1,23 +1,13 @@
-import { X, Heart } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
+import { Modal, SectionLabel } from './shared/Primitives';
 
 const PAYPAL_URL = import.meta.env.VITE_DONATION_URL || 'https://paypal.me/YOUR_USERNAME';
 
+// Named in plain text — no payment brand colours inside the product's palette.
 const METHODS = [
-  {
-    id: 'paypal',
-    label: 'PayPal',
-    available: true,
-    logo: (
-      <svg width="64" height="16" viewBox="0 0 64 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="13" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="14" fill="#003087">Pay</text>
-        <text x="24" y="13" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="14" fill="#009cde">Pal</text>
-      </svg>
-    ),
-  },
+  { id: 'paypal', label: 'PayPal', available: true },
   { id: 'stripe', label: 'Credit card', available: false },
   { id: 'applepay', label: 'Apple Pay', available: false },
 ];
@@ -25,85 +15,40 @@ const METHODS = [
 export default function DonateModal({ onClose }) {
   const settings = usePrayerStore((s) => s.settings);
   const lang = settings?.language || 'en';
-  useEscapeKey(onClose);
-  const trapRef = useFocusTrap();
 
   return (
-    <div
-      className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div
-        ref={trapRef}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        className="editorial-dialog relative w-full max-w-md px-6 pt-6 pb-8"
-      >
-        <button
-          onClick={onClose}
-          aria-label={t(lang, 'close')}
-          className="phase-icon-button absolute top-4 flex items-center justify-center rounded-full"
-          style={{ insetInlineEnd: '1rem' }}
-        >
-          <X size={15} />
-        </button>
-
-        {/* Header */}
-        <div className="flex items-center gap-2 mb-3">
-          <Heart size={18} style={{ color: 'var(--q-success)' }} />
-          <h2 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>
-            {t(lang, 'donateTitle')}
-          </h2>
+    <Modal label={t(lang, 'donateTitle')} onClose={onClose}>
+      <div className="q-dialog__header">
+        <div className="min-w-0">
+          <h2 className="q-dialog__title">{t(lang, 'donateTitle')}</h2>
+          <p className="q-meta mt-2">{t(lang, 'donateWhy')}</p>
         </div>
+        <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0">
+          <X size={18} aria-hidden="true" />
+        </button>
+      </div>
 
-        {/* Explanation */}
-        <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--q-text-tertiary)' }}>
-          {t(lang, 'donateWhy')}
-        </p>
-
-        {/* Payment methods */}
-        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--q-text-tertiary)' }}>
-          {t(lang, 'donateChooseMethod')}
-        </p>
-
-        <div className="space-y-2">
-          {METHODS.map(({ id, label, available, logo }) => (
-            available ? (
-              <a
-                key={id}
-                href={PAYPAL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between w-full rounded-xl px-4 py-3.5 transition-all"
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-selected-border)', textDecoration: 'none' }}
-              >
-                <div className="flex items-center gap-3">
-                  {logo}
-                </div>
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                  {t(lang, 'donateSelectBtn')}
-                </span>
+      <SectionLabel className="mb-2">{t(lang, 'donateChooseMethod')}</SectionLabel>
+      <ul className="menu-list">
+        {METHODS.map(({ id, label, available }) => (
+          <li key={id}>
+            {available ? (
+              <a href={PAYPAL_URL} target="_blank" rel="noopener noreferrer" className="menu-row menu-row--compact">
+                <span className="menu-row__body"><span className="menu-row__title">{label}</span></span>
+                <span className="menu-row__action">{t(lang, 'donateSelectBtn')}</span>
+                <ExternalLink size={16} aria-hidden="true" />
               </a>
             ) : (
-              <div
-                key={id}
-                className="flex items-center justify-between w-full rounded-xl px-4 py-3.5"
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-border)', opacity: 0.45 }}
-              >
-                <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{label}</span>
-                <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-border)' }}>
-                  {t(lang, 'donateComingSoon')}
-                </span>
+              <div className="menu-row menu-row--compact menu-row--unavailable">
+                <span className="menu-row__body"><span className="menu-row__title">{label}</span></span>
+                <span className="menu-row__description">{t(lang, 'donateComingSoon')}</span>
               </div>
-            )
-          ))}
-        </div>
+            )}
+          </li>
+        ))}
+      </ul>
 
-        <p className="text-center text-xs mt-5" style={{ color: 'var(--q-text-tertiary)' }}>
-          {t(lang, 'donateThanks')}
-        </p>
-      </div>
-    </div>
+      <p className="q-meta mt-5 text-center">{t(lang, 'donateThanks')}</p>
+    </Modal>
   );
 }

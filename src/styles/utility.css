@@ -333,23 +333,15 @@ html.auth-root body { background: var(--q-canvas); }
 .auth-sheet__intro { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
 .auth-intent { margin-block-end: var(--q-space-5); text-align: center; }
 
-.auth-mode-switch { display: flex; width: 100%; margin-block-end: var(--q-space-5); }
-.auth-mode-switch button { min-height: 44px; flex: 1 1 0; }
+.auth-mode-switch { margin-block-end: var(--q-space-5); }
 
 .auth-google { width: 100%; }
-.auth-google > span,
-.auth-form .primary-button > span { display: inline-flex; align-items: center; gap: var(--q-space-3); }
 
 .auth-or { display: flex; align-items: center; gap: var(--q-space-3); margin: var(--q-space-4) 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
 .auth-or::before,
 .auth-or::after { height: 1px; flex: 1 1 auto; background: var(--q-border); content: ''; }
 
 .auth-form { display: grid; gap: var(--q-space-4); }
-.auth-field { position: relative; }
-.auth-field__icon { position: absolute; inset-block-start: 50%; inset-inline-start: 14px; color: var(--q-text-tertiary); pointer-events: none; transform: translateY(-50%); }
-.auth-field__input { padding-inline-start: 42px; }
-.auth-field__input--end { padding-inline-end: 48px; }
-.auth-field__toggle { position: absolute; inset-block-start: 50%; inset-inline-end: 2px; transform: translateY(-50%); }
 .auth-privacy { margin: var(--q-space-5) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; text-align: center; }
 
 @media (max-width: 639px) {
@@ -363,3 +355,76 @@ html.auth-root body { background: var(--q-canvas); }
   .auth-brand { inset-block-start: max(var(--q-space-3), env(safe-area-inset-top)); gap: var(--q-space-1); }
   .auth-brand .brand-mark { width: 36px; height: 36px; }
 }
+
+/* ── The vault and the account key ──────────────────────────────────────── */
+/* One layout for every full-screen gate around the key. */
+.account-gate {
+  display: flex;
+  min-height: 100dvh;
+  align-items: center;
+  justify-content: center;
+  padding: max(var(--q-space-10), env(safe-area-inset-top)) var(--q-space-5) max(var(--q-space-10), env(safe-area-inset-bottom));
+  background: var(--q-canvas);
+  color: var(--q-text);
+}
+
+.account-gate__inner { display: flex; width: 100%; max-width: 24rem; flex-direction: column; align-items: center; text-align: center; }
+.account-gate__title { margin: var(--q-space-6) 0 var(--q-space-2); font-family: var(--q-font-editorial); font-size: var(--q-type-section); font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
+.account-gate__body { margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+.account-gate__reassure { display: flex; align-items: flex-start; gap: var(--q-space-2); margin: var(--q-space-4) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; text-align: start; }
+.account-gate__reassure > svg { flex: 0 0 auto; margin-block-start: 1px; color: var(--q-royal-text); }
+.account-gate__action { width: 100%; margin-block-start: var(--q-space-8); text-align: start; }
+.account-gate__exit { display: flex; flex-direction: column; align-items: center; gap: var(--q-space-1); margin-block-start: var(--q-space-8); }
+
+.vault-card { width: 100%; max-width: 24rem; padding: var(--q-space-6); }
+.vault-card--embedded { border: 1px solid var(--q-border); border-radius: var(--q-radius-surface); background: var(--q-surface); }
+.vault-card__step { display: grid; gap: var(--q-space-3); }
+.vault-card__intro { margin: 0 0 var(--q-space-1); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+/* The recovery code, shown once: large enough to copy by hand, and a copy button. */
+.vault-code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--q-space-2);
+  padding: var(--q-space-2) var(--q-space-1) var(--q-space-2) var(--q-space-4);
+  border: 1px solid var(--q-selected-border);
+  border-radius: 12px;
+  background: var(--q-field);
+}
+
+.vault-code > code { min-width: 0; color: var(--q-text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9375rem; letter-spacing: 0.06em; overflow-wrap: anywhere; }
+.q-input--code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.04em; }
+
+.vault-status { display: grid; gap: var(--q-space-3); margin: var(--q-space-4) 0 0; padding-block-start: var(--q-space-4); border-block-start: 1px solid var(--q-border); color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+p.vault-status,
+.vault-status > p { display: flex; align-items: flex-start; gap: var(--q-space-2); margin: 0; line-height: 1.5; }
+.vault-status svg { flex: 0 0 auto; color: var(--q-royal-text); }
+.vault-status--pending > p { color: var(--q-text-secondary); }
+.primary-button.is-working > svg { animation: spin 1s linear infinite; }
+
+/* Encrypted content this device can't open yet: said plainly, never blank. */
+.locked-inline { display: inline-flex; align-items: center; gap: 6px; color: var(--q-text-tertiary); font-size: 0.875rem; font-style: italic; }
+.locked-notice { padding-inline-start: var(--q-space-4); border-inline-start: 2px solid var(--q-border-strong); }
+.locked-notice__title { display: flex; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.locked-notice__title > svg { color: var(--q-royal-text); }
+.locked-notice__hint { margin: var(--q-space-1) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
+
+/* A short list that explains: an icon, a plain title, two or three lines. */
+.explain-list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.explain-list > li { display: flex; gap: var(--q-space-3); padding-block: var(--q-space-4); border-block-end: 1px solid var(--q-border); }
+.explain-list > li > svg { flex: 0 0 auto; margin-block-start: 2px; color: var(--q-royal-text); }
+.explain-list__title { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; line-height: 1.4; }
+.explain-list__body { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.6; }
+
+.menu-row--compact { min-height: 56px; }
+a.menu-row { text-decoration: none; }
+.menu-row__action { flex: 0 0 auto; color: var(--q-royal-text); font-size: var(--q-type-meta); font-weight: 600; }
+.menu-row--unavailable { cursor: default; }
+.menu-row--unavailable:hover { background: none; }
+.menu-row--unavailable .menu-row__title { color: var(--q-text-tertiary); font-weight: 500; }
+
+/* Something went wrong on one screen: say so, and offer the way back. */
+.error-fallback { display: flex; min-height: 60vh; align-items: center; justify-content: center; padding: var(--q-space-6); background: var(--q-canvas); }
+.error-fallback__inner { width: 100%; max-width: 24rem; text-align: center; }
+.error-fallback__title { margin: 0 0 var(--q-space-2); font-family: var(--q-font-editorial); font-size: var(--q-type-section); font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }

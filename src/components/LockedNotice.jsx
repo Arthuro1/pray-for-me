@@ -10,20 +10,15 @@ import { t } from '../i18n';
 export default function LockedNotice({ lang, inline = false }) {
   if (inline) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-sm italic" style={{ color: 'var(--q-text-tertiary)' }}>
-        <Lock size={13} className="shrink-0" /> {t(lang, 'contentLocked')}
+      <span className="locked-inline">
+        <Lock size={13} aria-hidden="true" /> {t(lang, 'contentLocked')}
       </span>
     );
   }
   return (
-    <div className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-      <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)' }}>
-        <Lock size={15} style={{ color: 'var(--q-royal-text)' }} />
-      </div>
-      <div className="min-w-0">
-        <p className="text-sm font-medium mb-1" style={{ color: 'var(--q-text)' }}>{t(lang, 'contentLocked')}</p>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'contentLockedHint')}</p>
-      </div>
+    <div className="locked-notice">
+      <p className="locked-notice__title"><Lock size={15} aria-hidden="true" /> {t(lang, 'contentLocked')}</p>
+      <p className="locked-notice__hint">{t(lang, 'contentLockedHint')}</p>
     </div>
   );
 }

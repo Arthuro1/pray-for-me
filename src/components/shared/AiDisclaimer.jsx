@@ -1,24 +1,18 @@
-import { Sparkles } from 'lucide-react';
+import { MessageSquareText } from 'lucide-react';
 import { t } from '../../i18n';
 
 // Single source of truth for how the app frames its AI to the user: a humble
 // study companion that points to Scripture and never speaks for God. Rendered
 // wherever AI output appears (`compact`) and at the consent + settings teaching
 // moments (`full`), so the posture wording can never drift between surfaces.
+// A plain message icon, never sparkles: the AI is a helper, not something magic.
 export default function AiDisclaimer({ lang = 'en', variant = 'compact', className = '' }) {
   if (variant === 'full') {
-    return (
-      <div className={`rounded-xl p-3 flex gap-2.5 ${className}`} style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-        <Sparkles size={15} style={{ color: 'var(--q-royal-text)', flexShrink: 0, marginTop: 2 }} />
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--q-royal-text)' }}>
-          {t(lang, 'aiPostureFull')}
-        </p>
-      </div>
-    );
+    return <p className={`ai-note ${className}`}>{t(lang, 'aiPostureFull')}</p>;
   }
   return (
-    <p className={`text-xs flex items-center gap-1.5 ${className}`} style={{ color: 'var(--q-text-tertiary)' }}>
-      <Sparkles size={12} style={{ flexShrink: 0 }} /> {t(lang, 'aiSuggestedLabel')}
+    <p className={`ai-label ${className}`}>
+      <MessageSquareText size={13} aria-hidden="true" /> {t(lang, 'aiSuggestedLabel')}
     </p>
   );
 }

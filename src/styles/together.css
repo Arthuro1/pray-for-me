@@ -212,24 +212,6 @@ button.together-row:hover { background: var(--q-hover); }
 
 .together-testimony__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-1) var(--q-space-3); margin-block-start: var(--q-space-2); color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
 
-/* ── Dialogs on this tab ────────────────────────────────────────────────── */
-.q-dialog__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--q-space-3); margin-block-end: var(--q-space-5); }
-
-.q-dialog__title {
-  margin: 0;
-  color: var(--q-text);
-  font-family: var(--q-font-editorial);
-  font-size: var(--q-type-section);
-  font-weight: 450;
-  letter-spacing: -0.012em;
-  line-height: 1.2;
-}
-
-.q-dialog__actions { display: flex; gap: var(--q-space-3); margin-block-start: var(--q-space-5); }
-.q-dialog__actions > * { flex: 1 1 0; }
-.q-dialog__section + .q-dialog__section { margin-block-start: var(--q-space-6); }
-.q-dialog__section > .section-label { margin-block-end: var(--q-space-2); }
-
 .member-list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
 
 .member-row {

@@ -63,6 +63,11 @@
 /* On deep-violet surfaces (.q-immersive) the same three buttons invert by
    themselves: the scope remaps the tokens they read. */
 
+/* A label and its icon or spinner stay on one line, evenly spaced. */
+.primary-button > span,
+.secondary-button > span,
+.quiet-button > span { display: inline-flex; align-items: center; gap: var(--q-space-2); }
+
 .primary-button:disabled,
 .secondary-button:disabled,
 .quiet-button:disabled { cursor: not-allowed; opacity: 0.45; }
@@ -358,6 +363,10 @@ a.prayer-row:hover { background: var(--q-hover); }
 .schedule-picker { display: grid; gap: var(--q-space-5); padding-block: var(--q-space-2); }
 .schedule-picker__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--q-space-2); }
 
+/* A segmented control that spans its column, its options sharing it equally. */
+.segmented-control--fill { display: flex; width: 100%; }
+.segmented-control--fill button { min-height: 44px; flex: 1 1 0; }
+
 /* ── Dialog (modal) and sheet ────────────────────────────────────────────── */
 .dialog-backdrop { background: var(--q-overlay) !important; }
 
@@ -376,6 +385,25 @@ a.prayer-row:hover { background: var(--q-hover); }
   font-weight: 500;
   letter-spacing: -0.012em;
 }
+
+/* The parts of a dialog: a header (serif title, close), text, sections, actions. */
+.q-dialog__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--q-space-3); margin-block-end: var(--q-space-5); }
+
+.q-dialog__title {
+  margin: 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: var(--q-type-section);
+  font-weight: 450;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+}
+
+.q-dialog__actions { display: flex; gap: var(--q-space-3); margin-block-start: var(--q-space-5); }
+.q-dialog__actions > * { flex: 1 1 0; }
+.q-dialog__section + .q-dialog__section { margin-block-start: var(--q-space-6); }
+.q-dialog__section > .section-label { margin-block-end: var(--q-space-2); }
+.q-dialog__text { margin: var(--q-space-5) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
 
 .bottom-sheet-backdrop {
   position: fixed;
@@ -469,6 +497,14 @@ a.prayer-row:hover { background: var(--q-hover); }
 .q-input[aria-invalid="true"],
 .q-textarea[aria-invalid="true"] { border-color: var(--q-danger); }
 
+/* A field with an icon inside it, and/or one control at its end (show a
+   passphrase, copy a code). */
+.q-input-wrap { position: relative; }
+.q-input-wrap__icon { position: absolute; inset-block-start: 50%; inset-inline-start: 14px; color: var(--q-text-tertiary); pointer-events: none; transform: translateY(-50%); }
+.q-input-wrap__action { position: absolute; inset-block-start: 50%; inset-inline-end: 2px; transform: translateY(-50%); }
+.q-input--with-icon { padding-inline-start: 42px; }
+.q-input--with-action { padding-inline-end: 48px; }
+
 /* A real checkbox, drawn quietly: the native input stays operable underneath. */
 .q-check { display: flex; min-height: 44px; align-items: center; gap: var(--q-space-3); cursor: pointer; }
 .q-check__control { position: relative; display: flex; width: 20px; height: 20px; flex: 0 0 auto; align-items: center; justify-content: center; }
@@ -494,10 +530,50 @@ a.prayer-row:hover { background: var(--q-hover); }
 .q-check:has(input:disabled) .q-check__control input { cursor: default; }
 .q-check:has(input:disabled) .q-check__box { opacity: 0.55; }
 
+/* A dialog's last step: a Rise Mark, thanks, one way out. */
+.dialog-done { display: flex; flex-direction: column; align-items: center; gap: var(--q-space-2); padding-block: var(--q-space-6) var(--q-space-2); text-align: center; }
+.dialog-done > .rise-mark { margin-block-end: var(--q-space-2); }
+
 /* A message about what just happened: an error, or a step that worked. */
 .q-notice { margin: 0; padding: var(--q-space-2) var(--q-space-3); border-radius: var(--q-radius-control); font-size: var(--q-type-meta); line-height: 1.5; }
 .q-notice--error { background: var(--q-danger-soft); color: var(--q-danger); }
 .q-notice--success { background: var(--q-success-soft); color: var(--q-success); }
+
+/* Toasts: what just happened, at the foot of the screen — a plain surface, the
+   one overlay elevation, a coloured icon (never colour alone: the words say it). */
+.q-toasts { position: fixed; z-index: 100; inset-block-end: 6rem; inset-inline-start: 50%; display: flex; width: 92%; max-width: 24rem; flex-direction: column; gap: var(--q-space-2); transform: translateX(-50%); }
+[dir="rtl"] .q-toasts { transform: translateX(50%); }
+.q-toasts--empty { pointer-events: none; }
+
+.q-toast {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding: var(--q-space-1) var(--q-space-2) var(--q-space-1) var(--q-space-4);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  box-shadow: var(--q-elevation);
+  color: var(--q-text);
+  font-size: 0.875rem;
+  animation: q-rise-in var(--q-motion-standard) var(--q-ease) both;
+}
+
+.q-toast__icon { flex: 0 0 auto; color: var(--q-danger); }
+/* Green stays with answered prayer; an ordinary success is royal. */
+.q-toast--success .q-toast__icon,
+.q-toast--info .q-toast__icon { color: var(--q-royal-text); }
+.q-toast__message { min-width: 0; flex: 1 1 auto; line-height: 1.45; }
+
+@media (min-width: 768px) {
+  .q-toasts { inset-block-end: var(--q-space-6); }
+}
+
+/* How the app speaks about its AI: a royal rule, never a tinted box. */
+.ai-note { margin: 0; padding-inline-start: var(--q-space-3); border-inline-start: 2px solid var(--q-royal); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.6; }
+.ai-label { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--q-text-tertiary); font-size: 0.75rem; }
+.ai-label > svg { flex: 0 0 auto; }
 
 /* Waiting on something small: one quiet spinner, centred. */
 .q-loading { display: flex; justify-content: center; padding-block: var(--q-space-6); color: var(--q-text-tertiary); }
@@ -1040,5 +1116,6 @@ label.circle-option { cursor: pointer; }
 
 .nudge__title svg { flex: 0 0 auto; color: var(--q-royal-text); }
 .nudge__body { margin-block-start: var(--q-space-1); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.55; }
+.nudge__body strong { color: var(--q-text); font-weight: 600; }
 .nudge__actions { display: flex; align-items: center; gap: var(--q-space-1); }
 .nudge__actions .secondary-button { flex: 1 1 auto; }

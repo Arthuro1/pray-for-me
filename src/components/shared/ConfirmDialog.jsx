@@ -6,14 +6,15 @@ import { Modal, PrimaryButton, SecondaryButton } from './Primitives';
 export default function ConfirmDialog({ title, message, confirmLabel, cancelLabel, onConfirm, onCancel, loading = false, danger = true }) {
   return (
     <Modal label={title} size="sm" onClose={loading ? null : onCancel}>
-      <h3 className="mb-2 text-base font-semibold" style={{ color: 'var(--q-text)', fontFamily: 'var(--q-font-ui)' }}>{title}</h3>
-      {message && <p className="mb-6 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{message}</p>}
-      <div className="flex gap-2">
-        <SecondaryButton onClick={onCancel} disabled={loading} autoFocus className="flex-1">
+      <h2 className="q-dialog__title">{title}</h2>
+      {message && <p className="q-dialog__text mt-3">{message}</p>}
+      <div className="q-dialog__actions mt-6">
+        <SecondaryButton onClick={onCancel} disabled={loading} autoFocus>
           {cancelLabel}
         </SecondaryButton>
-        <PrimaryButton onClick={onConfirm} disabled={loading} aria-busy={loading} danger={danger} className="flex-1">
-          {loading ? <Loader2 size={16} className="mx-auto animate-spin" aria-hidden="true" /> : confirmLabel}
+        <PrimaryButton onClick={onConfirm} disabled={loading} aria-busy={loading} danger={danger}>
+          {loading && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+          {confirmLabel}
         </PrimaryButton>
       </div>
     </Modal>

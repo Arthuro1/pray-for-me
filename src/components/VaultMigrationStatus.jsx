@@ -3,6 +3,7 @@ import { ShieldCheck, ShieldAlert, Loader2 } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
+import { PrimaryButton } from './shared/Primitives';
 
 // Shows whether the user's older private prayers (created before the vault, or
 // while it was locked) are encrypted at rest, and offers a one-tap migration to
@@ -33,34 +34,22 @@ export default function VaultMigrationStatus({ lang }) {
   // Checking, offline, or no private prayers to protect → render nothing.
   if (!status || status.total === 0) return null;
 
-  const wrapStyle = { borderTop: '0.5px solid var(--q-border)' };
-
   if (status.pending === 0) {
     return (
-      <div className="mt-3 pt-3 flex items-center gap-2" style={wrapStyle}>
-        <ShieldCheck size={14} style={{ color: 'var(--q-royal-text)' }} />
-        <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'vaultAllProtected')}</p>
-      </div>
+      <p className="vault-status">
+        <ShieldCheck size={16} aria-hidden="true" /> {t(lang, 'vaultAllProtected')}
+      </p>
     );
   }
 
   return (
-    <div className="mt-3 pt-3" style={wrapStyle}>
-      <div className="flex items-start gap-2 mb-2">
-        <ShieldAlert size={14} style={{ color: '#d97706', marginTop: 2, flexShrink: 0 }} />
-        <p className="text-xs" style={{ color: 'var(--q-text-secondary)' }}>
-          {t(lang, 'vaultMigratePending', { count: status.pending })}
-        </p>
-      </div>
-      <button
-        onClick={handleMigrate}
-        disabled={migrating}
-        className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-50"
-        style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
-      >
-        {migrating ? <Loader2 size={14} className="animate-spin" /> : <ShieldCheck size={14} />}
+    <div className="vault-status vault-status--pending">
+      <p>
+        <ShieldAlert size={16} aria-hidden="true" /> {t(lang, 'vaultMigratePending', { count: status.pending })}
+      </p>
+      <PrimaryButton icon={migrating ? Loader2 : ShieldCheck} iconSize={16} onClick={handleMigrate} disabled={migrating} className={migrating ? 'is-working' : ''}>
         {t(lang, migrating ? 'vaultMigrating' : 'vaultMigrateNow')}
-      </button>
+      </PrimaryButton>
     </div>
   );
 }

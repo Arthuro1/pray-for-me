@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { X, ShieldCheck, Lock, Users, Sparkles, Bell, Download, Trash2, KeyRound } from 'lucide-react';
+import { X, Lock, Users, MessageSquareText, Bell, Download, Trash2, KeyRound } from 'lucide-react';
 import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
+import { Modal } from './shared/Primitives';
 
 // A user-facing, plain-language "what leaves your device?" explanation of how
 // prayers are stored and shared. Deliberately non-technical and honest: it never
@@ -15,16 +14,13 @@ const SECTIONS = [
   { icon: Lock, titleKey: 'pcPrivateTitle', bodyKey: 'pcPrivateBody' },
   { icon: Users, titleKey: 'pcSharedTitle', bodyKey: 'pcSharedBody' },
   { icon: Bell, titleKey: 'pcPushTitle', bodyKey: 'pcPushBody' },
-  { icon: Sparkles, titleKey: 'pcAiTitle', bodyKey: 'pcAiBody' },
+  { icon: MessageSquareText, titleKey: 'pcAiTitle', bodyKey: 'pcAiBody' },
   { icon: KeyRound, titleKey: 'pcRecoveryTitle', bodyKey: 'pcRecoveryBody' },
   { icon: Download, titleKey: 'pcExportTitle', bodyKey: 'pcExportBody' },
   { icon: Trash2, titleKey: 'pcDeleteTitle', bodyKey: 'pcDeleteBody' },
 ];
 
 export default function PrivacyCenter({ lang = 'en', onClose }) {
-  useEscapeKey(onClose);
-  const trapRef = useFocusTrap();
-
   // Content-free impression: record that the user opened their privacy
   // explanation so understanding-your-privacy can be measured. No prayer data.
   useEffect(() => {
@@ -32,51 +28,30 @@ export default function PrivacyCenter({ lang = 'en', onClose }) {
   }, []);
 
   return (
-    <div
-      className="dialog-backdrop fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-6"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div
-        ref={trapRef}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t(lang, 'privacyCenterTitle')}
-        className="editorial-dialog relative w-full max-w-md px-6 pt-6 pb-8 max-h-[88vh] overflow-y-auto"
-      >
-        <button
-          onClick={onClose}
-          aria-label={t(lang, 'close')}
-          className="phase-icon-button absolute top-4 flex items-center justify-center rounded-full"
-          style={{ insetInlineEnd: '1rem' }}
-        >
-          <X size={15} />
+    <Modal label={t(lang, 'privacyCenterTitle')} onClose={onClose} className="max-h-[88vh] overflow-y-auto">
+      <div className="q-dialog__header">
+        <div className="min-w-0">
+          <h2 className="q-dialog__title">{t(lang, 'privacyCenterTitle')}</h2>
+          <p className="q-meta mt-2">{t(lang, 'pcIntro')}</p>
+        </div>
+        <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0">
+          <X size={18} aria-hidden="true" />
         </button>
-
-        <div className="flex items-center gap-2 mb-2">
-          <ShieldCheck size={18} style={{ color: 'var(--q-royal-text)' }} />
-          <h2 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'privacyCenterTitle')}</h2>
-        </div>
-        <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'pcIntro')}</p>
-
-        <div className="space-y-4">
-          {SECTIONS.map(({ icon: Icon, titleKey, bodyKey }) => (
-            <div key={titleKey} className="flex gap-3">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)' }}>
-                <Icon size={15} style={{ color: 'var(--q-royal-text)' }} />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium mb-0.5" style={{ color: 'var(--q-text)' }}>{t(lang, titleKey)}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)', lineHeight: 1.6 }}>{t(lang, bodyKey)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <p className="text-xs leading-relaxed mt-5 pt-4" style={{ color: 'var(--q-text-tertiary)', borderTop: '0.5px solid var(--q-border)' }}>
-          {t(lang, 'pcSecurityNote')}
-        </p>
       </div>
-    </div>
+
+      <ul className="explain-list">
+        {SECTIONS.map(({ icon: Icon, titleKey, bodyKey }) => (
+          <li key={titleKey}>
+            <Icon size={18} strokeWidth={1.85} aria-hidden="true" />
+            <div>
+              <h3 className="explain-list__title">{t(lang, titleKey)}</h3>
+              <p className="explain-list__body">{t(lang, bodyKey)}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <p className="q-meta mt-5">{t(lang, 'pcSecurityNote')}</p>
+    </Modal>
   );
 }

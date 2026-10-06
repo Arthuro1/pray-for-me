@@ -172,6 +172,24 @@ and rollback notes. Unreleased entries are moved into a dated version at release
     links. About 250 lines of `constellation-auth` styling are gone.
   - *Emoji* — the decorative 🙏 / 🔒 at the end of 15 messages (toasts, the
     privacy line, the test notification) are removed in every language.
+  - *The vault and the account key* — the locked vault, "we can't unlock your
+    prayers here" and "can't check right now" share one calm full-screen
+    layout (`AccountGate`): the mark, a serif heading, why the prayers are
+    still safe, the one way forward, and the way out. The vault dialog uses
+    the shared fields (passphrase fields now have names for screen readers),
+    buttons and notices; inside the lock screen it no longer repeats the
+    screen's own heading. The recovery-code reminder is the shared nudge;
+    encrypted content this device can't open is said plainly with a rule,
+    not a card.
+  - *Dialogs* — Privacy Center, Feedback, Support the app and AI consent are
+    the shared modal with a serif title; Feedback's and the inbox's
+    hand-made toggles became the real switch; the PayPal option is plain
+    text (no brand colours); the AI is introduced with a quiet royal rule
+    and a message icon instead of sparkles; confirmation dialogs share the
+    same title, text and actions.
+  - *Toasts and errors* — toasts are a plain surface with the overlay
+    elevation and rise in; an ordinary success is royal, not green; the
+    error fallback uses the shared buttons.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.

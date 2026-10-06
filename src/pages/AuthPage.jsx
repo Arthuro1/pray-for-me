@@ -41,9 +41,9 @@ function AuthField({ id, label, icon: Icon, inputRef, end = null, hint = null, .
   return (
     <div className="q-field">
       <label htmlFor={id} className="q-field__label">{label}</label>
-      <div className="auth-field">
-        <Icon size={16} className="auth-field__icon" aria-hidden="true" />
-        <Input ref={inputRef} id={id} className={end ? 'auth-field__input auth-field__input--end' : 'auth-field__input'} {...input} />
+      <div className="q-input-wrap">
+        <Icon size={16} className="q-input-wrap__icon" aria-hidden="true" />
+        <Input ref={inputRef} id={id} className={end ? 'q-input--with-icon q-input--with-action' : 'q-input--with-icon'} {...input} />
         {end}
       </div>
       {hint && <p id={hint.id} className="q-field__hint">{hint.text}</p>}
@@ -278,7 +278,7 @@ export default function AuthPage({ onBack, intent }) {
                 as a plain sentence under the form. */}
             {!savePrayerIntent && (
               <SegmentedControl
-                className="auth-mode-switch"
+                className="auth-mode-switch segmented-control--fill"
                 label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
                 value={mode === 'register' ? 'register' : 'login'}
                 onChange={switchMode}
@@ -344,7 +344,7 @@ export default function AuthPage({ onBack, intent }) {
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={t(lang, 'authPassword')}
                       aria-pressed={showPassword}
-                      className="icon-button auth-field__toggle"
+                      className="icon-button q-input-wrap__action"
                     >
                       {showPassword ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
                     </button>

@@ -1,56 +1,55 @@
 import { useState } from 'react';
-import { Lock, Shield, KeyRound, Copy, Check, X, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Copy, Check, X, Eye, EyeOff, Loader2 } from 'lucide-react';
 import useVaultStore from '../store/vaultStore';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { Input, PrimaryButton, QuietButton } from './shared/Primitives';
 
 const MIN_PASSPHRASE = 8;
 
-const inputStyle = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
-
-// A password field with a show/hide toggle.
+// A passphrase field with a show/hide toggle. The placeholder doubles as the
+// field's name for screen readers; the toggle says which field it reveals.
 function PassField({ value, onChange, placeholder, autoFocus }) {
   const [show, setShow] = useState(false);
   return (
-    <div className="relative">
-      <input
+    <div className="q-input-wrap">
+      <Input
         type={show ? 'text' : 'password'}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-label={placeholder}
         autoFocus={autoFocus}
         autoComplete="off"
-        className="w-full rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none"
-        style={inputStyle}
+        className="q-input--with-action"
       />
       <button
         type="button"
         onClick={() => setShow((s) => !s)}
-        className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
-        style={{ color: 'var(--q-text-tertiary)' }}
+        aria-label={placeholder}
+        aria-pressed={show}
+        className="icon-button q-input-wrap__action"
         tabIndex={-1}
       >
-        {show ? <EyeOff size={15} /> : <Eye size={15} />}
+        {show ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
       </button>
     </div>
   );
 }
 
-function PrimaryButton({ onClick, disabled, busy, children }) {
+// The one action of each step. While it works, a spinner sits beside the label.
+function SubmitButton({ onClick, disabled, busy, children }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled || busy}
-      className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40"
-      style={{ background: 'var(--q-action-primary)' }}
-    >
-      {busy ? <Loader2 size={15} className="animate-spin mx-auto" /> : children}
-    </button>
+    <PrimaryButton onClick={onClick} disabled={disabled || busy} aria-busy={busy || undefined} className="w-full">
+      {busy && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+      {children}
+    </PrimaryButton>
   );
 }
+
+const ErrorNote = ({ children }) => <p role="alert" className="q-notice q-notice--error">{children}</p>;
 
 // Unified vault dialog. `initialMode`: 'setup' | 'unlock' | 'change'.
 // onUnlocked fires once the vault becomes usable (created/unlocked/reset).
@@ -185,99 +184,101 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     setup: 'vaultSetupTitle', recovery: 'vaultRecoveryTitle', unlock: 'vaultUnlockTitle',
     reset: 'vaultResetTitle', change: 'vaultChangeTitle', rotate: 'vaultRotateTitle',
   }[mode];
-  const Icon = mode === 'unlock' ? Lock
-    : mode === 'recovery' || mode === 'reset' || mode === 'change' || mode === 'rotate' ? KeyRound
-      : Shield;
 
   const card = (
-    <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="editorial-dialog w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
-              <Icon size={16} style={{ color: 'var(--q-royal-text)' }} />
-            </div>
-            <h3 className="font-semibold text-base" style={{ color: 'var(--q-text)' }}>{t(lang, titleKey)}</h3>
+    <div
+      ref={trapRef}
+      tabIndex={-1}
+      role="dialog"
+      aria-modal="true"
+      aria-label={t(lang, titleKey)}
+      className={embedded ? 'vault-card vault-card--embedded' : 'q-dialog vault-card'}
+      onClick={(e) => e.stopPropagation()}
+    >
+        {/* Embedded in a gate that already names and explains itself, the card
+            starts straight at the field. */}
+        {!embedded && (
+          <div className="q-dialog__header">
+            <h2 className="q-dialog__title">{t(lang, titleKey)}</h2>
+            {dismissable && <button type="button" className="icon-button pressable -me-2 -mt-2 shrink-0" onClick={onClose} aria-label={t(lang, 'close')}><X size={18} aria-hidden="true" /></button>}
           </div>
-          {dismissable && <button className="phase-icon-button" onClick={onClose} aria-label={t(lang, 'close')}><X size={18} /></button>}
-        </div>
+        )}
 
         {/* ─── Setup ─── */}
         {mode === 'setup' && (
-          <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultSetupIntro')}</p>
+          <div className="vault-card__step">
+            <p className="vault-card__intro">{t(lang, 'vaultSetupIntro')}</p>
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultPassphrase')} autoFocus />
             <PassField value={confirm} onChange={setConfirm} placeholder={t(lang, 'vaultConfirmPassphrase')} />
-            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
-            <PrimaryButton onClick={handleCreate} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultCreate')}</PrimaryButton>
+            {error && <ErrorNote>{error}</ErrorNote>}
+            <SubmitButton onClick={handleCreate} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultCreate')}</SubmitButton>
           </div>
         )}
 
         {/* ─── Recovery code (shown once) ─── */}
         {mode === 'recovery' && (
-          <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultRecoveryIntro')}</p>
-            <div className="rounded-xl p-3 flex items-center justify-between gap-2" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-selected-border)' }}>
-              <code className="text-sm font-mono tracking-wider break-all" style={{ color: 'var(--q-text)' }}>{recoveryCode}</code>
-              <button onClick={copyCode} aria-label={t(lang, 'vaultCopyCode')} className="shrink-0 p-1.5 rounded-lg" style={{ color: 'var(--q-royal-text)' }}>
-                {copied ? <Check size={16} /> : <Copy size={16} />}
+          <div className="vault-card__step">
+            <p className="vault-card__intro">{t(lang, 'vaultRecoveryIntro')}</p>
+            <div className="vault-code">
+              <code>{recoveryCode}</code>
+              <button type="button" onClick={copyCode} aria-label={t(lang, 'vaultCopyCode')} className="icon-button pressable">
+                {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
               </button>
             </div>
-            {!codeSynced && (
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--q-danger)' }}>{t(lang, 'vaultCodeNotSynced')}</p>
-            )}
-            <PrimaryButton onClick={() => done()}>{t(lang, 'vaultRecoverySaved')}</PrimaryButton>
+            {!codeSynced && <ErrorNote>{t(lang, 'vaultCodeNotSynced')}</ErrorNote>}
+            <SubmitButton onClick={() => done()}>{t(lang, 'vaultRecoverySaved')}</SubmitButton>
           </div>
         )}
 
         {/* ─── Unlock ─── */}
         {mode === 'unlock' && (
-          <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultUnlockIntro')}</p>
+          <div className="vault-card__step">
+            {!embedded && <p className="vault-card__intro">{t(lang, 'vaultUnlockIntro')}</p>}
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultPassphrase')} autoFocus />
-            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
-            <PrimaryButton onClick={handleUnlock} busy={busy} disabled={!pass}>{t(lang, 'vaultUnlock')}</PrimaryButton>
-            <button onClick={() => { setError(''); setMode('reset'); }} className="w-full text-center text-xs" style={{ color: 'var(--q-royal-text)' }}>
+            {error && <ErrorNote>{error}</ErrorNote>}
+            <SubmitButton onClick={handleUnlock} busy={busy} disabled={!pass}>{t(lang, 'vaultUnlock')}</SubmitButton>
+            <QuietButton onClick={() => { setError(''); setMode('reset'); }} className="w-full">
               {t(lang, 'vaultForgot')}
-            </button>
+            </QuietButton>
           </div>
         )}
 
         {/* ─── Reset via recovery code ─── */}
         {mode === 'reset' && (
-          <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultResetIntro')}</p>
-            <input
+          <div className="vault-card__step">
+            <p className="vault-card__intro">{t(lang, 'vaultResetIntro')}</p>
+            <Input
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder={t(lang, 'vaultRecoveryCode')}
+              aria-label={t(lang, 'vaultRecoveryCode')}
               autoFocus
               autoComplete="off"
-              className="w-full rounded-xl px-3 py-2.5 text-sm font-mono focus:outline-none"
-              style={inputStyle}
+              className="q-input--code"
             />
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
-            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
-            <PrimaryButton onClick={handleReset} busy={busy} disabled={!code || !pass}>{t(lang, 'vaultReset')}</PrimaryButton>
+            {error && <ErrorNote>{error}</ErrorNote>}
+            <SubmitButton onClick={handleReset} busy={busy} disabled={!code || !pass}>{t(lang, 'vaultReset')}</SubmitButton>
           </div>
         )}
 
         {/* ─── Change passphrase ─── */}
         {mode === 'change' && (
-          <div className="space-y-3">
+          <div className="vault-card__step">
             <PassField value={confirm} onChange={setConfirm} placeholder={t(lang, 'vaultCurrentPassphrase')} autoFocus />
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
-            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
-            <PrimaryButton onClick={handleChange} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultChangeSave')}</PrimaryButton>
+            {error && <ErrorNote>{error}</ErrorNote>}
+            <SubmitButton onClick={handleChange} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultChangeSave')}</SubmitButton>
           </div>
         )}
 
         {/* ─── Rotate recovery code ─── */}
         {mode === 'rotate' && (
-          <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultRotateIntro')}</p>
-            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
-            <PrimaryButton onClick={handleRotate} busy={busy}>{t(lang, 'vaultRotateGenerate')}</PrimaryButton>
+          <div className="vault-card__step">
+            <p className="vault-card__intro">{t(lang, 'vaultRotateIntro')}</p>
+            {error && <ErrorNote>{error}</ErrorNote>}
+            <SubmitButton onClick={handleRotate} busy={busy}>{t(lang, 'vaultRotateGenerate')}</SubmitButton>
           </div>
         )}
       </div>

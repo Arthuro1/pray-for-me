@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { t } from '../i18n';
 import { devError } from '../lib/logger';
+import { PrimaryButton, SecondaryButton } from './shared/Primitives';
 
 // Catches render/lifecycle errors in its subtree so a single thrown error — or a
 // lazy-chunk fetch that fails on a flaky network — shows a recoverable fallback
@@ -51,36 +52,15 @@ export default class ErrorBoundary extends Component {
 
     const lang = this.props.lang || 'fr';
     return (
-      <div
-        role="alert"
-        className="min-h-[60vh] flex items-center justify-center p-6"
-        style={{ background: 'var(--q-canvas)' }}
-      >
-        <div className="max-w-sm text-center">
-          <h1 className="text-lg font-semibold mb-2" style={{ color: 'var(--q-text)' }}>
-            {t(lang, 'errorBoundaryTitle')}
-          </h1>
-          <p className="text-sm mb-6" style={{ color: 'var(--q-text-secondary)' }}>
-            {t(lang, 'errorBoundaryBody')}
-          </p>
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={this.reset}
-              className="w-full rounded-xl py-2.5 font-medium"
-              style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
-            >
-              {t(lang, 'retry')}
-            </button>
-            <button
-              type="button"
-              onClick={() => window.location.reload()}
-              className="w-full rounded-xl py-2.5 font-medium inline-flex items-center justify-center gap-2"
-              style={{ border: '1px solid var(--q-border)', color: 'var(--q-text)' }}
-            >
-              <RefreshCw size={16} />
+      <div role="alert" className="error-fallback">
+        <div className="error-fallback__inner">
+          <h1 className="error-fallback__title">{t(lang, 'errorBoundaryTitle')}</h1>
+          <p className="account-gate__body">{t(lang, 'errorBoundaryBody')}</p>
+          <div className="mt-6 grid gap-2">
+            <PrimaryButton onClick={this.reset}>{t(lang, 'retry')}</PrimaryButton>
+            <SecondaryButton icon={RefreshCw} iconSize={16} onClick={() => window.location.reload()}>
               {t(lang, 'errorBoundaryReload')}
-            </button>
+            </SecondaryButton>
           </div>
         </div>
       </div>

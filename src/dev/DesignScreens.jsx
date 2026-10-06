@@ -1,8 +1,11 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
 // /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
-// /about, /settings, /inbox, /auth and /auth-save render the REAL screens inside the real app shell with
-// sample prayers. Every store write is replaced by a local no-op first, and
+// /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
+// /vault-setup, /privacy, /feedback, /donate, /ai-consent and /confirm render
+// the REAL screens inside the real app shell with sample prayers (the vault and
+// key gates replace the shell, as in the app). Every store write is replaced
+// by a local no-op first, and
 // every database query answers empty, so nothing is queued, synced, encrypted
 // or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
@@ -26,6 +29,14 @@ import AboutTab from '../pages/AboutTab';
 import SettingsTab from '../pages/SettingsTab';
 import NotificationsPage from '../pages/NotificationsPage';
 import AuthPage from '../pages/AuthPage';
+import VaultLockScreen from '../components/VaultLockScreen';
+import AccountKeyRecoveryScreen from '../components/AccountKeyRecoveryScreen';
+import VaultModal from '../components/VaultModal';
+import PrivacyCenter from '../components/PrivacyCenter';
+import FeedbackModal from '../components/FeedbackModal';
+import DonateModal from '../components/DonateModal';
+import AiConsentModal from '../components/AiConsentModal';
+import ConfirmDialog from '../components/shared/ConfirmDialog';
 import useNotificationStore from '../store/notificationStore';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
@@ -114,7 +125,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save',
+  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -289,6 +300,10 @@ export default function DesignScreens({ screen }) {
     return <AuthPage onBack={() => navigate('/__design')} intent={screen === 'auth-save' ? 'save-prayer' : undefined} />;
   }
 
+  // The key and vault gates replace the whole app, as they do for real.
+  if (screen === 'vault-lock') return <VaultLockScreen lang={lang} />;
+  if (screen === 'key-missing') return <AccountKeyRecoveryScreen lang={lang} onResolved={() => {}} />;
+
   if (screen === 'session') {
     return <PrayerSession prayers={usePrayerStore.getState().prayers.slice(0, 3)} categories={[]} lang={lang} tr={(text) => text} onClose={() => navigate('/__design/today')} />;
   }
@@ -315,6 +330,23 @@ export default function DesignScreens({ screen }) {
       {screen === 'about' && <AboutTab />}
       {screen === 'settings' && <SettingsTab />}
       {screen === 'inbox' && <InboxPreview />}
+      {['vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm'].includes(screen) && <SettingsTab />}
+      {screen === 'vault-setup' && <VaultModal lang={lang} initialMode="setup" userId="design-user" onClose={() => navigate('/__design/settings')} />}
+      {screen === 'privacy' && <PrivacyCenter lang={lang} onClose={() => navigate('/__design/settings')} />}
+      {screen === 'feedback' && <FeedbackModal onClose={() => navigate('/__design/settings')} />}
+      {screen === 'donate' && <DonateModal onClose={() => navigate('/__design/settings')} />}
+      {screen === 'ai-consent' && <AiConsentModal lang={lang} onAccept={() => {}} onCancel={() => navigate('/__design/settings')} />}
+      {screen === 'confirm' && (
+        <ConfirmDialog
+          title="Delete this prayer?"
+          message="It will be removed from every device. This cannot be undone."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          danger
+          onConfirm={() => {}}
+          onCancel={() => navigate('/__design/journal')}
+        />
+      )}
       {screen === 'tend' && <PrayersTab onAdd={() => {}} />}
       {screen === 'tend' && (
         <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />

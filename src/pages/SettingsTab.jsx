@@ -504,7 +504,7 @@ export default function SettingsTab() {
               {/* Low data mode — device-local; defers nonessential fetches only. */}
               <PrivacyRow id="privacy-lowdata" icon={WifiOff} label={t(lang, 'privacyRowLowData')} open={!!openPrivacyRows.lowdata} onToggle={() => togglePrivacyRow('lowdata')}>
                 <div className="settings-row__main">
-                  <p className="settings-group__sub mb-0">{t(lang, 'lowDataSub')}</p>
+                  <p className="settings-row__sub">{t(lang, 'lowDataSub')}</p>
                   <Switch
                     checked={!!settings.lowDataMode}
                     onChange={() => updateSettings({ lowDataMode: !settings.lowDataMode })}
