@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { t, isRtl } from '../../i18n';
+import { QuietButton } from '../shared/Primitives';
 import { parseKey } from '../../lib/schedule';
 
-// The card around ONE day of a running plan, and the way to move to the day
-// before or the day after it.
+// ONE day of a running plan, set between two hairlines, and the way to move to
+// the day before or the day after it.
 //
 // Two ways in, on purpose: arrows that are always visible (the only ones a
 // keyboard, a screen reader or a desktop pointer can use) and a swipe on the
@@ -144,8 +145,7 @@ export default function PlanDayDeck({
         disabled={!target}
         aria-label={target ? `${label} · ${parseKey(target).toLocaleDateString(lang, { day: 'numeric', month: 'long' })}` : label}
         title={label}
-        className="pressable flex h-11 w-11 items-center justify-center rounded-full disabled:opacity-35"
-        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: target ? 'var(--q-royal-text)' : 'var(--q-text-tertiary)' }}
+        className="icon-button icon-button--outlined plan-deck__arrow pressable"
       >
         <Icon size={18} aria-hidden="true" />
       </button>
@@ -155,21 +155,17 @@ export default function PlanDayDeck({
   return (
     // The arrows are the controls; this handler only adds the arrow keys for
     // whoever already has focus inside the card, and swallows nothing else.
-    <section
-      className="rounded-2xl p-4 space-y-3"
-      style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
-      onKeyDown={onKeyDown}
-    >
-      <div className="flex items-center justify-between gap-2">
+    <section className="plan-deck" onKeyDown={onKeyDown}>
+      <div className="plan-deck__head">
         {/* The visible label is also the announcement, so a screen reader hears
             which day it landed on instead of only the content changing
             underneath it. The date rides along for listeners alone: on screen it
             belongs with the "not today" note below, next to the way back. */}
-        <p role="status" aria-live="polite" className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
+        <p role="status" aria-live="polite" className="section-label">
           {dayLabel}
           {dateLabel && <span className="sr-only">{` · ${dateLabel}`}</span>}
         </p>
-        <div className="flex shrink-0 items-center gap-1.5">
+        <div className="plan-deck__nav">
           {arrow('prev')}
           {arrow('next')}
         </div>
@@ -181,19 +177,12 @@ export default function PlanDayDeck({
           several honest meanings — a day paged to, a run that is resting between
           its days, one that has not begun, one that is paused. */}
       {note && (
-        <div className="flex flex-wrap items-center justify-between gap-x-3">
-          <p className="text-[11px] first-letter:uppercase" style={{ color: 'var(--q-text-tertiary)' }}>
-            {dateLabel ? `${note} · ${dateLabel}` : note}
-          </p>
+        <div className="plan-deck__away">
+          <p className="q-meta">{dateLabel ? `${note} · ${dateLabel}` : note}</p>
           {onShowToday && (
-            <button
-              type="button"
-              onClick={onShowToday}
-              className="pressable flex min-h-11 items-center text-[11px] font-medium"
-              style={{ color: 'var(--q-royal-text)' }}
-            >
+            <QuietButton onClick={onShowToday} className="-me-3">
               {homeLabel || t(lang, 'planBackToToday')}
-            </button>
+            </QuietButton>
           )}
         </div>
       )}
@@ -209,17 +198,18 @@ export default function PlanDayDeck({
       >
         <div
           key={dayKey}
-          className={enterFrom ? `plan-deck__panel plan-deck__panel--from-${enterFrom}` : 'plan-deck__panel'}
+          className={[
+            'plan-deck__panel',
+            dragging && 'plan-deck__panel--dragging',
+            enterFrom && `plan-deck__panel--from-${enterFrom}`,
+          ].filter(Boolean).join(' ')}
           // A day's content can raise a full-screen overlay of its own (the
           // deliverance guide's step-by-step prayer). An element being
           // transformed is the containing block for anything `fixed` inside it,
           // so the entrance is cleared the moment it is over and the panel goes
           // back to being a plain block.
           onAnimationEnd={(e) => { if (e.target === e.currentTarget) setEnterFrom(null); }}
-          style={{
-            transform: dx ? `translateX(${dx}px)` : undefined,
-            transition: dragging ? 'none' : 'transform 0.2s ease',
-          }}
+          style={dx ? { transform: `translateX(${dx}px)` } : undefined}
         >
           {children}
         </div>

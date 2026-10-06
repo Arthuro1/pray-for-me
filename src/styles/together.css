@@ -243,22 +243,6 @@ button.together-row:hover { background: var(--q-hover); }
 .member-row__name { min-width: 0; flex: 1 1 auto; overflow: hidden; color: var(--q-text); font-size: 0.9375rem; text-overflow: ellipsis; white-space: nowrap; }
 .member-row__role { display: block; color: var(--q-royal-text); font-size: var(--q-type-meta); }
 
-.invite-code {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--q-space-2);
-  margin-block: var(--q-space-4);
-  padding: var(--q-space-5);
-  border: 1px solid var(--q-border);
-  border-radius: var(--q-radius-surface);
-  background: #FFFFFF;
-  color: #202026;
-}
-
-.invite-code__hint { margin: 0; color: #5F6068; font-size: var(--q-type-meta); }
-.invite-code__value { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9375rem; font-weight: 600; letter-spacing: 0.12em; }
-
 /* Sharing a prayer with groups. */
 .share-groups { display: grid; gap: 0; margin: 0 0 var(--q-space-4); padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
 .share-groups > li { border-block-end: 1px solid var(--q-border); }

@@ -1,8 +1,9 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
 // /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
-// /plans, /plan, /grow and /guide render the REAL screens inside
-// the real app shell with sample prayers. Every store write is replaced by a local no-op first, so
-// nothing is queued, synced, encrypted or sent anywhere. Never shipped.
+// /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow and /guide render
+// the REAL screens inside the real app shell with sample prayers. Every store
+// write is replaced by a local no-op first, so nothing is queued, synced,
+// encrypted or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
@@ -20,8 +21,11 @@ import CommunityTab from '../pages/CommunityTab';
 import PlansTab from '../pages/PlansTab';
 import GrowTab from '../pages/GrowTab';
 import PlanDetailModal from '../components/PlanDetailModal';
+import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
+import PlanShareSheet from '../components/plan/PlanShareSheet';
 import GuideReader from '../components/GuideReader';
-import { planById } from '../lib/guidedPlan';
+import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
+import { supabase } from '../lib/supabase';
 import { guides } from '../content/teaching';
 import CirclePicker from '../components/CirclePicker';
 import { Modal, PageHeader } from '../components/shared/Primitives';
@@ -83,7 +87,10 @@ function seed() {
   useCommunityStore.setState({ ...stubbed, prayerShares: { d1: [{ groupId: 'g1', groupName: 'Home group', prayingCount: 8 }] }, groups: [], prayers: [], testimonies: [], pendingCount: 0 });
 }
 
-const SCREENS = ['today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group', 'plans', 'plan', 'grow', 'guide'];
+const SCREENS = [
+  'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
+  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide',
+];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
 
@@ -130,6 +137,49 @@ function TogetherPreview({ screen }) {
       <Route path="/community/group/:groupId" element={<CommunityTab />} />
     </Routes>
   );
+}
+
+// A rich guided plan on its fourth day, as its prayer page shows it.
+function PlanDayPreview({ lang }) {
+  const navigate = useNavigate();
+  const [prayer] = useState(() => {
+    const plan = planById('preparing21');
+    if (!plan) return null;
+    const run = {
+      ...buildGuidedPlanPrayer(plan, addDays(todayKey(), -3), lang),
+      id: 'd7', status: 'active', circle: 'heart', user_id: 'design-user', created_at: '2026-10-03T08:00:00Z',
+      prayer_categories: [], prayer_points: [], prayer_testimonies: [], prayer_updates: [],
+    };
+    usePrayerStore.setState((s) => ({ prayers: [...s.prayers.filter((p) => p.id !== run.id), run] }));
+    return run;
+  });
+  if (!prayer) return null;
+  return <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/plans')} onEdit={() => {}} lang={lang} />;
+}
+
+// The share sheet with a live link, three who joined and two friends to
+// invite. Its RPCs are answered here, during render — before the sheet's own
+// first fetch — so the preview never reaches the database.
+function PlanSharePreview({ lang }) {
+  const navigate = useNavigate();
+  useState(() => {
+    supabase.rpc = async (fn) => (fn === 'plan_share_status'
+      ? { data: [{ active_token: 'DesignPreviewLinkToken01', stopped: false, join_count: 3, friend_names: ['Marie'] }], error: null }
+      : { data: null, error: { message: 'design preview' } });
+    useCommunityStore.setState({
+      groups: [{ id: 'g1', name: 'Home group' }],
+      fetchFriends: async () => ({ friends: [{ id: 'f1', name: 'Marie Curie' }, { id: 'f2', name: 'Jonas Weber' }] }),
+      fetchPlanInvitees: async () => ({ inviteeIds: ['f2'] }),
+    });
+  });
+  const plan = planById('altar7');
+  return plan && <PlanShareSheet plan={plan} lang={lang} userId="design-user" onClose={() => navigate('/__design/plans')} />;
+}
+
+function PlanTailorPreview({ lang }) {
+  const navigate = useNavigate();
+  const plan = planById('preparing21');
+  return plan && <PlanPersonalizeModal plan={plan} lang={lang} mode="start" ctaKey="journeyStart" onSave={() => {}} onClose={() => navigate('/__design/plans')} />;
 }
 
 // The circle picker on its own: in the real form it appears only once the
@@ -199,7 +249,10 @@ export default function DesignScreens({ screen }) {
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
       {screen === 'carry' && <CarryPreview lang={lang} />}
-      {(screen === 'plans' || screen === 'plan') && <PlansTab />}
+      {(screen === 'plans' || screen === 'plan' || screen === 'plan-share' || screen === 'plan-tailor') && <PlansTab />}
+      {screen === 'plan-day' && <PlanDayPreview lang={lang} />}
+      {screen === 'plan-share' && <PlanSharePreview lang={lang} />}
+      {screen === 'plan-tailor' && <PlanTailorPreview lang={lang} />}
       {screen === 'plan' && planById('altar7') && (
         <PlanDetailModal plan={planById('altar7')} lang={lang} running={false} onStart={() => {}} onShare={() => {}} onClose={() => navigate('/__design/plans')} />
       )}

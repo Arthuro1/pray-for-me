@@ -106,12 +106,44 @@ and rollback notes. Unreleased entries are moved into a dated version at release
     (no brand colours); the ⋮ menu is a quiet surface with 44px items.
   - New key `rememberLabel` ×16 (from each locale's existing "Remember"
     movement). `community/ui.js` style constants removed with their last use.
+- **Formation — plans, Grow and Scripture read like a book** (`src/styles/formation.css`):
+  - *Scripture* — one gold reference style and one opened-passage panel (gold
+    rule, serif text, edition, link to the chapter) everywhere; "Begin with
+    God's Word" lost its Sparkles.
+  - *Plans* — the catalogue is editorial rows (serif title, duration, a thin
+    gold line for progress) instead of emoji tiles; a plan before it begins
+    reads as a page (serif introduction, its days as rows); "plan begun" is a
+    calm status, not a green card.
+  - *A plan day on its prayer page* — no longer a card: the day opens on a
+    hairline with "Day 4 of 21", round arrows and the day's theme in the
+    serif; past days show what was prayed and written as a quiet rule;
+    "Make this plan your own" and the pace sit with the day; the pace editor
+    opens in place with no box inside a box.
+  - *Grow* — Pray / Learn as a segmented control, rows instead of emoji cards;
+    the readers share one layout, and pray-through guides open in the
+    deep-violet prayer space and end on the Rise Mark.
+  - *Plan guides and completion* — boxes became inline-start rules, choices
+    use the circle option.
+  - *Sharing a plan or a verse* — the share sheet, the invitation panel, the
+    image panel and the verse dialog use the shared dialog, rows, checkboxes,
+    fields and three buttons; the link is one copyable line; the QR code
+    stays dark on white in both themes; "Make this plan your own" asks its
+    questions as choice rows, growth areas as chips.
+  - *Share art* — verse and plan cards and plan link previews drop the
+    starry sky for flat deep violet and the Rise Mark (`cardRise.js`);
+    `public/og/plans` regenerated; the public shared-plan page lost the
+    constellation.
+  - Scheduler rows (`RadioRow`, `DisclosureRow`) and the shared `Disclosure`
+    now come from the system (tokens and classes, no inline colours), so the
+    rhythm question looks the same in every form.
+  - No new strings.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.
 - Dev builds only: `/__design` renders every primitive in light, dark and RTL;
-  `/__design/today|journal|detail|session|bring|circles|tend|carry|together|group` render the
-  real screens with sample prayers and every store write stubbed out.
+  `/__design/today|journal|detail|session|bring|circles|tend|carry|together|group|plans|plan|plan-day|plan-share|plan-tailor|grow|guide`
+  render the real screens with sample prayers and every store write (and the
+  plan-share RPCs) stubbed out.
 
 ### Changed — Praystead becomes Qetoret
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Loader2, Check, HeartHandshake } from 'lucide-react';
+import { Loader2, HeartHandshake } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import useCommunityStore from '../../store/communityStore';
 import { toast } from '../../store/toastStore';
@@ -7,6 +7,7 @@ import { t } from '../../i18n';
 import Avatar from '../shared/Avatar';
 import { avatarConfigFrom } from '../../lib/avatar';
 import EmptyState from '../shared/EmptyState';
+import { Checkbox, Field, Input, PrimaryButton, SectionLabel, StatusLabel } from '../shared/Primitives';
 
 // Invite friends and/or whole groups to walk a guided plan together, inside
 // Qetoret. Selecting a group fans the invitation out to each of its members
@@ -74,82 +75,84 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
 
   return (
     <>
-      <div className="px-5 py-4 overflow-y-auto space-y-5">
+      <div className="plan-detail__body min-h-0 flex-1 overflow-y-auto">
         {/* Calm, honest framing of what an invitation does. */}
-        <div className="rounded-xl p-3 flex gap-2.5" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-          <HeartHandshake size={16} style={{ color: 'var(--q-royal-text)', flexShrink: 0, marginTop: 1 }} />
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planInviteSub')}</p>
-        </div>
+        <p className="share-note">
+          <HeartHandshake size={16} aria-hidden="true" /> <span>{t(lang, 'planInviteSub')}</span>
+        </p>
 
         {loading ? (
-          <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
+          <div className="plan-share__loading"><Loader2 size={20} className="animate-spin" aria-hidden="true" /></div>
         ) : nothingToInvite ? (
           <EmptyState compact title={t(lang, 'planInviteEmpty')} />
         ) : (
           <>
             {/* Start date — invitees begin the plan on this day. */}
-            <label className="flex items-center justify-between gap-3">
-              <span className="text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planStartDate')}</span>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="text-sm rounded-lg px-2.5 py-1.5"
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)', colorScheme: 'light dark' }}
-              />
-            </label>
+            <Field label={t(lang, 'planStartDate')} className="q-dialog__section">
+              {(field) => <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-auto justify-self-start" {...field} />}
+            </Field>
 
             {friends.length > 0 && (
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planInviteFriendsHeading')}</p>
-                <div className="space-y-2">
+              <section className="q-dialog__section">
+                <SectionLabel>{t(lang, 'planInviteFriendsHeading')}</SectionLabel>
+                <ul className="member-list">
                   {friends.map((f) => {
                     const already = invitedIds.has(f.id);
-                    const checked = selFriends.has(f.id);
                     return (
-                      <label
-                        key={f.id}
-                        className="flex items-center gap-3 p-2.5 rounded-xl"
-                        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', cursor: already ? 'default' : 'pointer', opacity: already ? 0.6 : 1 }}
-                      >
-                        <input type="checkbox" className="rounded" checked={already || checked} disabled={already} onChange={() => toggleFriend(f.id)} />
-                        <Avatar name={f.name} avatar={f.avatar} size={30} />
-                        <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--q-text)' }}>{f.name}</span>
-                        {already && (
-                          <span className="text-xs inline-flex items-center gap-1 shrink-0" style={{ color: 'var(--q-royal-text)' }}>
-                            <Check size={13} /> {t(lang, 'planInvitedBadge')}
-                          </span>
-                        )}
-                      </label>
+                      <li key={f.id} className="member-row">
+                        <Checkbox
+                          id={`plan-invite-friend-${f.id}`}
+                          checked={already || selFriends.has(f.id)}
+                          disabled={already}
+                          onChange={() => toggleFriend(f.id)}
+                          className="min-w-0 flex-1"
+                          label={(
+                            <span className="plan-invite__who">
+                              <Avatar name={f.name} avatar={f.avatar} size={32} />
+                              <span>{f.name}</span>
+                            </span>
+                          )}
+                        />
+                        {already && <StatusLabel tone="royal" className="shrink-0">{t(lang, 'planInvitedBadge')}</StatusLabel>}
+                      </li>
                     );
                   })}
-                </div>
-              </div>
+                </ul>
+              </section>
             )}
 
             {groups.length > 0 && (
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planInviteGroupsHeading')}</p>
-                <div className="space-y-2">
+              <section className="q-dialog__section">
+                <SectionLabel>{t(lang, 'planInviteGroupsHeading')}</SectionLabel>
+                <ul className="member-list">
                   {groups.map((g) => (
-                    <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-                      <input type="checkbox" className="rounded" checked={selGroups.has(g.id)} onChange={() => toggleGroup(g.id)} />
-                      <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={32} />
-                      <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--q-text)' }}>{g.name}</span>
-                    </label>
+                    <li key={g.id} className="member-row">
+                      <Checkbox
+                        id={`plan-invite-group-${g.id}`}
+                        checked={selGroups.has(g.id)}
+                        onChange={() => toggleGroup(g.id)}
+                        className="min-w-0 flex-1"
+                        label={(
+                          <span className="plan-invite__who">
+                            <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={32} />
+                            <span>{g.name}</span>
+                          </span>
+                        )}
+                      />
+                    </li>
                   ))}
-                </div>
-              </div>
+                </ul>
+              </section>
             )}
           </>
         )}
       </div>
 
       {!nothingToInvite && (
-        <div className="p-5 pt-3 shrink-0" style={{ borderTop: '0.5px solid var(--q-border)' }}>
-          <button onClick={handleSend} disabled={!canSend || sending} className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
-            {sending ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'planInviteSend')}
-          </button>
+        <div className="plan-detail__footer shrink-0">
+          <PrimaryButton onClick={handleSend} disabled={!canSend || sending} className="w-full">
+            {sending ? <Loader2 size={16} className="animate-spin" aria-label={t(lang, 'planInviteSend')} /> : t(lang, 'planInviteSend')}
+          </PrimaryButton>
         </div>
       )}
     </>

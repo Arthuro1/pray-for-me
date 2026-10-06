@@ -1,6 +1,6 @@
-import { Check } from 'lucide-react';
 import { t } from '../../i18n';
 import RichText from '../rich/RichText';
+import { SectionLabel, StatusLabel } from '../shared/Primitives';
 
 // What the reader left behind on a day of the plan they have already walked
 // through: that they prayed it, and anything they wrote that day.
@@ -16,26 +16,15 @@ export default function PlanDayTrace({ lang, prayed = false, updates = [] }) {
   if (!prayed && updates.length === 0) return null;
 
   return (
-    <section className="rounded-xl p-3 space-y-2" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-      {prayed && (
-        <p className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--q-success)' }}>
-          <Check size={13} aria-hidden="true" /> {t(lang, 'prayedOnDay')}
-        </p>
-      )}
+    <section className="plan-day__aside grid gap-3">
+      {prayed && <StatusLabel tone="answered">{t(lang, 'prayedOnDay')}</StatusLabel>}
 
       {updates.length > 0 && (
         <div>
-          <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
-            {t(lang, 'planDayNotes')}
-          </h4>
-          <div className="space-y-2">
+          <SectionLabel as="h4" className="mb-2">{t(lang, 'planDayNotes')}</SectionLabel>
+          <div className="grid gap-2">
             {updates.map((update) => (
-              <RichText
-                key={update.id}
-                text={update.text}
-                className="text-sm leading-relaxed"
-                style={{ color: 'var(--q-text-secondary)' }}
-              />
+              <RichText key={update.id} text={update.text} className="plan-day__text" />
             ))}
           </div>
         </div>

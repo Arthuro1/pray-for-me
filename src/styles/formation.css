@@ -302,3 +302,91 @@
 /* A single-line choice uses the circle option, centred on its ring. */
 .circle-option--compact { min-height: 48px; align-items: center; }
 .circle-option--compact .circle-option__ring { margin-block-start: 0; }
+
+/* ── A running plan's day on its prayer page ────────────────────────────── */
+/* Not a card: the day opens on a hairline (the section after it brings its
+   own), the counter and the arrows above it, the theme in the serif. Paging
+   moves the day, never the page. */
+.plan-deck { padding-block: var(--q-space-5) var(--q-space-6); border-block-start: 1px solid var(--q-border); }
+.plan-deck__head { display: flex; align-items: center; justify-content: space-between; gap: var(--q-space-2); }
+.plan-deck__nav { display: flex; flex: 0 0 auto; gap: var(--q-space-2); }
+.plan-deck__arrow { border-radius: 50%; }
+.plan-deck__arrow:not(:disabled) { color: var(--q-royal-text); }
+.plan-deck__arrow:disabled { cursor: default; opacity: 0.35; }
+
+.plan-deck__away { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--q-space-3); }
+.plan-deck__away > p::first-letter { text-transform: uppercase; }
+
+.plan-deck__theme {
+  margin: var(--q-space-3) 0 var(--q-space-2);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: var(--q-type-prayer);
+  font-weight: 450;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* `pan-y` keeps vertical scrolling native — only the horizontal axis is
+   ours — and the clip lets the day be dragged past the edge without widening
+   the page. The incoming day is nudged in from the side it was sent for, not
+   slid the full width: a tall column of text crossing the screen is heavier
+   than the move deserves. Reduced motion zeroes the tokens, so both go flat. */
+.plan-deck__viewport { overflow: hidden; touch-action: pan-y; }
+.plan-deck__panel { transition: transform var(--q-motion-standard) var(--q-ease); }
+.plan-deck__panel--dragging { transition: none; }
+.plan-deck__panel--from-right { animation: plan-deck-in-right var(--q-motion-standard) var(--q-ease); }
+.plan-deck__panel--from-left { animation: plan-deck-in-left var(--q-motion-standard) var(--q-ease); }
+
+@keyframes plan-deck-in-right {
+  from { opacity: 0; transform: translateX(32%); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes plan-deck-in-left {
+  from { opacity: 0; transform: translateX(-32%); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── Tailoring a plan: a few questions that change what a day says ─────── */
+.plan-tailor > * + * { margin-block-start: var(--q-space-8); }
+.plan-tailor__title { margin: 0 0 var(--q-space-1); color: var(--q-text); font-size: 0.9375rem; font-weight: 600; line-height: 1.4; }
+.plan-tailor__hint { margin-block-end: var(--q-space-3); }
+.plan-tailor__choices { display: grid; gap: var(--q-space-2); }
+.plan-tailor__fold { border-block: 1px solid var(--q-border); }
+.plan-tailor__fold + .plan-tailor__fold { margin-block-start: 0; border-block-start: 0; }
+.plan-tailor__fold-body { display: grid; gap: var(--q-space-4); padding-block: var(--q-space-2) var(--q-space-5); }
+.plan-tailor__child { display: flex; align-items: center; gap: var(--q-space-2); }
+
+/* ── Sharing a plan ─────────────────────────────────────────────────────── */
+.plan-share__section + .plan-share__section { margin-block-start: var(--q-space-8); }
+.plan-share__section > .section-label { margin-block-end: var(--q-space-3); }
+
+.plan-share__row {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  align-items: center;
+  gap: var(--q-space-3);
+  border-block: 1px solid var(--q-border);
+  color: var(--q-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+
+.plan-share__row:hover { background: var(--q-hover); }
+.plan-share__row > svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
+.plan-share__row > svg:first-child { color: var(--q-royal-text); }
+.plan-share__row > span { min-width: 0; flex: 1 1 auto; }
+
+.plan-share__more { display: grid; grid-template-columns: 1fr 1fr; gap: var(--q-space-2); }
+.plan-share__returns { margin-block-start: var(--q-space-6); padding-block-start: var(--q-space-4); border-block-start: 1px solid var(--q-border); }
+.plan-share__loading { display: flex; justify-content: center; padding-block: var(--q-space-6); color: var(--q-text-tertiary); }
+
+.plan-invite__who { display: flex; min-width: 0; align-items: center; gap: var(--q-space-3); }
+.plan-invite__who > span:last-child { overflow: hidden; color: var(--q-text); text-overflow: ellipsis; white-space: nowrap; }

@@ -1,42 +1,22 @@
-// One answer in a group of answers, as a card-sized row.
+// One answer in a group of answers, drawn as the shared choice row.
 //
 // A real radio: the native input carries focus, arrow keys, Space and the group
-// semantics; the ring beside it only mirrors state, and states it with a filled
-// dot as well as colour so it doesn't rely on hue alone.
+// semantics; the ring beside it only mirrors state, and states it with a gold
+// centre as well as colour so it doesn't rely on hue alone.
 //
 // One row of the scheduler (ScheduleEditor), which a guided plan's own card
 // opens too - so the rhythm is one question, asked in one vocabulary, wherever
 // the reader answers it.
 export default function RadioRow({ id, name, checked, onChange, label, sub, disabled = false }) {
   return (
-    <label
-      htmlFor={id}
-      className={`flex items-start gap-3 w-full min-h-[44px] rounded-xl px-3 py-2.5 ${disabled ? 'cursor-default opacity-60' : 'cursor-pointer'}`}
-      style={checked
-        ? { background: 'var(--q-selected)', border: '1.5px solid var(--q-royal)' }
-        : { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
-    >
-      <span className="relative w-5 h-5 shrink-0 mt-0.5 flex items-center justify-center">
-        <input
-          id={id}
-          type="radio"
-          name={name}
-          checked={checked}
-          disabled={disabled}
-          onChange={onChange}
-          className="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-default"
-        />
-        <span
-          aria-hidden="true"
-          className="w-5 h-5 rounded-full flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
-          style={{ background: 'var(--q-surface)', border: checked ? '1.5px solid var(--q-royal)' : '0.5px solid var(--q-field-border)' }}
-        >
-          {checked && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--q-action-primary)' }} />}
-        </span>
+    <label htmlFor={id} className={`circle-option ${sub ? '' : 'circle-option--compact'}`}>
+      <span className="circle-option__control">
+        <input id={id} type="radio" name={name} checked={checked} disabled={disabled} onChange={onChange} />
+        <span className="circle-option__ring" aria-hidden="true" />
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-sm font-medium break-words" style={{ color: 'var(--q-text)' }}>{label}</span>
-        {sub && <span className="block text-xs mt-0.5 break-words" style={{ color: 'var(--q-text-tertiary)' }}>{sub}</span>}
+      <span className="min-w-0">
+        <span className="circle-option__title break-words">{label}</span>
+        {sub && <span className="circle-option__description break-words">{sub}</span>}
       </span>
     </label>
   );

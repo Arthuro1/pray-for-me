@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Download, Loader2, Share2 } from 'lucide-react';
-import { SegmentedControl } from '../shared/Primitives';
+import { PrimaryButton, SecondaryButton, SegmentedControl } from '../shared/Primitives';
 import { toast } from '../../store/toastStore';
 import { t } from '../../i18n';
 import { renderPlanCard } from '../../lib/planCard';
@@ -70,15 +70,16 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
   };
 
   const canUseNativeSheet = typeof navigator !== 'undefined' && !!navigator.share;
+  const SaveButton = canUseNativeSheet ? SecondaryButton : PrimaryButton;
 
   if (!rendering && !image) {
-    return <p className="px-5 py-6 text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'errorGeneric')}</p>;
+    return <p className="plan-detail__body q-meta">{t(lang, 'errorGeneric')}</p>;
   }
 
   return (
-    <div className="px-5 py-4 overflow-y-auto">
+    <div className="plan-detail__body min-h-0 flex-1 overflow-y-auto">
       <SegmentedControl
-        className="mb-3"
+        className="mb-4"
         label={t(lang, 'planShareImage')}
         value={size}
         onChange={setSize}
@@ -87,41 +88,17 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
           { value: 'story', label: t(lang, 'verseCardStory') },
         ]}
       />
-      <div
-        className="mb-4 flex items-center justify-center overflow-hidden rounded-xl"
-        style={{
-          background: 'var(--q-surface-muted)',
-          border: '0.5px solid var(--q-border)',
-          aspectRatio: size === 'story' ? '9 / 16' : '1 / 1',
-          maxHeight: '18rem',
-        }}
-      >
+      <div className={`share-image ${size === 'story' ? 'share-image--story' : ''}`}>
         {image
-          ? <img src={image.url} alt={title} className="h-full w-full object-contain" />
-          : <Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />}
+          ? <img src={image.url} alt={title} />
+          : <Loader2 size={18} className="animate-spin" aria-hidden="true" />}
       </div>
       {image && (
-        <div className="flex flex-col gap-2">
+        <div className="mt-5 grid gap-2">
           {canUseNativeSheet && (
-            <button
-              type="button"
-              onClick={shareImage}
-              className="pressable flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white"
-              style={{ background: 'var(--q-action-primary)' }}
-            >
-              <Share2 size={16} aria-hidden="true" /> {t(lang, 'verseShareImage')}
-            </button>
+            <PrimaryButton icon={Share2} onClick={shareImage}>{t(lang, 'verseShareImage')}</PrimaryButton>
           )}
-          <button
-            type="button"
-            onClick={saveImage}
-            className="pressable flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium"
-            style={canUseNativeSheet
-              ? { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }
-              : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
-          >
-            <Download size={15} aria-hidden="true" /> {t(lang, 'verseSaveImage')}
-          </button>
+          <SaveButton icon={Download} iconSize={16} onClick={saveImage}>{t(lang, 'verseSaveImage')}</SaveButton>
         </div>
       )}
     </div>

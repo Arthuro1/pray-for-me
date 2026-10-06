@@ -1098,9 +1098,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             onGoToDay={onGoToDay}
             onShowToday={requestedDay ? onShowToday : null}
           >
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium mb-2" style={{ color: 'var(--q-text)' }}>{pick(planDay.theme, lang)}</p>
+                <p className="plan-deck__theme">{pick(planDay.theme, lang)}</p>
                 <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
                   {({ toggle, expanded }) => (
                     <button type="button" onClick={toggle} aria-expanded={expanded} className="scripture-ref">
@@ -1123,14 +1123,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               {/* Sharing the plan lives in the ⋯ menu only: on the day card it
                   competed with the day itself for the reader's attention. */}
               {canEditPersonalization && (
-                <button
-                  type="button"
-                  onClick={() => setEditingPersonalization(true)}
-                  className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                  style={{ color: 'var(--q-text-tertiary)' }}
-                >
-                  <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
-                </button>
+                <QuietButton icon={Pencil} iconSize={15} onClick={() => setEditingPersonalization(true)} className="-ms-3">
+                  {t(lang, 'planPersonalizeTitle')}
+                </QuietButton>
               )}
               {/* How often this comes back, kept WITH the day it paces — a
                   reader who finds a plan too fast is looking at the day, not

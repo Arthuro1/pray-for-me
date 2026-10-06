@@ -16,16 +16,15 @@ const DisclosureRow = forwardRef(function DisclosureRow({ label, value, action, 
       onClick={onToggle}
       aria-expanded={open}
       aria-controls={controlsId}
-      className="w-full min-h-[44px] flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-start"
-      style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
+      className="disclosure-row"
     >
       <span className="min-w-0 flex-1">
-        <span className="block text-sm" style={{ color: 'var(--q-text)' }}>{label}</span>
-        {value && <span className="block text-xs mt-0.5 break-words" style={{ color: 'var(--q-text-tertiary)' }}>{value}</span>}
+        <span className="disclosure-row__label">{label}</span>
+        {value && <span className="disclosure-row__value">{value}</span>}
       </span>
-      <span className="shrink-0 flex items-center gap-1 text-xs font-medium" style={{ color: 'var(--q-royal-text)' }}>
+      <span className="disclosure-row__action">
         {action}
-        <ChevronDown size={14} aria-hidden="true" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+        <ChevronDown size={14} aria-hidden="true" />
       </span>
     </button>
   );

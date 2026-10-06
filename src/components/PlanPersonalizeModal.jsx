@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { X, Check, ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { X, Check, Plus, Trash2 } from 'lucide-react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { CircleOption, Disclosure, Input, PrimaryButton, QuietButton } from './shared/Primitives';
 import { ROLES, GROWTH_AREAS, DEFAULT_ROLE, getPlanPrefs } from '../lib/planPrefs';
 import { MARRIAGE_INCLUDES, MAX_PLAN_CHILDREN, isCouplePlan, sanitizePlanPersonalization } from '../lib/planPersonalization';
 
@@ -24,32 +25,26 @@ import { MARRIAGE_INCLUDES, MAX_PLAN_CHILDREN, isCouplePlan, sanitizePlanPersona
 // infer it from a name, a profile photo, pronouns or anything else — and it
 // defaults to keeping the plan general.
 
-// A tappable option row. Radio semantics for the single-choice questions,
-// checkbox semantics for the multi-choice ones, so a screen reader announces
-// "one of four" versus "selected".
+// One answer, drawn as the shared choice row. Radio semantics for the
+// single-choice questions, checkbox semantics for the multi-choice ones, so a
+// screen reader announces "one of four" versus "selected".
 function OptionRow({ label, selected, multi, onSelect }) {
   return (
-    <button
-      type="button"
-      role={multi ? 'checkbox' : 'radio'}
-      aria-checked={selected}
-      onClick={onSelect}
-      className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-start text-sm"
-      style={selected
-        ? { background: 'var(--q-selected)', color: 'var(--q-text)', border: '1px solid var(--q-selected-border)' }
-        : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-    >
-      <span className="min-w-0">{label}</span>
-      {selected && <Check size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />}
-    </button>
+    <CircleOption
+      title={label}
+      selected={selected}
+      onSelect={onSelect}
+      className="circle-option--compact"
+      {...(multi ? { role: 'checkbox' } : {})}
+    />
   );
 }
 
 function Question({ id, title, hint, children }) {
   return (
     <section aria-labelledby={id}>
-      <h4 id={id} className="mb-0.5 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{title}</h4>
-      {hint && <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{hint}</p>}
+      <h3 id={id} className="plan-tailor__title">{title}</h3>
+      {hint && <p className="q-field__hint plan-tailor__hint">{hint}</p>}
       {children}
     </section>
   );
@@ -68,7 +63,7 @@ const COUPLE_ROLES = [
 function RoleQuestion({ lang, role, onChange, questionKey, hintKey, options }) {
   return (
     <Question id="plan-role" title={t(lang, questionKey)} hint={t(lang, hintKey)}>
-      <div role="radiogroup" aria-labelledby="plan-role" className="flex flex-col gap-2">
+      <div role="radiogroup" aria-labelledby="plan-role" className="plan-tailor__choices">
         {options.map((r) => (
           <OptionRow key={r.id} label={t(lang, r.labelKey)} selected={role === r.id} onSelect={() => onChange(r.id)} />
         ))}
@@ -79,18 +74,9 @@ function RoleQuestion({ lang, role, onChange, questionKey, hintKey, options }) {
 
 function Footer({ lang, ctaKey, privacyKey, onSave }) {
   return (
-    <div
-      className="shrink-0 space-y-2 px-5 pt-4"
-      style={{
-        background: 'var(--q-surface)',
-        borderTop: '0.5px solid var(--q-border)',
-        paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
-      }}
-    >
-      <button onClick={onSave} className="w-full rounded-xl px-3 py-3 text-sm font-semibold" style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}>
-        {t(lang, ctaKey)}
-      </button>
-      {privacyKey && <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, privacyKey)}</p>}
+    <div className="plan-detail__footer shrink-0">
+      <PrimaryButton onClick={onSave} className="w-full">{t(lang, ctaKey)}</PrimaryButton>
+      {privacyKey && <p className="q-meta mt-3 text-center">{t(lang, privacyKey)}</p>}
     </div>
   );
 }
@@ -134,9 +120,9 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
 
   return (
     <>
-      <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5 pb-8">
+      <div className="plan-detail__body plan-tailor min-h-0 flex-1 overflow-y-auto">
         <Question id="plan-couple-person" title={t(lang, engaged ? 'planCoupleFianceQ' : 'planCoupleSpouseQ')}>
-          <input
+          <Input
             aria-label={t(lang, 'planCoupleDisplayName')}
             list={(people || []).length > 0 ? `plan-couple-people-${plan.id}` : undefined}
             value={name}
@@ -144,107 +130,90 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
             autoComplete="off"
             onChange={(event) => changeName(event.target.value)}
             placeholder={t(lang, 'planCoupleDisplayName')}
-            className="min-h-11 w-full rounded-xl px-3 text-sm"
-            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
           />
           {(people || []).length > 0 && (
             <datalist id={`plan-couple-people-${plan.id}`}>
               {(people || []).map((item) => <option key={item.prayerId} value={item.name} />)}
             </datalist>
           )}
-          <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCouplePrivacy')}</p>
+          <p className="q-field__hint mt-2">{t(lang, 'planCouplePrivacy')}</p>
         </Question>
 
         <Question id="plan-couple-mode" title={t(lang, 'planCoupleModeQ')} hint={t(lang, 'planCoupleTogetherHint')}>
-          <div role="radiogroup" aria-labelledby="plan-couple-mode" className="flex flex-col gap-2">
+          <div role="radiogroup" aria-labelledby="plan-couple-mode" className="plan-tailor__choices">
             <OptionRow label={t(lang, 'planCoupleModePrivate')} selected={mode === 'private'} onSelect={() => setMode('private')} />
             <OptionRow label={t(lang, 'planCoupleModeTogether')} selected={mode === 'together'} onSelect={() => setMode('together')} />
           </div>
         </Question>
 
         {!engaged && (
-          <section>
-            <button
-              type="button"
-              onClick={() => setFamilyOpen((open) => !open)}
-              aria-expanded={familyOpen}
-              aria-controls="plan-couple-family-options"
-              className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
-            >
-              <span className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
-                {t(lang, 'planCoupleIncludeQ')}{includes.length ? ` · ${includes.length}` : ''}
-              </span>
-              <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: familyOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
-            </button>
-            {familyOpen && (
-              <div id="plan-couple-family-options" className="mt-2 space-y-4">
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCoupleIncludeHint')}</p>
-                <div role="group" aria-label={t(lang, 'planCoupleIncludeQ')} className="flex flex-col gap-2">
-                  {MARRIAGE_INCLUDES.map((item) => (
-                    <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={includes.includes(item.id)} multi onSelect={() => toggleInclude(item.id)} />
-                  ))}
-                </div>
-
-                {childEnabled && (
-                  <Question id="plan-couple-children" title={t(lang, 'planCoupleIncludeChildren')}>
-                    <div className="space-y-2">
-                      {children.map((child, index) => (
-                        <div key={child.id} className="flex items-center gap-2">
-                          <input
-                            aria-label={t(lang, 'planCoupleChildName')}
-                            value={child.name}
-                            maxLength={80}
-                            autoComplete="off"
-                            onChange={(event) => setChildren((current) => current.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)))}
-                            placeholder={t(lang, 'planCoupleChildName')}
-                            className="min-h-11 min-w-0 flex-1 rounded-xl px-3 text-sm"
-                            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setChildren((current) => current.filter((_, i) => i !== index))}
-                            aria-label={t(lang, 'planCoupleRemoveChild', { name: child.name || String(index + 1) })}
-                            className="phase-icon-button shrink-0"
-                          ><Trash2 size={16} /></button>
-                        </div>
-                      ))}
-                      {!atChildLimit && (
-                        <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
-                          <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
-                        </button>
-                      )}
-                    </div>
-                  </Question>
-                )}
-              </div>
-            )}
-          </section>
-        )}
-
-        <section>
-          <button
-            type="button"
-            onClick={() => setRoleOpen((open) => !open)}
-            aria-expanded={roleOpen}
-            aria-controls="plan-couple-role-options"
-            className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
+          <Disclosure
+            id="plan-couple-family-options"
+            label={t(lang, 'planCoupleIncludeQ')}
+            count={includes.length || undefined}
+            open={familyOpen}
+            onToggle={() => setFamilyOpen((open) => !open)}
+            className="plan-tailor__fold"
           >
-            <span className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
-              {t(lang, 'planCoupleRoleQ')}{role !== DEFAULT_ROLE ? ' · 1' : ''}
-            </span>
-            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: roleOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
-          </button>
-          {roleOpen && (
-            <div id="plan-couple-role-options" className="mt-2">
-              <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
-              <div role="radiogroup" aria-label={t(lang, 'planCoupleRoleQ')} className="flex flex-col gap-2">
-                {COUPLE_ROLES.map((item) => (
-                  <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={role === item.id} onSelect={() => setRole(item.id)} />
+            <div className="plan-tailor__fold-body">
+              <p className="q-field__hint">{t(lang, 'planCoupleIncludeHint')}</p>
+              <div role="group" aria-label={t(lang, 'planCoupleIncludeQ')} className="plan-tailor__choices">
+                {MARRIAGE_INCLUDES.map((item) => (
+                  <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={includes.includes(item.id)} multi onSelect={() => toggleInclude(item.id)} />
                 ))}
               </div>
+
+              {childEnabled && (
+                <Question id="plan-couple-children" title={t(lang, 'planCoupleIncludeChildren')}>
+                  <div className="grid gap-2">
+                    {children.map((child, index) => (
+                      <div key={child.id} className="plan-tailor__child">
+                        <Input
+                          aria-label={t(lang, 'planCoupleChildName')}
+                          value={child.name}
+                          maxLength={80}
+                          autoComplete="off"
+                          onChange={(event) => setChildren((current) => current.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)))}
+                          placeholder={t(lang, 'planCoupleChildName')}
+                          className="min-w-0 flex-1"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setChildren((current) => current.filter((_, i) => i !== index))}
+                          aria-label={t(lang, 'planCoupleRemoveChild', { name: child.name || String(index + 1) })}
+                          className="icon-button pressable shrink-0"
+                        ><Trash2 size={16} aria-hidden="true" /></button>
+                      </div>
+                    ))}
+                    {!atChildLimit && (
+                      <QuietButton icon={Plus} iconSize={16} onClick={addChild} className="-ms-3 justify-self-start">
+                        {t(lang, 'planCoupleAddChild')}
+                      </QuietButton>
+                    )}
+                  </div>
+                </Question>
+              )}
             </div>
-          )}
-        </section>
+          </Disclosure>
+        )}
+
+        <Disclosure
+          id="plan-couple-role-options"
+          label={t(lang, 'planCoupleRoleQ')}
+          count={role !== DEFAULT_ROLE ? 1 : undefined}
+          open={roleOpen}
+          onToggle={() => setRoleOpen((open) => !open)}
+          className="plan-tailor__fold"
+        >
+          <div className="plan-tailor__fold-body">
+            <p className="q-field__hint">{t(lang, 'planCoupleRoleReviewPending')}</p>
+            <div role="radiogroup" aria-label={t(lang, 'planCoupleRoleQ')} className="plan-tailor__choices">
+              {COUPLE_ROLES.map((item) => (
+                <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={role === item.id} onSelect={() => setRole(item.id)} />
+              ))}
+            </div>
+          </div>
+        </Disclosure>
       </div>
 
       <Footer lang={lang} ctaKey={ctaKey} onSave={save} />
@@ -263,7 +232,7 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
 
   return (
     <>
-      <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5 pb-8">
+      <div className="plan-detail__body plan-tailor min-h-0 flex-1 overflow-y-auto">
         <RoleQuestion
           lang={lang}
           role={role}
@@ -275,21 +244,16 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
 
         {/* Growth areas are the longest list and only rank the "Go deeper"
             shelf, so they wait behind a disclosure. */}
-        <section>
-          <button
-            type="button"
-            onClick={() => setGrowthOpen((v) => !v)}
-            aria-expanded={growthOpen}
-            aria-controls="plan-prep-growth"
-            className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
-          >
-            <span className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
-              {t(lang, 'planPrepGrowthQ')}{growth.length ? ` · ${growth.length}` : ''}
-            </span>
-            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: growthOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
-          </button>
-          {growthOpen && (
-            <div id="plan-prep-growth" role="group" aria-label={t(lang, 'planPrepGrowthQ')} className="mt-2 flex flex-wrap gap-2">
+        <Disclosure
+          id="plan-prep-growth"
+          label={t(lang, 'planPrepGrowthQ')}
+          count={growth.length || undefined}
+          open={growthOpen}
+          onToggle={() => setGrowthOpen((v) => !v)}
+          className="plan-tailor__fold"
+        >
+          <div className="plan-tailor__fold-body">
+            <div role="group" aria-label={t(lang, 'planPrepGrowthQ')} className="q-chips">
               {GROWTH_AREAS.map((g) => {
                 const selected = growth.includes(g.id);
                 return (
@@ -299,18 +263,16 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
                     role="checkbox"
                     aria-checked={selected}
                     onClick={() => toggleGrowth(g.id)}
-                    className="min-h-11 rounded-full px-3 text-xs font-medium"
-                    style={selected
-                      ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '1px solid var(--q-selected-border)' }
-                      : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
+                    className="q-chip pressable"
                   >
+                    {selected && <Check size={14} aria-hidden="true" />}
                     {t(lang, g.labelKey)}
                   </button>
                 );
               })}
             </div>
-          )}
-        </section>
+          </div>
+        </Disclosure>
       </div>
 
       <Footer lang={lang} ctaKey={ctaKey} privacyKey="planPrepOnboardingPrivacy" onSave={() => onSave({ role, growth })} />
@@ -335,17 +297,17 @@ export default function PlanPersonalizeModal({ plan, lang, onSave, onClose, peop
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, 'planPersonalizeTitle')}
-        className="editorial-dialog flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden"
+        className="q-dialog flex max-h-[88vh] min-h-0 w-full max-w-md flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start gap-3 p-5 pb-4" style={{ borderBottom: '0.5px solid var(--q-border)' }}>
+        <div className="plan-detail__header shrink-0">
           <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'planPersonalizeTitle')}</h3>
-            <p className="mt-0.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
+            <h2 className="q-dialog__title">{t(lang, 'planPersonalizeTitle')}</h2>
+            <p className="q-meta mt-1">
               {t(lang, plan.titleKey)}{mode === 'start' ? ` · ${t(lang, 'planDays', { n: plan.count })}` : ''}
             </p>
           </div>
-          <button onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0"><X size={18} /></button>
+          <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0"><X size={18} aria-hidden="true" /></button>
         </div>
 
         {couple

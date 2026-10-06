@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Repeat, CalendarClock, Edit2 } from 'lucide-react';
+import { Repeat, CalendarClock } from 'lucide-react';
 import { t } from '../i18n';
 import ScheduleEditor from './ScheduleEditor';
+import { PrimaryButton, SecondaryButton } from './shared/Primitives';
 import { draftFromSchedule, scheduleFromDraft, scheduleSummary } from '../lib/scheduleDraft';
 
 // Prayer-plan (recurrence) editor for the prayer detail page, so a plan can be
@@ -26,52 +27,29 @@ export default function SchedulePlanner({ schedule, onSave, lang, planDays, defa
 
   if (editing) {
     return (
-      <div className="rounded-2xl p-4 space-y-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+      <div className="schedule-picker">
         <ScheduleEditor draft={draft} onChange={setDraft} lang={lang} planDays={planDays} />
-        <div className="flex gap-2">
-          <button
-            onClick={close}
-            className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm"
-            style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-          >
-            {t(lang, 'cancel')}
-          </button>
-          <button
-            onClick={save}
-            className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm font-medium text-white"
-            style={{ background: 'var(--q-action-primary)' }}
-          >
-            {t(lang, 'schedUseRhythm')}
-          </button>
+        <div className="schedule-picker__actions">
+          <SecondaryButton onClick={close}>{t(lang, 'cancel')}</SecondaryButton>
+          <PrimaryButton onClick={save}>{t(lang, 'schedUseRhythm')}</PrimaryButton>
         </div>
       </div>
     );
   }
 
-  // Existing plan → tappable summary pill that opens the editor.
+  // Existing rhythm → its summary, which opens the editor.
   if (schedule) {
     return (
-      <button
-        onClick={startEdit}
-        title={t(lang, 'editSchedule')}
-        className="w-full min-h-[44px] text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
-        style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-      >
-        <Repeat size={12} className="shrink-0" />
-        <span className="flex-1 text-start">{scheduleSummary(schedule, lang)}</span>
-        <Edit2 size={12} className="shrink-0 opacity-60" />
-      </button>
+      <SecondaryButton icon={Repeat} iconSize={16} onClick={startEdit} title={t(lang, 'editSchedule')} className="w-full">
+        {scheduleSummary(schedule, lang)}
+      </SecondaryButton>
     );
   }
 
-  // No plan yet → entry point to add one.
+  // No rhythm yet → entry point to add one.
   return (
-    <button
-      onClick={startEdit}
-      className="w-full min-h-[44px] text-xs font-medium flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5"
-      style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-    >
-      <CalendarClock size={13} /> {t(lang, 'addSchedule')}
-    </button>
+    <SecondaryButton icon={CalendarClock} iconSize={16} onClick={startEdit} className="w-full">
+      {t(lang, 'addSchedule')}
+    </SecondaryButton>
   );
 }

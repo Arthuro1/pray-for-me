@@ -112,16 +112,10 @@ export function Disclosure({ id, label, count, open, onToggle, children, classNa
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={id}
-        className="pressable flex min-h-11 w-full items-center justify-between gap-3 text-start"
+        className="q-disclosure pressable"
       >
-        <span className="text-sm font-semibold" style={{ color: 'var(--q-text-secondary)' }}>
-          {label}{typeof count === 'number' ? ` · ${count}` : ''}
-        </span>
-        <ChevronDown
-          size={16}
-          aria-hidden="true"
-          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform var(--q-motion-standard) var(--q-ease)' }}
-        />
+        <span>{label}{typeof count === 'number' ? ` · ${count}` : ''}</span>
+        <ChevronDown size={16} aria-hidden="true" />
       </button>
       {open && <div id={id}>{children}</div>}
     </div>
@@ -237,11 +231,11 @@ export const Textarea = forwardRef(function Textarea({ editorial = false, classN
 
 // A real checkbox drawn quietly: the native input stays focusable and
 // operable underneath, the box beside it only mirrors its state.
-export function Checkbox({ id, checked, onChange, label, className = '' }) {
+export function Checkbox({ id, checked, onChange, label, disabled = false, className = '' }) {
   return (
     <label htmlFor={id} className={`q-check ${className}`}>
       <span className="q-check__control">
-        <input id={id} type="checkbox" checked={checked} onChange={onChange} />
+        <input id={id} type="checkbox" checked={checked} onChange={onChange} disabled={disabled} />
         <span className="q-check__box" aria-hidden="true">
           {checked && <Check size={14} strokeWidth={2.5} />}
         </span>
