@@ -30,7 +30,7 @@ describe('PrayTogetherCard — carry this prayer', () => {
 
   it('says plainly when you are carrying it, and how many carry it', async () => {
     await renderCard({ count: 3, hasReacted: true });
-    expect(screen.getByRole('button', { name: t(lang, 'carryingThisPrayer') }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('button', { name: t(lang, 'carryingLabel') }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByText(tp(lang, 'carryCount', 3))).toBeTruthy();
     expect(document.body.textContent).not.toMatch(/trending|top|classement|tendance/i);
   });

@@ -32,19 +32,20 @@ export default function FollowPrayerButton({ userId, prayerId, lang }) {
     return <Loader2 size={16} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />;
   }
 
+  // A quiet companion to "Carry this prayer": text and a bell, never a second
+  // filled button competing with it.
   const Icon = following ? Bell : BellOff;
   return (
     <button
+      type="button"
       onClick={toggle}
       disabled={busy}
       aria-pressed={following}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
-      style={following
-        ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }
-        : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
+      className="quiet-button pressable"
+      style={following ? undefined : { color: 'var(--q-text-secondary)' }}
     >
-      <Icon size={13} />
-      {t(lang, following ? 'following' : 'followPrayer')}
+      <Icon size={16} aria-hidden="true" />
+      <span>{t(lang, following ? 'following' : 'followPrayer')}</span>
     </button>
   );
 }

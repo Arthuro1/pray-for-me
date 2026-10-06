@@ -232,7 +232,7 @@ describe('PrayerDetail — "Carry this prayer" mirrors the personal list', () =>
     });
 
     // Already carrying: the pressed button says so, in the reader's language.
-    const carrying = screen.getByRole('button', { name: t(lang, 'carryingThisPrayer') });
+    const carrying = screen.getByRole('button', { name: t(lang, 'carryingLabel') });
     expect(carrying.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(carrying);
     await Promise.resolve();
@@ -254,7 +254,7 @@ describe('PrayerDetail — "Carry this prayer" mirrors the personal list', () =>
     });
 
     // Already carrying: the pressed button says so, in the reader's language.
-    const carrying = screen.getByRole('button', { name: t(lang, 'carryingThisPrayer') });
+    const carrying = screen.getByRole('button', { name: t(lang, 'carryingLabel') });
     expect(carrying.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(carrying);
     await Promise.resolve();

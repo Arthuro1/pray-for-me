@@ -9,6 +9,7 @@
 @import './styles/components.css';
 @import 'tailwindcss/utilities';
 @import './styles/prayer.css';
+@import './styles/altar.css';
 
 /* ── Screens ───────────────────────────────────────────────────────────── */
 .community-card,
@@ -871,14 +872,6 @@
 .constellation-settings .rounded-2xl,
 .constellation-notifications .rounded-xl {
   box-shadow: none !important;
-}
-
-.constellation-prayer-form {
-  border-radius: var(--q-radius-surface) var(--q-radius-surface) 0 0;
-}
-
-.constellation-prayer-form form label {
-  color: var(--q-royal-text) !important;
 }
 
 @media (max-width: 520px) {

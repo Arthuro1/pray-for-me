@@ -1,111 +1,111 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { t } from '../i18n';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
 import { toast } from '../store/toastStore';
-import { canReleaseFromRhythm, carriedSinceDate, lastPrayedDate, markTended } from '../lib/carried';
-import { PrimaryButton } from './shared/Primitives';
+import { canReleaseFromRhythm, carriedSinceLabel, lastPrayedDate, markTended } from '../lib/carried';
+import { circleLabelKey, circleOf } from '../lib/circles';
+import { Modal, PrimaryButton, QuietButton, SecondaryButton } from './shared/Primitives';
 import RiseMark from './shared/RiseMark';
 
-// "Tend your altar" (Elijah repairing the altar, 1 Kings 18:30): a gentle review
-// of prayers that have quietly rested a while, so a prayer list never becomes an
-// abandoned archive. There is no wrong answer and no scolding — continuing,
-// telling what changed, testifying and releasing are all faithful choices.
-// Releasing is NOT failure and does NOT mean the prayer was answered: it only
-// stops the prayer returning on its own; it stays in the Journal.
+// "Tend your altar" (Elijah repairing the altar, 1 Kings 18:30): a reflective
+// review of prayers that have quietly rested a while, ONE prayer at a time, so
+// a prayer list never becomes an abandoned archive. There is no wrong answer
+// and no scolding — continuing, telling what changed, testifying and releasing
+// are all faithful choices. Releasing is NOT failure and does NOT mean the
+// prayer was answered: it only stops the prayer returning on its own; it stays
+// in the Journal.
 //
 // Answers are remembered on this device only (ids and dates — see lib/carried.js).
 export default function TendAltar({ prayers, completions, lang, tr, onRelease, onClose }) {
   const navigate = useNavigate();
-  const [remaining, setRemaining] = useState(prayers);
-  const trapRef = useFocusTrap(true);
-  useEscapeKey(onClose);
+  // The prayers to tend are fixed when the review opens: answering one must
+  // never reshuffle the ones still waiting.
+  const [queue] = useState(prayers);
+  const [index, setIndex] = useState(0);
+  const titleRef = useRef(null);
+  const prayer = queue[index] || null;
 
-  const settle = (prayer) => {
-    markTended(prayer.id);
-    setRemaining((list) => list.filter((p) => p.id !== prayer.id));
+  // Each new prayer takes focus, so a screen reader hears it arrive.
+  useEffect(() => {
+    if (index > 0) titleRef.current?.focus();
+  }, [index]);
+
+  const settle = (item) => {
+    markTended(item.id);
+    setIndex((i) => i + 1);
   };
 
-  const openPrayer = (prayer, focus) => {
-    markTended(prayer.id);
+  const openPrayer = (item, focus) => {
+    markTended(item.id);
     onClose();
-    navigate(`/prayers/${prayer.id}`, { state: { focus } });
+    navigate(`/prayers/${item.id}`, { state: { focus } });
   };
 
-  const release = (prayer) => {
-    onRelease(prayer);
-    settle(prayer);
+  const release = (item) => {
+    onRelease(item);
+    settle(item);
     toast.success(t(lang, 'tendReleased'));
   };
 
-  const restingLabel = (prayer) => {
-    const since = lastPrayedDate(prayer, completions) || carriedSinceDate(prayer);
-    return t(lang, 'tendRestingSince', { date: since.toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' }) });
+  const context = (item) => {
+    const circle = circleOf(item);
+    return [
+      circle ? t(lang, circleLabelKey(circle)) : '',
+      item.for_other && item.person_name ? t(lang, 'forPersonLabel', { name: item.person_name }) : '',
+    ].filter(Boolean).join(' · ');
   };
 
-  const quiet = { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' };
+  const meta = (item) => {
+    const since = carriedSinceLabel(item, lang);
+    const last = lastPrayedDate(item, completions);
+    return [
+      since ? t(lang, 'carriedSince', { date: since }) : '',
+      last ? t(lang, 'tendRestingSince', { date: last.toLocaleDateString(lang, { day: 'numeric', month: 'long', year: 'numeric' }) }) : '',
+    ].filter(Boolean).join(' · ');
+  };
 
   return (
-    <div
-      className="fixed inset-0 z-[90] flex items-end justify-center p-0 sm:items-center sm:p-4"
-      style={{ background: 'var(--q-overlay)' }}
-      onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}
-    >
-      <div
-        ref={trapRef}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="tend-altar-title"
-        className="max-h-[88vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-5 sm:rounded-3xl"
-        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', boxShadow: 'var(--q-elevation)' }}
-      >
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <h2 id="tend-altar-title" className="editorial-heading text-2xl" style={{ color: 'var(--q-text)' }}>{t(lang, 'tendTitle')}</h2>
-          <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0">
-            <X size={17} aria-hidden="true" />
-          </button>
+    <Modal labelledBy="tend-altar-title" onClose={onClose} className="tend-altar">
+      <header className="tend-altar__header">
+        <div className="min-w-0">
+          <h2 id="tend-altar-title" className="tend-altar__title">{t(lang, 'tendTitle')}</h2>
+          {prayer && <p className="tend-altar__sub">{t(lang, 'tendSub')}</p>}
         </div>
+        <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2">
+          <X size={18} aria-hidden="true" />
+        </button>
+      </header>
 
-        {remaining.length === 0 ? (
-          <div className="flex flex-col items-center py-8 text-center" role="status">
-            <RiseMark size={44} className="mb-4" />
-            <p className="editorial text-xl" style={{ color: 'var(--q-text)' }}>{t(lang, 'tendDone')}</p>
-            <p className="mt-2 text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'tendDoneBody')}</p>
-            <PrimaryButton onClick={onClose} className="mt-6 min-w-36">{t(lang, 'close')}</PrimaryButton>
+      {prayer ? (
+        <article key={prayer.id} className="tend-altar__prayer rise-in" aria-labelledby="tend-altar-prayer">
+          {queue.length > 1 && (
+            <p className="tend-altar__progress"><span dir="ltr">{index + 1} / {queue.length}</span></p>
+          )}
+          {context(prayer) && <p className="section-label">{context(prayer)}</p>}
+          <h3 id="tend-altar-prayer" ref={titleRef} tabIndex={-1} className="tend-altar__prayer-title">
+            {tr(prayer.title, lang)}
+          </h3>
+          {meta(prayer) && <p className="tend-altar__meta">{meta(prayer)}</p>}
+
+          <p className="tend-altar__question">{t(lang, 'tendQuestion')}</p>
+          <div className="tend-altar__actions">
+            <PrimaryButton onClick={() => settle(prayer)}>{t(lang, 'tendContinue')}</PrimaryButton>
+            <SecondaryButton onClick={() => openPrayer(prayer, 'update')}>{t(lang, 'tendChanged')}</SecondaryButton>
+            <SecondaryButton onClick={() => openPrayer(prayer, 'answer')}>{t(lang, 'tendTestimony')}</SecondaryButton>
+            {canReleaseFromRhythm(prayer) && (
+              <QuietButton onClick={() => release(prayer)} className="tend-altar__release">{t(lang, 'tendRelease')}</QuietButton>
+            )}
           </div>
-        ) : (
-          <>
-            <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'tendIntro')}</p>
-            <ul className="space-y-3">
-              {remaining.map((prayer) => (
-                <li key={prayer.id} className="rounded-2xl p-4" style={{ background: 'var(--q-surface-muted)', borderInlineStart: '3px solid var(--q-gold)' }}>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{tr(prayer.title, lang)}</p>
-                  <p className="mt-0.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{restingLabel(prayer)}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <button type="button" onClick={() => settle(prayer)} className="min-h-[44px] rounded-xl px-3 text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                      {t(lang, 'tendContinue')}
-                    </button>
-                    <button type="button" onClick={() => openPrayer(prayer, 'update')} className="min-h-[44px] rounded-xl px-3 text-sm font-medium" style={quiet}>
-                      {t(lang, 'tendChanged')}
-                    </button>
-                    <button type="button" onClick={() => openPrayer(prayer, 'answer')} className="min-h-[44px] rounded-xl px-3 text-sm font-medium" style={quiet}>
-                      {t(lang, 'tendTestimony')}
-                    </button>
-                    {canReleaseFromRhythm(prayer) && (
-                      <button type="button" onClick={() => release(prayer)} className="min-h-[44px] rounded-xl px-3 text-sm font-medium" style={{ color: 'var(--q-text-tertiary)' }}>
-                        {t(lang, 'tendRelease')}
-                      </button>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
-    </div>
+        </article>
+      ) : (
+        <div className="tend-altar__done rise-in" role="status">
+          <RiseMark size={44} />
+          <p className="tend-altar__done-title">{t(lang, 'tendDone')}</p>
+          <p className="tend-altar__sub">{t(lang, 'tendDoneBody')}</p>
+          <PrimaryButton onClick={onClose} className="mt-8 min-w-36">{t(lang, 'remainFinish')}</PrimaryButton>
+        </div>
+      )}
+    </Modal>
   );
 }

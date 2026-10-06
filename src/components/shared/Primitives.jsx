@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronLeft } from 'lucide-react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
+import CircleGlyph from './CircleGlyph';
 
 export function PageHeader({ eyebrow, title, subtitle, aside, backTo, backLabel, backAriaLabel, className = '' }) {
   return (
@@ -234,13 +235,16 @@ export const Textarea = forwardRef(function Textarea({ editorial = false, classN
   return <textarea ref={ref} className={`q-textarea ${editorial ? 'q-textarea--editorial' : ''} ${className}`} {...props} />;
 });
 
-// One intercession circle as a deliberate choice: ring, title, description.
-// Used inside a `role="radiogroup"` (single) or as toggles (multiple).
-export function CircleOption({ title, description, selected, onSelect, multiple = false, className = '', ...props }) {
-  const state = multiple ? { 'aria-pressed': selected } : { role: 'radio', 'aria-checked': selected };
+// One intercession circle as a deliberate choice: its glyph (how far the
+// circle reaches), title, description. Used inside a `role="radiogroup"`, or as
+// a toggle (`toggle`) where the one choice can also be taken back.
+export function CircleOption({ circle, title, description, selected, onSelect, toggle = false, className = '', ...props }) {
+  const state = toggle ? { 'aria-pressed': selected } : { role: 'radio', 'aria-checked': selected };
   return (
     <button type="button" className={`circle-option pressable ${className}`} onClick={onSelect} {...state} {...props}>
-      <span className="circle-option__ring" aria-hidden="true" />
+      {circle
+        ? <CircleGlyph circle={circle} selected={selected} className="circle-option__glyph" />
+        : <span className="circle-option__ring" aria-hidden="true" />}
       <span className="min-w-0">
         <span className="circle-option__title">{title}</span>
         {description && <span className="circle-option__description">{description}</span>}

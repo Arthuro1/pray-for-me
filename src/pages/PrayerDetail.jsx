@@ -1526,7 +1526,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* Follow this prayer for update / answered / testimony notifications.
             Reversible surface for the auto-follow that happens on "I'm praying". */}
         {isCommunity && user?.id && (
-          <div className="flex items-center justify-end mb-4">
+          <div className="flex items-center justify-end py-2">
             <FollowPrayerButton userId={user.id} prayerId={communityPrayer.id} lang={lang} />
           </div>
         )}

@@ -1,6 +1,6 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
-// /detail and /session render the REAL screens inside the real app shell with
-// sample prayers. Every store write is replaced by a local no-op first, so
+// /detail, /session, /bring, /circles, /tend and /carry render the REAL screens inside
+// the real app shell with sample prayers. Every store write is replaced by a local no-op first, so
 // nothing is queued, synced, encrypted or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,6 +12,11 @@ import HomeTab from '../pages/HomeTab';
 import PrayersTab from '../pages/PrayersTab';
 import PrayerDetail from '../pages/PrayerDetail';
 import PrayerSession from '../components/PrayerSession';
+import PrayerForm from '../components/PrayerForm';
+import TendAltar from '../components/TendAltar';
+import PrayTogetherCard from '../components/PrayTogetherCard';
+import CirclePicker from '../components/CirclePicker';
+import { Modal, PageHeader } from '../components/shared/Primitives';
 import { dirFor, isLocaleLoaded, loadLocale } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';
@@ -70,7 +75,40 @@ function seed() {
   useCommunityStore.setState({ ...stubbed, prayerShares: { d1: [{ groupId: 'g1', groupName: 'Home group', prayingCount: 8 }] }, groups: [], prayers: [], testimonies: [], pendingCount: 0 });
 }
 
-const SCREENS = ['today', 'journal', 'detail', 'session'];
+const SCREENS = ['today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry'];
+
+// The circle picker on its own: in the real form it appears only once the
+// vault is unlocked, which a preview must never fake on a shared dev origin.
+function CirclesPreview({ lang }) {
+  const [circle, setCircle] = useState('household');
+  return (
+    <Modal label="circles" onClose={() => {}}>
+      <CirclePicker value={circle} onChange={setCircle} lang={lang} idPrefix="design-circle" />
+    </Modal>
+  );
+}
+
+const REACTORS = [
+  { user_id: 'design-user', name: 'Arthur' },
+  { user_id: 'r2', name: 'Marie' },
+  { user_id: 'r3', name: 'Paul' },
+];
+
+// "Carry this prayer" as a group member meets it: before and after carrying.
+function CarryPreview({ lang }) {
+  // Before the cards mount, so their first fetch already sees the faces.
+  useState(() => useCommunityStore.setState({ fetchReactors: async (id) => ({ reactors: id === 'c2' ? REACTORS : [] }) }));
+  const user = useAuthStore.getState().user;
+  return (
+    <div className="phase-page">
+      <div className="phase-page__shell"><PageHeader eyebrow="Home group" title="Please pray for my mother" /></div>
+      <div className="phase-content grid gap-10">
+        <PrayTogetherCard communityPrayer={{ id: 'c1' }} count={0} hasReacted={false} busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
+        <PrayTogetherCard communityPrayer={{ id: 'c2' }} count={8} hasReacted busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
+      </div>
+    </div>
+  );
+}
 
 export default function DesignScreens({ screen }) {
   const navigate = useNavigate();
@@ -105,7 +143,14 @@ export default function DesignScreens({ screen }) {
     <Layout onAddPrayer={() => {}}>
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
-      {(screen === 'today' || !SCREENS.includes(screen)) && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
+      {screen === 'carry' && <CarryPreview lang={lang} />}
+      {screen === 'circles' && <CirclesPreview lang={lang} />}
+      {screen === 'tend' && <PrayersTab onAdd={() => {}} />}
+      {screen === 'tend' && (
+        <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />
+      )}
+      {(screen === 'today' || screen === 'bring' || screen === 'circles' || !SCREENS.includes(screen)) && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
+      {screen === 'bring' && <PrayerForm editPrayer={usePrayerStore.getState().prayers.find((p) => p.id === 'd4')} onClose={() => navigate('/__design/today')} />}
       {nav}
     </Layout>
   );

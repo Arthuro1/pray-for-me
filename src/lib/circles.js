@@ -27,6 +27,9 @@ export function circleOf(prayer) {
 // i18n key for a circle's name ("My heart", "My house", …).
 export const circleLabelKey = (circle) => `circle_${circle}`;
 
+// i18n key for what a circle holds ("Family and household", …).
+export const circleDescKey = (circle) => `circleDesc_${circle}`;
+
 // Group prayers by circle, keeping the canonical inner-to-outer order and
 // dropping empty circles. Unplaced prayers come back under `null`, last.
 export function groupByCircle(prayers) {

@@ -57,12 +57,32 @@ and rollback notes. Unreleased entries are moved into a dated version at release
     title, carried-since, Pray now, then sections divided by hairlines; ways
     to pray, updates and testimonies are no longer boxed; a testimony keeps
     a gold rule.
+- **The altar and intercession** (`src/styles/altar.css`):
+  - *Circle picker* — the pill wall becomes seven deliberate choices (one
+    column on phones, two on wider screens): a circle glyph, the circle's
+    name and what it holds ("Family and household"…). The glyph is a gold
+    point for the heart and one ring that widens a step from "My heart" to
+    "Kingdom & Mission" — breadth, never rank; chosen, it fills with violet
+    around the gold point. The same glyph marks the circles on Today.
+  - *Bring a prayer* — the prayer form uses the shared fields and buttons:
+    serif title field, quiet "Add a note" / "Organize" rows, no tinted box.
+  - *Tend your altar* — one prayer at a time instead of a list of buttons:
+    its circle, a large title, "Carried since…", the question "How would you
+    like to carry this now?", then Continue carrying, Something has changed,
+    Record a testimony and a quiet Release from my rhythm; then the next.
+  - *Carry this prayer* — one Qetoret gesture: the Rise Mark lifts once and
+    the button settles on "Carrying" (no heart, no burst). On a group
+    prayer's page it sits in an open section with a few faces and the count,
+    kept secondary; Follow became a quiet bell beside it.
+  - New strings ×16 (flagged for native review): seven circle descriptions,
+    `tendSub`, `tendQuestion`, `carryingLabel`; `tendIntro` and
+    `carryingThisPrayer` removed.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.
 - Dev builds only: `/__design` renders every primitive in light, dark and RTL;
-  `/__design/today|journal|detail|session` render the real screens with sample
-  prayers and every store write stubbed out.
+  `/__design/today|journal|detail|session|bring|circles|tend|carry` render the
+  real screens with sample prayers and every store write stubbed out.
 
 ### Changed — Praystead becomes Qetoret
 

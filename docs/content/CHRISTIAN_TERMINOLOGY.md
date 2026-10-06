@@ -71,7 +71,14 @@ vocabulary above. Review them in context (Today, the prayer session, Settings):
 | `explorePlan` | Explore a prayer plan |
 | `aiDataPrefsTitle` | What the AI receives |
 | `aiDataPrefsSub` | The prayer title is always sent. Choose whether to include the description and the latest update. |
+| `circleDesc_self` … `circleDesc_kingdom` | Personal prayer and formation · Family and household · Friends and relationships · Church and ministry · Leaders and governments · Cities, countries and peoples · Gospel, justice, mercy and God’s purposes |
+| `tendSub` | Some prayers have been resting for a while. |
+| `tendQuestion` | How would you like to carry this now? |
+| `carryingLabel` | Carrying (the "Carry this prayer" button once pressed) |
 
 `sessionDoneTitle` lost its 🙏 in every locale (no emoji as interface art); the
 eight `aiPreview*` strings were restored verbatim from 78f6c6b. Korean
 `forPersonLabel` uses the "을(를)" fallback because the name is unknown.
+`carryingLabel` replaces `carryingThisPrayer`, and `tendSub` replaces
+`tendIntro` (both removed). `carryingLabel` follows each locale's "carry" verb
+above (fa: in intercession; zh/ja: interceding).

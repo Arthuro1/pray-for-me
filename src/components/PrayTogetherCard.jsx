@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { HandHeart, Loader2 } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
 import { t, tp } from '../i18n';
 import Avatar from './shared/Avatar';
+import CarryButton from './shared/CarryButton';
 
 // The primary "pray together" affordance on a community prayer: "Carry this
 // prayer" — deliberately taking a request into one's own life of intercession
-// (it joins "Prayers you're carrying"), never a like. A presence row shows who
-// else is carrying it (reusing Avatar). The count is information only: nothing
-// ranks, sorts or celebrates requests by how many carry them. Toggle side
-// effects (the saved copy, following) stay in the parent; this only renders.
+// (it joins "Prayers you're carrying"), never a like. Beneath it, quietly, the
+// faces of a few who carry it too and how many they are. The count is
+// information only: nothing ranks, sorts or celebrates requests by how many
+// carry them. Toggle side effects (the saved copy, following) stay in the
+// parent; this only renders.
 export default function PrayTogetherCard({ communityPrayer, count, hasReacted, busy, lang, user, onTogglePraying }) {
   const fetchReactors = useCommunityStore((s) => s.fetchReactors);
   const [reactors, setReactors] = useState([]);
@@ -22,47 +23,22 @@ export default function PrayTogetherCard({ communityPrayer, count, hasReacted, b
   }, [communityPrayer.id, count]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nameFor = (r) => (r.user_id === user?.id ? t(lang, 'you') : r.name);
-  // Show the current user first, then up to two more faces.
+  // The current user first, then up to two more faces.
   const ordered = [...reactors].sort((a, b) => (a.user_id === user?.id ? -1 : b.user_id === user?.id ? 1 : 0));
   const faces = ordered.slice(0, 3);
-  const namedFaces = faces.slice(0, 2).map(nameFor);
-  const extra = Math.max(0, count - namedFaces.length);
-  const summary = namedFaces.length
-    ? namedFaces.join(', ') + (extra > 0 ? ` ${t(lang, 'andNMore', { n: extra })}` : '')
-    : t(lang, 'beFirstToPray');
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-selected-border)' }}>
-      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'prayTogether')}</p>
-
-      <div className="flex items-center gap-2.5 mb-3">
+    <section className="carry-section" aria-labelledby="carry-section-label">
+      <p id="carry-section-label" className="section-label">{t(lang, 'prayTogether')}</p>
+      <CarryButton carrying={hasReacted} busy={busy} onToggle={onTogglePraying} lang={lang} className="carry-section__button" />
+      <p className="carry-section__presence">
         {faces.length > 0 && (
-          <div className="flex">
-            {faces.map((r, i) => (
-              <div key={r.user_id} className="rounded-full" style={{ marginInlineStart: i === 0 ? 0 : -8, boxShadow: '0 0 0 2px var(--q-surface)' }}>
-                <Avatar name={nameFor(r)} avatar={r.avatar} size={28} />
-              </div>
-            ))}
-          </div>
+          <span className="carry-section__faces" title={faces.map(nameFor).join(', ')}>
+            {faces.map((r) => <Avatar key={r.user_id} name={nameFor(r)} avatar={r.avatar} size={24} />)}
+          </span>
         )}
-        <p className="text-xs min-w-0 truncate" style={{ color: 'var(--q-text-tertiary)' }}>{summary}</p>
-      </div>
-
-      <button
-        onClick={onTogglePraying}
-        disabled={busy}
-        aria-pressed={hasReacted}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
-        style={hasReacted
-          ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }
-          : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
-      >
-        {busy ? <Loader2 size={16} className="animate-spin" /> : <HandHeart size={16} />}
-        {t(lang, hasReacted ? 'carryingThisPrayer' : 'carryThisPrayer')}
-      </button>
-      {count > 0 && (
-        <p className="mt-2 text-center text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{tp(lang, 'carryCount', count)}</p>
-      )}
-    </div>
+        <span>{count > 0 ? tp(lang, 'carryCount', count) : t(lang, 'beFirstToPray')}</span>
+      </p>
+    </section>
   );
 }

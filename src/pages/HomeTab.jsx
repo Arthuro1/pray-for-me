@@ -30,6 +30,7 @@ import VerseShareModal from '../components/VerseShareModal';
 import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrimaryButton, QuietButton, SecondaryButton, SectionHeader } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
+import CircleGlyph from '../components/shared/CircleGlyph';
 import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
@@ -376,7 +377,10 @@ export default function HomeTab({ onAdd, onEdit }) {
                       aria-label={`${name} · ${tp(lang, 'circlePrayerCount', inCircle.length)}`}
                       className="today-circles__item pressable"
                     >
-                      <span>{name}</span>
+                      <span className="today-circles__name">
+                        <CircleGlyph circle={circle} size={20} />
+                        <span>{name}</span>
+                      </span>
                       <span className="q-meta" aria-hidden="true">{inCircle.length}</span>
                     </button>
                   </li>

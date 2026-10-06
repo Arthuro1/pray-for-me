@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { X, ChevronDown, Plus } from 'lucide-react';
+import { X, ChevronDown, Plus, Check, SlidersHorizontal } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { useShallow } from 'zustand/react/shallow';
 import useTranslationStore from '../store/translationStore';
@@ -24,33 +24,21 @@ import { planWeekDays } from '../lib/planner';
 import { defaultNewDraft, draftFromSchedule, returnsSummary, scheduleFromDraft } from '../lib/scheduleDraft';
 import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
-
-const INPUT_STYLE = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
-const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
+import { PrimaryButton, SecondaryButton } from './shared/Primitives';
 
 // A real, keyboard- and screen-reader-operable checkbox: the native input is
 // invisible but present (focus, Space, labels all work); the styled box beside
 // it only mirrors its state and carries the visible focus ring.
 function CheckboxToggle({ id, checked, onChange, label }) {
   return (
-    <label htmlFor={id} className="flex items-center gap-2.5 cursor-pointer min-h-[44px] py-1.5">
-      <span className="relative w-5 h-5 shrink-0 flex items-center justify-center">
-        <input
-          id={id}
-          type="checkbox"
-          checked={checked}
-          onChange={onChange}
-          className="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-        />
-        <span
-          aria-hidden="true"
-          className="w-5 h-5 rounded-md flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
-          style={{ background: checked ? 'var(--q-action-primary)' : 'var(--q-field)', border: checked ? 'none' : '0.5px solid var(--q-field-border)' }}
-        >
-          {checked && <span className="text-white text-xs font-bold">✓</span>}
+    <label htmlFor={id} className="q-check">
+      <span className="q-check__control">
+        <input id={id} type="checkbox" checked={checked} onChange={onChange} />
+        <span className="q-check__box" aria-hidden="true">
+          {checked && <Check size={14} strokeWidth={2.5} />}
         </span>
       </span>
-      <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{label}</span>
+      <span className="q-check__label">{label}</span>
     </label>
   );
 }
@@ -65,13 +53,12 @@ function SectionToggle({ label, open, onToggle, controlsId, icon: Icon = Plus })
       onClick={onToggle}
       aria-expanded={open}
       aria-controls={controlsId}
-      className="w-full min-h-[44px] flex items-center justify-between gap-1.5 py-2 text-xs font-semibold"
-      style={{ color: 'var(--q-royal-text)' }}
+      className="prayer-form__toggle pressable"
     >
-      <span className="flex items-center gap-1.5">
-        <Icon size={14} /> {label}
+      <span>
+        <Icon size={16} aria-hidden="true" /> {label}
       </span>
-      <ChevronDown size={14} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+      <ChevronDown size={16} aria-hidden="true" />
     </button>
   );
 }
@@ -331,31 +318,28 @@ export default function PrayerForm({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        className="editorial-dialog constellation-prayer-form w-full max-w-lg mx-auto max-h-[92vh] overflow-y-auto"
+        aria-labelledby="prayer-form-title"
+        className="editorial-dialog prayer-form w-full max-w-lg mx-auto"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--q-border)' }} />
-        </div>
+        <div className="prayer-form__grip" aria-hidden="true" />
 
-        <div className="flex items-center justify-between px-5 py-3">
-          <h2 className="font-semibold text-lg" style={{ color: 'var(--q-text)' }}>{title}</h2>
+        <div className="prayer-form__header">
+          <h2 id="prayer-form-title" className="prayer-form__title">{title}</h2>
           <button
+            type="button"
             onClick={onClose}
             aria-label={t(lang, 'close')}
             title={t(lang, 'tipCloseForm')}
-            className="w-11 h-11 -mr-2 flex items-center justify-center rounded-full"
-            style={{ color: 'var(--q-royal-text)' }}
+            className="icon-button pressable -me-2"
           >
-            <span className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
-              <X size={16} />
-            </span>
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-5 pb-8 space-y-3">
-          <div>
-            <label htmlFor="prayer-title" className={LABEL_CLASS} style={{ color: 'var(--q-text-tertiary)' }}>
+        <form onSubmit={handleSubmit} className="prayer-form__body">
+          <div className="q-field">
+            <label htmlFor="prayer-title" className="q-field__label">
               {t(lang, communityMode ? 'prayerSubject' : 'prayerFieldLabel')}
             </label>
             <input
@@ -366,8 +350,7 @@ export default function PrayerForm({
               value={form.title}
               onChange={e => patch('title', e.target.value)}
               placeholder={t(lang, 'prayerSubjectPlaceholder')}
-              className="w-full text-sm rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2"
-              style={INPUT_STYLE}
+              className="q-input q-input--editorial"
             />
           </div>
 
@@ -381,25 +364,23 @@ export default function PrayerForm({
               type="button"
               onClick={revealRhythm}
               aria-label={`${rhythmLine} — ${t(lang, 'rhythmChangeAria')}`}
-              className="-mx-1.5 flex min-h-[44px] w-full items-center gap-1.5 rounded-lg px-1.5 text-start text-xs focus-visible:ring-2"
-              style={{ color: 'var(--q-text-tertiary)' }}
+              className="prayer-form__rhythm"
             >
               <span className="min-w-0 break-words">{rhythmLine}</span>
               <span aria-hidden="true">·</span>
-              <span className="shrink-0 font-medium" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'schedChange')}</span>
+              <span className="prayer-form__rhythm-change">{t(lang, 'schedChange')}</span>
             </button>
           )}
 
           {/* Something unfinished was put back. Stated once, quietly, with the
               one action that undoes it — never a modal in the way of praying. */}
           {restored && (
-            <p className="flex flex-wrap items-center gap-x-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }} role="status">
+            <p className="q-meta flex flex-wrap items-center gap-x-2" role="status">
               {t(lang, 'draftRestoredNote')}
               <button
                 type="button"
                 onClick={startFresh}
-                className="min-h-[44px] font-medium focus-visible:ring-2"
-                style={{ color: 'var(--q-royal-text)' }}
+                className="quiet-button pressable -ms-3"
               >
                 {t(lang, 'draftDiscardCta')}
               </button>
@@ -467,10 +448,10 @@ export default function PrayerForm({
                 open={organizeOpen}
                 onToggle={() => setOrganizeOpen((v) => !v)}
                 controlsId="prayer-organize-section"
-                icon={ChevronDown}
+                icon={SlidersHorizontal}
               />
               {organizeOpen && (
-                <div id="prayer-organize-section" className="space-y-4 rounded-2xl p-4" style={{ background: 'var(--q-field)' }}>
+                <div id="prayer-organize-section" className="prayer-form__organize">
                   {/* "Place on your altar" — offered only where the circle can
                       live inside this prayer's ciphertext (lib/circles.js). */}
                   {canHoldPrivateMetadata(editPrayer || null) && (
@@ -490,12 +471,11 @@ export default function PrayerForm({
                   />
 
                   {form.forOther && (
-                    <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid var(--q-selected-border)' }}>
-                      <div>
-                        <label htmlFor="prayer-person" className={LABEL_CLASS} style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'personName')}</label>
+                    <div className="prayer-form__person">
+                      <div className="q-field">
+                        <label htmlFor="prayer-person" className="q-field__label">{t(lang, 'personName')}</label>
                         <input id="prayer-person" type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
-                          placeholder={t(lang, 'personNamePlaceholder')} className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none focus-visible:ring-2"
-                          style={{ ...INPUT_STYLE, background: 'var(--q-surface)' }} />
+                          placeholder={t(lang, 'personNamePlaceholder')} className="q-input" />
                       </div>
                     </div>
                   )}
@@ -537,22 +517,16 @@ export default function PrayerForm({
           {/* Where this prayer will be visible — stated in the form, not after.
               Encryption shows as a quiet separate status, never as an audience. */}
           {formAudience && (
-            <div className="pt-1">
-              <AudienceBadge audience={formAudience} protection={formProtection} lang={lang} />
-            </div>
+            <AudienceBadge audience={formAudience} protection={formProtection} lang={lang} />
           )}
 
-          <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose} title={t(lang, 'tipDiscard')}
-              className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-medium focus-visible:ring-2"
-              style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}>
+          <div className="prayer-form__actions">
+            <SecondaryButton onClick={onClose} title={t(lang, 'tipDiscard')}>
               {t(lang, 'cancel')}
-            </button>
-            <button type="submit" disabled={submitting} title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
-              className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-semibold text-white focus-visible:ring-2 disabled:opacity-50"
-              style={{ background: 'var(--q-action-primary)' }}>
+            </SecondaryButton>
+            <PrimaryButton type="submit" disabled={submitting} title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}>
               {editPrayer || communityMode ? t(lang, editPrayer ? 'save' : 'add') : t(lang, 'savePrayer')}
-            </button>
+            </PrimaryButton>
           </div>
         </form>
       </div>

@@ -389,7 +389,7 @@ a.prayer-row:hover { background: var(--q-hover); }
 .circle-option {
   display: grid;
   min-height: 64px;
-  grid-template-columns: 20px minmax(0, 1fr);
+  grid-template-columns: 24px minmax(0, 1fr);
   align-items: start;
   gap: var(--q-space-3);
   padding: var(--q-space-3) var(--q-space-4);
@@ -436,6 +436,24 @@ a.prayer-row:hover { background: var(--q-hover); }
   background: var(--q-gold);
   content: '';
 }
+
+.circle-option__glyph { margin-block-start: 1px; }
+
+/* ── Circle glyph: a point for the heart, one ring for the circle's reach ── */
+.circle-glyph { display: block; flex: 0 0 auto; overflow: visible; }
+
+.circle-glyph__ring {
+  fill: none;
+  stroke: color-mix(in srgb, var(--q-royal) 38%, var(--q-border-strong));
+  stroke-width: 1.5;
+  transition: fill var(--q-motion-micro) var(--q-ease), stroke var(--q-motion-micro) var(--q-ease);
+}
+
+.circle-glyph__heart { fill: var(--q-gold); }
+
+/* Selected: the circle fills with royal violet around a gold heart. */
+.circle-glyph--selected .circle-glyph__ring { fill: var(--q-royal); stroke: var(--q-royal); }
+.circle-glyph--selected .circle-glyph__heart { fill: var(--q-gold-inverse); }
 
 /* ── Scripture ───────────────────────────────────────────────────────────── */
 .scripture-block {
