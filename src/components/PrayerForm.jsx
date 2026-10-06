@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { X, ChevronDown, Plus, Check, SlidersHorizontal } from 'lucide-react';
+import { X, ChevronDown, Plus, SlidersHorizontal } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { useShallow } from 'zustand/react/shallow';
 import useTranslationStore from '../store/translationStore';
@@ -24,24 +24,7 @@ import { planWeekDays } from '../lib/planner';
 import { defaultNewDraft, draftFromSchedule, returnsSummary, scheduleFromDraft } from '../lib/scheduleDraft';
 import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
-import { PrimaryButton, SecondaryButton } from './shared/Primitives';
-
-// A real, keyboard- and screen-reader-operable checkbox: the native input is
-// invisible but present (focus, Space, labels all work); the styled box beside
-// it only mirrors its state and carries the visible focus ring.
-function CheckboxToggle({ id, checked, onChange, label }) {
-  return (
-    <label htmlFor={id} className="q-check">
-      <span className="q-check__control">
-        <input id={id} type="checkbox" checked={checked} onChange={onChange} />
-        <span className="q-check__box" aria-hidden="true">
-          {checked && <Check size={14} strokeWidth={2.5} />}
-        </span>
-      </span>
-      <span className="q-check__label">{label}</span>
-    </label>
-  );
-}
+import { Checkbox, PrimaryButton, SecondaryButton } from './shared/Primitives';
 
 // A quiet inline expander ("Add a note", "Organize") — a comfortably tappable
 // full-width row that reveals an optional part of the form and can fold it away
@@ -414,7 +397,7 @@ export default function PrayerForm({
 
           {communityMode && (
             <>
-              <CheckboxToggle
+              <Checkbox
                 id="prayer-anonymous"
                 checked={form.isAnonymous}
                 onChange={() => patch('isAnonymous', !form.isAnonymous)}
@@ -463,7 +446,7 @@ export default function PrayerForm({
                     />
                   )}
 
-                  <CheckboxToggle
+                  <Checkbox
                     id="prayer-for-other"
                     checked={form.forOther}
                     onChange={() => patch('forOther', !form.forOther)}

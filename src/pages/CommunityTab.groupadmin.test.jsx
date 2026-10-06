@@ -42,11 +42,10 @@ function stubStore(overrides = {}) {
   return fns;
 }
 
-// The member row is the nearest rounded card ancestor of the member's name.
-// (GroupAdminModal rows use justify-between; MembersModal rows don't — both are
-// the closest ".rounded-xl" container.)
+// The member row is the list item that holds the member's name, in both the
+// admin and the read-only member lists.
 function rowFor(name) {
-  return screen.getByText(name).closest('.rounded-xl');
+  return screen.getByText(name).closest('li');
 }
 
 async function renderAdminModal() {
@@ -74,7 +73,7 @@ describe('GroupAdminModal — badges & action visibility', () => {
     // Only the non-owner, non-self members (admin2 + mem3) expose an actions menu.
     expect(screen.getAllByRole('button', { name: memberActions })).toHaveLength(2);
     expect(within(rowFor(OWNER.name)).queryByRole('button', { name: memberActions })).toBeNull();
-    const meRow = screen.getByText(/Me Myself \(vous\)/).closest('.rounded-xl');
+    const meRow = screen.getByText(/Me Myself \(vous\)/).closest('li');
     expect(within(meRow).queryByRole('button', { name: memberActions })).toBeNull();
   });
 

@@ -3,7 +3,7 @@
 // src/styles/components.css. Three button kinds only: primary, secondary, quiet.
 import { forwardRef, useId } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, ChevronLeft } from 'lucide-react';
+import { Check, ChevronDown, ChevronLeft } from 'lucide-react';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import CircleGlyph from './CircleGlyph';
@@ -234,6 +234,22 @@ export const Input = forwardRef(function Input({ className = '', ...props }, ref
 export const Textarea = forwardRef(function Textarea({ editorial = false, className = '', ...props }, ref) {
   return <textarea ref={ref} className={`q-textarea ${editorial ? 'q-textarea--editorial' : ''} ${className}`} {...props} />;
 });
+
+// A real checkbox drawn quietly: the native input stays focusable and
+// operable underneath, the box beside it only mirrors its state.
+export function Checkbox({ id, checked, onChange, label, className = '' }) {
+  return (
+    <label htmlFor={id} className={`q-check ${className}`}>
+      <span className="q-check__control">
+        <input id={id} type="checkbox" checked={checked} onChange={onChange} />
+        <span className="q-check__box" aria-hidden="true">
+          {checked && <Check size={14} strokeWidth={2.5} />}
+        </span>
+      </span>
+      <span className="q-check__label">{label}</span>
+    </label>
+  );
+}
 
 // One intercession circle as a deliberate choice: its glyph (how far the
 // circle reaches), title, description. Used inside a `role="radiogroup"`, or as

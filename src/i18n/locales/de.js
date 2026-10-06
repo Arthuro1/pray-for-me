@@ -1501,4 +1501,5 @@ export default {
   "tendSub": "Manche Gebete ruhen schon eine Weile.",
   "tendQuestion": "Wie möchtest du dieses Gebet jetzt tragen?",
   "carryingLabel": "Du trägst es mit",
+  "rememberLabel": "Erinnern",
 };

@@ -10,6 +10,7 @@
 @import 'tailwindcss/utilities';
 @import './styles/prayer.css';
 @import './styles/altar.css';
+@import './styles/together.css';
 
 /* ── Screens ───────────────────────────────────────────────────────────── */
 .community-card,
@@ -370,35 +371,6 @@
   }
 }
 
-/* Community */
-.community-empty {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(1.5rem, 5vw, 2.5rem);
-  background: var(--q-surface-inverse);
-  border-color: transparent;
-  color: var(--q-text-inverse);
-}
-
-.community-empty h2 { color: var(--q-text-inverse) !important; }
-.community-empty p { color: var(--q-text-inverse-secondary) !important; }
-
-.community-empty__primary {
-  background: var(--q-text-inverse) !important;
-  color: var(--q-royal-deep) !important;
-}
-
-.community-empty__secondary {
-  background: transparent !important;
-  border-color: color-mix(in srgb, var(--q-text-inverse) 28%, transparent) !important;
-  color: var(--q-text-inverse) !important;
-}
-
-.group-header {
-  padding-block: 1.2rem 1rem;
-  border-block-end: 1px solid var(--q-border);
-}
-
 /* Grow and Plan */
 .grow-next-card {
   position: relative;
@@ -701,154 +673,6 @@
   color: var(--q-text-inverse);
 }
 
-/* Community --------------------------------------------------------------- */
-.constellation-community__header > .flex {
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: .6rem;
-}
-
-.constellation-community__header .page-header__title {
-  /* Overflow handling (min-width:0 + overflow-wrap) is inherited from the base
-     .page-header__title rule; only the community-specific scale differs here. */
-  font-size: clamp(2.35rem, 9vw, 3.35rem);
-}
-
-.constellation-community__header .phase-icon-button {
-  width: 40px;
-  min-width: 40px;
-  height: 40px;
-}
-
-.community-action-icon {
-  display: block;
-  width: 2rem;
-  height: 2rem;
-  flex: 0 0 auto;
-  object-fit: contain;
-}
-
-.community-action-icon--compact {
-  width: 1.65rem;
-  height: 1.65rem;
-}
-
-.constellation-community__hero {
-  position: relative;
-  min-height: 10rem;
-  margin-block: .25rem 2.2rem;
-  padding: 1.45rem 46% 1.45rem 1.4rem;
-  overflow: hidden;
-  background: var(--q-surface);
-  border: 1px solid var(--q-border);
-  border-radius: var(--q-radius-surface);
-}
-
-.constellation-community__hero-copy {
-  position: relative;
-  z-index: 1;
-}
-
-.constellation-community__hero h2 {
-  color: var(--q-text);
-  font-family: var(--q-font-editorial);
-  font-size: clamp(1.55rem, 5vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -.025em;
-  line-height: 1.08;
-}
-
-.constellation-community__hero p {
-  margin-block-start: .6rem;
-  color: var(--q-text-secondary);
-  font-size: .82rem;
-  line-height: 1.55;
-}
-
-.constellation-community .community-card {
-  border-radius: var(--q-radius-surface);
-}
-
-.constellation-community-group .group-header {
-  padding-block-start: 1.4rem;
-}
-
-.constellation-community-prayer {
-  border-width: 0 0 1px !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-.constellation-community-prayer__title {
-  display: flex;
-  align-items: flex-start;
-  gap: .65rem;
-  font-family: var(--q-font-editorial);
-  font-size: 1.12rem !important;
-  line-height: 1.35;
-}
-
-.constellation-community-prayer__title svg {
-  margin-block-start: .08rem;
-  color: var(--q-royal-text);
-}
-
-.constellation-community-prayer__title span {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.constellation-community-feed {
-  border-block: 1px solid var(--q-border);
-}
-
-.constellation-community-feed__row {
-  display: grid;
-  width: 100%;
-  min-height: 5.25rem !important;
-  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
-  align-items: center;
-  gap: .7rem;
-  padding-block: .85rem;
-  border-block-end: 1px solid var(--q-border);
-  text-align: start;
-}
-
-.constellation-community-feed__row:last-child {
-  border-block-end: 0;
-}
-
-.constellation-community-feed__row > svg {
-  color: var(--q-royal-text);
-}
-
-.constellation-community-feed__body {
-  min-width: 0;
-}
-
-.constellation-community-feed__title {
-  display: block;
-  color: var(--q-text);
-  font-family: var(--q-font-editorial);
-  font-size: 1.08rem;
-  line-height: 1.3;
-}
-
-.constellation-community-feed__meta {
-  display: block;
-  margin-block-start: .22rem;
-  color: var(--q-text-tertiary);
-  font-size: .74rem;
-}
-
-.constellation-community-feed__count {
-  color: var(--q-success);
-  font-size: .72rem;
-  font-weight: 650;
-  white-space: nowrap;
-}
-
 /* Secondary destinations ------------------------------------------------- */
 .constellation-menu {
   border-block: 1px solid var(--q-border);
@@ -872,35 +696,6 @@
 .constellation-settings .rounded-2xl,
 .constellation-notifications .rounded-xl {
   box-shadow: none !important;
-}
-
-@media (max-width: 520px) {
-  .constellation-community__header .page-header__title {
-    font-size: 2.2rem;
-  }
-
-  .constellation-community__header .phase-icon-button {
-    width: 38px;
-    min-width: 38px;
-    height: 38px;
-  }
-
-  .constellation-community-group__actions {
-    flex-direction: column;
-  }
-
-  .constellation-community-group__actions > button {
-    width: 100%;
-  }
-
-  .constellation-community-feed__row {
-    grid-template-columns: 1.5rem minmax(0, 1fr);
-  }
-
-  .constellation-community-feed__count {
-    grid-column: 2;
-    margin-block-start: -.45rem;
-  }
 }
 
 /* Public Constellation landing ------------------------------------------- */

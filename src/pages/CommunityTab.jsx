@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, HandHeart, MessageSquare, Loader2, ArrowLeft, Mail, Settings, SlidersHorizontal, Trash2, Check, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, Star, DoorOpen, UsersRound, UserPlus, HeartHandshake, CalendarPlus } from 'lucide-react';
+import { Users, Plus, Loader2, ArrowLeft, Settings, SlidersHorizontal, Trash2, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, DoorOpen, UsersRound, UserPlus, CalendarPlus, ChevronRight, Paperclip } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import { t, tp } from '../i18n';
+import { t } from '../i18n';
 import { toast } from '../store/toastStore';
 import { timeAgo, groupByThisMonth } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
@@ -32,24 +32,19 @@ import { isPlanReviewed } from '../lib/planReview';
 import { groupPlanStatus, sortGroupPlans, prayingLabel } from '../lib/groupPlans';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
-import RichText from '../components/rich/RichText';
 import ShareButtons from '../components/shared/ShareButtons';
 import Switch from '../components/shared/Switch';
 import { QRCodeSVG } from 'qrcode.react';
-import { PageHeader } from '../components/shared/Primitives';
+import { PageHeader, PrimaryButton, QuietButton, SecondaryButton, SegmentedControl, StatusLabel } from '../components/shared/Primitives';
+import RiseMark from '../components/shared/RiseMark';
 import { Modal, CreateGroupModal, JoinGroupModal, AddFriendModal } from './community/GroupFriendModals';
-import { CARD_STYLE, SUBTLE_BTN, INPUT_STYLE } from './community/ui';
 import useCommunityHubData from './community/useCommunityHubData';
 import useGroupPlans from './community/useGroupPlans';
 import useGroupWall from './community/useGroupWall';
-// Plain, recognisable line icons (currentColor, so they adapt to theme and to
-// the button they sit in): join = walk through a door, create = a circle of
-// people, add a friend = a person with a plus.
-const COMMUNITY_ACTION_ICONS = { join: DoorOpen, create: UsersRound, friend: UserPlus };
-
-function CommunityActionIcon({ action, compact = false }) {
-  const Icon = COMMUNITY_ACTION_ICONS[action];
-  return <Icon size={compact ? 16 : 18} strokeWidth={1.9} aria-hidden="true" />;
+import GroupPrayerRow from './community/GroupPrayerRow';
+// Back to Together — the arrow follows the reading direction.
+function BackArrow(props) {
+  return <ArrowLeft className="rtl-mirror" {...props} />;
 }
 
 // Formats an ISO 'YYYY-MM-DD' group-plan start day for display, parsing it as a
@@ -62,36 +57,33 @@ function formatPlanDate(key, lang) {
   try { return d.toLocaleDateString(lang, { month: 'short', day: 'numeric' }); } catch { return key; }
 }
 
+// Something awaiting a decision (a friend request, an invitation): who, what,
+// and the two answers — never more.
 function ActionRow({ label, sublabel, avatarName, avatar, avatarKind = 'user', primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
-    <div className="phase-card phase-card--quiet flex items-center justify-between p-3 gap-3">
-      <div className="flex items-center gap-3 min-w-0">
-        {avatarName && <Avatar name={avatarName} avatar={avatar} kind={avatarKind} size={36} />}
-        <div className="min-w-0">
-          <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{label}</p>
-          {sublabel && <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>{sublabel}</p>}
-        </div>
-      </div>
-      <div className="flex gap-2 shrink-0">
-        <button onClick={onPrimary} disabled={busy} className="px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
-          {busy ? <Loader2 size={12} className="animate-spin" /> : primaryText}
-        </button>
-        <button onClick={onSecondary} disabled={busy} className="px-3 py-1.5 rounded-lg text-xs disabled:opacity-40" style={SUBTLE_BTN}>
-          {secondaryText}
-        </button>
-      </div>
-    </div>
+    <li className="together-row together-row--decide">
+      {avatarName && <Avatar name={avatarName} avatar={avatar} kind={avatarKind} size={36} />}
+      <span className="together-row__body">
+        <span className="together-row__name">{label}</span>
+        {sublabel && <span className="together-row__meta">{sublabel}</span>}
+      </span>
+      <span className="together-row__actions">
+        <SecondaryButton onClick={onSecondary} disabled={busy}>{secondaryText}</SecondaryButton>
+        <PrimaryButton onClick={onPrimary} disabled={busy}>
+          {busy ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : primaryText}
+        </PrimaryButton>
+      </span>
+    </li>
   );
 }
 
-function Section({ title, icon, children }) {
+// A titled list on the page: a small label and rows divided by hairlines.
+function Section({ title, split = false, children }) {
   return (
-    <div className="mb-8">
-      <h2 className="phase-section-heading flex items-center gap-2">
-        {icon} {title}
-      </h2>
-      <div className="space-y-2">{children}</div>
-    </div>
+    <section className="together-section">
+      <h2 className="section-label">{title}</h2>
+      <ul className={`together-list ${split ? 'together-list--split' : ''}`}>{children}</ul>
+    </section>
   );
 }
 
@@ -171,29 +163,26 @@ function CommunityHub({ lang, userId, onViewGroup }) {
 
   if (loading) {
     return (
-      <div className="px-5 md:px-8 py-6 max-w-4xl mx-auto">
-        <PrayerListSkeleton count={3} />
+      <div className="phase-page">
+        <div className="phase-content pt-12"><PrayerListSkeleton count={3} /></div>
       </div>
     );
   }
 
   return (
-    <div className="phase-page constellation-community min-h-screen">
+    <div className="phase-page together min-h-screen">
       <div className="phase-page__shell">
         {/* Once groups exist they lead the page; joining another group, creating
-            one or adding a friend become small header actions instead of a
-            second button row. Join stays reachable — invitations arrive by code. */}
+            one or adding a friend become one quiet header action. Join stays
+            reachable — invitations arrive by code. */}
         <PageHeader
-          className="constellation-community__header"
           title={t(lang, 'together')}
           aside={groups.length > 0 ? (
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'add')}
               triggerIcon={Plus}
-              triggerLabel={t(lang, 'add')}
-              triggerStyle={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
-              iconColor="#fff"
+              triggerClassName="icon-button pressable -me-2"
               items={[
                 { key: 'join', icon: DoorOpen, label: t(lang, 'joinGroupCta'), onClick: () => setShowJoinGroup(true) },
                 { key: 'create', icon: UsersRound, label: t(lang, 'createGroup'), onClick: () => setShowCreateGroup(true) },
@@ -202,41 +191,29 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             />
           ) : undefined}
         />
+      </div>
 
-        {groups.length > 0 && (
-          <div className="constellation-community__hero">
-            <div className="constellation-community__hero-copy">
-              <h2>{t(lang, 'fromYourGroups')}</h2>
-              <p>{t(lang, 'communityEmptyDesc')}</p>
+      <div className="phase-content">
+        {/* An empty Together gets ONE invitation — join first (most believers
+            are invited into an existing group), create second, add a friend as
+            a quiet text action. No second empty state below. */}
+        {groups.length === 0 && (
+          <div className="together-empty">
+            <RiseMark motion="still" size={40} />
+            <h2 className="together-empty__title">{t(lang, 'prayWithOthers')}</h2>
+            <p className="together-empty__body">{t(lang, 'communityEmptyDesc')}</p>
+            <div className="together-empty__actions">
+              <PrimaryButton icon={DoorOpen} onClick={() => setShowJoinGroup(true)}>{t(lang, 'joinGroupCta')}</PrimaryButton>
+              <SecondaryButton icon={UsersRound} onClick={() => setShowCreateGroup(true)}>{t(lang, 'createGroup')}</SecondaryButton>
+              <QuietButton icon={UserPlus} onClick={() => setShowAddFriend(true)}>{t(lang, 'addFriend')}</QuietButton>
             </div>
           </div>
         )}
 
-        {/* An empty community account gets ONE onboarding card — join first
-            (most believers are invited into an existing group), create second,
-            add-a-friend as a quiet text link. No second empty state below. */}
-        {groups.length === 0 && (
-          <div className="phase-card community-empty mb-8 text-center max-w-lg mx-auto">
-            <Users size={34} className="mx-auto mb-3" aria-hidden="true" />
-            <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--q-text)' }}>{t(lang, 'prayWithOthers')}</h2>
-            <p className="text-sm mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'communityEmptyDesc')}</p>
-            <button onClick={() => setShowJoinGroup(true)} className="community-empty__primary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-semibold mb-2.5">
-              <CommunityActionIcon action="join" compact /> {t(lang, 'joinGroupCta')}
-            </button>
-            <button onClick={() => setShowCreateGroup(true)} className="community-empty__secondary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-medium mb-3">
-              <CommunityActionIcon action="create" compact /> {t(lang, 'createGroup')}
-            </button>
-            <button onClick={() => setShowAddFriend(true)} className="inline-flex items-center gap-1.5 px-3 text-xs font-medium" style={{ color: 'rgba(255,255,255,.8)' }}>
-              <CommunityActionIcon action="friend" compact /> {t(lang, 'addFriend')}
-            </button>
-          </div>
-        )}
-
         {/* Needs attention: ONLY when something actually awaits a decision —
-            incoming friend requests and group invitations. Never a permanent
-            statistics block. */}
+            incoming friend requests and invitations. Never a statistics block. */}
         {(friendRequests.length > 0 || groupInvitations.length > 0 || planInvitations.length > 0) && (
-          <Section title={t(lang, 'needsAttention')} icon={<Mail size={18} />}>
+          <Section title={t(lang, 'needsAttention')}>
             {friendRequests.map(req => (
               <ActionRow key={req.id} label={req.fromName} sublabel={t(lang, 'friendRequests')}
                 avatarName={req.fromName} avatar={req.fromAvatar} busy={busyId === req.id}
@@ -277,46 +254,35 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             (for someone, or saved from a group); invisible to everyone else. */}
         <IntercessionQueue lang={lang} />
 
-        {/* The onboarding card above IS the empty state — no second "My groups"
-            empty section with another Join button. */}
         {groups.length > 0 && (
-          <Section title={t(lang, 'myGroups')}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {groups.map(g => (
-                <button key={g.id} onClick={() => onViewGroup(g.id)} className="phase-card community-card p-4 text-left">
-                  <div className="flex items-center gap-3">
-                    <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={40} />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm truncate" style={{ color: 'var(--q-text)' }}>{g.name}</p>
-                      {g.role === 'admin' && <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'admin')}</p>}
-                    </div>
-                    {unread[g.id] > 0 && (
-                      <span className="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--q-action-primary)' }}>
-                        {t(lang, 'newCount', { n: unread[g.id] })}
-                      </span>
-                    )}
-                  </div>
+          <Section title={t(lang, 'myGroups')} split>
+            {groups.map(g => (
+              <li key={g.id}>
+                <button type="button" onClick={() => onViewGroup(g.id)} className="together-row pressable">
+                  <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={40} />
+                  <span className="together-row__body">
+                    <span className="together-row__name together-row__name--editorial">{g.name}</span>
+                    {g.role === 'admin' && <span className="together-row__meta">{t(lang, 'admin')}</span>}
+                  </span>
+                  {unread[g.id] > 0 && <StatusLabel tone="royal">{t(lang, 'newCount', { n: unread[g.id] })}</StatusLabel>}
+                  <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
                 </button>
-              ))}
-            </div>
+              </li>
+            ))}
           </Section>
         )}
 
         {friends.length > 0 && (
-          <Section title={`${t(lang, 'peopleView')} (${friends.length})`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {friends.map(f => (
-                <div key={f.id} className="phase-card phase-card--quiet flex items-center justify-between gap-3 p-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <Avatar name={f.name} avatar={f.avatar} size={36} />
-                    <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{f.name}</p>
-                  </div>
-                  <button onClick={() => handleRemoveFriend(f)} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
-                    {t(lang, 'remove')}
-                  </button>
-                </div>
-              ))}
-            </div>
+          <Section title={`${t(lang, 'peopleView')} · ${friends.length}`} split>
+            {friends.map(f => (
+              <li key={f.id} className="together-row">
+                <Avatar name={f.name} avatar={f.avatar} size={32} />
+                <span className="together-row__body"><span className="together-row__name">{f.name}</span></span>
+                <QuietButton onClick={() => handleRemoveFriend(f)} disabled={busyId === f.id} style={{ color: 'var(--q-text-secondary)' }}>
+                  {t(lang, 'remove')}
+                </QuietButton>
+              </li>
+            ))}
           </Section>
         )}
 
@@ -458,49 +424,50 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
           onCancel={() => setConfirmRole(null)}
         />
       )}
-      <div className="max-h-[60vh] overflow-y-auto">
-        {/* Only admins and the group's creator can restyle a group — the same
-            rule the "Admins can update their group" policy enforces server-side. */}
-        {canEditAvatar && (
-          <div className="mb-5">
-            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupAvatar')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupAvatarHint')}</p>
-            <AvatarEditor lang={lang} kind="group" name={group.name} avatar={avatarConfigFrom(group)} ownerId={group.id} onSave={handleAvatarSave} />
-          </div>
-        )}
-
-        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'renameGroup')}</p>
-        <div className="flex gap-2 mb-5">
-          <input value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
-            onKeyDown={e => e.key === 'Enter' && handleRename()}
-            className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none" style={INPUT_STYLE} />
-          <button onClick={handleRename} disabled={!name.trim() || name.trim() === group.name || renaming}
-            className="px-4 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
-            {renaming ? <Loader2 size={14} className="animate-spin" /> : t(lang, 'save')}
-          </button>
+      {/* Only admins and the group's creator can restyle a group — the same
+          rule the "Admins can update their group" policy enforces server-side. */}
+      {canEditAvatar && (
+        <div className="q-dialog__section">
+          <p className="section-label">{t(lang, 'groupAvatar')}</p>
+          <p className="q-field__hint mb-3">{t(lang, 'groupAvatarHint')}</p>
+          <AvatarEditor lang={lang} kind="group" name={group.name} avatar={avatarConfigFrom(group)} ownerId={group.id} onSave={handleAvatarSave} />
         </div>
+      )}
 
-        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'inviteFriends')}</p>
+      <div className="q-dialog__section">
+        <label htmlFor="group-rename" className="section-label block mb-2">{t(lang, 'renameGroup')}</label>
+        <div className="flex gap-2">
+          <input id="group-rename" value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
+            onKeyDown={e => e.key === 'Enter' && handleRename()}
+            className="q-input min-w-0 flex-1" />
+          <PrimaryButton onClick={handleRename} disabled={!name.trim() || name.trim() === group.name || renaming}>
+            {renaming ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : t(lang, 'save')}
+          </PrimaryButton>
+        </div>
+      </div>
+
+      <div className="q-dialog__section">
+        <p className="section-label">{t(lang, 'inviteFriends')}</p>
         {invitable.length === 0 ? (
-          <p className="text-sm mb-4" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noFriendsToInvite')}</p>
+          <p className="q-meta">{t(lang, 'noFriendsToInvite')}</p>
         ) : (
-          <div className="space-y-2 mb-5">
+          <ul className="member-list">
             {invitable.map(f => (
-              <div key={f.id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Avatar name={f.name} avatar={f.avatar} size={30} />
-                  <p className="text-sm truncate" style={{ color: 'var(--q-text)' }}>{f.name}</p>
-                </div>
-                <button onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]} className="px-3 py-1 rounded-lg text-xs font-medium text-white disabled:opacity-40 shrink-0" style={{ background: 'var(--q-action-primary)' }}>
+              <li key={f.id} className="member-row">
+                <Avatar name={f.name} avatar={f.avatar} size={30} />
+                <span className="member-row__name">{f.name}</span>
+                <SecondaryButton onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]}>
                   {invited[f.id] ? t(lang, 'invited') : t(lang, 'invite')}
-                </button>
-              </div>
+                </SecondaryButton>
+              </li>
             ))}
-          </div>
+          </ul>
         )}
+      </div>
 
-        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'members')} ({members.length})</p>
-        <div className="space-y-2">
+      <div className="q-dialog__section">
+        <p className="section-label">{t(lang, 'members')} · {members.length}</p>
+        <ul className="member-list">
           {members.map(m => {
             const isSelf = m.user_id === userId;
             const isOwner = m.user_id === group.created_by;
@@ -515,28 +482,25 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
               { key: 'remove', icon: Trash2, label: t(lang, 'removeFromGroup'), danger: true, onClick: () => setConfirmRemove(m) },
             ];
             return (
-              <div key={m.user_id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <Avatar name={m.name} avatar={m.avatar} size={30} />
-                  <div className="min-w-0">
-                    <p className="text-sm truncate" style={{ color: 'var(--q-text)' }}>{m.name}{isSelf ? ` (${t(lang, 'you')})` : ''}</p>
-                    {isOwner
-                      ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'owner')}</p>
-                      : isMemberAdmin
-                        ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'admin')}</p>
-                        : null}
-                  </div>
-                </div>
+              <li key={m.user_id} className="member-row">
+                <Avatar name={m.name} avatar={m.avatar} size={30} />
+                <span className="member-row__name">
+                  <span className="block truncate">{m.name}{isSelf ? ` (${t(lang, 'you')})` : ''}</span>
+                  {isOwner
+                    ? <span className="member-row__role">{t(lang, 'owner')}</span>
+                    : isMemberAdmin
+                      ? <span className="member-row__role">{t(lang, 'admin')}</span>
+                      : null}
+                </span>
                 {menuItems.length > 0 && (
                   busyId === m.user_id
                     ? <Loader2 size={16} className="animate-spin shrink-0" style={{ color: 'var(--q-text-tertiary)' }} />
-                    : <OverflowMenu lang={lang} ariaLabel={t(lang, 'memberActions')} items={menuItems}
-                        triggerClassName="p-1.5 rounded-lg shrink-0 flex items-center justify-center" triggerStyle={SUBTLE_BTN} />
+                    : <OverflowMenu lang={lang} ariaLabel={t(lang, 'memberActions')} items={menuItems} triggerClassName="icon-button pressable shrink-0" />
                 )}
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </Modal>
   );
@@ -572,57 +536,55 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
   };
 
   return (
-    <Modal title={`${t(lang, 'members')} (${members.length})`} lang={lang} onClose={onClose}>
+    <Modal title={`${t(lang, 'members')} · ${members.length}`} lang={lang} onClose={onClose}>
       {/* Invite preview: what the person on the other end is being invited to. */}
-      <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={CARD_STYLE}>
+      <div className="mb-5 flex items-center gap-3">
         <Avatar kind="group" name={group.name} avatar={avatarConfigFrom(group)} size={40} />
-        <p className="text-sm font-semibold min-w-0 truncate" style={{ color: 'var(--q-text)' }}>{group.name}</p>
+        <p className="together-row__name together-row__name--editorial min-w-0">{group.name}</p>
       </div>
-      <div className="flex gap-2 mb-4">
-        <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
-          <Share2 size={15} /> {t(lang, 'shareInviteLink')}
-        </button>
+      <div className="mb-2 flex gap-2">
+        <PrimaryButton icon={Share2} onClick={shareInvite} className="flex-1">{t(lang, 'shareInviteLink')}</PrimaryButton>
         {/* Icon-only, so it carries a real accessible name (not just a
             tooltip), a full 44×44 target, and disclosure semantics. */}
         <button
+          type="button"
           onClick={revealQR}
           aria-label={t(lang, 'showQrCode')}
           aria-expanded={showQR}
           aria-controls="group-invite-qr"
-          className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center focus-visible:ring-2"
-          style={{ background: showQR ? 'var(--q-action-primary)' : 'var(--q-selected)', color: showQR ? '#fff' : 'var(--q-royal)', border: '0.5px solid var(--q-selected-border)' }}
+          className="icon-button icon-button--outlined pressable shrink-0"
         >
-          <QrCode size={16} aria-hidden="true" />
+          <QrCode size={18} aria-hidden="true" />
         </button>
       </div>
 
       <ShareButtons url={inviteUrl} text={`${t(lang, 'joinMyGroup')} "${group.name}"`} copiedLabel={t(lang, 'linkCopied')} onShared={onInviteAction} />
 
       {showQR && (
-        <div id="group-invite-qr" className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--q-border)' }}>
+        <div id="group-invite-qr" className="invite-code">
           <QRCodeSVG value={inviteUrl} size={170} bgColor="#ffffff" fgColor="#29213F" level="M" />
-          <p className="text-xs" style={{ color: '#5F6068' }}>{t(lang, 'scanToJoin')}</p>
-          <p className="text-sm font-mono font-semibold tracking-wider" style={{ color: '#1a0a2e' }}>{group.invite_code}</p>
+          <p className="invite-code__hint">{t(lang, 'scanToJoin')}</p>
+          <p className="invite-code__value">{group.invite_code}</p>
         </div>
       )}
       {loading ? (
         <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
       ) : (
-        <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+        <ul className="member-list mt-2">
           {members.map(m => (
-            <div key={m.user_id} className="flex items-center gap-2.5 p-2.5 rounded-xl" style={CARD_STYLE}>
+            <li key={m.user_id} className="member-row">
               <Avatar name={m.name} avatar={m.avatar} size={32} />
-              <div className="min-w-0">
-                <p className="text-sm truncate" style={{ color: 'var(--q-text)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
+              <span className="member-row__name">
+                <span className="block truncate">{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</span>
                 {m.user_id === group.created_by
-                  ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'owner')}</p>
+                  ? <span className="member-row__role">{t(lang, 'owner')}</span>
                   : m.role === 'admin'
-                    ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'admin')}</p>
+                    ? <span className="member-row__role">{t(lang, 'admin')}</span>
                     : null}
-              </div>
-            </div>
+              </span>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </Modal>
   );
@@ -630,9 +592,9 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
 
 function Empty({ lang, title }) {
   return (
-    <div className="text-center py-12">
-      <p className="text-sm mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, title)}</p>
-      <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'beFirst')}</p>
+    <div className="journal__no-match">
+      <p className="mb-1 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, title)}</p>
+      <p className="q-meta">{t(lang, 'beFirst')}</p>
     </div>
   );
 }
@@ -715,16 +677,15 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   };
 
   return (
-    <div className="phase-page constellation-community constellation-community-group min-h-screen">
-      <div className="phase-page__shell pt-3 flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
-          <ArrowLeft size={16} /> {t(lang, 'together')}
-        </button>
+    <div className="phase-page together together-group min-h-screen">
+      <div className="phase-page__shell together-bar">
+        <QuietButton onClick={onBack} icon={BackArrow} iconSize={16} className="-ms-3">
+          {t(lang, 'together')}
+        </QuietButton>
         <OverflowMenu
           lang={lang}
           ariaLabel={t(lang, 'groupOptions')}
-          triggerClassName="flex items-center justify-center w-11 h-11 rounded-lg"
-          triggerStyle={SUBTLE_BTN}
+          triggerClassName="icon-button pressable -me-2"
           items={[
             { key: 'members', icon: Users, label: t(lang, 'members'), onClick: () => setShowMembers(true) },
             { key: 'journey', icon: CalendarPlus, label: t(lang, 'groupJourneyStartCta'), onClick: () => setShowPlanPicker(true) },
@@ -741,10 +702,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         <Modal title={t(lang, 'groupSettings')} lang={lang} onClose={() => setShowSettings(false)}>
           {/* Real switch semantics (role, checked state, label, keyboard) —
               the description stays plain text beside it, never a fake knob. */}
-          <div className="flex items-start justify-between gap-3 w-full p-3 rounded-xl" style={CARD_STYLE}>
+          <div className="flex w-full items-start justify-between gap-4">
             <span className="min-w-0">
-              <span className="block text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'autoAddRequests')}</span>
-              <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'autoAddRequestsSub')}</span>
+              <span className="block text-[0.9375rem]" style={{ color: 'var(--q-text)' }}>{t(lang, 'autoAddRequests')}</span>
+              <span className="q-field__hint mt-1 block">{t(lang, 'autoAddRequestsSub')}</span>
             </span>
             <Switch checked={!!group?.autoAdd} onChange={handleToggleAutoAdd} label={t(lang, 'autoAddRequests')} />
           </div>
@@ -753,12 +714,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
       {showLeave && (
         <Modal title={t(lang, 'leaveGroup')} lang={lang} onClose={() => setShowLeave(false)}>
-          <p className="text-sm mb-5" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'leaveGroupConfirm')}</p>
-          <div className="flex gap-2">
-            <button onClick={() => setShowLeave(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={SUBTLE_BTN}>{t(lang, 'cancel')}</button>
-            <button onClick={handleLeave} disabled={leaving} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-danger)' }}>
-              {leaving ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'leaveGroup')}
-            </button>
+          <p className="text-[0.9375rem] leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'leaveGroupConfirm')}</p>
+          <div className="q-dialog__actions">
+            <SecondaryButton onClick={() => setShowLeave(false)}>{t(lang, 'cancel')}</SecondaryButton>
+            <PrimaryButton danger onClick={handleLeave} disabled={leaving}>
+              {leaving ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : t(lang, 'leaveGroup')}
+            </PrimaryButton>
           </div>
         </Modal>
       )}
@@ -778,40 +739,38 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           theology, safety, language, or editorial review is not a user task. */}
       {showPlanPicker && (
         <Modal title={t(lang, 'groupPlanPickerTitle')} lang={lang} onClose={() => setShowPlanPicker(false)}>
-          <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupPlanPickerSub')}</p>
-          <div className="grid grid-cols-1 gap-2">
-            {plansByCategory()
-              .map((group) => ({ ...group, plans: group.plans.filter(isPlanReviewed) }))
-              .filter((group) => group.plans.length > 0)
-              .map((group) => (
-              <section key={group.id}>
-                <h4 className="mb-2 mt-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
-                  {t(lang, group.labelKey)}
-                </h4>
-                <div className="grid grid-cols-1 gap-2">
-                  {group.plans.map((plan) => {
-                    const adopted = adoptedPlanIds.has(plan.id);
-                    return (
+          <p className="q-field__hint mb-4">{t(lang, 'groupPlanPickerSub')}</p>
+          {plansByCategory()
+            .map((category) => ({ ...category, plans: category.plans.filter(isPlanReviewed) }))
+            .filter((category) => category.plans.length > 0)
+            .map((category) => (
+            <section key={category.id} className="q-dialog__section">
+              <h3 className="section-label">{t(lang, category.labelKey)}</h3>
+              <ul className="together-list">
+                {category.plans.map((plan) => {
+                  const adopted = adoptedPlanIds.has(plan.id);
+                  return (
+                    <li key={plan.id}>
                       <button
-                        key={plan.id}
+                        type="button"
                         disabled={adopted}
                         onClick={() => { setShowPlanPicker(false); setDetailPlan(plan); }}
-                        className="phase-card plan-card p-3 flex items-start gap-3 text-start w-full disabled:opacity-50"
+                        className="together-row pressable disabled:opacity-50"
                       >
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--q-selected)' }}>{plan.emoji}</div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, plan.titleKey)}</p>
-                          <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
+                        <span className="together-row__body">
+                          <span className="together-row__name together-row__name--editorial">{t(lang, plan.titleKey)}</span>
+                          <span className="together-row__meta">
                             {adopted ? t(lang, 'groupPlanAlreadyRunning') : `${t(lang, plan.subKey)} · ${t(lang, 'planDays', { n: plan.count })}`}
-                          </p>
-                        </div>
+                          </span>
+                        </span>
+                        <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
                       </button>
-                    );
-                  })}
-                </div>
-              </section>
-            ))}
-          </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
         </Modal>
       )}
 
@@ -841,51 +800,42 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         />
       )}
 
-      <div className="phase-content max-w-4xl">
-        <div className="group-header mb-5 flex items-start gap-3">
-          <Avatar kind="group" name={group?.name || ''} avatar={avatarConfigFrom(group)} size={48} className="mt-1" />
+      <div className="phase-content">
+        <header className="together-group-header">
+          <Avatar kind="group" name={group?.name || ''} avatar={avatarConfigFrom(group)} size={56} />
           <div className="min-w-0">
             <p className="section-label mb-2">{t(lang, 'together')}</p>
-            <h1 className="page-header__title break-words" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.6rem)', overflowWrap: 'anywhere' }}>{group?.name}</h1>
+            <h1 className="together-group-header__title">{group?.name}</h1>
           </div>
-        </div>
+        </header>
 
-        {/* First-group checklist — leaders only, dismissible, retires itself as
-            the steps complete. Its rows are shortcuts to actions on this page. */}
         {communityEncryptionMigration.groupId === groupId
           && (communityEncryptionMigration.total > 0 || communityEncryptionMigration.status === 'error')
           && communityEncryptionMigration.status !== 'complete' && (
-          <div className="phase-card phase-card--quiet flex items-center gap-3 p-3 mb-4" role="status">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-              {communityEncryptionMigration.status === 'migrating'
-                ? <Loader2 size={17} className="animate-spin" />
-                : <ShieldCheck size={17} />}
-            </div>
+          <div className="together-status" role="status">
+            {communityEncryptionMigration.status === 'migrating'
+              ? <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+              : <ShieldCheck size={18} aria-hidden="true" />}
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>
                 {communityEncryptionMigration.status === 'error'
                   ? t(lang, 'errorBoundaryTitle')
                   : t(lang, 'vaultMigratePending', { count: communityEncryptionMigration.total })}
               </p>
-              <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
+              <p className="q-meta">
                 {['partial', 'error'].includes(communityEncryptionMigration.status)
                   ? t(lang, 'vaultMigratePartial')
                   : `${communityEncryptionMigration.completed} / ${communityEncryptionMigration.total}`}
               </p>
             </div>
             {['partial', 'error'].includes(communityEncryptionMigration.status) && (
-              <button
-                type="button"
-                onClick={() => migrateLegacyCommunityContent(groupId)}
-                className="px-3 py-2 rounded-lg text-xs font-medium"
-                style={SUBTLE_BTN}
-              >
-                {t(lang, 'retry')}
-              </button>
+              <QuietButton onClick={() => migrateLegacyCommunityContent(groupId)}>{t(lang, 'retry')}</QuietButton>
             )}
           </div>
         )}
 
+        {/* First-group checklist — leaders only, dismissible, retires itself as
+            the steps complete. Its rows are shortcuts to actions on this page. */}
         {isAdmin && group && !loading && (
           <GroupChecklist
             lang={lang}
@@ -896,8 +846,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             onAddRequest={() => setShowNewRequest(true)}
             onPray={() => {
               // Open the first request to pray over it. The step completes only
-              // through a genuine prayer action ("I'm praying" → hasPrayed) —
-              // never because a detail page was merely opened.
+              // through a genuine prayer action ("Carry this prayer" →
+              // hasPrayed) — never because a detail page was merely opened.
               if (prayers[0]) onOpenPrayer(prayers[0].id);
             }}
           />
@@ -907,11 +857,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             and shown to every member, so someone who joins the group later sees
             it here and can join in. Placed above the tabs so it's not missed. */}
         {groupPlans.length > 0 && (
-          <div className="mb-6">
-            <h2 className="phase-section-heading flex items-center gap-2">
-              <HeartHandshake size={18} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'groupPlansHeading')}
-            </h2>
-            <div className="flex flex-col gap-2">
+          <section className="together-plans">
+            <h2 className="section-label mb-2">{t(lang, 'groupPlansHeading')}</h2>
+            <ul className="together-list">
               {sortGroupPlans(groupPlans, todayKey()).map((gp) => {
                 const plan = planById(gp.plan_id);
                 if (!plan) return null;
@@ -922,83 +870,72 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 if (gp.joinedByMe) menuItems.push({ key: 'leave', icon: LogOut, label: t(lang, 'groupPlanLeave'), onClick: () => handleLeaveGroupPlan(gp) });
                 if (canEnd) menuItems.push({ key: 'end', icon: Trash2, label: t(lang, 'groupPlanEnd'), danger: true, onClick: () => setConfirmEndPlan(gp) });
                 return (
-                  <div key={gp.id} className="phase-card community-card p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--q-selected)' }}>
-                      {plan.emoji}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--q-text)' }}>{t(lang, plan.titleKey)}</p>
-                      <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--q-text-tertiary)' }}>
+                  <li key={gp.id} className="together-row">
+                    <span className="together-row__body">
+                      <span className="together-row__name together-row__name--editorial">{t(lang, plan.titleKey)}</span>
+                      <span className="together-row__meta">
                         {status === 'running' ? t(lang, 'groupPlanRunningNow') : t(lang, 'groupPlanStartsOn', { date: formatPlanDate(gp.start_date, lang) })}
                         {' · '}{t(lang, count.key, count.vars)}
-                      </p>
-                    </div>
-                    {gp.joinedByMe ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                        <Check size={13} /> {t(lang, 'groupPlanJoinedBadge')}
                       </span>
-                    ) : (
-                      <button
-                        onClick={() => handleJoinGroupPlan(gp)}
-                        disabled={busyPlanId === gp.id}
-                        className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40"
-                        style={{ background: 'var(--q-action-primary)' }}
-                      >
-                        {busyPlanId === gp.id ? <Loader2 size={13} className="animate-spin" /> : t(lang, 'groupPlanJoinCta')}
-                      </button>
-                    )}
-                    {menuItems.length > 0 && (
-                      <OverflowMenu lang={lang} ariaLabel={t(lang, 'groupPlansHeading')} items={menuItems}
-                        triggerClassName="p-1.5 rounded-lg shrink-0 flex items-center justify-center" triggerStyle={SUBTLE_BTN} />
-                    )}
-                  </div>
+                    </span>
+                    <span className="together-row__actions">
+                      {gp.joinedByMe ? (
+                        <StatusLabel tone="royal">{t(lang, 'groupPlanJoinedBadge')}</StatusLabel>
+                      ) : (
+                        <SecondaryButton onClick={() => handleJoinGroupPlan(gp)} disabled={busyPlanId === gp.id}>
+                          {busyPlanId === gp.id ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : t(lang, 'groupPlanJoinCta')}
+                        </SecondaryButton>
+                      )}
+                      {menuItems.length > 0 && (
+                        <OverflowMenu lang={lang} ariaLabel={t(lang, 'groupPlansHeading')} items={menuItems} triggerClassName="icon-button pressable shrink-0" />
+                      )}
+                    </span>
+                  </li>
                 );
               })}
-            </div>
-          </div>
+            </ul>
+          </section>
         )}
 
-        <div className="flex gap-1 mb-5">
-          {['requests', 'testimonies'].map(tab => (
-            <button key={tab} onClick={() => setSubTab(tab)} className="px-4 py-2 min-h-[44px] rounded-xl text-sm font-medium transition-all"
-              style={{ background: subTab === tab ? 'var(--q-action-primary)' : 'var(--q-field)', color: subTab === tab ? '#fff' : 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
-              {tab === 'requests' ? t(lang, 'prayerRequests') : t(lang, 'testimonies')}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl
+          className="together-tabs"
+          label={group?.name || t(lang, 'together')}
+          value={subTab}
+          onChange={setSubTab}
+          options={[
+            { value: 'requests', label: t(lang, 'prayerRequests') },
+            { value: 'testimonies', label: t(lang, 'testimonies') },
+          ]}
+        />
 
         {subTab === 'requests' && (
           <>
             {/* One visible action keeps the group focused on prayer. Invitations,
                 journeys, members, and administration stay in the group menu. */}
             {prayers.length > 0 && (
-              <div className="constellation-community-group__actions mb-4">
-                <button onClick={() => setShowNewRequest(true)} className="flex w-full items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--q-action-primary)' }}>
-                  <Plus size={16} /> {t(lang, 'newRequest')}
-                </button>
-              </div>
+              <PrimaryButton icon={Plus} onClick={() => setShowNewRequest(true)} className="together-new">
+                {t(lang, 'newRequest')}
+              </PrimaryButton>
             )}
 
             {/* List tools appear progressively: search once the wall is long
                 enough to need it, status filters once both states exist. A
                 small young group keeps a clean page. */}
             {(controls.search || controls.statusFilter) && (
-              <div className="mb-4 space-y-2.5">
+              <div className="together-tools">
                 {controls.search && (
-                  <div className="relative">
-                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--q-text-tertiary)' }} />
-                    <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
+                  <div className="journal-search">
+                    <Search size={16} className="journal-search__icon" aria-hidden="true" />
+                    <input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
                       aria-label={t(lang, 'searchRequests')}
-                      className="w-full text-sm rounded-xl pl-9 pr-3 py-2.5 focus:outline-none" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }} />
+                      className="q-input" />
                   </div>
                 )}
                 {controls.statusFilter && (
-                  <div className="flex gap-2">
-                    {['all', 'active', 'answered'].map(f => (
-                      <button key={f} onClick={() => setReqFilter(f)} aria-pressed={reqFilter === f}
-                        className="min-h-[44px] text-xs px-3 py-1.5 rounded-full font-medium"
-                        style={reqFilter === f ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' } : SUBTLE_BTN}>
-                        {t(lang, f === 'all' ? 'all' : f === 'active' ? 'active' : 'answered')}
+                  <div className="journal__tool-row" role="group" aria-label={t(lang, 'prayerRequests')}>
+                    {['all', 'active', 'answered'].map((value) => (
+                      <button key={value} type="button" onClick={() => setReqFilter(value)} aria-pressed={reqFilter === value} className="journal__tool pressable">
+                        {t(lang, value)}
                       </button>
                     ))}
                   </div>
@@ -1010,118 +947,61 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
               <PrayerListSkeleton />
             ) : prayers.length === 0 ? (
               // ONE contextual action for an empty group — no competing buttons.
-              <div className="text-center py-12">
-                <p className="text-sm mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noRequests')}</p>
-                <p className="text-xs mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'beFirst')}</p>
-                <button onClick={() => setShowNewRequest(true)} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--q-action-primary)' }}>
-                  <Plus size={16} /> {t(lang, 'newRequest')}
-                </button>
+              <div className="journal__no-match">
+                <p className="mb-1 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noRequests')}</p>
+                <p className="q-meta mb-6">{t(lang, 'beFirst')}</p>
+                <PrimaryButton icon={Plus} onClick={() => setShowNewRequest(true)}>{t(lang, 'newRequest')}</PrimaryButton>
               </div>
             ) : filteredPrayers.length === 0 ? (
-              <p className="text-center text-sm py-10" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noMatch')}</p>
+              <p className="journal__no-match q-meta">{t(lang, 'noMatch')}</p>
             ) : (
-              <div className="flex flex-col gap-3">
+              <ul className="together-wall">
                 {filteredPrayers.map(p => (
-                  <button key={p.id} onClick={() => onOpenPrayer(p.id)} className="phase-card community-card constellation-community-prayer p-4 text-left">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Avatar name={p.is_anonymous ? '?' : p.author_name} avatar={p.is_anonymous ? null : avatarFor(p.user_id)} size={26} anonymous={p.is_anonymous} />
-                        <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>
-                          {communityAuthor(p, user.id, lang)} · {timeAgo(p.created_at, lang)}
-                        </p>
-                      </div>
-                      {p.is_answered && (
-                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)' }}>
-                          <Check size={11} /> {t(lang, 'answered2')}
-                        </span>
-                      )}
-                    </div>
-                    {p._locked ? (
-                      <p className="text-sm font-medium mb-2"><LockedNotice lang={lang} inline /></p>
-                    ) : (
-                      <>
-                        <p className="constellation-community-prayer__title text-sm font-medium mb-2" style={{ color: 'var(--q-text)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>
-                          <Star size={17} strokeWidth={1.7} aria-hidden="true" />
-                          <span>{p.title}</span>
-                        </p>
-                        {p.description && <RichText text={p.description} className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--q-text-secondary)' }} />}
-                      </>
-                    )}
-                    <div className="flex items-center gap-3">
-                      {/* How many carry this request — information, never a rank. */}
-                      <span
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
-                        style={SUBTLE_BTN}
-                        title={tp(lang, 'carryCount', p.prayer_reactions?.[0]?.count ?? 0)}
-                      >
-                        <HandHeart size={13} aria-hidden="true" />
-                        <span aria-hidden="true">{p.prayer_reactions?.[0]?.count ?? 0}</span>
-                        <span className="sr-only">{tp(lang, 'carryCount', p.prayer_reactions?.[0]?.count ?? 0)}</span>
-                      </span>
-                      {(p.community_updates?.[0]?.count ?? 0) > 0 && (
-                        <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
-                          <MessageSquare size={13} /> {p.community_updates[0].count}
-                        </span>
-                      )}
-                    </div>
-                  </button>
+                  <GroupPrayerRow key={p.id} prayer={p} user={user} lang={lang} avatar={avatarFor(p.user_id)} onOpen={() => onOpenPrayer(p.id)} />
                 ))}
-              </div>
+              </ul>
             )}
           </>
         )}
 
+        {/* Testimonies — remembrance, kept with honour: the prayer it answers,
+            the words of the one who testifies, a gold line. No emoji, no
+            celebration; the app records, it never declares. */}
         {subTab === 'testimonies' && (
           testimonies.length === 0 ? (
             <Empty lang={lang} title="noTestimonies" />
           ) : (
             groupByThisMonth(testimonies, tm => tm.created_at).map(g => (
-              <div key={g.key} className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>
-                  {t(lang, g.key)}
-                </p>
-                <div className="flex flex-col gap-3">
-                  {g.items.map(testimony => {
-                    const linkedPrayer = testimony.community_prayers;
-                    const testimonyCategories = categories.filter(c => (linkedPrayer?.category_ids || []).includes(c.id));
-                    return (
-                      <button
-                        key={testimony.id}
-                        onClick={() => onOpenPrayer(testimony.community_prayer_id)}
-                        className="phase-card community-card w-full text-left p-4"
-                        style={{ borderInlineStart: '3px solid var(--q-success)' }}
-                      >
-                        <div className="flex items-center gap-2 mb-1.5 min-w-0">
-                          <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} avatar={testimony.is_anonymous ? null : avatarFor(testimony.user_id)} size={26} anonymous={testimony.is_anonymous} />
-                          <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>
-                            {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
-                          </p>
-                        </div>
-                        {linkedPrayer?.title && (
-                          <p className="text-sm font-medium mb-1" style={{ color: 'var(--q-text)' }}>{linkedPrayer.title}</p>
+              <section key={g.key}>
+                <h2 className="section-label together-month">{t(lang, g.key)}</h2>
+                {g.items.map(testimony => {
+                  const linkedPrayer = testimony.community_prayers;
+                  const testimonyCategories = categories.filter(c => (linkedPrayer?.category_ids || []).includes(c.id));
+                  const attachmentCount = testimony.attachments?.length ?? 0;
+                  return (
+                    <button
+                      key={testimony.id}
+                      type="button"
+                      onClick={() => onOpenPrayer(testimony.community_prayer_id)}
+                      className="together-testimony"
+                    >
+                      {linkedPrayer?.title && <span className="together-testimony__for" dir="auto">{linkedPrayer.title}</span>}
+                      {testimony._locked
+                        ? <LockedNotice lang={lang} inline />
+                        // Preview only — media plays on the prayer's page.
+                        : testimony.content && <span className="together-testimony__text" dir="auto">{testimony.content}</span>}
+                      <span className="together-testimony__meta">
+                        <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} avatar={testimony.is_anonymous ? null : avatarFor(testimony.user_id)} size={20} anonymous={testimony.is_anonymous} />
+                        <span>{communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}</span>
+                        {attachmentCount > 0 && (
+                          <span className="inline-flex items-center gap-1"><Paperclip size={12} aria-hidden="true" />{attachmentCount}</span>
                         )}
-                        {testimonyCategories.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mb-2">
-                            {testimonyCategories.map(c => (
-                              <span key={c.id} className="text-xs px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
-                                {c.emoji} {tr(c.name, lang)}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        {testimony._locked
-                          ? <LockedNotice lang={lang} inline />
-                          // Preview only — media plays on the prayer's page, so a
-                          // media-only testimony shows a 📎 count, not empty quotes.
-                          : <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>
-                              🎉 {testimony.content ? `"${testimony.content}"` : ''}
-                              {(testimony.attachments?.length ?? 0) > 0 && ` 📎 ${testimony.attachments.length}`}
-                            </p>}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+                        {testimonyCategories.map(c => <span key={c.id}>{tr(c.name, lang)}</span>)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </section>
             ))
           )
         )}

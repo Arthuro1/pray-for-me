@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "Некоторые молитвы давно не возносились.",
   "tendQuestion": "Как вы хотите нести её теперь?",
   "carryingLabel": "Вы несёте её",
+  "rememberLabel": "Помнить",
 };

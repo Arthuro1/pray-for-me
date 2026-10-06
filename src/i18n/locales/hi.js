@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "कुछ प्रार्थनाएँ कुछ समय से ठहरी हुई हैं।",
   "tendQuestion": "अब आप इसे कैसे उठाए रखना चाहेंगे?",
   "carryingLabel": "आप उठाए हुए हैं",
+  "rememberLabel": "याद रखना",
 };

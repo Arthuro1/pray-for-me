@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "Matagal nang nagpapahinga ang ilang panalangin.",
   "tendQuestion": "Paano mo nais pasanin ito ngayon?",
   "carryingLabel": "Pinapasan mo",
+  "rememberLabel": "Alalahanin",
 };

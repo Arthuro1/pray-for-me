@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "بعض الصلوات في راحة منذ مدة.",
   "tendQuestion": "كيف تودّ أن تحملها الآن؟",
   "carryingLabel": "أنت تحملها",
+  "rememberLabel": "تذكّر",
 };

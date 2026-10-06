@@ -1,0 +1,292 @@
+/* Together — praying with others. Not a feed: a shared place of intercession.
+   Groups, people and requests are rows on the page divided by hairlines; the
+   only filled action is the one that prays. Layout only; colour, type and
+   controls come from tokens and primitives. */
+
+/* ── Sections and rows ──────────────────────────────────────────────────── */
+.together-section { margin-block-end: var(--q-space-10); }
+.together-section > .section-label { margin-block-end: var(--q-space-2); }
+
+.together-list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+
+@media (min-width: 768px) {
+  .together-list--split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--q-space-8); }
+}
+
+.together-row {
+  display: flex;
+  width: 100%;
+  min-height: 64px;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding-block: var(--q-space-3);
+  border-block-end: 1px solid var(--q-border);
+  color: var(--q-text);
+  text-align: start;
+}
+
+button.together-row { transition: background-color var(--q-motion-micro) var(--q-ease); }
+button.together-row:hover { background: var(--q-hover); }
+
+.together-row__body { min-width: 0; flex: 1 1 auto; }
+.together-row__name { display: block; overflow: hidden; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.together-row__name--editorial { font-family: var(--q-font-editorial); font-size: 1.125rem; font-weight: 500; }
+.together-row__meta { display: block; overflow: hidden; margin-block-start: 2px; color: var(--q-text-tertiary); font-size: var(--q-type-meta); text-overflow: ellipsis; white-space: nowrap; }
+.together-row__actions { display: flex; flex: 0 0 auto; align-items: center; gap: var(--q-space-2); }
+
+@media (max-width: 480px) {
+  .together-row--decide { flex-wrap: wrap; }
+  .together-row--decide .together-row__actions { width: 100%; padding-inline-start: 48px; }
+  .together-row--decide .together-row__actions > * { flex: 1 1 0; }
+}
+
+/* ── Empty Together: one invitation ─────────────────────────────────────── */
+.together-empty {
+  display: flex;
+  max-width: 26rem;
+  flex-direction: column;
+  align-items: center;
+  margin: var(--q-space-8) auto var(--q-space-12);
+  text-align: center;
+}
+
+.together-empty__title {
+  margin: var(--q-space-5) 0 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: var(--q-type-section);
+  font-weight: 450;
+  line-height: 1.2;
+}
+
+.together-empty__body { margin: var(--q-space-2) 0 var(--q-space-8); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
+.together-empty__actions { display: grid; width: 100%; gap: var(--q-space-2); }
+
+/* ── Prayers you're carrying ────────────────────────────────────────────── */
+.carried-queue { margin-block-end: var(--q-space-10); }
+.carried-queue__status { display: flex; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; }
+.carried-queue__status svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
+.carried-queue__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); margin-block-start: var(--q-space-4); }
+.carried-queue__remaining { color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+.carried-queue__all { margin-block-start: var(--q-space-3); }
+.carried-queue__list { margin: 0; padding: 0; list-style: none; }
+
+.carried-queue__item {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--q-space-3);
+  border-block-start: 1px solid var(--q-border);
+  color: var(--q-text);
+  font-size: 0.9375rem;
+}
+
+.carried-queue__item svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
+.carried-queue__item-from { flex: 0 1 auto; max-width: 40%; overflow: hidden; color: var(--q-text-tertiary); font-size: var(--q-type-meta); text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── A group's page ─────────────────────────────────────────────────────── */
+.together-bar { display: flex; align-items: center; justify-content: space-between; padding-block-start: var(--q-space-3); }
+
+.together-group-header {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--q-space-4);
+  padding-block: var(--q-space-6) var(--q-space-6);
+}
+
+.together-group-header__title {
+  margin: 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: var(--q-type-title);
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.together-status {
+  display: flex;
+  align-items: center;
+  gap: var(--q-space-3);
+  margin-block-end: var(--q-space-6);
+  padding-block: var(--q-space-3);
+  border-block: 1px solid var(--q-border);
+}
+
+.together-status > svg { flex: 0 0 auto; color: var(--q-royal-text); }
+
+.together-plans { margin-block-end: var(--q-space-8); }
+
+.together-tabs { display: flex; width: 100%; margin-block-end: var(--q-space-5); }
+.together-tabs button { flex: 1 1 0; min-height: 44px; }
+
+.together-tools { display: grid; gap: var(--q-space-3); margin-block-end: var(--q-space-4); }
+.together-new { margin-block-end: var(--q-space-6); }
+
+@media (max-width: 480px) {
+  .together-new { width: 100%; }
+}
+
+/* ── A request on the wall ──────────────────────────────────────────────── */
+.together-wall { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+
+.together-prayer {
+  position: relative;
+  padding-block: var(--q-space-5) var(--q-space-3);
+  border-block-end: 1px solid var(--q-border);
+}
+
+.together-prayer__author {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--q-space-2);
+  margin: 0 0 var(--q-space-2);
+  color: var(--q-text-tertiary);
+  font-size: var(--q-type-meta);
+}
+
+/* The title opens the request; its hit area covers the whole row, while the
+   Carry button sits above it and stays its own target. */
+.together-prayer__open { display: block; width: 100%; color: var(--q-text); text-align: start; }
+.together-prayer__open::after { position: absolute; inset: 0; content: ''; }
+.together-prayer__open:focus-visible { outline: none; }
+.together-prayer:has(.together-prayer__open:focus-visible) { outline: 2px solid var(--q-focus); outline-offset: 2px; }
+.together-prayer:hover { background: var(--q-hover); }
+
+.together-prayer__title {
+  display: block;
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: 1.1875rem;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.together-prayer__description { margin-block-start: var(--q-space-1); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.5; }
+
+.together-prayer__foot {
+  display: flex;
+  min-height: 44px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--q-space-1) var(--q-space-4);
+  margin-block-start: var(--q-space-2);
+}
+
+.together-prayer__carry { position: relative; z-index: 1; margin-inline-start: calc(-1 * var(--q-space-3)); }
+.together-prayer__meta { display: inline-flex; align-items: center; gap: var(--q-space-3); color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+
+/* ── Testimonies: remembrance, kept with honour ─────────────────────────── */
+.together-month { margin-block: var(--q-space-6) var(--q-space-2); }
+.together-month:first-child { margin-block-start: 0; }
+
+.together-testimony {
+  display: block;
+  width: 100%;
+  padding-block: var(--q-space-4);
+  padding-inline: var(--q-space-5) 0;
+  border-inline-start: 2px solid var(--q-gold);
+  color: var(--q-text);
+  text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+
+.together-testimony:hover { background: var(--q-hover); }
+.together-testimony + .together-testimony { margin-block-start: var(--q-space-3); }
+
+.together-testimony__for { display: block; margin-block: var(--q-space-2) var(--q-space-1); color: var(--q-text-secondary); font-size: 0.875rem; font-weight: 600; }
+
+.together-testimony__text {
+  display: block;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.together-testimony__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-1) var(--q-space-3); margin-block-start: var(--q-space-2); color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+
+/* ── Dialogs on this tab ────────────────────────────────────────────────── */
+.q-dialog__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--q-space-3); margin-block-end: var(--q-space-5); }
+
+.q-dialog__title {
+  margin: 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: var(--q-type-section);
+  font-weight: 450;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+}
+
+.q-dialog__actions { display: flex; gap: var(--q-space-3); margin-block-start: var(--q-space-5); }
+.q-dialog__actions > * { flex: 1 1 0; }
+.q-dialog__section + .q-dialog__section { margin-block-start: var(--q-space-6); }
+.q-dialog__section > .section-label { margin-block-end: var(--q-space-2); }
+
+.member-list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+
+.member-row {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  gap: var(--q-space-3);
+  border-block-end: 1px solid var(--q-border);
+}
+
+.member-row__name { min-width: 0; flex: 1 1 auto; overflow: hidden; color: var(--q-text); font-size: 0.9375rem; text-overflow: ellipsis; white-space: nowrap; }
+.member-row__role { display: block; color: var(--q-royal-text); font-size: var(--q-type-meta); }
+
+.invite-code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--q-space-2);
+  margin-block: var(--q-space-4);
+  padding: var(--q-space-5);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: #FFFFFF;
+  color: #202026;
+}
+
+.invite-code__hint { margin: 0; color: #5F6068; font-size: var(--q-type-meta); }
+.invite-code__value { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9375rem; font-weight: 600; letter-spacing: 0.12em; }
+
+/* Sharing a prayer with groups. */
+.share-groups { display: grid; gap: 0; margin: 0 0 var(--q-space-4); padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.share-groups > li { border-block-end: 1px solid var(--q-border); }
+.share-note { display: flex; gap: var(--q-space-3); margin-block-end: var(--q-space-5); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.55; }
+.share-note > svg { flex: 0 0 auto; margin-block-start: 2px; color: var(--q-royal-text); }
+.share-note--caution { padding: var(--q-space-3) var(--q-space-4); border-radius: var(--q-radius-control); background: var(--q-danger-soft); }
+
+.share-preview { padding-block: var(--q-space-3); border-block: 1px solid var(--q-border); }
+.share-preview__who { display: flex; align-items: center; gap: var(--q-space-3); margin-block-start: var(--q-space-2); }
+
+/* ── Leader checklist ───────────────────────────────────────────────────── */
+.group-checklist { margin-block-end: var(--q-space-8); padding-block: var(--q-space-4) var(--q-space-2); border-block: 1px solid var(--q-border); }
+.group-checklist__head { display: flex; align-items: center; justify-content: space-between; gap: var(--q-space-2); }
+.group-checklist__title { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.group-checklist__steps { margin: var(--q-space-2) 0 0; padding: 0; list-style: none; }
+
+.group-checklist__step {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  gap: var(--q-space-3);
+  color: var(--q-text);
+  font-size: 0.9375rem;
+  text-align: start;
+}
+
+.group-checklist__step svg { flex: 0 0 auto; color: var(--q-royal-text); }
+.group-checklist__step:disabled { cursor: default; color: var(--q-text-tertiary); }
+.group-checklist__step:disabled svg { color: var(--q-text-tertiary); }
+.group-checklist__step:not(:disabled):hover { color: var(--q-royal-text); }

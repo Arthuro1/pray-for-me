@@ -1505,4 +1505,5 @@ export default {
   "tendSub": "Some prayers have been resting for a while.",
   "tendQuestion": "How would you like to carry this now?",
   "carryingLabel": "Carrying",
+  "rememberLabel": "Remember",
 };

@@ -66,43 +66,40 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
   };
 
   return (
-    <div className="rounded-2xl p-4 mb-5" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <h3 className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'checklistTitle')}</h3>
+    <section className="group-checklist" aria-labelledby={`group-checklist-${group.id}`}>
+      <div className="group-checklist__head">
+        <h3 id={`group-checklist-${group.id}`} className="group-checklist__title">{t(lang, 'checklistTitle')}</h3>
         <button
+          type="button"
           onClick={() => { dismissChecklist(group.id); complete(); setVersion((v) => v + 1); }}
           aria-label={t(lang, 'checklistDismiss')}
           title={t(lang, 'checklistDismiss')}
-          className="w-11 h-11 -m-2 flex items-center justify-center rounded-full shrink-0"
-          style={{ color: 'var(--q-text-tertiary)' }}
+          className="icon-button pressable -me-2 shrink-0"
         >
-          <X size={15} />
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
-      <div className="space-y-1">
+      <ul className="group-checklist__steps">
         {steps.map((step) => {
           const { icon: Icon, labelKey } = STEP_META[step.id];
           // A blocked step names the action that IS available right now.
           const label = t(lang, step.blocked ? 'checklistAddRequestFirst' : labelKey);
           return (
-            <button
-              key={step.id}
-              onClick={step.done ? undefined : actions[step.id]}
-              disabled={step.done}
-              className="w-full min-h-[44px] flex items-center gap-2.5 px-2 py-2 rounded-xl text-left text-sm"
-              style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text)', opacity: step.done ? 0.65 : 1 }}
-            >
-              {step.done
-                ? <Check size={15} className="shrink-0" style={{ color: 'var(--q-success)' }} aria-hidden="true" />
-                : <Icon size={15} className="shrink-0" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />}
-              <span className="flex-1" style={{ textDecoration: step.done ? 'line-through' : 'none' }}>
-                {label}
-              </span>
-              {!step.done && <ChevronRight size={14} className="shrink-0 opacity-50" aria-hidden="true" />}
-            </button>
+            <li key={step.id}>
+              <button
+                type="button"
+                onClick={step.done ? undefined : actions[step.id]}
+                disabled={step.done}
+                className="group-checklist__step pressable"
+              >
+                {step.done ? <Check size={16} aria-hidden="true" /> : <Icon size={16} aria-hidden="true" />}
+                <span className="flex-1">{label}</span>
+                {!step.done && <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />}
+              </button>
+            </li>
           );
         })}
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 }

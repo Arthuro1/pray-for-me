@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "Baadhi ya maombi yamepumzika kwa muda.",
   "tendQuestion": "Ungependa kulibeba vipi sasa?",
   "carryingLabel": "Unalibeba",
+  "rememberLabel": "Kukumbuka",
 };

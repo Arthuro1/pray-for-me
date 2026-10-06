@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "한동안 쉬고 있던 기도들이 있습니다.",
   "tendQuestion": "이제 이 기도를 어떻게 품고 싶으신가요?",
   "carryingLabel": "품고 있음",
+  "rememberLabel": "기억하기",
 };

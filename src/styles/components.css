@@ -82,6 +82,9 @@ button.pressable:active:not(:disabled) { transform: translateY(1px); }
 .icon-button:hover,
 .phase-icon-button:hover { background: var(--q-hover); color: var(--q-text); }
 
+.icon-button--outlined { border: 1px solid var(--q-border-strong); color: var(--q-text); }
+.icon-button--outlined[aria-expanded="true"] { border-color: var(--q-royal); background: var(--q-selected); color: var(--q-royal-text); }
+
 /* ── Page and section headers ────────────────────────────────────────────── */
 .page-header { padding-block: clamp(var(--q-space-8), 6vw, var(--q-space-12)) var(--q-space-6); }
 
@@ -346,6 +349,36 @@ a.prayer-row:hover { background: var(--q-hover); }
   .bottom-sheet-backdrop { align-items: center; }
 }
 
+/* ── Menu: a floating list of labelled actions ─────────────────────────── */
+.q-menu {
+  min-width: 200px;
+  overflow: hidden;
+  padding-block: var(--q-space-1);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  box-shadow: var(--q-elevation);
+}
+
+.q-menu__item {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding-inline: var(--q-space-4);
+  color: var(--q-text);
+  font-size: 0.9375rem;
+  text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+
+.q-menu__item:hover { background: var(--q-hover); }
+.q-menu__item svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
+.q-menu__item--danger,
+.q-menu__item--danger svg { color: var(--q-danger); }
+.q-menu__divider { height: 1px; margin-block: var(--q-space-1); background: var(--q-border); }
+
 /* ── Fields ──────────────────────────────────────────────────────────────── */
 .q-field { display: grid; gap: 6px; }
 .q-field__label { color: var(--q-text-secondary); font-size: 0.8125rem; font-weight: 600; }
@@ -375,6 +408,28 @@ a.prayer-row:hover { background: var(--q-hover); }
 
 .q-input[aria-invalid="true"],
 .q-textarea[aria-invalid="true"] { border-color: var(--q-danger); }
+
+/* A real checkbox, drawn quietly: the native input stays operable underneath. */
+.q-check { display: flex; min-height: 44px; align-items: center; gap: var(--q-space-3); cursor: pointer; }
+.q-check__control { position: relative; display: flex; width: 20px; height: 20px; flex: 0 0 auto; align-items: center; justify-content: center; }
+.q-check__control input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; opacity: 0; }
+
+.q-check__box {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--q-border-strong);
+  border-radius: 6px;
+  background: var(--q-field);
+  color: var(--q-on-action);
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease);
+}
+
+.q-check__control input:checked + .q-check__box { border-color: var(--q-action-primary); background: var(--q-action-primary); }
+.q-check__control input:focus-visible + .q-check__box { outline: 2px solid var(--q-focus); outline-offset: 2px; }
+.q-check__label { color: var(--q-text-secondary); font-size: 0.9375rem; }
 
 /* ── Intercession circle option ──────────────────────────────────────────── */
 .circle-options {
@@ -454,6 +509,24 @@ a.prayer-row:hover { background: var(--q-hover); }
 /* Selected: the circle fills with royal violet around a gold heart. */
 .circle-glyph--selected .circle-glyph__ring { fill: var(--q-royal); stroke: var(--q-royal); }
 .circle-glyph--selected .circle-glyph__heart { fill: var(--q-gold-inverse); }
+
+/* ── Share targets ──────────────────────────────────────────────────────────
+   Share targets: one quiet family of round buttons — no brand colours. */
+.share-targets { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--q-space-2); margin-block: var(--q-space-2) var(--q-space-4); }
+
+.share-target {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--q-border-strong);
+  border-radius: 50%;
+  color: var(--q-text-secondary);
+  transition: background-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease);
+}
+
+.share-target:hover { background: var(--q-hover); color: var(--q-text); }
 
 /* ── Scripture ───────────────────────────────────────────────────────────── */
 .scripture-block {

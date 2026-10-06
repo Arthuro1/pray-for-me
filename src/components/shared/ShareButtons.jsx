@@ -24,23 +24,24 @@ export default function ShareButtons({ url, text, copiedLabel, onShared }) {
   const copyForSlack = async () => {
     try { await navigator.clipboard.writeText(msg); toast.success(copiedLabel); onShared?.(); } catch { /* clipboard denied */ }
   };
+  // One quiet family of round buttons: each target is named for screen readers
+  // and drawn in the text colour — no brand colours in the product's palette.
   const targets = [
-    { name: 'WhatsApp', color: '#25D366', href: `https://wa.me/?text=${enc(msg)}`, icon: <BrandIcon name="whatsapp" /> },
-    { name: 'Telegram', color: '#26A5E4', href: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`, icon: <BrandIcon name="telegram" /> },
-    { name: 'Slack', color: '#4A154B', onClick: copyForSlack, icon: <BrandIcon name="slack" /> },
-    { name: 'Facebook', color: '#1877F2', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, icon: <BrandIcon name="facebook" /> },
-    { name: 'X', color: '#000000', href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`, icon: <BrandIcon name="x" /> },
-    { name: 'Email', color: '#64748b', href: `mailto:?subject=${enc(text)}&body=${enc(msg)}`, icon: <Mail size={18} /> },
+    { name: 'WhatsApp', href: `https://wa.me/?text=${enc(msg)}`, icon: <BrandIcon name="whatsapp" /> },
+    { name: 'Telegram', href: `https://t.me/share/url?url=${enc(url)}&text=${enc(text)}`, icon: <BrandIcon name="telegram" /> },
+    { name: 'Slack', onClick: copyForSlack, icon: <BrandIcon name="slack" /> },
+    { name: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, icon: <BrandIcon name="facebook" /> },
+    { name: 'X', href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`, icon: <BrandIcon name="x" /> },
+    { name: 'Email', href: `mailto:?subject=${enc(text)}&body=${enc(msg)}`, icon: <Mail size={18} aria-hidden="true" /> },
   ];
-  const cls = 'w-10 h-10 rounded-full flex items-center justify-center text-white transition-transform hover:scale-110';
   return (
-    <div className="flex flex-wrap gap-2.5 justify-center mb-4">
+    <div className="share-targets">
       {targets.map(tg => tg.href ? (
-        <a key={tg.name} href={tg.href} target="_blank" rel="noopener noreferrer" title={tg.name} className={cls} style={{ background: tg.color }} onClick={() => onShared?.()}>
+        <a key={tg.name} href={tg.href} target="_blank" rel="noopener noreferrer" title={tg.name} aria-label={tg.name} className="share-target" onClick={() => onShared?.()}>
           {tg.icon}
         </a>
       ) : (
-        <button key={tg.name} onClick={tg.onClick} title={tg.name} className={cls} style={{ background: tg.color }}>
+        <button key={tg.name} type="button" onClick={tg.onClick} title={tg.name} aria-label={tg.name} className="share-target">
           {tg.icon}
         </button>
       ))}

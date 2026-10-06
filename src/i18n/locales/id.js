@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "Beberapa doa sudah lama beristirahat.",
   "tendQuestion": "Bagaimana Anda ingin mendoakannya sekarang?",
   "carryingLabel": "Sedang mendoakan",
+  "rememberLabel": "Mengingat",
 };

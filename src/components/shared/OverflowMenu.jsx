@@ -20,10 +20,9 @@ function MenuItem({ icon: Icon, label, onClick, danger }) {
     <button
       role="menuitem"
       onClick={onClick}
-      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors hover:bg-[var(--q-field)]"
-      style={{ color: danger ? 'var(--q-danger)' : 'var(--q-text)' }}
+      className={`q-menu__item ${danger ? 'q-menu__item--danger' : ''}`}
     >
-      <Icon size={15} style={{ color: danger ? 'var(--q-danger)' : 'var(--q-text-tertiary)' }} /> {label}
+      <Icon size={16} aria-hidden="true" /> {label}
     </button>
   );
 }
@@ -108,7 +107,7 @@ export default function OverflowMenu({
           <div
             ref={menuRef}
             role="menu"
-            className="fixed rounded-xl overflow-hidden py-1 min-w-[190px]"
+            className="q-menu fixed"
             style={{
               top: coords ? coords.top : -9999,
               left: coords ? coords.left : -9999,
@@ -118,15 +117,12 @@ export default function OverflowMenu({
               maxWidth: 'calc(100vw - 8px)',
               visibility: coords ? 'visible' : 'hidden',
               zIndex: 61,
-              background: 'var(--q-surface)',
-              border: '0.5px solid var(--q-border)',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
             }}
           >
             {visible.map((it, i) => (
               <div key={it.key}>
                 {it.danger && i === firstDanger && i > 0 && (
-                  <div style={{ borderTop: '0.5px solid var(--q-border)', margin: '4px 0' }} />
+                  <div className="q-menu__divider" />
                 )}
                 <MenuItem icon={it.icon} label={it.label} danger={it.danger} onClick={() => { setOpen(false); it.onClick(); }} />
               </div>

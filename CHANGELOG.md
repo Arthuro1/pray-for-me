@@ -77,11 +77,40 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   - New strings ×16 (flagged for native review): seven circle descriptions,
     `tendSub`, `tendQuestion`, `carryingLabel`; `tendIntro` and
     `carryingThisPrayer` removed.
+- **Together — a shared place of intercession, not a feed** (`src/styles/together.css`):
+  - *Hub* — no hero card: "Together", then only what needs a decision
+    (requests and invitations as rows with Reject / Accept), "Prayers you're
+    carrying" as an open section (one Pray shared requests, a quiet line
+    once prayed, the full list behind a disclosure), groups and people as
+    rows. An empty Together is one invitation (Rise Mark, Join, Create, Add a
+    friend) — the old white-on-light "Add friend" text is gone.
+  - *A group's page* — back link and ⋮ as quiet controls, group name in the
+    serif, plans "praying together" as rows, Requests / Testimonies as a
+    segmented control, status filters as quiet toggles.
+  - *Requests* (`GroupPrayerRow`) — who asked, the request in the serif, two
+    lines of context, then **Carry this prayer** right on the row (the same
+    act as on the prayer's page, it joins "Prayers you're carrying") and the
+    count kept secondary ("8 carrying"); answered requests say "Answered" and
+    are no longer struck through; no star beside every title; member text
+    keeps its own direction in RTL.
+  - *Testimonies* — remembrance with a gold rule: the prayer it answers, the
+    testimony in the serif, who and when; no 🎉, no 📎 emoji, no coloured
+    category chips.
+  - *Testimony on a prayer's page* — a gold "Remember" label over "What
+    happened?" in the serif; the composer writes in the serif too; "Add a
+    word of thanks" lost its 🙏.
+  - *Sharing* — the share dialog, its preview and the group dialogs (create,
+    join, add a friend, members, manage) use the shared dialog, fields,
+    buttons and a new `Checkbox` primitive; member lists are rows; share
+    targets are one neutral family of round buttons with accessible names
+    (no brand colours); the ⋮ menu is a quiet surface with 44px items.
+  - New key `rememberLabel` ×16 (from each locale's existing "Remember"
+    movement). `community/ui.js` style constants removed with their last use.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.
 - Dev builds only: `/__design` renders every primitive in light, dark and RTL;
-  `/__design/today|journal|detail|session|bring|circles|tend|carry` render the
+  `/__design/today|journal|detail|session|bring|circles|tend|carry|together|group` render the
   real screens with sample prayers and every store write stubbed out.
 
 ### Changed — Praystead becomes Qetoret

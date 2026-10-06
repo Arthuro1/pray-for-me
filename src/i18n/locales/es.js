@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "Algunas oraciones llevan un tiempo en reposo.",
   "tendQuestion": "¿Cómo quieres llevarla ahora?",
   "carryingLabel": "La llevas",
+  "rememberLabel": "Recordar",
 };

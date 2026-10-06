@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "しばらく休んでいる祈りがあります。",
   "tendQuestion": "これから、この祈りをどのようにとりなしますか？",
   "carryingLabel": "とりなし中",
+  "rememberLabel": "覚える",
 };

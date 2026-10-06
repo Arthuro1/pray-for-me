@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Loader2, Users, EyeOff } from 'lucide-react';
+import { Loader2, Users, EyeOff, X } from 'lucide-react';
 import SharePreview from './SharePreview';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
+import { Checkbox, Modal, PrimaryButton, SecondaryButton } from './shared/Primitives';
 import { containsSensitiveContactDetails, safetyText } from '../lib/communitySafety';
 
 // Modal for sharing a PERSONAL prayer to one or more groups. Owns its own share
@@ -23,8 +22,6 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
   const [sharing, setSharing] = useState(false);
   const [sensitiveAcknowledged, setSensitiveAcknowledged] = useState(false);
 
-  useEscapeKey(onClose);
-  const trapRef = useFocusTrap(true);
 
   const alreadySharedIds = new Set(sharedGroups.map((g) => g.groupId));
   const addingNewGroups = [...shareGroupIds].some((id) => !alreadySharedIds.has(id));
@@ -52,77 +49,73 @@ export default function PrayerShareModal({ prayer, groups, sharedGroups, authorN
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={onClose}>
-      <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'shareWithGroup')} className="w-full max-w-sm rounded-2xl p-5" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }} onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-semibold text-base mb-1" style={{ color: 'var(--q-text)' }}>{t(lang, 'shareWithGroup')}</h3>
-        <p className="text-sm mb-4" style={{ color: 'var(--q-text-tertiary)' }}>{prayer.title}</p>
-
-        {/* Calm, honest explanation of what sharing means — always shown, so no
-            prayer is ever shared without the user understanding who can read it. */}
-        <div className="rounded-xl p-3 mb-4 flex gap-2.5" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
-          <Users size={16} style={{ color: 'var(--q-royal-text)', flexShrink: 0, marginTop: 1 }} />
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'shareGroupInfo')}</p>
+    <Modal labelledBy="prayer-share-title" onClose={onClose} size="sm">
+      <div className="q-dialog__header">
+        <div className="min-w-0">
+          <h2 id="prayer-share-title" className="q-dialog__title">{t(lang, 'shareWithGroup')}</h2>
+          <p className="q-meta mt-1 truncate">{prayer.title}</p>
         </div>
+        <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0">
+          <X size={18} aria-hidden="true" />
+        </button>
+      </div>
 
-        {addingNewGroups && hasSensitiveDetails && (
-          <div className="rounded-xl p-3 mb-4" style={{ background: 'var(--q-danger-soft)', border: '0.5px solid var(--q-danger)' }}>
-            <p className="text-xs leading-relaxed mb-2" style={{ color: 'var(--q-text-secondary)' }}>{safetyText(lang, 'sensitive')}</p>
-            <label className="flex items-start gap-2 text-xs cursor-pointer" style={{ color: 'var(--q-text-secondary)' }}>
-              <input type="checkbox" checked={sensitiveAcknowledged} onChange={(event) => setSensitiveAcknowledged(event.target.checked)} className="rounded mt-0.5" />
-              <span>{safetyText(lang, 'acknowledge')}</span>
-            </label>
-          </div>
-        )}
+      {/* Calm, honest explanation of what sharing means — always shown, so no
+          prayer is ever shared without the user understanding who can read it. */}
+      <p className="share-note">
+        <Users size={16} aria-hidden="true" />
+        <span>{t(lang, 'shareGroupInfo')}</span>
+      </p>
 
-        <div className="space-y-2 mb-5 max-h-60 overflow-y-auto">
-          {groups.map((g) => {
-            const checked = shareGroupIds.has(g.id);
-            return (
-              <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
-                <input type="checkbox" checked={checked} onChange={() => toggleShareGroup(g.id)} className="rounded" />
-                <span className="text-sm" style={{ color: 'var(--q-text)' }}>{g.name}</span>
-              </label>
-            );
-          })}
+      {addingNewGroups && hasSensitiveDetails && (
+        <div className="share-note share-note--caution block">
+          <p className="mb-1">{safetyText(lang, 'sensitive')}</p>
+          <Checkbox
+            id="prayer-share-acknowledge"
+            checked={sensitiveAcknowledged}
+            onChange={(event) => setSensitiveAcknowledged(event.target.checked)}
+            label={safetyText(lang, 'acknowledge')}
+          />
         </div>
-        <label className="flex items-center gap-2 text-sm mb-2 cursor-pointer" style={{ color: 'var(--q-text-secondary)' }}>
-          <input type="checkbox" checked={shareAnon} onChange={(e) => setShareAnon(e.target.checked)} className="rounded" />
-          {t(lang, 'anonymous')}
-        </label>
-        {/* When anonymous, be explicit that hiding the name does NOT hide the
-            request text from group members. */}
-        {shareAnon && (
-          <p className="text-xs leading-relaxed mb-3 flex gap-1.5" style={{ color: 'var(--q-text-tertiary)' }}>
-            <EyeOff size={13} style={{ flexShrink: 0, marginTop: 1 }} /> {t(lang, 'shareAnonNote')}
+      )}
+
+      <ul className="share-groups max-h-60 overflow-y-auto">
+        {groups.map((g) => (
+          <li key={g.id}>
+            <Checkbox id={`prayer-share-${g.id}`} checked={shareGroupIds.has(g.id)} onChange={() => toggleShareGroup(g.id)} label={g.name} />
+          </li>
+        ))}
+      </ul>
+      <Checkbox id="prayer-share-anonymous" checked={shareAnon} onChange={(e) => setShareAnon(e.target.checked)} label={t(lang, 'anonymous')} />
+      {/* When anonymous, be explicit that hiding the name does NOT hide the
+          request text from group members. */}
+      {shareAnon && (
+        <p className="q-field__hint mb-3 flex gap-1.5">
+          <EyeOff size={13} className="mt-0.5 shrink-0" aria-hidden="true" /> {t(lang, 'shareAnonNote')}
+        </p>
+      )}
+      {/* Live preview of the attribution group members will see — updates as
+          the anonymous toggle changes, so nothing is shared unseen. Below it,
+          the audience is NAMED and the update-sync behaviour stated plainly. */}
+      <div className="mt-4">
+        <SharePreview authorName={authorName} isAnonymous={shareAnon} title={prayer.title} lang={lang} />
+        {shareGroupIds.size > 0 && (
+          <p className="mt-3 text-sm font-medium" style={{ color: 'var(--q-text-secondary)' }}>
+            {t(lang, 'sharePreviewAudience', {
+              names: groups.filter((g) => shareGroupIds.has(g.id)).map((g) => g.name).join(', '),
+            })}
           </p>
         )}
-        {/* Live preview of the attribution group members will see — updates as
-            the anonymous toggle changes, so nothing is shared unseen. Below it,
-            the audience is NAMED and the update-sync behaviour stated plainly. */}
-        <div className="mb-4">
-          <SharePreview authorName={authorName} isAnonymous={shareAnon} title={prayer.title} lang={lang} />
-          {shareGroupIds.size > 0 && (
-            <p className="text-xs mt-2 font-medium" style={{ color: 'var(--q-text-secondary)' }}>
-              {t(lang, 'sharePreviewAudience', {
-                names: groups.filter((g) => shareGroupIds.has(g.id)).map((g) => g.name).join(', '),
-              })}
-            </p>
-          )}
-          {shareGroupIds.size > 0 && (
-            <p className="text-xs mt-1" style={{ color: 'var(--q-text-tertiary)' }}>
-              {t(lang, 'sharePreviewSync')}
-            </p>
-          )}
-        </div>
-        <div className="flex gap-2">
-          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
-            {t(lang, 'cancel')}
-          </button>
-          <button onClick={handleSave} disabled={sharing || (addingNewGroups && hasSensitiveDetails && !sensitiveAcknowledged)} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
-            {sharing ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'save')}
-          </button>
-        </div>
+        {shareGroupIds.size > 0 && (
+          <p className="q-meta mt-1">{t(lang, 'sharePreviewSync')}</p>
+        )}
       </div>
-    </div>
+      <div className="q-dialog__actions">
+        <SecondaryButton onClick={onClose}>{t(lang, 'cancel')}</SecondaryButton>
+        <PrimaryButton onClick={handleSave} disabled={sharing || (addingNewGroups && hasSensitiveDetails && !sensitiveAcknowledged)}>
+          {sharing ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : t(lang, 'save')}
+        </PrimaryButton>
+      </div>
+    </Modal>
   );
 }

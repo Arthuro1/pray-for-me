@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "አንዳንድ ጸሎቶች ለተወሰነ ጊዜ አርፈዋል።",
   "tendQuestion": "አሁን ይህን እንዴት መያዝ ይፈልጋሉ?",
   "carryingLabel": "እየያዙት ነው",
+  "rememberLabel": "ማሰብ",
 };

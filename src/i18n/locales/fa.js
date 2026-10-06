@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "برخی دعاها مدتی است آرام مانده‌اند.",
   "tendQuestion": "اکنون می‌خواهید چگونه برای آن شفاعت کنید؟",
   "carryingLabel": "در حال شفاعت",
+  "rememberLabel": "به یاد آوردن",
 };

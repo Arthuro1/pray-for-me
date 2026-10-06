@@ -589,3 +589,25 @@
 
   .prayer-activity-item__header { flex-wrap: wrap; }
 }
+
+/* ── Testimony: remembrance in the devotional voice ────────────────────── */
+.testimony-flow__title {
+  margin: var(--q-space-2) 0 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: var(--q-type-section);
+  font-weight: 450;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+}
+
+.testimony-flow__body { margin: var(--q-space-2) 0 var(--q-space-4); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
+
+/* What God has done is written in the serif, like the prayer itself. */
+.testimony-flow .update-composer__input {
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}

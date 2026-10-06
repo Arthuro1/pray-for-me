@@ -1500,4 +1500,5 @@ export default {
   "tendSub": "有些祷告已经安静了一段时间。",
   "tendQuestion": "现在你希望怎样为此代祷？",
   "carryingLabel": "正在代祷",
+  "rememberLabel": "记念",
 };

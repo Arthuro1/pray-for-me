@@ -1505,4 +1505,5 @@ export default {
   "tendSub": "Certaines prières reposent depuis un moment.",
   "tendQuestion": "Comment souhaitez-vous la porter désormais ?",
   "carryingLabel": "Vous la portez",
+  "rememberLabel": "Se souvenir",
 };

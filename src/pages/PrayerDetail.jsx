@@ -1781,8 +1781,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             without changing the answered date */}
         {isAnswered && canManage && (
           showThanks ? (
-            <div className="prayer-activity-panel">
-              <p className="prayer-activity-panel__title">{t(lang, 'testimony')}</p>
+            <div className="prayer-activity-panel testimony-flow">
+              <p className="section-label section-label--sacred">{t(lang, 'rememberLabel')}</p>
+              <h2 className="testimony-flow__title">{t(lang, 'testimony')}</h2>
               <UpdateComposer
                 lang={lang}
                 rows={3}
@@ -1791,12 +1792,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 sendLabel={t(lang, 'addThanks')}
                 onSend={handleAddThanks}
               />
-              <button onClick={() => setShowThanks(false)} className="w-full mt-2 py-2.5 rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>{t(lang, 'cancel')}</button>
+              <QuietButton onClick={() => setShowThanks(false)} className="mt-2 w-full" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'cancel')}</QuietButton>
             </div>
           ) : (
-            <button onClick={() => setShowThanks(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
-              🙏 {t(lang, 'addThanks')}
-            </button>
+            <SecondaryButton onClick={() => setShowThanks(true)} className="prayer-activity-action">
+              {t(lang, 'addThanks')}
+            </SecondaryButton>
           )
         )}
 
@@ -1804,11 +1805,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             optional testimony and the confirm step, together in the disclosure
             they belong to. Nothing is marked answered without this confirm. */}
         {!isAnswered && showTestimony && canManage && (
-          <div id="pd-answer" className="prayer-activity-panel">
+          <div id="pd-answer" className="prayer-activity-panel testimony-flow">
             {/* The person testifies; the app only records. It asks what
                 happened — it never declares on its own that God answered. */}
-            <p className="prayer-activity-panel__title">{t(lang, 'answerWhatHappened')}</p>
-            <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'answerHowGodWorked')}</p>
+            <p className="section-label section-label--sacred">{t(lang, 'rememberLabel')}</p>
+            <h2 className="testimony-flow__title">{t(lang, 'answerWhatHappened')}</h2>
+            <p className="testimony-flow__body">{t(lang, 'answerHowGodWorked')}</p>
             {/* The testimony is OPTIONAL — allowEmpty keeps Confirm available
                 with nothing written, exactly like the old flow. */}
             <UpdateComposer
@@ -1820,9 +1822,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               sendLabel={t(lang, 'confirm')}
               onSend={confirmAnswered}
             />
-            <button onClick={closeAnswerFlow} className="w-full mt-2 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
+            <QuietButton onClick={closeAnswerFlow} className="mt-2 w-full" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'cancel')}
-            </button>
+            </QuietButton>
           </div>
         )}
 
@@ -1850,17 +1852,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               />
             ) : (
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => setAddingNextStep(true)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
+                <SecondaryButton onClick={() => setAddingNextStep(true)}>
                   {t(lang, 'answerNextAdd')}
-                </button>
+                </SecondaryButton>
                 {!savedCopy && groups.length > 0 && !plan && (
-                  <button onClick={() => { setJustAnswered(false); setShowShareModal(true); }} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
+                  <SecondaryButton onClick={() => { setJustAnswered(false); setShowShareModal(true); }}>
                     {t(lang, 'answerNextShare')}
-                  </button>
+                  </SecondaryButton>
                 )}
-                <button onClick={() => setJustAnswered(false)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ color: 'var(--q-text-tertiary)' }}>
+                <QuietButton onClick={() => setJustAnswered(false)} style={{ color: 'var(--q-text-secondary)' }}>
                   {t(lang, 'answerNextPrivate')}
-                </button>
+                </QuietButton>
               </div>
             )}
           </div>
@@ -1868,10 +1870,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* An answered prayer's only remaining state action — reopening it. */}
         {isAnswered && canManage && (
-          <div className="flex gap-3 pb-6">
-            <button onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-2 text-sm px-4 py-3 min-h-[44px] rounded-xl font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
+          <div className="flex gap-3 pb-6 pt-2">
+            <QuietButton onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="-ms-3">
               {t(lang, 'resumePrayer')}
-            </button>
+            </QuietButton>
           </div>
         )}
         </>}

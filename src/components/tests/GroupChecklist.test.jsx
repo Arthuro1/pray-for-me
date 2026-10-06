@@ -134,8 +134,8 @@ describe('MembersModal — invitation completion', () => {
   it('the QR control is a named, 44px disclosure — not an icon with only a tooltip', async () => {
     render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} />);
     const qr = await screen.findByRole('button', { name: t(lang, 'showQrCode') });
-    expect(qr.className).toMatch(/w-11/);
-    expect(qr.className).toMatch(/h-11/);
+    // .icon-button is the 44×44 control primitive (components.css).
+    expect(qr.classList.contains('icon-button')).toBe(true);
     expect(qr.getAttribute('aria-expanded')).toBe('false');
 
     fireEvent.click(qr);
@@ -146,8 +146,7 @@ describe('MembersModal — invitation completion', () => {
   it('gives the modal close control a name and a 44px target', async () => {
     render(<MembersModal lang={lang} group={modalGroup} userId="u0" onClose={() => {}} />);
     const close = await screen.findByRole('button', { name: t(lang, 'close') });
-    expect(close.className).toMatch(/w-11/);
-    expect(close.className).toMatch(/h-11/);
+    expect(close.classList.contains('icon-button')).toBe(true);
   });
 });
 

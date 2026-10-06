@@ -75,6 +75,7 @@ vocabulary above. Review them in context (Today, the prayer session, Settings):
 | `tendSub` | Some prayers have been resting for a while. |
 | `tendQuestion` | How would you like to carry this now? |
 | `carryingLabel` | Carrying (the "Carry this prayer" button once pressed) |
+| `rememberLabel` | Remember (gold label over the testimony step; reuses each locale's `aboutMove_remember` verb) |
 
 `sessionDoneTitle` lost its 🙏 in every locale (no emoji as interface art); the
 eight `aiPreview*` strings were restored verbatim from 78f6c6b. Korean

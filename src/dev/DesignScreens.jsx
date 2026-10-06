@@ -1,9 +1,9 @@
 // Dev-only screen previews for the design gallery: /__design/today, /journal,
-// /detail, /session, /bring, /circles, /tend and /carry render the REAL screens inside
+// /detail, /session, /bring, /circles, /tend, /carry, /together and /group render the REAL screens inside
 // the real app shell with sample prayers. Every store write is replaced by a local no-op first, so
 // nothing is queued, synced, encrypted or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
@@ -15,6 +15,7 @@ import PrayerSession from '../components/PrayerSession';
 import PrayerForm from '../components/PrayerForm';
 import TendAltar from '../components/TendAltar';
 import PrayTogetherCard from '../components/PrayTogetherCard';
+import CommunityTab from '../pages/CommunityTab';
 import CirclePicker from '../components/CirclePicker';
 import { Modal, PageHeader } from '../components/shared/Primitives';
 import { dirFor, isLocaleLoaded, loadLocale } from '../i18n';
@@ -75,7 +76,54 @@ function seed() {
   useCommunityStore.setState({ ...stubbed, prayerShares: { d1: [{ groupId: 'g1', groupName: 'Home group', prayingCount: 8 }] }, groups: [], prayers: [], testimonies: [], pendingCount: 0 });
 }
 
-const SCREENS = ['today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry'];
+const SCREENS = ['today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group'];
+
+const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
+
+// A small group as a member meets it: two groups, a friend request, a wall of
+// requests (one carried, one answered, one anonymous) and a testimony.
+function seedTogether() {
+  const ok = (value) => async () => value;
+  useCommunityStore.setState({
+    groups: [
+      { id: 'g1', name: 'Home group', role: 'admin', created_by: 'design-user', invite_code: 'HOME42', autoAdd: false },
+      { id: 'g2', name: 'St Paul’s prayer team', role: 'member', created_by: 'u9', invite_code: 'PAUL7' },
+    ],
+    prayers: [
+      { id: 'c1', group_id: 'g1', user_id: 'u2', author_name: 'Sarah', title: 'Please pray for my mother', description: 'She has surgery on Thursday. Pray for the doctors, and for peace for all of us.', created_at: hoursAgo(3), prayer_reactions: [{ count: 8 }], community_updates: [{ count: 2 }] },
+      { id: 'c2', group_id: 'g1', user_id: 'u3', author_name: 'Paul', title: 'Wisdom for our elders this autumn', created_at: hoursAgo(26), prayer_reactions: [{ count: 3 }], community_updates: [{ count: 0 }] },
+      { id: 'c3', group_id: 'g1', user_id: 'u4', author_name: '', is_anonymous: true, title: 'A difficult conversation with my brother', created_at: hoursAgo(50), prayer_reactions: [{ count: 0 }] },
+      { id: 'c4', group_id: 'g1', user_id: 'u5', author_name: 'David', title: 'A new job', is_answered: true, created_at: hoursAgo(400), prayer_reactions: [{ count: 11 }] },
+    ],
+    testimonies: [
+      { id: 't1', community_prayer_id: 'c4', user_id: 'u5', author_name: 'David', content: 'I started my new work on Monday. Thank you for carrying this with me for so long.', created_at: hoursAgo(30), community_prayers: { title: 'A new job' } },
+    ],
+    userReactions: new Set(['c1']),
+    loading: false,
+    memberAvatars: {},
+    fetchFriends: ok({ friends: [{ id: 'f1', name: 'Marie' }, { id: 'f2', name: 'Jonas' }] }),
+    fetchFriendRequests: ok({ requests: [{ id: 'r1', fromName: 'Esther' }] }),
+    fetchGroupInvitations: ok({ invitations: [] }),
+    fetchPlanInvitations: ok({ invitations: [] }),
+    fetchGroupActivity: ok([]),
+    fetchGroupMembers: ok({ members: [{ user_id: 'design-user', name: 'Arthur', role: 'admin' }, { user_id: 'u2', name: 'Sarah' }, { user_id: 'u3', name: 'Paul' }] }),
+    fetchGroupPlans: ok({ plans: [{ id: 'gp1', plan_id: 'gratitude7', start_date: todayKey(), participantCount: 4, joinedByMe: false, added_by: 'u2' }] }),
+    fetchReactors: ok({ reactors: [] }),
+    fetchMyCommitments: ok([]),
+    subscribeGroupPrayers: () => () => {},
+    subscribeGroupPlans: () => () => {},
+  });
+}
+
+function TogetherPreview({ screen }) {
+  useState(seedTogether);
+  return (
+    <Routes location={screen === 'group' ? '/community/group/g1' : '/community'}>
+      <Route path="/community" element={<CommunityTab />} />
+      <Route path="/community/group/:groupId" element={<CommunityTab />} />
+    </Routes>
+  );
+}
 
 // The circle picker on its own: in the real form it appears only once the
 // vault is unlocked, which a preview must never fake on a shared dev origin.
@@ -144,6 +192,7 @@ export default function DesignScreens({ screen }) {
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
       {screen === 'carry' && <CarryPreview lang={lang} />}
+      {(screen === 'together' || screen === 'group') && <TogetherPreview screen={screen} />}
       {screen === 'circles' && <CirclesPreview lang={lang} />}
       {screen === 'tend' && <PrayersTab onAdd={() => {}} />}
       {screen === 'tend' && (
