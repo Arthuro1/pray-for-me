@@ -21,19 +21,19 @@ export default function PlanOverview({ plan, lang }) {
   return (
     <>
       {plan.mode === 'study' && (
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'studyPace')}</p>
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'studyPace')}</p>
       )}
 
       {/* What this journey is */}
       {(plan.intro || plan.biblical) && (
         <section>
-          <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'planAbout')}</h4>
+          <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planAbout')}</h4>
           <div id={`${disclosureId}-about`}>
             {plan.intro && (
               <p
                 className="text-sm leading-relaxed whitespace-pre-line"
                 style={{
-                  color: 'var(--text-2)',
+                  color: 'var(--q-text-secondary)',
                   ...(!showFullAbout && plan.biblical
                     ? { display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }
                     : {}),
@@ -46,9 +46,9 @@ export default function PlanOverview({ plan, lang }) {
             {/* Keep the longer biblical context available without making it
                 part of the first-use scan. */}
             {showFullAbout && plan.biblical && (
-              <div className="rounded-xl p-3.5 mt-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--accent)' }}>{t(lang, 'planInBible')}</h4>
-                <p className="text-sm leading-relaxed whitespace-pre-line mb-2.5" style={{ color: 'var(--text-1)' }}>{pick(plan.biblical.text, lang)}</p>
+              <div className="rounded-xl p-3.5 mt-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+                <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'planInBible')}</h4>
+                <p className="text-sm leading-relaxed whitespace-pre-line mb-2.5" style={{ color: 'var(--q-text)' }}>{pick(plan.biblical.text, lang)}</p>
                 <VersePill reference={plan.biblical.ref} lang={lang} />
               </div>
             )}
@@ -60,7 +60,7 @@ export default function PlanOverview({ plan, lang }) {
               aria-controls={`${disclosureId}-about`}
               onClick={() => setShowFullAbout((open) => !open)}
               className="mt-2 min-h-11 inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--q-royal-text)' }}
             >
               {showFullAbout ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
               {t(lang, showFullAbout ? 'tipCollapse' : 'gospelReadMore')}
@@ -71,7 +71,7 @@ export default function PlanOverview({ plan, lang }) {
 
       {/* Long journeys reveal their shape before their full syllabus. */}
       <section>
-        <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+        <h4 className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, movementFirst && !showAllDays ? 'journeyWalkThrough' : 'journeyDayPreview')}
         </h4>
         {movementFirst && !showAllDays && (
@@ -80,9 +80,9 @@ export default function PlanOverview({ plan, lang }) {
               const next = plan.movements[index + 1];
               const to = next ? next.from - 1 : plan.count;
               return (
-                <li key={`${movement.from}-${movement.titleKey}`} className="flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-                  <span className="w-14 shrink-0 text-xs font-semibold" style={{ color: 'var(--accent)' }}>{movement.from}–{to}</span>
-                  <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, movement.titleKey)}</span>
+                <li key={`${movement.from}-${movement.titleKey}`} className="flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+                  <span className="w-14 shrink-0 text-xs font-semibold" style={{ color: 'var(--q-royal-text)' }}>{movement.from}–{to}</span>
+                  <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, movement.titleKey)}</span>
                 </li>
               );
             })}
@@ -96,13 +96,13 @@ export default function PlanOverview({ plan, lang }) {
             return (
               <li key={i}>
                 {movement && (
-                  <p className="mb-1.5 mt-3 first:mt-0 text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                  <p className="mb-1.5 mt-3 first:mt-0 text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
                     {t(lang, movement.titleKey)}
                   </p>
                 )}
-                <div className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--accent)' }}>{t(lang, 'planDayLabel', { n: i + 1 })}</p>
-                  <p className="text-sm font-medium mb-2 leading-snug" style={{ color: 'var(--text-1)' }}>{pick(day.theme, lang)}</p>
+                <div className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'planDayLabel', { n: i + 1 })}</p>
+                  <p className="text-sm font-medium mb-2 leading-snug" style={{ color: 'var(--q-text)' }}>{pick(day.theme, lang)}</p>
                   <VersePill reference={day.ref} lang={lang} />
                 </div>
               </li>
@@ -117,7 +117,7 @@ export default function PlanOverview({ plan, lang }) {
             aria-label={t(lang, showAllDays ? 'tipCollapse' : 'previewAllDays')}
             onClick={() => setShowAllDays((open) => !open)}
             className="mt-3 w-full min-h-11 rounded-xl inline-flex items-center justify-center gap-1.5 text-sm font-semibold"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
           >
             {showAllDays ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
             {showAllDays ? t(lang, 'tipCollapse') : t(lang, 'previewAllDays')}

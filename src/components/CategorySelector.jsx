@@ -7,9 +7,9 @@ export default function CategorySelector({ categories, selectedIds, onToggle, tr
   if (categories.length === 0) return null;
   return (
     <div>
-      <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: 'var(--text-3)' }}>
+      <label className="text-xs font-semibold uppercase tracking-widest mb-1.5 block" style={{ color: 'var(--q-text-tertiary)' }}>
         {t(lang, 'categories')}{' '}
-        <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: '#c5bdd4' }}>
+        <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'multipleAllowed')}
         </span>
       </label>
@@ -24,7 +24,7 @@ export default function CategorySelector({ categories, selectedIds, onToggle, tr
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
               style={selected
                 ? { backgroundColor: c.color, color: '#fff', border: `1.5px solid ${c.color}` }
-                : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }
+                : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }
               }
             >
               {c.emoji} {tr(c.name, lang)}

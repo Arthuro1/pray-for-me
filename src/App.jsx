@@ -13,10 +13,13 @@ import { APP_NAME } from './lib/brand';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const GuestPrayerFlow = lazy(() => import('./components/GuestPrayerFlow'));
 const AuthenticatedApp = lazy(() => import('./AuthenticatedApp'));
+// Dev builds only: the design-system gallery at /__design. The condition is a
+// build-time constant, so production bundles never include it.
+const DesignGallery = import.meta.env.DEV ? lazy(() => import('./dev/DesignGallery')) : null;
 
 function AppLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--plum-dark)' }}>
+    <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--q-royal-deep)' }}>
       <div className="text-center text-white">
         <img src="/logo.svg" alt={APP_NAME} className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
         <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
@@ -107,6 +110,10 @@ export default function App() {
     await clearGuestDraft();
     setMode('landing');
   };
+
+  if (DesignGallery && location.pathname.startsWith('/__design')) {
+    return <Suspense fallback={<AppLoader />}><DesignGallery /></Suspense>;
+  }
 
   if (mode === 'authenticated') {
     return (

@@ -59,7 +59,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
   };
 
   const overlay = (children) => (
-    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--q-canvas)' }}>
       <div
         ref={trapRef}
         role="dialog"
@@ -97,7 +97,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
                 onClick={toggle}
                 aria-expanded={expanded}
                 className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-full font-medium"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
               >
                 <BookOpen size={11} /> {ref}
               </button>
@@ -115,20 +115,20 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
         <div className="shrink-0 px-5 pt-4 flex justify-end">{closeButton}</div>
         <div className="flex-1 overflow-y-auto px-6 pb-8 max-w-xl mx-auto w-full">
           <div className="text-center mb-6">
-            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
-              <Sunrise size={30} style={{ color: 'var(--accent)' }} aria-hidden="true" />
+            <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
+              <Sunrise size={30} style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
             </div>
-            <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold mb-3 focus:outline-none" style={{ color: 'var(--text-1)' }}>
+            <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold mb-3 focus:outline-none" style={{ color: 'var(--q-text)' }}>
               {pick(journey.title, lang)}
             </h2>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(journey.summary, lang)}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{pick(journey.summary, lang)}</p>
           </div>
         </div>
-        <div className="shrink-0 px-6 py-4 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <div className="shrink-0 px-6 py-4 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--q-border)' }}>
           <button
             onClick={goNext}
             className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-            style={{ background: 'var(--accent)' }}
+            style={{ background: 'var(--q-action-primary)' }}
           >
             {t(lang, 'gospelStart')} <ChevronRight size={16} />
           </button>
@@ -148,7 +148,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
 
     return overlay(
       <>
-        <div className="shrink-0 px-5 pt-4 pb-3 flex items-center justify-between" style={{ background: 'var(--header)' }}>
+        <div className="shrink-0 px-5 pt-4 pb-3 flex items-center justify-between" style={{ background: 'var(--q-surface-inverse)' }}>
           <button onClick={goBack} className="flex items-center gap-2 text-sm font-medium min-h-11 pr-2" style={{ color: 'rgba(255,255,255,0.85)' }}>
             <ArrowLeft size={16} /> {t(lang, 'gospelBack')}
           </button>
@@ -159,19 +159,19 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
           {showQuestions ? (
             // ── "I still have questions": Scripture-rooted pointers, never AI answers. ──
             <div>
-              <h3 ref={headingRef} tabIndex={-1} className="text-lg font-semibold mb-4 focus:outline-none" style={{ color: 'var(--text-1)' }}>
+              <h3 ref={headingRef} tabIndex={-1} className="text-lg font-semibold mb-4 focus:outline-none" style={{ color: 'var(--q-text)' }}>
                 {t(lang, 'gospelMoreQuestions')}
               </h3>
               <div className="space-y-5">
                 {(journey.questions || []).map((q) => (
-                  <div key={q.id} className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-                    <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{pick(q.heading, lang)}</p>
+                  <div key={q.id} className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+                    <p className="text-sm font-semibold mb-1" style={{ color: 'var(--q-text)' }}>{pick(q.heading, lang)}</p>
                     <RefPills refs={q.refs} />
                     {q.articleId && (
                       <button
                         onClick={() => onOpenArticle?.(q.articleId)}
                         className="mt-3 inline-flex items-center gap-1 text-xs font-semibold min-h-11"
-                        style={{ color: 'var(--accent)' }}
+                        style={{ color: 'var(--q-royal-text)' }}
                       >
                         {t(lang, 'gospelReadMore')} <ChevronRight size={13} />
                       </button>
@@ -182,41 +182,41 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
             </div>
           ) : (
             <>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--accent)' }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-royal-text)' }}>
                 {t(lang, 'gospelCompleted')}
               </p>
 
               {/* Response section — gentle, optional, never a saving formula. */}
-              <h3 ref={headingRef} tabIndex={-1} className="text-xl font-semibold mb-2 focus:outline-none" style={{ color: 'var(--text-1)' }}>
+              <h3 ref={headingRef} tabIndex={-1} className="text-xl font-semibold mb-2 focus:outline-none" style={{ color: 'var(--q-text)' }}>
                 {pick(journey.respondHeading, lang)}
               </h3>
-              <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-2)' }}>{pick(journey.respondBody, lang)}</p>
+              <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--q-text-secondary)' }}>{pick(journey.respondBody, lang)}</p>
 
               <button
                 onClick={() => setShowPrayer((v) => !v)}
                 aria-expanded={showPrayer}
                 aria-controls="gospel-guided-prayer"
                 className="flex items-center gap-1.5 text-sm font-semibold min-h-11"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 <ChevronDown size={15} className="motion-reduce:transition-none" style={{ transform: showPrayer ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
                 {t(lang, showPrayer ? 'gospelHidePrayer' : 'gospelUsePrayer')}
               </button>
 
               {showPrayer && (
-                <div id="gospel-guided-prayer" className="mt-3 rounded-2xl p-4" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                  <p className="text-sm leading-relaxed italic mb-3" style={{ color: 'var(--text-1)' }}>{pick(journey.guidedPrayer, lang)}</p>
-                  <p className="text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{pick(journey.formulaDisclaimer, lang)}</p>
+                <div id="gospel-guided-prayer" className="mt-3 rounded-2xl p-4" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+                  <p className="text-sm leading-relaxed italic mb-3" style={{ color: 'var(--q-text)' }}>{pick(journey.guidedPrayer, lang)}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{pick(journey.formulaDisclaimer, lang)}</p>
                 </div>
               )}
 
               {/* Next steps — a small number of clear, easy-to-ignore actions. */}
-              <h4 className="text-sm font-semibold mt-8 mb-3" style={{ color: 'var(--text-1)' }}>{t(lang, 'gospelNextStepsHeading')}</h4>
+              <h4 className="text-sm font-semibold mt-8 mb-3" style={{ color: 'var(--q-text)' }}>{t(lang, 'gospelNextStepsHeading')}</h4>
 
               <button
                 onClick={handleCreatePrayer}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white mb-3"
-                style={{ background: 'var(--accent)' }}
+                style={{ background: 'var(--q-action-primary)' }}
               >
                 <HandHeart size={16} /> {t(lang, 'gospelCreatePrayer')}
               </button>
@@ -225,33 +225,33 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
                 <button
                   onClick={() => onExplore?.()}
                   className="w-full text-left rounded-xl px-4 py-3 text-sm font-medium flex items-center justify-between min-h-11"
-                  style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-1)' }}
+                  style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text)' }}
                 >
-                  {t(lang, 'gospelContinueExploring')} <ChevronRight size={15} style={{ color: 'var(--text-3)' }} />
+                  {t(lang, 'gospelContinueExploring')} <ChevronRight size={15} style={{ color: 'var(--q-text-tertiary)' }} />
                 </button>
                 <button
                   onClick={() => setShowQuestions(true)}
                   className="w-full text-left rounded-xl px-4 py-3 text-sm font-medium flex items-center justify-between min-h-11"
-                  style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-1)' }}
+                  style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text)' }}
                 >
-                  <span className="flex items-center gap-2"><HelpCircle size={15} style={{ color: 'var(--text-3)' }} /> {t(lang, 'gospelMoreQuestions')}</span>
-                  <ChevronRight size={15} style={{ color: 'var(--text-3)' }} />
+                  <span className="flex items-center gap-2"><HelpCircle size={15} style={{ color: 'var(--q-text-tertiary)' }} /> {t(lang, 'gospelMoreQuestions')}</span>
+                  <ChevronRight size={15} style={{ color: 'var(--q-text-tertiary)' }} />
                 </button>
               </div>
 
               {readActions.length > 0 && (
                 <div className="mt-6">
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'gospelRelatedReading')}</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'gospelRelatedReading')}</p>
                   <div className="flex flex-col gap-2">
                     {readActions.map((a) => (
                       <button
                         key={a.id}
                         onClick={() => onOpenArticle?.(a.id)}
                         className="w-full text-left rounded-xl px-4 py-3 text-sm flex items-center justify-between min-h-11"
-                        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+                        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)' }}
                       >
-                        <span className="flex items-center gap-2"><BookOpen size={14} style={{ color: 'var(--accent)' }} /> {t(lang, a.key)}</span>
-                        <ChevronRight size={15} style={{ color: 'var(--text-3)' }} />
+                        <span className="flex items-center gap-2"><BookOpen size={14} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, a.key)}</span>
+                        <ChevronRight size={15} style={{ color: 'var(--q-text-tertiary)' }} />
                       </button>
                     ))}
                   </div>
@@ -261,7 +261,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
               <button
                 onClick={onClose}
                 className="w-full text-center mt-8 py-3 text-sm font-medium min-h-11"
-                style={{ color: 'var(--text-3)' }}
+                style={{ color: 'var(--q-text-tertiary)' }}
               >
                 {t(lang, 'gospelReturnToGrow')}
               </button>
@@ -277,7 +277,7 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
   const stepNo = index + 1;
   return overlay(
     <>
-      <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--header)' }}>
+      <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--q-surface-inverse)' }}>
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {t(lang, 'gospelStep', { n: stepNo, total })}
@@ -290,25 +290,25 @@ export default function GospelJourneyReader({ journey, lang, onClose, onCreatePr
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-8 max-w-xl mx-auto w-full">
-        <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold leading-snug mb-3 focus:outline-none" style={{ color: 'var(--text-1)' }}>
+        <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold leading-snug mb-3 focus:outline-none" style={{ color: 'var(--q-text)' }}>
           {pick(section.heading, lang)}
         </h2>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(section.body, lang)}</p>
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{pick(section.body, lang)}</p>
         <RefPills refs={section.refs} />
       </div>
 
-      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--q-border)' }}>
         <button
           onClick={goBack}
           className="shrink-0 whitespace-nowrap flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
-          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+          style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)' }}
         >
           <ChevronLeft size={16} /> {t(lang, 'backBtn')}
         </button>
         <button
           onClick={goNext}
           className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-          style={{ background: 'var(--accent)' }}
+          style={{ background: 'var(--q-action-primary)' }}
         >
           {t(lang, 'continueBtn')} <ChevronRight size={16} />
         </button>

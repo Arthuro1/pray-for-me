@@ -150,7 +150,7 @@ export default function PrayerSessionNote({
 
   if (!open) {
     return (
-      <div className="border-block-start mt-8 pt-5" style={{ borderColor: 'var(--border)' }}>
+      <div className="border-block-start mt-8 pt-5" style={{ borderColor: 'var(--q-border)' }}>
         <button
           ref={triggerRef}
           type="button"
@@ -158,7 +158,7 @@ export default function PrayerSessionNote({
           aria-expanded={false}
           aria-controls={panelId}
           className="pressable flex min-h-11 items-center gap-2 rounded-xl text-sm"
-          style={{ color: hasContent ? 'var(--success)' : 'var(--text-3)' }}
+          style={{ color: hasContent ? 'var(--q-success)' : 'var(--q-text-tertiary)' }}
         >
           {hasContent
             ? <Check size={14} aria-hidden="true" />
@@ -167,10 +167,10 @@ export default function PrayerSessionNote({
           {saving && <Loader2 size={13} className="animate-spin" aria-hidden="true" />}
         </button>
         {hasContent && draft.restored && draft.status === NOTE_STATUS.DRAFT && (
-          <p className="mt-1.5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'noteContinue')}</p>
+          <p className="mt-1.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noteContinue')}</p>
         )}
         {draft.status === NOTE_STATUS.PENDING && (
-          <p className="mt-1.5 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'noteVoicePending')}</p>
+          <p className="mt-1.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noteVoicePending')}</p>
         )}
       </div>
     );
@@ -181,20 +181,20 @@ export default function PrayerSessionNote({
       ref={panelRef}
       id={panelId}
       className="border-block-start mt-8 pt-5"
-      style={{ borderColor: 'var(--border)' }}
+      style={{ borderColor: 'var(--q-border)' }}
     >
       <div className="mb-2.5 flex items-center justify-between gap-3">
-        <p className="text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--text-3)' }}>
+        <p className="text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'noteTitle')}
         </p>
         {settled && (
-          <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: 'var(--success)' }}>
+          <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: 'var(--q-success)' }}>
             <Check size={11} aria-hidden="true" /> {t(lang, 'noteSaved')}
           </span>
         )}
       </div>
 
-      <div className="rounded-2xl" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+      <div className="rounded-2xl" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
         <RichTextEditor
           value={draft.text}
           onChange={(text) => onChangeText(text)}
@@ -219,7 +219,7 @@ export default function PrayerSessionNote({
           aria-label={t(lang, 'noteFormatting')}
           title={t(lang, 'noteFormatting')}
           className="pressable flex min-h-11 items-center gap-1 rounded-xl px-3 text-xs font-semibold"
-          style={{ color: showFormatting ? 'var(--accent)' : 'var(--text-3)' }}
+          style={{ color: showFormatting ? 'var(--q-royal-text)' : 'var(--q-text-tertiary)' }}
         >
           <Type size={14} aria-hidden="true" /> Aa
         </button>
@@ -244,7 +244,7 @@ export default function PrayerSessionNote({
         <p
           role="status"
           className="mt-2 flex items-start gap-1.5 text-xs leading-5"
-          style={{ color: 'var(--text-3)' }}
+          style={{ color: 'var(--q-text-tertiary)' }}
         >
           <Check className="mt-0.5 shrink-0" size={12} aria-hidden="true" />
           <span>{t(lang, 'noteSavedOnContinue')}</span>
@@ -255,7 +255,7 @@ export default function PrayerSessionNote({
         type="button"
         onClick={collapse}
         className="pressable mt-3 flex min-h-11 items-center gap-1.5 rounded-xl text-sm font-medium"
-        style={{ color: 'var(--accent)' }}
+        style={{ color: 'var(--q-royal-text)' }}
       >
         <ChevronUp size={14} aria-hidden="true" /> {t(lang, 'resumePrayer')}
       </button>

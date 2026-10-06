@@ -16,16 +16,16 @@ export default function PlanDayTrace({ lang, prayed = false, updates = [] }) {
   if (!prayed && updates.length === 0) return null;
 
   return (
-    <section className="rounded-xl p-3 space-y-2" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+    <section className="rounded-xl p-3 space-y-2" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
       {prayed && (
-        <p className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--success)' }}>
+        <p className="flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--q-success)' }}>
           <Check size={13} aria-hidden="true" /> {t(lang, 'prayedOnDay')}
         </p>
       )}
 
       {updates.length > 0 && (
         <div>
-          <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'planDayNotes')}
           </h4>
           <div className="space-y-2">
@@ -34,7 +34,7 @@ export default function PlanDayTrace({ lang, prayed = false, updates = [] }) {
                 key={update.id}
                 text={update.text}
                 className="text-sm leading-relaxed"
-                style={{ color: 'var(--text-2)' }}
+                style={{ color: 'var(--q-text-secondary)' }}
               />
             ))}
           </div>

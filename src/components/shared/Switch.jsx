@@ -14,12 +14,12 @@ export default function Switch({ checked, onChange, label, disabled = false }) {
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className="p-3 -m-3 min-w-[44px] min-h-[44px] inline-flex items-center justify-center shrink-0 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40"
-      style={{ outlineColor: 'var(--accent)' }}
+      style={{ outlineColor: 'var(--q-royal)' }}
     >
       <span
         aria-hidden="true"
         className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-        style={{ background: checked ? 'var(--accent)' : 'var(--input-border)' }}
+        style={{ background: checked ? 'var(--q-action-primary)' : 'var(--q-field-border)' }}
       >
         <span
           className="inline-block h-4 w-4 rounded-full bg-white shadow transition-transform"

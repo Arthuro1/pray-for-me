@@ -34,7 +34,7 @@ function friendlyAuthError(error) {
   return { key: 'errorGeneric' };
 }
 
-const inputStyle = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
+const inputStyle = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
 
 export default function AuthPage({ onBack, intent }) {
   // `intent === 'save-prayer'` is the contextual auth that follows the pray-first
@@ -182,11 +182,6 @@ export default function AuthPage({ onBack, intent }) {
 
   return (
     <div className="auth-experience constellation-auth">
-      <div className="constellation-auth__sky" aria-hidden="true">
-        <img src="/assets/constellation/detail-sky-light-transparent.png" alt="" className="constellation-auth__sky-image constellation-auth__sky-image--light" />
-        <img src="/assets/constellation/detail-sky-dark-transparent.png" alt="" className="constellation-auth__sky-image constellation-auth__sky-image--dark" />
-      </div>
-
       {/* Back to landing page */}
       {onBack && (
         <button
@@ -202,8 +197,8 @@ export default function AuthPage({ onBack, intent }) {
       {/* Logo */}
       <div className="auth-brand">
         <img src="/logo.svg" alt={APP_NAME} className="w-12 h-12 mb-3 rounded-xl" />
-        <h1 className="text-2xl font-semibold" style={{ color: 'var(--text-1)' }}>{APP_NAME}</h1>
-        <p className="text-xs mt-1 italic" style={{ color: 'var(--text-3)' }}>{t(lang, 'authTagline')}</p>
+        <h1 className="text-2xl font-semibold" style={{ color: 'var(--q-text)' }}>{APP_NAME}</h1>
+        <p className="text-xs mt-1 italic" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authTagline')}</p>
       </div>
 
       {/* Bottom sheet */}
@@ -211,13 +206,13 @@ export default function AuthPage({ onBack, intent }) {
         {mode === 'forgot' ? (
           <form onSubmit={handleForgot} noValidate className="space-y-4">
             <div>
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authResetTitle')}</h2>
-              <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authResetIntro')}</p>
+              <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'authResetTitle')}</h2>
+              <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authResetIntro')}</p>
             </div>
             <div>
               <label htmlFor="auth-reset-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
               <div className="relative">
-                <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                <Mail size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
                 <input
                   ref={emailRef}
                   id="auth-reset-email"
@@ -233,8 +228,8 @@ export default function AuthPage({ onBack, intent }) {
                 />
               </div>
             </div>
-            {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
-            {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
+            {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>}
+            {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-success)', background: 'var(--q-success-soft)' }}>{success}</p>}
             <button
               type="submit"
               disabled={loading}
@@ -247,7 +242,7 @@ export default function AuthPage({ onBack, intent }) {
               type="button"
               onClick={() => switchMode('login')}
               className="w-full text-center text-sm font-medium"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--q-royal-text)' }}
             >
               {t(lang, 'authBackToLogin')}
             </button>
@@ -258,15 +253,15 @@ export default function AuthPage({ onBack, intent }) {
                 and the account is explained as what makes that possible. */}
             {savePrayerIntent && (
               <div className="mb-5 text-center">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authKeepPrayerTitle')}</h2>
-                <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authKeepPrayerBody')}</p>
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'authKeepPrayerTitle')}</h2>
+                <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authKeepPrayerBody')}</p>
               </div>
             )}
 
             {joinPlanIntent && (
               <div className="mb-5 text-center">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'authJoinPlanTitle')}</h2>
-                <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'authJoinPlanBody')}</p>
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'authJoinPlanTitle')}</h2>
+                <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authJoinPlanBody')}</p>
               </div>
             )}
 
@@ -300,16 +295,16 @@ export default function AuthPage({ onBack, intent }) {
               onClick={handleGoogle}
               disabled={loading}
               className="w-full flex items-center justify-center gap-3 rounded-xl py-3 text-sm font-medium mb-4 transition-colors disabled:opacity-50"
-              style={{ border: '0.5px solid var(--border)', color: 'var(--text-2)', background: 'var(--surface-2)' }}
+              style={{ border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)', background: 'var(--q-surface-muted)' }}
             >
               <img src="/assets/google-g.png" alt="" className="h-[18px] w-[18px]" aria-hidden="true" />
               {t(lang, 'authContinueGoogle')}
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-              <span className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'authOr')}</span>
-              <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+              <div className="flex-1 h-px" style={{ background: 'var(--q-border)' }} />
+              <span className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'authOr')}</span>
+              <div className="flex-1 h-px" style={{ background: 'var(--q-border)' }} />
             </div>
 
             {mode === 'link' ? (
@@ -317,7 +312,7 @@ export default function AuthPage({ onBack, intent }) {
                 <div>
                   <label htmlFor="auth-link-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
                   <div className="relative">
-                    <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                    <Mail size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
                     <input
                       ref={emailRef}
                       id="auth-link-email"
@@ -334,8 +329,8 @@ export default function AuthPage({ onBack, intent }) {
                   </div>
                 </div>
 
-                {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
-                {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
+                {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>}
+                {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-success)', background: 'var(--q-success-soft)' }}>{success}</p>}
 
                 <button
                   type="submit"
@@ -351,7 +346,7 @@ export default function AuthPage({ onBack, intent }) {
                   type="button"
                   onClick={() => switchMode('register')}
                   className="w-full text-center text-xs font-medium"
-                  style={{ color: 'var(--accent)' }}
+                  style={{ color: 'var(--q-royal-text)' }}
                 >
                   {t(lang, 'authUsePasswordInstead')}
                 </button>
@@ -364,7 +359,7 @@ export default function AuthPage({ onBack, intent }) {
                 <div>
                   <label htmlFor="auth-name" className="auth-field-label">{t(lang, 'authNamePlaceholder')}</label>
                   <div className="relative">
-                    <User size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                    <User size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
                     <input
                       id="auth-name"
                       type="text"
@@ -381,7 +376,7 @@ export default function AuthPage({ onBack, intent }) {
               <div>
                 <label htmlFor="auth-email" className="auth-field-label">{t(lang, 'authEmail')}</label>
                 <div className="relative">
-                  <Mail size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                  <Mail size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
                   <input
                     ref={emailRef}
                     id="auth-email"
@@ -400,7 +395,7 @@ export default function AuthPage({ onBack, intent }) {
               <div>
                 <label htmlFor="auth-password" className="auth-field-label">{t(lang, 'authPassword')}</label>
                 <div className="relative">
-                  <Lock size={15} className="auth-field-icon" style={{ color: 'var(--text-3)' }} />
+                  <Lock size={15} className="auth-field-icon" style={{ color: 'var(--q-text-tertiary)' }} />
                   <input
                     ref={passwordRef}
                     id="auth-password"
@@ -422,7 +417,7 @@ export default function AuthPage({ onBack, intent }) {
                     aria-label={t(lang, 'authPassword')}
                     aria-pressed={showPassword}
                     className="auth-password-toggle"
-                    style={{ color: 'var(--text-3)' }}
+                    style={{ color: 'var(--q-text-tertiary)' }}
                   >
                     {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
@@ -438,15 +433,15 @@ export default function AuthPage({ onBack, intent }) {
                     type="button"
                     onClick={() => switchMode('forgot')}
                     className="text-xs font-medium"
-                    style={{ color: 'var(--accent)' }}
+                    style={{ color: 'var(--q-royal-text)' }}
                   >
                     {t(lang, 'authForgotPassword')}
                   </button>
                 </div>
               )}
 
-              {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--danger)', background: 'var(--danger-bg)' }}>{error}</p>}
-              {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--success)', background: 'var(--success-bg)' }}>{success}</p>}
+              {error && <p id="auth-form-error" role="alert" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>}
+              {success && <p role="status" className="text-xs rounded-lg px-3 py-2" style={{ color: 'var(--q-success)', background: 'var(--q-success-soft)' }}>{success}</p>}
 
               {canResend && (
                 <button
@@ -454,7 +449,7 @@ export default function AuthPage({ onBack, intent }) {
                   onClick={handleResend}
                   disabled={loading}
                   className="w-full text-center text-xs font-medium disabled:opacity-60"
-                  style={{ color: 'var(--accent)' }}
+                  style={{ color: 'var(--q-royal-text)' }}
                 >
                   {t(lang, 'authResend')}
                 </button>
@@ -476,7 +471,7 @@ export default function AuthPage({ onBack, intent }) {
                   type="button"
                   onClick={() => switchMode('link')}
                   className="w-full text-center text-xs font-medium"
-                  style={{ color: 'var(--accent)' }}
+                  style={{ color: 'var(--q-royal-text)' }}
                 >
                   {t(lang, 'authUseLinkInstead')}
                 </button>
@@ -491,7 +486,7 @@ export default function AuthPage({ onBack, intent }) {
                 type="button"
                 onClick={() => switchMode('login')}
                 className="mt-4 w-full text-center text-sm font-medium"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 {t(lang, 'authHaveAccount')}
               </button>
@@ -499,7 +494,7 @@ export default function AuthPage({ onBack, intent }) {
           </>
         )}
 
-        <p className="text-center text-xs mt-4" style={{ color: 'var(--text-3)' }}>
+        <p className="text-center text-xs mt-4" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'authPrivacyNote')}
         </p>
       </div>

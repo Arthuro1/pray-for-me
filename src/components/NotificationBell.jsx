@@ -26,7 +26,7 @@ export default function NotificationBell({ className = '', style = {} }) {
         {unreadCount > 0 && (
           <span
             className="absolute flex items-center justify-center text-[10px] font-bold text-white rounded-full"
-            style={{ top: -4, right: -4, minWidth: 16, height: 16, padding: '0 4px', background: '#ef4444' }}
+            style={{ top: -4, right: -4, minWidth: 16, height: 16, padding: '0 4px', background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
             aria-hidden="true"
           >
             {unreadCount > 9 ? '9+' : unreadCount}

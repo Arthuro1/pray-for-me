@@ -27,16 +27,16 @@ function ItemCard({ item, lang, onOpen, done, durationLabel }) {
     >
       <span className="text-2xl shrink-0 leading-none mt-0.5">{item.emoji}</span>
       <span className="flex-1 min-w-0">
-        <span className="text-sm font-semibold flex items-center gap-1.5" style={{ color: 'var(--text-1)' }}>
+        <span className="text-sm font-semibold flex items-center gap-1.5" style={{ color: 'var(--q-text)' }}>
           {pick(item.title, lang)}
-          {done && <Check size={13} aria-hidden="true" style={{ color: 'var(--success)' }} />}
+          {done && <Check size={13} aria-hidden="true" style={{ color: 'var(--q-success)' }} />}
         </span>
-        <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-3)' }}>{pick(item.summary, lang)}</span>
+        <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{pick(item.summary, lang)}</span>
         {durationLabel && (
-          <span className="block text-xs mt-1 font-medium" style={{ color: 'var(--accent)' }}>{durationLabel}</span>
+          <span className="block text-xs mt-1 font-medium" style={{ color: 'var(--q-royal-text)' }}>{durationLabel}</span>
         )}
       </span>
-      <ChevronRight size={16} className="shrink-0 mt-1 opacity-50" style={{ color: 'var(--text-3)' }} />
+      <ChevronRight size={16} className="shrink-0 mt-1 opacity-50" style={{ color: 'var(--q-text-tertiary)' }} />
     </button>
   );
 }
@@ -52,7 +52,7 @@ function Disclosure({ id, label, open, onToggle, count }) {
       aria-expanded={open}
       aria-controls={id}
       className="w-full min-h-[44px] flex items-center justify-between gap-2 py-2 text-sm font-medium"
-      style={{ color: 'var(--text-2)' }}
+      style={{ color: 'var(--q-text-secondary)' }}
     >
       <span>{label}{typeof count === 'number' ? ` (${count})` : ''}</span>
       <ChevronDown size={15} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} aria-hidden="true" />
@@ -172,8 +172,8 @@ export default function GrowTab({ onCreatePrayer }) {
                 aria-pressed={active}
                 className="flex-1 flex items-center justify-center gap-2 px-3 text-sm font-medium"
                 style={active
-                  ? { background: 'var(--surface)', color: 'var(--text-1)' }
-                  : { color: 'var(--text-3)' }}
+                  ? { background: 'var(--q-surface)', color: 'var(--q-text)' }
+                  : { color: 'var(--q-text-tertiary)' }}
               >
                 <Icon size={15} /> {label}
               </button>
@@ -197,19 +197,19 @@ export default function GrowTab({ onCreatePrayer }) {
                 >
                   <span className="text-2xl shrink-0 leading-none mt-0.5">{recommendation.guide.emoji}</span>
                   <span className="flex-1 min-w-0">
-                    <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+                    <span className="block text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
                       {pick(recommendation.guide.title, lang)}
                     </span>
-                    <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                    <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
                       {t(lang, REC_DESC_KEYS[recommendation.type])}
                     </span>
                     {guideDurationMinutes(recommendation.guide) && (
-                      <span className="block text-xs mt-1 font-medium" style={{ color: 'var(--accent)' }}>
+                      <span className="block text-xs mt-1 font-medium" style={{ color: 'var(--q-royal-text)' }}>
                         {t(lang, 'aboutMinutes', { n: guideDurationMinutes(recommendation.guide) })}
                       </span>
                     )}
                   </span>
-                  <ChevronRight size={16} className="shrink-0 mt-1" style={{ color: 'var(--accent)' }} />
+                  <ChevronRight size={16} className="shrink-0 mt-1" style={{ color: 'var(--q-royal-text)' }} />
                 </button>
               </div>
             )}
@@ -246,7 +246,7 @@ export default function GrowTab({ onCreatePrayer }) {
           </>
         ) : (
           <>
-            <p className="text-xs mb-3 leading-relaxed" style={{ color: 'var(--text-3)' }}>
+            <p className="text-xs mb-3 leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, 'growLearnIntro')}
             </p>
             <div className="flex flex-col gap-3">
@@ -265,14 +265,14 @@ export default function GrowTab({ onCreatePrayer }) {
           onClick={() => setOpenJourney(true)}
           className="phase-card phase-card--quiet grow-card w-full text-left p-4 mt-6 mb-8 flex items-center gap-3"
         >
-          <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent)' }}>
+          <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-action-primary)' }}>
             <Sunrise size={16} className="text-white" aria-hidden="true" />
           </span>
           <span className="flex-1 min-w-0">
-            <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'growSeekerTitle')}</span>
-            <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'growSeekerDesc')}</span>
+            <span className="block text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'growSeekerTitle')}</span>
+            <span className="block text-xs mt-0.5 leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'growSeekerDesc')}</span>
           </span>
-          <ChevronRight size={15} className="shrink-0 opacity-60" style={{ color: 'var(--accent)' }} aria-hidden="true" />
+          <ChevronRight size={15} className="shrink-0 opacity-60" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
         </button>}
       </div>
     </div>

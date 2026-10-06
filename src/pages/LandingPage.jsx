@@ -47,81 +47,44 @@ function detectLang() {
   return ALL_CODES.includes(nav) ? nav : 'en';
 }
 
-// Warm neutral canvas, royal plum for action, gold as a restrained accent.
-// Every text colour holds WCAG AA on its background.
-const THEMES = {
-  dark: {
-    bg: '#15111b',
-    text: '#f6efe6',
-    textSoft: '#e2d8e8',
-    textMuted: '#c4b8cc',
-    textFaint: '#a99db1',
-    textDim: '#a093a9',
-    textGhost: '#9d90a6',
-    surface: '#1d1725',
-    surfaceStrong: '#2a2234',
-    chipBg: '#1d1725',
-    border: '#3a3043',
-    borderStrong: '#4e4259',
-    menuBg: '#1d1725',
-    menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
-    accentText: '#c3a7ec',
-    accentSoftBg: '#2c2238',
-    accentChipBg: '#2c2238',
-    accentActiveBg: '#35293f',
-    accentBorder: '#4a3b5c',
-    calloutBg: '#211731',
-    calloutBorder: '#4a3b5c',
-    previewBg: '#15111b',
-    previewItemBg: '#2a2234',
-    gold: '#d8b06a',
-    goldLine: '#e4c27f',
-    primaryBg: '#6e4fa8',
-    prayerPreviewBg: '#2e1c42',
-    prayerPreviewButtonBg: '#f6efe6',
-    prayerPreviewButtonText: '#2e1c42',
-    peaceBg: '#1a302a',
-    peaceText: '#8fcab8',
-    movementColors: ['#d8b06a', '#c3a7ec', '#8fcab8', '#e4c27f'],
-    ctaShadow: '0 12px 32px rgba(0,0,0,0.28)',
-    ctaShadowBig: '0 18px 44px rgba(0,0,0,0.34)',
-  },
-  light: {
-    bg: '#f7f3ec',
-    text: '#261b31',
-    textSoft: '#463a52',
-    textMuted: '#6b5e75',
-    textFaint: '#685c6f',
-    textDim: '#685c6f',
-    textGhost: '#685c6f',
-    surface: '#fffdf9',
-    surfaceStrong: '#f1ebe1',
-    chipBg: '#fffdf9',
-    border: '#e6ddd0',
-    borderStrong: '#d5c8b6',
-    menuBg: '#fffdf9',
-    menuShadow: '0 8px 24px rgba(38,27,49,0.14)',
-    accentText: '#5b3d82',
-    accentSoftBg: '#efe8f4',
-    accentChipBg: '#efe8f4',
-    accentActiveBg: '#e6dcef',
-    accentBorder: '#dccfe6',
-    calloutBg: '#2e1c42',
-    calloutBorder: '#4a2c68',
-    previewBg: '#fffdf9',
-    previewItemBg: '#f5ecdc',
-    gold: '#8b6124',
-    goldLine: '#d9ae62',
-    primaryBg: '#5b3d82',
-    prayerPreviewBg: '#2e1c42',
-    prayerPreviewButtonBg: '#fffdf9',
-    prayerPreviewButtonText: '#2e1c42',
-    peaceBg: '#e6f1ec',
-    peaceText: '#2f6b5d',
-    movementColors: ['#8b6124', '#5b3d82', '#3f7a6c', '#8b6124'],
-    ctaShadow: '0 12px 30px rgba(46,28,66,0.18)',
-    ctaShadowBig: '0 18px 42px rgba(46,28,66,0.22)',
-  },
+// The landing page wears the product's own token layer — one brand from the
+// first visit to the signed-in app. Light and dark come from data-theme on
+// <html>, so a single set of purpose tokens serves both.
+const T = {
+  bg: 'var(--q-canvas)',
+  text: 'var(--q-text)',
+  textSoft: 'var(--q-text)',
+  textMuted: 'var(--q-text-secondary)',
+  textFaint: 'var(--q-text-tertiary)',
+  textDim: 'var(--q-text-tertiary)',
+  textGhost: 'var(--q-text-tertiary)',
+  surface: 'var(--q-surface)',
+  surfaceStrong: 'var(--q-surface-muted)',
+  chipBg: 'var(--q-surface)',
+  border: 'var(--q-border)',
+  borderStrong: 'var(--q-border-strong)',
+  menuBg: 'var(--q-surface)',
+  menuShadow: 'var(--q-elevation)',
+  accentText: 'var(--q-royal-text)',
+  accentSoftBg: 'var(--q-selected)',
+  accentChipBg: 'var(--q-selected)',
+  accentActiveBg: 'var(--q-selected)',
+  accentBorder: 'var(--q-selected-border)',
+  calloutBg: 'var(--q-surface-inverse)',
+  calloutBorder: 'transparent',
+  previewBg: 'var(--q-surface)',
+  previewItemBg: 'var(--q-surface-muted)',
+  gold: 'var(--q-gold-text)',
+  goldLine: 'var(--q-gold)',
+  primaryBg: 'var(--q-action-primary)',
+  prayerPreviewBg: 'var(--q-surface-inverse)',
+  prayerPreviewButtonBg: 'var(--q-text-inverse)',
+  prayerPreviewButtonText: 'var(--q-royal-deep)',
+  peaceBg: 'var(--q-success-soft)',
+  peaceText: 'var(--q-success)',
+  movementColors: ['var(--q-royal-text)', 'var(--q-royal-text)', 'var(--q-royal-text)', 'var(--q-royal-text)'],
+  ctaShadow: 'none',
+  ctaShadowBig: 'none',
 };
 
 function GooglePlayLink({ label, T }) {
@@ -221,7 +184,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   // The nine-card feature grid is folded away by default so the hero and the
   // movements carry the first impression; visitors opt in to the full list.
   const [showAllFeatures, setShowAllFeatures] = useState(false);
-  const T = THEMES[theme];
   const activeLang = LANGS.find(l => l.code === lang);
 
   // Fetch only the selected landing dictionary. A stale request cannot overwrite
@@ -514,11 +476,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
             </div>
-            <div className="constellation-landing__preview-focus relative overflow-hidden rounded-[1.35rem] p-5 sm:p-6" style={{ background: T.prayerPreviewBg, color: '#fff' }}>
-              <span className="constellation-landing__preview-art" aria-hidden="true">
-                <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" />
-              </span>
-              <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.66)' }}>{preview.altarToday}</p>
+            <div className="constellation-landing__preview-focus relative overflow-hidden rounded-[1.35rem] p-5 sm:p-6" style={{ background: T.prayerPreviewBg, color: 'var(--q-text-inverse)' }}>
+              <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--q-text-inverse-tertiary)' }}>{preview.altarToday}</p>
               <p className="editorial relative mt-5 max-w-[18rem] text-2xl leading-snug">{samplePrayerTitle}</p>
               <button
                 type="button"
@@ -691,15 +650,14 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
       {/* Scripture finder callout */}
       <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
-        <div className="constellation-landing__callout relative overflow-hidden p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: '#fff', boxShadow: T.ctaShadow }}>
-          <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-landing__callout-art" aria-hidden="true" />
+        <div className="constellation-landing__callout relative overflow-hidden p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: 'var(--q-text-inverse)' }}>
           <div className="flex-1">
             <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4" style={{ background: T.accentChipBg, color: T.accentText }}>
               <BookOpen size={11} /> {c.calloutBadge}
             </div>
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
-            <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
-            <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.62)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
+            <p className="text-sm mb-3" style={{ color: 'var(--q-text-inverse-secondary)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
+            <p className="text-xs mb-5 italic" style={{ color: 'var(--q-text-inverse-tertiary)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
             <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}>
               {beginLabel}
             </button>

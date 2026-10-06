@@ -49,24 +49,24 @@ export default function RecoveryPromptBanner({ lang }) {
 
   return (
     <>
-      <div className="mx-4 md:mx-8 mt-4 rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--surface)' }}>
-          <KeyRound size={15} style={{ color: 'var(--accent)' }} />
+      <div className="mx-4 md:mx-8 mt-4 rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-surface)' }}>
+          <KeyRound size={15} style={{ color: 'var(--q-royal-text)' }} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold mb-0.5" style={{ color: 'var(--text-1)' }}>{t(lang, 'backupKeyTitle')}</p>
-          <p className="text-xs leading-relaxed mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'backupKeyBody')}</p>
-          <p className="text-xs leading-relaxed font-medium mb-3" style={{ color: 'var(--text-1)' }}>{t(lang, 'backupKeyWarn')}</p>
+          <p className="text-sm font-semibold mb-0.5" style={{ color: 'var(--q-text)' }}>{t(lang, 'backupKeyTitle')}</p>
+          <p className="text-xs leading-relaxed mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'backupKeyBody')}</p>
+          <p className="text-xs leading-relaxed font-medium mb-3" style={{ color: 'var(--q-text)' }}>{t(lang, 'backupKeyWarn')}</p>
           <div className="flex items-center gap-2">
-            <button onClick={() => setShowSetup(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium text-white" style={{ background: 'var(--accent)' }}>
+            <button onClick={() => setShowSetup(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium text-white" style={{ background: 'var(--q-action-primary)' }}>
               {t(lang, 'backupKeyCta')}
             </button>
-            <button onClick={snooze} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ color: 'var(--text-3)' }}>
+            <button onClick={snooze} className="px-3 py-1.5 rounded-lg text-xs font-medium" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, 'backupKeyDismiss')}
             </button>
           </div>
         </div>
-        <button onClick={dismissForever} aria-label={t(lang, 'backupKeyDismissForever')} title={t(lang, 'backupKeyDismissForever')} className="shrink-0 p-1" style={{ color: 'var(--text-3)' }}>
+        <button onClick={dismissForever} aria-label={t(lang, 'backupKeyDismissForever')} title={t(lang, 'backupKeyDismissForever')} className="shrink-0 p-1" style={{ color: 'var(--q-text-tertiary)' }}>
           <X size={16} />
         </button>
       </div>

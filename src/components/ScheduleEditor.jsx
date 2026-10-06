@@ -39,7 +39,7 @@ import {
 // A per-prayer "follow up / check back in" reminder is NOT a recurrence and does
 // not live here — it is a separate concept (see FollowUpField / followUpStore).
 
-const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
+const INPUT_STYLE = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
 const FIELD_CLASS = 'w-full text-sm rounded-xl px-4 py-2.5 min-h-[44px] focus:outline-none';
 const NUMBER_CLASS = 'w-20 text-sm rounded-xl px-3 py-2 min-h-[44px] text-center focus:outline-none';
 
@@ -118,7 +118,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
   return (
     <div className="space-y-3" onKeyDown={blockImplicitSubmit}>
       <fieldset className="space-y-2">
-        <legend className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>
+        <legend className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'schedWhenAppear')}
         </legend>
         {modeRows.map((row) => (
@@ -176,13 +176,13 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                                 // instead of pushing the row off-screen.
                                 className="relative flex-none min-w-[44px] min-h-[44px] px-2 text-xs rounded-xl font-medium transition-colors"
                                 style={on
-                                  ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                                  : { background: 'var(--surface)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
+                                  ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', border: '1.5px solid var(--q-royal)' }
+                                  : { background: 'var(--q-surface)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-field-border)' }}
                               >
                                 {day}
                                 {/* Selection also reads without colour: a dot
                                     and a heavier border, not hue alone. */}
-                                {on && <span aria-hidden="true" className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{ background: '#fff' }} />}
+                                {on && <span aria-hidden="true" className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{ background: 'var(--q-on-action)' }} />}
                               </button>
                             );
                           })}
@@ -209,7 +209,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                             label={t(lang, RHYTHM_LABELS[choice])}
                           />
                           {choice === 'interval' && rhythm === 'interval' && (
-                            <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--text-2)' }}>
+                            <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--q-text-secondary)' }}>
                               <label htmlFor={id('interval')}>{t(lang, 'intervalEvery')}</label>
                               <input
                                 id={id('interval')} type="number" min="2" max="90" value={d.interval}
@@ -220,7 +220,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                             </div>
                           )}
                           {choice === 'monthly' && rhythm === 'monthly' && (
-                            <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--text-2)' }}>
+                            <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--q-text-secondary)' }}>
                               <label htmlFor={id('dayOfMonth')}>{t(lang, 'monthlyOnDay')}</label>
                               <input
                                 id={id('dayOfMonth')} type="number" min="1" max="31" value={d.dayOfMonth}
@@ -321,7 +321,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                     </div>
                   )}
                   {kind === 'count' && d.endKind === 'count' && (
-                    <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--text-2)' }}>
+                    <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--q-text-secondary)' }}>
                       <label htmlFor={id('endCount')} className="sr-only">{t(lang, 'schedEndCountLabel')}</label>
                       <input
                         id={id('endCount')} type="number" min="1" max="365" value={d.endCount}
@@ -343,7 +343,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
       <p
         aria-live="polite"
         className="text-sm rounded-xl px-3 py-2.5 break-words"
-        style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+        style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
       >
         {scheduleSentence(preview, lang, { planDays })}
       </p>

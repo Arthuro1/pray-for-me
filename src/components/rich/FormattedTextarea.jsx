@@ -4,7 +4,7 @@ import RichTextEditor from './RichTextEditor';
 
 export default function FormattedTextarea({ id, value, onChange, placeholder, ariaLabel, rows = 3, lang }) {
   return (
-    <div className="rounded-xl" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+    <div className="rounded-xl" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
       <RichTextEditor
         inputId={id}
         value={value}

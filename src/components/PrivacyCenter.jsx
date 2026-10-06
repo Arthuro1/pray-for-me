@@ -54,26 +54,26 @@ export default function PrivacyCenter({ lang = 'en', onClose }) {
         </button>
 
         <div className="flex items-center gap-2 mb-2">
-          <ShieldCheck size={18} style={{ color: 'var(--accent)' }} />
-          <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'privacyCenterTitle')}</h2>
+          <ShieldCheck size={18} style={{ color: 'var(--q-royal-text)' }} />
+          <h2 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'privacyCenterTitle')}</h2>
         </div>
-        <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'pcIntro')}</p>
+        <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'pcIntro')}</p>
 
         <div className="space-y-4">
           {SECTIONS.map(({ icon: Icon, titleKey, bodyKey }) => (
             <div key={titleKey} className="flex gap-3">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)' }}>
-                <Icon size={15} style={{ color: 'var(--accent)' }} />
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)' }}>
+                <Icon size={15} style={{ color: 'var(--q-royal-text)' }} />
               </div>
               <div>
-                <h3 className="text-sm font-medium mb-0.5" style={{ color: 'var(--text-1)' }}>{t(lang, titleKey)}</h3>
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-3)', lineHeight: 1.6 }}>{t(lang, bodyKey)}</p>
+                <h3 className="text-sm font-medium mb-0.5" style={{ color: 'var(--q-text)' }}>{t(lang, titleKey)}</h3>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)', lineHeight: 1.6 }}>{t(lang, bodyKey)}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <p className="text-xs leading-relaxed mt-5 pt-4" style={{ color: 'var(--text-3)', borderTop: '0.5px solid var(--border-soft)' }}>
+        <p className="text-xs leading-relaxed mt-5 pt-4" style={{ color: 'var(--q-text-tertiary)', borderTop: '0.5px solid var(--q-border)' }}>
           {t(lang, 'pcSecurityNote')}
         </p>
       </div>

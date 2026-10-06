@@ -21,10 +21,10 @@ function Toggle({ enabled, onToggle, label, sub }) {
   return (
     <button onClick={onToggle} className="flex items-start justify-between gap-3 w-full py-2.5 text-left">
       <span className="min-w-0">
-        <span className="block text-sm" style={{ color: 'var(--text-1)' }}>{label}</span>
-        {sub && <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{sub}</span>}
+        <span className="block text-sm" style={{ color: 'var(--q-text)' }}>{label}</span>
+        {sub && <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{sub}</span>}
       </span>
-      <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors mt-0.5" style={{ background: enabled ? 'var(--accent)' : 'var(--input-border)' }}>
+      <span className="shrink-0 w-10 h-6 rounded-full p-0.5 transition-colors mt-0.5" style={{ background: enabled ? 'var(--q-action-primary)' : 'var(--q-field-border)' }}>
         <span className="block w-5 h-5 rounded-full bg-white transition-transform" style={{ transform: enabled ? 'translateX(16px)' : 'translateX(0)' }} />
       </span>
     </button>
@@ -85,7 +85,7 @@ export default function NotificationPreferences() {
   if (loading) {
     return (
       <div className="flex justify-center py-6">
-        <Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} />
+        <Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />
       </div>
     );
   }
@@ -106,49 +106,49 @@ export default function NotificationPreferences() {
       />
 
       {/* Quiet hours */}
-      <div className="py-3 border-t mt-1" style={{ borderColor: 'var(--border)' }}>
+      <div className="py-3 border-t mt-1" style={{ borderColor: 'var(--q-border)' }}>
         <div className="flex items-center gap-2 mb-2">
-          <Moon size={14} style={{ color: 'var(--text-3)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'quietHours')}</span>
+          <Moon size={14} style={{ color: 'var(--q-text-tertiary)' }} />
+          <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'quietHours')}</span>
         </div>
-        <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'quietHoursSub')}</p>
+        <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'quietHoursSub')}</p>
         <div className="flex items-center gap-2 flex-wrap">
-          <label className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'quietFrom')}</label>
+          <label className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'quietFrom')}</label>
           <input
             type="time"
             value={acct.quiet_hours_start || ''}
             onChange={(e) => persist('_account', { quiet_hours_start: e.target.value || null, timezone: tz }, { quiet_hours_start: e.target.value })}
             className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
           />
-          <label className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'quietTo')}</label>
+          <label className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'quietTo')}</label>
           <input
             type="time"
             value={acct.quiet_hours_end || ''}
             onChange={(e) => persist('_account', { quiet_hours_end: e.target.value || null, timezone: tz }, { quiet_hours_end: e.target.value })}
             className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
           />
         </div>
-        {tz && <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'timezone')}: {tz}</p>}
+        {tz && <p className="text-xs mt-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'timezone')}: {tz}</p>}
       </div>
 
       {/* Per-type delivery mode */}
-      <div className="py-2 border-t mt-1" style={{ borderColor: 'var(--border)' }}>
+      <div className="py-2 border-t mt-1" style={{ borderColor: 'var(--q-border)' }}>
         <div className="flex items-center gap-2 mb-2 mt-1">
-          <BellRing size={14} style={{ color: 'var(--text-3)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifByType')}</span>
+          <BellRing size={14} style={{ color: 'var(--q-text-tertiary)' }} />
+          <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'notifByType')}</span>
         </div>
         <div className="space-y-1.5">
           {NOTIF_TYPES.map((type) => (
             <div key={type} className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-sm min-w-0 truncate" style={{ color: 'var(--text-2)' }}>{t(lang, TYPE_LABEL[type])}</span>
+              <span className="text-sm min-w-0 truncate" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, TYPE_LABEL[type])}</span>
               <select
                 value={modeFor(type)}
                 onChange={(e) => persist(type, { delivery_mode: e.target.value }, { delivery_mode: e.target.value })}
                 aria-label={t(lang, TYPE_LABEL[type])}
                 className="text-xs rounded-lg px-2 py-1.5 focus:outline-none shrink-0"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
               >
                 <option value="immediate">{t(lang, 'modeImmediate')}</option>
                 <option value="digest">{t(lang, 'modeDigest')}</option>

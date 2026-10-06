@@ -62,7 +62,7 @@ export default function SchedulePicker({ draft, onCommit, lang, planDays, idPref
           onToggle={start}
           controlsId={`${idPrefix}-editor`}
         />
-        <p className="text-xs px-1" style={{ color: 'var(--text-3)' }}>
+        <p className="text-xs px-1" style={{ color: 'var(--q-text-tertiary)' }}>
           {modeOf(draft) === 'plan' ? t(lang, 'rhythmPlanHint') : t(lang, 'schedChangeLater')}
         </p>
       </div>
@@ -70,14 +70,14 @@ export default function SchedulePicker({ draft, onCommit, lang, planDays, idPref
   }
 
   return (
-    <div id={`${idPrefix}-editor`} className="space-y-3 rounded-2xl p-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+    <div id={`${idPrefix}-editor`} className="space-y-3 rounded-2xl p-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
       <ScheduleEditor draft={working} onChange={setWorking} lang={lang} planDays={planDays} idPrefix={idPrefix} />
       <div className="flex gap-2">
         <button
           type="button"
           onClick={close}
           className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm"
-          style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+          style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
         >
           {t(lang, 'cancel')}
         </button>
@@ -85,7 +85,7 @@ export default function SchedulePicker({ draft, onCommit, lang, planDays, idPref
           type="button"
           onClick={commit}
           className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm font-medium text-white"
-          style={{ background: 'var(--accent)' }}
+          style={{ background: 'var(--q-action-primary)' }}
         >
           {t(lang, 'schedUseRhythm')}
         </button>

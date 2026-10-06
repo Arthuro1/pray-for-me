@@ -54,11 +54,11 @@ export default function NotificationPanel({ onClose }) {
         aria-modal="true"
         aria-label={t(lang, 'inbox')}
         className="w-full md:w-96 rounded-t-2xl md:rounded-2xl max-h-[80vh] md:max-h-[70vh] flex flex-col"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--border)' }}>
-          <h2 className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--q-border)' }}>
+          <h2 className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--q-text)' }}>
             <Bell size={16} /> {t(lang, 'inbox')}
           </h2>
           <div className="flex items-center gap-1">
@@ -66,12 +66,12 @@ export default function NotificationPanel({ onClose }) {
               <button
                 onClick={markAllRead}
                 className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 <CheckCheck size={14} /> {t(lang, 'markAllRead')}
               </button>
             )}
-            <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1 rounded-lg" style={{ color: 'var(--text-3)' }}>
+            <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1 rounded-lg" style={{ color: 'var(--q-text-tertiary)' }}>
               <X size={16} />
             </button>
           </div>
@@ -80,20 +80,20 @@ export default function NotificationPanel({ onClose }) {
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {loading && notifications.length === 0 ? (
             <div className="flex justify-center py-10">
-              <Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} />
+              <Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />
             </div>
           ) : error ? (
             <div className="text-center py-10">
-              <p className="text-sm mb-3" style={{ color: 'var(--text-2)' }}>{t(lang, 'notifError')}</p>
-              <button onClick={() => user?.id && fetchNotifications(user.id)} className="text-sm font-medium px-4 py-2 rounded-xl" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              <p className="text-sm mb-3" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'notifError')}</p>
+              <button onClick={() => user?.id && fetchNotifications(user.id)} className="text-sm font-medium px-4 py-2 rounded-xl" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                 {t(lang, 'retry')}
               </button>
             </div>
           ) : recent.length === 0 ? (
             <div className="text-center py-12">
-              <Bell size={28} className="mx-auto mb-3" style={{ color: 'var(--text-3)', opacity: 0.5 }} />
-              <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'notifEmpty')}</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifEmptySub')}</p>
+              <Bell size={28} className="mx-auto mb-3" style={{ color: 'var(--q-text-tertiary)', opacity: 0.5 }} />
+              <p className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'notifEmpty')}</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifEmptySub')}</p>
             </div>
           ) : (
             recent.map((n) => (
@@ -102,11 +102,11 @@ export default function NotificationPanel({ onClose }) {
           )}
         </div>
 
-        <div className="px-4 py-3 border-t" style={{ borderColor: 'var(--border)' }}>
+        <div className="px-4 py-3 border-t" style={{ borderColor: 'var(--q-border)' }}>
           <button
             onClick={() => { onClose(); navigate('/notifications'); }}
             className="w-full text-center text-sm font-medium py-2 rounded-xl"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
           >
             {t(lang, 'seeAllNotifications')}
           </button>

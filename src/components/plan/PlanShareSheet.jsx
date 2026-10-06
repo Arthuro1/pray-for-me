@@ -13,7 +13,7 @@ import ConfirmDialog from '../shared/ConfirmDialog';
 import PlanInvitePanel from './PlanInvitePanel';
 import PlanShareImagePanel from './PlanShareImagePanel';
 
-const QUIET_BUTTON = { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' };
+const QUIET_BUTTON = { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' };
 
 // "Share this plan": the one sheet every plan surface opens — the catalogue
 // preview, a run in progress, a finished run. Two halves:
@@ -80,17 +80,17 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
           className="editorial-dialog w-full max-w-md flex flex-col max-h-[85vh]"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="p-5 pb-3 shrink-0 flex items-start gap-3" style={{ borderBottom: '0.5px solid var(--border)' }}>
+          <div className="p-5 pb-3 shrink-0 flex items-start gap-3" style={{ borderBottom: '0.5px solid var(--q-border)' }}>
             {view !== 'main' && (
               <button type="button" onClick={back} aria-label={t(lang, 'backBtn')} className="phase-icon-button shrink-0">
                 <ArrowLeft size={18} aria-hidden="true" />
               </button>
             )}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>
+              <h3 className="font-semibold text-base" style={{ color: 'var(--q-text)' }}>
                 {t(lang, view === 'invite' ? 'planShareInviteFriends' : 'planShareAction')}
               </h3>
-              <p className="text-sm mt-0.5 truncate" style={{ color: 'var(--text-3)' }}>{title}</p>
+              <p className="text-sm mt-0.5 truncate" style={{ color: 'var(--q-text-tertiary)' }}>{title}</p>
             </div>
             <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0">
               <X size={18} aria-hidden="true" />
@@ -107,9 +107,9 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
 
           {view === 'qr' && (
             <div className="px-5 py-5 overflow-y-auto">
-              <div className="flex flex-col items-center gap-2 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>
-                <QRCodeSVG value={link.url} size={200} bgColor="#ffffff" fgColor="#1a0a2e" level="M" aria-hidden="true" />
-                <p className="text-xs" style={{ color: '#475569' }}>{t(lang, 'planShareScan')}</p>
+              <div className="flex flex-col items-center gap-2 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--q-border)' }}>
+                <QRCodeSVG value={link.url} size={200} bgColor="#ffffff" fgColor="#29213F" level="M" aria-hidden="true" />
+                <p className="text-xs" style={{ color: '#5F6068' }}>{t(lang, 'planShareScan')}</p>
               </div>
             </div>
           )}
@@ -124,9 +124,9 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                   className="pressable flex min-h-12 w-full items-center gap-3 rounded-xl px-3 text-start text-sm font-medium"
                   style={QUIET_BUTTON}
                 >
-                  <HeartHandshake size={16} aria-hidden="true" style={{ color: 'var(--accent)' }} />
-                  <span className="flex-1 min-w-0" style={{ color: 'var(--text-1)' }}>{t(lang, 'planShareInviteFriends')}</span>
-                  <ChevronRight size={16} aria-hidden="true" style={{ color: 'var(--text-3)' }} />
+                  <HeartHandshake size={16} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
+                  <span className="flex-1 min-w-0" style={{ color: 'var(--q-text)' }}>{t(lang, 'planShareInviteFriends')}</span>
+                  <ChevronRight size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }} />
                 </button>
               </section>
 
@@ -134,19 +134,19 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                 <p className="section-label mb-2">{t(lang, 'planShareAnywhere')}</p>
 
                 {link.status === 'loading' && (
-                  <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} aria-hidden="true" /></div>
+                  <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" /></div>
                 )}
 
                 {link.status === 'stopped' && (
                   <div className="rounded-xl p-3" style={QUIET_BUTTON}>
-                    <p className="flex gap-2 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                    <p className="flex gap-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
                       <Link2Off size={14} aria-hidden="true" className="shrink-0 mt-0.5" /> {t(lang, 'planShareStopped')}
                     </p>
                     <button
                       type="button"
                       onClick={link.renew}
                       className="pressable mt-3 flex min-h-11 w-full items-center justify-center rounded-xl text-sm font-medium text-white"
-                      style={{ background: 'var(--accent)' }}
+                      style={{ background: 'var(--q-action-primary)' }}
                     >
                       {t(lang, 'planShareNewLink')}
                     </button>
@@ -156,17 +156,17 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                 {hasLink && (
                   <>
                     <div className="flex items-center gap-2 rounded-xl p-1.5 ps-3" style={QUIET_BUTTON}>
-                      <span className="flex-1 min-w-0 truncate text-xs font-mono" dir="ltr" style={{ color: 'var(--text-2)' }}>{link.url.replace(/^https?:\/\//, '')}</span>
+                      <span className="flex-1 min-w-0 truncate text-xs font-mono" dir="ltr" style={{ color: 'var(--q-text-secondary)' }}>{link.url.replace(/^https?:\/\//, '')}</span>
                       <button
                         type="button"
                         onClick={copyLink}
                         className="pressable flex min-h-10 shrink-0 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold"
-                        style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+                        style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
                       >
                         <Copy size={13} aria-hidden="true" /> {t(lang, 'planShareCopy')}
                       </button>
                     </div>
-                    <p className="mt-1.5 mb-3 text-[11px] leading-relaxed" style={{ color: 'var(--text-3)' }}>
+                    <p className="mt-1.5 mb-3 text-[11px] leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>
                       {t(lang, link.status === 'ready' ? 'planShareLinkNote' : 'planShareLinkNotePlain')}
                     </p>
 
@@ -175,7 +175,7 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                         type="button"
                         onClick={nativeShare}
                         className="pressable mb-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white"
-                        style={{ background: 'var(--accent)' }}
+                        style={{ background: 'var(--q-action-primary)' }}
                       >
                         <Share2 size={16} aria-hidden="true" /> {t(lang, 'planShareNative')}
                       </button>
@@ -204,7 +204,7 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                   the plain fallback link, which counts nothing. */}
               {(link.status === 'ready' || link.status === 'stopped') && (
                 <section className="space-y-2 pt-1" aria-live="polite">
-                  <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
                     {link.joinCount > 0 ? tp(lang, 'planShareJoined', link.joinCount) : t(lang, 'planShareJoinedNone')}
                     {link.friendNames.length > 0 && ` ${t(lang, 'planShareJoinedFriends', { names: link.friendNames.join(', ') })}`}
                   </p>
@@ -213,7 +213,7 @@ export default function PlanShareSheet({ plan, lang, userId, startDate = todayKe
                       type="button"
                       onClick={() => setConfirmStop(true)}
                       className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                      style={{ color: 'var(--text-3)' }}
+                      style={{ color: 'var(--q-text-tertiary)' }}
                     >
                       <Link2Off size={13} aria-hidden="true" /> {t(lang, 'planShareStop')}
                     </button>

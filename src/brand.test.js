@@ -57,8 +57,9 @@ describe('the public brand is Qetoret', () => {
 
 describe('the rise motion respects reduced motion', () => {
   it('turns the rise animations off when the reader prefers reduced motion', () => {
-    const css = read('src/index.css');
-    const block = css.slice(css.indexOf('@keyframes qetoret-rise'));
-    expect(block).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.rise-in,\s*\.rise-wisp--once path,\s*\.rise-wisp--breathe path\s*\{\s*animation: none;/);
+    const css = read('src/styles/components.css');
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.rise-in,\s*\.rise-mark--rise path,\s*\.rise-mark--breathe path\s*\{\s*animation: none;\s*opacity: 1;/);
+    // The motion tokens themselves collapse to zero as well.
+    expect(read('src/styles/tokens.css')).toMatch(/prefers-reduced-motion: reduce[\s\S]*--q-rise: 0px;/);
   });
 });

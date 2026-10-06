@@ -111,8 +111,8 @@ describe('GuestPrayerFlow', () => {
     expect(screen.getByRole('dialog', { name: t(lang, 'firstPrayerQuestion') })).toBeTruthy();
     expect(container.querySelector('.constellation-onboarding')).toBeTruthy();
     expect(container.querySelector('.constellation-guest-flow')).toBeTruthy();
-    expect(container.querySelector('.constellation-onboarding__sky-image--light')).toBeTruthy();
-    expect(container.querySelector('.constellation-onboarding__sky-image--dark')).toBeTruthy();
+    // Qetoret has no celestial art: no sky, no stars behind the prayer.
+    expect(container.querySelector('[class*="sky"]')).toBeNull();
     expect(screen.getByText(t(lang, 'firstPrayerQuestion'))).toBeTruthy();
     // Device-local, NOT a claim that account E2EE already happened.
     expect(screen.getByText(t(lang, 'firstPrayerDeviceNote'))).toBeTruthy();

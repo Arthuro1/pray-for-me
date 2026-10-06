@@ -145,7 +145,7 @@ export default function PlanDayDeck({
         aria-label={target ? `${label} · ${parseKey(target).toLocaleDateString(lang, { day: 'numeric', month: 'long' })}` : label}
         title={label}
         className="pressable flex h-11 w-11 items-center justify-center rounded-full disabled:opacity-35"
-        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: target ? 'var(--accent)' : 'var(--text-3)' }}
+        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: target ? 'var(--q-royal-text)' : 'var(--q-text-tertiary)' }}
       >
         <Icon size={18} aria-hidden="true" />
       </button>
@@ -157,7 +157,7 @@ export default function PlanDayDeck({
     // whoever already has focus inside the card, and swallows nothing else.
     <section
       className="rounded-2xl p-4 space-y-3"
-      style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+      style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
       onKeyDown={onKeyDown}
     >
       <div className="flex items-center justify-between gap-2">
@@ -165,7 +165,7 @@ export default function PlanDayDeck({
             which day it landed on instead of only the content changing
             underneath it. The date rides along for listeners alone: on screen it
             belongs with the "not today" note below, next to the way back. */}
-        <p role="status" aria-live="polite" className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
+        <p role="status" aria-live="polite" className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
           {dayLabel}
           {dateLabel && <span className="sr-only">{` · ${dateLabel}`}</span>}
         </p>
@@ -182,7 +182,7 @@ export default function PlanDayDeck({
           its days, one that has not begun, one that is paused. */}
       {note && (
         <div className="flex flex-wrap items-center justify-between gap-x-3">
-          <p className="text-[11px] first-letter:uppercase" style={{ color: 'var(--text-3)' }}>
+          <p className="text-[11px] first-letter:uppercase" style={{ color: 'var(--q-text-tertiary)' }}>
             {dateLabel ? `${note} · ${dateLabel}` : note}
           </p>
           {onShowToday && (
@@ -190,7 +190,7 @@ export default function PlanDayDeck({
               type="button"
               onClick={onShowToday}
               className="pressable flex min-h-11 items-center text-[11px] font-medium"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--q-royal-text)' }}
             >
               {homeLabel || t(lang, 'planBackToToday')}
             </button>

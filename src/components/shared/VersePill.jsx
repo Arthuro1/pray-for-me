@@ -12,8 +12,8 @@ import VerseAccordion from '../VerseAccordion';
 export default function VersePill({ reference, lang, tone = 'accent' }) {
   const label = localizeRef(reference, lang);
   const panelStyle = tone === 'quiet'
-    ? { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }
-    : { background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' };
+    ? { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }
+    : { background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' };
 
   return (
     <VerseAccordion reference={label} lang={lang} panelStyle={panelStyle}>
@@ -24,8 +24,8 @@ export default function VersePill({ reference, lang, tone = 'accent' }) {
           aria-expanded={expanded}
           className="inline-flex min-h-11 items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium"
           style={tone === 'quiet'
-            ? { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }
-            : { background: 'var(--accent-soft)', color: 'var(--accent)' }}
+            ? { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }
+            : { background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
         >
           <BookOpen size={11} aria-hidden="true" /> {label}
         </button>

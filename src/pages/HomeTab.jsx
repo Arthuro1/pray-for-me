@@ -30,7 +30,7 @@ import { fetchScriptureText } from '../lib/verseText';
 import VerseVersion from '../components/VerseVersion';
 import VerseShareModal from '../components/VerseShareModal';
 import EmptyState from '../components/shared/EmptyState';
-import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, QuietButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
+import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, SecondaryButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
 import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
@@ -204,8 +204,8 @@ export default function HomeTab({ onAdd, onEdit }) {
             there is something to bring — an empty day has its own invitation. */}
         {!dayEmpty && (!loading || prayers.length > 0) && (
           <div className="mb-4">
-            <SectionLabel className="mb-1" style={{ color: 'var(--gold)' }}>{t(lang, 'altarTodayTitle')}</SectionLabel>
-            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'altarTodaySub')}</p>
+            <SectionLabel className="mb-1" style={{ color: 'var(--q-gold-text)' }}>{t(lang, 'altarTodayTitle')}</SectionLabel>
+            <p className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'altarTodaySub')}</p>
           </div>
         )}
 
@@ -249,25 +249,25 @@ export default function HomeTab({ onAdd, onEdit }) {
             <StatusPill tone="answered" icon={Check} className="mb-3" role="status">
               {t(lang, 'todayCompleteTitle')}
             </StatusPill>
-            <p className="editorial-heading mb-4 text-2xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</p>
+            <p className="editorial-heading mb-4 text-2xl" style={{ color: 'var(--q-text)' }}>{t(lang, 'sessionDoneTitle')}</p>
             <div className="flex flex-wrap items-center justify-center gap-2">
-              <QuietButton onClick={() => setRemaining(true)}>
+              <SecondaryButton onClick={() => setRemaining(true)}>
                 {t(lang, 'remainWithGod')}
-              </QuietButton>
+              </SecondaryButton>
               {todayEntries.length > 0 && (
-                <QuietButton
+                <SecondaryButton
                   onClick={() => openSession(todayEntries.map((e) => e.prayer))}
                   icon={HandHeart}
                 >
                   {t(lang, 'prayAgain')}
-                </QuietButton>
+                </SecondaryButton>
               )}
             </div>
           </PrayerSurface>
         )}
 
         {reminder && remainingPrayers.length === 0 && (
-          <p className="text-xs text-center mb-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--text-3)' }}>
+          <p className="text-xs text-center mb-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--q-text-tertiary)' }}>
             <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
           </p>
         )}
@@ -320,7 +320,7 @@ export default function HomeTab({ onAdd, onEdit }) {
               return (
                 <div key={slot}>
                   {useSlots && (
-                    <p className="mt-5 flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--text-3)' }}>
+                    <p className="mt-5 flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--q-text-tertiary)' }}>
                       <SlotIcon size={12} /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
                     </p>
                   )}
@@ -358,11 +358,11 @@ export default function HomeTab({ onAdd, onEdit }) {
                       onClick={() => navigate('/prayers', { state: { circle } })}
                       aria-label={`${name} · ${tp(lang, 'circlePrayerCount', inCircle.length)}`}
                       className="pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium"
-                      style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
+                      style={{ background: 'var(--q-surface)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
                     >
-                      <Icon size={14} aria-hidden="true" style={{ color: 'var(--accent)' }} />
+                      <Icon size={14} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
                       {name}
-                      <span aria-hidden="true" style={{ color: 'var(--text-3)' }}>{inCircle.length}</span>
+                      <span aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }}>{inCircle.length}</span>
                     </button>
                   </li>
                 );
@@ -374,7 +374,7 @@ export default function HomeTab({ onAdd, onEdit }) {
         {/* Prayed today — completed prayers fold into one quiet, collapsed row
             so the main list only ever shows what remains. */}
         {completedToday.length > 0 && (
-          <div className="mb-5 border-block" style={{ borderColor: 'var(--border)' }}>
+          <div className="mb-5 border-block" style={{ borderColor: 'var(--q-border)' }}>
             <Disclosure
               id="today-prayed"
               label={t(lang, 'prayedTodayLabel')}
@@ -389,10 +389,10 @@ export default function HomeTab({ onAdd, onEdit }) {
                     key={prayer.id}
                     onClick={() => navigate(`/prayers/${prayer.id}`)}
                     className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-left"
-                    style={{ background: 'var(--input-bg)' }}
+                    style={{ background: 'var(--q-field)' }}
                   >
-                    <Check size={13} className="shrink-0" style={{ color: 'var(--success)' }} />
-                    <span className="flex-1 min-w-0 text-sm truncate" style={{ color: 'var(--text-2)' }}>{planName(prayer)}</span>
+                    <Check size={13} className="shrink-0" style={{ color: 'var(--q-success)' }} />
+                    <span className="flex-1 min-w-0 text-sm truncate" style={{ color: 'var(--q-text-secondary)' }}>{planName(prayer)}</span>
                   </button>
                 ))}
               </div>
@@ -402,16 +402,16 @@ export default function HomeTab({ onAdd, onEdit }) {
 
         {/* Add a prayer — always one tap from the list itself */}
         {!dayEmpty && (
-          <QuietButton onClick={onAdd} icon={Plus} className="mb-6 w-full border-dashed">
+          <SecondaryButton onClick={onAdd} icon={Plus} className="mb-6 w-full border-dashed">
             {t(lang, 'emptyAddManual')}
-          </QuietButton>
+          </SecondaryButton>
         )}
 
         {/* Return to prayer — prayers missed the last few days, AFTER today's
             list and collapsed by default. Grace, not guilt: never an "overdue"
             count up front; one tap marks them prayed, or they quietly age out. */}
         {catchUp.length > 0 && (
-          <div className="mb-6 border-block" style={{ borderColor: 'var(--border)' }}>
+          <div className="mb-6 border-block" style={{ borderColor: 'var(--q-border)' }}>
             <Disclosure
               id="today-catch-up"
               label={`🌿 ${t(lang, 'catchUpTitle')}`}
@@ -421,20 +421,20 @@ export default function HomeTab({ onAdd, onEdit }) {
               className="py-1"
             >
               <div className="px-4 pb-4">
-                <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'catchUpSub')}</p>
+                <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'catchUpSub')}</p>
                 {/* Pray through all the missed requests in one walk, the same
                     immersive session as Today — each is recorded on the day it
                     was missed. The per-item checkmarks below stay for catching
                     up one at a time. */}
-                <QuietButton onClick={startCatchUpSession} icon={HandHeart} className="mb-3 w-full">
+                <SecondaryButton onClick={startCatchUpSession} icon={HandHeart} className="mb-3 w-full">
                   {t(lang, 'prayNow')}
-                </QuietButton>
+                </SecondaryButton>
                 <div className="space-y-1.5">
                   {catchUp.map(({ prayer, day }) => (
-                    <div key={prayer.id} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: 'var(--input-bg)' }}>
+                    <div key={prayer.id} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: 'var(--q-field)' }}>
                       <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-left">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{planName(prayer)}</p>
-                        <p className="text-[10px]" style={{ color: 'var(--text-3)' }}>
+                        <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{planName(prayer)}</p>
+                        <p className="text-[10px]" style={{ color: 'var(--q-text-tertiary)' }}>
                           {t(lang, 'missedOn', { date: parseKey(day).toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' }) })}
                         </p>
                       </button>
@@ -443,7 +443,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                         title={t(lang, 'markPrayed')}
                         aria-label={t(lang, 'markPrayed')}
                         className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-                        style={{ background: 'var(--surface)', border: '1.5px solid var(--input-border)', color: 'var(--text-3)' }}
+                        style={{ background: 'var(--q-surface)', border: '1.5px solid var(--q-field-border)', color: 'var(--q-text-tertiary)' }}
                       >
                         <Check size={13} />
                       </button>
@@ -458,7 +458,7 @@ export default function HomeTab({ onAdd, onEdit }) {
         {/* Verse of the day — a small closing card, not the headline */}
         <section className="scripture-block mb-6">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, 'verseOfDay')}
             </p>
             {verse && (
@@ -467,7 +467,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                 aria-label={t(lang, 'shareVerse')}
                 title={t(lang, 'shareVerse')}
                 className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
               >
                 <Share2 size={13} />
               </button>
@@ -476,16 +476,16 @@ export default function HomeTab({ onAdd, onEdit }) {
           {verse ? (
             <div>
               {verse.text
-                ? <p className="scripture-text text-lg leading-relaxed" style={{ color: 'var(--text-1)' }}>“{verse.text}”</p>
+                ? <p className="scripture-text text-lg leading-relaxed" style={{ color: 'var(--q-text)' }}>“{verse.text}”</p>
                 : verseResolving
                   ? (
-                    <div className="flex items-center gap-2" style={{ color: 'var(--text-3)' }}>
+                    <div className="flex items-center gap-2" style={{ color: 'var(--q-text-tertiary)' }}>
                       <Loader2 size={13} className="animate-spin" />
                       <span className="text-xs">{t(lang, 'loadingVerse')}</span>
                     </div>
                   )
                   : null}
-              <p className="text-xs text-right mt-2" style={{ color: 'var(--text-3)' }}>
+              <p className="text-xs text-right mt-2" style={{ color: 'var(--q-text-tertiary)' }}>
                 — {verse.ref}
                 {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
               </p>
@@ -494,13 +494,13 @@ export default function HomeTab({ onAdd, onEdit }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-end gap-1.5 mt-1.5 text-xs"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 <ExternalLink size={11} /> {t(lang, 'readWholeChapter')}
               </a>
             </div>
           ) : (
-            <div className="flex items-center gap-2" style={{ color: 'var(--text-3)' }}>
+            <div className="flex items-center gap-2" style={{ color: 'var(--q-text-tertiary)' }}>
               <Loader2 size={14} className="animate-spin" />
               <span className="text-xs">...</span>
             </div>

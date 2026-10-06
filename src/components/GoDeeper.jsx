@@ -60,16 +60,16 @@ function ResourceCard({ resource, lang, lowData = false }) {
     <>
       <ResourceThumbnail thumbnail={cover} size="shelf" />
       <span className="min-w-0 flex-1">
-        <span className="block break-words text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{title}</span>
-        {author && <span className="mt-0.5 block break-words text-xs" style={{ color: 'var(--text-2)' }}>{author}</span>}
+        <span className="block break-words text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{title}</span>
+        {author && <span className="mt-0.5 block break-words text-xs" style={{ color: 'var(--q-text-secondary)' }}>{author}</span>}
         {/* Type AND language, always — the language of a recommendation is
             never left for the reader to discover after tapping. */}
-        <span className="mt-1 block text-xs" style={{ color: 'var(--text-3)' }}>
+        <span className="mt-1 block text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
           {typeLabel} · {languageLabel(resource.lang)}
         </span>
-        {why && <span className="mt-2 block text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{why}</span>}
+        {why && <span className="mt-2 block text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{why}</span>}
         {url && (
-          <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--accent)' }}>
+          <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: 'var(--q-royal-text)' }}>
             {t(lang, 'resourceLearnMore')}
             <ExternalLink size={11} aria-hidden="true" />
           </span>
@@ -77,7 +77,7 @@ function ResourceCard({ resource, lang, lowData = false }) {
       </span>
     </>
   );
-  const surface = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' };
+  const surface = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' };
 
   return (
     <li>
@@ -137,7 +137,7 @@ function ShelfLanguages({ lang, enabled, offers, onToggle }) {
 
   return (
     <div className="mb-3">
-      <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+      <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
         {t(lang, 'resourceLanguagesTitle')}
       </h4>
       <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
@@ -160,7 +160,7 @@ function ShelfLanguages({ lang, enabled, offers, onToggle }) {
             type="button"
             onClick={() => setShowAll(true)}
             className="pressable inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-medium"
-            style={{ color: 'var(--accent)', border: '0.5px dashed var(--input-border)' }}
+            style={{ color: 'var(--q-royal-text)', border: '0.5px dashed var(--q-field-border)' }}
           >
             <Plus size={12} aria-hidden="true" />
             {t(lang, 'resourceLanguagesMore')}
@@ -193,7 +193,7 @@ export default function GoDeeper({ resources, lang, id = 'plan-go-deeper', langu
   return (
     <section
       className={framed ? 'rounded-xl px-3' : undefined}
-      style={framed ? { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' } : undefined}
+      style={framed ? { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' } : undefined}
     >
       <button
         type="button"
@@ -203,12 +203,12 @@ export default function GoDeeper({ resources, lang, id = 'plan-go-deeper', langu
         className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
       >
         <span className="flex min-w-0 items-center gap-2">
-          <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>{t(lang, 'goDeeper')}</span>
+          <span className="text-sm font-semibold" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'goDeeper')}</span>
           {resources.length > 0 && (
             <span
               aria-hidden="true"
               className="inline-flex min-w-6 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
             >
               {resources.length}
             </span>
@@ -217,12 +217,12 @@ export default function GoDeeper({ resources, lang, id = 'plan-go-deeper', langu
         <ChevronDown
           size={16}
           aria-hidden="true"
-          style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }}
+          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }}
         />
       </button>
       {open && (
         <div id={id} className="pb-3">
-          <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'goDeeperNote')}</p>
+          <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'goDeeperNote')}</p>
           <ShelfLanguages lang={lang} enabled={enabled} offers={languageOffers} onToggle={toggleLanguage} />
           <ul className="grid gap-2 sm:grid-cols-2">
             {resources.map((r) => <ResourceCard key={r.id} resource={r} lang={lang} lowData={lowData} />)}

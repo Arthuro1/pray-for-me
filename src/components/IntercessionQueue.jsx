@@ -10,7 +10,7 @@ import { t } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
 import { intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, remainingInQueue } from '../lib/intercession';
 
-const CARD_STYLE = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
+const CARD_STYLE = { background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' };
 
 // The intercession queue, surfaced inside Community: one clear "Pray shared
 // requests" action over the requests the user explicitly took on (personal
@@ -91,11 +91,11 @@ export default function IntercessionQueue({ lang }) {
           aria-expanded={false}
           aria-controls="intercession-done"
           className="w-full min-h-[44px] flex items-center gap-2 text-sm"
-          style={{ color: 'var(--success)' }}
+          style={{ color: 'var(--q-success)' }}
         >
           <Check size={15} aria-hidden="true" />
           <span className="flex-1 text-start" role="status">{t(lang, 'intercessionDone')}</span>
-          <ChevronDown size={14} aria-hidden="true" style={{ color: 'var(--text-3)' }} />
+          <ChevronDown size={14} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }} />
         </button>
       </div>
     );
@@ -106,10 +106,10 @@ export default function IntercessionQueue({ lang }) {
       {sessionOverlay}
 
       <div className="flex items-center gap-2 mb-1">
-        <HandHeart size={16} style={{ color: 'var(--accent)' }} aria-hidden="true" />
-        <h2 className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'intercessionTitle')}</h2>
+        <HandHeart size={16} style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
+        <h2 className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'intercessionTitle')}</h2>
       </div>
-      <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'intercessionDueSub')}</p>
+      <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'intercessionDueSub')}</p>
 
       {/* Source filters exist only when there is more than one source to
           filter between — no permanent filter bar for a single-source queue.
@@ -123,8 +123,8 @@ export default function IntercessionQueue({ lang }) {
               aria-pressed={filter === f.id}
               className="min-h-[44px] text-xs px-3 py-1.5 rounded-full font-medium"
               style={filter === f.id
-                ? { background: 'var(--accent)', color: '#fff' }
-                : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }
+                : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
             >
               {f.label}
             </button>
@@ -134,25 +134,25 @@ export default function IntercessionQueue({ lang }) {
 
       {remaining.length > 0 ? (
         <>
-          <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>
+          <p className="text-xs mb-2" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'intercessionRemaining', { n: remaining.length })}
           </p>
           <button
             onClick={() => setSession(remaining)}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white"
-            style={{ background: 'var(--accent)' }}
+            style={{ background: 'var(--q-action-primary)' }}
           >
             <HandHeart size={16} /> {t(lang, 'praySharedBtn')}
           </button>
         </>
       ) : due.length === 0 ? (
         // Nothing due today at all — schedules carry the load on other days.
-        <p className="text-sm" style={{ color: 'var(--text-3)' }} role="status">
+        <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }} role="status">
           {t(lang, 'intercessionNoneDue')}
         </p>
       ) : (
         <div className="flex items-center gap-3">
-          <p className="flex-1 text-sm flex items-center gap-2" style={{ color: 'var(--success)' }} role="status">
+          <p className="flex-1 text-sm flex items-center gap-2" style={{ color: 'var(--q-success)' }} role="status">
             <Check size={15} aria-hidden="true" /> {t(lang, 'intercessionDone')}
           </p>
           {/* Quiet Pray again over today's due queue — completions are
@@ -161,7 +161,7 @@ export default function IntercessionQueue({ lang }) {
             <button
               onClick={() => setSession(filterQueue(due, filter))}
               className="min-h-[44px] text-xs font-medium px-3 rounded-xl"
-              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
             >
               {t(lang, 'prayAgainBtn')}
             </button>
@@ -178,7 +178,7 @@ export default function IntercessionQueue({ lang }) {
             aria-expanded={allOpen}
             aria-controls="intercession-all"
             className="w-full min-h-[44px] flex items-center justify-between gap-2 mt-2 text-xs font-medium"
-            style={{ color: 'var(--text-2)' }}
+            style={{ color: 'var(--q-text-secondary)' }}
           >
             <span>{t(lang, 'intercessionAllCarried', { n: carried.length })}</span>
             <ChevronDown size={14} aria-hidden="true" style={{ transform: allOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
@@ -186,13 +186,13 @@ export default function IntercessionQueue({ lang }) {
           {allOpen && (
             <div id="intercession-all" className="mt-1 space-y-1">
               {carried.map((p) => (
-                <div key={p.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs" style={{ background: 'var(--input-bg)' }}>
+                <div key={p.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs" style={{ background: 'var(--q-field)' }}>
                   {(completions[p.id] || []).includes(dayKey)
-                    ? <Check size={12} className="shrink-0" aria-hidden="true" style={{ color: 'var(--success)' }} />
-                    : <HandHeart size={12} className="shrink-0" aria-hidden="true" style={{ color: 'var(--accent)' }} />}
-                  <span className="flex-1 truncate" style={{ color: 'var(--text-1)' }}>{tr(p.title, lang)}</span>
+                    ? <Check size={12} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-success)' }} />
+                    : <HandHeart size={12} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />}
+                  <span className="flex-1 truncate" style={{ color: 'var(--q-text)' }}>{tr(p.title, lang)}</span>
                   {p.origin_group_name && (
-                    <span className="shrink-0 truncate max-w-[35%]" style={{ color: 'var(--text-3)' }}>{p.origin_group_name}</span>
+                    <span className="shrink-0 truncate max-w-[35%]" style={{ color: 'var(--q-text-tertiary)' }}>{p.origin_group_name}</span>
                   )}
                 </div>
               ))}
@@ -200,7 +200,7 @@ export default function IntercessionQueue({ lang }) {
                 <button
                   onClick={() => setSession(allRemaining)}
                   className="w-full min-h-[44px] text-xs font-medium rounded-xl mt-1"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   {t(lang, 'prayAllCarriedBtn', { n: allRemaining.length })}
                 </button>

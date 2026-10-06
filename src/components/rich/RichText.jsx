@@ -50,7 +50,7 @@ function linkify(text, keyBase) {
         target="_blank"
         rel="noopener noreferrer"
         className="underline break-all"
-        style={{ color: 'var(--accent)' }}
+        style={{ color: 'var(--q-royal-text)' }}
       >
         {label}
       </a>

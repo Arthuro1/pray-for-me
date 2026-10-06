@@ -44,7 +44,7 @@ export default function DeleteButton({ onDelete, lang, label, size = 13, classNa
         // Revealed on hover, but also on keyboard focus — otherwise a keyboard
         // user tabs onto a control they cannot see.
         className={`shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity ${className}`}
-        style={{ color: 'var(--text-3)', ...style }}
+        style={{ color: 'var(--q-text-tertiary)', ...style }}
       >
         <Trash2 size={size} aria-hidden="true" />
       </button>

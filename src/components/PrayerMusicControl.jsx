@@ -78,7 +78,7 @@ export default function PrayerMusicControl({ lang, active = true }) {
       {open && (
         <div
           className="fixed left-5 right-5 top-[calc(4.25rem+env(safe-area-inset-top))] z-30 w-auto rounded-xl p-1.5 shadow-2xl sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:w-[min(26rem,calc(100vw-2.5rem))]"
-          style={{ background: 'var(--plum-deep)', border: '1px solid rgba(255,255,255,.14)' }}
+          style={{ background: 'var(--q-surface-inverse)', border: '1px solid rgba(255,255,255,.14)' }}
           role="radiogroup"
           aria-label={t(lang, 'prayerMusic')}
         >

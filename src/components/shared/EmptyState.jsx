@@ -6,13 +6,13 @@ export default function EmptyState({ emoji = '🙏', title, subtitle, actionLabe
   return (
     <div className={`text-center ${compact ? 'py-7 px-4' : 'py-14 px-6'}`}>
       <p aria-hidden="true" className={compact ? 'text-2xl mb-3' : 'text-4xl mb-4'}>{emoji}</p>
-      <p className="editorial-heading text-xl mb-2" style={{ color: 'var(--text-1)' }}>{title}</p>
-      {subtitle && <p className={`text-sm ${compact ? 'mb-4' : 'mb-6'} max-w-sm mx-auto leading-relaxed`} style={{ color: 'var(--text-2)' }}>{subtitle}</p>}
+      <p className="editorial-heading text-xl mb-2" style={{ color: 'var(--q-text)' }}>{title}</p>
+      {subtitle && <p className={`text-sm ${compact ? 'mb-4' : 'mb-6'} max-w-sm mx-auto leading-relaxed`} style={{ color: 'var(--q-text-secondary)' }}>{subtitle}</p>}
       {actionLabel && onAction && (
         <PrimaryButton onClick={onAction} icon={Icon}>{actionLabel}</PrimaryButton>
       )}
       {secondaryLabel && onSecondary && (
-        <button onClick={onSecondary} className="pressable mt-3 min-h-11 px-3 text-sm font-semibold" style={{ color: 'var(--accent)' }}>
+        <button onClick={onSecondary} className="pressable mt-3 min-h-11 px-3 text-sm font-semibold" style={{ color: 'var(--q-royal-text)' }}>
           {secondaryLabel}
         </button>
       )}

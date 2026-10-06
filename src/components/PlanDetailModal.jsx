@@ -44,17 +44,17 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 pb-4 flex items-start gap-3 shrink-0" style={{ borderBottom: '0.5px solid var(--border)' }}>
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
+        <div className="p-5 pb-4 flex items-start gap-3 shrink-0" style={{ borderBottom: '0.5px solid var(--q-border)' }}>
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--q-selected)' }}>
             {plan.emoji}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</h3>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, plan.titleKey)}</h3>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, plan.subKey)} · {t(lang, 'planDays', { n: plan.count })}
             </p>
             {!isPlanReviewed(source) && (
-              <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--gold)' }}>{t(lang, 'planCoupleReviewPending')}</p>
+              <p className="mt-1 text-[11px] font-medium" style={{ color: 'var(--q-gold-text)' }}>{t(lang, 'planCoupleReviewPending')}</p>
             )}
           </div>
           {onShare && isPlanShareable(source) && (
@@ -69,13 +69,13 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
           {/* Opened in review mode (or a dev build): say plainly that what
               follows is a draft, not only that a review is outstanding. */}
           {!isPlanReviewed(source) && (
-            <p className="rounded-xl p-3 text-xs leading-relaxed" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}>
+            <p className="rounded-xl p-3 text-xs leading-relaxed" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}>
               {t(lang, 'planCoupleReviewHint')}
             </p>
           )}
           <PlanOverview plan={plan} lang={lang} />
         </div>) : (
-          <div className="min-h-0 flex-1 overflow-y-auto p-5 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+          <div className="min-h-0 flex-1 overflow-y-auto p-5 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
             {t(lang, 'planCoupleReviewHint')}
           </div>
         )}
@@ -84,21 +84,21 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
         <div
           className="shrink-0 p-5 pt-4 space-y-3"
           style={{
-            background: 'var(--surface)',
-            borderTop: '0.5px solid var(--border)',
+            background: 'var(--q-surface)',
+            borderTop: '0.5px solid var(--q-border)',
             paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
           }}
         >
           {!running && usable && showStartDate && (
             <label className="flex items-center justify-between gap-3">
-              <span className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>{t(lang, 'planStartDate')}</span>
+              <span className="text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planStartDate')}</span>
               <input
                 type="date"
                 value={startDate}
                 min={todayKey()}
                 onChange={(e) => setStartDate(e.target.value)}
                 className="text-sm rounded-lg px-2.5 py-1.5"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)', colorScheme: 'light dark' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)', colorScheme: 'light dark' }}
               />
             </label>
           )}
@@ -108,8 +108,8 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
             disabled={running || !usable}
             className="w-full text-sm font-semibold px-3 py-3 rounded-xl disabled:opacity-60"
             style={running
-              ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
-              : { background: 'var(--accent)', color: '#fff' }}
+              ? { background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }
+              : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
           >
             {/* A short label, not the explanation — that already sits in the
                 body of this modal, right above. */}
@@ -117,13 +117,13 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
               ? <span className="inline-flex items-center gap-1.5"><Check size={15} /> {runningLabel || t(lang, 'planRunning')}</span>
               : (ctaLabel || t(lang, showStartDate ? 'journeyStart' : 'journeyStartToday'))}
           </button>
-          {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-3)' }}>{footnote}</p>}
+          {footnote && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{footnote}</p>}
           {!running && usable && !ctaLabel && (
             <button
               type="button"
               onClick={() => setShowStartDate((open) => !open)}
               className="w-full min-h-11 text-sm font-medium"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--q-royal-text)' }}
             >
               {t(lang, showStartDate ? 'startTodayInstead' : 'startAnotherDay')}
             </button>

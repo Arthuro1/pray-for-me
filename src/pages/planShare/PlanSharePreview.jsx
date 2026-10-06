@@ -17,12 +17,12 @@ export function PlanSharePreview({ plan, lang, firstName }) {
         {firstName ? t(lang, 'planShareInvitedBy', { name: firstName }) : t(lang, 'planShareInvited')}
       </p>
       <div className="flex items-start gap-3">
-        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }} aria-hidden="true">
+        <span className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }} aria-hidden="true">
           {localized.emoji}
         </span>
         <div className="min-w-0">
-          <h1 className="editorial-heading text-3xl leading-tight" style={{ color: 'var(--text-1)' }}>{t(lang, localized.titleKey)}</h1>
-          <p className="mt-1 text-sm" style={{ color: 'var(--text-3)' }}>
+          <h1 className="editorial-heading text-3xl leading-tight" style={{ color: 'var(--q-text)' }}>{t(lang, localized.titleKey)}</h1>
+          <p className="mt-1 text-sm" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, localized.subKey)} · {t(lang, 'planDays', { n: localized.count })}
           </p>
         </div>
@@ -45,14 +45,14 @@ export function PlanJoinControls({ lang, onJoin, busy = false }) {
     <div className="space-y-3">
       {showStartDate && (
         <label className="flex items-center justify-between gap-3">
-          <span className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>{t(lang, 'planStartDate')}</span>
+          <span className="text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planStartDate')}</span>
           <input
             type="date"
             value={startDate}
             min={todayKey()}
             onChange={(e) => setStartDate(e.target.value)}
             className="text-sm rounded-lg px-2.5 py-1.5"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)', colorScheme: 'light dark' }}
+            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)', colorScheme: 'light dark' }}
           />
         </label>
       )}
@@ -69,7 +69,7 @@ export function PlanJoinControls({ lang, onJoin, busy = false }) {
         type="button"
         onClick={() => setShowStartDate((open) => !open)}
         className="w-full min-h-11 text-sm font-medium"
-        style={{ color: 'var(--accent)' }}
+        style={{ color: 'var(--q-royal-text)' }}
       >
         {t(lang, showStartDate ? 'startTodayInstead' : 'startAnotherDay')}
       </button>

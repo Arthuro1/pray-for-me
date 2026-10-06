@@ -9,6 +9,18 @@ import { AVATAR_SCOPES, removeAllAvatarObjects } from '../lib/avatarPhotos';
 import { clearServiceWorkerUserCaches } from '../lib/serviceWorkerSecurity';
 import { clearUserKeyCache } from '../lib/crypto/userKeys';
 import { clearGroupKeyCache } from '../lib/crypto/groupKeys';
+import { clearAllAiResultCaches } from '../lib/aiResultCache';
+import { resetAiRequestState } from '../lib/aiCore';
+import { clearTranslationCache } from './translationStore';
+
+// Clear all in-memory AI state (result caches, translation cache, in-flight
+// request/cooldown markers) so nothing decrypted lingers across an account
+// boundary. Called on sign-out and account deletion.
+function clearAiEphemeralState() {
+  clearAllAiResultCaches();
+  clearTranslationCache();
+  resetAiRequestState();
+}
 
 function clearSessionCryptoCaches() {
   clearGroupKeyCache();
@@ -154,6 +166,7 @@ const useAuthStore = create((set, get) => ({
       forgetAccountKey(user.id),
     ]);
     try { await supabase.auth.signOut({ scope: 'local' }); } catch { /* local state below is authoritative */ }
+    clearAiEphemeralState();
     clearSessionCryptoCaches();
     setAuthSessionHint(false);
     setIdentityUser(null);

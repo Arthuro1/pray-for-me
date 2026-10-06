@@ -38,7 +38,7 @@ export default function WordingReviewModal({ lang, onClose }) {
         {!allowed ? <p role="alert">{t(lang, 'wordingRestricted')}</p> : <>
           <label className="block">{t(lang, 'wordingStatus')}<select className="wording-control" disabled={busy} value={status} onChange={(e) => { setStatus(e.target.value); setPage(0); }}>{WORDING_STATUSES.map((s) => <option key={s} value={s}>{t(lang, `wordingStatus_${s}`)}</option>)}</select></label>
           {loading ? <p role="status">{t(lang, 'wordingLoading')}</p> : result.rows.length === 0 && !error ? <p>{t(lang, 'wordingEmpty')}</p> : null}
-          {result.rows.map((row) => <article key={row.id} className="rounded-xl border p-4 space-y-2 break-words" style={{ borderColor: 'var(--border)' }}>
+          {result.rows.map((row) => <article key={row.id} className="rounded-xl border p-4 space-y-2 break-words" style={{ borderColor: 'var(--q-border)' }}>
             <p className="text-xs">{row.locale} · {row.translation_key} · {new Date(row.created_at).toLocaleDateString(lang)}</p>
             <p className="text-sm">{t(lang, `wordingIssue_${row.issue_type}`)}</p>
             <blockquote dir={dirFor(row.locale)} className="whitespace-pre-wrap">{row.current_string}</blockquote>

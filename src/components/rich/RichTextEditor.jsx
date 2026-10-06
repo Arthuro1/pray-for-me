@@ -75,7 +75,7 @@ function SelectionToolbar({ pos, lang, onFormat, active = {} }) {
         aria-pressed={typeof active[cmd] === 'boolean' ? active[cmd] : undefined}
         title={label}
         className="w-9 h-9 flex items-center justify-center rounded-lg"
-        style={{ color: 'var(--text-1)' }}
+        style={{ color: 'var(--q-text)' }}
       >
         <Icon size={15} aria-hidden="true" />
       </button>
@@ -91,8 +91,8 @@ function SelectionToolbar({ pos, lang, onFormat, active = {} }) {
         left: pos.left,
         transform: pos.below ? 'translate(-50%, 0)' : 'translate(-50%, -100%)',
         zIndex: 61,
-        background: 'var(--surface)',
-        border: '0.5px solid var(--border)',
+        background: 'var(--q-surface)',
+        border: '0.5px solid var(--q-border)',
       }}
     >
       {btn(Bold, t(lang, 'formatBold'), 'bold')}
@@ -213,7 +213,7 @@ export default function RichTextEditor({
           <div
             aria-hidden="true"
             className="absolute inset-0 pointer-events-none overflow-hidden text-ellipsis whitespace-nowrap text-sm px-3.5 py-2.5 select-none"
-            style={{ color: 'var(--text-3)' }}
+            style={{ color: 'var(--q-text-tertiary)' }}
           >
             {placeholder}
           </div>
@@ -233,7 +233,7 @@ export default function RichTextEditor({
           // Browsers emit real <ul>/<ol> elements. Tailwind's preflight resets
           // their markers, so restore them while typing to match RichText.
           className={`w-full text-sm bg-transparent px-3.5 py-2.5 focus:outline-none overflow-y-auto whitespace-pre-wrap break-words [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-5 [&_ol]:ps-5 [&_ul]:my-0.5 [&_ol]:my-0.5 ${className}`}
-          style={{ color: 'var(--text-1)', minHeight, maxHeight }}
+          style={{ color: 'var(--q-text)', minHeight, maxHeight }}
         />
       </div>
       {showToolbar && (

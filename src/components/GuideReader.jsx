@@ -41,7 +41,7 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
   const back = () => { setWhyOpen(false); setIndex((i) => i - 1); };
 
   const overlay = (children) => (
-    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--q-canvas)' }}>
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={pick(guide.title, lang)} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
         {children}
       </div>
@@ -58,7 +58,7 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
     <button
       onClick={advance}
       className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-      style={{ background: 'var(--accent)' }}
+      style={{ background: 'var(--q-action-primary)' }}
     >
       {last ? <><Check size={16} /> {t(lang, 'amenBtn')}</> : <>{label} <ChevronRight size={16} /></>}
     </button>
@@ -68,7 +68,7 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
     <button
       onClick={back}
       className="shrink-0 whitespace-nowrap flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-xl text-sm font-semibold"
-      style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+      style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)' }}
     >
       <ChevronLeft size={16} /> {t(lang, 'backBtn')}
     </button>
@@ -82,14 +82,14 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
         <div className="flex-1 overflow-y-auto px-6 pb-8 max-w-xl mx-auto w-full">
           <div className="text-center mb-6">
             <div className="text-5xl mb-3">{guide.emoji}</div>
-            <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--text-1)' }}>{pick(guide.title, lang)}</h2>
+            <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--q-text)' }}>{pick(guide.title, lang)}</h2>
             {duration && (
-              <p className="text-xs font-medium" style={{ color: 'var(--text-3)' }}>{t(lang, 'aboutMinutes', { n: duration })}</p>
+              <p className="text-xs font-medium" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aboutMinutes', { n: duration })}</p>
             )}
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(guide.intro, lang)}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{pick(guide.intro, lang)}</p>
         </div>
-        <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--q-border)' }}>
           {advanceButton(t(lang, 'guideBegin'), false)}
         </div>
       </>
@@ -100,9 +100,9 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
     return overlay(
       <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-3">
         <div className="text-6xl mb-1">🙏</div>
-        <h2 className="text-xl font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'guideDoneTitle')}</h2>
-        <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'guideDoneSub')}</p>
-        <button onClick={onClose} className="mt-4 px-6 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+        <h2 className="text-xl font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'guideDoneTitle')}</h2>
+        <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'guideDoneSub')}</p>
+        <button onClick={onClose} className="mt-4 px-6 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--q-action-primary)' }}>
           {t(lang, 'close')}
         </button>
         <ReportWordingLink lang={lang} surface={`guides/${guide.id}`} />
@@ -114,7 +114,7 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
 
   return overlay(
     <>
-      <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--header)' }}>
+      <div className="shrink-0 px-5 pt-4 pb-3" style={{ background: 'var(--q-surface-inverse)' }}>
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {index + 1} / {total}
@@ -127,8 +127,8 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-8 max-w-xl mx-auto w-full">
-        <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--text-1)' }}>{pick(step.title, lang)}</h2>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-2)' }}>{pick(step.prompt, lang)}</p>
+        <h2 className="text-2xl font-semibold leading-snug mb-3" style={{ color: 'var(--q-text)' }}>{pick(step.title, lang)}</h2>
+        <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--q-text-secondary)' }}>{pick(step.prompt, lang)}</p>
 
         {/* Optional authored "why this step" — a collapsed one-liner that never
             blocks Continue and simply doesn't exist for unexplained steps.
@@ -141,13 +141,13 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
               aria-expanded={whyOpen}
               aria-controls="guide-step-why"
               className="min-h-[44px] flex items-center gap-1.5 text-xs font-medium"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--q-royal-text)' }}
             >
               <ChevronDown size={13} aria-hidden="true" style={{ transform: whyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
               {t(lang, 'whyThisStep')}
             </button>
             {whyOpen && (
-              <p id="guide-step-why" className="text-xs leading-relaxed pl-5" style={{ color: 'var(--text-3)' }}>
+              <p id="guide-step-why" className="text-xs leading-relaxed pl-5" style={{ color: 'var(--q-text-tertiary)' }}>
                 {pick(step.why, lang)}
               </p>
             )}
@@ -160,19 +160,19 @@ export default function GuideReader({ guide, lang, onClose, onStarted, onComplet
               <button
                 onClick={toggle}
                 className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
-                style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
               >
-                <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-                  <BookOpen size={15} style={{ color: 'var(--accent)' }} /> {ref}
+                <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--q-text)' }}>
+                  <BookOpen size={15} style={{ color: 'var(--q-royal-text)' }} /> {ref}
                 </span>
-                <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readFullPassage')}</span>
+                <span className="text-xs shrink-0" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'readFullPassage')}</span>
               </button>
             )}
           </VerseAccordion>
         )}
       </div>
 
-      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--border)' }}>
+      <div className="shrink-0 px-6 py-4 flex items-center gap-3 max-w-xl mx-auto w-full" style={{ borderTop: '0.5px solid var(--q-border)' }}>
         {backButton}
         {advanceButton(t(lang, 'continueBtn'), isLastStep)}
       </div>

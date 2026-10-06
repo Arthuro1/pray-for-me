@@ -1,6 +1,11 @@
-import { forwardRef } from 'react';
+// Qetoret primitives. Every screen composes these instead of styling its own
+// buttons, headers, rows, labels, dialogs and fields; the look lives in
+// src/styles/components.css. Three button kinds only: primary, secondary, quiet.
+import { forwardRef, useId } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronLeft } from 'lucide-react';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export function PageHeader({ eyebrow, title, subtitle, aside, backTo, backLabel, backAriaLabel, className = '' }) {
   return (
@@ -9,16 +14,15 @@ export function PageHeader({ eyebrow, title, subtitle, aside, backTo, backLabel,
         <Link
           to={backTo}
           aria-label={backAriaLabel || backLabel}
-          className="pressable mb-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-semibold no-underline"
-          style={{ color: 'var(--accent)' }}
+          className="quiet-button -ms-3 mb-3 no-underline"
         >
-          <ChevronLeft className="rtl-mirror" size={17} aria-hidden="true" />
+          <ChevronLeft className="rtl-mirror" size={18} aria-hidden="true" />
           <span>{backLabel}</span>
         </Link>
       )}
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="min-w-0">
-          {eyebrow && <p className="page-header__eyebrow mb-2">{eyebrow}</p>}
+          {eyebrow && <p className="page-header__eyebrow section-label">{eyebrow}</p>}
           <h1 className="page-header__title">{title}</h1>
           {subtitle && <p className="page-header__subtitle">{subtitle}</p>}
         </div>
@@ -28,40 +32,58 @@ export function PageHeader({ eyebrow, title, subtitle, aside, backTo, backLabel,
   );
 }
 
+// An eyebrow (sans, small caps), an optional serif title and supporting line.
+// `sacred` marks the eyebrow in gold — reserve it for altar, Scripture and
+// testimony moments.
+export function SectionHeader({ as: Tag = 'h2', eyebrow, title, supporting, action, sacred = false, id, className = '' }) {
+  const Eyebrow = title ? 'p' : Tag;
+  return (
+    <div className={`section-header ${className}`}>
+      <div className="section-header__copy">
+        {eyebrow && <Eyebrow id={title ? undefined : id} className={`section-label ${sacred ? 'section-label--sacred' : ''}`}>{eyebrow}</Eyebrow>}
+        {title && <Tag id={id} className="section-header__title q-section-title">{title}</Tag>}
+        {supporting && <p className="section-header__supporting">{supporting}</p>}
+      </div>
+      {action && <div className="shrink-0">{action}</div>}
+    </div>
+  );
+}
+
+export function SectionDivider({ className = '' }) {
+  return <hr className={`q-divider ${className}`} />;
+}
+
 export function PrayerSurface({ as: Tag = 'section', tone = 'default', className = '', children, ...props }) {
   return (
-    <Tag className={`prayer-surface prayer-surface--${tone} ${className}`} {...props}>
+    <Tag className={`prayer-surface prayer-surface--${tone} ${tone === 'focus' ? 'q-inverse' : ''} ${className}`} {...props}>
       {children}
     </Tag>
   );
 }
 
-export const PrimaryButton = forwardRef(function PrimaryButton(
-  { icon: Icon, children, className = '', type = 'button', ...props },
-  ref,
-) {
-  return (
-    <button ref={ref} type={type} className={`primary-button pressable inline-flex items-center justify-center gap-2 px-5 ${className}`} {...props}>
-      {Icon && <Icon size={17} aria-hidden="true" />}
-      <span>{children}</span>
-    </button>
-  );
-});
+function makeButton(base, displayName) {
+  const Button = forwardRef(function Button(
+    { icon: Icon, iconSize = 18, inverse = false, danger = false, children, className = '', type = 'button', ...props },
+    ref,
+  ) {
+    const variants = `${inverse ? `${base}--inverse` : ''} ${danger ? `${base}--danger` : ''}`;
+    return (
+      <button ref={ref} type={type} className={`${base} pressable ${variants} ${className}`} {...props}>
+        {Icon && <Icon size={iconSize} strokeWidth={1.85} aria-hidden="true" />}
+        {children != null && <span>{children}</span>}
+      </button>
+    );
+  });
+  Button.displayName = displayName;
+  return Button;
+}
 
-export const QuietButton = forwardRef(function QuietButton(
-  { icon: Icon, children, className = '', type = 'button', ...props },
-  ref,
-) {
-  return (
-    <button ref={ref} type={type} className={`quiet-button pressable inline-flex items-center justify-center gap-2 px-4 ${className}`} {...props}>
-      {Icon && <Icon size={16} aria-hidden="true" />}
-      <span>{children}</span>
-    </button>
-  );
-});
+export const PrimaryButton = makeButton('primary-button', 'PrimaryButton');
+export const SecondaryButton = makeButton('secondary-button', 'SecondaryButton');
+export const QuietButton = makeButton('quiet-button', 'QuietButton');
 
-export function SectionLabel({ as: Tag = 'p', className = '', children, ...props }) {
-  return <Tag className={`section-label ${className}`} {...props}>{children}</Tag>;
+export function SectionLabel({ as: Tag = 'p', sacred = false, className = '', children, ...props }) {
+  return <Tag className={`section-label ${sacred ? 'section-label--sacred' : ''} ${className}`} {...props}>{children}</Tag>;
 }
 
 export function SegmentedControl({ label, value, options, onChange, className = '' }) {
@@ -89,15 +111,15 @@ export function Disclosure({ id, label, count, open, onToggle, children, classNa
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={id}
-        className="pressable flex min-h-11 w-full items-center justify-between gap-3 text-left"
+        className="pressable flex min-h-11 w-full items-center justify-between gap-3 text-start"
       >
-        <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>
+        <span className="text-sm font-semibold" style={{ color: 'var(--q-text-secondary)' }}>
           {label}{typeof count === 'number' ? ` · ${count}` : ''}
         </span>
         <ChevronDown
           size={16}
           aria-hidden="true"
-          style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform var(--motion) var(--ease)' }}
+          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform var(--q-motion-standard) var(--q-ease)' }}
         />
       </button>
       {open && <div id={id}>{children}</div>}
@@ -105,12 +127,67 @@ export function Disclosure({ id, label, count, open, onToggle, children, classNa
   );
 }
 
+// One prayer in a list: a serif title, its context, optional circle and status.
+// Rows sit on the page — no card around each one.
+export function PrayerRow({ as: Tag = 'button', title, context, circle, status, meta, aside, className = '', ...props }) {
+  return (
+    <Tag className={`prayer-row ${className}`} {...(Tag === 'button' ? { type: 'button' } : {})} {...props}>
+      <span className="min-w-0">
+        <span className="prayer-row__title">{title}</span>
+        {context && <span className="prayer-row__context">{context}</span>}
+        {(circle || status || meta) && (
+          <span className="prayer-row__meta">
+            {circle && <span>{circle}</span>}
+            {meta}
+            {status}
+          </span>
+        )}
+      </span>
+      {aside && <span className="prayer-row__aside">{aside}</span>}
+    </Tag>
+  );
+}
+
+// Quiet text with a small mark. Tones: neutral, answered, sacred, royal.
+export function StatusLabel({ tone = 'neutral', plain = false, className = '', children, ...props }) {
+  return (
+    <span className={`status-label status-label--${tone} ${plain ? 'status-label--plain' : ''} ${className}`} {...props}>
+      {children}
+    </span>
+  );
+}
+
+// Compact pill — for filters, tags and true status indicators only.
 export function StatusPill({ tone = 'neutral', icon: Icon, className = '', children, ...props }) {
   return (
     <span className={`status-pill status-pill--${tone} ${className}`} {...props}>
       {Icon && <Icon size={12} aria-hidden="true" />}
       {children}
     </span>
+  );
+}
+
+// The one modal: overlay, a single clean surface, focus kept inside, Escape
+// closes. `onClose` may be null while something is in flight.
+export function Modal({ label, labelledBy, onClose, size = 'md', className = '', children }) {
+  useEscapeKey(onClose || null);
+  const trapRef = useFocusTrap();
+  const width = size === 'sm' ? 'max-w-sm' : size === 'lg' ? 'max-w-2xl' : 'max-w-lg';
+  return (
+    <div className="dialog-backdrop fixed inset-0 z-[90] flex items-end justify-center p-4 sm:items-center" onClick={onClose || undefined}>
+      <div
+        ref={trapRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label={labelledBy ? undefined : label}
+        aria-labelledby={labelledBy}
+        className={`q-dialog w-full ${width} p-6 sm:p-8 ${className}`}
+        onClick={(event) => event.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -134,3 +211,52 @@ export const BottomSheet = forwardRef(function BottomSheet(
     </div>
   );
 });
+
+// Label + control + hint, wired for screen readers. Children receive the ids.
+export function Field({ label, hint, error, children, className = '' }) {
+  const id = useId();
+  const hintId = hint || error ? `${id}-hint` : undefined;
+  return (
+    <div className={`q-field ${className}`}>
+      {label && <label htmlFor={id} className="q-field__label">{label}</label>}
+      {children({ id, 'aria-describedby': hintId, 'aria-invalid': error ? true : undefined })}
+      {(error || hint) && <p id={hintId} className={`q-field__hint ${error ? 'q-field__hint--error' : ''}`}>{error || hint}</p>}
+    </div>
+  );
+}
+
+export const Input = forwardRef(function Input({ className = '', ...props }, ref) {
+  return <input ref={ref} className={`q-input ${className}`} {...props} />;
+});
+
+// `editorial` sets prayer content in the devotional serif.
+export const Textarea = forwardRef(function Textarea({ editorial = false, className = '', ...props }, ref) {
+  return <textarea ref={ref} className={`q-textarea ${editorial ? 'q-textarea--editorial' : ''} ${className}`} {...props} />;
+});
+
+// One intercession circle as a deliberate choice: ring, title, description.
+// Used inside a `role="radiogroup"` (single) or as toggles (multiple).
+export function CircleOption({ title, description, selected, onSelect, multiple = false, className = '', ...props }) {
+  const state = multiple ? { 'aria-pressed': selected } : { role: 'radio', 'aria-checked': selected };
+  return (
+    <button type="button" className={`circle-option pressable ${className}`} onClick={onSelect} {...state} {...props}>
+      <span className="circle-option__ring" aria-hidden="true" />
+      <span className="min-w-0">
+        <span className="circle-option__title">{title}</span>
+        {description && <span className="circle-option__description">{description}</span>}
+      </span>
+    </button>
+  );
+}
+
+// Scripture is quoted, never generated: the text comes from the verse pipeline
+// and the reference is always shown, in gold.
+export function ScriptureBlock({ text, reference, lang, dir, className = '', children }) {
+  return (
+    <figure className={`scripture-block ${className}`}>
+      {text && <blockquote className="scripture-block__text" lang={lang} dir={dir}>{text}</blockquote>}
+      {children}
+      {reference && <figcaption className="scripture-block__reference">{reference}</figcaption>}
+    </figure>
+  );
+}

@@ -4,10 +4,9 @@
 // persistent control on Today. All calls run through aiCore, so they share the one
 // theological guardrail (the gateway's system prompt) and the one client cooldown.
 //
-// The gateway returns references only ({ title, references: [{ ref, why }] }); it
-// never generates verse text. We map that to the UI's { title, verses: [{ ref,
-// text }] } shape with empty text — the verse reader fills the wording from
-// trusted Scripture sources.
+// The gateway returns references only ([{ title, verses: [{ ref }] }]); it never
+// generates verse text. Any wording that slips through is dropped below — the
+// verse reader fills it from trusted Scripture sources.
 import { callAiForJson, localizeAiError } from './lib/aiCore';
 import { AI_MODEL_HINT } from './lib/aiClient';
 import { createAiCache, aiCacheKey } from './lib/aiResultCache';
@@ -16,19 +15,6 @@ import useAuthStore from './store/authStore';
 import usePrayerStore from './store/prayerStore';
 
 const cache = createAiCache();
-
-function normalize(data) {
-  const recommendations = Array.isArray(data?.recommendations) ? data.recommendations : [];
-  return recommendations
-    .filter((r) => r && r.title && Array.isArray(r.references))
-    .map((r) => ({
-      title: String(r.title),
-      verses: r.references
-        .filter((ref) => ref && ref.ref)
-        .map((ref) => ({ ref: String(ref.ref), text: '', why: ref.why ? String(ref.why) : '' })),
-    }))
-    .filter((r) => r.verses.length > 0);
-}
 
 export async function getAIRecommendations({ title, description = '', update = '', type = 'new', lang = 'fr' }) {
   const isEvolution = type === 'evolution';
@@ -68,6 +54,6 @@ export async function getAIRecommendations({ title, description = '', update = '
         // References only — never AI verse wording presented as Scripture.
         .map((r) => ({ ...r, verses: r.verses.filter((v) => v && v.ref).map((v) => ({ ref: String(v.ref) })) }))
     : [];
-  if (recs.length > 0) cache.set(cacheKey, recs);
+  if (recs.length > 0) cache.set(key, recs);
   return { recs, error: null };
 }

@@ -27,7 +27,7 @@ export default function FollowUpBanner({ prayer, lang, onAddUpdate, onMarkAnswer
       type="button"
       onClick={onClick}
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium"
-      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
     >
       {icon} {t(lang, labelKey)}
     </button>
@@ -42,15 +42,15 @@ export default function FollowUpBanner({ prayer, lang, onAddUpdate, onMarkAnswer
     <div
       className="rounded-2xl p-4 space-y-3"
       style={due
-        ? { background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }
-        : { background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+        ? { background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }
+        : { background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
     >
       <div className="flex items-start gap-2.5">
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)' }}>
-          {due ? <Bell size={15} style={{ color: 'var(--accent)' }} /> : <CalendarClock size={15} style={{ color: 'var(--accent)' }} />}
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)' }}>
+          {due ? <Bell size={15} style={{ color: 'var(--q-royal-text)' }} /> : <CalendarClock size={15} style={{ color: 'var(--q-royal-text)' }} />}
         </div>
         <div>
-          <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>
+          <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>
             {due ? t(lang, 'followUpDue') : t(lang, 'followUpSetFor', { date: followUpWhenLabel(followUp.date, lang) })}
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function FollowUpBanner({ prayer, lang, onAddUpdate, onMarkAnswer
             type="button"
             onClick={() => setPicking(false)}
             className="text-xs font-medium"
-            style={{ color: 'var(--accent)' }}
+            style={{ color: 'var(--q-royal-text)' }}
           >
             {t(lang, 'close')}
           </button>

@@ -53,8 +53,8 @@ export function usePrayerActions(lang) {
     // copy (community_origin_id set) follows someone else's prayer, so omit it.
     if (!prayer.community_origin_id) {
       actions.push(prayer.status === 'answered'
-        ? { key: 'resume', icon: RotateCcw, label: t(lang, 'resume'), bg: 'var(--accent)', onClick: () => markActive(prayer.id) }
-        : { key: 'answered', icon: CheckCircle, label: t(lang, 'answered2'), bg: 'var(--success)', onClick: () => markAnswered(prayer.id) });
+        ? { key: 'resume', icon: RotateCcw, label: t(lang, 'resume'), bg: 'var(--q-action-primary)', onClick: () => markActive(prayer.id) }
+        : { key: 'answered', icon: CheckCircle, label: t(lang, 'answered2'), bg: 'var(--q-success)', onClick: () => markAnswered(prayer.id) });
     }
     actions.push({ key: 'remove', icon: Trash2, label: t(lang, 'remove'), bg: '#e53e3e', onClick: () => removePrayer(prayer) });
     return actions;

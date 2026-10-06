@@ -8,7 +8,7 @@ import { todayKey } from '../lib/prayedLog';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import Avatar from './shared/Avatar';
 
-const CARD = { background: 'var(--surface)', border: '0.5px solid var(--border)' };
+const CARD = { background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' };
 
 // Spacious prayer card used by the personal My Prayers and Home lists,
 // matching the look of the community prayer wall (author + date header first).
@@ -113,12 +113,12 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
           className="constellation-today-row__star shrink-0"
         />
         <span className="min-w-0 flex-1">
-          <span className="editorial block text-lg leading-snug" style={{ color: 'var(--text-1)' }}>
+          <span className="editorial block text-lg leading-snug" style={{ color: 'var(--q-text)' }}>
             {planRow?.theme || title}
           </span>
-          {context && <span className="mt-1 block truncate text-xs" style={{ color: 'var(--text-3)' }}>{context}</span>}
+          {context && <span className="mt-1 block truncate text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{context}</span>}
         </span>
-        <ChevronRight size={20} strokeWidth={1.65} aria-hidden="true" style={{ color: 'var(--text-3)' }} />
+        <ChevronRight size={20} strokeWidth={1.65} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }} />
       </button>
     );
   }
@@ -133,20 +133,20 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
       <div className="flex items-center justify-between gap-2 mb-1.5">
         <div className="flex items-center gap-2 min-w-0">
           <Avatar name={authorName} size={26} anonymous={oa?.anonymous} />
-          <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+          <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>
             {authorLabel} · {timeAgo(prayer.created_at, lang)}
             {prayer.origin_group_name ? ` · ${prayer.origin_group_name}` : ''}
           </p>
         </div>
         <div className="shrink-0 flex items-center gap-1.5">
-          {prayer.pinned && <Pin size={13} fill="currentColor" style={{ color: 'var(--accent)' }} />}
+          {prayer.pinned && <Pin size={13} fill="currentColor" style={{ color: 'var(--q-royal-text)' }} />}
           <span
             className="text-xs px-2.5 py-1 rounded-full font-medium"
             style={isAnswered
-              ? { background: 'var(--answered-pill-bg)', color: 'var(--answered-pill-text)' }
+              ? { background: 'var(--q-success-soft)', color: 'var(--q-success)' }
               : isEnded
-                ? { background: 'var(--input-bg)', color: 'var(--text-3)' }
-                : { background: 'var(--accent-soft)', color: 'var(--accent)' }}
+                ? { background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }
+                : { background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
           >
             {t(lang, isAnswered ? 'answered2' : isEnded ? 'seriesEnded' : 'active2')}
           </span>
@@ -155,13 +155,13 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
 
       <p
         className="prayer-card__title text-[15px] font-medium leading-snug mb-2"
-        style={{ color: 'var(--text-1)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}
+        style={{ color: 'var(--q-text)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}
       >
         {title}
       </p>
 
       {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
-        <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+        <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
           <Search size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span className="line-clamp-2">{tr(searchMatch.text, lang)}</span>
         </p>
@@ -178,25 +178,25 @@ export default function PrayerListItem({ prayer, categories, lang, tr, shares, c
       )}
 
       {prayer.for_other && prayer.person_name && (
-        <div className="text-xs flex items-center gap-1.5 mb-1" style={{ color: 'var(--text-3)' }}>
+        <div className="text-xs flex items-center gap-1.5 mb-1" style={{ color: 'var(--q-text-tertiary)' }}>
           <Avatar name={prayer.person_name} size={18} /> {prayer.person_name}
         </div>
       )}
 
       {groupShares.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-          <Users size={11} style={{ color: 'var(--accent)' }} />
+          <Users size={11} style={{ color: 'var(--q-royal-text)' }} />
           {groupShares.map((s) => (
-            <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
               {s.groupName}
             </span>
           ))}
           {groupShares.some((s) => s.isAnonymous) && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+            <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
               <EyeOff size={9} /> {t(lang, 'anonymous')}
             </span>
           )}
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
             <HandHeart size={10} /> {totalPraying} {t(lang, 'prayingCount')}
           </span>
         </div>

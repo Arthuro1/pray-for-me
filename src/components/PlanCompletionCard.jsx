@@ -32,11 +32,11 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
   const continuationChoiceOpen = themes.length > 0 && !done;
 
   return (
-    <section className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
+    <section className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+      <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
         <Sprout size={13} aria-hidden="true" /> {t(lang, 'planCompleteHeading', { n: plan.count })}
       </p>
-      <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{pick(plan.completion, lang)}</p>
+      <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{pick(plan.completion, lang)}</p>
 
       {/* "Look back" — questions to sit with, not a form to fill in. A plan that
           declares them gets them; the others render nothing here. They ask about
@@ -44,13 +44,13 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           about what supposedly left the reader. */}
       {(plan.lookBack || []).length > 0 && (
         <section className="mb-4">
-          <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'planLookBackHeading')}
           </h4>
           <ul className="space-y-1.5">
             {plan.lookBack.map((key) => (
-              <li key={key} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
-                <span aria-hidden="true" style={{ color: 'var(--accent)' }}>•</span>
+              <li key={key} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
+                <span aria-hidden="true" style={{ color: 'var(--q-royal-text)' }}>•</span>
                 <span className="min-w-0">{t(lang, key)}</span>
               </li>
             ))}
@@ -60,7 +60,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
 
       {themes.length > 0 && !done && (
         <>
-          <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planContinueHeading')}</h4>
+          <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'planContinueHeading')}</h4>
           <div role="group" aria-label={t(lang, 'planContinueHeading')} className="mb-3 flex flex-col gap-2">
             {themes.map((th) => {
               const on = selected.includes(th.id);
@@ -73,11 +73,11 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
                   onClick={() => toggle(th.id)}
                   className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-start text-sm"
                   style={on
-                    ? { background: 'var(--accent-soft)', color: 'var(--text-1)', border: '1px solid var(--accent-border)' }
-                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    ? { background: 'var(--q-selected)', color: 'var(--q-text)', border: '1px solid var(--q-selected-border)' }
+                    : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   <span className="min-w-0">{t(lang, th.titleKey)}</span>
-                  {on && <Check size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--accent)' }} />}
+                  {on && <Check size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />}
                 </button>
               );
             })}
@@ -87,7 +87,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
             onClick={async () => { await onContinue(chosen); setDone(true); }}
             disabled={chosen.length === 0}
             className={`${relationshipActionKey ? 'mb-3 ' : ''}w-full rounded-xl px-3 py-2.5 text-sm font-semibold disabled:opacity-50`}
-            style={{ background: 'var(--accent)', color: '#fff' }}
+            style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
           >
             {t(lang, 'planContinueCta')}
           </button>
@@ -95,7 +95,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
       )}
 
       {done && (
-        <p className={relationshipActionKey ? 'mb-3 text-sm font-medium' : 'text-sm font-medium'} style={{ color: 'var(--success)' }}>
+        <p className={relationshipActionKey ? 'mb-3 text-sm font-medium' : 'text-sm font-medium'} style={{ color: 'var(--q-success)' }}>
           {t(lang, 'planContinueAdded')}
         </p>
       )}
@@ -113,8 +113,8 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           data-emphasis={continuationChoiceOpen ? 'secondary' : 'primary'}
           className="block w-full rounded-xl px-3 py-2.5 text-center text-sm font-semibold"
           style={continuationChoiceOpen
-            ? { background: 'var(--input-bg)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }
-            : { background: 'var(--accent)', color: '#fff' }}
+            ? { background: 'var(--q-field)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }
+            : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
         >
           {t(lang, relationshipActionKey)}
         </Link>
@@ -127,7 +127,7 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
           type="button"
           onClick={onShare}
           className="pressable mt-3 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium"
-          style={{ color: 'var(--accent)' }}
+          style={{ color: 'var(--q-royal-text)' }}
         >
           <Share2 size={15} aria-hidden="true" /> {t(lang, 'planShareWithSomeone')}
         </button>

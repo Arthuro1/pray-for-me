@@ -25,11 +25,11 @@ export default function SyncIndicator() {
   return (
     <div
       className="fixed z-[105] flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium shadow-lg"
-      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 76px)', right: 16, background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-2)' }}
+      style={{ bottom: 'calc(env(safe-area-inset-bottom, 0px) + 76px)', right: 16, background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text-secondary)' }}
     >
       {online
-        ? <><Loader2 size={12} className="animate-spin" style={{ color: 'var(--accent)' }} /> {t(lang, 'syncing')}</>
-        : <><CloudOff size={12} style={{ color: 'var(--text-3)' }} /> {t(lang, 'pendingChanges', { n: count })}</>}
+        ? <><Loader2 size={12} className="animate-spin" style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'syncing')}</>
+        : <><CloudOff size={12} style={{ color: 'var(--q-text-tertiary)' }} /> {t(lang, 'pendingChanges', { n: count })}</>}
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default function ResourceLanguagePref({ lang }) {
     : chain.join('  ·  ');
 
   return (
-    <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+    <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -57,18 +57,18 @@ export default function ResourceLanguagePref({ lang }) {
         className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
       >
         <span className="flex min-w-0 items-center gap-2">
-          <Library size={16} aria-hidden="true" style={{ color: 'var(--accent)' }} />
+          <Library size={16} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
           <span className="min-w-0">
-            <span className="block text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'resourceLanguagesTitle')}</span>
-            <span className="block text-xs break-words" style={{ color: 'var(--text-3)' }}>{summary}</span>
+            <span className="block text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'resourceLanguagesTitle')}</span>
+            <span className="block text-xs break-words" style={{ color: 'var(--q-text-tertiary)' }}>{summary}</span>
           </span>
         </span>
-        <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
+        <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
       </button>
 
       {open && (
         <div id="resource-languages-panel" className="mt-3">
-          <p className="mb-2 text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'resourceLanguagesSub')}</p>
+          <p className="mb-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'resourceLanguagesSub')}</p>
           <div role="group" aria-label={t(lang, 'resourceLanguagesTitle')} className="flex flex-wrap gap-2">
             {LANGUAGES.filter((l) => l.code !== lang && DISPLAYABLE_RESOURCE_LANGUAGES.has(l.code)).map((l) => (
               <LanguageChip key={l.code} label={l.label} on={enabled.includes(l.code)} onToggle={() => toggle(l.code)} />

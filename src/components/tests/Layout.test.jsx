@@ -179,10 +179,11 @@ describe('Layout — floating Add button', () => {
 // desktop-width — so these force the mobile branch and assert on values it
 // preserves. The nav's own bottom inset padding is verified visually in-browser.
 describe('Layout — safe-area & separation', () => {
-  it('lifts the bottom nav off scrolling content with a soft shadow', () => {
+  it('separates the bottom nav from scrolling content with a hairline, not a shadow', () => {
     const { container } = renderNav();
     const nav = bottomNav(container);
-    expect(nav.style.boxShadow).toContain('var(--nav-shadow)');
+    expect(nav.style.borderTop).toContain('var(--q-border)');
+    expect(nav.style.boxShadow).toBe('');
   });
 
   it('pads the main content clear of the nav and the bottom inset on mobile', () => {

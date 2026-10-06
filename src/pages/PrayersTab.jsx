@@ -59,7 +59,7 @@ import TendAltar from '../components/TendAltar';
 // too late to be reassuring.
 function FilterStatus({ lang, count, label, onClear }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-2 mb-1" style={{ color: 'var(--text-3)' }}>
+    <div className="flex flex-wrap items-center gap-x-2 mb-1" style={{ color: 'var(--q-text-tertiary)' }}>
       <p className="text-xs" role="status">
         <span>{t(lang, 'filtersOnLabel')}</span>
         <span aria-hidden="true"> · </span>
@@ -72,7 +72,7 @@ function FilterStatus({ lang, count, label, onClear }) {
           type="button"
           onClick={onClear}
           className="inline-flex min-h-[44px] items-center gap-1 text-xs font-medium"
-          style={{ color: 'var(--accent)' }}
+          style={{ color: 'var(--q-royal-text)' }}
         >
           <X size={12} aria-hidden="true" /> {t(lang, 'clearFiltersBtn')}
         </button>
@@ -237,18 +237,6 @@ export default function PrayersTab({ onAdd }) {
       <div className="phase-page__shell journal-page-header constellation-journal__header">
         <div className="constellation-journal__title-row">
           <h1 className="constellation-journal__title">{t(lang, 'journal')}</h1>
-          <span className="constellation-journal__art" aria-hidden="true">
-            <img
-              src="/assets/constellation/journal-light-transparent.png"
-              alt=""
-              className="constellation-journal__art-image constellation-journal__art-image--light"
-            />
-            <img
-              src="/assets/constellation/journal-dark-transparent.png"
-              alt=""
-              className="constellation-journal__art-image constellation-journal__art-image--dark"
-            />
-          </span>
           <span className="constellation-journal__actions">
             <button
               type="button"
@@ -306,7 +294,7 @@ export default function PrayersTab({ onAdd }) {
           <div className="constellation-journal__utility-panel">
             {!peopleOpen && (searchOpen || !!search) && (
               <div className="journal-search">
-                <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)', insetInlineStart: '0.9rem' }} />
+                <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--q-text-tertiary)', insetInlineStart: '0.9rem' }} />
                 <input
                   type="text"
                   autoFocus
@@ -322,7 +310,7 @@ export default function PrayersTab({ onAdd }) {
                     onClick={() => { setSearch(''); setSearchOpen(false); }}
                     aria-label={t(lang, 'close')}
                     className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
-                    style={{ color: 'var(--text-3)', insetInlineEnd: 0 }}
+                    style={{ color: 'var(--q-text-tertiary)', insetInlineEnd: 0 }}
                   >
                     <X size={15} />
                   </button>
@@ -338,7 +326,7 @@ export default function PrayersTab({ onAdd }) {
                   aria-label={t(lang, 'peopleView')}
                   title={t(lang, 'peopleView')}
                   className="phase-icon-button constellation-journal__labelled shrink-0"
-                  style={peopleOpen ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
+                  style={peopleOpen ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', borderColor: 'var(--q-royal)' } : undefined}
                 >
                   <Users size={16} aria-hidden="true" />
                   <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'peopleView')}</span>
@@ -357,7 +345,7 @@ export default function PrayersTab({ onAdd }) {
                     : t(lang, 'journalFilters')}
                   title={t(lang, 'journalFilters')}
                   className="phase-icon-button constellation-journal__labelled shrink-0"
-                  style={structuredFiltersActive ? { background: 'var(--plum)', color: '#fff', borderColor: 'var(--plum)' } : undefined}
+                  style={structuredFiltersActive ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', borderColor: 'var(--q-royal)' } : undefined}
                 >
                   <SlidersHorizontal size={16} aria-hidden="true" />
                   <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'journalFilters')}</span>
@@ -383,8 +371,8 @@ export default function PrayersTab({ onAdd }) {
             className="constellation-journal__hint"
             role="status"
           >
-            <Lightbulb size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--gold)' }} />
-            <p className="min-w-0 flex-1 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+            <Lightbulb size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-gold-text)' }} />
+            <p className="min-w-0 flex-1 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, hint === JOURNAL_HINTS.PEOPLE ? 'journalPeopleHint' : 'journalDiscoverHint')}
             </p>
             {hint === JOURNAL_HINTS.PEOPLE && (
@@ -397,7 +385,7 @@ export default function PrayersTab({ onAdd }) {
                   setSelectedPerson(null);
                 }}
                 className="min-h-[44px] shrink-0 px-2 text-xs font-semibold"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 {t(lang, 'journalPeopleHintCta')}
               </button>
@@ -406,7 +394,7 @@ export default function PrayersTab({ onAdd }) {
               type="button"
               onClick={() => { dismissHint(hint); completeHint(); }}
               className="min-h-[44px] shrink-0 px-2 text-xs font-medium"
-              style={{ color: 'var(--text-3)' }}
+              style={{ color: 'var(--q-text-tertiary)' }}
             >
               {t(lang, 'hintDismiss')}
             </button>
@@ -419,12 +407,12 @@ export default function PrayersTab({ onAdd }) {
             type="button"
             onClick={() => setTending(true)}
             className="pressable mt-3 flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-start"
-            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+            style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border)' }}
           >
-            <Sprout size={16} className="shrink-0" aria-hidden="true" style={{ color: 'var(--gold)' }} />
-            <span className="flex-1 text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'tendTitle')}</span>
-            <span className="text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'tendEntry', tendList.length)}</span>
-            <ChevronRight size={15} className="rtl-mirror shrink-0" aria-hidden="true" style={{ color: 'var(--text-3)' }} />
+            <Sprout size={16} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-gold-text)' }} />
+            <span className="flex-1 text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'tendTitle')}</span>
+            <span className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{tp(lang, 'tendEntry', tendList.length)}</span>
+            <ChevronRight size={15} className="rtl-mirror shrink-0" aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }} />
           </button>
         )}
         {tending && (
@@ -476,15 +464,15 @@ export default function PrayersTab({ onAdd }) {
               <button
                 onClick={() => setSelectedPerson(null)}
                 className="flex items-center gap-2 min-h-[44px] text-sm font-medium mb-2"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 <ArrowLeft size={15} /> {t(lang, 'peopleView')}
               </button>
               <div className="flex items-center gap-3 mb-4">
                 <Avatar name={personDetail.name} size={40} />
                 <div className="min-w-0">
-                  <p className="text-base font-semibold truncate" style={{ color: 'var(--text-1)' }}>{personDetail.name}</p>
-                  <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                  <p className="text-base font-semibold truncate" style={{ color: 'var(--q-text)' }}>{personDetail.name}</p>
+                  <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
                     {personDetail.activeCount} {t(lang, 'active2')} · {personDetail.answeredCount} {t(lang, 'answered2')}
                   </p>
                 </div>
@@ -499,14 +487,14 @@ export default function PrayersTab({ onAdd }) {
                 if (active.length === 0) return null;
                 if (remaining.length === 0) {
                   return (
-                    <div className="flex items-center gap-3 rounded-2xl px-4 py-1 mb-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-                      <p className="flex-1 min-h-[44px] flex items-center gap-2 text-sm" style={{ color: 'var(--success)' }} role="status">
+                    <div className="flex items-center gap-3 rounded-2xl px-4 py-1 mb-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+                      <p className="flex-1 min-h-[44px] flex items-center gap-2 text-sm" style={{ color: 'var(--q-success)' }} role="status">
                         <Check size={15} aria-hidden="true" /> {t(lang, 'personPrayedToday', { name: personDetail.name })}
                       </p>
                       <button
                         onClick={() => setPersonSessionPrayers(active)}
                         className="min-h-[44px] shrink-0 text-xs font-medium px-3 rounded-xl"
-                        style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                        style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                       >
                         {t(lang, 'prayAgainBtn')}
                       </button>
@@ -542,20 +530,20 @@ export default function PrayersTab({ onAdd }) {
                   <div className="flex items-center gap-3">
                     <Avatar name={person.name} size={36} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-1)' }}>{person.name}</p>
-                      <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--q-text)' }}>{person.name}</p>
+                      <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
                         {person.activeCount} {t(lang, 'active2')} · {person.answeredCount} {t(lang, 'answered2')}
                       </p>
                     </div>
-                    <ChevronRight size={15} className="shrink-0 opacity-50" style={{ color: 'var(--text-3)' }} aria-hidden="true" />
+                    <ChevronRight size={15} className="shrink-0 opacity-50" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
                   </div>
                   {person.latestUpdate?.text && (
-                    <p className="text-xs mt-2 line-clamp-1" style={{ color: 'var(--text-2)' }}>
+                    <p className="text-xs mt-2 line-clamp-1" style={{ color: 'var(--q-text-secondary)' }}>
                       {tr(person.latestUpdate.text, lang)}
                     </p>
                   )}
                   {person.nextFollowUp && (
-                    <p className="text-xs mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                    <p className="text-xs mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                       <Bell size={10} aria-hidden="true" /> {t(lang, 'followUpNext', { date: followUpWhenLabel(person.nextFollowUp, lang) })}
                     </p>
                   )}
@@ -568,7 +556,7 @@ export default function PrayersTab({ onAdd }) {
             {/* Quiet context, not a statistic card — only when there is
                 something to give thanks for. */}
             {!filtersActive && recap.answered > 0 && (
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>
+              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>
                 {t(lang, 'answeredThisWeek', { n: recap.answered })}
               </p>
             )}
@@ -579,11 +567,11 @@ export default function PrayersTab({ onAdd }) {
               <AnsweredGallery prayers={[]} showCount={false} showReflection={false} />
             ) : filtersActive && answeredCount > 0 && filteredEntries.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-sm mb-4" style={{ color: 'var(--text-2)' }}>{t(lang, 'noMatch')}</p>
+                <p className="text-sm mb-4" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
                 <button
                   onClick={clearFilters}
                   className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium"
-                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
                 >
                   <X size={14} /> {t(lang, 'clearFiltersBtn')}
                 </button>
@@ -618,11 +606,11 @@ export default function PrayersTab({ onAdd }) {
                 // Prayers exist but the filters hide them — offer to clear the
                 // filters, never to add another prayer.
                 <div className="text-center py-12">
-                  <p className="text-sm mb-4" style={{ color: 'var(--text-2)' }}>{t(lang, 'noMatch')}</p>
+                  <p className="text-sm mb-4" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
                   <button
                     onClick={clearFilters}
                     className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium"
-                    style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                    style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
                   >
                     <X size={14} /> {t(lang, 'clearFiltersBtn')}
                   </button>

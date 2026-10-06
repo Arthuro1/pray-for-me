@@ -46,15 +46,15 @@ export default function MoreTab() {
               // and ideas to help you pray" — rather than two run-together spans.
               aria-label={`${label} — ${description}`}
               className="constellation-menu__row w-full flex items-center gap-3 px-1 py-3.5 text-start transition-colors"
-              style={i > 0 ? { borderTop: '0.5px solid var(--border)' } : {}}
+              style={i > 0 ? { borderTop: '0.5px solid var(--q-border)' } : {}}
             >
-              <Icon size={18} className="shrink-0" style={{ color: 'var(--accent)' }} aria-hidden="true" />
+              <Icon size={18} className="shrink-0" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</span>
+                <span className="block text-sm font-medium" style={{ color: 'var(--q-text)' }}>{label}</span>
                 {/* What you'll find there — one quiet line, never a second label. */}
-                <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{description}</span>
+                <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{description}</span>
               </span>
-              <ChevronRight size={15} className="shrink-0" style={{ color: 'var(--text-3)' }} aria-hidden="true" />
+              <ChevronRight size={15} className="shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
             </button>
           ))}
         </div>

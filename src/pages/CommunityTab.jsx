@@ -68,12 +68,12 @@ function ActionRow({ label, sublabel, avatarName, avatar, avatarKind = 'user', p
       <div className="flex items-center gap-3 min-w-0">
         {avatarName && <Avatar name={avatarName} avatar={avatar} kind={avatarKind} size={36} />}
         <div className="min-w-0">
-          <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{label}</p>
-          {sublabel && <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>{sublabel}</p>}
+          <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{label}</p>
+          {sublabel && <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>{sublabel}</p>}
         </div>
       </div>
       <div className="flex gap-2 shrink-0">
-        <button onClick={onPrimary} disabled={busy} className="px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+        <button onClick={onPrimary} disabled={busy} className="px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
           {busy ? <Loader2 size={12} className="animate-spin" /> : primaryText}
         </button>
         <button onClick={onSecondary} disabled={busy} className="px-3 py-1.5 rounded-lg text-xs disabled:opacity-40" style={SUBTLE_BTN}>
@@ -192,7 +192,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
               ariaLabel={t(lang, 'add')}
               triggerIcon={Plus}
               triggerLabel={t(lang, 'add')}
-              triggerStyle={{ background: 'var(--plum)', color: '#fff' }}
+              triggerStyle={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
               iconColor="#fff"
               items={[
                 { key: 'join', icon: DoorOpen, label: t(lang, 'joinGroupCta'), onClick: () => setShowJoinGroup(true) },
@@ -209,10 +209,6 @@ function CommunityHub({ lang, userId, onViewGroup }) {
               <h2>{t(lang, 'fromYourGroups')}</h2>
               <p>{t(lang, 'communityEmptyDesc')}</p>
             </div>
-            <span className="constellation-community__hero-art" aria-hidden="true">
-              <img src="/assets/constellation/community-sky-light-transparent.png" alt="" className="constellation-community__hero-image constellation-community__hero-image--light" />
-              <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-community__hero-image constellation-community__hero-image--dark" />
-            </span>
           </div>
         )}
 
@@ -222,8 +218,8 @@ function CommunityHub({ lang, userId, onViewGroup }) {
         {groups.length === 0 && (
           <div className="phase-card community-empty mb-8 text-center max-w-lg mx-auto">
             <Users size={34} className="mx-auto mb-3" aria-hidden="true" />
-            <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayWithOthers')}</h2>
-            <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'communityEmptyDesc')}</p>
+            <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--q-text)' }}>{t(lang, 'prayWithOthers')}</h2>
+            <p className="text-sm mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'communityEmptyDesc')}</p>
             <button onClick={() => setShowJoinGroup(true)} className="community-empty__primary w-full flex items-center justify-center gap-2 px-5 rounded-xl text-sm font-semibold mb-2.5">
               <CommunityActionIcon action="join" compact /> {t(lang, 'joinGroupCta')}
             </button>
@@ -291,11 +287,11 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                   <div className="flex items-center gap-3">
                     <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={40} />
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm truncate" style={{ color: 'var(--text-1)' }}>{g.name}</p>
-                      {g.role === 'admin' && <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>}
+                      <p className="font-semibold text-sm truncate" style={{ color: 'var(--q-text)' }}>{g.name}</p>
+                      {g.role === 'admin' && <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'admin')}</p>}
                     </div>
                     {unread[g.id] > 0 && (
-                      <span className="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--accent)' }}>
+                      <span className="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--q-action-primary)' }}>
                         {t(lang, 'newCount', { n: unread[g.id] })}
                       </span>
                     )}
@@ -313,7 +309,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
                 <div key={f.id} className="phase-card phase-card--quiet flex items-center justify-between gap-3 p-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <Avatar name={f.name} avatar={f.avatar} size={36} />
-                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{f.name}</p>
                   </div>
                   <button onClick={() => handleRemoveFriend(f)} disabled={busyId === f.id} className="px-3 py-1 rounded-lg text-xs disabled:opacity-40 shrink-0" style={SUBTLE_BTN}>
                     {t(lang, 'remove')}
@@ -467,35 +463,35 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
             rule the "Admins can update their group" policy enforces server-side. */}
         {canEditAvatar && (
           <div className="mb-5">
-            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupAvatar')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupAvatarHint')}</p>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupAvatar')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupAvatarHint')}</p>
             <AvatarEditor lang={lang} kind="group" name={group.name} avatar={avatarConfigFrom(group)} ownerId={group.id} onSave={handleAvatarSave} />
           </div>
         )}
 
-        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'renameGroup')}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'renameGroup')}</p>
         <div className="flex gap-2 mb-5">
           <input value={name} onChange={e => setName(e.target.value)} placeholder={t(lang, 'groupName')}
             onKeyDown={e => e.key === 'Enter' && handleRename()}
             className="flex-1 text-sm rounded-xl px-3 py-2 focus:outline-none" style={INPUT_STYLE} />
           <button onClick={handleRename} disabled={!name.trim() || name.trim() === group.name || renaming}
-            className="px-4 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+            className="px-4 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
             {renaming ? <Loader2 size={14} className="animate-spin" /> : t(lang, 'save')}
           </button>
         </div>
 
-        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'inviteFriends')}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'inviteFriends')}</p>
         {invitable.length === 0 ? (
-          <p className="text-sm mb-4" style={{ color: 'var(--text-3)' }}>{t(lang, 'noFriendsToInvite')}</p>
+          <p className="text-sm mb-4" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noFriendsToInvite')}</p>
         ) : (
           <div className="space-y-2 mb-5">
             {invitable.map(f => (
               <div key={f.id} className="flex items-center justify-between gap-3 p-2.5 rounded-xl" style={CARD_STYLE}>
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Avatar name={f.name} avatar={f.avatar} size={30} />
-                  <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{f.name}</p>
+                  <p className="text-sm truncate" style={{ color: 'var(--q-text)' }}>{f.name}</p>
                 </div>
-                <button onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]} className="px-3 py-1 rounded-lg text-xs font-medium text-white disabled:opacity-40 shrink-0" style={{ background: 'var(--accent)' }}>
+                <button onClick={() => handleInvite(f.id)} disabled={busyId === f.id || invited[f.id]} className="px-3 py-1 rounded-lg text-xs font-medium text-white disabled:opacity-40 shrink-0" style={{ background: 'var(--q-action-primary)' }}>
                   {invited[f.id] ? t(lang, 'invited') : t(lang, 'invite')}
                 </button>
               </div>
@@ -503,7 +499,7 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
           </div>
         )}
 
-        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'members')} ({members.length})</p>
+        <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'members')} ({members.length})</p>
         <div className="space-y-2">
           {members.map(m => {
             const isSelf = m.user_id === userId;
@@ -523,17 +519,17 @@ export function GroupAdminModal({ lang, userId, group, onClose, onInviteAction }
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Avatar name={m.name} avatar={m.avatar} size={30} />
                   <div className="min-w-0">
-                    <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{isSelf ? ` (${t(lang, 'you')})` : ''}</p>
+                    <p className="text-sm truncate" style={{ color: 'var(--q-text)' }}>{m.name}{isSelf ? ` (${t(lang, 'you')})` : ''}</p>
                     {isOwner
-                      ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'owner')}</p>
+                      ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'owner')}</p>
                       : isMemberAdmin
-                        ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>
+                        ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'admin')}</p>
                         : null}
                   </div>
                 </div>
                 {menuItems.length > 0 && (
                   busyId === m.user_id
-                    ? <Loader2 size={16} className="animate-spin shrink-0" style={{ color: 'var(--text-3)' }} />
+                    ? <Loader2 size={16} className="animate-spin shrink-0" style={{ color: 'var(--q-text-tertiary)' }} />
                     : <OverflowMenu lang={lang} ariaLabel={t(lang, 'memberActions')} items={menuItems}
                         triggerClassName="p-1.5 rounded-lg shrink-0 flex items-center justify-center" triggerStyle={SUBTLE_BTN} />
                 )}
@@ -580,10 +576,10 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
       {/* Invite preview: what the person on the other end is being invited to. */}
       <div className="flex items-center gap-3 mb-4 p-3 rounded-xl" style={CARD_STYLE}>
         <Avatar kind="group" name={group.name} avatar={avatarConfigFrom(group)} size={40} />
-        <p className="text-sm font-semibold min-w-0 truncate" style={{ color: 'var(--text-1)' }}>{group.name}</p>
+        <p className="text-sm font-semibold min-w-0 truncate" style={{ color: 'var(--q-text)' }}>{group.name}</p>
       </div>
       <div className="flex gap-2 mb-4">
-        <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+        <button onClick={shareInvite} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
           <Share2 size={15} /> {t(lang, 'shareInviteLink')}
         </button>
         {/* Icon-only, so it carries a real accessible name (not just a
@@ -594,7 +590,7 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
           aria-expanded={showQR}
           aria-controls="group-invite-qr"
           className="w-11 h-11 shrink-0 rounded-xl flex items-center justify-center focus-visible:ring-2"
-          style={{ background: showQR ? 'var(--accent)' : 'var(--accent-soft)', color: showQR ? '#fff' : 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+          style={{ background: showQR ? 'var(--q-action-primary)' : 'var(--q-selected)', color: showQR ? '#fff' : 'var(--q-royal)', border: '0.5px solid var(--q-selected-border)' }}
         >
           <QrCode size={16} aria-hidden="true" />
         </button>
@@ -603,25 +599,25 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
       <ShareButtons url={inviteUrl} text={`${t(lang, 'joinMyGroup')} "${group.name}"`} copiedLabel={t(lang, 'linkCopied')} onShared={onInviteAction} />
 
       {showQR && (
-        <div id="group-invite-qr" className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--border)' }}>
-          <QRCodeSVG value={inviteUrl} size={170} bgColor="#ffffff" fgColor="#1a0a2e" level="M" />
-          <p className="text-xs" style={{ color: '#475569' }}>{t(lang, 'scanToJoin')}</p>
+        <div id="group-invite-qr" className="flex flex-col items-center gap-2 mb-4 p-4 rounded-xl" style={{ background: '#ffffff', border: '0.5px solid var(--q-border)' }}>
+          <QRCodeSVG value={inviteUrl} size={170} bgColor="#ffffff" fgColor="#29213F" level="M" />
+          <p className="text-xs" style={{ color: '#5F6068' }}>{t(lang, 'scanToJoin')}</p>
           <p className="text-sm font-mono font-semibold tracking-wider" style={{ color: '#1a0a2e' }}>{group.invite_code}</p>
         </div>
       )}
       {loading ? (
-        <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+        <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
       ) : (
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {members.map(m => (
             <div key={m.user_id} className="flex items-center gap-2.5 p-2.5 rounded-xl" style={CARD_STYLE}>
               <Avatar name={m.name} avatar={m.avatar} size={32} />
               <div className="min-w-0">
-                <p className="text-sm truncate" style={{ color: 'var(--text-1)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
+                <p className="text-sm truncate" style={{ color: 'var(--q-text)' }}>{m.name}{m.user_id === userId ? ` (${t(lang, 'you')})` : ''}</p>
                 {m.user_id === group.created_by
-                  ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'owner')}</p>
+                  ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'owner')}</p>
                   : m.role === 'admin'
-                    ? <p className="text-xs" style={{ color: 'var(--accent)' }}>{t(lang, 'admin')}</p>
+                    ? <p className="text-xs" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'admin')}</p>
                     : null}
               </div>
             </div>
@@ -635,8 +631,8 @@ export function MembersModal({ lang, group, userId, onClose, onInviteAction }) {
 function Empty({ lang, title }) {
   return (
     <div className="text-center py-12">
-      <p className="text-sm mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, title)}</p>
-      <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
+      <p className="text-sm mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, title)}</p>
+      <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'beFirst')}</p>
     </div>
   );
 }
@@ -721,7 +717,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   return (
     <div className="phase-page constellation-community constellation-community-group min-h-screen">
       <div className="phase-page__shell pt-3 flex items-center justify-between">
-        <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+        <button onClick={onBack} className="flex items-center gap-2 min-h-[44px] px-1 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
           <ArrowLeft size={16} /> {t(lang, 'together')}
         </button>
         <OverflowMenu
@@ -747,8 +743,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
               the description stays plain text beside it, never a fake knob. */}
           <div className="flex items-start justify-between gap-3 w-full p-3 rounded-xl" style={CARD_STYLE}>
             <span className="min-w-0">
-              <span className="block text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'autoAddRequests')}</span>
-              <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'autoAddRequestsSub')}</span>
+              <span className="block text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'autoAddRequests')}</span>
+              <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'autoAddRequestsSub')}</span>
             </span>
             <Switch checked={!!group?.autoAdd} onChange={handleToggleAutoAdd} label={t(lang, 'autoAddRequests')} />
           </div>
@@ -757,10 +753,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
 
       {showLeave && (
         <Modal title={t(lang, 'leaveGroup')} lang={lang} onClose={() => setShowLeave(false)}>
-          <p className="text-sm mb-5" style={{ color: 'var(--text-2)' }}>{t(lang, 'leaveGroupConfirm')}</p>
+          <p className="text-sm mb-5" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'leaveGroupConfirm')}</p>
           <div className="flex gap-2">
             <button onClick={() => setShowLeave(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={SUBTLE_BTN}>{t(lang, 'cancel')}</button>
-            <button onClick={handleLeave} disabled={leaving} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--danger)' }}>
+            <button onClick={handleLeave} disabled={leaving} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-danger)' }}>
               {leaving ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'leaveGroup')}
             </button>
           </div>
@@ -782,14 +778,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           theology, safety, language, or editorial review is not a user task. */}
       {showPlanPicker && (
         <Modal title={t(lang, 'groupPlanPickerTitle')} lang={lang} onClose={() => setShowPlanPicker(false)}>
-          <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'groupPlanPickerSub')}</p>
+          <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'groupPlanPickerSub')}</p>
           <div className="grid grid-cols-1 gap-2">
             {plansByCategory()
               .map((group) => ({ ...group, plans: group.plans.filter(isPlanReviewed) }))
               .filter((group) => group.plans.length > 0)
               .map((group) => (
               <section key={group.id}>
-                <h4 className="mb-2 mt-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                <h4 className="mb-2 mt-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
                   {t(lang, group.labelKey)}
                 </h4>
                 <div className="grid grid-cols-1 gap-2">
@@ -802,10 +798,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         onClick={() => { setShowPlanPicker(false); setDetailPlan(plan); }}
                         className="phase-card plan-card p-3 flex items-start gap-3 text-start w-full disabled:opacity-50"
                       >
-                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--accent-soft)' }}>{plan.emoji}</div>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'var(--q-selected)' }}>{plan.emoji}</div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
-                          <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                          <p className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, plan.titleKey)}</p>
+                          <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
                             {adopted ? t(lang, 'groupPlanAlreadyRunning') : `${t(lang, plan.subKey)} · ${t(lang, 'planDays', { n: plan.count })}`}
                           </p>
                         </div>
@@ -860,18 +856,18 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           && (communityEncryptionMigration.total > 0 || communityEncryptionMigration.status === 'error')
           && communityEncryptionMigration.status !== 'complete' && (
           <div className="phase-card phase-card--quiet flex items-center gap-3 p-3 mb-4" role="status">
-            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
               {communityEncryptionMigration.status === 'migrating'
                 ? <Loader2 size={17} className="animate-spin" />
                 : <ShieldCheck size={17} />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>
+              <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>
                 {communityEncryptionMigration.status === 'error'
                   ? t(lang, 'errorBoundaryTitle')
                   : t(lang, 'vaultMigratePending', { count: communityEncryptionMigration.total })}
               </p>
-              <p className="text-xs" style={{ color: 'var(--text-3)' }}>
+              <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
                 {['partial', 'error'].includes(communityEncryptionMigration.status)
                   ? t(lang, 'vaultMigratePartial')
                   : `${communityEncryptionMigration.completed} / ${communityEncryptionMigration.total}`}
@@ -913,7 +909,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         {groupPlans.length > 0 && (
           <div className="mb-6">
             <h2 className="phase-section-heading flex items-center gap-2">
-              <HeartHandshake size={18} style={{ color: 'var(--accent)' }} /> {t(lang, 'groupPlansHeading')}
+              <HeartHandshake size={18} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'groupPlansHeading')}
             </h2>
             <div className="flex flex-col gap-2">
               {sortGroupPlans(groupPlans, todayKey()).map((gp) => {
@@ -927,18 +923,18 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 if (canEnd) menuItems.push({ key: 'end', icon: Trash2, label: t(lang, 'groupPlanEnd'), danger: true, onClick: () => setConfirmEndPlan(gp) });
                 return (
                   <div key={gp.id} className="phase-card community-card p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--accent-soft)' }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: 'var(--q-selected)' }}>
                       {plan.emoji}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-1)' }}>{t(lang, plan.titleKey)}</p>
-                      <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-3)' }}>
+                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--q-text)' }}>{t(lang, plan.titleKey)}</p>
+                      <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--q-text-tertiary)' }}>
                         {status === 'running' ? t(lang, 'groupPlanRunningNow') : t(lang, 'groupPlanStartsOn', { date: formatPlanDate(gp.start_date, lang) })}
                         {' · '}{t(lang, count.key, count.vars)}
                       </p>
                     </div>
                     {gp.joinedByMe ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                         <Check size={13} /> {t(lang, 'groupPlanJoinedBadge')}
                       </span>
                     ) : (
@@ -946,7 +942,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         onClick={() => handleJoinGroupPlan(gp)}
                         disabled={busyPlanId === gp.id}
                         className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium text-white disabled:opacity-40"
-                        style={{ background: 'var(--accent)' }}
+                        style={{ background: 'var(--q-action-primary)' }}
                       >
                         {busyPlanId === gp.id ? <Loader2 size={13} className="animate-spin" /> : t(lang, 'groupPlanJoinCta')}
                       </button>
@@ -965,7 +961,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         <div className="flex gap-1 mb-5">
           {['requests', 'testimonies'].map(tab => (
             <button key={tab} onClick={() => setSubTab(tab)} className="px-4 py-2 min-h-[44px] rounded-xl text-sm font-medium transition-all"
-              style={{ background: subTab === tab ? 'var(--accent)' : 'var(--input-bg)', color: subTab === tab ? '#fff' : 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+              style={{ background: subTab === tab ? 'var(--q-action-primary)' : 'var(--q-field)', color: subTab === tab ? '#fff' : 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
               {tab === 'requests' ? t(lang, 'prayerRequests') : t(lang, 'testimonies')}
             </button>
           ))}
@@ -977,7 +973,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 journeys, members, and administration stay in the group menu. */}
             {prayers.length > 0 && (
               <div className="constellation-community-group__actions mb-4">
-                <button onClick={() => setShowNewRequest(true)} className="flex w-full items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--accent)' }}>
+                <button onClick={() => setShowNewRequest(true)} className="flex w-full items-center gap-2 py-3 rounded-xl text-sm font-medium justify-center text-white" style={{ background: 'var(--q-action-primary)' }}>
                   <Plus size={16} /> {t(lang, 'newRequest')}
                 </button>
               </div>
@@ -990,10 +986,10 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
               <div className="mb-4 space-y-2.5">
                 {controls.search && (
                   <div className="relative">
-                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-3)' }} />
+                    <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--q-text-tertiary)' }} />
                     <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
                       aria-label={t(lang, 'searchRequests')}
-                      className="w-full text-sm rounded-xl pl-9 pr-3 py-2.5 focus:outline-none" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }} />
+                      className="w-full text-sm rounded-xl pl-9 pr-3 py-2.5 focus:outline-none" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }} />
                   </div>
                 )}
                 {controls.statusFilter && (
@@ -1001,7 +997,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                     {['all', 'active', 'answered'].map(f => (
                       <button key={f} onClick={() => setReqFilter(f)} aria-pressed={reqFilter === f}
                         className="min-h-[44px] text-xs px-3 py-1.5 rounded-full font-medium"
-                        style={reqFilter === f ? { background: 'var(--accent)', color: '#fff' } : SUBTLE_BTN}>
+                        style={reqFilter === f ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' } : SUBTLE_BTN}>
                         {t(lang, f === 'all' ? 'all' : f === 'active' ? 'active' : 'answered')}
                       </button>
                     ))}
@@ -1015,14 +1011,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
             ) : prayers.length === 0 ? (
               // ONE contextual action for an empty group — no competing buttons.
               <div className="text-center py-12">
-                <p className="text-sm mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'noRequests')}</p>
-                <p className="text-xs mb-5" style={{ color: 'var(--text-3)' }}>{t(lang, 'beFirst')}</p>
-                <button onClick={() => setShowNewRequest(true)} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--accent)' }}>
+                <p className="text-sm mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noRequests')}</p>
+                <p className="text-xs mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'beFirst')}</p>
+                <button onClick={() => setShowNewRequest(true)} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white" style={{ background: 'var(--q-action-primary)' }}>
                   <Plus size={16} /> {t(lang, 'newRequest')}
                 </button>
               </div>
             ) : filteredPrayers.length === 0 ? (
-              <p className="text-center text-sm py-10" style={{ color: 'var(--text-3)' }}>{t(lang, 'noMatch')}</p>
+              <p className="text-center text-sm py-10" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noMatch')}</p>
             ) : (
               <div className="flex flex-col gap-3">
                 {filteredPrayers.map(p => (
@@ -1030,12 +1026,12 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <div className="flex items-center gap-2 min-w-0">
                         <Avatar name={p.is_anonymous ? '?' : p.author_name} avatar={p.is_anonymous ? null : avatarFor(p.user_id)} size={26} anonymous={p.is_anonymous} />
-                        <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                        <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>
                           {communityAuthor(p, user.id, lang)} · {timeAgo(p.created_at, lang)}
                         </p>
                       </div>
                       {p.is_answered && (
-                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: 'var(--success-bg)', color: 'var(--success)' }}>
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium shrink-0" style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)' }}>
                           <Check size={11} /> {t(lang, 'answered2')}
                         </span>
                       )}
@@ -1044,11 +1040,11 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                       <p className="text-sm font-medium mb-2"><LockedNotice lang={lang} inline /></p>
                     ) : (
                       <>
-                        <p className="constellation-community-prayer__title text-sm font-medium mb-2" style={{ color: 'var(--text-1)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>
+                        <p className="constellation-community-prayer__title text-sm font-medium mb-2" style={{ color: 'var(--q-text)', textDecoration: p.is_answered ? 'line-through' : 'none', opacity: p.is_answered ? 0.7 : 1 }}>
                           <Star size={17} strokeWidth={1.7} aria-hidden="true" />
                           <span>{p.title}</span>
                         </p>
-                        {p.description && <RichText text={p.description} className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-2)' }} />}
+                        {p.description && <RichText text={p.description} className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--q-text-secondary)' }} />}
                       </>
                     )}
                     <div className="flex items-center gap-3">
@@ -1063,7 +1059,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         <span className="sr-only">{tp(lang, 'carryCount', p.prayer_reactions?.[0]?.count ?? 0)}</span>
                       </span>
                       {(p.community_updates?.[0]?.count ?? 0) > 0 && (
-                        <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-3)' }}>
+                        <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
                           <MessageSquare size={13} /> {p.community_updates[0].count}
                         </span>
                       )}
@@ -1081,7 +1077,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           ) : (
             groupByThisMonth(testimonies, tm => tm.created_at).map(g => (
               <div key={g.key} className="mb-5">
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>
                   {t(lang, g.key)}
                 </p>
                 <div className="flex flex-col gap-3">
@@ -1093,16 +1089,16 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                         key={testimony.id}
                         onClick={() => onOpenPrayer(testimony.community_prayer_id)}
                         className="phase-card community-card w-full text-left p-4"
-                        style={{ borderInlineStart: '3px solid var(--success)' }}
+                        style={{ borderInlineStart: '3px solid var(--q-success)' }}
                       >
                         <div className="flex items-center gap-2 mb-1.5 min-w-0">
                           <Avatar name={testimony.is_anonymous ? '?' : testimony.author_name} avatar={testimony.is_anonymous ? null : avatarFor(testimony.user_id)} size={26} anonymous={testimony.is_anonymous} />
-                          <p className="text-xs truncate" style={{ color: 'var(--text-3)' }}>
+                          <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>
                             {communityAuthor(testimony, user.id, lang)} · {timeAgo(testimony.created_at, lang)}
                           </p>
                         </div>
                         {linkedPrayer?.title && (
-                          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{linkedPrayer.title}</p>
+                          <p className="text-sm font-medium mb-1" style={{ color: 'var(--q-text)' }}>{linkedPrayer.title}</p>
                         )}
                         {testimonyCategories.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mb-2">
@@ -1117,7 +1113,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                           ? <LockedNotice lang={lang} inline />
                           // Preview only — media plays on the prayer's page, so a
                           // media-only testimony shows a 📎 count, not empty quotes.
-                          : <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>
+                          : <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>
                               🎉 {testimony.content ? `"${testimony.content}"` : ''}
                               {(testimony.attachments?.length ?? 0) > 0 && ` 📎 ${testimony.attachments.length}`}
                             </p>}
@@ -1151,7 +1147,7 @@ function CommunityPrayerView({ lang, user, groupId, prayerId, onBack }) {
 
   const prayer = prayers.find(p => p.id === prayerId);
   if (!prayer) {
-    if (loading) return <div className="flex justify-center py-20"><Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>;
+    if (loading) return <div className="flex justify-center py-20"><Loader2 size={24} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>;
     return <Navigate to={`/community/group/${groupId}`} replace />;
   }
   return <PrayerDetail communityPrayer={prayer} onBack={onBack} lang={lang} />;

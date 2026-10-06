@@ -12,7 +12,7 @@ export default function EditButton({ onEdit, label, size = 13, className = '', s
       aria-label={label}
       title={label}
       className={`shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity ${className}`}
-      style={{ color: 'var(--text-3)', ...style }}
+      style={{ color: 'var(--q-text-tertiary)', ...style }}
     >
       <Pencil size={size} aria-hidden="true" />
     </button>

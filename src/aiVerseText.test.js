@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 // Guard, not a unit test: AI output must never reach the reader as Bible text
 // (CLAUDE.md "Scripture rule"; docs/QETORET_IDENTITY.md §9). Even if the model
 // sends verse wording anyway, the client keeps references only — the text comes
@@ -7,7 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 const reply = vi.hoisted(() => ({ data: null }));
 vi.mock('./lib/aiCore', () => ({
-  callClaudeForJson: async () => ({ data: reply.data, error: null }),
+  callAiForJson: async () => ({ data: reply.data, error: null }),
   localizeAiError: (error) => error,
 }));
 

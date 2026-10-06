@@ -50,21 +50,21 @@ export default function PlanDayBody({
     const studySafetyNote = pick(day.safetyNote, lang);
     return (
       <div className="space-y-4">
-        {reflection && <p dir="auto" className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{reflection}</p>}
+        {reflection && <p dir="auto" className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{reflection}</p>}
         <StudyDayGuide study={day.study} lang={lang} onAddNote={onAddNote} />
         {/* A study of lament or of a psalm of despair can reach a reader in
             danger; the same safety aside a prayer day carries is shown here. */}
         {studySafetyNote && (
-          <aside className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-            <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <aside className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+            <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, 'planCoupleSafetyHeading')}
             </h4>
-            <p dir="auto" className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{studySafetyNote}</p>
+            <p dir="auto" className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{studySafetyNote}</p>
           </aside>
         )}
         {(day.related || []).length > 0 && (
           <section>
-            <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'studyRelated')}</h4>
+            <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'studyRelated')}</h4>
             <div className="flex flex-wrap gap-1.5">
               {day.related.map((ref) => <VersePill key={ref} reference={ref} lang={lang} tone="quiet" />)}
             </div>
@@ -108,7 +108,7 @@ export default function PlanDayBody({
   return (
     <div className="space-y-4">
       {reflection && (
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{reflection}</p>
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{reflection}</p>
       )}
 
       {/* A deliverance day replaces the plain prompt list with its own guidance:
@@ -127,13 +127,13 @@ export default function PlanDayBody({
 
       {!isFreedomDay && prompts.length > 0 && (
         <section>
-          <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'planPrayerPrompts')}
           </h4>
           <ul className="space-y-1.5">
             {prompts.map((text, i) => (
-              <li key={i} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>
-                <span aria-hidden="true" style={{ color: 'var(--accent)' }}>•</span>
+              <li key={i} className="flex gap-2 text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>
+                <span aria-hidden="true" style={{ color: 'var(--q-royal-text)' }}>•</span>
                 <span className="min-w-0">{text}</span>
               </li>
             ))}
@@ -143,46 +143,46 @@ export default function PlanDayBody({
 
       {spousePrompt && (
         <section>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {day.partnerName
               ? t(lang, 'planPrayForNamedPerson', { name: `\u2068${day.partnerName}\u2069` })
               : t(lang, 'planPrayForSpouse')}
           </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{spousePrompt}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>{spousePrompt}</p>
         </section>
       )}
 
       {/* The mirror: every prayer for someone else is prayed back over the reader. */}
       {selfPrompt && (
-        <section className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
+        <section className="rounded-xl p-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
             {t(lang, 'planPrayForYourself')}
           </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{selfPrompt}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>{selfPrompt}</p>
         </section>
       )}
 
       {marriagePrompt && (
-        <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+        <section className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'planPrayForMarriage')}
           </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{marriagePrompt}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>{marriagePrompt}</p>
         </section>
       )}
 
       {(day.childPrayers || []).map((child) => (
         <section key={child.id}>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'planPrayForChild', { name: `\u2068${child.name}\u2069` })}
           </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{pick(child.prompt, lang)}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>{pick(child.prompt, lang)}</p>
         </section>
       ))}
 
       {askRole && (
-        <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-          <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planPrepRoleQ')}</h4>
+        <section className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+          <h4 className="mb-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'planPrepRoleQ')}</h4>
           <div role="radiogroup" aria-label={t(lang, 'planPrepRoleQ')} className="flex flex-wrap gap-2">
             {ROLES.map((r) => (
               <button
@@ -192,7 +192,7 @@ export default function PlanDayBody({
                 aria-checked={false}
                 onClick={() => onChooseRole(r.id)}
                 className="pressable min-h-11 rounded-full px-3 text-xs font-medium"
-                style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                style={{ background: 'var(--q-surface)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
               >
                 {t(lang, r.labelKey)}
               </button>
@@ -202,11 +202,11 @@ export default function PlanDayBody({
       )}
 
       {roleText && (
-        <section className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+        <section className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, role === 'husband' ? 'planPrepRoleHusbandHeading' : 'planPrepRoleWifeHeading')}
           </h4>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{roleText}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{roleText}</p>
           {roleReflection?.ref && (
             <div className="mt-2"><VersePill reference={roleReflection.ref} lang={lang} tone="quiet" /></div>
           )}
@@ -214,22 +214,22 @@ export default function PlanDayBody({
       )}
 
       {safetyNote && (
-        <aside className="rounded-xl p-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+        <aside className="rounded-xl p-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+          <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'planCoupleSafetyHeading')}
           </h4>
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{safetyNote}</p>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{safetyNote}</p>
         </aside>
       )}
 
       {rolePending && (
-        <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
+        <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
       )}
 
       {/* Keep the prayer itself short. Related reading and couple exercises are
           available after prayer without competing with the primary directions. */}
       {hasAfterPrayer && (
-        <section className="rounded-xl px-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+        <section className="rounded-xl px-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
           <button
             type="button"
             onClick={() => setAfterPrayerOpen((v) => !v)}
@@ -237,12 +237,12 @@ export default function PlanDayBody({
             aria-controls={`${idPrefix}-after-prayer`}
             className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
           >
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-2)' }}>{t(lang, 'planAfterPrayer')}</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planAfterPrayer')}</span>
             <ChevronDown
               size={16}
               aria-hidden="true"
               style={{
-                color: 'var(--text-3)',
+                color: 'var(--q-text-tertiary)',
                 transform: afterPrayerOpen ? 'rotate(180deg)' : undefined,
                 transition: 'transform 0.15s',
               }}
@@ -253,7 +253,7 @@ export default function PlanDayBody({
             <div id={`${idPrefix}-after-prayer`} className="space-y-4 pb-3">
               {related.length > 0 && (
                 <section>
-                  <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                  <h4 className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
                     {t(lang, 'planRelatedScripture')}
                   </h4>
                   <div className="flex flex-wrap gap-1.5">
@@ -264,28 +264,28 @@ export default function PlanDayBody({
 
               {conversationPrompt && (
                 <section>
-                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
                     {t(lang, 'planTalkTogether')}
                   </h4>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{conversationPrompt}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{conversationPrompt}</p>
                 </section>
               )}
 
               {practice && (
                 <section>
-                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
                     {t(lang, 'planPracticeToday')}
                   </h4>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{practice}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{practice}</p>
                 </section>
               )}
 
               {prayTogether && (
-                <section className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>
+                <section className="rounded-xl p-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+                  <h4 className="mb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-royal-text)' }}>
                     {t(lang, 'planPrayTogether')}
                   </h4>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }}>{prayTogether}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }}>{prayTogether}</p>
                 </section>
               )}
 

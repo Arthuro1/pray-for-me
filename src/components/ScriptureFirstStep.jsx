@@ -19,26 +19,26 @@ import RichText from './rich/RichText';
 // never from the AI, even for guidance saved before the AI stopped sending it.
 function Passage({ p, lang, added, onAdd }) {
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <p className="text-sm font-semibold flex items-center gap-1.5 mb-1" style={{ color: 'var(--accent)' }}>
+    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+      <p className="text-sm font-semibold flex items-center gap-1.5 mb-1" style={{ color: 'var(--q-royal-text)' }}>
         <BookOpen size={14} /> {p.ref}
       </p>
-      {p.why && <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-3)' }}>{p.why}</p>}
+      {p.why && <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{p.why}</p>}
       <VerseAccordion reference={p.ref} lang={lang}>
         {({ toggle }) => (
           <div className="flex items-center justify-between gap-2">
-            <button onClick={toggle} className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+            <button onClick={toggle} className="text-xs font-medium" style={{ color: 'var(--q-royal-text)' }}>
               {t(lang, 'readInApp')} →
             </button>
             {added ? (
-              <span className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--accent)' }}>
+              <span className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--q-royal-text)' }}>
                 <Check size={13} /> {t(lang, 'addedPoint')}
               </span>
             ) : (
               <button
                 onClick={onAdd}
                 className="text-xs font-medium px-3 py-1.5 rounded-full"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
               >
                 + {t(lang, 'addAsPoint')}
               </button>
@@ -100,8 +100,8 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     if (status === 'offline') {
       return (
         <div className="flex flex-col items-center text-center gap-3 py-10 px-4">
-          <WifiOff size={28} style={{ color: 'var(--text-3)' }} />
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'scriptureOffline')}</p>
+          <WifiOff size={28} style={{ color: 'var(--q-text-tertiary)' }} />
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'scriptureOffline')}</p>
         </div>
       );
     }
@@ -109,8 +109,8 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     if (status === 'loading') {
       return (
         <div className="flex flex-col items-center text-center gap-3 py-12">
-          <RefreshCw size={22} className="animate-spin" style={{ color: 'var(--accent)' }} />
-          <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'scriptureFinding')}</p>
+          <RefreshCw size={22} className="animate-spin" style={{ color: 'var(--q-royal-text)' }} />
+          <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'scriptureFinding')}</p>
         </div>
       );
     }
@@ -118,15 +118,15 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     if (status === 'intro') {
       return (
         <div className="flex flex-col gap-4 py-4">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'scriptureFirstIntro')}</p>
-          <div className="rounded-2xl px-4 py-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-            <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{title}</p>
-            {description && <RichText text={description} className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--text-3)' }} />}
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'scriptureFirstIntro')}</p>
+          <div className="rounded-2xl px-4 py-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+            <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{title}</p>
+            {description && <RichText text={description} className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }} />}
           </div>
           <button
             onClick={fetchGuidance}
             className="flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-            style={{ background: 'var(--accent)' }}
+            style={{ background: 'var(--q-action-primary)' }}
           >
             <Sparkles size={16} /> {t(lang, 'findScripture')}
           </button>
@@ -139,11 +139,11 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
     if (!guidance) {
       return (
         <div className="flex flex-col items-center text-center gap-3 py-10 px-4">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{error || t(lang, 'scriptureNone')}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{error || t(lang, 'scriptureNone')}</p>
           <button
             onClick={fetchGuidance}
             className="text-xs font-medium px-4 py-2 rounded-full flex items-center gap-1.5"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
           >
             <RefreshCw size={13} /> {t(lang, 'retryScripture')}
           </button>
@@ -163,17 +163,17 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
 
         {guidance.context && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'contextLabel')}</p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{guidance.context}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'contextLabel')}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{guidance.context}</p>
           </div>
         )}
 
         {guidance.themes.length > 0 && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'biblicalThemes')}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'biblicalThemes')}</p>
             <div className="flex flex-wrap gap-1.5">
               {guidance.themes.map((th, i) => (
-                <span key={i} className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>{th}</span>
+                <span key={i} className="text-xs px-3 py-1 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>{th}</span>
               ))}
             </div>
           </div>
@@ -181,11 +181,11 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
 
         {guidance.reflections.length > 0 && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'reflectLabel')}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'reflectLabel')}</p>
             <ul className="space-y-1.5">
               {guidance.reflections.map((q, i) => (
-                <li key={i} className="text-sm leading-relaxed flex gap-2" style={{ color: 'var(--text-2)' }}>
-                  <span style={{ color: 'var(--accent)' }}>•</span> {q}
+                <li key={i} className="text-sm leading-relaxed flex gap-2" style={{ color: 'var(--q-text-secondary)' }}>
+                  <span style={{ color: 'var(--q-royal-text)' }}>•</span> {q}
                 </li>
               ))}
             </ul>
@@ -204,28 +204,28 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
         aria-modal="true"
         aria-label={t(lang, 'scriptureFirstTitle')}
         className="w-full max-w-lg mx-auto rounded-t-3xl md:rounded-3xl max-h-[92vh] flex flex-col md:shadow-2xl"
-        style={{ background: 'var(--bg)' }}
+        style={{ background: 'var(--q-canvas)' }}
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1 shrink-0">
-          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--border)' }} />
+          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--q-border)' }} />
         </div>
         <div className="flex items-center justify-between px-5 py-3 shrink-0">
-          <h2 className="font-semibold text-lg flex items-center gap-2" style={{ color: 'var(--text-1)' }}>
-            <BookOpen size={18} style={{ color: 'var(--accent)' }} /> {t(lang, 'scriptureFirstTitle')}
+          <h2 className="font-semibold text-lg flex items-center gap-2" style={{ color: 'var(--q-text)' }}>
+            <BookOpen size={18} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'scriptureFirstTitle')}
           </h2>
-          <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+          <button onClick={onClose} aria-label={t(lang, 'close')} className="p-1.5 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
             <X size={16} />
           </button>
         </div>
 
         <div className="px-5 overflow-y-auto flex-1">{body()}</div>
 
-        <div className="px-5 py-4 shrink-0" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <div className="px-5 py-4 shrink-0" style={{ borderTop: '0.5px solid var(--q-border)' }}>
           <button
             onClick={onClose}
             className="w-full rounded-xl py-3 text-sm font-semibold text-white"
-            style={{ background: 'var(--plum)' }}
+            style={{ background: 'var(--q-action-primary)' }}
           >
             {t(lang, 'prayNowCta')}
           </button>

@@ -247,10 +247,10 @@ export function withAlpha(hex, alpha) {
 export function readCardPalette(root = document.documentElement) {
   const styles = getComputedStyle(root);
   const token = (name, fallback) => (styles.getPropertyValue(name) || '').trim() || fallback;
-  const ink = token('--card-sky-ink', '#f8f5ff');
-  const accent = token('--card-sky-accent', '#e4c27f');
+  const ink = token('--q-text-inverse', '#F7F5EF');
+  const accent = token('--q-gold-inverse', '#C6A15C');
   return {
-    sky: [token('--card-sky-from', '#19132f'), token('--card-sky-to', '#4a3190')],
+    sky: [token('--q-surface-inverse', '#29213F'), token('--q-surface-inverse', '#29213F')],
     ink,
     label: accent,
     reference: accent,
@@ -274,8 +274,8 @@ export function fontStacks(root) {
   const styles = getComputedStyle(root);
   const read = (name, fallback) => (styles.getPropertyValue(name) || '').trim() || fallback;
   return {
-    editorial: read('--font-editorial', FAMILIES.editorial),
-    ui: read('--font-ui', FAMILIES.ui),
+    editorial: read('--q-font-editorial', FAMILIES.editorial),
+    ui: read('--q-font-ui', FAMILIES.ui),
   };
 }
 

@@ -42,31 +42,31 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
       <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" className="editorial-dialog w-full max-w-sm p-5">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
-              <ShieldCheck size={16} style={{ color: 'var(--accent)' }} />
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
+              <ShieldCheck size={16} style={{ color: 'var(--q-royal-text)' }} />
             </div>
-            <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, 'aiPreviewTitle')}</h3>
+            <h3 className="font-semibold text-base" style={{ color: 'var(--q-text)' }}>{t(lang, 'aiPreviewTitle')}</h3>
           </div>
           <button className="phase-icon-button" onClick={onCancel} aria-label={t(lang, 'close')}><X size={18} /></button>
         </div>
 
-        <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPreviewBody')}</p>
+        <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiPreviewBody')}</p>
 
-        <div className="rounded-xl p-3 mb-4 space-y-2" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+        <div className="rounded-xl p-3 mb-4 space-y-2" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPreviewFieldTitle')}</p>
-            <p className="text-sm break-words" style={{ color: 'var(--text-1)' }}>{outTitle}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiPreviewFieldTitle')}</p>
+            <p className="text-sm break-words" style={{ color: 'var(--q-text)' }}>{outTitle}</p>
           </div>
           {sendDescription && hasDescription && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPreviewFieldDescription')}</p>
-              <p className="text-sm break-words whitespace-pre-wrap" style={{ color: 'var(--text-2)' }}>{outDescription}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiPreviewFieldDescription')}</p>
+              <p className="text-sm break-words whitespace-pre-wrap" style={{ color: 'var(--q-text-secondary)' }}>{outDescription}</p>
             </div>
           )}
           {sendUpdate && hasUpdate && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiPreviewFieldUpdate')}</p>
-              <p className="text-sm break-words whitespace-pre-wrap" style={{ color: 'var(--text-2)' }}>{outUpdate}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiPreviewFieldUpdate')}</p>
+              <p className="text-sm break-words whitespace-pre-wrap" style={{ color: 'var(--q-text-secondary)' }}>{outUpdate}</p>
             </div>
           )}
         </div>
@@ -74,13 +74,13 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
         <div className="mb-4">
           {hasDescription && (
             <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{includeDescriptionLabel}</span>
+              <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{includeDescriptionLabel}</span>
               <Switch checked={sendDescription} onChange={(v) => updateSettings({ aiSendDescription: v })} label={includeDescriptionLabel} />
             </div>
           )}
           {hasUpdate && (
             <div className="flex items-center justify-between gap-3 py-1.5">
-              <span className="text-sm" style={{ color: 'var(--text-2)' }}>{includeUpdateLabel}</span>
+              <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{includeUpdateLabel}</span>
               <Switch checked={sendUpdate} onChange={(v) => updateSettings({ aiSendUpdate: v })} label={includeUpdateLabel} />
             </div>
           )}
@@ -90,14 +90,14 @@ export default function AiOutgoingPreview({ lang = 'en', title, description = ''
           <button
             onClick={onCancel}
             className="flex-1 py-2.5 rounded-xl text-sm font-medium"
-            style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+            style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
           >
             {t(lang, 'cancel')}
           </button>
           <button
             onClick={onSend}
             className="flex-1 py-2.5 rounded-xl text-sm font-medium inline-flex items-center justify-center gap-1.5"
-            style={{ background: 'var(--accent)', color: '#fff' }}
+            style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
           >
             <Send size={14} /> {t(lang, 'aiPreviewSend')}
           </button>

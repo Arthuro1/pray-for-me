@@ -10,7 +10,7 @@ import { FOLLOW_UP_OPTIONS, followUpDateFor } from '../store/followUpStore';
 // (YYYY-MM-DD) or null for "no reminder"; the parent form persists it via
 // followUpStore once the prayer's id is known.
 
-const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
+const INPUT_STYLE = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
 
 function Chip({ active, onClick, children }) {
   return (
@@ -19,8 +19,8 @@ function Chip({ active, onClick, children }) {
       onClick={onClick}
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
       style={active
-        ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-        : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+        ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', border: '1.5px solid var(--q-royal)' }
+        : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
     >
       {children}
     </button>
@@ -42,10 +42,10 @@ export default function FollowUpField({ value = null, onChange, lang }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-1.5">
-        <Bell size={13} style={{ color: 'var(--text-3)' }} />
-        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'followUpTitle')}</p>
+        <Bell size={13} style={{ color: 'var(--q-text-tertiary)' }} />
+        <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'followUpTitle')}</p>
       </div>
-      <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'followUpHint')}</p>
+      <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'followUpHint')}</p>
 
       <div className="flex flex-wrap gap-2">
         {FOLLOW_UP_OPTIONS.map((o) => (

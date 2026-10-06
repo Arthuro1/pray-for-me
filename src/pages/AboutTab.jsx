@@ -34,7 +34,7 @@ function References({ refs, lang }) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
             >
               <BookOpen size={11} aria-hidden="true" /> {label}
             </a>
@@ -48,7 +48,7 @@ function References({ refs, lang }) {
 function Section({ title, children, labelledBy }) {
   return (
     <section className="mb-8" aria-labelledby={labelledBy}>
-      <h2 id={labelledBy} className="editorial-heading mb-2 text-2xl" style={{ color: 'var(--text-1)' }}>{title}</h2>
+      <h2 id={labelledBy} className="editorial-heading mb-2 text-2xl" style={{ color: 'var(--q-text)' }}>{title}</h2>
       {children}
     </section>
   );
@@ -67,12 +67,12 @@ export default function AboutTab() {
       <div className="phase-content max-w-2xl">
         <div className="mb-8 flex items-center gap-3">
           <RiseMark animate={false} size={32} />
-          <p className="editorial text-xl" style={{ color: 'var(--accent)' }}>{t(lang, 'aboutTagline')}</p>
+          <p className="editorial text-xl" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'aboutTagline')}</p>
         </div>
 
         {SECTIONS.map(({ id, titleKey, bodyKey, refs }) => (
           <Section key={id} title={t(lang, titleKey)} labelledBy={`about-${id}`}>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, bodyKey)}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, bodyKey)}</p>
             <References refs={refs} lang={lang} />
           </Section>
         ))}
@@ -80,7 +80,7 @@ export default function AboutTab() {
         <Section title={t(lang, 'aboutMovementsTitle')} labelledBy="about-movements">
           <ol className="space-y-2">
             {MOVEMENTS.map((m) => (
-              <li key={m} className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+              <li key={m} className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
                 {t(lang, `aboutMove_${m}`)}
               </li>
             ))}
@@ -88,13 +88,13 @@ export default function AboutTab() {
         </Section>
 
         <Section title={t(lang, 'aboutCirclesTitle')} labelledBy="about-circles">
-          <p className="mb-3 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'aboutCirclesBody')}</p>
+          <p className="mb-3 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aboutCirclesBody')}</p>
           <ol className="flex flex-wrap gap-2">
             {CIRCLES.map((circle) => {
               const Icon = CIRCLE_ICONS[circle];
               return (
-                <li key={circle} className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium" style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-2)' }}>
-                  <Icon size={13} aria-hidden="true" style={{ color: 'var(--accent)' }} /> {t(lang, circleLabelKey(circle))}
+                <li key={circle} className="inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium" style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border)', color: 'var(--q-text-secondary)' }}>
+                  <Icon size={13} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} /> {t(lang, circleLabelKey(circle))}
                 </li>
               );
             })}
@@ -102,7 +102,7 @@ export default function AboutTab() {
         </Section>
 
         <Section title={t(lang, 'aboutPromisesTitle')} labelledBy="about-promises">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'aboutPromisesBody')}</p>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aboutPromisesBody')}</p>
         </Section>
       </div>
     </div>

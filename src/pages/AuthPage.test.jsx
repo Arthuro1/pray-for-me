@@ -68,8 +68,8 @@ describe('AuthPage', () => {
     const { container } = render(<AuthPage onBack={onBack} />);
     expect(screen.getByText(t('fr', 'authForgotPassword'))).toBeTruthy();
     expect(screen.getByText(t('fr', 'authContinueGoogle'))).toBeTruthy();
-    expect(container.querySelector('.constellation-auth__sky-image--light')).toBeTruthy();
-    expect(container.querySelector('.constellation-auth__sky-image--dark')).toBeTruthy();
+    // Qetoret has no celestial art: no sky, no stars behind the prayer.
+    expect(container.querySelector('[class*="sky"]')).toBeNull();
     expect(container.querySelector('img[src="/logo.svg"]')).toBeTruthy();
     expect(container.querySelector('img[src="/assets/google-g.png"]')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t('fr', 'authBackHome')));

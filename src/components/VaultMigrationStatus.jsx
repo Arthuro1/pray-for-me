@@ -33,13 +33,13 @@ export default function VaultMigrationStatus({ lang }) {
   // Checking, offline, or no private prayers to protect → render nothing.
   if (!status || status.total === 0) return null;
 
-  const wrapStyle = { borderTop: '0.5px solid var(--border-soft)' };
+  const wrapStyle = { borderTop: '0.5px solid var(--q-border)' };
 
   if (status.pending === 0) {
     return (
       <div className="mt-3 pt-3 flex items-center gap-2" style={wrapStyle}>
-        <ShieldCheck size={14} style={{ color: 'var(--accent)' }} />
-        <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultAllProtected')}</p>
+        <ShieldCheck size={14} style={{ color: 'var(--q-royal-text)' }} />
+        <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'vaultAllProtected')}</p>
       </div>
     );
   }
@@ -48,7 +48,7 @@ export default function VaultMigrationStatus({ lang }) {
     <div className="mt-3 pt-3" style={wrapStyle}>
       <div className="flex items-start gap-2 mb-2">
         <ShieldAlert size={14} style={{ color: '#d97706', marginTop: 2, flexShrink: 0 }} />
-        <p className="text-xs" style={{ color: 'var(--text-2)' }}>
+        <p className="text-xs" style={{ color: 'var(--q-text-secondary)' }}>
           {t(lang, 'vaultMigratePending', { count: status.pending })}
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function VaultMigrationStatus({ lang }) {
         onClick={handleMigrate}
         disabled={migrating}
         className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium disabled:opacity-50"
-        style={{ background: 'var(--accent)', color: '#fff' }}
+        style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
       >
         {migrating ? <Loader2 size={14} className="animate-spin" /> : <ShieldCheck size={14} />}
         {t(lang, migrating ? 'vaultMigrating' : 'vaultMigrateNow')}

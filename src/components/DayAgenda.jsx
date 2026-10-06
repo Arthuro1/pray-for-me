@@ -33,11 +33,11 @@ export default function DayAgenda({
   const isEmpty = entries.length === 0 && commitments.length === 0;
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <p className="text-sm font-semibold capitalize mb-2" style={{ color: 'var(--text-1)' }}>{dayLabel}</p>
+    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+      <p className="text-sm font-semibold capitalize mb-2" style={{ color: 'var(--q-text)' }}>{dayLabel}</p>
 
       {isEmpty && (
-        <p className="text-xs text-center py-4" style={{ color: 'var(--text-3)' }}>🕊️ {t(lang, 'noPrayersThisDay')}</p>
+        <p className="text-xs text-center py-4" style={{ color: 'var(--q-text-tertiary)' }}>🕊️ {t(lang, 'noPrayersThisDay')}</p>
       )}
 
       {SLOT_ORDER.map((slot) => {
@@ -48,7 +48,7 @@ export default function DayAgenda({
         return (
           <div key={slot} className="mb-2">
             {showHeader && (
-              <p className="text-[10px] font-semibold uppercase tracking-widest mb-1.5 flex items-center gap-1" style={{ color: 'var(--text-3)' }}>
+              <p className="text-[10px] font-semibold uppercase tracking-widest mb-1.5 flex items-center gap-1" style={{ color: 'var(--q-text-tertiary)' }}>
                 <Icon size={11} /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
               </p>
             )}
@@ -65,15 +65,15 @@ export default function DayAgenda({
                 const planDayNo = plan ? planDayNumber(prayer.schedule, dayKey) : null;
                 const href = planDayNo ? `/prayers/${prayer.id}?day=${dayKey}` : `/prayers/${prayer.id}`;
                 return (
-                  <div key={prayer.id} className="rounded-xl px-3 py-2.5" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+                  <div key={prayer.id} className="rounded-xl px-3 py-2.5" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
                     <div className="flex items-center gap-2.5">
                       <SourceDot source={source} />
                       <button onClick={() => navigate(href)} className="flex-1 min-w-0 text-start">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--text-1)', textDecoration: prayed ? 'line-through' : 'none', opacity: prayed ? 0.6 : 1 }}>
+                        <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)', textDecoration: prayed ? 'line-through' : 'none', opacity: prayed ? 0.6 : 1 }}>
                           {tr(prayer.title, lang)}
                         </p>
                         {hasSchedule && (
-                          <p className="text-[10px] truncate" style={{ color: 'var(--text-3)' }}>
+                          <p className="text-[10px] truncate" style={{ color: 'var(--q-text-tertiary)' }}>
                             {(() => {
                               // Plan prayers show "Day n of N · theme" for the
                               // selected day; other schedules show their summary.
@@ -92,8 +92,8 @@ export default function DayAgenda({
                         aria-label={t(lang, prayed ? 'prayedOnDay' : 'markPrayed')}
                         className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all"
                         style={prayed
-                          ? { background: 'var(--success)', color: '#fff' }
-                          : { background: 'var(--surface)', border: '1.5px solid var(--input-border)', color: 'var(--text-3)' }}
+                          ? { background: 'var(--q-success-soft)', color: 'var(--q-success)', boxShadow: 'inset 0 0 0 1px var(--q-success-border)' }
+                          : { background: 'var(--q-surface)', border: '1.5px solid var(--q-field-border)', color: 'var(--q-text-tertiary)' }}
                       >
                         <Check size={13} />
                       </button>
@@ -104,7 +104,7 @@ export default function DayAgenda({
                         <OverflowMenu
                           lang={lang}
                           triggerClassName="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-                          triggerStyle={{ background: 'var(--surface)', border: '0.5px solid var(--input-border)', color: 'var(--text-3)' }}
+                          triggerStyle={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-tertiary)' }}
                           items={[
                             { key: 'skip', icon: SkipForward, label: t(lang, 'skipThisDay'), onClick: () => onSkip(prayer.id, dayKey), hidden: prayed || !!override },
                             { key: 'move', icon: CalendarClock, label: t(lang, 'moveThisDay'), onClick: () => setMovingId(prayer.id), hidden: prayed || !!override },
@@ -124,7 +124,7 @@ export default function DayAgenda({
                           setMovingId(null);
                         }}
                         className="w-full mt-2 text-sm rounded-lg px-3 py-2 focus:outline-none"
-                        style={{ background: 'var(--surface)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                       />
                     )}
                   </div>
@@ -136,7 +136,7 @@ export default function DayAgenda({
       })}
 
       {commitments.length > 0 && (
-        <div className="mt-3 pt-2" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <div className="mt-3 pt-2" style={{ borderTop: '0.5px solid var(--q-border)' }}>
           <p className="text-[10px] font-semibold uppercase tracking-widest mb-1.5 flex items-center gap-1" style={{ color: DOT_COLORS.group }}>
             <Users size={11} /> {t(lang, 'myCommitments')}
           </p>
@@ -146,12 +146,12 @@ export default function DayAgenda({
                 key={c.id}
                 onClick={() => navigate(`/community/group/${c.group_id}/prayer/${c.community_prayer_id}`)}
                 className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-start"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
               >
                 <span className="rounded-full shrink-0" style={{ width: 6, height: 6, background: DOT_COLORS.group }} />
                 <span className="flex-1 min-w-0">
-                  <span className="block text-sm font-medium truncate" style={{ color: 'var(--text-1)' }}>{c.title}</span>
-                  {c.group_name && <span className="block text-[10px] truncate" style={{ color: 'var(--text-3)' }}>{c.group_name}</span>}
+                  <span className="block text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{c.title}</span>
+                  {c.group_name && <span className="block text-[10px] truncate" style={{ color: 'var(--q-text-tertiary)' }}>{c.group_name}</span>}
                 </span>
               </button>
             ))}

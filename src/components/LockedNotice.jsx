@@ -10,19 +10,19 @@ import { t } from '../i18n';
 export default function LockedNotice({ lang, inline = false }) {
   if (inline) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-sm italic" style={{ color: 'var(--text-3)' }}>
+      <span className="inline-flex items-center gap-1.5 text-sm italic" style={{ color: 'var(--q-text-tertiary)' }}>
         <Lock size={13} className="shrink-0" /> {t(lang, 'contentLocked')}
       </span>
     );
   }
   return (
-    <div className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-      <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-soft)' }}>
-        <Lock size={15} style={{ color: 'var(--accent)' }} />
+    <div className="rounded-2xl p-4 flex items-start gap-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+      <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-selected)' }}>
+        <Lock size={15} style={{ color: 'var(--q-royal-text)' }} />
       </div>
       <div className="min-w-0">
-        <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'contentLocked')}</p>
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'contentLockedHint')}</p>
+        <p className="text-sm font-medium mb-1" style={{ color: 'var(--q-text)' }}>{t(lang, 'contentLocked')}</p>
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'contentLockedHint')}</p>
       </div>
     </div>
   );

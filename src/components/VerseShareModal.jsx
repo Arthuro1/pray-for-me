@@ -119,20 +119,20 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
         aria-modal="true"
         aria-label={t(lang, 'shareVerse')}
         className="w-full max-w-sm rounded-2xl p-5"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'shareVerse')}</h3>
-            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{verse.ref}</p>
+            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'shareVerse')}</h3>
+            <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{verse.ref}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t(lang, 'close')}
             className="pressable flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-            style={{ color: 'var(--text-3)' }}
+            style={{ color: 'var(--q-text-tertiary)' }}
           >
             <X size={17} aria-hidden="true" />
           </button>
@@ -153,15 +153,15 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
             <div
               className="mb-4 flex items-center justify-center overflow-hidden rounded-xl"
               style={{
-                background: 'var(--surface-2)',
-                border: '0.5px solid var(--border)',
+                background: 'var(--q-surface-muted)',
+                border: '0.5px solid var(--q-border)',
                 aspectRatio: size === 'story' ? '9 / 16' : '1 / 1',
                 maxHeight: '15rem',
               }}
             >
               {image
                 ? <img src={image.url} alt={`${label} — ${verse.ref}`} className="h-full w-full object-contain" />
-                : <Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} aria-hidden="true" />}
+                : <Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />}
             </div>
           </>
         )}
@@ -172,7 +172,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
               type="button"
               onClick={canUseNativeSheet ? shareImage : saveImage}
               className="pressable flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white"
-              style={{ background: 'var(--accent)' }}
+              style={{ background: 'var(--q-action-primary)' }}
             >
               {canUseNativeSheet
                 ? <><Share2 size={16} aria-hidden="true" /> {t(lang, 'verseShareImage')}</>
@@ -185,7 +185,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
                 type="button"
                 onClick={saveImage}
                 className="pressable flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-medium"
-                style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
               >
                 <Download size={15} aria-hidden="true" /> {t(lang, 'verseSaveImage')}
               </button>
@@ -194,7 +194,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
               type="button"
               onClick={copyText}
               className="pressable flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-medium"
-              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
             >
               <Copy size={15} aria-hidden="true" /> {t(lang, 'verseCopyText')}
             </button>
@@ -203,7 +203,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
 
         {/* The web targets can't carry the PNG, so they pass on the verse as text
             plus the link — the same message the clipboard action copies. */}
-        <p className="mb-2 text-center text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'verseShareTextLabel')}</p>
+        <p className="mb-2 text-center text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'verseShareTextLabel')}</p>
         <ShareButtons
           url={linkUrl}
           text={shareText}

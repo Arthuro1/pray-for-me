@@ -52,7 +52,7 @@ const COPY = {
 function starterPlanBody(plan, lang) {
   return (
     <>
-      <span className="block font-semibold" style={{ color: 'var(--text-1)' }}>
+      <span className="block font-semibold" style={{ color: 'var(--q-text)' }}>
         <span aria-hidden="true">{plan.emoji} </span><span>{t(lang, plan.titleKey)}</span>
       </span>
       <span className="block">{t(lang, plan.subKey)}</span>

@@ -37,7 +37,7 @@ export default function Avatar({
       <div
         {...a11y}
         className={`avatar avatar--anonymous ${className}`}
-        style={{ ...box, background: 'var(--input-bg)', color: 'var(--text-3)' }}
+        style={{ ...box, background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}
       >
         <User size={Math.round(size * 0.55)} aria-hidden="true" />
       </div>

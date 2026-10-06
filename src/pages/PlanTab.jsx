@@ -101,7 +101,7 @@ export default function CalendarTab() {
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'calendarActions')}
-              triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
+              triggerStyle={{ background: 'var(--q-surface-muted)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
               items={[{ key: 'export', icon: Download, label: t(lang, 'exportIcs'), onClick: exportCalendar }]}
             />
           )}

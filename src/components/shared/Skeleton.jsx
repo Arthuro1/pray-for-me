@@ -2,12 +2,12 @@
 // layout jump and "flash of spinner" of a bare loader.
 
 function Bar({ w = '100%', h = 12, className = '' }) {
-  return <div className={`rounded ${className}`} style={{ width: w, height: h, background: 'var(--input-bg)' }} />;
+  return <div className={`rounded ${className}`} style={{ width: w, height: h, background: 'var(--q-field)' }} />;
 }
 
 export function SkeletonCard() {
   return (
-    <div className="p-4 rounded-2xl animate-pulse" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+    <div className="p-4 rounded-2xl animate-pulse" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
       <Bar w="40%" h={10} className="mb-3" />
       <Bar w="75%" h={14} className="mb-2" />
       <Bar w="55%" h={12} />

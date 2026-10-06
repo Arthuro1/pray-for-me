@@ -8,7 +8,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 
 const MIN_PASSPHRASE = 8;
 
-const inputStyle = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
+const inputStyle = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
 
 // A password field with a show/hide toggle.
 function PassField({ value, onChange, placeholder, autoFocus }) {
@@ -29,7 +29,7 @@ function PassField({ value, onChange, placeholder, autoFocus }) {
         type="button"
         onClick={() => setShow((s) => !s)}
         className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
-        style={{ color: 'var(--text-3)' }}
+        style={{ color: 'var(--q-text-tertiary)' }}
         tabIndex={-1}
       >
         {show ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -45,7 +45,7 @@ function PrimaryButton({ onClick, disabled, busy, children }) {
       onClick={onClick}
       disabled={disabled || busy}
       className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40"
-      style={{ background: 'var(--accent)' }}
+      style={{ background: 'var(--q-action-primary)' }}
     >
       {busy ? <Loader2 size={15} className="animate-spin mx-auto" /> : children}
     </button>
@@ -193,10 +193,10 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
     <div ref={trapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, titleKey)} className="editorial-dialog w-full max-w-sm p-5" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
-              <Icon size={16} style={{ color: 'var(--accent)' }} />
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
+              <Icon size={16} style={{ color: 'var(--q-royal-text)' }} />
             </div>
-            <h3 className="font-semibold text-base" style={{ color: 'var(--text-1)' }}>{t(lang, titleKey)}</h3>
+            <h3 className="font-semibold text-base" style={{ color: 'var(--q-text)' }}>{t(lang, titleKey)}</h3>
           </div>
           {dismissable && <button className="phase-icon-button" onClick={onClose} aria-label={t(lang, 'close')}><X size={18} /></button>}
         </div>
@@ -204,10 +204,10 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {/* ─── Setup ─── */}
         {mode === 'setup' && (
           <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultSetupIntro')}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultSetupIntro')}</p>
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultPassphrase')} autoFocus />
             <PassField value={confirm} onChange={setConfirm} placeholder={t(lang, 'vaultConfirmPassphrase')} />
-            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleCreate} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultCreate')}</PrimaryButton>
           </div>
         )}
@@ -215,15 +215,15 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {/* ─── Recovery code (shown once) ─── */}
         {mode === 'recovery' && (
           <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultRecoveryIntro')}</p>
-            <div className="rounded-xl p-3 flex items-center justify-between gap-2" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--accent-border)' }}>
-              <code className="text-sm font-mono tracking-wider break-all" style={{ color: 'var(--text-1)' }}>{recoveryCode}</code>
-              <button onClick={copyCode} aria-label={t(lang, 'vaultCopyCode')} className="shrink-0 p-1.5 rounded-lg" style={{ color: 'var(--accent)' }}>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultRecoveryIntro')}</p>
+            <div className="rounded-xl p-3 flex items-center justify-between gap-2" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-selected-border)' }}>
+              <code className="text-sm font-mono tracking-wider break-all" style={{ color: 'var(--q-text)' }}>{recoveryCode}</code>
+              <button onClick={copyCode} aria-label={t(lang, 'vaultCopyCode')} className="shrink-0 p-1.5 rounded-lg" style={{ color: 'var(--q-royal-text)' }}>
                 {copied ? <Check size={16} /> : <Copy size={16} />}
               </button>
             </div>
             {!codeSynced && (
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--danger)' }}>{t(lang, 'vaultCodeNotSynced')}</p>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--q-danger)' }}>{t(lang, 'vaultCodeNotSynced')}</p>
             )}
             <PrimaryButton onClick={() => done()}>{t(lang, 'vaultRecoverySaved')}</PrimaryButton>
           </div>
@@ -232,11 +232,11 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {/* ─── Unlock ─── */}
         {mode === 'unlock' && (
           <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultUnlockIntro')}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultUnlockIntro')}</p>
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultPassphrase')} autoFocus />
-            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleUnlock} busy={busy} disabled={!pass}>{t(lang, 'vaultUnlock')}</PrimaryButton>
-            <button onClick={() => { setError(''); setMode('reset'); }} className="w-full text-center text-xs" style={{ color: 'var(--accent)' }}>
+            <button onClick={() => { setError(''); setMode('reset'); }} className="w-full text-center text-xs" style={{ color: 'var(--q-royal-text)' }}>
               {t(lang, 'vaultForgot')}
             </button>
           </div>
@@ -245,7 +245,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {/* ─── Reset via recovery code ─── */}
         {mode === 'reset' && (
           <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultResetIntro')}</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultResetIntro')}</p>
             <input
               type="text"
               value={code}
@@ -257,7 +257,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
               style={inputStyle}
             />
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
-            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleReset} busy={busy} disabled={!code || !pass}>{t(lang, 'vaultReset')}</PrimaryButton>
           </div>
         )}
@@ -267,7 +267,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
           <div className="space-y-3">
             <PassField value={confirm} onChange={setConfirm} placeholder={t(lang, 'vaultCurrentPassphrase')} autoFocus />
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
-            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
+            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleChange} busy={busy} disabled={!pass || !confirm}>{t(lang, 'vaultChangeSave')}</PrimaryButton>
           </div>
         )}
@@ -275,8 +275,8 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {/* ─── Rotate recovery code ─── */}
         {mode === 'rotate' && (
           <div className="space-y-3">
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'vaultRotateIntro')}</p>
-            {error && <p className="text-xs" style={{ color: 'var(--danger)' }}>{error}</p>}
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'vaultRotateIntro')}</p>
+            {error && <p className="text-xs" style={{ color: 'var(--q-danger)' }}>{error}</p>}
             <PrimaryButton onClick={handleRotate} busy={busy}>{t(lang, 'vaultRotateGenerate')}</PrimaryButton>
           </div>
         )}

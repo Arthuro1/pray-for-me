@@ -8,16 +8,16 @@ import { t } from '../../i18n';
 export default function AiDisclaimer({ lang = 'en', variant = 'compact', className = '' }) {
   if (variant === 'full') {
     return (
-      <div className={`rounded-xl p-3 flex gap-2.5 ${className}`} style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-        <Sparkles size={15} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 2 }} />
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--accent)' }}>
+      <div className={`rounded-xl p-3 flex gap-2.5 ${className}`} style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+        <Sparkles size={15} style={{ color: 'var(--q-royal-text)', flexShrink: 0, marginTop: 2 }} />
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--q-royal-text)' }}>
           {t(lang, 'aiPostureFull')}
         </p>
       </div>
     );
   }
   return (
-    <p className={`text-xs flex items-center gap-1.5 ${className}`} style={{ color: 'var(--text-3)' }}>
+    <p className={`text-xs flex items-center gap-1.5 ${className}`} style={{ color: 'var(--q-text-tertiary)' }}>
       <Sparkles size={12} style={{ flexShrink: 0 }} /> {t(lang, 'aiSuggestedLabel')}
     </p>
   );

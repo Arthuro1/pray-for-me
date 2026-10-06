@@ -26,16 +26,11 @@ export default function PlanSharePublicPage({ lang, onJoin, onSignIn }) {
 
   return (
     <div className="constellation-plan-share relative flex min-h-screen flex-col">
-      <div className="constellation-plan-share__sky" aria-hidden="true">
-        <img src="/assets/constellation/detail-sky-light-transparent.png" alt="" className="constellation-plan-share__sky-image constellation-plan-share__sky-image--light" />
-        <img src="/assets/constellation/detail-sky-dark-transparent.png" alt="" className="constellation-plan-share__sky-image constellation-plan-share__sky-image--dark" />
-      </div>
-
       <header className="relative mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
-        <a href="/" className="flex min-h-11 items-center gap-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+        <a href="/" className="flex min-h-11 items-center gap-2 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
           <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" /> <span className="brand-wordmark text-base">{APP_NAME}</span>
         </a>
-        <button type="button" onClick={onSignIn} className="min-h-11 px-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+        <button type="button" onClick={onSignIn} className="min-h-11 px-2 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
           {t(lang, 'authLogIn')}
         </button>
       </header>
@@ -55,7 +50,7 @@ export default function PlanSharePublicPage({ lang, onJoin, onSignIn }) {
         </>
       ) : (
         <main className="relative mx-auto w-full max-w-md flex-1 px-4">
-          <p className="py-10 text-center text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'planShareUnavailable')}</p>
+          <p className="py-10 text-center text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planShareUnavailable')}</p>
         </main>
       )}
     </div>

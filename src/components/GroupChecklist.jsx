@@ -66,15 +66,15 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
   };
 
   return (
-    <div className="rounded-2xl p-4 mb-5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+    <div className="rounded-2xl p-4 mb-5" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
       <div className="flex items-center justify-between gap-2 mb-2">
-        <h3 className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'checklistTitle')}</h3>
+        <h3 className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'checklistTitle')}</h3>
         <button
           onClick={() => { dismissChecklist(group.id); complete(); setVersion((v) => v + 1); }}
           aria-label={t(lang, 'checklistDismiss')}
           title={t(lang, 'checklistDismiss')}
           className="w-11 h-11 -m-2 flex items-center justify-center rounded-full shrink-0"
-          style={{ color: 'var(--text-3)' }}
+          style={{ color: 'var(--q-text-tertiary)' }}
         >
           <X size={15} />
         </button>
@@ -90,11 +90,11 @@ export default function GroupChecklist({ lang, group, requestCount, hasPrayed, o
               onClick={step.done ? undefined : actions[step.id]}
               disabled={step.done}
               className="w-full min-h-[44px] flex items-center gap-2.5 px-2 py-2 rounded-xl text-left text-sm"
-              style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-1)', opacity: step.done ? 0.65 : 1 }}
+              style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text)', opacity: step.done ? 0.65 : 1 }}
             >
               {step.done
-                ? <Check size={15} className="shrink-0" style={{ color: 'var(--success)' }} aria-hidden="true" />
-                : <Icon size={15} className="shrink-0" style={{ color: 'var(--accent)' }} aria-hidden="true" />}
+                ? <Check size={15} className="shrink-0" style={{ color: 'var(--q-success)' }} aria-hidden="true" />
+                : <Icon size={15} className="shrink-0" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />}
               <span className="flex-1" style={{ textDecoration: step.done ? 'line-through' : 'none' }}>
                 {label}
               </span>

@@ -13,17 +13,8 @@ import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { track, EVENTS } from '../lib/analytics';
 import PrayerSession from './PrayerSession';
-import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
+import { PrimaryButton, SecondaryButton, SectionLabel } from './shared/Primitives';
 import { APP_NAME } from '../lib/brand';
-
-function ConstellationBackdrop() {
-  return (
-    <div className="constellation-onboarding__sky" aria-hidden="true">
-      <img src="/assets/constellation/community-sky-light-transparent.png" alt="" className="constellation-onboarding__sky-image constellation-onboarding__sky-image--light" />
-      <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" className="constellation-onboarding__sky-image constellation-onboarding__sky-image--dark" />
-    </div>
-  );
-}
 
 // The first prayer, in two modes:
 //
@@ -137,7 +128,6 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
   if (phase === 'decide') {
     return (
       <div className="first-prayer-experience constellation-onboarding">
-        <ConstellationBackdrop />
         <div
           ref={trapRef}
           tabIndex={-1}
@@ -149,7 +139,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>{APP_NAME}</SectionLabel>
+          <SectionLabel className="mb-3" style={{ color: 'var(--q-gold-text)' }}>{APP_NAME}</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
@@ -160,9 +150,9 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
             <PrimaryButton onClick={requestSave} icon={HandHeart} className="first-prayer-primary w-full min-h-[52px]">
               {t(lang, 'firstPrayerSaveBtn')}
             </PrimaryButton>
-            <QuietButton onClick={onFinish} className="first-prayer-quiet w-full">
+            <SecondaryButton onClick={onFinish} className="first-prayer-quiet w-full">
               {t(lang, 'firstPrayerFinishBtn')}
-            </QuietButton>
+            </SecondaryButton>
           </div>
         </div>
       </div>
@@ -172,7 +162,6 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
   // Capture: the single question that matters.
   return (
     <div className="first-prayer-experience constellation-onboarding">
-      <ConstellationBackdrop />
       <form
         ref={trapRef}
         tabIndex={-1}
@@ -202,7 +191,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           <h2 id="first-prayer-question" className="editorial-heading rise-in max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
           </h2>
-          <p className="editorial rise-in rise-in--late mt-3 text-xl" style={{ color: 'var(--text-2)' }}>
+          <p className="editorial rise-in rise-in--late mt-3 text-xl" style={{ color: 'var(--q-text-secondary)' }}>
             {t(lang, 'firstPrayerBring')}
           </p>
 

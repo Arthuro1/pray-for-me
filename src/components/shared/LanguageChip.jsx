@@ -16,8 +16,8 @@ export default function LanguageChip({ label, on, onToggle, count = 0, ariaLabel
       onClick={onToggle}
       className="pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium"
       style={on
-        ? { background: 'var(--accent-soft)', color: 'var(--accent)', border: '1px solid var(--accent-border)' }
-        : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+        ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '1px solid var(--q-selected-border)' }
+        : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
     >
       {on && <Check size={12} aria-hidden="true" />}
       {label}
@@ -25,7 +25,7 @@ export default function LanguageChip({ label, on, onToggle, count = 0, ariaLabel
         <span
           aria-hidden="true"
           className="inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
-          style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+          style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
         >
           {count}
         </span>

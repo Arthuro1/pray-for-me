@@ -45,7 +45,7 @@ export default function NotificationsPage() {
               <button
                 onClick={markAllRead}
                 className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-xl"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
               >
                 <CheckCheck size={15} /> {t(lang, 'markAllRead')}
               </button>
@@ -55,7 +55,7 @@ export default function NotificationsPage() {
               aria-label={t(lang, 'notifPrefsTitle')}
               title={t(lang, 'notifPrefsTitle')}
               className="flex items-center justify-center w-11 h-11 rounded-xl"
-              style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+              style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
             >
               <Settings size={16} />
             </button>
@@ -67,20 +67,20 @@ export default function NotificationsPage() {
       <div className="phase-content max-w-2xl">
         {loading && notifications.length === 0 ? (
           <div className="flex justify-center py-16">
-            <Loader2 size={24} className="animate-spin" style={{ color: 'var(--text-3)' }} />
+            <Loader2 size={24} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />
           </div>
         ) : error ? (
           <div className="text-center py-16">
-            <p className="text-sm mb-4" style={{ color: 'var(--text-2)' }}>{t(lang, 'notifError')}</p>
-            <button onClick={() => user?.id && fetchNotifications(user.id)} className="text-sm font-medium px-4 py-2 rounded-xl" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <p className="text-sm mb-4" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'notifError')}</p>
+            <button onClick={() => user?.id && fetchNotifications(user.id)} className="text-sm font-medium px-4 py-2 rounded-xl" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
               {t(lang, 'retry')}
             </button>
           </div>
         ) : notifications.length === 0 ? (
           <div className="text-center py-20">
-            <Bell size={36} className="mx-auto mb-4" style={{ color: 'var(--text-3)', opacity: 0.5 }} />
-            <p className="text-base" style={{ color: 'var(--text-2)' }}>{t(lang, 'notifEmpty')}</p>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifEmptySub')}</p>
+            <Bell size={36} className="mx-auto mb-4" style={{ color: 'var(--q-text-tertiary)', opacity: 0.5 }} />
+            <p className="text-base" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'notifEmpty')}</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifEmptySub')}</p>
           </div>
         ) : (
           <>
@@ -95,7 +95,7 @@ export default function NotificationsPage() {
                   onClick={fetchMoreNotifications}
                   disabled={loading}
                   className="text-sm font-medium px-5 py-2.5 rounded-xl disabled:opacity-50"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   {loading ? <Loader2 size={15} className="animate-spin" /> : t(lang, 'loadMore')}
                 </button>

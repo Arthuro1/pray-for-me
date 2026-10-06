@@ -92,7 +92,7 @@ export default function PlanJoinPage() {
   if (!plan) {
     return (
       <div className="px-4 py-12 text-center">
-        <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'planShareUnavailable')}</p>
+        <p className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planShareUnavailable')}</p>
         <button type="button" onClick={() => navigate('/', { replace: true })} className="primary-button mt-6 px-6">{t(lang, 'guidanceContinue')}</button>
       </div>
     );
@@ -121,9 +121,9 @@ export default function PlanJoinPage() {
 
       <div className="mt-6 space-y-3">
         {started ? (
-          <div className="phase-card p-5" role="status" style={{ borderColor: 'var(--success)' }}>
-            <p className="flex items-center gap-2 font-semibold" style={{ color: 'var(--text-1)' }}>
-              <Check size={18} aria-hidden="true" style={{ color: 'var(--success)' }} />
+          <div className="phase-card p-5" role="status" style={{ borderColor: 'var(--q-success)' }}>
+            <p className="flex items-center gap-2 font-semibold" style={{ color: 'var(--q-text)' }}>
+              <Check size={18} aria-hidden="true" style={{ color: 'var(--q-success)' }} />
               {started.startDate === todayKey()
                 ? t(lang, 'journeyBeginsToday')
                 : t(lang, 'groupPlanStartsOn', { date: formatPlanStartDate(started.startDate, lang) })}
@@ -134,8 +134,8 @@ export default function PlanJoinPage() {
           </div>
         ) : running ? (
           <div className="phase-card p-5">
-            <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'planShareAlreadyRunning')}</p>
-            <p className="mt-1 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planDayOf', { n: running.day || 1, total: plan.count })}</p>
+            <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'planShareAlreadyRunning')}</p>
+            <p className="mt-1 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planDayOf', { n: running.day || 1, total: plan.count })}</p>
             <button type="button" onClick={() => navigate(`/prayers/${running.prayerId}`)} className="primary-button mt-4 flex w-full items-center justify-center gap-2 px-4">
               <HandHeart size={16} aria-hidden="true" /> {t(lang, 'guidanceContinue')}
             </button>
@@ -148,7 +148,7 @@ export default function PlanJoinPage() {
           />
         )}
 
-        {ownLink && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planShareOwnLink')}</p>}
+        {ownLink && <p className="text-xs text-center leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planShareOwnLink')}</p>}
 
         {offerFriend && (
           <button
@@ -156,7 +156,7 @@ export default function PlanJoinPage() {
             onClick={requestFriend}
             disabled={requested}
             className="pressable flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium disabled:opacity-60"
-            style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+            style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
           >
             {requested
               ? <><Check size={15} aria-hidden="true" /> {t(lang, 'requestSent')}</>

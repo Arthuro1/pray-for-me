@@ -6,7 +6,7 @@ export default function Encouragement({ lang = 'en', className = '' }) {
   const text = dailyEncouragement(lang);
   if (!text) return null;
   return (
-    <p className={`text-xs italic leading-relaxed ${className}`} style={{ color: 'var(--text-3)' }}>
+    <p className={`text-xs italic leading-relaxed ${className}`} style={{ color: 'var(--q-text-tertiary)' }}>
       {text}
     </p>
   );

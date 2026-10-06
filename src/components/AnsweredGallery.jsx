@@ -76,19 +76,19 @@ export default function AnsweredGallery({
       <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
         <button onClick={() => navigate(`/prayers/${prayer.id}`)}
           className="w-full text-left rounded-2xl p-4 transition-all hover:scale-[1.01]"
-          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', borderLeft: '3px solid var(--success)' }}>
+          style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', borderLeft: '3px solid var(--q-success)' }}>
           {/* Author + creation date header (matches community cards) */}
           <div className="flex items-center gap-2 mb-1.5 min-w-0">
             <Avatar name={authorName} size={26} anonymous={oa?.anonymous} />
-            <p className="text-xs truncate flex-1" style={{ color: 'var(--text-3)' }}>
+            <p className="text-xs truncate flex-1" style={{ color: 'var(--q-text-tertiary)' }}>
               {authorLabel} · {timeAgo(prayer.created_at, lang)}
               {prayer.origin_group_name ? ` · ${prayer.origin_group_name}` : ''}
             </p>
-            {prayer.pinned && <Pin size={13} fill="currentColor" className="shrink-0" style={{ color: 'var(--accent)' }} />}
+            {prayer.pinned && <Pin size={13} fill="currentColor" className="shrink-0" style={{ color: 'var(--q-royal-text)' }} />}
           </div>
-          <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-1)' }}>{tr(prayer.title, lang)}</p>
+          <p className="text-sm font-semibold mb-1" style={{ color: 'var(--q-text)' }}>{tr(prayer.title, lang)}</p>
           {showSearchMatch && (
-            <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>
+            <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
               <Search size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
               <span className="line-clamp-2">{tr(searchMatch.text, lang)}</span>
             </p>
@@ -97,43 +97,43 @@ export default function AnsweredGallery({
             // Preview only — media renders in the detail page (players don't
             // belong inside this clickable card), so a media-only testimony
             // shows a 📎 count instead of empty quotes.
-            <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--text-2)' }}>
+            <p className="text-sm italic leading-relaxed mb-2" style={{ color: 'var(--q-text-secondary)' }}>
               {lastTestimony.content ? `"${tr(lastTestimony.content, lang)}"` : ''}
               {(lastTestimony.attachments?.length ?? 0) > 0 && ` 📎 ${lastTestimony.attachments.length}`}
             </p>
           )}
           {/* Gentle gratitude nudge when no testimony has been recorded yet */}
           {testimonies.length === 0 && (
-            <p className="text-xs mb-2 flex items-center gap-1.5" style={{ color: 'var(--accent)' }}>
+            <p className="text-xs mb-2 flex items-center gap-1.5" style={{ color: 'var(--q-royal-text)' }}>
               🙏 {t(lang, 'thanksPrompt')}
             </p>
           )}
           <div className="flex items-center gap-2 flex-wrap">
             {prayer.answered_at && (
-              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: '#e8f5ed', color: '#059669' }}>
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)' }}>
                 🙌 {format(new Date(prayer.answered_at), 'd MMM yyyy', { locale })}
               </span>
             )}
             {pCats.map(c => (
-              <span key={c.id} className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              <span key={c.id} className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                 {c.emoji} {tr(c.name, lang)}
               </span>
             ))}
           </div>
           {groupShares.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 mt-2">
-              <Users size={11} style={{ color: 'var(--accent)' }} />
+              <Users size={11} style={{ color: 'var(--q-royal-text)' }} />
               {groupShares.map(s => (
-                <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                   {s.groupName}
                 </span>
               ))}
               {groupShares.some(s => s.isAnonymous) && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
                   <EyeOff size={9} /> {t(lang, 'anonymous')}
                 </span>
               )}
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--input-bg)', color: 'var(--text-3)' }}>
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
                 <HandHeart size={10} /> {totalPraying} {t(lang, 'prayingCount')}
               </span>
             </div>
@@ -169,26 +169,26 @@ export default function AnsweredGallery({
             <button
               onClick={toggle}
               className="w-full flex items-center justify-between gap-3 rounded-2xl p-4"
-              style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}
+              style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}
             >
-              <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--accent)' }}>
+              <span className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--q-royal-text)' }}>
                 <BookOpen size={15} /> {faithfulnessRef}
               </span>
-              <span className="text-xs shrink-0" style={{ color: 'var(--accent)' }}>{t(lang, 'readFullPassage')}</span>
+              <span className="text-xs shrink-0" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'readFullPassage')}</span>
             </button>
           )}
         </VerseAccordion>
       )}
 
       {showCount && (
-        <p className="text-xs mb-4" style={{ color: 'var(--text-3)' }}>
+        <p className="text-xs mb-4" style={{ color: 'var(--q-text-tertiary)' }}>
           {answered.length} {answered.length !== 1 ? t(lang, 'prayers2') : t(lang, 'prayer')}
         </p>
       )}
 
       {groups.map(g => (
         <div key={g.key} className="mb-5">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, g.key)}
           </p>
           <div className="flex flex-col gap-3">

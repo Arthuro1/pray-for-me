@@ -36,11 +36,11 @@ function OptionRow({ label, selected, multi, onSelect }) {
       onClick={onSelect}
       className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-start text-sm"
       style={selected
-        ? { background: 'var(--accent-soft)', color: 'var(--text-1)', border: '1px solid var(--accent-border)' }
-        : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+        ? { background: 'var(--q-selected)', color: 'var(--q-text)', border: '1px solid var(--q-selected-border)' }
+        : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
     >
       <span className="min-w-0">{label}</span>
-      {selected && <Check size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--accent)' }} />}
+      {selected && <Check size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />}
     </button>
   );
 }
@@ -48,8 +48,8 @@ function OptionRow({ label, selected, multi, onSelect }) {
 function Question({ id, title, hint, children }) {
   return (
     <section aria-labelledby={id}>
-      <h4 id={id} className="mb-0.5 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{title}</h4>
-      {hint && <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{hint}</p>}
+      <h4 id={id} className="mb-0.5 text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{title}</h4>
+      {hint && <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{hint}</p>}
       {children}
     </section>
   );
@@ -82,15 +82,15 @@ function Footer({ lang, ctaKey, privacyKey, onSave }) {
     <div
       className="shrink-0 space-y-2 px-5 pt-4"
       style={{
-        background: 'var(--surface)',
-        borderTop: '0.5px solid var(--border)',
+        background: 'var(--q-surface)',
+        borderTop: '0.5px solid var(--q-border)',
         paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
       }}
     >
-      <button onClick={onSave} className="w-full rounded-xl px-3 py-3 text-sm font-semibold" style={{ background: 'var(--accent)', color: '#fff' }}>
+      <button onClick={onSave} className="w-full rounded-xl px-3 py-3 text-sm font-semibold" style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}>
         {t(lang, ctaKey)}
       </button>
-      {privacyKey && <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, privacyKey)}</p>}
+      {privacyKey && <p className="text-center text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, privacyKey)}</p>}
     </div>
   );
 }
@@ -145,14 +145,14 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
             onChange={(event) => changeName(event.target.value)}
             placeholder={t(lang, 'planCoupleDisplayName')}
             className="min-h-11 w-full rounded-xl px-3 text-sm"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
           />
           {(people || []).length > 0 && (
             <datalist id={`plan-couple-people-${plan.id}`}>
               {(people || []).map((item) => <option key={item.prayerId} value={item.name} />)}
             </datalist>
           )}
-          <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCouplePrivacy')}</p>
+          <p className="mt-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCouplePrivacy')}</p>
         </Question>
 
         <Question id="plan-couple-mode" title={t(lang, 'planCoupleModeQ')} hint={t(lang, 'planCoupleTogetherHint')}>
@@ -171,14 +171,14 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
               aria-controls="plan-couple-family-options"
               className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
             >
-              <span className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+              <span className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
                 {t(lang, 'planCoupleIncludeQ')}{includes.length ? ` · ${includes.length}` : ''}
               </span>
-              <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--text-3)', transform: familyOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
+              <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: familyOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
             </button>
             {familyOpen && (
               <div id="plan-couple-family-options" className="mt-2 space-y-4">
-                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleIncludeHint')}</p>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCoupleIncludeHint')}</p>
                 <div role="group" aria-label={t(lang, 'planCoupleIncludeQ')} className="flex flex-col gap-2">
                   {MARRIAGE_INCLUDES.map((item) => (
                     <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={includes.includes(item.id)} multi onSelect={() => toggleInclude(item.id)} />
@@ -198,7 +198,7 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
                             onChange={(event) => setChildren((current) => current.map((item, i) => (i === index ? { ...item, name: event.target.value } : item)))}
                             placeholder={t(lang, 'planCoupleChildName')}
                             className="min-h-11 min-w-0 flex-1 rounded-xl px-3 text-sm"
-                            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                           />
                           <button
                             type="button"
@@ -209,7 +209,7 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
                         </div>
                       ))}
                       {!atChildLimit && (
-                        <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                        <button type="button" onClick={addChild} className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
                           <Plus size={15} aria-hidden="true" /> {t(lang, 'planCoupleAddChild')}
                         </button>
                       )}
@@ -229,14 +229,14 @@ function CoupleQuestions({ plan, lang, people, initial, onSave, ctaKey }) {
             aria-controls="plan-couple-role-options"
             className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
           >
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+            <span className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
               {t(lang, 'planCoupleRoleQ')}{role !== DEFAULT_ROLE ? ' · 1' : ''}
             </span>
-            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--text-3)', transform: roleOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
+            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: roleOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
           </button>
           {roleOpen && (
             <div id="plan-couple-role-options" className="mt-2">
-              <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
+              <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planCoupleRoleReviewPending')}</p>
               <div role="radiogroup" aria-label={t(lang, 'planCoupleRoleQ')} className="flex flex-col gap-2">
                 {COUPLE_ROLES.map((item) => (
                   <OptionRow key={item.id} label={t(lang, item.labelKey)} selected={role === item.id} onSelect={() => setRole(item.id)} />
@@ -283,10 +283,10 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
             aria-controls="plan-prep-growth"
             className="flex min-h-11 w-full items-center justify-between gap-3 text-start"
           >
-            <span className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
+            <span className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
               {t(lang, 'planPrepGrowthQ')}{growth.length ? ` · ${growth.length}` : ''}
             </span>
-            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--text-3)', transform: growthOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
+            <ChevronDown size={16} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)', transform: growthOpen ? 'rotate(180deg)' : undefined, transition: 'transform 0.15s' }} />
           </button>
           {growthOpen && (
             <div id="plan-prep-growth" role="group" aria-label={t(lang, 'planPrepGrowthQ')} className="mt-2 flex flex-wrap gap-2">
@@ -301,8 +301,8 @@ function SinglesQuestions({ plan, lang, onSave, ctaKey }) {
                     onClick={() => toggleGrowth(g.id)}
                     className="min-h-11 rounded-full px-3 text-xs font-medium"
                     style={selected
-                      ? { background: 'var(--accent-soft)', color: 'var(--accent)', border: '1px solid var(--accent-border)' }
-                      : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '1px solid var(--q-selected-border)' }
+                      : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                   >
                     {t(lang, g.labelKey)}
                   </button>
@@ -338,10 +338,10 @@ export default function PlanPersonalizeModal({ plan, lang, onSave, onClose, peop
         className="editorial-dialog flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start gap-3 p-5 pb-4" style={{ borderBottom: '0.5px solid var(--border)' }}>
+        <div className="flex items-start gap-3 p-5 pb-4" style={{ borderBottom: '0.5px solid var(--q-border)' }}>
           <div className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'planPersonalizeTitle')}</h3>
-            <p className="mt-0.5 text-xs" style={{ color: 'var(--text-3)' }}>
+            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'planPersonalizeTitle')}</h3>
+            <p className="mt-0.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, plan.titleKey)}{mode === 'start' ? ` · ${t(lang, 'planDays', { n: plan.count })}` : ''}
             </p>
           </div>

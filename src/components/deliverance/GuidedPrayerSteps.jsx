@@ -43,20 +43,20 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
-      style={{ background: 'var(--bg)' }}
+      style={{ background: 'var(--q-canvas)' }}
       role="dialog"
       aria-modal="true"
       aria-label={t(lang, 'freedomGuidedSessionLabel')}
       ref={trapRef}
     >
-      <header className="flex items-center justify-between gap-3 px-5 py-4" style={{ borderBlockEnd: '0.5px solid var(--border)' }}>
+      <header className="flex items-center justify-between gap-3 px-5 py-4" style={{ borderBlockEnd: '0.5px solid var(--q-border)' }}>
         <div className="min-w-0">
-          <p className="truncate text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+          <p className="truncate text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
             {dayTitle}
           </p>
           {/* Progress announced politely: a screen-reader user hears "Step 3 of 9"
               on each move without the whole panel being re-read. */}
-          <p aria-live="polite" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+          <p aria-live="polite" className="text-xs font-medium" style={{ color: 'var(--q-royal-text)' }}>
             {t(lang, 'freedomStepOf', { n: index + 1, total })}
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
           type="button"
           onClick={onClose}
           className="pressable flex min-h-11 min-w-11 items-center justify-center rounded-full"
-          style={{ color: 'var(--text-3)' }}
+          style={{ color: 'var(--q-text-tertiary)' }}
           aria-label={t(lang, 'freedomPausePrayer')}
           title={t(lang, 'freedomPausePrayer')}
         >
@@ -77,21 +77,21 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
           ref={headingRef}
           tabIndex={-1}
           className="editorial-heading mb-5 text-3xl leading-tight sm:text-4xl"
-          style={{ color: 'var(--text-1)' }}
+          style={{ color: 'var(--q-text)' }}
         >
           {t(lang, step.titleKey)}
         </h2>
 
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'freedomGuidedPrayerLabel')}
         </p>
-        <p className="mb-6 text-lg leading-relaxed" style={{ color: 'var(--text-1)' }}>
+        <p className="mb-6 text-lg leading-relaxed" style={{ color: 'var(--q-text)' }}>
           {pick(step.body, lang)}
         </p>
 
         {step.refs?.length > 0 && (
           <section>
-            <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>
+            <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, 'planRelatedScripture')}
             </h3>
             <div className="flex flex-wrap gap-1.5">
@@ -101,13 +101,13 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
         )}
       </div>
 
-      <footer className="flex items-center justify-between gap-3 px-6 py-4" style={{ borderBlockStart: '0.5px solid var(--border)' }}>
+      <footer className="flex items-center justify-between gap-3 px-6 py-4" style={{ borderBlockStart: '0.5px solid var(--q-border)' }}>
         <button
           type="button"
           onClick={() => setIndex((n) => Math.max(0, n - 1))}
           disabled={index === 0}
           className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 text-sm font-medium disabled:opacity-40"
-          style={{ color: 'var(--text-2)' }}
+          style={{ color: 'var(--q-text-secondary)' }}
         >
           <ChevronLeft size={15} aria-hidden="true" /> {t(lang, 'backBtn')}
         </button>
@@ -115,7 +115,7 @@ export default function GuidedPrayerSteps({ steps, lang, dayTitle, onClose, onFi
           type="button"
           onClick={() => (isLast ? onFinish?.() : setIndex((n) => n + 1))}
           className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-5 text-sm font-semibold text-white"
-          style={{ background: 'var(--accent)' }}
+          style={{ background: 'var(--q-action-primary)' }}
         >
           {isLast ? t(lang, 'freedomAmenFinish') : t(lang, 'freedomNextStep')}
           {!isLast && <ChevronRight size={15} aria-hidden="true" />}

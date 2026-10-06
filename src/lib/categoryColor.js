@@ -54,6 +54,6 @@ export function resolveCategoryColor(stored) {
 // low-alpha overlay, which muddies on dark). Pass `surface` when the tile sits
 // on something other than the page ground — a card's own fill, say — otherwise
 // the mix is computed against a background that isn't actually behind it.
-export function categoryTint(color, amount = 20, surface = 'var(--surface)') {
+export function categoryTint(color, amount = 20, surface = 'var(--q-surface)') {
   return `color-mix(in srgb, ${color} ${amount}%, ${surface})`;
 }

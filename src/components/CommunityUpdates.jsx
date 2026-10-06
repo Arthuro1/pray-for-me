@@ -48,7 +48,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
       <p className="prayer-activity-panel__title">{t(lang, 'memberUpdates')}</p>
 
       {loading ? (
-        <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+        <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
       ) : (
         <div className="prayer-activity-list">
           {updates.map((u) => (
@@ -59,7 +59,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                   {communityAuthor(u, userId, lang)}{' · '}{timeAgo(u.created_at, lang)}
                 </p>
                 {u._locked ? (
-                  <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
+                  <p className="text-sm italic leading-snug" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'updateSyncing')}</p>
                 ) : editingId === u.id ? (
                   <MessageEditor
                     initialText={u.text}
@@ -73,7 +73,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                       text={loc(u.text)}
                       lang={lang}
                       className="text-sm leading-snug"
-                      style={{ color: 'var(--text-1)' }}
+                      style={{ color: 'var(--q-text)' }}
                     />
                     <AttachmentList
                       attachments={u.attachments}

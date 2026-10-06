@@ -6,6 +6,33 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Changed — Qetoret design system ("Modern Royal Priesthood")
+
+- **One token layer** (`src/styles/tokens.css`): alabaster, royal violet,
+  temple gold and ink, with a dark theme of its own (not an inversion). Every
+  legacy colour token (`--plum`, `--accent`, `--text-1…3`, the night theme, the
+  constellation and landing palettes) now resolves to purpose tokens (`--q-*`);
+  purple used as text gets an AA-safe twin in dark mode. Gold `#B68A45` and
+  the quietest gray fail AA as text, so each has a darker text token.
+- **Primitives** (`src/styles/components.css`, `components/shared/Primitives.jsx`):
+  three button kinds only (primary / secondary / quiet), page and section
+  headers, prayer rows, status labels, one modal, sheets, fields, circle
+  options, Scripture blocks. Four radii (10 / 14 / 20 / pill), one elevation
+  for overlays only, no gradients, no blur, a 4px spacing scale and one rise
+  motion that respects reduced motion.
+- **Two type voices:** the multilingual sans for software, and **Newsreader**
+  (SIL OFL, self-hosted in `public/fonts/newsreader/`, precached) for prayer
+  titles, Scripture and reflective copy.
+- **Constellation removed:** the sky images (`public/assets/constellation/`),
+  star glows and blurred skies are gone; the landing page wears the product
+  tokens. Navigation is flat (hairline, no floating bar), the active item is
+  purple with a 2px gold line, and counts are royal purple, not alarm red.
+- **Fixes found on the way:** signing out no longer throws before clearing
+  local data (a merge dropped `clearAiEphemeralState`); AI prayer points are
+  cached again; the "review what's sent to the AI" step renders again, with its
+  strings restored in all 16 languages.
+- Dev builds only: `/__design` renders every primitive in light, dark and RTL.
+
 ### Changed — Praystead becomes Qetoret
 
 - **New name and identity.** The app is now **Qetoret** — *Let your prayers

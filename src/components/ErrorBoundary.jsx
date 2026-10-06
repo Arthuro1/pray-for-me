@@ -54,13 +54,13 @@ export default class ErrorBoundary extends Component {
       <div
         role="alert"
         className="min-h-[60vh] flex items-center justify-center p-6"
-        style={{ background: 'var(--bg)' }}
+        style={{ background: 'var(--q-canvas)' }}
       >
         <div className="max-w-sm text-center">
-          <h1 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-1)' }}>
+          <h1 className="text-lg font-semibold mb-2" style={{ color: 'var(--q-text)' }}>
             {t(lang, 'errorBoundaryTitle')}
           </h1>
-          <p className="text-sm mb-6" style={{ color: 'var(--text-2)' }}>
+          <p className="text-sm mb-6" style={{ color: 'var(--q-text-secondary)' }}>
             {t(lang, 'errorBoundaryBody')}
           </p>
           <div className="flex flex-col gap-2">
@@ -68,7 +68,7 @@ export default class ErrorBoundary extends Component {
               type="button"
               onClick={this.reset}
               className="w-full rounded-xl py-2.5 font-medium"
-              style={{ background: 'var(--accent)', color: '#fff' }}
+              style={{ background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
             >
               {t(lang, 'retry')}
             </button>
@@ -76,7 +76,7 @@ export default class ErrorBoundary extends Component {
               type="button"
               onClick={() => window.location.reload()}
               className="w-full rounded-xl py-2.5 font-medium inline-flex items-center justify-center gap-2"
-              style={{ border: '1px solid var(--border)', color: 'var(--text-1)' }}
+              style={{ border: '1px solid var(--q-border)', color: 'var(--q-text)' }}
             >
               <RefreshCw size={16} />
               {t(lang, 'errorBoundaryReload')}

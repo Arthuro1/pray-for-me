@@ -97,13 +97,13 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
 
   return (
     <div className="group/verse inline-flex items-start gap-1">
-      <VerseAccordion reference={ref} lang={lang} initialText={text} panelStyle={{ background: 'var(--gold-soft)', border: '1px solid color-mix(in srgb, var(--gold) 28%, var(--border))' }}>
+      <VerseAccordion reference={ref} lang={lang} initialText={text} panelStyle={{ background: 'var(--q-gold-soft)', border: '1px solid color-mix(in srgb, var(--q-gold) 28%, var(--q-border))' }}>
         {({ toggle }) => (
           <button
             onClick={toggle}
             title={t(lang, 'tipVerseToggle')}
             className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-            style={{ background: 'var(--gold-soft)', color: 'var(--gold)' }}
+            style={{ background: 'var(--q-gold-soft)', color: 'var(--q-gold-text)' }}
           >
             <BookOpen size={9} /> {ref}
           </button>
@@ -788,6 +788,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           onCancel={() => setShowAiConsent(false)}
         />
       )}
+      {showAiPreview && (
+        <AiOutgoingPreview
+          lang={lang}
+          title={livePrayer.title}
+          description={recsDescription()}
+          update={recsLatestUpdate()}
+          onSend={() => { setShowAiPreview(false); markOutgoingReviewed(livePrayer.id); runRecs(); }}
+          onCancel={() => setShowAiPreview(false)}
+        />
+      )}
       {showPlanShare && (
         <PlanShareSheet plan={plan} lang={lang} userId={user.id} onClose={() => setShowPlanShare(false)} />
       )}
@@ -828,11 +838,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       {showDeleteConfirm && (
         <div className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowDeleteConfirm(false)}>
           <div ref={deleteTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'tipDeletePrayer')} className="editorial-dialog w-full max-w-sm p-5" onClick={e => e.stopPropagation()}>
-            <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--text-1)' }}>{t(lang, 'tipDeletePrayer')}</h3>
-            <p className="text-sm mb-5" style={{ color: 'var(--text-3)' }}>{livePrayer.title}</p>
+            <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--q-text)' }}>{t(lang, 'tipDeletePrayer')}</h3>
+            <p className="text-sm mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{livePrayer.title}</p>
             <div className="flex gap-2">
-              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
-              <button onClick={handleDeleteCommunity} disabled={deleting} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--danger)' }}>
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>{t(lang, 'cancel')}</button>
+              <button onClick={handleDeleteCommunity} disabled={deleting} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-danger)' }}>
                 {deleting ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'tipDeletePrayer')}
               </button>
             </div>
@@ -881,8 +891,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'options')}
-              triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
-              iconColor="var(--text-2)"
+              triggerStyle={{ background: 'var(--q-surface-muted)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
+              iconColor="var(--q-text-secondary)"
               items={[
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => setShowCommunityEdit(true), hidden: !canEditCommunityPrayer },
                 { key: 'report', icon: Flag, label: safetyText(lang, 'report'), onClick: () => setShowReportConfirm(true), hidden: communityPrayer.user_id === user?.id },
@@ -898,8 +908,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               lang={lang}
               ariaLabel={t(lang, 'options')}
               triggerRef={scheduleTriggerRef}
-              triggerStyle={{ background: 'var(--surface-muted)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
-              iconColor="var(--text-2)"
+              triggerStyle={{ background: 'var(--q-surface-muted)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
+              iconColor="var(--q-text-secondary)"
               items={[
                 // The plan day leads with its own passage and its Go deeper —
                 // an AI scripture hunt for the run's title would only compete.
@@ -926,19 +936,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       </div>
 
       <section className="constellation-detail__hero">
-        <div className="constellation-detail__sky" aria-hidden="true">
-          <img
-            src="/assets/constellation/detail-sky-light-transparent.png"
-            alt=""
-            className="constellation-detail__sky-image constellation-detail__sky-image--light"
-          />
-          <img
-            src="/assets/constellation/detail-sky-dark-transparent.png"
-            alt=""
-            className="constellation-detail__sky-image constellation-detail__sky-image--dark"
-          />
-        </div>
-
         <div className="constellation-detail__hero-copy">
           {canEditTitle && editingTitle ? (
             <input
@@ -1014,13 +1011,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               onClick={handleToggleTranslate}
               disabled={translating}
               className="flex items-center gap-1.5 min-h-[44px] text-xs font-medium disabled:opacity-50"
-              style={{ color: 'var(--accent)' }}
+              style={{ color: 'var(--q-royal-text)' }}
             >
               {translating ? <Loader2 size={13} className="animate-spin" /> : <Languages size={13} />}
               {showTranslated ? t(lang, 'showOriginal') : t(lang, 'seeTranslation')}
             </button>
             {showTranslated && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                 {t(lang, 'translatedLabel')}
               </span>
             )}
@@ -1049,7 +1046,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               </span>
             ))}
             {livePrayer.for_other && livePrayer.person_name && (
-              <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+              <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
                 👤 {livePrayer.person_name}
               </span>
             )}
@@ -1068,7 +1065,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 <button
                   onClick={focusUpdateField}
                   className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   <Plus size={13} aria-hidden="true" className="shrink-0" />
                   <span className="truncate">{t(lang, 'addUpdateBtn')}</span>
@@ -1078,7 +1075,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   aria-expanded={showTestimony}
                   aria-controls="pd-answer"
                   className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
-                  style={{ background: 'var(--card-answered-bg)', color: 'var(--success)', border: '0.5px solid var(--card-answered-border)' }}
+                  style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)', border: '0.5px solid var(--q-success-border)' }}
                 >
                   <CheckCircle size={13} aria-hidden="true" className="shrink-0" />
                   <span className="truncate">{t(lang, 'markAnswered')}</span>
@@ -1098,8 +1095,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <p
               className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
               style={seriesEnded
-                ? { background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }
-                : { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                ? { background: 'var(--q-field)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-field-border)' }
+                : { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
             >
               <Repeat size={12} className="shrink-0" /> {seriesEnded ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
             </p>
@@ -1125,14 +1122,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           >
             <div className="space-y-3">
               <div>
-                <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-1)' }}>{pick(planDay.theme, lang)}</p>
+                <p className="text-sm font-medium mb-2" style={{ color: 'var(--q-text)' }}>{pick(planDay.theme, lang)}</p>
                 <VerseAccordion reference={localizeRef(planDay.ref, lang)} lang={lang}>
                   {({ toggle, expanded }) => (
                     <button
                       onClick={toggle}
                       aria-expanded={expanded}
                       className="text-xs flex items-center gap-1.5"
-                      style={{ color: 'var(--accent)' }}
+                      style={{ color: 'var(--q-royal-text)' }}
                     >
                       <BookOpen size={12} /> {localizeRef(planDay.ref, lang)}
                     </button>
@@ -1157,7 +1154,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   type="button"
                   onClick={() => setEditingPersonalization(true)}
                   className="pressable flex min-h-11 items-center gap-1.5 text-xs font-medium"
-                  style={{ color: 'var(--text-3)' }}
+                  style={{ color: 'var(--q-text-tertiary)' }}
                 >
                   <Pencil size={12} aria-hidden="true" /> {t(lang, 'planPersonalizeTitle')}
                 </button>
@@ -1249,7 +1246,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <button
                 onClick={() => setShowCatPicker(v => !v)}
                 className="text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
               >
                 <Plus size={11} /> {t(lang, 'addCategoryFull')}
               </button>
@@ -1262,7 +1259,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     key={c.id}
                     onClick={() => updatePrayer(livePrayer.id, { categoryIds: [...prayerCategoryIds, c.id] })}
                     className="text-xs px-3 py-1.5 rounded-full font-medium"
-                    style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
+                    style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-field-border)' }}
                   >
                     {c.emoji} {tr(c.name, lang)}
                   </button>
@@ -1279,9 +1276,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             pray, so this panel appears only if that run carries points of its
             own — and then without the affordances to author more. ── */}
         {showWaysToPray && (
-        <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+        <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
           <div className="prayer-points-panel__header flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--text-3)' }}>{t(lang, 'waysToPray')}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'waysToPray')}</p>
             {offerPointAuthoring && (isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
                 <button
@@ -1289,7 +1286,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   disabled={loadingRecs}
                   title={t(lang, 'tipAiSuggest')}
                   className="flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium disabled:opacity-50"
-                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
                 >
                   {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
                   {t(lang, 'prayerSuggestionsCta')}
@@ -1299,7 +1296,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
 
           {(displayPrayer.prayer_points || []).length === 0 && !loadingRecs && updateRecs.length === 0 && (
-            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'needHelpFindingWords')}</p>
+            <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'needHelpFindingWords')}</p>
           )}
 
           <div className="prayer-points-panel__list">
@@ -1312,7 +1309,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               return (
                 <div key={pp.id} className="prayer-point-card group rounded-xl">
                   <div className="flex items-start gap-2">
-                    <p className="flex-1 text-sm leading-snug" style={{ color: pp._locked ? 'var(--text-3)' : 'var(--text-1)' }}>
+                    <p className="flex-1 text-sm leading-snug" style={{ color: pp._locked ? 'var(--q-text-tertiary)' : 'var(--q-text)' }}>
                       {pp._locked ? t(lang, 'contentLocked') : loc(pp.title)}
                     </p>
                     {canRemoveContent && !pointReadOnly && (
@@ -1321,7 +1318,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         aria-label={t(lang, 'tipRemovePoint')}
                         title={t(lang, 'tipRemovePoint')}
                         className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
-                        style={{ color: 'var(--gold)' }}
+                        style={{ color: 'var(--q-gold-text)' }}
                       >
                         <Trash2 size={13} aria-hidden="true" />
                       </button>
@@ -1353,7 +1350,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           onChange={e => setNewVerse(v => ({ ...v, ref: e.target.value }))}
                           placeholder={t(lang, 'verseRefPlaceholder')}
                           className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
-                          style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-1)' }}
+                          style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text)' }}
                           autoFocus
                         />
                         <input
@@ -1362,10 +1359,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                           onChange={e => setNewVerse(v => ({ ...v, text: e.target.value }))}
                           placeholder={t(lang, 'verseTextPlaceholder')}
                           className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
-                          style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-1)' }}
+                          style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text)' }}
                         />
                         <div className="flex gap-1.5">
-                          <button onClick={() => { setAddingVerseTo(null); setNewVerse({ ref: '', text: '' }); }} className="flex-1 text-xs rounded-lg py-1.5" style={{ background: 'var(--gold-soft)', color: 'var(--gold)' }}>{t(lang, 'cancel')}</button>
+                          <button onClick={() => { setAddingVerseTo(null); setNewVerse({ ref: '', text: '' }); }} className="flex-1 text-xs rounded-lg py-1.5" style={{ background: 'var(--q-gold-soft)', color: 'var(--q-gold-text)' }}>{t(lang, 'cancel')}</button>
                           <button
                             onClick={() => {
                               if (!newVerse.ref.trim()) return;
@@ -1375,7 +1372,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                             }}
                             title={t(lang, 'tipSaveVerse')}
                             className="flex-1 text-xs rounded-lg py-1.5 font-medium"
-                            style={{ background: 'var(--gold)', color: 'var(--surface)' }}
+                            style={{ background: 'var(--q-gold)', color: 'var(--q-surface)' }}
                           >
                             {t(lang, 'addVerse')}
                           </button>
@@ -1386,7 +1383,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         onClick={() => { setAddingVerseTo(pp.id); setNewVerse({ ref: '', text: '' }); }}
                         title={t(lang, 'tipAddVerse')}
                         className="prayer-point-card__add-verse flex items-center gap-1 text-xs"
-                        style={{ color: 'var(--gold)' }}
+                        style={{ color: 'var(--q-gold-text)' }}
                       >
                         <Plus size={11} /> {t(lang, 'addVerse')}
                       </button>
@@ -1397,15 +1394,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             })}
           </div>
 
-          {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: 'var(--gold)', background: 'var(--gold-soft)' }}>{recsError}</p>}
+          {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: 'var(--q-gold-text)', background: 'var(--q-gold-soft)' }}>{recsError}</p>}
 
           <div className="space-y-2 mt-2">
             {updateRecs.map(rec => {
               const recWhy = (rec.verses || []).find(v => v.why)?.why || '';
               return (
-              <div key={rec.title} className="rounded-xl p-3" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
+              <div key={rec.title} className="rounded-xl p-3" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
                 <div className="flex gap-2 items-start">
-                  <p className="flex-1 text-sm leading-snug font-medium" style={{ color: 'var(--text-1)' }}>{rec.title}</p>
+                  <p className="flex-1 text-sm leading-snug font-medium" style={{ color: 'var(--q-text)' }}>{rec.title}</p>
                   <button
                     onClick={async () => {
                       await handleAddPoint({ title: rec.title, verses: rec.verses });
@@ -1413,24 +1410,24 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     }}
                     title={t(lang, 'tipAddPoint')}
                     className="shrink-0 rounded-xl p-1.5 text-white"
-                    style={{ background: 'var(--accent)' }}
+                    style={{ background: 'var(--q-action-primary)' }}
                   >
                     <Plus size={13} />
                   </button>
                 </div>
                 {recWhy && (
-                  <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--text-3)' }}>{recWhy}</p>
+                  <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{recWhy}</p>
                 )}
                 {(rec.verses || []).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {rec.verses.map((v, i) => (
-                      <VerseAccordion key={i} reference={v.ref} lang={lang} panelStyle={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
+                      <VerseAccordion key={i} reference={v.ref} lang={lang} panelStyle={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-selected-border)' }}>
                         {({ toggle }) => (
                           <button
                             onClick={toggle}
                             title={t(lang, 'tipVerseToggle')}
                             className="flex items-center gap-1 text-xs px-2 py-1 rounded-full"
-                            style={{ background: 'var(--accent-border)', color: 'var(--accent)' }}
+                            style={{ background: 'var(--q-selected-border)', color: 'var(--q-royal-text)' }}
                           >
                             <BookOpen size={9} /> {v.ref}
                           </button>
@@ -1449,14 +1446,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           {/* Manual prayer point input */}
           {offerPointAuthoring && canAddContent && (
             showManualForm ? (
-              <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'var(--surface-2)', border: '0.5px solid var(--border)' }}>
+              <div className="mt-3 rounded-xl p-3 space-y-2" style={{ background: 'var(--q-surface-muted)', border: '0.5px solid var(--q-border)' }}>
                 <input
                   type="text"
                   value={manualPoint.title}
                   onChange={e => setManualPoint(p => ({ ...p, title: e.target.value }))}
                   placeholder={t(lang, 'pointTitlePlaceholder')}
                   className="w-full text-sm rounded-xl px-3 py-2 focus:outline-none"
-                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                  style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                   autoFocus
                 />
                 <input
@@ -1465,13 +1462,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   onChange={e => setManualPoint(p => ({ ...p, verse: e.target.value }))}
                   placeholder={t(lang, 'pointVersePlaceholder')}
                   className="w-full text-sm rounded-xl px-3 py-2 focus:outline-none"
-                  style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                  style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                 />
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowManualForm(false)}
                     className="flex-1 text-sm rounded-xl py-2"
-                    style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                   >
                     {t(lang, 'cancel')}
                   </button>
@@ -1484,7 +1481,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     }}
                     title={t(lang, 'tipAddManualPoint')}
                     className="flex-1 text-sm rounded-xl py-2 font-medium text-white"
-                    style={{ background: 'var(--accent)' }}
+                    style={{ background: 'var(--q-action-primary)' }}
                   >
                     {t(lang, 'addBtn')}
                   </button>
@@ -1494,7 +1491,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               <button
                 onClick={() => setShowManualForm(true)}
                 className="mt-3 flex items-center gap-1.5 text-xs font-medium"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 <Plus size={13} /> {t(lang, 'addPointManually')}
               </button>
@@ -1515,7 +1512,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* Set / change this prayer's follow-up date (opened from the ⋯ menu). */}
         {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && followUpRelevant && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <FollowUpField
               value={followUps[livePrayer.id]?.date || null}
               onChange={(date) => setFollowUp(livePrayer.id, date)}
@@ -1526,8 +1523,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* ── Saved-from-community: read-only follow indicator ── */}
         {savedCopy && (
-          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-3)' }}>
-            <Users size={12} style={{ color: 'var(--accent)' }} /> {t(lang, 'followsGroup')}
+          <p className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
+            <Users size={12} style={{ color: 'var(--q-royal-text)' }} /> {t(lang, 'followsGroup')}
           </p>
         )}
 
@@ -1601,7 +1598,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </div>
           ) : (
             <div className="flex gap-3">
-              <button onClick={handleResumeCommunity} title={t(lang, 'tipResume')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+              <button onClick={handleResumeCommunity} title={t(lang, 'tipResume')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                 {t(lang, 'resumePrayer')}
               </button>
             </div>
@@ -1611,7 +1608,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* ── Community mode: testimony (members; author/admin use the answered flow) ── */}
         {isCommunity && !canEditCommunityPrayer && (
           testimonySent ? (
-            <div className="prayer-activity-action rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <div className="prayer-activity-action rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
               {t(lang, 'testimony')}
             </div>
           ) : showCommunityTestimony ? (
@@ -1626,10 +1623,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 onSend={handlePostCommunityTestimony}
               />
               <AnonymousToggle checked={communityTestimonyAnon} onChange={setCommunityTestimonyAnon} lang={lang} className="mt-3 mb-3" />
-              <button onClick={() => setShowCommunityTestimony(false)} className="w-full py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+              <button onClick={() => setShowCommunityTestimony(false)} className="w-full py-2.5 rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>{t(lang, 'cancel')}</button>
             </div>
           ) : (
-            <button onClick={() => setShowCommunityTestimony(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+            <button onClick={() => setShowCommunityTestimony(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
               {t(lang, 'postTestimony')}
             </button>
           )
@@ -1643,13 +1640,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <p className="prayer-activity-panel__title">{t(lang, 'evolutions')}</p>
 
           {allUpdates.length === 0 && (
-            <p className="text-sm italic mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'noUpdate')}</p>
+            <p className="text-sm italic mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noUpdate')}</p>
           )}
 
           <div className="prayer-activity-list">
             {allUpdates.map(u => (
               <div key={u.id} className="prayer-activity-item prayer-activity-item--personal group flex gap-3">
-                <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--accent)', alignSelf: 'stretch', minHeight: '14px' }} />
+                <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--q-action-primary)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div className="prayer-activity-item__body min-w-0 flex-1">
                   {/* An entry captured while praying reads as part of the
                       prayer's story, not as a different kind of thing — the same
@@ -1660,7 +1657,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                     </p>
                   )}
                   {u._locked ? (
-                    <p className="text-sm italic leading-snug" style={{ color: 'var(--text-3)' }}>{t(lang, 'updateSyncing')}</p>
+                    <p className="text-sm italic leading-snug" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'updateSyncing')}</p>
                   ) : editingUpdateId === u.id ? (
                     <MessageEditor
                       initialText={u.text}
@@ -1675,7 +1672,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         text={loc(u.text)}
                         lang={lang}
                         className="text-sm leading-snug"
-                        style={{ color: 'var(--text-1)' }}
+                        style={{ color: 'var(--q-text)' }}
                         onRemove={canManage && !u._communityFallback ? () => removeUpdateText(livePrayer.id, u.id) : null}
                       />
                       <AttachmentList
@@ -1773,7 +1770,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                         text={loc(tm.content)}
                         lang={lang}
                         className="text-sm leading-relaxed"
-                        style={{ color: 'var(--text-1)' }}
+                        style={{ color: 'var(--q-text)' }}
                         onRemove={canManage && isRow ? () => removeTestimonyText(livePrayer.id, tm.id) : null}
                       />
                       <AttachmentList
@@ -1790,7 +1787,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               {sharedActivity.testimonies.filter(hasContent).map(tm => (
                 <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony">
                   <p className="prayer-activity-item__meta">{communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
-                  {tm.content && <RichText text={loc(tm.content)} className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }} />}
+                  {tm.content && <RichText text={loc(tm.content)} className="text-sm leading-relaxed" style={{ color: 'var(--q-text)' }} />}
                   <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
                 </div>
               ))}
@@ -1812,10 +1809,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 sendLabel={t(lang, 'addThanks')}
                 onSend={handleAddThanks}
               />
-              <button onClick={() => setShowThanks(false)} className="w-full mt-2 py-2.5 rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>{t(lang, 'cancel')}</button>
+              <button onClick={() => setShowThanks(false)} className="w-full mt-2 py-2.5 rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>{t(lang, 'cancel')}</button>
             </div>
           ) : (
-            <button onClick={() => setShowThanks(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
+            <button onClick={() => setShowThanks(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
               🙏 {t(lang, 'addThanks')}
             </button>
           )
@@ -1829,7 +1826,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             {/* The person testifies; the app only records. It asks what
                 happened — it never declares on its own that God answered. */}
             <p className="prayer-activity-panel__title">{t(lang, 'answerWhatHappened')}</p>
-            <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'answerHowGodWorked')}</p>
+            <p className="mb-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'answerHowGodWorked')}</p>
             {/* The testimony is OPTIONAL — allowEmpty keeps Confirm available
                 with nothing written, exactly like the old flow. */}
             <UpdateComposer
@@ -1841,7 +1838,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               sendLabel={t(lang, 'confirm')}
               onSend={confirmAnswered}
             />
-            <button onClick={closeAnswerFlow} className="w-full mt-2 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+            <button onClick={closeAnswerFlow} className="w-full mt-2 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
               {t(lang, 'cancel')}
             </button>
           </div>
@@ -1853,9 +1850,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             person chooses to. */}
         {isAnswered && justAnswered && canManage && (
           <div className="prayer-activity-panel" data-testid="answer-next-step">
-            <p className="text-xs" role="status" style={{ color: 'var(--text-3)' }}>{t(lang, 'answerMarked')}</p>
+            <p className="text-xs" role="status" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'answerMarked')}</p>
             <p className="prayer-activity-panel__title mt-2">{t(lang, 'answerNextTitle')}</p>
-            <p className="mb-3 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'answerNextBody')}</p>
+            <p className="mb-3 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'answerNextBody')}</p>
             {addingNextStep ? (
               <UpdateComposer
                 lang={lang}
@@ -1871,15 +1868,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               />
             ) : (
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => setAddingNextStep(true)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                <button onClick={() => setAddingNextStep(true)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                   {t(lang, 'answerNextAdd')}
                 </button>
                 {!savedCopy && groups.length > 0 && !plan && (
-                  <button onClick={() => { setJustAnswered(false); setShowShareModal(true); }} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+                  <button onClick={() => { setJustAnswered(false); setShowShareModal(true); }} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>
                     {t(lang, 'answerNextShare')}
                   </button>
                 )}
-                <button onClick={() => setJustAnswered(false)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ color: 'var(--text-3)' }}>
+                <button onClick={() => setJustAnswered(false)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ color: 'var(--q-text-tertiary)' }}>
                   {t(lang, 'answerNextPrivate')}
                 </button>
               </div>
@@ -1890,7 +1887,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* An answered prayer's only remaining state action — reopening it. */}
         {isAnswered && canManage && (
           <div className="flex gap-3 pb-6">
-            <button onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-2 text-sm px-4 py-3 min-h-[44px] rounded-xl font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+            <button onClick={() => markActive(livePrayer.id)} title={t(lang, "tipResume")} className="flex items-center gap-2 text-sm px-4 py-3 min-h-[44px] rounded-xl font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
               {t(lang, 'resumePrayer')}
             </button>
           </div>

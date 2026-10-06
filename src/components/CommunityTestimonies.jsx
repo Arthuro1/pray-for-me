@@ -72,7 +72,7 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
                   text={loc(tm.content)}
                   lang={lang}
                   className="text-sm leading-relaxed"
-                  style={{ color: 'var(--text-1)' }}
+                  style={{ color: 'var(--q-text)' }}
                 />
                 <AttachmentList
                   attachments={tm.attachments}

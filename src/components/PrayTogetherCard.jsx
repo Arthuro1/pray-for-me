@@ -32,20 +32,20 @@ export default function PrayTogetherCard({ communityPrayer, count, hasReacted, b
     : t(lang, 'beFirstToPray');
 
   return (
-    <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
-      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--accent)' }}>{t(lang, 'prayTogether')}</p>
+    <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-selected-border)' }}>
+      <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'prayTogether')}</p>
 
       <div className="flex items-center gap-2.5 mb-3">
         {faces.length > 0 && (
           <div className="flex">
             {faces.map((r, i) => (
-              <div key={r.user_id} className="rounded-full" style={{ marginInlineStart: i === 0 ? 0 : -8, boxShadow: '0 0 0 2px var(--surface)' }}>
+              <div key={r.user_id} className="rounded-full" style={{ marginInlineStart: i === 0 ? 0 : -8, boxShadow: '0 0 0 2px var(--q-surface)' }}>
                 <Avatar name={nameFor(r)} avatar={r.avatar} size={28} />
               </div>
             ))}
           </div>
         )}
-        <p className="text-xs min-w-0 truncate" style={{ color: 'var(--text-3)' }}>{summary}</p>
+        <p className="text-xs min-w-0 truncate" style={{ color: 'var(--q-text-tertiary)' }}>{summary}</p>
       </div>
 
       <button
@@ -54,14 +54,14 @@ export default function PrayTogetherCard({ communityPrayer, count, hasReacted, b
         aria-pressed={hasReacted}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
         style={hasReacted
-          ? { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }
-          : { background: 'var(--accent)', color: '#fff' }}
+          ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }
+          : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
       >
         {busy ? <Loader2 size={16} className="animate-spin" /> : <HandHeart size={16} />}
         {t(lang, hasReacted ? 'carryingThisPrayer' : 'carryThisPrayer')}
       </button>
       {count > 0 && (
-        <p className="mt-2 text-center text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'carryCount', count)}</p>
+        <p className="mt-2 text-center text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{tp(lang, 'carryCount', count)}</p>
       )}
     </div>
   );

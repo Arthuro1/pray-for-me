@@ -159,13 +159,13 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
         aria-modal="true"
         aria-label={t(lang, 'avatarCropTitle')}
         className="w-full max-w-sm rounded-2xl p-5"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'avatarCropTitle')}</h3>
-            <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'avatarCropHint')}</p>
+            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'avatarCropTitle')}</h3>
+            <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'avatarCropHint')}</p>
           </div>
           <button
             type="button"
@@ -173,7 +173,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             disabled={saving}
             aria-label={t(lang, 'close')}
             className="pressable flex h-9 w-9 shrink-0 items-center justify-center rounded-full disabled:opacity-40"
-            style={{ color: 'var(--text-3)' }}
+            style={{ color: 'var(--q-text-tertiary)' }}
           >
             <X size={17} aria-hidden="true" />
           </button>
@@ -194,7 +194,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
         >
           {source
             ? <canvas ref={canvasRef} width={PREVIEW_PIXELS} height={PREVIEW_PIXELS} className="avatar-crop-canvas" />
-            : <Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} aria-hidden="true" />}
+            : <Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />}
         </div>
 
         <div className="mb-4 flex items-center gap-2">
@@ -204,7 +204,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             disabled={!source || zoom <= MIN_ZOOM || saving}
             aria-label={t(lang, 'avatarZoomOut')}
             className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl disabled:opacity-40"
-            style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-2)' }}
+            style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
           >
             <Minus size={16} aria-hidden="true" />
           </button>
@@ -225,7 +225,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             disabled={!source || zoom >= MAX_ZOOM || saving}
             aria-label={t(lang, 'avatarZoomIn')}
             className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl disabled:opacity-40"
-            style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-2)' }}
+            style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
           >
             <Plus size={16} aria-hidden="true" />
           </button>
@@ -237,7 +237,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             onClick={close}
             disabled={saving}
             className="pressable min-h-11 flex-1 rounded-xl text-sm font-medium disabled:opacity-40"
-            style={{ background: 'var(--input-bg)', border: '1px solid var(--input-border)', color: 'var(--text-2)' }}
+            style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
           >
             {t(lang, 'cancel')}
           </button>
@@ -246,7 +246,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             onClick={handleConfirm}
             disabled={!source || saving}
             className="pressable min-h-11 flex-1 rounded-xl text-sm font-medium text-white disabled:opacity-40"
-            style={{ background: 'var(--accent)' }}
+            style={{ background: 'var(--q-action-primary)' }}
           >
             {saving ? <Loader2 size={14} className="animate-spin mx-auto" aria-hidden="true" /> : t(lang, 'avatarPhotoSave')}
           </button>

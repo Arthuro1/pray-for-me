@@ -6,7 +6,7 @@ import { toKey } from './schedule';
 // Dot colours by schedule kind. `dots` (see planner.monthDots) maps a day key to
 // { once, recurring, plan, group } counts; `group` comes from community commitments.
 export const DOT_COLORS = {
-  recurring: 'var(--accent)',
+  recurring: 'var(--q-royal)',
   once: '#d97706',
   plan: '#94a3b8',
   group: '#0891b2',

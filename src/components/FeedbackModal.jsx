@@ -77,20 +77,20 @@ export default function FeedbackModal({ onClose }) {
 
         {done ? (
           <div className="flex flex-col items-center py-8 text-center">
-            <CheckCircle size={44} style={{ color: 'var(--success)' }} className="mb-3" />
-            <p className="font-semibold text-lg mb-1" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackThanks')}</p>
-            <p className="text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'feedbackThanksub')}</p>
+            <CheckCircle size={44} style={{ color: 'var(--q-success)' }} className="mb-3" />
+            <p className="font-semibold text-lg mb-1" style={{ color: 'var(--q-text)' }}>{t(lang, 'feedbackThanks')}</p>
+            <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'feedbackThanksub')}</p>
             <button
               onClick={onClose}
               className="mt-6 px-6 py-2.5 rounded-xl text-sm font-medium text-white"
-              style={{ background: 'var(--accent)' }}
+              style={{ background: 'var(--q-action-primary)' }}
             >
               {t(lang, 'close')}
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
-            <h2 className="text-base font-semibold mb-4" style={{ color: 'var(--text-1)' }}>
+            <h2 className="text-base font-semibold mb-4" style={{ color: 'var(--q-text)' }}>
               {t(lang, 'feedbackTitle')}
             </h2>
 
@@ -103,8 +103,8 @@ export default function FeedbackModal({ onClose }) {
                   onClick={() => setType(key)}
                   className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium transition-all"
                   style={type === key
-                    ? { background: 'var(--accent)', color: '#fff' }
-                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }
+                    : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   <Icon size={13} />
                   {t(lang, labelKey)}
@@ -120,15 +120,15 @@ export default function FeedbackModal({ onClose }) {
               placeholder={t(lang, 'feedbackPlaceholder')}
               rows={4}
               className="w-full rounded-xl px-3 py-3 text-sm focus:outline-none resize-none mb-4"
-              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+              style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
             />
 
             {/* Anonymous toggle */}
-            <div className="flex items-center justify-between mb-4 rounded-xl px-4 py-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+            <div className="flex items-center justify-between mb-4 rounded-xl px-4 py-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
               <div>
-                <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackAnon')}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'feedbackAnon')}</p>
                 {!anonymous && (
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
                     {displayName || email}
                   </p>
                 )}
@@ -137,7 +137,7 @@ export default function FeedbackModal({ onClose }) {
                 type="button"
                 onClick={() => setAnonymous((a) => !a)}
                 className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0"
-                style={{ background: anonymous ? 'var(--plum)' : 'var(--border-strong)' }}
+                style={{ background: anonymous ? 'var(--q-action-primary)' : 'var(--q-border-strong)' }}
               >
                 <span
                   className="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"
@@ -147,14 +147,14 @@ export default function FeedbackModal({ onClose }) {
             </div>
 
             {error && (
-              <p className="text-xs rounded-lg px-3 py-2 mb-3" style={{ color: '#c04040', background: '#fdf0f0' }}>{error}</p>
+              <p className="text-xs rounded-lg px-3 py-2 mb-3" style={{ color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}>{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading || !message.trim()}
               className="w-full rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50"
-              style={{ background: 'var(--plum)' }}
+              style={{ background: 'var(--q-action-primary)' }}
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               {t(lang, 'feedbackSubmit')}

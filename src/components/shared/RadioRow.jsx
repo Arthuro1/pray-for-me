@@ -13,8 +13,8 @@ export default function RadioRow({ id, name, checked, onChange, label, sub, disa
       htmlFor={id}
       className={`flex items-start gap-3 w-full min-h-[44px] rounded-xl px-3 py-2.5 ${disabled ? 'cursor-default opacity-60' : 'cursor-pointer'}`}
       style={checked
-        ? { background: 'var(--accent-soft)', border: '1.5px solid var(--accent)' }
-        : { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}
+        ? { background: 'var(--q-selected)', border: '1.5px solid var(--q-royal)' }
+        : { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
     >
       <span className="relative w-5 h-5 shrink-0 mt-0.5 flex items-center justify-center">
         <input
@@ -29,14 +29,14 @@ export default function RadioRow({ id, name, checked, onChange, label, sub, disa
         <span
           aria-hidden="true"
           className="w-5 h-5 rounded-full flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
-          style={{ background: 'var(--surface)', border: checked ? '1.5px solid var(--accent)' : '0.5px solid var(--input-border)' }}
+          style={{ background: 'var(--q-surface)', border: checked ? '1.5px solid var(--q-royal)' : '0.5px solid var(--q-field-border)' }}
         >
-          {checked && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--accent)' }} />}
+          {checked && <span className="w-2.5 h-2.5 rounded-full" style={{ background: 'var(--q-action-primary)' }} />}
         </span>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-medium break-words" style={{ color: 'var(--text-1)' }}>{label}</span>
-        {sub && <span className="block text-xs mt-0.5 break-words" style={{ color: 'var(--text-3)' }}>{sub}</span>}
+        <span className="block text-sm font-medium break-words" style={{ color: 'var(--q-text)' }}>{label}</span>
+        {sub && <span className="block text-xs mt-0.5 break-words" style={{ color: 'var(--q-text-tertiary)' }}>{sub}</span>}
       </span>
     </label>
   );

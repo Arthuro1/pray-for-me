@@ -20,10 +20,10 @@ function MenuItem({ icon: Icon, label, onClick, danger }) {
     <button
       role="menuitem"
       onClick={onClick}
-      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors hover:bg-[var(--input-bg)]"
-      style={{ color: danger ? '#e53e3e' : 'var(--text-1)' }}
+      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors hover:bg-[var(--q-field)]"
+      style={{ color: danger ? 'var(--q-danger)' : 'var(--q-text)' }}
     >
-      <Icon size={15} style={{ color: danger ? '#e53e3e' : 'var(--text-3)' }} /> {label}
+      <Icon size={15} style={{ color: danger ? 'var(--q-danger)' : 'var(--q-text-tertiary)' }} /> {label}
     </button>
   );
 }
@@ -118,15 +118,15 @@ export default function OverflowMenu({
               maxWidth: 'calc(100vw - 8px)',
               visibility: coords ? 'visible' : 'hidden',
               zIndex: 61,
-              background: 'var(--surface)',
-              border: '0.5px solid var(--border)',
+              background: 'var(--q-surface)',
+              border: '0.5px solid var(--q-border)',
               boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
             }}
           >
             {visible.map((it, i) => (
               <div key={it.key}>
                 {it.danger && i === firstDanger && i > 0 && (
-                  <div style={{ borderTop: '0.5px solid var(--border)', margin: '4px 0' }} />
+                  <div style={{ borderTop: '0.5px solid var(--q-border)', margin: '4px 0' }} />
                 )}
                 <MenuItem icon={it.icon} label={it.label} danger={it.danger} onClick={() => { setOpen(false); it.onClick(); }} />
               </div>

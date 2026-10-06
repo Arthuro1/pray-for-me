@@ -37,13 +37,13 @@ const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '
 
 function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
   return (
-    <div className="settings-row" style={{ borderBottom: '0.5px solid var(--border-soft)', paddingBottom: '14px', marginBottom: '14px' }}>
+    <div className="settings-row" style={{ borderBottom: '0.5px solid var(--q-border)', paddingBottom: '14px', marginBottom: '14px' }}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
-          {Icon && <Icon size={15} className="shrink-0" style={{ color: 'var(--text-3)' }} />}
+          {Icon && <Icon size={15} className="shrink-0" style={{ color: 'var(--q-text-tertiary)' }} />}
           <div className="min-w-0">
-            <p className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</p>
-            {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>{sub}</p>}
+            <p className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{label}</p>
+            {sub && <p className="text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{sub}</p>}
           </div>
         </div>
         {onToggle !== undefined && (
@@ -61,7 +61,7 @@ function Row({ label, sub, icon: Icon, enabled, onToggle, children }) {
 // of a long card stack.
 function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
   return (
-    <div style={{ borderBottom: '0.5px solid var(--border-soft)' }}>
+    <div style={{ borderBottom: '0.5px solid var(--q-border)' }}>
       <button
         type="button"
         onClick={onToggle}
@@ -69,12 +69,12 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
         aria-controls={`${id}-body`}
         className="w-full min-h-[48px] flex items-center gap-2.5 px-1 py-2 text-start"
       >
-        <Icon size={15} className="shrink-0" style={{ color: 'var(--accent)' }} aria-hidden="true" />
-        <span className="flex-1 text-sm font-medium" style={{ color: 'var(--text-1)' }}>{label}</span>
+        <Icon size={15} className="shrink-0" style={{ color: 'var(--q-royal-text)' }} aria-hidden="true" />
+        <span className="flex-1 text-sm font-medium" style={{ color: 'var(--q-text)' }}>{label}</span>
         <ChevronDown
           size={14}
           aria-hidden="true"
-          style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
+          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
         />
       </button>
       <div id={`${id}-body`} hidden={!open} className="px-1 pb-3">
@@ -103,11 +103,11 @@ function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
         aria-controls={`${id}-panel`}
         className="settings-section__trigger flex items-center gap-2.5"
       >
-        <Icon size={16} style={{ color: 'var(--accent)' }} />
-        <h2 className="text-sm font-bold flex-1 text-left" style={{ color: 'var(--text-1)' }}>{title}</h2>
+        <Icon size={16} style={{ color: 'var(--q-royal-text)' }} />
+        <h2 className="text-sm font-bold flex-1 text-left" style={{ color: 'var(--q-text)' }}>{title}</h2>
         <ChevronDown
           size={16}
-          style={{ color: 'var(--text-3)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+          style={{ color: 'var(--q-text-tertiary)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
         />
       </button>
       <div id={`${id}-panel`} hidden={!open} className="settings-section__panel">
@@ -138,7 +138,7 @@ function LanguageDropdown({ lang, onChange }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-1.5 text-sm rounded-xl px-3 py-2 focus:outline-none"
-        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
       >
         <span>{active?.flag}</span>
         <span>{active?.label}</span>
@@ -147,7 +147,7 @@ function LanguageDropdown({ lang, onChange }) {
       {open && (
         <div
           className="absolute right-0 mt-1 rounded-xl overflow-hidden overflow-y-auto z-50"
-          style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', minWidth: '160px', maxHeight: '260px', boxShadow: '0 8px 24px rgba(0,0,0,0.25)' }}
+          style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', minWidth: '160px', maxHeight: '260px', boxShadow: '0 8px 24px rgba(0,0,0,0.25)' }}
         >
           {LANGUAGES.map((l) => (
             <button
@@ -156,8 +156,8 @@ function LanguageDropdown({ lang, onChange }) {
               onClick={() => { onChange(l.code); setOpen(false); }}
               className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors"
               style={l.code === lang
-                ? { background: 'var(--accent-soft)', color: 'var(--accent)' }
-                : { color: 'var(--text-2)' }}
+                ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)' }
+                : { color: 'var(--q-text-secondary)' }}
             >
               <span>{l.flag}</span>
               <span>{l.label}</span>
@@ -402,8 +402,8 @@ export default function SettingsTab() {
         />
         <div className="settings-profile phase-card phase-card--quiet px-4 py-3 mb-5">
           <div className="min-w-0">
-            <p className="font-semibold truncate" style={{ color: 'var(--text-1)' }}>{displayName}</p>
-            <p className="text-xs truncate mt-0.5" style={{ color: 'var(--text-3)' }}>{user?.email}</p>
+            <p className="font-semibold truncate" style={{ color: 'var(--q-text)' }}>{displayName}</p>
+            <p className="text-xs truncate mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>{user?.email}</p>
           </div>
         </div>
       </div>
@@ -413,9 +413,9 @@ export default function SettingsTab() {
         {/* ── Account & privacy ── */}
         <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={Shield} open={openSections.account} onToggle={() => toggleSection('account')}>
           {/* Avatar — three controls, deliberately not a profile screen. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'profileAvatar')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'profileAvatarHint')}</p>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'profileAvatar')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'profileAvatarHint')}</p>
             <AvatarEditor
               lang={lang}
               kind="user"
@@ -428,23 +428,23 @@ export default function SettingsTab() {
           </div>
 
           {/* Account info */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'account')}</p>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'account')}</p>
             <div className="space-y-2.5 mb-4">
               <div className="flex items-center gap-2.5">
-                <Mail size={14} style={{ color: 'var(--text-3)' }} />
-                <span className="text-sm" style={{ color: 'var(--text-2)' }}>{user?.email}</span>
+                <Mail size={14} style={{ color: 'var(--q-text-tertiary)' }} />
+                <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{user?.email}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Shield size={14} style={{ color: 'var(--text-3)' }} />
-                <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
+                <Shield size={14} style={{ color: 'var(--q-text-tertiary)' }} />
+                <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'via')} <span style={{ fontWeight: 500 }}>{providerLabel}</span></span>
               </div>
             </div>
             <button
               onClick={signOut}
               title={t(lang, 'tipSignOut')}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ border: '1px solid color-mix(in srgb, var(--danger) 28%, var(--border))', color: 'var(--danger)', background: 'var(--danger-bg)' }}
+              style={{ border: '1px solid color-mix(in srgb, var(--q-danger) 28%, var(--q-border))', color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}
             >
               <LogOut size={14} />
               {t(lang, 'signOut')}
@@ -456,15 +456,15 @@ export default function SettingsTab() {
             compact list of disclosure ROWS instead of a long card stack; only
             Delete account stays apart, at the bottom. ── */}
         <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
-          <div className="rounded-2xl px-3 py-1 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl px-3 py-1 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             {/* Privacy Center — plain-language explanation of storage & sharing.
                 Basic privacy is free for everyone; this is never gated. */}
             <PrivacyRow id="privacy-overview" icon={ShieldCheck} label={t(lang, 'privacyRowOverview')} open={!!openPrivacyRows.overview} onToggle={() => togglePrivacyRow('overview')}>
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'privacyCenterSub')}</p>
+              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'privacyCenterSub')}</p>
               <button
                 onClick={() => setShowPrivacy(true)}
                 className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
               >
                 <ShieldCheck size={14} />
                 {t(lang, 'privacyCenterBtn')}
@@ -474,9 +474,9 @@ export default function SettingsTab() {
             {/* Prayer Vault */}
             <PrivacyRow id="privacy-vault" icon={vaultInitialized && !vaultUnlocked ? Lock : Shield} label={t(lang, 'privacyRowVault')} open={!!openPrivacyRows.vault} onToggle={() => togglePrivacyRow('vault')}>
               <div className="flex items-center gap-2 mb-2">
-                <p className="text-xs flex-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'vaultManageSub')}</p>
+                <p className="text-xs flex-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'vaultManageSub')}</p>
                 {vaultInitialized && (
-                  <span className="text-xs px-2 py-0.5 rounded-full shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                  <span className="text-xs px-2 py-0.5 rounded-full shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                     {t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}
                   </span>
                 )}
@@ -486,7 +486,7 @@ export default function SettingsTab() {
                 <button
                   onClick={() => setVaultMode('setup')}
                   className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
                 >
                   <Shield size={14} />
                   {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
@@ -497,7 +497,7 @@ export default function SettingsTab() {
                 <button
                   onClick={() => setVaultMode('unlock')}
                   className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
                 >
                   <Unlock size={14} />
                   {t(lang, 'vaultUnlock')}
@@ -510,7 +510,7 @@ export default function SettingsTab() {
                     <button
                       onClick={handleLockVault}
                       className="flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                     >
                       <Lock size={14} />
                       {t(lang, 'vaultLockNow')}
@@ -518,7 +518,7 @@ export default function SettingsTab() {
                     <button
                       onClick={() => setVaultMode('change')}
                       className="flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                     >
                       <KeyRound size={14} />
                       {t(lang, 'vaultChangePass')}
@@ -526,7 +526,7 @@ export default function SettingsTab() {
                     <button
                       onClick={() => setVaultMode('rotate')}
                       className="col-span-2 flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                      style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                     >
                       <RefreshCw size={14} />
                       {t(lang, 'vaultRotateCode')}
@@ -541,13 +541,13 @@ export default function SettingsTab() {
                 choice syncs account-wide and every scheduler honours it. Generic
                 previews stay the safest default. */}
             <PrivacyRow id="privacy-notif" icon={Bell} label={t(lang, 'privacyRowNotif')} open={!!openPrivacyRows.notif} onToggle={() => togglePrivacyRow('notif')}>
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPreviewSub')}</p>
+              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifPreviewSub')}</p>
               <div role="radiogroup" aria-label={t(lang, 'notifPreviewTitle')} className="space-y-1.5">
                 {[
                   { value: 'generic', labelKey: 'notifPreviewGeneric' },
                   { value: 'count', labelKey: 'notifPreviewCount' },
                 ].map(({ value, labelKey }) => (
-                  <label key={value} className="flex items-center gap-2.5 min-h-[44px] px-2 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)' }}>
+                  <label key={value} className="flex items-center gap-2.5 min-h-[44px] px-2 rounded-xl cursor-pointer" style={{ background: 'var(--q-field)' }}>
                     <input
                       type="radio"
                       name="notification-detail"
@@ -558,7 +558,7 @@ export default function SettingsTab() {
                         updatePushPrefs(user?.id, { notificationDetail: value }).catch(() => { /* best-effort */ });
                       }}
                     />
-                    <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, labelKey)}</span>
+                    <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, labelKey)}</span>
                   </label>
                 ))}
               </div>
@@ -567,7 +567,7 @@ export default function SettingsTab() {
             {/* Low data mode — device-local; defers nonessential fetches only. */}
             <PrivacyRow id="privacy-lowdata" icon={WifiOff} label={t(lang, 'privacyRowLowData')} open={!!openPrivacyRows.lowdata} onToggle={() => togglePrivacyRow('lowdata')}>
               <div className="flex items-start justify-between gap-3">
-                <p className="text-xs flex-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'lowDataSub')}</p>
+                <p className="text-xs flex-1" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'lowDataSub')}</p>
                 <Switch
                   checked={!!settings.lowDataMode}
                   onChange={() => updateSettings({ lowDataMode: !settings.lowDataMode })}
@@ -582,11 +582,11 @@ export default function SettingsTab() {
 
               {/* Outgoing-data preferences (mirrored from the per-request preview).
                   The title is always sent; description is opt-in. */}
-              <div className="rounded-xl p-3 mb-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-                <p className="text-xs font-semibold mb-1" style={{ color: 'var(--text-2)' }}>{t(lang, 'aiDataPrefsTitle')}</p>
-                <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiDataPrefsSub')}</p>
+              <div className="rounded-xl p-3 mb-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+                <p className="text-xs font-semibold mb-1" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aiDataPrefsTitle')}</p>
+                <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiDataPrefsSub')}</p>
                 <div className="flex items-center justify-between gap-3 py-1">
-                  <span className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'aiPreviewIncludeDescription')}</span>
+                  <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'aiPreviewIncludeDescription')}</span>
                   <Switch
                     checked={!!settings.aiSendDescription}
                     onChange={() => updateSettings({ aiSendDescription: !settings.aiSendDescription })}
@@ -599,25 +599,25 @@ export default function SettingsTab() {
                 <button
                   onClick={handleRevokeAi}
                   className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-                  style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                  style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   <Sparkles size={14} />
                   {t(lang, 'aiRevoke')}
                 </button>
               ) : (
-                <p className="text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'aiCurrentlyOff')}</p>
+                <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'aiCurrentlyOff')}</p>
               )}
             </PrivacyRow>
 
             {/* Data export — your prayers belong to you. The ONE export surface
                 (More links here; no duplicate row elsewhere). */}
             <PrivacyRow id="privacy-export" icon={Download} label={t(lang, 'privacyRowExport')} open={!!openPrivacyRows.export} onToggle={() => togglePrivacyRow('export')}>
-              <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'exportDataSub')}</p>
+              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'exportDataSub')}</p>
               <button
                 onClick={handleExport}
                 disabled={prayers.length === 0}
                 className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium disabled:opacity-40"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
               >
                 <Download size={14} />
                 {t(lang, 'exportData')}
@@ -627,13 +627,13 @@ export default function SettingsTab() {
 
           {/* Danger zone — irreversible account deletion (right to erasure),
               kept APART at the bottom of the section and gated by ConfirmDialog. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '1px solid color-mix(in srgb, var(--danger) 28%, var(--border))' }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--danger)' }}>{t(lang, 'dangerZone')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'deleteAccountSub')}</p>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '1px solid color-mix(in srgb, var(--q-danger) 28%, var(--q-border))' }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--q-danger)' }}>{t(lang, 'dangerZone')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'deleteAccountSub')}</p>
             <button
               onClick={handleDeleteAccount}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 min-h-[44px] text-sm font-medium"
-              style={{ border: '1px solid color-mix(in srgb, var(--danger) 28%, var(--border))', color: 'var(--danger)', background: 'var(--danger-bg)' }}
+              style={{ border: '1px solid color-mix(in srgb, var(--q-danger) 28%, var(--q-border))', color: 'var(--q-danger)', background: 'var(--q-danger-soft)' }}
             >
               <Trash2 size={14} />
               {t(lang, 'deleteAccount')}
@@ -648,9 +648,9 @@ export default function SettingsTab() {
               to sit on the Plan tab between the day agenda and the plan
               catalogue, which is a content surface, not a place for a standing
               preference. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
-            <p className="text-sm font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'perDayTitle')}</p>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'perDaySub')}</p>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+            <p className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'perDayTitle')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'perDaySub')}</p>
             <div className="flex gap-2 flex-wrap" role="group" aria-label={t(lang, 'perDayTitle')}>
               {CAP_OPTIONS.map((n) => {
                 const active = (settings.maxPerDay || null) === n;
@@ -661,8 +661,8 @@ export default function SettingsTab() {
                     aria-pressed={active}
                     className="min-h-[44px] px-4 rounded-xl text-sm font-medium transition-colors"
                     style={active
-                      ? { background: 'var(--accent)', color: '#fff', border: '1.5px solid var(--accent)' }
-                      : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                      ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', border: '1.5px solid var(--q-royal)' }
+                      : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                   >
                     {n ?? t(lang, 'perDayOff')}
                   </button>
@@ -672,29 +672,29 @@ export default function SettingsTab() {
           </div>
 
           {/* Daily + follow-up reminders */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <div className="flex items-center gap-2 mb-4">
-              <Bell size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'remindersTitle')}</h3>
+              <Bell size={16} style={{ color: 'var(--q-royal-text)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'remindersTitle')}</h3>
             </div>
 
             <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} icon={Bell} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
               {settings.dailyReminderEnabled && (
                 <div className="mt-3">
                   <div className="flex items-center gap-2">
-                    <Clock size={13} style={{ color: 'var(--text-3)' }} />
+                    <Clock size={13} style={{ color: 'var(--q-text-tertiary)' }} />
                     <input
                       type="time"
                       value={settings.dailyReminderTime}
                       onChange={(e) => handleReminderTimeChange(e.target.value)}
                       className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                      style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                      style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                     />
                   </div>
                   {(() => {
                     const r = nextReminder(settings.dailyReminderTime);
                     return (
-                      <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+                      <p className="text-xs mt-2" style={{ color: 'var(--q-text-tertiary)' }}>
                         {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
                       </p>
                     );
@@ -712,7 +712,7 @@ export default function SettingsTab() {
                         value={settings.followUpDays}
                         onChange={(e) => handleFollowUpDaysChange(parseInt(e.target.value))}
                         className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                       >
                         <option value={3}>{t(lang, 'every3days')}</option>
                         <option value={7}>{t(lang, 'everyWeek')}</option>
@@ -720,13 +720,13 @@ export default function SettingsTab() {
                         <option value={30}>{t(lang, 'everyMonth')}</option>
                       </select>
                       <div className="flex items-center gap-2">
-                        <Clock size={13} style={{ color: 'var(--text-3)' }} />
+                        <Clock size={13} style={{ color: 'var(--q-text-tertiary)' }} />
                         <input
                           type="time"
                           value={settings.followUpTime || '07:00'}
                           onChange={(e) => handleFollowUpTimeChange(e.target.value)}
                           className="text-sm rounded-lg px-3 py-1.5 focus:outline-none"
-                          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                          style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
                         />
                       </div>
                     </div>
@@ -738,7 +738,7 @@ export default function SettingsTab() {
                           ? t(lang, 'tomorrow')
                           : nf.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
                       return (
-                        <p className="text-xs mt-2" style={{ color: 'var(--text-3)' }}>
+                        <p className="text-xs mt-2" style={{ color: 'var(--q-text-tertiary)' }}>
                           {t(lang, 'nextReminder')} · {dayLabel} {nf.time}
                         </p>
                       );
@@ -753,7 +753,7 @@ export default function SettingsTab() {
                 onClick={() => new Notification(`${APP_NAME} 🙏`, { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
                 title={t(lang, 'tipTestNotif')}
                 className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
-                style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
               >
                 {t(lang, 'testNotif')}
               </button>
@@ -761,12 +761,12 @@ export default function SettingsTab() {
           </div>
 
           {/* Community notification preferences (in-app inbox + push per type) */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <div className="flex items-center gap-2 mb-1">
-              <Bell size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'notifPrefsTitle')}</h3>
+              <Bell size={16} style={{ color: 'var(--q-royal-text)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'notifPrefsTitle')}</h3>
             </div>
-            <p className="text-xs mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'notifPrefsSub')}</p>
+            <p className="text-xs mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'notifPrefsSub')}</p>
             <NotificationPreferences />
           </div>
         </SettingsSection>
@@ -774,10 +774,10 @@ export default function SettingsTab() {
         {/* ── Appearance & language ── */}
         <SettingsSection id="appearance" title={t(lang, 'settingsSecAppearance')} icon={Sun} open={openSections.appearance} onToggle={() => toggleSection('appearance')}>
           {/* Theme */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <div className="flex items-center gap-2 mb-3">
-              {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--accent)' }} /> : <Sun size={16} style={{ color: 'var(--accent)' }} />}
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'appearance')}</h3>
+              {settings.theme === 'dark' ? <Moon size={16} style={{ color: 'var(--q-royal-text)' }} /> : <Sun size={16} style={{ color: 'var(--q-royal-text)' }} />}
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'appearance')}</h3>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {[{ value: 'light', icon: Sun, labelKey: 'themeLight' }, { value: 'dark', icon: Moon, labelKey: 'themeDark' }].map(({ value, icon: Icon, labelKey }) => (
@@ -786,8 +786,8 @@ export default function SettingsTab() {
                   onClick={() => updateSettings({ theme: value })}
                   className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all"
                   style={settings.theme === value
-                    ? { background: 'var(--accent)', color: '#fff' }
-                    : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+                    ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }
+                    : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
                 >
                   <Icon size={15} />
                   {t(lang, labelKey)}
@@ -797,11 +797,11 @@ export default function SettingsTab() {
           </div>
 
           {/* Language */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Globe size={16} style={{ color: 'var(--accent)' }} />
-                <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'language')}</h3>
+                <Globe size={16} style={{ color: 'var(--q-royal-text)' }} />
+                <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'language')}</h3>
               </div>
               <LanguageDropdown
                 lang={lang}
@@ -817,21 +817,21 @@ export default function SettingsTab() {
 
         {/* ── Support & feedback ── */}
         <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
-          {user?.id && !user.is_anonymous && <div className="rounded-2xl p-4 mb-3 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          {user?.id && !user.is_anonymous && <div className="rounded-2xl p-4 mb-3 space-y-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <button className="wording-action" onClick={() => setWordingMode('report')}>{t(lang, 'wordingReport')}</button>
             {canReviewWording(user) && <button className="wording-action" onClick={() => setWordingMode('review')}>{t(lang, 'wordingReview')}</button>}
           </div>}
           {/* Feedback */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <div className="flex items-center gap-2 mb-1">
-              <MessageSquare size={16} style={{ color: 'var(--accent)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'feedbackTitle')}</h3>
+              <MessageSquare size={16} style={{ color: 'var(--q-royal-text)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'feedbackTitle')}</h3>
             </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'feedbackSub')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'feedbackSub')}</p>
             <button
               onClick={() => setShowFeedback(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
             >
               <MessageSquare size={14} />
               {t(lang, 'feedbackBtn')}
@@ -840,16 +840,16 @@ export default function SettingsTab() {
 
           {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
               never unlocks features and the whole app works without it. */}
-          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+          <div className="rounded-2xl p-4 mb-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
             <div className="flex items-center gap-2 mb-1">
-              <Heart size={16} style={{ color: 'var(--success)' }} />
-              <h3 className="font-semibold text-sm" style={{ color: 'var(--text-1)' }}>{t(lang, 'donateTitle')}</h3>
+              <Heart size={16} style={{ color: 'var(--q-success)' }} />
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'donateTitle')}</h3>
             </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--text-3)' }}>{t(lang, 'donateSub')}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'donateSub')}</p>
             <button
               onClick={() => setShowDonate(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium"
-              style={{ background: 'var(--success-bg)', color: 'var(--success)', border: '1px solid var(--success-border)' }}
+              style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)', border: '1px solid var(--q-success-border)' }}
             >
               <Heart size={14} />
               {t(lang, 'donateBtn')}
@@ -857,11 +857,11 @@ export default function SettingsTab() {
           </div>
         </SettingsSection>
 
-        <div className="rounded-2xl px-6 py-5 mt-2 text-center" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-          <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>
-          <p className="text-xs font-medium" style={{ color: 'var(--accent)', opacity: 0.6 }}>James 5:16</p>
+        <div className="rounded-2xl px-6 py-5 mt-2 text-center" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+          <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'motto')}</p>
+          <p className="text-xs font-medium" style={{ color: 'var(--q-royal-text)', opacity: 0.6 }}>James 5:16</p>
         </div>
-        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>{APP_NAME} v{APP_VERSION}</p>
+        <p className="text-center text-xs mt-3" style={{ color: 'var(--q-text-tertiary)' }}>{APP_NAME} v{APP_VERSION}</p>
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}

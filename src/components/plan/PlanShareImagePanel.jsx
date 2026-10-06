@@ -74,7 +74,7 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
   const canUseNativeSheet = typeof navigator !== 'undefined' && !!navigator.share;
 
   if (!rendering && !image) {
-    return <p className="px-5 py-6 text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, 'errorGeneric')}</p>;
+    return <p className="px-5 py-6 text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'errorGeneric')}</p>;
   }
 
   return (
@@ -92,15 +92,15 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
       <div
         className="mb-4 flex items-center justify-center overflow-hidden rounded-xl"
         style={{
-          background: 'var(--surface-2)',
-          border: '0.5px solid var(--border)',
+          background: 'var(--q-surface-muted)',
+          border: '0.5px solid var(--q-border)',
           aspectRatio: size === 'story' ? '9 / 16' : '1 / 1',
           maxHeight: '18rem',
         }}
       >
         {image
           ? <img src={image.url} alt={title} className="h-full w-full object-contain" />
-          : <Loader2 size={18} className="animate-spin" style={{ color: 'var(--text-3)' }} aria-hidden="true" />}
+          : <Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />}
       </div>
       {image && (
         <div className="flex flex-col gap-2">
@@ -109,7 +109,7 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
               type="button"
               onClick={shareImage}
               className="pressable flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white"
-              style={{ background: 'var(--accent)' }}
+              style={{ background: 'var(--q-action-primary)' }}
             >
               <Share2 size={16} aria-hidden="true" /> {t(lang, 'verseShareImage')}
             </button>
@@ -119,8 +119,8 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
             onClick={saveImage}
             className="pressable flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium"
             style={canUseNativeSheet
-              ? { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }
-              : { background: 'var(--accent)', color: '#fff' }}
+              ? { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }
+              : { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }}
           >
             <Download size={15} aria-hidden="true" /> {t(lang, 'verseSaveImage')}
           </button>

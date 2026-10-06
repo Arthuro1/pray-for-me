@@ -76,32 +76,32 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
     <>
       <div className="px-5 py-4 overflow-y-auto space-y-5">
         {/* Calm, honest framing of what an invitation does. */}
-        <div className="rounded-xl p-3 flex gap-2.5" style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)' }}>
-          <HeartHandshake size={16} style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }} />
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-2)' }}>{t(lang, 'planInviteSub')}</p>
+        <div className="rounded-xl p-3 flex gap-2.5" style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)' }}>
+          <HeartHandshake size={16} style={{ color: 'var(--q-royal-text)', flexShrink: 0, marginTop: 1 }} />
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planInviteSub')}</p>
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--text-3)' }} /></div>
+          <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
         ) : nothingToInvite ? (
           <EmptyState compact emoji="🤝" title={t(lang, 'planInviteEmpty')} />
         ) : (
           <>
             {/* Start date — invitees begin the plan on this day. */}
             <label className="flex items-center justify-between gap-3">
-              <span className="text-xs font-medium" style={{ color: 'var(--text-2)' }}>{t(lang, 'planStartDate')}</span>
+              <span className="text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'planStartDate')}</span>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className="text-sm rounded-lg px-2.5 py-1.5"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)', colorScheme: 'light dark' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)', colorScheme: 'light dark' }}
               />
             </label>
 
             {friends.length > 0 && (
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'planInviteFriendsHeading')}</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planInviteFriendsHeading')}</p>
                 <div className="space-y-2">
                   {friends.map((f) => {
                     const already = invitedIds.has(f.id);
@@ -110,13 +110,13 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
                       <label
                         key={f.id}
                         className="flex items-center gap-3 p-2.5 rounded-xl"
-                        style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', cursor: already ? 'default' : 'pointer', opacity: already ? 0.6 : 1 }}
+                        style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', cursor: already ? 'default' : 'pointer', opacity: already ? 0.6 : 1 }}
                       >
                         <input type="checkbox" className="rounded" checked={already || checked} disabled={already} onChange={() => toggleFriend(f.id)} />
                         <Avatar name={f.name} avatar={f.avatar} size={30} />
-                        <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--text-1)' }}>{f.name}</span>
+                        <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--q-text)' }}>{f.name}</span>
                         {already && (
-                          <span className="text-xs inline-flex items-center gap-1 shrink-0" style={{ color: 'var(--accent)' }}>
+                          <span className="text-xs inline-flex items-center gap-1 shrink-0" style={{ color: 'var(--q-royal-text)' }}>
                             <Check size={13} /> {t(lang, 'planInvitedBadge')}
                           </span>
                         )}
@@ -129,13 +129,13 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
 
             {groups.length > 0 && (
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'planInviteGroupsHeading')}</p>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'planInviteGroupsHeading')}</p>
                 <div className="space-y-2">
                   {groups.map((g) => (
-                    <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+                    <label key={g.id} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
                       <input type="checkbox" className="rounded" checked={selGroups.has(g.id)} onChange={() => toggleGroup(g.id)} />
                       <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={32} />
-                      <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--text-1)' }}>{g.name}</span>
+                      <span className="text-sm flex-1 min-w-0 truncate" style={{ color: 'var(--q-text)' }}>{g.name}</span>
                     </label>
                   ))}
                 </div>
@@ -146,8 +146,8 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
       </div>
 
       {!nothingToInvite && (
-        <div className="p-5 pt-3 shrink-0" style={{ borderTop: '0.5px solid var(--border)' }}>
-          <button onClick={handleSend} disabled={!canSend || sending} className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--accent)' }}>
+        <div className="p-5 pt-3 shrink-0" style={{ borderTop: '0.5px solid var(--q-border)' }}>
+          <button onClick={handleSend} disabled={!canSend || sending} className="w-full py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-action-primary)' }}>
             {sending ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'planInviteSend')}
           </button>
         </div>

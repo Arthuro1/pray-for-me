@@ -26,20 +26,20 @@ export default function SchedulePlanner({ schedule, onSave, lang, planDays, defa
 
   if (editing) {
     return (
-      <div className="rounded-2xl p-4 space-y-3" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
+      <div className="rounded-2xl p-4 space-y-3" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
         <ScheduleEditor draft={draft} onChange={setDraft} lang={lang} planDays={planDays} />
         <div className="flex gap-2">
           <button
             onClick={close}
             className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm"
-            style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+            style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
           >
             {t(lang, 'cancel')}
           </button>
           <button
             onClick={save}
             className="flex-1 py-2.5 min-h-[44px] rounded-xl text-sm font-medium text-white"
-            style={{ background: 'var(--accent)' }}
+            style={{ background: 'var(--q-action-primary)' }}
           >
             {t(lang, 'schedUseRhythm')}
           </button>
@@ -55,7 +55,7 @@ export default function SchedulePlanner({ schedule, onSave, lang, planDays, defa
         onClick={startEdit}
         title={t(lang, 'editSchedule')}
         className="w-full min-h-[44px] text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
-        style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+        style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
       >
         <Repeat size={12} className="shrink-0" />
         <span className="flex-1 text-start">{scheduleSummary(schedule, lang)}</span>
@@ -69,7 +69,7 @@ export default function SchedulePlanner({ schedule, onSave, lang, planDays, defa
     <button
       onClick={startEdit}
       className="w-full min-h-[44px] text-xs font-medium flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5"
-      style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+      style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
     >
       <CalendarClock size={13} /> {t(lang, 'addSchedule')}
     </button>

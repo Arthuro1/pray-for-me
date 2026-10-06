@@ -10,15 +10,15 @@ import { APP_NAME } from '../lib/brand';
 
 // A small count badge. The number itself is announced through the destination's
 // aria-label (e.g. "Community, 3 pending"), so the visual pill is aria-hidden to
-// avoid a screen reader reading the digits twice. Colour comes from the theme
-// `--badge` token — a calm brand purple, not an alarm red.
+// avoid a screen reader reading the digits twice. Royal purple, not an alarm
+// red: an ordinary count is an invitation to return, not an emergency.
 function Badge({ count, className = '', style = {} }) {
   if (!count) return null;
   return (
     <span
       aria-hidden="true"
       className={`flex items-center justify-center text-[10px] font-bold rounded-full ${className}`}
-      style={{ minWidth: 18, height: 18, padding: '0 5px', background: 'var(--badge)', color: 'var(--badge-text)', ...style }}
+      style={{ minWidth: 18, height: 18, padding: '0 5px', background: 'var(--q-action-primary)', color: 'var(--q-on-action)', ...style }}
     >
       {count > 9 ? '9+' : count}
     </span>
@@ -120,25 +120,25 @@ export default function Layout({ children, onAddPrayer }) {
         style={{
           width: `${sidebarWidth}px`,
           insetInlineStart: 0,
-          borderInlineEnd: '1px solid color-mix(in srgb, var(--border) 75%, transparent)',
+          borderInlineEnd: '1px solid var(--q-border)',
           overflow: 'hidden',
-          transition: 'width var(--motion) var(--ease)',
+          transition: 'width var(--q-motion-standard) var(--q-ease)',
         }}
       >
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
           {!collapsed && (
             <div className="flex items-center gap-2.5 overflow-hidden">
               <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg shrink-0" />
-              <span className="brand-wordmark text-base whitespace-nowrap" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
+              <span className="brand-wordmark text-base whitespace-nowrap" style={{ color: 'var(--q-text)' }}>{APP_NAME}</span>
             </div>
           )}
           {collapsed && <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg mx-auto" />}
           <div className="flex items-center gap-1 shrink-0">
-            {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--text-3)' }} />}
+            {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--q-text-tertiary)' }} />}
             <button
               onClick={() => setCollapsed(!collapsed)}
               className="pressable flex h-11 w-11 items-center justify-center rounded-full transition-colors"
-              style={{ color: 'var(--text-3)', marginLeft: collapsed ? 0 : 4 }}
+              style={{ color: 'var(--q-text-tertiary)', marginLeft: collapsed ? 0 : 4 }}
               title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
             >
               {collapsed ? <ChevronRight className="rtl-mirror" size={16} /> : <ChevronLeft className="rtl-mirror" size={16} />}
@@ -150,7 +150,7 @@ export default function Layout({ children, onAddPrayer }) {
             centered row so a collapsed power-user never loses access to it. */}
         {collapsed && (
           <div className="flex justify-center mb-3">
-            <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-3)' }} />
+            <NotificationBell className="w-9 h-9" style={{ color: 'var(--q-text-tertiary)' }} />
           </div>
         )}
 
@@ -165,18 +165,19 @@ export default function Layout({ children, onAddPrayer }) {
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 title={collapsed ? label : undefined}
-                className="pressable relative flex min-h-11 items-center rounded-xl text-sm font-semibold no-underline transition-all"
+                className="app-nav-item pressable relative flex min-h-11 items-center rounded-control text-sm no-underline"
                 style={{
                   gap: collapsed ? 0 : 12,
                   padding: collapsed ? '10px 0' : '10px 12px',
                   justifyContent: collapsed ? 'center' : 'flex-start',
-                  ...(active
-                    ? { background: 'var(--nav-active-bg)', color: 'var(--nav-active-color)', boxShadow: 'inset 0 -2px 0 var(--gold)' }
-                    : { color: 'var(--text-3)' }),
+                  color: active ? 'var(--q-royal-text)' : 'var(--q-text-secondary)',
+                  fontWeight: active ? 650 : 500,
                 }}
               >
+                {/* Active: purple text and a 2px gold line — never a filled card. */}
+                {active && <span aria-hidden="true" className="app-nav-item__mark" />}
                 <span className="relative flex items-center">
-                  <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
+                  <Icon size={18} strokeWidth={active ? 2.1 : 1.8} aria-hidden="true" />
                   {collapsed && <Badge count={badge} className="absolute" style={{ top: -8, insetInlineEnd: -8 }} />}
                 </span>
                 {!collapsed && <span>{label}</span>}
@@ -190,15 +191,14 @@ export default function Layout({ children, onAddPrayer }) {
           <button
             onClick={onAddPrayer}
             title={t(lang, "tipAddPrayer")}
-            className="primary-button pressable w-full flex min-h-12 items-center rounded-xl text-sm font-semibold text-white transition-all"
+            className="primary-button pressable w-full"
             style={{
               gap: collapsed ? 0 : 10,
               padding: collapsed ? '12px 0' : '12px 14px',
               justifyContent: collapsed ? 'center' : 'flex-start',
-              background: 'var(--plum)',
             }}
           >
-            <Plus size={18} strokeWidth={2.5} />
+            <Plus size={18} strokeWidth={2.1} aria-hidden="true" />
             {!collapsed && <span>{t(lang, 'newPrayer')}</span>}
           </button>
         </div>
@@ -214,14 +214,14 @@ export default function Layout({ children, onAddPrayer }) {
           style={{
             height: 'calc(3rem + env(safe-area-inset-top))',
             paddingTop: 'env(safe-area-inset-top)',
-            borderBottom: '1px solid color-mix(in srgb, var(--border) 70%, transparent)',
+            borderBottom: '1px solid var(--q-border)',
           }}
         >
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt={APP_NAME} className="w-7 h-7 rounded-lg" />
-            <span className="brand-wordmark text-base" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
+            <span className="brand-wordmark text-base" style={{ color: 'var(--q-text)' }}>{APP_NAME}</span>
           </div>
-          <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
+          <NotificationBell className="w-9 h-9" style={{ color: 'var(--q-text-secondary)' }} />
         </header>
       )}
 
@@ -240,7 +240,7 @@ export default function Layout({ children, onAddPrayer }) {
             : showBottomNav
               ? `calc(${BOTTOM_NAV_H + 20}px + env(safe-area-inset-bottom))`
               : 'env(safe-area-inset-bottom)',
-          transition: 'padding-inline-start var(--motion) var(--ease)',
+          transition: 'padding-inline-start var(--q-motion-standard) var(--q-ease)',
         }}
       >
         {children}
@@ -254,35 +254,29 @@ export default function Layout({ children, onAddPrayer }) {
           onClick={onAddPrayer}
           title={t(lang, "tipAddPrayer")}
           aria-label={t(lang, "tipAddPrayer")}
-          className="pressable md:hidden fixed z-20 rounded-full flex items-center justify-center transition-transform"
+          className="app-add-button pressable md:hidden fixed z-20 flex items-center justify-center"
           style={{
             // Float clear of the nav bar AND the bottom safe-area inset.
             // insetInlineEnd (not right) mirrors the FAB to the left in RTL.
             bottom: `calc(${BOTTOM_NAV_H + 16}px + env(safe-area-inset-bottom))`,
             insetInlineEnd: '20px',
-            width: '52px',
-            height: '52px',
-            background: 'var(--plum)',
-            border: '3px solid var(--surface)',
-            boxShadow: '0 12px 30px color-mix(in srgb, var(--plum-dark) 25%, transparent)',
           }}
         >
-          <Plus size={24} color="white" strokeWidth={2.5} />
+          <Plus size={24} strokeWidth={2} aria-hidden="true" />
         </button>
       )}
 
       {/* ── Bottom nav (mobile only) ──
           paddingBottom = the bottom safe-area inset, so the surface fills down
           to the very edge while the tappable row sits above the home indicator.
-          A soft top shadow (plus the hairline border) keeps it separate from
-          content scrolling underneath, in both light and dark themes. */}
+          Flat and native: a solid canvas and one hairline separate it from the
+          content scrolling underneath — no floating container, no shadow. */}
       {showBottomNav && (
         <nav
           className="app-bottom-nav md:hidden fixed bottom-0 left-0 right-0 flex z-10"
           aria-label={t(lang, 'primaryNav')}
           style={{
-            borderTop: '1px solid color-mix(in srgb, var(--border) 75%, transparent)',
-            boxShadow: 'var(--nav-shadow)',
+            borderTop: '1px solid var(--q-border)',
             paddingBottom: 'env(safe-area-inset-bottom)',
           }}
         >
@@ -296,19 +290,10 @@ export default function Layout({ children, onAddPrayer }) {
                 aria-current={active ? 'page' : undefined}
                 aria-label={navLabel(label, badge)}
                 className="pressable flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 no-underline transition-colors"
-                style={{ minHeight: BOTTOM_NAV_H, color: active ? 'var(--nav-active-color)' : 'var(--text-3)' }}
+                style={{ minHeight: BOTTOM_NAV_H, color: active ? 'var(--q-royal-text)' : 'var(--q-text-tertiary)' }}
               >
-                <span
-                  className="relative flex items-center justify-center"
-                  style={{
-                    width: 40,
-                    height: 28,
-                    borderRadius: 999,
-                    background: active ? 'var(--nav-active-bg)' : 'transparent',
-                    transition: 'background 0.15s ease',
-                  }}
-                >
-                  <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                <span className="relative flex h-7 w-10 items-center justify-center">
+                  <Icon size={22} strokeWidth={active ? 2.1 : 1.75} aria-hidden="true" />
                   <Badge count={badge} className="absolute" style={{ top: -2, insetInlineEnd: 2 }} />
                 </span>
                 <span

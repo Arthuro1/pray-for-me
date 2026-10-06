@@ -1,0 +1,178 @@
+/* Qetoret base — element defaults, the type scale and the motion language.
+   Sans is the software voice (controls, labels, dates); the serif is reserved
+   for sacred content (prayer titles, Scripture, testimony, reflective copy). */
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--q-canvas);
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--q-canvas);
+  color: var(--q-text);
+  font-family: var(--q-font-ui);
+  font-size: var(--q-type-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--q-motion-standard) var(--q-ease), color var(--q-motion-standard) var(--q-ease);
+}
+
+button, input, textarea, select { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+/* ── Type scale ─────────────────────────────────────────────────────────── */
+.editorial,
+.editorial-heading,
+.scripture-text,
+.q-display,
+.q-title,
+.q-section-title,
+.q-prayer-title {
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+.editorial-heading { font-weight: 500; letter-spacing: -0.015em; }
+
+.q-display {
+  margin: 0;
+  font-size: var(--q-type-display);
+  font-weight: 450;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+}
+
+.q-title {
+  margin: 0;
+  font-size: var(--q-type-title);
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.q-section-title {
+  margin: 0;
+  font-size: var(--q-type-section);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+}
+
+.q-prayer-title {
+  margin: 0;
+  font-size: var(--q-type-prayer);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.q-body { font-size: var(--q-type-body); line-height: 1.6; }
+
+.q-meta {
+  color: var(--q-text-tertiary);
+  font-size: var(--q-type-meta);
+  line-height: 1.45;
+}
+
+.q-eyebrow,
+.section-label {
+  margin: 0;
+  color: var(--q-text-tertiary);
+  font-family: var(--q-font-ui);
+  font-size: var(--q-type-label);
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Gold marks what is sacred — Scripture, testimony, "your altar". */
+.q-eyebrow--sacred,
+.section-label--sacred { color: var(--q-gold-text); }
+
+/* ── Fields ─────────────────────────────────────────────────────────────── */
+input, textarea, select {
+  background: var(--q-field);
+  border: 1px solid var(--q-field-border);
+  color: var(--q-text);
+}
+
+/* :where() keeps these at zero specificity so any component class wins. */
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+  border-radius: var(--q-radius-control);
+}
+
+input::placeholder, textarea::placeholder { color: var(--q-text-tertiary); }
+
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select):focus-visible {
+  border-color: var(--q-focus);
+  outline: 2px solid color-mix(in srgb, var(--q-focus) 28%, transparent);
+  outline-offset: 0;
+}
+
+input[type="checkbox"], input[type="radio"], input[type="range"] { accent-color: var(--q-action-primary); }
+
+::selection {
+  background: color-mix(in srgb, var(--q-royal) 22%, transparent);
+  color: var(--q-text);
+}
+
+/* ── Focus — always visible, never colour alone ──────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--q-focus);
+  outline-offset: 3px;
+  border-radius: var(--q-radius-control);
+}
+
+[role="dialog"] :focus {
+  outline: 2px solid var(--q-focus);
+  outline-offset: 3px;
+}
+
+[role="dialog"] :focus:not(:focus-visible) { outline-color: transparent; }
+
+/* ── Utilities ──────────────────────────────────────────────────────────── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+[dir="rtl"] .rtl-mirror { transform: scaleX(-1); }
+
+/* ── Motion — one idea: rise ──────────────────────────────────────────────
+   Content arrives from slightly below and leaves slightly upward. No bounce,
+   no confetti, no reward animation. Never the only signal of a state change. */
+@keyframes q-rise-in {
+  from { opacity: 0; transform: translateY(var(--q-rise)); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes q-rise-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(calc(var(--q-rise) * -0.8)); }
+}
+
+@keyframes q-ascend {
+  0% { opacity: 0; transform: translateY(8px); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-22px); }
+}
+
+.rise-in { animation: q-rise-in var(--q-motion-reflective) var(--q-ease) both; }
+.rise-in--late { animation-delay: 160ms; }
+.rise-out { animation: q-rise-out var(--q-motion-standard) var(--q-ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

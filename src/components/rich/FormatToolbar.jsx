@@ -15,7 +15,7 @@ export function ToolbarButton({ icon: Icon, label, active, onClick }) {
       aria-pressed={typeof active === 'boolean' ? active : undefined}
       title={label}
       className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
-      style={{ color: active ? 'var(--accent)' : 'var(--text-3)', background: active ? 'var(--accent-soft)' : 'transparent' }}
+      style={{ color: active ? 'var(--q-royal-text)' : 'var(--q-text-tertiary)', background: active ? 'var(--q-selected)' : 'transparent' }}
     >
       <Icon size={14} aria-hidden="true" />
     </button>

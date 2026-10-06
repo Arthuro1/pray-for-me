@@ -24,7 +24,7 @@ export default function MessageEditor({ initialText, onSave, onCancel, lang }) {
   };
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+    <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
       <RichTextEditor
         value={text}
         onChange={setText}
@@ -40,12 +40,12 @@ export default function MessageEditor({ initialText, onSave, onCancel, lang }) {
       {/* A balanced two-button footer: an equal-width secondary Cancel and
           primary Save, each a comfortable tap target, separated from the field
           by a hairline — clearer than two small right-hugging buttons. */}
-      <div className="flex items-center gap-2 px-2 pb-2 pt-1.5" style={{ borderTop: '0.5px solid var(--input-border)' }}>
+      <div className="flex items-center gap-2 px-2 pb-2 pt-1.5" style={{ borderTop: '0.5px solid var(--q-field-border)' }}>
         <button
           type="button"
           onClick={onCancel}
           className="flex-1 min-h-[40px] text-sm rounded-lg font-medium"
-          style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+          style={{ background: 'var(--q-surface)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
         >
           {t(lang, 'cancel')}
         </button>
@@ -54,7 +54,7 @@ export default function MessageEditor({ initialText, onSave, onCancel, lang }) {
           onClick={save}
           disabled={saving}
           className="flex-1 flex items-center justify-center gap-1.5 min-h-[40px] text-sm rounded-lg font-medium text-white disabled:opacity-40"
-          style={{ background: 'var(--accent)' }}
+          style={{ background: 'var(--q-action-primary)' }}
         >
           {saving && <Loader2 size={13} className="animate-spin" aria-hidden="true" />}
           {t(lang, 'save')}

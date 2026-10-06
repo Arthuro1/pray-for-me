@@ -44,7 +44,7 @@ function OptionRow({ label, options, value, onChange, disabled }) {
 
   return (
     <div className="mb-4">
-      <p id={labelId} className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{label}</p>
+      <p id={labelId} className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{label}</p>
       <div role="radiogroup" aria-labelledby={labelId} className="flex flex-wrap gap-2" onKeyDown={onKeyDown}>
         {options.map((o, i) => (
           <button
@@ -227,7 +227,7 @@ export default function AvatarEditor({ lang, kind = 'user', name, avatar, ownerI
     <div>
       <div className="flex items-center gap-3 mb-4">
         <Avatar kind={kind} name={name} avatar={preview} size={52} label={t(lang, 'avatarPreview')} />
-        <p className="text-sm min-w-0 truncate" style={{ color: 'var(--text-2)' }}>{name}</p>
+        <p className="text-sm min-w-0 truncate" style={{ color: 'var(--q-text-secondary)' }}>{name}</p>
       </div>
 
       <input
@@ -240,7 +240,7 @@ export default function AvatarEditor({ lang, kind = 'user', name, avatar, ownerI
         aria-hidden="true"
       />
 
-      <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--text-3)' }}>{t(lang, 'avatarPhoto')}</p>
+      <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'avatarPhoto')}</p>
       <div className="flex flex-wrap gap-2 mb-4">
         <button type="button" onClick={pickFile} disabled={!!busy} className="avatar-action">
           {busy === 'photo' ? spinner : <ImagePlus size={16} aria-hidden="true" />}
@@ -275,7 +275,7 @@ export default function AvatarEditor({ lang, kind = 'user', name, avatar, ownerI
         onClick={savePreset}
         disabled={!!busy}
         className="w-full min-h-11 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40"
-        style={{ background: 'var(--accent)' }}
+        style={{ background: 'var(--q-action-primary)' }}
       >
         {busy === 'preset'
           ? <Loader2 size={14} className="animate-spin mx-auto" aria-hidden="true" />

@@ -38,9 +38,9 @@ function MenuRow({ icon: Icon, label, onClick }) {
       type="button"
       onClick={onClick}
       className="flex items-center gap-3 w-full px-2.5 py-2 rounded-xl text-sm text-start transition-colors"
-      style={{ color: 'var(--text-1)' }}
+      style={{ color: 'var(--q-text)' }}
     >
-      <span className="w-8 h-8 flex items-center justify-center rounded-full shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+      <span className="w-8 h-8 flex items-center justify-center rounded-full shrink-0" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
         <Icon size={15} aria-hidden="true" />
       </span>
       {label}
@@ -217,7 +217,7 @@ export default function UpdateComposer({
       aria-label={sendLabel || t(lang, 'tipSaveUpdate')}
       title={sendLabel || t(lang, 'tipSaveUpdate')}
       className={`update-composer__send flex items-center justify-center gap-1.5 min-h-[44px] shrink-0 text-white text-xs font-medium disabled:opacity-40 ${sendLabel ? 'px-3.5 rounded-lg' : 'w-11 rounded-full'}`}
-      style={{ background: 'var(--accent)' }}
+      style={{ background: 'var(--q-action-primary)' }}
     >
       {sending || uploading ? <Loader2 size={16} className="animate-spin" aria-hidden="true" /> : <Send size={16} aria-hidden="true" />}
       {sendLabel}
@@ -238,11 +238,11 @@ export default function UpdateComposer({
             onChange={(e) => setLinkDraft(e.target.value)}
             placeholder={t(lang, 'linkPlaceholder')}
             className="flex-1 min-w-0 text-xs rounded-lg px-2.5 py-2 focus:outline-none"
-            style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addLink(); } }}
             autoFocus
           />
-          <button type="button" onClick={addLink} className="text-xs px-3 rounded-lg font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+          <button type="button" onClick={addLink} className="text-xs px-3 rounded-lg font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
             {t(lang, 'addBtn')}
           </button>
         </div>
@@ -250,13 +250,13 @@ export default function UpdateComposer({
 
       {recording ? (
         /* Recording bar: cancel · pulsing dot + timer · stop */
-        <div className="flex items-center gap-2 rounded-full px-2 py-1.5" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
-          <button type="button" onClick={cancelRecording} aria-label={t(lang, 'cancel')} title={t(lang, 'cancel')} className="w-9 h-9 flex items-center justify-center rounded-full shrink-0" style={{ color: 'var(--text-3)' }}>
+        <div className="flex items-center gap-2 rounded-full px-2 py-1.5" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
+          <button type="button" onClick={cancelRecording} aria-label={t(lang, 'cancel')} title={t(lang, 'cancel')} className="w-9 h-9 flex items-center justify-center rounded-full shrink-0" style={{ color: 'var(--q-text-tertiary)' }}>
             <Trash2 size={16} aria-hidden="true" />
           </button>
-          <span className="w-2.5 h-2.5 rounded-full animate-pulse shrink-0" style={{ background: '#e53e3e' }} aria-hidden="true" />
-          <span className="flex-1 text-sm tabular-nums" style={{ color: 'var(--text-2)' }}>{fmtSeconds(recordSeconds)}</span>
-          <button type="button" onClick={stopRecording} aria-label={t(lang, 'stopRecording')} title={t(lang, 'stopRecording')} className="w-11 h-11 flex items-center justify-center rounded-full shrink-0 text-white" style={{ background: 'var(--accent)' }}>
+          <span className="w-2.5 h-2.5 rounded-full animate-pulse shrink-0" style={{ background: 'var(--q-danger)' }} aria-hidden="true" />
+          <span className="flex-1 text-sm tabular-nums" style={{ color: 'var(--q-text-secondary)' }}>{fmtSeconds(recordSeconds)}</span>
+          <button type="button" onClick={stopRecording} aria-label={t(lang, 'stopRecording')} title={t(lang, 'stopRecording')} className="w-11 h-11 flex items-center justify-center rounded-full shrink-0 text-white" style={{ background: 'var(--q-action-primary)' }}>
             <Square size={15} aria-hidden="true" />
           </button>
         </div>
@@ -271,7 +271,7 @@ export default function UpdateComposer({
               title={t(lang, 'attachMenu')}
               aria-expanded={showMenu}
               className="w-11 h-11 flex items-center justify-center rounded-full transition-transform"
-              style={{ color: 'var(--text-3)', transform: showMenu ? 'rotate(45deg)' : 'none' }}
+              style={{ color: 'var(--q-text-tertiary)', transform: showMenu ? 'rotate(45deg)' : 'none' }}
             >
               <Plus size={22} aria-hidden="true" />
             </button>
@@ -279,7 +279,7 @@ export default function UpdateComposer({
               <div
                 role="menu"
                 className="absolute bottom-12 start-0 z-20 w-52 rounded-2xl p-1.5 shadow-lg"
-                style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}
+                style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
               >
                 <MenuRow icon={Camera} label={t(lang, 'attachPhoto')} onClick={() => runMenu(() => pickFile('image/*'))} />
                 <MenuRow icon={Film} label={t(lang, 'attachVideo')} onClick={() => runMenu(() => pickFile('video/*'))} />
@@ -292,7 +292,7 @@ export default function UpdateComposer({
 
           {/* Input pill — a WYSIWYG field: selecting text raises a bold / italic /
               list toolbar and the styling shows inline, never as raw markers. */}
-          <div className="update-composer__input flex-1 min-w-0 rounded-3xl flex items-center" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+          <div className="update-composer__input flex-1 min-w-0 rounded-3xl flex items-center" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
             <RichTextEditor
               value={text}
               onChange={setText}
@@ -312,7 +312,7 @@ export default function UpdateComposer({
               aria-label={t(lang, 'recordVoice')}
               title={t(lang, 'recordVoice')}
               className="w-11 h-11 flex items-center justify-center rounded-full shrink-0 text-white"
-              style={{ background: 'var(--accent)' }}
+              style={{ background: 'var(--q-action-primary)' }}
             >
               <Mic size={18} aria-hidden="true" />
             </button>

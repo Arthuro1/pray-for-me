@@ -18,7 +18,7 @@ export default function ReportWordingLink({ lang, surface }) {
         type="button"
         onClick={() => setOpen(true)}
         className="pressable flex min-h-11 items-center gap-1.5 text-xs"
-        style={{ color: 'var(--text-3)' }}
+        style={{ color: 'var(--q-text-tertiary)' }}
       >
         <Flag size={12} aria-hidden="true" /> {t(lang, 'wordingReport')}
       </button>

@@ -27,7 +27,7 @@ export default function SourceLanguageField({ value, onChange, sampleText = '', 
 
   return (
     <div>
-      <div className="flex items-center gap-1.5 flex-wrap text-xs" style={{ color: 'var(--text-3)' }}>
+      <div className="flex items-center gap-1.5 flex-wrap text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
         <Languages size={12} aria-hidden="true" className="shrink-0" />
         <span>{t(lang, 'sourceLangWrittenIn', { name: labelOf(value) })}</span>
         <button
@@ -36,7 +36,7 @@ export default function SourceLanguageField({ value, onChange, sampleText = '', 
           aria-expanded={open}
           aria-controls={panelId}
           className="min-h-[44px] px-1 font-semibold focus-visible:ring-2 rounded"
-          style={{ color: 'var(--accent)' }}
+          style={{ color: 'var(--q-royal-text)' }}
         >
           {t(lang, 'sourceLangChange')}
         </button>
@@ -47,7 +47,7 @@ export default function SourceLanguageField({ value, onChange, sampleText = '', 
           type="button"
           onClick={() => onChange(suggestion)}
           className="min-h-[44px] flex items-center text-xs text-start focus-visible:ring-2 rounded"
-          style={{ color: 'var(--accent)' }}
+          style={{ color: 'var(--q-royal-text)' }}
         >
           {t(lang, 'sourceLangLooksLike', { name: labelOf(suggestion) })}
         </button>
@@ -61,7 +61,7 @@ export default function SourceLanguageField({ value, onChange, sampleText = '', 
             value={value}
             onChange={(e) => onChange(e.target.value)}
             className="w-full text-sm rounded-xl px-3 min-h-[44px] focus:outline-none focus-visible:ring-2"
-            style={{ background: 'var(--surface)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+            style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
           >
             {LANGUAGES.map((l) => (
               <option key={l.code} value={l.code}>{l.label}</option>

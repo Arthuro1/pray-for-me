@@ -48,8 +48,8 @@ describe('Onboarding', () => {
     expect(screen.getByText(t(lang, 'onboardPrivateNote'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'onboardSaveAndPray'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'onboardLater'))).toBeTruthy();
-    expect(container.querySelector('.constellation-onboarding__sky-image--light')).toBeTruthy();
-    expect(container.querySelector('.constellation-onboarding__sky-image--dark')).toBeTruthy();
+    // Qetoret has no celestial art: no sky, no stars behind the prayer.
+    expect(container.querySelector('[class*="sky"]')).toBeNull();
     expectNoSupporterPrompt();
   });
 

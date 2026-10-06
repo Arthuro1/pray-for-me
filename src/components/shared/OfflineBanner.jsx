@@ -28,7 +28,7 @@ export default function OfflineBanner() {
       role="status"
       aria-live="polite"
       className="fixed top-0 left-0 right-0 z-[110] flex items-center justify-center gap-2 py-1.5 text-xs font-medium text-white"
-      style={{ background: '#475569' }}
+      style={{ background: 'var(--q-surface-inverse)', color: 'var(--q-text-inverse)' }}
     >
       <WifiOff size={13} aria-hidden="true" /> {t(lang, 'offline')}
     </div>

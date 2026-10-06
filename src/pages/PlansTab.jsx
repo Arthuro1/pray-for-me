@@ -170,25 +170,25 @@ export default function PlansTab() {
 
       <div className="phase-content max-w-2xl">
         {started && (
-          <div className="phase-card mb-7 p-5" role="status" style={{ borderColor: 'var(--success)' }}>
+          <div className="phase-card mb-7 p-5" role="status" style={{ borderColor: 'var(--q-success)' }}>
             <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: 'var(--success-bg)', color: 'var(--success)' }}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)' }}>
                 <Check size={18} aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-semibold" style={{ color: 'var(--text-1)' }}>
+                <p className="font-semibold" style={{ color: 'var(--q-text)' }}>
                   {started.startDate === todayKey()
                     ? t(lang, 'journeyBeginsToday')
                     : t(lang, 'groupPlanStartsOn', { date: formatPlanStartDate(started.startDate, lang) })}
                 </p>
-                <p className="mt-1 text-sm" style={{ color: 'var(--text-3)' }}>{t(lang, started.plan.titleKey)}</p>
+                <p className="mt-1 text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, started.plan.titleKey)}</p>
               </div>
             </div>
             <button type="button" onClick={() => navigate(`/prayers/${started.prayerId}`)} className="primary-button mt-4 flex w-full items-center justify-center gap-2 px-4">
               <HandHeart size={16} aria-hidden="true" /> {t(lang, 'beginDayOne')}
             </button>
             {user?.id && (
-              <button type="button" onClick={() => setShareTarget(started)} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+              <button type="button" onClick={() => setShareTarget(started)} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 text-sm font-medium" style={{ color: 'var(--q-royal-text)' }}>
                 <Share2 size={15} aria-hidden="true" /> {t(lang, 'planShareAction')}
               </button>
             )}
@@ -207,7 +207,7 @@ export default function PlansTab() {
           </PlanSection>
         )}
 
-        <p className="mb-7 flex items-start gap-2 text-xs leading-relaxed" style={{ color: 'var(--text-3)' }}>
+        <p className="mb-7 flex items-start gap-2 text-xs leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>
           <Users size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span>{t(lang, 'plansTogetherHint')}</span>
         </p>

@@ -1,0 +1,140 @@
+/* Qetoret — the one token layer for the app, its public pages and brand assets.
+   Alabaster, royal violet, temple gold and ink. Components read purpose
+   tokens only; never a raw color. Gold and the quietest gray from the brand
+   palette fail AA as text on alabaster, so each has a darker text twin. */
+:root {
+  color-scheme: light;
+
+  /* Backgrounds */
+  --q-canvas: #F7F5EF;
+  --q-surface: #FCFBF8;
+  --q-surface-muted: #F0EDE6;
+  --q-surface-inverse: #29213F;
+  --q-field: var(--q-surface);
+
+  /* Text */
+  --q-text: #202026;
+  --q-text-secondary: #5F6068;
+  --q-text-tertiary: #6A6A72;
+  --q-text-inverse: #F7F5EF;
+  --q-text-inverse-secondary: #C9C4D3;
+  --q-text-inverse-tertiary: #A59FB4;
+
+  /* Brand */
+  --q-royal: #4B3A78;
+  --q-royal-text: #4B3A78;
+  --q-royal-light: #6B59A6;
+  --q-royal-deep: #29213F;
+  --q-gold: #B68A45;
+  --q-gold-text: #856126;
+  --q-gold-soft: #E3D2AE;
+  --q-gold-inverse: #C6A15C;
+
+  /* Actions */
+  --q-action-primary: var(--q-royal);
+  --q-action-primary-hover: color-mix(in srgb, var(--q-royal) 82%, var(--q-royal-light));
+  --q-on-action: #F7F5EF;
+
+  /* Semantic — green is reserved for answered prayer and testimony */
+  --q-success: #577367;
+  --q-success-soft: color-mix(in srgb, var(--q-success) 9%, var(--q-canvas));
+  --q-success-border: color-mix(in srgb, var(--q-success) 28%, var(--q-border));
+  --q-danger: #A13D3D;
+  --q-danger-fill: var(--q-danger);
+  --q-danger-soft: color-mix(in srgb, var(--q-danger) 8%, var(--q-canvas));
+
+  /* States */
+  --q-selected: color-mix(in srgb, var(--q-royal) 8%, var(--q-canvas));
+  --q-selected-border: color-mix(in srgb, var(--q-royal) 26%, var(--q-border));
+  --q-hover: color-mix(in srgb, var(--q-text) 4%, transparent);
+
+  /* Borders, focus, overlay */
+  --q-border: #DED9CF;
+  --q-border-strong: #CFC8BC;
+  --q-field-border: var(--q-border-strong);
+  --q-focus: var(--q-royal);
+  --q-overlay: rgb(17 16 24 / 56%);
+
+  /* Shape — four radii only */
+  --q-radius-control: 10px;
+  --q-radius-surface: 14px;
+  --q-radius-dialog: 20px;
+  --q-radius-pill: 999px;
+
+  /* Elevation — level 1 only; everything else is flat */
+  --q-elevation: 0 16px 40px rgb(32 27 45 / 8%);
+
+  /* Spacing — 4px base */
+  --q-space-1: 4px;
+  --q-space-2: 8px;
+  --q-space-3: 12px;
+  --q-space-4: 16px;
+  --q-space-5: 20px;
+  --q-space-6: 24px;
+  --q-space-8: 32px;
+  --q-space-10: 40px;
+  --q-space-12: 48px;
+  --q-space-16: 64px;
+  --q-space-20: 80px;
+
+  /* Type scale */
+  --q-type-display: clamp(2.75rem, 6vw, 3.5rem);
+  --q-type-title: clamp(2rem, 5vw, 2.5rem);
+  --q-type-section: clamp(1.375rem, 3vw, 1.625rem);
+  --q-type-prayer: clamp(1.25rem, 2.6vw, 1.5rem);
+  --q-type-body: 1rem;
+  --q-type-meta: 0.8125rem;
+  --q-type-label: 0.6875rem;
+
+  /* Two voices: sans for software, serif for sacred content */
+  --q-font-ui: 'Twemoji Country Flags', 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Noto Sans Ethiopic', 'Noto Sans CJK SC', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --q-font-editorial: 'Newsreader', 'Noto Serif', 'Iowan Old Style', 'Palatino Linotype', 'Noto Naskh Arabic', 'Noto Serif Devanagari', 'Noto Serif Ethiopic', 'Noto Serif CJK SC', Georgia, serif;
+
+  /* Motion — one language: a short rise */
+  --q-motion-micro: 160ms;
+  --q-motion-standard: 240ms;
+  --q-motion-reflective: 380ms;
+  --q-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --q-rise: 10px;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --q-canvas: #111018;
+  --q-surface: #191720;
+  --q-surface-muted: #211E2A;
+  --q-surface-inverse: #211A37;
+  --q-text: #F1EEE8;
+  --q-text-secondary: #AAA6B0;
+  --q-text-tertiary: #8D8993;
+  --q-text-inverse: #F1EEE8;
+  --q-royal: #7868B2;
+  --q-royal-text: #9486C8;
+  --q-royal-light: #9486C8;
+  --q-royal-deep: #211A37;
+  --q-gold: #C6A15C;
+  --q-gold-text: #C6A15C;
+  --q-gold-soft: #443821;
+  --q-action-primary: #7262AB;
+  --q-action-primary-hover: #7E6EB8;
+  --q-success: #7C9B8D;
+  --q-success-soft: color-mix(in srgb, var(--q-success) 12%, var(--q-canvas));
+  --q-danger: #EF8F8F;
+  --q-danger-fill: #B54A4A;
+  --q-danger-soft: color-mix(in srgb, var(--q-danger) 10%, var(--q-canvas));
+  --q-selected: color-mix(in srgb, var(--q-royal) 16%, var(--q-canvas));
+  --q-border: #302C38;
+  --q-border-strong: #423C4C;
+  --q-focus: var(--q-royal-text);
+  --q-overlay: rgb(8 7 12 / 72%);
+  --q-elevation: 0 16px 40px rgb(0 0 0 / 28%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --q-motion-micro: 0ms;
+    --q-motion-standard: 0ms;
+    --q-motion-reflective: 0ms;
+    --q-rise: 0px;
+  }
+}

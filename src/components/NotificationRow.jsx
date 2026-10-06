@@ -45,8 +45,8 @@ export default function NotificationRow({ notification, lang, onActivate, group 
       aria-label={notificationLabel(notification, lang)}
       className="w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors"
       style={{
-        background: unread ? 'var(--accent-soft)' : 'var(--surface)',
-        border: '0.5px solid var(--border)',
+        background: unread ? 'var(--q-selected)' : 'var(--q-surface)',
+        border: '0.5px solid var(--q-border)',
       }}
     >
       {group ? (
@@ -56,7 +56,7 @@ export default function NotificationRow({ notification, lang, onActivate, group 
           <Avatar kind="group" name={group.name} avatar={avatarConfigFrom(group)} size={36} />
           <span
             className="absolute -bottom-1 flex items-center justify-center w-4 h-4 rounded-full"
-            style={{ insetInlineEnd: '-0.25rem', background: 'var(--surface)', color: 'var(--accent)', border: '0.5px solid var(--border)' }}
+            style={{ insetInlineEnd: '-0.25rem', background: 'var(--q-surface)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-border)' }}
           >
             <Icon size={10} strokeWidth={2.4} />
           </span>
@@ -64,22 +64,22 @@ export default function NotificationRow({ notification, lang, onActivate, group 
       ) : (
         <span
           className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center mt-0.5"
-          style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+          style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
           aria-hidden="true"
         >
           <Icon size={17} strokeWidth={2} />
         </span>
       )}
       <span className="min-w-0 flex-1">
-        <span className="block text-sm" style={{ color: 'var(--text-1)', fontWeight: unread ? 600 : 400 }}>
+        <span className="block text-sm" style={{ color: 'var(--q-text)', fontWeight: unread ? 600 : 400 }}>
           {t(lang, meta.labelKey)}
         </span>
-        <span className="block text-xs mt-0.5" style={{ color: 'var(--text-3)' }}>
+        <span className="block text-xs mt-0.5" style={{ color: 'var(--q-text-tertiary)' }}>
           {timeAgo(notification.created_at, lang)}
         </span>
       </span>
       {unread && (
-        <span className="shrink-0 mt-2 w-2 h-2 rounded-full" style={{ background: 'var(--accent)' }} aria-hidden="true" />
+        <span className="shrink-0 mt-2 w-2 h-2 rounded-full" style={{ background: 'var(--q-action-primary)' }} aria-hidden="true" />
       )}
     </button>
   );

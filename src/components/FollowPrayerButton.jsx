@@ -29,7 +29,7 @@ export default function FollowPrayerButton({ userId, prayerId, lang }) {
   };
 
   if (following === null) {
-    return <Loader2 size={16} className="animate-spin" style={{ color: 'var(--text-3)' }} />;
+    return <Loader2 size={16} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} />;
   }
 
   const Icon = following ? Bell : BellOff;
@@ -40,8 +40,8 @@ export default function FollowPrayerButton({ userId, prayerId, lang }) {
       aria-pressed={following}
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium disabled:opacity-50"
       style={following
-        ? { background: 'var(--accent)', color: '#fff' }
-        : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+        ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)' }
+        : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
     >
       <Icon size={13} />
       {t(lang, following ? 'following' : 'followPrayer')}

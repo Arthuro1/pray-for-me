@@ -60,7 +60,7 @@ export default function WordingReportModal({ lang, initialSurface = 'ui', onClos
               {matches.map((e) => <option key={e.id} value={e.id}>{e.text.slice(0, 100)} · {e.key}</option>)}
             </select></label>
             {matches.length === 0 && <p role="status">{t(lang, 'wordingEmpty')}</p>}
-            {chosen && <blockquote className="rounded-xl p-3 whitespace-pre-wrap break-words" style={{ background: 'var(--input-bg)' }}>{chosen.text}</blockquote>}
+            {chosen && <blockquote className="rounded-xl p-3 whitespace-pre-wrap break-words" style={{ background: 'var(--q-field)' }}>{chosen.text}</blockquote>}
             <label className="block">{t(lang, 'wordingIssue')}<select className="wording-control" value={issue} onChange={(e) => setIssue(e.target.value)}>{WORDING_ISSUES.map((value) => <option key={value} value={value}>{t(lang, `wordingIssue_${value}`)}</option>)}</select></label>
             <label className="block">{t(lang, 'wordingSuggestion')}<textarea className="wording-control" rows={3} value={suggestion} maxLength={2000} onChange={(e) => setSuggestion(e.target.value)} /></label>
             <button className="wording-action" disabled={sending || !chosen} type="submit">{t(lang, sending ? 'wordingLoading' : 'feedbackSubmit')}</button>

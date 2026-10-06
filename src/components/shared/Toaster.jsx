@@ -4,7 +4,7 @@ import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
 
 const ICONS = { success: CheckCircle, error: AlertCircle, info: Info };
-const COLORS = { success: 'var(--success)', error: '#e53e3e', info: 'var(--accent)' };
+const COLORS = { success: 'var(--q-success)', error: 'var(--q-danger)', info: 'var(--q-royal-text)' };
 
 // Saved / copied / completed / offline all land here, so this is where a screen
 // reader hears about them. `polite` waits for a pause instead of cutting the
@@ -28,7 +28,7 @@ export default function Toaster() {
           <div
             key={toast.id}
             className="flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg text-sm animate-[fadeIn_0.15s_ease]"
-            style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', color: 'var(--text-1)' }}
+            style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', color: 'var(--q-text)' }}
           >
             <Icon size={16} aria-hidden="true" style={{ color: COLORS[toast.type] || COLORS.error, flexShrink: 0 }} />
             <span className="flex-1">{toast.message}</span>
@@ -36,7 +36,7 @@ export default function Toaster() {
               <button
                 onClick={() => { toast.action.onClick(); dismiss(toast.id); }}
                 className="min-h-[44px] text-xs font-semibold px-2 py-1 rounded-lg shrink-0 focus-visible:ring-2"
-                style={{ color: 'var(--accent)', background: 'var(--accent-soft)' }}
+                style={{ color: 'var(--q-royal-text)', background: 'var(--q-selected)' }}
               >
                 {toast.action.label}
               </button>
@@ -45,7 +45,7 @@ export default function Toaster() {
               onClick={() => dismiss(toast.id)}
               aria-label={t(lang, 'close')}
               className="w-11 h-11 -my-2 -mr-2 shrink-0 flex items-center justify-center rounded-full focus-visible:ring-2"
-              style={{ color: 'var(--text-3)' }}
+              style={{ color: 'var(--q-text-tertiary)' }}
             >
               <X size={14} aria-hidden="true" />
             </button>

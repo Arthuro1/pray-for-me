@@ -18,15 +18,15 @@ export default function AudienceBadge({ audience, protection = null, lang, class
       <span
         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium"
         style={shared
-          ? { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }
-          : { background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+          ? { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }
+          : { background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
       >
         <Icon size={11} aria-hidden="true" /> {t(lang, key, vars)}
       </span>
       {prot && (
         <span
           className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium"
-          style={{ background: 'transparent', color: 'var(--text-3)', border: '0.5px solid var(--input-border)' }}
+          style={{ background: 'transparent', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-field-border)' }}
         >
           <ShieldCheck size={10} aria-hidden="true" /> {t(lang, prot.key)}
         </span>

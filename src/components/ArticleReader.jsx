@@ -21,9 +21,9 @@ export default function ArticleReader({ article, lang, onClose, onOpenJourney })
   const showJourneyInvite = !!(article.relatedJourneyId && article.journeyInviteKey && onOpenJourney);
 
   return (
-    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div className="fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--q-canvas)' }}>
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={pick(article.title, lang)} tabIndex={-1} className="flex flex-col h-full focus:outline-none">
-        <div className="shrink-0 px-5 pt-4 pb-5" style={{ background: 'var(--header)' }}>
+        <div className="shrink-0 px-5 pt-4 pb-5" style={{ background: 'var(--q-surface-inverse)' }}>
           <div className="flex items-center justify-between mb-4">
             <button onClick={onClose} className="flex items-center gap-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.8)' }}>
               <ArrowLeft size={16} /> {t(lang, 'growLearn')}
@@ -41,8 +41,8 @@ export default function ArticleReader({ article, lang, onClose, onOpenJourney })
           <div className="space-y-7">
             {(article.sections || []).map((section, i) => (
               <div key={i}>
-                <h3 className="text-base font-semibold mb-2" style={{ color: 'var(--text-1)' }}>{pick(section.heading, lang)}</h3>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-2)' }}>{pick(section.body, lang)}</p>
+                <h3 className="text-base font-semibold mb-2" style={{ color: 'var(--q-text)' }}>{pick(section.heading, lang)}</h3>
+                <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--q-text-secondary)' }}>{pick(section.body, lang)}</p>
                 {(section.refs || []).length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {section.refs.map((r) => {
@@ -53,7 +53,7 @@ export default function ArticleReader({ article, lang, onClose, onOpenJourney })
                             <button
                               onClick={toggle}
                               className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium"
-                              style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
+                              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
                             >
                               <BookOpen size={11} /> {ref}
                             </button>
@@ -73,20 +73,20 @@ export default function ArticleReader({ article, lang, onClose, onOpenJourney })
             <button
               onClick={() => onOpenJourney(article.relatedJourneyId)}
               className="w-full text-left rounded-2xl p-4 mt-9 flex items-center gap-3 transition-all motion-reduce:transition-none hover:scale-[1.01] motion-reduce:hover:scale-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ background: 'var(--accent-soft)', border: '0.5px solid var(--accent-border)', outlineColor: 'var(--accent)' }}
+              style={{ background: 'var(--q-selected)', border: '0.5px solid var(--q-selected-border)', outlineColor: 'var(--q-royal)' }}
             >
-              <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent)' }}>
+              <span className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--q-action-primary)' }}>
                 <Sunrise size={16} className="text-white" aria-hidden="true" />
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block text-xs font-semibold mb-0.5" style={{ color: 'var(--accent)' }}>{t(lang, 'gospelInviteLabel')}</span>
-                <span className="block text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, article.journeyInviteKey)}</span>
+                <span className="block text-xs font-semibold mb-0.5" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'gospelInviteLabel')}</span>
+                <span className="block text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, article.journeyInviteKey)}</span>
               </span>
-              <ChevronRight size={16} className="shrink-0" style={{ color: 'var(--text-3)' }} aria-hidden="true" />
+              <ChevronRight size={16} className="shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
             </button>
           )}
 
-          <p className="text-xs text-center mt-10 mb-2 leading-relaxed" style={{ color: 'var(--text-3)' }}>
+          <p className="text-xs text-center mt-10 mb-2 leading-relaxed" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, 'growScriptureNote')}
           </p>
           <div className="flex justify-center"><ReportWordingLink lang={lang} surface={`theology/${article.id}`} /></div>

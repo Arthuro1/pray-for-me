@@ -25,7 +25,7 @@ import { defaultNewDraft, draftFromSchedule, returnsSummary, scheduleFromDraft }
 import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 
-const INPUT_STYLE = { background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' };
+const INPUT_STYLE = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
 const LABEL_CLASS = 'text-xs font-semibold uppercase tracking-widest mb-1.5 block';
 
 // A real, keyboard- and screen-reader-operable checkbox: the native input is
@@ -45,12 +45,12 @@ function CheckboxToggle({ id, checked, onChange, label }) {
         <span
           aria-hidden="true"
           className="w-5 h-5 rounded-md flex items-center justify-center peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2"
-          style={{ background: checked ? 'var(--accent)' : 'var(--input-bg)', border: checked ? 'none' : '0.5px solid var(--input-border)' }}
+          style={{ background: checked ? 'var(--q-action-primary)' : 'var(--q-field)', border: checked ? 'none' : '0.5px solid var(--q-field-border)' }}
         >
           {checked && <span className="text-white text-xs font-bold">✓</span>}
         </span>
       </span>
-      <span className="text-sm" style={{ color: 'var(--text-2)' }}>{label}</span>
+      <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{label}</span>
     </label>
   );
 }
@@ -66,7 +66,7 @@ function SectionToggle({ label, open, onToggle, controlsId, icon: Icon = Plus })
       aria-expanded={open}
       aria-controls={controlsId}
       className="w-full min-h-[44px] flex items-center justify-between gap-1.5 py-2 text-xs font-semibold"
-      style={{ color: 'var(--accent)' }}
+      style={{ color: 'var(--q-royal-text)' }}
     >
       <span className="flex items-center gap-1.5">
         <Icon size={14} /> {label}
@@ -335,19 +335,19 @@ export default function PrayerForm({
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--border)' }} />
+          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--q-border)' }} />
         </div>
 
         <div className="flex items-center justify-between px-5 py-3">
-          <h2 className="font-semibold text-lg" style={{ color: 'var(--text-1)' }}>{title}</h2>
+          <h2 className="font-semibold text-lg" style={{ color: 'var(--q-text)' }}>{title}</h2>
           <button
             onClick={onClose}
             aria-label={t(lang, 'close')}
             title={t(lang, 'tipCloseForm')}
             className="w-11 h-11 -mr-2 flex items-center justify-center rounded-full"
-            style={{ color: 'var(--accent)' }}
+            style={{ color: 'var(--q-royal-text)' }}
           >
-            <span className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
+            <span className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
               <X size={16} />
             </span>
           </button>
@@ -355,7 +355,7 @@ export default function PrayerForm({
 
         <form onSubmit={handleSubmit} className="px-5 pb-8 space-y-3">
           <div>
-            <label htmlFor="prayer-title" className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>
+            <label htmlFor="prayer-title" className={LABEL_CLASS} style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, communityMode ? 'prayerSubject' : 'prayerFieldLabel')}
             </label>
             <input
@@ -382,24 +382,24 @@ export default function PrayerForm({
               onClick={revealRhythm}
               aria-label={`${rhythmLine} — ${t(lang, 'rhythmChangeAria')}`}
               className="-mx-1.5 flex min-h-[44px] w-full items-center gap-1.5 rounded-lg px-1.5 text-start text-xs focus-visible:ring-2"
-              style={{ color: 'var(--text-3)' }}
+              style={{ color: 'var(--q-text-tertiary)' }}
             >
               <span className="min-w-0 break-words">{rhythmLine}</span>
               <span aria-hidden="true">·</span>
-              <span className="shrink-0 font-medium" style={{ color: 'var(--accent)' }}>{t(lang, 'schedChange')}</span>
+              <span className="shrink-0 font-medium" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'schedChange')}</span>
             </button>
           )}
 
           {/* Something unfinished was put back. Stated once, quietly, with the
               one action that undoes it — never a modal in the way of praying. */}
           {restored && (
-            <p className="flex flex-wrap items-center gap-x-2 text-xs" style={{ color: 'var(--text-3)' }} role="status">
+            <p className="flex flex-wrap items-center gap-x-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }} role="status">
               {t(lang, 'draftRestoredNote')}
               <button
                 type="button"
                 onClick={startFresh}
                 className="min-h-[44px] font-medium focus-visible:ring-2"
-                style={{ color: 'var(--accent)' }}
+                style={{ color: 'var(--q-royal-text)' }}
               >
                 {t(lang, 'draftDiscardCta')}
               </button>
@@ -470,7 +470,7 @@ export default function PrayerForm({
                 icon={ChevronDown}
               />
               {organizeOpen && (
-                <div id="prayer-organize-section" className="space-y-4 rounded-2xl p-4" style={{ background: 'var(--input-bg)' }}>
+                <div id="prayer-organize-section" className="space-y-4 rounded-2xl p-4" style={{ background: 'var(--q-field)' }}>
                   {/* "Place on your altar" — offered only where the circle can
                       live inside this prayer's ciphertext (lib/circles.js). */}
                   {canHoldPrivateMetadata(editPrayer || null) && (
@@ -490,12 +490,12 @@ export default function PrayerForm({
                   />
 
                   {form.forOther && (
-                    <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid var(--accent-border)' }}>
+                    <div className="space-y-3 pl-3" style={{ borderLeft: '2px solid var(--q-selected-border)' }}>
                       <div>
-                        <label htmlFor="prayer-person" className={LABEL_CLASS} style={{ color: 'var(--text-3)' }}>{t(lang, 'personName')}</label>
+                        <label htmlFor="prayer-person" className={LABEL_CLASS} style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'personName')}</label>
                         <input id="prayer-person" type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
                           placeholder={t(lang, 'personNamePlaceholder')} className="w-full text-sm rounded-xl px-4 py-2.5 focus:outline-none focus-visible:ring-2"
-                          style={{ ...INPUT_STYLE, background: 'var(--surface)' }} />
+                          style={{ ...INPUT_STYLE, background: 'var(--q-surface)' }} />
                       </div>
                     </div>
                   )}
@@ -545,12 +545,12 @@ export default function PrayerForm({
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} title={t(lang, 'tipDiscard')}
               className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-medium focus-visible:ring-2"
-              style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}>
+              style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}>
               {t(lang, 'cancel')}
             </button>
             <button type="submit" disabled={submitting} title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
               className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-semibold text-white focus-visible:ring-2 disabled:opacity-50"
-              style={{ background: 'var(--plum)' }}>
+              style={{ background: 'var(--q-action-primary)' }}>
               {editPrayer || communityMode ? t(lang, editPrayer ? 'save' : 'add') : t(lang, 'savePrayer')}
             </button>
           </div>

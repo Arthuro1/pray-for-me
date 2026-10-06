@@ -1,533 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Qetoret styles. Load order is the cascade: tokens and fonts, Tailwind's
+   reset, the base layer, the primitives, Tailwind utilities, then screens.
+   Screens compose primitives; they never restyle them. */
+@import './styles/fonts.css';
+@import './styles/tokens.css';
+@import 'tailwindcss/base';
+@import './styles/base.css';
+@import 'tailwindcss/components';
+@import './styles/components.css';
+@import 'tailwindcss/utilities';
 
-* { box-sizing: border-box; }
-
-:root {
-  color-scheme: light;
-  --background: #f6f1e8;
-  --surface: #fffdf9;
-  --surface-muted: #eee7dc;
-  --surface-raised: #ffffff;
-  --ink: #241b2f;
-  --text-muted: #746a7d;
-  --text-faint: #6f6474;
-  --plum: #5b3d82;
-  --plum-dark: #2e1c42;
-  --plum-deep: #24182f;
-  /* Gold as TEXT must hold AA on the warm canvas; --gold-bright is for lines,
-     marks and fills only. */
-  --gold: #8b6124;
-  --gold-bright: #d9ae62;
-  --gold-soft: #f4ead7;
-  --sage: #5f7865;
-  --sage-soft: #e7eee6;
-  --border: #e4dbcf;
-  --border-strong: #d4c7b7;
-  --overlay: rgba(35, 25, 44, 0.64);
-  --shadow-sm: 0 1px 2px rgba(43, 30, 47, 0.05), 0 8px 24px rgba(43, 30, 47, 0.04);
-  --shadow-md: 0 18px 54px rgba(43, 30, 47, 0.12);
-  --font-ui: 'Twemoji Country Flags', 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Noto Sans Ethiopic', 'Noto Sans CJK SC', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-editorial: 'Iowan Old Style', 'Palatino Linotype', 'Noto Serif', 'Noto Naskh Arabic', 'Noto Serif Devanagari', 'Noto Serif Ethiopic', Georgia, serif;
-  --motion: 200ms;
-  --ease: cubic-bezier(.2, .75, .3, 1);
-
-  /* Compatibility tokens used throughout the established product. */
-  --bg: var(--background);
-  --surface-2: var(--surface-muted);
-  --border-soft: #ece5db;
-  --header: linear-gradient(145deg, var(--plum-dark) 0%, #49345f 100%);
-  --header-answered: linear-gradient(145deg, #49604f 0%, var(--sage) 100%);
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --accent: var(--plum);
-  --accent-2: #81649c;
-  --accent-soft: #eee7f2;
-  --accent-border: #d8cadf;
-  --nav-active-bg: #eee7f2;
-  --nav-active-color: #52386d;
-  --badge: #6f5585;
-  --badge-text: #ffffff;
-  --nav-shadow: 0 -8px 30px rgba(48, 33, 63, 0.07);
-  --input-bg: #fbf7f0;
-  --input-border: #d9cec0;
-  --danger: #a13d3d;
-  --danger-bg: #fbebea;
-  --success: #4f6c56;
-  --success-bg: var(--sage-soft);
-  --success-border: #bdd0c0;
-  --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #bdd0c0;
-  /* Answered-status pill kept as tokens so each theme can retint it. Light and
-     Dark keep the established green; Night maps it to its teal of peace. */
-  --answered-pill-bg: #e8f5ed;
-  --answered-pill-text: #059669;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-  --background: #17131c;
-  --surface: #211b27;
-  --surface-muted: #2a2330;
-  --surface-raised: #2d2534;
-  --ink: #f4eee5;
-  --text-muted: #c5bac9;
-  --text-faint: #9d91a3;
-  --plum: #b294c7;
-  --plum-dark: #2b1d38;
-  --plum-deep: #1b1224;
-  --gold: #d2aa6d;
-  --gold-bright: #e4c27f;
-  --gold-soft: #3a3023;
-  --sage: #94ad98;
-  --sage-soft: #24332a;
-  --border: #3c3342;
-  --border-strong: #514558;
-  --overlay: rgba(10, 7, 12, 0.76);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 30px rgba(0, 0, 0, 0.16);
-  --shadow-md: 0 22px 64px rgba(0, 0, 0, 0.34);
-
-  --bg: var(--background);
-  --surface-2: var(--surface-muted);
-  --border-soft: #332b39;
-  --header: linear-gradient(145deg, #21162c 0%, #3a294a 100%);
-  --header-answered: linear-gradient(145deg, #243329 0%, #405947 100%);
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --accent: var(--plum);
-  --accent-2: #c8add9;
-  --accent-soft: #33283c;
-  --accent-border: #50405b;
-  --nav-active-bg: #33283c;
-  --nav-active-color: #d4bde1;
-  --badge: #8f71a4;
-  --badge-text: #ffffff;
-  --nav-shadow: 0 -8px 30px rgba(0, 0, 0, 0.32);
-  --input-bg: #28212e;
-  --input-border: #4a3d51;
-  --danger: #ef8f8f;
-  --danger-bg: #391e21;
-  --success: #9bc4a3;
-  --success-bg: var(--sage-soft);
-  --success-border: #405d47;
-  --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #405d47;
-}
-
-/* ── Night ────────────────────────────────────────────────────────────────
-   The nocturnal "Vigil-led blend": a deep indigo ground with a luminous
-   periwinkle accent (in --plum's role), violet as the "Constellation" note
-   (in --gold's role: labels, Scripture), and a calm teal-mint for peace and
-   answered prayer (in --sage's role). No metal — the color itself leads.
-   Everything reads through these tokens, so this one block re-skins the app. */
-[data-theme="night"] {
-  color-scheme: dark;
-  --background: #0f1322;
-  --surface: #191f34;
-  --surface-muted: #1f2740;
-  --surface-raised: #232b42;
-  --ink: #e8ecfb;
-  --text-muted: #a7afce;
-  --text-faint: #7c84a6;
-  --plum: #6b76d6;
-  --plum-dark: #2b3566;
-  --plum-deep: #101736;
-  --gold: #b4a6ff;
-  --gold-soft: #221f44;
-  --sage: #6fcdb8;
-  --sage-soft: #16302a;
-  --border: #232a44;
-  --border-strong: #333c5c;
-  --overlay: rgba(7, 9, 22, 0.78);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24), 0 12px 30px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 22px 64px rgba(0, 0, 0, 0.44);
-
-  --bg: var(--background);
-  --surface-2: var(--surface-muted);
-  --border-soft: #2a3350;
-  --header: linear-gradient(150deg, #1b2340 0%, #34407a 100%);
-  --header-answered: linear-gradient(150deg, #163027 0%, #2f5a4e 100%);
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --accent: var(--plum);
-  --accent-2: #b4a6ff;
-  --accent-soft: #20264a;
-  --accent-border: #3a4470;
-  --nav-active-bg: #20264a;
-  --nav-active-color: #c6d0ff;
-  --badge: #6a5cc0;
-  --badge-text: #ffffff;
-  --nav-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
-  --input-bg: #171d30;
-  --input-border: #2f3856;
-  --danger: #ef8f8f;
-  --danger-bg: #3a1e22;
-  --success: #6fcdb8;
-  --success-bg: var(--sage-soft);
-  --success-border: #2f5a4e;
-  --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #2f5a4e;
-  --answered-pill-bg: #16302a;
-  --answered-pill-text: #6fcdb8;
-}
-
-html {
-  background: var(--background);
-  text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
-  font-family: var(--font-ui);
-  background:
-    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--gold) 7%, transparent), transparent 28rem),
-    var(--background);
-  color: var(--ink);
-  transition: background-color var(--motion) var(--ease), color var(--motion) var(--ease);
-  -webkit-font-smoothing: antialiased;
-}
-
-button, input, textarea, select { font: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
-
-.editorial,
-.editorial-heading,
-.scripture-text {
-  font-family: var(--font-editorial);
-  text-wrap: balance;
-}
-
-.editorial-heading {
-  font-weight: 600;
-  letter-spacing: -0.025em;
-}
-
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
-input, textarea, select {
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  color: var(--ink);
-}
-
-input::placeholder, textarea::placeholder { color: var(--text-faint); }
-
-::selection {
-  background: color-mix(in srgb, var(--plum) 25%, transparent);
-  color: var(--ink);
-}
-
-:focus-visible {
-  outline: 2px solid var(--plum);
-  outline-offset: 3px;
-  border-radius: 8px;
-}
-
-[role="dialog"] :focus {
-  outline: 2px solid var(--plum);
-  outline-offset: 3px;
-  border-radius: 8px;
-}
-
-[role="dialog"] :focus:not(:focus-visible) {
-  outline-color: color-mix(in srgb, var(--plum) 55%, transparent);
-}
-
-.page-header {
-  padding-block: clamp(2rem, 5vw, 3.75rem) 1.5rem;
-}
-
-.page-header__eyebrow,
-.section-label {
-  color: var(--gold);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.page-header__title {
-  margin: 0;
-  color: var(--ink);
-  font-family: var(--font-editorial);
-  font-size: clamp(2rem, 6vw, 3.25rem);
-  font-weight: 600;
-  letter-spacing: -0.035em;
-  line-height: 1.04;
-  text-wrap: balance;
-  /* The title shares its header row with an optional action aside. It must be
-     able to break — a long single token (a locale word, or Home's greeting with
-     a long email-derived name) has to wrap inside its own min-width:0 column
-     instead of forcing the page wider than the viewport at 320px. */
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.page-header__subtitle {
-  max-width: 42rem;
-  margin-block-start: 0.75rem;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.7;
-}
-
-.prayer-surface {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.15rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.prayer-surface--quiet {
-  background: transparent;
-  border-color: var(--border);
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.prayer-surface--focus {
-  position: relative;
-  overflow: hidden;
-  background: var(--header);
-  border-color: color-mix(in srgb, var(--plum) 35%, transparent);
-  color: #fff;
-  box-shadow: var(--shadow-md);
-}
-
-.prayer-surface--focus::after {
-  position: absolute;
-  inset: auto -15% -45% 35%;
-  width: 20rem;
-  height: 20rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
-  content: '';
-  pointer-events: none;
-}
-
-.prayer-surface--answered {
-  background: var(--sage-soft);
-  border-color: var(--success-border);
-}
-
-.primary-button,
-.quiet-button {
-  min-height: 44px;
-  border-radius: 0.85rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 1.2;
-  transition: transform var(--motion) var(--ease), background-color var(--motion) var(--ease), border-color var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
-}
-
-.primary-button {
-  background: var(--plum);
-  color: #fff;
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--plum) 22%, transparent);
-}
-
-.primary-button:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--plum) 88%, #000);
-}
-
-.quiet-button {
-  background: color-mix(in srgb, var(--surface) 80%, transparent);
-  border: 1px solid var(--border-strong);
-  color: var(--text-muted);
-}
-
-.quiet-button:hover:not(:disabled) {
-  background: var(--surface-muted);
-  color: var(--ink);
-}
-
-.primary-button:active:not(:disabled),
-.quiet-button:active:not(:disabled),
-button.pressable:active:not(:disabled) { transform: scale(.98); }
-
-.primary-button:disabled,
-.quiet-button:disabled { cursor: not-allowed; opacity: .48; }
-
-.segmented-control {
-  display: inline-flex;
-  gap: 0.2rem;
-  padding: 0.22rem;
-  background: var(--surface-muted);
-  border: 1px solid var(--border);
-  border-radius: 0.9rem;
-}
-
-.segmented-control button {
-  min-height: 38px;
-  padding-inline: 0.9rem;
-  border-radius: 0.68rem;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  font-weight: 650;
-}
-
-.segmented-control button[aria-pressed="true"] {
-  background: var(--surface);
-  color: var(--ink);
-  box-shadow: 0 1px 4px rgba(35, 25, 44, 0.08);
-}
-
-.status-pill {
-  display: inline-flex;
-  min-height: 28px;
-  align-items: center;
-  gap: 0.35rem;
-  padding-inline: 0.65rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface-muted);
-  color: var(--text-muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-.status-pill--answered {
-  background: var(--sage-soft);
-  border-color: var(--success-border);
-  color: var(--success);
-}
-
-.status-pill--scripture {
-  background: var(--gold-soft);
-  border-color: color-mix(in srgb, var(--gold) 30%, var(--border));
-  color: var(--gold);
-}
-
-.bottom-sheet-backdrop {
-  position: fixed;
-  z-index: 60;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 1rem;
-  background: var(--overlay);
-  backdrop-filter: blur(10px);
-}
-
-.bottom-sheet {
-  width: 100%;
-  max-width: 34rem;
-  max-height: min(92dvh, 52rem);
-  overflow-y: auto;
-  padding: clamp(1.25rem, 4vw, 2rem);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  box-shadow: var(--shadow-md);
-}
-
+/* ── Screens ───────────────────────────────────────────────────────────── */
 .journal-row {
-  border-block-end: 1px solid var(--border);
-  transition: background-color var(--motion) var(--ease), transform var(--motion) var(--ease);
+  border-block-end: 1px solid var(--q-border);
+  transition: background-color var(--q-motion-standard) var(--q-ease);
 }
 
-.journal-row:hover { background: color-mix(in srgb, var(--surface) 72%, transparent); }
-
-.scripture-block {
-  padding-block: 1.25rem;
-  padding-inline: clamp(1rem, 4vw, 1.5rem);
-  border-inline-start: 2px solid var(--gold);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--gold-soft) 75%, transparent), transparent 70%);
-}
+.journal-row:hover { background: var(--q-hover); }
 
 .session-safe-footer {
   padding-bottom: max(1rem, env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-  border-top: 1px solid var(--border);
-  backdrop-filter: blur(18px);
-}
-
-.app-sidebar,
-.app-mobile-bar,
-.app-bottom-nav {
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(20px) saturate(115%);
-}
-
-.app-sidebar { box-shadow: 10px 0 30px rgba(43, 30, 47, 0.025); }
-.app-mobile-bar { box-shadow: 0 1px 0 color-mix(in srgb, var(--border) 70%, transparent); }
-
-/* Phase 2 surfaces -------------------------------------------------------
-   The Journal, Community, Grow, Plan and Settings pages share one quieter
-   editorial canvas. Product-specific components keep their state and data
-   contracts; these classes only establish hierarchy, rhythm and touch size. */
-.phase-page {
-  min-height: 100%;
-  background:
-    radial-gradient(circle at 92% 0%, color-mix(in srgb, var(--gold) 6%, transparent), transparent 24rem),
-    var(--background);
-}
-
-.phase-page__shell,
-.phase-content {
-  width: min(100%, 62rem);
-  margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 2rem);
-}
-
-.phase-content { padding-block-end: 2rem; }
-
-.phase-page button,
-.editorial-dialog button,
-.auth-experience button {
-  min-height: 44px;
-}
-
-.phase-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.15rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.phase-card--quiet {
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
-  box-shadow: none;
-}
-
-.phase-card--gold {
-  background: linear-gradient(145deg, color-mix(in srgb, var(--gold-soft) 84%, var(--surface)), var(--surface));
-  border-color: color-mix(in srgb, var(--gold) 28%, var(--border));
-}
-
-.phase-icon-button {
-  display: inline-flex;
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: .85rem;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  color: var(--text-muted);
-  transition: background-color var(--motion) var(--ease), color var(--motion) var(--ease), transform var(--motion) var(--ease);
-}
-
-.phase-icon-button:hover { background: var(--surface-muted); color: var(--ink); }
-
-.phase-section-heading {
-  margin-block-end: .8rem;
-  color: var(--ink);
-  font-family: var(--font-editorial);
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: -.015em;
+  background: var(--q-canvas);
+  border-top: 1px solid var(--q-border);
 }
 
 /* Journal */
@@ -535,7 +28,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   display: grid;
   gap: 1.25rem;
   padding-block-end: 1.2rem;
-  border-block-end: 1px solid var(--border);
+  border-block-end: 1px solid var(--q-border);
 }
 
 .journal-toolbar {
@@ -555,27 +48,26 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .journal-search input {
   min-height: 48px;
   padding-inline: 2.75rem;
-  border-radius: .9rem;
+  border-radius: var(--q-radius-control);
 }
 
 .journal-person-card,
 .community-card,
 .plan-card,
 .grow-card {
-  transition: border-color var(--motion) var(--ease), background-color var(--motion) var(--ease), transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease);
+  transition: border-color var(--q-motion-standard) var(--q-ease), background-color var(--q-motion-standard) var(--q-ease), transform var(--q-motion-standard) var(--q-ease), box-shadow var(--q-motion-standard) var(--q-ease);
 }
 
 .journal-person-card:hover,
 .community-card:hover,
 .plan-card:hover,
 .grow-card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--q-border-strong);
   transform: translateY(-1px);
 }
 
 /* Prayer detail */
-.detail-page { min-height: 100vh; background: var(--background); }
+.detail-page { min-height: 100vh; background: var(--q-canvas); }
 
 .detail-header {
   position: sticky;
@@ -585,16 +77,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   align-items: center;
   gap: .8rem;
   padding: max(.75rem, env(safe-area-inset-top)) clamp(1rem, 4vw, 2rem) .75rem;
-  background: color-mix(in srgb, var(--surface) 91%, transparent);
-  border-block-end: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
-  box-shadow: 0 8px 30px rgba(43, 30, 47, .035);
-  backdrop-filter: blur(20px) saturate(115%);
+  background: var(--q-surface);
+  border-block-end: 1px solid color-mix(in srgb, var(--q-border) 80%, transparent);
 }
 
 .detail-header__title {
   overflow: hidden;
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: clamp(1.05rem, 3vw, 1.3rem);
   font-weight: 600;
   letter-spacing: -.015em;
@@ -602,12 +92,12 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   white-space: nowrap;
 }
 
-.detail-header__meta { color: var(--text-faint); }
+.detail-header__meta { color: var(--q-text-tertiary); }
 
 .detail-header__icon {
-  background: var(--surface-muted);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
+  background: var(--q-surface-muted);
+  border: 1px solid var(--q-border);
+  color: var(--q-text-secondary);
 }
 
 .detail-page__content {
@@ -617,15 +107,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .detail-page__content > .rounded-2xl {
-  border-color: var(--border) !important;
-  box-shadow: var(--shadow-sm);
+  border-color: var(--q-border) !important;
 }
 
 .prayer-point-card {
   padding: .55rem .7rem !important;
-  background: color-mix(in srgb, var(--gold-soft) 76%, var(--surface));
-  border-inline-start: 3px solid var(--gold);
-  color: var(--ink);
+  background: color-mix(in srgb, var(--q-gold-soft) 76%, var(--q-surface));
+  border-inline-start: 3px solid var(--q-gold);
+  color: var(--q-text);
 }
 
 .prayer-points-panel {
@@ -662,15 +151,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .prayer-activity-panel {
   padding: clamp(.8rem, 2.5vw, 1rem);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: var(--shadow-sm);
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
 }
 
 .prayer-activity-panel__title {
   margin-block-end: .75rem;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-size: .7rem;
   font-weight: 700;
   letter-spacing: .13em;
@@ -687,9 +175,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   min-width: 0;
   padding: .75rem;
   overflow: hidden;
-  background: color-mix(in srgb, var(--surface-muted) 72%, var(--surface));
-  border: 1px solid var(--border);
-  border-radius: .85rem;
+  background: color-mix(in srgb, var(--q-surface-muted) 72%, var(--q-surface));
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
 }
 
 .prayer-activity-item--community,
@@ -701,8 +189,8 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .prayer-activity-item--testimony {
-  background: color-mix(in srgb, var(--accent-soft) 62%, var(--surface));
-  border-color: color-mix(in srgb, var(--accent-border) 70%, var(--border));
+  background: color-mix(in srgb, var(--q-selected) 62%, var(--q-surface));
+  border-color: color-mix(in srgb, var(--q-selected-border) 70%, var(--q-border));
 }
 
 .prayer-activity-item__body {
@@ -722,7 +210,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .prayer-activity-item__meta {
   min-width: 0;
   margin: 0 0 .3rem;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-size: .72rem;
   font-weight: 500;
   line-height: 1.4;
@@ -746,14 +234,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   height: 2.25rem;
   align-items: center;
   justify-content: center;
-  border-radius: .65rem;
+  border-radius: var(--q-radius-control);
   opacity: 1;
 }
 
 .prayer-activity-composer {
   margin-block-start: .75rem;
   padding-block-start: .75rem;
-  border-block-start: 1px solid var(--border);
+  border-block-start: 1px solid var(--q-border);
 }
 
 .update-composer,
@@ -794,10 +282,10 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   justify-content: center;
   gap: .5rem;
   padding: .75rem;
-  color: var(--text-faint);
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  border-radius: .9rem;
+  color: var(--q-text-tertiary);
+  background: var(--q-field);
+  border: 1px solid var(--q-field-border);
+  border-radius: var(--q-radius-surface);
   font-size: .75rem;
   font-style: italic;
 }
@@ -810,9 +298,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   display: block;
   max-width: 100%;
   overflow: hidden;
-  background: var(--surface-muted);
-  border: 1px solid var(--border);
-  border-radius: .9rem;
+  background: var(--q-surface-muted);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
 }
 
 .attachment-image img {
@@ -829,10 +317,10 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   gap: .65rem;
   min-height: 4.75rem;
   padding: .65rem .75rem;
-  color: var(--text-1);
-  background: color-mix(in srgb, var(--accent-soft) 55%, var(--surface));
-  border: 1px solid color-mix(in srgb, var(--accent-border) 76%, var(--border));
-  border-radius: .95rem;
+  color: var(--q-text);
+  background: color-mix(in srgb, var(--q-selected) 55%, var(--q-surface));
+  border: 1px solid color-mix(in srgb, var(--q-selected-border) 76%, var(--q-border));
+  border-radius: var(--q-radius-surface);
 }
 
 .attachment-audio > audio {
@@ -846,10 +334,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   align-items: center;
   justify-content: center;
   padding-inline-start: .1rem;
-  color: var(--badge-text);
-  background: var(--accent);
+  color: var(--q-on-action);
+  background: var(--q-action-primary);
   border-radius: 999px;
-  box-shadow: 0 5px 14px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .attachment-audio__body {
@@ -862,7 +349,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   align-items: center;
   gap: .35rem;
   margin-block-end: .35rem;
-  color: var(--text-1);
+  color: var(--q-text);
   font-size: .76rem;
   font-weight: 650;
   line-height: 1.25;
@@ -870,7 +357,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .attachment-audio__name {
   overflow: hidden;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -881,7 +368,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   grid-template-columns: 2.35rem minmax(3rem, 1fr) 2.35rem;
   align-items: center;
   gap: .4rem;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-size: .64rem;
   font-variant-numeric: tabular-nums;
 }
@@ -895,7 +382,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   min-width: 0;
   height: 1.25rem;
   margin: 0;
-  accent-color: var(--accent);
+  accent-color: var(--q-royal);
   cursor: pointer;
 }
 
@@ -907,9 +394,8 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .attachment-video {
   overflow: hidden;
   background: #09090b;
-  border: 1px solid var(--border-strong);
-  border-radius: .95rem;
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--q-border-strong);
+  border-radius: var(--q-radius-surface);
 }
 
 .attachment-video__heading {
@@ -919,8 +405,8 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   gap: .35rem;
   padding: .55rem .7rem;
   overflow: hidden;
-  color: var(--text-2);
-  background: var(--surface-muted);
+  color: var(--q-text-secondary);
+  background: var(--q-surface-muted);
   font-size: .72rem;
   font-weight: 650;
   white-space: nowrap;
@@ -928,7 +414,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .attachment-video__heading span:last-child {
   overflow: hidden;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-weight: 500;
   text-overflow: ellipsis;
 }
@@ -957,10 +443,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   justify-content: center;
   padding-inline-start: .15rem;
   color: #fff;
-  background: color-mix(in srgb, var(--accent) 88%, #000);
+  background: color-mix(in srgb, var(--q-action-primary) 88%, #000);
   border: 2px solid rgba(255, 255, 255, .82);
   border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .42);
   transform: translate(-50%, -50%);
 }
 
@@ -985,7 +470,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   min-height: 2.25rem;
   padding: .35rem .8rem;
   color: #fff;
-  background: var(--accent);
+  background: var(--q-action-primary);
   border-radius: 999px;
   font-size: .72rem;
   font-weight: 700;
@@ -998,12 +483,12 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   align-items: center;
   gap: .65rem;
   padding: .6rem .75rem;
-  color: var(--text-1);
-  background: color-mix(in srgb, var(--accent-soft) 48%, var(--surface));
-  border: 1px solid color-mix(in srgb, var(--accent-border) 76%, var(--border));
-  border-radius: .9rem;
+  color: var(--q-text);
+  background: color-mix(in srgb, var(--q-selected) 48%, var(--q-surface));
+  border: 1px solid color-mix(in srgb, var(--q-selected-border) 76%, var(--q-border));
+  border-radius: var(--q-radius-control);
   text-decoration: none;
-  transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease), transform var(--motion) var(--ease);
+  transition: border-color var(--q-motion-standard) var(--q-ease), background var(--q-motion-standard) var(--q-ease), transform var(--q-motion-standard) var(--q-ease);
 }
 
 .attachment-link__icon {
@@ -1012,9 +497,9 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   height: 2.25rem;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: .7rem;
+  color: var(--q-royal-text);
+  background: var(--q-selected);
+  border-radius: var(--q-radius-control);
 }
 
 .attachment-link__copy {
@@ -1036,12 +521,12 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .attachment-link__copy span {
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-size: .68rem;
 }
 
 .attachment-link__arrow {
-  color: var(--accent);
+  color: var(--q-royal-text);
 }
 
 .attachment-list__remove,
@@ -1055,15 +540,14 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   height: 2rem;
   align-items: center;
   justify-content: center;
-  color: var(--text-2);
-  background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
-  border: 1px solid var(--border);
+  color: var(--q-text-secondary);
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
   border-radius: 999px;
-  box-shadow: var(--shadow-sm);
 }
 
 .attachment-list__status {
-  color: var(--accent);
+  color: var(--q-royal-text);
 }
 
 .attachment-list__item--removable .attachment-audio__heading,
@@ -1074,8 +558,8 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 @media (hover: hover) and (pointer: fine) {
   .attachment-link:hover {
-    background: color-mix(in srgb, var(--accent-soft) 72%, var(--surface));
-    border-color: var(--accent-border);
+    background: color-mix(in srgb, var(--q-selected) 72%, var(--q-surface));
+    border-color: var(--q-selected-border);
     transform: translateY(-1px);
   }
 
@@ -1103,7 +587,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 @media (max-width: 520px) {
   .prayer-activity-panel {
     padding: .75rem;
-    border-radius: .95rem;
+    border-radius: var(--q-radius-surface);
   }
 
   .prayer-activity-panel__title {
@@ -1145,7 +629,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   .update-composer--labelled .update-composer__send {
     grid-column: 1 / -1;
     width: 100%;
-    border-radius: .75rem;
+    border-radius: var(--q-radius-surface);
   }
 }
 
@@ -1154,45 +638,28 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   position: relative;
   overflow: hidden;
   padding: clamp(1.5rem, 5vw, 2.5rem);
-  background: linear-gradient(150deg, var(--plum-dark), #4b3860);
-  border-color: color-mix(in srgb, var(--plum) 45%, transparent);
-  color: #fff;
-  box-shadow: var(--shadow-md);
+  background: var(--q-surface-inverse);
+  border-color: transparent;
+  color: var(--q-text-inverse);
 }
 
-[data-theme="night"] .community-empty {
-  background: linear-gradient(150deg, #1b2340, #2b2a52);
-}
-
-.community-empty::after {
-  position: absolute;
-  inset: auto -4rem -6rem auto;
-  width: 14rem;
-  height: 14rem;
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 50%;
-  content: '';
-  pointer-events: none;
-}
-
-.community-empty h2,
-.community-empty p { color: #fff !important; }
-.community-empty p { opacity: .72; }
+.community-empty h2 { color: var(--q-text-inverse) !important; }
+.community-empty p { color: var(--q-text-inverse-secondary) !important; }
 
 .community-empty__primary {
-  background: #f8f1e6 !important;
-  color: var(--plum-dark) !important;
+  background: var(--q-text-inverse) !important;
+  color: var(--q-royal-deep) !important;
 }
 
 .community-empty__secondary {
-  background: rgba(255,255,255,.08) !important;
-  border-color: rgba(255,255,255,.22) !important;
-  color: #fff !important;
+  background: transparent !important;
+  border-color: color-mix(in srgb, var(--q-text-inverse) 28%, transparent) !important;
+  color: var(--q-text-inverse) !important;
 }
 
 .group-header {
   padding-block: 1.2rem 1rem;
-  border-block-end: 1px solid var(--border);
+  border-block-end: 1px solid var(--q-border);
 }
 
 /* Grow and Plan */
@@ -1200,16 +667,15 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   position: relative;
   overflow: hidden;
   padding: clamp(1.15rem, 4vw, 1.5rem);
-  background: linear-gradient(145deg, color-mix(in srgb, var(--gold-soft) 76%, var(--surface)), var(--surface));
-  border: 1px solid color-mix(in srgb, var(--gold) 30%, var(--border));
-  border-radius: 1.2rem;
-  box-shadow: var(--shadow-sm);
+  background: var(--q-surface);
+  border: 1px solid color-mix(in srgb, var(--q-gold) 32%, var(--q-border));
+  border-radius: var(--q-radius-surface);
 }
 
 .grow-phase-header h2 {
   margin: 0;
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: clamp(2rem, 6vw, 3.25rem);
   font-weight: 600;
   letter-spacing: -.035em;
@@ -1218,19 +684,19 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .plan-week-overview {
   padding: .85rem;
-  background: color-mix(in srgb, var(--surface) 78%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
 }
 
 .plan-week-day {
   min-width: 0;
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
 }
 
 .plan-week-day[aria-current="date"] {
-  background: var(--gold-soft);
-  color: var(--ink);
+  background: var(--q-gold-soft);
+  color: var(--q-text);
 }
 
 /* Avatars — one tile for people and groups. The fills are chosen so white
@@ -1251,7 +717,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 .avatar--anonymous {
-  box-shadow: inset 0 0 0 1px var(--border);
+  box-shadow: inset 0 0 0 1px var(--q-border);
 }
 
 /* A photo covers the preset that is already drawn underneath, so the tile is
@@ -1275,21 +741,21 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border-radius: .75rem;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  color: var(--text-2);
+  border-radius: var(--q-radius-control);
+  background: var(--q-field);
+  border: 1px solid var(--q-field-border);
+  color: var(--q-text-secondary);
 }
 
 .avatar-option[aria-checked="true"],
 .avatar-option[aria-pressed="true"] {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent-soft), 0 0 0 3px var(--accent);
-  color: var(--accent);
+  border-color: var(--q-royal);
+  box-shadow: 0 0 0 2px var(--q-selected), 0 0 0 3px var(--q-royal);
+  color: var(--q-royal-text);
 }
 
 .avatar-option:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--q-royal);
   outline-offset: 2px;
 }
 
@@ -1302,17 +768,17 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   align-items: center;
   justify-content: center;
   gap: .4rem;
-  border-radius: .75rem;
+  border-radius: var(--q-radius-control);
   padding-inline: .75rem;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  color: var(--text-2);
+  background: var(--q-field);
+  border: 1px solid var(--q-field-border);
+  color: var(--q-text-secondary);
   font-size: .8125rem;
   font-weight: 500;
 }
 
 .avatar-action:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--q-royal);
   outline-offset: 2px;
 }
 
@@ -1329,8 +795,8 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--surface-2);
-  border: 0.5px solid var(--border);
+  background: var(--q-surface-muted);
+  border: 0.5px solid var(--q-border);
   cursor: grab;
   touch-action: none;
 }
@@ -1338,7 +804,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .avatar-crop-frame:active { cursor: grabbing; }
 
 .avatar-crop-frame:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--q-royal);
   outline-offset: 3px;
 }
 
@@ -1350,11 +816,11 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .avatar-crop-zoom {
   min-height: 2.75rem;
-  accent-color: var(--accent);
+  accent-color: var(--q-royal);
 }
 
 .avatar-crop-zoom:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--q-royal);
   outline-offset: 2px;
 }
 
@@ -1367,21 +833,20 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 
 .settings-section {
   margin-block-end: .8rem;
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: var(--shadow-sm);
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
   scroll-margin-block-start: 5rem;
 }
 
 .settings-section__trigger {
   width: 100%;
   padding: .8rem 1rem;
-  color: var(--ink);
+  color: var(--q-text);
 }
 
 .settings-section__trigger h2 {
-  font-family: var(--font-editorial);
+  font-family: var(--q-font-editorial);
   font-size: 1.05rem;
   font-weight: 600;
 }
@@ -1389,7 +854,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 .settings-section__panel { padding: 0 .75rem .75rem; }
 
 .settings-section__panel > .rounded-2xl {
-  border-radius: .9rem;
+  border-radius: var(--q-radius-surface);
   box-shadow: none;
 }
 
@@ -1403,19 +868,7 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   place-items: end center;
   overflow: hidden;
   padding: 7.5rem 0 0;
-  background:
-    radial-gradient(circle at 50% 6%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 22rem),
-    linear-gradient(155deg, var(--background), color-mix(in srgb, var(--accent-soft) 42%, var(--background)));
-}
-
-.auth-experience::before {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(color-mix(in srgb, var(--ink) 2%, transparent) 1px, transparent 1px);
-  background-size: 100% 34px;
-  content: '';
-  mask-image: linear-gradient(to bottom, #000, transparent 75%);
-  pointer-events: none;
+  background: var(--q-canvas);
 }
 
 .auth-brand {
@@ -1429,61 +882,36 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   pointer-events: none;
 }
 
-.auth-brand h1 { font-family: var(--font-editorial); letter-spacing: -.025em; }
-
-/* "Qetoret" set beside the logo, in the serif of the brand lockup. */
-.brand-wordmark { font-family: var(--font-editorial); font-weight: 600; letter-spacing: .01em; }
+.auth-brand h1 { font-family: var(--q-font-editorial); letter-spacing: -.025em; }
 
 .auth-sheet {
   position: relative;
   z-index: 2;
   width: min(100%, 30rem);
   padding: 1.5rem clamp(1.25rem, 6vw, 2rem) max(2rem, env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  border: 1px solid var(--border);
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
   border-block-end: 0;
-  border-radius: 1.6rem 1.6rem 0 0;
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(18px);
+  border-radius: var(--q-radius-dialog) var(--q-radius-dialog) 0 0;
+  box-shadow: var(--q-elevation);
 }
 
-.auth-sheet h2 { font-family: var(--font-editorial); font-size: 1.4rem; }
+.auth-sheet h2 { font-family: var(--q-font-editorial); font-size: 1.4rem; }
 .auth-field-icon { position: absolute; inset-inline-start: .8rem; top: 50%; transform: translateY(-50%); }
 .auth-field { min-height: 48px; padding-inline: 2.5rem .8rem; }
 .auth-password-toggle { position: absolute; inset-inline-end: .25rem; top: 50%; width: 44px; transform: translateY(-50%); }
-.auth-primary { background: var(--plum) !important; box-shadow: 0 8px 24px color-mix(in srgb, var(--plum) 20%, transparent); }
-
-.dialog-backdrop {
-  background: var(--overlay) !important;
-  backdrop-filter: blur(10px);
-}
-
-.editorial-dialog {
-  background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 1.4rem !important;
-  box-shadow: var(--shadow-md);
-}
-
-.editorial-dialog h2,
-.editorial-dialog h3 {
-  font-family: var(--font-editorial);
-  letter-spacing: -.015em;
-}
+.auth-primary { background: var(--q-action-primary) !important; }
 
 @media (min-width: 640px) {
   .auth-experience { place-items: center; padding: 8rem 1.5rem 1.5rem; }
-  .auth-sheet { border-block-end: 1px solid var(--border); border-radius: 1.6rem; }
+  .auth-sheet { border-block-end: 1px solid var(--q-border); border-radius: var(--q-radius-dialog); }
   .journal-page-header { grid-template-columns: minmax(0, 1fr) minmax(20rem, .72fr); align-items: end; }
 }
 
 @media (max-width: 420px) {
-  .phase-page__shell,
-  .phase-content,
-  .detail-page__content { padding-inline: .9rem; }
+  .detail-page__content { padding-inline: var(--q-space-4); }
   .journal-toolbar { flex-wrap: wrap; }
   .journal-toolbar .segmented-control { flex-basis: calc(100% - 6.5rem); }
-  .page-header__title { font-size: 2.1rem; }
 }
 
 .first-prayer-experience {
@@ -1493,20 +921,8 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   min-height: 100dvh;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background:
-    radial-gradient(circle at 50% -10%, rgba(183, 138, 74, 0.17), transparent 34rem),
-    linear-gradient(155deg, var(--plum-deep), var(--plum-dark));
-  color: #fff;
-}
-
-.first-prayer-experience::before {
-  position: fixed;
-  inset: 0;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 100% 34px;
-  content: '';
-  mask-image: linear-gradient(to bottom, #000, transparent 80%);
-  pointer-events: none;
+  background: var(--q-surface-inverse);
+  color: var(--q-text-inverse);
 }
 
 .first-prayer-panel {
@@ -1526,271 +942,33 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
   padding: 1.15rem 0;
   resize: none;
   border: 0;
-  border-block-end: 1px solid rgba(255, 255, 255, 0.34);
+  border-block-end: 1px solid color-mix(in srgb, var(--q-text-inverse) 34%, transparent);
   border-radius: 0;
   background: transparent;
-  color: #fff;
-  font-family: var(--font-editorial);
+  color: var(--q-text-inverse);
+  font-family: var(--q-font-editorial);
   font-size: clamp(1.25rem, 4.5vw, 1.75rem);
   line-height: 1.55;
-  caret-color: var(--gold);
+  caret-color: var(--q-gold-inverse);
 }
 
-.first-prayer-journal::placeholder { color: rgba(255, 255, 255, 0.42); }
-.first-prayer-journal:focus { outline: 0; border-block-end-color: var(--gold); }
+.first-prayer-journal::placeholder { color: var(--q-text-inverse-tertiary); }
+.first-prayer-journal:focus { outline: 0; border-block-end-color: var(--q-gold-inverse); }
 
 .first-prayer-primary {
-  background: #f7efe3;
-  color: var(--plum-dark);
-  box-shadow: 0 14px 34px rgba(11, 7, 14, 0.24);
+  background: var(--q-text-inverse);
+  color: var(--q-royal-deep);
 }
-
-.first-prayer-primary:hover:not(:disabled) { background: #fffaf3; }
 
 .first-prayer-quiet {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.75);
+  border-color: color-mix(in srgb, var(--q-text-inverse) 24%, transparent);
+  color: var(--q-text-inverse-secondary);
 }
 
 .first-prayer-quiet:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
-}
-
-@media (min-width: 640px) {
-  .bottom-sheet-backdrop { align-items: center; }
-}
-
-[dir="rtl"] .rtl-mirror { transform: scaleX(-1); }
-
-/* ── Night-theme signatures — scoped so Light and Dark stay untouched ──────
-   The immersive first-prayer moment keeps a deep-indigo, cool-lit night sky,
-   and each request on Today carries a small "constellation" point of light. */
-[data-theme="night"] .first-prayer-experience {
-  background:
-    radial-gradient(circle at 50% -10%, rgba(159, 176, 255, 0.16), transparent 34rem),
-    linear-gradient(155deg, var(--plum-deep), #1b2340);
-}
-
-[data-theme="night"] .journal-row::before {
-  content: "";
-  flex: 0 0 auto;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-2);
-  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 8px color-mix(in srgb, var(--accent-2) 70%, transparent);
-}
-
-[data-theme="night"] .prayer-card .prayer-card__title {
-  position: relative;
-  padding-inline-start: 1.2rem;
-}
-
-[data-theme="night"] .prayer-card .prayer-card__title::before {
-  position: absolute;
-  inset-block-start: .4em;
-  inset-inline-start: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-2);
-  box-shadow: 0 0 0 3px var(--accent-soft), 0 0 8px color-mix(in srgb, var(--accent-2) 70%, transparent);
-  content: "";
-}
-
-/* Constellation app -------------------------------------------------------
-   The approved Light/Dark system is scoped to signed-in Qetoret by the
-   constellation-app class on <html>. Public landing/auth surfaces keep their
-   existing palette, while every authenticated route, sheet and prayer moment
-   shares one calm sky. */
-.constellation-app {
-  color-scheme: light;
-  /* Qetoret: warm neutral canvas, royal plum for action, gold as a restrained
-     accent (borders, labels, the rise line) — never the dominant colour. Every
-     text colour below holds WCAG AA on --background and --surface. */
-  --background: #f7f3ec;
-  --surface: #fffdf9;
-  --surface-muted: #f1ebe1;
-  --surface-raised: #ffffff;
-  --ink: #261b31;
-  --text-muted: #6b5e75;
-  --text-faint: #685c6f;
-  --plum: #5b3d82;
-  --plum-dark: #43295f;
-  --plum-deep: #261b31;
-  --gold: #8b6124;
-  --gold-bright: #d9ae62;
-  --gold-soft: #f5ecdc;
-  --sage: #3f7a6c;
-  --sage-soft: #e6f1ec;
-  --border: #e6ddd0;
-  --border-strong: #d5c8b6;
-  --overlay: rgba(38, 27, 49, 0.62);
-  --shadow-sm: 0 1px 2px rgba(43, 30, 47, 0.04), 0 10px 30px rgba(67, 41, 95, 0.05);
-  --shadow-md: 0 22px 64px rgba(43, 30, 47, 0.13);
-  --bg: var(--background);
-  --surface-2: var(--surface-muted);
-  --border-soft: #ece4d8;
-  --header: linear-gradient(145deg, #2e1c42 0%, #4a2c68 100%);
-  --header-answered: linear-gradient(145deg, #24483f 0%, #3f7a6c 100%);
-  /* The shared verse-of-the-day image wears the same deep plum as the Home hero,
-     in both themes — a near-white card would vanish against half the chat
-     backgrounds it lands on. Its whole palette lives here so the exported card
-     can never drift from the system; Light and Dark differ only in depth. */
-  --card-sky-from: #2e1c42;
-  --card-sky-to: #4a2c68;
-  --card-sky-ink: #f8f2e8;
-  --card-sky-accent: #e4c27f;
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --accent: var(--plum);
-  --accent-2: #8a6bb3;
-  --accent-soft: #efe8f4;
-  --accent-border: #dccfe6;
-  --nav-active-bg: transparent;
-  --nav-active-color: #5b3d82;
-  --badge: #5b3d82;
-  --badge-text: #ffffff;
-  --nav-shadow: 0 -8px 30px rgba(38, 27, 49, 0.055);
-  --input-bg: #fffdf9;
-  --input-border: #d9cdbd;
-  --danger: #a13d5d;
-  --danger-bg: #faecef;
-  --success: #3f7a6c;
-  --success-bg: var(--sage-soft);
-  --success-border: #b5d2c8;
-  --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #b5d2c8;
-  --answered-pill-bg: #e6f1ec;
-  --answered-pill-text: #2f6b5d;
-}
-
-.constellation-app[data-theme="dark"],
-.constellation-app[data-theme="night"] {
-  color-scheme: dark;
-  --background: #15111b;
-  --surface: #1d1725;
-  --surface-muted: #231c2c;
-  --surface-raised: #2a2234;
-  --ink: #f6efe6;
-  --text-muted: #c4b8cc;
-  --text-faint: #9d90a6;
-  --plum: #9a7ce0;
-  --plum-dark: #6e4fa8;
-  --plum-deep: #15111b;
-  --gold: #d8b06a;
-  --gold-bright: #e4c27f;
-  --gold-soft: #33291e;
-  --sage: #8fcab8;
-  --sage-soft: #1a302a;
-  --border: #3a3043;
-  --border-strong: #4e4259;
-  --overlay: rgba(5, 3, 10, 0.78);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28), 0 12px 34px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 24px 72px rgba(0, 0, 0, 0.46);
-  --bg: var(--background);
-  --surface-2: var(--surface-muted);
-  --border-soft: #2e2637;
-  --header: linear-gradient(145deg, #1f1430 0%, #43295f 100%);
-  --header-answered: linear-gradient(145deg, #15302a 0%, #2c5c50 100%);
-  --card-sky-from: #1f1430;
-  --card-sky-to: #43295f;
-  --card-sky-accent: #e4c27f;
-  --accent: var(--plum);
-  --accent-2: #c3a7ec;
-  --accent-soft: #2c2238;
-  --accent-border: #4a3b5c;
-  --nav-active-bg: transparent;
-  --nav-active-color: #c3a7ec;
-  --badge: #8e70d0;
-  --badge-text: #ffffff;
-  --nav-shadow: 0 -8px 30px rgba(0, 0, 0, 0.38);
-  --input-bg: #1b1622;
-  --input-border: #433850;
-  --danger: #ef8fa8;
-  --danger-bg: #351b25;
-  --success: #8fcab8;
-  --success-bg: var(--sage-soft);
-  --success-border: #335b51;
-  --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #335b51;
-  --answered-pill-bg: #1a302a;
-  --answered-pill-text: #8fcab8;
-}
-
-/* Shared authenticated canvas --------------------------------------------- */
-html.constellation-app body {
-  background: var(--background);
-}
-
-.constellation-app .layout-shell,
-.constellation-app .phase-page {
-  background: var(--background);
-}
-
-.constellation-app .phase-page {
-  background-image: none;
-}
-
-.constellation-app .app-sidebar,
-.constellation-app .app-mobile-bar,
-.constellation-app .app-bottom-nav {
-  background: color-mix(in srgb, var(--background) 91%, transparent);
-  border-color: var(--border) !important;
-  box-shadow: none;
-}
-
-.constellation-app .phase-page__shell,
-.constellation-app .phase-content {
-  width: min(100%, 48rem);
-}
-
-.constellation-app .page-header {
-  padding-block: clamp(1.6rem, 5vw, 3rem) 1.35rem;
-}
-
-.constellation-app .page-header__title {
-  font-size: clamp(2.55rem, 8vw, 3.55rem);
-  font-weight: 600;
-}
-
-.constellation-app .page-header__eyebrow,
-.constellation-app .section-label {
-  color: var(--accent);
-}
-
-.constellation-app .phase-card {
-  border-color: var(--border);
-  box-shadow: none;
-}
-
-.constellation-app .phase-card--quiet {
-  background: color-mix(in srgb, var(--surface) 55%, transparent);
-}
-
-.constellation-app .phase-icon-button {
-  border-color: transparent;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink);
-}
-
-.constellation-app .phase-icon-button:hover {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.constellation-app .prayer-surface--focus::after,
-.constellation-app .community-empty::after {
-  display: none;
-}
-
-.constellation-app .editorial-dialog {
-  background: var(--surface);
-  border-color: var(--border);
+  background: color-mix(in srgb, var(--q-text-inverse) 8%, transparent);
+  color: var(--q-text-inverse);
 }
 
 /* Today ------------------------------------------------------------------- */
@@ -1802,20 +980,14 @@ html.constellation-app body {
   min-height: 17rem;
   display: flex;
   align-items: flex-end;
-  background-color: #2e1c42;
-  background-image: url('/assets/constellation/detail-sky-dark-transparent.png');
-  background-repeat: no-repeat;
-  background-position: 95% 15%;
-  background-size: min(29rem, 88%) auto;
-  border-color: color-mix(in srgb, #b7a3ee 28%, transparent);
-  border-radius: 1.2rem;
-  box-shadow: 0 24px 55px rgba(43, 29, 83, .22);
+  background: var(--q-surface-inverse);
+  border-color: transparent;
+  border-radius: var(--q-radius-surface);
 }
 
 .constellation-home__focus .primary-button {
-  background: #f7f3ff;
-  color: #57408f;
-  box-shadow: none;
+  background: var(--q-text-inverse);
+  color: var(--q-royal-deep);
 }
 
 .constellation-home__today .constellation-today-row {
@@ -1824,8 +996,7 @@ html.constellation-app body {
 }
 
 .constellation-today-row__star {
-  color: var(--accent);
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 30%, transparent));
+  color: var(--q-royal-text);
 }
 
 /* Community --------------------------------------------------------------- */
@@ -1866,9 +1037,9 @@ html.constellation-app body {
   margin-block: .25rem 2.2rem;
   padding: 1.45rem 46% 1.45rem 1.4rem;
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1.15rem;
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
 }
 
 .constellation-community__hero-copy {
@@ -1877,8 +1048,8 @@ html.constellation-app body {
 }
 
 .constellation-community__hero h2 {
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: clamp(1.55rem, 5vw, 2rem);
   font-weight: 600;
   letter-spacing: -.025em;
@@ -1887,44 +1058,13 @@ html.constellation-app body {
 
 .constellation-community__hero p {
   margin-block-start: .6rem;
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
   font-size: .82rem;
   line-height: 1.55;
 }
 
-.constellation-community__hero-art {
-  position: absolute;
-  inset: .45rem 0 .45rem 46%;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-.constellation-community__hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  mix-blend-mode: multiply;
-}
-
-.constellation-community__hero-image--dark {
-  display: none;
-  mix-blend-mode: normal;
-}
-
-[data-theme="dark"] .constellation-community__hero-image--light,
-[data-theme="night"] .constellation-community__hero-image--light {
-  display: none;
-}
-
-[data-theme="dark"] .constellation-community__hero-image--dark,
-[data-theme="night"] .constellation-community__hero-image--dark {
-  display: block;
-}
-
 .constellation-community .community-card {
-  border-radius: .95rem;
+  border-radius: var(--q-radius-surface);
 }
 
 .constellation-community-group .group-header {
@@ -1942,15 +1082,14 @@ html.constellation-app body {
   display: flex;
   align-items: flex-start;
   gap: .65rem;
-  font-family: var(--font-editorial);
+  font-family: var(--q-font-editorial);
   font-size: 1.12rem !important;
   line-height: 1.35;
 }
 
 .constellation-community-prayer__title svg {
   margin-block-start: .08rem;
-  color: var(--accent);
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 30%, transparent));
+  color: var(--q-royal-text);
 }
 
 .constellation-community-prayer__title span {
@@ -1959,7 +1098,7 @@ html.constellation-app body {
 }
 
 .constellation-community-feed {
-  border-block: 1px solid var(--border);
+  border-block: 1px solid var(--q-border);
 }
 
 .constellation-community-feed__row {
@@ -1970,7 +1109,7 @@ html.constellation-app body {
   align-items: center;
   gap: .7rem;
   padding-block: .85rem;
-  border-block-end: 1px solid var(--border);
+  border-block-end: 1px solid var(--q-border);
   text-align: start;
 }
 
@@ -1979,8 +1118,7 @@ html.constellation-app body {
 }
 
 .constellation-community-feed__row > svg {
-  color: var(--accent);
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 30%, transparent));
+  color: var(--q-royal-text);
 }
 
 .constellation-community-feed__body {
@@ -1989,8 +1127,8 @@ html.constellation-app body {
 
 .constellation-community-feed__title {
   display: block;
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: 1.08rem;
   line-height: 1.3;
 }
@@ -1998,12 +1136,12 @@ html.constellation-app body {
 .constellation-community-feed__meta {
   display: block;
   margin-block-start: .22rem;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-size: .74rem;
 }
 
 .constellation-community-feed__count {
-  color: var(--success);
+  color: var(--q-success);
   font-size: .72rem;
   font-weight: 650;
   white-space: nowrap;
@@ -2014,7 +1152,7 @@ html.constellation-app body {
   width: min(100%, 48rem);
   margin-inline: auto;
   padding-block: max(.55rem, env(safe-area-inset-top)) .55rem;
-  background: color-mix(in srgb, var(--background) 91%, transparent);
+  background: var(--q-canvas);
   border-block-end: 0;
   box-shadow: none;
 }
@@ -2023,12 +1161,12 @@ html.constellation-app body {
 .constellation-detail .detail-header [aria-haspopup="menu"] {
   background: transparent !important;
   border-color: transparent !important;
-  color: var(--ink) !important;
+  color: var(--q-text) !important;
 }
 
 .constellation-detail__screen-title {
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: 1.1rem;
   font-weight: 600;
   text-transform: capitalize;
@@ -2039,34 +1177,6 @@ html.constellation-app body {
   margin-inline: auto;
 }
 
-.constellation-detail__sky {
-  height: clamp(8.25rem, 28vw, 12rem);
-  overflow: hidden;
-}
-
-.constellation-detail__sky-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  mix-blend-mode: multiply;
-}
-
-.constellation-detail__sky-image--dark {
-  display: none;
-  mix-blend-mode: normal;
-}
-
-[data-theme="dark"] .constellation-detail__sky-image--light,
-[data-theme="night"] .constellation-detail__sky-image--light {
-  display: none;
-}
-
-[data-theme="dark"] .constellation-detail__sky-image--dark,
-[data-theme="night"] .constellation-detail__sky-image--dark {
-  display: block;
-}
-
 .constellation-detail__hero-copy {
   padding: 1.2rem clamp(1rem, 4vw, 2rem) 1.6rem;
   text-align: center;
@@ -2075,8 +1185,8 @@ html.constellation-app body {
 .constellation-detail__title,
 .constellation-detail__title-input {
   width: 100%;
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: clamp(2.35rem, 9vw, 4rem);
   font-weight: 600;
   letter-spacing: -.045em;
@@ -2100,14 +1210,14 @@ html.constellation-app body {
 .constellation-detail__title-input {
   background: transparent;
   border: 0;
-  border-block-end: 1px solid var(--border-strong);
+  border-block-end: 1px solid var(--q-border-strong);
   outline: none;
 }
 
 .constellation-detail__description {
   max-width: 36rem;
   margin: 1rem auto 0;
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
   font-size: .95rem;
   line-height: 1.7;
 }
@@ -2119,7 +1229,7 @@ html.constellation-app body {
   justify-content: center;
   gap: .35rem 1rem;
   margin-block-start: 1rem;
-  color: var(--accent);
+  color: var(--q-royal-text);
   font-size: .78rem;
   font-weight: 600;
 }
@@ -2128,7 +1238,7 @@ html.constellation-app body {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  color: var(--success);
+  color: var(--q-success);
 }
 
 .constellation-detail .detail-page__content {
@@ -2194,29 +1304,8 @@ html.constellation-app body {
   height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
-  background-color: var(--background) !important;
+  background-color: var(--q-canvas) !important;
   background-image: none !important;
-}
-
-.constellation-session::before {
-  position: absolute;
-  z-index: 0;
-  inset: -1.25rem;
-  background-image: url('/assets/constellation/detail-sky-light-transparent.png');
-  background-repeat: no-repeat !important;
-  background-position: center top !important;
-  background-size: min(62rem, 150vw) auto !important;
-  content: '';
-  filter: blur(5px);
-  opacity: .78;
-  pointer-events: none;
-  transform: scale(1.025);
-}
-
-[data-theme="dark"] .constellation-session::before,
-[data-theme="night"] .constellation-session::before {
-  background-image: url('/assets/constellation/detail-sky-dark-transparent.png');
-  opacity: .72;
 }
 
 .constellation-session > [role="dialog"] {
@@ -2225,22 +1314,21 @@ html.constellation-app body {
 }
 
 .constellation-session__header {
-  background: color-mix(in srgb, var(--background) 76%, transparent) !important;
-  backdrop-filter: blur(12px);
+  background: var(--q-canvas) !important;
 }
 
 .constellation-session__header p {
-  color: var(--text-faint) !important;
+  color: var(--q-text-tertiary) !important;
 }
 
 .constellation-session__header button {
-  background: color-mix(in srgb, var(--surface) 74%, transparent) !important;
-  border-color: var(--border) !important;
-  color: var(--ink) !important;
+  background: var(--q-hover) !important;
+  border-color: var(--q-border) !important;
+  color: var(--q-text) !important;
 }
 
 .constellation-session__header button p {
-  color: var(--ink) !important;
+  color: var(--q-text) !important;
 }
 
 .constellation-session__request {
@@ -2289,35 +1377,31 @@ html.constellation-app body {
 }
 
 .constellation-session__footer {
-  background: color-mix(in srgb, var(--background) 84%, transparent);
-  border-color: var(--border);
+  background: var(--q-canvas);
+  border-color: var(--q-border);
 }
 
 .constellation-session__done {
-  background: color-mix(in srgb, var(--background) 42%, transparent);
-  backdrop-filter: blur(2px);
+  background: var(--q-hover);
 }
 
-[data-theme="dark"] .constellation-session__header button,
-[data-theme="night"] .constellation-session__header button {
+[data-theme="dark"] .constellation-session__header button {
   background: rgba(255, 255, 255, .07) !important;
   border-color: rgba(255, 255, 255, .1) !important;
   color: rgba(255, 255, 255, .86) !important;
 }
 
-[data-theme="dark"] .constellation-session__header p,
-[data-theme="night"] .constellation-session__header p {
+[data-theme="dark"] .constellation-session__header p {
   color: rgba(255, 255, 255, .58) !important;
 }
 
-[data-theme="dark"] .constellation-session__header button p,
-[data-theme="night"] .constellation-session__header button p {
+[data-theme="dark"] .constellation-session__header button p {
   color: #fff !important;
 }
 
 /* Secondary destinations ------------------------------------------------- */
 .constellation-menu {
-  border-block: 1px solid var(--border);
+  border-block: 1px solid var(--q-border);
 }
 
 .constellation-menu__row {
@@ -2325,7 +1409,7 @@ html.constellation-app body {
 }
 
 .constellation-menu__row:hover {
-  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  background: var(--q-hover);
 }
 
 .constellation-more .page-header__eyebrow {
@@ -2341,16 +1425,16 @@ html.constellation-app body {
 }
 
 .constellation-prayer-form {
-  border-radius: 1.35rem 1.35rem 0 0;
+  border-radius: var(--q-radius-surface) var(--q-radius-surface) 0 0;
 }
 
 .constellation-prayer-form form label {
-  color: var(--accent) !important;
+  color: var(--q-royal-text) !important;
 }
 
 .constellation-journal {
   min-height: 100%;
-  background: var(--background);
+  background: var(--q-canvas);
 }
 
 .constellation-journal .phase-page__shell,
@@ -2374,43 +1458,12 @@ html.constellation-app body {
 
 .constellation-journal__title {
   margin: 0;
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: clamp(2.55rem, 11vw, 3.25rem);
   font-weight: 600;
   letter-spacing: -.045em;
   line-height: .98;
-}
-
-.constellation-journal__art {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  justify-content: flex-end;
-  overflow: hidden;
-}
-
-.constellation-journal__art-image {
-  width: min(8.25rem, 100%);
-  height: 4.4rem;
-  object-fit: cover;
-  object-position: center;
-  mix-blend-mode: multiply;
-}
-
-.constellation-journal__art-image--dark {
-  display: none;
-  mix-blend-mode: normal;
-}
-
-[data-theme="dark"] .constellation-journal__art-image--light,
-[data-theme="night"] .constellation-journal__art-image--light {
-  display: none;
-}
-
-[data-theme="dark"] .constellation-journal__art-image--dark,
-[data-theme="night"] .constellation-journal__art-image--dark {
-  display: block;
 }
 
 .constellation-journal__actions {
@@ -2425,12 +1478,12 @@ html.constellation-app body {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: var(--ink);
+  color: var(--q-text);
 }
 
 .constellation-journal__icon-button:hover {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--q-selected);
+  color: var(--q-royal-text);
 }
 
 .constellation-journal__toolbar {
@@ -2443,28 +1496,21 @@ html.constellation-app body {
   width: 100%;
   padding: .25rem;
   background: transparent;
-  border-color: var(--border);
-  border-radius: 1rem;
+  border-color: var(--q-border);
+  border-radius: var(--q-radius-control);
 }
 
 .constellation-journal__toolbar .segmented-control button {
   flex: 1;
   min-height: 44px;
-  border-radius: .78rem;
-  color: var(--text-muted);
+  border-radius: var(--q-radius-control);
+  color: var(--q-text-secondary);
   font-size: .9rem;
 }
 
 .constellation-journal__toolbar .segmented-control button[aria-pressed="true"] {
-  background: var(--surface);
-  color: var(--accent);
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--plum) 10%, transparent);
-}
-
-[data-theme="dark"] .constellation-journal__toolbar .segmented-control button[aria-pressed="true"],
-[data-theme="night"] .constellation-journal__toolbar .segmented-control button[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--plum) 45%, var(--surface));
-  color: #fff;
+  background: var(--q-surface);
+  color: var(--q-royal-text);
 }
 
 .constellation-journal__utility-panel {
@@ -2522,9 +1568,9 @@ html.constellation-app body {
   gap: .5rem;
   margin-block-end: .75rem;
   padding: .1rem .75rem;
-  border: 0.5px solid var(--border);
-  border-radius: 1rem;
-  background: var(--surface);
+  border: 0.5px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
 }
 
 .constellation-journal__people-label {
@@ -2533,7 +1579,7 @@ html.constellation-app body {
   align-items: center;
   gap: .4rem;
   padding-inline: .85rem;
-  color: var(--accent);
+  color: var(--q-royal-text);
   font-size: .8rem;
   font-weight: 650;
 }
@@ -2550,13 +1596,13 @@ html.constellation-app body {
 
 .constellation-journal__swipe-row {
   border-radius: 0;
-  background: var(--background);
+  background: var(--q-canvas);
 }
 
 .constellation-journal__swipe-row > div:last-child {
   z-index: 1;
-  background: var(--background);
-  box-shadow: inset -1px 0 var(--background);
+  background: var(--q-canvas);
+  box-shadow: inset -1px 0 var(--q-canvas);
 }
 
 .constellation-journal-row {
@@ -2567,20 +1613,19 @@ html.constellation-app body {
   align-items: center;
   gap: .75rem;
   padding: 1.15rem .25rem;
-  background: var(--background);
-  border-block-end: 1px solid var(--border);
-  color: var(--ink);
+  background: var(--q-canvas);
+  border-block-end: 1px solid var(--q-border);
+  color: var(--q-text);
   text-align: start;
-  transition: background-color var(--motion) var(--ease), transform var(--motion) var(--ease);
+  transition: background-color var(--q-motion-standard) var(--q-ease), transform var(--q-motion-standard) var(--q-ease);
 }
 
 .constellation-journal-row:hover {
-  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  background: var(--q-hover);
 }
 
 .constellation-journal-row__star {
-  color: var(--accent);
-  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 32%, transparent));
+  color: var(--q-royal-text);
 }
 
 .constellation-journal-row__body {
@@ -2589,8 +1634,8 @@ html.constellation-app body {
 
 .constellation-journal-row__title {
   display: block;
-  color: var(--ink);
-  font-family: var(--font-editorial);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
   font-size: 1.16rem;
   font-weight: 500;
   letter-spacing: -.012em;
@@ -2603,14 +1648,14 @@ html.constellation-app body {
   justify-content: space-between;
   gap: .4rem .85rem;
   margin-block-start: .35rem;
-  color: var(--accent);
+  color: var(--q-royal-text);
   font-size: .78rem;
   line-height: 1.35;
 }
 
 .constellation-journal-row__shared,
 .constellation-journal-row__answered {
-  color: var(--success);
+  color: var(--q-success);
 }
 
 .constellation-journal-row__match {
@@ -2618,7 +1663,7 @@ html.constellation-app body {
   align-items: flex-start;
   gap: .35rem;
   margin-block-start: .45rem;
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
   font-size: .74rem;
   line-height: 1.45;
 }
@@ -2631,7 +1676,7 @@ html.constellation-app body {
 }
 
 .constellation-journal-row__chevron {
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
 }
 
 .constellation-journal-row--answered .constellation-journal-row__title,
@@ -2647,26 +1692,18 @@ html.constellation-app body {
   justify-content: center;
   gap: .75rem;
   margin-block-start: 1.25rem;
-  color: var(--accent);
-  border: 1px dashed var(--accent-border);
-  border-radius: .85rem;
-  font-family: var(--font-editorial);
+  color: var(--q-royal-text);
+  border: 1px dashed var(--q-selected-border);
+  border-radius: var(--q-radius-surface);
+  font-family: var(--q-font-editorial);
   font-size: 1rem;
   font-weight: 600;
-  transition: background-color var(--motion) var(--ease), border-color var(--motion) var(--ease);
+  transition: background-color var(--q-motion-standard) var(--q-ease), border-color var(--q-motion-standard) var(--q-ease);
 }
 
 .constellation-journal__add:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-}
-
-.constellation-app .app-bottom-nav {
-  background: color-mix(in srgb, var(--background) 92%, transparent);
-}
-
-.constellation-app .app-bottom-nav [aria-current="page"] > span:first-child {
-  background: transparent !important;
+  background: var(--q-selected);
+  border-color: var(--q-royal);
 }
 
 @media (max-width: 420px) {
@@ -2678,11 +1715,6 @@ html.constellation-app body {
   .constellation-journal__title-row {
     grid-template-columns: minmax(0, auto) minmax(3.4rem, 1fr) auto;
     gap: .35rem;
-  }
-
-  .constellation-journal__art-image {
-    width: 5.5rem;
-    height: 3.6rem;
   }
 
   .constellation-journal-row__meta {
@@ -2722,11 +1754,7 @@ html.constellation-app body {
 
 /* Public Constellation landing ------------------------------------------- */
 html.constellation-landing-root body {
-  background: #f7f3ec;
-}
-
-html.constellation-landing-root[data-theme="dark"] body {
-  background: #15111b;
+  background: var(--q-canvas);
 }
 
 .constellation-landing {
@@ -2741,7 +1769,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__nav > div:first-child span {
-  font-family: var(--font-editorial);
+  font-family: var(--q-font-editorial);
   font-weight: 600;
 }
 
@@ -2760,11 +1788,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__hero-copy > div:first-child {
-  color: #8b6124 !important;
-}
-
-.constellation-landing--dark .constellation-landing__hero-copy > div:first-child {
-  color: #d8b06a !important;
+  color: var(--q-gold-text) !important;
 }
 
 .constellation-landing__hero h1 {
@@ -2780,7 +1804,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__hero-copy button {
-  border-radius: .75rem !important;
+  border-radius: var(--q-radius-control) !important;
 }
 
 .constellation-landing__preview {
@@ -2788,12 +1812,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__preview-frame {
-  border-radius: 1.35rem !important;
-  box-shadow: 0 26px 72px rgba(37, 30, 53, .16) !important;
-}
-
-.constellation-landing--dark .constellation-landing__preview-frame {
-  box-shadow: 0 28px 78px rgba(0, 0, 0, .45) !important;
+  border-radius: var(--q-radius-surface) !important;
 }
 
 .constellation-landing__preview-focus {
@@ -2801,26 +1820,11 @@ html.constellation-landing-root[data-theme="dark"] body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border: 1px solid color-mix(in srgb, #d9ae62 30%, transparent);
+  border: 1px solid transparent;
 }
 
 .constellation-landing__preview-focus > p:first-of-type {
   margin-block-end: auto;
-}
-
-.constellation-landing__preview-art {
-  position: absolute;
-  inset-block-start: -.8rem;
-  inset-inline-end: -1.5rem;
-  width: min(75%, 22rem);
-  opacity: .8;
-  pointer-events: none;
-}
-
-.constellation-landing__preview-art img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .constellation-landing__benefits {
@@ -2836,7 +1840,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 .constellation-landing__step h3,
 .constellation-landing__callout h2,
 .constellation-landing__final h2 {
-  font-family: var(--font-editorial);
+  font-family: var(--q-font-editorial);
   font-weight: 600;
   letter-spacing: -.025em;
 }
@@ -2846,7 +1850,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__feature {
-  border-radius: .85rem !important;
+  border-radius: var(--q-radius-surface) !important;
   box-shadow: none;
 }
 
@@ -2859,21 +1863,7 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__callout {
-  border-radius: 1.2rem !important;
-}
-
-.constellation-landing__callout > *:not(.constellation-landing__callout-art) {
-  position: relative;
-  z-index: 1;
-}
-
-.constellation-landing__callout-art {
-  position: absolute;
-  inset-block-start: -2rem;
-  inset-inline-end: -2rem;
-  width: min(42rem, 70%);
-  opacity: .42;
-  pointer-events: none;
+  border-radius: var(--q-radius-surface) !important;
 }
 
 .constellation-landing__final {
@@ -2908,115 +1898,17 @@ html.constellation-landing-root[data-theme="dark"] body {
   .constellation-landing__benefit:last-child {
     border-block-end: 0;
   }
-
-  .constellation-landing__callout-art {
-    width: 34rem;
-    max-width: none;
-  }
 }
 
 /* Constellation authentication and onboarding --------------------------- */
 html.constellation-auth-root body {
-  background: #f7f3ec;
-}
-
-html.constellation-auth-root[data-theme="dark"] body {
-  background: #15111b;
-}
-
-.constellation-auth,
-.constellation-onboarding {
-  --background: #f7f3ec;
-  --surface: #ffffff;
-  --surface-muted: #f1ebe1;
-  --surface-2: var(--surface-muted);
-  --ink: #261b31;
-  --text-muted: #6b5e75;
-  --text-faint: #685c6f;
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --plum: #5b3d82;
-  --plum-dark: #43295f;
-  --gold: #8b6124;
-  --accent: var(--plum);
-  --accent-soft: #efe8f4;
-  --accent-border: #dccfe6;
-  --border: #e6ddd0;
-  --border-strong: #d5c8b6;
-  --input-bg: #ffffff;
-  --input-border: #d9cdbd;
-}
-
-[data-theme="dark"] .constellation-auth,
-[data-theme="dark"] .constellation-onboarding {
-  --background: #15111b;
-  --surface: #1d1725;
-  --surface-muted: #2a2234;
-  --surface-2: var(--surface-muted);
-  --ink: #f6efe6;
-  --text-muted: #c4b8cc;
-  --text-faint: #9d90a6;
-  --plum: #9a7ce0;
-  --plum-dark: #6e4fa8;
-  --gold: #d8b06a;
-  --accent: var(--plum);
-  --accent-soft: #2c2238;
-  --accent-border: #4a3b5c;
-  --border: #3a3043;
-  --border-strong: #4e4259;
-  --input-bg: #1b1622;
-  --input-border: #433850;
+  background: var(--q-canvas);
 }
 
 .constellation-auth.auth-experience {
   place-items: center;
   padding: 8.5rem 1rem 2rem;
-  background: var(--background);
-}
-
-.constellation-auth.auth-experience::before,
-.constellation-onboarding.first-prayer-experience::before {
-  display: none;
-}
-
-.constellation-auth__sky,
-.constellation-plan-share__sky {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 0;
-  height: 17rem;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.constellation-auth__sky-image,
-.constellation-plan-share__sky-image {
-  position: absolute;
-  inset-block-start: -1.5rem;
-  inset-inline-start: 50%;
-  width: min(43rem, 110vw);
-  max-width: none;
-  transform: translateX(-50%);
-  opacity: .72;
-}
-
-.constellation-auth__sky-image--dark,
-.constellation-onboarding__sky-image--dark,
-.constellation-plan-share__sky-image--dark {
-  display: none;
-}
-
-[data-theme="dark"] .constellation-auth__sky-image--light,
-[data-theme="dark"] .constellation-onboarding__sky-image--light,
-[data-theme="dark"] .constellation-plan-share__sky-image--light {
-  display: none;
-}
-
-[data-theme="dark"] .constellation-auth__sky-image--dark,
-[data-theme="dark"] .constellation-onboarding__sky-image--dark,
-[data-theme="dark"] .constellation-plan-share__sky-image--dark {
-  display: block;
+  background: var(--q-canvas);
 }
 
 .constellation-auth .auth-brand {
@@ -3031,11 +1923,10 @@ html.constellation-auth-root[data-theme="dark"] body {
 .constellation-auth .auth-sheet {
   width: min(100%, 29rem);
   padding: 1.4rem clamp(1.15rem, 5vw, 1.8rem) max(1.5rem, env(safe-area-inset-bottom));
-  border: 1px solid var(--border);
-  border-radius: 1.2rem;
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-dialog);
+  background: var(--q-surface);
   box-shadow: none;
-  backdrop-filter: none;
 }
 
 .constellation-auth .auth-sheet h2 {
@@ -3044,33 +1935,33 @@ html.constellation-auth-root[data-theme="dark"] body {
 }
 
 .constellation-auth .auth-field {
-  border-radius: .75rem !important;
+  border-radius: var(--q-radius-control) !important;
 }
 
 .constellation-auth .auth-field-label {
   display: block;
   margin-block-end: .35rem;
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
   font-size: .75rem;
   font-weight: 650;
 }
 
 .constellation-auth .auth-field-hint {
   margin-block-start: .35rem;
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
   font-size: .7rem;
   line-height: 1.45;
 }
 
 .constellation-auth .auth-field[aria-invalid="true"] {
-  border-color: var(--danger) !important;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger) 18%, transparent);
+  border-color: var(--q-danger) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--q-danger) 18%, transparent);
 }
 
 .constellation-auth .auth-primary {
   min-height: 3rem;
-  border-radius: .75rem !important;
-  background: var(--accent) !important;
+  border-radius: var(--q-radius-control) !important;
+  background: var(--q-action-primary) !important;
   box-shadow: none;
 }
 
@@ -3078,10 +1969,9 @@ html.constellation-auth-root[data-theme="dark"] body {
   display: flex;
   gap: .3rem;
   padding: .3rem;
-  background: var(--surface-muted);
-  border: 1px solid var(--border-strong);
-  border-radius: .9rem;
-  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--ink) 7%, transparent);
+  background: var(--q-surface-muted);
+  border: 1px solid var(--q-border-strong);
+  border-radius: var(--q-radius-control);
 }
 
 .constellation-auth .auth-mode-switch__option {
@@ -3091,74 +1981,54 @@ html.constellation-auth-root[data-theme="dark"] body {
   padding-inline: .8rem;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: .65rem;
-  color: var(--text-muted);
+  border-radius: var(--q-radius-control);
+  color: var(--q-text-secondary);
   font-size: .875rem;
   font-weight: 650;
   transition:
-    background-color var(--motion) var(--ease),
-    border-color var(--motion) var(--ease),
-    color var(--motion) var(--ease),
-    box-shadow var(--motion) var(--ease);
+    background-color var(--q-motion-standard) var(--q-ease),
+    border-color var(--q-motion-standard) var(--q-ease),
+    color var(--q-motion-standard) var(--q-ease),
+    box-shadow var(--q-motion-standard) var(--q-ease);
 }
 
 .constellation-auth .auth-mode-switch__option[aria-pressed="true"] {
-  background: var(--plum-dark);
-  border-color: color-mix(in srgb, var(--plum-dark) 72%, #fff);
-  color: #fff;
-  box-shadow: 0 3px 10px color-mix(in srgb, var(--plum-dark) 24%, transparent) !important;
-  font-weight: 750;
+  background: var(--q-surface);
+  border-color: var(--q-border);
+  color: var(--q-text);
+  font-weight: 650;
 }
 
 .constellation-auth .auth-mode-switch__option[aria-pressed="false"]:hover {
-  background: var(--accent-soft);
-  border-color: var(--accent-border);
-  color: var(--accent);
+  background: var(--q-selected);
+  border-color: var(--q-selected-border);
+  color: var(--q-royal-text);
 }
 
 .constellation-auth .auth-mode-switch__option:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--q-royal) 38%, transparent);
   outline-offset: 2px;
 }
 
 .constellation-auth .auth-sheet > .flex:first-of-type,
 .constellation-auth .auth-sheet form + p {
-  border-color: var(--border);
+  border-color: var(--q-border);
 }
 
 .constellation-auth .phase-icon-button {
   border-color: transparent;
   background: transparent;
-  color: var(--ink);
+  color: var(--q-text);
 }
 
 .constellation-auth .phase-icon-button:hover {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--q-selected);
+  color: var(--q-royal-text);
 }
 
 .constellation-onboarding.first-prayer-experience {
-  background: var(--background);
-  color: var(--ink);
-}
-
-.constellation-onboarding__sky {
-  position: fixed;
-  inset-block-start: 0;
-  inset-inline: 0;
-  height: min(31rem, 58dvh);
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.constellation-onboarding__sky-image {
-  position: absolute;
-  inset-block-start: -1rem;
-  inset-inline-start: 50%;
-  width: min(55rem, 150vw);
-  max-width: none;
-  transform: translateX(-50%);
-  opacity: .7;
+  background: var(--q-canvas);
+  color: var(--q-text);
 }
 
 .constellation-onboarding .first-prayer-panel {
@@ -3173,61 +2043,60 @@ html.constellation-auth-root[data-theme="dark"] body {
 }
 
 .constellation-onboarding .section-label {
-  color: var(--accent);
+  color: var(--q-royal-text);
 }
 
 .constellation-onboarding .first-prayer-journal {
   min-height: 8rem;
-  border-block-end-color: var(--border-strong);
-  color: var(--ink);
-  caret-color: var(--accent);
+  border-block-end-color: var(--q-border-strong);
+  color: var(--q-text);
+  caret-color: var(--q-royal-text);
 }
 
 .constellation-onboarding .first-prayer-journal::placeholder {
-  color: var(--text-faint);
+  color: var(--q-text-tertiary);
 }
 
 .constellation-onboarding .first-prayer-journal:focus {
-  border-block-end-color: var(--accent);
+  border-block-end-color: var(--q-royal);
 }
 
 .constellation-onboarding .first-prayer-primary {
-  border-radius: .75rem !important;
-  background: var(--accent);
-  color: #ffffff;
-  box-shadow: none;
+  border-radius: var(--q-radius-control) !important;
+  background: var(--q-action-primary);
+  color: var(--q-on-action);
 }
 
 .constellation-onboarding .first-prayer-primary:hover:not(:disabled) {
-  background: var(--plum-dark);
+  background: var(--q-royal-deep);
 }
 
 .constellation-onboarding .first-prayer-quiet {
-  border-color: var(--border);
+  border-color: var(--q-border);
   background: transparent;
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
 }
 
 .constellation-onboarding .first-prayer-quiet:hover:not(:disabled) {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--q-selected);
+  color: var(--q-royal-text);
 }
 
 .constellation-onboarding__close {
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 80%, transparent);
-  color: var(--ink);
+  border: 1px solid var(--q-border);
+  background: var(--q-surface);
+  color: var(--q-text);
 }
 
 .constellation-onboarding__note,
 .constellation-onboarding__later {
-  color: var(--text-muted);
+  color: var(--q-text-secondary);
 }
 
 .constellation-onboarding__decision-icon {
-  border: 1px solid var(--accent-border);
-  background: var(--accent-soft);
-  color: var(--accent);
+  border: 1px solid var(--q-selected-border);
+  background: var(--q-selected);
+  color: var(--q-royal-text);
 }
 
 /* Public pray-first journey and shared-plan page ---------------------------
@@ -3238,84 +2107,25 @@ html.constellation-auth-root[data-theme="dark"] body {
 .constellation-guest-flow,
 .constellation-plan-share {
   color-scheme: light;
-  --background: #f7f3ec;
-  --surface: #ffffff;
-  --surface-muted: #f1ebe1;
-  --surface-raised: #ffffff;
-  --surface-2: var(--surface-muted);
-  --ink: #261b31;
-  --text-muted: #6b5e75;
-  --text-faint: #685c6f;
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --plum: #5b3d82;
-  --plum-dark: #43295f;
-  --plum-deep: #2e1c42;
-  --gold: #8b6124;
-  --gold-soft: #f5ecdc;
-  --sage: #3f7a6c;
-  --sage-soft: #e6f1ec;
-  --accent: var(--plum);
-  --accent-2: #8a6bb3;
-  --accent-soft: #efe8f4;
-  --accent-border: #dccfe6;
-  --border: #e6ddd0;
-  --border-strong: #d5c8b6;
-  --input-bg: #ffffff;
-  --input-border: #d9cdbd;
-  --success: #3f7a6c;
-  --success-bg: var(--sage-soft);
-  --success-border: #b5d2c8;
 }
 
 [data-theme="dark"] .constellation-guest-flow,
 [data-theme="dark"] .constellation-plan-share {
   color-scheme: dark;
-  --background: #15111b;
-  --surface: #1d1725;
-  --surface-muted: #2a2234;
-  --surface-raised: #2a2234;
-  --surface-2: var(--surface-muted);
-  --ink: #f6efe6;
-  --text-muted: #c4b8cc;
-  --text-faint: #a99db1;
-  --text-1: var(--ink);
-  --text-2: var(--text-muted);
-  --text-3: var(--text-faint);
-  --plum: #9a7ce0;
-  --plum-dark: #6e4fa8;
-  --plum-deep: #15111b;
-  --gold: #d8b06a;
-  --gold-soft: #33291e;
-  --sage: #8fcab8;
-  --sage-soft: #1a302a;
-  --accent: var(--plum);
-  --accent-2: #c3a7ec;
-  --accent-soft: #2c2238;
-  --accent-border: #4a3b5c;
-  --border: #3a3043;
-  --border-strong: #4e4259;
-  --input-bg: #1b1622;
-  --input-border: #433850;
-  --success: #8fcab8;
-  --success-bg: var(--sage-soft);
-  --success-border: #335b51;
 }
 
 .constellation-plan-share {
-  background: var(--background);
-  color: var(--ink);
+  background: var(--q-canvas);
+  color: var(--q-text);
 }
 
 .constellation-plan-share .section-label {
-  color: var(--accent);
+  color: var(--q-royal-text);
 }
 
 .constellation-plan-share__actions {
-  border-block-start: 0.5px solid var(--border);
-  background: color-mix(in srgb, var(--background) 92%, transparent);
-  backdrop-filter: blur(12px);
+  border-block-start: 0.5px solid var(--q-border);
+  background: var(--q-canvas);
 }
 
 @media (max-width: 639px) {
@@ -3327,7 +2137,7 @@ html.constellation-auth-root[data-theme="dark"] body {
   .constellation-auth .auth-sheet {
     border-inline: 0;
     border-block-end: 0;
-    border-radius: 1.2rem 1.2rem 0 0;
+    border-radius: var(--q-radius-dialog) var(--q-radius-dialog) 0 0;
   }
 
   .constellation-onboarding .first-prayer-panel {
@@ -3394,80 +2204,21 @@ html.constellation-auth-root[data-theme="dark"] body {
   to { transform: none; opacity: 1; }
 }
 
-/* Qetoret motion — one idea: rise. A short, gentle upward fade when prayer
-   begins, when a prayer is marked prayed and when a session ends. No confetti,
-   no reward animations. Never the only signal of a state change: every use sits
-   beside text that says the same thing. */
-@keyframes qetoret-rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
-}
-
-@keyframes qetoret-ascend {
-  0% { opacity: 0; transform: translateY(10px); }
-  35% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-26px); }
-}
-
-.rise-in {
-  animation: qetoret-rise 640ms var(--ease) both;
-}
-
-.rise-in--late {
-  animation-delay: 180ms;
-}
-
-.rise-wisp {
-  display: block;
-  color: var(--gold-bright, #d9ae62);
-}
-
-.rise-wisp--once path {
-  animation: qetoret-ascend 1600ms var(--ease) both;
-}
-
-.rise-wisp--still path {
-  opacity: .9;
-}
-
-/* Remain with God: the line rises slowly and repeats, like breath. */
-.rise-wisp--breathe path {
-  animation: qetoret-ascend 4800ms var(--ease) infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rise-in,
-  .rise-wisp--once path,
-  .rise-wisp--breathe path {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
-}
 /* Published-wording report and editorial review controls. */
 .wording-control {
   display: block;
   width: 100%;
   margin-top: .35rem;
   padding: .65rem;
-  border-radius: .6rem;
-  border: 1px solid var(--input-border);
-  background: var(--input-bg);
-  color: var(--text-1);
+  border-radius: var(--q-radius-control);
+  border: 1px solid var(--q-field-border);
+  background: var(--q-field);
+  color: var(--q-text);
 }
 .wording-action {
-  border-radius: .6rem;
+  border-radius: var(--q-radius-control);
   padding: .6rem .9rem;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--q-selected);
+  color: var(--q-royal-text);
 }
 .wording-action:disabled { opacity: .5; }

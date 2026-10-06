@@ -32,7 +32,7 @@ const SIZES = {
   shelf: { width: 72, height: 108, icon: 24, radius: 'rounded-lg' },
 };
 
-export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg)', size = 'compact' }) {
+export default function ResourceThumbnail({ thumbnail, surface = 'var(--q-field)', size = 'compact' }) {
   // Keyed by the src that failed rather than a boolean, so the tile re-tries by
   // itself if the card is ever handed a different cover.
   const [failedSrc, setFailedSrc] = useState(null);
@@ -51,7 +51,7 @@ export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg
         width: dimensions.width,
         height: dimensions.height,
         background: categoryTint(color, 18, surface),
-        border: '0.5px solid var(--input-border)',
+        border: '0.5px solid var(--q-field-border)',
       }}
     >
       {showImage ? (
@@ -79,7 +79,7 @@ export default function ResourceThumbnail({ thumbnail, surface = 'var(--input-bg
                 18% tint of itself measures ~2.5:1 at worst, which is under the
                 3:1 a graphic should hold. Mixed like this the whole palette
                 clears 3.2:1 in both themes, and still reads as its own colour. */}
-            <Icon size={dimensions.icon} style={{ color: `color-mix(in srgb, ${color} 85%, var(--ink))` }} />
+            <Icon size={dimensions.icon} style={{ color: `color-mix(in srgb, ${color} 85%, var(--q-text))` }} />
           </span>
         </>
       )}

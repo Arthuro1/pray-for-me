@@ -44,13 +44,13 @@ export default function JournalFilters({
         aria-modal="true"
         aria-label={t(lang, 'journalFilters')}
         className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-5 sm:rounded-3xl"
-        style={{ background: 'var(--surface)', border: '0.5px solid var(--border)', boxShadow: 'var(--shadow-md)' }}
+        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)', boxShadow: 'var(--q-elevation)' }}
       >
         {managingLabels ? (
           <LabelsManager lang={lang} tr={tr} onDone={() => setManagingLabels(false)} />
         ) : (<>
           <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>
+            <h2 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>
               {t(lang, 'journalFilters')}
             </h2>
             <button
@@ -65,13 +65,13 @@ export default function JournalFilters({
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {categories.length > 0 && (
-            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--text-2)' }}>
+            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'allCategories')}
               <select
                 value={filters.category}
                 onChange={set('category')}
                 className={selectClass}
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
               >
                 <option value="all">{t(lang, 'all')}</option>
                 {categories.map((category) => (
@@ -84,13 +84,13 @@ export default function JournalFilters({
           )}
 
           {circles.length > 0 && (
-            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--text-2)' }}>
+            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'journalCircle')}
               <select
                 value={filters.circle || 'all'}
                 onChange={set('circle')}
                 className={selectClass}
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
               >
                 <option value="all">{t(lang, 'all')}</option>
                 {circles.map((circle) => <option key={circle} value={circle}>{t(lang, circleLabelKey(circle))}</option>)}
@@ -100,13 +100,13 @@ export default function JournalFilters({
           )}
 
           {people.length > 0 && (
-            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--text-2)' }}>
+            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'peopleView')}
               <select
                 value={filters.person}
                 onChange={set('person')}
                 className={selectClass}
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
               >
                 <option value="all">{t(lang, 'all')}</option>
                 {people.map((person) => <option key={person} value={person}>{person}</option>)}
@@ -117,13 +117,13 @@ export default function JournalFilters({
           {/* Source also answers "just my plans" — so it is offered to a reader
               who runs plans but belongs to no group, who never saw it before. */}
           {(groups.length > 0 || hasPlans) && (
-            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--text-2)' }}>
+            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'journalSource')}
               <select
                 value={filters.source}
                 onChange={set('source')}
                 className={selectClass}
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
               >
                 <option value="all">{t(lang, 'all')}</option>
                 {hasPersonal && <option value="personal">{t(lang, 'srcPersonal')}</option>}
@@ -134,13 +134,13 @@ export default function JournalFilters({
           )}
 
           {segment === 'answered' && (
-            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--text-2)' }}>
+            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'schedDateLabel')}
               <select
                 value={filters.answeredDate}
                 onChange={set('answeredDate')}
                 className={selectClass}
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-1)' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
               >
                 <option value="all">{t(lang, 'all')}</option>
                 <option value="month">{t(lang, 'answeredThisMonth')}</option>
@@ -154,7 +154,7 @@ export default function JournalFilters({
               type="button"
               onClick={onClear}
               className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3 text-xs font-medium sm:col-span-2 sm:justify-self-end"
-              style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+              style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
             >
               <X size={14} aria-hidden="true" /> {t(lang, 'clearFiltersBtn')}
             </button>
@@ -164,7 +164,7 @@ export default function JournalFilters({
           type="button"
           onClick={() => setManagingLabels(true)}
           className="mt-4 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium"
-          style={{ background: 'var(--surface-soft)', color: 'var(--text-2)', border: '0.5px solid var(--border)' }}
+          style={{ background: 'var(--q-surface-muted)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-border)' }}
         >
           <Tag size={15} aria-hidden="true" /> {t(lang, 'manageLabels')}
         </button>

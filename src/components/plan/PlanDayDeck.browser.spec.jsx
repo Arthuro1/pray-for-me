@@ -26,7 +26,7 @@ const DAYS = { prev: '2026-09-15', today: '2026-09-16', next: '2026-09-17' };
 function renderDeck({ lang = 'fr', dir = 'ltr', children, ...props } = {}) {
   const onGoToDay = vi.fn();
   const { container } = render(
-    <main dir={dir} className="mx-auto max-w-xl p-4" style={{ background: 'var(--background)' }}>
+    <main dir={dir} className="mx-auto max-w-xl p-4" style={{ background: 'var(--q-canvas)' }}>
       <PlanDayDeck
         lang={lang}
         dayNo={4}

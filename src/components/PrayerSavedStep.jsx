@@ -73,7 +73,7 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
         aria-modal="true"
         aria-label={heading}
         className="w-full max-w-md mx-auto rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
-        style={{ background: 'var(--surface)' }}
+        style={{ background: 'var(--q-surface)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Full 44×44 tap target: the button carries the size, the inner
@@ -83,9 +83,9 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
             onClick={onClose}
             aria-label={t(lang, 'close')}
             className="w-11 h-11 flex items-center justify-center rounded-full focus-visible:ring-2"
-            style={{ color: 'var(--accent)' }}
+            style={{ color: 'var(--q-royal-text)' }}
           >
-            <span aria-hidden="true" className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--accent-soft)' }}>
+            <span aria-hidden="true" className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
               <X size={16} />
             </span>
           </button>
@@ -98,18 +98,18 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
               <RiseMark size={44} />
             </div>
           ) : (
-            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--success-soft, #e8f5ed)' }}>
-              <Check size={26} style={{ color: 'var(--success)' }} />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--q-success-soft)' }}>
+              <Check size={26} style={{ color: 'var(--q-success)' }} />
             </div>
           )}
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{heading}</h2>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{heading}</h2>
+          <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>
             {t(lang, isFirstPrayer ? 'altarBegunBody' : 'savedOnToday')}
           </p>
           {/* When it comes back — the one thing this moment can usefully add,
               and only when the schedule really has a next day to name. */}
           {nextReturn && (
-            <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
+            <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>
               {t(lang, 'nextPrayerLabel', { when: nextReturn })}
             </p>
           )}
@@ -125,14 +125,14 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
         <button
           onClick={() => setPraying(true)}
           className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white mb-2.5"
-          style={{ background: 'var(--plum)' }}
+          style={{ background: 'var(--q-action-primary)' }}
         >
           <HandHeart size={17} /> {t(lang, 'prayNowCta')}
         </button>
         <button
           onClick={onClose}
           className="w-full rounded-xl py-3 text-sm font-medium"
-          style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)', color: 'var(--text-2)' }}
+          style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
         >
           {t(lang, 'doneBtn')}
         </button>
@@ -141,7 +141,7 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
             type="button"
             onClick={() => onChooseRhythm(savedPrayer)}
             className="mt-2 w-full min-h-[44px] text-sm font-semibold focus-visible:ring-2 rounded-xl"
-            style={{ color: 'var(--accent)' }}
+            style={{ color: 'var(--q-royal-text)' }}
           >
             {t(lang, 'altarChooseRhythm')}
           </button>

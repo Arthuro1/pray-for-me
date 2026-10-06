@@ -121,7 +121,7 @@ const PrayerVoiceRecorder = forwardRef(function PrayerVoiceRecorder(
   if (readOnly) {
     return voice ? (
       <div className="mt-3 flex w-full items-center gap-2">
-        <Play size={13} aria-hidden="true" style={{ color: 'var(--accent)' }} />
+        <Play size={13} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
         <audio controls src={url || undefined} preload="metadata" aria-label={t(lang, 'noteVoicePlayback')} className="max-w-full flex-1" />
       </div>
     ) : null;
@@ -129,14 +129,14 @@ const PrayerVoiceRecorder = forwardRef(function PrayerVoiceRecorder(
 
   if (recording) {
     return (
-      <div className="mt-3 w-full rounded-xl px-3 py-3" style={{ background: 'var(--input-bg)', border: '0.5px solid var(--input-border)' }}>
+      <div className="mt-3 w-full rounded-xl px-3 py-3" style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}>
         <div className="flex items-center gap-2.5">
           {/* Never colour alone: the pulsing dot is paired with the word "Recording". */}
-          <span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full" style={{ background: '#e53e3e' }} aria-hidden="true" />
-          <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'noteRecording')}</span>
+          <span className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full" style={{ background: 'var(--q-danger)' }} aria-hidden="true" />
+          <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'noteRecording')}</span>
           {/* The ticking count is decorative — announcing it every second would
               bury everything else in a screen reader. */}
-          <span className="flex-1 text-end text-sm tabular-nums" style={{ color: 'var(--text-2)' }} aria-hidden="true">
+          <span className="flex-1 text-end text-sm tabular-nums" style={{ color: 'var(--q-text-secondary)' }} aria-hidden="true">
             {fmtDuration(seconds)}
           </span>
         </div>
@@ -146,7 +146,7 @@ const PrayerVoiceRecorder = forwardRef(function PrayerVoiceRecorder(
           onClick={() => stop()}
           aria-label={t(lang, 'noteStopRecording')}
           className="pressable mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl text-sm font-medium text-white"
-          style={{ background: 'var(--accent)' }}
+          style={{ background: 'var(--q-action-primary)' }}
         >
           <Square size={14} aria-hidden="true" /> {t(lang, 'noteStopRecording')}
         </button>
@@ -163,7 +163,7 @@ const PrayerVoiceRecorder = forwardRef(function PrayerVoiceRecorder(
             type="button"
             onClick={start}
             className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 text-xs font-medium"
-            style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}
+            style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
           >
             <RotateCcw size={13} aria-hidden="true" /> {t(lang, 'noteRecordAgain')}
           </button>
@@ -171,12 +171,12 @@ const PrayerVoiceRecorder = forwardRef(function PrayerVoiceRecorder(
             type="button"
             onClick={onDelete}
             className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 text-xs font-medium"
-            style={{ color: 'var(--text-3)' }}
+            style={{ color: 'var(--q-text-tertiary)' }}
           >
             <Trash2 size={13} aria-hidden="true" /> {t(lang, 'noteDeleteRecording')}
           </button>
         </div>
-        {error && <p className="mt-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, error)}</p>}
+        {error && <p className="mt-2 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, error)}</p>}
       </div>
     );
   }
@@ -189,11 +189,11 @@ const PrayerVoiceRecorder = forwardRef(function PrayerVoiceRecorder(
         type="button"
         onClick={start}
         className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 text-xs font-medium"
-        style={{ color: 'var(--text-2)' }}
+        style={{ color: 'var(--q-text-secondary)' }}
       >
         <Mic size={14} aria-hidden="true" /> {t(lang, 'noteVoice')}
       </button>
-      {error && <p role="status" className="mt-1 text-xs text-end" style={{ color: 'var(--text-3)' }}>{t(lang, error)}</p>}
+      {error && <p role="status" className="mt-1 text-xs text-end" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, error)}</p>}
     </div>
   );
 });

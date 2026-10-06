@@ -51,19 +51,19 @@ export default function DonateModal({ onClose }) {
 
         {/* Header */}
         <div className="flex items-center gap-2 mb-3">
-          <Heart size={18} style={{ color: 'var(--success)' }} />
-          <h2 className="text-base font-semibold" style={{ color: 'var(--text-1)' }}>
+          <Heart size={18} style={{ color: 'var(--q-success)' }} />
+          <h2 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>
             {t(lang, 'donateTitle')}
           </h2>
         </div>
 
         {/* Explanation */}
-        <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--text-3)' }}>
+        <p className="text-xs leading-relaxed mb-5" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'donateWhy')}
         </p>
 
         {/* Payment methods */}
-        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--text-3)' }}>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'donateChooseMethod')}
         </p>
 
@@ -76,12 +76,12 @@ export default function DonateModal({ onClose }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between w-full rounded-xl px-4 py-3.5 transition-all"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--accent-border)', textDecoration: 'none' }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-selected-border)', textDecoration: 'none' }}
               >
                 <div className="flex items-center gap-3">
                   {logo}
                 </div>
-                <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                <span className="text-xs font-medium px-2.5 py-1 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
                   {t(lang, 'donateSelectBtn')}
                 </span>
               </a>
@@ -89,10 +89,10 @@ export default function DonateModal({ onClose }) {
               <div
                 key={id}
                 className="flex items-center justify-between w-full rounded-xl px-4 py-3.5"
-                style={{ background: 'var(--input-bg)', border: '0.5px solid var(--border)', opacity: 0.45 }}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-border)', opacity: 0.45 }}
               >
-                <span className="text-sm" style={{ color: 'var(--text-2)' }}>{label}</span>
-                <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: 'var(--input-bg)', color: 'var(--text-3)', border: '0.5px solid var(--border)' }}>
+                <span className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{label}</span>
+                <span className="text-xs px-2.5 py-1 rounded-full" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-border)' }}>
                   {t(lang, 'donateComingSoon')}
                 </span>
               </div>
@@ -100,7 +100,7 @@ export default function DonateModal({ onClose }) {
           ))}
         </div>
 
-        <p className="text-center text-xs mt-5" style={{ color: 'var(--text-3)' }}>
+        <p className="text-center text-xs mt-5" style={{ color: 'var(--q-text-tertiary)' }}>
           {t(lang, 'donateThanks')}
         </p>
       </div>

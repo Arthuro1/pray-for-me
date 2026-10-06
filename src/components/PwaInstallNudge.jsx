@@ -84,22 +84,22 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
           <div className="p-6">
             <div
               className="mb-4 flex h-11 w-11 items-center justify-center rounded-full"
-              style={{ background: 'var(--gold-soft)', color: 'var(--gold)' }}
+              style={{ background: 'var(--q-gold-soft)', color: 'var(--q-gold-text)' }}
               aria-hidden="true"
             >
               <Share size={19} />
             </div>
-            <h2 className="editorial-heading text-2xl" style={{ color: 'var(--text-1)' }}>
+            <h2 className="editorial-heading text-2xl" style={{ color: 'var(--q-text)' }}>
               {t(lang, 'pwaIosTitle')}
             </h2>
-            <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'pwaIosBody')}
             </p>
-            <div className="mt-5 flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--surface-soft)' }}>
-              <Share size={18} aria-hidden="true" style={{ color: 'var(--accent)' }} />
+            <div className="mt-5 flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--q-surface-muted)' }}>
+              <Share size={18} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
               <span aria-hidden="true">→</span>
-              <SquarePlus size={18} aria-hidden="true" style={{ color: 'var(--accent)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--text-1)' }}>
+              <SquarePlus size={18} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
+              <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>
                 {t(lang, 'pwaIosAddAction')}
               </span>
             </div>
