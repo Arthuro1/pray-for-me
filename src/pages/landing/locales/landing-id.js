@@ -137,7 +137,6 @@ export default {
     "Filipi 4:7",
     "Yesaya 40:31"
   ],
-  "stepLabel": "Langkah",
   "todayLabel": "Hari ini",
   "prayNowLabel": "Berdoa sekarang",
   "preview": {

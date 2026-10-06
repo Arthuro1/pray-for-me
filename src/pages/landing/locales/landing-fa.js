@@ -137,7 +137,6 @@ export default {
     "فیلیپیان 4:7",
     "اشعیا 40:31"
   ],
-  "stepLabel": "گام",
   "todayLabel": "امروز",
   "prayNowLabel": "اکنون دعا کنید",
   "preview": {

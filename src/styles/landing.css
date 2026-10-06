@@ -1,0 +1,196 @@
+/* Landing — the public first page, on the product's own tokens and
+   primitives. Mostly alabaster, one deep-violet band, the serif for what is
+   sacred, hairlines instead of cards. Its hero shows the app's real Today
+   (the `.today-focus` classes from prayer.css), not a mock-up. */
+html.landing-root body { background: var(--q-canvas); }
+
+.landing { min-height: 100vh; background: var(--q-canvas); color: var(--q-text); }
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.landing__nav {
+  display: flex;
+  max-width: 72rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--q-space-2);
+  margin-inline: auto;
+  padding: var(--q-space-4) clamp(var(--q-space-3), 4vw, var(--q-space-12));
+}
+
+.landing__brand { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; }
+.landing__nav-actions { display: flex; align-items: center; gap: var(--q-space-2); }
+.landing__sign-in { max-width: 9rem; padding-inline: var(--q-space-4); }
+.landing__sign-in > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.landing__language-menu { position: absolute; z-index: 50; inset-inline-end: 0; width: min(17rem, calc(100vw - 1.5rem)); max-height: calc(100dvh - 5rem); margin-block-start: var(--q-space-1); overflow-y: auto; }
+.landing__language-menu [aria-checked="true"] { background: var(--q-selected); color: var(--q-royal-text); }
+.landing__language-status { max-width: 7rem; color: var(--q-text-tertiary); font-size: 0.6875rem; line-height: 1.2; text-align: end; }
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+.landing__hero {
+  display: grid;
+  max-width: 72rem;
+  align-items: center;
+  gap: var(--q-space-12);
+  margin-inline: auto;
+  padding: var(--q-space-12) var(--q-space-6) var(--q-space-20);
+}
+
+@media (min-width: 900px) {
+  .landing__hero { grid-template-columns: 1.05fr 0.95fr; gap: var(--q-space-16); padding-block-start: var(--q-space-16); }
+}
+
+.landing__hero-copy { min-width: 0; }
+
+.landing__title {
+  max-width: 13ch;
+  margin: var(--q-space-4) 0 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.landing__lede { max-width: 34rem; margin: var(--q-space-6) 0 0; color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.7; }
+.landing__actions { display: flex; flex-wrap: wrap; gap: var(--q-space-3); margin-block-start: var(--q-space-8); }
+.landing__actions--center { justify-content: center; }
+.landing__cta { min-height: 52px; padding-inline: var(--q-space-6); }
+.landing__reassurance { display: flex; max-width: 28rem; align-items: flex-start; gap: var(--q-space-2); margin: var(--q-space-4) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
+.landing__reassurance > svg { flex: 0 0 auto; margin-block-start: 2px; }
+.landing__links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-5); margin-block-start: var(--q-space-3); }
+.landing__link { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; color: var(--q-royal-text); font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
+.landing__link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+@media (max-width: 520px) {
+  .landing__actions > * { flex: 1 1 100%; }
+}
+
+/* The app's Today, framed as a page — no phone, no decoration. */
+.landing__preview { width: 100%; max-width: 30rem; margin-inline: auto; }
+.landing__preview-page { padding: var(--q-space-6); border: 1px solid var(--q-border); border-radius: var(--q-radius-dialog); background: var(--q-canvas); }
+.landing__preview-page > .section-label { margin-block-end: var(--q-space-4); }
+.landing__focus { margin-block-end: var(--q-space-4); }
+.landing__preview-rows { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.landing__preview-rows > li { display: grid; gap: 4px; padding-block: var(--q-space-4); border-block-end: 1px solid var(--q-border); }
+.landing__preview-rows > li:last-child { border-block-end: 0; padding-block-end: 0; }
+.landing__preview-title { color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.125rem; line-height: 1.3; }
+.landing__preview-meta { color: var(--q-gold-text); font-size: var(--q-type-meta); font-weight: 600; }
+
+/* ── Bands: one measure, generous space, a hairline between ─────────────── */
+.landing__band { max-width: 72rem; margin-inline: auto; padding: var(--q-space-16) var(--q-space-6); border-block-start: 1px solid var(--q-border); }
+.landing__narrow { max-width: 48rem; }
+.landing__heading { margin: 0 0 var(--q-space-3); color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
+.landing__text { max-width: 36rem; margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
+.landing__note { margin: var(--q-space-6) 0 0; color: var(--q-text-tertiary); font-size: 0.875rem; font-style: italic; line-height: 1.6; }
+
+/* Bring · Carry · Return · Remember: one editorial row, divided by hairlines. */
+.landing__movements { display: grid; margin: 0; padding: 0; list-style: none; }
+.landing__movements > li { padding-block: var(--q-space-6); border-block-start: 1px solid var(--q-border); }
+.landing__movements > li:first-child { border-block-start: 0; padding-block-start: 0; }
+.landing__movements > li > svg { color: var(--q-royal-text); }
+.landing__movement-title { margin: var(--q-space-4) 0 var(--q-space-2); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.5rem; font-weight: 450; }
+.landing__movement-desc { margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+@media (min-width: 768px) {
+  .landing__movements { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .landing__movements > li { padding: 0 var(--q-space-6); border-block-start: 0; border-inline-start: 1px solid var(--q-border); }
+  .landing__movements > li:first-child { padding-inline-start: 0; border-inline-start: 0; }
+}
+
+/* The circles: a widening ring model beside the seven names. */
+.landing__circles { display: grid; align-items: center; gap: var(--q-space-10); }
+.landing__rings { width: 100%; max-width: 20rem; margin-inline: auto; }
+.landing__rings-art { display: block; width: 100%; height: auto; }
+.landing__ring { fill: none; stroke: color-mix(in srgb, var(--q-royal) 30%, transparent); stroke-width: 1; }
+.landing__ring--heart { fill: color-mix(in srgb, var(--q-royal) 8%, transparent); stroke: var(--q-royal); stroke-width: 1.5; }
+.landing__ring-point { fill: var(--q-gold); }
+.landing__ring-rise { fill: none; stroke: var(--q-gold); stroke-linecap: round; stroke-width: 2.5; }
+
+@media (min-width: 900px) {
+  .landing__circles { grid-template-columns: 0.9fr 1.1fr; gap: var(--q-space-16); }
+}
+
+.landing__circle-list { display: grid; gap: 0 var(--q-space-6); margin: var(--q-space-6) 0 0; padding: 0; list-style: none; }
+.landing__circle-list > li { display: flex; align-items: flex-start; gap: var(--q-space-3); padding-block: var(--q-space-3); border-block-end: 1px solid var(--q-border); }
+.landing__circle-list > li > svg { margin-block-start: 1px; }
+.landing__circle-name { display: block; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.landing__circle-desc { display: block; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.45; }
+.landing__start { margin: var(--q-space-5) 0 0; color: var(--q-royal-text); font-family: var(--q-font-editorial); font-size: 1.125rem; }
+
+@media (min-width: 640px) {
+  .landing__circle-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* How it works: three steps, numbered in the serif. */
+.landing__steps { margin: var(--q-space-6) 0 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.landing__steps > li { display: flex; align-items: baseline; gap: var(--q-space-5); padding-block: var(--q-space-5); border-block-end: 1px solid var(--q-border); }
+.landing__step-number { flex: 0 0 2rem; color: var(--q-gold-text); font-family: var(--q-font-editorial); font-size: 1.75rem; line-height: 1; }
+.landing__step-title { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.25rem; font-weight: 450; }
+.landing__step-desc { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+/* Why Qetoret? — room to breathe: a gold eyebrow, the name explained in the
+   serif, one Rise Mark, the references beneath. */
+.landing__why > .rise-mark { margin-block-end: var(--q-space-5); }
+.landing__why-body { max-width: 40rem; margin: var(--q-space-4) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-optical-sizing: auto; font-size: clamp(1.25rem, 3vw, 1.5rem); line-height: 1.55; }
+.landing__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-5); margin: var(--q-space-2) 0 0; padding: 0; list-style: none; }
+
+/* Features: a quiet list, not a grid of cards. */
+.landing__features { display: grid; gap: 0 var(--q-space-8); margin: var(--q-space-6) 0 0; padding: 0; list-style: none; }
+.landing__features > li { display: flex; gap: var(--q-space-3); padding-block: var(--q-space-4); border-block-end: 1px solid var(--q-border); }
+.landing__features > li > svg { flex: 0 0 auto; margin-block-start: 2px; color: var(--q-royal-text); }
+.landing__feature-title { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.landing__feature-desc { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.55; }
+
+@media (min-width: 640px) {
+  .landing__features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Praying with Scripture — the one deep-violet band (tokens remapped by
+   .q-immersive, so the primary button inverts by itself). */
+.landing__scripture { margin-block: var(--q-space-8); padding: var(--q-space-16) var(--q-space-6); background: var(--q-canvas); }
+.landing__scripture-inner { display: grid; max-width: 64rem; gap: var(--q-space-10); margin-inline: auto; }
+.landing__scripture .landing__heading { margin-block-start: var(--q-space-3); }
+
+@media (min-width: 900px) {
+  .landing__scripture-inner { grid-template-columns: 1.2fr 0.8fr; align-items: center; }
+}
+
+.landing__scripture-list { margin: var(--q-space-3) 0 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.landing__scripture-list > li { display: grid; gap: 2px; padding-block: var(--q-space-3) var(--q-space-1); border-block-end: 1px solid var(--q-border); }
+.landing__scripture-point { color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; }
+
+/* FAQ */
+.landing__faq { margin-block-start: var(--q-space-4); border-block-start: 1px solid var(--q-border); }
+.landing__faq-item { border-block-end: 1px solid var(--q-border); }
+
+.landing__faq-question {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--q-space-4);
+  padding-block: var(--q-space-4);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: 1.125rem;
+  text-align: start;
+}
+
+.landing__faq-question > svg { flex: 0 0 auto; color: var(--q-text-tertiary); transition: transform var(--q-motion-standard) var(--q-ease); }
+.landing__faq-question[aria-expanded="true"] > svg { transform: rotate(180deg); }
+.landing__faq-answer { margin: 0; padding-block-end: var(--q-space-5); padding-inline-end: var(--q-space-8); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.75; }
+
+/* The last invitation, and the footer. */
+.landing__final { display: flex; max-width: 40rem; flex-direction: column; align-items: center; margin-inline: auto; padding: var(--q-space-20) var(--q-space-6); border-block-start: 1px solid var(--q-border); text-align: center; }
+.landing__final-title { margin: var(--q-space-5) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+.landing__promise { margin: var(--q-space-6) 0 0; color: var(--q-royal-text); font-family: var(--q-font-editorial); font-size: 1.125rem; }
+
+.landing__footer { display: flex; max-width: 64rem; flex-direction: column; align-items: center; gap: var(--q-space-3); margin-inline: auto; padding: var(--q-space-8) var(--q-space-6); border-block-start: 1px solid var(--q-border); text-align: center; }
+
+@media (min-width: 768px) {
+  .landing__footer { flex-direction: row; justify-content: space-between; text-align: start; }
+}

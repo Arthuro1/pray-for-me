@@ -5,9 +5,17 @@ import { normalizeTheme } from '../utils/theme';
 import { cachedLandingCopy, FALLBACK_LANDING_COPY, FALLBACK_LANDING_LANG, resolveLandingCopy } from './landing/copy';
 import { APP_NAME } from '../lib/brand';
 import { CIRCLES } from '../lib/circles';
-import { CIRCLE_ICONS } from '../components/shared/circleIcons';
-
 import { BrandLockup, BrandMark, Wordmark } from '../components/shared/Brand';
+import { PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
+import CircleGlyph from '../components/shared/CircleGlyph';
+import RiseMark from '../components/shared/RiseMark';
+import { circleReach } from '../components/shared/circleGeometry';
+
+// The landing page is the product's first page, built from the product's own
+// tokens, primitives and classes (src/styles/landing.css): alabaster, royal
+// violet, temple gold, the serif for what is sacred — the same Today the app
+// shows, one deep-violet band, no separate marketing palette.
+
 // Keep native language names in the shared registry. Languages whose longer
 // marketing copy is still abbreviated show a clear, translated status label.
 const PARTIAL_LANDING_LANGS = new Set(['sw', 'am', 'id', 'tl', 'ko', 'ru', 'ar', 'fa']);
@@ -23,10 +31,12 @@ const ALL_CODES = LANGS.map(l => l.code);
 const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=space.praystead.twa';
 
 // Four of the seven movements (docs/QETORET_IDENTITY.md §4), surfaced right
-// under the hero in this order: Bring, Carry, Return, Remember. Icons are
-// language-independent; the words come from the landing locale.
+// under the hero in this order: Bring, Carry, Return, Remember. One line icon
+// each; the words come from the landing locale.
 const MOVEMENT_ICONS = [Feather, HandHeart, Repeat, CheckCircle];
 
+// One line-icon family for the feature list. The colours the locale files
+// still carry per feature are not used: the page has one palette.
 const FEATURE_ICONS = {
   BookOpen,
   Calendar,
@@ -48,110 +58,47 @@ function detectLang() {
   return ALL_CODES.includes(nav) ? nav : 'en';
 }
 
-// The landing page wears the product's own token layer — one brand from the
-// first visit to the signed-in app. Light and dark come from data-theme on
-// <html>, so a single set of purpose tokens serves both.
-const T = {
-  bg: 'var(--q-canvas)',
-  text: 'var(--q-text)',
-  textSoft: 'var(--q-text)',
-  textMuted: 'var(--q-text-secondary)',
-  textFaint: 'var(--q-text-tertiary)',
-  textDim: 'var(--q-text-tertiary)',
-  textGhost: 'var(--q-text-tertiary)',
-  surface: 'var(--q-surface)',
-  surfaceStrong: 'var(--q-surface-muted)',
-  chipBg: 'var(--q-surface)',
-  border: 'var(--q-border)',
-  borderStrong: 'var(--q-border-strong)',
-  menuBg: 'var(--q-surface)',
-  menuShadow: 'var(--q-elevation)',
-  accentText: 'var(--q-royal-text)',
-  accentSoftBg: 'var(--q-selected)',
-  accentChipBg: 'var(--q-selected)',
-  accentActiveBg: 'var(--q-selected)',
-  accentBorder: 'var(--q-selected-border)',
-  calloutBg: 'var(--q-surface-inverse)',
-  calloutBorder: 'transparent',
-  previewBg: 'var(--q-surface)',
-  previewItemBg: 'var(--q-surface-muted)',
-  gold: 'var(--q-gold-text)',
-  goldLine: 'var(--q-gold)',
-  primaryBg: 'var(--q-action-primary)',
-  prayerPreviewBg: 'var(--q-surface-inverse)',
-  prayerPreviewButtonBg: 'var(--q-text-inverse)',
-  prayerPreviewButtonText: 'var(--q-royal-deep)',
-  peaceBg: 'var(--q-success-soft)',
-  peaceText: 'var(--q-success)',
-  movementColors: ['var(--q-royal-text)', 'var(--q-royal-text)', 'var(--q-royal-text)', 'var(--q-royal-text)'],
-  ctaShadow: 'none',
-  ctaShadowBig: 'none',
-};
-
-function GooglePlayLink({ label, T }) {
+function GooglePlayLink({ label }) {
   return (
-    <a
-      href={GOOGLE_PLAY_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="pressable inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl px-5 py-3 text-center text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
-      style={{ background: T.surface, color: T.text, border: `1px solid ${T.borderStrong}` }}
-    >
-      <Smartphone size={20} className="shrink-0" aria-hidden="true" />
-      {label}
+    <a href={GOOGLE_PLAY_URL} target="_blank" rel="noopener noreferrer" className="secondary-button landing__cta">
+      <Smartphone size={18} aria-hidden="true" />
+      <span>{label}</span>
     </a>
   );
 }
 
-function FAQ({ q, a, T }) {
+function FAQ({ q, a }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="overflow-hidden" style={{ borderBlockEnd: `1px solid ${T.border}` }}>
-      <button
-        type="button"
-        aria-expanded={open}
-        className="pressable flex min-h-14 w-full items-center justify-between gap-4 px-1 py-4 text-left"
-        onClick={() => setOpen(o => !o)}
-      >
-        <span className="editorial text-lg" style={{ color: T.text }}>{q}</span>
-        {open
-          ? <ChevronUp size={16} style={{ color: T.textFaint }} />
-          : <ChevronDown size={16} style={{ color: T.textFaint }} />}
+    <div className="landing__faq-item">
+      <button type="button" aria-expanded={open} className="landing__faq-question" onClick={() => setOpen(o => !o)}>
+        <span>{q}</span>
+        <ChevronDown size={18} aria-hidden="true" />
       </button>
-      {open && (
-        <div className="pb-5 pe-8">
-          <p className="text-sm" style={{ color: T.textMuted, lineHeight: 1.8 }}>{a}</p>
-        </div>
-      )}
+      {open && <p className="landing__faq-answer">{a}</p>}
     </div>
   );
 }
 
-// Seven concentric rings, innermost = My heart. Decorative only: the ordered
+// The seven Intercession Circles as one widening model: the same rings the
+// app's circle glyph draws, from "My heart" outward, around a gold point and
+// the incense rising from it. Breadth, never rank. Decorative only: the ordered
 // list beside it carries the words, so a screen reader hears the list once.
-function CircleRings({ T }) {
-  const rings = CIRCLES.map((circle, i) => ({ circle, r: 22 + i * 21 }));
+function CircleRings() {
+  const scale = 140 / circleReach(CIRCLES[CIRCLES.length - 1]);
   return (
-    <svg viewBox="0 0 320 320" className="h-auto w-full max-w-[20rem]" aria-hidden="true" focusable="false">
-      {[...rings].reverse().map(({ circle, r }, i) => (
+    <svg viewBox="0 0 320 320" className="landing__rings-art" aria-hidden="true" focusable="false">
+      {[...CIRCLES].reverse().map((circle, i) => (
         <circle
           key={circle}
           cx="160"
           cy="160"
-          r={r}
-          fill={i % 2 ? T.surface : T.surfaceStrong}
-          stroke={T.borderStrong}
-          strokeWidth="1"
+          r={circleReach(circle) * scale}
+          className={i === CIRCLES.length - 1 ? 'landing__ring landing__ring--heart' : 'landing__ring'}
         />
       ))}
-      <circle cx="160" cy="160" r="22" fill={T.prayerPreviewBg} />
-      <path
-        d="M154 176C162 171 164 165 160 158C157 152 157 147 161 141C163 138 165 136 167 134"
-        fill="none"
-        stroke={T.goldLine}
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
+      <circle cx="160" cy="160" r="5" className="landing__ring-point" />
+      <path d="M157 150C163 145 164 139 160 133C157 128 157 123 161 118" className="landing__ring-rise" />
     </svg>
   );
 }
@@ -182,7 +129,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [theme, setTheme] = useState(() => {
     return normalizeTheme(localStorage.getItem('pfm_theme'));
   });
-  // The nine-card feature grid is folded away by default so the hero and the
+  // The feature list is folded away by default so the hero and the
   // movements carry the first impression; visitors opt in to the full list.
   const [showAllFeatures, setShowAllFeatures] = useState(false);
   const activeLang = LANGS.find(l => l.code === lang);
@@ -213,9 +160,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     document.documentElement.lang = rendered.lang;
     document.documentElement.dir = dirFor(lang);
     document.documentElement.setAttribute('data-theme', theme);
-    document.documentElement.classList.add('constellation-landing-root');
+    document.documentElement.classList.add('landing-root');
     localStorage.setItem('pfm_theme', theme);
-    return () => document.documentElement.classList.remove('constellation-landing-root');
+    return () => document.documentElement.classList.remove('landing-root');
   }, [lang, rendered.lang, theme]);
 
   useEffect(() => {
@@ -306,7 +253,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
     samplePrayerTitle,
     scripturePreviewPoints,
     scriptureReferences,
-    stepLabel,
     todayLabel,
     prayNowLabel,
     languageMenuLabel,
@@ -314,31 +260,32 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   } = copy;
 
   return (
-    <div className={`constellation-landing constellation-landing--${theme} min-h-screen`} style={{ background: T.bg, color: T.text }}>
+    <div className="landing">
 
-      {/* Nav */}
-      <nav className="constellation-landing__nav mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
-        <div className="flex items-center gap-2.5 shrink-0">
+      {/* Header: the mark, the language, the theme, Sign in. */}
+      <nav className="landing__nav" aria-label={APP_NAME}>
+        <div className="landing__brand">
           <BrandMark size={32} title={APP_NAME} />
           <Wordmark height={20} title={null} className="hidden min-[430px]:inline-block" />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="landing__nav-actions">
           {/* Theme toggle */}
           <button
+            type="button"
             onClick={toggleTheme}
             title={theme === 'light' ? 'Dark mode' : 'Light mode'}
             aria-label={theme === 'light' ? 'Dark mode' : 'Light mode'}
-            className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all"
-            style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
+            className="icon-button icon-button--outlined pressable"
           >
-            {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
+            {theme === 'light' ? <Moon size={17} aria-hidden="true" /> : <Sun size={17} aria-hidden="true" />}
           </button>
 
           {/* Language dropdown */}
           <div ref={langMenuRef} className="relative">
             <button
               ref={langButtonRef}
+              type="button"
               onClick={() => setLangOpen(o => !o)}
               onKeyDown={(event) => {
                 if (event.key !== 'ArrowDown') return;
@@ -354,14 +301,13 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               // itself keeps its words; a whole-page spinner to change a
               // language is what made the site feel slow.
               aria-busy={copyPending || undefined}
-              className="pressable flex min-h-11 items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-all"
-              style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
+              className="language-picker pressable"
             >
               <span>{activeLang?.flag}</span>
               <span>{activeLang?.shortLabel}</span>
               {copyPending
-                ? <Loader2 size={13} className="animate-spin" aria-hidden="true" style={{ opacity: 0.6 }} />
-                : <ChevronDown size={13} aria-hidden="true" style={{ opacity: 0.6 }} />}
+                ? <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+                : <ChevronDown size={14} aria-hidden="true" />}
             </button>
 
             {langOpen && (
@@ -370,14 +316,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
                 role="menu"
                 aria-label={languageMenuLabel}
                 onKeyDown={handleLanguageMenuKeyDown}
-                className="absolute end-0 z-50 mt-1 overflow-y-auto rounded-xl"
-                style={{
-                  background: T.menuBg,
-                  border: `0.5px solid ${T.borderStrong}`,
-                  boxShadow: T.menuShadow,
-                  maxHeight: 'calc(100dvh - 5rem)',
-                  width: 'min(17rem, calc(100vw - 1.5rem))',
-                }}
+                className="q-menu landing__language-menu"
               >
                 {LANGS.map(({ code, flag, label, complete }) => (
                   <button
@@ -386,136 +325,85 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
                     role="menuitemradio"
                     aria-checked={lang === code}
                     onClick={() => handleLang(code)}
-                    className="pressable flex min-h-11 w-full items-center gap-2.5 px-4 py-2.5 text-start text-sm transition-colors"
-                    style={lang === code
-                      ? { background: T.accentActiveBg, color: T.accentText }
-                      : { color: T.textSoft }}
+                    className="q-menu__item"
                   >
                     <span>{flag}</span>
                     <span className="flex-1">{label}</span>
-                    {!complete && (
-                      <span className="max-w-[7rem] text-end text-[10px] leading-tight" style={{ color: T.textFaint }}>
-                        {translationInProgress}
-                      </span>
-                    )}
+                    {!complete && <span className="landing__language-status">{translationInProgress}</span>}
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          <button
-            onClick={onSignIn}
-            className="pressable min-h-11 max-w-28 shrink-0 truncate rounded-xl px-3 py-2 text-sm font-medium transition-all sm:px-4"
-            style={{ background: T.chipBg, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
-          >
-            {c.signIn}
-          </button>
+          <SecondaryButton onClick={onSignIn} className="landing__sign-in">{c.signIn}</SecondaryButton>
         </div>
       </nav>
 
       {/* Hero: who Qetoret is for and the one first step — pray. */}
-      <section className="constellation-landing__hero relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
-        <div className="constellation-landing__hero-copy relative min-w-0">
-          <div className="mb-5 flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em]">
-            <span>{APP_NAME}</span>
-            <span aria-hidden="true">·</span>
-            <span className="normal-case tracking-normal font-semibold">{hero.promise}</span>
+      <section className="landing__hero">
+        <div className="landing__hero-copy">
+          <p className="section-label section-label--sacred">{APP_NAME}</p>
+          <h1 className="landing__title rise-in">{hero.title}</h1>
+          <p className="landing__lede">{hero.subtitle}</p>
+          <div className="landing__actions">
+            <PrimaryButton onClick={onBeginPrayer} className="landing__cta">{beginLabel}</PrimaryButton>
+            <SecondaryButton onClick={onSignIn} className="landing__cta">{c.signIn}</SecondaryButton>
           </div>
-          <h1 className="editorial-heading rise-in text-5xl leading-[1.02] sm:text-6xl lg:text-7xl" style={{ color: T.text }}>
-            {hero.title}
-          </h1>
-          <p className="mt-6 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
-          <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <button
-              onClick={onBeginPrayer}
-              className="pressable min-h-[52px] rounded-xl px-7 py-3 text-sm font-bold text-white"
-              style={{ background: T.primaryBg, boxShadow: T.ctaShadow }}
-            >
-              {beginLabel}
-            </button>
-            <button
-              onClick={onSignIn}
-              className="pressable min-h-[52px] rounded-xl px-6 py-3 text-sm font-semibold"
-              style={{ background: T.surface, color: T.text, border: `1px solid ${T.borderStrong}` }}
-            >
-              {c.signIn}
-            </button>
-          </div>
-          <p className="mt-4 flex max-w-md items-start gap-2 text-xs leading-relaxed" style={{ color: T.textFaint }}>
-            <Lock size={13} className="mt-0.5 shrink-0" aria-hidden="true" /> {heroReassurance}
+          <p className="landing__reassurance">
+            <Lock size={14} aria-hidden="true" /> {heroReassurance}
           </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1">
-            <button
+          <div className="landing__links">
+            <QuietButton
               onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-              className="pressable inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold"
-              style={{ color: T.textSoft }}
+              className="-ms-3"
             >
-              {c.howItWorks} <ChevronDown size={15} aria-hidden="true" />
-            </button>
-            <a
-              href={GOOGLE_PLAY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
-              style={{ color: T.accentText }}
-            >
-              <Smartphone size={15} aria-hidden="true" /> {playStore.cta}
+              {c.howItWorks} <ChevronDown size={16} aria-hidden="true" />
+            </QuietButton>
+            <a href={GOOGLE_PLAY_URL} target="_blank" rel="noopener noreferrer" className="landing__link">
+              <Smartphone size={16} aria-hidden="true" /> {playStore.cta}
             </a>
           </div>
         </div>
 
-        {/* A truthful preview of the actual journey: today's prayers, a prayer
-            carried for months, a testimony. Its Pray now action enters the same
-            guest flow as the primary CTA; no fabricated usage statistics. */}
-        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label={`${APP_NAME} — ${preview.altarToday}`}>
-          <div className="constellation-landing__preview-frame relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
-            <div className="flex items-center justify-between px-2 py-2">
-              <div className="flex items-center gap-2.5">
-                <BrandLockup size={24} />
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
-            </div>
-            <div className="constellation-landing__preview-focus relative overflow-hidden rounded-[1.35rem] p-5 sm:p-6" style={{ background: T.prayerPreviewBg, color: 'var(--q-text-inverse)' }}>
-              <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'var(--q-text-inverse-tertiary)' }}>{preview.altarToday}</p>
-              <p className="editorial relative mt-5 max-w-[18rem] text-2xl leading-snug">{samplePrayerTitle}</p>
-              <button
-                type="button"
-                onClick={onBeginPrayer}
-                className="relative mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold"
-                style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}
-              >
-                <HandHeart size={16} /> {prayNowLabel}
-              </button>
-            </div>
-            <div className="grid gap-2 p-2 pt-3 sm:grid-cols-2">
-              <div className="min-h-24 p-4" style={{ borderInlineStart: `2px solid ${T.goldLine}`, background: T.previewItemBg }}>
-                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.gold }}>{preview.carriedLabel}</p>
-                <p className="editorial mt-3 text-sm leading-relaxed" style={{ color: T.text }}>{preview.carriedTitle}</p>
-              </div>
-              <div className="min-h-24 p-4" style={{ background: T.peaceBg }}>
-                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.peaceText }}>{preview.rememberLabel}</p>
-                <p className="mt-3 text-sm leading-relaxed" style={{ color: T.textMuted }}>{preview.rememberText}</p>
-              </div>
-            </div>
+        {/* The real Today, not a mock-up: "Your altar today", one prayer in the
+            deep-violet focus, Pray now — the same classes the app draws it
+            with — and two rows below it. Pray now enters the same guest flow
+            as the primary call; no fabricated usage statistics. */}
+        <div className="landing__preview" aria-label={`${APP_NAME} — ${preview.altarToday}`}>
+          <div className="landing__preview-page">
+            <p className="section-label section-label--sacred">{preview.altarToday}</p>
+            <section className="today-focus q-immersive landing__focus">
+              <RiseMark motion="still" size={140} className="today-focus__rise" />
+              <p className="today-focus__context">{todayLabel}</p>
+              <p className="today-focus__title">{samplePrayerTitle}</p>
+              <PrimaryButton onClick={onBeginPrayer} className="today-focus__begin">{prayNowLabel}</PrimaryButton>
+            </section>
+            <ul className="landing__preview-rows">
+              <li>
+                <span className="landing__preview-title">{preview.carriedTitle}</span>
+                <span className="landing__preview-meta">{preview.carriedLabel}</span>
+              </li>
+              <li>
+                <span className="landing__preview-title">{preview.rememberText}</span>
+                <StatusLabel tone="answered">{preview.rememberLabel}</StatusLabel>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
       {/* Bring · Carry · Return · Remember — the movements of a life of prayer,
-          up front, before anything about features. */}
-      <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6">
-        <ol className="constellation-landing__benefits grid grid-cols-1 border-block md:grid-cols-2 lg:grid-cols-4" style={{ borderColor: T.border }}>
+          up front, before anything about features: one editorial row. */}
+      <section className="landing__band" aria-label={movements.map((m) => m.title).join(' · ')}>
+        <ol className="landing__movements">
           {movements.map(({ title, desc }, i) => {
             const Icon = MOVEMENT_ICONS[i] || Feather;
-            const color = T.movementColors[i];
             return (
-              <li key={title} className="constellation-landing__benefit px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
-                <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: color + '18', border: `1px solid ${color}35` }}>
-                  <Icon size={20} style={{ color }} aria-hidden="true" />
-                </div>
-                <h3 className="editorial text-xl mb-2" style={{ color: T.text }}>{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
+              <li key={title}>
+                <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+                <h3 className="landing__movement-title">{title}</h3>
+                <p className="landing__movement-desc">{desc}</p>
               </li>
             );
           })}
@@ -524,198 +412,140 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
       {/* From your heart to the nations: the seven Intercession Circles. Not
           levels — the widening reach of intercession. */}
-      <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6" aria-labelledby="landing-circles-title">
-        <div className="grid items-center gap-10 md:grid-cols-[.9fr_1.1fr] md:gap-16">
-          <div className="mx-auto w-full max-w-xs md:max-w-sm">
-            <CircleRings T={T} />
+      <section className="landing__band landing__circles" aria-labelledby="landing-circles-title">
+        <div className="landing__rings">
+          <CircleRings />
+        </div>
+        <div>
+          <h2 id="landing-circles-title" className="landing__heading">{circles.title}</h2>
+          <p className="landing__text">{circles.subtitle}</p>
+          <ol className="landing__circle-list">
+            {CIRCLES.map((circle, i) => {
+              const item = circles.items[i];
+              return (
+                <li key={circle}>
+                  <CircleGlyph circle={circle} size={24} />
+                  <span className="min-w-0">
+                    <span className="landing__circle-name">{item.name}</span>
+                    <span className="landing__circle-desc">{item.desc}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="landing__start">{circles.start}</p>
+        </div>
+      </section>
+
+      {/* How it works: three steps, numbered in the serif. */}
+      <section id="how-it-works" className="landing__band landing__narrow">
+        <h2 className="landing__heading">{c.stepsTitle}</h2>
+        <ol className="landing__steps">
+          {c.steps.map(({ title, desc }, i) => (
+            <li key={title}>
+              <span className="landing__step-number" aria-hidden="true">{i + 1}</span>
+              <div>
+                <h3 className="landing__step-title">{title}</h3>
+                <p className="landing__step-desc">{desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* Why Qetoret? — the name, briefly, with room to breathe and references
+          only: the Bible text itself is never authored here (CLAUDE.md,
+          Scripture rule). */}
+      <section className="landing__band landing__narrow landing__why" aria-labelledby="landing-why-title">
+        <RiseMark motion="still" size={40} />
+        <h2 id="landing-why-title" className="section-label section-label--sacred">{why.title}</h2>
+        <p className="landing__why-body">{why.body}</p>
+        <p className="section-label mt-8">{why.referencesLabel}</p>
+        <ul className="landing__refs">
+          {why.references.map((ref) => (
+            <li key={ref} className="scripture-ref"><BookOpen size={13} aria-hidden="true" /> {ref}</li>
+          ))}
+        </ul>
+        <p className="landing__note">{why.note}</p>
+      </section>
+
+      {/* Features — a quiet list, folded behind "Explore all features" so the
+          page leads with the movements above, not a wall of cards. */}
+      <section className="landing__band landing__narrow">
+        <h2 className="landing__heading">{c.featuresTitle}</h2>
+        {c.featuresSub && <p className="landing__text">{c.featuresSub}</p>}
+        {showAllFeatures && (
+          <ul className="landing__features">
+            {c.features.map(({ icon, title, desc }) => {
+              const Icon = FEATURE_ICONS[icon] || Feather;
+              return (
+                <li key={title}>
+                  <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
+                  <div>
+                    <h3 className="landing__feature-title">{title}</h3>
+                    <p className="landing__feature-desc">{desc}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <SecondaryButton onClick={() => setShowAllFeatures((open) => !open)} aria-expanded={showAllFeatures} className="mt-6">
+          {showAllFeatures ? explore.less : explore.more}
+          {showAllFeatures ? <ChevronUp size={16} aria-hidden="true" /> : <ChevronDown size={16} aria-hidden="true" />}
+        </SecondaryButton>
+      </section>
+
+      {/* Praying with Scripture — the one deep-violet band on the page. */}
+      <section className="landing__scripture q-immersive">
+        <div className="landing__scripture-inner">
+          <div>
+            <p className="section-label section-label--sacred">{c.calloutBadge}</p>
+            <h2 className="landing__heading">{c.calloutTitle}</h2>
+            <p className="landing__text">{c.calloutDesc}</p>
+            <p className="landing__note">{c.calloutDisclaimer}</p>
+            <PrimaryButton onClick={onBeginPrayer} className="mt-6">{beginLabel}</PrimaryButton>
           </div>
           <div>
-            <div className="constellation-landing__section-heading mb-6">
-              <h2 id="landing-circles-title" className="text-3xl font-bold mb-3">{circles.title}</h2>
-              <p className="max-w-xl text-sm leading-relaxed" style={{ color: T.textMuted }}>{circles.subtitle}</p>
-            </div>
-            <ol className="grid gap-x-6 sm:grid-cols-2">
-              {CIRCLES.map((circle, i) => {
-                const Icon = CIRCLE_ICONS[circle];
-                const item = circles.items[i];
-                return (
-                  <li key={circle} className="flex items-start gap-3 py-3" style={{ borderBlockEnd: `1px solid ${T.border}` }}>
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, color: T.accentText }}>
-                      <Icon size={15} aria-hidden="true" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold" style={{ color: T.text }}>{item.name}</span>
-                      <span className="block text-xs leading-relaxed" style={{ color: T.textFaint }}>{item.desc}</span>
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
-            <p className="editorial mt-5 text-base" style={{ color: T.accentText }}>{circles.start}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section id="how-it-works" className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24">
-        <div className="constellation-landing__section-heading text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
-        </div>
-        <div className="border-block" style={{ borderColor: T.border }}>
-          {c.steps.map(({ title, desc }, i) => {
-            const StepIcon = [Feather, Repeat, CheckCircle][i];
-            return (
-            <div key={title} className="constellation-landing__step flex items-start gap-5 py-6" style={{ borderBlockEnd: i < c.steps.length - 1 ? `1px solid ${T.border}` : undefined }}>
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, border: `1px solid ${T.accentBorder}`, color: T.accentText }}>
-                <StepIcon size={18} />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: T.accentChipBg, color: T.accentText }}>
-                    {stepLabel} {i + 1}
-                  </span>
-                  <h3 className="editorial text-lg" style={{ color: T.text }}>{title}</h3>
-                </div>
-                <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
-              </div>
-            </div>
-          );})}
-        </div>
-      </section>
-
-      {/* Why Qetoret? — the name, briefly, with references only: the Bible text
-          itself is never authored here (CLAUDE.md, Scripture rule). */}
-      <section className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24" aria-labelledby="landing-why-title">
-        <div className="p-7 md:p-10" style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: '1.2rem', borderInlineStart: `3px solid ${T.goldLine}` }}>
-          <h2 id="landing-why-title" className="editorial-heading text-3xl mb-4" style={{ color: T.text }}>{why.title}</h2>
-          <p className="text-sm leading-relaxed" style={{ color: T.textMuted, lineHeight: 1.8 }}>{why.body}</p>
-          <p className="mt-6 text-[11px] font-bold uppercase tracking-[.14em]" style={{ color: T.gold }}>{why.referencesLabel}</p>
-          <ul className="mt-2 flex flex-wrap gap-2">
-            {why.references.map((ref) => (
-              <li key={ref} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium" style={{ background: T.accentSoftBg, color: T.accentText }}>
-                <BookOpen size={11} aria-hidden="true" /> {ref}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 text-xs italic leading-relaxed" style={{ color: T.textFaint }}>{why.note}</p>
-        </div>
-      </section>
-
-      {/* Features — the full grid is folded behind "Explore all features" so the
-          landing leads with the movements above, not a wall of cards. */}
-      <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
-        <div className="constellation-landing__section-heading text-center mb-8">
-          <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
-        </div>
-        {!showAllFeatures ? (
-          <div className="text-center">
-            <button
-              onClick={() => setShowAllFeatures(true)}
-              aria-expanded={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium"
-              style={{ background: T.surfaceStrong, color: T.text, border: `0.5px solid ${T.borderStrong}` }}
-            >
-              {explore.more} <ChevronDown size={15} />
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {c.features.map(({ icon, color, title, desc }) => {
-                const Icon = FEATURE_ICONS[icon] || Feather;
-                return (
-                  <div key={title} className="constellation-landing__feature p-5" style={{ background: T.surface, border: `0.5px solid ${T.border}` }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: color + '22' }}>
-                      <Icon size={18} style={{ color }} />
-                    </div>
-                    <h3 className="text-sm font-semibold mb-1.5" style={{ color: T.text }}>{title}</h3>
-                    <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="text-center mt-6">
-              <button
-                onClick={() => setShowAllFeatures(false)}
-                aria-expanded
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium"
-                style={{ background: T.surfaceStrong, color: T.textSoft, border: `0.5px solid ${T.borderStrong}` }}
-              >
-                {explore.less} <ChevronUp size={15} />
-              </button>
-            </div>
-          </>
-        )}
-      </section>
-
-      {/* Scripture finder callout */}
-      <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
-        <div className="constellation-landing__callout relative overflow-hidden p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: 'var(--q-text-inverse)' }}>
-          <div className="flex-1">
-            <div className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full mb-4" style={{ background: T.accentChipBg, color: T.accentText }}>
-              <BookOpen size={11} /> {c.calloutBadge}
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
-            <p className="text-sm mb-3" style={{ color: 'var(--q-text-inverse-secondary)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
-            <p className="text-xs mb-5 italic" style={{ color: 'var(--q-text-inverse-tertiary)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
-            <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}>
-              {beginLabel}
-            </button>
-          </div>
-          <div className="w-full md:w-64 rounded-2xl p-4 shrink-0" style={{ background: T.previewBg, border: `0.5px solid ${T.border}` }}>
-            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: T.textDim }}>{c.calloutPreviewLabel}</p>
+            <p className="section-label">{c.calloutPreviewLabel}</p>
             {/* Example references use the visitor's localized book names —
                 never an English "Philippians" inside another language. */}
-            {scriptureReferences.map((verse, index) => (
-              <div key={verse} className="rounded-xl p-3 mb-2" style={{ background: T.previewItemBg, borderInlineStart: `3px solid ${T.goldLine}` }}>
-                <p className="text-xs mb-1" style={{ color: T.text }}>{scripturePreviewPoints[index]}</p>
-                <p className="text-xs flex items-center gap-1" style={{ color: T.gold }}>
-                  <BookOpen size={9} /> {verse}
-                </p>
-              </div>
-            ))}
+            <ul className="landing__scripture-list">
+              {scriptureReferences.map((verse, index) => (
+                <li key={verse}>
+                  <span className="landing__scripture-point">{scripturePreviewPoints[index]}</span>
+                  <span className="scripture-ref"><BookOpen size={13} aria-hidden="true" /> {verse}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="constellation-landing__section px-6 max-w-2xl mx-auto mb-24">
-        <div className="constellation-landing__section-heading text-center mb-10">
-          <h2 className="text-3xl font-bold mb-3">{c.faqTitle}</h2>
-        </div>
-        <div className="space-y-2">
-          {c.faqs.map((faq) => (
-            <FAQ key={faq.q} {...faq} T={T} />
-          ))}
+      <section className="landing__band landing__narrow">
+        <h2 className="landing__heading">{c.faqTitle}</h2>
+        <div className="landing__faq">
+          {c.faqs.map((faq) => <FAQ key={faq.q} {...faq} />)}
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="constellation-landing__final relative px-6 py-20 text-center overflow-hidden">
-        <div className="relative max-w-xl mx-auto">
-          <BrandMark size={64} className="mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-bold mb-8">{c.ctaTitle}</h2>
-          <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-            <button onClick={onBeginPrayer} className="pressable min-h-[52px] px-8 py-4 rounded-xl text-sm font-semibold text-white" style={{ background: T.primaryBg, boxShadow: T.ctaShadowBig }}>
-              {beginLabel}
-            </button>
-            <GooglePlayLink label={playStore.cta} T={T} />
-          </div>
-          <p className="editorial text-base mt-6" style={{ color: T.accentText }}>{hero.promise}</p>
+      {/* Final invitation */}
+      <section className="landing__final">
+        <BrandMark size={56} />
+        <h2 className="landing__final-title">{c.ctaTitle}</h2>
+        <div className="landing__actions landing__actions--center">
+          <PrimaryButton onClick={onBeginPrayer} className="landing__cta">{beginLabel}</PrimaryButton>
+          <GooglePlayLink label={playStore.cta} />
         </div>
+        <p className="landing__promise">{hero.promise}</p>
       </section>
 
       {/* Footer */}
-      <footer className="constellation-landing__footer px-6 py-8 border-t max-w-5xl mx-auto" style={{ borderColor: T.border }}>
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <BrandLockup size={24} />
-          </div>
-          <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
-          <button onClick={onSignIn} className="pressable min-h-11 rounded-xl px-4 py-2 text-xs font-medium" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>
-            {c.signIn} →
-          </button>
-        </div>
+      <footer className="landing__footer">
+        <BrandLockup size={24} />
+        <p className="q-meta">{c.footerBuilt}</p>
+        <QuietButton onClick={onSignIn}>{c.signIn} →</QuietButton>
       </footer>
 
     </div>

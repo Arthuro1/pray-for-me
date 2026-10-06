@@ -26,6 +26,11 @@
     color var(--q-motion-micro) var(--q-ease);
 }
 
+/* A link drawn as a button keeps the button's look. */
+a.primary-button,
+a.secondary-button,
+a.quiet-button { text-decoration: none; }
+
 .primary-button {
   background: var(--q-action-primary);
   color: var(--q-on-action);

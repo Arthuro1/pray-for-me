@@ -137,7 +137,6 @@ export default {
     "빌립보서 4:7",
     "이사야 40:31"
   ],
-  "stepLabel": "단계",
   "todayLabel": "오늘",
   "prayNowLabel": "지금 기도하기",
   "preview": {

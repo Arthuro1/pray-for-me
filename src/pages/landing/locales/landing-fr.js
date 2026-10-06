@@ -137,7 +137,6 @@ export default {
     "Philippiens 4:7",
     "Ésaïe 40:31"
   ],
-  "stepLabel": "Étape",
   "todayLabel": "Aujourd'hui",
   "prayNowLabel": "Prier maintenant",
   "preview": {

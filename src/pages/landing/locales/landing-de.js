@@ -137,7 +137,6 @@ export default {
     "Philipper 4:7",
     "Jesaja 40:31"
   ],
-  "stepLabel": "Schritt",
   "todayLabel": "Heute",
   "prayNowLabel": "Jetzt beten",
   "preview": {

@@ -137,7 +137,6 @@ export default {
     "Филиппийцам 4:7",
     "Исаия 40:31"
   ],
-  "stepLabel": "Шаг",
   "todayLabel": "Сегодня",
   "prayNowLabel": "Молиться сейчас",
   "preview": {

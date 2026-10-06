@@ -213,6 +213,23 @@ and rollback notes. Unreleased entries are moved into a dated version at release
     step (the outgoing text quoted on a rule, the include toggles as
     settings rows); the follow-up on a prayer's page (a quiet rule that
     turns royal when due, quiet actions); the iPhone install help.
+- **The landing page on the same system as the app** (`src/styles/landing.css`):
+  one brand from the first visit to the signed-in app — the page's private
+  colour map and ~170 lines of `constellation-landing` styling are gone.
+  Mostly alabaster with one deep-violet band (praying with Scripture); the
+  header is the mark, theme, language and Sign in; the hero is "QETORET",
+  the serif promise, Begin with a prayer / Sign in, and beside it the app's
+  real Today — "Your altar today", one prayer in the deep-violet focus,
+  Pray now, two rows — drawn with the app's own classes, not a phone
+  mock-up. Bring · Carry · Return · Remember form one editorial row with
+  hairlines and a line icon each (no tinted bubbles); the seven circles are a
+  widening ring model in violet with the gold point and rising incense, and
+  their list uses the app's circle glyph; the three steps are numbered in
+  the serif; "Why Qetoret?" has room to breathe — gold eyebrow, the name
+  explained in the serif, one Rise Mark, references beneath; the features
+  are a quiet list (the per-feature colours are no longer used); the FAQ is
+  rows. No new strings; the unused `stepLabel` is removed from the 16
+  landing files.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.

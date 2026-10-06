@@ -137,7 +137,6 @@ export default {
     "ፊልጵስዩስ 4:7",
     "ኢሳይያስ 40:31"
   ],
-  "stepLabel": "ደረጃ",
   "todayLabel": "ዛሬ",
   "prayNowLabel": "አሁን ጸልይ",
   "preview": {

@@ -137,7 +137,6 @@ export default {
     "Wafilipi 4:7",
     "Isaya 40:31"
   ],
-  "stepLabel": "Hatua",
   "todayLabel": "Leo",
   "prayNowLabel": "Omba sasa",
   "preview": {

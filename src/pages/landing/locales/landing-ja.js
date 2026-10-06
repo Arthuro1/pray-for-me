@@ -137,7 +137,6 @@ export default {
     "ピリピ 4:7",
     "イザヤ書 40:31"
   ],
-  "stepLabel": "ステップ",
   "todayLabel": "今日",
   "prayNowLabel": "今すぐ祈る",
   "preview": {

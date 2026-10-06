@@ -137,7 +137,6 @@ export default {
     "Philippians 4:7",
     "Isaiah 40:31"
   ],
-  "stepLabel": "Step",
   "todayLabel": "Today",
   "prayNowLabel": "Pray now",
   "preview": {

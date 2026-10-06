@@ -137,7 +137,6 @@ export default {
     "Filipos 4:7",
     "Isaias 40:31"
   ],
-  "stepLabel": "Hakbang",
   "todayLabel": "Ngayon",
   "prayNowLabel": "Manalangin ngayon",
   "preview": {

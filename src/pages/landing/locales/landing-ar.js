@@ -137,7 +137,6 @@ export default {
     "فيلبي 4:7",
     "إشعياء 40:31"
   ],
-  "stepLabel": "خطوة",
   "todayLabel": "اليوم",
   "prayNowLabel": "صلِّ الآن",
   "preview": {
