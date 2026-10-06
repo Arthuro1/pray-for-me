@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "Permohonan",
   "continueBtn": "Lanjut",
   "amenBtn": "Amin",
-  "sessionDoneTitle": "Waktu bersama Tuhan 🙏",
+  "sessionDoneTitle": "Waktu bersama Tuhan",
   "sessionDoneSub": "Hari ini Anda mendoakan {n} pokok doa.",
   "sessionDoneSub_one": "Hari ini Anda mendoakan 1 pokok doa.",
   "sessionDoneSub_other": "Hari ini Anda mendoakan {n} pokok doa.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "Pembaruan terbaru",
   "aiDataPrefsTitle": "Yang diterima AI",
   "aiDataPrefsSub": "Judul doa selalu dikirim. Pilih apakah deskripsi dan pembaruan terbaru ikut disertakan.",
+  "forPersonLabel": "Untuk {name}",
+  "altarPrayedThrough": "Anda telah mendoakan seluruh mezbah Anda hari ini.",
+  "emptyTodayTitle": "Mulailah dengan apa yang ada di hati Anda.",
+  "emptyTodaySub": "Bawalah satu doa ke hadapan Tuhan. Mezbah Anda boleh dimulai dari yang kecil.",
+  "explorePlan": "Jelajahi rencana doa",
 };

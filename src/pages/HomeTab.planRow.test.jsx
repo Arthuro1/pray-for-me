@@ -82,9 +82,10 @@ const renderHome = () => render(<MemoryRouter><HomeTab onAdd={() => {}} /></Memo
 describe('HomeTab — a plan day on Today', () => {
   it('headlines the day\'s theme and says which plan and day above it', () => {
     renderHome();
-    // The hero eyebrow and the row's own context line both carry it.
-    expect(screen.getAllByText(`${planName} · ${dayLabel}`).length).toBe(2);
-    expect(screen.getAllByText(theme).length).toBe(2);
+    // The focus surface carries it once; the list beneath holds only the
+    // other prayers, so nothing is said twice.
+    expect(screen.getAllByText(`${planName} · ${dayLabel}`).length).toBe(1);
+    expect(screen.getAllByText(theme).length).toBe(1);
     expect(screen.queryByText('Titre enregistré')).toBeNull();
   });
 

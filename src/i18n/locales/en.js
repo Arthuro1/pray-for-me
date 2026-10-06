@@ -654,7 +654,7 @@ export default {
   "stageSupplication": "Supplication",
   "continueBtn": "Continue",
   "amenBtn": "Amen",
-  "sessionDoneTitle": "Time with God 🙏",
+  "sessionDoneTitle": "Time with God",
   "sessionDoneSub": "You prayed for {n} requests today.",
   "sessionDoneSub_one": "You prayed for 1 request today.",
   "sessionDoneSub_other": "You prayed for {n} requests today.",
@@ -1492,4 +1492,9 @@ export default {
   "aiPreviewFieldUpdate": "Latest update",
   "aiDataPrefsTitle": "What the AI receives",
   "aiDataPrefsSub": "The prayer title is always sent. Choose whether to include the description and the latest update.",
+  "forPersonLabel": "For {name}",
+  "altarPrayedThrough": "You have prayed through today's altar.",
+  "emptyTodayTitle": "Begin with what is on your heart.",
+  "emptyTodaySub": "Bring one prayer before God. Your altar can begin small.",
+  "explorePlan": "Explore a prayer plan",
 };

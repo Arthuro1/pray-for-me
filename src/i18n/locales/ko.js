@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "간구",
   "continueBtn": "계속",
   "amenBtn": "아멘",
-  "sessionDoneTitle": "하나님과 함께한 시간 🙏",
+  "sessionDoneTitle": "하나님과 함께한 시간",
   "sessionDoneSub": "오늘 {n}개의 기도 제목을 위해 기도했습니다.",
   "sessionDoneSub_one": "오늘 1개의 기도 제목을 위해 기도했습니다.",
   "sessionDoneSub_other": "오늘 {n}개의 기도 제목을 위해 기도했습니다.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "최근 업데이트",
   "aiDataPrefsTitle": "AI가 받는 내용",
   "aiDataPrefsSub": "기도 제목은 항상 전송됩니다. 설명과 최근 업데이트를 포함할지 선택하세요.",
+  "forPersonLabel": "{name}을(를) 위해",
+  "altarPrayedThrough": "오늘 제단에 올린 모든 기도를 마쳤습니다.",
+  "emptyTodayTitle": "마음에 있는 것부터 시작하세요.",
+  "emptyTodaySub": "기도 하나를 하나님 앞에 가져오세요. 제단은 작게 시작해도 됩니다.",
+  "explorePlan": "기도 플랜 둘러보기",
 };

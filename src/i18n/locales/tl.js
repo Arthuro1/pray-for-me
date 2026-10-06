@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "Pagsamo",
   "continueBtn": "Magpatuloy",
   "amenBtn": "Amen",
-  "sessionDoneTitle": "Oras na kasama ang Diyos 🙏",
+  "sessionDoneTitle": "Oras na kasama ang Diyos",
   "sessionDoneSub": "Ipinanalangin mo ang {n} paksa ngayon.",
   "sessionDoneSub_one": "Ipinanalangin mo ang 1 paksa ngayon.",
   "sessionDoneSub_other": "Ipinanalangin mo ang {n} paksa ngayon.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "Pinakabagong update",
   "aiDataPrefsTitle": "Ang natatanggap ng AI",
   "aiDataPrefsSub": "Laging ipinapadala ang pamagat ng panalangin. Piliin kung isasama ang paglalarawan at ang pinakabagong update.",
+  "forPersonLabel": "Para kay {name}",
+  "altarPrayedThrough": "Naipanalangin mo na ang lahat ng nasa iyong altar ngayon.",
+  "emptyTodayTitle": "Magsimula sa kung ano ang nasa iyong puso.",
+  "emptyTodaySub": "Magdala ng isang panalangin sa harap ng Diyos. Maaaring magsimula nang maliit ang iyong altar.",
+  "explorePlan": "Tuklasin ang isang plano ng panalangin",
 };

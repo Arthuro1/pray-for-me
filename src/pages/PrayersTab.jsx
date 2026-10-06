@@ -12,18 +12,16 @@ import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
 import JournalFilters from '../components/JournalFilters';
-import Avatar from '../components/shared/Avatar';
-import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check, Lightbulb, Sprout } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, Check } from 'lucide-react';
 import { t, tp } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
-import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
 import { weeklyRecap } from '../utils/recap';
 import { peopleFromPrayers, peopleViewAvailable, personSession } from '../lib/people';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { todayKey } from '../lib/prayedLog';
 import PrayerSession from '../components/PrayerSession';
-import { SegmentedControl } from '../components/shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
 import {
   EMPTY_JOURNAL_FILTERS,
   filterJournalPrayers,
@@ -59,8 +57,8 @@ import TendAltar from '../components/TendAltar';
 // too late to be reassuring.
 function FilterStatus({ lang, count, label, onClear }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-2 mb-1" style={{ color: 'var(--q-text-tertiary)' }}>
-      <p className="text-xs" role="status">
+    <div className="journal-filter-status">
+      <p className="q-meta" role="status">
         <span>{t(lang, 'filtersOnLabel')}</span>
         <span aria-hidden="true"> · </span>
         <span>{label}</span>
@@ -68,14 +66,9 @@ function FilterStatus({ lang, count, label, onClear }) {
       {/* A filtered-to-nothing list has its own, larger "Clear filters" below —
           two of them side by side would only make the way out harder to see. */}
       {count > 0 && (
-        <button
-          type="button"
-          onClick={onClear}
-          className="inline-flex min-h-[44px] items-center gap-1 text-xs font-medium"
-          style={{ color: 'var(--q-royal-text)' }}
-        >
-          <X size={12} aria-hidden="true" /> {t(lang, 'clearFiltersBtn')}
-        </button>
+        <QuietButton onClick={onClear} icon={X} iconSize={14}>
+          {t(lang, 'clearFiltersBtn')}
+        </QuietButton>
       )}
     </div>
   );
@@ -211,17 +204,15 @@ export default function PrayersTab({ onAdd }) {
     <SwipeableRow
       key={prayer.id}
       actions={swipeActions(prayer)}
-      className="constellation-journal__swipe-row"
+      className="journal__swipe-row"
     >
       <PrayerListItem
         prayer={prayer}
-        categories={categories}
         lang={lang}
         tr={tr}
         shares={prayerShares[prayer.id]}
-        currentUserName={getAuthorName(user)}
         searchMatch={normalizedSearch ? match : null}
-        variant="constellation"
+        variant="journal"
         onClick={() => navigate(`/prayers/${prayer.id}`)}
       />
     </SwipeableRow>
@@ -233,11 +224,11 @@ export default function PrayersTab({ onAdd }) {
     : null;
 
   return (
-    <div className="phase-page constellation-journal">
-      <div className="phase-page__shell journal-page-header constellation-journal__header">
-        <div className="constellation-journal__title-row">
-          <h1 className="constellation-journal__title">{t(lang, 'journal')}</h1>
-          <span className="constellation-journal__actions">
+    <div className="phase-page journal">
+      <div className="phase-page__shell journal__header">
+        <div className="journal__title-row">
+          <h1 className="page-header__title">{t(lang, 'journal')}</h1>
+          <span className="journal__actions">
             <button
               type="button"
               onClick={() => {
@@ -247,11 +238,9 @@ export default function PrayersTab({ onAdd }) {
               aria-expanded={searchOpen || !!search}
               aria-label={t(lang, 'search')}
               title={t(lang, 'searchLabel')}
-              className="phase-icon-button constellation-journal__icon-button constellation-journal__labelled"
+              className="icon-button pressable"
             >
-              <Search size={24} strokeWidth={1.8} aria-hidden="true" />
-              {/* The label appears only where it costs no header height. */}
-              <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'searchLabel')}</span>
+              <Search size={20} aria-hidden="true" />
             </button>
             {onAdd && (
               <button
@@ -259,19 +248,18 @@ export default function PrayersTab({ onAdd }) {
                 onClick={onAdd}
                 aria-label={t(lang, 'emptyAddManual')}
                 title={t(lang, 'emptyAddManual')}
-                className="phase-icon-button constellation-journal__icon-button"
+                className="icon-button pressable"
               >
-                <Plus size={27} strokeWidth={1.7} aria-hidden="true" />
+                <Plus size={22} aria-hidden="true" />
               </button>
             )}
           </span>
         </div>
-        <div>
 
         {/* ONE segmented control carries the counts (no separate stat cards),
             with search, the category filter and — when useful — the People
-            lens folded behind small icons. */}
-        <div className="journal-toolbar constellation-journal__toolbar">
+            lens folded behind small labelled tools. */}
+        <div className="journal__toolbar">
           <SegmentedControl
             label={t(lang, 'journal')}
             value={peopleOpen ? 'people' : segment}
@@ -291,10 +279,10 @@ export default function PrayersTab({ onAdd }) {
         {/* The search field only takes space once asked for; text is preserved
             while it (or the segment) is toggled. */}
         {utilityPanelOpen && (
-          <div className="constellation-journal__utility-panel">
+          <div className="journal__tools">
             {!peopleOpen && (searchOpen || !!search) && (
               <div className="journal-search">
-                <Search size={15} className="absolute top-1/2 -translate-y-1/2" style={{ color: 'var(--q-text-tertiary)', insetInlineStart: '0.9rem' }} />
+                <Search size={16} aria-hidden="true" className="journal-search__icon" />
                 <input
                   type="text"
                   autoFocus
@@ -302,22 +290,21 @@ export default function PrayersTab({ onAdd }) {
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={t(lang, 'search')}
                   aria-label={t(lang, 'search')}
-                  className="w-full text-sm focus:outline-none"
+                  className="q-input"
                 />
                 {!!search && (
                   <button
                     type="button"
                     onClick={() => { setSearch(''); setSearchOpen(false); }}
                     aria-label={t(lang, 'close')}
-                    className="absolute top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center"
-                    style={{ color: 'var(--q-text-tertiary)', insetInlineEnd: 0 }}
+                    className="journal-search__clear icon-button"
                   >
-                    <X size={15} />
+                    <X size={16} aria-hidden="true" />
                   </button>
                 )}
               </div>
             )}
-            <div className="constellation-journal__utility-actions">
+            <div className="journal__tool-row">
               {peopleAvailable && (
                 <button
                   type="button"
@@ -325,11 +312,10 @@ export default function PrayersTab({ onAdd }) {
                   aria-pressed={peopleOpen}
                   aria-label={t(lang, 'peopleView')}
                   title={t(lang, 'peopleView')}
-                  className="phase-icon-button constellation-journal__labelled shrink-0"
-                  style={peopleOpen ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', borderColor: 'var(--q-royal)' } : undefined}
+                  className="journal__tool pressable"
                 >
                   <Users size={16} aria-hidden="true" />
-                  <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'peopleView')}</span>
+                  <span aria-hidden="true">{t(lang, 'peopleView')}</span>
                 </button>
               )}
               {!peopleOpen && (hasFilterControls || toolsUseful) && (
@@ -344,22 +330,17 @@ export default function PrayersTab({ onAdd }) {
                     ? `${t(lang, 'journalFilters')} — ${t(lang, 'filtersOnLabel')}`
                     : t(lang, 'journalFilters')}
                   title={t(lang, 'journalFilters')}
-                  className="phase-icon-button constellation-journal__labelled shrink-0"
-                  style={structuredFiltersActive ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', borderColor: 'var(--q-royal)' } : undefined}
+                  aria-pressed={structuredFiltersActive}
+                  className="journal__tool pressable"
                 >
                   <SlidersHorizontal size={16} aria-hidden="true" />
-                  <span className="constellation-journal__button-label" aria-hidden="true">{t(lang, 'journalFilters')}</span>
+                  <span aria-hidden="true">{t(lang, 'journalFilters')}</span>
                 </button>
               )}
               {peopleOpen && (
-                <button
-                  type="button"
-                  onClick={() => setPeopleOpen(false)}
-                  className="constellation-journal__people-label"
-                >
-                  <ArrowLeft size={15} />
+                <QuietButton onClick={() => setPeopleOpen(false)} icon={ArrowLeft} iconSize={16} className="-ms-3">
                   {t(lang, 'peopleView')}
-                </button>
+                </QuietButton>
               )}
             </div>
           </div>
@@ -367,12 +348,8 @@ export default function PrayersTab({ onAdd }) {
         {/* One quiet introduction, once, to the tool that has just become
             useful — dismissible, and never shown again after that. */}
         {hintVisible && (
-          <div
-            className="constellation-journal__hint"
-            role="status"
-          >
-            <Lightbulb size={15} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-gold-text)' }} />
-            <p className="min-w-0 flex-1 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
+          <div className="journal__hint" role="status">
+            <p className="min-w-0 flex-1 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, hint === JOURNAL_HINTS.PEOPLE ? 'journalPeopleHint' : 'journalDiscoverHint')}
             </p>
             {hint === JOURNAL_HINTS.PEOPLE && (
@@ -384,8 +361,7 @@ export default function PrayersTab({ onAdd }) {
                   setPeopleOpen(true);
                   setSelectedPerson(null);
                 }}
-                className="min-h-[44px] shrink-0 px-2 text-xs font-semibold"
-                style={{ color: 'var(--q-royal-text)' }}
+                className="quiet-button pressable shrink-0"
               >
                 {t(lang, 'journalPeopleHintCta')}
               </button>
@@ -393,7 +369,7 @@ export default function PrayersTab({ onAdd }) {
             <button
               type="button"
               onClick={() => { dismissHint(hint); completeHint(); }}
-              className="min-h-[44px] shrink-0 px-2 text-xs font-medium"
+              className="quiet-button pressable shrink-0"
               style={{ color: 'var(--q-text-tertiary)' }}
             >
               {t(lang, 'hintDismiss')}
@@ -403,16 +379,10 @@ export default function PrayersTab({ onAdd }) {
         {/* Tend your altar — offered only when some prayers have quietly rested
             a while; never a count of failures, never in the way. */}
         {!peopleOpen && segment === 'active' && tendList.length > 0 && (
-          <button
-            type="button"
-            onClick={() => setTending(true)}
-            className="pressable mt-3 flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-start"
-            style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border)' }}
-          >
-            <Sprout size={16} className="shrink-0" aria-hidden="true" style={{ color: 'var(--q-gold-text)' }} />
-            <span className="flex-1 text-sm font-medium" style={{ color: 'var(--q-text)' }}>{t(lang, 'tendTitle')}</span>
-            <span className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{tp(lang, 'tendEntry', tendList.length)}</span>
-            <ChevronRight size={15} className="rtl-mirror shrink-0" aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }} />
+          <button type="button" onClick={() => setTending(true)} className="journal__tend pressable">
+            <span className="journal__tend-title">{t(lang, 'tendTitle')}</span>
+            <span className="q-meta">{tp(lang, 'tendEntry', tendList.length)}</span>
+            <ChevronRight size={16} className="rtl-mirror shrink-0" aria-hidden="true" />
           </button>
         )}
         {tending && (
@@ -443,10 +413,9 @@ export default function PrayersTab({ onAdd }) {
             onClose={() => setShowFilters(false)}
           />
         )}
-        </div>
       </div>
 
-      <div className="phase-content constellation-journal__content">
+      <div className="phase-content journal__content">
         {peopleOpen ? (
           personDetail ? (
             // ── One person's related prayers — not a separate profile page ──
@@ -461,21 +430,14 @@ export default function PrayersTab({ onAdd }) {
                   onPrayed={(id) => markPrayedOn(id, todayKey())}
                 />
               )}
-              <button
-                onClick={() => setSelectedPerson(null)}
-                className="flex items-center gap-2 min-h-[44px] text-sm font-medium mb-2"
-                style={{ color: 'var(--q-royal-text)' }}
-              >
-                <ArrowLeft size={15} /> {t(lang, 'peopleView')}
-              </button>
-              <div className="flex items-center gap-3 mb-4">
-                <Avatar name={personDetail.name} size={40} />
-                <div className="min-w-0">
-                  <p className="text-base font-semibold truncate" style={{ color: 'var(--q-text)' }}>{personDetail.name}</p>
-                  <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
-                    {personDetail.activeCount} {t(lang, 'active2')} · {personDetail.answeredCount} {t(lang, 'answered2')}
-                  </p>
-                </div>
+              <QuietButton onClick={() => setSelectedPerson(null)} icon={ArrowLeft} iconSize={16} className="-ms-3 mb-2">
+                {t(lang, 'peopleView')}
+              </QuietButton>
+              <div className="mb-5">
+                <h2 className="q-section-title">{personDetail.name}</h2>
+                <p className="q-meta mt-1">
+                  {personDetail.activeCount} {t(lang, 'active2')} · {personDetail.answeredCount} {t(lang, 'answered2')}
+                </p>
               </div>
 
               {/* ONE contextual action: pray for this person now, over their
@@ -487,32 +449,24 @@ export default function PrayersTab({ onAdd }) {
                 if (active.length === 0) return null;
                 if (remaining.length === 0) {
                   return (
-                    <div className="flex items-center gap-3 rounded-2xl px-4 py-1 mb-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
-                      <p className="flex-1 min-h-[44px] flex items-center gap-2 text-sm" style={{ color: 'var(--q-success)' }} role="status">
+                    <div className="mb-4 flex items-center gap-3">
+                      <p className="flex min-h-[44px] flex-1 items-center gap-2 text-sm" style={{ color: 'var(--q-text-secondary)' }} role="status">
                         <Check size={15} aria-hidden="true" /> {t(lang, 'personPrayedToday', { name: personDetail.name })}
                       </p>
-                      <button
-                        onClick={() => setPersonSessionPrayers(active)}
-                        className="min-h-[44px] shrink-0 text-xs font-medium px-3 rounded-xl"
-                        style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                      >
+                      <QuietButton onClick={() => setPersonSessionPrayers(active)}>
                         {t(lang, 'prayAgainBtn')}
-                      </button>
+                      </QuietButton>
                     </div>
                   );
                 }
                 return (
-                  <button
-                    onClick={() => setPersonSessionPrayers(remaining)}
-                    className="primary-button w-full flex items-center justify-center gap-2 px-5 mb-4 text-sm font-semibold text-white"
-                  >
-                    <HandHeart size={16} aria-hidden="true" />
+                  <PrimaryButton onClick={() => setPersonSessionPrayers(remaining)} className="mb-4 w-full">
                     {t(lang, 'prayForPerson', { name: personDetail.name, n: remaining.length })}
-                  </button>
+                  </PrimaryButton>
                 );
               })()}
 
-              <div className="flex flex-col gap-3 pb-6">
+              <div className="journal__list pb-6">
                 {[...personDetail.prayers]
                   .sort((a, b) => (a.status === b.status ? 0 : a.status === 'active' ? -1 : 1))
                   .map(renderPrayer)}
@@ -520,33 +474,29 @@ export default function PrayersTab({ onAdd }) {
             </>
           ) : (
             // ── People overview: name, open requests, latest news, follow-up ──
-            <div className="flex flex-col gap-3 pb-6">
+            <div className="journal__list pb-6">
               {people.map((person) => (
                 <button
                   key={person.name.toLowerCase()}
+                  type="button"
                   onClick={() => setSelectedPerson(person.name)}
-                  className="phase-card journal-person-card w-full text-left p-4"
+                  className="prayer-row journal-person-card pressable"
                 >
-                  <div className="flex items-center gap-3">
-                    <Avatar name={person.name} size={36} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--q-text)' }}>{person.name}</p>
-                      <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
-                        {person.activeCount} {t(lang, 'active2')} · {person.answeredCount} {t(lang, 'answered2')}
-                      </p>
-                    </div>
-                    <ChevronRight size={15} className="shrink-0 opacity-50" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
-                  </div>
-                  {person.latestUpdate?.text && (
-                    <p className="text-xs mt-2 line-clamp-1" style={{ color: 'var(--q-text-secondary)' }}>
-                      {tr(person.latestUpdate.text, lang)}
-                    </p>
-                  )}
-                  {person.nextFollowUp && (
-                    <p className="text-xs mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                      <Bell size={10} aria-hidden="true" /> {t(lang, 'followUpNext', { date: followUpWhenLabel(person.nextFollowUp, lang) })}
-                    </p>
-                  )}
+                  <span className="min-w-0">
+                    <span className="prayer-row__title">{person.name}</span>
+                    {person.latestUpdate?.text && (
+                      <span className="prayer-row__context line-clamp-1">{tr(person.latestUpdate.text, lang)}</span>
+                    )}
+                    <span className="prayer-row__meta">
+                      <span>{person.activeCount} {t(lang, 'active2')} · {person.answeredCount} {t(lang, 'answered2')}</span>
+                      {person.nextFollowUp && (
+                        <span className="inline-flex items-center gap-1" style={{ color: 'var(--q-royal-text)' }}>
+                          <Bell size={12} aria-hidden="true" /> {t(lang, 'followUpNext', { date: followUpWhenLabel(person.nextFollowUp, lang) })}
+                        </span>
+                      )}
+                    </span>
+                  </span>
+                  <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
                 </button>
               ))}
             </div>
@@ -556,7 +506,7 @@ export default function PrayersTab({ onAdd }) {
             {/* Quiet context, not a statistic card — only when there is
                 something to give thanks for. */}
             {!filtersActive && recap.answered > 0 && (
-              <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>
+              <p className="q-meta mb-2">
                 {t(lang, 'answeredThisWeek', { n: recap.answered })}
               </p>
             )}
@@ -566,18 +516,12 @@ export default function PrayersTab({ onAdd }) {
             {answeredCount === 0 && !filtersActive ? (
               <AnsweredGallery prayers={[]} showCount={false} showReflection={false} />
             ) : filtersActive && answeredCount > 0 && filteredEntries.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-sm mb-4" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
-                <button
-                  onClick={clearFilters}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium"
-                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-                >
-                  <X size={14} /> {t(lang, 'clearFiltersBtn')}
-                </button>
+              <div className="journal__no-match">
+                <p className="mb-4 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
+                <SecondaryButton onClick={clearFilters} icon={X} iconSize={16}>{t(lang, 'clearFiltersBtn')}</SecondaryButton>
               </div>
             ) : (
-              <div className="constellation-journal__list">
+              <div className="journal__list">
                 {filteredEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
               </div>
             )}
@@ -595,7 +539,6 @@ export default function PrayersTab({ onAdd }) {
             ) : sortedEntries.length === 0 ? (
               trulyEmpty ? (
                 <EmptyState
-                  emoji="🙏"
                   title={t(lang, 'noPrayersFound')}
                   subtitle={t(lang, 'noPrayersFoundSub')}
                   actionLabel={onAdd ? t(lang, 'emptyAddManual') : undefined}
@@ -605,32 +548,21 @@ export default function PrayersTab({ onAdd }) {
               ) : (
                 // Prayers exist but the filters hide them — offer to clear the
                 // filters, never to add another prayer.
-                <div className="text-center py-12">
-                  <p className="text-sm mb-4" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
-                  <button
-                    onClick={clearFilters}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-xl text-sm font-medium"
-                    style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-                  >
-                    <X size={14} /> {t(lang, 'clearFiltersBtn')}
-                  </button>
+                <div className="journal__no-match">
+                  <p className="mb-4 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
+                  <SecondaryButton onClick={clearFilters} icon={X} iconSize={16}>{t(lang, 'clearFiltersBtn')}</SecondaryButton>
                 </div>
               )
             ) : (
-              <div className="constellation-journal__list">
+              <div className="journal__list">
                 {sortedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
                 {!filtersActive && latestAnsweredPrayer && renderPrayer(latestAnsweredPrayer)}
               </div>
             )}
             {onAdd && sortedEntries.length > 0 && (
-              <button
-                type="button"
-                onClick={onAdd}
-                className="constellation-journal__add"
-              >
-                <Plus size={20} aria-hidden="true" />
+              <QuietButton onClick={onAdd} icon={Plus} className="journal__add">
                 {t(lang, 'emptyAddManual')}
-              </button>
+              </QuietButton>
             )}
           </>
         )}

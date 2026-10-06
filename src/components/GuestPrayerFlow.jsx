@@ -14,7 +14,6 @@ import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { EVENTS, track } from '../lib/analytics';
 import { PrimaryButton, SecondaryButton, SectionLabel } from './shared/Primitives';
-import Encouragement from './shared/Encouragement';
 import PrayerMusicControl from './PrayerMusicControl';
 import RiseMark from './shared/RiseMark';
 import { APP_NAME } from '../lib/brand';
@@ -36,10 +35,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
   };
 
   return (
-    <div
-      className="prayer-session constellation-session constellation-onboarding constellation-guest-flow fixed inset-0 z-[70] flex flex-col"
-      style={{ background: 'var(--q-canvas)' }}
-    >
+    <div className="prayer-session q-immersive constellation-onboarding constellation-guest-flow">
       <div
         ref={trapRef}
         role="dialog"
@@ -49,55 +45,42 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
         className="flex h-full flex-col focus:outline-none"
       >
         {done ? (
-          <div className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <RiseMark size={48} className="mb-5" />
-            <SectionLabel className="mb-3">Amen</SectionLabel>
-            <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--q-text)' }}>
-              {t(lang, 'sessionDoneTitle')}
-            </h2>
-            <Encouragement lang={lang} className="mt-4 max-w-sm" />
-            <p className="mt-5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>
-              {tp(lang, 'sessionDoneSub', 1)}
-            </p>
-            <PrimaryButton onClick={onClose} className="mt-9 min-w-36">
-              {t(lang, 'continueBtn')}
-            </PrimaryButton>
+          <div className="prayer-session__done">
+            <RiseMark size={56} className="mb-6" />
+            <SectionLabel sacred className="mb-3">{t(lang, 'amenBtn')}</SectionLabel>
+            <h2 className="prayer-session__done-title">{t(lang, 'sessionDoneTitle')}</h2>
+            <p className="q-meta mt-5">{tp(lang, 'sessionDoneSub', 1)}</p>
+            <div className="prayer-session__done-actions">
+              <PrimaryButton onClick={onClose}>{t(lang, 'continueBtn')}</PrimaryButton>
+            </div>
           </div>
         ) : (
           <>
-            <header className="constellation-session__header shrink-0 px-5 pb-3 pt-[max(1rem,env(safe-area-inset-top))]" style={{ background: 'var(--q-surface-inverse)' }}>
-              <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
-                <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {APP_NAME} · 1 / 1
-                </p>
-                <div className="flex items-center gap-2">
+            <header className="prayer-session__header">
+              <div className="prayer-session__bar">
+                <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable">
+                  <X size={20} aria-hidden="true" />
+                </button>
+                <div className="prayer-session__tools">
                   <PrayerMusicControl lang={lang} active />
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    aria-label={t(lang, 'close')}
-                    className="pressable flex h-11 w-11 items-center justify-center rounded-full"
-                    style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
-                  >
-                    <X size={16} aria-hidden="true" />
-                  </button>
                 </div>
               </div>
-              <div className="mx-auto h-px max-w-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.14)' }}>
-                <div className="h-full w-full" style={{ background: 'var(--q-gold)' }} />
+              <div className="prayer-session__progress-row">
+                <div className="prayer-session__track" aria-hidden="true"><span style={{ width: '100%' }} /></div>
+                <p className="prayer-session__progress"><span dir="ltr">1 / 1</span></p>
               </div>
             </header>
 
-            <main className="constellation-session__request mx-auto min-h-0 w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12">
-              <h2 className="constellation-session__title editorial-heading text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--q-text)' }}>
-                {prayer.title}
-              </h2>
+            <main className="prayer-session__request">
+              <div className="prayer-session__step">
+                <h2 className="prayer-session__title">{prayer.title}</h2>
+              </div>
             </main>
 
-            <footer className="constellation-session__footer session-safe-footer shrink-0 px-5 pt-3">
-              <div className="mx-auto flex w-full max-w-2xl">
-                <PrimaryButton onClick={finishPrayer} className="min-h-[52px] flex-1">
-                  <Check size={16} aria-hidden="true" /> {t(lang, 'amenBtn')}
+            <footer className="prayer-session__footer session-safe-footer">
+              <div className="prayer-session__footer-row">
+                <PrimaryButton onClick={finishPrayer} icon={Check} className="prayer-session__advance">
+                  {t(lang, 'amenBtn')}
                 </PrimaryButton>
               </div>
             </footer>

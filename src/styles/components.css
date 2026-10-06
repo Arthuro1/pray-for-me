@@ -52,23 +52,8 @@
 
 .quiet-button:hover:not(:disabled) { background: var(--q-hover); }
 
-/* On the deep-violet prayer surfaces the hierarchy holds, the colours invert. */
-.primary-button--inverse {
-  background: var(--q-text-inverse);
-  color: var(--q-royal-deep);
-}
-
-.primary-button--inverse:hover:not(:disabled) { background: color-mix(in srgb, var(--q-text-inverse) 88%, var(--q-gold-inverse)); }
-
-.secondary-button--inverse {
-  border-color: color-mix(in srgb, var(--q-text-inverse) 28%, transparent);
-  color: var(--q-text-inverse);
-}
-
-.secondary-button--inverse:hover:not(:disabled),
-.quiet-button--inverse:hover:not(:disabled) { background: color-mix(in srgb, var(--q-text-inverse) 8%, transparent); }
-
-.quiet-button--inverse { color: var(--q-text-inverse-secondary); }
+/* On deep-violet surfaces (.q-immersive) the same three buttons invert by
+   themselves: the scope remaps the tokens they read. */
 
 .primary-button:disabled,
 .secondary-button:disabled,
@@ -267,14 +252,20 @@ a.prayer-row:hover { background: var(--q-hover); }
 
 .phase-card--gold { border-color: color-mix(in srgb, var(--q-gold) 32%, var(--q-border)); }
 
-/* The immersive prayer surface: solid deep violet, no art, no gradient. */
+/* The immersive prayer surface: solid deep violet, no art, no gradient. Its
+   tokens are remapped in tokens.css (.q-immersive), so children just work. */
+.prayer-surface--focus,
+.q-inverse,
+.q-immersive {
+  background: var(--q-canvas);
+  color: var(--q-text);
+}
+
 .prayer-surface--focus,
 .q-inverse {
   position: relative;
   overflow: hidden;
-  background: var(--q-surface-inverse);
   border-color: transparent;
-  color: var(--q-text-inverse);
 }
 
 .prayer-surface--answered {
@@ -472,12 +463,9 @@ a.prayer-row:hover { background: var(--q-hover); }
   letter-spacing: 0.04em;
 }
 
-.q-inverse .scripture-block__text { color: var(--q-text-inverse); }
-.q-inverse .scripture-block__reference { color: var(--q-gold-inverse); }
 
 /* ── Rise Mark ───────────────────────────────────────────────────────────── */
 .rise-mark { display: block; flex: 0 0 auto; color: var(--q-gold); }
-.q-inverse .rise-mark { color: var(--q-gold-inverse); }
 
 .rise-mark--rise path { animation: q-ascend 1600ms var(--q-ease) both; }
 .rise-mark--breathe path { animation: q-ascend 4800ms var(--q-ease) infinite; }
@@ -584,3 +572,35 @@ a.prayer-row:hover { background: var(--q-hover); }
 @media (prefers-reduced-motion: reduce) {
   .brand-mark--rising .brand-mark__incense { animation: none; opacity: 1; transform: none; }
 }
+
+/* ── Nudge: one quiet, dismissible invitation ────────────────────────────── */
+.nudge {
+  display: grid;
+  gap: var(--q-space-3);
+  margin-block-end: var(--q-space-6);
+  padding: var(--q-space-4) var(--q-space-5);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+}
+
+@media (min-width: 640px) {
+  .nudge { display: flex; align-items: center; gap: var(--q-space-5); }
+}
+
+.nudge__copy { min-width: 0; flex: 1 1 auto; }
+
+.nudge__title {
+  display: flex;
+  align-items: center;
+  gap: var(--q-space-2);
+  margin: 0;
+  color: var(--q-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.nudge__title svg { flex: 0 0 auto; color: var(--q-royal-text); }
+.nudge__body { margin-block-start: var(--q-space-1); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.55; }
+.nudge__actions { display: flex; align-items: center; gap: var(--q-space-1); }
+.nudge__actions .secondary-button { flex: 1 1 auto; }

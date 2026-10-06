@@ -197,7 +197,7 @@ describe('HomeTab — remaining vs completed', () => {
         </Routes>
       </MemoryRouter>,
     );
-    fireEvent.click(screen.getByText(t(lang, 'journeysTitle')));
+    fireEvent.click(screen.getByText(t(lang, 'explorePlan')));
     expect(screen.getByText('plans page')).toBeTruthy();
   });
 

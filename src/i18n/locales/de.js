@@ -683,7 +683,7 @@ export default {
   "stageSupplication": "Bitte",
   "continueBtn": "Weiter",
   "amenBtn": "Amen",
-  "sessionDoneTitle": "Zeit mit Gott 🙏",
+  "sessionDoneTitle": "Zeit mit Gott",
   "sessionDoneSub": "Du hast heute für {n} Anliegen gebetet.",
   "sessionDoneSub_one": "Du hast heute für 1 Anliegen gebetet.",
   "sessionDoneSub_other": "Du hast heute für {n} Anliegen gebetet.",
@@ -1488,4 +1488,9 @@ export default {
   "aiPreviewFieldUpdate": "Neuestes Update",
   "aiDataPrefsTitle": "Was die KI erhält",
   "aiDataPrefsSub": "Der Gebetstitel wird immer gesendet. Wähle, ob die Beschreibung und das neueste Update einbezogen werden.",
+  "forPersonLabel": "Für {name}",
+  "altarPrayedThrough": "Du hast heute für alles auf deinem Altar gebetet.",
+  "emptyTodayTitle": "Beginne mit dem, was dir auf dem Herzen liegt.",
+  "emptyTodaySub": "Bring ein Gebet vor Gott. Dein Altar darf klein beginnen.",
+  "explorePlan": "Einen Gebetsplan entdecken",
 };

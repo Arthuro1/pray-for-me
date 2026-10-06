@@ -8,7 +8,7 @@ import { APP_NAME } from '../../lib/brand';
 
 const TONES = {
   brand: ['var(--q-mark)', 'var(--q-mark-incense)'],
-  inverse: ['var(--q-text-inverse)', 'var(--q-gold-inverse)'],
+  inverse: ['#F7F5EF', '#C6A15C'],
   mono: ['currentColor', 'currentColor'],
 };
 

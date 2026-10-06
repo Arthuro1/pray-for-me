@@ -56,3 +56,22 @@ Notes: Russian uses "алтарь" (common in evangelical speech) in the UI and 
 Synodal "жертвенник курения" for the altar of incense in Exodus/Luke; Persian
 renders "carry" as intercession because a literal "carry" reads oddly; the
 Authorities circle is "Regierende" (de) and "上に立つ人々" (ja) to stay neutral.
+
+### Redesign copy (AI-drafted 2026-10-06 — needs native review)
+
+New interface strings from the UI redesign, drafted in all 16 locales with the
+vocabulary above. Review them in context (Today, the prayer session, Settings):
+
+| Key | English source |
+|---|---|
+| `forPersonLabel` | For {name} |
+| `altarPrayedThrough` | You have prayed through today's altar. |
+| `emptyTodayTitle` | Begin with what is on your heart. |
+| `emptyTodaySub` | Bring one prayer before God. Your altar can begin small. |
+| `explorePlan` | Explore a prayer plan |
+| `aiDataPrefsTitle` | What the AI receives |
+| `aiDataPrefsSub` | The prayer title is always sent. Choose whether to include the description and the latest update. |
+
+`sessionDoneTitle` lost its 🙏 in every locale (no emoji as interface art); the
+eight `aiPreview*` strings were restored verbatim from 78f6c6b. Korean
+`forPersonLabel` uses the "을(를)" fallback because the name is unknown.

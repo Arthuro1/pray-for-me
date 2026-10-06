@@ -2,7 +2,8 @@
 // when import.meta.env.DEV, so production builds drop it. Renders the Qetoret
 // primitives with sample content — no account, no network, no stored data —
 // so every phase of the redesign can be checked in light, dark and RTL.
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Check, Moon, Plus, Sun } from 'lucide-react';
 import {
   CircleOption,
@@ -51,7 +52,16 @@ function Section({ title, children }) {
   );
 }
 
+const DesignScreens = lazy(() => import('./DesignScreens'));
+
 export default function DesignGallery() {
+  const { pathname } = useLocation();
+  const screen = pathname.replace(/^\/__design\/?/, '');
+  if (screen) return <Suspense fallback={null}><DesignScreens screen={screen} /></Suspense>;
+  return <Primitives />;
+}
+
+function Primitives() {
   const [theme, setTheme] = useState(() => document.documentElement.getAttribute('data-theme') || 'light');
   const [dir, setDir] = useState('ltr');
   const [circle, setCircle] = useState('My house');
@@ -89,9 +99,9 @@ export default function DesignGallery() {
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-8">
             <BrandLockup size={30} />
-            <span className="q-inverse inline-flex items-center gap-6 rounded-surface p-5">
-              <BrandMark size={56} tone="inverse" />
-              <BrandLockup size={28} tone="inverse" />
+            <span className="q-immersive inline-flex items-center gap-6 rounded-surface p-5">
+              <BrandMark size={56} />
+              <BrandLockup size={28} />
             </span>
           </div>
         </Section>
@@ -135,10 +145,10 @@ export default function DesignGallery() {
             <PrimaryButton disabled>Disabled</PrimaryButton>
             <PrimaryButton danger>Delete</PrimaryButton>
           </div>
-          <div className="prayer-surface--focus q-inverse mt-6 flex flex-wrap gap-3 rounded-surface p-6">
-            <PrimaryButton inverse>Begin prayer</PrimaryButton>
-            <SecondaryButton inverse>Remain with God</SecondaryButton>
-            <QuietButton inverse>Finish</QuietButton>
+          <div className="q-immersive mt-6 flex flex-wrap gap-3 rounded-surface p-6">
+            <PrimaryButton>Begin prayer</PrimaryButton>
+            <SecondaryButton>Remain with God</SecondaryButton>
+            <QuietButton>Finish</QuietButton>
           </div>
         </Section>
 

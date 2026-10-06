@@ -654,7 +654,7 @@ export default {
   "stageSupplication": "Supplication",
   "continueBtn": "Continuer",
   "amenBtn": "Amen",
-  "sessionDoneTitle": "Un temps avec Dieu 🙏",
+  "sessionDoneTitle": "Un temps avec Dieu",
   "sessionDoneSub": "Vous avez prié pour {n} sujets aujourd’hui.",
   "sessionDoneSub_one": "Vous avez prié pour 1 sujet aujourd’hui.",
   "sessionDoneSub_other": "Vous avez prié pour {n} sujets aujourd’hui.",
@@ -1492,4 +1492,9 @@ export default {
   "aiPreviewFieldUpdate": "Dernière mise à jour",
   "aiDataPrefsTitle": "Ce que l’IA reçoit",
   "aiDataPrefsSub": "Le titre de la prière est toujours envoyé. Choisissez d’inclure ou non la description et la dernière mise à jour.",
+  "forPersonLabel": "Pour {name}",
+  "altarPrayedThrough": "Vous avez prié pour tout votre autel d'aujourd'hui.",
+  "emptyTodayTitle": "Commencez par ce qui est sur votre cœur.",
+  "emptyTodaySub": "Apportez une prière devant Dieu. Votre autel peut commencer petit.",
+  "explorePlan": "Découvrir un plan de prière",
 };

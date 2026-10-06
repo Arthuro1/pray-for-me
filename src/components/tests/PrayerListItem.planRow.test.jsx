@@ -52,28 +52,28 @@ const theme = pick(planDayContent(PLAN, 2).theme, lang);
 
 describe('PrayerListItem — a plan run in the Journal', () => {
   it('reads "Day 2 of 3" instead of the recurrence rule', () => {
-    renderItem('constellation');
+    renderItem('journal');
     expect(screen.getByText(dayLabel)).toBeTruthy();
     expect(screen.queryByText(t(lang, 'schedDaily'))).toBeNull();
   });
 
   it('is titled by the plan, not by the title stored when it started', () => {
-    renderItem('constellation');
+    renderItem('journal');
     const row = screen.getByRole('button');
-    expect(row.querySelector('.constellation-journal-row__title')?.textContent).toBe(planName);
+    expect(row.querySelector('.journal-row__title')?.textContent).toBe(planName);
     expect(screen.queryByText('Titre enregistré')).toBeNull();
   });
 
   it('says so when the run is paused', () => {
     const paused = planRun({ type: 'none', plan: { id: PLAN, startDate: START, dayOffset: 1, total: 3 } });
-    renderItem('constellation', paused);
+    renderItem('journal', paused);
     expect(screen.getByText(`${dayLabel} · ${t(lang, 'planPacePausedNote')}`)).toBeTruthy();
   });
 
   it('leaves an ordinary prayer on its schedule summary', () => {
     const ordinary = planRun({ type: 'recurring', freq: 'daily', startDate: START, end: { kind: 'never' } });
     ordinary.title = 'Prière ordinaire';
-    renderItem('constellation', ordinary);
+    renderItem('journal', ordinary);
     expect(screen.getByText('Prière ordinaire')).toBeTruthy();
     expect(screen.queryByText(dayLabel)).toBeNull();
   });
@@ -81,7 +81,7 @@ describe('PrayerListItem — a plan run in the Journal', () => {
 
 describe('PrayerListItem — a plan run on Today', () => {
   it('leads with the day\'s theme and names the plan beneath it', () => {
-    renderItem('journal');
+    renderItem('today');
     expect(screen.getByText(theme)).toBeTruthy();
     expect(screen.getByText(`${planName} · ${dayLabel}`)).toBeTruthy();
   });
@@ -93,7 +93,7 @@ describe('PrayerListItem — a plan run on Today', () => {
       end: { kind: 'count', count: 12 },
       plan: { id: PLAN, startDate: addDays(todayKey(), -8) },
     });
-    renderItem('journal', overrun);
+    renderItem('today', overrun);
     expect(screen.getByText(planName)).toBeTruthy();
   });
 });

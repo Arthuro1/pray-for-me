@@ -84,7 +84,7 @@ export default function PlanInvitePanel({ plan, startDate, lang, userId, onDone 
         {loading ? (
           <div className="flex justify-center py-6"><Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
         ) : nothingToInvite ? (
-          <EmptyState compact emoji="🤝" title={t(lang, 'planInviteEmpty')} />
+          <EmptyState compact title={t(lang, 'planInviteEmpty')} />
         ) : (
           <>
             {/* Start date — invitees begin the plan on this day. */}

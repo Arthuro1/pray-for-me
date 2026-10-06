@@ -85,8 +85,8 @@ describe('Onboarding', () => {
     expect(await screen.findByText('La santé de ma sœur')).toBeTruthy();
     // …and finishing it (Amen) completes onboarding.
     fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
-    await waitFor(() => expect(screen.getByText(t(lang, 'close'))).toBeTruthy());
-    fireEvent.click(screen.getByText(t(lang, 'close')));
+    await waitFor(() => expect(screen.getByText(t(lang, 'remainFinish'))).toBeTruthy());
+    fireEvent.click(screen.getByText(t(lang, 'remainFinish')));
     expect(onFinish).toHaveBeenCalled();
   });
 });

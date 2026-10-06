@@ -147,7 +147,6 @@ export default function AnsweredGallery({
     return (
       <>
         <EmptyState
-          emoji="🙏"
           title={t(lang, 'noAnsweredYet')}
           subtitle={t(lang, 'noAnsweredSub')}
           actionLabel={t(lang, 'today')}

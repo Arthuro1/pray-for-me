@@ -88,6 +88,10 @@
   --q-type-body: 1rem;
   --q-type-meta: 0.8125rem;
   --q-type-label: 0.6875rem;
+  /* Tracking for small capitals. Only Latin, Greek and Cyrillic take it:
+     Arabic and Persian letters join, and Devanagari, Ethiopic and CJK have no
+     capitals — spacing them apart breaks the words. */
+  --q-tracking-label: 0.14em;
 
   /* Two voices: sans for software, serif for sacred content */
   --q-font-ui: 'Twemoji Country Flags', 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Devanagari', 'Noto Sans Ethiopic', 'Noto Sans CJK SC', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -99,6 +103,10 @@
   --q-motion-reflective: 380ms;
   --q-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --q-rise: 10px;
+}
+
+:root:is(:lang(ar), :lang(fa), :lang(hi), :lang(am), :lang(zh), :lang(ja), :lang(ko)) {
+  --q-tracking-label: 0;
 }
 
 :root[data-theme="dark"] {
@@ -132,6 +140,47 @@
   --q-focus: var(--q-royal-text);
   --q-overlay: rgb(8 7 12 / 72%);
   --q-elevation: 0 16px 40px rgb(0 0 0 / 28%);
+}
+
+/* Immersive scope — the deep-violet prayer space (Today's focus, the prayer
+   session, Remain with God). It remaps the purpose tokens instead of styling
+   each component, so everything nested inside — buttons, fields, Scripture,
+   plan days, notes — reads correctly on violet without knowing it. */
+.q-immersive,
+.q-inverse,
+.prayer-surface--focus {
+  --q-canvas: var(--q-royal-deep);
+  --q-surface: color-mix(in srgb, var(--q-royal-deep) 88%, #F7F5EF);
+  --q-surface-muted: color-mix(in srgb, var(--q-royal-deep) 82%, #F7F5EF);
+  --q-surface-inverse: #F7F5EF;
+  --q-field: rgb(247 245 239 / 6%);
+  --q-field-border: rgb(247 245 239 / 24%);
+  --q-text: #F7F5EF;
+  --q-text-secondary: #CAC5D2;
+  --q-text-tertiary: #A9A3B7;
+  --q-text-inverse: #29213F;
+  --q-border: rgb(247 245 239 / 14%);
+  --q-border-strong: rgb(247 245 239 / 26%);
+  --q-royal: #B9AEE3;
+  --q-royal-text: #CEC6EE;
+  --q-royal-light: #CEC6EE;
+  --q-action-primary: #F7F5EF;
+  --q-action-primary-hover: #E9E4F1;
+  --q-on-action: #29213F;
+  --q-gold: #C6A15C;
+  --q-gold-text: #D6B87D;
+  --q-gold-soft: rgb(198 161 92 / 16%);
+  --q-success: #A3C2B4;
+  --q-success-soft: rgb(163 194 180 / 14%);
+  --q-success-border: rgb(163 194 180 / 32%);
+  --q-danger: #F0A9A9;
+  --q-selected: rgb(247 245 239 / 10%);
+  --q-selected-border: rgb(247 245 239 / 30%);
+  --q-hover: rgb(247 245 239 / 7%);
+  --q-focus: #F7F5EF;
+  --q-mark: #F7F5EF;
+  --q-mark-incense: #C6A15C;
+  color: var(--q-text);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -39,7 +39,30 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   and store icons regenerated; theme colours updated (manifest, page, TWA). In
   the app the mark is drawn inline and recolours for dark mode; loaders show
   the incense rising. **Android:** the new launcher icon ships with the next AAB.
-- Dev builds only: `/__design` renders every primitive in light, dark and RTL.
+- **The four core prayer screens as one book** (`src/styles/prayer.css`):
+  - *Today* — date and greeting, "Your altar today" in gold, then one
+    deep-violet focus surface (one prayer, "Begin prayer", a faint Rise line);
+    the other prayers as flat rows; "Prayed today · N" folded; the circles
+    carried as a quiet list; a completed day is a calm status, not a green
+    card; an empty day is one Rise Mark and "Begin with what is on your heart."
+  - *Prayer session* — an immersive deep-violet space (`.q-immersive` remaps
+    the tokens, so plan days, notes and Scripture inside it just work): close,
+    sound, prayer mode and progress on one gold line; each prayer rises in;
+    no emoji, no chips; it ends with the Rise Mark, Amen, "You have prayed
+    through today's altar", Remain with God and Finish.
+  - *Journal* — editorial rows (title, rhythm or "Carried since…", circle,
+    a green "Answered"/"Testimony" mark — never struck through); people view
+    and Tend entry as rows; quiet labelled tools.
+  - *A prayer's page* — reads like a document: context line, large serif
+    title, carried-since, Pray now, then sections divided by hairlines; ways
+    to pray, updates and testimonies are no longer boxed; a testimony keeps
+    a gold rule.
+- Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
+  for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
+  the session's progress stays "1 / 3" in right-to-left languages.
+- Dev builds only: `/__design` renders every primitive in light, dark and RTL;
+  `/__design/today|journal|detail|session` render the real screens with sample
+  prayers and every store write stubbed out.
 
 ### Changed — Praystead becomes Qetoret
 

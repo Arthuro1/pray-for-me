@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "祈求",
   "continueBtn": "继续",
   "amenBtn": "阿们",
-  "sessionDoneTitle": "与神同在的时光 🙏",
+  "sessionDoneTitle": "与神同在的时光",
   "sessionDoneSub": "今天你为 {n} 个事项祷告了。",
   "sessionDoneSub_one": "今天你为 1 个事项祷告了。",
   "sessionDoneSub_other": "今天你为 {n} 个事项祷告了。",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "最新更新",
   "aiDataPrefsTitle": "AI 接收的内容",
   "aiDataPrefsSub": "祷告标题总是会发送。你可以选择是否包含描述和最新更新。",
+  "forPersonLabel": "为{name}",
+  "altarPrayedThrough": "你已为今天祭坛上的一切祷告。",
+  "emptyTodayTitle": "从你心里所装的开始。",
+  "emptyTodaySub": "把一个祷告带到神面前。你的祭坛可以从小处开始。",
+  "explorePlan": "浏览祷告计划",
 };

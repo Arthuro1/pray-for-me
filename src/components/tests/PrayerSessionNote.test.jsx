@@ -119,8 +119,8 @@ function typeNote(html) {
 
 // The single advancing action, whatever it is called on this step ("Continue"
 // until the last prayer, then "Amen").
-const nextButton = () => document.querySelector('.constellation-session__footer .primary-button');
-const backButton = () => document.querySelector('.constellation-session__footer .quiet-button');
+const nextButton = () => document.querySelector('.prayer-session__footer .primary-button');
+const backButton = () => document.querySelector('.prayer-session__footer .quiet-button');
 
 // A note-free Next is synchronous; one with content has to encrypt and persist
 // first. Yield repeatedly rather than betting on a single fixed delay — under a

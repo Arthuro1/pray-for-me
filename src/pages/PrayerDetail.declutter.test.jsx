@@ -4,6 +4,7 @@
 // Mark answered up top; scheduling lives in the ⋯ overflow (opened on demand,
 // never a permanently expanded editor); a saved-from-community copy shows its
 // "From [group]" source badge; audience and encryption are separate statuses.
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -81,8 +82,8 @@ describe('PrayerDetail — leads with prayer', () => {
     const { container } = renderDetail(base());
     const prayNow = screen.getByRole('button', { name: t(lang, 'prayNow') });
     expect(prayNow).toBeTruthy();
-    expect(prayNow.className).toContain('constellation-detail__pray');
-    expect(container.querySelector('.constellation-detail__hero')?.contains(prayNow)).toBe(true);
+    expect(prayNow.className).toContain('prayer-detail__pray');
+    expect(container.querySelector('.prayer-detail__hero')?.contains(prayNow)).toBe(true);
     expect(screen.getByText(t(lang, 'addUpdateBtn'))).toBeTruthy();
     expect(screen.getAllByText(t(lang, 'markAnswered')).length).toBeGreaterThan(0);
   });
@@ -91,19 +92,19 @@ describe('PrayerDetail — leads with prayer', () => {
     const { container } = renderDetail(base({
       schedule: { type: 'recurring', freq: 'weekly', weekDays: [1], startDate: '2026-01-01' },
     }));
-    const hero = container.querySelector('.constellation-detail__hero');
+    const hero = container.querySelector('.prayer-detail__hero');
     expect(hero.textContent).not.toContain('Reposez-vous sous le ciel');
     // A long-carried prayer reads as memory: "Carried since July 2026".
-    expect(hero.querySelector('.constellation-detail__meta').textContent)
+    expect(hero.querySelector('.prayer-detail__meta').textContent)
       .toBe(t(lang, 'carriedSince', { date: carriedSinceLabel({ created_at: '2026-07-01T00:00:00Z' }, lang) }));
-    expect(hero.querySelector('.constellation-detail__pray')).toBeTruthy();
+    expect(hero.querySelector('.prayer-detail__pray')).toBeTruthy();
   });
 
   it('adds a plain count of the days prayed — memory, never a score', () => {
     const prayer = base();
     usePrayerStore.setState({ prayers: [prayer], categories: [], completions: { p1: ['2026-08-01', '2026-08-02'] }, settings: { language: lang } });
     const { container } = render(<PrayerDetail prayer={prayer} onBack={() => {}} onEdit={() => {}} lang={lang} />);
-    const meta = container.querySelector('.constellation-detail__meta').textContent;
+    const meta = container.querySelector('.prayer-detail__meta').textContent;
     expect(meta).toContain(tp(lang, 'prayedDays', 2));
     expect(meta).not.toMatch(/%|streak|série/i);
   });
@@ -119,13 +120,13 @@ describe('PrayerDetail — leads with prayer', () => {
     expect(screen.queryByText(t(lang, 'answerNextTitle'))).toBeNull();
   });
 
-  it('uses the same responsive primary-button sizing as Today', () => {
+  it('uses the shared primary button, full width on a phone', () => {
     renderDetail(base());
     const prayNow = screen.getByRole('button', { name: t(lang, 'prayNow') });
     expect(prayNow.className).toContain('primary-button');
-    expect(prayNow.className).toContain('w-full');
-    expect(prayNow.className).toContain('sm:w-auto');
-    expect(prayNow.className).toContain('sm:min-w-44');
+    expect(prayNow.className).toContain('prayer-detail__pray');
+    const css = readFileSync('src/styles/prayer.css', 'utf8');
+    expect(css).toMatch(/@media \(max-width: 480px\)\s*\{\s*\.prayer-detail__pray \{ width: 100%; \}/);
   });
 
   it('orders the hierarchy Pray now → Add update → Mark answered in the document', () => {
@@ -192,13 +193,18 @@ describe('PrayerDetail — leads with prayer', () => {
   });
 
   it('keeps the leading actions on a 44px target and lets long labels truncate, not overflow', () => {
-    renderDetail(base());
+    const { container } = renderDetail(base());
+    const row = container.querySelector('.prayer-detail__secondary-actions');
     for (const key of ['addUpdateBtn', 'markAnswered']) {
       const btn = screen.getByRole('button', { name: new RegExp(t(lang, key)) });
-      expect(btn.className).toMatch(/min-h-\[44px\]/);
-      expect(btn.className).toMatch(/min-w-0/);
-      expect(btn.querySelector('span').className).toMatch(/truncate/);
+      expect(btn.className).toContain('secondary-button');
+      expect(row.contains(btn)).toBe(true);
     }
+    // The 44px target belongs to the button primitive; truncation to the row.
+    expect(readFileSync('src/styles/components.css', 'utf8')).toMatch(/\.secondary-button,[\s\S]*?min-height: 44px;/);
+    const css = readFileSync('src/styles/prayer.css', 'utf8');
+    expect(css).toMatch(/\.prayer-detail__secondary-actions > \* \{ min-width: 0;/);
+    expect(css).toMatch(/\.prayer-detail__secondary-actions > \* > span \{[^}]*text-overflow: ellipsis;/);
   });
 
   it('never renders the schedule editor by default — only a quiet summary when one exists', () => {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { PrimaryButton, SecondaryButton, SectionLabel } from './shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, SectionLabel } from './shared/Primitives';
 import RiseMark from './shared/RiseMark';
 
 const DURATIONS = [
@@ -43,21 +43,19 @@ export default function RemainWithGod({ lang, onFinish, embedded = false }) {
   };
 
   const body = (
-    <div ref={bodyRef} className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center" data-remain-phase={phase}>
+    <div ref={bodyRef} className="prayer-session__done" data-remain-phase={phase}>
       {phase === 'choose' && (
         <>
           <RiseMark motion="still" size={40} className="mb-6" />
-          <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--q-text)' }}>
-            {t(lang, 'remainWithGod')}
-          </h2>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'remainSub')}</p>
-          <div className="mt-9 flex w-full max-w-xs flex-col gap-3">
+          <h2 className="prayer-session__done-title">{t(lang, 'remainWithGod')}</h2>
+          <p className="prayer-session__prompt mx-auto mt-4 max-w-sm">{t(lang, 'remainSub')}</p>
+          <div className="prayer-session__done-actions">
             {DURATIONS.map(({ seconds: s, labelKey }) => (
-              <PrimaryButton key={s} onClick={() => begin(s)} className="min-h-[52px] w-full">
+              <SecondaryButton key={s} onClick={() => begin(s)}>
                 {t(lang, labelKey)}
-              </PrimaryButton>
+              </SecondaryButton>
             ))}
-            <SecondaryButton onClick={onFinish} className="w-full">{t(lang, 'remainFinish')}</SecondaryButton>
+            <QuietButton onClick={onFinish}>{t(lang, 'remainFinish')}</QuietButton>
           </div>
         </>
       )}
@@ -65,16 +63,18 @@ export default function RemainWithGod({ lang, onFinish, embedded = false }) {
       {phase === 'still' && (
         <>
           <RiseMark motion="breathe" size={56} className="mb-8" />
-          <p className="editorial text-3xl" style={{ color: 'var(--q-text)' }}>{t(lang, 'remainStill')}</p>
-          <SecondaryButton onClick={onFinish} className="mt-16">{t(lang, 'remainFinish')}</SecondaryButton>
+          <p className="prayer-session__done-title">{t(lang, 'remainStill')}</p>
+          <QuietButton onClick={onFinish} className="mt-16">{t(lang, 'remainFinish')}</QuietButton>
         </>
       )}
 
       {phase === 'ended' && (
         <>
-          <SectionLabel className="mb-3">{t(lang, 'amenBtn')}</SectionLabel>
-          <p role="status" className="editorial max-w-sm text-2xl leading-snug" style={{ color: 'var(--q-text)' }}>{t(lang, 'remainEnded')}</p>
-          <PrimaryButton onClick={onFinish} className="mt-9 min-w-36">{t(lang, 'remainFinish')}</PrimaryButton>
+          <SectionLabel sacred className="mb-3">{t(lang, 'amenBtn')}</SectionLabel>
+          <p role="status" className="prayer-session__done-title">{t(lang, 'remainEnded')}</p>
+          <div className="prayer-session__done-actions">
+            <PrimaryButton onClick={onFinish}>{t(lang, 'remainFinish')}</PrimaryButton>
+          </div>
         </>
       )}
     </div>
@@ -83,7 +83,7 @@ export default function RemainWithGod({ lang, onFinish, embedded = false }) {
   if (embedded) return body;
 
   return (
-    <div className="prayer-session constellation-session fixed inset-0 z-[70] flex flex-col" style={{ background: 'var(--q-canvas)' }}>
+    <div className="prayer-session q-immersive">
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'remainWithGod')} tabIndex={-1} className="flex h-full flex-col focus:outline-none">
         {body}
       </div>

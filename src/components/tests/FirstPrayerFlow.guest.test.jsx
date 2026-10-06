@@ -95,9 +95,9 @@ async function prayAsGuest() {
   fireEvent.click(screen.getByText(t(lang, 'firstPrayerPrayCta')));
   // The session opens on the just-typed prayer.
   expect(await screen.findByText('La paix dans notre foyer')).toBeTruthy();
-  expect(document.querySelector('.constellation-session')).toBeTruthy();
+  expect(document.querySelector('.prayer-session')).toBeTruthy();
   expect(document.querySelector('.constellation-guest-flow')).toBeTruthy();
-  expect(document.querySelector('.constellation-session__title')).toBeTruthy();
+  expect(document.querySelector('.prayer-session__title')).toBeTruthy();
   // Pray through it (single request → Amen), then close the done screen.
   fireEvent.click(screen.getByText(t(lang, 'amenBtn')));
   await waitFor(() => expect(screen.getByText(t(lang, 'continueBtn'))).toBeTruthy());

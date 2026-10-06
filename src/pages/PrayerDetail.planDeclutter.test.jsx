@@ -227,14 +227,14 @@ describe('a plan run shows the plan’s own words, in the reader’s language', 
   it('is not editable in place — the name belongs to the plan', () => {
     const { container } = renderDetail(planRun());
     fireEvent.click(screen.getByText(t(lang, 'plan30Title')));
-    expect(container.querySelector('.constellation-detail__title-input')).toBeNull();
+    expect(container.querySelector('.prayer-detail__title-input')).toBeNull();
   });
 
   it('an ordinary prayer keeps its own title, editable in place', () => {
     const { container } = renderDetail(ordinary());
     expect(screen.getByText(STALE_TITLE)).toBeTruthy();
     fireEvent.click(screen.getByText(STALE_TITLE));
-    expect(container.querySelector('.constellation-detail__title-input')).toBeTruthy();
+    expect(container.querySelector('.prayer-detail__title-input')).toBeTruthy();
   });
 });
 

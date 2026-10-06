@@ -1,3 +1,9 @@
+import { X } from 'lucide-react';
+import { QuietButton, SecondaryButton } from './Primitives';
+
+// One quiet, dismissible invitation at the moment it becomes useful. A plain
+// surface with a hairline — never a coloured card competing with the prayer
+// above it — one action, and a way to say "not now".
 export default function ContextualNudgeCard({
   icon: Icon,
   title,
@@ -14,55 +20,29 @@ export default function ContextualNudgeCard({
   ...sectionProps
 }) {
   return (
-    <section
-      className="mb-6 rounded-2xl p-4 sm:flex sm:items-center sm:gap-4"
-      style={{ background: 'var(--q-gold-soft)', border: '1px solid color-mix(in srgb, var(--q-gold) 24%, var(--q-border))' }}
-      aria-labelledby={titleId}
-      {...sectionProps}
-    >
-      <div
-        className="mb-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:mb-0"
-        style={{ background: 'var(--q-surface)', color: 'var(--q-gold-text)' }}
-        aria-hidden="true"
-      >
-        <Icon size={18} />
-      </div>
-      <div className="min-w-0 flex-1">
-        <h2 id={titleId} className="text-sm font-semibold" style={{ color: 'var(--q-text)' }}>
+    <section className="nudge" aria-labelledby={titleId} {...sectionProps}>
+      <div className="nudge__copy">
+        <h2 id={titleId} className="nudge__title">
+          {Icon && <Icon size={16} aria-hidden="true" />}
           {title}
         </h2>
-        <div className="mt-1 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
-          {body}
-        </div>
+        <div className="nudge__body">{body}</div>
         {secondaryLabel && (
-          <button
-            type="button"
-            onClick={onSecondary}
-            className="mt-1 inline-flex min-h-11 items-center text-xs font-semibold underline-offset-2 hover:underline"
-            style={{ color: 'var(--q-royal-text)' }}
-          >
+          <QuietButton onClick={onSecondary} className="-ms-3">
             {secondaryLabel}
-          </button>
+          </QuietButton>
         )}
       </div>
-      <div className="mt-4 flex items-center gap-2 sm:mt-0 sm:shrink-0">
-        <button
-          type="button"
-          onClick={onAction}
-          className="min-h-11 flex-1 rounded-xl px-4 text-xs font-semibold sm:flex-none"
-          style={{ background: 'var(--q-surface)', border: '1px solid var(--q-border-strong)', color: 'var(--q-royal-text)' }}
-        >
-          {actionLabel}
-        </button>
+      <div className="nudge__actions">
+        <SecondaryButton onClick={onAction}>{actionLabel}</SecondaryButton>
         <button
           type="button"
           onClick={onDismiss}
           aria-label={dismissLabel}
           title={dismissLabel}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg"
-          style={{ color: 'var(--q-text-tertiary)' }}
+          className="icon-button pressable"
         >
-          <span aria-hidden="true">×</span>
+          <X size={18} aria-hidden="true" />
         </button>
       </div>
     </section>

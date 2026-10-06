@@ -1,206 +1,77 @@
-import { ChevronRight, EyeOff, HandHeart, Pin, Search, Sparkles, Users } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { t } from '../i18n';
-import { originAuthor } from '../utils/user';
-import { timeAgo } from '../utils/date';
 import { scheduleEnded } from '../lib/planner';
 import { planRowContext, planRowSummary } from '../lib/planRow';
 import { todayKey } from '../lib/prayedLog';
 import { scheduleSummary } from '../lib/scheduleDraft';
-import Avatar from './shared/Avatar';
+import { carriedSinceLabel, showsCarriedSince } from '../lib/carried';
+import { circleLabelKey, circleOf } from '../lib/circles';
+import { StatusLabel } from './shared/Primitives';
 
-const CARD = { background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' };
-
-// Spacious prayer card used by the personal My Prayers and Home lists,
-// matching the look of the community prayer wall (author + date header first).
-export default function PrayerListItem({ prayer, categories, lang, tr, shares, currentUserName = '', onClick, variant = 'card', searchMatch = null }) {
+// One prayer in a list, read like a line in a prayer book: a serif title, one
+// line of context, and a quiet meta line (circle, answered, who is carrying it).
+// No card, no icon per row, no chips — the list scans by its titles.
+//
+// variant 'today'   — what to pray now: the plan day's theme, or who it is for.
+// variant 'journal' — the record: its rhythm or how long it has been carried.
+export default function PrayerListItem({ prayer, lang, tr, shares, onClick, variant = 'journal', searchMatch = null }) {
   const isAnswered = prayer.status === 'answered';
   // A finished series reads "Series ended", never "Active" — the plan is over
   // even though the prayer stays in the journal.
   const isEnded = !isAnswered && scheduleEnded(prayer, todayKey());
-  const pCatIds = (prayer.prayer_categories || []).map((pc) => pc.category_id);
-  const pCats = categories.filter((c) => pCatIds.includes(c.id));
-  const oa = originAuthor(prayer);
-  const groupShares = shares || [];
-  // Author: original author for saved community prayers, otherwise the user ("Me").
-  const authorName = oa ? (oa.anonymous ? '?' : oa.name) : currentUserName;
-  const authorLabel = oa ? (oa.anonymous ? t(lang, 'anonymous') : oa.name) : t(lang, 'meAuthor');
-  const totalPraying = groupShares.reduce((n, s) => n + (s.prayingCount || 0), 0);
+  const totalPraying = (shares || []).reduce((n, s) => n + (s.prayingCount || 0), 0);
   // A guided plan run is a prayer like any other underneath, but it is not read
   // like one: it is named by the plan (in the reader's language, not the one
   // the run was started in) and placed by its day, not by a recurrence rule.
   const planRow = planRowSummary(prayer, lang);
   const title = planRow?.name || tr(prayer.title, lang);
+  const circle = circleOf(prayer);
+  const person = prayer.for_other && prayer.person_name ? t(lang, 'forPersonLabel', { name: prayer.person_name }) : '';
 
-  if (variant === 'constellation') {
-    // A running plan answers "how far in am I?", which is what the generic
-    // "Every day · 30 times" never said. A finished or answered one keeps the
-    // ordinary status wording — the run is over either way.
+  let heading = title;
+  let context = '';
+  if (variant === 'today') {
+    // A plan run leads with the DAY'S THEME, because that is what changes; the
+    // plan and the day move to the line beneath, so two runs stay distinct.
+    heading = planRow?.theme || title;
+    context = planRow ? planRowContext(planRow) : person || prayer.origin_group_name || '';
+  } else {
     const planRhythm = planRow?.dayLabel
       ? [planRow.dayLabel, planRow.paused ? t(lang, 'planPacePausedNote') : ''].filter(Boolean).join(' · ')
       : '';
-    const rhythm = isAnswered
-      ? t(lang, 'answered')
-      : isEnded
-        ? t(lang, 'seriesEnded')
-        : planRhythm || scheduleSummary(prayer.schedule, lang) || t(lang, 'sentDaily');
-
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        className={`constellation-journal-row pressable ${isAnswered ? 'constellation-journal-row--answered' : ''}`}
-      >
-        <Sparkles
-          size={18}
-          strokeWidth={1.7}
-          aria-hidden="true"
-          className="constellation-journal-row__star"
-        />
-        <span className="constellation-journal-row__body">
-          <span className="constellation-journal-row__title">
-            {title}
-          </span>
-          <span className="constellation-journal-row__meta">
-            <span className={isAnswered ? 'constellation-journal-row__answered' : ''}>
-              {rhythm}
-            </span>
-            {totalPraying > 0 && (
-              <span className="constellation-journal-row__shared">
-                {totalPraying} {t(lang, 'prayingCount')}
-              </span>
-            )}
-          </span>
-          {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
-            <span className="constellation-journal-row__match">
-              <Search size={12} aria-hidden="true" />
-              <span>{tr(searchMatch.text, lang)}</span>
-            </span>
-          )}
-        </span>
-        <ChevronRight
-          size={22}
-          strokeWidth={1.65}
-          aria-hidden="true"
-          className="constellation-journal-row__chevron"
-        />
-      </button>
-    );
+    const carried = showsCarriedSince(prayer) ? t(lang, 'carriedSince', { date: carriedSinceLabel(prayer, lang) }) : '';
+    context = isAnswered ? person : isEnded
+      ? t(lang, 'seriesEnded')
+      : planRhythm || scheduleSummary(prayer.schedule, lang) || carried || person;
   }
 
-  // Today uses a journal row: title first, only the person/source when useful.
-  // Full authorship, schedule and sharing metadata remain available in Journal
-  // and on the detail page, where that context belongs.
-  if (variant === 'journal') {
-    // A plan run leads with the DAY'S THEME, because that is what changes: the
-    // plan's name is the same on day 12 as on day 1 and says nothing about what
-    // there is to pray. The plan and the day move to the line beneath, so two
-    // runs at once are still told apart. This is how the session already reads.
-    const context = planRow
-      ? planRowContext(planRow)
-      : prayer.for_other && prayer.person_name
-        ? prayer.person_name
-        : prayer.origin_group_name || '';
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        className="journal-row constellation-today-row pressable flex min-h-[76px] w-full items-center gap-3 px-1 py-4 text-left"
-      >
-        <Sparkles
-          size={16}
-          strokeWidth={1.7}
-          aria-hidden="true"
-          className="constellation-today-row__star shrink-0"
-        />
-        <span className="min-w-0 flex-1">
-          <span className="editorial block text-lg leading-snug" style={{ color: 'var(--q-text)' }}>
-            {planRow?.theme || title}
-          </span>
-          {context && <span className="mt-1 block truncate text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{context}</span>}
-        </span>
-        <ChevronRight size={20} strokeWidth={1.65} aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }} />
-      </button>
-    );
-  }
+  const meta = [
+    circle && <span key="circle">{t(lang, circleLabelKey(circle))}</span>,
+    variant === 'journal' && isAnswered && (
+      <StatusLabel key="answered" tone="answered">
+        {t(lang, (prayer.prayer_testimonies || []).length > 0 ? 'testimony' : 'answered')}
+      </StatusLabel>
+    ),
+    variant === 'journal' && totalPraying > 0 && <span key="carrying">{totalPraying} {t(lang, 'prayingCount')}</span>,
+  ].filter(Boolean);
 
   return (
     <button
+      type="button"
       onClick={onClick}
-      className="prayer-card w-full text-left p-4 rounded-2xl transition-all hover:scale-[1.01]"
-      style={CARD}
+      className={`journal-row prayer-row pressable ${isAnswered ? 'prayer-row--answered' : ''}`}
     >
-      {/* Author + creation date header (matches community cards) */}
-      <div className="flex items-center justify-between gap-2 mb-1.5">
-        <div className="flex items-center gap-2 min-w-0">
-          <Avatar name={authorName} size={26} anonymous={oa?.anonymous} />
-          <p className="text-xs truncate" style={{ color: 'var(--q-text-tertiary)' }}>
-            {authorLabel} · {timeAgo(prayer.created_at, lang)}
-            {prayer.origin_group_name ? ` · ${prayer.origin_group_name}` : ''}
-          </p>
-        </div>
-        <div className="shrink-0 flex items-center gap-1.5">
-          {prayer.pinned && <Pin size={13} fill="currentColor" style={{ color: 'var(--q-royal-text)' }} />}
-          <span
-            className="text-xs px-2.5 py-1 rounded-full font-medium"
-            style={isAnswered
-              ? { background: 'var(--q-success-soft)', color: 'var(--q-success)' }
-              : isEnded
-                ? { background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }
-                : { background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
-          >
-            {t(lang, isAnswered ? 'answered2' : isEnded ? 'seriesEnded' : 'active2')}
+      <span className="min-w-0">
+        <span className="prayer-row__title journal-row__title">{heading}</span>
+        {context && <span className="prayer-row__context">{context}</span>}
+        {meta.length > 0 && <span className="prayer-row__meta">{meta}</span>}
+        {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
+          <span className="prayer-row__match">
+            <Search size={12} aria-hidden="true" />
+            <span>{tr(searchMatch.text, lang)}</span>
           </span>
-        </div>
-      </div>
-
-      <p
-        className="prayer-card__title text-[15px] font-medium leading-snug mb-2"
-        style={{ color: 'var(--q-text)', textDecoration: isAnswered ? 'line-through' : 'none', opacity: isAnswered ? 0.6 : 1 }}
-      >
-        {title}
-      </p>
-
-      {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
-        <p className="mb-2 flex items-start gap-1.5 text-xs leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
-          <Search size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
-          <span className="line-clamp-2">{tr(searchMatch.text, lang)}</span>
-        </p>
-      )}
-
-      {pCats.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-2">
-          {pCats.map((c) => (
-            <span key={c.id} className="text-[11px] px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
-              {c.emoji} {tr(c.name, lang)}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {prayer.for_other && prayer.person_name && (
-        <div className="text-xs flex items-center gap-1.5 mb-1" style={{ color: 'var(--q-text-tertiary)' }}>
-          <Avatar name={prayer.person_name} size={18} /> {prayer.person_name}
-        </div>
-      )}
-
-      {groupShares.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-          <Users size={11} style={{ color: 'var(--q-royal-text)' }} />
-          {groupShares.map((s) => (
-            <span key={s.groupId} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-              {s.groupName}
-            </span>
-          ))}
-          {groupShares.some((s) => s.isAnonymous) && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
-              <EyeOff size={9} /> {t(lang, 'anonymous')}
-            </span>
-          )}
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1" style={{ background: 'var(--q-field)', color: 'var(--q-text-tertiary)' }}>
-            <HandHeart size={10} /> {totalPraying} {t(lang, 'prayingCount')}
-          </span>
-        </div>
-      )}
+        )}
+      </span>
     </button>
   );
 }

@@ -1,12 +1,13 @@
 // @vitest-environment jsdom
 //
-// The journal card's status pill must tell the truth about a scheduled series:
-// a plan that consumed all its occurrences reads "Series ended", not "Active",
-// while an open-ended schedule keeps the Active pill.
+// A Journal row must tell the truth about a scheduled series: a plan that
+// consumed all its occurrences reads "Series ended", while an open-ended
+// schedule reads as its rhythm. Active is the default state and carries no pill.
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import PrayerListItem from '../PrayerListItem';
 import { t } from '../../i18n';
+import { scheduleSummary } from '../../lib/scheduleDraft';
 
 const lang = 'fr';
 afterEach(cleanup);
@@ -24,12 +25,13 @@ const renderItem = (schedule) => render(
   <PrayerListItem prayer={prayer(schedule)} categories={[]} lang={lang} tr={(s) => s} onClick={() => {}} />
 );
 
-describe('PrayerListItem status pill', () => {
-  it('exposes the stable card hooks used by the Night-only constellation marker', () => {
+describe('PrayerListItem — Journal row status', () => {
+  it('is an editorial row titled by the prayer, with no card around it', () => {
     renderItem({ type: 'recurring', freq: 'daily', startDate: '2024-01-01', end: { kind: 'never' } });
-    const card = screen.getByRole('button');
-    expect(card.classList.contains('prayer-card')).toBe(true);
-    expect(card.querySelector('.prayer-card__title')?.textContent).toBe('Semaine de gratitude');
+    const row = screen.getByRole('button');
+    expect(row.classList.contains('prayer-row')).toBe(true);
+    expect(row.classList.contains('prayer-card')).toBe(false);
+    expect(row.querySelector('.journal-row__title')?.textContent).toBe('Semaine de gratitude');
   });
 
   it('shows "Series ended" once a count-capped plan is finished', () => {
@@ -42,9 +44,10 @@ describe('PrayerListItem status pill', () => {
     expect(screen.queryByText(t(lang, 'active2'))).toBeNull();
   });
 
-  it('keeps the Active pill for an open-ended schedule', () => {
-    renderItem({ type: 'recurring', freq: 'daily', startDate: '2024-01-01', end: { kind: 'never' } });
-    expect(screen.getByText(t(lang, 'active2'))).toBeTruthy();
+  it('reads an open-ended schedule as its rhythm, never as ended', () => {
+    const schedule = { type: 'recurring', freq: 'daily', startDate: '2024-01-01', end: { kind: 'never' } };
+    renderItem(schedule);
+    expect(screen.getByText(scheduleSummary(schedule, lang))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'seriesEnded'))).toBeNull();
   });
 });

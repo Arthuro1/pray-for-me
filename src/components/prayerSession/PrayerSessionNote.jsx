@@ -92,7 +92,7 @@ export default function PrayerSessionNote({
         const panel = panelRef.current;
         if (!panel) return;
 
-        const scroller = panel.closest('.constellation-session__request');
+        const scroller = panel.closest('.prayer-session__request');
         if (!scroller) return;
         const panelRect = panel.getBoundingClientRect();
         const scrollerRect = scroller.getBoundingClientRect();

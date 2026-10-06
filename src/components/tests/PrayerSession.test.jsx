@@ -323,7 +323,7 @@ describe('PrayerSession — immediate start & format control', () => {
     const { container } = render(
       <PrayerSession prayers={two} categories={[]} lang={lang} tr={tr} onClose={() => {}} onComplete={() => {}} />,
     );
-    const scrollArea = container.querySelector('.constellation-session__request');
+    const scrollArea = container.querySelector('.prayer-session__request');
     scrollArea.scrollTop = 320;
 
     fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
@@ -356,8 +356,8 @@ describe('PrayerSession — immediate start & format control', () => {
   });
 
   it('keeps the session fixed to the viewport instead of flowing into Today', () => {
-    const css = readFileSync('src/index.css', 'utf8');
-    const sessionRule = css.match(/\.constellation-session\s*\{([^}]*)\}/)?.[1] || '';
+    const css = readFileSync('src/styles/prayer.css', 'utf8');
+    const sessionRule = css.match(/\.prayer-session\s*\{([^}]*)\}/)?.[1] || '';
 
     expect(sessionRule).toMatch(/position:\s*fixed/);
     expect(sessionRule).toMatch(/inset:\s*0/);

@@ -3,6 +3,7 @@
 // The controls this refinement pass touched: named, tappable, keyboard-operable,
 // and readable in RTL and with long translated labels. Icon-only buttons must
 // carry a real accessible name — a `title` tooltip alone is not one.
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
@@ -69,11 +70,14 @@ beforeEach(() => {
 describe('icon-only controls carry a real accessible name', () => {
   it('names the Prayer Detail back and overflow controls, and sizes them to 44px', () => {
     renderDetail();
-    for (const name of [t(lang, 'tipBack'), t(lang, 'options')]) {
-      const btn = screen.getByRole('button', { name });
-      expect(btn.className).toMatch(/w-11/);
-      expect(btn.className).toMatch(/h-11/);
-    }
+    const back = screen.getByRole('button', { name: t(lang, 'tipBack') });
+    expect(back.className).toContain('icon-button');
+    // The icon-button primitive is a 44px square.
+    const css = readFileSync('src/styles/components.css', 'utf8');
+    expect(css).toMatch(/\.icon-button,[\s\S]*?width: 44px;[\s\S]*?height: 44px;/);
+    const options = screen.getByRole('button', { name: t(lang, 'options') });
+    expect(options.className).toMatch(/w-11/);
+    expect(options.className).toMatch(/h-11/);
   });
 
   it('names the update-submit control (not only via a tooltip)', () => {
@@ -182,16 +186,23 @@ describe('RTL and long translated labels', () => {
     renderDetail(prayer(), 'de');
     for (const key of ['addUpdateBtn', 'markAnswered']) {
       const label = screen.getByText(t('de', key));
-      expect(label.className).toMatch(/truncate/);
-      expect(label.closest('button').className).toMatch(/min-w-0/);
+      expect(label.tagName).toBe('SPAN');
+      expect(label.closest('.prayer-detail__secondary-actions')).toBeTruthy();
     }
+    const css = readFileSync('src/styles/prayer.css', 'utf8');
+    expect(css).toMatch(/\.prayer-detail__secondary-actions > \* \{ min-width: 0;/);
+    expect(css).toMatch(/\.prayer-detail__secondary-actions > \* > span \{[^}]*text-overflow: ellipsis;/);
   });
 
   it('stacks the secondary actions on the narrowest phones instead of squeezing them', () => {
     const { container } = renderDetail();
     const row = screen.getByText(t(lang, 'addUpdateBtn')).closest('button').parentElement;
-    expect(row.className).toMatch(/flex-col/);
-    expect(row.className).toMatch(/min-\[380px\]:flex-row/);
+    expect(row.className).toContain('prayer-detail__secondary-actions');
+    // Each action claims at least 12rem and the row wraps, so two stack on a
+    // narrow phone and sit side by side once there is room.
+    const css = readFileSync('src/styles/prayer.css', 'utf8');
+    expect(css).toMatch(/\.prayer-detail__secondary-actions \{ display: flex; flex-wrap: wrap;/);
+    expect(css).toMatch(/\.prayer-detail__secondary-actions > \* \{ min-width: 0; flex: 1 1 12rem; \}/);
     expect(container.querySelector('[dir]')).toBeNull(); // dir is owned by <html>, not duplicated here
   });
 });

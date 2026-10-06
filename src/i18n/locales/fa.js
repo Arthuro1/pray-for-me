@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "درخواست",
   "continueBtn": "ادامه",
   "amenBtn": "آمین",
-  "sessionDoneTitle": "زمانی با خدا 🙏",
+  "sessionDoneTitle": "زمانی با خدا",
   "sessionDoneSub": "امروز برای {n} موضوع دعا کردید.",
   "sessionDoneSub_one": "امروز برای یک موضوع دعا کردید.",
   "sessionDoneSub_other": "امروز برای {n} موضوع دعا کردید.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "آخرین به‌روزرسانی",
   "aiDataPrefsTitle": "آنچه هوش مصنوعی دریافت می‌کند",
   "aiDataPrefsSub": "عنوان دعا همیشه ارسال می‌شود. انتخاب کنید که توضیحات و آخرین به‌روزرسانی هم ارسال شود یا نه.",
+  "forPersonLabel": "برای {name}",
+  "altarPrayedThrough": "برای همهٔ آنچه امروز بر مذبح شماست دعا کرده‌اید.",
+  "emptyTodayTitle": "با آنچه در دل دارید آغاز کنید.",
+  "emptyTodaySub": "یک دعا به حضور خدا بیاورید. مذبح شما می‌تواند کوچک آغاز شود.",
+  "explorePlan": "کاوش در یک برنامهٔ دعا",
 };

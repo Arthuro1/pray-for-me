@@ -5,11 +5,9 @@ import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
-import { getAuthorName } from '../utils/user';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
-import Encouragement from '../components/shared/Encouragement';
+import { Loader2, Plus, Share2, ExternalLink } from 'lucide-react';
 import { bibleLink } from '../utils/bibleLink';
 import { t, tp } from '../i18n';
 import PrayerListSkeleton from '../components/shared/Skeleton';
@@ -24,20 +22,20 @@ import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { planRowContext, planRowSummary } from '../lib/planRow';
 import { PLAN_SOURCES } from '../lib/planAnalytics';
 import { parseKey } from '../lib/schedule';
-import { Clock, Check, Sunrise, Sun, Moon } from 'lucide-react';
+import { Clock, Check } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
 import VerseVersion from '../components/VerseVersion';
 import VerseShareModal from '../components/VerseShareModal';
 import EmptyState from '../components/shared/EmptyState';
-import { Disclosure, PageHeader, PrayerSurface, PrimaryButton, SecondaryButton, SectionLabel, StatusPill } from '../components/shared/Primitives';
+import { Disclosure, PageHeader, PrimaryButton, QuietButton, SecondaryButton, SectionHeader } from '../components/shared/Primitives';
+import RiseMark from '../components/shared/RiseMark';
 import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
 import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
 import RemainWithGod from '../components/RemainWithGod';
-import { circleLabelKey, groupByCircle } from '../lib/circles';
-import { CIRCLE_ICONS } from '../components/shared/circleIcons';
+import { circleLabelKey, circleOf, groupByCircle } from '../lib/circles';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -170,8 +168,21 @@ export default function HomeTab({ onAdd, onEdit }) {
   const startCatchUpSession = () =>
     openSession(catchUp.map((c) => c.prayer), Object.fromEntries(catchUp.map((c) => [c.prayer.id, c.day])));
 
+  // The first remaining prayer is the one brought forward; the list beneath
+  // holds the others, so nothing is said twice.
+  const focusPrayer = remainingPrayers[0] || null;
+  const focusCircle = focusPrayer ? circleOf(focusPrayer) : null;
+  const focusDetail = focusPrayer && !heroPlan
+    ? [
+      focusCircle ? t(lang, circleLabelKey(focusCircle)) : '',
+      focusPrayer.for_other && focusPrayer.person_name ? t(lang, 'forPersonLabel', { name: focusPrayer.person_name }) : '',
+    ].filter(Boolean).join(' · ')
+    : '';
+  const otherEntries = remainingEntries.filter((e) => e.prayer.id !== focusPrayer?.id);
+  const showFocus = remainingPrayers.length > 0 && (!loading || prayers.length > 0);
+
   return (
-    <div className="phase-page constellation-home">
+    <div className="phase-page today">
       {sharingVerse && verse && (
         <VerseShareModal verse={verse} lang={lang} dayKey={dayKey} onClose={() => setSharingVerse(false)} />
       )}
@@ -182,6 +193,7 @@ export default function HomeTab({ onAdd, onEdit }) {
           categories={categories}
           lang={lang}
           tr={tr}
+          doneTitle={session.dayById ? undefined : t(lang, 'altarPrayedThrough')}
           onClose={() => setSession(null)}
           // Per-prayer completion is logged as the user advances PAST each
           // prayer (feeds Home's remaining count, catch-up, calendar history
@@ -194,81 +206,69 @@ export default function HomeTab({ onAdd, onEdit }) {
         />
       )}
 
-      <div className="constellation-home__shell mx-auto max-w-3xl px-5 md:px-8">
+      <div className="phase-page__shell">
         <PageHeader
-          eyebrow={`${DAY_NAMES[lang]?.[dayIndex]} · ${format(today, 'd MMMM yyyy', { locale: dateLocale })}`}
+          eyebrow={`${DAY_NAMES[lang]?.[dayIndex] ? `${DAY_NAMES[lang][dayIndex]} · ` : ''}${format(today, 'd MMMM yyyy', { locale: dateLocale })}`}
           title={`${greeting}${displayName ? `, ${displayName}` : ''}`}
         />
+      </div>
 
+      <div className="phase-content">
         {/* "Your altar today" names what this page is for, once, and only when
             there is something to bring — an empty day has its own invitation. */}
         {!dayEmpty && (!loading || prayers.length > 0) && (
-          <div className="mb-4">
-            <SectionLabel className="mb-1" style={{ color: 'var(--q-gold-text)' }}>{t(lang, 'altarTodayTitle')}</SectionLabel>
-            <p className="text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'altarTodaySub')}</p>
-          </div>
+          <SectionHeader
+            eyebrow={t(lang, 'altarTodayTitle')}
+            supporting={t(lang, 'altarTodaySub')}
+            sacred
+            className="mb-5"
+          />
         )}
 
-        {/* One clear doorway into prayer. The first request gives the card a
-            human focus; schedules and community metadata wait below. */}
-        {remainingPrayers.length > 0 && (!loading || prayers.length > 0) && (
-          <PrayerSurface tone="focus" className="constellation-home__focus mb-6 p-6 sm:p-8">
-            <div className="relative z-10">
-              <p className="mb-5 text-[11px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.6)' }}>
-                {planRowContext(heroPlan) || t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
+        {/* One doorway into prayer: a deep-violet space, one prayer, one action. */}
+        {showFocus && (
+          <section className="today-focus q-immersive" aria-labelledby="today-focus-title">
+            <RiseMark motion="still" size={180} className="today-focus__rise" />
+            <p className="today-focus__context">
+              {planRowContext(heroPlan) || t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
+            </p>
+            <h2 id="today-focus-title" className="today-focus__title">
+              {heroPlan?.theme || heroPlan?.name || tr(focusPrayer.title, lang)}
+            </h2>
+            {focusDetail && <p className="today-focus__detail">{focusDetail}</p>}
+            <PrimaryButton onClick={() => openSession(remainingPrayers)} className="today-focus__begin">
+              {t(lang, 'beginPrayer')}
+            </PrimaryButton>
+            {reminder && (
+              <p className="today-focus__reminder">
+                <Clock size={12} aria-hidden="true" /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
               </p>
-              <p className="editorial max-w-xl text-2xl leading-snug sm:text-3xl" style={{ color: '#fff' }}>
-                {heroPlan?.theme || heroPlan?.name || tr(remainingPrayers[0].title, lang)}
-              </p>
-              {remainingPrayers.length > 1 && (
-                <p className="mt-2 text-xs" style={{ color: 'rgba(255,255,255,.5)' }}>
-                  + {remainingPrayers.length - 1}
-                </p>
-              )}
-              <PrimaryButton
-                onClick={() => openSession(remainingPrayers)}
-                icon={HandHeart}
-                className="first-prayer-primary mt-8 w-full whitespace-nowrap sm:w-auto sm:min-w-44"
-              >
-                {t(lang, 'beginPrayer')}
-              </PrimaryButton>
-              {reminder && (
-                <p className="mt-5 flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,.48)' }}>
-                  <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
-                </p>
-              )}
-            </div>
-          </PrayerSurface>
+            )}
+          </section>
         )}
 
-        {/* All of today prayed: a clear status (not a button and not a score),
-            with two quiet, optional ways to stay: be still before God, or walk
-            the whole day once more. */}
+        {/* All of today prayed: a calm status — not a reward, not a green card —
+            and two optional ways to stay: be still, or walk the day once more. */}
         {dayComplete && (
-          <PrayerSurface tone="answered" className="mb-6 p-6 text-center">
-            <StatusPill tone="answered" icon={Check} className="mb-3" role="status">
-              {t(lang, 'todayCompleteTitle')}
-            </StatusPill>
-            <p className="editorial-heading mb-4 text-2xl" style={{ color: 'var(--q-text)' }}>{t(lang, 'sessionDoneTitle')}</p>
-            <div className="flex flex-wrap items-center justify-center gap-2">
+          <section className="today-complete">
+            <RiseMark motion="still" size={40} />
+            <p className="today-complete__title" role="status">{t(lang, 'todayCompleteTitle')}</p>
+            <div className="today-complete__actions">
               <SecondaryButton onClick={() => setRemaining(true)}>
                 {t(lang, 'remainWithGod')}
               </SecondaryButton>
               {todayEntries.length > 0 && (
-                <SecondaryButton
-                  onClick={() => openSession(todayEntries.map((e) => e.prayer))}
-                  icon={HandHeart}
-                >
+                <QuietButton onClick={() => openSession(todayEntries.map((e) => e.prayer))}>
                   {t(lang, 'prayAgain')}
-                </SecondaryButton>
+                </QuietButton>
               )}
             </div>
-          </PrayerSurface>
+          </section>
         )}
 
         {reminder && remainingPrayers.length === 0 && (
-          <p className="text-xs text-center mb-4 flex items-center justify-center gap-1.5" style={{ color: 'var(--q-text-tertiary)' }}>
-            <Clock size={12} /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
+          <p className="q-meta mb-6 flex items-center justify-center gap-1.5">
+            <Clock size={12} aria-hidden="true" /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
           </p>
         )}
 
@@ -293,48 +293,40 @@ export default function HomeTab({ onAdd, onEdit }) {
         )}
 
         {!loading && dayEmpty && (
-          <PrayerSurface className="mb-6">
-            <EmptyState
-              emoji="🕊️"
-              title={t(lang, 'emptyEncourage')}
-              subtitle={t(lang, 'noPrayersToday')}
-              actionLabel={t(lang, 'emptyAddManual')}
-              onAction={onAdd}
-              actionIcon={Plus}
-              secondaryLabel={t(lang, 'journeysTitle')}
-              onSecondary={() => navigate('/plans', { state: { source: PLAN_SOURCES.EMPTY_DAY } })}
-            />
-            <Encouragement lang={lang} className="mx-auto mb-7 max-w-sm px-6 text-center" />
-          </PrayerSurface>
+          <EmptyState
+            title={t(lang, 'emptyTodayTitle')}
+            subtitle={t(lang, 'emptyTodaySub')}
+            actionLabel={t(lang, 'emptyAddManual')}
+            onAction={onAdd}
+            actionIcon={Plus}
+            secondaryLabel={t(lang, 'explorePlan')}
+            onSecondary={() => navigate('/plans', { state: { source: PLAN_SOURCES.EMPTY_DAY } })}
+          />
         )}
 
-        {/* What remains to pray today (completed prayers fold away below) */}
-        {remainingEntries.length > 0 && (
-          <section className="constellation-home__today mb-7">
-            <SectionLabel className="mb-2">{t(lang, 'today')}</SectionLabel>
+        {/* The rest of today, as flat rows — no cards. */}
+        {otherEntries.length > 0 && (
+          <section className="today-list" aria-label={t(lang, 'today')}>
             {/* Grouped by prayer-time slot once any prayer uses one; flat list otherwise */}
             {(useSlots ? SLOT_ORDER : ['anytime']).map((slot) => {
-              const slotEntries = useSlots ? slotGroups[slot] : remainingEntries;
+              const slotEntries = (useSlots ? slotGroups[slot] : otherEntries)?.filter((e) => e.prayer.id !== focusPrayer?.id);
               if (!slotEntries || slotEntries.length === 0) return null;
-              const SlotIcon = { morning: Sunrise, midday: Sun, evening: Moon, anytime: Clock }[slot];
               return (
                 <div key={slot}>
                   {useSlots && (
-                    <p className="mt-5 flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--q-text-tertiary)' }}>
-                      <SlotIcon size={12} /> {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
+                    <p className="section-label today-list__slot">
+                      {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
                     </p>
                   )}
                   {slotEntries.map(({ prayer }) => (
                     <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
                       <PrayerListItem
                         prayer={prayer}
-                        categories={categories}
                         lang={lang}
                         tr={tr}
                         shares={prayerShares[prayer.id]}
-                        currentUserName={getAuthorName(user)}
                         onClick={() => navigate(`/prayers/${prayer.id}`)}
-                        variant="journal"
+                        variant="today"
                       />
                     </SwipeableRow>
                   ))}
@@ -344,12 +336,37 @@ export default function HomeTab({ onAdd, onEdit }) {
           </section>
         )}
 
+        {/* Prayed today — completed prayers fold into one quiet, collapsed row
+            so the main list only ever shows what remains. */}
+        {completedToday.length > 0 && (
+          <div className="today-fold">
+            <Disclosure
+              id="today-prayed"
+              label={t(lang, 'prayedTodayLabel')}
+              count={completedToday.length}
+              open={prayedOpen}
+              onToggle={() => setPrayedOpen((v) => !v)}
+            >
+              <ul className="today-fold__list">
+                {completedToday.map((prayer) => (
+                  <li key={prayer.id}>
+                    <button type="button" onClick={() => navigate(`/prayers/${prayer.id}`)} className="today-fold__row pressable">
+                      <Check size={14} aria-hidden="true" />
+                      <span>{planName(prayer)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </Disclosure>
+          </div>
+        )}
+
+        {/* "On your altar": the circles this person carries, as a quiet list. */}
         {altarCircles.length > 0 && (
-          <nav className="mb-6" aria-label={t(lang, 'altarCirclesLabel')}>
-            <SectionLabel className="mb-2">{t(lang, 'altarCirclesLabel')}</SectionLabel>
-            <ul className="flex flex-wrap gap-2">
+          <nav className="today-circles" aria-label={t(lang, 'altarCirclesLabel')}>
+            <p className="section-label mb-2">{t(lang, 'altarCirclesLabel')}</p>
+            <ul>
               {altarCircles.map(({ circle, prayers: inCircle }) => {
-                const Icon = CIRCLE_ICONS[circle];
                 const name = t(lang, circleLabelKey(circle));
                 return (
                   <li key={circle}>
@@ -357,12 +374,10 @@ export default function HomeTab({ onAdd, onEdit }) {
                       type="button"
                       onClick={() => navigate('/prayers', { state: { circle } })}
                       aria-label={`${name} · ${tp(lang, 'circlePrayerCount', inCircle.length)}`}
-                      className="pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium"
-                      style={{ background: 'var(--q-surface)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
+                      className="today-circles__item pressable"
                     >
-                      <Icon size={14} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
-                      {name}
-                      <span aria-hidden="true" style={{ color: 'var(--q-text-tertiary)' }}>{inCircle.length}</span>
+                      <span>{name}</span>
+                      <span className="q-meta" aria-hidden="true">{inCircle.length}</span>
                     </button>
                   </li>
                 );
@@ -371,139 +386,104 @@ export default function HomeTab({ onAdd, onEdit }) {
           </nav>
         )}
 
-        {/* Prayed today — completed prayers fold into one quiet, collapsed row
-            so the main list only ever shows what remains. */}
-        {completedToday.length > 0 && (
-          <div className="mb-5 border-block" style={{ borderColor: 'var(--q-border)' }}>
-            <Disclosure
-              id="today-prayed"
-              label={t(lang, 'prayedTodayLabel')}
-              count={completedToday.length}
-              open={prayedOpen}
-              onToggle={() => setPrayedOpen((v) => !v)}
-              className="py-1"
-            >
-              <div className="px-4 pb-4 space-y-1.5">
-                {completedToday.map((prayer) => (
-                  <button
-                    key={prayer.id}
-                    onClick={() => navigate(`/prayers/${prayer.id}`)}
-                    className="w-full flex items-center gap-2.5 rounded-xl px-3 py-2 text-left"
-                    style={{ background: 'var(--q-field)' }}
-                  >
-                    <Check size={13} className="shrink-0" style={{ color: 'var(--q-success)' }} />
-                    <span className="flex-1 min-w-0 text-sm truncate" style={{ color: 'var(--q-text-secondary)' }}>{planName(prayer)}</span>
-                  </button>
-                ))}
-              </div>
-            </Disclosure>
-          </div>
-        )}
-
         {/* Add a prayer — always one tap from the list itself */}
         {!dayEmpty && (
-          <SecondaryButton onClick={onAdd} icon={Plus} className="mb-6 w-full border-dashed">
+          <QuietButton onClick={onAdd} icon={Plus} className="today-add">
             {t(lang, 'emptyAddManual')}
-          </SecondaryButton>
+          </QuietButton>
         )}
 
         {/* Return to prayer — prayers missed the last few days, AFTER today's
             list and collapsed by default. Grace, not guilt: never an "overdue"
             count up front; one tap marks them prayed, or they quietly age out. */}
         {catchUp.length > 0 && (
-          <div className="mb-6 border-block" style={{ borderColor: 'var(--q-border)' }}>
+          <div className="today-fold">
             <Disclosure
               id="today-catch-up"
-              label={`🌿 ${t(lang, 'catchUpTitle')}`}
+              label={t(lang, 'catchUpTitle')}
               count={catchUp.length}
               open={catchUpOpen}
               onToggle={() => setCatchUpOpen((v) => !v)}
-              className="py-1"
             >
-              <div className="px-4 pb-4">
-                <p className="text-xs mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'catchUpSub')}</p>
+              <div className="pb-4">
+                <p className="q-meta mb-3">{t(lang, 'catchUpSub')}</p>
                 {/* Pray through all the missed requests in one walk, the same
                     immersive session as Today — each is recorded on the day it
                     was missed. The per-item checkmarks below stay for catching
                     up one at a time. */}
-                <SecondaryButton onClick={startCatchUpSession} icon={HandHeart} className="mb-3 w-full">
+                <SecondaryButton onClick={startCatchUpSession} className="mb-2 w-full">
                   {t(lang, 'prayNow')}
                 </SecondaryButton>
-                <div className="space-y-1.5">
+                <ul className="today-fold__list">
                   {catchUp.map(({ prayer, day }) => (
-                    <div key={prayer.id} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: 'var(--q-field)' }}>
-                      <button onClick={() => navigate(`/prayers/${prayer.id}`)} className="flex-1 min-w-0 text-left">
-                        <p className="text-sm font-medium truncate" style={{ color: 'var(--q-text)' }}>{planName(prayer)}</p>
-                        <p className="text-[10px]" style={{ color: 'var(--q-text-tertiary)' }}>
+                    <li key={prayer.id} className="today-fold__catch-up">
+                      <button type="button" onClick={() => navigate(`/prayers/${prayer.id}`)} className="min-w-0 flex-1 text-start">
+                        <span className="block truncate text-sm font-medium" style={{ color: 'var(--q-text)' }}>{planName(prayer)}</span>
+                        <span className="q-meta block">
                           {t(lang, 'missedOn', { date: parseKey(day).toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' }) })}
-                        </p>
+                        </span>
                       </button>
                       <button
+                        type="button"
                         onClick={() => markPrayedOn(prayer.id, day)}
                         title={t(lang, 'markPrayed')}
                         aria-label={t(lang, 'markPrayed')}
-                        className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-                        style={{ background: 'var(--q-surface)', border: '1.5px solid var(--q-field-border)', color: 'var(--q-text-tertiary)' }}
+                        className="icon-button pressable"
                       >
-                        <Check size={13} />
+                        <Check size={16} aria-hidden="true" />
                       </button>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </Disclosure>
           </div>
         )}
 
-        {/* Verse of the day — a small closing card, not the headline */}
-        <section className="scripture-block mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>
-              {t(lang, 'verseOfDay')}
-            </p>
+        {/* Verse of the day — Scripture closes the page, quoted, never generated. */}
+        <section className="today-verse" aria-labelledby="today-verse-label">
+          <div className="today-verse__head">
+            <p id="today-verse-label" className="section-label section-label--sacred">{t(lang, 'verseOfDay')}</p>
             {verse && (
               <button
+                type="button"
                 onClick={() => setSharingVerse(true)}
                 aria-label={t(lang, 'shareVerse')}
                 title={t(lang, 'shareVerse')}
-                className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors"
-                style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
+                className="icon-button pressable"
               >
-                <Share2 size={13} />
+                <Share2 size={16} aria-hidden="true" />
               </button>
             )}
           </div>
           {verse ? (
-            <div>
+            <div className="scripture-block">
               {verse.text
-                ? <p className="scripture-text text-lg leading-relaxed" style={{ color: 'var(--q-text)' }}>“{verse.text}”</p>
+                ? <p className="scripture-block__text">“{verse.text}”</p>
                 : verseResolving
                   ? (
-                    <div className="flex items-center gap-2" style={{ color: 'var(--q-text-tertiary)' }}>
-                      <Loader2 size={13} className="animate-spin" />
-                      <span className="text-xs">{t(lang, 'loadingVerse')}</span>
-                    </div>
+                    <p className="q-meta flex items-center gap-2">
+                      <Loader2 size={13} className="animate-spin" aria-hidden="true" /> {t(lang, 'loadingVerse')}
+                    </p>
                   )
                   : null}
-              <p className="text-xs text-right mt-2" style={{ color: 'var(--q-text-tertiary)' }}>
-                — {verse.ref}
+              <p className="scripture-block__reference">
+                {verse.ref}
                 {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
               </p>
               <a
                 href={bibleLink(verse.ref, lang)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-end gap-1.5 mt-1.5 text-xs"
-                style={{ color: 'var(--q-royal-text)' }}
+                className="today-verse__link"
               >
-                <ExternalLink size={11} /> {t(lang, 'readWholeChapter')}
+                <ExternalLink size={12} aria-hidden="true" /> {t(lang, 'readWholeChapter')}
               </a>
             </div>
           ) : (
-            <div className="flex items-center gap-2" style={{ color: 'var(--q-text-tertiary)' }}>
-              <Loader2 size={14} className="animate-spin" />
-              <span className="text-xs">...</span>
-            </div>
+            <p className="q-meta flex items-center gap-2">
+              <Loader2 size={14} className="animate-spin" aria-hidden="true" /> …
+            </p>
           )}
         </section>
       </div>

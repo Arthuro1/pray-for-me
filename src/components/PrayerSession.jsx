@@ -14,15 +14,14 @@ import PlanDayBody from './PlanDayBody';
 import { pick, localizeRef } from '../content/teaching';
 import { todayKey } from '../lib/prayedLog';
 import { markActivationSessionCompleted } from '../lib/activationProgress';
-import Encouragement from './shared/Encouragement';
 import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
-import { PrimaryButton, QuietButton, SecondaryButton, SectionLabel, StatusPill } from './shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, SectionLabel } from './shared/Primitives';
 import PrayerMusicControl from './PrayerMusicControl';
 import PrayerSessionNote from './prayerSession/PrayerSessionNote';
 import { useSessionNotes } from './prayerSession/useSessionNotes';
 import { isSessionNote } from '../lib/prayerNotes';
-import { APP_NAME } from '../lib/brand';
+import { circleLabelKey, circleOf } from '../lib/circles';
 import RemainWithGod from './RemainWithGod';
 import RiseMark from './shared/RiseMark';
 
@@ -41,9 +40,9 @@ const MODE_STAGES = {
 };
 
 const MOVEMENT_META = {
-  adoration: { emoji: '🙌', titleKey: 'stageAdoration', promptKey: 'stageAdorationPrompt' },
-  confession: { emoji: '🕊️', titleKey: 'stageConfession', promptKey: 'stageConfessionPrompt' },
-  thanksgiving: { emoji: '🙏', titleKey: 'stageThanksgiving', promptKey: 'stageThanksgivingPrompt' },
+  adoration: { titleKey: 'stageAdoration', promptKey: 'stageAdorationPrompt' },
+  confession: { titleKey: 'stageConfession', promptKey: 'stageConfessionPrompt' },
+  thanksgiving: { titleKey: 'stageThanksgiving', promptKey: 'stageThanksgivingPrompt' },
 };
 
 const MODE_OPTIONS = [
@@ -72,17 +71,16 @@ function SessionVerse({ verse, lang }) {
 
   return (
     <div className="scripture-block mt-4">
-      {text && <p className="scripture-text text-lg leading-relaxed" style={{ color: 'var(--q-text)' }}>“{text}”</p>}
+      {text && <p className="scripture-block__text">“{text}”</p>}
       {ref && (
         <VerseAccordion reference={ref} lang={lang} initialText={text}>
           {({ toggle }) => (
             <button
               onClick={toggle}
               title={t(lang, 'readInApp')}
-              className="pressable mt-2 flex min-h-11 items-center gap-1.5 text-xs font-semibold"
-              style={{ color: 'var(--q-gold-text)' }}
+              className="scripture-block__reference pressable flex min-h-11 items-center gap-1.5"
             >
-              <BookOpen size={11} /> {ref}
+              <BookOpen size={12} aria-hidden="true" /> {ref}
             </button>
           )}
         </VerseAccordion>
@@ -99,7 +97,10 @@ function SessionVerse({ verse, lang }) {
 // `allowNotes` gates the optional prayer note. Off for a signed-out visitor for
 // the same reason: a note becomes an entry in the prayer's update history, which
 // only exists for an account.
-export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed, allowFormats = true, allowNotes = true }) {
+// `doneTitle` names what was prayed through when the walk ends ("You have
+// prayed through today's altar" from Today); other entry points keep the
+// general "Time with God".
+export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed, doneTitle, allowFormats = true, allowNotes = true }) {
   const [mode, setMode] = useState(() => (allowFormats ? initialMode() : 'requests'));
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
@@ -405,10 +406,8 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
 
   const overlay = (children) => (
     <div
-      className="prayer-session constellation-session fixed inset-0 z-[70] flex flex-col"
-      style={viewport
-        ? { background: 'var(--q-canvas)', top: viewport.top, height: viewport.height, bottom: 'auto' }
-        : { background: 'var(--q-canvas)' }}
+      className="prayer-session q-immersive"
+      style={viewport ? { top: viewport.top, height: viewport.height, bottom: 'auto' } : undefined}
     >
       <div ref={trapRef} role="dialog" aria-modal="true" aria-label={t(lang, 'prayNow')} tabIndex={-1} className="flex h-full min-h-0 flex-col overflow-hidden focus:outline-none">
         {children}
@@ -419,8 +418,8 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // Closing is the "pause" — progress is already recorded per prayer, so the
   // session can be resumed later with the first unfinished request.
   const closeButton = (
-    <button onClick={handleClose} aria-label={t(lang, 'close')} className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}>
-      <X size={16} />
+    <button type="button" onClick={handleClose} aria-label={t(lang, 'close')} className="icon-button pressable">
+      <X size={20} aria-hidden="true" />
     </button>
   );
 
@@ -431,7 +430,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     <PrimaryButton
       onClick={advance}
       disabled={committing}
-      className="min-h-[52px] flex-1"
+      className="prayer-session__advance"
     >
       {committing
         ? <span className="inline-flex items-center gap-2">
@@ -451,24 +450,21 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const noteErrorPanel = noteError && (
     <div
       role="alert"
-      className="mx-auto mb-3 w-full max-w-2xl rounded-xl px-4 py-3"
-      style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)' }}
+      className="prayer-session__alert"
     >
       <p className="text-sm" style={{ color: 'var(--q-text)' }}>{t(lang, 'noteSaveFailed')}</p>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={advance}
-          className="pressable min-h-11 rounded-xl px-3 text-xs font-semibold"
-          style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}
+          className="secondary-button pressable"
         >
           {t(lang, 'noteTryAgain')}
         </button>
         <button
           type="button"
           onClick={discardNoteAndContinue}
-          className="pressable min-h-11 rounded-xl px-3 text-xs font-medium"
-          style={{ color: 'var(--q-text-tertiary)' }}
+          className="quiet-button pressable"
         >
           {t(lang, 'noteContinueWithoutSaving')}
         </button>
@@ -479,17 +475,17 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // Footer paired with a Back control, shared by the movement and supplication
   // views. Back hides on the very first step — there is no picker to return to.
   const footer = (
-    <div className="constellation-session__footer session-safe-footer shrink-0 px-5 pt-3 w-full">
+    <div className="prayer-session__footer session-safe-footer">
       {noteErrorPanel}
-      <div className="mx-auto flex w-full max-w-2xl items-center gap-3">
+      <div className="prayer-session__footer-row">
       {currentStep > 1 && (
         <QuietButton
           onClick={back}
           disabled={committing}
-          className="shrink-0 min-h-[52px]"
+          className="prayer-session__back"
         >
           <span className="inline-flex items-center gap-2 whitespace-nowrap">
-            <ChevronLeft className="rtl-mirror" size={16} /> {t(lang, 'backBtn')}
+            <ChevronLeft className="rtl-mirror" size={16} aria-hidden="true" /> {t(lang, 'backBtn')}
           </span>
         </QuietButton>
       )}
@@ -505,24 +501,23 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
 
   if (done) {
     return overlay(
-      <div className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center">
-        <RiseMark size={48} className="mb-5" />
-        <SectionLabel className="mb-3">Amen</SectionLabel>
-        <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--q-text)' }}>{t(lang, 'sessionDoneTitle')}</h2>
-        <Encouragement lang={lang} className="mt-4 max-w-sm text-sm" />
-        <p className="mt-5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{tp(lang, 'sessionDoneSub', total)}</p>
+      <div className="prayer-session__done">
+        <RiseMark size={56} className="mb-6" />
+        <SectionLabel sacred className="mb-3">{t(lang, 'amenBtn')}</SectionLabel>
+        <h2 className="prayer-session__done-title">{doneTitle || t(lang, 'sessionDoneTitle')}</h2>
+        <p className="q-meta mt-5">{tp(lang, 'sessionDoneSub', total)}</p>
         {/* Notes were attached to their prayers as the walk went on — this is a
             quiet acknowledgement, never another step to complete. */}
         {notes.savedCount > 0 && (
-          <p className="mt-1.5 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{tp(lang, 'notesSavedCount', notes.savedCount)}</p>
+          <p className="q-meta mt-1.5">{tp(lang, 'notesSavedCount', notes.savedCount)}</p>
         )}
-        <div className="mt-9 flex w-full max-w-xs flex-col gap-3">
-          <PrimaryButton onClick={handleClose} className="min-w-36">
-            {t(lang, 'close')}
-          </PrimaryButton>
+        <div className="prayer-session__done-actions">
           <SecondaryButton onClick={() => setRemaining(true)}>
             {t(lang, 'remainWithGod')}
           </SecondaryButton>
+          <PrimaryButton onClick={handleClose}>
+            {t(lang, 'remainFinish')}
+          </PrimaryButton>
         </div>
       </div>
     );
@@ -532,51 +527,49 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // control is a small, quiet affordance — the session already started, and the
   // deeper paths (guided / ACTS) live one tap beneath it.
   const header = (
-    <div className="constellation-session__header shrink-0 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3" style={{ background: 'var(--q-surface-inverse)' }}>
-      <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            <span>{APP_NAME} · </span><span>{currentStep} / {totalSteps}</span>
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+    <div className="prayer-session__header">
+      <div className="prayer-session__bar">
+        {closeButton}
+        <div className="prayer-session__tools">
           <PrayerMusicControl lang={lang} active={!done} />
           {allowFormats && (
             <button
+              type="button"
               onClick={() => setShowFormats((value) => !value)}
               aria-expanded={showFormats}
               title={t(lang, 'prayerFormat')}
-              className="pressable flex min-h-11 items-center gap-1 rounded-full px-3 text-xs font-semibold"
-              style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
+              className="prayer-session__format pressable"
             >
-              {t(lang, MODE_OPTIONS.find((o) => o.mode === mode).titleKey)}
-              <ChevronDown size={12} style={{ transform: showFormats ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+              <span className="prayer-session__format-label">{t(lang, MODE_OPTIONS.find((o) => o.mode === mode).titleKey)}</span>
+              <ChevronDown size={14} aria-hidden="true" style={{ transform: showFormats ? 'rotate(180deg)' : 'none', transition: 'transform var(--q-motion-micro) var(--q-ease)' }} />
             </button>
           )}
-          {closeButton}
         </div>
       </div>
       {allowFormats && showFormats && (
-        <div className="mx-auto mb-3 max-w-2xl space-y-1 rounded-xl p-1.5" style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,.09)' }} role="radiogroup" aria-label={t(lang, 'prayerFormat')}>
+        <div className="prayer-session__formats" role="radiogroup" aria-label={t(lang, 'prayerFormat')}>
           {MODE_OPTIONS.map(({ mode: m, titleKey, descKey }) => (
             <button
               key={m}
+              type="button"
               role="radio"
               aria-checked={m === mode}
               onClick={() => pickFormat(m)}
-              className="pressable min-h-11 w-full rounded-lg px-3 py-2 text-start"
-              style={m === mode ? { background: 'rgba(255,255,255,0.12)' } : {}}
+              className="prayer-session__format-option pressable"
             >
-              <p className="text-xs font-semibold flex items-center gap-1.5 text-white">
-                {m === mode && <Check size={12} />} {t(lang, titleKey)}
-              </p>
-              <p className="text-[11px] mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>{t(lang, descKey)}</p>
+              <span className="prayer-session__format-title">
+                {m === mode && <Check size={14} aria-hidden="true" />} {t(lang, titleKey)}
+              </span>
+              <span className="prayer-session__format-desc">{t(lang, descKey)}</span>
             </button>
           ))}
         </div>
       )}
-      <div className="mx-auto h-px max-w-2xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.14)' }}>
-        <div className="h-full transition-all" style={{ width: `${(currentStep / totalSteps) * 100}%`, background: 'var(--q-gold)', transitionDuration: 'var(--q-motion-standard)' }} />
+      <div className="prayer-session__progress-row">
+        <div className="prayer-session__track" aria-hidden="true">
+          <span style={{ width: `${(currentStep / totalSteps) * 100}%` }} />
+        </div>
+        <p className="prayer-session__progress"><span dir="ltr">{currentStep} / {totalSteps}</span></p>
       </div>
     </div>
   );
@@ -588,26 +581,22 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     return overlay(
       <>
         {header}
-        <div className="constellation-session__movement mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center overflow-y-auto px-6 py-10 sm:px-10">
-          <div className="mb-5 text-3xl" aria-hidden="true">{meta.emoji}</div>
-          <SectionLabel className="mb-3">{t(lang, 'prayerFormat')}</SectionLabel>
-          <h2 className="editorial-heading mb-4 text-4xl leading-tight sm:text-5xl" style={{ color: 'var(--q-text)' }}>{t(lang, meta.titleKey)}</h2>
-          <p className="mb-9 max-w-xl text-base leading-8" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, meta.promptKey)}</p>
-          {ref && (
-            <VerseAccordion reference={ref} lang={lang}>
-              {({ toggle }) => (
-                <button
-                  onClick={toggle}
-                  className="scripture-block pressable flex min-h-16 w-full items-center justify-between gap-3 text-start"
-                >
-                  <span className="scripture-text flex items-center gap-2 text-lg" style={{ color: 'var(--q-text)' }}>
-                    <BookOpen size={16} style={{ color: 'var(--q-gold-text)' }} /> {ref}
-                  </span>
-                  <span className="shrink-0 text-xs font-semibold" style={{ color: 'var(--q-gold-text)' }}>{t(lang, 'readInApp')}</span>
-                </button>
-              )}
-            </VerseAccordion>
-          )}
+        <div className="prayer-session__movement">
+          <div key={`movement-${stage}`} className="prayer-session__step">
+            <SectionLabel sacred className="mb-4">{t(lang, 'prayerFormat')}</SectionLabel>
+            <h2 className="prayer-session__title">{t(lang, meta.titleKey)}</h2>
+            <p className="prayer-session__prompt">{t(lang, meta.promptKey)}</p>
+            {ref && (
+              <VerseAccordion reference={ref} lang={lang}>
+                {({ toggle }) => (
+                  <button type="button" onClick={toggle} className="prayer-session__passage pressable">
+                    <span className="scripture-block__text">{ref}</span>
+                    <span className="prayer-session__passage-action"><BookOpen size={14} aria-hidden="true" /> {t(lang, 'readInApp')}</span>
+                  </button>
+                )}
+              </VerseAccordion>
+            )}
+          </div>
         </div>
         {footer}
       </>
@@ -618,6 +607,14 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const prayer = prayers[prayerIndex];
   const ids = (prayer.prayer_categories || []).map((pc) => pc.category_id);
   const cats = categories.filter((c) => ids.includes(c.id));
+  const circle = circleOf(prayer);
+  // Who and where, in one quiet line — never a row of chips.
+  const contextLine = [
+    circle ? t(lang, circleLabelKey(circle)) : '',
+    prayer.for_other && prayer.person_name ? t(lang, 'forPersonLabel', { name: prayer.person_name }) : '',
+    prayer.origin_group_name || '',
+    ...cats.map((c) => tr(c.name, lang)),
+  ].filter(Boolean).join(' · ');
   const points = prayer.prayer_points || [];
   const showSupplicationLabel = stages.length > 1; // only in guided / acts paths
   // Guided plan: the day-specific theme + Scripture lead the session, so the
@@ -638,131 +635,102 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   return overlay(
     <>
       {header}
-      <div
-        ref={requestScrollRef}
-        className="constellation-session__request mx-auto min-h-0 w-full max-w-2xl flex-1 overflow-y-auto px-6 py-9 sm:px-10 sm:py-12"
-      >
-        {planContent ? (
-          <SectionLabel className="mb-4">
-            {t(lang, 'planDayOf', { n: planContent.n, total: planContent.total })} · {planPrayerText(sessionPlan, lang)?.title || tr(prayer.title, lang)}
-          </SectionLabel>
-        ) : showSupplicationLabel ? (
-          <SectionLabel className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
-        ) : null}
-        {(cats.length > 0 || (prayer.for_other && prayer.person_name) || prayer.origin_group_name) && (
-          <div className="mb-5 flex flex-wrap gap-1.5">
-            {cats.map((c) => (
-              <StatusPill key={c.id} style={{ borderColor: c.color }}>
-                {c.emoji} {tr(c.name, lang)}
-              </StatusPill>
-            ))}
-            {prayer.for_other && prayer.person_name && (
-              <StatusPill>👤 {prayer.person_name}</StatusPill>
-            )}
-            {/* Source label — which group this shared request came from */}
-            {prayer.origin_group_name && (
-              <StatusPill>👥 {prayer.origin_group_name}</StatusPill>
-            )}
-          </div>
-        )}
+      <div ref={requestScrollRef} className="prayer-session__request">
+        <div key={`request-${prayer.id}-${prayerIndex}`} className="prayer-session__step">
+          {planContent ? (
+            <SectionLabel sacred className="mb-4">
+              {t(lang, 'planDayOf', { n: planContent.n, total: planContent.total })} · {planPrayerText(sessionPlan, lang)?.title || tr(prayer.title, lang)}
+            </SectionLabel>
+          ) : showSupplicationLabel ? (
+            <SectionLabel sacred className="mb-4">{t(lang, 'stageSupplication')}</SectionLabel>
+          ) : null}
+          {contextLine && <p className="prayer-session__context">{contextLine}</p>}
 
-        <h2 className="constellation-session__title editorial-heading mb-5 text-4xl leading-[1.12] sm:text-5xl" style={{ color: 'var(--q-text)' }}>
-          {planContent ? pick(planContent.theme, lang) : tr(prayer.title, lang)}
-        </h2>
+          <h2 className="prayer-session__title">
+            {planContent ? pick(planContent.theme, lang) : tr(prayer.title, lang)}
+          </h2>
 
-        {/* The day's Scripture — the passage to pray from, tappable to read in place */}
-        {planContent?.ref && (() => {
-          const planRef = localizeRef(planContent.ref, lang);
-          return (
-            <VerseAccordion reference={planRef} lang={lang}>
-              {({ toggle }) => (
-                <button
-                  onClick={toggle}
-                  className="scripture-block pressable mb-7 flex min-h-16 w-full items-center justify-between gap-3 text-start"
-                >
-                  <span className="scripture-text flex items-center gap-2 text-lg" style={{ color: 'var(--q-text)' }}>
-                    <BookOpen size={16} style={{ color: 'var(--q-gold-text)' }} /> {planRef}
-                  </span>
-                  <span className="shrink-0 text-xs font-semibold" style={{ color: 'var(--q-gold-text)' }}>{t(lang, 'readInApp')}</span>
-                </button>
-              )}
-            </VerseAccordion>
-          );
-        })()}
+          {/* The day's Scripture — the passage to pray from, tappable to read in place */}
+          {planContent?.ref && (() => {
+            const planRef = localizeRef(planContent.ref, lang);
+            return (
+              <VerseAccordion reference={planRef} lang={lang}>
+                {({ toggle }) => (
+                  <button type="button" onClick={toggle} className="prayer-session__passage pressable mb-8">
+                    <span className="scripture-block__text">{planRef}</span>
+                    <span className="prayer-session__passage-action"><BookOpen size={14} aria-hidden="true" /> {t(lang, 'readInApp')}</span>
+                  </button>
+                )}
+              </VerseAccordion>
+            );
+          })()}
 
-        {/* A rich plan day's reflection, prompts, self-prompt, practice and
-            "Go deeper" — nothing renders for the simpler plans. */}
-        {planContent && (
-          <div className="mb-7">
-            <PlanDayBody
-              day={planContent}
+          {/* A rich plan day's reflection, prompts, self-prompt, practice and
+              "Go deeper" — nothing renders for the simpler plans. */}
+          {planContent && (
+            <div className="mb-7">
+              <PlanDayBody
+                day={planContent}
+                lang={lang}
+                role={sessionPlanRole}
+                resources={sessionPlanResources}
+                resourceOffers={sessionPlanResourceOffers}
+                idPrefix="session-plan-day"
+                onAddNote={notesEnabled ? () => setNoteOpenSignal((n) => n + 1) : undefined}
+              />
+            </div>
+          )}
+
+          {/* A plan run’s description is the plan’s unchanging subtitle — it would
+              repeat under every single day. The day above is the content. */}
+          {!planContent && prayer.description && (
+            <RichText text={tr(prayer.description, lang)} className="prayer-session__description" />
+          )}
+
+          {/* Freshest news to pray from — one line, never the whole history.
+              A note the reader captured in an earlier session is an ordinary update
+              by the time it lands here, so without this it came back as "Latest
+              update" in news green: their own quiet note, dressed up as something
+              that had happened. Named and toned as what it is instead. */}
+          {latestUpdate?.text && (() => {
+            const ownNote = isSessionNote(latestUpdate.id);
+            return (
+              <aside className={`prayer-session__update ${ownNote ? 'prayer-session__update--note' : ''}`}>
+                <p className="section-label mb-2">{t(lang, ownNote ? 'noteTitle' : 'latestUpdateLabel')}</p>
+                <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-6" style={{ color: 'var(--q-text-secondary)' }} />
+              </aside>
+            );
+          })()}
+
+          {points.length > 0 && (
+            <div className="prayer-session__points">
+              {points.map((pp, i) => (
+                <div key={pp.id || i} className="prayer-session__point">
+                  <p className="prayer-session__point-title">{tr(pp.title, lang)}</p>
+                  {(pp.verses || []).map((v, vi) => (
+                    <SessionVerse key={pp.id ? `${pp.id}-${vi}` : vi} verse={v} lang={lang} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* The optional note: after the request and its Scripture, well clear of
+              the primary Continue action, and collapsed until it is asked for. */}
+          {notesEnabled && noteDraft && (
+            <PrayerSessionNote
               lang={lang}
-              role={sessionPlanRole}
-              resources={sessionPlanResources}
-              resourceOffers={sessionPlanResourceOffers}
-              idPrefix="session-plan-day"
-              onAddNote={notesEnabled ? () => setNoteOpenSignal((n) => n + 1) : undefined}
+              prayerId={prayer.id}
+              draft={noteDraft}
+              recorderRef={notes.recorderRef}
+              saving={committing}
+              onChangeText={(text) => notes.setText(prayer.id, text)}
+              onCaptureVoice={(voice) => notes.setVoice(prayer.id, voice)}
+              onDeleteVoice={() => notes.deleteVoice(prayer.id)}
+              openSignal={noteOpenSignal}
             />
-          </div>
-        )}
-
-        {/* A plan run’s description is the plan’s unchanging subtitle — it would
-            repeat under every single day. The day above is the content. */}
-        {!planContent && prayer.description && (
-          <RichText text={tr(prayer.description, lang)} className="mb-7 text-base leading-7" style={{ color: 'var(--q-text-secondary)' }} />
-        )}
-
-        {/* Freshest news to pray from — one line, never the whole history.
-            A note the reader captured in an earlier session is an ordinary update
-            by the time it lands here, so without this it came back as "Latest
-            update" in news green: their own quiet note, dressed up as something
-            that had happened. Named and toned as what it is instead. */}
-        {latestUpdate?.text && (() => {
-          const ownNote = isSessionNote(latestUpdate.id);
-          return (
-            <aside
-              className="mb-8 border-inline-start-2 py-1 ps-4"
-              style={{ borderColor: ownNote ? 'var(--q-border)' : 'var(--q-success)' }}
-            >
-              <p
-                className="mb-2 text-[10px] font-bold uppercase tracking-[.16em]"
-                style={{ color: ownNote ? 'var(--q-text-tertiary)' : 'var(--q-success)' }}
-              >
-                {t(lang, ownNote ? 'noteTitle' : 'latestUpdateLabel')}
-              </p>
-              <RichText text={tr(latestUpdate.text, lang)} className="text-sm leading-6" style={{ color: 'var(--q-text-secondary)' }} />
-            </aside>
-          );
-        })()}
-
-        {points.length > 0 && (
-          <div className="border-block-start" style={{ borderColor: 'var(--q-border)' }}>
-            {points.map((pp, i) => (
-              <div key={pp.id || i} className="py-6" style={{ borderBlockEnd: '1px solid var(--q-border)' }}>
-                <p className="text-base font-semibold leading-7" style={{ color: 'var(--q-text)' }}>{tr(pp.title, lang)}</p>
-                {(pp.verses || []).map((v, vi) => (
-                  <SessionVerse key={pp.id ? `${pp.id}-${vi}` : vi} verse={v} lang={lang} />
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* The optional note: after the request and its Scripture, well clear of
-            the primary Continue action, and collapsed until it is asked for. */}
-        {notesEnabled && noteDraft && (
-          <PrayerSessionNote
-            lang={lang}
-            prayerId={prayer.id}
-            draft={noteDraft}
-            recorderRef={notes.recorderRef}
-            saving={committing}
-            onChangeText={(text) => notes.setText(prayer.id, text)}
-            onCaptureVoice={(voice) => notes.setVoice(prayer.id, voice)}
-            onDeleteVoice={() => notes.deleteVoice(prayer.id)}
-            openSignal={noteOpenSignal}
-          />
-        )}
+          )}
+        </div>
       </div>
 
       {footer}

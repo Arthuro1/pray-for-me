@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Sparkles, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, HandHeart, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -68,7 +68,8 @@ import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import AudienceBadge from '../components/shared/AudienceBadge';
 import PrayerSession from '../components/PrayerSession';
-import { PrimaryButton } from '../components/shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
+import { circleLabelKey, circleOf } from '../lib/circles';
 import FollowUpField from '../components/FollowUpField';
 import useFollowUpStore from '../store/followUpStore';
 import { audienceOf, protectionOf } from '../lib/audience';
@@ -498,7 +499,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const memberAvatarFor = useMemberAvatars(isCommunity ? communityPrayer.group_id : null);
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
-  const constellationPrayerCount = isCommunity
+  const heroCircle = circleOf(livePrayer);
+  const heroContext = [
+    heroCircle ? t(lang, circleLabelKey(heroCircle)) : '',
+    livePrayer.for_other && livePrayer.person_name ? t(lang, 'forPersonLabel', { name: livePrayer.person_name }) : '',
+    livePrayer.origin_group_name || '',
+  ].filter(Boolean).join(' · ');
+  const carryingCount = isCommunity
     ? communityReactionCount
     : sharedGroups.reduce((total, share) => total + (share.prayingCount || 0), 0);
 
@@ -748,7 +755,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   );
 
   return (
-    <div className="detail-page phase-page constellation-detail">
+    <div className="detail-page phase-page prayer-detail">
       {showScripture && (
         <ScriptureFirstStep
           prayerId={livePrayer.id}
@@ -870,20 +877,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         />
       )}
 
-      {/* The request itself has room to breathe in the constellation hero
-          below; this sticky bar stays a quiet navigation rail. */}
+      {/* The request itself has room to breathe below; this sticky bar is a
+          quiet navigation rail: back, and one menu for everything else. */}
       <div className="detail-header">
         <button
+          type="button"
           onClick={onBack}
           aria-label={t(lang, 'tipBack')}
           title={t(lang, 'tipBack')}
-          className="detail-header__icon shrink-0 w-11 h-11 flex items-center justify-center rounded-full transition-colors"
+          className="icon-button pressable"
         >
-          <ArrowLeft size={18} aria-hidden="true" />
+          <ArrowLeft size={20} className="rtl-mirror" aria-hidden="true" />
         </button>
-        <p className="constellation-detail__screen-title flex-1 min-w-0 text-center">
-          {t(lang, 'prayer')}
-        </p>
         <div className="flex items-center gap-2 shrink-0">
           {isCommunity ? (
             // Author/admin management only; the primary "I'm praying" action now
@@ -891,7 +896,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'options')}
-              triggerStyle={{ background: 'var(--q-surface-muted)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
+              triggerStyle={{ background: 'transparent', color: 'var(--q-text-secondary)', border: 0 }}
               iconColor="var(--q-text-secondary)"
               items={[
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => setShowCommunityEdit(true), hidden: !canEditCommunityPrayer },
@@ -908,7 +913,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               lang={lang}
               ariaLabel={t(lang, 'options')}
               triggerRef={scheduleTriggerRef}
-              triggerStyle={{ background: 'var(--q-surface-muted)', color: 'var(--q-text-secondary)', border: '1px solid var(--q-border)' }}
+              triggerStyle={{ background: 'transparent', color: 'var(--q-text-secondary)', border: 0 }}
               iconColor="var(--q-text-secondary)"
               items={[
                 // The plan day leads with its own passage and its Go deeper —
@@ -935,69 +940,66 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </div>
       </div>
 
-      <section className="constellation-detail__hero">
-        <div className="constellation-detail__hero-copy">
-          {canEditTitle && editingTitle ? (
-            <input
-              autoFocus
-              value={titleDraft}
-              onChange={(e) => setTitleDraft(e.target.value)}
-              onBlur={saveTitle}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
-                else if (e.key === 'Escape') { titleCancelRef.current = true; e.currentTarget.blur(); }
-              }}
-              aria-label={t(lang, 'tipEditPrayer')}
-              className="constellation-detail__title-input"
-            />
-          ) : (
-            <h1
-              onClick={canEditTitle ? startEditTitle : undefined}
-              className={`constellation-detail__title ${canEditTitle ? 'cursor-text' : ''}`}
-              style={{ textDecoration: isAnswered ? 'line-through' : 'none' }}
-            >
-              <span>{livePrayer._locked ? t(lang, 'contentLocked') : (planText?.title || loc(livePrayer.title))}</span>
-              {canEditTitle && <Edit2 size={15} className="shrink-0 opacity-40" aria-hidden="true" />}
-            </h1>
-          )}
+      <section className="prayer-detail__hero">
+        {heroContext && <p className="section-label prayer-detail__context">{heroContext}</p>}
+        {canEditTitle && editingTitle ? (
+          <input
+            autoFocus
+            value={titleDraft}
+            onChange={(e) => setTitleDraft(e.target.value)}
+            onBlur={saveTitle}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
+              else if (e.key === 'Escape') { titleCancelRef.current = true; e.currentTarget.blur(); }
+            }}
+            aria-label={t(lang, 'tipEditPrayer')}
+            className="prayer-detail__title-input"
+          />
+        ) : (
+          <h1
+            onClick={canEditTitle ? startEditTitle : undefined}
+            className={`prayer-detail__title ${canEditTitle ? 'cursor-text' : ''}`}
+          >
+            <span>{livePrayer._locked ? t(lang, 'contentLocked') : (planText?.title || loc(livePrayer.title))}</span>
+            {canEditTitle && <Edit2 size={16} className="prayer-detail__edit-hint" aria-hidden="true" />}
+          </h1>
+        )}
 
-          {livePrayer._locked ? (
-            <LockedNotice lang={lang} />
-          ) : (planText?.description || livePrayer.description) ? (
-            <RichText text={planText?.description || loc(livePrayer.description)} className="constellation-detail__description" />
-          ) : null}
+        {livePrayer._locked ? (
+          <LockedNotice lang={lang} />
+        ) : (planText?.description || livePrayer.description) ? (
+          <RichText text={planText?.description || loc(livePrayer.description)} className="prayer-detail__description" />
+        ) : null}
 
-          <div className="constellation-detail__meta">
-            <span>
-              {isCommunity
-                ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
-                : showsCarriedSince(livePrayer)
-                  // Long-carried prayer as memory, never merit: a date and,
-                  // once there is one, a plain count of the days it was prayed.
-                  ? [
-                    t(lang, 'carriedSince', { date: carriedSinceLabel(livePrayer, lang) }),
-                    prayedDays > 0 ? tp(lang, 'prayedDays', prayedDays) : null,
-                  ].filter(Boolean).join(' · ')
-                  : timeAgo(livePrayer.created_at, lang)}
+        <div className="prayer-detail__meta">
+          <span>
+            {isCommunity
+              ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
+              : showsCarriedSince(livePrayer)
+                // Long-carried prayer as memory, never merit: a date and,
+                // once there is one, a plain count of the days it was prayed.
+                ? [
+                  t(lang, 'carriedSince', { date: carriedSinceLabel(livePrayer, lang) }),
+                  prayedDays > 0 ? tp(lang, 'prayedDays', prayedDays) : null,
+                ].filter(Boolean).join(' · ')
+                : timeAgo(livePrayer.created_at, lang)}
+          </span>
+          {isAnswered && <StatusLabel tone="answered">{t(lang, 'answered')}</StatusLabel>}
+          {carryingCount > 0 && (
+            <span className="prayer-detail__praying">
+              {carryingCount} {t(lang, 'prayingCount')}
             </span>
-            {constellationPrayerCount > 0 && (
-              <span className="constellation-detail__praying">
-                <Users size={13} aria-hidden="true" />
-                {constellationPrayerCount} {t(lang, 'prayingCount')}
-              </span>
-            )}
-          </div>
-
-          {!isCommunity && !isAnswered && !livePrayer._locked && (
-            <PrimaryButton
-              onClick={() => setShowPraySession(true)}
-              icon={HandHeart}
-              className="constellation-detail__pray mt-8 w-full whitespace-nowrap sm:w-auto sm:min-w-44"
-            >
-              {t(lang, 'prayNow')}
-            </PrimaryButton>
           )}
         </div>
+
+        {!isCommunity && !isAnswered && !livePrayer._locked && (
+          <PrimaryButton
+            onClick={() => setShowPraySession(true)}
+            className="prayer-detail__pray"
+          >
+            {t(lang, 'prayNow')}
+          </PrimaryButton>
+        )}
       </section>
 
       <div className="detail-page__content space-y-4">
@@ -1007,20 +1009,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             labelled, and the original always stays one tap away. */}
         {translationRelevant && !isPlanRun && (
           <div className="flex items-center gap-2">
-            <button
+            <QuietButton
               onClick={handleToggleTranslate}
               disabled={translating}
-              className="flex items-center gap-1.5 min-h-[44px] text-xs font-medium disabled:opacity-50"
-              style={{ color: 'var(--q-royal-text)' }}
+              icon={translating ? Loader2 : Languages}
+              iconSize={14}
+              className="-ms-3"
             >
-              {translating ? <Loader2 size={13} className="animate-spin" /> : <Languages size={13} />}
               {showTranslated ? t(lang, 'showOriginal') : t(lang, 'seeTranslation')}
-            </button>
-            {showTranslated && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                {t(lang, 'translatedLabel')}
-              </span>
-            )}
+            </QuietButton>
+            {showTranslated && <StatusLabel plain>{t(lang, 'translatedLabel')}</StatusLabel>}
           </div>
         )}
 
@@ -1041,15 +1039,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {!savedCopy && prayerCategories.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {prayerCategories.map(c => (
-              <span key={c.id} className="text-xs px-3 py-1.5 rounded-full font-medium text-white" style={{ backgroundColor: c.color }}>
-                {c.emoji} {tr(c.name, lang)}
+              <span key={c.id} className="status-pill">
+                <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
+                {tr(c.name, lang)}
               </span>
             ))}
-            {livePrayer.for_other && livePrayer.person_name && (
-              <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
-                👤 {livePrayer.person_name}
-              </span>
-            )}
           </div>
         )}
 
@@ -1061,25 +1055,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               // Beside Pray now on any width that fits, stacked when the
               // translated labels need the room — so the hierarchy stays
               // readable instead of the labels overflowing.
-              <div className="constellation-detail__secondary-actions flex flex-col min-[380px]:flex-row gap-2">
-                <button
-                  onClick={focusUpdateField}
-                  className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
-                  style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}
-                >
-                  <Plus size={13} aria-hidden="true" className="shrink-0" />
-                  <span className="truncate">{t(lang, 'addUpdateBtn')}</span>
-                </button>
-                <button
+              <div className="prayer-detail__secondary-actions">
+                <SecondaryButton onClick={focusUpdateField} icon={Plus} iconSize={16}>
+                  {t(lang, 'addUpdateBtn')}
+                </SecondaryButton>
+                <SecondaryButton
                   onClick={showTestimony ? closeAnswerFlow : openAnswerFlow}
                   aria-expanded={showTestimony}
                   aria-controls="pd-answer"
-                  className="flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 min-h-[44px] rounded-xl text-xs font-medium"
-                  style={{ background: 'var(--q-success-soft)', color: 'var(--q-success)', border: '0.5px solid var(--q-success-border)' }}
+                  icon={CheckCircle}
+                  iconSize={16}
                 >
-                  <CheckCircle size={13} aria-hidden="true" className="shrink-0" />
-                  <span className="truncate">{t(lang, 'markAnswered')}</span>
-                </button>
+                  {t(lang, 'markAnswered')}
+                </SecondaryButton>
               </div>
           )
         )}
@@ -1092,13 +1080,8 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           schedulePlanner
         ) : (
           livePrayer.schedule && !planScheduleRow && (
-            <p
-              className="text-xs flex items-center gap-1.5 rounded-xl px-3 py-2"
-              style={seriesEnded
-                ? { background: 'var(--q-field)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-field-border)' }
-                : { background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-            >
-              <Repeat size={12} className="shrink-0" /> {seriesEnded ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
+            <p className="prayer-detail__rhythm">
+              <Repeat size={14} className="shrink-0" aria-hidden="true" /> {seriesEnded ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
             </p>
           )
         )}
@@ -1276,21 +1259,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             pray, so this panel appears only if that run carries points of its
             own — and then without the affordances to author more. ── */}
         {showWaysToPray && (
-        <div className="prayer-points-panel rounded-2xl" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+        <div className="prayer-points-panel">
           <div className="prayer-points-panel__header flex items-center justify-between">
-            <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'waysToPray')}</p>
+            <p className="section-label">{t(lang, 'waysToPray')}</p>
             {offerPointAuthoring && (isCommunity || canAddContent) && (
               <div className="flex items-center gap-1.5">
-                <button
+                <QuietButton
                   onClick={fetchRecs}
                   disabled={loadingRecs}
                   title={t(lang, 'tipAiSuggest')}
-                  className="flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium disabled:opacity-50"
-                  style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
+                  icon={loadingRecs ? Loader2 : Lightbulb}
+                  iconSize={14}
                 >
-                  {loadingRecs ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
                   {t(lang, 'prayerSuggestionsCta')}
-                </button>
+                </QuietButton>
               </div>
             )}
           </div>
@@ -1307,7 +1289,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
               const pointReadOnly = !!(pp._locked || pp._communityFallback);
               return (
-                <div key={pp.id} className="prayer-point-card group rounded-xl">
+                <div key={pp.id} className="prayer-point-card group">
                   <div className="flex items-start gap-2">
                     <p className="flex-1 text-sm leading-snug" style={{ color: pp._locked ? 'var(--q-text-tertiary)' : 'var(--q-text)' }}>
                       {pp._locked ? t(lang, 'contentLocked') : loc(pp.title)}
@@ -1512,7 +1494,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
 
         {/* Set / change this prayer's follow-up date (opened from the ⋯ menu). */}
         {showFollowUpEdit && !isCommunity && !savedCopy && !isAnswered && followUpRelevant && (
-          <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}>
+          <div className="prayer-detail__section">
             <FollowUpField
               value={followUps[livePrayer.id]?.date || null}
               onChange={(date) => setFollowUp(livePrayer.id, date)}
@@ -1646,7 +1628,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <div className="prayer-activity-list">
             {allUpdates.map(u => (
               <div key={u.id} className="prayer-activity-item prayer-activity-item--personal group flex gap-3">
-                <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--q-action-primary)', alignSelf: 'stretch', minHeight: '14px' }} />
+                <div className="w-0.5 rounded-full shrink-0 mt-1.5" style={{ background: 'var(--q-border-strong)', alignSelf: 'stretch', minHeight: '14px' }} />
                 <div className="prayer-activity-item__body min-w-0 flex-1">
                   {/* An entry captured while praying reads as part of the
                       prayer's story, not as a different kind of thing — the same

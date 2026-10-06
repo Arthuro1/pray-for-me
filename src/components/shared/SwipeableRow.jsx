@@ -56,7 +56,7 @@ export default function SwipeableRow({ actions = [], children, className = '' })
   };
 
   return (
-    <div className={`relative overflow-hidden rounded-2xl ${className}`.trim()}>
+    <div className={`relative overflow-hidden ${className}`.trim()}>
       <div
         className="absolute inset-y-0 right-0 flex"
         aria-hidden={!open}

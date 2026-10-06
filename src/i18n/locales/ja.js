@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "嘆願",
   "continueBtn": "続ける",
   "amenBtn": "アーメン",
-  "sessionDoneTitle": "神と過ごす時 🙏",
+  "sessionDoneTitle": "神と過ごす時",
   "sessionDoneSub": "今日は{n}件のために祈りました。",
   "sessionDoneSub_one": "今日は1件のために祈りました。",
   "sessionDoneSub_other": "今日は{n}件のために祈りました。",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "最新の更新",
   "aiDataPrefsTitle": "AI が受け取る内容",
   "aiDataPrefsSub": "祈りのタイトルは常に送信されます。説明と最新の更新を含めるかどうかを選べます。",
+  "forPersonLabel": "{name}のために",
+  "altarPrayedThrough": "今日の祭壇にあるすべてのために祈りました。",
+  "emptyTodayTitle": "あなたの心にあることから始めましょう。",
+  "emptyTodaySub": "一つの祈りを神の前に持って来ましょう。祭壇は小さく始めてかまいません。",
+  "explorePlan": "祈りのプランを見る",
 };

@@ -63,10 +63,10 @@ export function PrayerSurface({ as: Tag = 'section', tone = 'default', className
 
 function makeButton(base, displayName) {
   const Button = forwardRef(function Button(
-    { icon: Icon, iconSize = 18, inverse = false, danger = false, children, className = '', type = 'button', ...props },
+    { icon: Icon, iconSize = 18, danger = false, children, className = '', type = 'button', ...props },
     ref,
   ) {
-    const variants = `${inverse ? `${base}--inverse` : ''} ${danger ? `${base}--danger` : ''}`;
+    const variants = danger ? `${base}--danger` : '';
     return (
       <button ref={ref} type={type} className={`${base} pressable ${variants} ${className}`} {...props}>
         {Icon && <Icon size={iconSize} strokeWidth={1.85} aria-hidden="true" />}

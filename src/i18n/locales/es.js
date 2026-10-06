@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "Súplica",
   "continueBtn": "Continuar",
   "amenBtn": "Amén",
-  "sessionDoneTitle": "Tiempo con Dios 🙏",
+  "sessionDoneTitle": "Tiempo con Dios",
   "sessionDoneSub": "Hoy oraste por {n} petición(es).",
   "sessionDoneSub_one": "Hoy oraste por 1 petición.",
   "sessionDoneSub_other": "Hoy oraste por {n} peticiones.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "Última actualización",
   "aiDataPrefsTitle": "Lo que recibe la IA",
   "aiDataPrefsSub": "El título de la oración siempre se envía. Elige si incluir la descripción y la última actualización.",
+  "forPersonLabel": "Por {name}",
+  "altarPrayedThrough": "Has orado por todo tu altar de hoy.",
+  "emptyTodayTitle": "Empieza con lo que llevas en el corazón.",
+  "emptyTodaySub": "Lleva una oración delante de Dios. Tu altar puede empezar pequeño.",
+  "explorePlan": "Explorar un plan de oración",
 };

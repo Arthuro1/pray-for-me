@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "الطلب",
   "continueBtn": "متابعة",
   "amenBtn": "آمين",
-  "sessionDoneTitle": "وقت مع الله 🙏",
+  "sessionDoneTitle": "وقت مع الله",
   "sessionDoneSub": "صلّيت اليوم من أجل {n} موضوعًا.",
   "sessionDoneSub_one": "صلّيت اليوم من أجل موضوع واحد.",
   "sessionDoneSub_other": "صلّيت اليوم من أجل {n} موضوعًا.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "آخر تحديث",
   "aiDataPrefsTitle": "ما يتلقاه الذكاء الاصطناعي",
   "aiDataPrefsSub": "يُرسَل عنوان الصلاة دائمًا. اختر ما إذا كنت تريد تضمين الوصف وآخر تحديث.",
+  "forPersonLabel": "لأجل {name}",
+  "altarPrayedThrough": "لقد صلّيت لكل ما على مذبحك اليوم.",
+  "emptyTodayTitle": "ابدأ بما في قلبك.",
+  "emptyTodaySub": "قدّم صلاة واحدة أمام الله. يمكن لمذبحك أن يبدأ صغيرًا.",
+  "explorePlan": "استكشف خطة صلاة",
 };

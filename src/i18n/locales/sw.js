@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "Dua",
   "continueBtn": "Endelea",
   "amenBtn": "Amina",
-  "sessionDoneTitle": "Wakati na Mungu 🙏",
+  "sessionDoneTitle": "Wakati na Mungu",
   "sessionDoneSub": "Umeomba kwa ajili ya mambo {n} leo.",
   "sessionDoneSub_one": "Umeomba kwa ajili ya jambo 1 leo.",
   "sessionDoneSub_other": "Umeomba kwa ajili ya mambo {n} leo.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "Sasisho la hivi punde",
   "aiDataPrefsTitle": "Kile ambacho AI hupokea",
   "aiDataPrefsSub": "Kichwa cha ombi hutumwa kila mara. Chagua kama utajumuisha maelezo na sasisho la hivi punde.",
+  "forPersonLabel": "Kwa ajili ya {name}",
+  "altarPrayedThrough": "Umeomba kwa yote yaliyo kwenye madhabahu yako leo.",
+  "emptyTodayTitle": "Anza na kile kilicho moyoni mwako.",
+  "emptyTodaySub": "Leta ombi moja mbele za Mungu. Madhabahu yako inaweza kuanza ndogo.",
+  "explorePlan": "Chunguza mpango wa maombi",
 };

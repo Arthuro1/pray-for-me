@@ -89,7 +89,7 @@ button { -webkit-tap-highlight-color: transparent; }
   font-family: var(--q-font-ui);
   font-size: var(--q-type-label);
   font-weight: 650;
-  letter-spacing: 0.14em;
+  letter-spacing: var(--q-tracking-label);
   line-height: 1.4;
   text-transform: uppercase;
 }

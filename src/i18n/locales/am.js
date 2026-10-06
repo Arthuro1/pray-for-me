@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "ልመና",
   "continueBtn": "ቀጥል",
   "amenBtn": "አሜን",
-  "sessionDoneTitle": "ከእግዚአብሔር ጋር ጊዜ 🙏",
+  "sessionDoneTitle": "ከእግዚአብሔር ጋር ጊዜ",
   "sessionDoneSub": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።",
   "sessionDoneSub_one": "ዛሬ ለ1 ጉዳይ ጸልየሃል።",
   "sessionDoneSub_other": "ዛሬ ለ{n} ጉዳዮች ጸልየሃል።",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "የቅርብ ጊዜ ዝማኔ",
   "aiDataPrefsTitle": "AI የሚቀበለው",
   "aiDataPrefsSub": "የጸሎቱ ርዕስ ሁልጊዜ ይላካል። መግለጫውን እና የቅርብ ጊዜውን ዝማኔ ማካተት ወይም አለማካተት ይምረጡ።",
+  "forPersonLabel": "ለ{name}",
+  "altarPrayedThrough": "የዛሬውን መሠዊያዎን በሙሉ በጸሎት አቅርበዋል።",
+  "emptyTodayTitle": "በልብዎ ባለው ነገር ይጀምሩ።",
+  "emptyTodaySub": "አንድ ጸሎት ወደ እግዚአብሔር ፊት ያቅርቡ። መሠዊያዎ በትንሹ ሊጀምር ይችላል።",
+  "explorePlan": "የጸሎት ዕቅድ ያስሱ",
 };

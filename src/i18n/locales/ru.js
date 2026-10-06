@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "Прошение",
   "continueBtn": "Продолжить",
   "amenBtn": "Аминь",
-  "sessionDoneTitle": "Время с Богом 🙏",
+  "sessionDoneTitle": "Время с Богом",
   "sessionDoneSub": "Сегодня вы помолились о {n} нуждах.",
   "sessionDoneSub_one": "Сегодня вы помолились об одной нужде.",
   "sessionDoneSub_other": "Сегодня вы помолились о {n} нуждах.",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "Последнее обновление",
   "aiDataPrefsTitle": "Что получает ИИ",
   "aiDataPrefsSub": "Название молитвы отправляется всегда. Выберите, добавлять ли описание и последнее обновление.",
+  "forPersonLabel": "За {name}",
+  "altarPrayedThrough": "Вы помолились обо всём, что сегодня на вашем алтаре.",
+  "emptyTodayTitle": "Начните с того, что у вас на сердце.",
+  "emptyTodaySub": "Принесите Богу одну молитву. Ваш алтарь может начаться с малого.",
+  "explorePlan": "Посмотреть молитвенный план",
 };

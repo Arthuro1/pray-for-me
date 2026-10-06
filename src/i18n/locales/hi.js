@@ -682,7 +682,7 @@ export default {
   "stageSupplication": "विनती",
   "continueBtn": "जारी रखें",
   "amenBtn": "आमीन",
-  "sessionDoneTitle": "परमेश्वर के साथ समय 🙏",
+  "sessionDoneTitle": "परमेश्वर के साथ समय",
   "sessionDoneSub": "आज आपने {n} विषय(ों) के लिए प्रार्थना की।",
   "sessionDoneSub_one": "आज आपने 1 विषय के लिए प्रार्थना की।",
   "sessionDoneSub_other": "आज आपने {n} विषयों के लिए प्रार्थना की।",
@@ -1487,4 +1487,9 @@ export default {
   "aiPreviewFieldUpdate": "नवीनतम अपडेट",
   "aiDataPrefsTitle": "AI को क्या मिलता है",
   "aiDataPrefsSub": "प्रार्थना का शीर्षक हमेशा भेजा जाता है। चुनें कि विवरण और नवीनतम अपडेट शामिल करने हैं या नहीं।",
+  "forPersonLabel": "{name} के लिए",
+  "altarPrayedThrough": "आज आपकी वेदी पर जो कुछ था, उस सबके लिए आपने प्रार्थना कर ली है।",
+  "emptyTodayTitle": "जो आपके मन में है, उसी से शुरू करें।",
+  "emptyTodaySub": "एक प्रार्थना परमेश्वर के सामने लाएँ। आपकी वेदी छोटे से शुरू हो सकती है।",
+  "explorePlan": "प्रार्थना योजना देखें",
 };
