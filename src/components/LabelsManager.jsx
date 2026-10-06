@@ -4,6 +4,7 @@ import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { CATEGORY_COLORS, categoryTint } from '../lib/categoryColor';
 import { confirm } from '../store/confirmStore';
+import { Field, Input, PrimaryButton, SecondaryButton } from './shared/Primitives';
 
 const EMOJIS = ['🙏', '✝️', '⛪', '👨‍👩‍👧‍👦', '💼', '🌍', '❤️', '🏥', '📖', '🕊️'];
 
@@ -52,79 +53,71 @@ export default function LabelsManager({ lang, tr, onDone }) {
 
   return (
     <section aria-labelledby="labels-manager-title">
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div>
-          <h2 id="labels-manager-title" className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>
-            {t(lang, 'labelsTitle')}
-          </h2>
-          <p className="mt-1 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'labelsSub')}</p>
+      <div className="q-dialog__header">
+        <div className="min-w-0">
+          <h2 id="labels-manager-title" className="q-dialog__title">{t(lang, 'labelsTitle')}</h2>
+          <p className="q-meta mt-2">{t(lang, 'labelsSub')}</p>
         </div>
         {onDone && (
-          <button type="button" onClick={onDone} aria-label={t(lang, 'close')} className="phase-icon-button shrink-0">
-            <X size={17} aria-hidden="true" />
+          <button type="button" onClick={onDone} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0">
+            <X size={18} aria-hidden="true" />
           </button>
         )}
       </div>
 
       {categories.length > 0 && (
-        <div className="mb-4 flex flex-wrap gap-2">
+        <ul className="label-list">
           {categories.map((category) => (
-            <div
-              key={category.id}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-full py-1 ps-3 pe-1"
-              style={{ background: categoryTint(category.color, 16), border: `1px solid ${category.color}` }}
-            >
-              <span aria-hidden="true">{category.emoji}</span>
-              <span className="max-w-40 truncate text-sm font-medium" style={{ color: 'var(--q-text)' }}>
-                {tr(category.name, lang)}
+            <li key={category.id} className="label-list__row">
+              {/* The reader's own colour and emoji: their content, kept as chosen. */}
+              <span className="label-chip" style={{ background: categoryTint(category.color, 16), borderColor: category.color }}>
+                <span aria-hidden="true">{category.emoji}</span>
+                <span className="label-chip__name">{tr(category.name, lang)}</span>
               </span>
-              <button type="button" onClick={() => edit(category)} aria-label={`${t(lang, 'editLabel')} ${tr(category.name, lang)}`} className="flex h-9 w-9 items-center justify-center rounded-full">
-                <Pencil size={13} aria-hidden="true" />
-              </button>
-              <button type="button" onClick={() => remove(category)} aria-label={`${t(lang, 'delete')} ${tr(category.name, lang)}`} className="flex h-9 w-9 items-center justify-center rounded-full" style={{ color: 'var(--q-danger)' }}>
-                <Trash2 size={13} aria-hidden="true" />
-              </button>
-            </div>
+              <span className="flex shrink-0">
+                <button type="button" onClick={() => edit(category)} aria-label={`${t(lang, 'editLabel')} ${tr(category.name, lang)}`} className="icon-button pressable">
+                  <Pencil size={16} aria-hidden="true" />
+                </button>
+                <button type="button" onClick={() => remove(category)} aria-label={`${t(lang, 'delete')} ${tr(category.name, lang)}`} className="icon-button icon-button--danger pressable">
+                  <Trash2 size={16} aria-hidden="true" />
+                </button>
+              </span>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {!formOpen ? (
-        <button
-          type="button"
-          onClick={() => { setDraft(emptyDraft()); setEditingId(null); setFormOpen(true); }}
-          className="secondary-button"
-        >
-          <Plus size={15} aria-hidden="true" /> {t(lang, 'addLabel')}
-        </button>
+        <SecondaryButton icon={Plus} iconSize={16} onClick={() => { setDraft(emptyDraft()); setEditingId(null); setFormOpen(true); }}>
+          {t(lang, 'addLabel')}
+        </SecondaryButton>
       ) : (
-        <div className="rounded-2xl p-4" style={{ background: 'var(--q-surface-muted)', border: '0.5px solid var(--q-border)' }}>
-          <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
-            {t(lang, editingId ? 'editLabel' : 'newLabel')}
-            <input
-              autoFocus
-              value={draft.name}
-              onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
-              placeholder={t(lang, 'labelNamePlaceholder')}
-              className="min-h-11 w-full rounded-xl px-3 text-sm focus:outline-none"
-              style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-            />
-          </label>
-          <div className="mt-3 flex flex-wrap gap-2" aria-label={t(lang, 'emojiLabel')}>
+        <div className="label-form">
+          <Field label={t(lang, editingId ? 'editLabel' : 'newLabel')}>
+            {(field) => (
+              <Input
+                autoFocus
+                value={draft.name}
+                onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
+                placeholder={t(lang, 'labelNamePlaceholder')}
+                {...field}
+              />
+            )}
+          </Field>
+          <div className="label-form__options" role="group" aria-label={t(lang, 'emojiLabel')}>
             {EMOJIS.map((emoji) => (
               <button
                 key={emoji}
                 type="button"
                 onClick={() => setDraft((current) => ({ ...current, emoji }))}
                 aria-pressed={draft.emoji === emoji}
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-lg"
-                style={{ background: 'var(--q-field)', outline: draft.emoji === emoji ? '2px solid var(--q-royal)' : 'none' }}
+                className="emoji-option pressable"
               >
                 {emoji}
               </button>
             ))}
           </div>
-          <div className="mt-3 flex flex-wrap gap-3" aria-label={t(lang, 'colorLabel')}>
+          <div className="label-form__options" role="group" aria-label={t(lang, 'colorLabel')}>
             {CATEGORY_COLORS.map((color) => (
               <button
                 key={color}
@@ -132,18 +125,16 @@ export default function LabelsManager({ lang, tr, onDone }) {
                 onClick={() => setDraft((current) => ({ ...current, color }))}
                 aria-label={color}
                 aria-pressed={draft.color === color}
-                className="flex h-11 w-11 items-center justify-center rounded-full"
+                className="color-swatch pressable"
                 style={{ background: color }}
               >
-                {draft.color === color && <Check size={15} color="#fff" aria-hidden="true" />}
+                {draft.color === color && <Check size={16} strokeWidth={2.5} aria-hidden="true" />}
               </button>
             ))}
           </div>
-          <div className="mt-4 flex gap-2">
-            <button type="button" onClick={reset} className="secondary-button flex-1">{t(lang, 'cancel')}</button>
-            <button type="button" onClick={save} disabled={!draft.name.trim()} className="primary-button flex-1 px-4 disabled:opacity-50">
-              {t(lang, 'saveBtn')}
-            </button>
+          <div className="q-dialog__actions mt-0">
+            <SecondaryButton onClick={reset}>{t(lang, 'cancel')}</SecondaryButton>
+            <PrimaryButton onClick={save} disabled={!draft.name.trim()}>{t(lang, 'saveBtn')}</PrimaryButton>
           </div>
         </div>
       )}

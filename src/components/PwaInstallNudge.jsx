@@ -82,27 +82,14 @@ export default function PwaInstallNudge({ lang, modeOverride = null }) {
       {showIosHelp && (
         <BottomSheet ref={sheetRef} label={t(lang, 'pwaIosTitle')} className="max-w-lg">
           <div className="p-6">
-            <div
-              className="mb-4 flex h-11 w-11 items-center justify-center rounded-full"
-              style={{ background: 'var(--q-gold-soft)', color: 'var(--q-gold-text)' }}
-              aria-hidden="true"
-            >
-              <Share size={19} />
-            </div>
-            <h2 className="editorial-heading text-2xl" style={{ color: 'var(--q-text)' }}>
-              {t(lang, 'pwaIosTitle')}
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }}>
-              {t(lang, 'pwaIosBody')}
-            </p>
-            <div className="mt-5 flex items-center gap-3 rounded-xl p-3" style={{ background: 'var(--q-surface-muted)' }}>
-              <Share size={18} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
+            <h2 className="q-dialog__title">{t(lang, 'pwaIosTitle')}</h2>
+            <p className="q-dialog__text mt-3">{t(lang, 'pwaIosBody')}</p>
+            <p className="ios-steps">
+              <Share size={18} aria-hidden="true" />
               <span aria-hidden="true">→</span>
-              <SquarePlus size={18} aria-hidden="true" style={{ color: 'var(--q-royal-text)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--q-text)' }}>
-                {t(lang, 'pwaIosAddAction')}
-              </span>
-            </div>
+              <SquarePlus size={18} aria-hidden="true" />
+              <span>{t(lang, 'pwaIosAddAction')}</span>
+            </p>
             <PrimaryButton onClick={dismiss} className="mt-6 w-full">
               {t(lang, 'doneBtn')}
             </PrimaryButton>

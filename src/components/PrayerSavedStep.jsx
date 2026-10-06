@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, HandHeart, X } from 'lucide-react';
+import { HandHeart, X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -12,6 +12,7 @@ import { todayKey } from '../lib/prayedLog';
 import { nextReturnLabel } from '../lib/scheduleDraft';
 import PrayerSession from './PrayerSession';
 import RiseMark from './shared/RiseMark';
+import { PrimaryButton, QuietButton, SecondaryButton } from './shared/Primitives';
 
 // Shown right after a new personal prayer is saved: a calm confirmation with ONE
 // decision — pray now, or be done. "Pray now" opens a real prayer session on the
@@ -65,87 +66,47 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6" style={{ background: 'rgba(26,10,46,0.6)' }} onClick={onClose}>
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end justify-center p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:items-center md:p-6" onClick={onClose}>
       <div
         ref={trapRef}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={heading}
-        className="w-full max-w-md mx-auto rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
-        style={{ background: 'var(--q-surface)' }}
+        className="q-dialog saved-step"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Full 44×44 tap target: the button carries the size, the inner
-            circle only carries the look. */}
-        <div className="flex justify-end -mt-3 -mr-3 mb-1">
-          <button
-            onClick={onClose}
-            aria-label={t(lang, 'close')}
-            className="w-11 h-11 flex items-center justify-center rounded-full focus-visible:ring-2"
-            style={{ color: 'var(--q-royal-text)' }}
-          >
-            <span aria-hidden="true" className="p-1.5 rounded-full flex items-center justify-center" style={{ background: 'var(--q-selected)' }}>
-              <X size={16} />
-            </span>
+        <div className="saved-step__close">
+          <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable">
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
 
-        {/* Compact success confirmation */}
-        <div className="text-center mb-6">
-          {isFirstPrayer ? (
-            <div className="mx-auto mb-2 flex h-14 items-end justify-center" aria-hidden="true">
-              <RiseMark size={44} />
-            </div>
-          ) : (
-            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--q-success-soft)' }}>
-              <Check size={26} style={{ color: 'var(--q-success)' }} />
-            </div>
-          )}
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--q-text)' }}>{heading}</h2>
-          <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>
-            {t(lang, isFirstPrayer ? 'altarBegunBody' : 'savedOnToday')}
-          </p>
+        {/* One mark for every saved prayer: the incense rising. A check in a
+            green circle said "done"; green belongs to answered prayer. */}
+        <div className="saved-step__body">
+          <RiseMark size={isFirstPrayer ? 44 : 36} />
+          <h2 className="q-dialog__title">{heading}</h2>
+          <p className="q-meta">{t(lang, isFirstPrayer ? 'altarBegunBody' : 'savedOnToday')}</p>
           {/* When it comes back — the one thing this moment can usefully add,
               and only when the schedule really has a next day to name. */}
-          {nextReturn && (
-            <p className="text-sm mt-1" style={{ color: 'var(--q-text-tertiary)' }}>
-              {t(lang, 'nextPrayerLabel', { when: nextReturn })}
-            </p>
-          )}
+          {nextReturn && <p className="q-meta">{t(lang, 'nextPrayerLabel', { when: nextReturn })}</p>}
           {/* The prayer's audience and protection, computed from the ACTUAL
               saved prayer and stated the same way they read everywhere else —
               a new personal prayer is Private, with encryption shown as a
               separate quiet status only when THIS prayer was really encrypted. */}
-          <div className="mt-2.5">
+          <div className="mt-2">
             <AudienceBadge audience={audienceOf(savedPrayer, [])} protection={protectionOf(savedPrayer)} lang={lang} />
           </div>
         </div>
 
-        <button
-          onClick={() => setPraying(true)}
-          className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white mb-2.5"
-          style={{ background: 'var(--q-action-primary)' }}
-        >
-          <HandHeart size={17} /> {t(lang, 'prayNowCta')}
-        </button>
-        <button
-          onClick={onClose}
-          className="w-full rounded-xl py-3 text-sm font-medium"
-          style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
-        >
-          {t(lang, 'doneBtn')}
-        </button>
-        {isFirstPrayer && onChooseRhythm && (
-          <button
-            type="button"
-            onClick={() => onChooseRhythm(savedPrayer)}
-            className="mt-2 w-full min-h-[44px] text-sm font-semibold focus-visible:ring-2 rounded-xl"
-            style={{ color: 'var(--q-royal-text)' }}
-          >
-            {t(lang, 'altarChooseRhythm')}
-          </button>
-        )}
+        <div className="grid gap-2">
+          <PrimaryButton icon={HandHeart} onClick={() => setPraying(true)} className="min-h-[52px]">{t(lang, 'prayNowCta')}</PrimaryButton>
+          <SecondaryButton onClick={onClose}>{t(lang, 'doneBtn')}</SecondaryButton>
+          {isFirstPrayer && onChooseRhythm && (
+            <QuietButton onClick={() => onChooseRhythm(savedPrayer)}>{t(lang, 'altarChooseRhythm')}</QuietButton>
+          )}
+        </div>
       </div>
     </div>
   );

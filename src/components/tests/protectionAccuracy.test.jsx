@@ -6,6 +6,7 @@
 // locked and assert the label doesn't move.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
 
 // The device key state, flipped per test. The whole point is that changing it
 // must not change what any of these surfaces say.
@@ -120,8 +121,10 @@ describe('saved confirmation — protection comes from the prayer, not the vault
     setStore(prayer());
     render(<PrayerSavedStep prayerId="p1" title="Ma prière" description="" lang={lang} onClose={() => {}} />);
     const close = screen.getByRole('button', { name: t(lang, 'close') });
-    expect(close.className).toMatch(/w-11/);
-    expect(close.className).toMatch(/h-11/);
+    // The icon-button primitive is a 44px square (components.css).
+    expect(close.className).toContain('icon-button');
+    const css = readFileSync('src/styles/components.css', 'utf8');
+    expect(css).toMatch(/\.icon-button,[\s\S]*?width: 44px;[\s\S]*?height: 44px;/);
   });
 });
 

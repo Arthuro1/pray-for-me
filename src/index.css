@@ -487,12 +487,15 @@
   justify-content: center;
   overflow: hidden;
   background: var(--q-surface-muted);
-  border: 0.5px solid var(--q-border);
+  border: 1px solid var(--q-border);
+  color: var(--q-text-tertiary);
   cursor: grab;
   touch-action: none;
 }
 
 .avatar-crop-frame:active { cursor: grabbing; }
+.avatar-crop-frame--person { border-radius: 50%; }
+.avatar-crop-frame--group { border-radius: var(--q-radius-surface); }
 
 .avatar-crop-frame:focus-visible {
   outline: 2px solid var(--q-royal);

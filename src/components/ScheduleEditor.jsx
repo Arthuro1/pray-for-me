@@ -39,9 +39,8 @@ import {
 // A per-prayer "follow up / check back in" reminder is NOT a recurrence and does
 // not live here — it is a separate concept (see FollowUpField / followUpStore).
 
-const INPUT_STYLE = { background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' };
-const FIELD_CLASS = 'w-full text-sm rounded-xl px-4 py-2.5 min-h-[44px] focus:outline-none';
-const NUMBER_CLASS = 'w-20 text-sm rounded-xl px-3 py-2 min-h-[44px] text-center focus:outline-none';
+const FIELD_CLASS = 'q-input';
+const NUMBER_CLASS = 'q-input q-input--number';
 
 const MODE_ROWS = [
   { value: 'recurring', labelKey: 'schedOtherRhythm', subKey: 'schedOtherRhythmSub' },
@@ -118,7 +117,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
   return (
     <div className="space-y-3" onKeyDown={blockImplicitSubmit}>
       <fieldset className="space-y-2">
-        <legend className="text-xs font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--q-text-tertiary)' }}>
+        <legend className="section-label mb-2">
           {t(lang, 'schedWhenAppear')}
         </legend>
         {modeRows.map((row) => (
@@ -141,7 +140,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                   value={d.date}
                   onChange={(e) => e.target.value && patch({ date: e.target.value })}
                   className={FIELD_CLASS}
-                  style={INPUT_STYLE}
+                 
                 />
               </div>
             )}
@@ -174,15 +173,11 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                                 // Fixed target, wrapping rather than shrinking:
                                 // a long localized abbreviation widens the day
                                 // instead of pushing the row off-screen.
-                                className="relative flex-none min-w-[44px] min-h-[44px] px-2 text-xs rounded-xl font-medium transition-colors"
-                                style={on
-                                  ? { background: 'var(--q-action-primary)', color: 'var(--q-on-action)', border: '1.5px solid var(--q-royal)' }
-                                  : { background: 'var(--q-surface)', color: 'var(--q-text-tertiary)', border: '0.5px solid var(--q-field-border)' }}
+                                // Selection reads without colour too: a chosen day is
+                                // filled and bold, an open one only outlined.
+                                className="day-toggle pressable"
                               >
                                 {day}
-                                {/* Selection also reads without colour: a dot
-                                    and a heavier border, not hue alone. */}
-                                {on && <span aria-hidden="true" className="absolute bottom-1 start-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{ background: 'var(--q-on-action)' }} />}
                               </button>
                             );
                           })}
@@ -209,23 +204,23 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                             label={t(lang, RHYTHM_LABELS[choice])}
                           />
                           {choice === 'interval' && rhythm === 'interval' && (
-                            <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--q-text-secondary)' }}>
+                            <div className="schedule-inline">
                               <label htmlFor={id('interval')}>{t(lang, 'intervalEvery')}</label>
                               <input
                                 id={id('interval')} type="number" min="2" max="90" value={d.interval}
                                 onChange={(e) => patch({ interval: Math.max(2, parseInt(e.target.value, 10) || 2) })}
-                                className={NUMBER_CLASS} style={INPUT_STYLE}
+                                className={NUMBER_CLASS}
                               />
                               <span>{t(lang, 'intervalDays')}</span>
                             </div>
                           )}
                           {choice === 'monthly' && rhythm === 'monthly' && (
-                            <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--q-text-secondary)' }}>
+                            <div className="schedule-inline">
                               <label htmlFor={id('dayOfMonth')}>{t(lang, 'monthlyOnDay')}</label>
                               <input
                                 id={id('dayOfMonth')} type="number" min="1" max="31" value={d.dayOfMonth}
                                 onChange={(e) => patch({ dayOfMonth: Math.min(31, Math.max(1, parseInt(e.target.value, 10) || 1)) })}
-                                className={NUMBER_CLASS} style={INPUT_STYLE}
+                                className={NUMBER_CLASS}
                               />
                             </div>
                           )}
@@ -235,7 +230,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                               <input
                                 id={id('yearlyDate')} type="date" value={d.yearlyDate}
                                 onChange={(e) => e.target.value && patch({ yearlyDate: e.target.value })}
-                                className={FIELD_CLASS} style={INPUT_STYLE}
+                                className={FIELD_CLASS}
                               />
                             </div>
                           )}
@@ -316,17 +311,17 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
                       <input
                         id={id('endDate')} type="date" value={d.endDate}
                         onChange={(e) => patch({ endDate: e.target.value })}
-                        className={FIELD_CLASS} style={INPUT_STYLE}
+                        className={FIELD_CLASS}
                       />
                     </div>
                   )}
                   {kind === 'count' && d.endKind === 'count' && (
-                    <div className="flex items-center gap-2 ps-3 text-sm" style={{ color: 'var(--q-text-secondary)' }}>
+                    <div className="schedule-inline">
                       <label htmlFor={id('endCount')} className="sr-only">{t(lang, 'schedEndCountLabel')}</label>
                       <input
                         id={id('endCount')} type="number" min="1" max="365" value={d.endCount}
                         onChange={(e) => patch({ endCount: Math.max(1, parseInt(e.target.value, 10) || 1) })}
-                        className={NUMBER_CLASS} style={INPUT_STYLE}
+                        className={NUMBER_CLASS}
                       />
                       <span>{t(lang, 'endTimesSuffix')}</span>
                     </div>
@@ -340,11 +335,7 @@ export default function ScheduleEditor({ draft, onChange, lang, planDays, idPref
 
       {/* The whole answer in one sentence, read off the schedule that will
           actually be saved. */}
-      <p
-        aria-live="polite"
-        className="text-sm rounded-xl px-3 py-2.5 break-words"
-        style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}
-      >
+      <p aria-live="polite" className="schedule-sentence">
         {scheduleSentence(preview, lang, { planDays })}
       </p>
     </div>

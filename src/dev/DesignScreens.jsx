@@ -3,7 +3,7 @@
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
 // /vault-setup, /privacy, /feedback, /donate, /ai-consent, /confirm,
-// /first-prayer and /calendar render
+// /first-prayer, /calendar, /saved, /labels and /ai-preview render
 // the REAL screens inside the real app shell with sample prayers (the vault and
 // key gates replace the shell, as in the app). Every store write is replaced
 // by a local no-op first, and
@@ -40,6 +40,9 @@ import FeedbackModal from '../components/FeedbackModal';
 import DonateModal from '../components/DonateModal';
 import AiConsentModal from '../components/AiConsentModal';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
+import PrayerSavedStep from '../components/PrayerSavedStep';
+import LabelsManager from '../components/LabelsManager';
+import AiOutgoingPreview from '../components/AiOutgoingPreview';
 import useNotificationStore from '../store/notificationStore';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
@@ -104,7 +107,7 @@ function seed() {
   const prayers = samplePrayers();
   usePrayerStore.setState((state) => ({
     prayers,
-    categories: [],
+    categories: [{ id: 'c1', name: 'Family', emoji: '🏠', color: '#7A5BA8' }, { id: 'c2', name: 'Work', emoji: '💼', color: '#4F7A6B' }],
     completions: { d4: [today], d5: [addDays(today, -1)] },
     loading: false,
     userId: 'design-user',
@@ -128,7 +131,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar',
+  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -335,6 +338,9 @@ export default function DesignScreens({ screen }) {
       {screen === 'about' && <AboutTab />}
       {screen === 'settings' && <SettingsTab />}
       {screen === 'calendar' && <PlanTab />}
+      {screen === 'saved' && <PrayerSavedStep prayerId="d4" title="My children" schedule={usePrayerStore.getState().prayers[3].schedule} lang={lang} onClose={() => navigate('/__design/today')} />}
+      {screen === 'labels' && <Modal label="labels" onClose={() => navigate('/__design/journal')}><LabelsManager lang={lang} tr={(text) => text} onDone={() => navigate('/__design/journal')} /></Modal>}
+      {screen === 'ai-preview' && <AiOutgoingPreview lang={lang} title="Healing and peace for Sarah" description="For her recovery after surgery." update="The surgery went well." onSend={() => {}} onCancel={() => navigate('/__design/detail')} />}
       {screen === 'inbox' && <InboxPreview />}
       {['vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm'].includes(screen) && <SettingsTab />}
       {screen === 'vault-setup' && <VaultModal lang={lang} initialMode="setup" userId="design-user" onClose={() => navigate('/__design/settings')} />}

@@ -96,6 +96,10 @@ button.pressable:active:not(:disabled) { transform: translateY(1px); }
 .phase-icon-button:hover { background: var(--q-hover); color: var(--q-text); }
 
 .icon-button--outlined { border: 1px solid var(--q-border-strong); color: var(--q-text); }
+.icon-button:disabled,
+.phase-icon-button:disabled { cursor: not-allowed; opacity: 0.4; }
+.icon-button--danger { color: var(--q-danger); }
+.icon-button--danger:hover { background: var(--q-danger-soft); color: var(--q-danger); }
 .icon-button--outlined[aria-expanded="true"] { border-color: var(--q-royal); background: var(--q-selected); color: var(--q-royal-text); }
 
 /* ── Page and section headers ────────────────────────────────────────────── */
@@ -362,6 +366,34 @@ a.prayer-row:hover { background: var(--q-hover); }
    or the page that opened it. */
 .schedule-picker { display: grid; gap: var(--q-space-5); padding-block: var(--q-space-2); }
 .schedule-picker__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--q-space-2); }
+.q-input--number { width: 5rem; text-align: center; }
+
+/* Inside the scheduler: a short inline answer ("every [3] days"). */
+.schedule-inline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); padding-inline-start: var(--q-space-3); color: var(--q-text-secondary); font-size: 0.875rem; }
+
+/* A weekday to pray on: outlined when open, filled and bold when chosen —
+   never told apart by colour alone. Wraps rather than shrinks. */
+.day-toggle {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--q-space-2);
+  border: 1px solid var(--q-border-strong);
+  border-radius: var(--q-radius-control);
+  color: var(--q-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease);
+}
+
+.day-toggle:hover { background: var(--q-hover); }
+.day-toggle[aria-pressed="true"] { border-color: var(--q-action-primary); background: var(--q-action-primary); color: var(--q-on-action); font-weight: 700; }
+
+/* The whole rhythm in one sentence, read off what will be saved. */
+.schedule-sentence { margin: 0; padding-inline-start: var(--q-space-3); border-inline-start: 2px solid var(--q-royal); color: var(--q-text); font-size: 0.9375rem; line-height: 1.5; overflow-wrap: anywhere; }
 
 /* A segmented control that spans its column, its options sharing it equally. */
 .segmented-control--fill { display: flex; width: 100%; }

@@ -509,3 +509,19 @@ a.menu-row { text-decoration: none; }
 .group-calendar { padding-block: var(--q-space-2); }
 .group-calendar__day { display: grid; gap: var(--q-space-2); }
 .group-calendar__who { display: flex; flex-wrap: wrap; gap: var(--q-space-1) var(--q-space-3); margin: 0 0 var(--q-space-2); padding: 0; color: var(--q-text-secondary); font-size: 0.875rem; list-style: none; }
+
+/* A follow-up on a prayer's page: quiet until it is due, then a royal rule. */
+.follow-up { display: grid; gap: var(--q-space-2); padding-block: var(--q-space-3); padding-inline-start: var(--q-space-4); border-inline-start: 2px solid var(--q-border-strong); }
+.follow-up--due { border-inline-start-color: var(--q-royal); }
+.follow-up__title { display: flex; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.follow-up__title > svg { flex: 0 0 auto; color: var(--q-royal-text); }
+.follow-up__actions { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-1); margin-inline-start: calc(-1 * var(--q-space-3)); }
+
+/* Adding to an iPhone home screen: the two taps, in order. */
+.ios-steps { display: flex; align-items: center; gap: var(--q-space-3); margin: var(--q-space-5) 0 0; padding-block: var(--q-space-3); border-block: 1px solid var(--q-border); color: var(--q-text); font-size: 0.9375rem; font-weight: 500; }
+.ios-steps > svg { flex: 0 0 auto; color: var(--q-royal-text); }
+
+/* What will be sent to the AI, shown before it is: quoted, labelled, redacted. */
+.ai-outgoing { display: grid; gap: var(--q-space-3); margin: 0 0 var(--q-space-4); padding: var(--q-space-1) 0 var(--q-space-1) var(--q-space-4); border-inline-start: 2px solid var(--q-border-strong); }
+.ai-outgoing__value { margin: var(--q-space-1) 0 0; color: var(--q-text); font-size: 0.9375rem; line-height: 1.5; overflow-wrap: anywhere; }
+.ai-outgoing__value--long { color: var(--q-text-secondary); white-space: pre-wrap; }

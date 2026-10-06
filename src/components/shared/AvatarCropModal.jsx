@@ -4,6 +4,7 @@ import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { loadAvatarSource, renderAvatarBlob } from '../../lib/avatarImage';
 import { t } from '../../i18n';
+import { PrimaryButton, SecondaryButton } from './Primitives';
 
 // Choosing the square. Drag to reposition, zoom in, confirm — and the preview
 // you are looking at IS the output: the same drawImage call renders the canvas
@@ -148,8 +149,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
-      style={{ background: 'rgba(0,0,0,0.5)' }}
+      className="dialog-backdrop fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
       onClick={close}
     >
       <div
@@ -158,24 +158,22 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
         role="dialog"
         aria-modal="true"
         aria-label={t(lang, 'avatarCropTitle')}
-        className="w-full max-w-sm rounded-2xl p-5"
-        style={{ background: 'var(--q-surface)', border: '0.5px solid var(--q-border)' }}
+        className="q-dialog w-full max-w-sm p-6"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="mb-4 flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-base font-semibold" style={{ color: 'var(--q-text)' }}>{t(lang, 'avatarCropTitle')}</h3>
-            <p className="text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'avatarCropHint')}</p>
+        <div className="q-dialog__header">
+          <div className="min-w-0">
+            <h2 className="q-dialog__title">{t(lang, 'avatarCropTitle')}</h2>
+            <p className="q-meta mt-2">{t(lang, 'avatarCropHint')}</p>
           </div>
           <button
             type="button"
             onClick={close}
             disabled={saving}
             aria-label={t(lang, 'close')}
-            className="pressable flex h-9 w-9 shrink-0 items-center justify-center rounded-full disabled:opacity-40"
-            style={{ color: 'var(--q-text-tertiary)' }}
+            className="icon-button pressable -me-2 -mt-2 shrink-0"
           >
-            <X size={17} aria-hidden="true" />
+            <X size={18} aria-hidden="true" />
           </button>
         </div>
 
@@ -189,12 +187,11 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
           onPointerCancel={endDrag}
-          className="avatar-crop-frame mx-auto mb-4"
-          style={{ borderRadius: kind === 'group' ? '1rem' : '50%' }}
+          className={`avatar-crop-frame avatar-crop-frame--${kind === 'group' ? 'group' : 'person'} mx-auto mb-4`}
         >
           {source
             ? <canvas ref={canvasRef} width={PREVIEW_PIXELS} height={PREVIEW_PIXELS} className="avatar-crop-canvas" />
-            : <Loader2 size={20} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />}
+            : <Loader2 size={20} className="animate-spin" aria-hidden="true" />}
         </div>
 
         <div className="mb-4 flex items-center gap-2">
@@ -203,8 +200,7 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             onClick={() => applyZoom(zoom - ZOOM_STEP)}
             disabled={!source || zoom <= MIN_ZOOM || saving}
             aria-label={t(lang, 'avatarZoomOut')}
-            className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl disabled:opacity-40"
-            style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
+            className="icon-button icon-button--outlined pressable shrink-0"
           >
             <Minus size={16} aria-hidden="true" />
           </button>
@@ -224,32 +220,18 @@ export default function AvatarCropModal({ lang, file, kind = 'user', onCancel, o
             onClick={() => applyZoom(zoom + ZOOM_STEP)}
             disabled={!source || zoom >= MAX_ZOOM || saving}
             aria-label={t(lang, 'avatarZoomIn')}
-            className="pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-xl disabled:opacity-40"
-            style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
+            className="icon-button icon-button--outlined pressable shrink-0"
           >
             <Plus size={16} aria-hidden="true" />
           </button>
         </div>
 
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={close}
-            disabled={saving}
-            className="pressable min-h-11 flex-1 rounded-xl text-sm font-medium disabled:opacity-40"
-            style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text-secondary)' }}
-          >
-            {t(lang, 'cancel')}
-          </button>
-          <button
-            type="button"
-            onClick={handleConfirm}
-            disabled={!source || saving}
-            className="pressable min-h-11 flex-1 rounded-xl text-sm font-medium text-white disabled:opacity-40"
-            style={{ background: 'var(--q-action-primary)' }}
-          >
-            {saving ? <Loader2 size={14} className="animate-spin mx-auto" aria-hidden="true" /> : t(lang, 'avatarPhotoSave')}
-          </button>
+        <div className="q-dialog__actions mt-0">
+          <SecondaryButton onClick={close} disabled={saving}>{t(lang, 'cancel')}</SecondaryButton>
+          <PrimaryButton onClick={handleConfirm} disabled={!source || saving}>
+            {saving && <Loader2 size={16} className="animate-spin" aria-hidden="true" />}
+            {t(lang, 'avatarPhotoSave')}
+          </PrimaryButton>
         </div>
       </div>
     </div>

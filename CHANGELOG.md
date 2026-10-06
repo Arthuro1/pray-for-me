@@ -204,6 +204,15 @@ and rollback notes. Unreleased entries are moved into a dated version at release
     same pieces and buttons.
   - *Answered* — the unused "gallery" behind the Journal's Answered view (it
     only ever showed its empty state) is replaced by that empty state alone.
+  - *Forms and small surfaces* — the rhythm editor's fields, weekday toggles
+    (filled and bold when chosen, not colour alone) and its one-sentence
+    summary (a royal rule, not a tinted box); labels (the reader's own
+    colours and emoji kept as chosen, around them rows, pickers and the
+    three buttons); the photo crop; "your prayer is saved" (the Rise Mark
+    for every save — the green check is gone); the AI "review what's sent"
+    step (the outgoing text quoted on a rule, the include toggles as
+    settings rows); the follow-up on a prayer's page (a quiet rule that
+    turns royal when due, quiet actions); the iPhone install help.
 - Nudges are quiet surfaces instead of gold cards; small-caps tracking is off
   for Arabic, Persian, Hindi, Amharic and CJK, where spacing breaks the words;
   the session's progress stays "1 / 3" in right-to-left languages.
