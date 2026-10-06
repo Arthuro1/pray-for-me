@@ -24,6 +24,8 @@ import {
   decryptPrayerFromStorage,
   SENSITIVE_FIELDS,
   SENSITIVE_JSON_FIELDS,
+  PAYLOAD_ONLY_FIELDS,
+  withoutPayloadOnlyFields,
   UPDATE_SENSITIVE_FIELDS,
   POINT_SENSITIVE_FIELDS,
   TESTIMONY_SENSITIVE_FIELDS,
@@ -32,6 +34,7 @@ import { isUnlocked } from '../lib/crypto/keyManager';
 import { groupKeyResolver } from '../lib/crypto/groupKeys';
 import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
 import { clearPlanPersonalization } from '../lib/planPersonalizationStorage';
+import { isCircle } from '../lib/circles';
 
 // Soft-deletes awaiting commit: id -> { prayer snapshot, commit timer }. Module
 // level so it survives store re-renders; an "Undo" toast clears the timer.
@@ -86,6 +89,10 @@ async function encryptedSensitiveFields(merged) {
   const sensitive = {
     ...Object.fromEntries(SENSITIVE_FIELDS.map((f) => [f, merged[f] ?? ''])),
     ...Object.fromEntries(SENSITIVE_JSON_FIELDS.map((f) => [f, merged[f] ?? null])),
+    // Payload-only metadata (the Intercession Circle) must ride along on EVERY
+    // re-encryption — an edit, saved guidance, a v1→v2 migration — or the
+    // rewrite would silently drop it. It never comes back as a column below.
+    ...Object.fromEntries(PAYLOAD_ONLY_FIELDS.map((f) => [f, merged[f] ?? null])),
   };
   const enc = await encryptPrayerForStorage({
     ...sensitive,
@@ -523,9 +530,13 @@ const usePrayerStore = create((set, get) => ({
     // optimistic copy so the UI states a fact about this row rather than a
     // guess from the vault.
     const willEncrypt = canEncrypt(row);
+    // The optional Intercession Circle lives only inside the ciphertext, so a
+    // prayer that will not be encrypted cannot hold one (lib/circles.js).
+    const circle = willEncrypt && isCircle(prayer.circle) ? prayer.circle : null;
 
     const optimistic = {
       ...row,
+      ...(circle ? { circle } : {}),
       created_at: new Date().toISOString(),
       prayer_updates: [],
       prayer_points: [],
@@ -540,7 +551,7 @@ const usePrayerStore = create((set, get) => ({
     set((state) => ({ prayers: [optimistic, ...state.prayers] }));
     // In-memory stays plaintext; only the persisted row is encrypted (if the
     // vault is unlocked). New prayers have no community_origin_id → encryptable.
-    const persistRow = willEncrypt ? await encryptPrayerForStorage(row) : row;
+    const persistRow = willEncrypt ? await encryptPrayerForStorage({ ...row, circle }) : row;
     enqueue('createPrayer', { row: persistRow, categoryIds });
     if (isFirst) track(EVENTS.FIRST_PRAYER_CREATED);
     return id;
@@ -595,6 +606,11 @@ const usePrayerStore = create((set, get) => ({
     // An edit re-encrypts a previously-plaintext row, so the in-memory copy
     // records that this row is now encrypted instead of waiting for a reload.
     const nowEncrypted = canEncrypt(current);
+    // Placing (or un-placing) a prayer in a circle is only possible for a prayer
+    // that is encrypted under the account key; null clears it.
+    if (updates.circle !== undefined && nowEncrypted) {
+      payload.circle = isCircle(updates.circle) ? updates.circle : null;
+    }
     set((state) => ({
       prayers: state.prayers.map((p) => {
         if (p.id !== id) return p;
@@ -611,9 +627,9 @@ const usePrayerStore = create((set, get) => ({
     // title/description out to its community copies — those are independent
     // snapshots encrypted under the group key, so pushing plaintext here would both
     // leak content and be unreadable under the wrong key.
-    let persistPayload = payload;
+    let persistPayload = withoutPayloadOnlyFields(payload);
     if (nowEncrypted) {
-      persistPayload = { ...payload, ...(await encryptedSensitiveFields({ ...current, ...payload })) };
+      persistPayload = { ...persistPayload, ...(await encryptedSensitiveFields({ ...current, ...payload })) };
     }
     enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds });
   },

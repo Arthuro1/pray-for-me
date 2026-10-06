@@ -1,4 +1,5 @@
 import { toRRule } from '../lib/schedule';
+import { APP_NAME } from '../lib/brand';
 
 // Builds an iCalendar (RFC 5545) file from the user's prayer schedule so it
 // can live inside Google/Apple/Outlook calendars too. Pure (no I/O): the
@@ -35,7 +36,7 @@ export function buildICS(prayers = [], commitments = []) {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Praystead//Prayer Schedule//EN',
+    `PRODID:-//${APP_NAME}//Prayer Schedule//EN`,
     'CALSCALE:GREGORIAN',
   ];
   for (const p of prayers) {

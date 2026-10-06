@@ -13,10 +13,13 @@
   --ink: #241b2f;
   --text-muted: #746a7d;
   --text-faint: #6f6474;
-  --plum: #60457b;
-  --plum-dark: #30213f;
+  --plum: #5b3d82;
+  --plum-dark: #2e1c42;
   --plum-deep: #24182f;
-  --gold: #a97938;
+  /* Gold as TEXT must hold AA on the warm canvas; --gold-bright is for lines,
+     marks and fills only. */
+  --gold: #8b6124;
+  --gold-bright: #d9ae62;
   --gold-soft: #f4ead7;
   --sage: #5f7865;
   --sage-soft: #e7eee6;
@@ -76,6 +79,7 @@
   --plum-dark: #2b1d38;
   --plum-deep: #1b1224;
   --gold: #d2aa6d;
+  --gold-bright: #e4c27f;
   --gold-soft: #3a3023;
   --sage: #94ad98;
   --sage-soft: #24332a;
@@ -1594,119 +1598,124 @@ button.pressable:active:not(:disabled) { transform: scale(.98); }
 }
 
 /* Constellation app -------------------------------------------------------
-   The approved Light/Dark system is scoped to signed-in Praystead by the
+   The approved Light/Dark system is scoped to signed-in Qetoret by the
    constellation-app class on <html>. Public landing/auth surfaces keep their
    existing palette, while every authenticated route, sheet and prayer moment
    shares one calm sky. */
 .constellation-app {
   color-scheme: light;
-  --background: #f8f6ff;
-  --surface: #ffffff;
-  --surface-muted: #f2effa;
+  /* Qetoret: warm neutral canvas, royal plum for action, gold as a restrained
+     accent (borders, labels, the rise line) — never the dominant colour. Every
+     text colour below holds WCAG AA on --background and --surface. */
+  --background: #f7f3ec;
+  --surface: #fffdf9;
+  --surface-muted: #f1ebe1;
   --surface-raised: #ffffff;
-  --ink: #251e35;
-  --text-muted: #74628f;
-  --text-faint: #6f637f;
-  --plum: #7457b8;
-  --plum-dark: #5d449a;
-  --plum-deep: #251e35;
-  --gold: #8c76c9;
-  --gold-soft: #f0ecfb;
-  --sage: #249e98;
-  --sage-soft: #e7f7f5;
-  --border: #ded8ee;
-  --border-strong: #c9bfe2;
-  --overlay: rgba(30, 22, 51, 0.62);
-  --shadow-sm: 0 1px 2px rgba(42, 31, 69, 0.04), 0 10px 30px rgba(57, 40, 91, 0.055);
-  --shadow-md: 0 22px 64px rgba(42, 31, 69, 0.14);
+  --ink: #261b31;
+  --text-muted: #6b5e75;
+  --text-faint: #685c6f;
+  --plum: #5b3d82;
+  --plum-dark: #43295f;
+  --plum-deep: #261b31;
+  --gold: #8b6124;
+  --gold-bright: #d9ae62;
+  --gold-soft: #f5ecdc;
+  --sage: #3f7a6c;
+  --sage-soft: #e6f1ec;
+  --border: #e6ddd0;
+  --border-strong: #d5c8b6;
+  --overlay: rgba(38, 27, 49, 0.62);
+  --shadow-sm: 0 1px 2px rgba(43, 30, 47, 0.04), 0 10px 30px rgba(67, 41, 95, 0.05);
+  --shadow-md: 0 22px 64px rgba(43, 30, 47, 0.13);
   --bg: var(--background);
   --surface-2: var(--surface-muted);
-  --border-soft: #e7e1f1;
-  --header: linear-gradient(145deg, #30215e 0%, #5d43a7 100%);
-  --header-answered: linear-gradient(145deg, #1d5f5b 0%, #279e98 100%);
-  /* The shared verse-of-the-day image wears the same sky as the Home hero, in both
-     themes — a near-white card would vanish against half the chat backgrounds it
-     lands on. Its whole palette lives here so the exported card can never drift
-     from the system; Light and Dark differ only in how deep the sky goes. */
-  --card-sky-from: #30215e;
-  --card-sky-to: #5d43a7;
-  --card-sky-ink: #f8f5ff;
-  --card-sky-accent: #cbb6f2;
+  --border-soft: #ece4d8;
+  --header: linear-gradient(145deg, #2e1c42 0%, #4a2c68 100%);
+  --header-answered: linear-gradient(145deg, #24483f 0%, #3f7a6c 100%);
+  /* The shared verse-of-the-day image wears the same deep plum as the Home hero,
+     in both themes — a near-white card would vanish against half the chat
+     backgrounds it lands on. Its whole palette lives here so the exported card
+     can never drift from the system; Light and Dark differ only in depth. */
+  --card-sky-from: #2e1c42;
+  --card-sky-to: #4a2c68;
+  --card-sky-ink: #f8f2e8;
+  --card-sky-accent: #e4c27f;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
   --accent: var(--plum);
-  --accent-2: #8c76c9;
-  --accent-soft: #eeebfa;
-  --accent-border: #d8cfee;
+  --accent-2: #8a6bb3;
+  --accent-soft: #efe8f4;
+  --accent-border: #dccfe6;
   --nav-active-bg: transparent;
-  --nav-active-color: #7457b8;
-  --badge: #7457b8;
+  --nav-active-color: #5b3d82;
+  --badge: #5b3d82;
   --badge-text: #ffffff;
-  --nav-shadow: 0 -8px 30px rgba(37, 30, 53, 0.055);
-  --input-bg: #ffffff;
-  --input-border: #d8d0e8;
+  --nav-shadow: 0 -8px 30px rgba(38, 27, 49, 0.055);
+  --input-bg: #fffdf9;
+  --input-border: #d9cdbd;
   --danger: #a13d5d;
   --danger-bg: #faecef;
-  --success: #249e98;
+  --success: #3f7a6c;
   --success-bg: var(--sage-soft);
-  --success-border: #a9d8d4;
+  --success-border: #b5d2c8;
   --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #a9d8d4;
-  --answered-pill-bg: #e7f7f5;
-  --answered-pill-text: #168b85;
+  --card-answered-border: #b5d2c8;
+  --answered-pill-bg: #e6f1ec;
+  --answered-pill-text: #2f6b5d;
 }
 
 .constellation-app[data-theme="dark"],
 .constellation-app[data-theme="night"] {
   color-scheme: dark;
-  --background: #120f1b;
-  --surface: #171423;
-  --surface-muted: #1c182a;
-  --surface-raised: #211c31;
-  --ink: #f8f5ff;
-  --text-muted: #b4a8c9;
-  --text-faint: #8d82a2;
+  --background: #15111b;
+  --surface: #1d1725;
+  --surface-muted: #231c2c;
+  --surface-raised: #2a2234;
+  --ink: #f6efe6;
+  --text-muted: #c4b8cc;
+  --text-faint: #9d90a6;
   --plum: #9a7ce0;
-  --plum-dark: #7457b8;
-  --plum-deep: #120f1b;
-  --gold: #9a7ce0;
-  --gold-soft: #211a36;
-  --sage: #63d1cb;
-  --sage-soft: #173331;
-  --border: #373047;
-  --border-strong: #4b415f;
+  --plum-dark: #6e4fa8;
+  --plum-deep: #15111b;
+  --gold: #d8b06a;
+  --gold-bright: #e4c27f;
+  --gold-soft: #33291e;
+  --sage: #8fcab8;
+  --sage-soft: #1a302a;
+  --border: #3a3043;
+  --border-strong: #4e4259;
   --overlay: rgba(5, 3, 10, 0.78);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28), 0 12px 34px rgba(0, 0, 0, 0.24);
   --shadow-md: 0 24px 72px rgba(0, 0, 0, 0.46);
   --bg: var(--background);
   --surface-2: var(--surface-muted);
-  --border-soft: #2c263a;
-  --header: linear-gradient(145deg, #19132f 0%, #4a3190 100%);
-  --header-answered: linear-gradient(145deg, #153532 0%, #23635f 100%);
-  --card-sky-from: #19132f;
-  --card-sky-to: #4a3190;
-  --card-sky-accent: #b19aeb;
+  --border-soft: #2e2637;
+  --header: linear-gradient(145deg, #1f1430 0%, #43295f 100%);
+  --header-answered: linear-gradient(145deg, #15302a 0%, #2c5c50 100%);
+  --card-sky-from: #1f1430;
+  --card-sky-to: #43295f;
+  --card-sky-accent: #e4c27f;
   --accent: var(--plum);
-  --accent-2: #b19aeb;
-  --accent-soft: #28203d;
-  --accent-border: #493b68;
+  --accent-2: #c3a7ec;
+  --accent-soft: #2c2238;
+  --accent-border: #4a3b5c;
   --nav-active-bg: transparent;
-  --nav-active-color: #a98be8;
+  --nav-active-color: #c3a7ec;
   --badge: #8e70d0;
   --badge-text: #ffffff;
   --nav-shadow: 0 -8px 30px rgba(0, 0, 0, 0.38);
-  --input-bg: #191523;
-  --input-border: #403650;
+  --input-bg: #1b1622;
+  --input-border: #433850;
   --danger: #ef8fa8;
   --danger-bg: #351b25;
-  --success: #63d1cb;
+  --success: #8fcab8;
   --success-bg: var(--sage-soft);
-  --success-border: #315b58;
+  --success-border: #335b51;
   --card-answered-bg: var(--sage-soft);
-  --card-answered-border: #315b58;
-  --answered-pill-bg: #173331;
-  --answered-pill-text: #63d1cb;
+  --card-answered-border: #335b51;
+  --answered-pill-bg: #1a302a;
+  --answered-pill-text: #8fcab8;
 }
 
 /* Shared authenticated canvas --------------------------------------------- */
@@ -1790,7 +1799,7 @@ html.constellation-app body {
   min-height: 17rem;
   display: flex;
   align-items: flex-end;
-  background-color: #30215e;
+  background-color: #2e1c42;
   background-image: url('/assets/constellation/detail-sky-dark-transparent.png');
   background-repeat: no-repeat;
   background-position: 95% 15%;
@@ -2710,11 +2719,11 @@ html.constellation-app body {
 
 /* Public Constellation landing ------------------------------------------- */
 html.constellation-landing-root body {
-  background: #f8f7fd;
+  background: #f7f3ec;
 }
 
 html.constellation-landing-root[data-theme="dark"] body {
-  background: #120f1b;
+  background: #15111b;
 }
 
 .constellation-landing {
@@ -2748,11 +2757,11 @@ html.constellation-landing-root[data-theme="dark"] body {
 }
 
 .constellation-landing__hero-copy > div:first-child {
-  color: #7457b8 !important;
+  color: #8b6124 !important;
 }
 
 .constellation-landing--dark .constellation-landing__hero-copy > div:first-child {
-  color: #9a7ce0 !important;
+  color: #d8b06a !important;
 }
 
 .constellation-landing__hero h1 {
@@ -2789,7 +2798,7 @@ html.constellation-landing-root[data-theme="dark"] body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border: 1px solid color-mix(in srgb, #c8b9ef 28%, transparent);
+  border: 1px solid color-mix(in srgb, #d9ae62 30%, transparent);
 }
 
 .constellation-landing__preview-focus > p:first-of-type {
@@ -2905,56 +2914,56 @@ html.constellation-landing-root[data-theme="dark"] body {
 
 /* Constellation authentication and onboarding --------------------------- */
 html.constellation-auth-root body {
-  background: #f8f7fd;
+  background: #f7f3ec;
 }
 
 html.constellation-auth-root[data-theme="dark"] body {
-  background: #120f1b;
+  background: #15111b;
 }
 
 .constellation-auth,
 .constellation-onboarding {
-  --background: #f8f7fd;
+  --background: #f7f3ec;
   --surface: #ffffff;
-  --surface-muted: #f0ecf8;
+  --surface-muted: #f1ebe1;
   --surface-2: var(--surface-muted);
-  --ink: #251e35;
-  --text-muted: #74628f;
-  --text-faint: #6f637f;
+  --ink: #261b31;
+  --text-muted: #6b5e75;
+  --text-faint: #685c6f;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
-  --plum: #7457b8;
-  --plum-dark: #5d449a;
-  --gold: #8c76c9;
+  --plum: #5b3d82;
+  --plum-dark: #43295f;
+  --gold: #8b6124;
   --accent: var(--plum);
-  --accent-soft: #eeebfa;
-  --accent-border: #d8cfee;
-  --border: #ded8ee;
-  --border-strong: #c9bfe2;
+  --accent-soft: #efe8f4;
+  --accent-border: #dccfe6;
+  --border: #e6ddd0;
+  --border-strong: #d5c8b6;
   --input-bg: #ffffff;
-  --input-border: #d8d0e8;
+  --input-border: #d9cdbd;
 }
 
 [data-theme="dark"] .constellation-auth,
 [data-theme="dark"] .constellation-onboarding {
-  --background: #120f1b;
-  --surface: #171423;
-  --surface-muted: #211c31;
+  --background: #15111b;
+  --surface: #1d1725;
+  --surface-muted: #2a2234;
   --surface-2: var(--surface-muted);
-  --ink: #f8f5ff;
-  --text-muted: #b4a8c9;
-  --text-faint: #8d82a2;
+  --ink: #f6efe6;
+  --text-muted: #c4b8cc;
+  --text-faint: #9d90a6;
   --plum: #9a7ce0;
-  --plum-dark: #7457b8;
-  --gold: #9a7ce0;
+  --plum-dark: #6e4fa8;
+  --gold: #d8b06a;
   --accent: var(--plum);
-  --accent-soft: #28203d;
-  --accent-border: #493b68;
-  --border: #373047;
-  --border-strong: #4b415f;
-  --input-bg: #191523;
-  --input-border: #403650;
+  --accent-soft: #2c2238;
+  --accent-border: #4a3b5c;
+  --border: #3a3043;
+  --border-strong: #4e4259;
+  --input-bg: #1b1622;
+  --input-border: #433850;
 }
 
 .constellation-auth.auth-experience {
@@ -3226,69 +3235,69 @@ html.constellation-auth-root[data-theme="dark"] body {
 .constellation-guest-flow,
 .constellation-plan-share {
   color-scheme: light;
-  --background: #f8f7fd;
+  --background: #f7f3ec;
   --surface: #ffffff;
-  --surface-muted: #f0ecf8;
+  --surface-muted: #f1ebe1;
   --surface-raised: #ffffff;
   --surface-2: var(--surface-muted);
-  --ink: #251e35;
-  --text-muted: #74628f;
-  --text-faint: #6f637f;
+  --ink: #261b31;
+  --text-muted: #6b5e75;
+  --text-faint: #685c6f;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
-  --plum: #7457b8;
-  --plum-dark: #5d449a;
-  --plum-deep: #30215e;
-  --gold: #8c76c9;
-  --gold-soft: #f0ecfb;
-  --sage: #249e98;
-  --sage-soft: #e7f7f5;
+  --plum: #5b3d82;
+  --plum-dark: #43295f;
+  --plum-deep: #2e1c42;
+  --gold: #8b6124;
+  --gold-soft: #f5ecdc;
+  --sage: #3f7a6c;
+  --sage-soft: #e6f1ec;
   --accent: var(--plum);
-  --accent-2: #8c76c9;
-  --accent-soft: #eeebfa;
-  --accent-border: #d8cfee;
-  --border: #ded8ee;
-  --border-strong: #c9bfe2;
+  --accent-2: #8a6bb3;
+  --accent-soft: #efe8f4;
+  --accent-border: #dccfe6;
+  --border: #e6ddd0;
+  --border-strong: #d5c8b6;
   --input-bg: #ffffff;
-  --input-border: #d8d0e8;
-  --success: #249e98;
+  --input-border: #d9cdbd;
+  --success: #3f7a6c;
   --success-bg: var(--sage-soft);
-  --success-border: #a9d8d4;
+  --success-border: #b5d2c8;
 }
 
 [data-theme="dark"] .constellation-guest-flow,
 [data-theme="dark"] .constellation-plan-share {
   color-scheme: dark;
-  --background: #120f1b;
-  --surface: #171423;
-  --surface-muted: #211c31;
-  --surface-raised: #211c31;
+  --background: #15111b;
+  --surface: #1d1725;
+  --surface-muted: #2a2234;
+  --surface-raised: #2a2234;
   --surface-2: var(--surface-muted);
-  --ink: #f8f5ff;
-  --text-muted: #b4a8c9;
-  --text-faint: #9b8fae;
+  --ink: #f6efe6;
+  --text-muted: #c4b8cc;
+  --text-faint: #a99db1;
   --text-1: var(--ink);
   --text-2: var(--text-muted);
   --text-3: var(--text-faint);
   --plum: #9a7ce0;
-  --plum-dark: #7457b8;
-  --plum-deep: #120f1b;
-  --gold: #9a7ce0;
-  --gold-soft: #211a36;
-  --sage: #63d1cb;
-  --sage-soft: #173331;
+  --plum-dark: #6e4fa8;
+  --plum-deep: #15111b;
+  --gold: #d8b06a;
+  --gold-soft: #33291e;
+  --sage: #8fcab8;
+  --sage-soft: #1a302a;
   --accent: var(--plum);
-  --accent-2: #b19aeb;
-  --accent-soft: #28203d;
-  --accent-border: #493b68;
-  --border: #373047;
-  --border-strong: #4b415f;
-  --input-bg: #191523;
-  --input-border: #403650;
-  --success: #63d1cb;
+  --accent-2: #c3a7ec;
+  --accent-soft: #2c2238;
+  --accent-border: #4a3b5c;
+  --border: #3a3043;
+  --border-strong: #4e4259;
+  --input-bg: #1b1622;
+  --input-border: #433850;
+  --success: #8fcab8;
   --success-bg: var(--sage-soft);
-  --success-border: #285b57;
+  --success-border: #335b51;
 }
 
 .constellation-plan-share {
@@ -3380,6 +3389,57 @@ html.constellation-auth-root[data-theme="dark"] body {
 @keyframes plan-deck-in-left {
   from { transform: translateX(-32%); opacity: 0; }
   to { transform: none; opacity: 1; }
+}
+
+/* Qetoret motion — one idea: rise. A short, gentle upward fade when prayer
+   begins, when a prayer is marked prayed and when a session ends. No confetti,
+   no reward animations. Never the only signal of a state change: every use sits
+   beside text that says the same thing. */
+@keyframes qetoret-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes qetoret-ascend {
+  0% { opacity: 0; transform: translateY(10px); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-26px); }
+}
+
+.rise-in {
+  animation: qetoret-rise 640ms var(--ease) both;
+}
+
+.rise-in--late {
+  animation-delay: 180ms;
+}
+
+.rise-wisp {
+  display: block;
+  color: var(--gold-bright, #d9ae62);
+}
+
+.rise-wisp--once path {
+  animation: qetoret-ascend 1600ms var(--ease) both;
+}
+
+.rise-wisp--still path {
+  opacity: .9;
+}
+
+/* Remain with God: the line rises slowly and repeats, like breath. */
+.rise-wisp--breathe path {
+  animation: qetoret-ascend 4800ms var(--ease) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-in,
+  .rise-wisp--once path,
+  .rise-wisp--breathe path {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

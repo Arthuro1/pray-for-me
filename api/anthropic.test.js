@@ -141,6 +141,34 @@ describe('AI proxy structured task boundary', () => {
     expect(french).toContain('prayer request = sujet de prière');
     expect(french).toContain('not a word-for-word rendering');
   });
+
+  // Qetoret's AI guardrails (docs/QETORET_IDENTITY.md §9): the model never
+  // speaks for God, never promises outcomes, stays non-partisan, and never
+  // writes Bible text — it returns references, and the app resolves the text.
+  it('holds every spiritual task to the Qetoret guardrails and asks for references only', async () => {
+    const sentFor = async (body) => {
+      global.fetch.mockClear();
+      await handler(req({ body }), mockRes());
+      const upstream = global.fetch.mock.calls.find(([url]) => String(url).includes('api.anthropic.com'));
+      return JSON.parse(upstream[1].body);
+    };
+    for (const body of [
+      { task: 'scripture_guidance', input: { title: 'My nation', description: '', lang: 'en' } },
+      { task: 'prayer_recommendations', input: { title: 'Our leaders', description: '', lang: 'en', kind: 'new' } },
+    ]) {
+      const sent = await sentFor(body);
+      const system = sent.system[0].text;
+      expect(system).toContain('never a mediator');
+      expect(system).toContain('Never write "God told me", "God is telling you"');
+      expect(system).toContain('never declare that a prayer has been answered');
+      expect(system).toContain('Never write out Bible verse text');
+      expect(system).toContain('stay non-partisan');
+      expect(system).toContain('never as control over God, people or events');
+      // The task itself no longer asks for verse wording.
+      expect(sent.messages[0].content).toMatch(/never verse text/);
+      expect(sent.messages[0].content).not.toMatch(/containing ref and text|readWhole, text/);
+    }
+  });
 });
 
 describe('AI proxy quotas and failure handling', () => {

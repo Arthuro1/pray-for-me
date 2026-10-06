@@ -14,13 +14,15 @@
 // plan catalogue and locale bundles by api/planPreview.test.js.
 import PLAN_PREVIEW from './_planPreviewData.js';
 
+const APP_NAME = 'Qetoret';
+
 const SITE = 'https://praystead.com';
 const PLAN_ID = /^[A-Za-z0-9_-]{1,64}$/;
 const TOKEN = /^[A-Za-z0-9_-]{16,32}$/;
 
 const GENERIC = {
-  title: 'Praystead — Bring what is on your heart',
-  description: 'A private prayer journal that brings the right requests back at the right time.',
+  title: `${APP_NAME} — Build a life of prayer before God`,
+  description: 'Bring what is on your heart before God. Carry others in prayer. Build faithful rhythms of intercession.',
   image: `${SITE}/og.png`,
 };
 
@@ -43,7 +45,7 @@ export function planPreviewPage({ planId, token, lang }) {
   const url = `${SITE}${path}`;
   const meta = plan
     ? {
-      title: `${plan.title[code]} · Praystead`,
+      title: `${plan.title[code]} · ${APP_NAME}`,
       description: `${plan.sub[code]} · ${plan.days[code]}`,
       image: `${SITE}/og/plans/${planId}.png`,
     }
@@ -52,7 +54,7 @@ export function planPreviewPage({ planId, token, lang }) {
   const tags = [
     ['name', 'description', meta.description],
     ['property', 'og:type', 'website'],
-    ['property', 'og:site_name', 'Praystead'],
+    ['property', 'og:site_name', APP_NAME],
     ['property', 'og:url', url],
     ['property', 'og:title', meta.title],
     ['property', 'og:description', meta.description],
@@ -81,7 +83,7 @@ ${tags.join('\n')}
 <body>
 <h1>${escapeHtml(meta.title)}</h1>
 <p>${escapeHtml(meta.description)}</p>
-<p><a href="${escapeHtml(appUrl)}">Praystead</a></p>
+<p><a href="${escapeHtml(appUrl)}">${APP_NAME}</a></p>
 </body>
 </html>`;
 }

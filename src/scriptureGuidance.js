@@ -19,12 +19,14 @@ const cache = createAiCache();
 // normalize to the shape the UI expects, with `text` always empty; the verse
 // reader resolves the wording from trusted Scripture sources.
 function normalize(data) {
+  // References only: any verse wording the model returns anyway is dropped, so
+  // AI text can never be shown as Scripture. The authoritative pipeline
+  // (lib/verseText.js) supplies the text when the reader opens a passage.
   const passages = (Array.isArray(data?.passages) ? data.passages : [])
     .filter((p) => p && p.ref)
     .map((p) => ({
       ref: String(p.ref),
       readWhole: p.readWhole ? String(p.readWhole) : String(p.ref),
-      text: '',
       why: p.why ? String(p.why) : '',
     }));
   const themes = (Array.isArray(data?.themes) ? data.themes : []).filter(Boolean).map(String);

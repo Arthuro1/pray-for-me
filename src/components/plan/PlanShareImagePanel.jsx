@@ -4,6 +4,7 @@ import { SegmentedControl } from '../shared/Primitives';
 import { toast } from '../../store/toastStore';
 import { t } from '../../i18n';
 import { renderPlanCard } from '../../lib/planCard';
+import { FILE_PREFIX } from '../../lib/brand';
 
 // The plan as a picture, for Stories and Status, where a bare link travels
 // badly. Square or story frame, then the phone's share sheet (the picture plus
@@ -15,7 +16,7 @@ export default function PlanShareImagePanel({ plan, lang, message, url, onShared
   const [rendering, setRendering] = useState(true);
 
   const title = t(lang, plan.titleKey);
-  const fileName = `praystead-plan-${plan.id}-${size}.png`;
+  const fileName = `${FILE_PREFIX}-plan-${plan.id}-${size}.png`;
 
   useEffect(() => {
     let objectUrl = null;

@@ -378,3 +378,84 @@ describe('no private plaintext reaches Supabase (prayer_testimonies: Phase 3c)',
     }
   });
 });
+
+// The Intercession Circle (lib/circles.js) is private metadata about what a
+// prayer is about. It has NO column: it must exist only inside the ciphertext.
+// A column write would also be rejected by the server and dropped by the queue,
+// losing the whole prayer — so this guard covers privacy and data safety at once.
+describe('the Intercession Circle never reaches Supabase in plaintext', () => {
+  const columnWrites = () => rec.writes.filter((w) => w.table === 'prayers');
+
+  it('addPrayer carries the circle inside encrypted_payload only', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'For my nation', circle: 'nations' });
+    await drainQueue();
+
+    const writes = columnWrites();
+    expect(writes.length).toBeGreaterThan(0);
+    for (const w of writes) {
+      expect(w.payload).not.toHaveProperty('circle');
+      expect(JSON.stringify(w.payload)).not.toContain('nations');
+    }
+    const write = writes.find((w) => w.payload?.encrypted_payload);
+    const data = await decryptJson(getMasterKey(), write.payload.encrypted_payload, prayerContext(write.payload));
+    expect(data.circle).toBe('nations');
+    // The in-memory prayer knows its circle straight away.
+    expect(usePrayerStore.getState().prayers[0].circle).toBe('nations');
+  });
+
+  it('an edit that changes something else keeps the circle in the new ciphertext', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'My household', circle: 'household' });
+    await drainQueue();
+    const id = usePrayerStore.getState().prayers[0].id;
+    rec.writes.length = 0;
+
+    await usePrayerStore.getState().updatePrayer(id, { title: 'My household, renamed' });
+    await drainQueue();
+
+    const write = columnWrites().find((w) => w.payload?.encrypted_payload);
+    expect(write.payload).not.toHaveProperty('circle');
+    const data = await decryptJson(getMasterKey(), write.payload.encrypted_payload, prayerContext({ id, user_id: 'user-1' }));
+    expect(data.title).toBe('My household, renamed');
+    expect(data.circle).toBe('household');
+  });
+
+  it('placing and clearing a circle re-encrypts without ever naming a column', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'Unplaced prayer' });
+    await drainQueue();
+    const id = usePrayerStore.getState().prayers[0].id;
+    expect(usePrayerStore.getState().prayers[0].circle).toBeUndefined();
+    rec.writes.length = 0;
+
+    await usePrayerStore.getState().updatePrayer(id, { circle: 'church' });
+    await drainQueue();
+    for (const w of columnWrites()) expect(w.payload).not.toHaveProperty('circle');
+    expect(usePrayerStore.getState().prayers[0].circle).toBe('church');
+
+    await usePrayerStore.getState().updatePrayer(id, { circle: null });
+    await drainQueue();
+    expect(usePrayerStore.getState().prayers[0].circle).toBeNull();
+  });
+
+  it('a prayer saved without the account key cannot hold a circle at all', async () => {
+    // No key in memory → the row is written as-is; a circle would have to be a
+    // plaintext column, so it is dropped instead of leaked or rejected.
+    await usePrayerStore.getState().addPrayer({ title: 'plain', circle: 'authorities' });
+    await drainQueue();
+
+    for (const w of columnWrites()) {
+      expect(w.payload).not.toHaveProperty('circle');
+      expect(JSON.stringify(w.payload)).not.toContain('authorities');
+    }
+    expect(usePrayerStore.getState().prayers[0].circle).toBeUndefined();
+  });
+
+  it('rejects a value that is not one of the seven circles', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addPrayer({ title: 'odd', circle: 'top-intercessor' });
+    await drainQueue();
+    expect(usePrayerStore.getState().prayers[0].circle).toBeUndefined();
+  });
+});

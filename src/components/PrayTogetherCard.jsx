@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { HandHeart, Loader2 } from 'lucide-react';
 import useCommunityStore from '../store/communityStore';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 import Avatar from './shared/Avatar';
 
-// The primary "pray together" affordance on a community prayer: a prominent
-// "I'm praying" action, a presence row that shows who else is praying (reusing
-// Avatar), and a shortcut into the prayer-chain calendar. This keeps the page's
-// core purpose — praying together — as its most visible element instead of a
-// small header chip. Toggle side effects (adding to the personal list) stay in
-// the parent; this component only renders and delegates.
+// The primary "pray together" affordance on a community prayer: "Carry this
+// prayer" — deliberately taking a request into one's own life of intercession
+// (it joins "Prayers you're carrying"), never a like. A presence row shows who
+// else is carrying it (reusing Avatar). The count is information only: nothing
+// ranks, sorts or celebrates requests by how many carry them. Toggle side
+// effects (the saved copy, following) stay in the parent; this only renders.
 export default function PrayTogetherCard({ communityPrayer, count, hasReacted, busy, lang, user, onTogglePraying }) {
   const fetchReactors = useCommunityStore((s) => s.fetchReactors);
   const [reactors, setReactors] = useState([]);
@@ -51,15 +51,18 @@ export default function PrayTogetherCard({ communityPrayer, count, hasReacted, b
       <button
         onClick={onTogglePraying}
         disabled={busy}
+        aria-pressed={hasReacted}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
         style={hasReacted
           ? { background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }
           : { background: 'var(--accent)', color: '#fff' }}
       >
         {busy ? <Loader2 size={16} className="animate-spin" /> : <HandHeart size={16} />}
-        {t(lang, 'iAmPraying')}
-        {count > 0 && <span style={{ opacity: 0.85 }}>· {count}</span>}
+        {t(lang, hasReacted ? 'carryingThisPrayer' : 'carryThisPrayer')}
       </button>
+      {count > 0 && (
+        <p className="mt-2 text-center text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'carryCount', count)}</p>
+      )}
     </div>
   );
 }

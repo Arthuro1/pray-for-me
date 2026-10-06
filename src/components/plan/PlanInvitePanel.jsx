@@ -9,7 +9,7 @@ import { avatarConfigFrom } from '../../lib/avatar';
 import EmptyState from '../shared/EmptyState';
 
 // Invite friends and/or whole groups to walk a guided plan together, inside
-// Praystead. Selecting a group fans the invitation out to each of its members
+// Qetoret. Selecting a group fans the invitation out to each of its members
 // (see invitePlan); each person accepts or declines on their own. A plan
 // invitation carries only the plan's content id + a start date — never any
 // prayer content — so the framing stays simple: "they'll be invited to pray this

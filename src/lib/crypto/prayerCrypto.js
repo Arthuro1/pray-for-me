@@ -17,6 +17,24 @@ export const SENSITIVE_FIELDS = ['title', 'description', 'person_name', 'phone']
 // AI guidance attached to a prayer, so it can be recalled without a new AI call.
 export const SENSITIVE_JSON_FIELDS = ['scripture_guidance'];
 
+// Fields that exist ONLY inside the encrypted payload — there is no column for
+// them, so they are removed from the persisted row instead of redacted. A write
+// that named an unknown column would be rejected (4xx), and the offline queue
+// drops rejected writes, which would lose the whole prayer. Currently the
+// optional Intercession Circle (lib/circles.js): private metadata about what a
+// prayer is about, so it travels with the ciphertext or not at all.
+export const PAYLOAD_ONLY_FIELDS = ['circle'];
+
+// Strip payload-only fields from a row or payload bound for a server column
+// write that is NOT encrypted (a prayer saved while the account key is
+// unavailable, or a saved community copy). Such a prayer cannot hold them.
+export function withoutPayloadOnlyFields(row) {
+  if (!row || !PAYLOAD_ONLY_FIELDS.some((f) => f in row)) return row;
+  const out = { ...row };
+  for (const f of PAYLOAD_ONLY_FIELDS) delete out[f];
+  return out;
+}
+
 // Nested collections bundled wholesale into the parent's encrypted payload for
 // the local at-rest cache, so a private prayer's updates, points, testimonies
 // (the new `prayer_testimonies` rows plus the legacy `testimonies` jsonb array
@@ -57,6 +75,13 @@ export function canEncrypt(prayer) {
 // own encryption metadata instead).
 export function willEncryptNewPrayer() {
   return isUnlocked();
+}
+
+// Can this prayer hold payload-only metadata (an Intercession Circle)? Only a
+// prayer that is — or, for a new one, will be — encrypted under the account key.
+// Pass null for a prayer that does not exist yet.
+export function canHoldPrivateMetadata(prayer) {
+  return prayer ? canEncrypt(prayer) : willEncryptNewPrayer();
 }
 
 // True once a prayer row carries an encrypted payload (server or cache).
@@ -104,11 +129,12 @@ export async function encryptPrayerForStorage(row, { nested = false } = {}) {
   const payload = {};
   for (const f of SENSITIVE_FIELDS) payload[f] = row[f] ?? '';
   for (const f of SENSITIVE_JSON_FIELDS) payload[f] = row[f] ?? null;
+  for (const f of PAYLOAD_ONLY_FIELDS) if (row[f] != null) payload[f] = row[f];
   if (nested) {
     for (const f of CACHE_NESTED_FIELDS) if (row[f] != null) payload[f] = row[f];
   }
   const encrypted_payload = await encryptJson(key, payload, prayerContext(row));
-  const out = { ...row, encrypted_payload, encryption_version: ENCRYPTION_VERSION };
+  const out = withoutPayloadOnlyFields({ ...row, encrypted_payload, encryption_version: ENCRYPTION_VERSION });
   for (const f of SENSITIVE_FIELDS) if (f in out) out[f] = '';
   for (const f of SENSITIVE_JSON_FIELDS) if (f in out) out[f] = null;
   if (nested) {

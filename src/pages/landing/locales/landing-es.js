@@ -4,15 +4,14 @@ export default {
     "signIn": "Iniciar sesión",
     "badge": "Diario de oración",
     "howItWorks": "Ver cómo funciona",
-    "verse": "«La oración ferviente del justo puede mucho.» — Santiago 5:16",
-    "featuresTitle": "Tu vida de oración en un solo lugar",
-    "featuresSub": "Tus peticiones, tus tiempos de oración y tus oraciones respondidas, juntos.",
+    "featuresTitle": "Un solo lugar para tu vida de oración",
+    "featuresSub": "Tus oraciones, ritmos y testimonios, juntos.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Orar juntos",
-        "desc": "Comparte peticiones con amigos o con un grupo y oren unos por otros."
+        "desc": "Comparte una petición con amigos o con un grupo, y oren unos por otros."
       },
       {
         "icon": "BookOpen",
@@ -23,26 +22,26 @@ export default {
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Planificar la oración",
-        "desc": "Elige cuándo orar por cada petición: una vez, cada día o ciertos días."
+        "title": "Ritmos de oración",
+        "desc": "Elige cuándo vuelve cada oración: una vez, cada día o en días concretos."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Galería de oraciones respondidas",
-        "desc": "Todas tus oraciones respondidas y tus testimonios en una galería."
+        "title": "Testimonios",
+        "desc": "Guarda las oraciones respondidas y los testimonios como memoria de la fidelidad de Dios."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Crecer en la oración",
-        "desc": "Planes de oración guiados, guías y lecturas breves basadas en la Palabra de Dios."
+        "desc": "Planes guiados, guías de oración y lecturas breves basadas en la Escritura."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "Recordatorios de oración",
-        "desc": "Un recordatorio diario para orar y otro para preguntar por las personas por quienes oras."
+        "title": "Recordatorios discretos",
+        "desc": "Un recordatorio diario para orar, y otro para preguntar por las personas que llevas en oración."
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Anota una petición",
-        "desc": "Bastan unas pocas palabras. Puedes añadir detalles después."
+        "title": "Presenta una oración",
+        "desc": "Unas pocas palabras bastan. Puedes añadir detalles después."
       },
       {
         "emoji": "🙏",
-        "title": "Ora cada día",
-        "desc": "Abre la app y toca Orar ahora."
+        "title": "Vuelve a orar",
+        "desc": "Cada oración vuelve los días que eliges, para que regreses a ella en oración."
       },
       {
         "emoji": "🎉",
-        "title": "Registra la respuesta",
-        "desc": "Cuando Dios responda, marca la oración y anota lo que Él hizo."
+        "title": "Escribe un testimonio",
+        "desc": "Cuando algo suceda, escribe cómo has visto a Dios obrar."
       }
     ],
     "calloutBadge": "Sugerencias de versículos",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "¿Qué hay en tu corazón hoy?",
-    "ctaVerse": "«Orad sin cesar.» — 1 Tesalonicenses 5:17",
     "footerBuilt": "Hecho con fe · Código abierto · Licencia MIT"
   },
-  "benefits": [
-    {
-      "title": "Nada se olvida",
-      "desc": "Recuerda a cada persona por quien prometiste orar."
-    },
-    {
-      "title": "Sabe por qué orar hoy",
-      "desc": "Cada día vuelven las peticiones por las que planeaste orar."
-    },
-    {
-      "title": "Recuerda la fidelidad de Dios",
-      "desc": "Guarda las oraciones respondidas y los testimonios como memoria de lo que Dios ha hecho."
-    }
-  ],
   "explore": {
     "more": "Explorar todas las funciones",
     "less": "Mostrar menos"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "Idioma",
   "translationInProgress": "Traducción en curso",
-  "heroReassurance": "Sin cuenta. Nada sale de este dispositivo a menos que elijas guardarlo.",
+  "heroReassurance": "No necesitas una cuenta. Tu primera oración se queda en este dispositivo, a menos que decidas guardarla.",
   "hero": {
-    "title": "Presenta a Dios lo que hay en tu corazón.",
-    "promise": "Ora con fidelidad. Recuerda la fidelidad de Dios.",
-    "subtitle": "Anota tus peticiones de oración. Cada una vuelve los días que eliges para orar por ella."
+    "title": "Construye una vida de oración delante de Dios.",
+    "promise": "Que tus oraciones se eleven.",
+    "subtitle": "Presenta a Dios lo que hay en tu corazón. Lleva en oración a tu familia, tus amigos, tu iglesia y las naciones. Crea ritmos fieles de oración y recuerda su fidelidad."
   },
   "samplePrayerTitle": "Paz para nuestra familia",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "Paso",
   "todayLabel": "Hoy",
-  "prayNowLabel": "Orar ahora"
+  "prayNowLabel": "Orar ahora",
+  "preview": {
+    "altarToday": "Tu altar hoy",
+    "carriedLabel": "En oración desde marzo de 2025",
+    "carriedTitle": "Sanidad para papá",
+    "rememberLabel": "Testimonio",
+    "rememberText": "Recuerda lo que Dios ha hecho."
+  },
+  "movements": [
+    {
+      "title": "Presentar",
+      "desc": "Presenta a Dios lo que hay en tu corazón, con tus propias palabras."
+    },
+    {
+      "title": "Interceder",
+      "desc": "Intercede por las personas y los lugares que Dios te ha confiado."
+    },
+    {
+      "title": "Volver",
+      "desc": "Crea ritmos que te traigan de vuelta a la oración, día tras día."
+    },
+    {
+      "title": "Recordar",
+      "desc": "Escribe testimonios y recuerda la fidelidad de Dios."
+    }
+  ],
+  "circles": {
+    "title": "De tu corazón a las naciones",
+    "subtitle": "La oración se amplía con el tiempo. No son niveles que alcanzar, sino las personas y los lugares que puedes llevar delante de Dios.",
+    "start": "Una sola oración basta para empezar.",
+    "items": [
+      {
+        "name": "Mi corazón",
+        "desc": "Tu propio caminar con Dios"
+      },
+      {
+        "name": "Mi casa",
+        "desc": "Cónyuge, hijos, padres, familia"
+      },
+      {
+        "name": "Mi gente",
+        "desc": "Amigos, vecinos, compañeros"
+      },
+      {
+        "name": "Su Iglesia",
+        "desc": "Tu iglesia, pastores, misioneros"
+      },
+      {
+        "name": "Autoridades",
+        "desc": "Gobernantes, jueces, servidores públicos"
+      },
+      {
+        "name": "Naciones",
+        "desc": "Ciudades, países y pueblos"
+      },
+      {
+        "name": "Reino y misión",
+        "desc": "El evangelio, la justicia y la misericordia"
+      }
+    ]
+  },
+  "why": {
+    "title": "¿Por qué Qetoret?",
+    "body": "Qetoret es la palabra hebrea para el incienso que se ofrecía delante de Dios. En la Escritura, el incienso que sube se convierte en una imagen de las oraciones del pueblo de Dios. Qetoret toma su nombre de esta imagen: una vida de oración presentada continuamente delante de Dios.",
+    "referencesLabel": "Léelo en la Escritura",
+    "references": [
+      "Salmo 141:2",
+      "Apocalipsis 5:8",
+      "Apocalipsis 8:3-4",
+      "Lucas 1:5-25"
+    ],
+    "note": "Qetoret es una herramienta para la oración, nunca un intermediario. Venimos al Padre por medio de Jesucristo."
+  }
 };

@@ -137,7 +137,7 @@ export default function FeedbackModal({ onClose }) {
                 type="button"
                 onClick={() => setAnonymous((a) => !a)}
                 className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors shrink-0"
-                style={{ background: anonymous ? '#7c5cfc' : '#e0d8f0' }}
+                style={{ background: anonymous ? 'var(--plum)' : 'var(--border-strong)' }}
               >
                 <span
                   className="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"
@@ -154,7 +154,7 @@ export default function FeedbackModal({ onClose }) {
               type="submit"
               disabled={loading || !message.trim()}
               className="w-full rounded-xl py-3 text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
+              style={{ background: 'var(--plum)' }}
             >
               {loading && <Loader2 size={14} className="animate-spin" />}
               {t(lang, 'feedbackSubmit')}

@@ -39,7 +39,7 @@ describe('LandingPage — nothing waits for a dictionary', () => {
     renderLanding();
     // Synchronously — no findBy, no await.
     expect(screen.getAllByText('Begin with a prayer').length).toBeGreaterThan(0);
-    expect(screen.getByText('Bring what is on your heart to God.')).toBeTruthy();
+    expect(screen.getByText('Build a life of prayer before God.')).toBeTruthy();
     expect(document.querySelector('[aria-busy="true"]')).toBeNull();
   });
 

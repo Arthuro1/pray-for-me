@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 //
-// Praystead is right to be explicit about privacy — but saying the same thing
+// Qetoret is right to be explicit about privacy — but saying the same thing
 // three times around one private note makes it feel riskier, not safer. Each
 // place now has ONE job:
 //

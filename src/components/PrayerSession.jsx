@@ -22,6 +22,9 @@ import PrayerMusicControl from './PrayerMusicControl';
 import PrayerSessionNote from './prayerSession/PrayerSessionNote';
 import { useSessionNotes } from './prayerSession/useSessionNotes';
 import { isSessionNote } from '../lib/prayerNotes';
+import { APP_NAME } from '../lib/brand';
+import RemainWithGod from './RemainWithGod';
+import RiseMark from './shared/RiseMark';
 
 // "Pray now" starts praying IMMEDIATELY — no upfront choice. The session opens
 // straight into the last-used format (requests, for a new user) and a small
@@ -104,6 +107,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   // format mid-session resumes the requests from here instead of repeating them.
   const [requestsCompleted, setRequestsCompleted] = useState(0);
   const [done, setDone] = useState(false);
+  const [remaining, setRemaining] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   // Set while an atomic leave-this-prayer step runs (finalising a recording,
   // writing the encrypted draft). It disables navigation so a fast double tap
@@ -494,12 +498,15 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     </div>
   );
 
+  // The optional quiet ending (LISTEN). Chosen, never automatic.
+  if (done && remaining) {
+    return overlay(<RemainWithGod lang={lang} onFinish={handleClose} embedded />);
+  }
+
   if (done) {
     return overlay(
       <div className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center">
-        <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'var(--sage-soft)', color: 'var(--success)', border: '1px solid var(--success-border)' }}>
-          <Check size={22} strokeWidth={1.7} aria-hidden="true" />
-        </div>
+        <RiseMark size={48} className="mb-5" />
         <SectionLabel className="mb-3">Amen</SectionLabel>
         <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</h2>
         <Encouragement lang={lang} className="mt-4 max-w-sm text-sm" />
@@ -509,9 +516,14 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
         {notes.savedCount > 0 && (
           <p className="mt-1.5 text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'notesSavedCount', notes.savedCount)}</p>
         )}
-        <PrimaryButton onClick={handleClose} className="mt-9 min-w-36">
-          {t(lang, 'close')}
-        </PrimaryButton>
+        <div className="mt-9 flex w-full max-w-xs flex-col gap-3">
+          <PrimaryButton onClick={handleClose} className="min-w-36">
+            {t(lang, 'close')}
+          </PrimaryButton>
+          <QuietButton onClick={() => setRemaining(true)}>
+            {t(lang, 'remainWithGod')}
+          </QuietButton>
+        </div>
       </div>
     );
   }
@@ -524,7 +536,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            <span>Praystead · </span><span>{currentStep} / {totalSteps}</span>
+            <span>{APP_NAME} · </span><span>{currentStep} / {totalSteps}</span>
           </p>
         </div>
         <div className="flex items-center gap-2">

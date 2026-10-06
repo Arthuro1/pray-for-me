@@ -1,8 +1,8 @@
 {
-  "name": "Praystead",
-  "short_name": "Praystead",
+  "name": "Qetoret",
+  "short_name": "Qetoret",
   "id": "/",
-  "description": "A private, Scripture-first prayer journal that works offline.",
+  "description": "A Scripture-first prayer companion for building a faithful life of prayer and intercession.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#30213f",
@@ -35,7 +35,7 @@
       "sizes": "694x1280",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Pray through today's requests"
+      "label": "Come before God with today's prayers"
     },
     {
       "src": "/screenshots/4_2_2.jpg",
@@ -49,7 +49,7 @@
     {
       "name": "Pray today",
       "short_name": "Pray today",
-      "description": "Open today's prayers",
+      "description": "Come before God with today's prayers",
       "url": "/?source=pwa-shortcut",
       "icons": [
         {
@@ -60,9 +60,9 @@
       ]
     },
     {
-      "name": "Add prayer",
-      "short_name": "Add prayer",
-      "description": "Add a private prayer",
+      "name": "Bring a prayer",
+      "short_name": "Bring a prayer",
+      "description": "Add something to carry before God",
       "url": "/?action=add-prayer",
       "icons": [
         {
@@ -73,5 +73,8 @@
       ]
     }
   ],
-  "categories": ["lifestyle", "religion"]
+  "categories": [
+    "lifestyle",
+    "religion"
+  ]
 }

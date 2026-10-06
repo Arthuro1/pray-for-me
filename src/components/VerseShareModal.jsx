@@ -9,6 +9,7 @@ import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { versionForSource } from '../lib/bibleVersions';
 import { renderVerseCard } from '../lib/verseCard';
+import { FILE_PREFIX } from '../lib/brand';
 
 // Sharing the verse of the day. The card image is the point: a verse that leaves
 // the app lands in someone else's chat, where the picture carries the words and
@@ -39,7 +40,7 @@ export default function VerseShareModal({ verse, lang, dayKey, onClose }) {
 
   const label = t(lang, 'verseOfDay');
   const invite = t(lang, 'verseReadInBible');
-  const fileName = `praystead-verse-${dayKey}.png`;
+  const fileName = `${FILE_PREFIX}-verse-${dayKey}.png`;
   const linkUrl = typeof window === 'undefined' ? '' : window.location.origin;
 
   useEffect(() => {

@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 //
-// The landing hero leads with three core benefits; the nine-card feature grid is
-// folded behind an "Explore all features" toggle. Landing marketing copy is
-// loaded from one locale chunk at a time, so assertions wait for that boundary.
+// The landing hero names Qetoret and leads with the movements of a life of
+// prayer; the nine-card feature grid is folded behind an "Explore all features"
+// toggle. Landing marketing copy is loaded from one locale chunk at a time, so
+// assertions wait for that boundary.
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 
 import LandingPage from './LandingPage';
 
@@ -15,14 +16,40 @@ beforeEach(() => {
   document.documentElement.removeAttribute('data-theme');
 });
 
-describe('LandingPage — simplified hero', () => {
-  it('surfaces the three core benefits up front', async () => {
+describe('LandingPage — Qetoret hero', () => {
+  it('names Qetoret and its promise, never the old brand', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    expect(await screen.findByText('Nothing forgotten')).toBeTruthy();
-    expect(screen.getAllByText('Know what to pray today').length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Remember God's faithfulness").length).toBeGreaterThan(0);
-    expect(screen.getByText('Bring what is on your heart to God.')).toBeTruthy();
-    expect(screen.getByText('Pray faithfully. Remember God’s faithfulness.')).toBeTruthy();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Build a life of prayer before God.' })).toBeTruthy();
+    expect(screen.getAllByText('Let your prayers rise.').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Qetoret').length).toBeGreaterThan(0);
+    expect(document.body.textContent).not.toMatch(/Praystead/);
+  });
+
+  it('introduces the movements up front: Bring, Carry, Return, Remember', async () => {
+    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
+    for (const movement of ['Bring', 'Carry', 'Return', 'Remember']) {
+      expect(await screen.findByRole('heading', { name: movement })).toBeTruthy();
+    }
+  });
+
+  it('shows the seven Intercession Circles as a widening list, not levels', async () => {
+    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
+    const section = (await screen.findByRole('heading', { name: 'From your heart to the nations' })).closest('section');
+    const names = within(section).getAllByRole('listitem').map((li) => li.textContent);
+    expect(names).toHaveLength(7);
+    expect(names[0]).toMatch(/^My heart/);
+    expect(names[6]).toMatch(/^Kingdom & Mission/);
+  });
+
+  it('explains the name with Scripture references only — no quoted Bible text', async () => {
+    render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
+    const section = (await screen.findByRole('heading', { name: 'Why Qetoret?' })).closest('section');
+    for (const ref of ['Psalm 141:2', 'Revelation 5:8', 'Revelation 8:3–4', 'Luke 1:5–25']) {
+      expect(within(section).getByText(ref)).toBeTruthy();
+    }
+    // The app is a tool, never a mediator.
+    expect(within(section).getByText(/never a go-between/)).toBeTruthy();
+    expect(document.body.textContent).not.toMatch(/Pray without ceasing/);
   });
 
   it('folds the full feature grid behind an "Explore all features" toggle', async () => {
@@ -46,11 +73,11 @@ describe('LandingPage — simplified hero', () => {
 });
 
 describe('LandingPage — simplified product story', () => {
-  it('explains the product in three steps (write → pray each day → record the answer)', async () => {
+  it('explains the product in three steps (bring → return → record a testimony)', async () => {
     render(<LandingPage onBeginPrayer={() => {}} onSignIn={() => {}} />);
-    expect(await screen.findByText('Write a request')).toBeTruthy();
-    expect(screen.getByText('Pray each day')).toBeTruthy();
-    expect(screen.getByText('Record the answer')).toBeTruthy();
+    expect(await screen.findByText('Bring a prayer')).toBeTruthy();
+    expect(screen.getByText('Return to pray')).toBeTruthy();
+    expect(screen.getByText('Record a testimony')).toBeTruthy();
     // The old category/weekly-plan setup steps are gone.
     expect(screen.queryByText('Set your plan')).toBeNull();
     expect(screen.queryByText(/assign a category/i)).toBeNull();
@@ -66,7 +93,9 @@ describe('LandingPage — simplified product story', () => {
     fireEvent.click(begin);
     expect(onBeginPrayer).toHaveBeenCalled();
     expect(onSignIn).not.toHaveBeenCalled();
-    // Existing users keep a direct "Sign in" path.
+    // Existing users keep a direct "Sign in" path — in the nav, as the hero's
+    // secondary action, and in the footer.
+    expect(screen.getAllByText(/Sign in/).length).toBeGreaterThanOrEqual(3);
     fireEvent.click(screen.getAllByText('Sign in')[0]);
     expect(onSignIn).toHaveBeenCalled();
     // One invitation, worded the same everywhere: hero, Scripture callout, closing section.

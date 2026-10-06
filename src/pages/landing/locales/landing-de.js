@@ -4,45 +4,44 @@ export default {
     "signIn": "Anmelden",
     "badge": "Gebetstagebuch",
     "howItWorks": "Wie es funktioniert",
-    "verse": "„Das Gebet eines Gerechten vermag viel.“ — Jakobus 5:16",
-    "featuresTitle": "Dein Gebetsleben an einem Ort",
-    "featuresSub": "Deine Anliegen, Gebetszeiten und Gebetserhörungen – alles beisammen.",
+    "featuresTitle": "Ein Ort für dein Gebetsleben",
+    "featuresSub": "Deine Gebete, Rhythmen und Zeugnisse an einem Ort.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Gemeinsam beten",
-        "desc": "Teile Anliegen mit Freunden oder einer Gruppe und betet füreinander."
+        "desc": "Teile ein Anliegen mit Freunden oder einer Gruppe und tragt einander im Gebet."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
         "title": "Gebetstagebuch",
-        "desc": "Schreib Anliegen für dich und andere auf und halte fest, wie es weitergeht."
+        "desc": "Halte Anliegen für dich und andere fest und ergänze mit der Zeit Neuigkeiten."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Gebetszeiten planen",
-        "desc": "Leg fest, wann du für jedes Anliegen betest: einmal, täglich oder an bestimmten Tagen."
+        "title": "Gebetsrhythmen",
+        "desc": "Wähle, wann jedes Gebet wiederkommt: einmal, täglich oder an bestimmten Tagen."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Galerie erhörter Gebete",
-        "desc": "Alle erhörten Gebete und deine Zeugnisse in einer Galerie."
+        "title": "Zeugnisse",
+        "desc": "Bewahre deine erhörten Gebete und Zeugnisse als Erinnerung an Gottes Treue."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Im Gebet wachsen",
-        "desc": "Geführte Gebetspläne, Gebetsanleitungen und kurze Impulse, gegründet auf Gottes Wort."
+        "desc": "Geführte Pläne, Gebetsanleitungen und kurze Lesungen, verwurzelt in der Schrift."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "Gebetserinnerungen",
-        "desc": "Eine tägliche Erinnerung ans Beten – und daran, bei Menschen nachzufragen, für die du betest."
+        "title": "Sanfte Erinnerungen",
+        "desc": "Eine tägliche Erinnerung zum Beten und eine, bei den Menschen nachzufragen, die du im Gebet trägst."
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Anliegen aufschreiben",
+        "title": "Ein Gebet bringen",
         "desc": "Ein paar Worte genügen. Details kannst du später ergänzen."
       },
       {
         "emoji": "🙏",
-        "title": "Täglich beten",
-        "desc": "Öffne die App und tippe auf „Jetzt beten“."
+        "title": "Zum Gebet zurückkehren",
+        "desc": "Jedes Gebet kommt an den Tagen wieder, die du wählst, damit du wieder dafür beten kannst."
       },
       {
         "emoji": "🎉",
-        "title": "Erhörung festhalten",
-        "desc": "Wenn Gott antwortet, markiere das Gebet und schreib auf, was er getan hat."
+        "title": "Ein Zeugnis festhalten",
+        "desc": "Wenn etwas geschieht, schreib auf, wie du Gott am Werk gesehen hast."
       }
     ],
     "calloutBadge": "Bibelvers-Vorschläge",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "Was liegt dir heute auf dem Herzen?",
-    "ctaVerse": "„Betet ohne Unterlass.“ — 1. Thessalonicher 5:17",
     "footerBuilt": "Mit Glauben gebaut · Open Source · MIT-Lizenz"
   },
-  "benefits": [
-    {
-      "title": "Nichts geht verloren",
-      "desc": "Behalte im Blick, für wen du versprochen hast zu beten."
-    },
-    {
-      "title": "Wissen, wofür du heute betest",
-      "desc": "Jeder Tag bringt die Anliegen zurück, für die du beten wolltest."
-    },
-    {
-      "title": "Gottes Treue nicht vergessen",
-      "desc": "Bewahre erhörte Gebete und Zeugnisse als Erinnerung an das, was Gott getan hat."
-    }
-  ],
   "explore": {
     "more": "Alle Funktionen entdecken",
     "less": "Weniger anzeigen"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "Sprache",
   "translationInProgress": "Übersetzung in Arbeit",
-  "heroReassurance": "Kein Konto nötig. Nichts verlässt dieses Gerät, außer du entscheidest dich, es zu speichern.",
+  "heroReassurance": "Kein Konto nötig. Dein erstes Gebet bleibt auf diesem Gerät, außer du entscheidest dich, es zu speichern.",
   "hero": {
-    "title": "Bring vor Gott, was dir auf dem Herzen liegt.",
-    "promise": "Bleib beharrlich im Gebet. Erinnere dich an Gottes Treue.",
-    "subtitle": "Schreib deine Gebetsanliegen auf. Jedes kommt an den Tagen wieder, an denen du dafür beten willst."
+    "title": "Bau ein Leben des Gebets vor Gott.",
+    "promise": "Lass deine Gebete aufsteigen.",
+    "subtitle": "Bring vor Gott, was dir auf dem Herzen liegt. Trage deine Familie, deine Freunde, deine Gemeinde und die Nationen im Gebet. Finde treue Gebetsrhythmen und denk an seine Treue."
   },
   "samplePrayerTitle": "Frieden für unsere Familie",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "Schritt",
   "todayLabel": "Heute",
-  "prayNowLabel": "Jetzt beten"
+  "prayNowLabel": "Jetzt beten",
+  "preview": {
+    "altarToday": "Dein Altar heute",
+    "carriedLabel": "Im Gebet getragen seit März 2025",
+    "carriedTitle": "Heilung für Papa",
+    "rememberLabel": "Zeugnis",
+    "rememberText": "Denk daran, was Gott getan hat."
+  },
+  "movements": [
+    {
+      "title": "Bringen",
+      "desc": "Bring vor Gott, was dir auf dem Herzen liegt, mit deinen eigenen Worten."
+    },
+    {
+      "title": "Tragen",
+      "desc": "Tritt im Gebet für die Menschen und Orte ein, die Gott dir anvertraut hat."
+    },
+    {
+      "title": "Zurückkehren",
+      "desc": "Finde Rhythmen, die dich Tag für Tag ins Gebet zurückführen."
+    },
+    {
+      "title": "Erinnern",
+      "desc": "Halte Zeugnisse fest und denk an Gottes Treue."
+    }
+  ],
+  "circles": {
+    "title": "Von deinem Herzen bis zu den Nationen",
+    "subtitle": "Gebet wird mit der Zeit weiter. Das sind keine Stufen, die man erreichen muss, sondern die Menschen und Orte, die du vor Gott tragen kannst.",
+    "start": "Ein einziges Gebet genügt für den Anfang.",
+    "items": [
+      {
+        "name": "Mein Herz",
+        "desc": "Dein eigener Weg mit Gott"
+      },
+      {
+        "name": "Mein Haus",
+        "desc": "Ehepartner, Kinder, Eltern, Familie"
+      },
+      {
+        "name": "Meine Menschen",
+        "desc": "Freunde, Nachbarn, Kollegen"
+      },
+      {
+        "name": "Seine Gemeinde",
+        "desc": "Deine Gemeinde, Pastoren, Missionare"
+      },
+      {
+        "name": "Regierende",
+        "desc": "Verantwortliche in Politik, Justiz und Verwaltung"
+      },
+      {
+        "name": "Nationen",
+        "desc": "Städte, Länder und Völker"
+      },
+      {
+        "name": "Reich Gottes & Mission",
+        "desc": "Evangelium, Gerechtigkeit und Barmherzigkeit"
+      }
+    ]
+  },
+  "why": {
+    "title": "Warum Qetoret?",
+    "body": "Qetoret ist das hebräische Wort für das Räucherwerk, das vor Gott dargebracht wurde. In der Bibel wird der aufsteigende Rauch zum Bild für die Gebete des Volkes Gottes. Qetoret ist nach diesem Bild benannt: ein Leben im Gebet, das immer wieder vor Gott gebracht wird.",
+    "referencesLabel": "In der Bibel nachlesen",
+    "references": [
+      "Psalm 141:2",
+      "Offenbarung 5:8",
+      "Offenbarung 8:3–4",
+      "Lukas 1:5–25"
+    ],
+    "note": "Qetoret ist ein Werkzeug für das Gebet, nie ein Vermittler. Wir kommen durch Jesus Christus zum Vater."
+  }
 };

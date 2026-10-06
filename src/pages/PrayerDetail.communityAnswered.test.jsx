@@ -92,7 +92,7 @@ const personalSource = (extra = {}) => ({
   ...extra,
 });
 
-// A copy saved into the viewer's own list via "I'm praying" — linked back to the
+// A copy saved into the viewer's own list via "Carry this prayer" — linked back to the
 // group request by community_origin_id (never source_prayer_id).
 const savedCopy = (extra = {}) => ({
   id: 'sc1',
@@ -219,8 +219,8 @@ describe('PrayerDetail — community answered mirrors a saved-from-community cop
   });
 });
 
-describe('PrayerDetail — "I\'m praying" toggle mirrors the personal list', () => {
-  it('un-tapping "I\'m praying" removes the saved copy it added', async () => {
+describe('PrayerDetail — "Carry this prayer" mirrors the personal list', () => {
+  it('no longer carrying a prayer removes the saved copy that carrying added', async () => {
     const toggleReaction = vi.fn(async () => {});
     const fetchReactors = vi.fn(async () => ({ reactors: [] }));
     const softDeletePrayer = vi.fn();
@@ -231,7 +231,10 @@ describe('PrayerDetail — "I\'m praying" toggle mirrors the personal list', () 
       prayerSpies: { softDeletePrayer },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'iAmPraying')) }));
+    // Already carrying: the pressed button says so, in the reader's language.
+    const carrying = screen.getByRole('button', { name: t(lang, 'carryingThisPrayer') });
+    expect(carrying.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(carrying);
     await Promise.resolve();
     await Promise.resolve();
 
@@ -239,7 +242,7 @@ describe('PrayerDetail — "I\'m praying" toggle mirrors the personal list', () 
     expect(softDeletePrayer).toHaveBeenCalledWith('sc1');
   });
 
-  it('un-tapping "I\'m praying" never deletes a prayer the viewer only shared', async () => {
+  it('no longer carrying a prayer never deletes a prayer the viewer only shared', async () => {
     const toggleReaction = vi.fn(async () => {});
     const fetchReactors = vi.fn(async () => ({ reactors: [] }));
     const softDeletePrayer = vi.fn();
@@ -250,7 +253,10 @@ describe('PrayerDetail — "I\'m praying" toggle mirrors the personal list', () 
       prayerSpies: { softDeletePrayer },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'iAmPraying')) }));
+    // Already carrying: the pressed button says so, in the reader's language.
+    const carrying = screen.getByRole('button', { name: t(lang, 'carryingThisPrayer') });
+    expect(carrying.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(carrying);
     await Promise.resolve();
     await Promise.resolve();
 

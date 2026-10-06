@@ -24,7 +24,7 @@
 //   • "Your past is not your master" (day 17) offers grace without minimising
 //     harm: it points to confession, restitution and counsel, distinguishes harm
 //     done BY the reader from harm done TO them, and carries a safety note.
-//   • Praystead never speaks for God and promises no outcome or feeling.
+//   • Qetoret never speaks for God and promises no outcome or feeling.
 //
 // LOCALIZATION: day themes are authored in all 16 languages; the longer prose
 // is authored in en + fr and falls back through pick() elsewhere

@@ -78,7 +78,7 @@ describe('HomeTab — remaining vs completed', () => {
   it('"Pray now" opens a session on only the remaining prayers (resume, no repeats)', () => {
     usePrayerStore.setState({ completions: { p1: [DAY] } });
     renderHome();
-    fireEvent.click(screen.getByText(t(lang, 'prayNow')));
+    fireEvent.click(screen.getByText(t(lang, 'beginPrayer')));
     // The session resumes with the first UNFINISHED request…
     expect(screen.getByRole('dialog')).toBeTruthy();
     expect(within(screen.getByRole('dialog')).getByText('Prière deux')).toBeTruthy();
@@ -89,12 +89,12 @@ describe('HomeTab — remaining vs completed', () => {
   it('advancing in the session updates Home the moment it closes (partial exit + resume)', () => {
     renderHome();
     expect(screen.getByText(t(lang, 'todayRemainingLabel', { n: 3 }))).toBeTruthy();
-    fireEvent.click(screen.getByText(t(lang, 'prayNow')));
+    fireEvent.click(screen.getByText(t(lang, 'beginPrayer')));
     fireEvent.click(screen.getByText(t(lang, 'continueBtn'))); // past p1
     fireEvent.click(screen.getByLabelText(t(lang, 'close'))); // leave halfway
     // Home now counts 2 remaining; reopening resumes at p2.
     expect(screen.getByText(t(lang, 'todayRemainingLabel', { n: 2 }))).toBeTruthy();
-    fireEvent.click(screen.getByText(t(lang, 'prayNow')));
+    fireEvent.click(screen.getByText(t(lang, 'beginPrayer')));
     expect(within(screen.getByRole('dialog')).getByText('Prière deux')).toBeTruthy();
   });
 
@@ -102,11 +102,32 @@ describe('HomeTab — remaining vs completed', () => {
     usePrayerStore.setState({ completions: { p1: [DAY], p2: [DAY], p3: [DAY] } });
     renderHome();
     expect(screen.getByRole('status').textContent).toContain(t(lang, 'todayCompleteTitle'));
-    expect(screen.queryByText(t(lang, 'prayNow'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'beginPrayer'))).toBeNull();
     // "Pray again" walks ALL of today's prayers again, explicitly.
     fireEvent.click(screen.getByText(t(lang, 'prayAgain')));
     expect(screen.getByText('1 / 3')).toBeTruthy();
     expect(within(screen.getByRole('dialog')).getByText('Prière un')).toBeTruthy();
+  });
+
+  it('names the page "your altar today" once there is something to bring', () => {
+    renderHome();
+    expect(screen.getByText(t(lang, 'altarTodayTitle'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'altarTodaySub'))).toBeTruthy();
+  });
+
+  it('a completed day offers an optional "Remain with God" — stillness, not a reward', () => {
+    usePrayerStore.setState({ completions: { p1: [DAY], p2: [DAY], p3: [DAY] } });
+    renderHome();
+    fireEvent.click(screen.getByText(t(lang, 'remainWithGod')));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'remainWithGod') });
+    // A choice of duration and a way out — nothing generated, nothing counted.
+    expect(within(dialog).getByText(t(lang, 'remain30s'))).toBeTruthy();
+    expect(within(dialog).getByText(t(lang, 'remain1m'))).toBeTruthy();
+    fireEvent.click(within(dialog).getByText(t(lang, 'remain30s')));
+    expect(within(dialog).getByText(t(lang, 'remainStill'))).toBeTruthy();
+    expect(dialog.textContent).not.toMatch(/\d+\s*(s|sec|%)/);
+    fireEvent.click(within(dialog).getByText(t(lang, 'remainFinish')));
+    expect(screen.queryByRole('dialog', { name: t(lang, 'remainWithGod') })).toBeNull();
   });
 
   it('a prayer added after the day was complete re-opens Today', () => {
@@ -120,7 +141,7 @@ describe('HomeTab — remaining vs completed', () => {
     usePrayerStore.setState((s) => ({ prayers: [prayer('pNew', 'Nouvelle prière'), ...s.prayers] }));
     rerender(<MemoryRouter><HomeTab onAdd={() => {}} /></MemoryRouter>);
     expect(screen.getByText(t(lang, 'todayRemainingLabel', { n: 1 }))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'prayNow'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'beginPrayer'))).toBeTruthy();
     expect(screen.queryByRole('status')).toBeNull();
   });
 

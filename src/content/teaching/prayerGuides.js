@@ -7,6 +7,87 @@
 //          steps: [{ title{en,fr}, prompt{en,fr}, passage? }] }
 
 const guides = [
+  // Qetoret's foundation (docs/QETORET_IDENTITY.md §3): identity before
+  // activity. Five movements of the royal priesthood — always under Christ, the
+  // Great High Priest; never status, and never authority OVER other people.
+  {
+    id: 'royalPriesthood',
+    emoji: '👑',
+    minutes: 7, // authored duration — shown as "About N min"
+    theme: 'foundations',
+    title: { en: 'A royal priesthood', fr: 'Un sacerdoce royal' },
+    summary: {
+      en: 'Why every believer may draw near to God through Christ — and carry others before Him.',
+      fr: 'Pourquoi chaque croyant peut s’approcher de Dieu par le Christ — et porter les autres devant lui.',
+    },
+    intro: {
+      en: 'In Christ, God’s people are called a royal priesthood. This is not status, and it is not power over others. It is access and responsibility: we draw near because Jesus, our Great High Priest, has opened the way, and we carry others before God because love carries. Walk slowly through these five movements.',
+      fr: 'En Christ, le peuple de Dieu est appelé un sacerdoce royal. Ce n’est ni un statut, ni un pouvoir sur les autres. C’est un accès et une responsabilité : nous nous approchons parce que Jésus, notre grand-prêtre, a ouvert le chemin, et nous portons les autres devant Dieu parce que l’amour porte. Parcours lentement ces cinq mouvements.',
+    },
+    steps: [
+      {
+        title: { en: 'Draw near', fr: 'Approche-toi' },
+        prompt: {
+          en: 'You do not earn your way in. Read how Christ has opened the way, then come to the Father with confidence and a sincere heart.',
+          fr: 'Tu ne gagnes pas ton entrée. Lis comment le Christ a ouvert le chemin, puis viens au Père avec assurance et un cœur sincère.',
+        },
+        why: {
+          en: 'Access to God is a gift of Christ’s priesthood, not a reward for spiritual performance.',
+          fr: 'L’accès à Dieu est un don du sacerdoce du Christ, pas la récompense d’une performance spirituelle.',
+        },
+        passage: 'Hebrews 10:19-22',
+      },
+      {
+        title: { en: 'Offer', fr: 'Offre' },
+        prompt: {
+          en: 'A priest brings offerings. Offer God your praise, your thanks and your own life — the spiritual sacrifices Peter describes.',
+          fr: 'Un prêtre apporte des offrandes. Offre à Dieu ta louange, ta reconnaissance et ta vie elle-même — les sacrifices spirituels dont parle Pierre.',
+        },
+        why: {
+          en: 'Prayer begins with God Himself before it turns to our requests.',
+          fr: 'La prière commence par Dieu lui-même avant de se tourner vers nos demandes.',
+        },
+        passage: '1 Peter 2:4-5',
+      },
+      {
+        title: { en: 'Carry', fr: 'Porte' },
+        prompt: {
+          en: 'The high priest wore the names of God’s people over his heart when he came before the Lord. Name before God the people you carry: your family, your friends, those who asked you to pray.',
+          fr: 'Le grand-prêtre portait les noms du peuple de Dieu sur son cœur quand il se présentait devant l’Éternel. Nomme devant Dieu les personnes que tu portes : ta famille, tes amis, ceux qui t’ont demandé de prier.',
+        },
+        why: {
+          en: 'Intercession is love that carries others before God. It does not need eloquent words.',
+          fr: 'L’intercession est un amour qui porte les autres devant Dieu. Elle n’a pas besoin de belles paroles.',
+        },
+        passage: 'Exodus 28:29',
+      },
+      {
+        title: { en: 'Stand in the gap', fr: 'Tiens-toi à la brèche' },
+        prompt: {
+          en: 'Widen your prayer: your church, those in authority, your city and the nations. Pray for wisdom, justice, peace and the spread of the gospel — not for your side to win.',
+          fr: 'Élargis ta prière : ton Église, ceux qui exercent l’autorité, ta ville et les nations. Prie pour la sagesse, la justice, la paix et l’avancée de l’Évangile — non pour que ton camp l’emporte.',
+        },
+        why: {
+          en: 'Paul calls for prayer for all people, rulers included, because God desires all people to be saved.',
+          fr: 'Paul appelle à prier pour tous les hommes, y compris les dirigeants, parce que Dieu veut que tous soient sauvés.',
+        },
+        passage: '1 Timothy 2:1-4',
+      },
+      {
+        title: { en: 'Represent the King', fr: 'Représente le Roi' },
+        prompt: {
+          en: 'Prayer sends you back into the world. Ask the Lord whether there is a faithful next step: someone to encourage, to forgive, to serve, or to tell about Jesus.',
+          fr: 'La prière te renvoie dans le monde. Demande au Seigneur s’il y a un pas fidèle à faire : quelqu’un à encourager, à qui pardonner, à servir, ou à qui parler de Jésus.',
+        },
+        why: {
+          en: 'We are ambassadors of Christ: the authority is His, carried in love and obedience — never over other people.',
+          fr: 'Nous sommes ambassadeurs du Christ : l’autorité est la sienne, portée dans l’amour et l’obéissance — jamais sur les autres.',
+        },
+        passage: '2 Corinthians 5:18-20',
+      },
+    ],
+  },
+
   {
     id: 'acts',
     emoji: '🙌',

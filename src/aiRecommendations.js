@@ -62,7 +62,12 @@ export async function getAIRecommendations({ title, description = '', update = '
   });
   if (error) return { recs: [], error: localizeAiError(error, lang) };
 
-  const recs = normalize(data);
-  if (recs.length > 0) cache.set(key, recs);
+  const recs = Array.isArray(data)
+    ? data
+        .filter((r) => r && r.title && Array.isArray(r.verses) && r.verses.length > 0)
+        // References only — never AI verse wording presented as Scripture.
+        .map((r) => ({ ...r, verses: r.verses.filter((v) => v && v.ref).map((v) => ({ ref: String(v.ref) })) }))
+    : [];
+  if (recs.length > 0) cache.set(cacheKey, recs);
   return { recs, error: null };
 }

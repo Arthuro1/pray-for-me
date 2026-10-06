@@ -34,6 +34,12 @@ const RHYTHM_MIN_PRAYERS = 2;
 const REMINDER_MIN_PRAYERS = 2;
 // Organizing is worth introducing when a list has become something to navigate.
 const ORGANIZE_MIN_PRAYERS = 3;
+// Carrying others is the widening of a prayer life that already exists: a few
+// prayers, prayed on several distinct days, and still none for anyone else.
+const CARRY_MIN_PRAYERS = 3;
+const CARRY_MIN_DAYS = 3;
+// Circles that are, by definition, about someone or something beyond oneself.
+const OUTWARD_CIRCLES = new Set(['household', 'people', 'church', 'authorities', 'nations', 'kingdom']);
 // "Came back" = prayed on more than one distinct day.
 const RETURNING_MIN_DAYS = 2;
 
@@ -43,10 +49,17 @@ const followsAPlan = (prayer) => !!prayer?.schedule?.plan?.id;
 function hasOrganization(prayer) {
   return !!(
     prayer?.for_other
+    || prayer?.circle
     || prayer?.person_name
     || (prayer?.category_ids || []).length
     || (prayer?.prayer_categories || []).length
   );
+}
+
+// Someone is already being carried: a prayer for another person, a request
+// taken on from a group, or one placed in an outward circle.
+function carriesOthers(prayer) {
+  return !!(prayer?.for_other || prayer?.community_origin_id || OUTWARD_CIRCLES.has(prayer?.circle));
 }
 
 // A prayer that never comes back on its own is real evidence that changing a
@@ -130,6 +143,17 @@ export function nextActivationStep({
     && !done.has(ACTIVATION_STEPS.ORGANIZE)
   ) {
     return ACTIVATION_STEPS.ORGANIZE;
+  }
+
+  // Carry — the widening question, last of all and only once: a person who
+  // keeps returning to prayer, and whose prayers are still all their own.
+  if (
+    !done.has(ACTIVATION_STEPS.CARRY)
+    && active.length >= CARRY_MIN_PRAYERS
+    && returningDayCount(completions) >= CARRY_MIN_DAYS
+    && !active.some(carriesOthers)
+  ) {
+    return ACTIVATION_STEPS.CARRY;
   }
 
   return null;

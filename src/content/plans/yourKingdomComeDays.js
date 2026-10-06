@@ -5,7 +5,7 @@
 //   prompts     INTERCESSION — what are we asking God to do?
 //   selfPrompt  SUBMISSION — what in my own life must come under the reign I
 //               am praying for? Present on every day.
-// Plus a reflection (Praystead commentary, never Scripture text), one small
+// Plus a reflection (Qetoret commentary, never Scripture text), one small
 // practice, up to three related passages and resource topics.
 //
 // Prose is authored in en + fr; the other languages fall back through pick().

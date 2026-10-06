@@ -10,7 +10,8 @@ import { dateLocale, timeAgo } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
 import { testimonyList, recoverLockedPrayerPoints, mergeSharedPrayerUpdates } from '../utils/prayer';
 import { getAIRecommendations } from '../aiRecommendations';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
+import { carriedSinceLabel, prayedDayCount, showsCarriedSince } from '../lib/carried';
 import { toast } from '../store/toastStore';
 import AiConsentModal from '../components/AiConsentModal';
 import AiOutgoingPreview from '../components/AiOutgoingPreview';
@@ -135,7 +136,7 @@ const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
 // skipped or moved doesn't hand the memos below a fresh object every render.
 const EMPTY_OVERRIDES = {};
 
-export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null }) {
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null, initialFocus = null }) {
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
@@ -144,6 +145,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // control, and confirming happens inside the thing it opened. Its (optional)
   // testimony text lives in the composer.
   const [showTestimony, setShowTestimony] = useState(false);
+  // Set only in the moment a prayer is marked answered here — the optional
+  // "Is there a faithful next step?" question is never shown again later.
+  const [justAnswered, setJustAnswered] = useState(false);
+  const [addingNextStep, setAddingNextStep] = useState(false);
   // Adding a word of thanks to an already-answered prayer (remembrance).
   const [showThanks, setShowThanks] = useState(false);
   const [updateRecs, setUpdateRecs] = useState([]);
@@ -334,6 +339,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const livePrayer = isCommunity
     ? (communityPrayers.find(p => p.id === communityPrayer.id) || communityPrayer)
     : (prayers.find(p => p.id === prayer.id) || prayer);
+  const prayedDays = isCommunity ? 0 : prayedDayCount(completions, livePrayer.id);
   // An owned prayer can contain older child rows encrypted under an account key
   // this device no longer holds, while its group-key snapshot remains readable.
   // Recover matching points for display only; the original ciphertext is never
@@ -693,9 +699,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const confirmAnswered = (text, attachments) => {
     markAnswered(livePrayer.id, text, attachments);
     closeAnswerFlow();
+    setJustAnswered(true);
   };
 
   const focusUpdateField = () => revealAndFocus('pd-updates', '[contenteditable]');
+
+  // Arriving from "Tend your altar" with a purpose: open that part once.
+  const initialFocusDone = useRef(false);
+  useEffect(() => {
+    if (initialFocusDone.current || !initialFocus || isCommunity) return;
+    initialFocusDone.current = true;
+    if (initialFocus === 'answer') openAnswerFlow();
+    else if (initialFocus === 'update') requestAnimationFrame(focusUpdateField);
+  });
 
   // Own prayer → warn first; saved copy → instant unfollow + Undo. Then navigate back.
   const handleDelete = () => removePrayer(livePrayer, onBack);
@@ -958,7 +974,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <span>
               {isCommunity
                 ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
-                : timeAgo(livePrayer.created_at, lang)}
+                : showsCarriedSince(livePrayer)
+                  // Long-carried prayer as memory, never merit: a date and,
+                  // once there is one, a plain count of the days it was prayed.
+                  ? [
+                    t(lang, 'carriedSince', { date: carriedSinceLabel(livePrayer, lang) }),
+                    prayedDays > 0 ? tp(lang, 'prayedDays', prayedDays) : null,
+                  ].filter(Boolean).join(' · ')
+                  : timeAgo(livePrayer.created_at, lang)}
             </span>
             {constellationPrayerCount > 0 && (
               <span className="constellation-detail__praying">
@@ -1401,7 +1424,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 {(rec.verses || []).length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {rec.verses.map((v, i) => (
-                      <VerseAccordion key={i} reference={v.ref} lang={lang} initialText={v.text} panelStyle={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
+                      <VerseAccordion key={i} reference={v.ref} lang={lang} panelStyle={{ background: 'var(--surface)', border: '0.5px solid var(--accent-border)' }}>
                         {({ toggle }) => (
                           <button
                             onClick={toggle}
@@ -1589,7 +1612,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {isCommunity && !canEditCommunityPrayer && (
           testimonySent ? (
             <div className="prayer-activity-action rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
-              🎉 {t(lang, 'testimony')}
+              {t(lang, 'testimony')}
             </div>
           ) : showCommunityTestimony ? (
             <div className="prayer-activity-panel">
@@ -1607,7 +1630,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </div>
           ) : (
             <button onClick={() => setShowCommunityTestimony(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}>
-              🎉 {t(lang, 'postTestimony')}
+              {t(lang, 'postTestimony')}
             </button>
           )
         )}
@@ -1719,7 +1742,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   {(tm.created_at || ((showDelete || canEditTm) && !editing)) && (
                     <div className="prayer-activity-item__header">
                       {tm.created_at
-                        ? <p className="prayer-activity-item__meta">🎉 {format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
+                        ? <p className="prayer-activity-item__meta">{format(new Date(tm.created_at), 'd MMM yyyy', { locale })}</p>
                         : <span />}
                       {!editing && (showDelete || canEditTm) && (
                         <div className="prayer-activity-item__actions flex items-start gap-1.5">
@@ -1766,7 +1789,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               })}
               {sharedActivity.testimonies.filter(hasContent).map(tm => (
                 <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony">
-                  <p className="prayer-activity-item__meta">🎉 {communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
+                  <p className="prayer-activity-item__meta">{communityAuthor(tm, user?.id, lang)} · {timeAgo(tm.created_at, lang)}</p>
                   {tm.content && <RichText text={loc(tm.content)} className="text-sm leading-relaxed" style={{ color: 'var(--text-1)' }} />}
                   <AttachmentList attachments={tm.attachments} lang={lang} className={tm.content ? 'mt-1.5' : ''} />
                 </div>
@@ -1803,7 +1826,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             they belong to. Nothing is marked answered without this confirm. */}
         {!isAnswered && showTestimony && canManage && (
           <div id="pd-answer" className="prayer-activity-panel">
-            <p className="prayer-activity-panel__title">{t(lang, 'testimony')}</p>
+            {/* The person testifies; the app only records. It asks what
+                happened — it never declares on its own that God answered. */}
+            <p className="prayer-activity-panel__title">{t(lang, 'answerWhatHappened')}</p>
+            <p className="mb-2 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'answerHowGodWorked')}</p>
             {/* The testimony is OPTIONAL — allowEmpty keeps Confirm available
                 with nothing written, exactly like the old flow. */}
             <UpdateComposer
@@ -1811,13 +1837,53 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               rows={1}
               autoFocus
               allowEmpty
-              placeholder={`${t(lang, 'testimony')}…`}
+              placeholder={`${t(lang, 'recordTestimony')}…`}
               sendLabel={t(lang, 'confirm')}
               onSend={confirmAnswered}
             />
             <button onClick={closeAnswerFlow} className="w-full mt-2 py-2.5 min-h-[44px] rounded-xl text-sm" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
               {t(lang, 'cancel')}
             </button>
+          </div>
+        )}
+
+        {/* Answer → mission (Luke 1: John's life served a purpose larger than
+            the prayer). Right after a prayer is marked answered, ONE optional
+            question. Private stays the default; nothing is shared unless the
+            person chooses to. */}
+        {isAnswered && justAnswered && canManage && (
+          <div className="prayer-activity-panel" data-testid="answer-next-step">
+            <p className="text-xs" role="status" style={{ color: 'var(--text-3)' }}>{t(lang, 'answerMarked')}</p>
+            <p className="prayer-activity-panel__title mt-2">{t(lang, 'answerNextTitle')}</p>
+            <p className="mb-3 text-xs" style={{ color: 'var(--text-3)' }}>{t(lang, 'answerNextBody')}</p>
+            {addingNextStep ? (
+              <UpdateComposer
+                lang={lang}
+                rows={2}
+                autoFocus
+                placeholder={`${t(lang, 'answerNextPlaceholder')}…`}
+                sendLabel={t(lang, 'save')}
+                onSend={async (text, attachments) => {
+                  await handleAddUpdate(text, attachments);
+                  setJustAnswered(false);
+                  toast.success(t(lang, 'answerNextSaved'));
+                }}
+              />
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                <button onClick={() => setAddingNextStep(true)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+                  {t(lang, 'answerNextAdd')}
+                </button>
+                {!savedCopy && groups.length > 0 && !plan && (
+                  <button onClick={() => { setJustAnswered(false); setShowShareModal(true); }} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ background: 'var(--input-bg)', color: 'var(--text-2)', border: '0.5px solid var(--input-border)' }}>
+                    {t(lang, 'answerNextShare')}
+                  </button>
+                )}
+                <button onClick={() => setJustAnswered(false)} className="min-h-[44px] rounded-xl px-4 text-sm font-medium" style={{ color: 'var(--text-3)' }}>
+                  {t(lang, 'answerNextPrivate')}
+                </button>
+              </div>
+            )}
           </div>
         )}
 

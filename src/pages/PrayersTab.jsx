@@ -13,8 +13,8 @@ import EmptyState from '../components/shared/EmptyState';
 import AnsweredGallery from '../components/AnsweredGallery';
 import JournalFilters from '../components/JournalFilters';
 import Avatar from '../components/shared/Avatar';
-import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check, Lightbulb } from 'lucide-react';
-import { t } from '../i18n';
+import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, HandHeart, Check, Lightbulb, Sprout } from 'lucide-react';
+import { t, tp } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
 import { getAuthorName } from '../utils/user';
 import { prayerPriority } from '../utils/prayer';
@@ -38,6 +38,9 @@ import {
   readJournalHints,
 } from '../lib/journalHints';
 import { useContextualNudgeSlot } from '../components/shared/contextualNudge';
+import { isCircle } from '../lib/circles';
+import { tendCandidates } from '../lib/carried';
+import TendAltar from '../components/TendAltar';
 
 // The Journal: every request and its history, in two simple segments — Active
 // and Answered. Search and useful retrieval filters stay quiet, and an optional
@@ -80,8 +83,8 @@ function FilterStatus({ lang, count, label, onClear }) {
 
 export default function PrayersTab({ onAdd }) {
   const navigate = useNavigate();
-  const { prayers, categories, settings, loading, completions, markPrayedOn } = usePrayerStore(
-    useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings, loading: s.loading, completions: s.completions, markPrayedOn: s.markPrayedOn }))
+  const { prayers, categories, settings, loading, completions, markPrayedOn, updatePrayer } = usePrayerStore(
+    useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings, loading: s.loading, completions: s.completions, markPrayedOn: s.markPrayedOn, updatePrayer: s.updatePrayer }))
   );
   const { tr } = useTranslationStore();
   const { user } = useAuthStore();
@@ -95,7 +98,14 @@ export default function PrayersTab({ onAdd }) {
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id, fetchPrayerShares]);
   // Opened from a shortcut (e.g. the /answered redirect) with a preset segment.
   const [segment, setSegment] = useState(location.state?.filter === 'answered' ? 'answered' : 'active');
-  const [filters, setFilters] = useState({ ...EMPTY_JOURNAL_FILTERS });
+  // Opened from a circle on Today ("On your altar") with that circle preset.
+  const [tending, setTending] = useState(false);
+  // Recomputed when the review closes, so the prayers just tended drop out.
+  const tendList = useMemo(() => tendCandidates(prayers, completions), [prayers, completions, tending]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [filters, setFilters] = useState(() => ({
+    ...EMPTY_JOURNAL_FILTERS,
+    ...(isCircle(location.state?.circle) ? { circle: location.state.circle } : {}),
+  }));
   // Search is folded behind an icon; its text and filters survive segment
   // switches so coming back to Active resumes exactly where Grace was.
   const [search, setSearch] = useState('');
@@ -160,6 +170,7 @@ export default function PrayersTab({ onAdd }) {
     || filterOptions.people.length > 0
     || filterOptions.groups.length > 0
     || filterOptions.hasPlans
+    || filterOptions.circles.length > 0
     || (segment === 'answered' && answeredCount > 0)
   );
   const resultsLabel = (count) => count === 1
@@ -401,6 +412,31 @@ export default function PrayersTab({ onAdd }) {
             </button>
           </div>
         )}
+        {/* Tend your altar — offered only when some prayers have quietly rested
+            a while; never a count of failures, never in the way. */}
+        {!peopleOpen && segment === 'active' && tendList.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setTending(true)}
+            className="pressable mt-3 flex min-h-11 w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-start"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
+            <Sprout size={16} className="shrink-0" aria-hidden="true" style={{ color: 'var(--gold)' }} />
+            <span className="flex-1 text-sm font-medium" style={{ color: 'var(--text-1)' }}>{t(lang, 'tendTitle')}</span>
+            <span className="text-xs" style={{ color: 'var(--text-3)' }}>{tp(lang, 'tendEntry', tendList.length)}</span>
+            <ChevronRight size={15} className="rtl-mirror shrink-0" aria-hidden="true" style={{ color: 'var(--text-3)' }} />
+          </button>
+        )}
+        {tending && (
+          <TendAltar
+            prayers={tendList}
+            completions={completions}
+            lang={lang}
+            tr={tr}
+            onRelease={(prayer) => updatePrayer(prayer.id, { schedule: { type: 'none' } })}
+            onClose={() => setTending(false)}
+          />
+        )}
         {!peopleOpen && showFilters && (hasFilterControls || toolsUseful) && (
           <JournalFilters
             segment={segment}
@@ -410,6 +446,7 @@ export default function PrayersTab({ onAdd }) {
             groups={filterOptions.groups}
             hasPersonal={filterOptions.hasPersonal}
             hasPlans={filterOptions.hasPlans}
+            circles={filterOptions.circles}
             lang={lang}
             tr={tr}
             active={structuredFiltersActive}

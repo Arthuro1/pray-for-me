@@ -18,7 +18,7 @@ const QUIET_BUTTON = { background: 'var(--input-bg)', color: 'var(--text-2)', bo
 // "Share this plan": the one sheet every plan surface opens — the catalogue
 // preview, a run in progress, a finished run. Two halves:
 //
-//   In Praystead — invite friends or whole groups (plan_invitations).
+//   In Qetoret — invite friends or whole groups (plan_invitations).
 //   Anywhere     — a public link for people with no account and no friendship
 //                  yet: the phone's share sheet, the web share targets, an
 //                  image for Stories, and a QR code to show in person.

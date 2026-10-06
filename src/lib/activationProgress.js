@@ -13,6 +13,9 @@ export const ACTIVATION_STEPS = Object.freeze({
   RHYTHM: 'rhythm',
   REMINDER: 'reminder',
   ORGANIZE: 'organize',
+  // "Who else would you like to carry before God?" — the widening of prayer
+  // beyond oneself, offered only after real, repeated use.
+  CARRY: 'carry',
 });
 
 const VALID_STEPS = new Set(Object.values(ACTIVATION_STEPS));

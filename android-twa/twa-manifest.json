@@ -1,8 +1,8 @@
 {
   "packageId": "space.praystead.twa",
   "host": "praystead.com",
-  "name": "Praystead",
-  "launcherName": "Praystead",
+  "name": "Qetoret",
+  "launcherName": "Qetoret",
   "display": "standalone",
   "themeColor": "#6D28D9",
   "themeColorDark": "#000000",

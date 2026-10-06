@@ -11,7 +11,7 @@ import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Loader2, Plus, HandHeart, Share2, ExternalLink } from 'lucide-react';
 import Encouragement from '../components/shared/Encouragement';
 import { bibleLink } from '../utils/bibleLink';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
@@ -35,6 +35,9 @@ import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
 import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
+import RemainWithGod from '../components/RemainWithGod';
+import { circleLabelKey, groupByCircle } from '../lib/circles';
+import { CIRCLE_ICONS } from '../components/shared/circleIcons';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -45,8 +48,8 @@ const DAY_NAMES = {
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR, zh: enUS, es: enUS, hi: enUS, ja: enUS, sw: enUS, am: enUS, id: enUS, tl: enUS, ko: enUS, ru: enUS, ar: enUS, fa: enUS };
 
-// Today is built for one thing: praying. Compact greeting → what REMAINS today
-// → one large "Pray now" → the list itself → add. Completed prayers fold into a
+// Today is "your altar today": built for one thing, coming before God. Compact
+// greeting → what REMAINS today → one large "Begin prayer" → the list itself → add. Completed prayers fold into a
 // quiet "Prayed today" row, catch-up sits AFTER the list, collapsed (grace, not
 // guilt), and the daily verse closes the page as a small card. Statistics live
 // in the Journal; planning and everything else in More.
@@ -79,6 +82,7 @@ export default function HomeTab({ onAdd, onEdit }) {
   // session open.
   const [session, setSession] = useState(null);
   const [catchUpOpen, setCatchUpOpen] = useState(false);
+  const [remaining, setRemaining] = useState(false);
   const [prayedOpen, setPrayedOpen] = useState(false);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
@@ -98,6 +102,10 @@ export default function HomeTab({ onAdd, onEdit }) {
   const slotGroups = groupBySlot(remainingEntries);
   const useSlots = remainingEntries.some((e) => e.slot); // headers only once slots are in use
   const catchUp = getCatchUp();
+  // "On your altar": the circles this person has actually placed prayers in.
+  // Absent until they use one — the altar begins small and grows with them.
+  const altarCircles = groupByCircle(prayers.filter((p) => p.status === 'active' && !p._locked))
+    .filter(({ circle }) => circle);
   const today = new Date();
   const dayIndex = today.getDay();
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
@@ -167,6 +175,7 @@ export default function HomeTab({ onAdd, onEdit }) {
       {sharingVerse && verse && (
         <VerseShareModal verse={verse} lang={lang} dayKey={dayKey} onClose={() => setSharingVerse(false)} />
       )}
+      {remaining && <RemainWithGod lang={lang} onFinish={() => setRemaining(false)} />}
       {session && session.prayers.length > 0 && (
         <PrayerSession
           prayers={session.prayers}
@@ -191,6 +200,15 @@ export default function HomeTab({ onAdd, onEdit }) {
           title={`${greeting}${displayName ? `, ${displayName}` : ''}`}
         />
 
+        {/* "Your altar today" names what this page is for, once, and only when
+            there is something to bring — an empty day has its own invitation. */}
+        {!dayEmpty && (!loading || prayers.length > 0) && (
+          <div className="mb-4">
+            <SectionLabel className="mb-1" style={{ color: 'var(--gold)' }}>{t(lang, 'altarTodayTitle')}</SectionLabel>
+            <p className="text-sm" style={{ color: 'var(--text-2)' }}>{t(lang, 'altarTodaySub')}</p>
+          </div>
+        )}
+
         {/* One clear doorway into prayer. The first request gives the card a
             human focus; schedules and community metadata wait below. */}
         {remainingPrayers.length > 0 && (!loading || prayers.length > 0) && (
@@ -212,7 +230,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                 icon={HandHeart}
                 className="first-prayer-primary mt-8 w-full whitespace-nowrap sm:w-auto sm:min-w-44"
               >
-                {t(lang, 'prayNow')}
+                {t(lang, 'beginPrayer')}
               </PrimaryButton>
               {reminder && (
                 <p className="mt-5 flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,.48)' }}>
@@ -223,22 +241,28 @@ export default function HomeTab({ onAdd, onEdit }) {
           </PrayerSurface>
         )}
 
-        {/* All of today prayed: a clear status (not a button), with "Pray again"
-            as an explicit, secondary way to walk the whole day once more. */}
+        {/* All of today prayed: a clear status (not a button and not a score),
+            with two quiet, optional ways to stay: be still before God, or walk
+            the whole day once more. */}
         {dayComplete && (
           <PrayerSurface tone="answered" className="mb-6 p-6 text-center">
             <StatusPill tone="answered" icon={Check} className="mb-3" role="status">
               {t(lang, 'todayCompleteTitle')}
             </StatusPill>
             <p className="editorial-heading mb-4 text-2xl" style={{ color: 'var(--text-1)' }}>{t(lang, 'sessionDoneTitle')}</p>
-            {todayEntries.length > 0 && (
-              <QuietButton
-                onClick={() => openSession(todayEntries.map((e) => e.prayer))}
-                icon={HandHeart}
-              >
-                {t(lang, 'prayAgain')}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <QuietButton onClick={() => setRemaining(true)}>
+                {t(lang, 'remainWithGod')}
               </QuietButton>
-            )}
+              {todayEntries.length > 0 && (
+                <QuietButton
+                  onClick={() => openSession(todayEntries.map((e) => e.prayer))}
+                  icon={HandHeart}
+                >
+                  {t(lang, 'prayAgain')}
+                </QuietButton>
+              )}
+            </div>
           </PrayerSurface>
         )}
 
@@ -257,6 +281,7 @@ export default function HomeTab({ onAdd, onEdit }) {
               lang={lang}
               onEditPrayer={onEdit}
               onOpenReminders={() => navigate('/settings#notifications')}
+              onAddPrayer={onAdd}
               onOpenPlans={(openPlanId) => navigate('/plans', { state: { source: PLAN_SOURCES.TODAY_CARD, openPlanId } })}
             />
             {pwaInstallAllowed({ activationStep }) && <PwaInstallNudge lang={lang} />}
@@ -319,6 +344,33 @@ export default function HomeTab({ onAdd, onEdit }) {
           </section>
         )}
 
+        {altarCircles.length > 0 && (
+          <nav className="mb-6" aria-label={t(lang, 'altarCirclesLabel')}>
+            <SectionLabel className="mb-2">{t(lang, 'altarCirclesLabel')}</SectionLabel>
+            <ul className="flex flex-wrap gap-2">
+              {altarCircles.map(({ circle, prayers: inCircle }) => {
+                const Icon = CIRCLE_ICONS[circle];
+                const name = t(lang, circleLabelKey(circle));
+                return (
+                  <li key={circle}>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/prayers', { state: { circle } })}
+                      aria-label={`${name} · ${tp(lang, 'circlePrayerCount', inCircle.length)}`}
+                      className="pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium"
+                      style={{ background: 'var(--surface)', color: 'var(--text-2)', border: '1px solid var(--border)' }}
+                    >
+                      <Icon size={14} aria-hidden="true" style={{ color: 'var(--accent)' }} />
+                      {name}
+                      <span aria-hidden="true" style={{ color: 'var(--text-3)' }}>{inCircle.length}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
+
         {/* Prayed today — completed prayers fold into one quiet, collapsed row
             so the main list only ever shows what remains. */}
         {completedToday.length > 0 && (
@@ -355,9 +407,9 @@ export default function HomeTab({ onAdd, onEdit }) {
           </QuietButton>
         )}
 
-        {/* Catch up — prayers missed the last few days, AFTER today's list and
-            collapsed by default. Grace, not guilt: one tap marks them prayed,
-            or they quietly age out of the window. */}
+        {/* Return to prayer — prayers missed the last few days, AFTER today's
+            list and collapsed by default. Grace, not guilt: never an "overdue"
+            count up front; one tap marks them prayed, or they quietly age out. */}
         {catchUp.length > 0 && (
           <div className="mb-6 border-block" style={{ borderColor: 'var(--border)' }}>
             <Disclosure

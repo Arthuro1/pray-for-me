@@ -19,7 +19,7 @@ import rules from '../../../content-quality/content-rules.json';
 const SOURCE_LANGS = ['en', 'fr'];
 const TRADITIONAL_ONLY = new Set([...rules.forbiddenCharacters.zh.chars]);
 
-// Wording no day of any plan may use, in any context: Praystead never speaks
+// Wording no day of any plan may use, in any context: Qetoret never speaks
 // for God to the reader.
 const NEVER = [
   /\bGod (?:has )?told you\b/i,

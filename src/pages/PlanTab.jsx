@@ -16,6 +16,7 @@ import { monthDayKeys } from '../lib/monthCalendar';
 import DayAgenda from '../components/DayAgenda';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import { PageHeader } from '../components/shared/Primitives';
+import { FILE_PREFIX } from '../lib/brand';
 
 // Calendar has one responsibility: show when prayers return and let a person
 // manage individual occurrences. Journeys, invitations, and labels live in the
@@ -80,7 +81,7 @@ export default function CalendarTab() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'praystead-schedule.ics';
+    link.download = `${FILE_PREFIX}-schedule.ics`;
     link.click();
     URL.revokeObjectURL(url);
     toast.success(t(lang, 'exportDone'));

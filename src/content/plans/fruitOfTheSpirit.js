@@ -26,7 +26,7 @@
 //   • Days 5 and 9 carry a safety note: these virtues never require anyone to
 //     stay in danger or keep silent about harm.
 //   • Promises nothing — not a changed feeling, not visible growth in ten days —
-//     and Praystead never speaks for God.
+//     and Qetoret never speaks for God.
 //
 // LOCALIZATION: `theme` is authored in all 16 languages; prose is authored in
 // en + fr and falls back through pick() for the other languages

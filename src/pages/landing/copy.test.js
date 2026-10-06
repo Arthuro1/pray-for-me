@@ -33,7 +33,14 @@ describe('landing locale chunks', () => {
       expect(copy.content.features, `${code}: features`).toHaveLength(9);
       expect(copy.content.steps, `${code}: steps`).toHaveLength(3);
       expect(copy.content.faqs, `${code}: FAQs`).toHaveLength(expectedFaqs);
-      expect(copy.benefits, `${code}: benefits`).toHaveLength(3);
+      expect(copy.movements, `${code}: movements (Bring, Carry, Return, Remember)`).toHaveLength(4);
+      expect(copy.circles.items, `${code}: the seven Intercession Circles`).toHaveLength(7);
+      expect(copy.why.references, `${code}: Why Qetoret references`).toHaveLength(4);
+      expect(copy.preview.altarToday, `${code}: altar preview`).toEqual(expect.any(String));
+      expect(copy.hero.title, `${code}: hero title`).toEqual(expect.any(String));
+      // The landing never carries authored Bible text — references only.
+      expect(copy.content.verse, `${code}: no quoted verse`).toBeUndefined();
+      expect(copy.content.ctaVerse, `${code}: no quoted verse`).toBeUndefined();
       expect(copy.scripturePreviewPoints, `${code}: Scripture points`).toHaveLength(2);
       expect(copy.scriptureReferences, `${code}: Scripture references`).toHaveLength(2);
       expect(copy.content.faqs[0].a, `${code}: privacy promise`).toEqual(expect.any(String));

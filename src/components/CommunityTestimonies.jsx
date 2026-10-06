@@ -46,7 +46,7 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
           <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony group">
             <div className="prayer-activity-item__header">
               <p className="prayer-activity-item__meta">
-                🎉 {communityAuthor(tm, userId, lang)} · {timeAgo(tm.created_at, lang)}
+                {communityAuthor(tm, userId, lang)} · {timeAgo(tm.created_at, lang)}
               </p>
               {editingId !== tm.id && (canEdit(tm) || canDelete(tm)) && (
                 <div className="prayer-activity-item__actions flex items-start gap-1.5 mt-0.5">

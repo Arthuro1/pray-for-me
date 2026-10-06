@@ -9,7 +9,7 @@
 // guided plan (src/content/prayerPlans.js); only the content is specific.
 //
 // GUARDRAILS (the reason this file and its days read the way they do):
-//   • Praystead never speaks for God. Impressions, dreams, feelings and inner
+//   • Qetoret never speaks for God. Impressions, dreams, feelings and inner
 //     voices are TESTED — by Scripture, the character of Jesus, fruit, mature
 //     counsel and humility — never assumed to be the Spirit. No personal
 //     prophecy, and no predictions about marriage, pregnancy, illness, death,
@@ -22,7 +22,7 @@
 //     experience that can follow conversion, often with tongues) is presented
 //     as such, and other Christians' reading (Spirit baptism at conversion,
 //     repeated fillings) is named fairly (day 18). Tongues are never presented
-//     as the initial evidence as Praystead's position, never taught by
+//     as the initial evidence as Qetoret's position, never taught by
 //     imitation, and never made a measure of whether the Spirit lives in a
 //     believer (Romans 8:9; 1 Corinthians 12:13, 12:30 — days 5 and 12).
 //   • Experience is welcomed but emotional intensity is never the standard:

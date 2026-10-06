@@ -6,6 +6,7 @@ import useCommunityStore from '../store/communityStore';
 import useLayoutStore from '../store/layoutStore';
 import NotificationBell from './NotificationBell';
 import { t } from '../i18n';
+import { APP_NAME } from '../lib/brand';
 
 // A small count badge. The number itself is announced through the destination's
 // aria-label (e.g. "Community, 3 pending"), so the visual pill is aria-hidden to
@@ -89,7 +90,7 @@ export default function Layout({ children, onAddPrayer }) {
 
   // Destinations reached THROUGH More keep the More tab lit, so the user always
   // knows the way back to them.
-  const MORE_PATHS = ['/more', '/guidance', '/calendar', '/grow', '/plan', '/settings', '/notifications'];
+  const MORE_PATHS = ['/more', '/guidance', '/calendar', '/grow', '/plan', '/settings', '/notifications', '/about'];
   // A route and everything nested under it — segment-wise, so the old `/plan`
   // (now Calendar) never claims `/plans`.
   const within = (base) => pathname === base || pathname.startsWith(`${base}/`);
@@ -127,11 +128,11 @@ export default function Layout({ children, onAddPrayer }) {
         <div className="flex items-center justify-between px-4 mb-8" style={{ minHeight: 32 }}>
           {!collapsed && (
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <img src="/logo.svg" alt="Praystead" className="w-8 h-8 rounded-lg shrink-0" />
-              <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>Praystead</span>
+              <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg shrink-0" />
+              <span className="font-bold text-sm whitespace-nowrap" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
             </div>
           )}
-          {collapsed && <img src="/logo.svg" alt="Praystead" className="w-8 h-8 rounded-lg mx-auto" />}
+          {collapsed && <img src="/logo.svg" alt={APP_NAME} className="w-8 h-8 rounded-lg mx-auto" />}
           <div className="flex items-center gap-1 shrink-0">
             {!collapsed && <NotificationBell className="w-8 h-8" style={{ color: 'var(--text-3)' }} />}
             <button
@@ -217,8 +218,8 @@ export default function Layout({ children, onAddPrayer }) {
           }}
         >
           <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Praystead" className="w-7 h-7 rounded-lg" />
-            <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>Praystead</span>
+            <img src="/logo.svg" alt={APP_NAME} className="w-7 h-7 rounded-lg" />
+            <span className="font-bold text-sm" style={{ color: 'var(--text-1)' }}>{APP_NAME}</span>
           </div>
           <NotificationBell className="w-9 h-9" style={{ color: 'var(--text-2)' }} />
         </header>

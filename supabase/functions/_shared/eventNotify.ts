@@ -222,22 +222,22 @@ export const EVENT_MSG: Record<string, Record<EventType, Copy>> = {
 
 // Digest summary copy ({count} new notifications). Content-free by construction.
 export const DIGEST_MSG: Record<string, { title: string; body: string }> = {
-  en: { title: 'Praystead 🙏', body: 'You have {count} new notification(s).' },
-  fr: { title: 'Praystead 🙏', body: 'Vous avez {count} nouvelle(s) notification(s).' },
-  de: { title: 'Praystead 🙏', body: 'Du hast {count} neue Benachrichtigung(en).' },
-  pt: { title: 'Praystead 🙏', body: 'Você tem {count} nova(s) notificação(ões).' },
-  es: { title: 'Praystead 🙏', body: 'Tienes {count} notificación(es) nueva(s).' },
-  zh: { title: 'Praystead 🙏', body: '你有 {count} 条新通知。' },
-  ja: { title: 'Praystead 🙏', body: '新しい通知が {count} 件あります。' },
-  ko: { title: 'Praystead 🙏', body: '새로운 알림이 {count}개 있습니다.' },
-  ru: { title: 'Praystead 🙏', body: 'У вас {count} новых уведомлений.' },
-  ar: { title: 'Praystead 🙏', body: 'لديك {count} إشعار جديد.' },
-  fa: { title: 'Praystead 🙏', body: 'شما {count} اعلان جدید دارید.' },
-  hi: { title: 'Praystead 🙏', body: 'आपके पास {count} नई सूचनाएँ हैं।' },
-  sw: { title: 'Praystead 🙏', body: 'Una arifa {count} mpya.' },
-  am: { title: 'Praystead 🙏', body: '{count} አዲስ ማሳወቂያዎች አለዎት።' },
-  id: { title: 'Praystead 🙏', body: 'Anda punya {count} notifikasi baru.' },
-  tl: { title: 'Praystead 🙏', body: 'May {count} bagong abiso ka.' },
+  en: { title: 'Qetoret 🙏', body: 'You have {count} new notification(s).' },
+  fr: { title: 'Qetoret 🙏', body: 'Vous avez {count} nouvelle(s) notification(s).' },
+  de: { title: 'Qetoret 🙏', body: 'Du hast {count} neue Benachrichtigung(en).' },
+  pt: { title: 'Qetoret 🙏', body: 'Você tem {count} nova(s) notificação(ões).' },
+  es: { title: 'Qetoret 🙏', body: 'Tienes {count} notificación(es) nueva(s).' },
+  zh: { title: 'Qetoret 🙏', body: '你有 {count} 条新通知。' },
+  ja: { title: 'Qetoret 🙏', body: '新しい通知が {count} 件あります。' },
+  ko: { title: 'Qetoret 🙏', body: '새로운 알림이 {count}개 있습니다.' },
+  ru: { title: 'Qetoret 🙏', body: 'У вас {count} новых уведомлений.' },
+  ar: { title: 'Qetoret 🙏', body: 'لديك {count} إشعار جديد.' },
+  fa: { title: 'Qetoret 🙏', body: 'شما {count} اعلان جدید دارید.' },
+  hi: { title: 'Qetoret 🙏', body: 'आपके पास {count} नई सूचनाएँ हैं।' },
+  sw: { title: 'Qetoret 🙏', body: 'Una arifa {count} mpya.' },
+  am: { title: 'Qetoret 🙏', body: '{count} አዲስ ማሳወቂያዎች አለዎት።' },
+  id: { title: 'Qetoret 🙏', body: 'Anda punya {count} notifikasi baru.' },
+  tl: { title: 'Qetoret 🙏', body: 'May {count} bagong abiso ka.' },
 };
 
 // Batched-digest push payload — a single summary that replaces N individual
@@ -308,7 +308,7 @@ export function eventPayload(
 ): string {
   const table = pick(lang);
   const copy = table[type as EventType] || EVENT_MSG.en[type as EventType] || {
-    title: 'Praystead 🙏',
+    title: 'Qetoret 🙏',
     body: 'You have a new notification.',
   };
   return JSON.stringify({

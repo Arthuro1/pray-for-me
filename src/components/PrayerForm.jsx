@@ -9,7 +9,9 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { setContentLang } from '../lib/contentLang';
 import { normalizeContentLang } from '../lib/langHint';
 import { toast } from '../store/toastStore';
-import { willEncryptNewPrayer } from '../lib/crypto/prayerCrypto';
+import { canHoldPrivateMetadata, willEncryptNewPrayer } from '../lib/crypto/prayerCrypto';
+import { circleOf } from '../lib/circles';
+import CirclePicker from './CirclePicker';
 import useCommunityStore from '../store/communityStore';
 import AudienceBadge from './shared/AudienceBadge';
 import SourceLanguageField from './SourceLanguageField';
@@ -88,6 +90,8 @@ function initialForm(editPrayer, prefill, lang) {
     description: prefill?.description || '',
     categoryIds: [], forOther: false, personName: '', isAnonymous: false, scheduleDraft: defaultNewDraft(),
     contentLanguage: lang,
+    // Optional Intercession Circle — never preselected, never required.
+    circle: null,
   };
   return {
     title: editPrayer.title || '',
@@ -98,6 +102,7 @@ function initialForm(editPrayer, prefill, lang) {
     isAnonymous: editPrayer.is_anonymous || false,
     scheduleDraft: draftFromSchedule(editPrayer.schedule),
     contentLanguage: normalizeContentLang(editPrayer.content_language) || lang,
+    circle: circleOf(editPrayer),
   };
 }
 
@@ -109,7 +114,7 @@ function hasNote(editPrayer, prefill) {
 // Editing a prayer that already uses any organizing choice — its rhythm, who
 // it's for, or its labels — auto-opens Organize, so nothing set earlier hides.
 function usesOrganize(editPrayer) {
-  return !!(editPrayer && (editPrayer.schedule || editPrayer.for_other
+  return !!(editPrayer && (editPrayer.schedule || editPrayer.for_other || circleOf(editPrayer)
     || (editPrayer.prayer_categories || []).length > 0 || (editPrayer.category_ids || []).length > 0));
 }
 
@@ -123,6 +128,7 @@ export default function PrayerForm({
   onCommunitySubmit,
   prefill,
   initialOrganizeOpen = false,
+  onEditSaved,
 }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore(
     useShallow((s) => ({
@@ -142,7 +148,7 @@ export default function PrayerForm({
   const [created, setCreated] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   // One required question — everything else is optional and collapsed: a note,
-  // and "Organize" (person, categories, prayer rhythm). The community request
+  // and "Organize" (circle, person, categories, prayer rhythm). The community request
   // form keeps its note open (context for the group is the point there).
   const [noteOpen, setNoteOpen] = useState(() => communityMode || hasNote(editPrayer, prefill));
   const [organizeOpen, setOrganizeOpen] = useState(() => initialOrganizeOpen || usesOrganize(editPrayer));
@@ -185,9 +191,10 @@ export default function PrayerForm({
         categoryIds: f.categoryIds,
         scheduleDraft: f.scheduleDraft,
         contentLanguage: f.contentLanguage,
+        circle: f.circle,
       }
       : null),
-    restore: ({ title, description, forOther, personName, categoryIds, scheduleDraft, contentLanguage }) => {
+    restore: ({ title, description, forOther, personName, categoryIds, scheduleDraft, contentLanguage, circle }) => {
       if (!title && !description && !personName) return false;
       setForm((current) => ({
         ...current,
@@ -198,6 +205,7 @@ export default function PrayerForm({
         categoryIds: categoryIds || [],
         scheduleDraft: scheduleDraft || current.scheduleDraft,
         contentLanguage: contentLanguage || current.contentLanguage,
+        circle: circleOf({ circle }),
       }));
       if (description) setNoteOpen(true);
       return true;
@@ -307,6 +315,7 @@ export default function PrayerForm({
         schedule={created.schedule}
         lang={lang}
         onClose={onClose}
+        onChooseRhythm={onEditSaved}
       />
     );
   }
@@ -462,6 +471,17 @@ export default function PrayerForm({
               />
               {organizeOpen && (
                 <div id="prayer-organize-section" className="space-y-4 rounded-2xl p-4" style={{ background: 'var(--input-bg)' }}>
+                  {/* "Place on your altar" — offered only where the circle can
+                      live inside this prayer's ciphertext (lib/circles.js). */}
+                  {canHoldPrivateMetadata(editPrayer || null) && (
+                    <CirclePicker
+                      value={form.circle}
+                      onChange={(circle) => patch('circle', circle)}
+                      lang={lang}
+                      idPrefix="prayer-circle"
+                    />
+                  )}
+
                   <CheckboxToggle
                     id="prayer-for-other"
                     checked={form.forOther}
@@ -530,7 +550,7 @@ export default function PrayerForm({
             </button>
             <button type="submit" disabled={submitting} title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}
               className="flex-1 rounded-xl py-3 min-h-[44px] text-sm font-semibold text-white focus-visible:ring-2 disabled:opacity-50"
-              style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}>
+              style={{ background: 'var(--plum)' }}>
               {editPrayer || communityMode ? t(lang, editPrayer ? 'save' : 'add') : t(lang, 'savePrayer')}
             </button>
           </div>

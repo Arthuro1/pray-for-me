@@ -4,45 +4,44 @@ export default {
     "signIn": "Se connecter",
     "badge": "Journal de prière",
     "howItWorks": "Voir comment ça marche",
-    "verse": "« La prière fervente du juste a une grande efficace. » — Jacques 5:16",
-    "featuresTitle": "Votre vie de prière, au même endroit",
-    "featuresSub": "Vos sujets, vos temps de prière et les prières exaucées, réunis.",
+    "featuresTitle": "Un seul lieu pour votre vie de prière",
+    "featuresSub": "Vos prières, vos rythmes et vos témoignages, réunis.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Prier ensemble",
-        "desc": "Partagez vos sujets avec des amis ou un groupe et priez les uns pour les autres."
+        "desc": "Partagez un sujet avec des amis ou un groupe, et portez les prières les uns des autres."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
         "title": "Journal de prière",
-        "desc": "Notez des sujets pour vous et pour d'autres, et ajoutez des nouvelles au fil du temps."
+        "desc": "Apportez vos sujets, pour vous et pour d'autres, et ajoutez des nouvelles au fil du temps."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Planifier la prière",
-        "desc": "Choisissez quand prier pour chaque sujet : une fois, chaque jour ou certains jours."
+        "title": "Rythmes de prière",
+        "desc": "Choisissez quand chaque prière revient : une fois, chaque jour ou certains jours."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Galerie des prières exaucées",
-        "desc": "Toutes vos prières exaucées et vos témoignages dans une galerie."
+        "title": "Témoignages",
+        "desc": "Gardez vos prières exaucées et vos témoignages comme un mémorial de la fidélité de Dieu."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Grandir dans la prière",
-        "desc": "Des plans de prière guidés, des guides et de courtes lectures enracinés dans la Parole de Dieu."
+        "desc": "Parcours guidés, guides de prière et courtes lectures enracinées dans l'Écriture."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "Rappels de prière",
-        "desc": "Un rappel quotidien pour prier, et un autre pour prendre des nouvelles de ceux pour qui vous priez."
+        "title": "Rappels discrets",
+        "desc": "Un rappel quotidien pour prier, et un rappel pour prendre des nouvelles des personnes que vous portez."
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Notez un sujet",
+        "title": "Apporter une prière",
         "desc": "Quelques mots suffisent. Vous pourrez ajouter des détails plus tard."
       },
       {
         "emoji": "🙏",
-        "title": "Priez chaque jour",
-        "desc": "Ouvrez l'application et touchez Prier maintenant."
+        "title": "Revenir prier",
+        "desc": "Chaque prière revient les jours que vous choisissez, pour que vous la repreniez dans la prière."
       },
       {
         "emoji": "🎉",
-        "title": "Notez l'exaucement",
-        "desc": "Quand Dieu exauce votre prière, marquez-la et notez ce qu'Il a fait."
+        "title": "Noter un témoignage",
+        "desc": "Quand quelque chose se produit, écrivez comment vous avez vu Dieu à l’œuvre."
       }
     ],
     "calloutBadge": "Suggestions de versets",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "Qu'avez-vous sur le cœur aujourd'hui ?",
-    "ctaVerse": "« Priez sans cesse. » — 1 Thessaloniciens 5:17",
     "footerBuilt": "Fait avec foi · Open source · Licence MIT"
   },
-  "benefits": [
-    {
-      "title": "Rien n'est oublié",
-      "desc": "Gardez en mémoire tous ceux pour qui vous avez promis de prier."
-    },
-    {
-      "title": "Sachez quoi prier aujourd'hui",
-      "desc": "Chaque jour ramène les sujets que vous avez prévu de porter dans la prière."
-    },
-    {
-      "title": "Souvenez-vous de la fidélité de Dieu",
-      "desc": "Gardez vos prières exaucées et vos témoignages comme un mémorial de ce que Dieu a fait."
-    }
-  ],
   "explore": {
     "more": "Découvrir toutes les fonctionnalités",
     "less": "Afficher moins"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "Langue",
   "translationInProgress": "Traduction en cours",
-  "heroReassurance": "Aucun compte requis. Rien ne quitte cet appareil, sauf si vous choisissez de l'enregistrer.",
+  "heroReassurance": "Aucun compte requis. Votre première prière reste sur cet appareil, sauf si vous choisissez de l'enregistrer.",
   "hero": {
-    "title": "Confiez à Dieu ce que vous avez sur le cœur.",
-    "promise": "Priez fidèlement. Souvenez-vous de la fidélité de Dieu.",
-    "subtitle": "Notez vos sujets de prière. Chacun revient les jours où vous choisissez de prier pour lui."
+    "title": "Bâtissez une vie de prière devant Dieu.",
+    "promise": "Que vos prières s'élèvent.",
+    "subtitle": "Apportez à Dieu ce que vous avez sur le cœur. Portez dans la prière votre famille, vos amis, votre Église et les nations. Prenez des rythmes de prière fidèles et souvenez-vous de sa fidélité."
   },
   "samplePrayerTitle": "La paix pour notre famille",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "Étape",
   "todayLabel": "Aujourd'hui",
-  "prayNowLabel": "Prier maintenant"
+  "prayNowLabel": "Prier maintenant",
+  "preview": {
+    "altarToday": "Votre autel aujourd'hui",
+    "carriedLabel": "Portée depuis mars 2025",
+    "carriedTitle": "La guérison de papa",
+    "rememberLabel": "Témoignage",
+    "rememberText": "Souvenez-vous de ce que Dieu a fait."
+  },
+  "movements": [
+    {
+      "title": "Apporter",
+      "desc": "Apportez à Dieu ce que vous avez sur le cœur, avec vos propres mots."
+    },
+    {
+      "title": "Porter",
+      "desc": "Intercédez pour les personnes et les lieux que Dieu vous a confiés."
+    },
+    {
+      "title": "Revenir",
+      "desc": "Prenez des rythmes qui vous ramènent à la prière, jour après jour."
+    },
+    {
+      "title": "Se souvenir",
+      "desc": "Notez vos témoignages et souvenez-vous de la fidélité de Dieu."
+    }
+  ],
+  "circles": {
+    "title": "De votre cœur jusqu'aux nations",
+    "subtitle": "La prière s’élargit avec le temps. Ce ne sont pas des niveaux à atteindre, mais les personnes et les lieux que vous pouvez porter devant Dieu.",
+    "start": "Une seule prière suffit pour commencer.",
+    "items": [
+      {
+        "name": "Mon cœur",
+        "desc": "Votre propre marche avec Dieu"
+      },
+      {
+        "name": "Ma maison",
+        "desc": "Conjoint, enfants, parents, famille"
+      },
+      {
+        "name": "Mes proches",
+        "desc": "Amis, voisins, collègues"
+      },
+      {
+        "name": "Son Église",
+        "desc": "Votre Église, vos pasteurs, les missionnaires"
+      },
+      {
+        "name": "Les autorités",
+        "desc": "Dirigeants, juges, fonctionnaires"
+      },
+      {
+        "name": "Les nations",
+        "desc": "Villes, pays et peuples"
+      },
+      {
+        "name": "Royaume et mission",
+        "desc": "L'Évangile, la justice et la miséricorde"
+      }
+    ]
+  },
+  "why": {
+    "title": "Pourquoi Qetoret ?",
+    "body": "Qetoret est le mot hébreu qui désigne l'encens offert devant Dieu. Dans l'Écriture, l'encens qui monte devient une image des prières du peuple de Dieu. Qetoret tire son nom de cette image : une vie de prière sans cesse présentée à Dieu.",
+    "referencesLabel": "À lire dans l'Écriture",
+    "references": [
+      "Psaume 141:2",
+      "Apocalypse 5:8",
+      "Apocalypse 8:3-4",
+      "Luc 1:5-25"
+    ],
+    "note": "Qetoret est un outil pour la prière, jamais un intermédiaire. Nous venons au Père par Jésus-Christ."
+  }
 };

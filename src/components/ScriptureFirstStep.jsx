@@ -13,21 +13,18 @@ import { getScriptureGuidance } from '../scriptureGuidance';
 import VerseAccordion from './VerseAccordion';
 import RichText from './rich/RichText';
 
-// One suggested passage: reference, the key verse(s), why it speaks to the
-// request, an inline "read in app" expansion, and an opt-in "add as prayer point".
+// One suggested passage: reference, why it speaks to the request, an inline
+// "read in app" expansion, and an opt-in "add as prayer point". The Bible text
+// itself only ever comes from the authoritative pipeline inside VerseAccordion —
+// never from the AI, even for guidance saved before the AI stopped sending it.
 function Passage({ p, lang, added, onAdd }) {
   return (
     <div className="rounded-2xl p-4" style={{ background: 'var(--surface)', border: '0.5px solid var(--border)' }}>
       <p className="text-sm font-semibold flex items-center gap-1.5 mb-1" style={{ color: 'var(--accent)' }}>
         <BookOpen size={14} /> {p.ref}
       </p>
-      {p.text && (
-        <p className="text-sm italic leading-relaxed pl-3 mb-2" style={{ color: 'var(--text-2)', borderLeft: '2px solid var(--accent-border)' }}>
-          "{p.text}"
-        </p>
-      )}
       {p.why && <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-3)' }}>{p.why}</p>}
-      <VerseAccordion reference={p.ref} lang={lang} initialText={p.text}>
+      <VerseAccordion reference={p.ref} lang={lang}>
         {({ toggle }) => (
           <div className="flex items-center justify-between gap-2">
             <button onClick={toggle} className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
@@ -95,7 +92,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
   };
 
   const addPassage = (p) => {
-    addPrayerPoint(prayerId, { title: p.why || p.ref, verses: [{ ref: p.ref, text: p.text }] });
+    addPrayerPoint(prayerId, { title: p.why || p.ref, verses: [{ ref: p.ref }] });
     setAdded((m) => ({ ...m, [p.ref]: true }));
   };
 
@@ -228,7 +225,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
           <button
             onClick={onClose}
             className="w-full rounded-xl py-3 text-sm font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
+            style={{ background: 'var(--plum)' }}
           >
             {t(lang, 'prayNowCta')}
           </button>

@@ -21,6 +21,7 @@ import useAuthStore from './store/authStore';
 const HomeTab = lazy(() => import('./pages/HomeTab'));
 const PrayersTab = lazy(() => import('./pages/PrayersTab'));
 const MoreTab = lazy(() => import('./pages/MoreTab'));
+const AboutTab = lazy(() => import('./pages/AboutTab'));
 const CalendarTab = lazy(() => import('./pages/PlanTab'));
 const GuidanceTab = lazy(() => import('./pages/GrowTab'));
 const PlansTab = lazy(() => import('./pages/PlansTab'));
@@ -55,6 +56,7 @@ import { importGuestPrayerOnce } from './lib/guestPrayerImport';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
 import { Loader2 } from 'lucide-react';
+import { APP_NAME } from './lib/brand';
 
 // Fallback shown while a lazily-loaded route chunk is fetched.
 function PageLoader() {
@@ -133,6 +135,9 @@ function PersonalPrayerPage({ onEdit }) {
   // It is read here and passed down as a prop so PrayerDetail stays free of the
   // router. An unusable value changes nothing: PrayerDetail falls back to today.
   const [searchParams] = useSearchParams();
+  // "Tend your altar" can open a prayer straight at the part it asked about
+  // ("Something has changed" → updates, "Record a testimony" → answered flow).
+  const location = useLocation();
   const { prayers, settings } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, settings: s.settings }))
   );
@@ -152,6 +157,7 @@ function PersonalPrayerPage({ onEdit }) {
       onGoToDay={(dayKey) => navigate(`/prayers/${id}?day=${dayKey}`, { replace: true })}
       onBack={() => navigate(-1)}
       onEdit={onEdit}
+      initialFocus={location.state?.focus || null}
     />
   );
 }
@@ -407,9 +413,9 @@ export default function AuthenticatedApp({
 
   if (authLoading || !localeReady || (user && !vaultChecked)) {
     return (
-      <div className="min-h-screen bg-indigo-700 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--plum-dark)' }}>
         <div className="text-center text-white">
-          <img src="/logo.svg" alt="Praystead" className="w-16 h-16 rounded-2xl mx-auto mb-4" />
+          <img src="/logo.svg" alt={APP_NAME} className="w-16 h-16 rounded-2xl mx-auto mb-4" />
           <Loader2 className="animate-spin mx-auto" size={24} />
         </div>
       </div>
@@ -496,6 +502,7 @@ export default function AuthenticatedApp({
                   old standalone page redirects there so saved links keep working. */}
               <Route path="/answered" element={<Navigate to="/prayers" state={{ filter: 'answered' }} replace />} />
               <Route path="/more" element={<MoreTab />} />
+              <Route path="/about" element={<AboutTab />} />
               <Route path="/community" element={<CommunityTab />} />
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
@@ -519,12 +526,17 @@ export default function AuthenticatedApp({
       </ContextualNudgeProvider>
       {showForm && (
         <PrayerForm
+          // A new key per prayer: moving from "saved" to editing that same
+          // prayer (the first-prayer "Choose a prayer rhythm" step) starts a
+          // fresh form rather than reusing the saved-confirmation state.
+          key={editPrayer?.id || 'new'}
           onClose={() => {
             setShowForm(false);
             setEditPrayer(null);
             setFormPrefill(null);
             setFormOptions(null);
           }}
+          onEditSaved={(saved) => openEdit(saved, { openOrganize: true })}
           editPrayer={editPrayer}
           prefill={formPrefill}
           initialOrganizeOpen={!!formOptions?.openOrganize}

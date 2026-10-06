@@ -16,6 +16,8 @@ import { EVENTS, track } from '../lib/analytics';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
 import Encouragement from './shared/Encouragement';
 import PrayerMusicControl from './PrayerMusicControl';
+import RiseMark from './shared/RiseMark';
+import { APP_NAME } from '../lib/brand';
 
 function ConstellationBackdrop() {
   return (
@@ -56,12 +58,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
       >
         {done ? (
           <div className="constellation-session__done flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <div
-              className="mb-7 flex h-14 w-14 items-center justify-center rounded-full"
-              style={{ background: 'var(--sage-soft)', color: 'var(--success)', border: '1px solid var(--success-border)' }}
-            >
-              <Check size={22} strokeWidth={1.7} aria-hidden="true" />
-            </div>
+            <RiseMark size={48} className="mb-5" />
             <SectionLabel className="mb-3">Amen</SectionLabel>
             <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl" style={{ color: 'var(--text-1)' }}>
               {t(lang, 'sessionDoneTitle')}
@@ -79,7 +76,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
             <header className="constellation-session__header shrink-0 px-5 pb-3 pt-[max(1rem,env(safe-area-inset-top))]" style={{ background: 'var(--plum-deep)' }}>
               <div className="mx-auto mb-3 flex max-w-2xl items-center justify-between gap-3">
                 <p className="text-[10px] font-bold uppercase tracking-[.18em]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  Praystead · 1 / 1
+                  {APP_NAME} · 1 / 1
                 </p>
                 <div className="flex items-center gap-2">
                   <PrayerMusicControl lang={lang} active />
@@ -196,7 +193,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
           <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Praystead</SectionLabel>
+          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>{APP_NAME}</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
@@ -231,7 +228,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         <header className="flex min-h-11 items-center justify-between">
           <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
             <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
-            Praystead
+            {APP_NAME}
           </div>
           <button
             type="button"
@@ -244,10 +241,13 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
-          <SectionLabel className="mb-4">Praystead</SectionLabel>
-          <h2 id="guest-prayer-question" className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+          <SectionLabel className="mb-4">{APP_NAME}</SectionLabel>
+          <h2 id="guest-prayer-question" className="editorial-heading rise-in max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, 'firstPrayerQuestion')}
           </h2>
+          <p className="editorial rise-in rise-in--late mt-3 text-xl" style={{ color: 'var(--text-2)' }}>
+            {t(lang, 'firstPrayerBring')}
+          </p>
 
           <textarea
             autoFocus

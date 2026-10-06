@@ -4,9 +4,8 @@ export default {
     "signIn": "登录",
     "badge": "祷告日志",
     "howItWorks": "查看如何使用",
-    "verse": "“义人祈祷所发的力量是大有功效的。” — 雅各书 5:16",
-    "featuresTitle": "您的祷告生活，尽在一处",
-    "featuresSub": "代祷事项、祷告时间和蒙应允的祷告，都在一起。",
+    "featuresTitle": "一个地方，承载你的祷告生活",
+    "featuresSub": "你的祷告、节奏和见证，都在一起。",
     "features": [
       {
         "icon": "Users",
@@ -17,32 +16,32 @@ export default {
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
-        "title": "祷告日志",
-        "desc": "记下为自己和他人的代祷事项，并随时补充近况。"
+        "title": "祷告日记",
+        "desc": "记下为自己和他人的代祷事项，并随时添加近况。"
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "安排祷告",
-        "desc": "选择何时为每个事项祷告：一次、每天或特定日子。"
+        "title": "祷告节奏",
+        "desc": "选择每个祷告何时回来：一次、每天或指定的日子。"
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "蒙应允的祷告",
-        "desc": "所有蒙应允的祷告和您的见证，集中在一处。"
+        "title": "见证",
+        "desc": "保存蒙应允的祷告和见证，记念神的信实。"
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "在祷告中成长",
-        "desc": "扎根于神话语的祷告计划、祷告指引和简短读物。"
+        "desc": "以圣经为根基的引导计划、祷告指南和简短读物。"
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "祷告提醒",
-        "desc": "每天提醒您祷告，也提醒您关心您所代祷的人。"
+        "title": "温和的提醒",
+        "desc": "每天提醒你祷告，也提醒你关心你所代祷的人。"
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "写下事项",
-        "desc": "几个字就够了，细节可以以后再补。"
+        "title": "带来一个祷告",
+        "desc": "几句话就够了，之后可以再补充细节。"
       },
       {
         "emoji": "🙏",
-        "title": "每天祷告",
-        "desc": "打开应用，点击“现在祷告”。"
+        "title": "回来祷告",
+        "desc": "每个祷告会在你选择的日子回来，让你再次为它祷告。"
       },
       {
         "emoji": "🎉",
-        "title": "记录应允",
-        "desc": "当神回应时，标记这个祷告，并写下他所做的事。"
+        "title": "记录见证",
+        "desc": "当事情发生时，写下你如何看见神的作为。"
       }
     ],
     "calloutBadge": "经文建议",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "今天您心里有什么事？",
-    "ctaVerse": "“不住地祷告。” — 帖撒罗尼迦前书 5:17",
     "footerBuilt": "以信仰建造 · 开源 · MIT许可证"
   },
-  "benefits": [
-    {
-      "title": "不再遗忘",
-      "desc": "记住每一位您答应为之祷告的人。"
-    },
-    {
-      "title": "知道今天为何祷告",
-      "desc": "每天都会带回您计划祷告的事项。"
-    },
-    {
-      "title": "记念神的信实",
-      "desc": "保存蒙应允的祷告和见证，记念神所行的事。"
-    }
-  ],
   "explore": {
     "more": "探索全部功能",
     "less": "收起"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "语言",
   "translationInProgress": "翻译进行中",
-  "heroReassurance": "无需账户。除非您选择保存，否则任何内容都不会离开此设备。",
+  "heroReassurance": "无需注册账户。你的第一个祷告只保存在这台设备上，除非你选择保存。",
   "hero": {
-    "title": "把心里的事带到神面前。",
-    "promise": "忠心祷告，记念神的信实。",
-    "subtitle": "记下您的代祷事项。每一项都会在您选定的日子重新出现，提醒您为它祷告。"
+    "title": "在神面前建立祷告的生命。",
+    "promise": "愿你的祷告如香升起。",
+    "subtitle": "把心里的事带到神面前。在祷告中记念你的家人、朋友、教会和列国。建立忠心的祷告节奏，记念神的信实。"
   },
   "samplePrayerTitle": "为家中的平安祷告",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "步骤",
   "todayLabel": "今天",
-  "prayNowLabel": "现在祷告"
+  "prayNowLabel": "现在祷告",
+  "preview": {
+    "altarToday": "你今天的祭坛",
+    "carriedLabel": "自2025年3月起代祷",
+    "carriedTitle": "为爸爸的医治",
+    "rememberLabel": "见证",
+    "rememberText": "记念神所做的事。"
+  },
+  "movements": [
+    {
+      "title": "带来",
+      "desc": "用自己的话，把心里的事带到神面前。"
+    },
+    {
+      "title": "代祷",
+      "desc": "为神托付给你的人和地方代祷。"
+    },
+    {
+      "title": "回归",
+      "desc": "建立节奏，让你日复一日回到祷告中。"
+    },
+    {
+      "title": "记念",
+      "desc": "记录见证，记念神的信实。"
+    }
+  ],
+  "circles": {
+    "title": "从你的心到列国",
+    "subtitle": "祷告会随着时间扩展。这些不是要达到的等级，而是你可以带到神面前的人和地方。",
+    "start": "一个祷告就足以开始。",
+    "items": [
+      {
+        "name": "我的心",
+        "desc": "你自己与神同行"
+      },
+      {
+        "name": "我的家",
+        "desc": "配偶、孩子、父母、家人"
+      },
+      {
+        "name": "我身边的人",
+        "desc": "朋友、邻舍、同事"
+      },
+      {
+        "name": "祂的教会",
+        "desc": "你的教会、牧者、宣教士"
+      },
+      {
+        "name": "在上掌权的",
+        "desc": "领导人、法官、公职人员"
+      },
+      {
+        "name": "列国",
+        "desc": "城市、国家和民族"
+      },
+      {
+        "name": "神的国与使命",
+        "desc": "福音、公义和怜悯"
+      }
+    ]
+  },
+  "why": {
+    "title": "为什么叫 Qetoret？",
+    "body": "Qetoret 是希伯来文，指在神面前献上的香。在圣经中，上升的香成为神子民祷告的图画。Qetoret 的名字就来自这个图画：一个不断被带到神面前的祷告生命。",
+    "referencesLabel": "在圣经中阅读",
+    "references": [
+      "诗篇 141:2",
+      "启示录 5:8",
+      "启示录 8:3-4",
+      "路加福音 1:5-25"
+    ],
+    "note": "Qetoret 只是祷告的工具，绝不是中保。我们藉着耶稣基督来到父面前。"
+  }
 };

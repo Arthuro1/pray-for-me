@@ -4,6 +4,7 @@ import { planById } from '../../lib/guidedPlan';
 import { parsePlanSharePath, savePendingPlanJoin } from '../../lib/planShareLink';
 import { usePlanShareInvite } from '../../hooks/usePlanShareInvite';
 import { PlanJoinControls, PlanSharePreview } from './PlanSharePreview';
+import { APP_NAME } from '../../lib/brand';
 
 // What someone without an account sees when they open a shared plan link:
 // the plan itself, readable before anything is asked of them, and one action.
@@ -32,7 +33,7 @@ export default function PlanSharePublicPage({ lang, onJoin, onSignIn }) {
 
       <header className="relative mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
         <a href="/" className="flex min-h-11 items-center gap-2 text-sm font-semibold" style={{ color: 'var(--text-1)' }}>
-          <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" /> Praystead
+          <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" /> {APP_NAME}
         </a>
         <button type="button" onClick={onSignIn} className="min-h-11 px-2 text-sm font-medium" style={{ color: 'var(--accent)' }}>
           {t(lang, 'authLogIn')}

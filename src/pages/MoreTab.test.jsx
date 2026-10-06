@@ -28,6 +28,7 @@ const ROWS = [
   ['guidance', 'moreGuidanceDesc', '/guidance'],
   ['calendar', 'moreCalendarDesc', '/calendar'],
   ['settingsAndHelp', 'moreSettingsHelpDesc', '/settings'],
+  ['aboutTitle', 'moreAboutDesc', '/about'],
 ];
 
 describe('MoreTab', () => {
@@ -51,7 +52,7 @@ describe('MoreTab', () => {
     }
   });
 
-  it('navigates to the three consolidated destinations', () => {
+  it('navigates to the four consolidated destinations', () => {
     renderMore();
     for (const [label, description, to] of ROWS) {
       fireEvent.click(screen.getByRole('button', {
@@ -62,9 +63,9 @@ describe('MoreTab', () => {
     expect(navigate).toHaveBeenCalledTimes(ROWS.length);
   });
 
-  it('keeps the overflow intentionally limited to three destinations', () => {
+  it('keeps the overflow intentionally limited to four destinations', () => {
     renderMore();
-    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.getAllByRole('button')).toHaveLength(4);
     expect(screen.queryByText(t(lang, 'privacySecurity'))).toBeNull();
     expect(screen.queryByText(t(lang, 'settingsSecSupport'))).toBeNull();
   });

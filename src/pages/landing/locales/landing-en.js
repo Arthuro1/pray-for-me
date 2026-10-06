@@ -4,45 +4,44 @@ export default {
     "signIn": "Sign in",
     "badge": "Prayer journal",
     "howItWorks": "See how it works",
-    "verse": "“The prayer of a righteous person is powerful and effective.” — James 5:16",
-    "featuresTitle": "One place for your prayer life",
-    "featuresSub": "Your requests, prayer times and answered prayers, kept together.",
+    "featuresTitle": "One place for your life of prayer",
+    "featuresSub": "Your prayers, rhythms and testimonies, kept together.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Pray together",
-        "desc": "Share requests with friends or a group and pray for one another."
+        "desc": "Share a request with friends or a group, and carry one another's prayers."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
         "title": "Prayer journal",
-        "desc": "Write down requests for yourself and others, and add updates over time."
+        "desc": "Bring requests for yourself and others, and add updates as time goes on."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Prayer scheduling",
-        "desc": "Choose when to pray for each request: once, every day or on set days."
+        "title": "Prayer rhythms",
+        "desc": "Choose how often each prayer returns: once, every day or on set days."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Answered prayer gallery",
-        "desc": "All your answered prayers and testimonies in one gallery."
+        "title": "Testimonies",
+        "desc": "Keep answered prayers and testimonies as a record of God's faithfulness."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Grow in prayer",
-        "desc": "Guided prayer plans, prayer guides and short readings rooted in Scripture."
+        "desc": "Guided plans, prayer guides and short readings rooted in Scripture."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "Prayer reminders",
-        "desc": "A daily reminder to pray, and a reminder to follow up with the people you pray for."
+        "title": "Gentle reminders",
+        "desc": "A daily reminder to pray, and a reminder to follow up with the people you carry."
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Write a request",
+        "title": "Bring a prayer",
         "desc": "A few words are enough. You can add details later."
       },
       {
         "emoji": "🙏",
-        "title": "Pray each day",
-        "desc": "Open the app and tap Pray now."
+        "title": "Return to pray",
+        "desc": "Each prayer comes back on the days you choose, so you can return to it in prayer."
       },
       {
         "emoji": "🎉",
-        "title": "Record the answer",
-        "desc": "When God answers, mark the prayer and write down what He did."
+        "title": "Record a testimony",
+        "desc": "When something happens, write down how you have seen God at work."
       }
     ],
     "calloutBadge": "Scripture suggestions",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "What is on your heart today?",
-    "ctaVerse": "“Pray without ceasing.” — 1 Thessalonians 5:17",
     "footerBuilt": "Built with faith · Open source · MIT License"
   },
-  "benefits": [
-    {
-      "title": "Nothing forgotten",
-      "desc": "Keep track of everyone you promised to pray for."
-    },
-    {
-      "title": "Know what to pray today",
-      "desc": "Each day brings back the requests you planned to pray for."
-    },
-    {
-      "title": "Remember God's faithfulness",
-      "desc": "Keep answered prayers and testimonies as a record of what God has done."
-    }
-  ],
   "explore": {
     "more": "Explore all features",
     "less": "Show fewer"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "Language",
   "translationInProgress": "Translation in progress",
-  "heroReassurance": "No account needed. Nothing leaves this device unless you choose to save it.",
+  "heroReassurance": "No account needed. Your first prayer stays on this device unless you choose to save it.",
   "hero": {
-    "title": "Bring what is on your heart to God.",
-    "promise": "Pray faithfully. Remember God’s faithfulness.",
-    "subtitle": "Write down your prayer requests. Each one comes back on the days you choose to pray for it."
+    "title": "Build a life of prayer before God.",
+    "promise": "Let your prayers rise.",
+    "subtitle": "Bring what is on your heart before God. Carry your family, friends, church and nations in prayer. Build faithful prayer rhythms and remember His faithfulness."
   },
   "samplePrayerTitle": "Peace for our family",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "Step",
   "todayLabel": "Today",
-  "prayNowLabel": "Pray now"
+  "prayNowLabel": "Pray now",
+  "preview": {
+    "altarToday": "Your altar today",
+    "carriedLabel": "Carried since March 2025",
+    "carriedTitle": "Healing for Dad",
+    "rememberLabel": "Testimony",
+    "rememberText": "Remember what God has done."
+  },
+  "movements": [
+    {
+      "title": "Bring",
+      "desc": "Bring what is on your heart before God, in your own words."
+    },
+    {
+      "title": "Carry",
+      "desc": "Intercede for the people and places God has entrusted to you."
+    },
+    {
+      "title": "Return",
+      "desc": "Build rhythms that bring you back to prayer, day after day."
+    },
+    {
+      "title": "Remember",
+      "desc": "Record testimonies and remember God's faithfulness."
+    }
+  ],
+  "circles": {
+    "title": "From your heart to the nations",
+    "subtitle": "Prayer widens over time. These are not levels to reach — they are the people and places you can carry before God.",
+    "start": "One prayer is enough to begin.",
+    "items": [
+      {
+        "name": "My heart",
+        "desc": "Your own walk with God"
+      },
+      {
+        "name": "My house",
+        "desc": "Spouse, children, parents, family"
+      },
+      {
+        "name": "My people",
+        "desc": "Friends, neighbors, colleagues"
+      },
+      {
+        "name": "His Church",
+        "desc": "Your church, pastors, missionaries"
+      },
+      {
+        "name": "Authorities",
+        "desc": "Leaders, judges, public servants"
+      },
+      {
+        "name": "Nations",
+        "desc": "Cities, countries and peoples"
+      },
+      {
+        "name": "Kingdom & Mission",
+        "desc": "The gospel, justice and mercy"
+      }
+    ]
+  },
+  "why": {
+    "title": "Why Qetoret?",
+    "body": "Qetoret is the Hebrew word for the incense offered before God. In Scripture, rising incense becomes a picture of the prayers of God's people. Qetoret takes its name from this image: a life of prayer continually brought before God.",
+    "referencesLabel": "Read it in Scripture",
+    "references": [
+      "Psalm 141:2",
+      "Revelation 5:8",
+      "Revelation 8:3–4",
+      "Luke 1:5–25"
+    ],
+    "note": "Qetoret is a tool for prayer, never a go-between. We come to the Father through Jesus Christ."
+  }
 };

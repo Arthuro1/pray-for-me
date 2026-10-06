@@ -45,8 +45,8 @@ import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import useFollowUpStore from '../store/followUpStore';
-import { t } from '../i18n';
-import { timeAgo } from '../utils/date';
+import { t, tp } from '../i18n';
+import { carriedSinceLabel } from '../lib/carried';
 
 const lang = 'fr';
 
@@ -93,8 +93,30 @@ describe('PrayerDetail — leads with prayer', () => {
     }));
     const hero = container.querySelector('.constellation-detail__hero');
     expect(hero.textContent).not.toContain('Reposez-vous sous le ciel');
-    expect(hero.querySelector('.constellation-detail__meta').textContent).toBe(timeAgo('2026-07-01T00:00:00Z', lang));
+    // A long-carried prayer reads as memory: "Carried since July 2026".
+    expect(hero.querySelector('.constellation-detail__meta').textContent)
+      .toBe(t(lang, 'carriedSince', { date: carriedSinceLabel({ created_at: '2026-07-01T00:00:00Z' }, lang) }));
     expect(hero.querySelector('.constellation-detail__pray')).toBeTruthy();
+  });
+
+  it('adds a plain count of the days prayed — memory, never a score', () => {
+    const prayer = base();
+    usePrayerStore.setState({ prayers: [prayer], categories: [], completions: { p1: ['2026-08-01', '2026-08-02'] }, settings: { language: lang } });
+    const { container } = render(<PrayerDetail prayer={prayer} onBack={() => {}} onEdit={() => {}} lang={lang} />);
+    const meta = container.querySelector('.constellation-detail__meta').textContent;
+    expect(meta).toContain(tp(lang, 'prayedDays', 2));
+    expect(meta).not.toMatch(/%|streak|série/i);
+  });
+
+  it('after marking answered, asks once about a faithful next step — private by default', async () => {
+    renderDetail(base());
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'markAnswered')) }));
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'confirm')) }));
+    // The app records the person's own act; it never declares that God answered.
+    expect(await screen.findByText(t(lang, 'answerMarked'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'answerNextTitle'))).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'answerNextPrivate') }));
+    expect(screen.queryByText(t(lang, 'answerNextTitle'))).toBeNull();
   });
 
   it('uses the same responsive primary-button sizing as Today', () => {
@@ -146,7 +168,9 @@ describe('PrayerDetail — leads with prayer', () => {
     renderDetail(base());
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'markAnswered')) }));
 
-    const testimony = screen.getByRole('textbox', { name: new RegExp(t(lang, 'testimony')) });
+    // The flow asks what happened and invites — never requires — a testimony.
+    expect(screen.getByText(t(lang, 'answerWhatHappened'))).toBeTruthy();
+    const testimony = screen.getByRole('textbox', { name: new RegExp(t(lang, 'recordTestimony')) });
     const confirm = screen.getByRole('button', { name: new RegExp(t(lang, 'confirm')) });
 
     expect(testimony.style.minHeight).toBe('24px');

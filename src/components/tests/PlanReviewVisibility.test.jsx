@@ -48,10 +48,12 @@ beforeEach(() => {
 afterEach(() => { cleanup(); localStorage.clear(); vi.unstubAllEnvs(); });
 
 describe('approved and draft plans in the journey catalogue', () => {
-  // The only draft left is the synthetic fixture, so the negative case
-  // survives every approval.
+  // The synthetic fixture keeps the negative case alive through every
+  // approval. zechariah10 ("At the Altar", drafted 2026-10-06) is a real draft
+  // awaiting its theology, safety and locale sign-offs — only a named human
+  // reviewer may move it out of this list.
   it('keeps a real negative fixture after the pending curricula are approved', () => {
-    expect(drafts.map((plan) => plan.id)).toEqual(['test-review-draft']);
+    expect(drafts.map((plan) => plan.id)).toEqual(['zechariah10', 'test-review-draft']);
   });
 
   it('shows all five approved curricula to an ordinary reader', () => {

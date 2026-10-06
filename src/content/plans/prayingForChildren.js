@@ -26,7 +26,7 @@
 //     wisdom, not fear; no stereotypes about boys or girls.
 //   • The intro welcomes those without children of their own, those who long
 //     for children or have lost a child, and those whose child is far away.
-//   • Praystead never speaks for God. Hannah (day 21) is read as narrative:
+//   • Qetoret never speaks for God. Hannah (day 21) is read as narrative:
 //     her vow was hers, and the plan draws only its posture of surrender.
 //
 // LOCALIZATION: `theme` is authored in all 16 languages inline; prose is

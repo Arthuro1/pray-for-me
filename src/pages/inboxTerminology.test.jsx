@@ -20,12 +20,13 @@ beforeEach(() => {
 });
 
 describe('More — no duplicate destinations', () => {
-  it('lists exactly Guidance, Calendar and Settings & help — no Notifications row', () => {
+  it('lists exactly Guidance, Calendar, Settings & help and About — no Notifications row', () => {
     render(<MemoryRouter><MoreTab /></MemoryRouter>);
     expect(screen.getByText(t(lang, 'guidance'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'calendar'))).toBeTruthy();
     expect(screen.getByText(t(lang, 'settingsAndHelp'))).toBeTruthy();
-    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.getByText(t(lang, 'aboutTitle'))).toBeTruthy();
+    expect(screen.getAllByRole('button')).toHaveLength(4);
     expect(screen.queryByText(t(lang, 'notifications'))).toBeNull();
     expect(screen.queryByText(t(lang, 'inbox'))).toBeNull();
   });

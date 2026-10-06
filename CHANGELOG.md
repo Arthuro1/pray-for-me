@@ -6,7 +6,69 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Changed — Praystead becomes Qetoret
+
+- **New name and identity.** The app is now **Qetoret** — *Let your prayers
+  rise. Build a life of prayer before God.* New mark (a Q whose tail rises like
+  incense), warm-neutral / royal-plum / restrained-gold palette in light and
+  dark, one "rise" motion that respects reduced motion. Product constitution:
+  `docs/QETORET_IDENTITY.md`. Rename map: `docs/QETORET_MIGRATION.md`.
+  **Compatibility:** internal identifiers are unchanged on purpose — `pfm_*`
+  storage keys, the `praystead.com` domain and the Android package
+  `space.praystead.twa` (a new package id would ship a new app, not an update).
+  Only the Android launcher label changes.
+- **Landing page** rebuilt around the movements Bring · Carry · Return ·
+  Remember, the seven Intercession Circles and a short "Why Qetoret?" with
+  Scripture references only (the quoted verses the old landing carried are gone).
+  Guest-first is unchanged: no account before the first prayer.
+- **Entry:** "What is on your heart? Bring it before God." The first saved
+  prayer says "Your prayer altar has begun" and offers one step: choose a prayer
+  rhythm.
+- **Today is "your altar today":** "Begin prayer", a completed day without
+  task language, "Return to prayer" instead of catch-up, and an optional
+  "On your altar" row once circles are used.
+- **Carry this prayer** replaces "I'm praying" (same permissions and data: the
+  request joins "Prayers you're carrying"); the count is information, never a
+  rank.
+- **Answered prayer → testimony:** "What happened?", "Record a testimony", then
+  one optional "Is there a faithful next step?" — private by default. The app
+  never declares that God answered; it records that you did.
+- **AI guardrails** extended in `api/anthropic.js` (never speaks for God, never
+  promises outcomes, non-partisan prayer for leaders, authority under Christ).
+  **Scripture fix:** the AI tasks no longer return verse wording, and the client
+  discards any that arrives — Bible text only ever comes from the authoritative
+  verse pipeline.
+
 ### Added
+
+- **Intercession Circles** (My heart · My house · My people · His Church ·
+  Authorities · Nations · Kingdom & Mission): optional "Place on your altar" in
+  the prayer form and a Journal filter. Stored **inside the encrypted prayer
+  payload** only — no schema change, never a plaintext column; old prayers stay
+  under "Your prayers" and are never classified automatically.
+- **Remain with God** — an optional quiet ending (30 s / 1 min / Finish) after a
+  session and from a completed Today; no text, metrics or recommendations.
+- **Carried since …** on a prayer's page, with a plain count of the days it was
+  prayed (memory, never merit).
+- **Tend your altar** — a gentle review of prayers that have rested 30+ days:
+  continue carrying, something has changed, record a testimony, or release from
+  my rhythm. Answers are device-local (`pfm_altar_tended_v1`, ids and dates only).
+- **"Who else would you like to carry before God?"** — a last, once-only
+  activation step after repeated use, for someone whose prayers are all their own.
+- **A royal priesthood** prayer guide (first in Grow) and **About Qetoret**
+  (More → About), both reference-only.
+- **At the Altar: Learning to Carry Prayer** (`zechariah10`), a 10-day plan on
+  Luke 1 — a **draft** awaiting a named reviewer's theology, safety and locale
+  sign-offs (visible only in dev or with `?planPreview=1`).
+- All new copy in 16 languages (EN/FR authored; 14 AI-drafted and flagged for
+  native review — see the vocabulary table in
+  `docs/content/CHRISTIAN_TERMINOLOGY.md`).
+
+### Deploy notes
+
+No migration. After the web deploy: redeploy `send-event-notifications` (push
+title), rebuild the Android bundle with a bumped `versionCode`, run
+`npm run build:plan-og`, and update store listing text and screenshots by hand.
 
 - Drafted thirteen new guided plans, all held behind content review (visible
   only with `?planPreview=1` until a named human signs theology, safety and

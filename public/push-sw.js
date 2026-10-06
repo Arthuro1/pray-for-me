@@ -47,7 +47,7 @@ function safePath(url) {
 
 self.addEventListener('push', (event) => {
   const data = parsePushData(event);
-  const title = data.title || 'Praystead 🙏';
+  const title = data.title || 'Qetoret 🙏';
   const path = safePath(data.url);
   // A stable tag collapses repeat pushes about the same entity instead of
   // stacking duplicates; renotify:false keeps a refresh from re-alerting.
@@ -85,7 +85,7 @@ self.addEventListener('notificationclick', (event) => {
 
   event.waitUntil((async () => {
     const clientsList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-    // Prefer an existing Praystead window: navigate it to the target and focus it,
+    // Prefer an existing Qetoret window: navigate it to the target and focus it,
     // rather than spawning a duplicate tab.
     for (const client of clientsList) {
       let sameOrigin = false;

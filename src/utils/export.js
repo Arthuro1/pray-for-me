@@ -1,11 +1,12 @@
 import { testimonyList } from './prayer';
+import { APP_NAME } from '../lib/brand';
 
 // Builds a portable, human-readable snapshot of the user's prayer journal.
 // Pure (no I/O) so it can be unit-tested; the caller turns it into a download.
 export function buildExport(prayers = [], categories = []) {
   const catName = Object.fromEntries(categories.map((c) => [c.id, c.name]));
   return {
-    app: 'Praystead',
+    app: APP_NAME,
     version: 1,
     exported_at: new Date().toISOString(),
     categories: categories.map((c) => ({

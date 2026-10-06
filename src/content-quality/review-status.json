@@ -5,13 +5,13 @@
   "bundles": {
     "fr/ui": {
       "status": "needs-review",
-      "contentHash": "ff62063ce2c5c7e0b232782c50a9d81dee767dc7f53420fe72f48fc663a34fee",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "44df6f5ff4ca7b3a74d82bb9dede5e4e9bdb3f9e139267ca2054f3b5bb5aa1bf",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "fr/landing": {
       "status": "needs-review",
-      "contentHash": "ac7bf42130168ab4e3ea63cbd013e4fcef163015265d6a6cbc4b55fe5f0496d7",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "87ef5a395521733ca65971520801d1df9fbe752102ec5cd4e503c358b203579e",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "fr/plans/fast3": {
       "status": "needs-review",
@@ -65,8 +65,8 @@
     },
     "fr/plans/freedom30": {
       "status": "needs-review",
-      "contentHash": "b19df2d145688b1596af2161a7506b3782e8f8263f3e71fd1c3b95139523514f",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "contentHash": "88a84b56c6e4341c286ab2604ec8ff81598cc8261e9a393a76f271ea482bedf8",
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "fr/plans/david12": {
       "status": "needs-review",
@@ -77,6 +77,11 @@
       "status": "needs-review",
       "contentHash": "e163ae50346cb01db39e9415af525f0ac703d26bb9f7c42ed4eeefa1cec704f1",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "fr/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "62d7edc1bf8e0f6465d688bafb9d68756e277959900c4eb596fecb160a272aaf",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "fr/plans/identity21": {
       "status": "needs-review",
@@ -90,8 +95,8 @@
     },
     "fr/plans/holySpirit21": {
       "status": "needs-review",
-      "contentHash": "15c8f385c403849bb171a6d7ed1bb7b37faf6f38ad592ad00b2f78fe16deb634",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "contentHash": "3399534cad23dfc69e6250f86dc5e779550cbab65c093f9e896858300febea53",
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "fr/plans/kingdomCome14": {
       "status": "needs-review",
@@ -223,6 +228,11 @@
       "contentHash": "ec25fcec2f33d5fae50b5abce6b3878087c45b19996b5ce5ad0dfddd1ad7c10f",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "fr/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "25b263a70ac3f71a6fc0662546d825a234081ab5fca8e83958b05738bc3ec00e",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "fr/guides/acts": {
       "status": "needs-review",
       "contentHash": "351e821ac9529398040d4b9f12999eb3db0dae108f9f186b18070ec97069f2e3",
@@ -290,13 +300,13 @@
     },
     "en/ui": {
       "status": "needs-review",
-      "contentHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "en/landing": {
       "status": "needs-review",
-      "contentHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "en/plans/fast3": {
       "status": "needs-review",
@@ -350,8 +360,8 @@
     },
     "en/plans/freedom30": {
       "status": "needs-review",
-      "contentHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "contentHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128",
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "en/plans/david12": {
       "status": "needs-review",
@@ -362,6 +372,11 @@
       "status": "needs-review",
       "contentHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "en/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "en/plans/identity21": {
       "status": "needs-review",
@@ -375,8 +390,8 @@
     },
     "en/plans/holySpirit21": {
       "status": "needs-review",
-      "contentHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "contentHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9",
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "en/plans/kingdomCome14": {
       "status": "needs-review",
@@ -508,6 +523,11 @@
       "contentHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "en/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "en/guides/acts": {
       "status": "needs-review",
       "contentHash": "011d410e5650755ce1555eb0a5a2410c205bd80d8691ba4829f133ddbda717e6",
@@ -575,13 +595,13 @@
     },
     "de/ui": {
       "status": "needs-review",
-      "contentHash": "7fcf01a351605782f17a0c1f910a124f377a4391c94ff54eca5969ca95c65b6e",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "8a705658cb409f83671e7811d704d1963e4487d2f96f89268bac238081d28c6b",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "de/landing": {
       "status": "needs-review",
-      "contentHash": "2c5ed15a6a3bab593b909e15748990ddb5b1b50ea300e078176a3573ac1e5c5e",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "1a87563c04fed34a6c623a79d0cb039dcb2072c549b6667af9282a4af0573ba8",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "de/plans/fast3": {
       "status": "needs-review",
@@ -636,7 +656,7 @@
     "de/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "59e5593556029ccec5f20dfb30ebcfcd0f18358a3010c01a409b3b44869a59e7",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "de/plans/david12": {
       "status": "needs-review",
@@ -647,6 +667,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "de/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "b92733b6887131e13a367be81c7074ecad59c6ef4ee10f23936588f2b061fe5e",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "de/plans/identity21": {
       "status": "needs-review",
@@ -661,7 +686,7 @@
     "de/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "e7ac6e7d19e2d9fbaf57f551414332b76a49ee7c68b3c093c784c2f21d854e28",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "de/plans/kingdomCome14": {
       "status": "needs-review",
@@ -793,6 +818,11 @@
       "contentHash": "aa32b78a2d208cdf929ca7e93fedcf4ae12c6628e2d8ea6aeaa2a466c7e547bf",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "de/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "de/guides/acts": {
       "status": "needs-review",
       "contentHash": "7ab93976a63965a4dd7fe22d1c10382a7de8b911cd9671e02f4fdd08351cd4c5",
@@ -860,13 +890,13 @@
     },
     "pt/ui": {
       "status": "needs-review",
-      "contentHash": "63a4dba5d170409145d07afd0e464e533bc6f446555c69232f728bbdc9730c5c",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "2fb6de58c548e5784b864c0f9a64d4e7c15024377e8f137459ab9a8eef8e1c1b",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "pt/landing": {
       "status": "needs-review",
-      "contentHash": "86f7ba816ff5db3c11a3a037641b9c8bcfac1e1cbaadfa0c5111fbe01516f98d",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "065fbcce5808807f86f652c17178de980838930a8cd696a9e17bc1bafdff4263",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "pt/plans/fast3": {
       "status": "needs-review",
@@ -921,7 +951,7 @@
     "pt/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "b38b125ac36b6e9fea2e60261eb6aeff0726745b671334ed9dfedfe1d3afe8ba",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "pt/plans/david12": {
       "status": "needs-review",
@@ -932,6 +962,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "pt/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "c23e9dff6c9fb16a9ec8c958d2a818b39ed09e2fcdb6ed908813b6b9932b118d",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "pt/plans/identity21": {
       "status": "needs-review",
@@ -946,7 +981,7 @@
     "pt/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "a68ae4488984b4ac78cba5571021d979b682a426c3b8cae5e959e166ffeb07c5",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "pt/plans/kingdomCome14": {
       "status": "needs-review",
@@ -1078,6 +1113,11 @@
       "contentHash": "03b94fe0ad1f47e38a5566da863ab81f3786442e85182bca01bf8c19fb362a28",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "pt/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "pt/guides/acts": {
       "status": "needs-review",
       "contentHash": "be2eda71f423343692d7f402fb5fc3b3b5f57740a22ab941567ea3d39cfd9475",
@@ -1145,13 +1185,13 @@
     },
     "zh/ui": {
       "status": "needs-review",
-      "contentHash": "5df96acbed42f97aaa582b5de42889692f90b3bed3a59e097067b618de3e19a6",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "5e373bd81c1a89ef74b88e350859147dff7c0ea06fa32604adb03d7a9c09f6d0",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "zh/landing": {
       "status": "needs-review",
-      "contentHash": "da0e81ae27787a3439df8b3faebb7ec596954003918f6f33bd77ca321ce984b3",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "65bfa6d04ed55960f1a7479c40593d8d7851425051a1e0b561e9ffb886b2cd2c",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "zh/plans/fast3": {
       "status": "needs-review",
@@ -1206,7 +1246,7 @@
     "zh/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "60c4b07f87c88c6091f1360e0cd128ca20a642133fe65cce63f02dafac37f51c",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "zh/plans/david12": {
       "status": "needs-review",
@@ -1217,6 +1257,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "zh/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "5f20228ba467e3cc61ab7fb1ea4be9e7c9eaafc274fe624724019946a4b01b9d",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "zh/plans/identity21": {
       "status": "needs-review",
@@ -1231,7 +1276,7 @@
     "zh/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "b1c30fb325f632adffe950033dc0269adb480556b9af80c95dd540de21b1f17b",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "zh/plans/kingdomCome14": {
       "status": "needs-review",
@@ -1363,6 +1408,11 @@
       "contentHash": "ffe88986f2e9fac23512e4039656ef33730987e91472f411090b76198d6b630f",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "zh/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "zh/guides/acts": {
       "status": "needs-review",
       "contentHash": "454946879adfaee540f8447dc3d1eed43d49cbb284ca9a115cc3d55d1840e963",
@@ -1430,13 +1480,13 @@
     },
     "es/ui": {
       "status": "needs-review",
-      "contentHash": "2a61cf626a7a536e3183e562e8b1f2047fb14cfd50fce93d84ed06513afed638",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "753fab6a80d9ddc3b4ab444c61b1a2d586bf8470c0302e728a30b1277ea21aba",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "es/landing": {
       "status": "needs-review",
-      "contentHash": "298b16e6aa51556152d2d449e0fb34a276dd5099a70110d073beb5441b5cff5e",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "6f52dde364366f768677601c8090b7222bc989f957eb6c86abae9c9bb339b6ec",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "es/plans/fast3": {
       "status": "needs-review",
@@ -1491,7 +1541,7 @@
     "es/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "fecbba25226022fab443859a74bc841fa424ad2e87a84920297130b8cf337c46",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "es/plans/david12": {
       "status": "needs-review",
@@ -1502,6 +1552,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "es/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "8bd770056198b8dbe105f6a14396f60bf176dfc1a044fcc7983d47e21fba5a32",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "es/plans/identity21": {
       "status": "needs-review",
@@ -1516,7 +1571,7 @@
     "es/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "a27b8e2ff3161a5277df39bf1a65cb315fdcb4ab7cb31c2200f8e2e9ed5121f3",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "es/plans/kingdomCome14": {
       "status": "needs-review",
@@ -1648,6 +1703,11 @@
       "contentHash": "47b95fe70cfdb306d6f5233a890bf3981e1e533d6e4866c2135fa48d75aafd2c",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "es/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "es/guides/acts": {
       "status": "needs-review",
       "contentHash": "27673bc580ca83fe37144bf04f2bac55e6157bbab90695609e61a5acbfc39f62",
@@ -1715,13 +1775,13 @@
     },
     "hi/ui": {
       "status": "needs-review",
-      "contentHash": "a56228f78c4b19d88f3823de46ab313eb1040c6cb4068d82b8fe427135a25ec3",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "d4ca8a0a7ae07e1b4472a43f56578128b22236293bd873cdc8350f9042a0b1df",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "hi/landing": {
       "status": "needs-review",
-      "contentHash": "16c708a41ea20d24c9ec439595691cb6962daf15a429999a87b6aff445195cc9",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "e390eeb710070b65188c5bff4a94d2468803e77818980431bea7701eebdb7bfa",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "hi/plans/fast3": {
       "status": "needs-review",
@@ -1776,7 +1836,7 @@
     "hi/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "dd4ca677f7f0137a4785a99e86d9c193bfdc0914b506abaa6fb823fbac627d80",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "hi/plans/david12": {
       "status": "needs-review",
@@ -1787,6 +1847,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "hi/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "39bd088b66eca146f38cfd8063d42fa7815f0c81ce3f137dfb9c9726dc241ef2",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "hi/plans/identity21": {
       "status": "needs-review",
@@ -1801,7 +1866,7 @@
     "hi/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "8d4d52e6836e2024297da19ac43e3674c336e3764c3b93c5e28a16e08d854059",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "hi/plans/kingdomCome14": {
       "status": "needs-review",
@@ -1933,6 +1998,11 @@
       "contentHash": "17464381bf814f64040864fe55381716ab495db95e3dc87a159d4b63d62f4169",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "hi/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "hi/guides/acts": {
       "status": "needs-review",
       "contentHash": "207cf1ab1678eed35978a327228700f26c814845d37bf036b0798f2b7e2562f6",
@@ -2000,13 +2070,13 @@
     },
     "ja/ui": {
       "status": "needs-review",
-      "contentHash": "eda91eead395f2143c3b8960d4ebca068ef6458144ad542dd4960c775f83878e",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "7ef55b77792e3966849e561f321ab8c9dda0cbc414a78b319d994f6510f60db2",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "ja/landing": {
       "status": "needs-review",
-      "contentHash": "d7c251f24bd1b0c9ae003ac153cc2725513d206999fbc3c4b0347f3413f09858",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "ddda5643bdefd60e0c648a52de3473e6497dc65cf19e2fe3b93fa0dddd7c0c19",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "ja/plans/fast3": {
       "status": "needs-review",
@@ -2061,7 +2131,7 @@
     "ja/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "01b4a44911eb2435dfe4f037bb87631ee5b36ed361ffc1c6e637d3acd1817961",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "ja/plans/david12": {
       "status": "needs-review",
@@ -2072,6 +2142,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ja/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "a9d723b45252c9cb806fad060e868f2066b179f61aab5562cc435f72538588e7",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "ja/plans/identity21": {
       "status": "needs-review",
@@ -2086,7 +2161,7 @@
     "ja/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "b9ce3ca43934c3e434360cd1db56d65f1ab76989adf82f5794def9924befd618",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "ja/plans/kingdomCome14": {
       "status": "needs-review",
@@ -2218,6 +2293,11 @@
       "contentHash": "ddad9c23c0ff28587a1704e6a91ec10fdb4ed58b517e307878798cc451f55244",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "ja/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "ja/guides/acts": {
       "status": "needs-review",
       "contentHash": "62058a855104f1c92c29c8b57f126c952075b57cdb3f581a9eb0f3daa8e06d78",
@@ -2285,13 +2365,13 @@
     },
     "sw/ui": {
       "status": "needs-review",
-      "contentHash": "437837db9ce4ae571a0795c0d6ef065a81e04d35051390302c993261b5037cb2",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "05cbe2467a5590a238bcfcc7cfd73ddbc85fc597b98e126c737d7a17857486ad",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "sw/landing": {
       "status": "needs-review",
-      "contentHash": "782cde800b077bc0d45ef17d73369b07b293e8a5f7464d66ec641640826b89e7",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "3ba87a58bc67eb98f338b263990fcbdf78803b720703cf933a90bed4eecc66a7",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "sw/plans/fast3": {
       "status": "needs-review",
@@ -2346,7 +2426,7 @@
     "sw/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "de6c2787d5c9ba9e65734cf8b85498898e50a0c2ad7a4ffea8d2d14521524ccb",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "sw/plans/david12": {
       "status": "needs-review",
@@ -2357,6 +2437,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "sw/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "cfbd4f77ececdf06815e97d89527acac241cf0cdccd271b1d76f474c8db29804",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "sw/plans/identity21": {
       "status": "needs-review",
@@ -2371,7 +2456,7 @@
     "sw/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "9773f9d4ea4f9964b202523d4016e3256be812bae47fc1f72ad6df5045aaa596",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "sw/plans/kingdomCome14": {
       "status": "needs-review",
@@ -2503,6 +2588,11 @@
       "contentHash": "477c32f48d186780969edc1c576c961d08f9d83eb84d75183c45bfffad2af386",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "sw/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "sw/guides/acts": {
       "status": "needs-review",
       "contentHash": "899cc76717f6e3e501af805f58116ac7ea214bc350154f39882ce9865fbd0ab8",
@@ -2570,13 +2660,13 @@
     },
     "am/ui": {
       "status": "needs-review",
-      "contentHash": "34bdd158aca8722b72362a0c2e0012f64bf13388d840c97891f984a187200832",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "b470240ca078de22c42255d9149f4c8b1f944875633a636c143fdd53166a9e5d",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "am/landing": {
       "status": "needs-review",
-      "contentHash": "4837a6c357fb002080524fe8aee57e1b0f309f6154b6c553d0b5b898b9f7ea42",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "886c6df7e7c58c91ad79ee407207af11639878db6f01b2fae9bc833af176886a",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "am/plans/fast3": {
       "status": "needs-review",
@@ -2631,7 +2721,7 @@
     "am/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "c475dd31ee5cd13110a6273bddd2d1064a341ff8069b97cd9efb5371efb53fc7",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "am/plans/david12": {
       "status": "needs-review",
@@ -2642,6 +2732,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "am/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "49a0b38a227b72ce778cfb732f09d83a0b18f523b7a441a86a64982420f73234",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "am/plans/identity21": {
       "status": "needs-review",
@@ -2656,7 +2751,7 @@
     "am/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "8f02a0267fececf54db40ddaf9868413016305971dc4e80fe8071a4ad4db8e79",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "am/plans/kingdomCome14": {
       "status": "needs-review",
@@ -2788,6 +2883,11 @@
       "contentHash": "83922333b2caa6ccde1a93f734e9d9e8865c322c0052ad4e07252ce97a777040",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "am/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "am/guides/acts": {
       "status": "needs-review",
       "contentHash": "92a70d98d71fe0767f9356abc02715356d61e4ce7fb78b65152af973c56dc829",
@@ -2855,13 +2955,13 @@
     },
     "id/ui": {
       "status": "needs-review",
-      "contentHash": "9ad89718acda620a6e4f810fcd51d75ad7ff4d27ed9c98989d772a3f96b80d15",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "bb8cf939df8782c035b995f679611709f0d70fdf67094a70d2791cdc9944a3dc",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "id/landing": {
       "status": "needs-review",
-      "contentHash": "6784621fef7ce0fc06e4f88e0120343143efa0eb6d90603bea3d322b92fcfcd5",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "eebe61fb63ae4af1de3a18fc4b7f640bfe1bdc7f1e30b3434e2fdf63d78da81d",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "id/plans/fast3": {
       "status": "needs-review",
@@ -2916,7 +3016,7 @@
     "id/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "ddf3541b6fa64428839bcb14dcf540751a90b25dba5bcf6af2e60c50f99e5e5c",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "id/plans/david12": {
       "status": "needs-review",
@@ -2927,6 +3027,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "id/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "ca7c3d96da526e2e66711472471fe34f90bbd28141bcbd3ad3ded8de71b4b64a",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "id/plans/identity21": {
       "status": "needs-review",
@@ -2941,7 +3046,7 @@
     "id/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "31ac9254716daa5e9054ed9b413f501641e5913c582d136446ec4ee361b961e4",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "id/plans/kingdomCome14": {
       "status": "needs-review",
@@ -3073,6 +3178,11 @@
       "contentHash": "b00e158b7b3b5103dec597f51430a0b501ece72f0e6daf0087cabb30ae09d88c",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "id/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "id/guides/acts": {
       "status": "needs-review",
       "contentHash": "db970a87d4a006aff12125d3038f18759edb82667918f236723d1a68aaf2691d",
@@ -3140,13 +3250,13 @@
     },
     "tl/ui": {
       "status": "needs-review",
-      "contentHash": "0f88a4bbde9b50f95b777ca04099748f29ca1e92952d6f5bbc3dabf491c59a70",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "430494a3bdc75f24702b109d0f35611d1505c024fa08df60606c88ee338b612e",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "tl/landing": {
       "status": "needs-review",
-      "contentHash": "7a2eb5e7e1a1b3e804cec88ed75c0d16d24b0884c8e8bd808c562752a774552f",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "96fe8f62d6a35f4eeb12de2b4873bbb6a1fc0f03fc2575796138643907f870b5",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "tl/plans/fast3": {
       "status": "needs-review",
@@ -3201,7 +3311,7 @@
     "tl/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "b34904851164d216ed718ad0f2a7298ead2011a432725760d0dd36520409ff17",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "tl/plans/david12": {
       "status": "needs-review",
@@ -3212,6 +3322,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "tl/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "0b890588120d7c23e558331eb43a01cbf273229dae9b32b7b50669b0c2ea16fc",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "tl/plans/identity21": {
       "status": "needs-review",
@@ -3226,7 +3341,7 @@
     "tl/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "138706abc50ea12da27bd2f1c0b67162f290d79972addaf6e4f5a806bb6ef176",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "tl/plans/kingdomCome14": {
       "status": "needs-review",
@@ -3358,6 +3473,11 @@
       "contentHash": "e7e6cbd32a750e977941bb70d150cf4f677ccf415f5c83964f8932fdec66e7e4",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "tl/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "tl/guides/acts": {
       "status": "needs-review",
       "contentHash": "7819563f0fed6af58b75d2ad2e14cccdeae8b945486c87b2765aa3250accbfa9",
@@ -3425,13 +3545,13 @@
     },
     "ko/ui": {
       "status": "needs-review",
-      "contentHash": "08dc37bae72fdf0fbe0d4124bca06a4e1a083660c7c8c7ec844f88b9264c1c41",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "35680c0b5b9300021510053eabe58dea2883584318ccb3ef5489dc2d9c7df887",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "ko/landing": {
       "status": "needs-review",
-      "contentHash": "2ed3e26f0ace44c5ecbb433be15039c7d391670d9df38b33e4071328371b3611",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "a4c111a3a56cdd191b36951f0e5ab459179aae1a8536ef53c8d45e6d58eb3b3c",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "ko/plans/fast3": {
       "status": "needs-review",
@@ -3486,7 +3606,7 @@
     "ko/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "f0bbbe52ac81f980c93667d7a31f2bbf2e200f1154fc6f9a7d33695f565619ef",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "ko/plans/david12": {
       "status": "needs-review",
@@ -3497,6 +3617,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ko/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "30e87d13e9a9eebcc8bd9086ed4ecb7813b577d3a056e00552e22c2552a5a4b1",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "ko/plans/identity21": {
       "status": "needs-review",
@@ -3511,7 +3636,7 @@
     "ko/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "0a39934c2a73b8a5afa45b0f868ffc60e4f7adfb20dbc3e080094421885d4dff",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "ko/plans/kingdomCome14": {
       "status": "needs-review",
@@ -3643,6 +3768,11 @@
       "contentHash": "4ce342e259b5fab3cfa4c1a45b37019b9119970e882b804dd85b218eaede3cc4",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "ko/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "ko/guides/acts": {
       "status": "needs-review",
       "contentHash": "3bd0e60dc1dfe60640e93802bc8208ab475d1904fbb97c173df1de31afa3319e",
@@ -3710,13 +3840,13 @@
     },
     "ru/ui": {
       "status": "needs-review",
-      "contentHash": "28cc15408a45533849418e0a7e02a379a114c7ef261a9a028b7bf1c67d40c86b",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "c5ed8699cd9024509a8b94a9d832f959ab6ad5a6ac064cb7a6f2b597d90d2e85",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "ru/landing": {
       "status": "needs-review",
-      "contentHash": "a8f3f7d951b4e79840deb079b9316c3ba62ed6d6dcab2dfded3753a80849a63f",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "d492bec715c44a628ea88984b21e699f00b6a545ef50034ab7df223f6d7db2d8",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "ru/plans/fast3": {
       "status": "needs-review",
@@ -3771,7 +3901,7 @@
     "ru/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "538f9af149158f19a98f7b2b4edff7fce99df3622795db94905be8bbbf764153",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "ru/plans/david12": {
       "status": "needs-review",
@@ -3782,6 +3912,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ru/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "3542fb10f3761b99e156adca28057d334f1b62de3a698fbeaf84ca26afa58992",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "ru/plans/identity21": {
       "status": "needs-review",
@@ -3796,7 +3931,7 @@
     "ru/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "8c3a1c407de96b56f77c4a517d2aa6bb8eb5afedfe3e8f7ab1491803884856fd",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "ru/plans/kingdomCome14": {
       "status": "needs-review",
@@ -3928,6 +4063,11 @@
       "contentHash": "584f99351a666dca17636ae2913d427ce5d5b8c8a28b7857a82be845894d7adf",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "ru/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "ru/guides/acts": {
       "status": "needs-review",
       "contentHash": "7dad6998fbd074e0e778038013f0e8dd80d2b2bfedc0578b070b39e17ebe22c9",
@@ -3995,13 +4135,13 @@
     },
     "ar/ui": {
       "status": "needs-review",
-      "contentHash": "b7431897549017a9dfdeb83a66b114768422bd8ca1dce172f973ff963ba1cf2f",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "e9dcd1f42aa831d29f5ec42b7c243ecd83e932305d3c56b4fe887167fe3ea719",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "ar/landing": {
       "status": "needs-review",
-      "contentHash": "975bf00346b654570c341a28cd1969dac2d6cfd5b1678d33bec69f531720c2ec",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "8ba012c458dd961ed10c35deb5a870e4ce736fa6c987fc0032a30ba69641150c",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "ar/plans/fast3": {
       "status": "needs-review",
@@ -4056,7 +4196,7 @@
     "ar/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "9f79339fff9306bdf5c84fa8569e2a400b3255cb1501a6923e823e53fc617784",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "ar/plans/david12": {
       "status": "needs-review",
@@ -4067,6 +4207,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "ar/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "bec01796680cbec665deddfcc9b8709815934949eb142f59bb8e64b84856c44d",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "ar/plans/identity21": {
       "status": "needs-review",
@@ -4081,7 +4226,7 @@
     "ar/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "349e2120fe5920a276541786527b41c53fd6d63e8d5bf5f08860acfb084e7399",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "ar/plans/kingdomCome14": {
       "status": "needs-review",
@@ -4213,6 +4358,11 @@
       "contentHash": "580ef06d1da94d28ad20c25f753baa433bde119b0eaa2b9a09a1eb1651383456",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
     },
+    "ar/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
+    },
     "ar/guides/acts": {
       "status": "needs-review",
       "contentHash": "4ad910f7d0b2c406f0826f734c0d269f141cad58ae9b49b0d618b1e1c1c479a1",
@@ -4280,13 +4430,13 @@
     },
     "fa/ui": {
       "status": "needs-review",
-      "contentHash": "57a5bb21ad55c075b6a9744d3b9ac62b673c1335d3075f52c78bb89e5eda4e50",
-      "sourceHash": "e3005547aecfdac5cf796261db881d3bc3a495f43f03e420184e3b7585dc7b15"
+      "contentHash": "b83edff620fa90326b591d16f599095d5f5dd80b6caf2a90e21e75721c2ecc5a",
+      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
     },
     "fa/landing": {
       "status": "needs-review",
-      "contentHash": "0a798bbefb049f14109cfc1f98189ff7efb73a67b8083e11708e5b57eb7a6336",
-      "sourceHash": "ae9df437bb80ac33b4ace58eaf5b63b12b7867fb8e6c0479f09a07da47960736"
+      "contentHash": "07af5ad21c73dc5e26341a757af7dbbda90aa10263478d167f1e58ff1f576f04",
+      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
     },
     "fa/plans/fast3": {
       "status": "needs-review",
@@ -4341,7 +4491,7 @@
     "fa/plans/freedom30": {
       "status": "needs-review",
       "contentHash": "17e9b697c79a92c406b3c8b9c775d0d91dcf9f48e748c7cea04bebde301f86d7",
-      "sourceHash": "4f5323d6be246405762f1a82017c203d0f9fb097ee24d1ad79c8658e108d271d"
+      "sourceHash": "ff9d3b16a6978a22da1590dc07f7c62515793705c57cf1fe29b32e51d4cf4128"
     },
     "fa/plans/david12": {
       "status": "needs-review",
@@ -4352,6 +4502,11 @@
       "status": "needs-review",
       "contentHash": "c8b8237a6662a4a2dce84b0563089654800cf5f7c6b3a2241bc5cb19ba5f226f",
       "sourceHash": "e9f52bc5a4dee24e1edec4ddb399a39ece78de56eeced888c93b63c6d88bedba"
+    },
+    "fa/plans/zechariah10": {
+      "status": "needs-review",
+      "contentHash": "b5415b8cf81dcc2a4c94c5d94f8b40669b077ec85f7a131b3fd00d99f699392a",
+      "sourceHash": "fbb2933925d3a0ae63070dace3610667d257f1bfff1fa19e6f6d2ee0146f58b2"
     },
     "fa/plans/identity21": {
       "status": "needs-review",
@@ -4366,7 +4521,7 @@
     "fa/plans/holySpirit21": {
       "status": "needs-review",
       "contentHash": "8e918de1b3b39f36c74110a0d2eee11009e04ae4d15907e2e3b6ebdb9947ac3f",
-      "sourceHash": "91a5d0f3e1337497da772ecdbbbfd0d91bdcf7aeefa7027f0bfbe94ec4686bc5"
+      "sourceHash": "f2e78ae9a25bff74bc8eecb02e5c543fe16ee5810e4a02e5de05ef20df46a8f9"
     },
     "fa/plans/kingdomCome14": {
       "status": "needs-review",
@@ -4497,6 +4652,11 @@
       "status": "needs-review",
       "contentHash": "bac9cf4aad78dcc6377e0d50dcdd03060e57b314b3560b9f8bd9e2a182701667",
       "sourceHash": "b1b3e8ba481fb0a316ab3711685e0421af0472aa949249ab43cd054c414002e8"
+    },
+    "fa/guides/royalPriesthood": {
+      "status": "needs-review",
+      "contentHash": "70aac6122c64345383c2452ea66043f29d3e51cc9879886e51a3a0ffaf624c0c",
+      "sourceHash": "7a878e59170e1850b63da167424567d2a75fad04265889d52a011a9ef03708e6"
     },
     "fa/guides/acts": {
       "status": "needs-review",

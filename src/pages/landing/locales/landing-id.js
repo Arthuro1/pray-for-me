@@ -4,45 +4,44 @@ export default {
     "signIn": "Masuk",
     "badge": "Jurnal doa",
     "howItWorks": "Lihat cara kerjanya",
-    "verse": "“Doa orang yang benar, bila dengan yakin didoakan, sangat besar kuasanya.” — Yakobus 5:16",
-    "featuresTitle": "Kehidupan doa Anda di satu tempat",
-    "featuresSub": "Pokok doa, waktu doa, dan doa yang dijawab, tersimpan bersama.",
+    "featuresTitle": "Satu tempat untuk kehidupan doa Anda",
+    "featuresSub": "Doa, ritme, dan kesaksian Anda, dalam satu tempat.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Berdoa bersama",
-        "desc": "Bagikan pokok doa dengan teman atau kelompok, dan saling mendoakan."
+        "desc": "Bagikan pokok doa dengan sahabat atau kelompok, dan saling mendoakan."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
         "title": "Jurnal doa",
-        "desc": "Tuliskan pokok doa untuk diri sendiri dan orang lain, lalu tambahkan kabar terbaru."
+        "desc": "Catat pokok doa untuk diri sendiri dan orang lain, lalu tambahkan kabar terbaru dari waktu ke waktu."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Jadwal doa",
-        "desc": "Pilih kapan mendoakan setiap pokok doa: sekali, setiap hari, atau pada hari tertentu."
+        "title": "Ritme doa",
+        "desc": "Pilih kapan setiap doa kembali: sekali, setiap hari, atau pada hari tertentu."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Galeri doa yang dijawab",
-        "desc": "Semua doa yang dijawab dan kesaksian Anda dalam satu galeri."
+        "title": "Kesaksian",
+        "desc": "Simpan doa yang dijawab dan kesaksian sebagai pengingat akan kesetiaan Tuhan."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Bertumbuh dalam doa",
-        "desc": "Rencana doa terpandu, panduan doa, dan bacaan singkat yang berakar pada Firman Tuhan."
+        "desc": "Rencana terpandu, panduan doa, dan bacaan singkat yang berakar pada Alkitab."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "Pengingat doa",
-        "desc": "Pengingat harian untuk berdoa, dan untuk menanyakan kabar orang yang Anda doakan."
+        "title": "Pengingat yang lembut",
+        "desc": "Pengingat harian untuk berdoa, dan pengingat untuk menanyakan kabar orang-orang yang Anda doakan."
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Tulis pokok doa",
-        "desc": "Beberapa kata sudah cukup. Detail bisa ditambahkan nanti."
+        "title": "Bawa sebuah doa",
+        "desc": "Beberapa kata sudah cukup. Anda bisa menambahkan detail nanti."
       },
       {
         "emoji": "🙏",
-        "title": "Berdoa setiap hari",
-        "desc": "Buka aplikasi dan ketuk Berdoa sekarang."
+        "title": "Kembali berdoa",
+        "desc": "Setiap doa kembali pada hari yang Anda pilih, supaya Anda mendoakannya lagi."
       },
       {
         "emoji": "🎉",
-        "title": "Catat jawabannya",
-        "desc": "Saat Tuhan menjawab, tandai doa itu dan tuliskan apa yang telah Ia lakukan."
+        "title": "Catat kesaksian",
+        "desc": "Saat sesuatu terjadi, tuliskan bagaimana Anda melihat Tuhan bekerja."
       }
     ],
     "calloutBadge": "Saran ayat",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "Apa yang ada di hati Anda hari ini?",
-    "ctaVerse": "“Berdoalah tanpa henti.” — 1 Tesalonika 5:17",
     "footerBuilt": "Dibangun dengan iman · Open source · Lisensi MIT"
   },
-  "benefits": [
-    {
-      "title": "Tidak ada yang terlupa",
-      "desc": "Ingat setiap orang yang Anda janjikan untuk didoakan."
-    },
-    {
-      "title": "Tahu apa yang didoakan hari ini",
-      "desc": "Setiap hari menampilkan kembali pokok doa yang Anda rencanakan."
-    },
-    {
-      "title": "Ingat kesetiaan Tuhan",
-      "desc": "Simpan doa yang dijawab dan kesaksian sebagai pengingat akan apa yang telah Tuhan lakukan."
-    }
-  ],
   "explore": {
     "more": "Jelajahi semua fitur",
     "less": "Tampilkan lebih sedikit"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "Bahasa",
   "translationInProgress": "Terjemahan sedang berlangsung",
-  "heroReassurance": "Tidak perlu akun. Tidak ada yang meninggalkan perangkat ini sampai Anda memilih untuk menyimpannya.",
+  "heroReassurance": "Tidak perlu akun. Doa pertama Anda tetap di perangkat ini sampai Anda memilih untuk menyimpannya.",
   "hero": {
-    "title": "Bawalah isi hati Anda kepada Tuhan.",
-    "promise": "Berdoalah dengan setia. Ingatlah kesetiaan Tuhan.",
-    "subtitle": "Tuliskan pokok doa Anda. Setiap pokok doa muncul kembali pada hari yang Anda pilih untuk mendoakannya."
+    "title": "Bangunlah kehidupan doa di hadapan Tuhan.",
+    "promise": "Biarlah doa-doa Anda naik seperti dupa.",
+    "subtitle": "Bawalah isi hati Anda kepada Tuhan. Doakan keluarga, sahabat, gereja, dan bangsa-bangsa. Bangun ritme doa yang setia dan ingatlah kesetiaan-Nya."
   },
   "samplePrayerTitle": "Kedamaian bagi keluarga kami",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "Langkah",
   "todayLabel": "Hari ini",
-  "prayNowLabel": "Berdoa sekarang"
+  "prayNowLabel": "Berdoa sekarang",
+  "preview": {
+    "altarToday": "Mezbah Anda hari ini",
+    "carriedLabel": "Didoakan sejak Maret 2025",
+    "carriedTitle": "Kesembuhan untuk Ayah",
+    "rememberLabel": "Kesaksian",
+    "rememberText": "Ingatlah apa yang telah Tuhan lakukan."
+  },
+  "movements": [
+    {
+      "title": "Membawa",
+      "desc": "Bawalah isi hati Anda kepada Tuhan dengan kata-kata Anda sendiri."
+    },
+    {
+      "title": "Bersyafaat",
+      "desc": "Berdoalah bagi orang-orang dan tempat-tempat yang Tuhan percayakan kepada Anda."
+    },
+    {
+      "title": "Kembali",
+      "desc": "Bangun ritme yang membawa Anda kembali kepada doa, hari demi hari."
+    },
+    {
+      "title": "Mengingat",
+      "desc": "Catat kesaksian dan ingatlah kesetiaan Tuhan."
+    }
+  ],
+  "circles": {
+    "title": "Dari hati Anda sampai bangsa-bangsa",
+    "subtitle": "Doa meluas seiring waktu. Ini bukan tingkatan yang harus dicapai, melainkan orang dan tempat yang dapat Anda bawa ke hadapan Tuhan.",
+    "start": "Satu doa sudah cukup untuk memulai.",
+    "items": [
+      {
+        "name": "Hatiku",
+        "desc": "Perjalanan pribadi Anda bersama Tuhan"
+      },
+      {
+        "name": "Rumahku",
+        "desc": "Pasangan, anak, orang tua, keluarga"
+      },
+      {
+        "name": "Orang-orangku",
+        "desc": "Sahabat, tetangga, rekan kerja"
+      },
+      {
+        "name": "Gereja-Nya",
+        "desc": "Gereja Anda, gembala, misionaris"
+      },
+      {
+        "name": "Para pemimpin",
+        "desc": "Pemerintah, hakim, pelayan publik"
+      },
+      {
+        "name": "Bangsa-bangsa",
+        "desc": "Kota, negara, dan suku bangsa"
+      },
+      {
+        "name": "Kerajaan dan misi",
+        "desc": "Injil, keadilan, dan belas kasihan"
+      }
+    ]
+  },
+  "why": {
+    "title": "Mengapa Qetoret?",
+    "body": "Qetoret adalah kata Ibrani untuk ukupan yang dipersembahkan di hadapan Tuhan. Dalam Alkitab, asap ukupan yang naik menjadi gambaran doa-doa umat Tuhan. Nama Qetoret diambil dari gambaran ini: kehidupan doa yang terus-menerus dibawa ke hadapan Tuhan.",
+    "referencesLabel": "Baca dalam Alkitab",
+    "references": [
+      "Mazmur 141:2",
+      "Wahyu 5:8",
+      "Wahyu 8:3-4",
+      "Lukas 1:5-25"
+    ],
+    "note": "Qetoret hanyalah alat untuk berdoa, bukan perantara. Kita datang kepada Bapa melalui Yesus Kristus."
+  }
 };

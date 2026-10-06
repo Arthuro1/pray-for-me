@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Bell, CalendarClock, FolderHeart, Route } from 'lucide-react';
+import { Bell, CalendarClock, FolderHeart, HandHeart, Route } from 'lucide-react';
 import { t } from '../i18n';
 import { starterPlan } from '../lib/guidedPlan';
 import {
@@ -39,6 +39,12 @@ const COPY = {
     body: 'activationOrganizeBody',
     action: 'activationOrganizeCta',
   },
+  [ACTIVATION_STEPS.CARRY]: {
+    icon: HandHeart,
+    title: 'activationCarryTitle',
+    body: 'activationCarryBody',
+    action: 'activationCarryCta',
+  },
 };
 
 // The plan invitation names one real plan rather than describing plans in
@@ -68,6 +74,7 @@ export default function ActivationNudge({
   onEditPrayer,
   onOpenReminders,
   onOpenPlans,
+  onAddPrayer,
 }) {
   const [hiddenForVisit, setHiddenForVisit] = useState(false);
   const progress = readActivationProgress();
@@ -104,6 +111,7 @@ export default function ActivationNudge({
     finish();
     if (step === ACTIVATION_STEPS.PLANS) onOpenPlans(starter.id);
     else if (step === ACTIVATION_STEPS.REMINDER) onOpenReminders?.();
+    else if (step === ACTIVATION_STEPS.CARRY) onAddPrayer?.();
     else if (target) onEditPrayer?.(target, { openOrganize: true });
   };
 

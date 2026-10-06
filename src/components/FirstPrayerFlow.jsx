@@ -14,6 +14,7 @@ import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
 import { track, EVENTS } from '../lib/analytics';
 import PrayerSession from './PrayerSession';
 import { PrimaryButton, QuietButton, SectionLabel } from './shared/Primitives';
+import { APP_NAME } from '../lib/brand';
 
 function ConstellationBackdrop() {
   return (
@@ -148,7 +149,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           <div className="constellation-onboarding__decision-icon mb-7 flex h-14 w-14 items-center justify-center rounded-full">
             <Feather size={24} strokeWidth={1.5} aria-hidden="true" />
           </div>
-          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>Praystead</SectionLabel>
+          <SectionLabel className="mb-3" style={{ color: 'var(--gold)' }}>{APP_NAME}</SectionLabel>
           <h2 className="editorial-heading max-w-lg text-3xl leading-tight sm:text-4xl">
             {t(lang, 'firstPrayerSaveTitle')}
           </h2>
@@ -184,7 +185,7 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         <header className="flex min-h-11 items-center justify-between">
           <div className="flex items-center gap-2.5 text-sm font-semibold tracking-wide">
             <img src="/logo.svg" alt="" className="h-8 w-8 rounded-lg" />
-            Praystead
+            {APP_NAME}
           </div>
           <button
             type="button"
@@ -197,10 +198,13 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
-          <SectionLabel className="mb-4">Praystead</SectionLabel>
-          <h2 id="first-prayer-question" className="editorial-heading max-w-xl text-4xl leading-[1.08] sm:text-5xl">
+          <SectionLabel className="mb-4">{APP_NAME}</SectionLabel>
+          <h2 id="first-prayer-question" className="editorial-heading rise-in max-w-xl text-4xl leading-[1.08] sm:text-5xl">
             {t(lang, isGuest ? 'firstPrayerQuestion' : 'onboardCaptureTitle')}
           </h2>
+          <p className="editorial rise-in rise-in--late mt-3 text-xl" style={{ color: 'var(--text-2)' }}>
+            {t(lang, 'firstPrayerBring')}
+          </p>
 
           <textarea
             autoFocus

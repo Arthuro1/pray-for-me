@@ -7,7 +7,7 @@ import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 import { toast } from '../store/toastStore';
 import { timeAgo, groupByThisMonth } from '../utils/date';
 import { getAuthorName, communityAuthor } from '../utils/user';
@@ -1052,8 +1052,15 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                       </>
                     )}
                     <div className="flex items-center gap-3">
-                      <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={SUBTLE_BTN}>
-                        <HandHeart size={13} /> {p.prayer_reactions?.[0]?.count ?? 0}
+                      {/* How many carry this request — information, never a rank. */}
+                      <span
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium"
+                        style={SUBTLE_BTN}
+                        title={tp(lang, 'carryCount', p.prayer_reactions?.[0]?.count ?? 0)}
+                      >
+                        <HandHeart size={13} aria-hidden="true" />
+                        <span aria-hidden="true">{p.prayer_reactions?.[0]?.count ?? 0}</span>
+                        <span className="sr-only">{tp(lang, 'carryCount', p.prayer_reactions?.[0]?.count ?? 0)}</span>
                       </span>
                       {(p.community_updates?.[0]?.count ?? 0) > 0 && (
                         <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--text-3)' }}>

@@ -2,17 +2,17 @@
 
 <br/>
 
-<img src="public/logo.svg" alt="Praystead" width="80" height="80" />
+<img src="public/logo.svg" alt="Qetoret" width="80" height="80" />
 
-# Praystead
+# Qetoret
 
-### Your personal Christian prayer companion
+### Build a life of prayer before God.
 
-*"Pray without ceasing." — 1 Thessalonians 5:17*
+*Let your prayers rise.*
 
 <br/>
 
-[![Live](https://img.shields.io/badge/Live-praystead.com-6d28d9?style=for-the-badge&logo=vercel&logoColor=white)](https://praystead.com)
+[![Live](https://img.shields.io/badge/Live-praystead.com-4a2c68?style=for-the-badge&logo=vercel&logoColor=white)](https://praystead.com)
 [![React](https://img.shields.io/badge/React_18-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
@@ -22,19 +22,30 @@
 
 <br/>
 
-> A private, multilingual prayer journal powered by AI — helping you pray deeper, track God's answers, and never forget a prayer request.
+> A private, Scripture-first prayer companion for personal prayer, intercession, prayer rhythms and testimony.
 
 <br/>
 
 </div>
 
+## Why “Qetoret”?
+
+*Qetoret* (קְטֹרֶת) is the Hebrew word for the incense offered before the Lord. Scripture uses rising incense as a picture associated with the prayers of God's people (Psalm 141:2; Revelation 5:8; 8:3–4), and Luke 1:5–25 tells of Zechariah's prayer heard at the altar of incense. Qetoret takes its name from that image: a life of prayer continually brought before God.
+
+Qetoret helps believers **come** before God through Christ, **bring** what is on their heart, **carry** their household, their people, the Church, those in authority and the nations in intercession, **return** in faithful rhythms, **listen**, **respond** in obedience and **remember** His faithfulness. The app is a tool — never a mediator. Access to the Father is through Jesus Christ.
+
+- Product constitution: [docs/QETORET_IDENTITY.md](docs/QETORET_IDENTITY.md)
+- Rename map (what changed, what deliberately did not): [docs/QETORET_MIGRATION.md](docs/QETORET_MIGRATION.md)
+
+> **Formerly Praystead / Pray for Me.** Internal identifiers (`pfm_*` storage keys, the `praystead.com` domain, the Android package `space.praystead.twa`) keep their historical names on purpose so existing installations keep their data and receive updates.
+
 ---
 
 ## ✨ Features
 
-- **🙏 Pray first, sign up only to save** — a visitor can pray a genuine first prayer *before* registering: the landing CTA is "Begin with a prayer", which opens one question ("Who or what is on your heart?") and then a guest-safe prayer session — no account, no AI/translation/community calls, and **nothing sent to the server**. Only afterward does it ask, once, whether to keep the prayer; choosing to save opens warm, contextual auth and then imports it through the normal **encrypted** path. The guest draft lives only in device-local **AES-GCM ciphertext** (non-extractable key in IndexedDB), expires after 24h, and survives a same-device OAuth redirect — honest copy throughout ("This stays on this device until you choose to save it"). Existing users keep a direct **Sign in**, and invite links flow through the unchanged auth path
+- **🙏 Pray first, sign up only to save** — a visitor can pray a genuine first prayer *before* registering: the landing CTA is "Begin with a prayer", which opens one question ("What is on your heart? Bring it before God.") and then a guest-safe prayer session — no account, no AI/translation/community calls, and **nothing sent to the server**. Only afterward does it ask, once, whether to keep the prayer; choosing to save opens warm, contextual auth and then imports it through the normal **encrypted** path. The guest draft lives only in device-local **AES-GCM ciphertext** (non-extractable key in IndexedDB), expires after 24h, and survives a same-device OAuth redirect — honest copy throughout ("This stays on this device until you choose to save it"). Existing users keep a direct **Sign in**, and invite links flow through the unchanged auth path
 - **🗂️ Prayer journal** — capture a request in a single field (your very first prayer *is* the onboarding — write it, save it, pray it); organizing with categories, people and prayer rhythms is optional and one tap away. Add updates and prayer points with Bible verses, mark prayers answered, and revisit testimonies in the Journal's **Active | Answered** segments. Updates and testimonies support **simple formatting** (bold, italic, lists, auto-linked URLs) and **media** — photos, voice notes, video and links — with every file **encrypted on-device before upload** (per-file AES-GCM key, private storage bucket that only ever holds ciphertext). An author can later remove a single attachment or the text from a posted update, and the entry disappears once nothing remains — the answered side is a reflection gallery of God's faithfulness. An optional **People view** appears once several prayers name people, grouping requests by person with latest updates and follow-up dates (pastoral follow-up without a CRM)
-- **🤝 Community** — prayer groups (invite code, link, or QR) with **multiple admins** (promote/demote members, owner & admin badges), a dismissible **first-group checklist** that walks a new leader from invite to praying together (it never offers an action it can't honour — with no requests yet the row reads "Add a request first" and goes there — and its **Invite** step ticks itself off as soon as another member joins, re-checked when the app returns to the foreground rather than by polling), a **Needs attention** row for invitations awaiting you, friends (including a view of your own still-pending outgoing requests, with one-tap cancel), anonymous sharing with a **share preview** that names its audience before you publish, "I'm praying" reactions, member updates and testimonies (with the same formatting and encrypted media as personal updates), two-way sync between your prayer and its shared copies, and translation controls that appear only when a request's language differs from yours — new content stores its **source language** (`content_language`), so even a three-word request in another language reliably offers translation; the original is always preserved behind "Show original", the choice is remembered per group (per prayer for personal ones), and Scripture text never goes through AI translation. The language is **defaulted from the one you're using, and correctable** — bilingual writers get a quiet "Written in English · Change" line inside the existing Organize/advanced disclosure (never a new form field, and nobody is ever asked to pick a language for a prayer). An explicit choice always beats the on-device heuristic; when the heuristic confidently disagrees it *offers* its reading, and only applies it if you tap it. Corrections travel with the prayer through edits, sharing, saving a group request personally, and the offline queue
+- **🤝 Community** — prayer groups (invite code, link, or QR) with **multiple admins** (promote/demote members, owner & admin badges), a dismissible **first-group checklist** that walks a new leader from invite to praying together (it never offers an action it can't honour — with no requests yet the row reads "Add a request first" and goes there — and its **Invite** step ticks itself off as soon as another member joins, re-checked when the app returns to the foreground rather than by polling), a **Needs attention** row for invitations awaiting you, friends (including a view of your own still-pending outgoing requests, with one-tap cancel), anonymous sharing with a **share preview** that names its audience before you publish, **"Carry this prayer"** (takes a request into your own intercession, never a like; the count is information, never a ranking), member updates and testimonies (with the same formatting and encrypted media as personal updates), two-way sync between your prayer and its shared copies, and translation controls that appear only when a request's language differs from yours — new content stores its **source language** (`content_language`), so even a three-word request in another language reliably offers translation; the original is always preserved behind "Show original", the choice is remembered per group (per prayer for personal ones), and Scripture text never goes through AI translation. The language is **defaulted from the one you're using, and correctable** — bilingual writers get a quiet "Written in English · Change" line inside the existing Organize/advanced disclosure (never a new form field, and nobody is ever asked to pick a language for a prayer). An explicit choice always beats the on-device heuristic; when the heuristic confidently disagrees it *offers* its reading, and only applies it if you tap it. Corrections travel with the prayer through edits, sharing, saving a group request personally, and the offline queue
 - **🙌 Intercession queue** — the requests you *explicitly* took on (prayers for someone, requests saved from groups) gather in one Community section. The default session covers only what is **due today** — per-prayer schedules and claimed prayer-chain days, via the same planner as Today; legacy unscheduled requests keep their daily fallback — while **"View all requests I'm carrying"** stays one tap away behind a collapsed disclosure. Sessions resume where you left off, completions feed the same per-prayer log as Today, and a fully-prayed day collapses to a quiet "✓ prayed today" row instead of a dashboard card
 - **👤 Avatars** — an identity aid, not a profile. A person or a group is a coloured tile with initials or one of eight line symbols, derived deterministically from the display name so every account and every group is already recognisable with nothing configured. Optionally, upload a **photo**: it is cropped, resized to 512×512 and re-encoded **on the device** — a canvas redraw, so EXIF (GPS, device, timestamp, embedded thumbnail) simply does not survive — then stored in a private bucket under an opaque object id with **no public URL**, readable only by the people who could already see that person or group (yourself, an accepted friend, a member of a shared group; for a group, its members and pending invitees). If you signed in with Google, your **account picture is the default** without anything being stored — it is read from your own session at render time, so it can never be looked up for anyone else — and any explicit choice you make always beats it. There are no public profiles, no directories, and no avatar browsing
 - **🌱 Grow** — a path, not a catalogue: ONE recommended next step from your own progress (continue an in-progress guide, or the next new one), with the full library of 12 prayer guides and 16 short readings behind "Browse all" and completed guides in a collapsed history — all localized, plus an optional **gospel journey** for anyone exploring the hope behind prayer
@@ -198,7 +209,7 @@ npx supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJEC
 
 ## 💛 No paid feature gating
 
-Praystead currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, end-to-end encryption, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
+Qetoret currently has **no active paid tiers and no plan-based feature gates**. Every capability — advanced scheduling, AI assistance, end-to-end encryption, groups, calendar export, prayer chains — is available to everyone. Private prayers, data export and account deletion are simply how the app works, never an upgrade.
 
 Some of the richer flows use a **Simple vs Advanced** split purely to keep new users from being overloaded — it is a UX distinction, **not** a plan distinction:
 

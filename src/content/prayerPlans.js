@@ -34,6 +34,7 @@ import { PRAYING_FOR_CHILDREN } from './plans/prayingForChildren';
 import { PRAYING_FOR_UNBORN_CHILD } from './plans/prayingForUnbornChild';
 import { HEALING_FROM_CHURCH_HURT } from './plans/healingFromChurchHurt';
 import { PSALMS_STUDY } from './plans/psalmsStudy';
+import { AT_THE_ALTAR } from './plans/atTheAltar';
 import { canUsePlan } from '../lib/planReview';
 
 // Plans are grouped in the UI by CATEGORY so the list stays browsable as it
@@ -272,7 +273,9 @@ export const PLANS = [
   FREEDOM_IN_CHRIST,
   DAVID_HEART,
   BIBLICAL_WISDOM,
-  // Order within a category is display order.
+  // Order within a category is display order. Zechariah at the altar leads
+  // the formation shelf once reviewed: it is the story behind Qetoret's name.
+  AT_THE_ALTAR,
   IDENTITY_IN_CHRIST,
   FRUIT_OF_THE_SPIRIT,
   INTIMACY_WITH_THE_SPIRIT,

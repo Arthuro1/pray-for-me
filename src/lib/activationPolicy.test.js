@@ -221,3 +221,58 @@ describe('returningDayCount', () => {
     expect(returningDayCount({ p1: null })).toBe(0);
   });
 });
+
+// "Who else would you like to carry before God?" — the widening of a prayer life
+// that already exists. It comes last, once, and never to someone already
+// carrying another person.
+describe('the carry invitation', () => {
+  const three = [prayer('p1'), prayer('p2'), prayer('p3')];
+  const THREE_DAYS = { p1: ['2026-08-25'], p2: ['2026-08-26'], p3: ['2026-08-27'] };
+  const answeredEarlier = () => {
+    for (const step of [ACTIVATION_STEPS.RHYTHM, ACTIVATION_STEPS.REMINDER, ACTIVATION_STEPS.ORGANIZE]) {
+      markActivationStepHandled(step);
+    }
+  };
+
+  it('is offered after repeated use when every prayer is still one’s own', () => {
+    answeredEarlier();
+    expect(nextActivationStep({ prayers: three, completions: THREE_DAYS, sessionCompleted: true }))
+      .toBe(ACTIVATION_STEPS.CARRY);
+  });
+
+  it('waits for several distinct days of prayer', () => {
+    answeredEarlier();
+    expect(nextActivationStep({ prayers: three, completions: RETURNED, sessionCompleted: true })).toBeNull();
+  });
+
+  it.each([
+    ['a prayer for someone else', { for_other: true }],
+    ['a request carried from a group', { community_origin_id: 'c1' }],
+    ['a prayer placed in an outward circle', { circle: 'household' }],
+  ])('never asks someone already carrying others (%s)', (_label, extra) => {
+    answeredEarlier();
+    const prayers = [prayer('p1', extra), prayer('p2'), prayer('p3')];
+    expect(nextActivationStep({ prayers, completions: THREE_DAYS, sessionCompleted: true })).toBeNull();
+  });
+
+  it('treats "My heart" as one’s own prayer, not as carrying someone', () => {
+    answeredEarlier();
+    const prayers = [prayer('p1', { circle: 'self' }), prayer('p2'), prayer('p3')];
+    expect(nextActivationStep({ prayers, completions: THREE_DAYS, sessionCompleted: true }))
+      .toBe(ACTIVATION_STEPS.CARRY);
+  });
+
+  it('is asked once', () => {
+    answeredEarlier();
+    markActivationStepHandled(ACTIVATION_STEPS.CARRY);
+    expect(nextActivationStep({ prayers: three, completions: THREE_DAYS, sessionCompleted: true })).toBeNull();
+  });
+});
+
+describe('placing a prayer in a circle counts as organizing it', () => {
+  it('does not ask to organize a journal that already uses circles', () => {
+    const prayers = [prayer('p1', { circle: 'church' }), prayer('p2'), prayer('p3')];
+    markActivationStepHandled(ACTIVATION_STEPS.RHYTHM);
+    expect(nextActivationStep({ prayers })).not.toBe(ACTIVATION_STEPS.ORGANIZE);
+  });
+});

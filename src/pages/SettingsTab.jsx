@@ -29,6 +29,7 @@ import Avatar from '../components/shared/Avatar';
 import AvatarEditor from '../components/shared/AvatarEditor';
 import { fetchMyAvatar, saveMyAvatar } from '../lib/profileAvatars';
 import { identityPhotoUrlFrom, withIdentityPhoto } from '../lib/identityPhoto';
+import { APP_NAME, FILE_PREFIX } from '../lib/brand';
 
 // Version comes from package.json via Vite's `define` (see vite.config.js), so
 // the About line never drifts. Fallback keeps it defined outside a Vite build.
@@ -357,7 +358,7 @@ export default function SettingsTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `praystead-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `${FILE_PREFIX}-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     track(EVENTS.DATA_EXPORTED);
@@ -749,7 +750,7 @@ export default function SettingsTab() {
 
             {settings.notificationsGranted && (
               <button
-                onClick={() => new Notification('Praystead 🙏', { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
+                onClick={() => new Notification(`${APP_NAME} 🙏`, { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
                 title={t(lang, 'tipTestNotif')}
                 className="w-full mt-3 text-sm py-2 rounded-xl font-medium"
                 style={{ background: 'var(--accent-soft)', color: 'var(--accent)', border: '0.5px solid var(--accent-border)' }}
@@ -860,7 +861,7 @@ export default function SettingsTab() {
           <p className="text-sm font-medium italic mb-2 leading-relaxed" style={{ color: 'var(--accent)' }}>{t(lang, 'motto')}</p>
           <p className="text-xs font-medium" style={{ color: 'var(--accent)', opacity: 0.6 }}>James 5:16</p>
         </div>
-        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>Praystead v{APP_VERSION}</p>
+        <p className="text-center text-xs mt-3" style={{ color: 'var(--text-3)' }}>{APP_NAME} v{APP_VERSION}</p>
       </div>
 
       {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}

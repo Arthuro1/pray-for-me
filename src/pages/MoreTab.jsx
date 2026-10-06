@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Compass, CalendarDays, Settings, ChevronRight } from 'lucide-react';
+import { Compass, CalendarDays, Settings, ChevronRight, Feather } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { PageHeader } from '../components/shared/Primitives';
 
-// More is a short bridge to three secondary destinations. It does not mirror
-// Settings sections or duplicate the notification inbox.
+// More is a short bridge to four secondary destinations — the last is the
+// biblical foundation behind the app's name. It does not mirror Settings
+// sections or duplicate the notification inbox.
 export default function MoreTab() {
   const navigate = useNavigate();
   const settings = usePrayerStore((s) => s.settings);
@@ -15,6 +16,7 @@ export default function MoreTab() {
     { key: 'guidance', icon: Compass, label: t(lang, 'guidance'), description: t(lang, 'moreGuidanceDesc'), to: '/guidance' },
     { key: 'calendar', icon: CalendarDays, label: t(lang, 'calendar'), description: t(lang, 'moreCalendarDesc'), to: '/calendar' },
     { key: 'settings', icon: Settings, label: t(lang, 'settingsAndHelp'), description: t(lang, 'moreSettingsHelpDesc'), to: '/settings' },
+    { key: 'about', icon: Feather, label: t(lang, 'aboutTitle'), description: t(lang, 'moreAboutDesc'), to: '/about' },
   ];
 
   const go = (to) => {

@@ -53,7 +53,7 @@ describe('planPreviewPage', () => {
   it('names the plan in the sharer’s language', () => {
     const html = planPreviewPage({ planId: 'altar7', token: TOKEN, lang: 'fr' });
     const plan = PLAN_PREVIEW.plans.altar7;
-    expect(html).toContain(`<meta property="og:title" content="${esc(plan.title.fr)} · Praystead" />`);
+    expect(html).toContain(`<meta property="og:title" content="${esc(plan.title.fr)} · Qetoret" />`);
     expect(html).toContain(`content="${esc(`${plan.sub.fr} · ${plan.days.fr}`)}"`);
     expect(html).toContain('<meta property="og:image" content="https://praystead.com/og/plans/altar7.png" />');
     expect(html).toContain(`<meta property="og:url" content="https://praystead.com/plans/altar7/${TOKEN}" />`);
@@ -62,7 +62,7 @@ describe('planPreviewPage', () => {
 
   it('falls back to English for an unknown language', () => {
     const html = planPreviewPage({ planId: 'altar7', lang: 'xx' });
-    expect(html).toContain(`${esc(PLAN_PREVIEW.plans.altar7.title.en)} · Praystead`);
+    expect(html).toContain(`${esc(PLAN_PREVIEW.plans.altar7.title.en)} · Qetoret`);
   });
 
   it('shows the generic preview for an unknown or malformed plan', () => {

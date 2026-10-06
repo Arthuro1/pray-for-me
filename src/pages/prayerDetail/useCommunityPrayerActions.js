@@ -107,12 +107,12 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
     if (!wasReacted && !alreadyInPersonal) {
       const groupName = groups.find((g) => g.id === communityPrayer.group_id)?.name || null;
       const res = await addFromCommunity(communityPrayer, groupName);
-      if (!res?.error) toast.success(t(lang, 'addedToMyPrayers'));
+      if (!res?.error) toast.success(t(lang, 'carryAdded'));
     } else if (wasReacted) {
       const savedCopy = prayers.find((p) => p.community_origin_id === communityPrayer.id);
       if (savedCopy) {
         softDeletePrayer(savedCopy.id);
-        toast.success(t(lang, 'removedFromList'));
+        toast.success(t(lang, 'carryRemoved'));
       }
     }
     setTogglingPraying(false);

@@ -11,6 +11,7 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import { todayKey } from '../lib/prayedLog';
 import { nextReturnLabel } from '../lib/scheduleDraft';
 import PrayerSession from './PrayerSession';
+import RiseMark from './shared/RiseMark';
 
 // Shown right after a new personal prayer is saved: a calm confirmation with ONE
 // decision — pray now, or be done. "Pray now" opens a real prayer session on the
@@ -22,7 +23,10 @@ import PrayerSession from './PrayerSession';
 // already said "Saved privately", so this panel leads with the prayer itself and
 // with when it comes back — repeating the reassurance a third time would only
 // make a private prayer feel riskier than it is.
-export default function PrayerSavedStep({ prayerId, title, description, encrypted = false, schedule = null, lang, onClose }) {
+// The very FIRST saved prayer is a threshold, so it is named as one — "Your
+// prayer altar has begun" — with the single next step a life of prayer needs:
+// choosing how often to return. Every later save keeps the plain confirmation.
+export default function PrayerSavedStep({ prayerId, title, description, encrypted = false, schedule = null, lang, onClose, onChooseRhythm }) {
   const [praying, setPraying] = useState(false);
   const { prayers, categories, markPrayedOn } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, categories: s.categories, markPrayedOn: s.markPrayedOn }))
@@ -43,6 +47,8 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
   // name (a one-off due today, "no fixed schedule"), in which case we say nothing
   // rather than hedge.
   const nextReturn = nextReturnLabel(schedule ?? savedPrayer.schedule, lang);
+  const isFirstPrayer = prayers.length === 1 && prayers[0].id === prayerId;
+  const heading = t(lang, isFirstPrayer ? 'altarBegunTitle' : 'prayerSavedTitle');
 
   if (praying) {
     const prayer = savedPrayer;
@@ -65,7 +71,7 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={t(lang, 'prayerSavedTitle')}
+        aria-label={heading}
         className="w-full max-w-md mx-auto rounded-t-3xl md:rounded-3xl px-6 pt-6 pb-8 md:shadow-2xl"
         style={{ background: 'var(--surface)' }}
         onClick={(e) => e.stopPropagation()}
@@ -87,11 +93,19 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
 
         {/* Compact success confirmation */}
         <div className="text-center mb-6">
-          <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--success-soft, #e8f5ed)' }}>
-            <Check size={26} style={{ color: 'var(--success)' }} />
-          </div>
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{t(lang, 'prayerSavedTitle')}</h2>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>{t(lang, 'savedOnToday')}</p>
+          {isFirstPrayer ? (
+            <div className="mx-auto mb-2 flex h-14 items-end justify-center" aria-hidden="true">
+              <RiseMark size={44} />
+            </div>
+          ) : (
+            <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--success-soft, #e8f5ed)' }}>
+              <Check size={26} style={{ color: 'var(--success)' }} />
+            </div>
+          )}
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--text-1)' }}>{heading}</h2>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-3)' }}>
+            {t(lang, isFirstPrayer ? 'altarBegunBody' : 'savedOnToday')}
+          </p>
           {/* When it comes back — the one thing this moment can usefully add,
               and only when the schedule really has a next day to name. */}
           {nextReturn && (
@@ -111,7 +125,7 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
         <button
           onClick={() => setPraying(true)}
           className="w-full flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-white mb-2.5"
-          style={{ background: 'linear-gradient(135deg, #a78bfa, #7c5cfc)' }}
+          style={{ background: 'var(--plum)' }}
         >
           <HandHeart size={17} /> {t(lang, 'prayNowCta')}
         </button>
@@ -122,6 +136,16 @@ export default function PrayerSavedStep({ prayerId, title, description, encrypte
         >
           {t(lang, 'doneBtn')}
         </button>
+        {isFirstPrayer && onChooseRhythm && (
+          <button
+            type="button"
+            onClick={() => onChooseRhythm(savedPrayer)}
+            className="mt-2 w-full min-h-[44px] text-sm font-semibold focus-visible:ring-2 rounded-xl"
+            style={{ color: 'var(--accent)' }}
+          >
+            {t(lang, 'altarChooseRhythm')}
+          </button>
+        )}
       </div>
     </div>
   );

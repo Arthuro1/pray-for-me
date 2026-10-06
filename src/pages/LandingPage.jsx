@@ -1,8 +1,11 @@
-﻿import { useEffect, useRef, useState } from 'react';
-import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2, Repeat } from 'lucide-react';
 import { dirFor, LANGUAGES } from '../i18n';
 import { normalizeTheme } from '../utils/theme';
 import { cachedLandingCopy, FALLBACK_LANDING_COPY, FALLBACK_LANDING_LANG, resolveLandingCopy } from './landing/copy';
+import { APP_NAME } from '../lib/brand';
+import { CIRCLES } from '../lib/circles';
+import { CIRCLE_ICONS } from '../components/shared/circleIcons';
 
 // Keep native language names in the shared registry. Languages whose longer
 // marketing copy is still abbreviated show a clear, translated status label.
@@ -14,17 +17,14 @@ const LANGS = LANGUAGES.map((language) => ({
 }));
 
 const ALL_CODES = LANGS.map(l => l.code);
+// The Play listing follows the Android application id, which keeps its
+// historical name so installed apps keep updating (docs/QETORET_MIGRATION.md).
 const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=space.praystead.twa';
 
-// The three things Praystead does, surfaced right under the hero. Icons/colours are
-// language-independent (defined once); the copy lives in one shared map with an
-// English fallback, so all 16 languages keep working even where the per-language
-// CONTENT below is still an abbreviated placeholder.
-const BENEFIT_META = [
-  { icon: Feather, color: '#a97938' },
-  { icon: Calendar, color: '#60457b' },
-  { icon: CheckCircle, color: '#5f7865' },
-];
+// Four of the seven movements (docs/QETORET_IDENTITY.md §4), surfaced right
+// under the hero in this order: Bring, Carry, Return, Remember. Icons are
+// language-independent; the words come from the landing locale.
+const MOVEMENT_ICONS = [Feather, HandHeart, Repeat, CheckCircle];
 
 const FEATURE_ICONS = {
   BookOpen,
@@ -47,76 +47,80 @@ function detectLang() {
   return ALL_CODES.includes(nav) ? nav : 'en';
 }
 
+// Warm neutral canvas, royal plum for action, gold as a restrained accent.
+// Every text colour holds WCAG AA on its background.
 const THEMES = {
   dark: {
-    bg: '#120f1b',
-    text: '#f8f5ff',
-    textSoft: '#d6ccec',
-    textMuted: '#b4a8c9',
-    textFaint: '#9b8fae',
-    textDim: '#9488a8',
-    textGhost: '#8d82a2',
-    surface: '#171423',
-    surfaceStrong: '#211c31',
-    chipBg: '#171423',
-    border: '#373047',
-    borderStrong: '#4b415f',
-    menuBg: '#171423',
+    bg: '#15111b',
+    text: '#f6efe6',
+    textSoft: '#e2d8e8',
+    textMuted: '#c4b8cc',
+    textFaint: '#a99db1',
+    textDim: '#a093a9',
+    textGhost: '#9d90a6',
+    surface: '#1d1725',
+    surfaceStrong: '#2a2234',
+    chipBg: '#1d1725',
+    border: '#3a3043',
+    borderStrong: '#4e4259',
+    menuBg: '#1d1725',
     menuShadow: '0 8px 24px rgba(0,0,0,0.4)',
-    accentText: '#b19aeb',
-    accentSoftBg: '#28203d',
-    accentChipBg: '#28203d',
-    accentActiveBg: '#33294a',
-    accentBorder: '#493b68',
-    calloutBg: '#1c1730',
-    calloutBorder: '#493b68',
-    previewBg: '#120f1b',
-    previewItemBg: '#211c31',
-    gold: '#9a7ce0',
-    primaryBg: '#7457b8',
-    prayerPreviewBg: '#30215e',
-    prayerPreviewButtonBg: '#f8f5ff',
-    prayerPreviewButtonText: '#30215e',
-    peaceBg: '#173331',
-    peaceText: '#63d1cb',
-    benefitColors: ['#9a7ce0', '#b19aeb', '#63d1cb'],
+    accentText: '#c3a7ec',
+    accentSoftBg: '#2c2238',
+    accentChipBg: '#2c2238',
+    accentActiveBg: '#35293f',
+    accentBorder: '#4a3b5c',
+    calloutBg: '#211731',
+    calloutBorder: '#4a3b5c',
+    previewBg: '#15111b',
+    previewItemBg: '#2a2234',
+    gold: '#d8b06a',
+    goldLine: '#e4c27f',
+    primaryBg: '#6e4fa8',
+    prayerPreviewBg: '#2e1c42',
+    prayerPreviewButtonBg: '#f6efe6',
+    prayerPreviewButtonText: '#2e1c42',
+    peaceBg: '#1a302a',
+    peaceText: '#8fcab8',
+    movementColors: ['#d8b06a', '#c3a7ec', '#8fcab8', '#e4c27f'],
     ctaShadow: '0 12px 32px rgba(0,0,0,0.28)',
     ctaShadowBig: '0 18px 44px rgba(0,0,0,0.34)',
   },
   light: {
-    bg: '#f8f7fd',
-    text: '#251e35',
-    textSoft: '#4b405f',
-    textMuted: '#74628f',
-    textFaint: '#6f637f',
-    textDim: '#6f637f',
-    textGhost: '#6f637f',
-    surface: '#ffffff',
-    surfaceStrong: '#f0ecf8',
-    chipBg: '#ffffff',
-    border: '#ded8ee',
-    borderStrong: '#c9bfe2',
-    menuBg: '#ffffff',
-    menuShadow: '0 8px 24px rgba(26,22,48,0.14)',
-    accentText: '#7457b8',
-    accentSoftBg: '#eeebfa',
-    accentChipBg: '#eeebfa',
-    accentActiveBg: '#e6e0f5',
-    accentBorder: '#d8cfee',
-    calloutBg: '#30215e',
-    calloutBorder: '#5d43a7',
-    previewBg: '#ffffff',
-    previewItemBg: '#f0ecfb',
-    gold: '#7457b8',
-    primaryBg: '#7457b8',
-    prayerPreviewBg: '#30215e',
-    prayerPreviewButtonBg: '#ffffff',
-    prayerPreviewButtonText: '#30215e',
-    peaceBg: '#e7f7f5',
-    peaceText: '#249e98',
-    benefitColors: ['#7457b8', '#8c76c9', '#249e98'],
-    ctaShadow: '0 12px 30px rgba(48,33,63,0.18)',
-    ctaShadowBig: '0 18px 42px rgba(48,33,63,0.22)',
+    bg: '#f7f3ec',
+    text: '#261b31',
+    textSoft: '#463a52',
+    textMuted: '#6b5e75',
+    textFaint: '#685c6f',
+    textDim: '#685c6f',
+    textGhost: '#685c6f',
+    surface: '#fffdf9',
+    surfaceStrong: '#f1ebe1',
+    chipBg: '#fffdf9',
+    border: '#e6ddd0',
+    borderStrong: '#d5c8b6',
+    menuBg: '#fffdf9',
+    menuShadow: '0 8px 24px rgba(38,27,49,0.14)',
+    accentText: '#5b3d82',
+    accentSoftBg: '#efe8f4',
+    accentChipBg: '#efe8f4',
+    accentActiveBg: '#e6dcef',
+    accentBorder: '#dccfe6',
+    calloutBg: '#2e1c42',
+    calloutBorder: '#4a2c68',
+    previewBg: '#fffdf9',
+    previewItemBg: '#f5ecdc',
+    gold: '#8b6124',
+    goldLine: '#d9ae62',
+    primaryBg: '#5b3d82',
+    prayerPreviewBg: '#2e1c42',
+    prayerPreviewButtonBg: '#fffdf9',
+    prayerPreviewButtonText: '#2e1c42',
+    peaceBg: '#e6f1ec',
+    peaceText: '#2f6b5d',
+    movementColors: ['#8b6124', '#5b3d82', '#3f7a6c', '#8b6124'],
+    ctaShadow: '0 12px 30px rgba(46,28,66,0.18)',
+    ctaShadowBig: '0 18px 42px rgba(46,28,66,0.22)',
   },
 };
 
@@ -159,6 +163,35 @@ function FAQ({ q, a, T }) {
   );
 }
 
+// Seven concentric rings, innermost = My heart. Decorative only: the ordered
+// list beside it carries the words, so a screen reader hears the list once.
+function CircleRings({ T }) {
+  const rings = CIRCLES.map((circle, i) => ({ circle, r: 22 + i * 21 }));
+  return (
+    <svg viewBox="0 0 320 320" className="h-auto w-full max-w-[20rem]" aria-hidden="true" focusable="false">
+      {[...rings].reverse().map(({ circle, r }, i) => (
+        <circle
+          key={circle}
+          cx="160"
+          cy="160"
+          r={r}
+          fill={i % 2 ? T.surface : T.surfaceStrong}
+          stroke={T.borderStrong}
+          strokeWidth="1"
+        />
+      ))}
+      <circle cx="160" cy="160" r="22" fill={T.prayerPreviewBg} />
+      <path
+        d="M154 176C162 171 164 165 160 158C157 152 157 147 161 141C163 138 165 136 167 134"
+        fill="none"
+        stroke={T.goldLine}
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 // `onBeginPrayer` opens the pray-first guest flow (the hero and journal CTAs);
 // `onSignIn` is the direct path to authentication (the nav + footer "Sign in"),
 // preserved for people who already have an account.
@@ -185,8 +218,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [theme, setTheme] = useState(() => {
     return normalizeTheme(localStorage.getItem('pfm_theme'));
   });
-  // The nine-card feature grid is folded away by default so the hero + three core
-  // benefits carry the first impression; visitors opt in to the full list.
+  // The nine-card feature grid is folded away by default so the hero and the
+  // movements carry the first impression; visitors opt in to the full list.
   const [showAllFeatures, setShowAllFeatures] = useState(false);
   const T = THEMES[theme];
   const activeLang = LANGS.find(l => l.code === lang);
@@ -298,11 +331,15 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
   const {
     content: c,
-    benefits,
+    movements,
+    circles,
+    why,
+    preview,
     explore,
     beginLabel,
     playStore,
     hero,
+    heroReassurance,
     samplePrayerTitle,
     scripturePreviewPoints,
     scriptureReferences,
@@ -320,7 +357,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <nav className="constellation-landing__nav mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-4 sm:gap-4 sm:px-6 sm:py-5 md:px-12">
         <div className="flex items-center gap-2.5 shrink-0">
           <img src="/logo.svg" alt="" className="w-8 h-8 rounded-lg" />
-          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">Praystead</span>
+          <span className="hidden text-lg font-semibold tracking-tight min-[430px]:inline">{APP_NAME}</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -414,17 +451,19 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         </div>
       </nav>
 
-      {/* Hero: lived prayer experience first, product preview second. */}
+      {/* Hero: who Qetoret is for and the one first step — pray. */}
       <section className="constellation-landing__hero relative mx-auto grid max-w-6xl items-center gap-12 px-6 pb-24 pt-14 md:grid-cols-[1.02fr_.98fr] md:gap-16 md:pt-20">
         <div className="constellation-landing__hero-copy relative min-w-0">
-          <h1 className="editorial-heading text-5xl leading-[1.02] sm:text-6xl lg:text-7xl" style={{ color: T.text }}>
+          <div className="mb-5 flex items-center gap-2 text-xs font-bold uppercase tracking-[.2em]">
+            <span>{APP_NAME}</span>
+            <span aria-hidden="true">·</span>
+            <span className="normal-case tracking-normal font-semibold">{hero.promise}</span>
+          </div>
+          <h1 className="editorial-heading rise-in text-5xl leading-[1.02] sm:text-6xl lg:text-7xl" style={{ color: T.text }}>
             {hero.title}
           </h1>
-          <p className="editorial mt-5 max-w-xl text-2xl leading-snug" style={{ color: T.accentText }}>
-            {hero.promise}
-          </p>
-          <p className="mt-5 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
-          <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <p className="mt-6 max-w-lg text-base" style={{ color: T.textMuted, lineHeight: 1.75 }}>{hero.subtitle}</p>
+          <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <button
               onClick={onBeginPrayer}
               className="pressable min-h-[52px] rounded-xl px-7 py-3 text-sm font-bold text-white"
@@ -432,26 +471,46 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             >
               {beginLabel}
             </button>
-            <GooglePlayLink label={playStore.cta} T={T} />
+            <button
+              onClick={onSignIn}
+              className="pressable min-h-[52px] rounded-xl px-6 py-3 text-sm font-semibold"
+              style={{ background: T.surface, color: T.text, border: `1px solid ${T.borderStrong}` }}
+            >
+              {c.signIn}
+            </button>
           </div>
-          <button
-            onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
-            className="pressable mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold"
-            style={{ color: T.textSoft }}
-          >
-            {c.howItWorks} <ChevronDown size={15} aria-hidden="true" />
-          </button>
+          <p className="mt-4 flex max-w-md items-start gap-2 text-xs leading-relaxed" style={{ color: T.textFaint }}>
+            <Lock size={13} className="mt-0.5 shrink-0" aria-hidden="true" /> {heroReassurance}
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1">
+            <button
+              onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+              className="pressable inline-flex min-h-11 items-center gap-2 rounded-xl text-sm font-semibold"
+              style={{ color: T.textSoft }}
+            >
+              {c.howItWorks} <ChevronDown size={15} aria-hidden="true" />
+            </button>
+            <a
+              href={GOOGLE_PLAY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold underline-offset-4 hover:underline"
+              style={{ color: T.accentText }}
+            >
+              <Smartphone size={15} aria-hidden="true" /> {playStore.cta}
+            </a>
+          </div>
         </div>
 
-        {/* A truthful preview of the actual journey: Today → focused prayer →
-            remembrance. Its Pray now action enters the same guest flow as the
-            primary CTA; no fabricated usage statistics. */}
-        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label="Praystead product preview">
+        {/* A truthful preview of the actual journey: today's prayers, a prayer
+            carried for months, a testimony. Its Pray now action enters the same
+            guest flow as the primary CTA; no fabricated usage statistics. */}
+        <div className="constellation-landing__preview relative mx-auto w-full max-w-lg" aria-label={`${APP_NAME} — ${preview.altarToday}`}>
           <div className="constellation-landing__preview-frame relative overflow-hidden rounded-[1.75rem] p-3 sm:p-4" style={{ background: T.surface, border: `1px solid ${T.borderStrong}`, boxShadow: T.ctaShadowBig }}>
             <div className="flex items-center justify-between px-2 py-2">
               <div className="flex items-center gap-2.5">
                 <img src="/logo.svg" alt="" className="h-7 w-7 rounded-lg" />
-                <span className="text-xs font-bold" style={{ color: T.text }}>Praystead</span>
+                <span className="text-xs font-bold" style={{ color: T.text }}>{APP_NAME}</span>
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: T.textDim }}>{todayLabel}</span>
             </div>
@@ -459,7 +518,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               <span className="constellation-landing__preview-art" aria-hidden="true">
                 <img src="/assets/constellation/community-sky-dark-transparent.png" alt="" />
               </span>
-              <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.62)' }}>{benefits[1].title}</p>
+              <p className="relative text-[10px] font-bold uppercase tracking-[.16em]" style={{ color: 'rgba(255,255,255,.66)' }}>{preview.altarToday}</p>
               <p className="editorial relative mt-5 max-w-[18rem] text-2xl leading-snug">{samplePrayerTitle}</p>
               <button
                 type="button"
@@ -471,41 +530,120 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               </button>
             </div>
             <div className="grid gap-2 p-2 pt-3 sm:grid-cols-2">
-              <div className="min-h-24 p-4" style={{ borderInlineStart: `2px solid ${T.gold}`, background: T.previewItemBg }}>
-                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.gold }}>{c.calloutPreviewLabel}</p>
-                <p className="editorial mt-3 text-sm leading-relaxed" style={{ color: T.text }}>{c.verse}</p>
+              <div className="min-h-24 p-4" style={{ borderInlineStart: `2px solid ${T.goldLine}`, background: T.previewItemBg }}>
+                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.gold }}>{preview.carriedLabel}</p>
+                <p className="editorial mt-3 text-sm leading-relaxed" style={{ color: T.text }}>{preview.carriedTitle}</p>
               </div>
               <div className="min-h-24 p-4" style={{ background: T.peaceBg }}>
-                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.peaceText }}>{benefits[2].title}</p>
-                <p className="mt-3 text-sm leading-relaxed" style={{ color: T.textMuted }}>{c.steps[2]?.desc}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[.13em]" style={{ color: T.peaceText }}>{preview.rememberLabel}</p>
+                <p className="mt-3 text-sm leading-relaxed" style={{ color: T.textMuted }}>{preview.rememberText}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Core benefits — the three things Praystead does, up front, before the
-          longer feature list. Centered so it reads cleanly in RTL too. */}
+      {/* Bring · Carry · Return · Remember — the movements of a life of prayer,
+          up front, before anything about features. */}
       <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6">
-        <div className="constellation-landing__benefits grid grid-cols-1 border-block md:grid-cols-3" style={{ borderColor: T.border }}>
-          {benefits.map(({ title, desc }, i) => {
-            const { icon: Icon, color: defaultColor } = BENEFIT_META[i];
-            const color = T.benefitColors?.[i] || defaultColor;
+        <ol className="constellation-landing__benefits grid grid-cols-1 border-block md:grid-cols-2 lg:grid-cols-4" style={{ borderColor: T.border }}>
+          {movements.map(({ title, desc }, i) => {
+            const Icon = MOVEMENT_ICONS[i] || Feather;
+            const color = T.movementColors[i];
             return (
-              <div key={title} className="constellation-landing__benefit px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
+              <li key={title} className="constellation-landing__benefit px-2 py-8 text-start md:px-7" style={{ borderInlineStart: i ? `1px solid ${T.border}` : undefined }}>
                 <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full" style={{ backgroundColor: color + '18', border: `1px solid ${color}35` }}>
-                  <Icon size={20} style={{ color }} />
+                  <Icon size={20} style={{ color }} aria-hidden="true" />
                 </div>
                 <h3 className="editorial text-xl mb-2" style={{ color: T.text }}>{title}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
-              </div>
+              </li>
             );
           })}
+        </ol>
+      </section>
+
+      {/* From your heart to the nations: the seven Intercession Circles. Not
+          levels — the widening reach of intercession. */}
+      <section className="constellation-landing__section mx-auto mb-28 max-w-6xl px-6" aria-labelledby="landing-circles-title">
+        <div className="grid items-center gap-10 md:grid-cols-[.9fr_1.1fr] md:gap-16">
+          <div className="mx-auto w-full max-w-xs md:max-w-sm">
+            <CircleRings T={T} />
+          </div>
+          <div>
+            <div className="constellation-landing__section-heading mb-6">
+              <h2 id="landing-circles-title" className="text-3xl font-bold mb-3">{circles.title}</h2>
+              <p className="max-w-xl text-sm leading-relaxed" style={{ color: T.textMuted }}>{circles.subtitle}</p>
+            </div>
+            <ol className="grid gap-x-6 sm:grid-cols-2">
+              {CIRCLES.map((circle, i) => {
+                const Icon = CIRCLE_ICONS[circle];
+                const item = circles.items[i];
+                return (
+                  <li key={circle} className="flex items-start gap-3 py-3" style={{ borderBlockEnd: `1px solid ${T.border}` }}>
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, color: T.accentText }}>
+                      <Icon size={15} aria-hidden="true" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold" style={{ color: T.text }}>{item.name}</span>
+                      <span className="block text-xs leading-relaxed" style={{ color: T.textFaint }}>{item.desc}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+            <p className="editorial mt-5 text-base" style={{ color: T.accentText }}>{circles.start}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section id="how-it-works" className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24">
+        <div className="constellation-landing__section-heading text-center mb-12">
+          <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
+        </div>
+        <div className="border-block" style={{ borderColor: T.border }}>
+          {c.steps.map(({ title, desc }, i) => {
+            const StepIcon = [Feather, Repeat, CheckCircle][i];
+            return (
+            <div key={title} className="constellation-landing__step flex items-start gap-5 py-6" style={{ borderBlockEnd: i < c.steps.length - 1 ? `1px solid ${T.border}` : undefined }}>
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, border: `1px solid ${T.accentBorder}`, color: T.accentText }}>
+                <StepIcon size={18} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: T.accentChipBg, color: T.accentText }}>
+                    {stepLabel} {i + 1}
+                  </span>
+                  <h3 className="editorial text-lg" style={{ color: T.text }}>{title}</h3>
+                </div>
+                <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
+              </div>
+            </div>
+          );})}
+        </div>
+      </section>
+
+      {/* Why Qetoret? — the name, briefly, with references only: the Bible text
+          itself is never authored here (CLAUDE.md, Scripture rule). */}
+      <section className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24" aria-labelledby="landing-why-title">
+        <div className="p-7 md:p-10" style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: '1.2rem', borderInlineStart: `3px solid ${T.goldLine}` }}>
+          <h2 id="landing-why-title" className="editorial-heading text-3xl mb-4" style={{ color: T.text }}>{why.title}</h2>
+          <p className="text-sm leading-relaxed" style={{ color: T.textMuted, lineHeight: 1.8 }}>{why.body}</p>
+          <p className="mt-6 text-[11px] font-bold uppercase tracking-[.14em]" style={{ color: T.gold }}>{why.referencesLabel}</p>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {why.references.map((ref) => (
+              <li key={ref} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium" style={{ background: T.accentSoftBg, color: T.accentText }}>
+                <BookOpen size={11} aria-hidden="true" /> {ref}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-xs italic leading-relaxed" style={{ color: T.textFaint }}>{why.note}</p>
         </div>
       </section>
 
       {/* Features — the full grid is folded behind "Explore all features" so the
-          landing leads with the three core benefits above, not a wall of cards. */}
+          landing leads with the movements above, not a wall of cards. */}
       <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
         <div className="constellation-landing__section-heading text-center mb-8">
           <h2 className="text-3xl font-bold mb-3">{c.featuresTitle}</h2>
@@ -551,33 +689,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         )}
       </section>
 
-      {/* How it works */}
-      <section id="how-it-works" className="constellation-landing__section px-6 max-w-3xl mx-auto mb-24">
-        <div className="constellation-landing__section-heading text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">{c.stepsTitle}</h2>
-        </div>
-        <div className="border-block" style={{ borderColor: T.border }}>
-          {c.steps.map(({ title, desc }, i) => {
-            const StepIcon = [Feather, HandHeart, CheckCircle][i];
-            return (
-            <div key={title} className="constellation-landing__step flex items-start gap-5 py-6" style={{ borderBlockEnd: i < c.steps.length - 1 ? `1px solid ${T.border}` : undefined }}>
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: T.accentSoftBg, border: `1px solid ${T.accentBorder}`, color: T.accentText }}>
-                <StepIcon size={18} />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: T.accentChipBg, color: T.accentText }}>
-                    {stepLabel} {i + 1}
-                  </span>
-                  <h3 className="editorial text-lg" style={{ color: T.text }}>{title}</h3>
-                </div>
-                <p className="text-xs leading-relaxed" style={{ color: T.textFaint }}>{desc}</p>
-              </div>
-            </div>
-          );})}
-        </div>
-      </section>
-
       {/* Scripture finder callout */}
       <section className="constellation-landing__section px-6 max-w-5xl mx-auto mb-24">
         <div className="constellation-landing__callout relative overflow-hidden p-8 md:p-12 flex flex-col md:flex-row items-center gap-8" style={{ background: T.calloutBg, border: `1px solid ${T.calloutBorder}`, color: '#fff', boxShadow: T.ctaShadow }}>
@@ -587,8 +698,8 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               <BookOpen size={11} /> {c.calloutBadge}
             </div>
             <h2 className="text-2xl md:text-3xl font-bold mb-3">{c.calloutTitle}</h2>
-            <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.76)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
-            <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.52)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
+            <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,.78)', lineHeight: 1.7 }}>{c.calloutDesc}</p>
+            <p className="text-xs mb-5 italic" style={{ color: 'rgba(255,255,255,.62)', lineHeight: 1.7 }}>{c.calloutDisclaimer}</p>
             <button onClick={onBeginPrayer} className="pressable min-h-11 px-6 py-3 rounded-xl text-sm font-semibold" style={{ background: T.prayerPreviewButtonBg, color: T.prayerPreviewButtonText }}>
               {beginLabel}
             </button>
@@ -598,7 +709,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             {/* Example references use the visitor's localized book names —
                 never an English "Philippians" inside another language. */}
             {scriptureReferences.map((verse, index) => (
-              <div key={verse} className="rounded-xl p-3 mb-2" style={{ background: T.previewItemBg, borderLeft: `3px solid ${T.gold}` }}>
+              <div key={verse} className="rounded-xl p-3 mb-2" style={{ background: T.previewItemBg, borderInlineStart: `3px solid ${T.goldLine}` }}>
                 <p className="text-xs mb-1" style={{ color: T.text }}>{scripturePreviewPoints[index]}</p>
                 <p className="text-xs flex items-center gap-1" style={{ color: T.gold }}>
                   <BookOpen size={9} /> {verse}
@@ -632,7 +743,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             </button>
             <GooglePlayLink label={playStore.cta} T={T} />
           </div>
-          <p className="text-xs mt-4 italic" style={{ color: T.textGhost }}>{c.ctaVerse}</p>
+          <p className="editorial text-base mt-6" style={{ color: T.accentText }}>{hero.promise}</p>
         </div>
       </section>
 
@@ -641,7 +752,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="" className="w-6 h-6 rounded-md" />
-            <span className="text-sm font-medium" style={{ color: T.text }}>Praystead</span>
+            <span className="text-sm font-medium" style={{ color: T.text }}>{APP_NAME}</span>
           </div>
           <p className="text-xs" style={{ color: T.textGhost }}>{c.footerBuilt}</p>
           <button onClick={onSignIn} className="pressable min-h-11 rounded-xl px-4 py-2 text-xs font-medium" style={{ background: T.chipBg, color: T.textSoft, border: `0.5px solid ${T.border}` }}>

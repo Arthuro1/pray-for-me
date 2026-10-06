@@ -8,6 +8,7 @@ import {
 } from './i18n';
 import { shouldLoadAuthenticatedShell } from './lib/authSessionHint';
 import { pwaShortcutAction } from './lib/pwaInstall';
+import { APP_NAME } from './lib/brand';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const GuestPrayerFlow = lazy(() => import('./components/GuestPrayerFlow'));
@@ -15,9 +16,9 @@ const AuthenticatedApp = lazy(() => import('./AuthenticatedApp'));
 
 function AppLoader() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-indigo-700">
+    <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--plum-dark)' }}>
       <div className="text-center text-white">
-        <img src="/logo.svg" alt="Praystead" className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
+        <img src="/logo.svg" alt={APP_NAME} className="mx-auto mb-4 h-16 w-16 rounded-2xl" />
         <Loader2 className="mx-auto animate-spin" size={24} aria-hidden="true" />
       </div>
     </div>

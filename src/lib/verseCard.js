@@ -248,7 +248,7 @@ export function readCardPalette(root = document.documentElement) {
   const styles = getComputedStyle(root);
   const token = (name, fallback) => (styles.getPropertyValue(name) || '').trim() || fallback;
   const ink = token('--card-sky-ink', '#f8f5ff');
-  const accent = token('--card-sky-accent', '#b19aeb');
+  const accent = token('--card-sky-accent', '#e4c27f');
   return {
     sky: [token('--card-sky-from', '#19132f'), token('--card-sky-to', '#4a3190')],
     ink,

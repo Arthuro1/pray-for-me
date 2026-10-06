@@ -26,7 +26,7 @@
 //   • Nothing promises an outcome, and day 14 hopes for Christ's return
 //     without setting dates. The doxology is absent from the earliest
 //     manuscripts, so no day is built on it.
-//   • Praystead never speaks for God; no Bible text is stored here.
+//   • Qetoret never speaks for God; no Bible text is stored here.
 //
 // LOCALIZATION: day titles are authored in all 16 languages; the prose is
 // authored in en + fr and falls back through pick() elsewhere

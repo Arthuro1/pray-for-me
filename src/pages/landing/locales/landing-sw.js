@@ -4,45 +4,44 @@ export default {
     "signIn": "Ingia",
     "badge": "Jarida la maombi",
     "howItWorks": "Angalia jinsi inavyofanya kazi",
-    "verse": "“Maombi ya mtu mwenye haki yana nguvu nyingi.” — Yakobo 5:16",
-    "featuresTitle": "Maisha yako ya maombi mahali pamoja",
-    "featuresSub": "Mahitaji yako, nyakati za maombi na maombi yaliyojibiwa, pamoja.",
+    "featuresTitle": "Mahali pamoja kwa maisha yako ya maombi",
+    "featuresSub": "Maombi yako, desturi na shuhuda pamoja.",
     "features": [
       {
         "icon": "Users",
         "color": "#0d9488",
         "title": "Ombeni pamoja",
-        "desc": "Shiriki mahitaji ya maombi na marafiki au kikundi, na muombeane."
+        "desc": "Shiriki hitaji na marafiki au kikundi, na mwombeane."
       },
       {
         "icon": "BookOpen",
         "color": "#7c5cfc",
-        "title": "Jarida la maombi",
+        "title": "Shajara ya maombi",
         "desc": "Andika mahitaji yako na ya wengine, na uongeze habari mpya kadiri muda unavyokwenda."
       },
       {
         "icon": "Calendar",
         "color": "#059669",
-        "title": "Ratiba ya maombi",
-        "desc": "Chagua lini kuombea kila hitaji: mara moja, kila siku au siku maalum."
+        "title": "Desturi za maombi",
+        "desc": "Chagua lini kila ombi lirudi: mara moja, kila siku au siku maalum."
       },
       {
         "icon": "CheckCircle",
         "color": "#0891b2",
-        "title": "Maombi yaliyojibiwa",
-        "desc": "Maombi yako yote yaliyojibiwa na shuhuda zako mahali pamoja."
+        "title": "Shuhuda",
+        "desc": "Hifadhi maombi yaliyojibiwa na shuhuda kama kumbukumbu ya uaminifu wa Mungu."
       },
       {
         "icon": "Sprout",
         "color": "#65a30d",
         "title": "Kua katika maombi",
-        "desc": "Mipango ya maombi, miongozo ya maombi na masomo mafupi yaliyojengwa juu ya Neno la Mungu."
+        "desc": "Mipango ya kuongozwa, miongozo ya maombi na masomo mafupi yaliyojengwa juu ya Maandiko."
       },
       {
         "icon": "Bell",
         "color": "#ea580c",
-        "title": "Vikumbusho vya maombi",
-        "desc": "Kikumbusho cha kila siku cha kuomba, na cha kuwajulia hali watu unaowaombea."
+        "title": "Vikumbusho vya upole",
+        "desc": "Kikumbusho cha kila siku cha kuomba, na kikumbusho cha kuwajulia hali watu unaowaombea."
       },
       {
         "icon": "Smartphone",
@@ -67,18 +66,18 @@ export default {
     "steps": [
       {
         "emoji": "✍️",
-        "title": "Andika hitaji la maombi",
+        "title": "Leta ombi",
         "desc": "Maneno machache yanatosha. Unaweza kuongeza maelezo baadaye."
       },
       {
         "emoji": "🙏",
-        "title": "Omba kila siku",
-        "desc": "Fungua programu na ubonyeze Omba sasa."
+        "title": "Rudi kuomba",
+        "desc": "Kila ombi hurudi siku unazochagua, ili ulirudie katika maombi."
       },
       {
         "emoji": "🎉",
-        "title": "Andika jibu",
-        "desc": "Mungu anapojibu, weka alama kwenye ombi na uandike alichofanya."
+        "title": "Andika ushuhuda",
+        "desc": "Jambo linapotokea, andika jinsi ulivyomwona Mungu akitenda kazi."
       }
     ],
     "calloutBadge": "Mapendekezo ya mistari",
@@ -110,23 +109,8 @@ export default {
       }
     ],
     "ctaTitle": "Una nini moyoni leo?",
-    "ctaVerse": "“Ombeni bila kukoma.” — 1 Wathesalonike 5:17",
     "footerBuilt": "Imejengwa kwa imani · Chanzo wazi · Leseni ya MIT"
   },
-  "benefits": [
-    {
-      "title": "Hakuna kinachosahaulika",
-      "desc": "Wakumbuke wote uliowaahidi kuwaombea."
-    },
-    {
-      "title": "Jua la kuombea leo",
-      "desc": "Kila siku inarudisha mahitaji uliyopanga kuyaombea."
-    },
-    {
-      "title": "Kumbuka uaminifu wa Mungu",
-      "desc": "Hifadhi maombi yaliyojibiwa na shuhuda kama ukumbusho wa aliyoyatenda Mungu."
-    }
-  ],
   "explore": {
     "more": "Chunguza vipengele vyote",
     "less": "Onyesha kidogo"
@@ -138,11 +122,11 @@ export default {
   },
   "languageMenuLabel": "Lugha",
   "translationInProgress": "Tafsiri inaendelea",
-  "heroReassurance": "Hakuna akaunti inayohitajika. Hakuna kinachoondoka kwenye kifaa hiki hadi uchague kukihifadhi.",
+  "heroReassurance": "Huhitaji akaunti. Ombi lako la kwanza linabaki kwenye kifaa hiki hadi utakapochagua kulihifadhi.",
   "hero": {
-    "title": "Mpelekee Mungu yaliyo moyoni mwako.",
-    "promise": "Omba kwa uaminifu. Kumbuka uaminifu wa Mungu.",
-    "subtitle": "Andika mahitaji yako ya maombi. Kila moja linarudi siku unazochagua kuliombea."
+    "title": "Jenga maisha ya maombi mbele za Mungu.",
+    "promise": "Maombi yako na yapande juu kama uvumba.",
+    "subtitle": "Mpelekee Mungu yaliyo moyoni mwako. Waombee familia yako, marafiki, kanisa lako na mataifa. Jenga desturi ya maombi ya uaminifu na ukumbuke uaminifu wake."
   },
   "samplePrayerTitle": "Amani kwa familia yetu",
   "scripturePreviewPoints": [
@@ -155,5 +139,77 @@ export default {
   ],
   "stepLabel": "Hatua",
   "todayLabel": "Leo",
-  "prayNowLabel": "Omba sasa"
+  "prayNowLabel": "Omba sasa",
+  "preview": {
+    "altarToday": "Madhabahu yako leo",
+    "carriedLabel": "Unaliombea tangu Machi 2025",
+    "carriedTitle": "Uponyaji wa baba",
+    "rememberLabel": "Ushuhuda",
+    "rememberText": "Kumbuka yale Mungu amefanya."
+  },
+  "movements": [
+    {
+      "title": "Leta",
+      "desc": "Mpelekee Mungu yaliyo moyoni mwako, kwa maneno yako mwenyewe."
+    },
+    {
+      "title": "Ombea",
+      "desc": "Waombee watu na mahali ambapo Mungu amekukabidhi."
+    },
+    {
+      "title": "Rudi",
+      "desc": "Jenga desturi zinazokurudisha kwenye maombi siku baada ya siku."
+    },
+    {
+      "title": "Kumbuka",
+      "desc": "Andika shuhuda na ukumbuke uaminifu wa Mungu."
+    }
+  ],
+  "circles": {
+    "title": "Kutoka moyoni mwako hadi mataifa",
+    "subtitle": "Maombi hupanuka kadiri muda unavyokwenda. Hizi si ngazi za kufikia, bali ni watu na mahali unaoweza kuwaleta mbele za Mungu.",
+    "start": "Ombi moja linatosha kuanza.",
+    "items": [
+      {
+        "name": "Moyo wangu",
+        "desc": "Safari yako mwenyewe na Mungu"
+      },
+      {
+        "name": "Nyumba yangu",
+        "desc": "Mwenzi, watoto, wazazi, familia"
+      },
+      {
+        "name": "Watu wangu",
+        "desc": "Marafiki, majirani, wafanyakazi wenzako"
+      },
+      {
+        "name": "Kanisa lake",
+        "desc": "Kanisa lako, wachungaji, wamisionari"
+      },
+      {
+        "name": "Wenye mamlaka",
+        "desc": "Viongozi, waamuzi, watumishi wa umma"
+      },
+      {
+        "name": "Mataifa",
+        "desc": "Miji, nchi na makabila"
+      },
+      {
+        "name": "Ufalme na utume",
+        "desc": "Injili, haki na rehema"
+      }
+    ]
+  },
+  "why": {
+    "title": "Kwa nini Qetoret?",
+    "body": "Qetoret ni neno la Kiebrania linalomaanisha uvumba uliotolewa mbele za Mungu. Katika Maandiko, uvumba unaopanda unakuwa picha ya maombi ya watu wa Mungu. Jina Qetoret linatokana na picha hii: maisha ya maombi yanayoletwa mbele za Mungu daima.",
+    "referencesLabel": "Soma katika Maandiko",
+    "references": [
+      "Zaburi 141:2",
+      "Ufunuo 5:8",
+      "Ufunuo 8:3-4",
+      "Luka 1:5-25"
+    ],
+    "note": "Qetoret ni chombo cha maombi tu, kamwe si mpatanishi. Tunamjia Baba kupitia Yesu Kristo."
+  }
 };
