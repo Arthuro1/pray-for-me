@@ -7,8 +7,12 @@ import { Modal, PrimaryButton, SecondaryButton } from './shared/Primitives';
 // The consent read/grant/revoke helpers (hasAiConsent, grantAiConsent,
 // revokeAiConsent) live in lib/aiConsent.js.
 
-// Every AI feature sends one prayer's title plus its details or latest update;
-// `context` only scopes the stored consent.
+// One disclosure, said once: what the AI is (a study aid that is not Scripture
+// and cannot know God's will), what is sent and to whom (the title; details and
+// the latest update only if included; the exact text is shown before the first
+// request — AiOutgoingPreview), and that consent can be withdrawn in Settings.
+// Every AI feature sends one prayer's title plus, optionally, its details or
+// latest update; `context` only scopes the stored consent.
 export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {
   return (
     <Modal label={t(lang, 'aiConsentTitle')} onClose={onCancel} size="sm">
@@ -20,8 +24,6 @@ export default function AiConsentModal({ lang = 'en', context = 'prayer', onAcce
       </div>
 
       <AiDisclaimer lang={lang} variant="full" />
-      <p className="ai-note mt-3">{t(lang, 'aiConsentNoticePrayer')}</p>
-
       <p className="q-dialog__text">{t(lang, 'aiConsentBodyPrayer')}</p>
 
       <div className="q-dialog__actions">

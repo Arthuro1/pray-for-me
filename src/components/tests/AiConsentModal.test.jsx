@@ -50,6 +50,24 @@ describe('AI consent', () => {
     expect(track).toHaveBeenCalledWith(EVENTS.AI_CONSENT_REVOKED);
   });
 
+  // One disclosure, said once — and nothing informed consent needs is left
+  // out: what the AI is (not Scripture, cannot know God's will), what is sent
+  // and to whom, that the optional fields are opt-in, and how to withdraw.
+  it('discloses what the AI is, what is sent and how to withdraw — each once', () => {
+    render(<AiConsentModal lang={lang} context="prayer" onAccept={() => {}} onCancel={() => {}} />);
+    const text = screen.getByRole('dialog').textContent;
+    expect(text).toContain(t(lang, 'aiPostureFull'));
+    expect(text).toContain(t(lang, 'aiConsentBodyPrayer'));
+    expect(text).toContain(t(lang, 'aiConsentFooter'));
+    expect(text).toMatch(/pas l’Écriture/);
+    expect(text).toMatch(/connaître la volonté de Dieu/);
+    expect(text).toMatch(/Anthropic/);
+    expect(text).toMatch(/que si vous les incluez/);
+    expect(text).toMatch(/Paramètres/);
+    // What is sent is said once, not in two paragraphs.
+    expect(text.match(/titre/g)).toHaveLength(1);
+  });
+
   it('the consent modal grants on Accept and calls back', () => {
     const onAccept = vi.fn();
     render(<AiConsentModal lang={lang} context="prayer" onAccept={onAccept} onCancel={() => {}} />);

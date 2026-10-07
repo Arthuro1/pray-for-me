@@ -65,6 +65,15 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   prayer altar is taking shape", "What would you like to do with this prayer
   now?". German: "Meine Nächsten" for the third circle. The vocabulary
   hierarchy is documented in `docs/content/CHRISTIAN_TERMINOLOGY.md`.
+- **AI consent says it once.** The consent dialog had four overlapping texts
+  (a posture paragraph, "What we send…", "To suggest… we send…", and "Your
+  prayers remain private" — misleading, since the title is sent). It now has
+  one posture line (a study aid, not Scripture; the AI cannot know God's will
+  or speak for Him), one accurate data line (the title goes to Claude by
+  Anthropic; details and the latest update only if included; the exact text
+  is shown before the first request), and "You can withdraw this anytime in
+  Settings." Key `aiConsentNoticePrayer` removed; `aiPostureFull`,
+  `aiConsentBodyPrayer`, `aiConsentFooter` rewritten in 16 languages.
 - **Short-layer translations are marked as drafts.** The 14 AI-drafted
   languages of the circle teaching now carry a visible "Draft translation"
   label (landing panel and circle pages) until a named native reviewer signs
