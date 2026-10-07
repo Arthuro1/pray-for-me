@@ -21,12 +21,34 @@ import PlanDetailModal from '../components/PlanDetailModal';
 import PlanShareSheet from '../components/plan/PlanShareSheet';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 
-function PlanSection({ id, label, children }) {
+// `grid` lays the catalogue out in two columns where there is room; the
+// sections that follow the reader (Continue, Start here, Completed) stay one
+// column so their progress reads at full width.
+function PlanSection({ id, label, grid = false, children }) {
   return (
     <section aria-labelledby={id} className="plan-section">
       <h2 id={id} className="section-label">{label}</h2>
-      <div className="plan-list">{children}</div>
+      <div className={`plan-list ${grid ? 'plan-list--grid' : ''}`}>{children}</div>
     </section>
+  );
+}
+
+// One row of category shortcuts: a tap scrolls to that part of the catalogue.
+// Nothing is filtered or hidden — it only shortens the way down a long page.
+function PlanJumps({ lang, categories }) {
+  if (categories.length < 2) return null;
+  const jump = (id) => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById(`plans-${id}`)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  };
+  return (
+    <nav className="plan-jumps" aria-label={t(lang, 'plansJumpLabel')}>
+      {categories.map((group) => (
+        <button key={group.id} type="button" onClick={() => jump(group.id)} className="q-chip pressable">
+          {t(lang, group.labelKey)}
+        </button>
+      ))}
+    </nav>
   );
 }
 
@@ -133,7 +155,7 @@ export default function PlansTab() {
   );
 
   return (
-    <div className="phase-page plans">
+    <div className="phase-page phase-page--wide plans">
       {detailPlan && (
         <PlanDetailModal
           plan={detailPlan}
@@ -170,6 +192,7 @@ export default function PlansTab() {
 
       <div className="phase-page__shell">
         <PageHeader title={t(lang, 'journeysTitle')} subtitle={t(lang, 'journeysSub')} />
+        <PlanJumps lang={lang} categories={categories} />
       </div>
 
       <div className="phase-content">
@@ -211,7 +234,7 @@ export default function PlansTab() {
         </p>
 
         {categories.map((group) => (
-          <PlanSection key={group.id} id={`plans-${group.id}`} label={t(lang, group.labelKey)}>
+          <PlanSection key={group.id} id={`plans-${group.id}`} label={t(lang, group.labelKey)} grid>
             {group.plans.map((plan) => card(plan))}
           </PlanSection>
         ))}

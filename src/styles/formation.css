@@ -1,13 +1,26 @@
 /* Formation — prayer plans, guides, teaching and Scripture. Editorial
    richness through type, not decoration: titles in the serif, clear
-   durations, a thin gold line for progress, Scripture in gold. No emoji tiles,
-   no course cards, no gradients. Layout only; colour, type and controls come
+   durations, a thin gold line for progress, Scripture in gold. A plan's kind
+   is a thin line mark, never an emoji tile; no course cards, no gradients. Layout only; colour, type and controls come
    from tokens and primitives. */
 
 /* ── Plans catalogue ────────────────────────────────────────────────────── */
 .plan-section { margin-block-end: var(--q-space-10); }
-.plan-section > .section-label { margin-block-end: var(--q-space-2); }
+.plan-section > .section-label { margin-block-end: var(--q-space-2); scroll-margin-block-start: calc(4rem + env(safe-area-inset-top)); }
 .plan-list { border-block-start: 1px solid var(--q-border); }
+/* The catalogue in two columns where there is room for both to breathe. */
+@media (min-width: 1100px) {
+  .plan-list--grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--q-space-8); }
+}
+
+/* Category shortcuts: one row; on a phone it scrolls sideways, not wraps. */
+.plan-jumps { display: flex; gap: var(--q-space-2); margin-block: calc(-1 * var(--q-space-2)) var(--q-space-6); overflow-x: auto; scrollbar-width: none; }
+.plan-jumps::-webkit-scrollbar { display: none; }
+.plan-jumps > .q-chip { flex: 0 0 auto; }
+@media (min-width: 640px) { .plan-jumps { flex-wrap: wrap; overflow: visible; } }
+
+/* A plan's kind, as a quiet line mark. */
+.plan-emblem { display: inline-flex; width: 40px; height: 40px; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid var(--q-border); border-radius: 12px; color: var(--q-gold-text); }
 
 .plan-row {
   display: flex;
@@ -38,6 +51,7 @@
 .plan-row__sub { color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.45; }
 .plan-row__meta { margin-block-start: var(--q-space-1); color: var(--q-text-tertiary); font-size: var(--q-type-meta); font-weight: 600; }
 .plan-row__draft { margin-block-start: 2px; }
+.plan-row__chip { justify-self: start; margin-block-start: var(--q-space-1); padding: 1px 9px; border: 1px solid var(--q-border); border-radius: 999px; color: var(--q-text-tertiary); font-size: 0.75rem; font-weight: 600; line-height: 1.6; }
 
 .plan-row--featured { padding-block: var(--q-space-5); }
 .plan-row--featured .plan-row__title { font-size: var(--q-type-prayer); font-weight: 450; }

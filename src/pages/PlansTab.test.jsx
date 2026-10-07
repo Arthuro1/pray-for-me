@@ -171,3 +171,30 @@ describe('PlansTab — Intercession Circles', () => {
     for (const other of circles.slice(1)) expect(dialog.textContent).not.toContain(nameOf(other));
   });
 });
+
+describe('PlansTab — finding your way', () => {
+  it('offers one row of category shortcuts that only scrolls, never filters', () => {
+    renderPlans();
+    const jumps = screen.getByRole('navigation', { name: t(lang, 'plansJumpLabel') });
+    const chip = within(jumps).getAllByRole('button')[0];
+    const target = document.getElementById(`plans-${PLAN_CATEGORIES[0].id}`);
+    target.scrollIntoView = vi.fn();
+    fireEvent.click(chip);
+    expect(target.scrollIntoView).toHaveBeenCalled();
+    // Every catalogue section is still on the page.
+    expect(document.querySelectorAll('.plan-list--grid').length).toBeGreaterThan(1);
+  });
+
+  it('says a plan’s length once — on its chip, never again in the subtitle', async () => {
+    const { loadLocale } = await import('../i18n');
+    const toDigits = (n, zero) => String(n).replace(/\d/g, (d) => String.fromCharCode(zero + Number(d)));
+    for (const code of ['en', 'fr', 'es', 'pt', 'de', 'ru', 'zh', 'ja', 'ko', 'ar', 'fa', 'hi', 'id', 'sw', 'tl', 'am']) {
+      await loadLocale(code);
+      for (const plan of PLANS) {
+        const sub = t(code, plan.subKey);
+        const forms = [String(plan.count), toDigits(plan.count, 0x0660), toDigits(plan.count, 0x06f0)];
+        expect(forms.some((form) => sub.includes(form)), `${code} ${plan.subKey}: ${sub}`).toBe(false);
+      }
+    }
+  });
+});
