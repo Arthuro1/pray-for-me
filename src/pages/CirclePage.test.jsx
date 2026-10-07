@@ -74,7 +74,7 @@ describe('CirclePage', () => {
     const rows = within(plansSection()).getAllByRole('button');
     expect(rows).toHaveLength(expected.length);
     expected.forEach((plan, i) => expect(rows[i].textContent).toContain(t(lang, plan.titleKey)));
-    expect(plansSection().querySelector('.plan-row__circle')).toBeNull();
+    expect(within(plansSection()).queryByText(t(lang, circleLabelKey('household')))).toBeNull();
   });
 
   it('opens a plan\'s details on the Plans page, counted as coming from a circle', () => {

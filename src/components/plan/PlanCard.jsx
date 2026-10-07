@@ -1,34 +1,24 @@
 import { ChevronRight } from 'lucide-react';
 import { t } from '../../i18n';
 import { isPlanReviewed } from '../../lib/planReview';
-import { circleLabelKey, planCircles } from '../../lib/circles';
-import CircleGlyph from '../shared/CircleGlyph';
 import { StatusLabel } from '../shared/Primitives';
 
 // One plan in the catalogue, as an editorial row: its title in the serif, what
 // it is, how long it takes — and, while it runs, where the reader stands, with
 // a thin gold line. A single button whose accessible name carries all of it, so
-// a screen reader hears the row as one thing. No emoji tile, no coloured card.
+// a screen reader hears the row as one thing. No emoji tile, no coloured card,
+// and no circle label: plans are browsed by what they are for, and a plan's
+// circle is said once, in its detail.
 //
 //   progress — { day } when the plan is running for this reader
 //   finished — the reader has walked this plan to its end before
 //   featured — the larger reading used for "Continue" and "Start here"
-//   showCircle — name the plan's primary Intercession Circle above its title
-//                (one quiet line, never every circle it touches); off where
-//                the page is already about that circle
-export default function PlanCard({ plan, lang, progress, finished = false, featured = false, showCircle = true, onOpen }) {
+export default function PlanCard({ plan, lang, progress, finished = false, featured = false, onOpen }) {
   const running = !!progress;
   const day = progress?.day || 1;
-  const circle = showCircle ? planCircles(plan).primary : null;
   return (
     <button type="button" onClick={onOpen} className={`plan-row pressable ${featured ? 'plan-row--featured' : ''}`}>
       <span className="plan-row__body">
-        {circle && (
-          <span className="plan-row__circle">
-            <CircleGlyph circle={circle} size={14} />
-            <span>{t(lang, circleLabelKey(circle))}</span>
-          </span>
-        )}
         <span className="plan-row__title">{t(lang, plan.titleKey)}</span>
         <span className="plan-row__sub">{t(lang, plan.subKey)}</span>
         {/* A draft on screen always says so, in the row and again in the

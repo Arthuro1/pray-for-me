@@ -20,6 +20,11 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   Circle selector in Journal filters is gone, and "By circle" now also works on
   Answered prayers (without the add button), so answered prayers are still
   remembered by circle.
+- **Plans** are browsed by what they are for. The seven circle doors moved
+  from the top of the catalogue into one folded "Explore plans by circle" row
+  after it; catalogue rows no longer name a circle; a plan's details say only
+  "Forms prayer in …" (key `planAlsoConnects` removed; `exploreByCircle`
+  reworded in all 16 languages).
 
 ### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
 

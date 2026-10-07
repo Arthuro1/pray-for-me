@@ -9,25 +9,20 @@ import PlanOverview from './plan/PlanOverview';
 import { canUsePlan, isPlanReviewed } from '../lib/planReview';
 import { isPlanShareable } from '../lib/planShareLink';
 import { circleLabelKey, planCircles } from '../lib/circles';
-import { formatList } from '../lib/scheduleDraft';
 import CircleGlyph from './shared/CircleGlyph';
 import { PrimaryButton, QuietButton, StatusLabel } from './shared/Primitives';
 
-// Where a plan shapes prayer: its primary circle first, any others it touches
-// as one quieter line. Nothing when the plan carries no circle metadata.
-function PlanCircles({ plan, lang }) {
-  const { primary, circles } = planCircles(plan);
+// Where a plan shapes prayer, said once and quietly: its primary circle only.
+// The other circles a plan touches stay in its metadata, where they place it
+// on those circles' pages. Nothing when the plan carries no circle metadata.
+function PlanCircle({ plan, lang }) {
+  const { primary } = planCircles(plan);
   if (!primary) return null;
-  const name = (circle) => t(lang, circleLabelKey(circle));
-  const others = circles.slice(1).map(name);
   return (
-    <div className="plan-detail__circles">
-      <p className="plan-detail__circle">
-        <CircleGlyph circle={primary} size={16} selected />
-        <span>{t(lang, 'planFormsPrayerIn', { circle: name(primary) })}</span>
-      </p>
-      {others.length > 0 && <p className="q-meta">{t(lang, 'planAlsoConnects', { circles: formatList(lang, others) })}</p>}
-    </div>
+    <p className="plan-detail__circle">
+      <CircleGlyph circle={primary} size={16} selected />
+      <span>{t(lang, 'planFormsPrayerIn', { circle: t(lang, circleLabelKey(primary)) })}</span>
+    </p>
   );
 }
 
@@ -68,7 +63,7 @@ export default function PlanDetailModal({ plan: source, lang, running, onStart, 
             <p className="section-label">{t(lang, 'planDays', { n: plan.count })}</p>
             <h2 className="plan-detail__title">{t(lang, plan.titleKey)}</h2>
             <p className="plan-detail__sub">{t(lang, plan.subKey)}</p>
-            <PlanCircles plan={source} lang={lang} />
+            <PlanCircle plan={source} lang={lang} />
             {!isPlanReviewed(source) && (
               <StatusLabel tone="sacred" className="mt-2">{t(lang, 'planCoupleReviewPending')}</StatusLabel>
             )}

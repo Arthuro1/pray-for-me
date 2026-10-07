@@ -28,7 +28,6 @@ import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';
 import { t } from '../i18n';
 import { CIRCLES, circleLabelKey, planCircles } from '../lib/circles';
-import { formatList } from '../lib/scheduleDraft';
 
 const lang = 'fr';
 const planOf = (id) => PLANS.find((plan) => plan.id === id);
@@ -139,8 +138,15 @@ describe('PlansTab', () => {
 describe('PlansTab — Intercession Circles', () => {
   const nameOf = (circle) => t(lang, circleLabelKey(circle));
 
-  it('offers a second way in: the seven circles, each opening its page', () => {
+  // Plans are browsed by what they are for; the circles are a second, quieter
+  // way in — one folded row, not seven doors high on the page.
+  it('folds the circles behind one row that opens onto the seven circle pages', () => {
     renderPlans();
+    expect(screen.queryByRole('navigation', { name: t(lang, 'exploreByCircle') })).toBeNull();
+    const toggle = screen.getByRole('button', { name: t(lang, 'exploreByCircle') });
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+
+    fireEvent.click(toggle);
     const explore = screen.getByRole('navigation', { name: t(lang, 'exploreByCircle') });
     const links = within(explore).getAllByRole('link');
     expect(links.map((link) => link.textContent)).toEqual(CIRCLES.map(nameOf));
@@ -148,23 +154,20 @@ describe('PlansTab — Intercession Circles', () => {
     expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/plans"}');
   });
 
-  it('names a plan\'s primary circle on its row — one circle, never all it touches', () => {
+  it('names no circle on catalogue rows', () => {
+    renderPlans();
+    const catalogue = document.querySelector('.phase-content');
+    for (const circle of CIRCLES) expect(within(catalogue).queryByText(nameOf(circle)), circle).toBeNull();
+  });
+
+  it('says once, in a plan\'s details, where it forms prayer — never every circle it touches', () => {
     renderPlans();
     const plan = PLANS.find((p) => isPlanReviewed(p) && planCircles(p).circles.length > 1 && p.id !== STARTER_PLAN_ID);
     expect(plan).toBeTruthy();
-    const row = screen.getByText(titleOf(plan.id)).closest('button');
-    const { primary, circles } = planCircles(plan);
-    expect(row.querySelector('.plan-row__circle').textContent).toBe(nameOf(primary));
-    for (const other of circles.slice(1)) expect(row.textContent).not.toContain(nameOf(other));
-  });
-
-  it('says in a plan\'s details where it forms prayer, its other circles quieter', () => {
-    renderPlans();
-    const plan = PLANS.find((p) => isPlanReviewed(p) && planCircles(p).circles.length > 1 && p.id !== STARTER_PLAN_ID);
     fireEvent.click(screen.getByText(titleOf(plan.id)));
     const dialog = screen.getByRole('dialog', { name: titleOf(plan.id) });
     const { primary, circles } = planCircles(plan);
     expect(within(dialog).getByText(t(lang, 'planFormsPrayerIn', { circle: nameOf(primary) }))).toBeTruthy();
-    expect(within(dialog).getByText(t(lang, 'planAlsoConnects', { circles: formatList(lang, circles.slice(1).map(nameOf)) }))).toBeTruthy();
+    for (const other of circles.slice(1)) expect(dialog.textContent).not.toContain(nameOf(other));
   });
 });

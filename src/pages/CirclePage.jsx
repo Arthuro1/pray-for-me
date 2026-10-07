@@ -109,7 +109,6 @@ export default function CirclePage({ onPrayInCircle }) {
                   plan={plan}
                   lang={lang}
                   progress={progressById[plan.id]}
-                  showCircle={false}
                   onOpen={() => openPlan(plan)}
                 />
               ))}

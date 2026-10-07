@@ -157,8 +157,8 @@ approvals.
   authored metadata (`plansForCircle`, primary circle first). Praying calls
   `openAddInCircle(circle, { prompt })`. The back link returns to the path in
   router state `{ from, fromState }` (Plans by default; only in-app paths).
-  Opened from Plans ("Explore by circle"), the Journal's circle headings (which
-  reopen "By circle" on return) and the prayer detail's circle eyebrow.
+  Opened from Plans ("Explore plans by circle"), the Journal's circle headings
+  (which reopen "By circle" on return) and the prayer detail's circle sheet.
 - **Prayer composer** (`PrayerForm.jsx`): `CirclePicker compact` is ONE quiet
   row beside "Add a note" and "Organize" — "Intercession circle · Not set" (or
   the chosen circle) — that opens in place onto the seven chips and folds again
@@ -202,10 +202,12 @@ approvals.
   "By circle" works on the Answered segment. Nothing interprets
   why a prayer was answered, and a testimony shared to a group never carries a
   circle.
-- **Plans** (`PlansTab.jsx`): "Explore by circle" — seven doors to the circle
-  pages, beside the journey types; each `PlanCard` names its primary circle in
-  one quiet line; `PlanDetailModal` says "Forms prayer in …" and, quieter,
-  "Also connects with …".
+- **Plans** (`PlansTab.jsx`): plans are browsed by what they are for (the
+  categories). After them, one folded row — "Explore plans by circle" — opens
+  onto the seven doors to the circle pages, which list each circle's plans.
+  Catalogue rows (`PlanCard`) name no circle; `PlanDetailModal` says once,
+  quietly, "Forms prayer in …" (the primary circle only — the other circles a
+  plan touches stay in its metadata, where they place it on those pages).
 - **Plan completion** (`PlanCompletionCard.jsx`): "What do you want to keep
   carrying?" — the plan's own `continueThemes` if it has them, otherwise its
   primary circle's short-layer themes (so no plan needs new prose). Choosing one

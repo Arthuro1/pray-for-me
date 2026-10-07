@@ -13,7 +13,7 @@ import { canUsePlan } from '../lib/planReview';
 import { needsPreStartPersonalization, startGuidedPlan } from '../lib/startGuidedPlan';
 import { track } from '../lib/analytics';
 import { planSource, trackPlanDetailOpened, trackPlansPageViewed } from '../lib/planAnalytics';
-import { PageHeader, PrimaryButton, QuietButton } from '../components/shared/Primitives';
+import { Disclosure, PageHeader, PrimaryButton, QuietButton } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 import PlanCard from '../components/plan/PlanCard';
 import CircleLinks from '../components/circles/CircleLinks';
@@ -36,8 +36,8 @@ function PlanSection({ id, label, children }) {
 //
 // Every plan appears exactly once on the page: under Continue while it runs,
 // as "Start here" for someone who has never finished one, in its category
-// otherwise, and under Completed once walked to the end. "Explore by circle"
-// leads to the circle pages, which list a circle's plans there.
+// otherwise, and under Completed once walked to the end. A folded "Explore
+// plans by circle" row leads to the circle pages, which list a circle's plans.
 //
 // Other screens hand work to this page through router state:
 //   source             — the door the visit came through (lib/planAnalytics.js)
@@ -58,6 +58,7 @@ export default function PlansTab() {
   const [personalizeTarget, setPersonalizeTarget] = useState(null);
   const [shareTarget, setShareTarget] = useState(null);
   const [started, setStarted] = useState(null);
+  const [circlesOpen, setCirclesOpen] = useState(false);
 
   useEffect(() => { trackPlansPageViewed(entrySource); }, [entrySource]);
 
@@ -209,18 +210,24 @@ export default function PlansTab() {
           <span>{t(lang, 'plansTogetherHint')}</span>
         </p>
 
-        {/* A second way in, beside the journey types below: where prayer is
-            shaped. Seven doors to the circle pages, not a second catalogue. */}
-        <section aria-labelledby="plans-circles" className="plan-section">
-          <h2 id="plans-circles" className="section-label">{t(lang, 'exploreByCircle')}</h2>
-          <CircleLinks lang={lang} returnTo={{ from: '/plans' }} labelledBy="plans-circles" className="plan-circles" />
-        </section>
-
         {categories.map((group) => (
           <PlanSection key={group.id} id={`plans-${group.id}`} label={t(lang, group.labelKey)}>
             {group.plans.map((plan) => card(plan))}
           </PlanSection>
         ))}
+
+        {/* A second, quieter way in: plans are browsed by what they are for
+            (above); the circle pages list each circle's plans. One folded
+            row opens onto the seven doors — never a second catalogue. */}
+        <Disclosure
+          id="plans-circles"
+          label={t(lang, 'exploreByCircle')}
+          open={circlesOpen}
+          onToggle={() => setCirclesOpen((open) => !open)}
+          className="plan-section"
+        >
+          <CircleLinks lang={lang} returnTo={{ from: '/plans' }} label={t(lang, 'exploreByCircle')} className="plan-circles" />
+        </Disclosure>
 
         {finished.length > 0 && (
           <PlanSection id="plans-completed" label={t(lang, 'growHistory')}>
