@@ -74,11 +74,13 @@ describe('a study-first day on the shared plan surfaces', () => {
   });
 
   it('closes with the study synthesis rather than automatically creating prayers', () => {
-    const onContinue = vi.fn();
-    render(<PlanCompletionCard plan={plan} lang="fr" onContinue={onContinue} />);
+    const onKeepCarrying = vi.fn();
+    render(<PlanCompletionCard plan={plan} lang="fr" onKeepCarrying={onKeepCarrying} />);
     expect(screen.getByText(plan.completion.fr)).toBeTruthy();
     expect(screen.queryByRole('checkbox')).toBeNull();
-    expect(onContinue).not.toHaveBeenCalled();
+    // Themes to keep carrying are offered, but nothing happens until one is chosen.
+    expect(screen.getByRole('heading', { name: t('fr', 'planKeepCarryingHeading') })).toBeTruthy();
+    expect(onKeepCarrying).not.toHaveBeenCalled();
   });
 
   it('does not retain previous day questions when the host advances', () => {

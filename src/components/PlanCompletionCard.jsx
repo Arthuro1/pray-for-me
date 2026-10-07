@@ -1,37 +1,48 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Share2 } from 'lucide-react';
+import { HandHeart, Share2 } from 'lucide-react';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
 import { PLAN_SOURCES } from '../lib/planAnalytics';
+import { circleLabelKey, planCircles } from '../lib/circles';
+import { useCircleTeaching } from '../hooks/useCircleTeaching';
+import CircleGlyph from './shared/CircleGlyph';
 import RiseMark from './shared/RiseMark';
-import { PrimaryButton, QuietButton } from './shared/Primitives';
+import { QuietButton } from './shared/Primitives';
+
+// The themes a finished plan offers to keep carrying: its own authored
+// continuation themes when it has them, otherwise the themes of its primary
+// Intercession Circle (the circle's short layer, already in every language) —
+// so no plan needs new prose to end in lasting prayer.
+function keepCarryingThemes(plan, lang, teaching, circle) {
+  if (plan.continueThemes?.length) {
+    return plan.continueThemes.map((theme) => ({
+      id: theme.id,
+      title: t(lang, theme.titleKey),
+      desc: theme.descKey ? t(lang, theme.descKey) : null,
+    }));
+  }
+  return teaching?.circle(circle)?.themes.map((theme) => ({ ...theme, desc: null })) || [];
+}
 
 // What a rich plan says once its last day is behind the reader.
 //
 // Calm, and honest: it names what they did — sought God, worked on their own
 // heart, prayed about a marriage that may or may not come — and it does NOT say
-// that they are now ready or that anything has been earned. The one forward
-// action is optional: carry some of the themes on as ordinary recurring prayers.
+// that they are now ready or that anything has been earned.
 //
-// This list IS the "what would you like this plan to emphasize?" question,
-// asked where it can finally do something. It used to be put at the START of the
-// plan as well, and the only thing that answer ever did was pre-tick these boxes
-// three weeks later — so it is asked once, here, with everything offered.
-export default function PlanCompletionCard({ plan, lang, onContinue, onRelationshipNext, onShare }) {
-  const themes = plan.continueThemes || [];
-  // Recurring prayers are a lasting choice, so completion never opts the
-  // reader into all of them by default.
-  const [selected, setSelected] = useState([]);
-  const [done, setDone] = useState(false);
-
-  const toggle = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-
-  const chosen = themes.filter((th) => selected.includes(th.id));
+// Then it asks what they want to keep carrying, which turns a temporary journey
+// into lasting prayer. Choosing a theme opens the composer in the plan's circle
+// with the theme shown above an EMPTY field (`onKeepCarrying({ circle, prompt
+// })`): the person writes the prayer, and nothing is ever created for them.
+// They can come back and choose another.
+export default function PlanCompletionCard({ plan, lang, onKeepCarrying, onRelationshipNext, onShare }) {
+  const teaching = useCircleTeaching(lang);
+  const circle = planCircles(plan).primary;
+  const themes = onKeepCarrying ? keepCarryingThemes(plan, lang, teaching, circle) : [];
   const relationshipActionKey = plan.lifeStage === 'engaged'
     ? 'planCoupleContinueMarriage'
     : (plan.lifeStage === 'married' && plan.renewable ? 'planCoupleRepeat' : null);
-  const continuationChoiceOpen = themes.length > 0 && !done;
+  const continuationOffered = themes.length > 0;
 
   return (
     <section className="plan-complete">
@@ -59,57 +70,48 @@ export default function PlanCompletionCard({ plan, lang, onContinue, onRelations
         </section>
       )}
 
-      {themes.length > 0 && !done && (
-        <>
-          <h4 className="plan-complete__question">{t(lang, 'planContinueHeading')}</h4>
-          <div role="group" aria-label={t(lang, 'planContinueHeading')} className="plan-complete__themes">
-            {themes.map((th) => {
-              const on = selected.includes(th.id);
-              return (
+      {continuationOffered && (
+        <section aria-labelledby={`plan-keep-${plan.id}`} className="plan-complete__keep">
+          <h4 id={`plan-keep-${plan.id}`} className="plan-complete__question">{t(lang, 'planKeepCarryingHeading')}</h4>
+          <p className="plan-complete__hint">{t(lang, 'planKeepCarryingHint')}</p>
+          {circle && (
+            <p className="section-label plan-complete__circle">
+              <CircleGlyph circle={circle} size={16} />
+              <span>{t(lang, circleLabelKey(circle))}</span>
+            </p>
+          )}
+          <ul className="plan-complete__themes">
+            {themes.map((theme) => (
+              <li key={theme.id}>
                 <button
-                  key={th.id}
                   type="button"
-                  role="checkbox"
-                  aria-checked={on}
-                  onClick={() => toggle(th.id)}
+                  onClick={() => onKeepCarrying({ circle, prompt: theme.title })}
                   className="plan-complete__theme pressable"
                 >
-                  <span className="q-check__box" aria-hidden="true" style={on ? { borderColor: 'var(--q-action-primary)', background: 'var(--q-action-primary)' } : undefined}>
-                    {on && <Check size={14} strokeWidth={2.5} />}
+                  <span className="min-w-0 flex-1">
+                    <span className="plan-complete__theme-title">{theme.title}</span>
+                    {theme.desc && <span className="plan-complete__theme-desc">{theme.desc}</span>}
                   </span>
-                  <span className="min-w-0">{t(lang, th.titleKey)}</span>
+                  <HandHeart size={18} aria-hidden="true" className="shrink-0" />
                 </button>
-              );
-            })}
-          </div>
-          <PrimaryButton
-            onClick={async () => { await onContinue(chosen); setDone(true); }}
-            disabled={chosen.length === 0}
-            className={`${relationshipActionKey ? 'mb-3 ' : ''}w-full`}
-          >
-            {t(lang, 'planContinueCta')}
-          </PrimaryButton>
-        </>
-      )}
-
-      {done && (
-        <p className={`plan-complete__added ${relationshipActionKey ? 'mb-3' : ''}`} role="status">
-          {t(lang, 'planContinueAdded')}
-        </p>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {/* Router navigation, not a bare href: a plain link reloads the whole
           document, which in the installed PWA re-runs the splash and refetch —
           at the moment someone has just finished thirty days. When continuation
-          choices are also present, this remains a secondary path so the card
-          never presents two competing primary actions. */}
+          themes are offered, this stays a secondary path so the card never
+          presents two competing primary actions. */}
       {relationshipActionKey && (
         <Link
           to="/plans"
           state={{ source: PLAN_SOURCES.COMPLETION }}
           onClick={onRelationshipNext}
-          data-emphasis={continuationChoiceOpen ? 'secondary' : 'primary'}
-          className={`${continuationChoiceOpen ? 'secondary-button' : 'primary-button'} pressable w-full no-underline`}
+          data-emphasis={continuationOffered ? 'secondary' : 'primary'}
+          className={`${continuationOffered ? 'secondary-button' : 'primary-button'} pressable w-full no-underline`}
         >
           {t(lang, relationshipActionKey)}
         </Link>

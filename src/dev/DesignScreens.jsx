@@ -3,8 +3,8 @@
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
 // /vault-setup, /privacy, /feedback, /donate, /ai-consent, /confirm,
-// /first-prayer, /calendar, /saved, /labels, /ai-preview, /circle (?c=<circle>)
-// and /bring-circle render
+// /first-prayer, /calendar, /saved, /labels, /ai-preview, /circle (?c=<circle>),
+// /bring-circle and /plan-done (?p=<plan id>) render
 // the REAL screens inside the real app shell with sample prayers (the vault and
 // key gates replace the shell, as in the app). Every store write is replaced
 // by a local no-op first, and
@@ -47,6 +47,7 @@ import LabelsManager from '../components/LabelsManager';
 import AiOutgoingPreview from '../components/AiOutgoingPreview';
 import useNotificationStore from '../store/notificationStore';
 import PlanDetailModal from '../components/PlanDetailModal';
+import PlanCompletionCard from '../components/PlanCompletionCard';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 import PlanShareSheet from '../components/plan/PlanShareSheet';
 import GuideReader from '../components/GuideReader';
@@ -133,7 +134,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'circle', 'bring-circle', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
+  'circle', 'bring-circle', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -377,6 +378,11 @@ export default function DesignScreens({ screen }) {
         <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />
       )}
       {(screen === 'today' || screen === 'bring' || screen === 'circles' || !SCREENS.includes(screen)) && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
+      {screen === 'plan-done' && planById(searchParams.get('p') || 'kingdomCome14') && (
+        <div className="phase-page"><div className="phase-content">
+          <PlanCompletionCard plan={planById(searchParams.get('p') || 'kingdomCome14')} lang={lang} onKeepCarrying={() => navigate('/__design/bring-circle')} onShare={() => {}} />
+        </div></div>
+      )}
       {screen === 'bring-circle' && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
       {screen === 'bring-circle' && <PrayerForm context={{ circle: 'kingdom', prompt: 'Send workers into the harvest.' }} onClose={() => navigate('/__design/circle?c=kingdom')} />}
       {screen === 'bring' && <PrayerForm editPrayer={usePrayerStore.getState().prayers.find((p) => p.id === 'd4')} onClose={() => navigate('/__design/today')} />}

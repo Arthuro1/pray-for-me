@@ -300,22 +300,32 @@
 /* ── The end of a plan: remembrance, then one optional step ─────────────── */
 .plan-complete { padding-block: var(--q-space-8); border-block: 1px solid var(--q-border); }
 .plan-complete__body { margin: var(--q-space-3) 0 var(--q-space-6); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.125rem; line-height: 1.65; }
-.plan-complete__question { margin: var(--q-space-2) 0 var(--q-space-2); color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
-.plan-complete__themes { display: grid; margin-block-end: var(--q-space-4); border-block-start: 1px solid var(--q-border); }
+/* "What do you want to keep carrying?" — the question in the serif, then the
+   themes as quiet rows that each open the composer. */
+.plan-complete__keep { margin-block-start: var(--q-space-6); }
+.plan-complete__question { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.3125rem; font-weight: 500; line-height: 1.3; }
+.plan-complete__hint { margin: var(--q-space-2) 0 var(--q-space-4); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
+.plan-complete__circle { display: inline-flex; align-items: center; gap: var(--q-space-2); margin: 0 0 var(--q-space-2); }
+.plan-complete__themes { display: grid; margin: 0 0 var(--q-space-4); padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
 
 .plan-complete__theme {
   display: flex;
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
   align-items: center;
   gap: var(--q-space-3);
+  padding-block: var(--q-space-3);
   border-block-end: 1px solid var(--q-border);
   color: var(--q-text);
   font-size: 0.9375rem;
   text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease);
 }
 
-.plan-complete__added { margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; font-weight: 600; }
+.plan-complete__theme:hover { background: var(--q-hover); }
+.plan-complete__theme > svg { color: var(--q-royal-text); }
+.plan-complete__theme-title { display: block; font-weight: 600; }
+.plan-complete__theme-desc { display: block; margin-block-start: 2px; color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.45; }
 
 /* A single-line choice uses the circle option, centred on its ring. */
 .circle-option--compact { min-height: 48px; align-items: center; }

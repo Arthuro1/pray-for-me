@@ -129,7 +129,7 @@ function AddFriendPage() {
 }
 
 // Personal prayer detail at /prayers/:id — resolves the prayer from the store.
-function PersonalPrayerPage({ onEdit }) {
+function PersonalPrayerPage({ onEdit, onPrayInCircle }) {
   const { id } = useParams();
   const navigate = useNavigate();
   // `?day=YYYY-MM-DD` opens one particular day of a guided plan instead of
@@ -159,6 +159,7 @@ function PersonalPrayerPage({ onEdit }) {
       onGoToDay={(dayKey) => navigate(`/prayers/${id}?day=${dayKey}`, { replace: true })}
       onBack={() => navigate(-1)}
       onEdit={onEdit}
+      onPrayInCircle={onPrayInCircle}
       onOpenCircle={(circle) => navigate(`/circles/${circle}`, { state: { from: `/prayers/${id}` } })}
       initialFocus={location.state?.focus || null}
     />
@@ -223,7 +224,7 @@ export default function AuthenticatedApp({
     setShowForm(true);
   };
   // A new prayer begun inside one Intercession Circle (the Journal's circle
-  // groups, a circle page): the circle is preselected and its question frames
+  // groups, a circle page, a finished plan's "keep carrying"): the circle is preselected and its question frames
   // the field. An optional `prompt` ("Pray this") is shown above the empty
   // field as a starting point, never written into it.
   const openAddInCircle = (circle, { prompt = null } = {}) => {
@@ -497,7 +498,7 @@ export default function AuthenticatedApp({
               <Routes>
               <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} />} />
               <Route path="/prayers" element={<PrayersTab onAdd={openAdd} onAddInCircle={openAddInCircle} />} />
-              <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
+              <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} onPrayInCircle={openAddInCircle} />} />
               {/* The answered gallery is the Journal's second segment now; the
                   old standalone page redirects there so saved links keep working. */}
               <Route path="/answered" element={<Navigate to="/prayers" state={{ filter: 'answered' }} replace />} />
@@ -541,7 +542,7 @@ export default function AuthenticatedApp({
           editPrayer={editPrayer}
           prefill={formPrefill}
           initialOrganizeOpen={!!formOptions?.openOrganize}
-          context={formOptions?.circle ? { circle: formOptions.circle, prompt: formOptions.prompt } : null}
+          context={formOptions?.circle || formOptions?.prompt ? { circle: formOptions.circle, prompt: formOptions.prompt } : null}
         />
       )}
       {showOnboarding && (

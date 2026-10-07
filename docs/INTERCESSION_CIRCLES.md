@@ -172,6 +172,13 @@ approvals.
   pages, beside the journey types; each `PlanCard` names its primary circle in
   one quiet line; `PlanDetailModal` says "Forms prayer in …" and, quieter,
   "Also connects with …".
+- **Plan completion** (`PlanCompletionCard.jsx`): "What do you want to keep
+  carrying?" — the plan's own `continueThemes` if it has them, otherwise its
+  primary circle's short-layer themes (so no plan needs new prose). Choosing one
+  calls `onKeepCarrying({ circle, prompt })` → `PrayerDetail onPrayInCircle` →
+  `openAddInCircle`: the composer opens in the circle with the theme above an
+  EMPTY field. Nothing is created on the person's behalf (the old flow saved
+  prayers with pre-written titles); they can come back for another theme.
 - **Today**: the existing "On your altar" list and the circle on each row.
 
 ## Themes and categories

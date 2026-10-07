@@ -36,6 +36,15 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 - `loadCircleDeep` no longer resolves an inherited key such as `toString` as a
   circle.
 
+### Changed — a finished plan asks "What do you want to keep carrying?"
+
+- The completion card no longer creates prayers with pre-written titles from a
+  checklist. It offers themes — the plan's own, or its circle's — and choosing
+  one opens the composer in that circle with the theme above an empty field;
+  the person writes the lasting prayer. They can come back for another.
+- 2 new keys × 16 languages (14 AI-drafted); `planContinueHeading`,
+  `planContinueCta` and `planContinueAdded` removed (no longer used).
+
 ### Added — Intercession Circles, Milestone A (`docs/INTERCESSION_CIRCLES.md`)
 
 - **One canonical circle model** (`src/lib/circles.js`): definitions derived

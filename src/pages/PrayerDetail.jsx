@@ -40,7 +40,6 @@ import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
 import { hasPersonalization, isCouplePlan, planPeopleFrom } from '../lib/planPersonalization';
 import { savePlanPersonalization } from '../lib/planPersonalizationStorage';
 import { claimPlanCompletionReport, markPlanCompleted, savePlanPrefs } from '../lib/planPrefs';
-import { defaultNewSchedule } from '../lib/scheduleDraft';
 import { track } from '../lib/analytics';
 import { canUsePlan } from '../lib/planReview';
 import { isPlanShareable } from '../lib/planShareLink';
@@ -159,7 +158,7 @@ const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
 // skipped or moved doesn't hand the memos below a fresh object every render.
 const EMPTY_OVERRIDES = {};
 
-export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null, onOpenCircle = null, initialFocus = null }) {
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null, onOpenCircle = null, onPrayInCircle = null, initialFocus = null }) {
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
@@ -218,10 +217,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [showReportConfirm, setShowReportConfirm] = useState(false);
   const [showBlockConfirm, setShowBlockConfirm] = useState(false);
 
-  const { categories, addPrayer, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers, completions } = usePrayerStore(
+  const { categories, markAnswered, markActive, markPrayedOn, addTestimony: addPersonalTestimony, addUpdate, removeUpdateAttachment, removeUpdateText, deleteUpdate, editUpdate, removeTestimonyAttachment, removeTestimonyText, deleteTestimony, editTestimony, addPrayerPoint, addVerseToPoint, removeVerseFromPoint, removePrayerPoint, togglePin, syncCategoriesFromCommunity, updatePrayer, prayers, completions } = usePrayerStore(
     useShallow((s) => ({
       categories: s.categories,
-      addPrayer: s.addPrayer,
       markAnswered: s.markAnswered,
       markActive: s.markActive,
       markPrayedOn: s.markPrayedOn,
@@ -1225,25 +1223,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           />
         )}
 
-        {/* The last day is behind them — a calm close, and an optional way to
-            carry some of the themes on as ordinary recurring prayers. */}
+        {/* The last day is behind them — a calm close, and "What do you want
+            to keep carrying?": a theme opens the composer in the plan's circle,
+            where the person writes the lasting prayer themselves. */}
         {planFinished && (
           <PlanCompletionCard
             plan={plan}
             lang={lang}
             onShare={planShareable ? () => setShowPlanShare(true) : undefined}
-            onContinue={async (themes) => {
-              for (const theme of themes) {
-                await addPrayer({
-                  title: t(lang, theme.titleKey),
-                  description: t(lang, theme.descKey),
-                  categoryIds: [],
-                  schedule: defaultNewSchedule(),
-                });
-              }
+            onKeepCarrying={onPrayInCircle ? ({ circle, prompt }) => {
               markPlanCompleted(plan.id);
-              toast.success(t(lang, 'planContinueAdded'));
-            }}
+              onPrayInCircle(circle, { prompt });
+            } : undefined}
           />
         )}
         {savedCopy && categories.length > 0 && (
