@@ -18,4 +18,10 @@ const pending = () => Object.freeze({ status: 'pending', theology: null, safety:
 
 export const CIRCLE_DEEP_REVIEWS = Object.freeze({
   self: pending(),
+  household: pending(),
+  people: pending(),
+  church: pending(),
+  authorities: pending(),
+  nations: pending(),
+  kingdom: pending(),
 });

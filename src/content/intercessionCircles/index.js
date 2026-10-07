@@ -64,6 +64,12 @@ export const SHORT_UI_KEYS = Object.freeze(['choose', 'prayFor', 'scripture']);
 // without an entry here has no deep layer yet.
 const DEEP_LOADERS = Object.freeze({
   self: () => import('./deep/self'),
+  household: () => import('./deep/household'),
+  people: () => import('./deep/people'),
+  church: () => import('./deep/church'),
+  authorities: () => import('./deep/authorities'),
+  nations: () => import('./deep/nations'),
+  kingdom: () => import('./deep/kingdom'),
 });
 
 // Own keys only, so an id like 'toString' never looks like a circle with content.
@@ -72,9 +78,8 @@ const owns = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
 export const hasDeepLayer = (circle) => owns(DEEP_LOADERS, circle);
 
 export async function loadCircleDeep(circle) {
-  const loader = DEEP_LOADERS[circle];
-  if (!loader) return null;
-  return (await loader()).default;
+  if (!hasDeepLayer(circle)) return null;
+  return (await DEEP_LOADERS[circle]()).default;
 }
 
 // Per-language overlays for everything above, keyed by circle id (plus `ui`),

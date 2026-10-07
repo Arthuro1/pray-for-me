@@ -78,9 +78,13 @@ Components render this content; they never author it.
   (`CIRCLE_UI`), loaders (`loadCircleOverlay`, `loadCircleDeep`),
   `withOverlay(source, overlay, lang)` and `circlesForTheme(themeId)`.
 
+Every circle has a deep layer (Milestone B), all through the same contract and
+the same UI (`CircleDeepTeaching`): no circle gets an architecture of its own.
+
 Contract test: `intercessionCircles.test.js` (every circle present in order,
 every field authored, unique theme ids, at least one valid Scripture anchor,
-deep layer aligned with the short layer, no quoted Scripture).
+deep layer aligned with the short layer, no quoted Scripture, and each circle's
+guardrails below pinned to its wording).
 
 ### Scripture
 
@@ -96,11 +100,21 @@ pasted verse fails the contract test.
   teaches seven…".
 - **Hearing God.** Always pair listening with testing impressions against
   Scripture; the app never confirms that God said something.
+- **My house is formation, not fear.** A household is any home (a couple, a
+  family, one person living alone). Forgiveness never requires staying in harm's
+  way: where trust was broken by abuse, safety comes first.
+- **My people: prayer does not remove responsibility.** It often leads to a
+  practical act of love; reconciliation is sought where possible and wise,
+  never by pretending harm did not happen.
+- **His Church: pray before criticizing, never silence harm.** Praying for the
+  Church brings even what is wrong before Christ.
 - **Authorities and Nations are nonpartisan.** No party, candidate or political
-  outcome; prayer for leaders we disagree with; no Christian nationalism.
+  outcome; no "taking authority" over a government; prayer for leaders we
+  disagree with; no Christian nationalism; a person always chooses the nation
+  they carry.
 - **Kingdom is not domination.** Participation through prayer, witness,
   discipleship, mercy, justice, reconciliation and service; gospel and mercy held
-  together.
+  together; revival longed for, never promised or manufactured.
 - **Grace, not performance.** Fruit is grown, not earned; no scores, no
   "completed" circles; reflection stays qualitative and is never stored.
 
@@ -115,6 +129,11 @@ named human writes a sign-off.**
 
 The short layer ships without this gate; its 14 non-authored languages are
 AI-drafted and need a native review like the rest of the app copy.
+
+All seven deep layers are AI-drafted and `pending`. In the content audit
+(`check:content`) their bundles are `needs-review` and their English fallback in
+the other 14 languages is baselined as known `missing-copy` — findings, not
+approvals.
 
 ## Surfaces
 

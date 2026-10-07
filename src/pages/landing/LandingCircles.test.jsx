@@ -114,10 +114,16 @@ describe('LandingCircles', () => {
     expect(onBeginPrayer).toHaveBeenCalledWith({ circle: 'self', prompt });
   });
 
-  it('offers no deeper layer for a circle that has none yet', () => {
-    render(<LandingCircles lang="en" copy={copy} onBeginPrayer={vi.fn()} />);
-    fireEvent.click(option(6));
-    expect(screen.queryByRole('button', { name: CIRCLE_UI.explore.en })).toBeNull();
+  it('keeps an unsigned deep layer out of a production build', () => {
+    vi.stubEnv('DEV', false);
+    try {
+      render(<LandingCircles lang="en" copy={copy} onBeginPrayer={vi.fn()} />);
+      fireEvent.click(option(6));
+      expect(screen.getByRole('heading', { name: heading('kingdom') })).toBeTruthy();
+      expect(screen.queryByRole('button', { name: CIRCLE_UI.explore.en })).toBeNull();
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it('swaps at once with reduced motion', () => {

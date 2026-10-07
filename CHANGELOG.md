@@ -24,6 +24,17 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   work21 → My heart (+ My people, Kingdom); upperRoom10 → His Church
   (+ Kingdom). Metadata only, no plan text changed.
 - 5 new app keys × 16 languages (14 AI-drafted, need a native pass).
+- **Deep teaching for the other six circles** (`deep/household.js`, `people`,
+  `church`, `authorities`, `nations`, `kingdom`): meaning, each theme with a
+  short teaching, Scripture references and "Pray this" prompts, and reflection
+  questions — English and French, English elsewhere. All seven are drafts
+  behind the review gate (visible only in development or `?planPreview=1`) until
+  a named human signs theology, safety, English and French. Each circle's
+  guardrails are pinned by the contract test (forgiveness never requires staying
+  in harm's way; nonpartisan Authorities; no nationalism; no domination; revival
+  never promised).
+- `loadCircleDeep` no longer resolves an inherited key such as `toString` as a
+  circle.
 
 ### Added — Intercession Circles, Milestone A (`docs/INTERCESSION_CIRCLES.md`)
 

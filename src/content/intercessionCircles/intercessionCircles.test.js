@@ -39,7 +39,9 @@ function strings(value, out = []) {
 function expectValidRef(ref, where) {
   expect(typeof ref, where).toBe('string');
   expect(usfmFromReference(ref), `${where}: ${ref}`).toBeTruthy();
-  expect(localizeRef(ref, 'fr'), `${where}: ${ref} has a French book name`).not.toBe(ref);
+  // Chinese book names never coincide with the English ones (French "Amos" or
+  // "1 Samuel" do), so a changed reference proves the book is in BOOK_NAMES.
+  expect(localizeRef(ref, 'zh'), `${where}: ${ref} is a book the app can name`).not.toBe(ref);
 }
 
 describe('the circle content contract (short layer)', () => {
@@ -115,8 +117,8 @@ describe('the short layer in every language', () => {
 });
 
 describe('the deep layer', () => {
-  it('exists for My heart first', () => {
-    expect(hasDeepLayer('self')).toBe(true);
+  it('exists for every circle, through the same contract', () => {
+    for (const circle of CIRCLES) expect(hasDeepLayer(circle), circle).toBe(true);
     expect(hasDeepLayer('toString')).toBe(false);
   });
 
@@ -173,8 +175,47 @@ describe('the deep layer', () => {
     expect(discernment.body.en).toMatch(/Not every thought/);
   });
 
-  it('has no deep layer to load for a circle that has none', async () => {
-    expect(await loadCircleDeep('kingdom')).toBeNull();
+  it('has no deep layer to load for a circle that does not exist', async () => {
+    expect(await loadCircleDeep('galaxies')).toBeNull();
+    expect(await loadCircleDeep('toString')).toBeNull();
+  });
+
+  // The guardrails each circle's teaching is written under
+  // (docs/INTERCESSION_CIRCLES.md, "Theological guardrails for authors").
+  const body = (circle, theme) => DEEP[circle].themes.find((t) => t.id === theme).body;
+  const allText = (circle) => strings(DEEP[circle]).join(' ');
+
+  it('never asks a household to forgive by staying in harm’s way', () => {
+    expect(body('household', 'forgiveness').en).toMatch(/does not require staying in harm’s way/);
+    expect(body('household', 'forgiveness').en).toMatch(/safety comes first/);
+    expect(body('household', 'wisdom-protection').en).toMatch(/not out of fear/);
+  });
+
+  it('keeps carrying people tied to love in action', () => {
+    expect(body('people', 'practical-love').en).toMatch(/Prayer does not remove responsibility/);
+    expect(body('people', 'reconciliation').en).toMatch(/possible and wise/);
+  });
+
+  it('prays for the Church without silencing harm', () => {
+    expect(DEEP.church.meaning.en).toMatch(/does not mean staying silent about harm/);
+  });
+
+  it('keeps Authorities nonpartisan: no party, no candidate, no outcome, no taking control', () => {
+    expect(DEEP.authorities.meaning.en).toMatch(/never favors a party or a candidate/);
+    expect(DEEP.authorities.meaning.en).toMatch(/never treats prayer as a way to take control/);
+    expect(body('authorities', 'disagreement').en).toMatch(/never tells you which political outcome/);
+    expect(allText('authorities')).not.toMatch(/take authority over|rule .* spiritually|God has chosen|God chose/i);
+  });
+
+  it('keeps Nations free of nationalism, and the choice of a nation with the person', () => {
+    expect(body('nations', 'humility').en).toMatch(/not mean treating it as uniquely entitled/);
+    expect(DEEP.nations.meaning.en).toMatch(/You choose what you carry/);
+  });
+
+  it('keeps the Kingdom from domination, holds gospel and mercy together, and never promises revival', () => {
+    expect(DEEP.kingdom.meaning.en).toMatch(/never about building our own spiritual empires or dominating/);
+    expect(body('kingdom', 'justice-mercy').en).toMatch(/neither social action alone nor proclamation alone/);
+    expect(body('kingdom', 'awakening').en).toMatch(/without promising revival or trying to manufacture it/);
   });
 });
 
