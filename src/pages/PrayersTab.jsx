@@ -12,7 +12,7 @@ import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredEmpty from '../components/AnsweredEmpty';
 import JournalFilters from '../components/JournalFilters';
-import { Search, SlidersHorizontal, Plus, X, Users, ArrowLeft, Bell, ChevronRight, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, X, ArrowLeft, Bell, ChevronRight, Check } from 'lucide-react';
 import { t, tp } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
 import { prayerPriority } from '../utils/prayer';
@@ -20,8 +20,9 @@ import { weeklyRecap } from '../utils/recap';
 import { peopleFromPrayers, peopleViewAvailable, personSession } from '../lib/people';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import { todayKey } from '../lib/prayedLog';
+import { scheduleEnded } from '../lib/planner';
 import PrayerSession from '../components/PrayerSession';
-import { PrimaryButton, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
+import { Disclosure, PrimaryButton, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
 import {
   EMPTY_JOURNAL_FILTERS,
   filterJournalPrayers,
@@ -111,6 +112,7 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   // they're for. Only offered when enough person data exists.
   const [peopleOpen, setPeopleOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [endedOpen, setEndedOpen] = useState(false);
   // Snapshot of a person-scoped session, fixed when it starts — completions
   // recorded mid-session must not reshuffle the walk.
   const [personSessionPrayers, setPersonSessionPrayers] = useState(null);
@@ -160,6 +162,13 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
     if (byPin !== 0) return byPin;
     return prayerPriority(a.prayer, orderById) - prayerPriority(b.prayer, orderById);
   });
+  // A finished series (a walked plan, an ended rhythm) is not active prayer any
+  // more: it folds away under "Finished" — unless a search or filter is
+  // looking, which must see every match.
+  const today = todayKey();
+  const foldsEnded = (entry) => !filtersActive && scheduleEnded(entry.prayer, today);
+  const ongoingEntries = sortedEntries.filter((entry) => !foldsEnded(entry));
+  const endedEntries = sortedEntries.filter(foldsEnded);
   const searchMatches = Object.fromEntries(filteredEntries.map(({ prayer, match }) => [prayer.id, match]));
   const hasFilterControls = (
     categories.length > 0
@@ -182,6 +191,18 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   // circle — on Answered too, so answered prayers can be remembered by circle.
   const circleViewAvailable = prayers.some((prayer) => prayer.status === segment && circleOf(prayer));
   const showByCircle = byCircle && circleViewAvailable && !peopleOpen;
+  // How the list is shown: offered only once a second way exists.
+  const views = [
+    { value: 'list', label: t(lang, 'journalViewList') },
+    peopleAvailable && { value: 'people', label: t(lang, 'peopleView') },
+    circleViewAvailable && { value: 'circles', label: t(lang, 'journalViewCircles') },
+  ].filter(Boolean);
+  const view = peopleOpen ? 'people' : showByCircle ? 'circles' : 'list';
+  const changeView = (next) => {
+    setPeopleOpen(next === 'people');
+    setSelectedPerson(null);
+    if (next !== 'people') setByCircle(next === 'circles');
+  };
   const utilityPanelOpen = searchOpen || !!search || peopleOpen
     || peopleAvailable || circleViewAvailable || (toolsUseful && hasFilterControls);
   const hint = nextJournalHint({
@@ -296,13 +317,14 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
             >
               <Search size={20} aria-hidden="true" />
             </button>
+            {/* Phones only: on wider screens the sidebar's Add is the one way in. */}
             {onAdd && (
               <button
                 type="button"
                 onClick={onAdd}
                 aria-label={t(lang, 'emptyAddManual')}
                 title={t(lang, 'emptyAddManual')}
-                className="icon-button pressable"
+                className="icon-button pressable md:hidden"
               >
                 <Plus size={22} aria-hidden="true" />
               </button>
@@ -358,30 +380,18 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                 )}
               </div>
             )}
+            {/* Two different jobs, two different controls: how the list is
+                shown (a small switch) and what it holds (one Filter, at the
+                far end). */}
             <div className="journal__tool-row">
-              {peopleAvailable && (
-                <button
-                  type="button"
-                  onClick={() => { setPeopleOpen((value) => !value); setSelectedPerson(null); }}
-                  aria-pressed={peopleOpen}
-                  aria-label={t(lang, 'peopleView')}
-                  title={t(lang, 'peopleView')}
-                  className="journal__tool pressable"
-                >
-                  <Users size={16} aria-hidden="true" />
-                  <span aria-hidden="true">{t(lang, 'peopleView')}</span>
-                </button>
-              )}
-              {!peopleOpen && circleViewAvailable && (
-                <button
-                  type="button"
-                  onClick={() => setByCircle((value) => !value)}
-                  aria-pressed={byCircle}
-                  className="journal__tool pressable"
-                >
-                  <CircleGlyph circle="nations" size={16} />
-                  <span>{t(lang, 'journalByCircle')}</span>
-                </button>
+              {views.length > 1 && (
+                <SegmentedControl
+                  label={t(lang, 'journalViewLabel')}
+                  value={view}
+                  options={views}
+                  onChange={changeView}
+                  className="segmented-control--compact"
+                />
               )}
               {!peopleOpen && (hasFilterControls || toolsUseful) && (
                 <button
@@ -392,20 +402,14 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                   // Screen readers hear the state, not just the name — the plum
                   // fill alone would say nothing to them.
                   aria-label={structuredFiltersActive
-                    ? `${t(lang, 'journalFilters')} — ${t(lang, 'filtersOnLabel')}`
-                    : t(lang, 'journalFilters')}
-                  title={t(lang, 'journalFilters')}
+                    ? `${t(lang, 'filterLabel')} — ${t(lang, 'filtersOnLabel')}`
+                    : undefined}
                   aria-pressed={structuredFiltersActive}
-                  className="journal__tool pressable"
+                  className="journal__tool journal__tool--end pressable"
                 >
                   <SlidersHorizontal size={16} aria-hidden="true" />
-                  <span aria-hidden="true">{t(lang, 'journalFilters')}</span>
+                  <span>{t(lang, 'filterLabel')}</span>
                 </button>
-              )}
-              {peopleOpen && (
-                <QuietButton onClick={() => setPeopleOpen(false)} icon={ArrowLeft} iconSize={16} className="-ms-3">
-                  {t(lang, 'peopleView')}
-                </QuietButton>
               )}
             </div>
           </div>
@@ -620,17 +624,26 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                 </div>
               )
             ) : showByCircle ? (
-              renderByCircle(sortedEntries)
+              renderByCircle(ongoingEntries)
             ) : (
               <div className="journal__list">
-                {sortedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
+                {ongoingEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
                 {!filtersActive && latestAnsweredPrayer && renderPrayer(latestAnsweredPrayer)}
               </div>
             )}
-            {onAdd && sortedEntries.length > 0 && (
-              <QuietButton onClick={onAdd} icon={Plus} className="journal__add">
-                {t(lang, 'emptyAddManual')}
-              </QuietButton>
+            {endedEntries.length > 0 && (
+              <Disclosure
+                id="journal-ended"
+                label={t(lang, 'journalEnded')}
+                count={endedEntries.length}
+                open={endedOpen}
+                onToggle={() => setEndedOpen((open) => !open)}
+                className="journal__ended"
+              >
+                <div className="journal__list">
+                  {endedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
+                </div>
+              </Disclosure>
             )}
           </>
         )}

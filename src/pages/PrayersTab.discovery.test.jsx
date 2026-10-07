@@ -57,7 +57,7 @@ describe('Journal tools — findable, and named', () => {
     usePrayerStore.setState({ prayers: many(2), categories: [{ id: 'c1', name: 'Famille' }] });
     hintsSeen();
     renderJournal();
-    expect(screen.queryByRole('button', { name: t(lang, 'journalFilters') })).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'filterLabel') })).toBeNull();
   });
 
   it('stops hiding filters behind the search toggle once the list is long', () => {
@@ -65,7 +65,7 @@ describe('Journal tools — findable, and named', () => {
     hintsSeen();
     renderJournal();
     // Reachable straight away — no need to discover search first.
-    expect(screen.getByRole('button', { name: t(lang, 'journalFilters') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'filterLabel') })).toBeTruthy();
     // …and the search FIELD still only appears when asked for.
     expect(screen.queryByPlaceholderText(t(lang, 'search'))).toBeNull();
   });
@@ -115,12 +115,12 @@ describe('Journal tools — an active filter is obvious and undoable', () => {
 
   it('tells screen readers that the filter control is currently on', () => {
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
     fireEvent.change(screen.getByRole('combobox', { name: t(lang, 'allCategories') }), {
       target: { value: 'c1' },
     });
     expect(screen.getByRole('button', {
-      name: `${t(lang, 'journalFilters')} — ${t(lang, 'filtersOnLabel')}`,
+      name: `${t(lang, 'filterLabel')} — ${t(lang, 'filtersOnLabel')}`,
     })).toBeTruthy();
   });
 });

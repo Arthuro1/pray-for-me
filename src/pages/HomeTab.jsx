@@ -351,13 +351,6 @@ export default function HomeTab({ onAdd, onEdit }) {
           </div>
         )}
 
-        {/* Add a prayer — always one tap from the list itself */}
-        {!dayEmpty && (
-          <QuietButton onClick={onAdd} icon={Plus} className="today-add">
-            {t(lang, 'emptyAddManual')}
-          </QuietButton>
-        )}
-
         {/* Return to prayer — prayers missed the last few days, AFTER today's
             list and collapsed by default. Grace, not guilt: never an "overdue"
             count up front; one tap marks them prayed, or they quietly age out. */}

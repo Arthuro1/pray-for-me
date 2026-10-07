@@ -70,12 +70,12 @@ describe('PrayersTab — simplified header', () => {
 
   it('reveals journal filters only when a useful active-prayer option exists', () => {
     renderJournal();
-    expect(screen.queryByRole('button', { name: t(lang, 'journalFilters') })).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'filterLabel') })).toBeNull();
     usePrayerStore.setState({ categories: [{ id: 'c1', name: 'Famille', emoji: '👪', color: '#7c5cfc' }] });
     cleanup();
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
     expect(screen.getByRole('combobox', { name: t(lang, 'allCategories') })).toBeTruthy();
   });
 
@@ -93,9 +93,10 @@ describe('PrayersTab — simplified header', () => {
     expect(useLayoutStore.getState().fabSuppressed).toBe(true);
   });
 
-  it('a non-empty Journal keeps one inline Add action and suppresses the FAB', () => {
+  it('a non-empty Journal keeps ONE Add action (the header +, phones only) and suppresses the FAB', () => {
     renderJournal();
-    expect(screen.getByText(t(lang, 'emptyAddManual'))).toBeTruthy();
+    expect(screen.getAllByRole('button', { name: t(lang, 'emptyAddManual') })).toHaveLength(1);
+    expect(screen.queryByText(t(lang, 'emptyAddManual'))).toBeNull();
     expect(useLayoutStore.getState().fabSuppressed).toBe(true);
   });
 
@@ -103,5 +104,31 @@ describe('PrayersTab — simplified header', () => {
     renderJournal();
     expect(screen.getByText(/x1$/)).toBeTruthy();
     expect(screen.getAllByText(t(lang, 'answered')).length).toBeGreaterThan(1);
+  });
+});
+
+describe('PrayersTab — finished series', () => {
+  const ended = prayer('done', {
+    title: 'Plan terminé',
+    schedule: { type: 'recurring', freq: 'daily', start: '2026-01-01', end: { kind: 'date', date: '2026-01-10' } },
+  });
+
+  it('fold under "Finished" instead of sitting among active prayers', () => {
+    usePrayerStore.setState((s) => ({ prayers: [...s.prayers, ended] }));
+    renderJournal();
+    expect(screen.queryByText('Plan terminé')).toBeNull();
+    const fold = screen.getByRole('button', { name: `${t(lang, 'journalEnded')} · 1` });
+    fireEvent.click(fold);
+    expect(screen.getByText('Plan terminé')).toBeTruthy();
+    expect(screen.getByText('Prière a1')).toBeTruthy();
+  });
+
+  it('stay findable inline while a search is looking', () => {
+    usePrayerStore.setState((s) => ({ prayers: [...s.prayers, ended] }));
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'search')), { target: { value: 'terminé' } });
+    expect(screen.getByText('Plan terminé')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: new RegExp(t(lang, 'journalEnded')) })).toBeNull();
   });
 });

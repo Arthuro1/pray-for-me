@@ -324,6 +324,10 @@ a.prayer-row:hover { background: var(--q-hover); }
   box-shadow: 0 0 0 1px var(--q-border);
 }
 
+/* A small switch for HOW something is shown (not what it holds). */
+.segmented-control--compact button { min-height: 34px; padding-inline: var(--q-space-3); font-size: 0.8125rem; }
+@media (pointer: coarse) { .segmented-control--compact button { min-height: 44px; } }
+
 /* ── Disclosures ─────────────────────────────────────────────────────────── */
 /* A folded section: its name (and how many answers it holds), a chevron. */
 .q-disclosure {

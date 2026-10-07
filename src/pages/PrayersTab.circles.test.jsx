@@ -46,7 +46,7 @@ beforeEach(() => {
 const renderJournal = (props = {}) => render(
   <MemoryRouter><PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} {...props} /></MemoryRouter>,
 );
-const byCircle = () => screen.getByRole('button', { name: t(lang, 'journalByCircle') });
+const byCircle = () => screen.getByRole('button', { name: t(lang, 'journalViewCircles') });
 function LandedOnCircle() {
   const location = useLocation();
   return <p data-testid="circle-page">{`${location.pathname} ${JSON.stringify(location.state)}`}</p>;
@@ -57,7 +57,7 @@ describe('PrayersTab — By circle', () => {
   it('is not offered before any prayer has a circle', () => {
     usePrayerStore.setState({ prayers: [prayer('a'), prayer('b')] });
     renderJournal();
-    expect(screen.queryByRole('button', { name: t(lang, 'journalByCircle') })).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'journalViewCircles') })).toBeNull();
   });
 
   it('groups active prayers inner to outer, with unplaced prayers last', () => {
@@ -124,7 +124,7 @@ describe('PrayersTab — By circle', () => {
     usePrayerStore.setState((s) => ({ prayers: s.prayers.map((p) => (p.id === 'done' ? { ...p, circle: undefined } : p)) }));
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
-    expect(screen.queryByRole('button', { name: t(lang, 'journalByCircle') })).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'journalViewCircles') })).toBeNull();
     expect(screen.getByText('Prière done')).toBeTruthy();
   });
 
@@ -178,7 +178,7 @@ describe('PrayersTab — By circle', () => {
   it('is the only circle tool — the filters have no circle selector', () => {
     usePrayerStore.setState({ categories: [{ id: 'cat1', name: 'Famille', emoji: '' }] });
     renderJournal();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
     const sheet = screen.getByRole('dialog', { name: t(lang, 'journalFilters') });
     expect(within(sheet).queryByText(t(lang, 'circleFieldLabel'))).toBeNull();
     for (const select of within(sheet).queryAllByRole('combobox')) {

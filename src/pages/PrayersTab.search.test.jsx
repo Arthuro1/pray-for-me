@@ -93,7 +93,7 @@ describe('Journal retrieval', () => {
   it('opens filters as a modal overlay and closes it with Escape', () => {
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
 
     const dialog = screen.getByRole('dialog', { name: t(lang, 'journalFilters') });
     expect(dialog.getAttribute('aria-modal')).toBe('true');
@@ -134,7 +134,7 @@ describe('Journal retrieval', () => {
   it('filters by source/group without exposing another permanent control', () => {
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
     fireEvent.change(screen.getByRole('combobox', { name: t(lang, 'journalSource') }), {
       target: { value: 'group:Groupe Espoir' },
     });
@@ -148,7 +148,7 @@ describe('Journal retrieval', () => {
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 2` }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
     fireEvent.change(screen.getByRole('combobox', { name: t(lang, 'schedDateLabel') }), {
       target: { value: 'earlier' },
     });
