@@ -45,6 +45,17 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 - 2 new keys × 16 languages (14 AI-drafted); `planContinueHeading`,
   `planContinueCta` and `planContinueAdded` removed (no longer used).
 
+### Added — "Pray through my altar"
+
+- An optional order for a time of prayer, under the prayer formats: today's
+  prayers circle by circle, from My heart out to Kingdom & Mission, then
+  "Also on your heart". Off by default, remembered on the device; works with
+  every format. A guided plan run without its own circle is prayed in its
+  plan's circle (shown only, never saved). Each circle opens with a quiet
+  threshold — its name and its call — without an extra step, and the time of
+  prayer ends "You have carried your altar before God.", never with a count.
+- 5 new keys × 16 languages (14 AI-drafted).
+
 ### Added — Intercession Circles, Milestone A (`docs/INTERCESSION_CIRCLES.md`)
 
 - **One canonical circle model** (`src/lib/circles.js`): definitions derived

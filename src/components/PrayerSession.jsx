@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { X, Check, ChevronRight, ChevronLeft, ChevronDown, BookOpen, Loader2 } from 'lucide-react';
 import { t, tp } from '../i18n';
 import { confirm } from '../store/confirmStore';
@@ -22,6 +22,10 @@ import PrayerSessionNote from './prayerSession/PrayerSessionNote';
 import { useSessionNotes } from './prayerSession/useSessionNotes';
 import { isSessionNote } from '../lib/prayerNotes';
 import { circleLabelKey, circleOf } from '../lib/circles';
+import { altarOrder, canPrayThroughAltar } from '../lib/altarSession';
+import { useCircleTeaching } from '../hooks/useCircleTeaching';
+import CircleGlyph from './shared/CircleGlyph';
+import Switch from './shared/Switch';
 import RemainWithGod from './RemainWithGod';
 import RiseMark from './shared/RiseMark';
 
@@ -57,6 +61,11 @@ function initialMode() {
   const saved = localStorage.getItem(MODE_STORAGE_KEY);
   return MODE_STAGES[saved] ? saved : 'requests';
 }
+
+// "Pray through my altar" is an ORDER for the requests, beside the format:
+// off by default, remembered on this device like the format.
+const ORDER_STORAGE_KEY = 'pfm_prayer_order';
+const readAltarPreference = () => localStorage.getItem(ORDER_STORAGE_KEY) === 'altar';
 
 // A single Scripture citation on a prayer point, shown in the reader's language.
 // Verses are stored in the language the prayer was created in; useLocalizedVerse
@@ -100,8 +109,18 @@ function SessionVerse({ verse, lang }) {
 // `doneTitle` names what was prayed through when the walk ends ("You have
 // prayed through today's altar" from Today); other entry points keep the
 // general "Time with God".
-export default function PrayerSession({ prayers, categories, lang, tr, onClose, onComplete, onPrayed, doneTitle, allowFormats = true, allowNotes = true }) {
+export default function PrayerSession({ prayers: givenPrayers, categories, lang, tr, onClose, onComplete, onPrayed, doneTitle, allowFormats = true, allowNotes = true }) {
   const [mode, setMode] = useState(() => (allowFormats ? initialMode() : 'requests'));
+  // "Pray through my altar" (lib/altarSession.js): the requests circle by
+  // circle, inner to outer, unplaced ones last. Offered only where the order
+  // would change something. A walk keeps the order it began with, so a change
+  // made after the first step applies from the next time of prayer.
+  const altarOffered = allowFormats && canPrayThroughAltar(givenPrayers);
+  const [altarPreferred, setAltarPreferred] = useState(readAltarPreference);
+  const [altarWalk, setAltarWalk] = useState(() => altarOffered && readAltarPreference());
+  const altar = useMemo(() => (altarWalk ? altarOrder(givenPrayers) : null), [altarWalk, givenPrayers]);
+  const prayers = altar ? altar.prayers : givenPrayers;
+  const circleTeaching = useCircleTeaching(lang);
   const [stageIndex, setStageIndex] = useState(0);
   const [prayerIndex, setPrayerIndex] = useState(0);
   // How many requests have been prayed THIS session (advanced past). Switching
@@ -244,6 +263,7 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     stages.slice(0, stageIndex).reduce((sum, s) => sum + stepsIn(s), 0) +
     (stage === 'requests' ? prayerIndex + 1 : 1);
   const isLastStep = currentStep >= totalSteps;
+  const hasProgress = currentStep > 1 || requestsCompleted > 0;
 
   // All session entry points share this component. Keep the content-free
   // activation signal here so completion from any surface counts consistently.
@@ -261,7 +281,6 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     setShowFormats(false);
     if (m === mode) return;
     setMode(m);
-    const hasProgress = currentStep > 1 || requestsCompleted > 0;
     if (hasProgress && requestsCompleted >= total && MODE_STAGES[m].length === 1) {
       // Nothing left in a requests-only walk — the session is complete.
       setDone(true);
@@ -272,6 +291,12 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
     setPrayerIndex(hasProgress && MODE_STAGES[m][0] === 'requests'
       ? Math.min(requestsCompleted, total - 1)
       : 0);
+  };
+
+  const chooseAltarOrder = (on) => {
+    localStorage.setItem(ORDER_STORAGE_KEY, on ? 'altar' : 'list');
+    setAltarPreferred(on);
+    if (!hasProgress) setAltarWalk(on);
   };
 
   // Pure navigation — walk one step forward through the chosen path.
@@ -504,7 +529,9 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       <div className="prayer-session__done">
         <RiseMark size={56} className="mb-6" />
         <SectionLabel sacred className="mb-3">{t(lang, 'amenBtn')}</SectionLabel>
-        <h2 className="prayer-session__done-title">{doneTitle || t(lang, 'sessionDoneTitle')}</h2>
+        {/* An altar walk ends as one: carried before God — never a count of
+            circles "completed". */}
+        <h2 className="prayer-session__done-title">{altarWalk ? t(lang, 'altarCarriedTitle') : (doneTitle || t(lang, 'sessionDoneTitle'))}</h2>
         <p className="q-meta mt-5">{tp(lang, 'sessionDoneSub', total)}</p>
         {/* Notes were attached to their prayers as the walk went on — this is a
             quiet acknowledgement, never another step to complete. */}
@@ -565,6 +592,19 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
           ))}
         </div>
       )}
+      {allowFormats && showFormats && altarOffered && (
+        <div className="prayer-session__formats prayer-session__altar-order">
+          <div className="prayer-session__altar-row">
+            <span className="min-w-0">
+              <span className="prayer-session__format-title">{t(lang, 'prayThroughAltar')}</span>
+              <span className="prayer-session__format-desc">
+                {t(lang, altarPreferred === altarWalk ? 'prayThroughAltarDesc' : 'prayThroughAltarNextTime')}
+              </span>
+            </span>
+            <Switch checked={altarPreferred} onChange={chooseAltarOrder} label={t(lang, 'prayThroughAltar')} />
+          </div>
+        </div>
+      )}
       <div className="prayer-session__progress-row">
         <div className="prayer-session__track" aria-hidden="true">
           <span style={{ width: `${(currentStep / totalSteps) * 100}%` }} />
@@ -608,9 +648,14 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
   const ids = (prayer.prayer_categories || []).map((pc) => pc.category_id);
   const cats = categories.filter((c) => ids.includes(c.id));
   const circle = circleOf(prayer);
-  // Who and where, in one quiet line — never a row of chips.
+  // On an altar walk, the first prayer of each circle crosses a quiet
+  // threshold: the circle's name and its call, then the prayer. No card, no
+  // extra step — the walk simply continues. `null` is the unplaced group.
+  const threshold = altar?.starts.has(prayerIndex) ? { circle: altar.starts.get(prayerIndex) } : null;
+  // Who and where, in one quiet line — never a row of chips. (The threshold
+  // already names the circle.)
   const contextLine = [
-    circle ? t(lang, circleLabelKey(circle)) : '',
+    circle && !threshold ? t(lang, circleLabelKey(circle)) : '',
     prayer.for_other && prayer.person_name ? t(lang, 'forPersonLabel', { name: prayer.person_name }) : '',
     prayer.origin_group_name || '',
     ...cats.map((c) => tr(c.name, lang)),
@@ -637,6 +682,18 @@ export default function PrayerSession({ prayers, categories, lang, tr, onClose, 
       {header}
       <div ref={requestScrollRef} className="prayer-session__request">
         <div key={`request-${prayer.id}-${prayerIndex}`} className="prayer-session__step">
+          {threshold && (
+            <div className="prayer-session__threshold">
+              <RiseMark motion="still" size={28} />
+              <SectionLabel sacred className="prayer-session__threshold-label">
+                {threshold.circle && <CircleGlyph circle={threshold.circle} size={16} selected />}
+                <span>{threshold.circle ? t(lang, circleLabelKey(threshold.circle)) : t(lang, 'altarAlsoOnHeart')}</span>
+              </SectionLabel>
+              {threshold.circle && circleTeaching && (
+                <p className="prayer-session__threshold-line">{circleTeaching.circle(threshold.circle).heading}</p>
+              )}
+            </div>
+          )}
           {planContent ? (
             <SectionLabel sacred className="mb-4">
               {t(lang, 'planDayOf', { n: planContent.n, total: planContent.total })} · {planPrayerText(sessionPlan, lang)?.title || tr(prayer.title, lang)}

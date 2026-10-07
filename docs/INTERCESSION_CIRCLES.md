@@ -180,6 +180,18 @@ approvals.
   EMPTY field. Nothing is created on the person's behalf (the old flow saved
   prayers with pre-written titles); they can come back for another theme.
 - **Today**: the existing "On your altar" list and the circle on each row.
+- **Pray through my altar** (`PrayerSession.jsx`, `lib/altarSession.js`): an
+  optional ORDER for the session's requests, a switch under the prayer formats
+  (composes with requests / guided / ACTS), off by default and remembered on the
+  device (`pfm_prayer_order`). Offered only when there is more than one prayer
+  and one belongs to a circle. Order: `groupByCircle(prayers, sessionCircle)` —
+  inner to outer, each circle keeping the given order, unplaced prayers last
+  under "Also on your heart". `sessionCircle` is the placed circle, else a plan
+  run's plan `primaryCircle` (display only, never saved). The first prayer of
+  each circle crosses a quiet threshold (Rise Mark, the circle's name, its
+  short-layer heading) — no card, no extra step. A walk keeps the order it began
+  with; a change after the first step applies next time. The end reads "You have
+  carried your altar before God." — never a count of circles.
 
 ## Themes and categories
 
@@ -213,7 +225,7 @@ simply has no "Go deeper" section yet.
 |---|---|---|
 | A — circles become real | Foundation; interactive landing circles with the short panel and a CTA into the guest prayer; circle row in prayer creation; Journal "By circle"; change circle on prayer detail; light Today | Done 2026-10-07 |
 | + | My heart's deep layer as a gated draft | Done 2026-10-07 — awaiting human sign-off |
-| B — circles become formation | Deep layers for the other six; Plans "Browse by circle"; plan completion → "What do you want to keep carrying?"; "Pray through my altar" | Later |
+| B — circles become formation | Circle pages in the app; deep layers for the other six; Plans "Explore by circle"; plan completion → "What do you want to keep carrying?"; "Pray through my altar" | Done 2026-10-07 — all seven deep layers await human sign-off |
 | C — circles become intercession | Carry a community prayer into a personal circle (needs the privacy decision above); circle context in Tend and testimonies | Later |
 | P4 | Your Altar overview; optional weekly intercession rhythm; Grow → Intercession hub; monthly reflection | Later |
 

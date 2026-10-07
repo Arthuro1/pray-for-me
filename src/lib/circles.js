@@ -66,9 +66,10 @@ export function circlesWithin(circle) {
 
 // Group prayers by circle, keeping the canonical inner-to-outer order and
 // dropping empty circles. Unplaced prayers come back under `null`, last.
-export function groupByCircle(prayers) {
+// `circleFor` decides a prayer's circle (by default the one it was placed in).
+export function groupByCircle(prayers, circleFor = circleOf) {
   const buckets = new Map([...CIRCLES, null].map((c) => [c, []]));
-  for (const prayer of prayers || []) buckets.get(circleOf(prayer)).push(prayer);
+  for (const prayer of prayers || []) buckets.get(normalizeCircle(circleFor(prayer))).push(prayer);
   return [...buckets].filter(([, list]) => list.length > 0).map(([circle, list]) => ({ circle, prayers: list }));
 }
 

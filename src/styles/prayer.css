@@ -297,6 +297,17 @@
 
 .prayer-session__context { margin: 0 0 var(--q-space-4); color: var(--q-text-tertiary); font-size: var(--q-type-meta); letter-spacing: 0.02em; }
 
+/* "Pray through my altar": the order switch under the formats, and the quiet
+   threshold into each circle — editorial type and the Rise Mark, rising in
+   with the prayer it opens. No card, no extra step. */
+.prayer-session__altar-order { margin-block-start: var(--q-space-1); }
+.prayer-session__altar-row { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: var(--q-space-3); padding: 6px var(--q-space-3); }
+.prayer-session__altar-row > span { display: grid; gap: 2px; }
+
+.prayer-session__threshold { margin-block-end: var(--q-space-8); padding-block-end: var(--q-space-6); border-block-end: 1px solid var(--q-border); }
+.prayer-session__threshold-label { display: inline-flex; align-items: center; gap: var(--q-space-2); margin-block-start: var(--q-space-3); }
+.prayer-session__threshold-line { margin: var(--q-space-2) 0 0; color: var(--q-gold-text); font-family: var(--q-font-editorial); font-size: 1.1875rem; font-style: italic; line-height: 1.4; }
+
 .prayer-session__title {
   margin: 0 0 var(--q-space-6);
   color: var(--q-text);
