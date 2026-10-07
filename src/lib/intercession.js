@@ -7,6 +7,7 @@
 // Completion stays the ordinary per-prayer completion record (markPrayedOn), so
 // the queue, Today and the calendar can never disagree about what was prayed.
 import { prayersForDay } from './planner';
+import { CIRCLES, circleOf } from './circles';
 
 // Active personal prayers that belong in the queue. Locked rows (undecryptable
 // on this device) are excluded — a session can't display them.
@@ -50,6 +51,22 @@ export function filterQueue(queue, filter) {
   if (filter === 'personal') return queue.filter((p) => !p.community_origin_id);
   if (filter === 'groups') return queue.filter((p) => !!p.community_origin_id);
   return queue;
+}
+
+// The circles the user placed their carried prayers in, inner to outer — the
+// carrier's own placement, never the author's. Offered as a filter only when
+// choosing one would narrow the list.
+export function queueCircles(queue) {
+  const used = new Set((queue || []).map(circleOf).filter(Boolean));
+  const circles = CIRCLES.filter((circle) => used.has(circle));
+  const narrows = circles.length > 1 || (circles.length === 1 && queue.some((p) => circleOf(p) !== circles[0]));
+  return narrows ? circles : [];
+}
+
+// 'all' | one circle — like the source filter, it never touches completion data.
+export function filterQueueByCircle(queue, circle) {
+  if (!circle || circle === 'all') return queue;
+  return queue.filter((p) => circleOf(p) === circle);
 }
 
 // What is still unprayed on `dayKey` — resuming a left-midway session starts

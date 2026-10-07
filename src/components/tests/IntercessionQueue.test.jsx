@@ -69,6 +69,35 @@ describe('IntercessionQueue — membership', () => {
   });
 });
 
+describe('IntercessionQueue — by the carrier’s own circles', () => {
+  const placed = (id, circle) => ({ ...saved(id), circle });
+  const chip = (name) => screen.getByRole('button', { name });
+
+  it('offers no circle filter until carried prayers are placed', () => {
+    usePrayerStore.setState({ prayers: [saved('a'), forOther('b')] });
+    render(<IntercessionQueue lang={lang} />);
+    expect(screen.queryByRole('group', { name: t(lang, 'journalCircle') })).toBeNull();
+  });
+
+  it('narrows what the session walks to one circle, and back', () => {
+    usePrayerStore.setState({ prayers: [placed('a', 'people'), placed('b', 'nations'), saved('c')] });
+    render(<IntercessionQueue lang={lang} />);
+    expect(screen.getByRole('group', { name: t(lang, 'journalCircle') })).toBeTruthy();
+    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
+
+    fireEvent.click(chip(t(lang, 'circle_nations')));
+    expect(chip(t(lang, 'circle_nations')).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+    fireEvent.click(screen.getByText(t(lang, 'praySharedBtn')));
+    expect(screen.getByText('Sujet b')).toBeTruthy();
+    fireEvent.click(screen.getByLabelText(t(lang, 'close')));
+
+    fireEvent.click(chip(t(lang, 'all')));
+    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
+    expect(usePrayerStore.getState().completions).toEqual({});
+  });
+});
+
 describe('IntercessionQueue — session & resume', () => {
   it('praying updates completions immediately and the queue count on return', () => {
     usePrayerStore.setState({ prayers: [forOther('b'), forOther('d')] });

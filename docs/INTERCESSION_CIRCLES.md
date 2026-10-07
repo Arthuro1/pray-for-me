@@ -170,8 +170,31 @@ approvals.
   `onAddInCircle`; rows hide the circle (`PrayerListItem showCircle={false}`).
 - **Prayer detail**: circle eyebrow (opens the circle page through
   `onOpenCircle`; plain text where the host passes none) + "Place in a
-  circle"/"Change circle" (full `CirclePicker` in a `Modal`, saving
-  `updatePrayer(id, { circle })`).
+  circle"/"Change circle" (`components/circles/PlaceCircleModal.jsx`: the full
+  `CirclePicker` in a `Modal` portalled to `<body>`, saving
+  `updatePrayer(id, { circle })`). A carried copy is placeable too, with the
+  carrier's question ("Where would you like to carry this on your altar?") and
+  "Only you see this — never the group or the person who asked."
+- **Carry a group request** (`components/circles/CarryPlacement.jsx`, used by
+  `GroupPrayerRow` and `PrayTogetherCard`): carrying stays one tap. While the
+  person carries it, a quiet link follows the Carry button — "Place on your
+  altar" (on a wall row only right after carrying, on the request's own page
+  always), or the carrier's own circle once placed, which reopens the picker.
+  It writes `updatePrayer(copy.id, { circle })` on the carrier's encrypted copy
+  (`useCommunityPrayerActions` returns `carriedCopy` and `justCarried`) and
+  nothing else; the author's circle is never copied (`communityToPersonalInsert`)
+  and no community table, RPC or action sees it. Offered only when the copy can
+  hold private metadata and is readable on this device.
+- **Prayers you're carrying** (`components/IntercessionQueue.jsx`): once
+  carried prayers are placed in more than one circle (or one circle beside
+  unplaced ones), a quiet row of circle chips narrows what the session walks,
+  together with the source filter (`queueCircles`, `filterQueueByCircle` in
+  `lib/intercession.js`). Group walls themselves are never filtered by circle.
+- **Remember**: an answered prayer keeps its circle — the row in the Journal's
+  Answered segment names it beside "Testimony", the detail leads with it, and
+  the Journal's circle filter works on the Answered segment. Nothing interprets
+  why a prayer was answered, and a testimony shared to a group never carries a
+  circle.
 - **Plans** (`PlansTab.jsx`): "Explore by circle" — seven doors to the circle
   pages, beside the journey types; each `PlanCard` names its primary circle in
   one quiet line; `PlanDetailModal` says "Forms prayer in …" and, quieter,
@@ -230,7 +253,7 @@ simply has no "Go deeper" section yet.
 | A — circles become real | Foundation; interactive landing circles with the short panel and a CTA into the guest prayer; circle row in prayer creation; Journal "By circle"; change circle on prayer detail; light Today | Done 2026-10-07 |
 | + | My heart's deep layer as a gated draft | Done 2026-10-07 — awaiting human sign-off |
 | B — circles become formation | Circle pages in the app; deep layers for the other six; Plans "Explore by circle"; plan completion → "What do you want to keep carrying?"; "Pray through my altar" | Done 2026-10-07 — all seven deep layers await human sign-off |
-| C — circles become intercession | Carry a community prayer into a personal circle (needs the privacy decision above); circle context in Tend and testimonies | Later |
+| C — circles become intercession | Carried copies encrypted under the carrier's key; carry a community prayer into the carrier's own circle; circle filter on "Prayers you're carrying"; circle context in Tend (since the redesign) and testimonies | Done 2026-10-07 |
 | P4 | Your Altar overview; optional weekly intercession rhythm; Grow → Intercession hub; monthly reflection | Later |
 
 Explicitly never: circle scores or percentages, circle streaks or badges,

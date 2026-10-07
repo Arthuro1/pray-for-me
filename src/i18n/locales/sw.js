@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "Ungependa kulibeba vipi sasa?",
   "carryingLabel": "Unalibeba",
   "rememberLabel": "Kukumbuka",
+  "carryCircleQuestion": "Ungependa kulibeba ombi hili katika duara gani kwenye madhabahu yako?",
+  "carryCircleHint": "Si lazima. Ni wewe tu unayeona hili — kamwe si kikundi wala mtu aliyeomba.",
+  "carryPlacedIn": "Linabebwa katika “{circle}” — badilisha duara",
 };

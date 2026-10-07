@@ -8,8 +8,12 @@ import useTranslationStore from '../store/translationStore';
 import PrayerSession from './PrayerSession';
 import { t } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
-import { intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, remainingInQueue } from '../lib/intercession';
+import { circleLabelKey } from '../lib/circles';
+import {
+  intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, queueCircles, filterQueueByCircle, remainingInQueue,
+} from '../lib/intercession';
 import { Disclosure, PrimaryButton, QuietButton, SecondaryButton, SectionHeader, SegmentedControl } from './shared/Primitives';
+import CircleGlyph from './shared/CircleGlyph';
 import RiseMark from './shared/RiseMark';
 
 // The intercession queue, surfaced inside Together: one clear "Pray shared
@@ -20,7 +24,9 @@ import RiseMark from './shared/RiseMark';
 // collapsed disclosure. It reuses the ordinary PrayerSession and per-prayer
 // completions — leaving midway keeps real progress, and reopening resumes with
 // the first unfinished request. Renders nothing when the queue is empty, so
-// Grace never sees it.
+// Grace never sees it. Once the user has placed carried prayers in circles, a
+// quiet circle filter narrows the walk — by the carrier's own placement, and
+// never by anything the person who asked chose.
 export default function IntercessionQueue({ lang }) {
   const { prayers, categories, completions, markPrayedOn } = usePrayerStore(
     useShallow((s) => ({
@@ -36,6 +42,7 @@ export default function IntercessionQueue({ lang }) {
   const userId = useAuthStore((s) => s.user?.id);
   const { tr } = useTranslationStore();
   const [filter, setFilter] = useState('all');
+  const [circle, setCircle] = useState('all');
   // Snapshot of the session's prayers, fixed when it starts — completions
   // recorded while praying must not reshuffle the walk mid-session.
   const [session, setSession] = useState(null);
@@ -57,9 +64,14 @@ export default function IntercessionQueue({ lang }) {
 
   const due = dueIntercessionQueue(prayers, categories, dayKey, myCommitments);
   const sources = queueSources(due);
-  const filtered = filterQueue(due, filter);
+  const circles = queueCircles(carried);
+  const activeCircle = circles.includes(circle) ? circle : 'all';
+  // Both filters change only what the session walks, never completion data.
+  const narrow = (queue) => filterQueueByCircle(filterQueue(queue, filter), activeCircle);
+  const filtered = narrow(due);
+  const listed = narrow(carried);
   const remaining = remainingInQueue(filtered, completions, dayKey);
-  const allRemaining = remainingInQueue(filterQueue(carried, filter), completions, dayKey);
+  const allRemaining = remainingInQueue(listed, completions, dayKey);
   const dueDone = due.length > 0 && remainingInQueue(due, completions, dayKey).length === 0;
 
   const FILTERS = [
@@ -108,6 +120,19 @@ export default function IntercessionQueue({ lang }) {
       {sources.count > 1 && (
         <SegmentedControl label={t(lang, 'intercessionTitle')} value={filter} onChange={setFilter} options={FILTERS} className="mt-1" />
       )}
+      {circles.length > 0 && (
+        <div className="q-chips carried-queue__circles" role="group" aria-label={t(lang, 'journalCircle')}>
+          <button type="button" aria-pressed={activeCircle === 'all'} onClick={() => setCircle('all')} className="q-chip pressable">
+            {t(lang, 'all')}
+          </button>
+          {circles.map((c) => (
+            <button key={c} type="button" aria-pressed={activeCircle === c} onClick={() => setCircle(c)} className="q-chip circle-chip pressable">
+              <CircleGlyph circle={c} size={16} selected={activeCircle === c} />
+              <span>{t(lang, circleLabelKey(c))}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {remaining.length > 0 ? (
         <div className="carried-queue__actions">
@@ -124,7 +149,7 @@ export default function IntercessionQueue({ lang }) {
           </p>
           {/* Quiet Pray again over today's due queue — completions are
               idempotent per day, so walking it again never double-counts. */}
-          <QuietButton onClick={() => setSession(filterQueue(due, filter))}>{t(lang, 'prayAgainBtn')}</QuietButton>
+          <QuietButton onClick={() => setSession(filtered)}>{t(lang, 'prayAgainBtn')}</QuietButton>
         </div>
       )}
 
@@ -133,13 +158,13 @@ export default function IntercessionQueue({ lang }) {
       {carried.length > due.length && (
         <Disclosure
           id="intercession-all"
-          label={t(lang, 'intercessionAllCarried', { n: carried.length })}
+          label={t(lang, 'intercessionAllCarried', { n: listed.length })}
           open={allOpen}
           onToggle={() => setAllOpen((v) => !v)}
           className="carried-queue__all"
         >
           <ul className="carried-queue__list">
-            {carried.map((p) => {
+            {listed.map((p) => {
               const prayedToday = (completions[p.id] || []).includes(dayKey);
               return (
                 <li key={p.id} className="carried-queue__item">

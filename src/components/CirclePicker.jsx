@@ -12,8 +12,9 @@ import CircleGlyph from './shared/CircleGlyph';
 // Two forms. `compact` is the quiet row under the prayer's own words in the
 // composer — the prayer comes first, the circle second, and it never grows into
 // a form. The full form (each circle with what it holds) is for a deliberate
-// choice, such as changing a saved prayer's circle.
-export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle', compact = false }) {
+// choice, such as changing a saved prayer's circle; `label`/`hint` let a caller
+// ask its own question there (a carried request's circle is the carrier's alone).
+export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle', compact = false, label, hint }) {
   const legendId = `${idPrefix}-legend`;
   const hintId = `${idPrefix}-hint`;
   const toggle = (circle) => onChange(value === circle ? null : circle);
@@ -46,8 +47,8 @@ export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle
 
   return (
     <fieldset className="circle-picker" aria-labelledby={legendId} aria-describedby={hintId}>
-      <legend id={legendId} className="q-field__label">{t(lang, 'placeOnAltarLabel')}</legend>
-      <p id={hintId} className="q-field__hint circle-picker__hint">{t(lang, 'placeOnAltarHint')}</p>
+      <legend id={legendId} className="q-field__label">{label || t(lang, 'placeOnAltarLabel')}</legend>
+      <p id={hintId} className="q-field__hint circle-picker__hint">{hint || t(lang, 'placeOnAltarHint')}</p>
       <div className="circle-options">
         {CIRCLES.map((circle) => {
           const selected = value === circle;

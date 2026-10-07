@@ -1523,4 +1523,7 @@ export default {
   "tendQuestion": "Wie möchtest du dieses Gebet jetzt tragen?",
   "carryingLabel": "Du trägst es mit",
   "rememberLabel": "Erinnern",
+  "carryCircleQuestion": "Wo möchtest du dieses Gebet auf deinem Altar tragen?",
+  "carryCircleHint": "Optional. Nur du siehst das – nie die Gruppe oder die Person, die darum gebeten hat.",
+  "carryPlacedIn": "Getragen in „{circle}“ – Kreis ändern",
 };

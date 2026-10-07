@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "كيف تودّ أن تحملها الآن؟",
   "carryingLabel": "أنت تحملها",
   "rememberLabel": "تذكّر",
+  "carryCircleQuestion": "أين تودّ أن تحمل هذه الصلاة على مذبحك؟",
+  "carryCircleHint": "اختياري. أنت وحدك ترى ذلك، لا المجموعة ولا الشخص الذي طلب الصلاة.",
+  "carryPlacedIn": "محمولة في «{circle}» — تغيير الدائرة",
 };

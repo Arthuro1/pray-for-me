@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "¿Cómo quieres llevarla ahora?",
   "carryingLabel": "La llevas",
   "rememberLabel": "Recordar",
+  "carryCircleQuestion": "¿Dónde quieres llevar esta oración en tu altar?",
+  "carryCircleHint": "Opcional. Solo tú lo ves, nunca el grupo ni la persona que la pidió.",
+  "carryPlacedIn": "Llevada en «{circle}» — cambiar de círculo",
 };

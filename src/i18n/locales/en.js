@@ -1527,4 +1527,7 @@ export default {
   "tendQuestion": "How would you like to carry this now?",
   "carryingLabel": "Carrying",
   "rememberLabel": "Remember",
+  "carryCircleQuestion": "Where would you like to carry this on your altar?",
+  "carryCircleHint": "Optional. Only you see this — never the group or the person who asked.",
+  "carryPlacedIn": "Carried in {circle} — change circle",
 };

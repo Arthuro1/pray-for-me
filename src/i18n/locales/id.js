@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "Bagaimana Anda ingin mendoakannya sekarang?",
   "carryingLabel": "Sedang mendoakan",
   "rememberLabel": "Mengingat",
+  "carryCircleQuestion": "Di mana Anda ingin membawa doa ini di mezbah Anda?",
+  "carryCircleHint": "Opsional. Hanya Anda yang melihatnya — tidak pernah kelompok atau orang yang memintanya.",
+  "carryPlacedIn": "Dibawa dalam “{circle}” — ubah lingkaran",
 };

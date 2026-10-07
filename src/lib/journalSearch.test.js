@@ -166,6 +166,19 @@ describe('journal retrieval filters', () => {
     expect(journalFiltersActive({ ...EMPTY_JOURNAL_FILTERS, circle: 'none' }, 'active')).toBe(true);
   });
 
+  it('looks back over answered prayers by circle — carried requests included — without counting anything', () => {
+    const remembered = [
+      { id: 'a1', status: 'answered', title: 'Sarah', circle: 'household', answered_at: '2026-03-01T00:00:00Z' },
+      { id: 'a2', status: 'answered', title: 'Group request', circle: 'household', community_origin_id: 'c-1', origin_group_name: 'Église', answered_at: '2026-04-01T00:00:00Z' },
+      { id: 'a3', status: 'answered', title: 'Our church', circle: 'church', answered_at: '2026-05-01T00:00:00Z' },
+      { id: 'x1', status: 'active', title: 'Still carried', circle: 'household' },
+    ];
+    const ids = filterJournalPrayers({ prayers: remembered, status: 'answered', filters: { ...EMPTY_JOURNAL_FILTERS, circle: 'household' } })
+      .map(({ prayer }) => prayer.id);
+    expect(ids.sort()).toEqual(['a1', 'a2']);
+    expect(journalFiltersActive({ ...EMPTY_JOURNAL_FILTERS, circle: 'household' }, 'answered')).toBe(true);
+  });
+
   it('does not count an answered-date choice as active-segment filtering', () => {
     const filters = { ...EMPTY_JOURNAL_FILTERS, answeredDate: 'month' };
     expect(journalFiltersActive(filters, 'active')).toBe(false);

@@ -122,9 +122,25 @@ describe('PrayerDetail — the circle', () => {
     expect(screen.queryByRole('button', { name: t(lang, 'placeInCircle') })).toBeNull();
   });
 
-  it('offers no circle control on a carried copy of a community prayer', () => {
+  it('lets the carrier place a carried group request in their own circle, privately', () => {
     renderDetail(base({ community_origin_id: 'c-9', origin_group_name: 'Groupe' }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'placeInCircle') }));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'carryCircleQuestion') });
+    expect(within(dialog).getByText(t(lang, 'carryCircleHint'))).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: new RegExp(t(lang, 'circle_people')) }));
+    expect(updatePrayer).toHaveBeenCalledWith('p1', { circle: 'people' });
+  });
+
+  it('a carried request already placed leads with the carrier’s circle and the group it came from', () => {
+    const { container } = renderDetail(base({ community_origin_id: 'c-9', origin_group_name: 'Groupe', circle: 'people' }));
+    const hero = container.querySelector('.prayer-detail__hero');
+    expect(within(hero).getByText(t(lang, 'circle_people'))).toBeTruthy();
+    expect(within(hero).getByText('Groupe')).toBeTruthy();
+    expect(within(hero).getByRole('button', { name: t(lang, 'changeCircle') })).toBeTruthy();
+  });
+
+  it('offers no circle control on a carried copy this device cannot open', () => {
+    renderDetail(base({ community_origin_id: 'c-9', origin_group_name: 'Groupe', _locked: true }));
     expect(screen.queryByRole('button', { name: t(lang, 'placeInCircle') })).toBeNull();
-    expect(screen.queryByRole('button', { name: t(lang, 'changeCircle') })).toBeNull();
   });
 });

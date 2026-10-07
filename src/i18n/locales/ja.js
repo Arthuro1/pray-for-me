@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "これから、この祈りをどのようにとりなしますか？",
   "carryingLabel": "とりなし中",
   "rememberLabel": "覚える",
+  "carryCircleQuestion": "この祈りを、祭壇のどのサークルで覚えますか？",
+  "carryCircleHint": "任意。これはあなただけに表示され、グループや祈りを求めた人には表示されません。",
+  "carryPlacedIn": "「{circle}」で覚えています — サークルを変更",
 };

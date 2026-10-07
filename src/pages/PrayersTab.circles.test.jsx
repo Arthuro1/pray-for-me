@@ -106,6 +106,26 @@ describe('PrayersTab — By circle', () => {
     expect(screen.getByText('Prière done')).toBeTruthy();
   });
 
+  it('remembers where an answered prayer and its testimony belonged', () => {
+    usePrayerStore.setState((s) => ({
+      prayers: [
+        ...s.prayers,
+        prayer('carried', {
+          circle: 'people', status: 'answered', answered_at: new Date().toISOString(),
+          community_origin_id: 'c-1', origin_group_name: 'Église',
+          prayer_testimonies: [{ id: 't1', content: 'Merci', created_at: new Date().toISOString() }],
+        }),
+      ],
+    }));
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 2` }));
+    const row = (title) => screen.getByText(title).closest('button');
+    expect(within(row('Prière done')).getByText(t(lang, 'circle_church'))).toBeTruthy();
+    // A carried request keeps the carrier's own circle beside its testimony.
+    expect(within(row('Prière carried')).getByText(t(lang, 'circle_people'))).toBeTruthy();
+    expect(within(row('Prière carried')).getByText(t(lang, 'testimony'))).toBeTruthy();
+  });
+
   it('names each circle as a way into its teaching, and is reopened when that page sends the reader back', () => {
     render(
       <MemoryRouter initialEntries={['/prayers']}>

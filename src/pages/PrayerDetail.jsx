@@ -67,9 +67,9 @@ import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import AudienceBadge from '../components/shared/AudienceBadge';
 import PrayerSession from '../components/PrayerSession';
-import { Modal, PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
+import { PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
 import CircleGlyph from '../components/shared/CircleGlyph';
-import CirclePicker from '../components/CirclePicker';
+import PlaceCircleModal from '../components/circles/PlaceCircleModal';
 import { canHoldPrivateMetadata } from '../lib/crypto/prayerCrypto';
 import { circleLabelKey, circleOf } from '../lib/circles';
 import FollowUpField from '../components/FollowUpField';
@@ -289,7 +289,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // ── Community mode: answered mirroring + "I'm praying" toggle ──────────────
   const {
     communityHasReacted, togglingPraying, testimonySent, setTestimonySent,
-    handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying,
+    handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying, carriedCopy,
   } = useCommunityPrayerActions({ communityPrayer, isCommunity, user, authorName, lang });
 
   // Whole-testimony delete (author or group admin). The store drops it from the
@@ -537,7 +537,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // A saved copy follows the shared content read-only: it pulls the author's/
   // group's latest, but isn't edited here (open it in Community to contribute).
   const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
-  const canPlaceCircle = !isCommunity && !savedCopy && !livePrayer._locked && canHoldPrivateMetadata(livePrayer);
+  // A carried copy can be placed too: the circle is the carrier's own, on their
+  // own encrypted copy, and never reaches the group.
+  const canPlaceCircle = !isCommunity && !livePrayer._locked && canHoldPrivateMetadata(livePrayer);
   // Any run of a plan — upcoming, in progress or finished — can pass the plan
   // on. What is shared is the plan, never this run or anything prayed in it.
   const planShareable = !isCommunity && !savedCopy && !!user?.id && isPlanShareable(plan);
@@ -978,17 +980,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
         {showCirclePicker && (
-          <Modal label={t(lang, heroCircle ? 'changeCircle' : 'placeInCircle')} onClose={() => setShowCirclePicker(false)}>
-            <CirclePicker
-              value={heroCircle}
-              onChange={(circle) => {
-                updatePrayer(livePrayer.id, { circle });
-                setShowCirclePicker(false);
-              }}
-              lang={lang}
-              idPrefix="detail-circle"
-            />
-          </Modal>
+          <PlaceCircleModal
+            value={heroCircle}
+            onPlace={(circle) => updatePrayer(livePrayer.id, { circle })}
+            onClose={() => setShowCirclePicker(false)}
+            lang={lang}
+            carried={savedCopy}
+            idPrefix="detail-circle"
+          />
         )}
         {canEditTitle && editingTitle ? (
           <input
@@ -1540,6 +1539,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             lang={lang}
             user={user}
             onTogglePraying={handleTogglePraying}
+            carriedCopy={carriedCopy}
           />
         )}
 

@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "Paano mo nais pasanin ito ngayon?",
   "carryingLabel": "Pinapasan mo",
   "rememberLabel": "Alalahanin",
+  "carryCircleQuestion": "Saan mo gustong pasanin ang panalanging ito sa iyong altar?",
+  "carryCircleHint": "Opsyonal. Ikaw lang ang nakakakita nito — hindi kailanman ang grupo o ang taong humiling.",
+  "carryPlacedIn": "Pinapasan sa “{circle}” — palitan ang bilog",
 };

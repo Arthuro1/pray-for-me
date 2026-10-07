@@ -55,6 +55,8 @@ import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
 import { supabase } from '../lib/supabase';
 import { guides } from '../content/teaching';
 import CirclePicker from '../components/CirclePicker';
+import { CarryPlacementLink } from '../components/circles/CarryPlacement';
+import PlaceCircleModal from '../components/circles/PlaceCircleModal';
 import { Modal, PageHeader } from '../components/shared/Primitives';
 import { dirFor, isLocaleLoaded, loadLocale } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
@@ -140,9 +142,22 @@ const SCREENS = [
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
 
 // A small group as a member meets it: two groups, a friend request, a wall of
-// requests (one carried, one answered, one anonymous) and a testimony.
+// requests (two carried, one answered, one anonymous) and a testimony. The
+// carried ones sit in the member's own list, placed in their own circles.
 function seedTogether() {
   const ok = (value) => async () => value;
+  const carried = (id, origin, title, circle) => ({
+    id, community_origin_id: origin, origin_group_name: 'Home group', title, circle, status: 'active', schedule: daily,
+    user_id: 'design-user', created_at: '2026-09-01T08:00:00Z',
+    prayer_categories: [], prayer_points: [], prayer_testimonies: [], prayer_updates: [],
+  });
+  usePrayerStore.setState((s) => ({
+    prayers: [
+      ...s.prayers.filter((p) => !p.community_origin_id),
+      carried('cc1', 'c1', 'Please pray for my mother', 'people'),
+      carried('cc2', 'c2', 'Wisdom for our elders this autumn', 'church'),
+    ],
+  }));
   useCommunityStore.setState({
     groups: [
       { id: 'g1', name: 'Home group', role: 'admin', created_by: 'design-user', invite_code: 'HOME42', autoAdd: false },
@@ -157,7 +172,7 @@ function seedTogether() {
     testimonies: [
       { id: 't1', community_prayer_id: 'c4', user_id: 'u5', author_name: 'David', content: 'I started my new work on Monday. Thank you for carrying this with me for so long.', created_at: hoursAgo(30), community_prayers: { title: 'A new job' } },
     ],
-    userReactions: new Set(['c1']),
+    userReactions: new Set(['c1', 'c2']),
     loading: false,
     memberAvatars: {},
     fetchFriends: ok({ friends: [{ id: 'f1', name: 'Marie' }, { id: 'f2', name: 'Jonas' }] }),
@@ -267,10 +282,15 @@ const REACTORS = [
   { user_id: 'r3', name: 'Paul' },
 ];
 
-// "Carry this prayer" as a group member meets it: before and after carrying.
-function CarryPreview({ lang }) {
+// "Carry this prayer" as a group member meets it: before and after carrying,
+// then placing it on one's own altar. The placement link needs the account key
+// in the app, which a preview never fakes — so it is shown here on its own, in
+// both states, with the carrier's dialog (`?open=1`).
+function CarryPreview({ lang, open: initiallyOpen }) {
   // Before the cards mount, so their first fetch already sees the faces.
   useState(() => useCommunityStore.setState({ fetchReactors: async (id) => ({ reactors: id === 'c2' ? REACTORS : [] }) }));
+  const [open, setOpen] = useState(initiallyOpen);
+  const [circle, setCircle] = useState('people');
   const user = useAuthStore.getState().user;
   return (
     <div className="phase-page">
@@ -278,7 +298,12 @@ function CarryPreview({ lang }) {
       <div className="phase-content grid gap-10">
         <PrayTogetherCard communityPrayer={{ id: 'c1' }} count={0} hasReacted={false} busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
         <PrayTogetherCard communityPrayer={{ id: 'c2' }} count={8} hasReacted busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
+        <div className="flex flex-wrap gap-6">
+          <CarryPlacementLink circle={null} lang={lang} onOpen={() => setOpen(true)} />
+          <CarryPlacementLink circle={circle} lang={lang} onOpen={() => setOpen(true)} />
+        </div>
       </div>
+      {open && <PlaceCircleModal value={circle} onPlace={setCircle} onClose={() => setOpen(false)} lang={lang} carried idPrefix="design-carry-circle" />}
     </div>
   );
 }
@@ -328,7 +353,7 @@ export default function DesignScreens({ screen }) {
     <Layout onAddPrayer={() => {}}>
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
-      {screen === 'carry' && <CarryPreview lang={lang} />}
+      {screen === 'carry' && <CarryPreview lang={lang} open={searchParams.get('open') === '1'} />}
       {(screen === 'plans' || screen === 'plan' || screen === 'plan-share' || screen === 'plan-tailor') && <PlansTab />}
       {screen === 'plan-day' && <PlanDayPreview lang={lang} />}
       {screen === 'plan-share' && <PlanSharePreview lang={lang} />}

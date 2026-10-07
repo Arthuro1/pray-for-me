@@ -6,6 +6,28 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
+
+- **After "Carry this prayer"**, a quiet "Place on your altar" follows the
+  button — on a group wall right after carrying, on the request's own page
+  whenever it is carried. It opens "Where would you like to carry this on your
+  altar?" with the seven circles, and says only the carrier ever sees it.
+  Carrying itself stays one tap and never waits on it; once placed, the link
+  names the carrier's circle. The circle is the carrier's relationship to the
+  prayer — the author's mother may be the carrier's "My people" — so it lives
+  on the carrier's own encrypted copy and is never copied from the author or
+  shown to the group.
+- A carried request's own page in the Journal can now be placed or moved like
+  any other prayer.
+- **Prayers you're carrying** gains a quiet circle filter once carried prayers
+  sit in different circles; it narrows only what the time of prayer walks.
+  Group walls are not filtered by circle.
+- Remember: answered prayers and testimonies keep their circle in the
+  Journal, and the circle filter works on answered prayers. Tend your altar
+  already led with the circle.
+- 3 new keys × 16 languages (14 AI-drafted, need a native pass):
+  `carryCircleQuestion`, `carryCircleHint`, `carryPlacedIn`.
+
 ### Security — carried group requests are encrypted (`docs/ENCRYPTION.md`)
 
 - "Carry this prayer" used to save the carrier's copy of a group request with

@@ -2,7 +2,9 @@
 // — never every request from every group — and its remaining/resume math rides
 // the ordinary per-prayer completion records, so filters can never corrupt them.
 import { describe, it, expect } from 'vitest';
-import { intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, remainingInQueue } from './intercession';
+import {
+  intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, queueCircles, filterQueueByCircle, remainingInQueue,
+} from './intercession';
 
 const own = (id) => ({ id, status: 'active', for_other: false });
 const forOther = (id) => ({ id, status: 'active', for_other: true, person_name: 'Marc' });
@@ -40,6 +42,32 @@ describe('queueSources / filterQueue', () => {
     expect(filterQueue(queue, 'personal').map((p) => p.id)).toEqual(['b']);
     expect(filterQueue(queue, 'groups').map((p) => p.id)).toEqual(['c']);
     expect(filterQueue(queue, 'all')).toEqual(queue);
+  });
+});
+
+describe('queueCircles / filterQueueByCircle — the carrier’s own placement', () => {
+  const placed = (id, circle) => ({ ...saved(id), circle });
+
+  it('lists the circles in use, inner to outer, once choosing one would narrow the list', () => {
+    expect(queueCircles([placed('a', 'nations'), placed('b', 'people'), saved('c')])).toEqual(['people', 'nations']);
+    // One circle beside unplaced prayers still narrows.
+    expect(queueCircles([placed('a', 'church'), saved('c')])).toEqual(['church']);
+  });
+
+  it('offers nothing when no prayer is placed, or when every one shares the same circle', () => {
+    expect(queueCircles([saved('a'), forOther('b')])).toEqual([]);
+    expect(queueCircles([placed('a', 'people'), placed('b', 'people')])).toEqual([]);
+    expect(queueCircles([])).toEqual([]);
+  });
+
+  it('never reads a circle it does not know', () => {
+    expect(queueCircles([placed('a', 'galaxies'), placed('b', 'people')])).toEqual(['people']);
+  });
+
+  it('filters by circle without touching the prayers themselves', () => {
+    const queue = [placed('a', 'nations'), placed('b', 'people'), saved('c')];
+    expect(filterQueueByCircle(queue, 'people').map((p) => p.id)).toEqual(['b']);
+    expect(filterQueueByCircle(queue, 'all')).toBe(queue);
   });
 });
 

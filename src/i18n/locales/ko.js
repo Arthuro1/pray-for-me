@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "이제 이 기도를 어떻게 품고 싶으신가요?",
   "carryingLabel": "품고 있음",
   "rememberLabel": "기억하기",
+  "carryCircleQuestion": "이 기도를 제단의 어느 원에서 품고 싶으신가요?",
+  "carryCircleHint": "선택 사항입니다. 나만 볼 수 있으며, 그룹이나 기도를 요청한 사람은 볼 수 없습니다.",
+  "carryPlacedIn": "‘{circle}’에서 품는 중 — 원 변경",
 };

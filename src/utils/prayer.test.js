@@ -64,6 +64,10 @@ describe('communityToPersonalInsert', () => {
     expect(out.origin_is_anonymous).toBe(true);
     expect(out.description).toBe('');
   });
+  it('never copies a circle: the carrier places it in their own (spec §153)', () => {
+    const cp = { id: 'c3', title: 'For my mother', is_anonymous: false, author_name: 'Marie', circle: 'household' };
+    expect(communityToPersonalInsert(cp, 'Cell', 'u1')).not.toHaveProperty('circle');
+  });
 });
 
 describe('shared-source display recovery', () => {

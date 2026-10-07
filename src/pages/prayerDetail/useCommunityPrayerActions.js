@@ -9,10 +9,13 @@ import { t } from '../../i18n';
 // onto the viewer's personal source or saved copy), and the "I'm praying" toggle
 // (which symmetrically adds/removes the personal copy). Owns the togglingPraying
 // and testimonySent flags; setTestimonySent is returned for the separate
-// community-testimony composer that stays in PrayerDetail. No-op in personal mode.
+// community-testimony composer that stays in PrayerDetail. Also returns the
+// viewer's carried copy and whether they carried it just now, for the quiet
+// "Place on your altar" follow-up. No-op in personal mode.
 export default function useCommunityPrayerActions({ communityPrayer, isCommunity, user, authorName, lang }) {
   const [togglingPraying, setTogglingPraying] = useState(false);
   const [testimonySent, setTestimonySent] = useState(false);
+  const [justCarried, setJustCarried] = useState(false);
 
   const { userReactions, groups, toggleReaction, setCommunityAnswered, addTestimony } = useCommunityStore(
     useShallow((s) => ({
@@ -35,10 +38,13 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
 
   const communityHasReacted = isCommunity && userReactions.has(communityPrayer?.id);
 
+  // The viewer's own carried copy of this request, if they carry it.
+  const carriedCopy = isCommunity ? prayers.find((p) => p.community_origin_id === communityPrayer.id) || null : null;
+
   // True when this community prayer is already in the user's personal list —
   // either saved as a copy, or it was originally shared from their own prayer.
   const alreadyInPersonal = isCommunity && (
-    prayers.some((p) => p.community_origin_id === communityPrayer.id)
+    !!carriedCopy
     || (communityPrayer.source_prayer_id && prayers.some((p) => p.id === communityPrayer.source_prayer_id))
   );
 
@@ -107,11 +113,14 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
     if (!wasReacted && !alreadyInPersonal) {
       const groupName = groups.find((g) => g.id === communityPrayer.group_id)?.name || null;
       const res = await addFromCommunity(communityPrayer, groupName);
-      if (!res?.error) toast.success(t(lang, 'carryAdded'));
+      if (!res?.error) {
+        setJustCarried(true);
+        toast.success(t(lang, 'carryAdded'));
+      }
     } else if (wasReacted) {
-      const savedCopy = prayers.find((p) => p.community_origin_id === communityPrayer.id);
-      if (savedCopy) {
-        softDeletePrayer(savedCopy.id);
+      setJustCarried(false);
+      if (carriedCopy) {
+        softDeletePrayer(carriedCopy.id);
         toast.success(t(lang, 'carryRemoved'));
       }
     }
@@ -121,5 +130,6 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
   return {
     communityHasReacted, togglingPraying, testimonySent, setTestimonySent,
     handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying,
+    carriedCopy, justCarried,
   };
 }

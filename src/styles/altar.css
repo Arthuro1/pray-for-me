@@ -284,6 +284,23 @@
 .carry-section__faces > * { box-shadow: 0 0 0 2px var(--q-canvas); }
 .carry-section__faces > * + * { margin-inline-start: -6px; }
 
+/* After carrying: "Place on your altar", or the carrier's own circle. A quiet
+   link, never a second button competing with Carry. */
+.carry-placement {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--q-royal-text);
+  font-size: var(--q-type-meta);
+  font-weight: 600;
+}
+.carry-placement:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.carry-placement .circle-glyph { flex: 0 0 auto; }
+
 /* The composer's quiet circle row: the shared chips, a glyph in each, wrapping
    onto as many lines as the screen needs — never a form of its own. */
 .circle-picker--compact .circle-picker__hint { margin-block-end: var(--q-space-2); }

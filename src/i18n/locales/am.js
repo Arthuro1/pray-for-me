@@ -1522,4 +1522,7 @@ export default {
   "tendQuestion": "አሁን ይህን እንዴት መያዝ ይፈልጋሉ?",
   "carryingLabel": "እየያዙት ነው",
   "rememberLabel": "ማሰብ",
+  "carryCircleQuestion": "ይህን ጸሎት በመሠዊያዎ ላይ በየትኛው ክበብ መሸከም ይፈልጋሉ?",
+  "carryCircleHint": "አማራጭ ነው። ይህን የሚያዩት እርስዎ ብቻ ነዎት — ቡድኑም ሆነ ጸሎቱን የጠየቀው ሰው አያዩትም።",
+  "carryPlacedIn": "በ«{circle}» ውስጥ ተይዟል — ክበብ ይቀይሩ",
 };

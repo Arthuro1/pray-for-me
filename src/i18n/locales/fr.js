@@ -1527,4 +1527,7 @@ export default {
   "tendQuestion": "Comment souhaitez-vous la porter désormais ?",
   "carryingLabel": "Vous la portez",
   "rememberLabel": "Se souvenir",
+  "carryCircleQuestion": "Où souhaitez-vous porter cette prière sur votre autel ?",
+  "carryCircleHint": "Facultatif. Visible par vous uniquement — jamais par le groupe ni par la personne qui l'a demandée.",
+  "carryPlacedIn": "Portée dans « {circle} » — changer de cercle",
 };
