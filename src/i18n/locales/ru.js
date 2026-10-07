@@ -889,7 +889,6 @@ export default {
   "checklistPray": "Начните молиться",
   "checklistDismiss": "Скрыть",
   "intercessionTitle": "Молитвы, которые вы несёте",
-  "praySharedBtn": "Молиться об общих нуждах",
   "intercessionRemaining": "Сегодня осталось: {n}",
   "intercessionDone": "Сегодня вы помолились обо всех.",
   "srcPersonal": "Личные",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "Принести Богу сегодня — из молитв, которые вы несёте",
   "intercessionNoneDue": "На сегодня ничего не запланировано — твой ритм покрывает эти просьбы в другие дни.",
   "intercessionAllCarried": "Все молитвы, которые вы несёте · {n}",
   "prayAllCarriedBtn": "Помолиться обо всех оставшихся · {n}",

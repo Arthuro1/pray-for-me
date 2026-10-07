@@ -889,7 +889,6 @@ export default {
   "checklistPray": "መጸለይ ጀምር",
   "checklistDismiss": "ደብቅ",
   "intercessionTitle": "የያዟቸው ጸሎቶች",
-  "praySharedBtn": "የተጋሩ ጸሎቶችን ጸልይ",
   "intercessionRemaining": "ዛሬ {n} ቀርተዋል",
   "intercessionDone": "ዛሬ ለሁሉም ጸልየዋል።",
   "srcPersonal": "የግል",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "ዛሬ ወደ እግዚአብሔር የሚያቀርቧቸው",
   "intercessionNoneDue": "ዛሬ የታቀደ የለም — ዜማህ እነዚህን በሌሎች ቀናት ይሸፍናል።",
   "intercessionAllCarried": "የያዟቸው ጸሎቶች በሙሉ · {n}",
   "prayAllCarriedBtn": "የቀሩትን ሁሉ ጸልይ · {n}",

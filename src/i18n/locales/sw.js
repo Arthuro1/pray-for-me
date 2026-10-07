@@ -889,7 +889,6 @@ export default {
   "checklistPray": "Anza kuomba",
   "checklistDismiss": "Ficha",
   "intercessionTitle": "Maombi unayobeba",
-  "praySharedBtn": "Omba maombi yaliyoshirikiwa",
   "intercessionRemaining": "{n} ya kuomba leo",
   "intercessionDone": "Umewaombea wote leo.",
   "srcPersonal": "Binafsi",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "Ya kuleta mbele za Mungu leo, kutoka kwa maombi unayobeba",
   "intercessionNoneDue": "Hakuna lililopangwa leo — mpangilio wako unayashughulikia siku nyingine.",
   "intercessionAllCarried": "Maombi yote unayobeba · {n}",
   "prayAllCarriedBtn": "Ombea yote yaliyosalia · {n}",

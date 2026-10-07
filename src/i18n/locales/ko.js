@@ -889,7 +889,6 @@ export default {
   "checklistPray": "기도 시작하기",
   "checklistDismiss": "숨기기",
   "intercessionTitle": "품고 있는 기도",
-  "praySharedBtn": "나눔 기도 제목 기도하기",
   "intercessionRemaining": "오늘 {n}개 남음",
   "intercessionDone": "오늘 모두를 위해 기도했습니다.",
   "srcPersonal": "개인",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "오늘 하나님께 가져갈, 품고 있는 기도",
   "intercessionNoneDue": "오늘 예정된 것이 없어요 — 다른 날에 이 제목들을 기도합니다.",
   "intercessionAllCarried": "품고 있는 모든 기도 · {n}",
   "prayAllCarriedBtn": "남은 모두를 위해 기도 · {n}",

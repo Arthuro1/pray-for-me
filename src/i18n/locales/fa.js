@@ -889,7 +889,6 @@ export default {
   "checklistPray": "دعا را آغاز کنید",
   "checklistDismiss": "پنهان کن",
   "intercessionTitle": "دعاهایی که برایشان شفاعت می‌کنید",
-  "praySharedBtn": "برای درخواست‌های مشترک دعا کنید",
   "intercessionRemaining": "امروز {n} مانده",
   "intercessionDone": "امروز برای همه دعا کرده‌اید.",
   "srcPersonal": "شخصی",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "برای آوردن به حضور خدا در امروز",
   "intercessionNoneDue": "امروز چیزی برنامه‌ریزی نشده — ریتم تو این درخواست‌ها را در روزهای دیگر پوشش می‌دهد.",
   "intercessionAllCarried": "همهٔ دعاهایی که برایشان شفاعت می‌کنید · {n}",
   "prayAllCarriedBtn": "دعا برای همهٔ باقی‌مانده‌ها · {n}",

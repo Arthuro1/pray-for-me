@@ -889,7 +889,6 @@ export default {
   "checklistPray": "祈り始める",
   "checklistDismiss": "非表示にする",
   "intercessionTitle": "とりなしている祈り",
-  "praySharedBtn": "共有リクエストを祈る",
   "intercessionRemaining": "今日はあと {n} 件",
   "intercessionDone": "今日はすべてのために祈りました。",
   "srcPersonal": "個人",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "今日神の前にささげる、とりなしの祈り",
   "intercessionNoneDue": "今日は予定がありません — 他の日にこれらの課題を祈ります。",
   "intercessionAllCarried": "とりなしているすべての祈り · {n}",
   "prayAllCarriedBtn": "残りすべてを祈る · {n}",

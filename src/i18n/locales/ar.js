@@ -889,7 +889,6 @@ export default {
   "checklistPray": "ابدأ بالصلاة",
   "checklistDismiss": "إخفاء",
   "intercessionTitle": "الصلوات التي تحملها",
-  "praySharedBtn": "صلِّ للطلبات المشتركة",
   "intercessionRemaining": "{n} للصلاة اليوم",
   "intercessionDone": "لقد صلّيت لأجلهم جميعًا اليوم.",
   "srcPersonal": "شخصية",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "لتقدّمها أمام الله اليوم، من الصلوات التي تحملها",
   "intercessionNoneDue": "لا شيء مقرَّرًا اليوم — إيقاعك يغطي هذه الطلبات في أيام أخرى.",
   "intercessionAllCarried": "كل الصلوات التي تحملها · {n}",
   "prayAllCarriedBtn": "صلِّ لأجل كل المتبقي · {n}",

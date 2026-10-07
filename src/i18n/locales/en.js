@@ -895,7 +895,6 @@ export default {
   "checklistPray": "Begin praying",
   "checklistDismiss": "Hide this",
   "intercessionTitle": "Prayers you're carrying",
-  "praySharedBtn": "Pray shared requests",
   "intercessionRemaining": "{n} to pray today",
   "intercessionDone": "You have prayed for them all today.",
   "srcPersonal": "Personal",
@@ -932,7 +931,6 @@ export default {
   // Persona pass, second refinement (2026-07): due-today intercession, person
   // sessions, Grow durations & why-steps, audience/protection split, schedule
   // in overflow, compact Privacy & Security
-  "intercessionDueSub": "To bring before God today, from the prayers you carry",
   "intercessionNoneDue": "Nothing is due today — your rhythm covers these on other days.",
   "intercessionAllCarried": "All the prayers you're carrying · {n}",
   "prayAllCarriedBtn": "Pray all remaining · {n}",

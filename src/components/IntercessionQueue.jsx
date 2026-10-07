@@ -118,12 +118,33 @@ export default function IntercessionQueue({ lang }) {
     <section className="carried-queue" id="intercession-done" aria-labelledby="carried-queue-title">
       {sessionOverlay}
 
-      <SectionHeader id="carried-queue-title" as="h2" eyebrow={t(lang, 'intercessionTitle')} supporting={t(lang, 'intercessionDueSub')} />
+      <SectionHeader id="carried-queue-title" as="h2" eyebrow={t(lang, 'intercessionTitle')} />
 
-      {/* Praying needs no setup: the session walks everything due unless the
-          person asks to narrow it. Source and circle wait behind ONE quiet
-          "Filter", offered only when there is something to choose between;
-          its label says what is narrowing the walk while it is folded.
+      {/* The action comes first: praying needs no setup. */}
+      {remaining.length > 0 ? (
+        <div className="carried-queue__actions">
+          <PrimaryButton onClick={() => setSession(remaining)}>{t(lang, 'prayNow')}</PrimaryButton>
+          <span className="carried-queue__remaining">{t(lang, 'intercessionRemaining', { n: remaining.length })}</span>
+        </div>
+      ) : due.length === 0 ? (
+        // Nothing is due today at all — schedules carry the load on other days.
+        <p className="carried-queue__status mt-4" role="status">{t(lang, 'intercessionNoneDue')}</p>
+      ) : (
+        <div className="carried-queue__actions">
+          <p className="carried-queue__status" role="status">
+            <RiseMark motion="still" size={20} /> {t(lang, 'intercessionDone')}
+          </p>
+          {/* Quiet Pray again over today's due queue — completions are
+              idempotent per day, so walking it again never double-counts. */}
+          <QuietButton onClick={() => setSession(filtered)}>{t(lang, 'prayAgainBtn')}</QuietButton>
+        </div>
+      )}
+
+      {/* The session walks everything due unless the person asks to narrow
+          it. Source and circle wait behind ONE quiet "Filter" under the
+          action, offered only when there is something to choose between; its
+          label says what is narrowing the walk while it is folded. A circle
+          chip toggles off again, so "All" is said once, by the source switch.
           Filtering changes only what the session walks, never completion data. */}
       {canFilter && (
         <div className="carried-queue__filter">
@@ -144,11 +165,14 @@ export default function IntercessionQueue({ lang }) {
               )}
               {circles.length > 0 && (
                 <div className="q-chips" role="group" aria-label={t(lang, 'circleFieldLabel')}>
-                  <button type="button" aria-pressed={activeCircle === 'all'} onClick={() => setCircle('all')} className="q-chip pressable">
-                    {t(lang, 'all')}
-                  </button>
                   {circles.map((c) => (
-                    <button key={c} type="button" aria-pressed={activeCircle === c} onClick={() => setCircle(c)} className="q-chip circle-chip pressable">
+                    <button
+                      key={c}
+                      type="button"
+                      aria-pressed={activeCircle === c}
+                      onClick={() => setCircle(activeCircle === c ? 'all' : c)}
+                      className="q-chip circle-chip pressable"
+                    >
                       <CircleGlyph circle={c} size={16} selected={activeCircle === c} />
                       <span>{t(lang, circleLabelKey(c))}</span>
                     </button>
@@ -157,25 +181,6 @@ export default function IntercessionQueue({ lang }) {
               )}
             </div>
           )}
-        </div>
-      )}
-
-      {remaining.length > 0 ? (
-        <div className="carried-queue__actions">
-          <PrimaryButton onClick={() => setSession(remaining)}>{t(lang, 'praySharedBtn')}</PrimaryButton>
-          <span className="carried-queue__remaining">{t(lang, 'intercessionRemaining', { n: remaining.length })}</span>
-        </div>
-      ) : due.length === 0 ? (
-        // Nothing is due today at all — schedules carry the load on other days.
-        <p className="carried-queue__status mt-4" role="status">{t(lang, 'intercessionNoneDue')}</p>
-      ) : (
-        <div className="carried-queue__actions">
-          <p className="carried-queue__status" role="status">
-            <RiseMark motion="still" size={20} /> {t(lang, 'intercessionDone')}
-          </p>
-          {/* Quiet Pray again over today's due queue — completions are
-              idempotent per day, so walking it again never double-counts. */}
-          <QuietButton onClick={() => setSession(filtered)}>{t(lang, 'prayAgainBtn')}</QuietButton>
         </div>
       )}
 

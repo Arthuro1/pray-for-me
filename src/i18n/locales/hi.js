@@ -889,7 +889,6 @@ export default {
   "checklistPray": "प्रार्थना शुरू करें",
   "checklistDismiss": "छिपाएँ",
   "intercessionTitle": "जिन प्रार्थनाओं को आप उठाए हुए हैं",
-  "praySharedBtn": "साझा विषयों के लिए प्रार्थना करें",
   "intercessionRemaining": "आज {n} बाकी",
   "intercessionDone": "आज आपने सबके लिए प्रार्थना कर ली है।",
   "srcPersonal": "व्यक्तिगत",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "आज परमेश्वर के सामने लाने के लिए",
   "intercessionNoneDue": "आज कुछ निर्धारित नहीं — आपकी लय इन विनतियों को अन्य दिनों में शामिल करती है।",
   "intercessionAllCarried": "सभी प्रार्थनाएँ जिन्हें आप उठाए हुए हैं · {n}",
   "prayAllCarriedBtn": "शेष सभी के लिए प्रार्थना करें · {n}",

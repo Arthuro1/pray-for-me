@@ -889,7 +889,6 @@ export default {
   "checklistPray": "Empieza a orar",
   "checklistDismiss": "Ocultar",
   "intercessionTitle": "Oraciones que llevas",
-  "praySharedBtn": "Orar las peticiones compartidas",
   "intercessionRemaining": "{n} por orar hoy",
   "intercessionDone": "Hoy has orado por todas.",
   "srcPersonal": "Personales",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "Para presentar a Dios hoy, de las oraciones que llevas",
   "intercessionNoneDue": "No hay nada previsto hoy — tu ritmo cubre estas peticiones otros días.",
   "intercessionAllCarried": "Todas las oraciones que llevas · {n}",
   "prayAllCarriedBtn": "Orar por todas las restantes · {n}",

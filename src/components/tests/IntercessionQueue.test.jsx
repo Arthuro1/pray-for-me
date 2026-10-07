@@ -5,7 +5,7 @@
 // unfinished request, and completion updates the UI immediately (optimistic,
 // via the ordinary per-prayer completion log — offline included).
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 
 vi.mock('../../lib/verseText', () => ({
   fetchScriptureText: vi.fn(async () => null),
@@ -103,11 +103,14 @@ describe('IntercessionQueue — by the carrier’s own circles', () => {
     fireEvent.click(chip(t(lang, 'circle_nations')));
     expect(chip(t(lang, 'circle_nations')).getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
-    fireEvent.click(screen.getByText(t(lang, 'praySharedBtn')));
+    fireEvent.click(screen.getByText(t(lang, 'prayNow')));
     expect(screen.getByText('Sujet b')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t(lang, 'close')));
 
-    fireEvent.click(chip(t(lang, 'all')));
+    // "All" is said once (by the source switch): a pressed circle toggles off.
+    expect(within(screen.getByRole('group', { name: t(lang, 'circleFieldLabel') })).queryByRole('button', { name: t(lang, 'all') })).toBeNull();
+    fireEvent.click(chip(t(lang, 'circle_nations')));
+    expect(chip(t(lang, 'circle_nations')).getAttribute('aria-pressed')).toBe('false');
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
     expect(usePrayerStore.getState().completions).toEqual({});
   });
@@ -117,7 +120,7 @@ describe('IntercessionQueue — session & resume', () => {
   it('praying updates completions immediately and the queue count on return', () => {
     usePrayerStore.setState({ prayers: [forOther('b'), forOther('d')] });
     render(<IntercessionQueue lang={lang} />);
-    fireEvent.click(screen.getByText(t(lang, 'praySharedBtn')));
+    fireEvent.click(screen.getByText(t(lang, 'prayNow')));
     // First unfinished request opens; advancing past it records completion.
     expect(screen.getByText('Sujet b')).toBeTruthy();
     fireEvent.click(screen.getByText(t(lang, 'continueBtn')));
@@ -133,7 +136,7 @@ describe('IntercessionQueue — session & resume', () => {
       completions: { b: [dayKey] },
     });
     render(<IntercessionQueue lang={lang} />);
-    fireEvent.click(screen.getByText(t(lang, 'praySharedBtn')));
+    fireEvent.click(screen.getByText(t(lang, 'prayNow')));
     expect(screen.getByText('Sujet d')).toBeTruthy();
     expect(screen.queryByText('Sujet b')).toBeNull();
   });
@@ -142,7 +145,7 @@ describe('IntercessionQueue — session & resume', () => {
     usePrayerStore.setState({ prayers: [forOther('b')], completions: { b: [dayKey] } });
     render(<IntercessionQueue lang={lang} />);
     expect(screen.getByText(t(lang, 'intercessionDone'))).toBeTruthy();
-    expect(screen.queryByText(t(lang, 'praySharedBtn'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'prayNow'))).toBeNull();
     // The full dashboard card retires — no title, no subtitle — until expanded.
     expect(screen.queryByText(t(lang, 'intercessionTitle'))).toBeNull();
     fireEvent.click(screen.getByText(t(lang, 'intercessionDone')));
@@ -175,6 +178,6 @@ describe('IntercessionQueue — schedule-aware default', () => {
     usePrayerStore.setState({ prayers: [{ ...saved('c'), schedule: weeklyElsewhere }] });
     render(<IntercessionQueue lang={lang} />);
     expect(screen.getByText(t(lang, 'intercessionAllCarried', { n: 1 }))).toBeTruthy();
-    expect(screen.queryByText(t(lang, 'praySharedBtn'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'prayNow'))).toBeNull();
   });
 });

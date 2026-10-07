@@ -889,7 +889,6 @@ export default {
   "checklistPray": "Simulan ang pananalangin",
   "checklistDismiss": "Itago",
   "intercessionTitle": "Mga panalanging pinapasan mo",
-  "praySharedBtn": "Ipanalangin ang mga ibinahaging kahilingan",
   "intercessionRemaining": "{n} ipapanalangin ngayon",
   "intercessionDone": "Naipanalangin mo na silang lahat ngayon.",
   "srcPersonal": "Personal",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "Idudulog sa Diyos ngayon, mula sa mga panalanging pinapasan mo",
   "intercessionNoneDue": "Walang nakatakda ngayon — sakop ng iyong ritmo ang mga ito sa ibang araw.",
   "intercessionAllCarried": "Lahat ng panalanging pinapasan mo · {n}",
   "prayAllCarriedBtn": "Ipanalangin ang lahat ng natitira · {n}",

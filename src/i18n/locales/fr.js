@@ -895,7 +895,6 @@ export default {
   "checklistPray": "Commencez à prier",
   "checklistDismiss": "Masquer",
   "intercessionTitle": "Les prières que vous portez",
-  "praySharedBtn": "Prier les sujets partagés",
   "intercessionRemaining": "{n} à prier aujourd'hui",
   "intercessionDone": "Vous avez prié pour chacune aujourd'hui.",
   "srcPersonal": "Personnelles",
@@ -932,7 +931,6 @@ export default {
   // Persona pass, second refinement (2026-07): due-today intercession, person
   // sessions, Grow durations & why-steps, audience/protection split, schedule
   // in overflow, compact Privacy & Security
-  "intercessionDueSub": "À apporter à Dieu aujourd’hui, parmi les prières que vous portez",
   "intercessionNoneDue": "Rien n’est prévu aujourd’hui — votre rythme couvre ces sujets d’autres jours.",
   "intercessionAllCarried": "Toutes les prières que vous portez · {n}",
   "prayAllCarriedBtn": "Prier tous les sujets restants · {n}",

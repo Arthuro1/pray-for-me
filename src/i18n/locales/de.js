@@ -890,7 +890,6 @@ export default {
   "checklistPray": "Beginne zu beten",
   "checklistDismiss": "Ausblenden",
   "intercessionTitle": "Gebete, die du mitträgst",
-  "praySharedBtn": "Geteilte Anliegen beten",
   "intercessionRemaining": "Heute noch {n}",
   "intercessionDone": "Du hast heute für alle gebetet.",
   "srcPersonal": "Persönlich",
@@ -927,7 +926,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "Heute vor Gott zu bringen — aus den Gebeten, die du mitträgst",
   "intercessionNoneDue": "Heute steht nichts an — dein Rhythmus deckt diese Anliegen an anderen Tagen ab.",
   "intercessionAllCarried": "Alle Gebete, die du mitträgst · {n}",
   "prayAllCarriedBtn": "Alle verbleibenden beten · {n}",

@@ -260,9 +260,10 @@ function CommunityHub({ lang, userId, onViewGroup }) {
               <li key={g.id}>
                 <button type="button" onClick={() => onViewGroup(g.id)} className="together-row pressable">
                   <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={40} />
+                  {/* The name alone: a role is said inside the group, and
+                      "N new" below is the only thing worth a glance here. */}
                   <span className="together-row__body">
                     <span className="together-row__name together-row__name--editorial">{g.name}</span>
-                    {g.role === 'admin' && <span className="together-row__meta">{t(lang, 'admin')}</span>}
                   </span>
                   {unread[g.id] > 0 && <StatusLabel tone="royal">{t(lang, 'newCount', { n: unread[g.id] })}</StatusLabel>}
                   <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
@@ -274,13 +275,23 @@ function CommunityHub({ lang, userId, onViewGroup }) {
 
         {friends.length > 0 && (
           <Section title={`${t(lang, 'peopleView')} · ${friends.length}`} split>
+            {/* Removing someone is rare: it waits in each row's menu instead of
+                repeating a "Remove" on every line (Undo still follows). */}
             {friends.map(f => (
               <li key={f.id} className="together-row">
                 <Avatar name={f.name} avatar={f.avatar} size={32} />
                 <span className="together-row__body"><span className="together-row__name">{f.name}</span></span>
-                <QuietButton onClick={() => handleRemoveFriend(f)} disabled={busyId === f.id} style={{ color: 'var(--q-text-secondary)' }}>
-                  {t(lang, 'remove')}
-                </QuietButton>
+                {busyId === f.id
+                  ? <Loader2 size={16} className="animate-spin shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
+                  : (
+                    <OverflowMenu
+                      lang={lang}
+                      ariaLabel={`${t(lang, 'options')} · ${f.name}`}
+                      items={[{ key: 'remove', icon: Trash2, label: t(lang, 'remove'), danger: true, onClick: () => handleRemoveFriend(f) }]}
+                      triggerClassName="icon-button pressable shrink-0"
+                      iconColor="var(--q-text-tertiary)"
+                    />
+                  )}
               </li>
             ))}
           </Section>

@@ -889,7 +889,6 @@ export default {
   "checklistPray": "Mulai berdoa",
   "checklistDismiss": "Sembunyikan",
   "intercessionTitle": "Doa-doa yang Anda tanggung",
-  "praySharedBtn": "Doakan permintaan bersama",
   "intercessionRemaining": "{n} untuk didoakan hari ini",
   "intercessionDone": "Anda sudah mendoakan semuanya hari ini.",
   "srcPersonal": "Pribadi",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "Untuk dibawa ke hadapan Tuhan hari ini",
   "intercessionNoneDue": "Tidak ada jadwal hari ini — ritmemu mencakup permohonan ini di hari lain.",
   "intercessionAllCarried": "Semua doa yang Anda tanggung · {n}",
   "prayAllCarriedBtn": "Doakan semua yang tersisa · {n}",

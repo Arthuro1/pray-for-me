@@ -889,7 +889,6 @@ export default {
   "checklistPray": "开始祷告",
   "checklistDismiss": "隐藏",
   "intercessionTitle": "你代祷的祷告",
-  "praySharedBtn": "为共享请求祷告",
   "intercessionRemaining": "今天还有 {n} 个",
   "intercessionDone": "今天你已为他们全部祷告。",
   "srcPersonal": "个人",
@@ -926,7 +925,6 @@ export default {
   // Persona pass, second refinement (2026-07, AI-authored — pending native review):
   // due-today intercession, person sessions, Grow durations & why-steps,
   // audience/protection split, compact Privacy & Security
-  "intercessionDueSub": "今天要带到神面前的代祷",
   "intercessionNoneDue": "今天没有安排 — 你的节奏会在其他日子涵盖这些代祷。",
   "intercessionAllCarried": "你代祷的全部祷告 · {n}",
   "prayAllCarriedBtn": "为其余的一并祷告 · {n}",
