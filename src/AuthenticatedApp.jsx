@@ -220,6 +220,14 @@ export default function AuthenticatedApp({
     setFormOptions(null);
     setShowForm(true);
   };
+  // A new prayer begun inside one Intercession Circle (the Journal's circle
+  // groups): the circle is preselected and its question frames the field.
+  const openAddInCircle = (circle) => {
+    setEditPrayer(null);
+    setFormPrefill(null);
+    setFormOptions({ circle });
+    setShowForm(true);
+  };
 
   // Load the active language's strings (French is always bundled as fallback).
   useEffect(() => {
@@ -484,7 +492,7 @@ export default function AuthenticatedApp({
             <Suspense fallback={<PageLoader />}>
               <Routes>
               <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} />} />
-              <Route path="/prayers" element={<PrayersTab onAdd={openAdd} />} />
+              <Route path="/prayers" element={<PrayersTab onAdd={openAdd} onAddInCircle={openAddInCircle} />} />
               <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} />} />
               {/* The answered gallery is the Journal's second segment now; the
                   old standalone page redirects there so saved links keep working. */}
@@ -528,6 +536,7 @@ export default function AuthenticatedApp({
           editPrayer={editPrayer}
           prefill={formPrefill}
           initialOrganizeOpen={!!formOptions?.openOrganize}
+          context={formOptions?.circle ? { circle: formOptions.circle } : null}
         />
       )}
       {showOnboarding && (

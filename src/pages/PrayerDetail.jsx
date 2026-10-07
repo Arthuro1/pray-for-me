@@ -68,7 +68,10 @@ import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import AudienceBadge from '../components/shared/AudienceBadge';
 import PrayerSession from '../components/PrayerSession';
-import { PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
+import { Modal, PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
+import CircleGlyph from '../components/shared/CircleGlyph';
+import CirclePicker from '../components/CirclePicker';
+import { canHoldPrivateMetadata } from '../lib/crypto/prayerCrypto';
 import { circleLabelKey, circleOf } from '../lib/circles';
 import FollowUpField from '../components/FollowUpField';
 import useFollowUpStore from '../store/followUpStore';
@@ -153,6 +156,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [manualPoint, setManualPoint] = useState({ title: '', verse: '' });
   const [showManualForm, setShowManualForm] = useState(false);
   const [showCatPicker, setShowCatPicker] = useState(false);
+  const [showCirclePicker, setShowCirclePicker] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState('');
   const titleCancelRef = useRef(false);
@@ -494,9 +498,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const memberAvatarFor = useMemberAvatars(isCommunity ? communityPrayer.group_id : null);
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
+  // The circle leads the hero as spiritual context — more prominent than the
+  // labels — and can be changed in place without rebuilding the prayer (its
+  // rhythm, labels and history are untouched). Only a prayer that can keep the
+  // circle inside its ciphertext can be placed.
   const heroCircle = circleOf(livePrayer);
   const heroContext = [
-    heroCircle ? t(lang, circleLabelKey(heroCircle)) : '',
     livePrayer.for_other && livePrayer.person_name ? t(lang, 'forPersonLabel', { name: livePrayer.person_name }) : '',
     livePrayer.origin_group_name || '',
   ].filter(Boolean).join(' · ');
@@ -508,6 +515,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // A saved copy follows the shared content read-only: it pulls the author's/
   // group's latest, but isn't edited here (open it in Community to contribute).
   const savedCopy = !isCommunity && !!livePrayer.community_origin_id;
+  const canPlaceCircle = !isCommunity && !savedCopy && !livePrayer._locked && canHoldPrivateMetadata(livePrayer);
   // Any run of a plan — upcoming, in progress or finished — can pass the plan
   // on. What is shared is the plan, never this run or anything prayed in it.
   const planShareable = !isCommunity && !savedCopy && !!user?.id && isPlanShareable(plan);
@@ -936,7 +944,35 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       </div>
 
       <section className="prayer-detail__hero">
-        {heroContext && <p className="section-label prayer-detail__context">{heroContext}</p>}
+        {(heroCircle || heroContext || canPlaceCircle) && (
+          <div className="prayer-detail__context">
+            {heroCircle && (
+              <span className="section-label section-label--sacred prayer-detail__circle">
+                <CircleGlyph circle={heroCircle} size={16} selected />
+                <span>{t(lang, circleLabelKey(heroCircle))}</span>
+              </span>
+            )}
+            {heroContext && <span className="section-label">{heroContext}</span>}
+            {canPlaceCircle && (
+              <button type="button" onClick={() => setShowCirclePicker(true)} className="prayer-detail__circle-change pressable">
+                {t(lang, heroCircle ? 'changeCircle' : 'placeInCircle')}
+              </button>
+            )}
+          </div>
+        )}
+        {showCirclePicker && (
+          <Modal label={t(lang, heroCircle ? 'changeCircle' : 'placeInCircle')} onClose={() => setShowCirclePicker(false)}>
+            <CirclePicker
+              value={heroCircle}
+              onChange={(circle) => {
+                updatePrayer(livePrayer.id, { circle });
+                setShowCirclePicker(false);
+              }}
+              lang={lang}
+              idPrefix="detail-circle"
+            />
+          </Modal>
+        )}
         {canEditTitle && editingTitle ? (
           <input
             autoFocus
@@ -965,6 +1001,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         ) : (planText?.description || livePrayer.description) ? (
           <RichText text={planText?.description || loc(livePrayer.description)} className="prayer-detail__description" />
         ) : null}
+
+        {/* Labels — one quiet line, secondary to the circle above ("Marriage ·
+            Healing"), except on a saved copy where you can file it under your
+            own categories (personal organisation, further down). */}
+        {!savedCopy && prayerCategories.length > 0 && (
+          <p className="prayer-detail__labels">{prayerCategories.map((c) => tr(c.name, lang)).join(' · ')}</p>
+        )}
 
         <div className="prayer-detail__meta">
           <span>
@@ -1027,19 +1070,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             protection={protectionOf(livePrayer)}
             lang={lang}
           />
-        )}
-
-        {/* Categories — read-only chips, except on a saved copy where you can
-            file it under your own categories (personal organisation). */}
-        {!savedCopy && prayerCategories.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {prayerCategories.map(c => (
-              <span key={c.id} className="status-pill">
-                <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
-                {tr(c.name, lang)}
-              </span>
-            ))}
-          </div>
         )}
 
         {/* The hero leads with prayer. Management stays secondary here — and a

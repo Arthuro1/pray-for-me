@@ -245,10 +245,14 @@ function InboxPreview() {
 
 // The circle picker on its own: in the real form it appears only once the
 // vault is unlocked, which a preview must never fake on a shared dev origin.
+// Both forms: the composer's compact row, and the full choice used to change
+// a saved prayer's circle.
 function CirclesPreview({ lang }) {
   const [circle, setCircle] = useState('household');
   return (
     <Modal label="circles" onClose={() => {}}>
+      <CirclePicker compact value={circle} onChange={setCircle} lang={lang} idPrefix="design-circle-row" />
+      <hr className="my-6 border-0 border-t" style={{ borderColor: 'var(--q-border)' }} />
       <CirclePicker value={circle} onChange={setCircle} lang={lang} idPrefix="design-circle" />
     </Modal>
   );

@@ -452,7 +452,13 @@
 }
 
 .prayer-detail__hero { width: min(100%, 48rem); margin-inline: auto; padding: var(--q-space-4) clamp(var(--q-space-4), 4vw, var(--q-space-8)) var(--q-space-8); }
-.prayer-detail__context { margin-block-end: var(--q-space-3); }
+/* The circle leads (gold, with its glyph), then who it is for, then a quiet
+   way to place or change it. */
+.prayer-detail__context { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-3); margin-block-end: var(--q-space-3); }
+.prayer-detail__circle { display: inline-flex; align-items: center; gap: var(--q-space-2); }
+.prayer-detail__circle-change { min-height: 44px; padding: 0; border: 0; background: none; color: var(--q-royal-text); font-size: var(--q-type-meta); font-weight: 600; }
+.prayer-detail__circle-change:hover { text-decoration: underline; text-underline-offset: 3px; }
+.prayer-detail__labels { margin: var(--q-space-3) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
 
 .prayer-detail__title,
 .prayer-detail__title-input {
@@ -723,3 +729,12 @@
   font-style: italic;
   line-height: 1.45;
 }
+
+/* Journal "By circle": each circle a quiet section — its glyph and name in the
+   label voice, a plain count, a way to bring a prayer straight into it — then
+   the same rows as everywhere. Unplaced prayers come last, as "Your prayers". */
+.journal-circles { display: grid; gap: var(--q-space-8); }
+.journal-circle__header { display: flex; min-height: 44px; align-items: center; gap: var(--q-space-3); padding-block-end: var(--q-space-2); border-block-end: 1px solid var(--q-border); }
+.journal-circle__title { display: inline-flex; min-width: 0; flex: 1 1 auto; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text); font-family: var(--q-font-ui); font-size: var(--q-type-label); font-weight: 650; letter-spacing: var(--q-tracking-label); text-transform: uppercase; }
+.journal-circle__title > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.journal-circle__add { margin-inline-end: calc(var(--q-space-2) * -1); }

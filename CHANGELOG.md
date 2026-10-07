@@ -53,6 +53,20 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   shows in development and review mode with a "review pending" label, and
   nowhere else until signed. `check:content` now audits circle content; its
   deliberate English fallback for the deep layer is baselined.
+- **Prayer creation asks "Where are you carrying this?"** right under the
+  prayer's own words — a quiet row of the seven circles (shared chips),
+  optional, pressed again to clear — instead of inside Organize. Opened from a
+  circle, the circle is preselected and its question frames the empty field.
+- **Journal "By circle"**: once a circle is in use, the active prayers can be
+  grouped inner to outer (unplaced last as "Your prayers"), each group with a
+  plain count and a way to bring a prayer straight into it; rows under a
+  circle heading don't repeat it. Combines with the circle filter from Today.
+- **Prayer detail**: the circle leads the hero in gold with its glyph, before
+  who the prayer is for; "Place in a circle" / "Change circle" changes only the
+  circle (rhythm, labels and history untouched). Labels become one quiet line
+  ("Marriage · Healing") instead of coloured pills.
+- New strings ×16 (`circleQuestion`, `circleQuestionHint`, `journalByCircle`,
+  `addToCircle`, `changeCircle`, `placeInCircle`), AI-drafted beyond en/fr/de.
 
 ### Changed — Qetoret design system ("Modern Royal Priesthood")
 

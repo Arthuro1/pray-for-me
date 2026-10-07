@@ -36,7 +36,8 @@ import {
   readJournalHints,
 } from '../lib/journalHints';
 import { useContextualNudgeSlot } from '../components/shared/contextualNudge';
-import { isCircle } from '../lib/circles';
+import { circleLabelKey, groupByCircle, isCircle } from '../lib/circles';
+import CircleGlyph from '../components/shared/CircleGlyph';
 import { tendCandidates } from '../lib/carried';
 import TendAltar from '../components/TendAltar';
 
@@ -74,7 +75,7 @@ function FilterStatus({ lang, count, label, onClear }) {
   );
 }
 
-export default function PrayersTab({ onAdd }) {
+export default function PrayersTab({ onAdd, onAddInCircle }) {
   const navigate = useNavigate();
   const { prayers, categories, settings, loading, completions, markPrayedOn, updatePrayer } = usePrayerStore(
     useShallow((s) => ({ prayers: s.prayers, categories: s.categories, settings: s.settings, loading: s.loading, completions: s.completions, markPrayedOn: s.markPrayedOn, updatePrayer: s.updatePrayer }))
@@ -104,6 +105,10 @@ export default function PrayersTab({ onAdd }) {
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  // By circle: the same active prayers, grouped inner to outer by the circle
+  // each was placed in, unplaced ones last. A way to find prayers, never a
+  // tally — circles without prayers simply don't appear.
+  const [byCircle, setByCircle] = useState(false);
   // People view: an OPTIONAL lens over the same prayers, grouped by who
   // they're for. Only offered when enough person data exists.
   const [peopleOpen, setPeopleOpen] = useState(false);
@@ -176,8 +181,11 @@ export default function PrayersTab({ onAdd }) {
   const toolsUseful = journalToolsUseful(prayers);
   // People has its own, stronger signal (several people prayed for by name), so
   // it never waits on the list-length threshold.
+  // "By circle" is offered once someone has placed a prayer in a circle.
+  const circleViewAvailable = segment === 'active' && filterOptions.circles.length > 0;
+  const showByCircle = byCircle && circleViewAvailable && !peopleOpen;
   const utilityPanelOpen = searchOpen || !!search || peopleOpen
-    || peopleAvailable || (toolsUseful && hasFilterControls);
+    || peopleAvailable || circleViewAvailable || (toolsUseful && hasFilterControls);
   const hint = nextJournalHint({
     prayers,
     peopleOpen,
@@ -200,7 +208,7 @@ export default function PrayersTab({ onAdd }) {
     setShowFilters(false);
   };
 
-  const renderPrayer = (prayer, match = searchMatches[prayer.id]) => (
+  const renderPrayer = (prayer, match = searchMatches[prayer.id], showCircle = true) => (
     <SwipeableRow
       key={prayer.id}
       actions={swipeActions(prayer)}
@@ -213,6 +221,7 @@ export default function PrayersTab({ onAdd }) {
         shares={prayerShares[prayer.id]}
         searchMatch={normalizedSearch ? match : null}
         variant="journal"
+        showCircle={showCircle}
         onClick={() => navigate(`/prayers/${prayer.id}`)}
       />
     </SwipeableRow>
@@ -316,6 +325,17 @@ export default function PrayersTab({ onAdd }) {
                 >
                   <Users size={16} aria-hidden="true" />
                   <span aria-hidden="true">{t(lang, 'peopleView')}</span>
+                </button>
+              )}
+              {!peopleOpen && circleViewAvailable && (
+                <button
+                  type="button"
+                  onClick={() => setByCircle((value) => !value)}
+                  aria-pressed={byCircle}
+                  className="journal__tool pressable"
+                >
+                  <CircleGlyph circle="nations" size={16} />
+                  <span>{t(lang, 'journalByCircle')}</span>
                 </button>
               )}
               {!peopleOpen && (hasFilterControls || toolsUseful) && (
@@ -553,6 +573,38 @@ export default function PrayersTab({ onAdd }) {
                   <SecondaryButton onClick={clearFilters} icon={X} iconSize={16}>{t(lang, 'clearFiltersBtn')}</SecondaryButton>
                 </div>
               )
+            ) : showByCircle ? (
+              <div className="journal-circles">
+                {groupByCircle(sortedEntries.map(({ prayer }) => prayer)).map(({ circle, prayers: inCircle }) => {
+                  const name = circle ? t(lang, circleLabelKey(circle)) : t(lang, 'circleUnplaced');
+                  const headingId = `journal-circle-${circle || 'unplaced'}`;
+                  return (
+                    <section key={circle || 'unplaced'} className="journal-circle" aria-labelledby={headingId}>
+                      <header className="journal-circle__header">
+                        <h2 id={headingId} className="journal-circle__title">
+                          {circle && <CircleGlyph circle={circle} size={18} />}
+                          <span>{name}</span>
+                        </h2>
+                        <span className="q-meta">{tp(lang, 'circlePrayerCount', inCircle.length)}</span>
+                        {circle && onAddInCircle && (
+                          <button
+                            type="button"
+                            onClick={() => onAddInCircle(circle)}
+                            aria-label={t(lang, 'addToCircle', { circle: name })}
+                            title={t(lang, 'addToCircle', { circle: name })}
+                            className="icon-button pressable journal-circle__add"
+                          >
+                            <Plus size={18} aria-hidden="true" />
+                          </button>
+                        )}
+                      </header>
+                      <div className="journal__list">
+                        {inCircle.map((prayer) => renderPrayer(prayer, searchMatches[prayer.id], false))}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
             ) : (
               <div className="journal__list">
                 {sortedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}

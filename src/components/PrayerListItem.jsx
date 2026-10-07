@@ -14,7 +14,9 @@ import { StatusLabel } from './shared/Primitives';
 //
 // variant 'today'   — what to pray now: the plan day's theme, or who it is for.
 // variant 'journal' — the record: its rhythm or how long it has been carried.
-export default function PrayerListItem({ prayer, lang, tr, shares, onClick, variant = 'journal', searchMatch = null }) {
+// `showCircle={false}` where the circle is already the heading the row sits
+// under (the Journal's By circle view), so it is never said twice.
+export default function PrayerListItem({ prayer, lang, tr, shares, onClick, variant = 'journal', searchMatch = null, showCircle = true }) {
   const isAnswered = prayer.status === 'answered';
   // A finished series reads "Series ended", never "Active" — the plan is over
   // even though the prayer stays in the journal.
@@ -46,7 +48,7 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
   }
 
   const meta = [
-    circle && <span key="circle">{t(lang, circleLabelKey(circle))}</span>,
+    showCircle && circle && <span key="circle">{t(lang, circleLabelKey(circle))}</span>,
     variant === 'journal' && isAnswered && (
       <StatusLabel key="answered" tone="answered">
         {t(lang, (prayer.prayer_testimonies || []).length > 0 ? 'testimony' : 'answered')}

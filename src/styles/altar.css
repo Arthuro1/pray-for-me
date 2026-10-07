@@ -283,3 +283,9 @@
 .carry-section__faces { display: inline-flex; }
 .carry-section__faces > * { box-shadow: 0 0 0 2px var(--q-canvas); }
 .carry-section__faces > * + * { margin-inline-start: -6px; }
+
+/* The composer's quiet circle row: the shared chips, a glyph in each, wrapping
+   onto as many lines as the screen needs — never a form of its own. */
+.circle-picker--compact .circle-picker__hint { margin-block-end: var(--q-space-2); }
+.circle-chip { padding-inline: var(--q-space-3); }
+.circle-chip .circle-glyph { flex: 0 0 auto; }

@@ -1,0 +1,114 @@
+// @vitest-environment jsdom
+//
+// Journal "By circle": the same active prayers grouped inner to outer by the
+// circle each was placed in, unplaced prayers last — a way to find prayers,
+// never a tally. Offered only once a circle is in use.
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import { act, render, screen, fireEvent, cleanup, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+
+vi.mock('react-router-dom', async (orig) => ({ ...(await orig()), useNavigate: () => vi.fn() }));
+
+import PrayersTab from './PrayersTab';
+import usePrayerStore from '../store/prayerStore';
+import useAuthStore from '../store/authStore';
+import useLayoutStore from '../store/layoutStore';
+import useCommunityStore from '../store/communityStore';
+import { t, tp } from '../i18n';
+
+const lang = 'fr';
+const prayer = (id, extra = {}) => ({
+  id, title: `Prière ${id}`, status: 'active', created_at: '2026-01-01T00:00:00Z',
+  prayer_categories: [], prayer_points: [], prayer_testimonies: [], ...extra,
+});
+
+afterEach(cleanup);
+beforeEach(() => {
+  useLayoutStore.setState({ fabSuppressed: false });
+  useCommunityStore.setState({ prayerShares: {} });
+  useAuthStore.setState({ user: null });
+  usePrayerStore.setState({
+    prayers: [
+      prayer('nation', { circle: 'nations' }),
+      prayer('loose'),
+      prayer('home', { circle: 'household' }),
+      prayer('heart', { circle: 'self' }),
+      prayer('home2', { circle: 'household' }),
+      prayer('done', { circle: 'church', status: 'answered', answered_at: new Date().toISOString() }),
+    ],
+    categories: [],
+    settings: { language: lang },
+    loading: false,
+  });
+});
+
+const renderJournal = (props = {}) => render(
+  <MemoryRouter><PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} {...props} /></MemoryRouter>,
+);
+const byCircle = () => screen.getByRole('button', { name: t(lang, 'journalByCircle') });
+const groupTitles = () => [...document.querySelectorAll('.journal-circle__title')].map((h) => h.textContent);
+
+describe('PrayersTab — By circle', () => {
+  it('is not offered before any prayer has a circle', () => {
+    usePrayerStore.setState({ prayers: [prayer('a'), prayer('b')] });
+    renderJournal();
+    expect(screen.queryByRole('button', { name: t(lang, 'journalByCircle') })).toBeNull();
+  });
+
+  it('groups active prayers inner to outer, with unplaced prayers last', () => {
+    renderJournal();
+    fireEvent.click(byCircle());
+    expect(byCircle().getAttribute('aria-pressed')).toBe('true');
+    expect(groupTitles()).toEqual([
+      t(lang, 'circle_self'), t(lang, 'circle_household'), t(lang, 'circle_nations'), t(lang, 'circleUnplaced'),
+    ]);
+    const house = screen.getByRole('region', { name: t(lang, 'circle_household') });
+    expect(within(house).getByText('Prière home')).toBeTruthy();
+    expect(within(house).getByText('Prière home2')).toBeTruthy();
+    expect(within(house).getByText(tp(lang, 'circlePrayerCount', 2))).toBeTruthy();
+    // The circle is the heading; its rows never say it again.
+    expect(within(house).getAllByText(t(lang, 'circle_household'))).toHaveLength(1);
+    expect(within(screen.getByRole('region', { name: t(lang, 'circleUnplaced') })).getByText('Prière loose')).toBeTruthy();
+    // Answered prayers are not part of the active altar, and empty circles never appear.
+    expect(screen.queryByText('Prière done')).toBeNull();
+    expect(groupTitles()).not.toContain(t(lang, 'circle_church'));
+  });
+
+  it('brings a new prayer straight into a circle', () => {
+    const onAddInCircle = vi.fn();
+    renderJournal({ onAddInCircle });
+    fireEvent.click(byCircle());
+    const name = t(lang, 'circle_household');
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'addToCircle', { circle: name }) }));
+    expect(onAddInCircle).toHaveBeenCalledWith('household');
+    // "Your prayers" has no circle to bring a prayer into.
+    expect(within(screen.getByRole('region', { name: t(lang, 'circleUnplaced') })).queryByRole('button', { name: /\+/ })).toBeNull();
+  });
+
+  it('moves a prayer when its circle changes', () => {
+    renderJournal();
+    fireEvent.click(byCircle());
+    act(() => {
+      usePrayerStore.setState((s) => ({ prayers: s.prayers.map((p) => (p.id === 'loose' ? { ...p, circle: 'kingdom' } : p)) }));
+    });
+    expect(within(screen.getByRole('region', { name: t(lang, 'circle_kingdom') })).getByText('Prière loose')).toBeTruthy();
+    expect(screen.queryByRole('region', { name: t(lang, 'circleUnplaced') })).toBeNull();
+  });
+
+  it('is an active-prayer view only', () => {
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
+    expect(screen.queryByRole('button', { name: t(lang, 'journalByCircle') })).toBeNull();
+    expect(screen.getByText('Prière done')).toBeTruthy();
+  });
+
+  it('works alongside the circle filter opened from Today', () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/prayers', state: { circle: 'household' } }]}>
+        <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
+      </MemoryRouter>,
+    );
+    fireEvent.click(byCircle());
+    expect(groupTitles()).toEqual([t(lang, 'circle_household')]);
+  });
+});

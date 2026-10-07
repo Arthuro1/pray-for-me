@@ -126,7 +126,17 @@ AI-drafted and need a native review like the rest of the app copy.
   reader on demand (`LandingScriptureRef.jsx`). The call to pray opens the guest
   flow with `{ circle, prompt }` (`lib/guestPrayerContext.js`); the circle is
   kept in the encrypted guest draft and placed on the imported prayer.
-- **App**: the prayer composer, Journal, prayer detail and Today — see below.
+- **Prayer composer** (`PrayerForm.jsx`): `CirclePicker compact` right under
+  the prayer text ("Where are you carrying this?"), only when the prayer can be
+  encrypted. `context={ circle }` (from `openAddInCircle` in
+  `AuthenticatedApp.jsx`) preselects it and swaps the field label for the
+  circle's question.
+- **Journal** (`PrayersTab.jsx`): "By circle" view (offered once a circle is in
+  use, active segment only) via `groupByCircle`; per-group add calls
+  `onAddInCircle`; rows hide the circle (`PrayerListItem showCircle={false}`).
+- **Prayer detail**: circle eyebrow + "Place in a circle"/"Change circle"
+  (full `CirclePicker` in a `Modal`, saving `updatePrayer(id, { circle })`).
+- **Today**: the existing "On your altar" list and the circle on each row.
 
 ## Themes and categories
 
@@ -155,8 +165,8 @@ breakthrough21, preparing21, discernment28, work21, psalms42.
 
 | Milestone | Contents | Status |
 |---|---|---|
-| A — circles become real | Foundation; interactive landing circles with the short panel and a CTA into the guest prayer; circle row in prayer creation; Journal "By circle"; change circle on prayer detail; light Today | In progress (2026-10-07) |
-| + | My heart's deep layer as a gated draft | In progress |
+| A — circles become real | Foundation; interactive landing circles with the short panel and a CTA into the guest prayer; circle row in prayer creation; Journal "By circle"; change circle on prayer detail; light Today | Done 2026-10-07 |
+| + | My heart's deep layer as a gated draft | Done 2026-10-07 — awaiting human sign-off |
 | B — circles become formation | Deep layers for the other six; Plans "Browse by circle"; plan completion → "What do you want to keep carrying?"; "Pray through my altar" | Later |
 | C — circles become intercession | Carry a community prayer into a personal circle (needs the privacy decision above); circle context in Tend and testimonies | Later |
 | P4 | Your Altar overview; optional weekly intercession rhythm; Grow → Intercession hub; monthly reflection | Later |
