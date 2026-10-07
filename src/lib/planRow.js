@@ -17,7 +17,9 @@ import { restingPlanDay } from './schedule';
 
 // What a plan run says on `dayKey`:
 //
-//   { name, theme, dayLabel, paused }
+//   { name, theme, dayLabel, dayNo, total, paused }
+//
+// `dayNo` / `total` (numbers, or null) draw the row's thin progress line.
 //
 // null when the prayer is not a plan run whose content can be read — no plan,
 // or content that is unknown or still awaiting its review sign-off. Callers
@@ -48,6 +50,8 @@ export function planRowSummary(prayer, lang, dayKey = todayKey()) {
     name: planPrayerText(plan, lang)?.title || '',
     theme: content ? pick(content.theme, lang) : '',
     dayLabel: dayNo ? t(lang, 'planDayOf', { n: dayNo, total }) : '',
+    dayNo,
+    total: Number(total) || null,
     // A paused run has no dates at all, so it never reaches Today and would sit
     // in the Journal reading exactly like a running one — silently never coming
     // up again. The row says so instead.
@@ -55,9 +59,14 @@ export function planRowSummary(prayer, lang, dayKey = todayKey()) {
   };
 }
 
-// The one line under a Today row, and the eyebrow over the hero card: which
-// plan this is and how far in. Kept beside the summary so both callers phrase
-// it identically.
+// The eyebrow over the hero card: how far in, then which plan. The day leads
+// so it stays readable when a long plan name is cut short.
 export function planRowContext(summary) {
-  return [summary?.name, summary?.dayLabel].filter(Boolean).join(' · ');
+  return [summary?.dayLabel, summary?.name].filter(Boolean).join(' · ');
+}
+
+// How much of the plan is walked, 0–100, or null when unknown.
+export function planRowProgress(summary) {
+  if (!summary?.dayNo || !summary?.total) return null;
+  return Math.min(100, Math.round((summary.dayNo / summary.total) * 100));
 }

@@ -425,18 +425,20 @@ export default function HomeTab({ onAdd, onEdit }) {
                     </p>
                   )
                   : null}
-              <p className="scripture-block__reference">
-                {verse.ref}
-                {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
-              </p>
-              <a
-                href={bibleLink(verse.ref, lang)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="today-verse__link"
-              >
-                <ExternalLink size={12} aria-hidden="true" /> {t(lang, 'readWholeChapter')}
-              </a>
+              <div className="today-verse__foot">
+                <p className="scripture-block__reference">
+                  {verse.ref}
+                  {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
+                </p>
+                <a
+                  href={bibleLink(verse.ref, lang)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="today-verse__link"
+                >
+                  <ExternalLink size={12} aria-hidden="true" /> {t(lang, 'readWholeChapter')}
+                </a>
+              </div>
             </div>
           ) : (
             <p className="q-meta flex items-center gap-2">

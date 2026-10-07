@@ -169,11 +169,11 @@ button.pressable:active:not(:disabled) { transform: translateY(1px); }
 .prayer-row {
   display: grid;
   width: 100%;
-  min-height: 64px;
+  min-height: 56px;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--q-space-4);
-  padding-block: var(--q-space-4);
+  padding-block: var(--q-space-3);
   border-block-end: 1px solid var(--q-border);
   background: transparent;
   color: var(--q-text);
@@ -189,9 +189,9 @@ a.prayer-row:hover { background: var(--q-hover); }
   color: var(--q-text);
   font-family: var(--q-font-editorial);
   font-optical-sizing: auto;
-  font-size: 1.1875rem;
+  font-size: 1.0625rem;
   font-weight: 500;
-  letter-spacing: -0.008em;
+  letter-spacing: -0.006em;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
@@ -213,6 +213,28 @@ a.prayer-row:hover { background: var(--q-hover); }
   color: var(--q-text-tertiary);
   font-size: var(--q-type-meta);
 }
+
+/* One quiet line of details under a list row; a small mark says what each
+   one is (person, group, circle). The rhythm or plan day leads in a stronger
+   grey; a long plan name is cut short rather than wrapping. */
+.prayer-row__details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--q-space-3);
+  margin-block-start: 3px;
+  color: var(--q-text-tertiary);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.prayer-row__detail { display: inline-flex; min-width: 0; max-width: 100%; align-items: center; gap: 5px; }
+.prayer-row__detail > svg { flex: 0 0 auto; }
+.prayer-row__detail--lead { color: var(--q-text-secondary); }
+.prayer-row__detail--truncate { display: block; flex: 1 1 8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* A running plan's progress: the same thin gold line as the Plans tab. */
+.prayer-row__track { display: block; height: 2px; max-width: 12rem; margin-block-start: var(--q-space-2); overflow: hidden; border-radius: 2px; background: var(--q-border); }
+.prayer-row__track > span { display: block; height: 100%; background: var(--q-gold); }
 
 .prayer-row__aside { display: flex; align-items: center; gap: var(--q-space-2); color: var(--q-text-tertiary); }
 
@@ -1004,6 +1026,11 @@ label.circle-option { cursor: pointer; }
 .phase-page--wide .phase-page__shell,
 .phase-page--wide .phase-content { width: min(100%, 64rem); }
 
+/* The daily lists (Today, Journal, Together) read at a prayer-book measure. */
+.today :is(.phase-page__shell, .phase-content),
+.journal :is(.phase-page__shell, .phase-content),
+.together:not(.together-group) :is(.phase-page__shell, .phase-content) { width: min(100%, 45rem); }
+
 .phase-page button,
 .editorial-dialog button,
 .auth-experience button { min-height: 44px; }
@@ -1039,7 +1066,7 @@ label.circle-option { cursor: pointer; }
 
 .app-nav-item:hover { background: var(--q-hover); color: var(--q-text); }
 .app-nav-item[aria-current="page"],
-.app-nav-item[aria-current="page"]:hover { color: var(--q-royal-text); font-weight: 650; }
+.app-nav-item[aria-current="page"]:hover { color: var(--q-text); font-weight: 650; }
 .app-sidebar--collapsed .app-nav-item { justify-content: center; gap: 0; padding-inline: 0; }
 
 .app-sidebar__add { justify-content: flex-start; padding-inline: 14px; }

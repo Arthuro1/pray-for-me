@@ -149,15 +149,22 @@
 .today-fold + .today-verse { margin-block-start: calc(-1 * var(--q-space-6)); border-block-start: 0; }
 .today-verse__head { display: flex; align-items: center; justify-content: space-between; margin-block-end: var(--q-space-3); }
 
+/* The reference closes the quotation at its end; the way to the whole chapter
+   stays quiet on the other side — there when wanted, never competing. */
+.today-verse__foot { display: flex; flex-direction: row-reverse; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--q-space-4); margin-block-start: var(--q-space-2); }
+.today-verse__foot .scripture-block__reference { margin: 0; text-align: end; }
 .today-verse__link {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
   gap: 6px;
-  color: var(--q-royal-text);
+  color: var(--q-text-tertiary);
   font-size: var(--q-type-meta);
-  font-weight: 600;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--q-motion-micro) var(--q-ease);
 }
+.today-verse__link:hover { color: var(--q-text-secondary); text-decoration: underline; }
 
 /* ── Prayer session: the flagship space ────────────────────────────────── */
 .prayer-session {

@@ -138,7 +138,8 @@ export default function Layout({ children, onAddPrayer }) {
                 title={collapsed ? label : undefined}
                 className="app-nav-item pressable"
               >
-                {/* Active: purple text and a 2px gold line — never a filled card. */}
+                {/* Active: a 2px gold line and full-strength text — never a filled
+                    card, and never purple (purple is for actions). */}
                 {active && <span aria-hidden="true" className="app-nav-item__mark" />}
                 <span className="relative flex items-center">
                   <Icon size={18} strokeWidth={active ? 2.1 : 1.8} aria-hidden="true" />

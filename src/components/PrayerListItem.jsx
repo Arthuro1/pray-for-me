@@ -1,21 +1,26 @@
-import { Search } from 'lucide-react';
+import { Search, User, Users } from 'lucide-react';
 import { t } from '../i18n';
 import { scheduleEnded } from '../lib/planner';
-import { planRowContext, planRowSummary } from '../lib/planRow';
+import { planRowProgress, planRowSummary } from '../lib/planRow';
 import { todayKey } from '../lib/prayedLog';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { carriedSinceLabel, showsCarriedSince } from '../lib/carried';
 import { circleLabelKey, circleOf } from '../lib/circles';
+import CircleGlyph from './shared/CircleGlyph';
 import { StatusLabel } from './shared/Primitives';
 
-// One prayer in a list, read like a line in a prayer book: a serif title, one
-// line of context, and a quiet meta line (circle, answered, who is carrying it).
-// No card, no icon per row, no chips — the list scans by its titles.
+// One prayer in a list, read like a line in a prayer book: a serif title and
+// ONE quiet detail line beneath it. A small mark says what each detail is — a
+// person, a group, a circle — so "Prayer Buddies" (a group) and "Pour Anatole"
+// (a person) can never be confused. No card, no chips — the list scans by its
+// titles.
 //
 // variant 'today'   — what to pray now: the plan day's theme, or who it is for.
 // variant 'journal' — the record: its rhythm or how long it has been carried.
 // `showCircle={false}` where the circle is already the heading the row sits
 // under (the Journal's By circle view), so it is never said twice.
+const ICON = { size: 13, strokeWidth: 1.9, 'aria-hidden': true };
+
 export default function PrayerListItem({ prayer, lang, tr, shares, onClick, variant = 'journal', searchMatch = null, showCircle = true }) {
   const isAnswered = prayer.status === 'answered';
   // A finished series reads "Series ended", never "Active" — the plan is over
@@ -28,34 +33,52 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
   const planRow = planRowSummary(prayer, lang);
   const title = planRow?.name || tr(prayer.title, lang);
   const circle = circleOf(prayer);
-  const person = prayer.for_other && prayer.person_name ? t(lang, 'forPersonLabel', { name: prayer.person_name }) : '';
+  const person = prayer.for_other && prayer.person_name
+    ? { key: 'person', icon: <User {...ICON} />, text: t(lang, 'forPersonLabel', { name: prayer.person_name }) }
+    : null;
+  const group = prayer.origin_group_name
+    ? { key: 'group', icon: <Users {...ICON} />, text: prayer.origin_group_name }
+    : null;
+  const lead = (key, text) => (text ? { key, text, lead: true } : null);
 
   let heading = title;
-  let context = '';
+  let context = [];
   if (variant === 'today') {
     // A plan run leads with the DAY'S THEME, because that is what changes; the
-    // plan and the day move to the line beneath, so two runs stay distinct.
+    // day, then the plan, move to the line beneath — the day first, so it stays
+    // readable when a long plan name is cut short.
     heading = planRow?.theme || title;
-    context = planRow ? planRowContext(planRow) : person || prayer.origin_group_name || '';
+    context = planRow
+      ? [lead('day', planRow.dayLabel), planRow.theme && { key: 'plan', text: planRow.name, truncate: true }]
+      : [person || group];
   } else {
     const planRhythm = planRow?.dayLabel
       ? [planRow.dayLabel, planRow.paused ? t(lang, 'planPacePausedNote') : ''].filter(Boolean).join(' · ')
       : '';
     const carried = showsCarriedSince(prayer) ? t(lang, 'carriedSince', { date: carriedSinceLabel(prayer, lang) }) : '';
-    context = isAnswered ? person : isEnded
-      ? t(lang, 'seriesEnded')
-      : planRhythm || scheduleSummary(prayer.schedule, lang) || carried || person;
+    context = [isAnswered ? person : isEnded
+      ? lead('ended', t(lang, 'seriesEnded'))
+      : lead('rhythm', planRhythm || scheduleSummary(prayer.schedule, lang) || carried) || person];
   }
 
-  const meta = [
-    showCircle && circle && <span key="circle">{t(lang, circleLabelKey(circle))}</span>,
-    variant === 'journal' && isAnswered && (
-      <StatusLabel key="answered" tone="answered">
-        {t(lang, (prayer.prayer_testimonies || []).length > 0 ? 'testimony' : 'answered')}
-      </StatusLabel>
-    ),
-    variant === 'journal' && totalPraying > 0 && <span key="carrying">{totalPraying} {t(lang, 'prayingCount')}</span>,
+  const details = [
+    ...context,
+    showCircle && circle && {
+      key: 'circle',
+      icon: <CircleGlyph circle={circle} size={14} />,
+      text: t(lang, circleLabelKey(circle)),
+    },
+    variant === 'journal' && isAnswered && {
+      key: 'answered',
+      node: (
+        <StatusLabel tone="answered">
+          {t(lang, (prayer.prayer_testimonies || []).length > 0 ? 'testimony' : 'answered')}
+        </StatusLabel>
+      ),
+    },
+    variant === 'journal' && totalPraying > 0 && { key: 'carrying', text: `${totalPraying} ${t(lang, 'prayingCount')}` },
   ].filter(Boolean);
+  const progress = isEnded ? null : planRowProgress(planRow);
 
   return (
     <button
@@ -65,8 +88,24 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
     >
       <span className="min-w-0">
         <span className="prayer-row__title journal-row__title">{heading}</span>
-        {context && <span className="prayer-row__context">{context}</span>}
-        {meta.length > 0 && <span className="prayer-row__meta">{meta}</span>}
+        {details.length > 0 && (
+          <span className="prayer-row__details">
+            {details.map((d) => d.node ? <span key={d.key}>{d.node}</span> : (
+              <span
+                key={d.key}
+                className={`prayer-row__detail ${d.lead ? 'prayer-row__detail--lead' : ''} ${d.truncate ? 'prayer-row__detail--truncate' : ''}`}
+              >
+                {d.icon}
+                {d.text}
+              </span>
+            ))}
+          </span>
+        )}
+        {progress !== null && (
+          <span className="prayer-row__track" aria-hidden="true">
+            <span style={{ width: `${progress}%` }} />
+          </span>
+        )}
         {searchMatch?.text && !['title', 'person'].includes(searchMatch.field) && (
           <span className="prayer-row__match">
             <Search size={12} aria-hidden="true" />

@@ -84,7 +84,7 @@ describe('HomeTab — a plan day on Today', () => {
     renderHome();
     // The focus surface carries it once; the list beneath holds only the
     // other prayers, so nothing is said twice.
-    expect(screen.getAllByText(`${planName} · ${dayLabel}`).length).toBe(1);
+    expect(screen.getAllByText(`${dayLabel} · ${planName}`).length).toBe(1);
     expect(screen.getAllByText(theme).length).toBe(1);
     expect(screen.queryByText('Titre enregistré')).toBeNull();
   });

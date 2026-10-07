@@ -80,10 +80,17 @@ describe('PrayerListItem — a plan run in the Journal', () => {
 });
 
 describe('PrayerListItem — a plan run on Today', () => {
-  it('leads with the day\'s theme and names the plan beneath it', () => {
+  it('leads with the day\'s theme; beneath it the day comes first, then the plan', () => {
     renderItem('today');
     expect(screen.getByText(theme)).toBeTruthy();
-    expect(screen.getByText(`${planName} · ${dayLabel}`)).toBeTruthy();
+    const details = [...document.querySelectorAll('.prayer-row__detail')].map((d) => d.textContent);
+    expect(details).toEqual([dayLabel, planName]);
+  });
+
+  it('draws how far the plan has come as a thin progress line', () => {
+    renderItem('today');
+    const fill = document.querySelector('.prayer-row__track > span');
+    expect(fill?.style.width).toBe('67%');
   });
 
   it('falls back to the plan name when the day has no content', () => {

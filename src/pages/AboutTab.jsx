@@ -52,7 +52,13 @@ export default function AboutTab() {
   return (
     <div className="phase-page">
       <div className="phase-page__shell">
-        <PageHeader eyebrow={APP_NAME} title={t(lang, 'aboutTitle')} />
+        <PageHeader
+          eyebrow={APP_NAME}
+          title={t(lang, 'aboutTitle')}
+          backTo="/more"
+          backLabel={t(lang, 'moreTab')}
+          backAriaLabel={`${t(lang, 'backBtn')}: ${t(lang, 'moreTab')}`}
+        />
       </div>
 
       <div className="phase-content max-w-2xl">

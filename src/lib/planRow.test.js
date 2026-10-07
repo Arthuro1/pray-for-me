@@ -73,9 +73,9 @@ describe('planRowSummary', () => {
 });
 
 describe('planRowContext', () => {
-  it('joins the plan and its day for the line under a row', () => {
+  it('leads with the day, then names the plan', () => {
     const summary = planRowSummary(run(), lang, DAY);
-    expect(planRowContext(summary)).toBe(`${summary.name} · ${summary.dayLabel}`);
+    expect(planRowContext(summary)).toBe(`${summary.dayLabel} · ${summary.name}`);
   });
 
   it('is empty when there is no plan', () => {
