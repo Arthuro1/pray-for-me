@@ -32,10 +32,11 @@ export default function GroupPrayerRow({ prayer, user, lang, avatar, onOpen }) {
 
   return (
     <li className="together-prayer">
-      <p className="together-prayer__author">
+      {/* A div, not a <p>: the avatar renders a block element. */}
+      <div className="together-prayer__author">
         <Avatar name={prayer.is_anonymous ? '?' : prayer.author_name} avatar={prayer.is_anonymous ? null : avatar} size={24} anonymous={prayer.is_anonymous} />
         <span className="min-w-0 truncate">{communityAuthor(prayer, user.id, lang)} · {timeAgo(prayer.created_at, lang)}</span>
-      </p>
+      </div>
 
       {prayer._locked ? (
         <button type="button" onClick={onOpen} className="together-prayer__open together-prayer__open--locked">

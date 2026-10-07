@@ -415,6 +415,7 @@ export default function PrayerForm({
           {!communityMode && canHoldPrivateMetadata(editPrayer || null) && (
             <CirclePicker
               compact
+              defaultOpen={initialOrganizeOpen}
               value={form.circle}
               onChange={(circle) => patch('circle', circle)}
               lang={lang}

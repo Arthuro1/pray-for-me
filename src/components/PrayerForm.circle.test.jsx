@@ -101,6 +101,16 @@ describe('PrayerForm — the Intercession Circle row', () => {
     expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ circle: null }));
   });
 
+  // The "Where does this prayer belong?" card opens the composer to organize a
+  // prayer on purpose: there the circles are already in view.
+  it('opens onto the circles when the person came to organize this prayer', async () => {
+    const editPrayer = { id: 'p1', title: 'Ma famille', prayer_categories: [], schedule: null };
+    render(<PrayerForm onClose={() => {}} editPrayer={editPrayer} initialOrganizeOpen />);
+    await settled();
+    expect(circleRow().getAttribute('aria-expanded')).toBe('true');
+    expect(circleChoices().querySelectorAll('button[aria-pressed]')).toHaveLength(CIRCLES.length);
+  });
+
   it('is not offered when the prayer could not keep it encrypted', async () => {
     crypto.canHold = false;
     render(<PrayerForm onClose={() => {}} />);

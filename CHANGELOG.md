@@ -65,6 +65,10 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   prayer altar is taking shape", "What would you like to do with this prayer
   now?". German: "Meine Nächsten" for the third circle. The vocabulary
   hierarchy is documented in `docs/content/CHRISTIAN_TERMINOLOGY.md`.
+- The "Where does this prayer belong on your altar?" card opens the composer
+  with the circle row already open (someone who came to organize sees the
+  circles at once). A group request's author line is a `div`, not a `p`, so
+  its avatar no longer nests a block inside a paragraph.
 - **AI consent says it once.** The consent dialog had four overlapping texts
   (a posture paragraph, "What we send…", "To suggest… we send…", and "Your
   prayers remain private" — misleading, since the title is sent). It now has

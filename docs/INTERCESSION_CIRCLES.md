@@ -9,6 +9,14 @@ circles someone "has", ranks them, or nudges because one is empty.
 This document is the map of how the circles are built. Read it before adding a
 circle to a new screen.
 
+**Prayer is primary; circles are a quiet organizing and formation layer.** Ask
+of every screen: what did the person come here to do? If it is to pray, write
+a prayer, remember a request, join someone in prayer, record an update or
+choose a plan, a circle is at most a glyph and a short name, or one quiet
+row, never a block of its own. The circle page is the one place where a
+circle is fully taught. No counts that read like progress, no grids of
+circles, no explanation repeated on task screens.
+
 ## Concepts kept apart
 
 | Concept | Question it answers | Where it lives |
@@ -299,6 +307,7 @@ simply has no "Go deeper" section yet.
 | + | My heart's deep layer as a gated draft | Done 2026-10-07 — awaiting human sign-off |
 | B — circles become formation | Circle pages in the app; deep layers for the other six; Plans "Explore by circle"; plan completion → "What do you want to keep carrying?"; "Pray through my altar" | Done 2026-10-07 — all seven deep layers await human sign-off |
 | C — circles become intercession | Carried copies encrypted under the carrier's key; carry a community prayer into the carrier's own circle; circle filter on "Prayers you're carrying"; circle context in Tend (since the redesign) and testimonies | Done 2026-10-07 |
+| Declutter | Prayer is primary, circles a quiet layer: no circles on Today; one composer row; one circle view in the Journal; plans browsed by need; carry is one action (circle via the toast); one circle row on a prayer's page; teaching copy and altar/carry/circle vocabulary revised; short-layer translations labelled as drafts | Done 2026-10-07 — copy awaits native and theological review |
 | P4 | Your Altar overview; optional weekly intercession rhythm; Grow → Intercession hub; monthly reflection | Later |
 
 Explicitly never: circle scores or percentages, circle streaks or badges,

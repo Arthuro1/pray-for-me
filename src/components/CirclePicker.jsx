@@ -17,8 +17,8 @@ import CircleGlyph from './shared/CircleGlyph';
 // what it holds) is for a deliberate choice, such as changing a saved prayer's
 // circle; `label`/`hint` let a caller ask its own question there (a carried
 // request's circle is the carrier's alone).
-export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle', compact = false, label, hint }) {
-  if (compact) return <CircleRow value={value} onChange={onChange} lang={lang} idPrefix={idPrefix} />;
+export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle', compact = false, defaultOpen = false, label, hint }) {
+  if (compact) return <CircleRow value={value} onChange={onChange} lang={lang} idPrefix={idPrefix} defaultOpen={defaultOpen} />;
 
   const legendId = `${idPrefix}-legend`;
   const hintId = `${idPrefix}-hint`;
@@ -50,9 +50,10 @@ export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle
 
 // The composer's row. Choosing folds the circles away and hands focus back to
 // the row, so a keyboard or screen-reader user is never left on a control that
-// has just disappeared (the composer is a focus-trapped dialog).
-function CircleRow({ value, onChange, lang, idPrefix }) {
-  const [open, setOpen] = useState(false);
+// has just disappeared (the composer is a focus-trapped dialog). `defaultOpen`
+// is for someone who came to organize this prayer on purpose.
+function CircleRow({ value, onChange, lang, idPrefix, defaultOpen }) {
+  const [open, setOpen] = useState(defaultOpen);
   const toggleRef = useRef(null);
   const labelId = `${idPrefix}-label`;
   const choicesId = `${idPrefix}-choices`;
