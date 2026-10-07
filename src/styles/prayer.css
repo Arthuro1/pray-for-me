@@ -443,14 +443,14 @@
 }
 
 .prayer-detail__hero { width: min(100%, 48rem); margin-inline: auto; padding: var(--q-space-4) clamp(var(--q-space-4), 4vw, var(--q-space-8)) var(--q-space-8); }
-/* The circle leads (gold, with its glyph), then who it is for, then a quiet
-   way to place or change it. */
+/* Who it is for, and where it came from, above the title. */
 .prayer-detail__context { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-3); margin-block-end: var(--q-space-3); }
-.prayer-detail__circle { display: inline-flex; align-items: center; gap: var(--q-space-2); }
-.prayer-detail__circle--link { min-height: 44px; padding: 0; border: 0; background: none; }
-.prayer-detail__circle--link:hover > span { text-decoration: underline; text-underline-offset: 3px; }
-.prayer-detail__circle-change { min-height: 44px; padding: 0; border: 0; background: none; color: var(--q-royal-text); font-size: var(--q-type-meta); font-weight: 600; }
-.prayer-detail__circle-change:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* The circle: one quiet row under the prayer, opening the picker. */
+.prayer-detail__circle { display: inline-flex; min-height: 44px; align-items: center; gap: var(--q-space-2); margin: var(--q-space-2) 0 0; color: var(--q-text-secondary); font-size: var(--q-type-meta); font-weight: 600; }
+.prayer-detail__circle--button { padding: 0; border: 0; background: none; text-align: start; }
+.prayer-detail__circle--button:hover > span:first-of-type { text-decoration: underline; text-underline-offset: 3px; }
+.prayer-detail__circle--button > svg:last-child { color: var(--q-text-tertiary); }
+.prayer-detail__circle-unset { color: var(--q-text-tertiary); font-weight: 400; }
 .prayer-detail__labels { margin: var(--q-space-3) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
 
 .prayer-detail__title,

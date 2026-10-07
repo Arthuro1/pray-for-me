@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, ChevronRight, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -124,26 +124,30 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
   );
 }
 
-// The prayer's Intercession Circle at the head of the hero. Where the host can
-// show a circle's teaching (`onOpen`), the name opens it.
-function CircleEyebrow({ circle, lang, onOpen }) {
-  const name = t(lang, circleLabelKey(circle));
-  const className = 'section-label section-label--sacred prayer-detail__circle';
+// The prayer's Intercession Circle as ONE quiet metadata row under the prayer —
+// the prayer itself stays the hero. Where the circle can be kept encrypted
+// (`onChange`), the row opens the picker, which also leads to the circle's
+// teaching; elsewhere a placed circle is plain text.
+function CircleRow({ circle, lang, onChange }) {
+  const name = circle ? t(lang, circleLabelKey(circle)) : null;
   const content = (
     <>
-      <CircleGlyph circle={circle} size={16} selected />
-      <span>{name}</span>
+      <CircleGlyph circle={circle || 'nations'} size={16} selected={!!circle} />
+      <span>{name || t(lang, 'circleFieldLabel')}</span>
+      {!circle && <span className="prayer-detail__circle-unset">· {t(lang, 'circleNotSet')}</span>}
     </>
   );
-  if (!onOpen) return <span className={className}>{content}</span>;
+  if (!onChange) return circle ? <p className="prayer-detail__circle">{content}</p> : null;
   return (
     <button
       type="button"
-      onClick={() => onOpen(circle)}
-      aria-label={t(lang, 'circleLearnAbout', { circle: name })}
-      className={`${className} prayer-detail__circle--link pressable`}
+      onClick={onChange}
+      aria-haspopup="dialog"
+      aria-label={`${t(lang, 'circleFieldLabel')}: ${name || t(lang, 'circleNotSet')}`}
+      className="prayer-detail__circle prayer-detail__circle--button pressable"
     >
       {content}
+      <ChevronRight size={14} className="rtl-mirror shrink-0" aria-hidden="true" />
     </button>
   );
 }
@@ -520,10 +524,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const memberAvatarFor = useMemberAvatars(isCommunity ? communityPrayer.group_id : null);
   const canEditCommunityPrayer = isCommunity && (communityPrayer.user_id === user?.id || isGroupAdmin);
   const communityReactionCount = isCommunity ? (livePrayer.prayer_reactions?.[0]?.count ?? 0) : 0;
-  // The circle leads the hero as spiritual context — more prominent than the
-  // labels — and can be changed in place without rebuilding the prayer (its
-  // rhythm, labels and history are untouched). Only a prayer that can keep the
-  // circle inside its ciphertext can be placed.
+  // The circle is one quiet row under the prayer, changed in place without
+  // rebuilding it (its rhythm, labels and history are untouched). Only a prayer
+  // that can keep the circle inside its ciphertext can be placed.
   const heroCircle = circleOf(livePrayer);
   const heroContext = [
     livePrayer.for_other && livePrayer.person_name ? t(lang, 'forPersonLabel', { name: livePrayer.person_name }) : '',
@@ -968,15 +971,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       </div>
 
       <section className="prayer-detail__hero">
-        {(heroCircle || heroContext || canPlaceCircle) && (
+        {heroContext && (
           <div className="prayer-detail__context">
-            {heroCircle && <CircleEyebrow circle={heroCircle} lang={lang} onOpen={onOpenCircle} />}
-            {heroContext && <span className="section-label">{heroContext}</span>}
-            {canPlaceCircle && (
-              <button type="button" onClick={() => setShowCirclePicker(true)} className="prayer-detail__circle-change pressable">
-                {t(lang, heroCircle ? 'changeCircle' : 'placeInCircle')}
-              </button>
-            )}
+            <span className="section-label">{heroContext}</span>
           </div>
         )}
         {showCirclePicker && (
@@ -984,6 +981,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             value={heroCircle}
             onPlace={(circle) => updatePrayer(livePrayer.id, { circle })}
             onClose={() => setShowCirclePicker(false)}
+            onAbout={onOpenCircle}
             lang={lang}
             carried={savedCopy}
             idPrefix="detail-circle"
@@ -1018,9 +1016,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <RichText text={planText?.description || loc(livePrayer.description)} className="prayer-detail__description" />
         ) : null}
 
-        {/* Labels — one quiet line, secondary to the circle above ("Marriage ·
-            Healing"), except on a saved copy where you can file it under your
-            own categories (personal organisation, further down). */}
+        {/* Labels — one quiet line ("Marriage · Healing"), except on a saved
+            copy where you can file it under your own categories (personal
+            organisation, further down). */}
         {!savedCopy && prayerCategories.length > 0 && (
           <p className="prayer-detail__labels">{prayerCategories.map((c) => tr(c.name, lang)).join(' · ')}</p>
         )}
@@ -1045,6 +1043,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </span>
           )}
         </div>
+
+        {!isCommunity && (
+          <CircleRow circle={heroCircle} lang={lang} onChange={canPlaceCircle ? () => setShowCirclePicker(true) : null} />
+        )}
 
         {!isCommunity && !isAnswered && !livePrayer._locked && (
           <PrimaryButton

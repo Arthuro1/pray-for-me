@@ -175,13 +175,15 @@ approvals.
   `groupByCircle`; per-group add (Active only) calls `onAddInCircle`; rows hide
   the circle (`PrayerListItem showCircle={false}`); the count beside each
   heading stays quiet meta text.
-- **Prayer detail**: circle eyebrow (opens the circle page through
-  `onOpenCircle`; plain text where the host passes none) + "Place in a
-  circle"/"Change circle" (`components/circles/PlaceCircleModal.jsx`: the full
-  `CirclePicker` in a `Modal` portalled to `<body>`, saving
-  `updatePrayer(id, { circle })`). A carried copy is placeable too, with the
-  carrier's question ("Where would you like to carry this on your altar?") and
-  "Only you see this — never the group or the person who asked."
+- **Prayer detail**: the prayer is the hero; its circle is ONE quiet row under
+  it — "◉ My people ›", or "Intercession circle · Not set ›" — that opens
+  `components/circles/PlaceCircleModal.jsx` (the full `CirclePicker` in a
+  `Modal` portalled to `<body>`, saving `updatePrayer(id, { circle })`). Where
+  the host can show circle pages (`onOpenCircle`), the dialog adds "About My
+  people", the one way from a prayer to its circle's teaching. Where the
+  circle cannot stay encrypted, a placed circle is plain text and an unplaced
+  prayer shows nothing. A carried copy is placeable too, with the carrier's own
+  question and "Only you see this — never the group or the person who asked."
 - **Carry a group request** (`GroupPrayerRow`, `PrayTogetherCard`): carrying is
   ONE action, and the wall row and the request's page show only the Carry
   button — never the carrier's circle and never a second control. Right after

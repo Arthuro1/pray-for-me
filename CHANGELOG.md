@@ -33,6 +33,12 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   encrypted copy. Removed keys `carryPlacedIn`, `placeOnAltarLabel`.
 - **Prayers you're carrying**: the source switch and the circle chips moved
   behind one "Filter" (new key `filterLabel`), so praying needs no setup.
+- **A prayer's page** names its circle once: one quiet row under the prayer
+  ("◉ My people ›" or "Intercession circle · Not set ›") that opens the picker,
+  which also leads to "About My people". The circle eyebrow above the title and
+  the separate "Change circle" / "Place in a circle" link are gone (keys
+  `changeCircle`, `placeInCircle` removed, with the now-unused
+  `altarCirclesLabel` and `altarTodaySub`).
 
 ### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
 

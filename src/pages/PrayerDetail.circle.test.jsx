@@ -63,54 +63,64 @@ const renderDetail = (prayer, categories = []) => {
   return render(<PrayerDetail prayer={prayer} onBack={() => {}} onEdit={() => {}} lang={lang} />);
 };
 
+const circleRowName = (circle) => `${t(lang, 'circleFieldLabel')}: ${circle ? t(lang, `circle_${circle}`) : t(lang, 'circleNotSet')}`;
+const circleRow = (circle) => screen.getByRole('button', { name: circleRowName(circle) });
+
 describe('PrayerDetail — the circle', () => {
-  it('leads the hero, with the labels as one quiet line beneath', () => {
+  it('is one quiet row under the prayer — the prayer stays the hero', () => {
     const { container } = renderDetail(
       base({ circle: 'household', prayer_categories: [{ category_id: 'c1' }, { category_id: 'c2' }] }),
       [{ id: 'c1', name: 'Mariage', color: '#f00' }, { id: 'c2', name: 'Guérison', color: '#0f0' }],
     );
     const hero = container.querySelector('.prayer-detail__hero');
-    expect(within(hero).getByText(t(lang, 'circle_household'))).toBeTruthy();
+    // Said once: no eyebrow above the title, no separate "Change circle".
+    expect(within(hero).getAllByText(t(lang, 'circle_household'))).toHaveLength(1);
+    expect(hero.querySelector('.prayer-detail__context')).toBeNull();
+    const row = circleRow('household');
+    const title = within(hero).getByRole('heading', { level: 1 });
+    expect(title.compareDocumentPosition(row) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(within(hero).getByText('Mariage · Guérison')).toBeTruthy();
     // No coloured label pills in the hero any more.
     expect(hero.querySelector('.status-pill')).toBeNull();
   });
 
-  it('opens the circle\'s teaching from its name when the page can show it', () => {
+  it('leads from the picker to the circle\'s teaching when the page can show it', () => {
     const prayer = base({ circle: 'nations' });
     usePrayerStore.setState({ prayers: [prayer], categories: [], completions: {}, settings: { language: lang }, updatePrayer });
     const onOpenCircle = vi.fn();
     render(<PrayerDetail prayer={prayer} onBack={() => {}} onEdit={() => {}} onOpenCircle={onOpenCircle} lang={lang} />);
     const name = t(lang, 'circle_nations');
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circleLearnAbout', { circle: name }) }));
+    fireEvent.click(circleRow('nations'));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t(lang, 'circleLearnAbout', { circle: name }) }));
     expect(onOpenCircle).toHaveBeenCalledWith('nations');
+    expect(screen.queryByRole('dialog')).toBeNull();
     cleanup();
 
-    // Without a host that can show it (a community view), the circle is plain text.
+    // Without a host that can show it (a community view), there is no way there.
     renderDetail(prayer);
+    fireEvent.click(circleRow('nations'));
     expect(screen.queryByRole('button', { name: t(lang, 'circleLearnAbout', { circle: name }) })).toBeNull();
-    expect(screen.getByText(name)).toBeTruthy();
   });
 
   it('changes the circle in place, and nothing else', () => {
     renderDetail(base({ circle: 'household', schedule: { type: 'weekly', days: [1] } }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'changeCircle') }));
-    const dialog = screen.getByRole('dialog', { name: t(lang, 'changeCircle') });
+    fireEvent.click(circleRow('household'));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'circleFieldLabel') });
     fireEvent.click(within(dialog).getByRole('button', { name: new RegExp(t(lang, 'circle_people')) }));
     expect(updatePrayer).toHaveBeenCalledTimes(1);
     expect(updatePrayer).toHaveBeenCalledWith('p1', { circle: 'people' });
-    expect(screen.queryByRole('dialog', { name: t(lang, 'changeCircle') })).toBeNull();
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('lets an older prayer be placed, and a placed one be returned to "Your prayers"', () => {
     renderDetail(base());
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'placeInCircle') }));
+    fireEvent.click(circleRow(null));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: new RegExp(t(lang, 'circle_church')) }));
     expect(updatePrayer).toHaveBeenCalledWith('p1', { circle: 'church' });
 
     cleanup();
     renderDetail(base({ circle: 'church' }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'changeCircle') }));
+    fireEvent.click(circleRow('church'));
     // Choosing the current circle again takes it back — the circle is never required.
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: new RegExp(t(lang, 'circle_church')) }));
     expect(updatePrayer).toHaveBeenLastCalledWith('p1', { circle: null });
@@ -119,28 +129,28 @@ describe('PrayerDetail — the circle', () => {
   it('offers no circle control where the circle could not stay encrypted', () => {
     crypto.canHold = false;
     renderDetail(base());
-    expect(screen.queryByRole('button', { name: t(lang, 'placeInCircle') })).toBeNull();
+    expect(screen.queryByRole('button', { name: circleRowName(null) })).toBeNull();
+    expect(screen.queryByText(t(lang, 'circleFieldLabel'))).toBeNull();
   });
 
   it('lets the carrier place a carried group request in their own circle, privately', () => {
     renderDetail(base({ community_origin_id: 'c-9', origin_group_name: 'Groupe' }));
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'placeInCircle') }));
+    fireEvent.click(circleRow(null));
     const dialog = screen.getByRole('dialog', { name: t(lang, 'carryCircleQuestion') });
     expect(within(dialog).getByText(t(lang, 'carryCircleHint'))).toBeTruthy();
     fireEvent.click(within(dialog).getByRole('button', { name: new RegExp(t(lang, 'circle_people')) }));
     expect(updatePrayer).toHaveBeenCalledWith('p1', { circle: 'people' });
   });
 
-  it('a carried request already placed leads with the carrier’s circle and the group it came from', () => {
+  it('a carried request already placed names the carrier’s circle and the group it came from', () => {
     const { container } = renderDetail(base({ community_origin_id: 'c-9', origin_group_name: 'Groupe', circle: 'people' }));
     const hero = container.querySelector('.prayer-detail__hero');
-    expect(within(hero).getByText(t(lang, 'circle_people'))).toBeTruthy();
     expect(within(hero).getByText('Groupe')).toBeTruthy();
-    expect(within(hero).getByRole('button', { name: t(lang, 'changeCircle') })).toBeTruthy();
+    expect(within(hero).getByRole('button', { name: circleRowName('people') })).toBeTruthy();
   });
 
   it('offers no circle control on a carried copy this device cannot open', () => {
     renderDetail(base({ community_origin_id: 'c-9', origin_group_name: 'Groupe', _locked: true }));
-    expect(screen.queryByRole('button', { name: t(lang, 'placeInCircle') })).toBeNull();
+    expect(screen.queryByRole('button', { name: circleRowName(null) })).toBeNull();
   });
 });
