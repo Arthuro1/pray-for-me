@@ -1,54 +1,33 @@
+import { useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { t } from '../i18n';
 import { CIRCLES, circleDescKey, circleLabelKey } from '../lib/circles';
 import { CircleOption } from './shared/Primitives';
 import CircleGlyph from './shared/CircleGlyph';
 
-// "Where are you carrying this?": an OPTIONAL choice of one Intercession Circle.
-// Nothing is required, and pressing the chosen circle again returns the prayer
-// to "Your prayers". The circles are listed inner to outer because that is the
-// shape of intercession, not a ranking: each one's glyph simply reaches a
-// little further than the last.
+// An OPTIONAL choice of one Intercession Circle. Nothing is required, and
+// pressing the chosen circle again takes the prayer back out of it. The circles
+// are listed inner to outer because that is the shape of intercession, not a
+// ranking: each one's glyph simply reaches a little further than the last.
 //
-// Two forms. `compact` is the quiet row under the prayer's own words in the
-// composer — the prayer comes first, the circle second, and it never grows into
-// a form. The full form (each circle with what it holds) is for a deliberate
-// choice, such as changing a saved prayer's circle; `label`/`hint` let a caller
-// ask its own question there (a carried request's circle is the carrier's alone).
+// Two forms. `compact` is for the composer, where the prayer itself is the
+// point: one quiet row ("Intercession circle · Not set") that opens in place
+// onto the seven circles and folds again once one is chosen — organizing only
+// when asked for, never a form inside the form. The full form (each circle with
+// what it holds) is for a deliberate choice, such as changing a saved prayer's
+// circle; `label`/`hint` let a caller ask its own question there (a carried
+// request's circle is the carrier's alone).
 export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle', compact = false, label, hint }) {
+  if (compact) return <CircleRow value={value} onChange={onChange} lang={lang} idPrefix={idPrefix} />;
+
   const legendId = `${idPrefix}-legend`;
   const hintId = `${idPrefix}-hint`;
   const toggle = (circle) => onChange(value === circle ? null : circle);
 
-  if (compact) {
-    return (
-      <fieldset className="circle-picker circle-picker--compact" aria-labelledby={legendId} aria-describedby={hintId}>
-        <legend id={legendId} className="q-field__label">{t(lang, 'circleQuestion')}</legend>
-        <p id={hintId} className="q-field__hint circle-picker__hint">{t(lang, 'circleQuestionHint')}</p>
-        <div className="q-chips">
-          {CIRCLES.map((circle) => {
-            const selected = value === circle;
-            return (
-              <button
-                key={circle}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => toggle(circle)}
-                className="q-chip circle-chip pressable"
-              >
-                <CircleGlyph circle={circle} size={16} selected={selected} />
-                <span>{t(lang, circleLabelKey(circle))}</span>
-              </button>
-            );
-          })}
-        </div>
-      </fieldset>
-    );
-  }
-
   return (
-    <fieldset className="circle-picker" aria-labelledby={legendId} aria-describedby={hintId}>
-      <legend id={legendId} className="q-field__label">{label || t(lang, 'placeOnAltarLabel')}</legend>
-      <p id={hintId} className="q-field__hint circle-picker__hint">{hint || t(lang, 'placeOnAltarHint')}</p>
+    <fieldset className="circle-picker" aria-labelledby={legendId} aria-describedby={hint ? hintId : undefined}>
+      <legend id={legendId} className="q-field__label">{label || t(lang, 'circleFieldLabel')}</legend>
+      {hint && <p id={hintId} className="q-field__hint circle-picker__hint">{hint}</p>}
       <div className="circle-options">
         {CIRCLES.map((circle) => {
           const selected = value === circle;
@@ -66,5 +45,62 @@ export default function CirclePicker({ value, onChange, lang, idPrefix = 'circle
         })}
       </div>
     </fieldset>
+  );
+}
+
+// The composer's row. Choosing folds the circles away and hands focus back to
+// the row, so a keyboard or screen-reader user is never left on a control that
+// has just disappeared (the composer is a focus-trapped dialog).
+function CircleRow({ value, onChange, lang, idPrefix }) {
+  const [open, setOpen] = useState(false);
+  const toggleRef = useRef(null);
+  const labelId = `${idPrefix}-label`;
+  const choicesId = `${idPrefix}-choices`;
+  const choose = (circle) => {
+    onChange(value === circle ? null : circle);
+    setOpen(false);
+    toggleRef.current?.focus();
+  };
+
+  return (
+    <div className="circle-row">
+      <button
+        ref={toggleRef}
+        type="button"
+        onClick={() => setOpen((isOpen) => !isOpen)}
+        aria-expanded={open}
+        aria-controls={choicesId}
+        className="circle-row__toggle pressable"
+      >
+        <span id={labelId} className="circle-row__label">
+          <CircleGlyph circle="nations" size={16} />
+          {t(lang, 'circleFieldLabel')}
+        </span>
+        <span className={`circle-row__value ${value ? 'circle-row__value--set' : ''}`}>
+          {value && <CircleGlyph circle={value} size={16} selected />}
+          <span>{value ? t(lang, circleLabelKey(value)) : t(lang, 'circleNotSet')}</span>
+          <ChevronDown size={16} aria-hidden="true" className="circle-row__chevron" />
+        </span>
+      </button>
+      {open && (
+        <div id={choicesId} role="group" aria-labelledby={labelId} className="q-chips circle-row__choices">
+          {CIRCLES.map((circle) => {
+            const selected = value === circle;
+            return (
+              <button
+                key={circle}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => choose(circle)}
+                className="q-chip circle-chip pressable"
+              >
+                <CircleGlyph circle={circle} size={16} selected={selected} />
+                <span>{t(lang, circleLabelKey(circle))}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }

@@ -297,8 +297,27 @@
 .carry-placement:hover span { text-decoration: underline; text-underline-offset: 3px; }
 .carry-placement .circle-glyph { flex: 0 0 auto; }
 
-/* The composer's quiet circle row: the shared chips, a glyph in each, wrapping
-   onto as many lines as the screen needs — never a form of its own. */
-.circle-picker--compact .circle-picker__hint { margin-block-end: var(--q-space-2); }
+/* The composer's circle row: one quiet line beside "Add a note" and "Organize"
+   — its label, then what is chosen (or "Not set") — that opens onto the shared
+   chips, wrapping onto as many lines as the screen needs. */
+.circle-row__toggle {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--q-space-3);
+  color: var(--q-royal-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: start;
+}
+.circle-row__label,
+.circle-row__value { display: inline-flex; min-width: 0; align-items: center; gap: var(--q-space-2); }
+.circle-row__value { color: var(--q-text-tertiary); font-weight: 400; }
+.circle-row__value--set { color: var(--q-text); }
+.circle-row__chevron { flex: 0 0 auto; color: var(--q-royal-text); transition: transform var(--q-motion-standard) var(--q-ease); }
+.circle-row__toggle[aria-expanded="true"] .circle-row__chevron { transform: rotate(180deg); }
+.circle-row__choices { padding-block: var(--q-space-1) var(--q-space-3); }
 .circle-chip { padding-inline: var(--q-space-3); }
 .circle-chip .circle-glyph { flex: 0 0 auto; }

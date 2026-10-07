@@ -121,7 +121,7 @@ export default function IntercessionQueue({ lang }) {
         <SegmentedControl label={t(lang, 'intercessionTitle')} value={filter} onChange={setFilter} options={FILTERS} className="mt-1" />
       )}
       {circles.length > 0 && (
-        <div className="q-chips carried-queue__circles" role="group" aria-label={t(lang, 'journalCircle')}>
+        <div className="q-chips carried-queue__circles" role="group" aria-label={t(lang, 'circleFieldLabel')}>
           <button type="button" aria-pressed={activeCircle === 'all'} onClick={() => setCircle('all')} className="q-chip pressable">
             {t(lang, 'all')}
           </button>

@@ -85,7 +85,7 @@ export default function JournalFilters({
 
           {circles.length > 0 && (
             <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
-              {t(lang, 'journalCircle')}
+              {t(lang, 'circleFieldLabel')}
               <select
                 value={filters.circle || 'all'}
                 onChange={set('circle')}

@@ -159,12 +159,15 @@ approvals.
   router state `{ from, fromState }` (Plans by default; only in-app paths).
   Opened from Plans ("Explore by circle"), the Journal's circle headings (which
   reopen "By circle" on return) and the prayer detail's circle eyebrow.
-- **Prayer composer** (`PrayerForm.jsx`): `CirclePicker compact` right under
-  the prayer text ("Where are you carrying this?"), only when the prayer can be
-  encrypted. `context={ circle, prompt }` (from `openAddInCircle` in
-  `AuthenticatedApp.jsx`) preselects the circle and swaps the field label for
-  the circle's question; a `prompt` shows above the EMPTY field as a starting
-  point and is never saved or written into it.
+- **Prayer composer** (`PrayerForm.jsx`): `CirclePicker compact` is ONE quiet
+  row beside "Add a note" and "Organize" — "Intercession circle · Not set" (or
+  the chosen circle) — that opens in place onto the seven chips and folds again
+  after a choice, returning focus to the row. Writing a prayer never means
+  reading seven circles. Offered only when the prayer can be encrypted.
+  `context={ circle, prompt }` (from `openAddInCircle` in `AuthenticatedApp.jsx`)
+  preselects the circle and swaps the field label for the circle's question; a
+  `prompt` shows above the EMPTY field as a starting point and is never saved or
+  written into it.
 - **Journal** (`PrayersTab.jsx`): "By circle" view (offered once a circle is in
   use, active segment only) via `groupByCircle`; per-group add calls
   `onAddInCircle`; rows hide the circle (`PrayerListItem showCircle={false}`).

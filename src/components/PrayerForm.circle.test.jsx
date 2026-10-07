@@ -1,11 +1,13 @@
 // @vitest-environment jsdom
 //
-// "Where are you carrying this?" is optional and sits right under the prayer's
-// own words: nothing is required, nothing is preselected unless the person
-// came from a circle, and it is offered only where the circle can live inside
-// the prayer's ciphertext (lib/circles.js, lib/crypto/prayerCrypto.js).
+// The Intercession Circle is optional and quiet in the composer: writing a
+// prayer never means reading seven circles. One row names the circle (or "Not
+// set") and opens onto the circles only when asked. Nothing is preselected
+// unless the person came from a circle, and the row is offered only where the
+// circle can live inside the prayer's ciphertext (lib/circles.js,
+// lib/crypto/prayerCrypto.js).
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup, act } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, act, within } from '@testing-library/react';
 
 vi.mock('../lib/prayerFormDrafts', async (orig) => ({
   ...(await orig()),
@@ -42,17 +44,25 @@ const settled = () => act(async () => { await Promise.resolve(); });
 const openOrganize = () => fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
 const write = (title) => fireEvent.change(screen.getByLabelText(t(lang, 'prayerFieldLabel')), { target: { value: title } });
 const save = () => act(async () => { fireEvent.click(screen.getByRole('button', { name: t(lang, 'savePrayer') })); });
+const circleRow = () => screen.queryByRole('button', { name: new RegExp(t(lang, 'circleFieldLabel')) });
+const circleChoices = () => screen.queryByRole('group', { name: t(lang, 'circleFieldLabel') });
+const chip = (circle) => within(circleChoices()).getByRole('button', { name: t(lang, `circle_${circle}`) });
 
-describe('PrayerForm — where are you carrying this?', () => {
-  it('asks what to bring before God, and offers all seven circles with none chosen', async () => {
+describe('PrayerForm — the Intercession Circle row', () => {
+  it('asks only what to bring before God; the seven circles wait behind one quiet row', async () => {
     render(<PrayerForm onClose={() => {}} />);
     await settled();
     expect(screen.getByLabelText(t(lang, 'prayerFieldLabel'))).toBeTruthy();
-    // In view at once — not folded behind Organize.
-    const group = screen.getByRole('group', { name: t(lang, 'circleQuestion') });
-    const chips = group.querySelectorAll('button[aria-pressed]');
+    // No circle chips while writing — one row saying none is set.
+    expect(circleChoices()).toBeNull();
+    expect(circleRow().getAttribute('aria-expanded')).toBe('false');
+    expect(circleRow().textContent).toContain(t(lang, 'circleNotSet'));
+
+    fireEvent.click(circleRow());
+    expect(circleRow().getAttribute('aria-expanded')).toBe('true');
+    const chips = circleChoices().querySelectorAll('button[aria-pressed]');
     expect(chips).toHaveLength(CIRCLES.length);
-    for (const chip of chips) expect(chip.getAttribute('aria-pressed')).toBe('false');
+    for (const each of chips) expect(each.getAttribute('aria-pressed')).toBe('false');
   });
 
   it('saves without a circle when none is chosen — the circle is never required', async () => {
@@ -63,27 +73,41 @@ describe('PrayerForm — where are you carrying this?', () => {
     expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ title: 'Paix', circle: null }));
   });
 
-  it('saves the circle chosen, and a second press takes it back', async () => {
+  it('choosing folds the circles away, names the choice on the row and returns focus to it', async () => {
     render(<PrayerForm onClose={() => {}} />);
     await settled();
     write('Pour mes enfants');
-    const house = screen.getByRole('button', { name: new RegExp(t(lang, 'circle_household')) });
-    fireEvent.click(house);
-    expect(house.getAttribute('aria-pressed')).toBe('true');
-    fireEvent.click(house);
-    expect(house.getAttribute('aria-pressed')).toBe('false');
-    fireEvent.click(house);
+    fireEvent.click(circleRow());
+    fireEvent.click(chip('household'));
+
+    expect(circleChoices()).toBeNull();
+    expect(circleRow().textContent).toContain(t(lang, 'circle_household'));
+    expect(document.activeElement).toBe(circleRow());
     await save();
     expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ circle: 'household' }));
+  });
+
+  it('pressing the chosen circle again clears it', async () => {
+    render(<PrayerForm onClose={() => {}} />);
+    await settled();
+    write('Pour mes enfants');
+    fireEvent.click(circleRow());
+    fireEvent.click(chip('household'));
+    fireEvent.click(circleRow());
+    expect(chip('household').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(chip('household'));
+    expect(circleRow().textContent).toContain(t(lang, 'circleNotSet'));
+    await save();
+    expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ circle: null }));
   });
 
   it('is not offered when the prayer could not keep it encrypted', async () => {
     crypto.canHold = false;
     render(<PrayerForm onClose={() => {}} />);
     await settled();
-    expect(screen.queryByRole('group', { name: t(lang, 'circleQuestion') })).toBeNull();
+    expect(circleRow()).toBeNull();
     openOrganize();
-    expect(screen.queryByRole('group', { name: t(lang, 'circleQuestion') })).toBeNull();
+    expect(circleRow()).toBeNull();
   });
 });
 
@@ -93,11 +117,14 @@ describe('PrayerForm — arriving from a circle', () => {
     await settled();
     const field = screen.getByLabelText(t(lang, 'circlePrompt_church'));
     expect(field.value).toBe(''); // the words are always the person's own
-    const church = screen.getByRole('button', { name: new RegExp(t(lang, 'circle_church')) });
-    expect(church.getAttribute('aria-pressed')).toBe('true');
+    // Preselected, named on the row — no explanation, no chips in the way.
+    expect(circleChoices()).toBeNull();
+    expect(circleRow().textContent).toContain(t(lang, 'circle_church'));
 
     fireEvent.change(field, { target: { value: 'Pour nos anciens' } });
-    fireEvent.click(church); // cleared — the circle is never required
+    fireEvent.click(circleRow());
+    expect(chip('church').getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(chip('church')); // cleared — the circle is never required
     await save();
     expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ title: 'Pour nos anciens', circle: null }));
   });
@@ -121,18 +148,17 @@ describe('PrayerForm — arriving from a circle', () => {
     render(<PrayerForm onClose={() => {}} context={{ circle: 'galaxies' }} />);
     await settled();
     expect(screen.getByLabelText(t(lang, 'prayerFieldLabel'))).toBeTruthy();
-    const pressed = screen.getByRole('group', { name: t(lang, 'circleQuestion') }).querySelectorAll('[aria-pressed="true"]');
-    expect(pressed).toHaveLength(0);
+    expect(circleRow().textContent).toContain(t(lang, 'circleNotSet'));
   });
 
-  it('keeps a saved prayer’s circle in view when editing it', async () => {
+  it('names a saved prayer’s circle on the row when editing it', async () => {
     const editPrayer = { id: 'p1', title: 'Ma famille', circle: 'household', prayer_categories: [], schedule: null };
     const updatePrayer = vi.fn();
     usePrayerStore.setState({ updatePrayer });
     render(<PrayerForm onClose={() => {}} editPrayer={editPrayer} />);
     await settled();
-    expect(screen.getByRole('button', { name: new RegExp(t(lang, 'circle_household')) }).getAttribute('aria-pressed')).toBe('true');
-    // Organize stays folded: the circle no longer lives there.
+    expect(circleRow().textContent).toContain(t(lang, 'circle_household'));
+    // Organize stays folded: the circle does not live there.
     expect(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }).getAttribute('aria-expanded')).toBe('false');
   });
 });

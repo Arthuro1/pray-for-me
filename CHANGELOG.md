@@ -6,6 +6,17 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Changed — a quieter altar: prayer first, circles as a quiet layer (`docs/INTERCESSION_CIRCLES.md`)
+
+- **Today** no longer lists your circles with prayer counts, and no longer names
+  a circle on the hero or the rows. It shows what to pray today; the Journal's
+  "By circle" view is where prayers are found by circle.
+- **Writing a prayer** no longer shows seven circle chips under the prayer. One
+  quiet row — "Intercession circle · Not set" — opens onto the circles when
+  tapped and folds again after a choice. Coming from a circle still preselects
+  it. New keys `circleFieldLabel` (was `journalCircle`) and `circleNotSet`;
+  removed `circleQuestion`, `circleQuestionHint`, `placeOnAltarHint`.
+
 ### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
 
 - **After "Carry this prayer"**, a quiet "Place on your altar" follows the

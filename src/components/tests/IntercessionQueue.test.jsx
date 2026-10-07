@@ -76,13 +76,13 @@ describe('IntercessionQueue — by the carrier’s own circles', () => {
   it('offers no circle filter until carried prayers are placed', () => {
     usePrayerStore.setState({ prayers: [saved('a'), forOther('b')] });
     render(<IntercessionQueue lang={lang} />);
-    expect(screen.queryByRole('group', { name: t(lang, 'journalCircle') })).toBeNull();
+    expect(screen.queryByRole('group', { name: t(lang, 'circleFieldLabel') })).toBeNull();
   });
 
   it('narrows what the session walks to one circle, and back', () => {
     usePrayerStore.setState({ prayers: [placed('a', 'people'), placed('b', 'nations'), saved('c')] });
     render(<IntercessionQueue lang={lang} />);
-    expect(screen.getByRole('group', { name: t(lang, 'journalCircle') })).toBeTruthy();
+    expect(screen.getByRole('group', { name: t(lang, 'circleFieldLabel') })).toBeTruthy();
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
 
     fireEvent.click(chip(t(lang, 'circle_nations')));
