@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "Após N vezes",
   "endTimesSuffix": "vezes",
   "schedDaily": "Todos os dias",
-  "schedWeekly": "Cada {days}",
   "schedInterval": "A cada {n} dias",
   "schedMonthly": "No dia {d} de cada mês",
   "schedYearly": "Todo ano em {date}",

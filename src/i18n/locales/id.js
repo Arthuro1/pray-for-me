@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "Setelah N kali",
   "endTimesSuffix": "kali",
   "schedDaily": "Setiap hari",
-  "schedWeekly": "Setiap {days}",
   "schedInterval": "Setiap {n} hari",
   "schedMonthly": "Tanggal {d} setiap bulan",
   "schedYearly": "Setiap tahun pada {date}",

@@ -224,12 +224,12 @@ export function scheduleFromDraft(d, existing = null) {
 }
 
 // ── Human-readable schedules ─────────────────────────────────────────────────
-// TWO renderings of ONE schedule: a terse chip summary ("Every Tue, Fri ·
+// TWO renderings of ONE schedule: a terse chip summary ("Every Tuesday and Friday ·
 // morning · until answered") and a full sentence ("This prayer will appear
 // every Tuesday and Friday, at any time, until you mark it answered"). Both
 // read the same persisted object through the same field-by-field switch below,
 // so the preview a user confirms can never describe something else than what
-// gets saved — only the wording and the day-name length differ.
+// gets saved — only the wording differs.
 
 const SHORT_DATE = { day: 'numeric', month: 'short' };
 
@@ -257,6 +257,10 @@ export function formatList(lang, items) {
 
 const fmtDate = (key, lang) => parseKey(key).toLocaleDateString(lang, SHORT_DATE);
 
+// The summary opens a line, so its first letter is a capital (a no-op in
+// scripts without case).
+const capitalizeFirst = (text, lang) => (text ? text.charAt(0).toLocaleUpperCase(lang) + text.slice(1) : text);
+
 // The rhythm itself. `sentence` picks the flowing wording and full day names.
 function rhythmPhrase(s, lang, sentence) {
   if (s.type === 'once') {
@@ -268,11 +272,12 @@ function rhythmPhrase(s, lang, sentence) {
     case 'daily':
       return t(lang, sentence ? 'sentDaily' : 'schedDaily');
     case 'weekly': {
-      const idx = s.weekDays || [];
-      const days = sentence
-        ? formatList(lang, idx.map((i) => weekdayName(lang, i)))
-        : idx.map((i) => t(lang, 'days')[i]).join(', ');
-      return t(lang, sentence ? 'sentWeekly' : 'schedWeekly', { days });
+      // Full day names in both renderings: an abbreviation after "every"
+      // ("Chaque Jeu", "Jeden Mo") is not grammatical in most languages, and
+      // the sentence wording already carries each locale's own grammar.
+      const days = formatList(lang, (s.weekDays || []).map((i) => weekdayName(lang, i)));
+      const phrase = t(lang, 'sentWeekly', { days });
+      return sentence ? phrase : capitalizeFirst(phrase, lang);
     }
     case 'interval':
       return t(lang, sentence ? 'sentInterval' : 'schedInterval', { n: s.interval });
@@ -307,7 +312,7 @@ function endPhrase(s, lang, sentence) {
   return '';
 }
 
-// One-line human summary ("Every Tue, Fri · morning · until answered").
+// One-line human summary ("Every Tuesday and Friday · morning · until answered").
 // Also used by PrayerDetail and the day agenda. `showAnytime` spells out the
 // unset slot, for the compact row that stands in for the whole editor.
 export function scheduleSummary(s, lang, { showAnytime = false } = {}) {

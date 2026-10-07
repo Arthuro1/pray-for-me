@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "ከ N ጊዜ በኋላ",
   "endTimesSuffix": "ጊዜ",
   "schedDaily": "በየቀኑ",
-  "schedWeekly": "በየ {days}",
   "schedInterval": "በየ {n} ቀን",
   "schedMonthly": "በየወሩ በቀን {d}",
   "schedYearly": "በየዓመቱ በ{date}",

@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "Pagkatapos ng N beses",
   "endTimesSuffix": "beses",
   "schedDaily": "Araw-araw",
-  "schedWeekly": "Bawat {days}",
   "schedInterval": "Bawat {n} araw",
   "schedMonthly": "Sa ika-{d} ng bawat buwan",
   "schedYearly": "Taun-taon sa {date}",

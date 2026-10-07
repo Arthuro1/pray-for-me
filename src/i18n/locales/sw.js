@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "Baada ya mara N",
   "endTimesSuffix": "mara",
   "schedDaily": "Kila siku",
-  "schedWeekly": "Kila {days}",
   "schedInterval": "Kila siku {n}",
   "schedMonthly": "Siku ya {d} kila mwezi",
   "schedYearly": "Kila mwaka tarehe {date}",

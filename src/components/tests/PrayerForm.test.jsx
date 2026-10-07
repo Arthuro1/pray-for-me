@@ -23,6 +23,7 @@ vi.mock('../../lib/supabase', () => {
 import PrayerForm from '../PrayerForm';
 import usePrayerStore from '../../store/prayerStore';
 import { parseKey } from '../../lib/schedule';
+import { weekdayName } from '../../lib/scheduleDraft';
 import { todayKey } from '../../lib/prayedLog';
 import { t } from '../../i18n';
 
@@ -172,7 +173,7 @@ describe('PrayerForm — Quick Add', () => {
     // The compact row states the rhythm this prayer already has — no chips, no
     // decision to make, and the weekday it names is today's.
     const row = screen.getByText(t(lang, 'schedRhythmLabel')).closest('button');
-    expect(row.textContent).toContain(t(lang, 'days')[parseKey(todayKey()).getDay()]);
+    expect(row.textContent).toContain(weekdayName(lang, parseKey(todayKey()).getDay()));
     expect(row.textContent).toContain(t(lang, 'slotAnytime'));
     // Opening the scheduler does not preselect the "no fixed schedule" mode.
     fireEvent.click(row);

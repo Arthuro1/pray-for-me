@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "N बार के बाद",
   "endTimesSuffix": "बार",
   "schedDaily": "हर दिन",
-  "schedWeekly": "हर {days}",
   "schedInterval": "हर {n} दिन",
   "schedMonthly": "हर महीने की {d} तारीख़",
   "schedYearly": "हर साल {date}",

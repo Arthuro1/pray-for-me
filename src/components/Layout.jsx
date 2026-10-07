@@ -109,21 +109,12 @@ export default function Layout({ children, onAddPrayer }) {
         className={`app-sidebar ${collapsed ? 'app-sidebar--collapsed' : ''} hidden md:flex flex-col fixed top-0 h-full z-20 py-6`}
         style={{ width: `${sidebarWidth}px` }}
       >
+        {/* The name and the inbox only: the collapse toggle lives at the foot
+            of the sidebar, so the wordmark is never clipped. */}
         <div className="app-sidebar__head">
           {!collapsed && <BrandLockup size={30} className="overflow-hidden" />}
           {collapsed && <BrandMark size={30} title={APP_NAME} className="mx-auto" />}
-          <div className="flex items-center gap-1 shrink-0">
-            {!collapsed && <NotificationBell />}
-            <button
-              type="button"
-              onClick={() => setCollapsed(!collapsed)}
-              className="icon-button pressable"
-              aria-label={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
-              title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
-            >
-              {collapsed ? <ChevronRight className="rtl-mirror" size={16} /> : <ChevronLeft className="rtl-mirror" size={16} />}
-            </button>
-          </div>
+          {!collapsed && <div className="shrink-0"><NotificationBell /></div>}
         </div>
 
         {/* Collapsed sidebar still needs the inbox: render the bell on its own
@@ -169,6 +160,15 @@ export default function Layout({ children, onAddPrayer }) {
           >
             <Plus size={18} strokeWidth={2.1} aria-hidden="true" />
             {!collapsed && <span>{t(lang, 'newPrayer')}</span>}
+          </button>
+          <button
+            type="button"
+            onClick={() => setCollapsed(!collapsed)}
+            className="icon-button pressable app-sidebar__collapse"
+            aria-label={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
+            title={collapsed ? t(lang, "tipExpandSidebar") : t(lang, "tipCollapseSidebar")}
+          >
+            {collapsed ? <ChevronRight className="rtl-mirror" size={16} /> : <ChevronLeft className="rtl-mirror" size={16} />}
           </button>
         </div>
       </aside>

@@ -1040,6 +1040,8 @@ label.circle-option { cursor: pointer; }
 
 .app-sidebar__add { justify-content: flex-start; padding-inline: 14px; }
 .app-sidebar--collapsed .app-sidebar__add { justify-content: center; padding-inline: 0; }
+.app-sidebar__collapse { display: flex; margin-block-start: var(--q-space-2); margin-inline-start: auto; color: var(--q-text-tertiary); }
+.app-sidebar--collapsed .app-sidebar__collapse { margin-inline: auto; }
 
 /* Mobile: a top bar that clears the status bar of an installed app, and five
    flat tabs above the home indicator. */

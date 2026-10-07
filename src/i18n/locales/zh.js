@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "N 次后",
   "endTimesSuffix": "次",
   "schedDaily": "每天",
-  "schedWeekly": "每{days}",
   "schedInterval": "每 {n} 天",
   "schedMonthly": "每月 {d} 日",
   "schedYearly": "每年 {date}",

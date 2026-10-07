@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "پس از N بار",
   "endTimesSuffix": "بار",
   "schedDaily": "هر روز",
-  "schedWeekly": "هر {days}",
   "schedInterval": "هر {n} روز",
   "schedMonthly": "روز {d} هر ماه",
   "schedYearly": "هر سال در {date}",

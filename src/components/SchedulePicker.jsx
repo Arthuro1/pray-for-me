@@ -8,7 +8,7 @@ import { modeOf, planSummary, scheduleFromDraft, scheduleSummary } from '../lib/
 // Scheduling as ONE line until someone asks for more:
 //
 //     Prayer rhythm
-//     Every Tue · Anytime                                   Change
+//     Every Tuesday · Anytime                               Change
 //     You can change this later.
 //
 // The rhythm a prayer already has is stated — never a blank "Add a schedule" —

@@ -146,6 +146,8 @@
 .today-add { margin: 0 0 var(--q-space-8); margin-inline-start: calc(-1 * var(--q-space-3)); }
 
 .today-verse { margin-block: var(--q-space-4) var(--q-space-12); padding-block-start: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
+/* A fold right above already closes with a hairline: one line, not two. */
+.today-fold + .today-verse { margin-block-start: calc(-1 * var(--q-space-6)); border-block-start: 0; }
 .today-verse__head { display: flex; align-items: center; justify-content: space-between; margin-block-end: var(--q-space-3); }
 
 .today-verse__link {

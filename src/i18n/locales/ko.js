@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "N회 후",
   "endTimesSuffix": "회",
   "schedDaily": "매일",
-  "schedWeekly": "매주 {days}",
   "schedInterval": "{n}일마다",
   "schedMonthly": "매월 {d}일",
   "schedYearly": "매년 {date}",

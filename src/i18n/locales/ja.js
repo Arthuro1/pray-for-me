@@ -751,7 +751,6 @@ export default {
   "endAfterCount": "N回後",
   "endTimesSuffix": "回",
   "schedDaily": "毎日",
-  "schedWeekly": "毎週 {days}",
   "schedInterval": "{n}日ごと",
   "schedMonthly": "毎月{d}日",
   "schedYearly": "毎年 {date}",

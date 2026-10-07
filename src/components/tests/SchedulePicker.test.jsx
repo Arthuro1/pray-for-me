@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import SchedulePicker from '../SchedulePicker';
 import SchedulePlanner from '../SchedulePlanner';
-import { defaultNewDraft, emptyDraft } from '../../lib/scheduleDraft';
+import { defaultNewDraft, emptyDraft, weekdayName } from '../../lib/scheduleDraft';
 import { t } from '../../i18n';
 import { todayKey } from '../../lib/prayedLog';
 import { parseKey } from '../../lib/schedule';
@@ -48,7 +48,7 @@ describe('SchedulePicker — one line until asked', () => {
   it('states the rhythm the prayer already has, in words', () => {
     render(<PickerHarness />);
     // The bounded weekly default, named by its real weekday and time.
-    expect(rhythmRow().textContent).toContain(t(lang, 'days')[parseKey(todayKey()).getDay()]);
+    expect(rhythmRow().textContent).toContain(weekdayName(lang, parseKey(todayKey()).getDay()));
     expect(rhythmRow().textContent).toContain(t(lang, 'slotAnytime'));
   });
 
@@ -82,7 +82,7 @@ describe('SchedulePicker — one line until asked', () => {
     fireEvent.click(schedulerCancel());
 
     expect(onCommit).not.toHaveBeenCalled();
-    expect(rhythmRow().textContent).toContain(t(lang, 'days')[parseKey(todayKey()).getDay()]);
+    expect(rhythmRow().textContent).toContain(weekdayName(lang, parseKey(todayKey()).getDay()));
     // Reopening starts from the committed value again, not the discarded one.
     fireEvent.click(rhythmRow());
     expect(radio('schedEveryDay').checked).toBe(false);
@@ -122,7 +122,7 @@ describe('SchedulePlanner — Prayer Detail', () => {
     fireEvent.click(screen.getByText(t(lang, 'cancel')));
     expect(onSave).not.toHaveBeenCalled();
     // Collapsed back to the stored schedule's own summary.
-    expect(screen.getByText(new RegExp(t(lang, 'days')[2]))).toBeTruthy();
+    expect(screen.getByText(new RegExp(weekdayName(lang, 2)))).toBeTruthy();
   });
 
   it('clears a schedule to "no fixed schedule"', () => {
