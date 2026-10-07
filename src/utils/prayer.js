@@ -56,12 +56,19 @@ export function mirrorSavedCopy(p, c) {
   // readable saved snapshot until the key becomes available again.
   if (!c || c._locked) return {};
   const answered = !!c.is_answered;
+  const state = {
+    status: answered ? 'answered' : 'active',
+    answered_at: answered ? (p.answered_at || null) : null,
+  };
+  // The copy itself is stored under the carrier's account key. One this device
+  // cannot open stays locked: the group's text is never poured into it, where
+  // the device cache would keep it beside ciphertext it could not re-encrypt.
+  if (p._locked) return state;
   return {
     title: c.title ?? p.title,
     description: c.description ?? p.description,
     prayer_points: (c.prayer_points || []).map((pp) => ({ id: pp.id, title: pp.title, verses: pp.verses || [] })),
-    status: answered ? 'answered' : 'active',
-    answered_at: answered ? (p.answered_at || null) : null,
+    ...state,
   };
 }
 

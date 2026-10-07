@@ -6,6 +6,23 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Security — carried group requests are encrypted (`docs/ENCRYPTION.md`)
+
+- "Carry this prayer" used to save the carrier's copy of a group request with
+  its title, description and prayer points in **plaintext**, even when the
+  group's original is end-to-end encrypted. The copy is now stored under the
+  carrier's account key, like their own prayers, with fresh point ids. No
+  schema change.
+- The vault migration (Privacy center) now also counts and encrypts copies
+  carried before this release, so the "still unprotected" count may rise once
+  for people who carry group prayers.
+- A row a device cannot decrypt is never re-encrypted from its redacted
+  placeholders — not by an edit, saved Scripture guidance or the device cache —
+  and a locked carried copy no longer receives the group's text in memory.
+- Compatibility: older clients read encrypted copies the same way they read any
+  encrypted prayer. Rollback: a previous build would show encrypted copies but
+  write new carries in plaintext again; no data needs reverting.
+
 ### Added — Intercession Circles, Milestone B (`docs/INTERCESSION_CIRCLES.md`)
 
 - **A page for each circle inside the app** (`/circles/:circleId`,

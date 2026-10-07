@@ -112,8 +112,8 @@ async function encryptedSensitiveFields(merged) {
 // created before it existed (or while it was locked) stay plaintext on the
 // server. These helpers find those PRIVATE rows and re-store them as ciphertext
 // so "Prayer Vault" protects a user's whole private history, not just new writes.
-// Shared and saved-from-community prayers are deliberately skipped — group
-// members must read the former, and the latter mirrors public community content.
+// That history includes carried copies of group requests, which used to be
+// written in plaintext. Prayers the user shared to a group are still skipped.
 const MIGRATABLE_COLLECTIONS = ['prayer_updates', 'prayer_points', 'prayer_testimonies'];
 
 // A row is encrypted at rest once it carries an encryption_version (written
@@ -143,7 +143,7 @@ async function fetchSharedPrayerIds(userId) {
 async function fetchOwnedEncryptionState(userId) {
   const { data, error } = await supabase
     .from('prayers')
-    .select(`id, user_id, community_origin_id, encryption_version,
+    .select(`id, user_id, encryption_version,
              prayer_updates(id, encryption_version),
              prayer_points(id, encryption_version),
              prayer_testimonies(id, encryption_version)`)
@@ -156,7 +156,7 @@ async function fetchOwnedEncryptionState(userId) {
 async function fetchOwnedForMigration(userId) {
   const { data, error } = await supabase
     .from('prayers')
-    .select(`id, user_id, community_origin_id, encryption_version,
+    .select(`id, user_id, encryption_version,
              title, description, person_name, phone, scripture_guidance,
              prayer_updates(id, encryption_version, text),
              prayer_points(id, encryption_version, title, verses),
@@ -460,7 +460,7 @@ const usePrayerStore = create((set, get) => ({
     }
     let total = 0, pending = 0;
     for (const p of rows) {
-      if (p.community_origin_id || sharedIds.has(p.id)) continue; // plaintext by design
+      if (sharedIds.has(p.id)) continue; // shared to a group: left as it is
       total++;
       if (prayerNeedsEncryption(p)) pending++;
     }
@@ -482,7 +482,7 @@ const usePrayerStore = create((set, get) => ({
     }
     let migrated = 0, failed = 0;
     for (const p of rows) {
-      if (p.community_origin_id || sharedIds.has(p.id) || !prayerNeedsEncryption(p)) continue;
+      if (sharedIds.has(p.id) || !prayerNeedsEncryption(p)) continue;
       try { await encryptExistingPrayer(p); migrated++; }
       catch { failed++; }
     }
@@ -557,31 +557,49 @@ const usePrayerStore = create((set, get) => ({
     return id;
   },
 
-  // Saves a community prayer into the user's personal list as a snapshot copy
-  // (title, description, prayer points). Not ongoing-synced; deduped by origin.
+  // Carry a community prayer: save it into the user's personal list as a
+  // snapshot copy (title, description, prayer points), deduped by origin. The
+  // group's text arrives decrypted under the GROUP key; the copy is stored under
+  // the carrier's ACCOUNT key, so carrying never writes it to the server in
+  // plaintext. Only a carrier without a key in memory stores it as-is (like any
+  // prayer saved then); the vault migration encrypts it later.
   addFromCommunity: async (communityPrayer, groupName = null) => {
     const existing = get().prayers.find((p) => p.community_origin_id === communityPrayer.id);
     if (existing) return { prayer: existing, alreadyAdded: true };
 
-    const { data: { user } } = await supabase.auth.getUser();
-    const { data, error } = await supabase
-      .from('prayers')
-      .insert(communityToPersonalInsert(communityPrayer, groupName, user.id))
-      .select(`*, prayer_updates(*), prayer_points(*), prayer_testimonies(*), prayer_categories(category_id)`)
-      .single();
-    if (error || !data) return { error: error?.message || 'failed' };
+    const { data: { session } } = await supabase.auth.getSession();
+    const userId = session?.user?.id;
+    if (!userId) return { error: 'signed-out' };
 
-    // Copy current prayer points (categories are skipped — they belong to the author).
+    const row = { id: crypto.randomUUID(), ...communityToPersonalInsert(communityPrayer, groupName, userId) };
+    // The current prayer points, under fresh ids: the group copy's point ids are
+    // the author's own rows. (Categories are skipped — they belong to the author.)
     const points = (communityPrayer.prayer_points || []).map((pp) => ({
-      prayer_id: data.id, title: pp.title, verses: pp.verses || [],
+      id: crypto.randomUUID(), prayer_id: row.id, title: pp.title, verses: pp.verses || [],
     }));
+    const willEncrypt = canEncrypt(row);
+
+    const { error } = await supabase.from('prayers').insert(willEncrypt ? await encryptPrayerForStorage(row) : row);
+    if (error) return { error: error.message || 'failed' };
     if (points.length > 0) {
-      const { data: inserted } = await supabase.from('prayer_points').insert(points).select();
-      data.prayer_points = inserted || [];
+      const persistPoints = willEncrypt
+        ? await Promise.all(points.map((point) => encryptChildForStorage(point, POINT_SENSITIVE_FIELDS, userId)))
+        : points;
+      // Best effort: a copy without its own points still mirrors the group's on load.
+      await supabase.from('prayer_points').insert(persistPoints);
     }
 
-    set((state) => ({ prayers: [data, ...state.prayers] }));
-    return { prayer: data };
+    const prayer = {
+      ...row,
+      created_at: new Date().toISOString(),
+      prayer_updates: [],
+      prayer_points: points,
+      prayer_testimonies: [],
+      prayer_categories: [],
+      _encrypted: willEncrypt,
+    };
+    set((state) => ({ prayers: [prayer, ...state.prayers] }));
+    return { prayer };
   },
 
   // Optimistic + offline-capable. Fields map to snake_case; category links and
@@ -605,7 +623,10 @@ const usePrayerStore = create((set, get) => ({
     const current = get().prayers.find((p) => p.id === id);
     // An edit re-encrypts a previously-plaintext row, so the in-memory copy
     // records that this row is now encrypted instead of waiting for a reload.
-    const nowEncrypted = canEncrypt(current);
+    // A row this device could not decrypt (`_locked`) is never re-encrypted:
+    // its fields in memory are redacted placeholders, so only metadata (a pin,
+    // a schedule) is written and the stored ciphertext stays as it was.
+    const nowEncrypted = canEncrypt(current) && !current._locked;
     // Placing (or un-placing) a prayer in a circle is only possible for a prayer
     // that is encrypted under the account key; null clears it.
     if (updates.circle !== undefined && nowEncrypted) {
@@ -630,6 +651,9 @@ const usePrayerStore = create((set, get) => ({
     let persistPayload = withoutPayloadOnlyFields(payload);
     if (nowEncrypted) {
       persistPayload = { ...persistPayload, ...(await encryptedSensitiveFields({ ...current, ...payload })) };
+    } else if (current?._locked) {
+      // Never a plaintext content column beside ciphertext this device can't open.
+      for (const f of [...SENSITIVE_FIELDS, ...SENSITIVE_JSON_FIELDS]) delete persistPayload[f];
     }
     enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds });
   },
@@ -643,7 +667,8 @@ const usePrayerStore = create((set, get) => ({
       prayers: state.prayers.map((p) => (p.id === prayerId ? { ...p, scripture_guidance: guidance } : p)),
     }));
     const current = get().prayers.find((p) => p.id === prayerId);
-    if (!current) return;
+    // A row this device could not decrypt is never rewritten (see updatePrayer).
+    if (!current || current._locked) return;
     const persistPayload = canEncrypt(current)
       ? await encryptedSensitiveFields(current)
       : { scripture_guidance: guidance };

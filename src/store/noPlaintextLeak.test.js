@@ -537,3 +537,130 @@ describe('the Intercession Circle never reaches Supabase in plaintext', () => {
     expect(prayer.prayer_categories).toEqual([{ category_id: 'cat-2' }]);
   });
 });
+
+// Carrying a group request (Milestone C). The group's text is end-to-end
+// encrypted under the GROUP key; the carrier's copy lives in their own list and
+// is stored under their ACCOUNT key — never as plaintext columns. The circle the
+// carrier places it in is theirs alone: it must never reach the group, the
+// author, or any community table or RPC (spec §154, a release blocker).
+describe('a carried group request stays private to the carrier', () => {
+  const GROUP_REQUEST = {
+    id: 'c-42',
+    title: 'SECRET_GROUP_TITLE_mother_surgery',
+    description: 'SECRET_GROUP_DESC_tuesday_morning',
+    author_name: 'Marie',
+    is_anonymous: false,
+    content_language: 'fr',
+    prayer_points: [{ id: 'author-point-1', title: 'SECRET_GROUP_POINT_peace', verses: [{ ref: 'Phil 4:6' }] }],
+  };
+  const writesTo = (table) => rec.writes.filter((w) => w.table === table);
+  const communityWrites = () => rec.writes.filter((w) => w.table.startsWith('community') || w.table === 'prayer_reactions');
+
+  it('stores the copy and its points as ciphertext under the account key', async () => {
+    await createVault('pass');
+    const res = await usePrayerStore.getState().addFromCommunity(GROUP_REQUEST, 'Église');
+    expect(res.error).toBeUndefined();
+
+    const json = rec.writes.map((w) => JSON.stringify(w.payload)).join('\n');
+    for (const secret of [GROUP_REQUEST.title, GROUP_REQUEST.description, GROUP_REQUEST.prayer_points[0].title]) {
+      expect(json).not.toContain(secret);
+    }
+
+    const [row] = writesTo('prayers').map((w) => w.payload);
+    expect(row.community_origin_id).toBe('c-42');
+    expect(row.title).toBe('');
+    const data = await decryptJson(getMasterKey(), row.encrypted_payload, prayerContext(row));
+    expect(data.title).toBe(GROUP_REQUEST.title);
+
+    // Fresh point ids: the group copy's point ids belong to the author's own rows.
+    const [point] = writesTo('prayer_points').map((w) => w.payload).flat();
+    expect(point.id).not.toBe('author-point-1');
+    expect(point.prayer_id).toBe(row.id);
+    const pointData = await decryptJson(getMasterKey(), point.encrypted_payload, childContext('prayer-point', point, row.id));
+    expect(pointData.title).toBe(GROUP_REQUEST.prayer_points[0].title);
+
+    // In memory the carrier reads it at once, and it says it is encrypted.
+    const [copy] = usePrayerStore.getState().prayers;
+    expect(copy.title).toBe(GROUP_REQUEST.title);
+    expect(copy._encrypted).toBe(true);
+    expect(communityWrites()).toHaveLength(0);
+  });
+
+  it('keeps the carrier’s circle inside the ciphertext and away from every community surface', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addFromCommunity(GROUP_REQUEST, 'Église');
+    const [copy] = usePrayerStore.getState().prayers;
+    rec.writes.length = 0;
+    rec.rpcs.length = 0;
+
+    await usePrayerStore.getState().updatePrayer(copy.id, { circle: 'people' });
+    await drainQueue();
+
+    expect(usePrayerStore.getState().prayers[0].circle).toBe('people');
+    for (const w of rec.writes) {
+      expect(w.payload).not.toHaveProperty('circle');
+      expect(JSON.stringify(w.payload)).not.toContain('people');
+    }
+    expect(communityWrites()).toHaveLength(0);
+    expect(rec.rpcs).toHaveLength(0);
+
+    const write = writesTo('prayers').find((w) => w.payload?.encrypted_payload);
+    const data = await decryptJson(getMasterKey(), write.payload.encrypted_payload, prayerContext({ id: copy.id, user_id: 'user-1' }));
+    expect(data.circle).toBe('people');
+    expect(data.title).toBe(GROUP_REQUEST.title); // the snapshot rides along
+  });
+
+  it('without a key in memory, carrying still works but the copy cannot hold a circle', async () => {
+    const res = await usePrayerStore.getState().addFromCommunity(GROUP_REQUEST, 'Église');
+    expect(res.error).toBeUndefined();
+    const [copy] = usePrayerStore.getState().prayers;
+    expect(copy._encrypted).toBe(false);
+    rec.writes.length = 0;
+
+    await usePrayerStore.getState().updatePrayer(copy.id, { circle: 'people' });
+    await drainQueue();
+    expect(usePrayerStore.getState().prayers[0].circle).toBeUndefined();
+    for (const w of rec.writes) expect(JSON.stringify(w.payload)).not.toContain('people');
+  });
+
+  it('carries the same request only once', async () => {
+    await createVault('pass');
+    await usePrayerStore.getState().addFromCommunity(GROUP_REQUEST, 'Église');
+    rec.writes.length = 0;
+    const again = await usePrayerStore.getState().addFromCommunity(GROUP_REQUEST, 'Église');
+    expect(again.alreadyAdded).toBe(true);
+    expect(rec.writes).toHaveLength(0);
+  });
+});
+
+// A row this device could not decrypt holds redacted placeholders in memory.
+// Re-encrypting them would overwrite real ciphertext with empty strings, so an
+// edit writes metadata only and leaves the stored payload alone.
+describe('a row this device cannot open is never rewritten', () => {
+  it('a pin on a locked prayer writes no content and no new ciphertext', async () => {
+    await createVault('pass');
+    const stored = await encryptPrayerForStorage({ id: 'p-locked', user_id: 'user-1', title: 'Written with an older key', circle: 'household' });
+    usePrayerStore.setState({ prayers: [{ ...stored, _locked: true }] });
+    rec.writes.length = 0;
+
+    await usePrayerStore.getState().updatePrayer('p-locked', { pinned: true, circle: 'nations' });
+    await drainQueue();
+
+    const [write] = rec.writes.filter((w) => w.table === 'prayers');
+    expect(write.payload.pinned).toBe(true);
+    for (const f of ['encrypted_payload', 'encryption_version', 'title', 'description', 'person_name', 'phone', 'scripture_guidance', 'circle']) {
+      expect(write.payload).not.toHaveProperty(f);
+    }
+  });
+
+  it('a locked prayer never stores Scripture guidance beside its ciphertext', async () => {
+    await createVault('pass');
+    const stored = await encryptPrayerForStorage({ id: 'p-locked', user_id: 'user-1', title: 'Older key' });
+    usePrayerStore.setState({ prayers: [{ ...stored, _locked: true }] });
+    rec.writes.length = 0;
+
+    await usePrayerStore.getState().setScriptureGuidance('p-locked', { verses: [] });
+    await drainQueue();
+    expect(rec.writes.filter((w) => w.table === 'prayers')).toHaveLength(0);
+  });
+});

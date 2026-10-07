@@ -61,6 +61,34 @@ drafts; prayer-session note drafts; identity private keys; attachment
 blobs/metadata; community prayers, updates and testimonies; and wrapped
 group-key envelope identity.
 
+A personal row this device cannot decrypt (`_locked`) is never re-encrypted —
+not by an edit, not by saved guidance, not by the device cache. Its fields in
+memory are redacted placeholders; an edit to it writes metadata only (a pin, a
+schedule), and the cache keeps the ciphertext it arrived with.
+
+## Carried group requests
+
+"Carry this prayer" saves a copy of a group request into the carrier's own list
+(`prayers.community_origin_id`). The group's original stays under the group key
+in `community_prayers`. The copy — its snapshot of the title, description and
+prayer points, and the circle the carrier places it in — is stored under the
+carrier's **account key**, like their own prayers (personal-prayer /
+prayer-point contexts, owner = the carrier). Its points get fresh ids, because
+the group copy's point ids are the author's own rows.
+
+- On load the copy mirrors the group's current text in memory only; nothing is
+  written back. A copy this device cannot open stays locked and mirrors only the
+  group's answered state, so group text is never held beside ciphertext the
+  device cannot re-encrypt.
+- The carrier's circle never reaches a community table or RPC, the group or the
+  author (`src/store/noPlaintextLeak.test.js`).
+- Copies carried before this change were written in plaintext. The vault
+  migration (Privacy center → "Protect them") now counts and encrypts them with
+  the rest of the private history; it no longer skips `community_origin_id`.
+- A carrier with no account key in memory still carries the prayer as a
+  plaintext row, exactly like any prayer saved then; it cannot hold a circle
+  until the migration encrypts it.
+
 ## Prayer-session note drafts
 
 A note captured during a prayer session is personal content that may not have

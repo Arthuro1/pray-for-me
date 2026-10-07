@@ -56,9 +56,10 @@ Audit date: 2026-10-06. Classes:
   sent as a column — a write with an unknown column would be rejected (4xx),
   and the offline queue drops rejected writes, which would lose the whole prayer.
 - **No database migration.** Old rows have no circle and show under *Your prayers*.
-- Offered only when the new prayer will be encrypted. A prayer saved while the
-  account key is unavailable, and a carried copy of someone else's request, has
-  no circle.
+- Offered only when the prayer is (or will be) encrypted. A prayer saved while
+  the account key is unavailable has no circle. A carried copy of someone else's
+  request is encrypted under the carrier's account key since Milestone C, so it
+  can hold the carrier's own circle.
 - Older clients: they decrypt and ignore the field. If an older client edits the
   prayer, it re-encrypts the payload without the circle (the person re-places it).
   The service worker updates clients within the hour, so this window is short.

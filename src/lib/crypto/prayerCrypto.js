@@ -58,15 +58,16 @@ export const UPDATE_SENSITIVE_FIELDS = ['text', 'attachments'];
 export const POINT_SENSITIVE_FIELDS = ['title', 'verses'];
 export const TESTIMONY_SENSITIVE_FIELDS = ['content', 'attachments'];
 
-// A prayer is encryptable when the account key is ready (isUnlocked) AND it is
-// the user's own prayer. Saved-from-community copies (community_origin_id) mirror
-// the group's own encrypted content and are decrypted with the group key, so
-// they are never re-encrypted under the account key here. Sharing a prayer to a
-// group writes a separate copy encrypted under that GROUP's key
-// (community_prayers), so an owned prayer is encrypted under the account key AND
-// its shared copies are encrypted under their group keys — never plaintext.
+// A prayer is encryptable when the account key is ready (isUnlocked). That
+// includes a CARRIED copy of a group request (community_origin_id): the copy is
+// a row in the carrier's own list, so its snapshot of the group's text — and the
+// circle the carrier places it in — are stored under the carrier's account key,
+// exactly like their own prayers. (The group's original stays under the GROUP
+// key in community_prayers; the copy only mirrors it in memory.) Sharing a
+// prayer to a group likewise writes a separate copy under that group's key, so
+// no form of a prayer is ever stored in plaintext while a key is available.
 export function canEncrypt(prayer) {
-  return isUnlocked() && !!prayer && !prayer.community_origin_id;
+  return isUnlocked() && !!prayer;
 }
 
 // Will a personal prayer created RIGHT NOW be encrypted at rest? A statement
@@ -223,8 +224,12 @@ export function decryptPrayers(rows) {
 }
 
 // Encrypt each encryptable prayer's sensitive fields for the at-rest local
-// cache. Non-encryptable prayers (saved copies, or an already-locked row) pass
-// through unchanged. Callers must only invoke this while the vault is unlocked.
+// cache — carried copies included. A row this device could not decrypt
+// (`_locked`) keeps the ciphertext it arrived with: its fields in memory are
+// redacted placeholders, and re-encrypting them would overwrite content that
+// was never verified. Callers must only invoke this while the vault is unlocked.
 export async function encryptPrayersForCache(prayers) {
-  return Promise.all((prayers || []).map((p) => (canEncrypt(p) ? encryptPrayerForStorage(p, { nested: true }) : p)));
+  return Promise.all((prayers || []).map((p) => (
+    canEncrypt(p) && !p._locked ? encryptPrayerForStorage(p, { nested: true }) : p
+  )));
 }

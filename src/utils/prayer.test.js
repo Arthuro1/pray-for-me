@@ -38,6 +38,12 @@ describe('mirrorSavedCopy', () => {
 
     expect({ ...saved, ...mirrorSavedCopy(saved, locked) }).toEqual(saved);
   });
+
+  it('never pours the group text into a copy this device cannot open — only its answered state', () => {
+    const lockedCopy = { ...saved, title: '', description: '', _locked: true, encryption_version: 2 };
+    const c = { id: 'c1', title: 'new', description: 'newd', prayer_points: [{ id: 'pp1', title: 'p', verses: [] }], is_answered: true };
+    expect(mirrorSavedCopy(lockedCopy, c)).toEqual({ status: 'answered', answered_at: null });
+  });
 });
 
 describe('communityToPersonalInsert', () => {

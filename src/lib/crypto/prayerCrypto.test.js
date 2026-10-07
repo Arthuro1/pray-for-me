@@ -53,9 +53,9 @@ describe('canEncrypt', () => {
     expect(canEncrypt(samplePrayer())).toBe(true);
   });
 
-  it('is false for saved-from-community copies', async () => {
+  it('is true for a carried copy of a group request — it lives in the carrier’s own list', async () => {
     await createVault('pass-phrase');
-    expect(canEncrypt({ ...samplePrayer(), community_origin_id: 'c1' })).toBe(false);
+    expect(canEncrypt({ ...samplePrayer(), community_origin_id: 'c1' })).toBe(true);
   });
 });
 
@@ -149,11 +149,26 @@ describe('nested cache encryption (Phase 3b)', () => {
     expect(dec.testimonies).toEqual([]);
   });
 
-  it('leaves saved-from-community copies untouched', async () => {
-    const saved = { ...nestedPrayer(), community_origin_id: 'c1' };
-    const [out] = await encryptPrayersForCache([saved]);
-    expect(isPrayerEncrypted(out)).toBe(false);
-    expect(out.prayer_updates).toHaveLength(1);
+  it('encrypts a carried copy of a group request like any other prayer', async () => {
+    const carried = { ...nestedPrayer(), community_origin_id: 'c1', circle: 'people' };
+    const [out] = await encryptPrayersForCache([carried]);
+    expect(isPrayerEncrypted(out)).toBe(true);
+    expect(out.community_origin_id).toBe('c1'); // the link stays a plain column
+    const serialized = JSON.stringify(out);
+    expect(serialized).not.toContain('For my brother John');
+    expect(serialized).not.toContain('Surgery went well');
+    expect(serialized).not.toContain('people');
+    const dec = await decryptPrayerFromStorage(out);
+    expect(dec.title).toBe('For my brother John');
+    expect(dec.circle).toBe('people');
+  });
+
+  it('keeps the original ciphertext of a row this device could not decrypt', async () => {
+    const stored = await encryptPrayerForStorage(samplePrayer());
+    const locked = { ...stored, _locked: true };
+    const [out] = await encryptPrayersForCache([locked]);
+    expect(out).toBe(locked);
+    expect(out.encrypted_payload).toBe(stored.encrypted_payload);
   });
 });
 

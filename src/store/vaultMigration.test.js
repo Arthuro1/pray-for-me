@@ -1,8 +1,9 @@
 // Task 5 — Vault migration/status. Proves that scanVaultCoverage() correctly
 // reports how many of a user's PRIVATE prayers are still plaintext at rest, and
-// that migrateToVault() re-encrypts exactly those (parents + nested rows),
-// leaving shared / saved-from-community / already-encrypted rows untouched and
-// never sending private plaintext to the server.
+// that migrateToVault() re-encrypts exactly those (parents + nested rows) —
+// carried copies of group requests included — leaving prayers shared to a group
+// and already-encrypted rows untouched and never sending private plaintext to
+// the server.
 //
 // Uses the same recording-Supabase harness as noPlaintextLeak.test.js, but here
 // the mock also serves rows back from `select`, so the scan/migrate read path
@@ -68,10 +69,13 @@ const SECRET_UPDATE = 'SECRET_legacy_update_surgery';
 const SECRET_POINT = 'SECRET_legacy_point_healing';
 const SECRET_TESTIMONY = 'SECRET_legacy_testimony_healed';
 const SECRET_P5_UPDATE = 'SECRET_p5_nested_update';
+const SECRET_CARRIED = 'SECRET_carried_group_request';
+const SECRET_CARRIED_POINT = 'SECRET_carried_group_point';
 
 // p1 private + fully plaintext; p2 private + fully encrypted; p3 shared;
-// p4 saved-from-community; p5 private with an encrypted parent but a plaintext
-// nested update (a formerly-shared prayer, now private).
+// p4 a carried copy of a group request, written in plaintext before copies were
+// encrypted; p5 private with an encrypted parent but a plaintext nested update
+// (a formerly-shared prayer, now private).
 function seed() {
   db.prayersRows = [
     {
@@ -93,8 +97,10 @@ function seed() {
     },
     {
       id: 'p4', user_id: 'user-1', community_origin_id: 'c-9', encryption_version: null,
-      title: 'saved copy', description: '', person_name: '', phone: '', scripture_guidance: null,
-      prayer_updates: [], prayer_points: [], prayer_testimonies: [],
+      title: SECRET_CARRIED, description: '', person_name: '', phone: '', scripture_guidance: null,
+      prayer_updates: [],
+      prayer_points: [{ id: 'pt4', encryption_version: null, title: SECRET_CARRIED_POINT, verses: [] }],
+      prayer_testimonies: [],
     },
     {
       id: 'p5', user_id: 'user-1', community_origin_id: null, encryption_version: 1,
@@ -119,9 +125,10 @@ beforeEach(async () => {
 describe('scanVaultCoverage', () => {
   it('counts only PRIVATE prayers, flagging those still plaintext at rest', async () => {
     const res = await usePrayerStore.getState().scanVaultCoverage();
-    // Private = p1, p2, p5 (p3 shared and p4 saved-from-community are excluded).
-    // Pending = p1 (plaintext) + p5 (plaintext nested update); p2 is fully encrypted.
-    expect(res).toEqual({ total: 3, pending: 2 });
+    // Private = p1, p2, p4, p5 (p3, shared to a group, is excluded).
+    // Pending = p1 (plaintext) + p4 (plaintext carried copy) + p5 (plaintext
+    // nested update); p2 is fully encrypted.
+    expect(res).toEqual({ total: 4, pending: 3 });
   });
 
   it('reports zero pending once nothing private is plaintext', async () => {
@@ -143,25 +150,26 @@ describe('migrateToVault', () => {
     db.writes.length = 0; // ignore any vault-setup writes
 
     const res = await usePrayerStore.getState().migrateToVault();
-    expect(res).toEqual({ migrated: 2, failed: 0 }); // p1 + p5
+    expect(res).toEqual({ migrated: 3, failed: 0 }); // p1 + p4 + p5
 
     // No plaintext secret reached the server.
     const json = allWritesJson();
-    for (const secret of [SECRET_TITLE, SECRET_UPDATE, SECRET_POINT, SECRET_TESTIMONY, SECRET_P5_UPDATE]) {
+    for (const secret of [SECRET_TITLE, SECRET_UPDATE, SECRET_POINT, SECRET_TESTIMONY, SECRET_P5_UPDATE, SECRET_CARRIED, SECRET_CARRIED_POINT]) {
       expect(json).not.toContain(secret);
     }
 
-    // Parent p1 re-encrypted in place (title redacted, payload attached); p2/p5
-    // parents are already encrypted so they are never rewritten.
+    // Parents p1 and p4 re-encrypted in place (title redacted, payload
+    // attached); p2/p5 parents are already encrypted so they are never rewritten.
     const prayerWrites = writesTo('prayers');
-    expect(prayerWrites).toHaveLength(1);
-    expect(prayerWrites[0].match).toEqual({ col: 'id', val: 'p1' });
-    expect(prayerWrites[0].payload.title).toBe('');
-    expect(prayerWrites[0].payload.encrypted_payload).toBeTruthy();
+    expect(prayerWrites.map((w) => w.match)).toEqual([{ col: 'id', val: 'p1' }, { col: 'id', val: 'p4' }]);
+    for (const w of prayerWrites) {
+      expect(w.payload.title).toBe('');
+      expect(w.payload.encrypted_payload).toBeTruthy();
+    }
 
-    // Nested rows: p1's update/point/testimony + p5's update.
+    // Nested rows: p1's update/point/testimony, p4's point and p5's update.
     expect(writesTo('prayer_updates').map((w) => w.match.val).sort()).toEqual(['u1', 'u5']);
-    expect(writesTo('prayer_points').map((w) => w.match.val)).toEqual(['pt1']);
+    expect(writesTo('prayer_points').map((w) => w.match.val)).toEqual(['pt1', 'pt4']);
     expect(writesTo('prayer_testimonies').map((w) => w.match.val)).toEqual(['t1']);
 
     // Every child write redacts its plaintext column and attaches ciphertext.

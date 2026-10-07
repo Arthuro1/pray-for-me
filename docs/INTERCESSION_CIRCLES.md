@@ -44,20 +44,24 @@ Visuals are separate: `components/shared/CircleGlyph.jsx`, `circleGeometry.js`,
   only inside the ciphertext, on the server and in the on-device cache. There is
   no column. A column write would be rejected and the offline queue would drop
   the whole prayer.
-- A prayer that cannot be encrypted (account key unavailable, a saved community
-  copy) cannot hold a circle; the store drops it rather than leaking it.
+- A prayer that cannot be encrypted (account key unavailable, or a row this
+  device could not decrypt) cannot hold a circle; the store drops it rather than
+  leaking it.
+- A **carried** group request (`community_origin_id`) is a copy in the carrier's
+  own list, stored under the carrier's account key like any prayer of theirs, so
+  it can hold the carrier's circle. That circle is the carrier's relationship to
+  the prayer, independent of anything the author chose: it is never copied from
+  the author, never written to a community table or RPC, and never visible to the
+  group or the author.
 - The app never classifies prayer text, never sends prayer text to AI to choose a
   circle, and never assigns a circle on the person's behalf.
 - Analytics never carry a circle (`lib/analytics.js` has no such key).
 - Guards: `src/store/noPlaintextLeak.test.js` ("the Intercession Circle never
   reaches Supabase in plaintext") covers add, edit, place/clear, no-key, invalid
   values, the load path, the device cache, offline replay, unknown values and
-  independence from categories and rhythm.
-
-**Open (Milestone C):** carried community copies (`community_origin_id`) are
-plaintext mirrors and are never re-encrypted under the account key, so the
-carrier's own circle for a carried prayer has no encrypted home yet. Decide that
-before letting "Carry this prayer" choose a circle.
+  independence from categories and rhythm; "a carried group request stays private
+  to the carrier" covers the carried copy, its points and the carrier's circle
+  (spec §154, a release blocker).
 
 ## Teaching content — `src/content/intercessionCircles/`
 
