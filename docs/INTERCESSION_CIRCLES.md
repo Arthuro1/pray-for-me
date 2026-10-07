@@ -206,7 +206,11 @@ approvals.
   `openAddInCircle`: the composer opens in the circle with the theme above an
   EMPTY field. Nothing is created on the person's behalf (the old flow saved
   prayers with pre-written titles); they can come back for another theme.
-- **Today**: the existing "On your altar" list and the circle on each row.
+- **Today**: no circles. Today answers "what am I bringing before God today?";
+  the hero names who a prayer is for, never its circle, and the rows hide it
+  (`PrayerListItem showCircle={false}`). The former "On your altar" list of
+  circles with prayer counts was removed (2026-10-07): it duplicated the
+  Journal's "By circle" view and read like a dashboard.
 - **Pray through my altar** (`PrayerSession.jsx`, `lib/altarSession.js`): an
   optional ORDER for the session's requests, a switch under the prayer formats
   (composes with requests / guided / ACTS), off by default and remembered on the

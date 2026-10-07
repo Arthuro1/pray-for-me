@@ -112,7 +112,28 @@ describe('HomeTab — remaining vs completed', () => {
   it('names the page "your altar today" once there is something to bring', () => {
     renderHome();
     expect(screen.getByText(t(lang, 'altarTodayTitle'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'altarTodaySub'))).toBeTruthy();
+  });
+
+  // Today answers "what am I bringing before God today?", not "how is my
+  // prayer list organized?": no circle overview, no per-circle counts, and no
+  // circle name on the hero or the rows — circles live in the Journal and on a
+  // prayer's own page.
+  it('shows no circle overview, counts or circle names — only what to pray', () => {
+    usePrayerStore.setState({
+      prayers: [
+        { ...prayer('p1', 'Prière un'), circle: 'household', for_other: true, person_name: 'Marie' },
+        { ...prayer('p2', 'Prière deux'), circle: 'household' },
+        { ...prayer('p3', 'Prière trois'), circle: 'nations' },
+      ],
+    });
+    renderHome();
+    for (const circle of ['household', 'nations']) {
+      expect(screen.queryByText(t(lang, `circle_${circle}`))).toBeNull();
+    }
+    expect(screen.queryByRole('navigation')).toBeNull();
+    // The hero keeps the one detail that helps someone pray: who it is for.
+    expect(screen.getByText(t(lang, 'forPersonLabel', { name: 'Marie' }))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'beginPrayer'))).toBeTruthy();
   });
 
   it('a completed day offers an optional "Remain with God" — stillness, not a reward', () => {

@@ -9,7 +9,7 @@ import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
 import { Loader2, Plus, Share2, ExternalLink } from 'lucide-react';
 import { bibleLink } from '../utils/bibleLink';
-import { t, tp } from '../i18n';
+import { t } from '../i18n';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
@@ -30,13 +30,11 @@ import VerseShareModal from '../components/VerseShareModal';
 import EmptyState from '../components/shared/EmptyState';
 import { Disclosure, PageHeader, PrimaryButton, QuietButton, SecondaryButton, SectionHeader } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
-import CircleGlyph from '../components/shared/CircleGlyph';
 import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
 import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
 import RemainWithGod from '../components/RemainWithGod';
-import { circleLabelKey, circleOf, groupByCircle } from '../lib/circles';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -101,10 +99,6 @@ export default function HomeTab({ onAdd, onEdit }) {
   const slotGroups = groupBySlot(remainingEntries);
   const useSlots = remainingEntries.some((e) => e.slot); // headers only once slots are in use
   const catchUp = getCatchUp();
-  // "On your altar": the circles this person has actually placed prayers in.
-  // Absent until they use one — the altar begins small and grows with them.
-  const altarCircles = groupByCircle(prayers.filter((p) => p.status === 'active' && !p._locked))
-    .filter(({ circle }) => circle);
   const today = new Date();
   const dayIndex = today.getDay();
   const reminder = settings.dailyReminderEnabled ? nextReminder(settings.dailyReminderTime, today) : null;
@@ -170,14 +164,12 @@ export default function HomeTab({ onAdd, onEdit }) {
     openSession(catchUp.map((c) => c.prayer), Object.fromEntries(catchUp.map((c) => [c.prayer.id, c.day])));
 
   // The first remaining prayer is the one brought forward; the list beneath
-  // holds the others, so nothing is said twice.
+  // holds the others, so nothing is said twice. Its one line of detail is who
+  // it is for — what helps someone pray, not how the prayer is filed (circles
+  // live in the Journal and on the prayer's own page).
   const focusPrayer = remainingPrayers[0] || null;
-  const focusCircle = focusPrayer ? circleOf(focusPrayer) : null;
-  const focusDetail = focusPrayer && !heroPlan
-    ? [
-      focusCircle ? t(lang, circleLabelKey(focusCircle)) : '',
-      focusPrayer.for_other && focusPrayer.person_name ? t(lang, 'forPersonLabel', { name: focusPrayer.person_name }) : '',
-    ].filter(Boolean).join(' · ')
+  const focusDetail = focusPrayer && !heroPlan && focusPrayer.for_other && focusPrayer.person_name
+    ? t(lang, 'forPersonLabel', { name: focusPrayer.person_name })
     : '';
   const otherEntries = remainingEntries.filter((e) => e.prayer.id !== focusPrayer?.id);
   const showFocus = remainingPrayers.length > 0 && (!loading || prayers.length > 0);
@@ -216,14 +208,10 @@ export default function HomeTab({ onAdd, onEdit }) {
 
       <div className="phase-content">
         {/* "Your altar today" names what this page is for, once, and only when
-            there is something to bring — an empty day has its own invitation. */}
+            there is something to bring — an empty day has its own invitation.
+            Three words; the page itself shows what coming before God means. */}
         {!dayEmpty && (!loading || prayers.length > 0) && (
-          <SectionHeader
-            eyebrow={t(lang, 'altarTodayTitle')}
-            supporting={t(lang, 'altarTodaySub')}
-            sacred
-            className="mb-5"
-          />
+          <SectionHeader eyebrow={t(lang, 'altarTodayTitle')} sacred className="mb-5" />
         )}
 
         {/* One doorway into prayer: a deep-violet space, one prayer, one action. */}
@@ -328,6 +316,7 @@ export default function HomeTab({ onAdd, onEdit }) {
                         shares={prayerShares[prayer.id]}
                         onClick={() => navigate(`/prayers/${prayer.id}`)}
                         variant="today"
+                        showCircle={false}
                       />
                     </SwipeableRow>
                   ))}
@@ -360,34 +349,6 @@ export default function HomeTab({ onAdd, onEdit }) {
               </ul>
             </Disclosure>
           </div>
-        )}
-
-        {/* "On your altar": the circles this person carries, as a quiet list. */}
-        {altarCircles.length > 0 && (
-          <nav className="today-circles" aria-label={t(lang, 'altarCirclesLabel')}>
-            <p className="section-label mb-2">{t(lang, 'altarCirclesLabel')}</p>
-            <ul>
-              {altarCircles.map(({ circle, prayers: inCircle }) => {
-                const name = t(lang, circleLabelKey(circle));
-                return (
-                  <li key={circle}>
-                    <button
-                      type="button"
-                      onClick={() => navigate('/prayers', { state: { circle } })}
-                      aria-label={`${name} · ${tp(lang, 'circlePrayerCount', inCircle.length)}`}
-                      className="today-circles__item pressable"
-                    >
-                      <span className="today-circles__name">
-                        <CircleGlyph circle={circle} size={20} />
-                        <span>{name}</span>
-                      </span>
-                      <span className="q-meta" aria-hidden="true">{inCircle.length}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
         )}
 
         {/* Add a prayer — always one tap from the list itself */}

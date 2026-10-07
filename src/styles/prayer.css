@@ -143,26 +143,6 @@
   border-block-start: 1px solid var(--q-border);
 }
 
-.today-circles { margin-block: var(--q-space-2) var(--q-space-6); }
-.today-circles ul { display: grid; margin: 0; padding: 0; list-style: none; }
-
-@media (min-width: 640px) {
-  .today-circles ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--q-space-6); }
-}
-
-.today-circles__item {
-  display: flex;
-  width: 100%;
-  min-height: 48px;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--q-space-3);
-  border-block-end: 1px solid var(--q-border);
-  color: var(--q-text);
-  font-size: 0.9375rem;
-  text-align: start;
-}
-
 .today-add { margin: 0 0 var(--q-space-8); margin-inline-start: calc(-1 * var(--q-space-3)); }
 
 .today-verse { margin-block: var(--q-space-4) var(--q-space-12); padding-block-start: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
