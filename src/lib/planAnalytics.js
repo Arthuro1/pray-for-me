@@ -22,6 +22,7 @@ export const PLAN_SOURCES = Object.freeze({
   GROUP: 'group',
   INVITATION: 'invitation',
   SHARE_LINK: 'share_link',
+  CIRCLE: 'circle',
   DIRECT: 'direct',
 });
 

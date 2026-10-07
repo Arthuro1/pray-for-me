@@ -123,19 +123,36 @@ AI-drafted and need a native review like the rest of the app copy.
   accessible control (buttons with `aria-expanded`); the SVG is `aria-hidden`
   with invisible hit bands. The panel is `components/circles/CircleTeaching.jsx`
   fed by `hooks/useCircleTeaching.js`. Scripture references load the app's
-  reader on demand (`LandingScriptureRef.jsx`). The call to pray opens the guest
-  flow with `{ circle, prompt }` (`lib/guestPrayerContext.js`); the circle is
-  kept in the encrypted guest draft and placed on the imported prayer.
+  reader on demand (`components/circles/ScriptureRefButton.jsx`). The call to
+  pray opens the guest flow with `{ circle, prompt }` (`lib/guestPrayerContext.js`);
+  the circle is kept in the encrypted guest draft and placed on the imported
+  prayer.
+- **Circle page** (`pages/CirclePage.jsx`, route `/circles/:circleId`): the same
+  `CircleTeaching` (short layer; deep layer behind its review gate) with the
+  circle's name as the page's `h1`, the seven circles as a switcher
+  (`components/circles/CircleLinks.jsx`), and "Go deeper": the circle's plans from
+  authored metadata (`plansForCircle`, primary circle first). Praying calls
+  `openAddInCircle(circle, { prompt })`. The back link returns to the path in
+  router state `{ from, fromState }` (Plans by default; only in-app paths).
+  Opened from Plans ("Explore by circle"), the Journal's circle headings (which
+  reopen "By circle" on return) and the prayer detail's circle eyebrow.
 - **Prayer composer** (`PrayerForm.jsx`): `CirclePicker compact` right under
   the prayer text ("Where are you carrying this?"), only when the prayer can be
-  encrypted. `context={ circle }` (from `openAddInCircle` in
-  `AuthenticatedApp.jsx`) preselects it and swaps the field label for the
-  circle's question.
+  encrypted. `context={ circle, prompt }` (from `openAddInCircle` in
+  `AuthenticatedApp.jsx`) preselects the circle and swaps the field label for
+  the circle's question; a `prompt` shows above the EMPTY field as a starting
+  point and is never saved or written into it.
 - **Journal** (`PrayersTab.jsx`): "By circle" view (offered once a circle is in
   use, active segment only) via `groupByCircle`; per-group add calls
   `onAddInCircle`; rows hide the circle (`PrayerListItem showCircle={false}`).
-- **Prayer detail**: circle eyebrow + "Place in a circle"/"Change circle"
-  (full `CirclePicker` in a `Modal`, saving `updatePrayer(id, { circle })`).
+- **Prayer detail**: circle eyebrow (opens the circle page through
+  `onOpenCircle`; plain text where the host passes none) + "Place in a
+  circle"/"Change circle" (full `CirclePicker` in a `Modal`, saving
+  `updatePrayer(id, { circle })`).
+- **Plans** (`PlansTab.jsx`): "Explore by circle" — seven doors to the circle
+  pages, beside the journey types; each `PlanCard` names its primary circle in
+  one quiet line; `PlanDetailModal` says "Forms prayer in …" and, quieter,
+  "Also connects with …".
 - **Today**: the existing "On your altar" list and the circle on each row.
 
 ## Themes and categories
@@ -148,18 +165,21 @@ preselects; the person can change or clear it, and nothing saves until they do.
 ## Plans
 
 `primaryCircle` and `circles` are optional on a `PLANS` entry; the category stays
-(category = what kind of journey; circle = where it shapes prayer). Mapped today:
+(category = what kind of journey; circle = where it shapes prayer). Every plan
+is mapped (asserted by `lib/circles.test.js`):
 
 | Circle | Plans |
 |---|---|
-| My heart | identity21, fruit10, holySpirit21, freedom30, david12, wisdom42, zechariah10 (+ people, household, kingdom), manOfGod21, womanOfGod21 |
+| My heart | identity21, fruit10, holySpirit21, freedom30, david12, wisdom42, zechariah10 (+ people, household, kingdom), manOfGod21, womanOfGod21, fast3, altar7, gratitude7, breakthrough21, discernment28, psalms42, preparing21 (+ household), work21 (+ people, kingdom) |
 | My house | marriage30, covenant21, children21, unborn21, prodigal30 (+ people) |
 | My people | unbelievers30 (+ kingdom), others30 (+ household, nations) |
-| His Church | churchHurt21 (+ self) |
+| His Church | churchHurt21 (+ self), upperRoom10 (+ kingdom) |
 | Kingdom & Mission | kingdomCome14 (+ church, nations) |
 
-Not mapped yet (a human call): fast3, altar7, gratitude7, upperRoom10,
-breakthrough21, preparing21, discernment28, work21, psalms42.
+No plan has Authorities or Nations as its primary circle, and none touches
+Authorities at all. That is deliberate: no plan is written only to fill a
+circle. The Nations page lists the plans that touch it; the Authorities page
+simply has no "Go deeper" section yet.
 
 ## Roadmap
 

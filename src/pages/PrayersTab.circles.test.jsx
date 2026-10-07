@@ -5,7 +5,7 @@
 // never a tally. Offered only once a circle is in use.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { act, render, screen, fireEvent, cleanup, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 vi.mock('react-router-dom', async (orig) => ({ ...(await orig()), useNavigate: () => vi.fn() }));
 
@@ -46,6 +46,10 @@ const renderJournal = (props = {}) => render(
   <MemoryRouter><PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} {...props} /></MemoryRouter>,
 );
 const byCircle = () => screen.getByRole('button', { name: t(lang, 'journalByCircle') });
+function LandedOnCircle() {
+  const location = useLocation();
+  return <p data-testid="circle-page">{`${location.pathname} ${JSON.stringify(location.state)}`}</p>;
+}
 const groupTitles = () => [...document.querySelectorAll('.journal-circle__title')].map((h) => h.textContent);
 
 describe('PrayersTab — By circle', () => {
@@ -100,6 +104,31 @@ describe('PrayersTab — By circle', () => {
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
     expect(screen.queryByRole('button', { name: t(lang, 'journalByCircle') })).toBeNull();
     expect(screen.getByText('Prière done')).toBeTruthy();
+  });
+
+  it('names each circle as a way into its teaching, and is reopened when that page sends the reader back', () => {
+    render(
+      <MemoryRouter initialEntries={['/prayers']}>
+        <Routes>
+          <Route path="/prayers" element={<PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />} />
+          <Route path="/circles/:circleId" element={<LandedOnCircle />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click(byCircle());
+    fireEvent.click(within(screen.getByRole('region', { name: t(lang, 'circle_household') })).getByRole('link', { name: t(lang, 'circle_household') }));
+    expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/prayers","fromState":{"journalView":"circles"}}');
+    cleanup();
+
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/prayers', state: { journalView: 'circles' } }]}>
+        <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
+      </MemoryRouter>,
+    );
+    expect(byCircle().getAttribute('aria-pressed')).toBe('true');
+    expect(groupTitles()[0]).toBe(t(lang, 'circle_self'));
+    // The unplaced group has no circle page to open.
+    expect(within(screen.getByRole('region', { name: t(lang, 'circleUnplaced') })).queryByRole('link', { name: t(lang, 'circleUnplaced') })).toBeNull();
   });
 
   it('works alongside the circle filter opened from Today', () => {

@@ -1,6 +1,8 @@
 import { ChevronRight } from 'lucide-react';
 import { t } from '../../i18n';
 import { isPlanReviewed } from '../../lib/planReview';
+import { circleLabelKey, planCircles } from '../../lib/circles';
+import CircleGlyph from '../shared/CircleGlyph';
 import { StatusLabel } from '../shared/Primitives';
 
 // One plan in the catalogue, as an editorial row: its title in the serif, what
@@ -11,12 +13,22 @@ import { StatusLabel } from '../shared/Primitives';
 //   progress — { day } when the plan is running for this reader
 //   finished — the reader has walked this plan to its end before
 //   featured — the larger reading used for "Continue" and "Start here"
-export default function PlanCard({ plan, lang, progress, finished = false, featured = false, onOpen }) {
+//   showCircle — name the plan's primary Intercession Circle above its title
+//                (one quiet line, never every circle it touches); off where
+//                the page is already about that circle
+export default function PlanCard({ plan, lang, progress, finished = false, featured = false, showCircle = true, onOpen }) {
   const running = !!progress;
   const day = progress?.day || 1;
+  const circle = showCircle ? planCircles(plan).primary : null;
   return (
     <button type="button" onClick={onOpen} className={`plan-row pressable ${featured ? 'plan-row--featured' : ''}`}>
       <span className="plan-row__body">
+        {circle && (
+          <span className="plan-row__circle">
+            <CircleGlyph circle={circle} size={14} />
+            <span>{t(lang, circleLabelKey(circle))}</span>
+          </span>
+        )}
         <span className="plan-row__title">{t(lang, plan.titleKey)}</span>
         <span className="plan-row__sub">{t(lang, plan.subKey)}</span>
         {/* A draft on screen always says so, in the row and again in the

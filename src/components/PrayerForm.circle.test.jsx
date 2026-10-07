@@ -102,6 +102,21 @@ describe('PrayerForm — arriving from a circle', () => {
     expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ title: 'Pour nos anciens', circle: null }));
   });
 
+  it('shows a "Pray this" prompt above the empty field as a starting point, never inside it', async () => {
+    const prompt = 'Donne-nous des ouvriers pour la moisson.';
+    render(<PrayerForm onClose={() => {}} context={{ circle: 'kingdom', prompt }} />);
+    await settled();
+    const field = screen.getByLabelText(t(lang, 'circlePrompt_kingdom'));
+    expect(field.value).toBe('');
+    expect(field.getAttribute('aria-describedby')).toBe('prayer-starting-point');
+    expect(document.getElementById('prayer-starting-point').textContent).toBe(prompt);
+
+    fireEvent.change(field, { target: { value: 'Pour Marc, en mission' } });
+    await save();
+    expect(addPrayer).toHaveBeenCalledWith(expect.objectContaining({ title: 'Pour Marc, en mission', circle: 'kingdom' }));
+    expect(JSON.stringify(addPrayer.mock.calls[0][0])).not.toContain(prompt);
+  });
+
   it('ignores a context that is not a circle', async () => {
     render(<PrayerForm onClose={() => {}} context={{ circle: 'galaxies' }} />);
     await settled();

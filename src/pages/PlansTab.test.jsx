@@ -5,7 +5,7 @@
 // once, nothing behind a "Browse" disclosure.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 vi.mock('../lib/verseText', () => ({
   fetchScriptureText: vi.fn(async () => ({ text: '' })),
@@ -27,6 +27,8 @@ import { trackPlanDetailOpened, trackPlansPageViewed } from '../lib/planAnalytic
 import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';
 import { t } from '../i18n';
+import { CIRCLES, circleLabelKey, planCircles } from '../lib/circles';
+import { formatList } from '../lib/scheduleDraft';
 
 const lang = 'fr';
 const planOf = (id) => PLANS.find((plan) => plan.id === id);
@@ -38,11 +40,17 @@ const runOf = (planId, startDate, prayerId) => ({
 });
 const section = (key) => screen.getByRole('region', { name: t(lang, key) });
 
+function LandedOnCircle() {
+  const location = useLocation();
+  return <p data-testid="circle-page">{`${location.pathname} ${JSON.stringify(location.state)}`}</p>;
+}
+
 const renderPlans = (state) => render(
   <MemoryRouter initialEntries={[{ pathname: '/plans', state }]}>
     <Routes>
       <Route path="/plans" element={<PlansTab />} />
       <Route path="/prayers/:id" element={<p>prayer page</p>} />
+      <Route path="/circles/:circleId" element={<LandedOnCircle />} />
     </Routes>
   </MemoryRouter>,
 );
@@ -125,5 +133,38 @@ describe('PlansTab', () => {
   it('counts a visit with no known door as direct', () => {
     renderPlans();
     expect(trackPlansPageViewed).toHaveBeenCalledWith('direct');
+  });
+});
+
+describe('PlansTab — Intercession Circles', () => {
+  const nameOf = (circle) => t(lang, circleLabelKey(circle));
+
+  it('offers a second way in: the seven circles, each opening its page', () => {
+    renderPlans();
+    const explore = screen.getByRole('navigation', { name: t(lang, 'exploreByCircle') });
+    const links = within(explore).getAllByRole('link');
+    expect(links.map((link) => link.textContent)).toEqual(CIRCLES.map(nameOf));
+    fireEvent.click(within(explore).getByRole('link', { name: nameOf('household') }));
+    expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/plans"}');
+  });
+
+  it('names a plan\'s primary circle on its row — one circle, never all it touches', () => {
+    renderPlans();
+    const plan = PLANS.find((p) => isPlanReviewed(p) && planCircles(p).circles.length > 1 && p.id !== STARTER_PLAN_ID);
+    expect(plan).toBeTruthy();
+    const row = screen.getByText(titleOf(plan.id)).closest('button');
+    const { primary, circles } = planCircles(plan);
+    expect(row.querySelector('.plan-row__circle').textContent).toBe(nameOf(primary));
+    for (const other of circles.slice(1)) expect(row.textContent).not.toContain(nameOf(other));
+  });
+
+  it('says in a plan\'s details where it forms prayer, its other circles quieter', () => {
+    renderPlans();
+    const plan = PLANS.find((p) => isPlanReviewed(p) && planCircles(p).circles.length > 1 && p.id !== STARTER_PLAN_ID);
+    fireEvent.click(screen.getByText(titleOf(plan.id)));
+    const dialog = screen.getByRole('dialog', { name: titleOf(plan.id) });
+    const { primary, circles } = planCircles(plan);
+    expect(within(dialog).getByText(t(lang, 'planFormsPrayerIn', { circle: nameOf(primary) }))).toBeTruthy();
+    expect(within(dialog).getByText(t(lang, 'planAlsoConnects', { circles: formatList(lang, circles.slice(1).map(nameOf)) }))).toBeTruthy();
   });
 });

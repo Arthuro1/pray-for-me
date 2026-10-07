@@ -8,19 +8,21 @@ import { useEscapeKey } from '../../hooks/useEscapeKey';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
 import CircleGlyph from './CircleGlyph';
 
+// The quiet "‹ Plans" link back to where a page was opened from. `state` is
+// handed back to that page (e.g. which Journal view was open).
+export function BackLink({ to, label, ariaLabel, state, className = '' }) {
+  return (
+    <Link to={to} state={state} aria-label={ariaLabel || label} className={`quiet-button -ms-3 mb-3 no-underline ${className}`}>
+      <ChevronLeft className="rtl-mirror" size={18} aria-hidden="true" />
+      <span>{label}</span>
+    </Link>
+  );
+}
+
 export function PageHeader({ eyebrow, title, subtitle, aside, backTo, backLabel, backAriaLabel, className = '' }) {
   return (
     <header className={`page-header ${className}`}>
-      {backTo && backLabel && (
-        <Link
-          to={backTo}
-          aria-label={backAriaLabel || backLabel}
-          className="quiet-button -ms-3 mb-3 no-underline"
-        >
-          <ChevronLeft className="rtl-mirror" size={18} aria-hidden="true" />
-          <span>{backLabel}</span>
-        </Link>
-      )}
+      {backTo && backLabel && <BackLink to={backTo} label={backLabel} ariaLabel={backAriaLabel} />}
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="min-w-0">
           {eyebrow && <p className="page-header__eyebrow section-label">{eyebrow}</p>}

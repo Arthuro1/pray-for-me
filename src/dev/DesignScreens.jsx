@@ -3,14 +3,15 @@
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
 // /vault-setup, /privacy, /feedback, /donate, /ai-consent, /confirm,
-// /first-prayer, /calendar, /saved, /labels and /ai-preview render
+// /first-prayer, /calendar, /saved, /labels, /ai-preview, /circle (?c=<circle>)
+// and /bring-circle render
 // the REAL screens inside the real app shell with sample prayers (the vault and
 // key gates replace the shell, as in the app). Every store write is replaced
 // by a local no-op first, and
 // every database query answers empty, so nothing is queued, synced, encrypted
 // or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
-import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
@@ -24,6 +25,7 @@ import TendAltar from '../components/TendAltar';
 import PrayTogetherCard from '../components/PrayTogetherCard';
 import CommunityTab from '../pages/CommunityTab';
 import PlansTab from '../pages/PlansTab';
+import CirclePage from '../pages/CirclePage';
 import GrowTab from '../pages/GrowTab';
 import MoreTab from '../pages/MoreTab';
 import AboutTab from '../pages/AboutTab';
@@ -131,7 +133,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
-  'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
+  'circle', 'bring-circle', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -282,6 +284,7 @@ function CarryPreview({ lang }) {
 
 export default function DesignScreens({ screen }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [ready, setReady] = useState(false);
   const lang = usePrayerStore((s) => s.settings.language) || 'en';
 
@@ -338,6 +341,12 @@ export default function DesignScreens({ screen }) {
       )}
       {(screen === 'together' || screen === 'group') && <TogetherPreview screen={screen} />}
       {screen === 'circles' && <CirclesPreview lang={lang} />}
+      {/* A circle page needs its :circleId — rendered at that location. */}
+      {screen === 'circle' && (
+        <Routes location={{ pathname: `/circles/${searchParams.get('c') || 'household'}` }}>
+          <Route path="/circles/:circleId" element={<CirclePage onPrayInCircle={() => navigate('/__design/bring-circle')} />} />
+        </Routes>
+      )}
       {screen === 'more' && <MoreTab />}
       {screen === 'about' && <AboutTab />}
       {screen === 'settings' && <SettingsTab />}
@@ -368,6 +377,8 @@ export default function DesignScreens({ screen }) {
         <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />
       )}
       {(screen === 'today' || screen === 'bring' || screen === 'circles' || !SCREENS.includes(screen)) && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
+      {screen === 'bring-circle' && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
+      {screen === 'bring-circle' && <PrayerForm context={{ circle: 'kingdom', prompt: 'Send workers into the harvest.' }} onClose={() => navigate('/__design/circle?c=kingdom')} />}
       {screen === 'bring' && <PrayerForm editPrayer={usePrayerStore.getState().prayers.find((p) => p.id === 'd4')} onClose={() => navigate('/__design/today')} />}
       {nav}
     </Layout>

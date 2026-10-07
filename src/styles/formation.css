@@ -36,6 +36,8 @@
 }
 
 .plan-row__sub { color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.45; }
+/* The plan's primary circle, one quiet line above its title. */
+.plan-row__circle { display: inline-flex; align-items: center; gap: 6px; color: var(--q-text-tertiary); font-size: var(--q-type-label); font-weight: 650; letter-spacing: var(--q-tracking-label); text-transform: uppercase; }
 .plan-row__meta { margin-block-start: var(--q-space-1); color: var(--q-text-tertiary); font-size: var(--q-type-meta); font-weight: 600; }
 .plan-row__draft { margin-block-start: 2px; }
 
@@ -96,6 +98,22 @@
 }
 
 .plan-detail__sub { margin: var(--q-space-2) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
+.plan-detail__circles { display: grid; gap: 2px; margin-block-start: var(--q-space-3); }
+.plan-detail__circles > p { margin: 0; }
+.plan-detail__circle { display: inline-flex; align-items: center; gap: var(--q-space-2); color: var(--q-gold-text); font-size: var(--q-type-meta); font-weight: 600; }
+
+/* "Explore by circle" on the Plans page and the circle switcher on a circle
+   page: seven doors in the chip voice, never a second catalogue. */
+.circle-links { margin: 0; padding: 0; list-style: none; }
+.circle-page__nav { margin-block-end: var(--q-space-8); }
+/* On a phone the switcher is one row that scrolls sideways, not four rows of
+   chips above the teaching. */
+@media (max-width: 639px) {
+  .circle-page__nav .circle-links { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-block-end: 2px; }
+  .circle-page__nav .circle-links::-webkit-scrollbar { display: none; }
+  .circle-page__nav .circle-links > li { flex: 0 0 auto; }
+}
+.circle-page__plans { margin-block-start: var(--q-space-12); }
 .plan-detail__body { padding: var(--q-space-6) var(--q-space-6) var(--q-space-8); }
 .plan-detail__footer { padding: var(--q-space-4) var(--q-space-6) max(var(--q-space-5), env(safe-area-inset-bottom)); border-block-start: 1px solid var(--q-border); background: var(--q-surface); }
 

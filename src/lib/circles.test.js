@@ -8,6 +8,7 @@ import {
   isCircle,
   normalizeCircle,
   planCircles,
+  plansForCircle,
 } from './circles';
 import { PLANS } from '../content/prayerPlans';
 
@@ -105,6 +106,33 @@ describe('planCircles', () => {
       marriage30: 'household', covenant21: 'household', children21: 'household', unborn21: 'household',
       prodigal30: 'household', unbelievers30: 'people', others30: 'people',
       churchHurt21: 'church', kingdomCome14: 'kingdom',
+      // Milestone B: the nine journeys that had no circle yet.
+      fast3: 'self', altar7: 'self', gratitude7: 'self', breakthrough21: 'self', preparing21: 'self',
+      discernment28: 'self', psalms42: 'self', work21: 'self', upperRoom10: 'church',
     });
+  });
+
+  it('leaves no registered plan without a circle', () => {
+    expect(PLANS.filter((plan) => !planCircles(plan).primary).map((plan) => plan.id)).toEqual([]);
+  });
+});
+
+describe('plansForCircle', () => {
+  const plans = [
+    { id: 'a', primaryCircle: 'church', circles: ['church', 'self'] },
+    { id: 'b', primaryCircle: 'self', circles: ['self'] },
+    { id: 'c' },
+    { id: 'd', primaryCircle: 'kingdom', circles: ['kingdom', 'self'] },
+    { id: 'e', primaryCircle: 'self', circles: ['self', 'people'] },
+  ];
+
+  it('lists the plans whose circle it is first, then those that also touch it, keeping catalogue order', () => {
+    expect(plansForCircle(plans, 'self').map((plan) => plan.id)).toEqual(['b', 'e', 'a', 'd']);
+  });
+
+  it('never lists a plan without circle metadata, and knows no unknown circle', () => {
+    expect(plansForCircle(plans, 'people').map((plan) => plan.id)).toEqual(['e']);
+    expect(plansForCircle(plans, 'galaxies')).toEqual([]);
+    expect(plansForCircle(undefined, 'self')).toEqual([]);
   });
 });

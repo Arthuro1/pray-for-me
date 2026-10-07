@@ -125,6 +125,30 @@ function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
   );
 }
 
+// The prayer's Intercession Circle at the head of the hero. Where the host can
+// show a circle's teaching (`onOpen`), the name opens it.
+function CircleEyebrow({ circle, lang, onOpen }) {
+  const name = t(lang, circleLabelKey(circle));
+  const className = 'section-label section-label--sacred prayer-detail__circle';
+  const content = (
+    <>
+      <CircleGlyph circle={circle} size={16} selected />
+      <span>{name}</span>
+    </>
+  );
+  if (!onOpen) return <span className={className}>{content}</span>;
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(circle)}
+      aria-label={t(lang, 'circleLearnAbout', { circle: name })}
+      className={`${className} prayer-detail__circle--link pressable`}
+    >
+      {content}
+    </button>
+  );
+}
+
 // communityPrayer prop switches the component to community mode
 // `?day=` arrives from a URL, so it is checked for shape before it is asked
 // about: without this a hand-typed value walks the occurrence scan to its guard
@@ -135,7 +159,7 @@ const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
 // skipped or moved doesn't hand the memos below a fresh object every render.
 const EMPTY_OVERRIDES = {};
 
-export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null, initialFocus = null }) {
+export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null, onOpenCircle = null, initialFocus = null }) {
   const isCommunity = !!communityPrayer;
 
   // ── Personal mode state ──────────────────────────────────────────────────
@@ -946,12 +970,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
       <section className="prayer-detail__hero">
         {(heroCircle || heroContext || canPlaceCircle) && (
           <div className="prayer-detail__context">
-            {heroCircle && (
-              <span className="section-label section-label--sacred prayer-detail__circle">
-                <CircleGlyph circle={heroCircle} size={16} selected />
-                <span>{t(lang, circleLabelKey(heroCircle))}</span>
-              </span>
-            )}
+            {heroCircle && <CircleEyebrow circle={heroCircle} lang={lang} onOpen={onOpenCircle} />}
             {heroContext && <span className="section-label">{heroContext}</span>}
             {canPlaceCircle && (
               <button type="button" onClick={() => setShowCirclePicker(true)} className="prayer-detail__circle-change pressable">

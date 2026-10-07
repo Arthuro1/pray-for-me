@@ -5,7 +5,7 @@ import CircleGlyph from '../../components/shared/CircleGlyph';
 import CircleTeaching from '../../components/circles/CircleTeaching';
 import { useCircleTeaching } from '../../hooks/useCircleTeaching';
 import { EVENTS, track } from '../../lib/analytics';
-import LandingScriptureRef from './LandingScriptureRef';
+import ScriptureRefButton from '../../components/circles/ScriptureRefButton';
 
 // The seven Intercession Circles on the public page: the ring model and the
 // list are ONE control. Hovering or focusing a circle previews its reach on the
@@ -189,7 +189,7 @@ export default function LandingCircles({ lang, copy, onBeginPrayer }) {
             ui={teaching.ui}
             lang={teaching.lang}
             name={copy.items[shownIndex]?.name}
-            ScriptureRef={LandingScriptureRef}
+            ScriptureRef={ScriptureRefButton}
             onPray={pray(shown)}
             className="landing__circle-teaching"
           />

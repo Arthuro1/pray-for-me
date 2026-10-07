@@ -52,6 +52,8 @@ export const PSALMS_STUDY = {
   count: 42,
   emoji: '🎶',
   category: 'bible-study',
+  primaryCircle: 'self',
+  circles: ['self'],
   mode: 'study',
   resourceDomains: ['bible-study'],
   titleKey: 'planPsalmsTitle',

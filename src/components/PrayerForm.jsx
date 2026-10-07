@@ -99,8 +99,10 @@ export default function PrayerForm({
   communityMode,
   onCommunitySubmit,
   prefill,
-  // { circle } when the person came from a circle (a Journal circle group):
-  // its question frames the empty field and the circle is preselected.
+  // { circle, prompt } when the person came from a circle (a Journal circle
+  // group, a circle page, a finished plan): its question frames the empty field
+  // and the circle is preselected. A `prompt` ("Pray this") sits above the
+  // field as a starting point — never written into the person's own words.
   context = null,
   initialOrganizeOpen = false,
   onEditSaved,
@@ -121,6 +123,7 @@ export default function PrayerForm({
 
   const [form, setForm] = useState(() => initialForm(editPrayer, prefill, lang, context));
   const contextCircle = editPrayer ? null : normalizeCircle(context?.circle);
+  const startingPoint = editPrayer || communityMode ? null : (context?.prompt || null);
   const [created, setCreated] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   // One required question — everything else is optional: the circle row, then,
@@ -332,11 +335,13 @@ export default function PrayerForm({
             <label htmlFor="prayer-title" className="q-field__label">
               {t(lang, communityMode ? 'prayerSubject' : (contextCircle ? circlePromptKey(contextCircle) : 'prayerFieldLabel'))}
             </label>
+            {startingPoint && <p id="prayer-starting-point" className="prayer-form__starting-point">{startingPoint}</p>}
             <input
               id="prayer-title"
               type="text"
               required
               autoFocus
+              aria-describedby={startingPoint ? 'prayer-starting-point' : undefined}
               value={form.title}
               onChange={e => patch('title', e.target.value)}
               placeholder={t(lang, 'prayerSubjectPlaceholder')}

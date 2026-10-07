@@ -849,7 +849,8 @@ label.circle-option { cursor: pointer; }
 .q-chip:hover { background: var(--q-hover); }
 
 .q-chip[aria-checked="true"],
-.q-chip[aria-pressed="true"] {
+.q-chip[aria-pressed="true"],
+.q-chip[aria-current="page"] {
   border-color: var(--q-royal);
   background: var(--q-selected);
   color: var(--q-royal-text);

@@ -6,6 +6,25 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Added — Intercession Circles, Milestone B (`docs/INTERCESSION_CIRCLES.md`)
+
+- **A page for each circle inside the app** (`/circles/:circleId`,
+  `src/pages/CirclePage.jsx`): the circle's teaching as a doorway into prayer,
+  the seven circles as a switcher, and "Go deeper": the plans that shape prayer
+  in that circle, from authored metadata only (`plansForCircle`). Opened from
+  the Plans page, the Journal's circle headings (coming back reopens "By
+  circle") and a prayer's circle. "Pray this" opens the composer in the circle
+  with the prompt shown above the empty field — never written into it, never
+  saved.
+- **Plans: "Explore by circle"** beside the journey types; each plan row names
+  its primary circle in one quiet line, and a plan's details say where it forms
+  prayer ("Also connects with …" for the others).
+- **Every plan now has a circle**: fast3, altar7, gratitude7, breakthrough21,
+  discernment28, psalms42 → My heart; preparing21 → My heart (+ My house);
+  work21 → My heart (+ My people, Kingdom); upperRoom10 → His Church
+  (+ Kingdom). Metadata only, no plan text changed.
+- 5 new app keys × 16 languages (14 AI-drafted, need a native pass).
+
 ### Added — Intercession Circles, Milestone A (`docs/INTERCESSION_CIRCLES.md`)
 
 - **One canonical circle model** (`src/lib/circles.js`): definitions derived

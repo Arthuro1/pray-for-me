@@ -52,6 +52,8 @@ export const WORK_AND_CALLING = {
   count: 21,
   emoji: '🛠️',
   category: 'formation',
+  primaryCircle: 'self',
+  circles: ['self', 'people', 'kingdom'],
   resourceDomains: ['christian-living'],
   titleKey: 'planWorkTitle',
   subKey: 'planWorkSub',

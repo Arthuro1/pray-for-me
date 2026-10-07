@@ -26,6 +26,8 @@ export const MOVEMENTS = ['heart', 'know', 'shared', 'choose'].map((id, index) =
 export const DISCERNING_BEFORE_COMMITMENT = {
   id: 'discernment28', emoji: '🧭', count: 28, version: 1,
   category: 'relationships', lifeStage: 'single', resourceDomains: ['relationships'],
+  primaryCircle: 'self',
+  circles: ['self'],
   titleKey: 'planDiscernmentTitle', subKey: 'planDiscernmentSub',
   proseTranslations: LANG_CODES.filter((lang) => !['en', 'fr'].includes(lang)),
   review: DISCERNMENT_PLAN_APPROVAL,

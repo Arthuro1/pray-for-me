@@ -3,13 +3,15 @@ import { BookOpen } from 'lucide-react';
 import { isLocaleLoaded, loadLocale } from '../../i18n';
 import { localizeRef } from '../../content/teaching/pick';
 
-// The app's Scripture reader, fetched only when a visitor asks to read a
-// passage: the public page itself never loads Supabase. It resolves the text
-// the way the app always does — offline bundle, shared cache, YouVersion — and
-// otherwise links to the reader's own Bible. Scripture is never authored here.
-const VerseAccordion = lazy(() => import('../../components/VerseAccordion'));
+// A Scripture reference in circle teaching, opening the app's reader in place.
+// The reader is fetched only when someone asks to read a passage, so the public
+// landing page never loads Supabase; inside the app the chunk is already there.
+// It resolves the text the way the app always does — offline bundle, shared
+// cache, YouVersion — and otherwise links to the reader's own Bible. Scripture
+// is never authored here.
+const VerseAccordion = lazy(() => import('../VerseAccordion'));
 
-export default function LandingScriptureRef({ reference, lang }) {
+export default function ScriptureRefButton({ reference, lang }) {
   const [requested, setRequested] = useState(false);
   // The reader's own words ("Read the whole chapter") come from the app's
   // dictionary, which the public page does not otherwise load.

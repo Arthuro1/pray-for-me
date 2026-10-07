@@ -82,3 +82,15 @@ export function planCircles(plan) {
   const circles = primary ? [primary, ...listed.filter((c) => c !== primary)] : [];
   return { primary, circles: [...new Set(circles)] };
 }
+
+// The plans that shape prayer in one circle, from authored metadata only (no
+// recommendation algorithm): those whose PRIMARY circle it is first, then those
+// that also touch it, each group in the order `plans` gives them.
+export function plansForCircle(plans, circle) {
+  if (!isCircle(circle)) return [];
+  const withCircles = (plans || []).map((plan) => ({ plan, ...planCircles(plan) }));
+  return [
+    ...withCircles.filter((entry) => entry.primary === circle),
+    ...withCircles.filter((entry) => entry.primary !== circle && entry.circles.includes(circle)),
+  ].map((entry) => entry.plan);
+}

@@ -16,6 +16,7 @@ import { planSource, trackPlanDetailOpened, trackPlansPageViewed } from '../lib/
 import { PageHeader, PrimaryButton, QuietButton } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 import PlanCard from '../components/plan/PlanCard';
+import CircleLinks from '../components/circles/CircleLinks';
 import PlanDetailModal from '../components/PlanDetailModal';
 import PlanShareSheet from '../components/plan/PlanShareSheet';
 import PlanPersonalizeModal from '../components/PlanPersonalizeModal';
@@ -35,7 +36,8 @@ function PlanSection({ id, label, children }) {
 //
 // Every plan appears exactly once on the page: under Continue while it runs,
 // as "Start here" for someone who has never finished one, in its category
-// otherwise, and under Completed once walked to the end.
+// otherwise, and under Completed once walked to the end. "Explore by circle"
+// leads to the circle pages, which list a circle's plans there.
 //
 // Other screens hand work to this page through router state:
 //   source             — the door the visit came through (lib/planAnalytics.js)
@@ -206,6 +208,13 @@ export default function PlansTab() {
           <Users size={14} aria-hidden="true" />
           <span>{t(lang, 'plansTogetherHint')}</span>
         </p>
+
+        {/* A second way in, beside the journey types below: where prayer is
+            shaped. Seven doors to the circle pages, not a second catalogue. */}
+        <section aria-labelledby="plans-circles" className="plan-section">
+          <h2 id="plans-circles" className="section-label">{t(lang, 'exploreByCircle')}</h2>
+          <CircleLinks lang={lang} returnTo={{ from: '/plans' }} labelledBy="plans-circles" className="plan-circles" />
+        </section>
 
         {categories.map((group) => (
           <PlanSection key={group.id} id={`plans-${group.id}`} label={t(lang, group.labelKey)}>

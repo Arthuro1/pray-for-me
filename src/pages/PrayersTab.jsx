@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -107,8 +107,9 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   const [showFilters, setShowFilters] = useState(false);
   // By circle: the same active prayers, grouped inner to outer by the circle
   // each was placed in, unplaced ones last. A way to find prayers, never a
-  // tally — circles without prayers simply don't appear.
-  const [byCircle, setByCircle] = useState(false);
+  // tally — circles without prayers simply don't appear. A circle page's back
+  // link reopens it (`journalView`).
+  const [byCircle, setByCircle] = useState(() => location.state?.journalView === 'circles');
   // People view: an OPTIONAL lens over the same prayers, grouped by who
   // they're for. Only offered when enough person data exists.
   const [peopleOpen, setPeopleOpen] = useState(false);
@@ -583,7 +584,18 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                       <header className="journal-circle__header">
                         <h2 id={headingId} className="journal-circle__title">
                           {circle && <CircleGlyph circle={circle} size={18} />}
-                          <span>{name}</span>
+                          {/* The circle's name leads to its teaching; coming
+                              back reopens this "By circle" view. */}
+                          {circle ? (
+                            <Link
+                              to={`/circles/${circle}`}
+                              state={{ from: '/prayers', fromState: { journalView: 'circles' } }}
+                              title={t(lang, 'circleLearnAbout', { circle: name })}
+                              className="journal-circle__link"
+                            >
+                              {name}
+                            </Link>
+                          ) : <span>{name}</span>}
                         </h2>
                         <span className="q-meta">{tp(lang, 'circlePrayerCount', inCircle.length)}</span>
                         {circle && onAddInCircle && (

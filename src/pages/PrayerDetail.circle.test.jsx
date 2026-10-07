@@ -76,6 +76,22 @@ describe('PrayerDetail — the circle', () => {
     expect(hero.querySelector('.status-pill')).toBeNull();
   });
 
+  it('opens the circle\'s teaching from its name when the page can show it', () => {
+    const prayer = base({ circle: 'nations' });
+    usePrayerStore.setState({ prayers: [prayer], categories: [], completions: {}, settings: { language: lang }, updatePrayer });
+    const onOpenCircle = vi.fn();
+    render(<PrayerDetail prayer={prayer} onBack={() => {}} onEdit={() => {}} onOpenCircle={onOpenCircle} lang={lang} />);
+    const name = t(lang, 'circle_nations');
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circleLearnAbout', { circle: name }) }));
+    expect(onOpenCircle).toHaveBeenCalledWith('nations');
+    cleanup();
+
+    // Without a host that can show it (a community view), the circle is plain text.
+    renderDetail(prayer);
+    expect(screen.queryByRole('button', { name: t(lang, 'circleLearnAbout', { circle: name }) })).toBeNull();
+    expect(screen.getByText(name)).toBeTruthy();
+  });
+
   it('changes the circle in place, and nothing else', () => {
     renderDetail(base({ circle: 'household', schedule: { type: 'weekly', days: [1] } }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'changeCircle') }));

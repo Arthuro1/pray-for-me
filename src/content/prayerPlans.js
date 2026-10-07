@@ -71,6 +71,8 @@ export const PLANS = [
   {
     id: 'fast3',
     category: 'seeking',
+    primaryCircle: 'self',
+    circles: ['self'],
     emoji: '🕯️',
     count: 3,
     titleKey: 'planFast3Title',
@@ -95,6 +97,8 @@ export const PLANS = [
   {
     id: 'altar7',
     category: 'seeking',
+    primaryCircle: 'self',
+    circles: ['self'],
     emoji: '🕊️',
     count: 7,
     titleKey: 'planAltar7Title',
@@ -123,6 +127,8 @@ export const PLANS = [
   {
     id: 'gratitude7',
     category: 'seeking',
+    primaryCircle: 'self',
+    circles: ['self'],
     emoji: '🌅',
     count: 7,
     titleKey: 'planWeek7Title',
@@ -151,6 +157,8 @@ export const PLANS = [
   {
     id: 'upperRoom10',
     category: 'seeking',
+    primaryCircle: 'church',
+    circles: ['church', 'kingdom'],
     emoji: '🔥',
     count: 10,
     titleKey: 'planUpperRoomTitle',
@@ -182,6 +190,8 @@ export const PLANS = [
   {
     id: 'breakthrough21',
     category: 'seeking',
+    primaryCircle: 'self',
+    circles: ['self'],
     emoji: '⚡',
     count: 21,
     titleKey: 'planTheme21Title',

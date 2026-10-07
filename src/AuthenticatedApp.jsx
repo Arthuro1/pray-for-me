@@ -25,6 +25,7 @@ const AboutTab = lazy(() => import('./pages/AboutTab'));
 const CalendarTab = lazy(() => import('./pages/PlanTab'));
 const GuidanceTab = lazy(() => import('./pages/GrowTab'));
 const PlansTab = lazy(() => import('./pages/PlansTab'));
+const CirclePage = lazy(() => import('./pages/CirclePage'));
 const SettingsTab = lazy(() => import('./pages/SettingsTab'));
 const CommunityTab = lazy(() => import('./pages/CommunityTab'));
 const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
@@ -158,6 +159,7 @@ function PersonalPrayerPage({ onEdit }) {
       onGoToDay={(dayKey) => navigate(`/prayers/${id}?day=${dayKey}`, { replace: true })}
       onBack={() => navigate(-1)}
       onEdit={onEdit}
+      onOpenCircle={(circle) => navigate(`/circles/${circle}`, { state: { from: `/prayers/${id}` } })}
       initialFocus={location.state?.focus || null}
     />
   );
@@ -221,11 +223,13 @@ export default function AuthenticatedApp({
     setShowForm(true);
   };
   // A new prayer begun inside one Intercession Circle (the Journal's circle
-  // groups): the circle is preselected and its question frames the field.
-  const openAddInCircle = (circle) => {
+  // groups, a circle page): the circle is preselected and its question frames
+  // the field. An optional `prompt` ("Pray this") is shown above the empty
+  // field as a starting point, never written into it.
+  const openAddInCircle = (circle, { prompt = null } = {}) => {
     setEditPrayer(null);
     setFormPrefill(null);
-    setFormOptions({ circle });
+    setFormOptions({ circle, prompt });
     setShowForm(true);
   };
 
@@ -503,6 +507,7 @@ export default function AuthenticatedApp({
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
               <Route path="/plans" element={<PlansTab />} />
+              <Route path="/circles/:circleId" element={<CirclePage onPrayInCircle={openAddInCircle} />} />
               <Route path="/plans/:planId/:token?" element={<PlanJoinPage />} />
               <Route path="/community/group/:groupId" element={<CommunityTab />} />
               <Route path="/community/group/:groupId/prayer/:prayerId" element={<CommunityTab />} />
@@ -536,7 +541,7 @@ export default function AuthenticatedApp({
           editPrayer={editPrayer}
           prefill={formPrefill}
           initialOrganizeOpen={!!formOptions?.openOrganize}
-          context={formOptions?.circle ? { circle: formOptions.circle } : null}
+          context={formOptions?.circle ? { circle: formOptions.circle, prompt: formOptions.prompt } : null}
         />
       )}
       {showOnboarding && (
