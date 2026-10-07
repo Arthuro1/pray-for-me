@@ -1,13 +1,14 @@
 // His Church — Christ's people strengthened and formed. The Church belongs to
-// Christ and He loves her: believers learn to pray for her rather than merely
-// criticize her.
+// Christ and He loves her: believers pray for her, and praying for her never
+// means silence about what is wrong in her (prayer is not set against honest
+// criticism, which would silence people who were harmed in a church).
 export default {
   id: 'church',
   formation: { en: 'Christ’s people strengthened and formed.', fr: 'Le peuple de Christ fortifié et formé.' },
   heading: { en: 'Pray for the Church Christ loves.', fr: 'Priez pour l’Église que Christ aime.' },
   summary: {
-    en: 'The Church belongs to Christ. Learn to pray for her unity, holiness, leaders and mission more readily than you criticize her.',
-    fr: 'L’Église appartient à Christ. Apprenez à prier pour son unité, sa sainteté, ses responsables et sa mission plus volontiers que vous ne la critiquez.',
+    en: 'The Church belongs to Christ. Pray for her unity, holiness, leaders, healing and mission, and bring what is wrong into the light with truth and love.',
+    fr: 'L’Église appartient à Christ. Priez pour son unité, sa sainteté, ses responsables, sa guérison et sa mission, et mettez en lumière ce qui ne va pas, avec vérité et amour.',
   },
   themes: [
     { id: 'unity', title: { en: 'Unity', fr: 'L’unité' } },

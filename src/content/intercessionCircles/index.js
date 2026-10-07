@@ -43,13 +43,15 @@ export const circleContent = (circle) => BY_ID.get(circle) ?? null;
 // "Scripture" section). Each circle lists its most central passages first.
 export const KEY_REF_COUNT = 3;
 
-// Words the teaching panel itself needs, in the same two layers. The first three
-// appear on every short panel and are required in all 16 languages; the rest
-// belong to the deep layer and fall back to English while it is a draft.
+// Words the teaching panel itself needs, in the same two layers. The first four
+// appear on short panels and are required in all 16 languages (the draft label
+// shows only in the AI-drafted ones); the rest belong to the deep layer and
+// fall back to English while it is a draft.
 export const CIRCLE_UI = Object.freeze({
   choose: { en: 'Choose a circle to see how to pray for it.', fr: 'Choisissez un cercle pour voir comment prier.' },
   prayFor: { en: 'Pray for', fr: 'Prier pour' },
   scripture: { en: 'In Scripture', fr: 'Dans l’Écriture' },
+  draftTranslation: { en: 'Draft translation', fr: 'Traduction provisoire' },
   explore: { en: 'Explore this circle', fr: 'Explorer ce cercle' },
   exploreLess: { en: 'Show less', fr: 'Réduire' },
   meaning: { en: 'What this means', fr: 'Ce que cela veut dire' },
@@ -58,7 +60,7 @@ export const CIRCLE_UI = Object.freeze({
   draft: { en: 'Draft · review pending', fr: 'Brouillon · relecture en attente' },
 });
 
-export const SHORT_UI_KEYS = Object.freeze(['choose', 'prayFor', 'scripture']);
+export const SHORT_UI_KEYS = Object.freeze(['choose', 'prayFor', 'scripture', 'draftTranslation']);
 
 // The deep layer of a circle, fetched only when someone opens it. A circle
 // without an entry here has no deep layer yet.

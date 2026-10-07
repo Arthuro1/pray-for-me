@@ -8,14 +8,16 @@
 //
 // Guardrails applied in this file: Scripture by reference only, never quoted;
 // listening to God is always paired with testing impressions against Scripture
-// and the app never confirms that God said something; fruit is grown by the
+// (the app never confirms that God said something — that promise lives in About,
+// not in devotional prose); formation is God's gracious work, happening WHILE
+// we pray for others, never a precondition for interceding; fruit is grown by the
 // Spirit, never scored, earned or "completed"; prompts are prayers a person may
 // pray in their own words — the composer never pre-writes them.
 export default {
   id: 'self',
   meaning: {
-    en: 'Prayer begins with letting God shape our character, desires, habits, thinking, relationships and obedience. Jesus calls His followers salt and light: lives whose good works point others to the Father. A tree is known by its fruit, so pray not only for changed circumstances but for a changed heart. This is God’s work in you, received by faith and answered in obedience, never something earned by praying more.',
-    fr: 'La prière commence quand nous laissons Dieu façonner notre caractère, nos désirs, nos habitudes, nos pensées, nos relations et notre obéissance. Jésus appelle ses disciples le sel et la lumière : des vies dont les œuvres bonnes orientent les autres vers le Père. On reconnaît l’arbre à son fruit ; priez donc non seulement pour que les circonstances changent, mais pour que votre cœur change. C’est l’œuvre de Dieu en vous, reçue par la foi et accueillie dans l’obéissance, jamais une récompense que l’on gagne en priant davantage.',
+    en: 'In prayer, God shapes our character, desires, habits, thinking, relationships and obedience, until Christ is formed in us. Jesus calls His followers salt and light: lives whose good works point others to the Father. A tree is known by its fruit, so pray not only for changed circumstances but for a changed heart. This is God’s gracious work in you, received by faith and lived out in obedience, never something earned by praying more.',
+    fr: 'Dans la prière, Dieu façonne notre caractère, nos désirs, nos habitudes, nos pensées, nos relations et notre obéissance, jusqu’à ce que Christ soit formé en nous. Jésus appelle ses disciples le sel et la lumière : des vies dont les œuvres bonnes orientent les autres vers le Père. On reconnaît l’arbre à son fruit ; priez donc non seulement pour que les circonstances changent, mais pour que votre cœur change. C’est l’œuvre de la grâce de Dieu en vous, reçue par la foi et vécue dans l’obéissance, jamais une récompense que l’on gagne en priant davantage.',
   },
   framework: {
     title: { en: 'Seven foundations of a formed disciple', fr: 'Sept fondements d’un disciple formé' },
@@ -57,8 +59,8 @@ export default {
     {
       id: 'discernment',
       body: {
-        en: 'Qetoret encourages believers to listen for God’s leading through Scripture, prayer and the Holy Spirit, while testing impressions against Scripture. Not every thought, feeling or impression is God’s voice, and no app can confirm that God has spoken.',
-        fr: 'Qetoret encourage les croyants à être attentifs à la conduite de Dieu par l’Écriture, la prière et le Saint-Esprit, en éprouvant leurs impressions à la lumière de l’Écriture. Toute pensée, tout sentiment ou toute impression n’est pas la voix de Dieu, et aucune application ne peut confirmer que Dieu a parlé.',
+        en: 'Listen for God’s leading through Scripture, prayer and the Holy Spirit, testing impressions against Scripture. Not every thought, feeling or impression is God’s voice: weigh what you sense humbly, by Scripture and with wise believers.',
+        fr: 'Soyez attentifs à la conduite de Dieu par l’Écriture, la prière et le Saint-Esprit, en éprouvant vos impressions à la lumière de l’Écriture. Toute pensée, tout sentiment ou toute impression n’est pas la voix de Dieu : examinez avec humilité ce que vous percevez, à la lumière de l’Écriture et avec des croyants sages.',
       },
       refs: ['John 10:27', 'Romans 8:14', '1 Corinthians 2:12-16', '1 Thessalonians 5:19-22', '1 John 4:1'],
       prompts: [

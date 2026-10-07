@@ -13,7 +13,7 @@ vi.mock('../lib/analytics', async (importOriginal) => ({ ...(await importOrigina
 import CirclePage from './CirclePage';
 import usePrayerStore from '../store/prayerStore';
 import { PLANS } from '../content/prayerPlans';
-import { circleContent } from '../content/intercessionCircles';
+import { CIRCLE_UI, circleContent } from '../content/intercessionCircles';
 import { CIRCLES, circleLabelKey, plansForCircle } from '../lib/circles';
 import { canUsePlan } from '../lib/planReview';
 import { buildGuidedPlanPrayer } from '../lib/guidedPlan';
@@ -57,6 +57,18 @@ describe('CirclePage', () => {
     expect(screen.getByRole('heading', { level: 1, name: circleContent('household').heading.fr })).toBeTruthy();
     expect(screen.getByText(circleContent('household').formation.fr)).toBeTruthy();
     expect(track).toHaveBeenCalledWith(EVENTS.CIRCLE_TEACHING_OPENED, { source: 'app' });
+  });
+
+  // The short teaching ships in 16 languages; the 14 AI-drafted ones say so
+  // until a native reviewer signs them (content/intercessionCircles/review.js).
+  it('labels an AI-drafted language as a draft translation, never an authored one', async () => {
+    renderCircle('household');
+    expect(screen.queryByText(CIRCLE_UI.draftTranslation.fr)).toBeNull();
+    cleanup();
+
+    usePrayerStore.setState({ settings: { language: 'de' } });
+    renderCircle('household');
+    expect(await screen.findByText('Vorläufige Übersetzung')).toBeTruthy();
   });
 
   it('offers all seven circles, marking the one on screen', () => {

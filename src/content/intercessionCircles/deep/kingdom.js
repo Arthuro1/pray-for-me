@@ -106,8 +106,8 @@ export default {
     {
       id: 'sending',
       body: {
-        en: 'Prayer, obedience and mission belong together. Could God be inviting you to take part in what you are praying for: to go, give, serve, help someone follow Jesus, welcome, encourage, speak, support a missionary or keep praying faithfully?',
-        fr: 'La prière, l’obéissance et la mission vont ensemble. Dieu vous invite-t-il à prendre part à ce que vous demandez : partir, donner, servir, aider quelqu’un à suivre Jésus, accueillir, encourager, parler, soutenir un missionnaire ou continuer de prier fidèlement ?',
+        en: 'Prayer, obedience and mission belong together. Is there a faithful step you can take in response to what you are praying for: to go, give, serve, help someone follow Jesus, welcome, encourage, speak, support a missionary or keep praying faithfully?',
+        fr: 'La prière, l’obéissance et la mission vont ensemble. Y a-t-il un pas fidèle que vous pouvez faire en réponse à ce que vous demandez : partir, donner, servir, aider quelqu’un à suivre Jésus, accueillir, encourager, parler, soutenir un missionnaire ou continuer de prier fidèlement ?',
       },
       refs: ['Isaiah 6:8', 'Acts 13:1-3', 'John 20:21'],
       prompts: [
@@ -119,7 +119,7 @@ export default {
   // Qualitative only. Nothing here is ever scored, stored or counted.
   reflection: [
     { en: 'Is your prayer mostly about asking God to bless your plans?', fr: 'Votre prière consiste-t-elle surtout à demander à Dieu de bénir vos projets ?' },
-    { en: 'Where might God be inviting you to take part in what you pray about?', fr: 'Où Dieu vous invite-t-il peut-être à prendre part à ce que vous demandez ?' },
+    { en: 'Is there a faithful step you could take in response to what you pray about?', fr: 'Y a-t-il un pas fidèle que vous pourriez faire en réponse à ce que vous demandez ?' },
     { en: 'Who needs to hear the gospel?', fr: 'Qui a besoin d’entendre l’Évangile ?' },
     { en: 'Which worker, church, missionary or people could you carry faithfully?', fr: 'Quel ouvrier, quelle Église, quel missionnaire ou quel peuple pourriez-vous porter fidèlement ?' },
   ],

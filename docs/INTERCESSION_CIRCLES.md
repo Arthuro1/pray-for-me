@@ -99,21 +99,37 @@ pasted verse fails the contract test.
 
 ### Theological guardrails for authors
 
+- **Principle, not policy.** Devotional teaching states the spiritual
+  principle positively ("Pray for leaders across political lines…"). What the
+  app does or never does ("Qetoret never…") belongs in About, Privacy and Help.
+  The only exception is the framework note below. Never presume to know what
+  God is saying ("Could God be inviting you…"): ask about a faithful step
+  instead. Guarded by "speaks the principle, not app policy" in the contract
+  test.
 - **Framework vs Scripture.** My heart's seven foundations are *Qetoret's*
   grouping of biblical practices. Say "Qetoret groups…", never "the Bible
   teaches seven…".
+- **My heart is grace, not a precondition.** God forms us *as* we pray for
+  others ("As we carry others in prayer, God also forms us"), never first, as
+  if one had to be formed enough to intercede. Galatians 4:19 leads its
+  references.
 - **Hearing God.** Always pair listening with testing impressions against
-  Scripture; the app never confirms that God said something.
+  Scripture (and with wise believers); the app never confirms that God said
+  something.
 - **My house is formation, not fear.** A household is any home (a couple, a
   family, one person living alone). Forgiveness never requires staying in harm's
   way: where trust was broken by abuse, safety comes first.
 - **My people: prayer does not remove responsibility.** It often leads to a
   practical act of love; reconciliation is sought where possible and wise,
   never by pretending harm did not happen.
-- **His Church: pray before criticizing, never silence harm.** Praying for the
-  Church brings even what is wrong before Christ.
-- **Authorities and Nations are nonpartisan.** No party, candidate or political
-  outcome; no "taking authority" over a government; prayer for leaders we
+- **His Church: pray, and never silence harm.** Praying for the Church brings
+  what is wrong into the light with truth and love, before Christ. Prayer is
+  never set against honest criticism ("pray more readily than you criticize"
+  silences people harmed in a church).
+- **Authorities and Nations are nonpartisan.** Prayer for leaders across
+  political lines, seeking wisdom, justice, integrity and peace rather than
+  partisan victory or a political outcome (praying for a candidate as a person
+  is fine); no "taking authority" over a government; prayer for leaders we
   disagree with; no Christian nationalism; a person always chooses the nation
   they carry.
 - **Kingdom is not domination.** Participation through prayer, witness,
@@ -131,8 +147,18 @@ language (`en`, `fr`), or in a development build / review mode (`?planPreview=1`
 the same switch as plans), where it carries a "review pending" label. **Only a
 named human writes a sign-off.**
 
-The short layer ships without this gate; its 14 non-authored languages are
-AI-drafted and need a native review like the rest of the app copy.
+### Review records (short layer translations)
+
+The short layer ships in all 16 languages (the landing page must never mix
+languages), but only English and French are authored. The other 14 are AI
+drafts: `CIRCLE_TRANSLATION_REVIEWS` in the same `review.js` holds one record
+per language, all `machine-draft`, and `CircleTeaching` shows a visible "Draft
+translation" label (`ui.draftTranslation`, in every overlay) wherever
+`isCircleTranslationDraft(lang)` is true — on the landing panel and on circle
+pages. A native reviewer's dated, named sign-off
+(`{ status: 'approved', reviewer, reviewedAt }`) removes the label for that
+language. **Only a named human writes it**; `lib/circleReview.test.js` rejects
+an "approved" record without a reviewer and a real date.
 
 All seven deep layers are AI-drafted and `pending`. In the content audit
 (`check:content`) their bundles are `needs-review` and their English fallback in
@@ -213,8 +239,8 @@ approvals.
   Catalogue rows (`PlanCard`) name no circle; `PlanDetailModal` says once,
   quietly, "Forms prayer in …" (the primary circle only — the other circles a
   plan touches stay in its metadata, where they place it on those pages).
-- **Plan completion** (`PlanCompletionCard.jsx`): "What do you want to keep
-  carrying?" — the plan's own `continueThemes` if it has them, otherwise its
+- **Plan completion** (`PlanCompletionCard.jsx`): "What would you like to keep
+  praying about?" — the plan's own `continueThemes` if it has them, otherwise its
   primary circle's short-layer themes (so no plan needs new prose). Choosing one
   calls `onKeepCarrying({ circle, prompt })` → `PrayerDetail onPrayInCircle` →
   `openAddInCircle`: the composer opens in the circle with the theme above an
@@ -235,8 +261,9 @@ approvals.
   run's plan `primaryCircle` (display only, never saved). The first prayer of
   each circle crosses a quiet threshold (Rise Mark, the circle's name, its
   short-layer heading) — no card, no extra step. A walk keeps the order it began
-  with; a change after the first step applies next time. The end reads "You have
-  carried your altar before God." — never a count of circles.
+  with; a change after the first step applies next time. The switch reads "Pray
+  for everything on my altar" and the end "You have brought everything on your
+  altar before God." — never a count of circles.
 
 ## Themes and categories
 

@@ -39,6 +39,37 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   the separate "Change circle" / "Place in a circle" link are gone (keys
   `changeCircle`, `placeInCircle` removed, with the now-unused
   `altarCirclesLabel` and `altarTodaySub`).
+- **Circle teaching (drafts, EN + FR source; 14 overlays re-drafted):**
+  - My heart: "As we carry others in prayer, God also forms us…" replaces
+    "Before we carry the world in prayer, God forms the one who carries it",
+    which implied one must be formed enough before interceding. Galatians 4:19
+    leads its references. The deep layer reads "God's gracious work in you,
+    received by faith and lived out in obedience".
+  - His Church: "Pray for her unity, holiness, leaders, healing and mission,
+    and bring what is wrong into the light with truth and love." Prayer is no
+    longer set against criticism, which could silence people harmed in a church.
+  - Authorities: "Pray for leaders across political lines… rather than partisan
+    victory" replaces "never for a party or a candidate" (praying for a
+    candidate as a person is fine).
+  - Kingdom: "Is there a faithful step you can take…?" replaces "Could God be
+    inviting you…?" — the app never presumes to know what God is saying.
+  - Policy sentences ("Qetoret never…", "no app can confirm…") moved out of
+    devotional prose; a contract test now keeps them out.
+  - Calls to pray use ordinary verbs: "Pray for my household", "Pray for a
+    nation", "Pray for someone".
+- **Altar / carry / circle vocabulary** in all 16 languages: "Pray for
+  everything on my altar" (was "Pray through my altar" / "Prier mon autel
+  cercle par cercle" / "Meinen Altar Kreis für Kreis beten"), "You have brought
+  everything on your altar before God", "What would you like to keep praying
+  about?", "Where would you like to place this prayer on your altar?", "Your
+  prayer altar is taking shape", "What would you like to do with this prayer
+  now?". German: "Meine Nächsten" for the third circle. The vocabulary
+  hierarchy is documented in `docs/content/CHRISTIAN_TERMINOLOGY.md`.
+- **Short-layer translations are marked as drafts.** The 14 AI-drafted
+  languages of the circle teaching now carry a visible "Draft translation"
+  label (landing panel and circle pages) until a named native reviewer signs
+  `CIRCLE_TRANSLATION_REVIEWS` (`content/intercessionCircles/review.js`). All
+  14 are `machine-draft`; nothing was marked reviewed.
 
 ### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
 

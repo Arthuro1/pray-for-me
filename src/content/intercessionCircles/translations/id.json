@@ -2,7 +2,7 @@
   "self": {
     "formation": "Kristus terbentuk di dalam diriku.",
     "heading": "Biarlah Kristus terbentuk di dalam diri Anda.",
-    "summary": "Sebelum kita membawa dunia dalam doa, Allah membentuk orang yang membawanya. Berdoalah bukan hanya agar keadaan menjadi lebih mudah, tetapi agar karakter Yesus bertumbuh di dalam diri Anda.",
+    "summary": "Ketika kita mendoakan orang lain, Allah juga membentuk kita. Berdoalah bukan hanya agar keadaan berubah, tetapi agar karakter Kristus bertumbuh di dalam diri Anda.",
     "themes": [
       { "title": "Persekutuan dengan Allah" },
       { "title": "Firman dan perenungan" },
@@ -25,7 +25,7 @@
       { "title": "Hikmat dan perlindungan" },
       { "title": "Iman dari generasi ke generasi" }
     ],
-    "cta": "Membawa keluargaku ke hadapan Allah"
+    "cta": "Mendoakan keluargaku"
   },
   "people": {
     "formation": "Kasih Kristus bagi orang-orang di sekitarku.",
@@ -44,7 +44,7 @@
   "church": {
     "formation": "Umat Kristus dikuatkan dan dibentuk.",
     "heading": "Berdoalah bagi Gereja yang dikasihi Kristus.",
-    "summary": "Gereja adalah milik Kristus. Belajarlah lebih siap mendoakan kesatuan, kekudusan, para pemimpin, dan misinya daripada mengkritiknya.",
+    "summary": "Gereja adalah milik Kristus. Doakan kesatuan, kekudusan, para pemimpin, pemulihan, dan misinya, dan bawalah apa yang salah ke dalam terang dengan kebenaran dan kasih.",
     "themes": [
       { "title": "Kesatuan" },
       { "title": "Kekudusan" },
@@ -59,7 +59,7 @@
   "authorities": {
     "formation": "Hikmat, keadilan, dan damai bagi mereka yang diberi tanggung jawab.",
     "heading": "Berdoalah bagi mereka yang memimpin.",
-    "summary": "Orang percaya dipanggil untuk mendoakan para pemimpin, baik kita setuju dengan mereka maupun tidak. Mintalah hikmat, keadilan, integritas, dan damai, jangan pernah kemenangan sebuah partai atau seorang calon.",
+    "summary": "Orang percaya dipanggil untuk mendoakan para pemimpin. Doakan pemimpin dari semua haluan politik, dan mintalah kepada Allah hikmat, keadilan, integritas, dan damai, bukan kemenangan satu pihak.",
     "themes": [
       { "title": "Hikmat" },
       { "title": "Keadilan" },
@@ -85,12 +85,12 @@
       { "title": "Orang percaya yang dianiaya" },
       { "title": "Bangsa sendiri, dengan rendah hati" }
     ],
-    "cta": "Membawa satu bangsa ke hadapan Allah"
+    "cta": "Mendoakan satu bangsa"
   },
   "kingdom": {
     "formation": "Kehendak dan misi Allah di atas segalanya.",
     "heading": "Biarlah Kerajaan-Nya membentuk doa Anda.",
-    "summary": "Cakrawala doa yang paling luas adalah Kerajaan Allah dan kehendak-Nya, bukan rencana kita sendiri. Semua lingkaran lain ada di dalamnya, dan Kerajaan itu dapat mengundang Anda untuk ambil bagian dalam apa yang Anda doakan.",
+    "summary": "Cakrawala doa yang paling luas adalah Kerajaan Allah dan kehendak-Nya, bukan rencana kita sendiri. Semua lingkaran lain ada di dalamnya, dan doa ini dapat menuntun Anda mengambil langkah-langkah yang setia.",
     "themes": [
       { "title": "Kerajaan-Nya, bukan kerajaanku" },
       { "title": "Pekerja untuk tuaian" },
@@ -107,6 +107,7 @@
     "choose": "Pilih satu lingkaran untuk melihat cara mendoakannya.",
     "prayFor": "Berdoa untuk",
     "scripture": "Dalam Kitab Suci",
+    "draftTranslation": "Terjemahan sementara",
     "explore": "Jelajahi lingkaran ini",
     "exploreLess": "Tampilkan lebih sedikit",
     "meaning": "Apa artinya",

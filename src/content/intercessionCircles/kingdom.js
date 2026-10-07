@@ -9,8 +9,8 @@ export default {
   formation: { en: 'God’s will and mission above everything.', fr: 'La volonté et la mission de Dieu avant toute chose.' },
   heading: { en: 'Let His Kingdom shape your prayer.', fr: 'Laissez son Royaume façonner votre prière.' },
   summary: {
-    en: 'The widest horizon of prayer is God’s Kingdom and His will, not our own plans. Every other circle fits inside it, and it may invite you to take part in what you pray for.',
-    fr: 'Le plus vaste horizon de la prière, c’est le Royaume de Dieu et sa volonté, non nos propres projets. Tous les autres cercles s’y inscrivent, et il peut vous inviter à prendre part à ce que vous demandez.',
+    en: 'The widest horizon of prayer is God’s Kingdom and His will, not our own plans. Every other circle fits inside it, and praying for it can lead to faithful steps of your own.',
+    fr: 'Le plus vaste horizon de la prière, c’est le Royaume de Dieu et sa volonté, non nos propres projets. Tous les autres cercles s’y inscrivent, et cette prière peut vous conduire à faire vous-même des pas fidèles.',
   },
   themes: [
     { id: 'not-mine', title: { en: 'His Kingdom, not mine', fr: 'Son Royaume, non le mien' } },

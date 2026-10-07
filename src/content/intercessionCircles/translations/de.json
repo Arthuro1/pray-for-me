@@ -2,7 +2,7 @@
   "self": {
     "formation": "Christus gewinnt Gestalt in mir.",
     "heading": "Lass Christus in dir Gestalt gewinnen.",
-    "summary": "Bevor wir die Welt im Gebet tragen, formt Gott den, der sie trägt. Bete nicht nur um leichtere Umstände, sondern darum, dass das Wesen Jesu in dir wächst.",
+    "summary": "Während wir für andere beten, formt Gott auch uns. Bete nicht nur darum, dass sich die Umstände ändern, sondern dass das Wesen Christi in dir wächst.",
     "themes": [
       { "title": "Gemeinschaft mit Gott" },
       { "title": "Die Bibel und das Nachsinnen" },
@@ -25,7 +25,7 @@
       { "title": "Weisheit und Bewahrung" },
       { "title": "Glaube über Generationen" }
     ],
-    "cta": "Meine Familie vor Gott tragen"
+    "cta": "Für mein Zuhause beten"
   },
   "people": {
     "formation": "Die Liebe Christi für die Menschen um mich herum.",
@@ -39,12 +39,12 @@
       { "title": "Zeugnis" },
       { "title": "Liebe, die handelt" }
     ],
-    "cta": "Jemanden im Gebet tragen"
+    "cta": "Für jemanden beten"
   },
   "church": {
     "formation": "Das Volk Christi gestärkt und geformt.",
     "heading": "Bete für die Gemeinde, die Christus liebt.",
-    "summary": "Die Gemeinde gehört Christus. Lerne, für ihre Einheit, ihre Heiligkeit, ihre Leiter und ihren Auftrag zu beten, lieber als sie zu kritisieren.",
+    "summary": "Die Gemeinde gehört Christus. Bete für ihre Einheit, ihre Heiligkeit, ihre Leiter, ihre Heilung und ihren Auftrag, und bring in Wahrheit und Liebe ans Licht, was nicht recht ist.",
     "themes": [
       { "title": "Einheit" },
       { "title": "Heiligkeit" },
@@ -59,7 +59,7 @@
   "authorities": {
     "formation": "Weisheit, Gerechtigkeit und Frieden für alle, die Verantwortung tragen.",
     "heading": "Bete für die, die regieren.",
-    "summary": "Christen sind gerufen, für alle zu beten, die Verantwortung tragen, ob wir ihnen zustimmen oder nicht. Bitte um Weisheit, Gerechtigkeit, Integrität und Frieden, nie um den Sieg einer Partei oder eines Kandidaten.",
+    "summary": "Christen sind gerufen, für alle zu beten, die Verantwortung tragen. Bete für Verantwortliche aller politischen Richtungen und bitte Gott um Weisheit, Gerechtigkeit, Integrität und Frieden statt um den Sieg einer Seite.",
     "themes": [
       { "title": "Weisheit" },
       { "title": "Gerechtigkeit" },
@@ -85,12 +85,12 @@
       { "title": "Verfolgte Christen" },
       { "title": "Das eigene Land, in Demut" }
     ],
-    "cta": "Eine Nation vor Gott tragen"
+    "cta": "Für eine Nation beten"
   },
   "kingdom": {
     "formation": "Gottes Wille und Auftrag über allem.",
     "heading": "Lass Gottes Reich dein Gebet prägen.",
-    "summary": "Der weiteste Horizont des Gebets ist Gottes Reich und sein Wille, nicht unsere eigenen Pläne. Alle anderen Kreise haben darin Platz, und es kann dich einladen, an dem mitzuwirken, wofür du betest.",
+    "summary": "Der weiteste Horizont des Gebets ist Gottes Reich und sein Wille, nicht unsere eigenen Pläne. Alle anderen Kreise haben darin Platz, und dieses Gebet kann dich zu eigenen Schritten der Treue führen.",
     "themes": [
       { "title": "Sein Reich, nicht meins" },
       { "title": "Arbeiter für die Ernte" },
@@ -107,6 +107,7 @@
     "choose": "Wähle einen Kreis, um zu sehen, wie du dafür beten kannst.",
     "prayFor": "Beten für",
     "scripture": "In der Bibel",
+    "draftTranslation": "Vorläufige Übersetzung",
     "explore": "Diesen Kreis entdecken",
     "exploreLess": "Weniger anzeigen",
     "meaning": "Was das bedeutet",

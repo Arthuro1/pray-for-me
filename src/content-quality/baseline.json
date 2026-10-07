@@ -19005,7 +19005,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "eb7548d340e5262d066155ccf63b68c4473b07e6e88d573cd30eae6bfad4cd16"
+      "fingerprint": "115dae0279e83e04abf7a47d3c3bf05fb08319497add39fa86a90e2e87ddd6d7"
     },
     {
       "locale": "de",
@@ -19117,7 +19117,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "2bbca41b74aeac205968e25e0a7f8aaa3eb55b13abe5af36d14de836cabd664f"
+      "fingerprint": "1a4793a1c85a61896cd676eea7b24a25ce846db1504e494bd5f3bdad266a6d84"
     },
     {
       "locale": "de",
@@ -19488,7 +19488,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "bcdfd2b5a32ba67f37776fda5c411ae6720d6ba18b14f6e6fa684460c2089b00"
+      "fingerprint": "b0640aee35ae113051a76852353f32f0b5472622c67fd8c6d663ca159aa7e6b3"
     },
     {
       "locale": "de",
@@ -19838,14 +19838,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "58a25d3936078d6f68dbb20e0fe99b9f785eb7ae6d5c0d8460e8124d0e875529"
+      "fingerprint": "9291f0c4bf927c721cc0496b79642c956c5eb2030cabd55ad985bf8b69d0f88c"
     },
     {
       "locale": "de",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "f97f94bccfe38d951d2df5ce1c9e190be8c15ac85a3991aa587c8f4ab1fb4ee4"
+      "fingerprint": "04347d22ec2b9f2100169f9fbe8db55878281088a155d58c8668a5d2ae4d72e1"
     },
     {
       "locale": "de",
@@ -20041,7 +20041,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "fe56d349a0c7ad5c7500b04088f5871c47411c1529d9a11fd51fc8db7580068f"
+      "fingerprint": "bb0c15f4afaa9a1fdac1a5b567a1b5d1f22e0bdb66edeac81cd653b0f3ac42ee"
     },
     {
       "locale": "de",
@@ -20195,7 +20195,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "a3e7e7b2889ee8b1010c71193bf2904934319c8bbd7f7b87a4fd99d53119b8f5"
+      "fingerprint": "cea7c73b876cbd0372ef17c89656e509cfee6cf0d3d3c43d41c6c52b13bb1863"
     },
     {
       "locale": "de",
@@ -20440,7 +20440,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e5c0fae5e25a5a7cd7f2922e90bae265c935e8586c7849c520789d2dcb6c7b74"
+      "fingerprint": "6a2269f2a99eafdef9991649a832c123297b8282808ad3962fe32d8081b86e0a"
     },
     {
       "locale": "de",
@@ -20608,7 +20608,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e3a891824c77db2eedc0d6f81ff97e6dc9e6a25005bd676048fca6de5ff3dc4a"
+      "fingerprint": "4b2d6bdcaaa80c7f9a6633ecf45f1c439d75661499f6e03f59e7877f97a97358"
     },
     {
       "locale": "de",
@@ -39627,7 +39627,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "56ab3814e544d431023504df998933564531306cb57a8ba8ca807a1e341f7005"
+      "fingerprint": "d46681f23f5a7ba68a04d3b410bb92a0b18e8e6690a12ead2f72dbe110557ea7"
     },
     {
       "locale": "pt",
@@ -39739,7 +39739,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e058551b46a9dbf9e49371b3ef43b8893e1d2312d3291a30a35275bdccb1fe55"
+      "fingerprint": "f14758ac3d91e22bb1b2503f897db43786736723b3cf896c597404d359469376"
     },
     {
       "locale": "pt",
@@ -40110,7 +40110,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "68d7b63571bbfea49380d507bda88d3fc1b92894ca17a5a505fbf1041866e45c"
+      "fingerprint": "39259a6d72fa3d18d64ed1af428e81d8beef9e633d30ecf835a7c8cd33f17cd0"
     },
     {
       "locale": "pt",
@@ -40460,14 +40460,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "be8a9dcf501dcb65d537ef6e65a2ade2e0d675f3e0e3895e02ba97818b32f73e"
+      "fingerprint": "5fbdea5719074da3b482ec40c4463a59812ae19b67ff7a7d0f2576651bc041f6"
     },
     {
       "locale": "pt",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "7c8fceb35497edc3cc6266ee13aa8459aa1808bf0acee23ee02c1d7444c5b0b4"
+      "fingerprint": "f6a3585c47b874c772b09c8ae36c4a402f304b3c35c6aa43a0a263c297402ccb"
     },
     {
       "locale": "pt",
@@ -40663,7 +40663,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "d6b4bf34051fa07d772ec6a4296e13c05a7d1dec06a14f229cada2780f5647f1"
+      "fingerprint": "689a0293782b34c61593204df3184d597f16fe557971f2cf077f9bfdee523f12"
     },
     {
       "locale": "pt",
@@ -40817,7 +40817,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "56ea9ede03573813efe337e511b30b87f8bad97ccd97b68ae3d910f2a1d62578"
+      "fingerprint": "7666867ecee9eb551683b2144bbfc253ec4be3c4c4a5e3408dd5d516288a5555"
     },
     {
       "locale": "pt",
@@ -41062,7 +41062,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "0a2d7aa8dc53c2fee7f2fa3c0c406c7748953e64a8188cf3e2610f369eb9360a"
+      "fingerprint": "9f03413213d0481b3a74ab2577bfd428a6578f6eee31b821929d764fac91826b"
     },
     {
       "locale": "pt",
@@ -41230,7 +41230,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e624da59f57e8270e774c1ef8f6d1e6f324652eeea1e5ec547bd60b08c608fb3"
+      "fingerprint": "5273b1efff1be50c4c512cbcd8ad4ebf393cea609866c7912e8a226cae6363e0"
     },
     {
       "locale": "pt",
@@ -61390,7 +61390,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "10f286bc960c10e8d99e134e71b0c9627ad4610270473a3fb55db8c0236755d4"
+      "fingerprint": "86b24bc831fa07c8ef1aae1b37e27592a677563a9151ea23732f540fc84ad5aa"
     },
     {
       "locale": "zh",
@@ -61502,7 +61502,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "0b9bc0719b0feca7c016a68d7d9d7d5e72f57542aa59bee43a04007379849977"
+      "fingerprint": "2f39d13694aafe0677febf7695fd2ffbb331e3ceead90be7e51eae7ab95d3733"
     },
     {
       "locale": "zh",
@@ -61873,7 +61873,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "80d8112b321a57be52adc590581a82d40c4dc986c3bb2190a56fa56143c6f1e1"
+      "fingerprint": "b826a35c39dc72df17e970655c78dfc3199c0d5f8270285e754137dd5d7332aa"
     },
     {
       "locale": "zh",
@@ -62223,14 +62223,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "59a41193e177a009a445c5fe041f3c2181352da9a02c93f4630fb46552197902"
+      "fingerprint": "cc86f9e4d593e0c46dbb04b4bf6ed6c737903ba53ef3fde79f64731455acc6ce"
     },
     {
       "locale": "zh",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "4337f2f38a5cf2414dbabd563e80aa04f9e9c28b5fa6b0738a55a575e383fb62"
+      "fingerprint": "7d47755381a9dda25df06709712ed2f9db21d3d23384307b7ce6223caa2f5f50"
     },
     {
       "locale": "zh",
@@ -62426,7 +62426,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "b8b26347b50db8f6f09acab5ac974dec3decf32ea0d57c14ba8183cd64bd34f9"
+      "fingerprint": "ebcd2b82224acbcc2ea8c3a722ea19a09e75d07fba586d5573cdf92016f9dd82"
     },
     {
       "locale": "zh",
@@ -62580,7 +62580,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "a130f4a37deadde30bab63be89468219419985fbdbbe35e8cdfe5a453c9baba7"
+      "fingerprint": "96aa644aeadf199c9c417224035c704ebc69b833208df4a058f359830218bd21"
     },
     {
       "locale": "zh",
@@ -62825,7 +62825,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "0e4e0ab43bca2871ca4918acfa09ae30878900770760ee3c62b516446bfa7c17"
+      "fingerprint": "061696f15c3777207465e35a97b1abb27f32e90e0ba134e407975f2daa70cf47"
     },
     {
       "locale": "zh",
@@ -62993,7 +62993,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "f5ff0025c61f366bbaaafd875648144b110ca93e29fbe4f5272144bc3a3e1a04"
+      "fingerprint": "da664a8bc9525eb6737242d0f5601540485ce9e51f547b2ff566c5f5c1ee8e33"
     },
     {
       "locale": "zh",
@@ -82012,7 +82012,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "442f2a0e986f12630a9e623533e9e256fa619203ba364f59e63eb114d814237d"
+      "fingerprint": "1bbba6b539eed0d22084ed49e9b1f42ee01a24c3532ca566ef21b8e7896b92e4"
     },
     {
       "locale": "es",
@@ -82124,7 +82124,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "a9a6fcb3b706a633a2f0a4d9d450c99c031b0795b054778a7c016f0bb2f984da"
+      "fingerprint": "3dcb7aaf0a4c9aedb5f87b43a5211acb2741d119c9c52b06d7735158f351ada0"
     },
     {
       "locale": "es",
@@ -82495,7 +82495,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "b1b4c0faae870f9275c130d364a24e7140cea1dc2ee90df1abc28c6632cfe675"
+      "fingerprint": "862020846b4eba8847c2bb7fc2f43c85659c9b59ba551e62a0fbf4688cd20b8c"
     },
     {
       "locale": "es",
@@ -82845,14 +82845,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "a13ec56540022a6e36bd67965f0642baf104eff9a52a91030c3db658e240254d"
+      "fingerprint": "e6920069ba82f8506c2c033c5e60f0968dc5a291f0882dd81d5f10b3d5bdd916"
     },
     {
       "locale": "es",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "cd96f6eb3f76e73d896423dd894558cb9d8f982dd948a875536f1cf0c33cfcd3"
+      "fingerprint": "abb1fe7eddd7c8867b5639a8dbc73b69f3bd99cdc8d70b561eb8959cc1d9e3dc"
     },
     {
       "locale": "es",
@@ -83048,7 +83048,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "3e33d19f8df3108445cc01f9ec1a938457b7599dca6a411e02c0f5f57a5452d6"
+      "fingerprint": "32b4f5aefa135faaf9aedda1e50aa2d44ccb369fbd93d151be962ba9275537b0"
     },
     {
       "locale": "es",
@@ -83202,7 +83202,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "99ff495c722df3213bbaae42ccccc752c5674def9b00a5521b3315634b27ea7f"
+      "fingerprint": "06fa48d3ece048a5eb7c702461a197d55d220fd5fef926410feec52eaaf556dd"
     },
     {
       "locale": "es",
@@ -83447,7 +83447,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "2ef2b0efd1211b9890a6d41329107e2f8938706e777f77b6afdfb85fcc86c090"
+      "fingerprint": "8d77381e3f93c86a5c4f8de9e7808bc8b7bc7fe8ea09e83fd7b6c244f994262d"
     },
     {
       "locale": "es",
@@ -83615,7 +83615,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "b2bb144b39ebac139d1dea1c710c674c27328bb323f4f61b973f65350ad6d820"
+      "fingerprint": "36985a179ed868cbbb798df1a4931109b1cebd3d51358c29e15c567d28eb173d"
     },
     {
       "locale": "es",
@@ -103775,7 +103775,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "781e76a03177ae4daef044a9231de5d3ce2a1fc228e7452ca1ffa3d0b771050e"
+      "fingerprint": "278b7d95f015aef9e6af7215cdf5b230911f0eee75bb8b6bf0e9094fac5a57c5"
     },
     {
       "locale": "hi",
@@ -103887,7 +103887,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "d134404a86b85d06d52ea5451335d2ed2021ef78e05e240441bb031b910cfdaa"
+      "fingerprint": "186693d04a995f23e78160ab5942f2481affa51c85986181ea0e1dbaa41fcaaf"
     },
     {
       "locale": "hi",
@@ -104258,7 +104258,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "456d692366d8697a56bdbb47b244e6afa8390652cc645ff313a44f46a5d6972f"
+      "fingerprint": "a95627b9266e98b74ec8ec56fbe75ac9aed4fc9b79151b0eb6b96b35d17ba0f1"
     },
     {
       "locale": "hi",
@@ -104608,14 +104608,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "2ea3b37ae8606fbbc8e32113e34f42063f7dc807f74def9f48359fb232da3c8a"
+      "fingerprint": "8fdae036446e04ee3dabeac44cb08acbb032e9c11b6eb3ca7a678c78386da5c7"
     },
     {
       "locale": "hi",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "02220b879ea8733846e7ea8f169f2f434b447f4392495f3907fe98c175c64975"
+      "fingerprint": "2b4aa5cb0d9c9740b500b225663bae66ee65415c940f262af2800201b6243dd8"
     },
     {
       "locale": "hi",
@@ -104811,7 +104811,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "c0ba5d80ce7d122a051444f5f48b47c831aecfd0cb00e622c7fde508e043f7d9"
+      "fingerprint": "3a2dfdd9c2fbd24819a9dc1cf09355997adfaaf788d769eaead19b24a00e6ef1"
     },
     {
       "locale": "hi",
@@ -104965,7 +104965,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "41f34adb5d0a744bbaad04932f69ab06fe2054f50a6236c17bac2a4d0b5a390d"
+      "fingerprint": "0e5f6067d50c418fa4201199dcfc7c49501e28033b42faa6b302d3af4b9d555f"
     },
     {
       "locale": "hi",
@@ -105210,7 +105210,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "b16f334e16cf255b62aa2c8c7e99ebcabfe491daf75655473529a8d0ce582d9a"
+      "fingerprint": "454c10c68d8de27baa24897194cb46175653ec2350f233e4d934f2756ff62b77"
     },
     {
       "locale": "hi",
@@ -105378,7 +105378,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6ea8a759049e916092ce4abd728adf855a87e915d944fae67b5cc637f9dc5cad"
+      "fingerprint": "fab8da395c55d0b5eccb4d07a22da94f8f40cfdfbb929f46f7ae20cb47a60f83"
     },
     {
       "locale": "hi",
@@ -125538,7 +125538,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "57c670485c37651864382b6815518aee93405aaafecef177d3392520dab11036"
+      "fingerprint": "926708aeaa1ecb51065c0a10ab8683fbe0908e7070e2ecc1cf0166bb716b6bbb"
     },
     {
       "locale": "ja",
@@ -125650,7 +125650,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "fd191b5159f4e6b2df074abcc3c39254f3bbc70e6fc9b5215dd8a2af1c35ad0d"
+      "fingerprint": "00599f691f58118ff86f5bffa0046801d84d6f39b89d8499c9ebe84622ff5e7c"
     },
     {
       "locale": "ja",
@@ -126021,7 +126021,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "81e6637c6416f40c32978889909b5d76a724a007a63dfe67b9abac0f761e0316"
+      "fingerprint": "4874ba6e8cd7c80bb127b0135775c6f8d52418335b3609e0f369c3f6f7fef24f"
     },
     {
       "locale": "ja",
@@ -126371,14 +126371,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "bcf6e229d08814b66899625b3dc351ed939fd319219be4221d129cb336e173ee"
+      "fingerprint": "e929848d4fb3b981cd4978e9626b77e56dd5b5dbf3915fd9053023cd2282f69c"
     },
     {
       "locale": "ja",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "398cc33b2c4a443b2ceb1cdadeed4989442ca0530173428073990ebace88dc19"
+      "fingerprint": "ec16268e9a2d14a5ebe82932849045de34c8e775153f28317e373d8596ca0cf4"
     },
     {
       "locale": "ja",
@@ -126574,7 +126574,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "b360e758e0d4726b5c9c7c2d36da8f54efa69a406dfbffbc35b1c90ae480cf56"
+      "fingerprint": "bdf42aa3cf7cf08be6935843fe69e9cf569930ced0f93139d5a43f4df088d504"
     },
     {
       "locale": "ja",
@@ -126728,7 +126728,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "3d50e85f9bd616ab2bc92318d8f435530912d9d5096ac96d2ad4fc98e9d3415d"
+      "fingerprint": "2c555a064390ff7de19ef3c7db04bfd064dcc308eada43452bf46d2fbdba16d6"
     },
     {
       "locale": "ja",
@@ -126973,7 +126973,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6b898d665fae14dd774322f30bbda6910d13eb2358540b6797817ed9f0f2aea1"
+      "fingerprint": "8c6b54148780396c5abee8eb715ee63c7be019bdee9a43c43ca4082f5749f3ba"
     },
     {
       "locale": "ja",
@@ -127141,7 +127141,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "835634f1aa0166ab8a8f6b3ad2f92ef33cc64ec6675b4d7b825645756ed1ef30"
+      "fingerprint": "54353ebd89a829f2b6d8b8d565db8fb62cc1d5fe0bbe8e8e356182fcde79c1f2"
     },
     {
       "locale": "ja",
@@ -147301,7 +147301,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "a29ab9399ccb7fef3e54b521de0c72fd3f5d0cc05447e763d5f71818d7d05195"
+      "fingerprint": "c044c394c23b3666b2980faffa6cd3b6edea623a766e4d477f373d20e16a079a"
     },
     {
       "locale": "sw",
@@ -147413,7 +147413,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "4dbf25e5260db2a25c30f6df2c2adb212dce7387e64bd5835f8c771b8db6c3da"
+      "fingerprint": "bdfe4b363b134e14bc7212c21684f3a271d9b0007581697d15fd0c0ccf756eb4"
     },
     {
       "locale": "sw",
@@ -147784,7 +147784,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "c21c3780e77451539346e0c5a05f2d6131c9871869d53ef599bbcbdacd723587"
+      "fingerprint": "d87276dc3d74793ca8708e7d2ae6b8c6be502b94749043b5ffd47eff06770a31"
     },
     {
       "locale": "sw",
@@ -148134,14 +148134,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e970b732f0d971400c2e527eab2f686aeb7f8fa5cf935a38d8d3d5ba6a9a34ac"
+      "fingerprint": "c43cd5c68c81a615560dd5fa6100e676cf3513e348119f1f0dcb11dfb037c372"
     },
     {
       "locale": "sw",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "7d82c2e8fe163e9f5129c2529f3cb1c68bc8ad40041a5c8860c9115e99c19aa8"
+      "fingerprint": "371c607dfe5f93139824d9d199abd9977d7cef332263b8f9bb0611f60b999124"
     },
     {
       "locale": "sw",
@@ -148337,7 +148337,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "742c435fd17347cb0dd6acae76d09c89d6cd896f5df883739e24197d8c0963fd"
+      "fingerprint": "6219cd653a3e1ef710818fff0cde8c58dd96e75b27f730b16b568c6d859c58f0"
     },
     {
       "locale": "sw",
@@ -148491,7 +148491,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "231a140f6c17e8abf6255e681962daf2a1b586e313476c6b40e86c4b266ed63a"
+      "fingerprint": "6877359a38a69e50c0fbce4e66f133302e0d28df216b520e309018a751a457f0"
     },
     {
       "locale": "sw",
@@ -148736,7 +148736,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "aff79398eeb5a5ff025da17905598f2f3bb49184917c583e4786956818378a97"
+      "fingerprint": "0057eac1c966abb84b9e271c9891ec6c201d150d2aeefd9d10c2ce771daae376"
     },
     {
       "locale": "sw",
@@ -148904,7 +148904,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "bca819d6c64e8d6f3794f507094473f77a24c9907b5953ec7e6313d51a299fbe"
+      "fingerprint": "73e98f8f59a4a8c1e8d361767573f89ab70c568a8fa9b53ea07ef5061a54df18"
     },
     {
       "locale": "sw",
@@ -169064,7 +169064,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "8cb845428313f9193b9ea91633d29e4c1645145c839db110679d1b8eb126acaa"
+      "fingerprint": "a9296fa5d3e531be070d0864f0e4ae5cc5be1a368500350f32b2156f74123c64"
     },
     {
       "locale": "am",
@@ -169176,7 +169176,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "5efc42ef247a8859c475c3119f0d89d435bd446e6e4aed4d4c8028c2d1c2c6d5"
+      "fingerprint": "42e4eed1a2f3bf023640a20ec5018fa86006c5ebfed40e260e0aafd1c4d8db63"
     },
     {
       "locale": "am",
@@ -169547,7 +169547,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "fc3527be673268bb32af548c9f350b72cc6bfb96b9a62a97da26c4a1d32778cc"
+      "fingerprint": "84720305b02b348e718096e0e4c1c9c6ad2619f00565d06c4ab46158acd0f558"
     },
     {
       "locale": "am",
@@ -169897,14 +169897,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "9c4dc3a76c2b64b82192d76dfe0a6f1b2073aa0e3f9182562e36a593a954789b"
+      "fingerprint": "6e57f2cf0a38c0584a34069b2eb30e246b1d8893f65172bfbd5cefb3dcd84b86"
     },
     {
       "locale": "am",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "1ae8444972aaed19510f78d8f9df3f69abde2263dd48efbc2c1044c82aab7e7f"
+      "fingerprint": "9fabd40017b5d155303198c9e5fcf871ef6531708ddb2b5636412868c9297df3"
     },
     {
       "locale": "am",
@@ -170100,7 +170100,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6762306c7f9e43e0664f5f89257bc04f4f078944462241ef0a81ab00f27f6a26"
+      "fingerprint": "e441c88e3340e01a57457738d09f92570c7913dcd9abc3486ad7e5ea52d1bb8c"
     },
     {
       "locale": "am",
@@ -170254,7 +170254,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e227c402933b5ece64627fe7f2c7d8aac905e8a0b8051ba0dd29008e7b807f9e"
+      "fingerprint": "9e7a1def8c045defe7c85c73e3ccd427788dfce2c0d453eef2abe881b1a1e81a"
     },
     {
       "locale": "am",
@@ -170499,7 +170499,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "8e7b2157d0a4f93bf45b19d5179feb28294800f2c77369f1a81a17d750c06e7f"
+      "fingerprint": "1189a55b4248342339a8c498468f20461eef15dd4ff492dc3fbe897fe8fbc9f5"
     },
     {
       "locale": "am",
@@ -170667,7 +170667,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "396e8dfbdda880ab8021536c0123b35c2e40d0e24223a2fd395d657a3723e722"
+      "fingerprint": "315c2a2753b0013b75e634fb00ecb1e769cd6763ca78c0450c74e8f9ae8f239b"
     },
     {
       "locale": "am",
@@ -190827,7 +190827,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "8cacc722e559ad5ffec9860f62e7c2c8c33b895a8dbd215d0258587635e2fa68"
+      "fingerprint": "97d99d7ff86f344538a9f26445645b4994c9d397918240543c9724a173cdbfb1"
     },
     {
       "locale": "id",
@@ -190939,7 +190939,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "820193096cc9e666af545668f14fa162f22930df109b8dfde908bf18feabfb02"
+      "fingerprint": "0fba7d134588dc04c0c16069b857a42f3159be8ff0b99c7f99c07ca88d071631"
     },
     {
       "locale": "id",
@@ -191310,7 +191310,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "664c7fc9566fa26bb314ee5e798b7aa3cf5f50c013212ccab255353db43e918e"
+      "fingerprint": "a905fac94f4e66c1ca346c735cea7f23f32b27450f093534594179d42bd6d765"
     },
     {
       "locale": "id",
@@ -191660,14 +191660,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6f2c2e27c7c4f24a553eaffbcf13949337ec6c2236bf16442c0dcf9fa9289db5"
+      "fingerprint": "f5023699ec12d065e5617f8ed4a4e391c44541a8178bb16f75fefc47e5b9f74a"
     },
     {
       "locale": "id",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "3ece4f2eedfd83942a275eb17c3c10e0f3810540e60207136f542b8f6e9e8970"
+      "fingerprint": "f643913de9a1297f57a0baaa943861f410d1c25d5884b322054f4e65ce5f5983"
     },
     {
       "locale": "id",
@@ -191863,7 +191863,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "744934b234653f6cca02ff4c2dc6ffd15e466904d21895648d3079fe81fb4a2c"
+      "fingerprint": "98931b95226c684bfb7dfd28faede75452ecbddf3b437856d0985257c0bfd05c"
     },
     {
       "locale": "id",
@@ -192017,7 +192017,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e2e9556b1f2ea63c36c8d4222ab941b14e281741d26c668109f5c9151e372cb8"
+      "fingerprint": "07ef88a183fd34c9a0be2b08e8f57e5f9ca730eb5b8f3dc60859b634fb835bd2"
     },
     {
       "locale": "id",
@@ -192262,7 +192262,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "8df224452c9f8dd5473d899ecde8d4397a2dd2c0083569d290948a648165edc8"
+      "fingerprint": "b36fbec21792841b14399ee3fea6c8aadf660b5f28016eaf606e816da3add89e"
     },
     {
       "locale": "id",
@@ -192430,7 +192430,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "1635be28b3c6f34d656e921539a92d2695ad704967cc37fd30b00b3a251eb76f"
+      "fingerprint": "c48423bd3e9162f4a31bfedb4319d4948298a73fea1254eadf4ee2517fe48b91"
     },
     {
       "locale": "id",
@@ -212590,7 +212590,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "36ffa69f31a919112b02ce53d4ca590a4020a4fe34d5e05f8f7760bcaccba7c5"
+      "fingerprint": "d3e8671ddb2326f03d6c13f997dbdd5da76fa53e4cd41f58ccb66c2db3b919ae"
     },
     {
       "locale": "tl",
@@ -212702,7 +212702,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "fa7fa144d2600b41b7bf811d6cb3c79dccec1f4897a8d10e4aead4909c8eb772"
+      "fingerprint": "67badea3045ae3417907354d098b95bbd6c7daf6376a9cc5f673a87ffcd9d188"
     },
     {
       "locale": "tl",
@@ -213073,7 +213073,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "31e64e4b641cd39840f73e8bb84356f4856092a051f2e7ec1fc7f17788c078d1"
+      "fingerprint": "1f4f916af74f311832772dcb9d69f1b66b0b562eccdb0bdc69826c3c31577c92"
     },
     {
       "locale": "tl",
@@ -213423,14 +213423,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "d485d28a7fa36f978fcfbdf59e06a3dc81dd02fbd27fb1b9c1a4edada9e44b4a"
+      "fingerprint": "86c8202f0631d443c1e6505f45485c75c72c9e3e612ed21fb9caa731cab21187"
     },
     {
       "locale": "tl",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "7b6b6c313a78da06cf446dabd9d8caa370c44c925b1df83c71c6089b24e0c4b9"
+      "fingerprint": "91e5b49487960c22e0c41dc09b0b6898b029c8f693f25b712a031579adc9dc51"
     },
     {
       "locale": "tl",
@@ -213626,7 +213626,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "aeb2ab09286e4cf76f44a1875849962454a343bf11bc093a856ccf933d132aaa"
+      "fingerprint": "3928d95cba80e112e684db5478cb024b09a6fe64a8843dfe6da76fea5675fc69"
     },
     {
       "locale": "tl",
@@ -213780,7 +213780,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "0de61665875a76b2501a25b9a7b2e64ea756d05d0807d28e8a819b398b299270"
+      "fingerprint": "8f476738500955e015e9215e4609624757197212040cdacfc068631d09cc004a"
     },
     {
       "locale": "tl",
@@ -214025,7 +214025,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "b0d7e7a143b5b83627f1c9523a7e6685cfb92def14778fe788292f7620427f80"
+      "fingerprint": "bfd1474eaeafe8941708c235c223b997b7ff04ff92f156f825116d4fe442e9ef"
     },
     {
       "locale": "tl",
@@ -214193,7 +214193,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "d28798730b564dfb28d56921970c17eac8d80750f0b720ca8e5dc60b5a94cb95"
+      "fingerprint": "278b09c6998eae8127fb58f7cf7a32928e8974a22fe10318897642dbe049a2fe"
     },
     {
       "locale": "tl",
@@ -234353,7 +234353,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "651ee46cabf034843954699bb807aaa4bdd706484cd7224bccb700c39e0669db"
+      "fingerprint": "38394928a7e70da716b3833a081c69fb0d010cdfa031b50a17f38d4c901a16ab"
     },
     {
       "locale": "ko",
@@ -234465,7 +234465,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6117537c6e1c3e4fa5769930473d212eea4f695706850fbbe39011f1724dea63"
+      "fingerprint": "710a55a67df6d47f73f4b86588960d2ec6f8480c566420ed6285c138ef7d1991"
     },
     {
       "locale": "ko",
@@ -234836,7 +234836,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "356f04691c95ea057bbdb381a8ed7f1e5aa85b984a51d69c639608f6184b6da8"
+      "fingerprint": "55064ae219c28e066fba46721549dfb310040d46b0ef103295f1a2494c901d7a"
     },
     {
       "locale": "ko",
@@ -235186,14 +235186,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6f56874de0f84e7bb1d31fc21fcfff9addf29198812363c770cd0949e50aef37"
+      "fingerprint": "af2fbab831cb61bcc1627ee51f33f908a22c94e62a73e44a7ae4e6a66ee6c98c"
     },
     {
       "locale": "ko",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "9db7050805a5ec4bf7bf2f6abf4eadfaafa571c9925d1b2263fa477207b55a5e"
+      "fingerprint": "d898a88a16f0d36616fce2106631d4ccb082704d2146c5f29a902cf0fe9b3bed"
     },
     {
       "locale": "ko",
@@ -235389,7 +235389,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "7fadeeb9247e1f0e85b1c34ff3b3412c2111b376b644cc03366af7c4e0bd0ecb"
+      "fingerprint": "b50d692ba20801830e12761c2f77de4b36dbf36a92c6e6677698f04c09799893"
     },
     {
       "locale": "ko",
@@ -235543,7 +235543,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "bd6d7eef588db7a8ceb752245350df97bee90ed84b2a71de58af18d9896ad621"
+      "fingerprint": "de96132aa7f38634ffd8a4054ef2456f5b819764fd242c90fdb188e3d12d3c13"
     },
     {
       "locale": "ko",
@@ -235788,7 +235788,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "a56a1b56e7a259bc83be10d0e0f67f62a7c43c70071b47882dc2538ee51ca7db"
+      "fingerprint": "9abce96478ddcbd38b45a8861feb7b1c2bcd843c7c7da3e6ce8757adca8ed66c"
     },
     {
       "locale": "ko",
@@ -235956,7 +235956,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "4d2f77315da23a187231be74c46117b4b63f528630bb263a2fb523099406c263"
+      "fingerprint": "366446258aaf0be042e1d83b20b2871a4f3e41a0111fdd2d6a65d59d8ddcc004"
     },
     {
       "locale": "ko",
@@ -254975,7 +254975,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "ca33c4d1eb26272a2e749c1197bc7d0b647fbb8000e1af0ce4eb39dc127c3887"
+      "fingerprint": "249687b30a683ae97b228e0a1062107a981c5be3571829d7e8ff37d702c192e2"
     },
     {
       "locale": "ru",
@@ -255087,7 +255087,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "c1a44454ccc79ff32d860cf8227ac766895ac41284b49e19526f54ff79fc5622"
+      "fingerprint": "72b5c0b0cce97bc2f422766f17fb440492cde2971fc43092f55d07cdb8fff2a2"
     },
     {
       "locale": "ru",
@@ -255458,7 +255458,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "411e0d3933a256b7044ad92e2e7e00f53026f58c0e4839d5e0f8f154cb00fdb3"
+      "fingerprint": "eec1f390d3f7c059c54c249bd91536e439bca0b50c3fbfd7bc08988e0de209ee"
     },
     {
       "locale": "ru",
@@ -255808,14 +255808,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "236529803685c755646d34ac89944e84de3131a195adc149ec47011d3f18a7ca"
+      "fingerprint": "b1cf73967dd07b9b3da1585a55997cf0e9d1f0084c0e2385608c9a4f5fe4c414"
     },
     {
       "locale": "ru",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "efb3d562122262e1dba2c6fcd2eb15fb5fdeeb75822aacb10cda5562406fb08c"
+      "fingerprint": "885e3c998b2fc76632dc29cc0bb09ac55e71e54354693f38088699fd22387d8f"
     },
     {
       "locale": "ru",
@@ -256011,7 +256011,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "67ed04adbc13292b7a228be019e6094a415043826a03ca08ab0b67e41c584484"
+      "fingerprint": "124aa16326934316df8bcf2c91beba0157e4003ec9281049e8d5b7abe69059a6"
     },
     {
       "locale": "ru",
@@ -256165,7 +256165,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "066f61c719420320c12a4b20a492152848eba5fe15e2ebe427607ae1f5872fba"
+      "fingerprint": "b9ef590a302ddc700f3fb41329065a3fdaef3928d1f1737eb3d7ed66085a8cff"
     },
     {
       "locale": "ru",
@@ -256410,7 +256410,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "58ce047664c2c82617d00799060272cd4c8c7dca052be7cd4e0990952fdbb19e"
+      "fingerprint": "d1a2fc1e18616d13010fcbbfb351a43e2280483f653e7cc36caaacc9635b1e60"
     },
     {
       "locale": "ru",
@@ -256578,7 +256578,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "e099bcb1e2403dd9dc6983964a6eda3b2b18e3ac0d413288481c7be3c4cdd973"
+      "fingerprint": "fdd12f35def2bc5be85f3e506cde7d8e45c75321ff4671a6f51c481ec6cef3a5"
     },
     {
       "locale": "ru",
@@ -276738,7 +276738,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "319470269a4bc226c2d0ed431609015ee3bd78916d47a6d1cf67ce821511bc73"
+      "fingerprint": "ca5fd02bcd14d2f0aff33dee6ac44623c6090c65dc35f0e77ffcf88809e2b48b"
     },
     {
       "locale": "ar",
@@ -276850,7 +276850,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "43114f97c85abbebed4e2a3f7fd330ee55ec52fa6a69cc98a3e272e7a8195835"
+      "fingerprint": "926a37ab5edbb960cf845a43b5da7712d0dcb8ca1b365d2300a84a718fe34164"
     },
     {
       "locale": "ar",
@@ -277221,7 +277221,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "39742e90d937ca57128df604732fa93911712a4c6ad91683d7fb6350cc180097"
+      "fingerprint": "7bad144013cb0ae8888a8555e78d561e14b83e1e75a600e7820ed9ab72c33b5e"
     },
     {
       "locale": "ar",
@@ -277571,14 +277571,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6cb6d4c8bda7766cd7a31e4d7eace0830c68450cd0778265d0ab0f8b2aa40d2b"
+      "fingerprint": "39912ff2bdde1bcabf945a6f041ce93303ec3a738b37902cdaccf9f8debf411c"
     },
     {
       "locale": "ar",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "20b5cc16454a22f7ce425ce20eb0d5e9898b8ffd48c4b29c76ea3c855ac154b0"
+      "fingerprint": "215d13da3eb474ec2f35f20fcaab376770d764b07d792b4557629ac81c0e3c2e"
     },
     {
       "locale": "ar",
@@ -277774,7 +277774,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "67221c0d05e579e918809d2ea1c4719dd57b82a94aeeb6e441d51a1185820d6f"
+      "fingerprint": "496ada781cdaa66c1fd5867a29ab9c3388def61129abd15875f973ceb739b268"
     },
     {
       "locale": "ar",
@@ -277928,7 +277928,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "1f5e7838be47d2f62fdf1f88695a47c12c6eab4a2ecbe6ef921adc5296e0ea94"
+      "fingerprint": "a8d21c29af08de169b06b6e0869f801f192132e93a753e1238a9c05763080a17"
     },
     {
       "locale": "ar",
@@ -278173,7 +278173,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "f1299c67466febd293917bd6a78599e1af6764a7884bd19287fc3590ad9cc017"
+      "fingerprint": "c847a1163809f643680131b579979e78408c57e3d3c712379a1f0b61130346f3"
     },
     {
       "locale": "ar",
@@ -278341,7 +278341,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "64e73d003dfddda95be019d1d13d5f027a17c8e708af1f3dbd2086a70132b6a5"
+      "fingerprint": "51f80c59216fc812787f3d19e17824ba76bb7bdc8e89ec30a24d2030d58b777e"
     },
     {
       "locale": "ar",
@@ -298501,7 +298501,7 @@
       "id": "circles/self/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "af601c426b08640a529169cd25da3d384a766a39505d864a4c8bf9720bd560d9"
+      "fingerprint": "c1a4dff9e9ea04fab9b94047517d5d8ab342d7bcff5617af2851660c1ba904ef"
     },
     {
       "locale": "fa",
@@ -298613,7 +298613,7 @@
       "id": "circles/self/deep:themes[2].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "2405da42d8c7e8a8ae2c95e52be759d1d1179afd2c3315dff6a84d85ccc10e67"
+      "fingerprint": "95e07e6c0b96719e7fc2badea13d117e48e6ed32c8966cdc74c9254b235de557"
     },
     {
       "locale": "fa",
@@ -298984,7 +298984,7 @@
       "id": "circles/household/deep:reflection[2]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "68630b0a068933788d0433416f084cdc9a798784c09c05942a0a395a34292e12"
+      "fingerprint": "172f1c2cafb34c6a68b90908ab137a74bb321bad1d4c3cbd85ba04b8bbf68079"
     },
     {
       "locale": "fa",
@@ -299334,14 +299334,14 @@
       "id": "circles/church/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "7f87dc0ba68f2a3a9c1113cd5a7a39218b80681575de1a95a14d03c4f69b7be4"
+      "fingerprint": "92b72a5a93545aa34a2a768b57ed3804f959c537bd7abdf3137f93d06137dd0d"
     },
     {
       "locale": "fa",
       "id": "circles/church/deep:reflection[0]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "5cc102958ca5c161853280290335b36fa8fe00901c473af0b8bc38337a2dcc32"
+      "fingerprint": "aeaf80a6c70dcbb69ffd285e7509d6cdee9af3668816adafab87ea9081b2b0a6"
     },
     {
       "locale": "fa",
@@ -299537,7 +299537,7 @@
       "id": "circles/authorities/deep:meaning",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "dd9781ff7881dc95344022cfc4188f2648c511e48704dfae1275355d010adc5d"
+      "fingerprint": "34721def23802d56977740a2ea8d12106de9aa547a17afffad6cea441a7363d1"
     },
     {
       "locale": "fa",
@@ -299691,7 +299691,7 @@
       "id": "circles/authorities/deep:themes[6].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "3006c79a9f326966102db82e2d902373e5efde977f907946f342812e29034049"
+      "fingerprint": "e9922129887e6459b8fae357157f2cb0692a5df7883cdc7305a9e4170fadf8e5"
     },
     {
       "locale": "fa",
@@ -299936,7 +299936,7 @@
       "id": "circles/kingdom/deep:reflection[1]",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "6db515a02bfe00a59dc2b93a282f43531f1e6dde80743d5a119883ecba50065f"
+      "fingerprint": "038b3d494f83fa976526d8e13916c708de8baad6586dc31d7203bd29db1acbef"
     },
     {
       "locale": "fa",
@@ -300104,7 +300104,7 @@
       "id": "circles/kingdom/deep:themes[7].body",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",
-      "fingerprint": "127c2e1b6a93660614834f986a197e2cef4c8d1d1b19c6b39168cebfc7d1aaf1"
+      "fingerprint": "095c43cdbbf42eb5608f958308b737192236f48aa0a50bd2d99eb71fcd9069de"
     },
     {
       "locale": "fa",

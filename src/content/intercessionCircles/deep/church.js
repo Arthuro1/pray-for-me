@@ -5,15 +5,16 @@
 // contract test).
 //
 // Guardrails applied in this file: Scripture by reference only, never quoted;
-// the Church belongs to Christ and believers pray for her rather than merely
-// criticize her — but praying for the Church never means staying silent about
-// harm done in her (see the churchHurt21 plan); gifts build others up and never
-// create status; prompts are prayers a person may pray in their own words.
+// the Church belongs to Christ and believers pray for her — and praying for the
+// Church never means staying silent about harm done in her (see the
+// churchHurt21 plan), so prayer is never set against honest criticism; gifts
+// build others up and never create status; prompts are prayers a person may
+// pray in their own words.
 export default {
   id: 'church',
   meaning: {
-    en: 'The Church belongs to Christ, and He loves her. It is easy to criticize the Church; Qetoret invites you to pray for her first: for your local church, its pastors and members, believers across the world and those who suffer for their faith. Praying for the Church does not mean staying silent about harm. It means bringing even what is wrong before Christ, who calls His people to holiness.',
-    fr: 'L’Église appartient à Christ, et il l’aime. Il est facile de critiquer l’Église ; Qetoret vous invite d’abord à prier pour elle : pour votre Église locale, ses pasteurs et ses membres, les croyants à travers le monde et ceux qui souffrent pour leur foi. Prier pour l’Église ne veut pas dire se taire face au mal. C’est apporter même ce qui ne va pas devant Christ, qui appelle son peuple à la sainteté.',
+    en: 'The Church belongs to Christ, and He loves her. Pray for her: for your local church, its pastors and members, believers across the world and those who suffer for their faith. Praying for the Church does not mean staying silent about harm. Bring what is wrong into the light with truth and love, and before Christ, who calls His people to holiness and heals what has been wounded.',
+    fr: 'L’Église appartient à Christ, et il l’aime. Priez pour elle : pour votre Église locale, ses pasteurs et ses membres, les croyants à travers le monde et ceux qui souffrent pour leur foi. Prier pour l’Église ne veut pas dire se taire face au mal. Mettez en lumière ce qui ne va pas, avec vérité et amour, et apportez-le devant Christ, qui appelle son peuple à la sainteté et guérit ce qui a été blessé.',
   },
   themes: [
     {
@@ -106,7 +107,7 @@ export default {
   ],
   // Qualitative only. Nothing here is ever scored, stored or counted.
   reflection: [
-    { en: 'Do you pray for your church as readily as you criticize it?', fr: 'Priez-vous pour votre Église aussi volontiers que vous la critiquez ?' },
+    { en: 'What in your church would you like to bring before Christ, with thanksgiving or with lament?', fr: 'Qu’aimeriez-vous apporter devant Christ pour votre Église, dans la reconnaissance ou dans la lamentation ?' },
     { en: 'Which leaders are you intentionally carrying in prayer?', fr: 'Quels responsables portez-vous délibérément dans la prière ?' },
     { en: 'Where does your church need greater unity, holiness or courage?', fr: 'Où votre Église a-t-elle besoin de plus d’unité, de sainteté ou de courage ?' },
     { en: 'How might prayer move you toward serving the Church?', fr: 'Comment la prière pourrait-elle vous conduire à servir l’Église ?' },

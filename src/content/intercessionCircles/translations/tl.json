@@ -2,7 +2,7 @@
   "self": {
     "formation": "Si Cristo na nahuhubog sa akin.",
     "heading": "Hayaang mahubog si Cristo sa iyo.",
-    "summary": "Bago natin dalhin ang mundo sa panalangin, hinuhubog muna ng Diyos ang nagdadala nito. Ipanalangin hindi lamang na gumaan ang kalagayan, kundi na lumago sa iyo ang ugali ni Jesus.",
+    "summary": "Habang ipinapanalangin natin ang iba, hinuhubog din tayo ng Diyos. Ipanalangin hindi lamang na magbago ang kalagayan, kundi na lumago sa iyo ang ugali ni Cristo.",
     "themes": [
       { "title": "Pakikipag-isa sa Diyos" },
       { "title": "Ang Kasulatan at pagbubulay-bulay" },
@@ -25,7 +25,7 @@
       { "title": "Karunungan at pag-iingat" },
       { "title": "Pananampalataya sa bawat salinlahi" }
     ],
-    "cta": "Idulog ang aking tahanan sa Diyos"
+    "cta": "Ipanalangin ang aking tahanan"
   },
   "people": {
     "formation": "Ang pag-ibig ni Cristo para sa mga nasa paligid ko.",
@@ -44,7 +44,7 @@
   "church": {
     "formation": "Ang bayan ni Cristo na pinalalakas at hinuhubog.",
     "heading": "Ipanalangin ang Iglesiang minamahal ni Cristo.",
-    "summary": "Ang Iglesia ay kay Cristo. Matutong ipanalangin ang kanyang pagkakaisa, kabanalan, mga pinuno at misyon nang mas madalas kaysa punahin siya.",
+    "summary": "Ang Iglesia ay kay Cristo. Ipanalangin ang kanyang pagkakaisa, kabanalan, mga pinuno, kagalingan at misyon, at dalhin sa liwanag ang mali nang may katotohanan at pag-ibig.",
     "themes": [
       { "title": "Pagkakaisa" },
       { "title": "Kabanalan" },
@@ -59,7 +59,7 @@
   "authorities": {
     "formation": "Karunungan, katarungan at kapayapaan para sa mga pinagkatiwalaan ng pananagutan.",
     "heading": "Ipanalangin ang mga namamahala.",
-    "summary": "Tinawag ang mga mananampalataya na ipanalangin ang mga may kapangyarihan, sang-ayon man tayo sa kanila o hindi. Humingi ng karunungan, katarungan, katapatan at kapayapaan, hindi kailanman ng tagumpay ng isang partido o kandidato.",
+    "summary": "Tinawag ang mga mananampalataya na ipanalangin ang mga may kapangyarihan. Ipanalangin ang mga pinuno sa lahat ng panig ng pulitika, at hingin sa Diyos ang karunungan, katarungan, katapatan at kapayapaan sa halip na tagumpay ng isang panig.",
     "themes": [
       { "title": "Karunungan" },
       { "title": "Katarungan" },
@@ -85,12 +85,12 @@
       { "title": "Mga mananampalatayang inuusig" },
       { "title": "Ang sarili nating bansa, nang may kababaang-loob" }
     ],
-    "cta": "Idulog ang isang bansa sa Diyos"
+    "cta": "Ipanalangin ang isang bansa"
   },
   "kingdom": {
     "formation": "Ang kalooban at misyon ng Diyos higit sa lahat.",
     "heading": "Hayaang hubugin ng Kanyang Kaharian ang iyong panalangin.",
-    "summary": "Ang pinakamalawak na abot-tanaw ng panalangin ay ang Kaharian ng Diyos at ang Kanyang kalooban, hindi ang sarili nating mga plano. Nasa loob nito ang lahat ng iba pang bilog, at maaari ka nitong anyayahang makibahagi sa iyong ipinapanalangin.",
+    "summary": "Ang pinakamalawak na abot-tanaw ng panalangin ay ang Kaharian ng Diyos at ang Kanyang kalooban, hindi ang sarili nating mga plano. Nasa loob nito ang lahat ng iba pang bilog, at maaaring akayin ka ng panalanging ito sa tapat na mga hakbang.",
     "themes": [
       { "title": "Ang Kanyang Kaharian, hindi akin" },
       { "title": "Mga manggagawa para sa anihan" },
@@ -107,6 +107,7 @@
     "choose": "Pumili ng bilog para makita kung paano ito ipapanalangin.",
     "prayFor": "Ipanalangin",
     "scripture": "Sa Kasulatan",
+    "draftTranslation": "Pansamantalang salin",
     "explore": "Tuklasin ang bilog na ito",
     "exploreLess": "Ipakita nang mas kaunti",
     "meaning": "Ano ang ibig sabihin nito",

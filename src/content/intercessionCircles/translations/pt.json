@@ -2,7 +2,7 @@
   "self": {
     "formation": "Cristo formado em mim.",
     "heading": "Deixe Cristo ser formado em você.",
-    "summary": "Antes de levarmos o mundo em oração, Deus forma quem o leva. Ore não só para que as circunstâncias mudem, mas para que o caráter de Jesus cresça em você.",
+    "summary": "Enquanto oramos pelos outros, Deus também nos forma. Ore não só para que as circunstâncias mudem, mas para que o caráter de Cristo cresça em você.",
     "themes": [
       { "title": "Comunhão com Deus" },
       { "title": "As Escrituras e a meditação" },
@@ -25,7 +25,7 @@
       { "title": "Sabedoria e proteção" },
       { "title": "A fé de geração em geração" }
     ],
-    "cta": "Levar meu lar diante de Deus"
+    "cta": "Orar pelo meu lar"
   },
   "people": {
     "formation": "O amor de Cristo levado a quem está ao meu redor.",
@@ -39,12 +39,12 @@
       { "title": "O testemunho" },
       { "title": "O amor em ação" }
     ],
-    "cta": "Levar alguém em oração"
+    "cta": "Orar por alguém"
   },
   "church": {
     "formation": "O povo de Cristo fortalecido e formado.",
     "heading": "Ore pela Igreja que Cristo ama.",
-    "summary": "A Igreja pertence a Cristo. Aprenda a orar pela unidade, santidade, líderes e missão dela com mais prontidão do que a criticá-la.",
+    "summary": "A Igreja pertence a Cristo. Ore pela unidade, santidade, líderes, cura e missão dela, e traga à luz o que está errado, com verdade e amor.",
     "themes": [
       { "title": "A unidade" },
       { "title": "A santidade" },
@@ -59,7 +59,7 @@
   "authorities": {
     "formation": "Sabedoria, justiça e paz para quem recebeu uma responsabilidade.",
     "heading": "Ore por quem governa.",
-    "summary": "Os cristãos são chamados a orar por quem exerce autoridade, concordando ou não com essas pessoas. Peça sabedoria, justiça, integridade e paz, nunca a vitória de um partido ou de um candidato.",
+    "summary": "Os cristãos são chamados a orar por quem exerce autoridade. Ore pelos governantes de todas as correntes políticas, pedindo a Deus sabedoria, justiça, integridade e paz, e não a vitória de um lado.",
     "themes": [
       { "title": "A sabedoria" },
       { "title": "A justiça" },
@@ -85,12 +85,12 @@
       { "title": "Os cristãos perseguidos" },
       { "title": "Nossa própria nação, com humildade" }
     ],
-    "cta": "Levar uma nação diante de Deus"
+    "cta": "Orar por uma nação"
   },
   "kingdom": {
     "formation": "A vontade e a missão de Deus acima de tudo.",
     "heading": "Deixe o Reino dele moldar a sua oração.",
-    "summary": "O horizonte mais amplo da oração é o Reino de Deus e a sua vontade, não os nossos próprios planos. Todos os outros círculos cabem nele, e ele pode convidar você a participar daquilo pelo que ora.",
+    "summary": "O horizonte mais amplo da oração é o Reino de Deus e a sua vontade, não os nossos próprios planos. Todos os outros círculos cabem nele, e essa oração pode levar você a dar passos fiéis.",
     "themes": [
       { "title": "O Reino dele, não o meu" },
       { "title": "Trabalhadores para a seara" },
@@ -107,6 +107,7 @@
     "choose": "Escolha um círculo para ver como orar por ele.",
     "prayFor": "Orar por",
     "scripture": "Nas Escrituras",
+    "draftTranslation": "Tradução provisória",
     "explore": "Explorar este círculo",
     "exploreLess": "Mostrar menos",
     "meaning": "O que isso significa",

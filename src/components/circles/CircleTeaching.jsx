@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { HandHeart } from 'lucide-react';
 import CircleGlyph from '../shared/CircleGlyph';
-import { PrimaryButton, QuietButton, SectionLabel } from '../shared/Primitives';
+import { PrimaryButton, QuietButton, SectionLabel, StatusLabel } from '../shared/Primitives';
 import { KEY_REF_COUNT } from '../../content/intercessionCircles';
-import { canShowCircleDeep } from '../../lib/circleReview';
+import { canShowCircleDeep, isCircleTranslationDraft } from '../../lib/circleReview';
 import CircleDeepTeaching from './CircleDeepTeaching';
 
 // One circle's teaching, as a doorway into prayer: its name, a heading, the
@@ -38,6 +38,11 @@ export default function CircleTeaching({
         </SectionLabel>
         <Heading id={headingId} className="circle-teaching__heading">{teaching.heading}</Heading>
         <p className="circle-teaching__formation">{teaching.formation}</p>
+        {/* An AI-drafted language says so until a native reviewer signs it
+            (content/intercessionCircles/review.js). */}
+        {isCircleTranslationDraft(lang) && (
+          <StatusLabel tone="sacred" className="circle-teaching__draft">{ui.draftTranslation}</StatusLabel>
+        )}
       </div>
 
       <div className="circle-teaching__body">

@@ -5,9 +5,10 @@ export default {
   id: 'self',
   formation: { en: 'Christ formed in me.', fr: 'Christ formé en moi.' },
   heading: { en: 'Let Christ be formed in you.', fr: 'Laissez Christ prendre forme en vous.' },
+  // Formation happens WHILE we pray for others, never as a precondition for it.
   summary: {
-    en: 'Before we carry the world in prayer, God forms the one who carries it. Pray not only for easier circumstances, but for the character of Jesus to grow in you.',
-    fr: 'Avant que nous portions le monde dans la prière, Dieu forme celui qui le porte. Priez non seulement pour que les circonstances changent, mais pour que le caractère de Jésus grandisse en vous.',
+    en: 'As we carry others in prayer, God also forms us. Pray not only for changed circumstances, but for the character of Christ to grow in you.',
+    fr: 'Tandis que nous portons les autres dans la prière, Dieu nous forme, nous aussi. Priez non seulement pour que les circonstances changent, mais pour que le caractère de Christ grandisse en vous.',
   },
   themes: [
     { id: 'communion', title: { en: 'Communion with God', fr: 'La communion avec Dieu' } },
@@ -18,6 +19,6 @@ export default {
     { id: 'fruit', title: { en: 'The fruit of the Spirit', fr: 'Le fruit de l’Esprit' } },
     { id: 'relationships', title: { en: 'Kingdom-shaped relationships', fr: 'Des relations façonnées par le Royaume' } },
   ],
-  refs: ['Galatians 5:22-25', 'Matthew 5:13-16', 'Romans 8:29', 'Matthew 7:15-20', 'Ephesians 5:8-11', 'Colossians 3:12-17'],
+  refs: ['Galatians 4:19', 'Galatians 5:22-25', 'Romans 8:29', 'Matthew 5:13-16', 'Matthew 7:15-20', 'Ephesians 5:8-11', 'Colossians 3:12-17'],
   cta: { en: 'Begin praying for my heart', fr: 'Prier pour mon cœur' },
 };

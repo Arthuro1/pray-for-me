@@ -178,7 +178,7 @@ export default {
         "desc": "Ehepartner, Kinder, Eltern, Familie"
       },
       {
-        "name": "Meine Menschen",
+        "name": "Meine Nächsten",
         "desc": "Freunde, Nachbarn, Kollegen"
       },
       {

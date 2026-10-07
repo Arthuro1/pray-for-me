@@ -468,6 +468,7 @@
 /* The deep layer: one section open at a time, hairlines between. */
 .circle-deep { margin-block-start: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
 .circle-deep__draft { display: inline-flex; margin-block: var(--q-space-4) var(--q-space-1); }
+.circle-teaching__draft { display: inline-flex; margin-block-start: var(--q-space-3); }
 .circle-deep__section { border-block-end: 1px solid var(--q-border); }
 .circle-deep__toggle-heading { margin: 0; font: inherit; }
 .circle-deep__toggle-heading > .q-disclosure { width: 100%; }

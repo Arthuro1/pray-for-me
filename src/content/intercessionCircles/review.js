@@ -25,3 +25,31 @@ export const CIRCLE_DEEP_REVIEWS = Object.freeze({
   nations: pending(),
   kingdom: pending(),
 });
+
+// Records for the SHORT layer's translations (translations/<lang>.json). The
+// short layer is authored in English and French beside the code; every other
+// language is an AI draft, and its circle teaching carries a visible "Draft
+// translation" label until a native reviewer signs it here
+// (lib/circleReview.js, isCircleTranslationDraft). The same rule applies: ONLY
+// a named human reviewer may change a record — never an AI assistant.
+//
+// Shape of an approved record:
+//   { status: 'approved', reviewer: 'Name', reviewedAt: 'YYYY-MM-DD' }
+const machineDraft = () => Object.freeze({ status: 'machine-draft', reviewer: null, reviewedAt: null });
+
+export const CIRCLE_TRANSLATION_REVIEWS = Object.freeze({
+  es: machineDraft(),
+  pt: machineDraft(),
+  de: machineDraft(),
+  zh: machineDraft(),
+  hi: machineDraft(),
+  ja: machineDraft(),
+  sw: machineDraft(),
+  am: machineDraft(),
+  id: machineDraft(),
+  tl: machineDraft(),
+  ko: machineDraft(),
+  ru: machineDraft(),
+  ar: machineDraft(),
+  fa: machineDraft(),
+});

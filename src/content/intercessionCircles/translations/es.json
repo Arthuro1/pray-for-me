@@ -2,7 +2,7 @@
   "self": {
     "formation": "Cristo formado en mí.",
     "heading": "Deja que Cristo tome forma en ti.",
-    "summary": "Antes de que llevemos el mundo en oración, Dios forma a quien lo lleva. Ora no solo para que cambien las circunstancias, sino para que el carácter de Jesús crezca en ti.",
+    "summary": "Mientras oramos por otros, Dios también nos forma a nosotros. Ora no solo para que cambien las circunstancias, sino para que el carácter de Cristo crezca en ti.",
     "themes": [
       { "title": "Comunión con Dios" },
       { "title": "Las Escrituras y la meditación" },
@@ -25,7 +25,7 @@
       { "title": "Sabiduría y protección" },
       { "title": "La fe de generación en generación" }
     ],
-    "cta": "Llevar a mi hogar ante Dios"
+    "cta": "Orar por mi hogar"
   },
   "people": {
     "formation": "El amor de Cristo llevado a quienes me rodean.",
@@ -39,12 +39,12 @@
       { "title": "El testimonio" },
       { "title": "El amor en acción" }
     ],
-    "cta": "Llevar a alguien en oración"
+    "cta": "Orar por alguien"
   },
   "church": {
     "formation": "El pueblo de Cristo fortalecido y formado.",
     "heading": "Ora por la Iglesia que Cristo ama.",
-    "summary": "La Iglesia pertenece a Cristo. Aprende a orar por su unidad, su santidad, sus líderes y su misión con más disposición que a criticarla.",
+    "summary": "La Iglesia pertenece a Cristo. Ora por su unidad, su santidad, sus líderes, su sanidad y su misión, y saca a la luz lo que está mal, con verdad y amor.",
     "themes": [
       { "title": "La unidad" },
       { "title": "La santidad" },
@@ -59,7 +59,7 @@
   "authorities": {
     "formation": "Sabiduría, justicia y paz para quienes tienen una responsabilidad.",
     "heading": "Ora por quienes gobiernan.",
-    "summary": "Los creyentes están llamados a orar por quienes ejercen autoridad, estemos de acuerdo con ellos o no. Pide sabiduría, justicia, integridad y paz, nunca la victoria de un partido o de un candidato.",
+    "summary": "Los creyentes están llamados a orar por quienes ejercen autoridad. Ora por los gobernantes de todo el espectro político, pidiendo a Dios sabiduría, justicia, integridad y paz, no la victoria de un bando.",
     "themes": [
       { "title": "La sabiduría" },
       { "title": "La justicia" },
@@ -85,12 +85,12 @@
       { "title": "Los creyentes perseguidos" },
       { "title": "Nuestra propia nación, con humildad" }
     ],
-    "cta": "Llevar una nación ante Dios"
+    "cta": "Orar por una nación"
   },
   "kingdom": {
     "formation": "La voluntad y la misión de Dios por encima de todo.",
     "heading": "Deja que su Reino forme tu oración.",
-    "summary": "El horizonte más amplio de la oración es el Reino de Dios y su voluntad, no nuestros propios planes. Todos los demás círculos caben en él, y puede invitarte a participar en aquello por lo que oras.",
+    "summary": "El horizonte más amplio de la oración es el Reino de Dios y su voluntad, no nuestros propios planes. Todos los demás círculos caben en él, y esta oración puede llevarte a dar pasos fieles.",
     "themes": [
       { "title": "Su Reino, no el mío" },
       { "title": "Obreros para la cosecha" },
@@ -107,6 +107,7 @@
     "choose": "Elige un círculo para ver cómo orar por él.",
     "prayFor": "Orar por",
     "scripture": "En las Escrituras",
+    "draftTranslation": "Traducción provisional",
     "explore": "Explorar este círculo",
     "exploreLess": "Mostrar menos",
     "meaning": "Qué significa",

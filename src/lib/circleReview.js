@@ -3,7 +3,7 @@
 // build or in review mode (`?planPreview=1`, one switch for all drafts), and a
 // production build shows it only once a named human has signed it.
 import { hasReviewSignoff, isPlanPreviewOn } from './planReview';
-import { CIRCLE_DEEP_REVIEWS } from '../content/intercessionCircles/review';
+import { CIRCLE_DEEP_REVIEWS, CIRCLE_TRANSLATION_REVIEWS } from '../content/intercessionCircles/review';
 import { hasDeepLayer } from '../content/intercessionCircles';
 
 // The deep layer is authored in these languages; every other language reads the
@@ -28,3 +28,13 @@ export function canShowCircleDeep(
 // Is what canShowCircleDeep reveals still a draft? Drives the "review pending"
 // label, so a reviewer always knows what they are reading.
 export const isCircleDeepDraft = (circle, reviews = CIRCLE_DEEP_REVIEWS) => !isCircleDeepReviewed(reviews[circle]);
+
+// The short layer is authored in these languages; the others are AI drafts.
+export const SHORT_LAYER_LANGS = Object.freeze(['en', 'fr']);
+
+// Is the short-layer teaching in `lang` still a machine draft? It ships (the
+// landing must never mix languages), but says so with a visible "Draft
+// translation" label until a native reviewer's dated, named sign-off exists.
+export const isCircleTranslationDraft = (lang, reviews = CIRCLE_TRANSLATION_REVIEWS) => (
+  !SHORT_LAYER_LANGS.includes(lang) && !hasReviewSignoff(reviews[lang])
+);

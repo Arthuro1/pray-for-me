@@ -196,15 +196,43 @@ describe('the deep layer', () => {
     expect(body('people', 'reconciliation').en).toMatch(/possible and wise/);
   });
 
-  it('prays for the Church without silencing harm', () => {
-    expect(DEEP.church.meaning.en).toMatch(/does not mean staying silent about harm/);
+  it('forms the one who prays WHILE they pray for others — by grace, never as a precondition', () => {
+    const self = circleContent('self');
+    expect(self.summary.en).toMatch(/As we carry others in prayer, God also forms us/);
+    expect(self.summary.en).not.toMatch(/Before we/);
+    expect(self.refs[0]).toBe('Galatians 4:19');
+    expect(DEEP.self.meaning.en).toMatch(/God’s gracious work in you, received by faith and lived out in obedience/);
   });
 
-  it('keeps Authorities nonpartisan: no party, no candidate, no outcome, no taking control', () => {
-    expect(DEEP.authorities.meaning.en).toMatch(/never favors a party or a candidate/);
-    expect(DEEP.authorities.meaning.en).toMatch(/never treats prayer as a way to take control/);
-    expect(body('authorities', 'disagreement').en).toMatch(/never tells you which political outcome/);
+  it('prays for the Church without silencing harm, and never sets prayer against honest criticism', () => {
+    expect(DEEP.church.meaning.en).toMatch(/does not mean staying silent about harm/);
+    expect(circleContent('church').summary.en).toMatch(/bring what is wrong into the light with truth and love/);
+    for (const text of [...strings(DEEP.church), ...strings(circleContent('church'))]) {
+      expect(text).not.toMatch(/critici[sz]e/i);
+    }
+  });
+
+  it('keeps Authorities nonpartisan: across political lines, no partisan victory, no taking control', () => {
+    expect(circleContent('authorities').summary.en).toMatch(/across political lines/);
+    expect(circleContent('authorities').summary.en).toMatch(/rather than partisan victory/);
+    expect(DEEP.authorities.meaning.en).toMatch(/rather than partisan victory/);
+    expect(DEEP.authorities.meaning.en).toMatch(/Prayer is not a way to take control of a government/);
+    expect(body('authorities', 'disagreement').en).toMatch(/rather than a political outcome/);
     expect(allText('authorities')).not.toMatch(/take authority over|rule .* spiritually|God has chosen|God chose/i);
+  });
+
+  // Devotional teaching states the spiritual principle; what the app does or
+  // never does belongs in About, Privacy and Help. The one exception is My
+  // heart's framework note, which must say the seven foundations are
+  // Qetoret's grouping rather than a list Scripture gives.
+  it('speaks the principle, not app policy, and never presumes to know what God is saying', () => {
+    for (const circle of CIRCLES) {
+      const texts = [...strings(circleContent(circle)), ...strings({ ...DEEP[circle], framework: undefined })];
+      for (const text of texts) {
+        expect(text, circle).not.toMatch(/Qetoret|\bthe app\b|\bno app\b|application/i);
+        expect(text, circle).not.toMatch(/Could God be|God (is|might be) inviting|God is telling|God wants you/i);
+      }
+    }
   });
 
   it('keeps Nations free of nationalism, and the choice of a nation with the person', () => {

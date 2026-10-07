@@ -1,7 +1,9 @@
 // Authorities — wisdom, justice and peace among those entrusted with
-// responsibility. NONPARTISAN by construction: prayer for leaders whether or not
-// we agree with them; never a party, a candidate, or "taking authority" over a
-// government. Qetoret never decides which leaders deserve prayer.
+// responsibility. NONPARTISAN by construction: prayer for leaders across
+// political lines, whether or not we agree with them, seeking wisdom and
+// justice rather than partisan victory; never "taking authority" over a
+// government. Praying for a candidate as a person is fine; asking God for a
+// party's or candidate's victory is what the teaching steers away from.
 export default {
   id: 'authorities',
   formation: {
@@ -10,8 +12,8 @@ export default {
   },
   heading: { en: 'Pray for those who lead.', fr: 'Priez pour ceux qui dirigent.' },
   summary: {
-    en: 'Believers are called to pray for those in authority, whether or not we agree with them. Ask for wisdom, justice, integrity and peace, never for a party or a candidate.',
-    fr: 'Les croyants sont appelés à prier pour ceux qui exercent l’autorité, que nous soyons d’accord avec eux ou non. Demandez la sagesse, la justice, l’intégrité et la paix, jamais la victoire d’un parti ou d’un candidat.',
+    en: 'Believers are called to pray for those in authority. Pray for leaders across political lines, asking God for wisdom, justice, integrity and peace rather than partisan victory.',
+    fr: 'Les croyants sont appelés à prier pour ceux qui exercent l’autorité. Priez pour les dirigeants de tous bords politiques, en demandant à Dieu la sagesse, la justice, l’intégrité et la paix plutôt que la victoire d’un camp.',
   },
   themes: [
     { id: 'wisdom', title: { en: 'Wisdom', fr: 'La sagesse' } },

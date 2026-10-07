@@ -18,5 +18,5 @@ export default {
     { id: 'practical-love', title: { en: 'Love in action', fr: 'L’amour en actes' } },
   ],
   refs: ['Galatians 6:2', 'John 13:34-35', 'Luke 10:25-37', 'Matthew 5:43-48', 'James 5:16', 'Philippians 2:3-4'],
-  cta: { en: 'Carry someone in prayer', fr: 'Porter quelqu’un dans la prière' },
+  cta: { en: 'Pray for someone', fr: 'Prier pour quelqu’un' },
 };

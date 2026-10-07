@@ -5,16 +5,18 @@
 // contract test).
 //
 // Guardrails applied in this file (NONPARTISAN by construction): Scripture by
-// reference only, never quoted; prayer for leaders whether or not we agree with
-// them; never a party, a candidate, a political outcome or a claim that God
+// reference only, never quoted; prayer for leaders across political lines,
+// whether or not we agree with them; wisdom, justice and peace rather than a
+// party's or candidate's victory, a political outcome or a claim that God
 // chose a movement; never "taking authority" over a government or ruling a
 // nation spiritually — we bring those entrusted with responsibility before God.
-// Qetoret never decides which leaders deserve prayer.
+// The principle is said positively; app policy ("Qetoret never …") lives in
+// About, not in devotional prose.
 export default {
   id: 'authorities',
   meaning: {
-    en: 'Scripture calls believers to pray for everyone, including those in authority: presidents, prime ministers, monarchs, legislators, judges, governors, mayors, civil servants and those who keep the public safe. Qetoret never decides which leaders deserve prayer, never favors a party or a candidate, and never treats prayer as a way to take control of a government. We bring those entrusted with responsibility before God.',
-    fr: 'L’Écriture appelle les croyants à prier pour tous, y compris pour ceux qui exercent l’autorité : présidents, Premiers ministres, souverains, parlementaires, juges, gouverneurs, maires, fonctionnaires et ceux qui veillent à la sécurité publique. Qetoret ne décide jamais quels dirigeants méritent la prière, ne favorise jamais un parti ou un candidat, et ne présente jamais la prière comme un moyen de prendre le contrôle d’un gouvernement. Nous portons devant Dieu ceux à qui une responsabilité est confiée.',
+    en: 'Scripture calls believers to pray for everyone, including those in authority: presidents, prime ministers, monarchs, legislators, judges, governors, mayors, civil servants and those who keep the public safe. Pray for leaders across political lines, seeking wisdom, justice, integrity and peace rather than partisan victory. Prayer is not a way to take control of a government: we bring those entrusted with responsibility before God.',
+    fr: 'L’Écriture appelle les croyants à prier pour tous, y compris pour ceux qui exercent l’autorité : présidents, Premiers ministres, souverains, parlementaires, juges, gouverneurs, maires, fonctionnaires et ceux qui veillent à la sécurité publique. Priez pour les dirigeants de tous bords politiques, en demandant la sagesse, la justice, l’intégrité et la paix plutôt que la victoire d’un camp. La prière n’est pas un moyen de prendre le contrôle d’un gouvernement : nous portons devant Dieu ceux à qui une responsabilité est confiée.',
   },
   themes: [
     {
@@ -92,8 +94,8 @@ export default {
     {
       id: 'disagreement',
       body: {
-        en: 'Pray for leaders across political differences, including those whose decisions you oppose. Qetoret never tells you which political outcome to ask for: bring them before God and ask that His purposes of righteousness, peace and truth prevail.',
-        fr: 'Priez pour les dirigeants au-delà des divergences politiques, y compris ceux dont vous contestez les décisions. Qetoret ne vous dit jamais quel résultat politique demander : portez-les devant Dieu et demandez que ses desseins de justice, de paix et de vérité s’accomplissent.',
+        en: 'Pray for leaders across political differences, including those whose decisions you oppose. Seek wisdom, justice, integrity and peace rather than a political outcome: bring them before God and ask that His purposes of righteousness, peace and truth prevail.',
+        fr: 'Priez pour les dirigeants au-delà des divergences politiques, y compris ceux dont vous contestez les décisions. Cherchez la sagesse, la justice, l’intégrité et la paix plutôt qu’un résultat politique : portez-les devant Dieu et demandez que ses desseins de justice, de paix et de vérité s’accomplissent.',
       },
       refs: ['1 Timothy 2:1-2', 'Matthew 5:44', 'Jeremiah 29:7'],
       prompts: [

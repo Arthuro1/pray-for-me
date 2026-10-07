@@ -91,7 +91,7 @@ export default {
   reflection: [
     { en: 'What kind of spiritual atmosphere are you helping to create at home?', fr: 'Quelle atmosphère spirituelle contribuez-vous à créer chez vous ?' },
     { en: 'Where does your household most need peace or healing?', fr: 'Où votre foyer a-t-il le plus besoin de paix ou de guérison ?' },
-    { en: 'Is there someone in your family you have stopped carrying in prayer?', fr: 'Y a-t-il quelqu’un dans votre famille que vous avez cessé de porter dans la prière ?' },
+    { en: 'Who in your family would you like to bring before God again?', fr: 'Qui, dans votre famille, aimeriez-vous de nouveau porter devant Dieu ?' },
     { en: 'Which spiritual practices could become more natural in your home?', fr: 'Quelles pratiques spirituelles pourraient devenir plus naturelles dans votre foyer ?' },
   ],
 };

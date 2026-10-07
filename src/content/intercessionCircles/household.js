@@ -17,5 +17,5 @@ export default {
     { id: 'generations', title: { en: 'Faith across generations', fr: 'La foi de génération en génération' } },
   ],
   refs: ['Deuteronomy 6:4-9', 'Colossians 3:12-21', 'Joshua 24:15', 'Psalm 127', 'Ephesians 5:21-33', 'Ephesians 6:1-4', '2 Timothy 1:5'],
-  cta: { en: 'Carry my household', fr: 'Porter mon foyer devant Dieu' },
+  cta: { en: 'Pray for my household', fr: 'Prier pour mon foyer' },
 };

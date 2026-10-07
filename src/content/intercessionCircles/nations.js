@@ -21,5 +21,5 @@ export default {
     { id: 'humility', title: { en: 'Our own nation, humbly', fr: 'Notre propre nation, avec humilité' } },
   ],
   refs: ['Psalm 67', 'Revelation 7:9-10', 'Isaiah 2:2-4', 'Matthew 24:14', 'Matthew 28:18-20', 'Acts 1:8'],
-  cta: { en: 'Carry a nation', fr: 'Porter une nation' },
+  cta: { en: 'Pray for a nation', fr: 'Prier pour une nation' },
 };

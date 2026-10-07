@@ -2,7 +2,7 @@
   "self": {
     "formation": "Kristo akiumbika ndani yangu.",
     "heading": "Mwache Kristo aumbike ndani yako.",
-    "summary": "Kabla hatujaubeba ulimwengu katika maombi, Mungu humuunda yule anayeubeba. Omba si tu ili hali ziwe rahisi, bali ili tabia ya Yesu ikue ndani yako.",
+    "summary": "Tunapowaombea wengine, Mungu hutuunda sisi pia. Omba si tu ili hali zibadilike, bali ili tabia ya Kristo ikue ndani yako.",
     "themes": [
       { "title": "Ushirika na Mungu" },
       { "title": "Maandiko na kutafakari" },
@@ -25,7 +25,7 @@
       { "title": "Hekima na ulinzi" },
       { "title": "Imani kutoka kizazi hadi kizazi" }
     ],
-    "cta": "Kuibeba nyumba yangu mbele za Mungu"
+    "cta": "Kuiombea nyumba yangu"
   },
   "people": {
     "formation": "Upendo wa Kristo kwa wale wanaonizunguka.",
@@ -39,12 +39,12 @@
       { "title": "Ushuhuda" },
       { "title": "Upendo kwa vitendo" }
     ],
-    "cta": "Kumbeba mtu katika maombi"
+    "cta": "Kumwombea mtu"
   },
   "church": {
     "formation": "Watu wa Kristo wakiimarishwa na kuundwa.",
     "heading": "Liombee Kanisa ambalo Kristo analipenda.",
-    "summary": "Kanisa ni mali ya Kristo. Jifunze kuombea umoja wake, utakatifu wake, viongozi wake na utume wake kwa urahisi kuliko kulikosoa.",
+    "summary": "Kanisa ni mali ya Kristo. Omba kwa ajili ya umoja wake, utakatifu wake, viongozi wake, uponyaji wake na utume wake, na ulete nuruni kilicho kibaya kwa ukweli na upendo.",
     "themes": [
       { "title": "Umoja" },
       { "title": "Utakatifu" },
@@ -59,7 +59,7 @@
   "authorities": {
     "formation": "Hekima, haki na amani kwa waliokabidhiwa madaraka.",
     "heading": "Waombee wale wanaoongoza.",
-    "summary": "Waumini wameitwa kuwaombea wenye mamlaka, tukikubaliana nao au la. Omba hekima, haki, uadilifu na amani, kamwe si ushindi wa chama au mgombea.",
+    "summary": "Waumini wameitwa kuwaombea wenye mamlaka. Waombee viongozi wa pande zote za kisiasa, ukimwomba Mungu hekima, haki, uadilifu na amani badala ya ushindi wa upande mmoja.",
     "themes": [
       { "title": "Hekima" },
       { "title": "Haki" },
@@ -85,12 +85,12 @@
       { "title": "Waumini wanaoteswa" },
       { "title": "Taifa letu, kwa unyenyekevu" }
     ],
-    "cta": "Kulibeba taifa mbele za Mungu"
+    "cta": "Kuliombea taifa"
   },
   "kingdom": {
     "formation": "Mapenzi na utume wa Mungu juu ya yote.",
     "heading": "Acha Ufalme wake uunde maombi yako.",
-    "summary": "Upeo mpana zaidi wa maombi ni Ufalme wa Mungu na mapenzi yake, si mipango yetu wenyewe. Duara nyingine zote zimo ndani yake, na unaweza kukualika ushiriki katika kile unachokiombea.",
+    "summary": "Upeo mpana zaidi wa maombi ni Ufalme wa Mungu na mapenzi yake, si mipango yetu wenyewe. Duara nyingine zote zimo ndani yake, na maombi haya yanaweza kukuongoza kuchukua hatua za uaminifu.",
     "themes": [
       { "title": "Ufalme wake, si wangu" },
       { "title": "Watenda kazi wa mavuno" },
@@ -107,6 +107,7 @@
     "choose": "Chagua duara ili uone jinsi ya kuliombea.",
     "prayFor": "Omba kwa ajili ya",
     "scripture": "Katika Maandiko",
+    "draftTranslation": "Tafsiri ya awali",
     "explore": "Chunguza duara hili",
     "exploreLess": "Onyesha kidogo",
     "meaning": "Maana yake",
