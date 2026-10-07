@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "Terminar",
   "remainStill": "Quédate quieto.",
   "remainEnded": "Vuelve a tu día en paz.",
-  "placeOnAltarLabel": "Colocar en tu altar",
   "circle_self": "Mi corazón",
   "circle_household": "Mi casa",
   "circle_people": "Mi gente",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "Recordar",
   "carryCircleQuestion": "¿Dónde quieres llevar esta oración en tu altar?",
   "carryCircleHint": "Opcional. Solo tú lo ves, nunca el grupo ni la persona que la pidió.",
-  "carryPlacedIn": "Llevada en «{circle}» — cambiar de círculo",
   "circleNotSet": "Ninguno",
+  "carryChooseCircle": "Elegir un círculo",
+  "filterLabel": "Filtrar",
 };

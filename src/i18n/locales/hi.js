@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "समाप्त करें",
   "remainStill": "चुप हो जाओ।",
   "remainEnded": "शांति के साथ अपने दिन में लौटें।",
-  "placeOnAltarLabel": "अपनी वेदी पर रखें",
   "circle_self": "मेरा मन",
   "circle_household": "मेरा घर",
   "circle_people": "मेरे लोग",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "याद रखना",
   "carryCircleQuestion": "आप इस प्रार्थना को अपनी वेदी पर किस घेरे में उठाना चाहेंगे?",
   "carryCircleHint": "वैकल्पिक। इसे केवल आप देखते हैं — समूह या प्रार्थना माँगने वाला व्यक्ति कभी नहीं।",
-  "carryPlacedIn": "“{circle}” में उठाई गई — घेरा बदलें",
   "circleNotSet": "कोई नहीं",
+  "carryChooseCircle": "घेरा चुनें",
+  "filterLabel": "फ़िल्टर",
 };

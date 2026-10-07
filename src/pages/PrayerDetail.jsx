@@ -289,7 +289,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // ── Community mode: answered mirroring + "I'm praying" toggle ──────────────
   const {
     communityHasReacted, togglingPraying, testimonySent, setTestimonySent,
-    handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying, carriedCopy,
+    handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying,
   } = useCommunityPrayerActions({ communityPrayer, isCommunity, user, authorName, lang });
 
   // Whole-testimony delete (author or group admin). The store drops it from the
@@ -1539,7 +1539,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             lang={lang}
             user={user}
             onTogglePraying={handleTogglePraying}
-            carriedCopy={carriedCopy}
           />
         )}
 

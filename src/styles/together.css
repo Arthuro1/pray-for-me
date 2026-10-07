@@ -68,7 +68,8 @@ button.together-row:hover { background: var(--q-hover); }
 .carried-queue__status svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
 .carried-queue__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); margin-block-start: var(--q-space-4); }
 .carried-queue__remaining { color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
-.carried-queue__circles { margin-block-start: var(--q-space-3); }
+.carried-queue__filter { margin-block-start: var(--q-space-1); }
+.carried-queue__filters { display: grid; gap: var(--q-space-3); padding-block: var(--q-space-2) var(--q-space-1); }
 .carried-queue__all { margin-block-start: var(--q-space-3); }
 .carried-queue__list { margin: 0; padding: 0; list-style: none; }
 
@@ -180,7 +181,6 @@ button.together-row:hover { background: var(--q-hover); }
 }
 
 .together-prayer__carry { position: relative; z-index: 1; margin-inline-start: calc(-1 * var(--q-space-3)); }
-.together-prayer__placement { position: relative; z-index: 1; }
 .together-prayer__meta { display: inline-flex; align-items: center; gap: var(--q-space-3); color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
 
 /* ── Testimonies: remembrance, kept with honour ─────────────────────────── */

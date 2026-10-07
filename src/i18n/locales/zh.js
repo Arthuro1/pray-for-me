@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "结束",
   "remainStill": "安静下来。",
   "remainEnded": "平平安安地回到你的一天。",
-  "placeOnAltarLabel": "放在你的祭坛上",
   "circle_self": "我的心",
   "circle_household": "我的家",
   "circle_people": "我身边的人",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "记念",
   "carryCircleQuestion": "你希望在祭坛上的哪个圈中承载这个祷告？",
   "carryCircleHint": "可选。只有你能看到——小组和提出代祷请求的人都看不到。",
-  "carryPlacedIn": "在“{circle}”中承载 — 更改圈",
   "circleNotSet": "未设置",
+  "carryChooseCircle": "选择代祷圈",
+  "filterLabel": "筛选",
 };

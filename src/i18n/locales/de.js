@@ -1401,7 +1401,6 @@ export default {
   "remainFinish": "Beenden",
   "remainStill": "Sei still.",
   "remainEnded": "Geh in Frieden in deinen Tag.",
-  "placeOnAltarLabel": "Auf deinen Altar legen",
   "circle_self": "Mein Herz",
   "circle_household": "Mein Haus",
   "circle_people": "Meine Menschen",
@@ -1521,6 +1520,7 @@ export default {
   "rememberLabel": "Erinnern",
   "carryCircleQuestion": "Wo möchtest du dieses Gebet auf deinem Altar tragen?",
   "carryCircleHint": "Optional. Nur du siehst das – nie die Gruppe oder die Person, die darum gebeten hat.",
-  "carryPlacedIn": "Getragen in „{circle}“ – Kreis ändern",
   "circleNotSet": "Keiner",
+  "carryChooseCircle": "Kreis wählen",
+  "filterLabel": "Filtern",
 };

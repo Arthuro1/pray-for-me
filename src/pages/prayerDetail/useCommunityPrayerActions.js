@@ -4,18 +4,21 @@ import useCommunityStore from '../../store/communityStore';
 import usePrayerStore from '../../store/prayerStore';
 import { toast } from '../../store/toastStore';
 import { t } from '../../i18n';
+import { canPlaceCarried, placeCarriedPrayer } from '../../store/carryPlacementStore';
+
+// Long enough to read the confirmation and reach its one button; placing the
+// prayer stays possible later from its own page in the Journal.
+const CHOOSE_CIRCLE_TTL = 10000;
 
 // Actions on an open COMMUNITY prayer: marking it answered / resuming (mirrored
 // onto the viewer's personal source or saved copy), and the "I'm praying" toggle
-// (which symmetrically adds/removes the personal copy). Owns the togglingPraying
-// and testimonySent flags; setTestimonySent is returned for the separate
-// community-testimony composer that stays in PrayerDetail. Also returns the
-// viewer's carried copy and whether they carried it just now, for the quiet
-// "Place on your altar" follow-up. No-op in personal mode.
+// (which symmetrically adds/removes the personal copy, and offers to place a new
+// copy in one of the carrier's own circles). Owns the togglingPraying and
+// testimonySent flags; setTestimonySent is returned for the separate
+// community-testimony composer that stays in PrayerDetail. No-op in personal mode.
 export default function useCommunityPrayerActions({ communityPrayer, isCommunity, user, authorName, lang }) {
   const [togglingPraying, setTogglingPraying] = useState(false);
   const [testimonySent, setTestimonySent] = useState(false);
-  const [justCarried, setJustCarried] = useState(false);
 
   const { userReactions, groups, toggleReaction, setCommunityAnswered, addTestimony } = useCommunityStore(
     useShallow((s) => ({
@@ -114,11 +117,14 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
       const groupName = groups.find((g) => g.id === communityPrayer.group_id)?.name || null;
       const res = await addFromCommunity(communityPrayer, groupName);
       if (!res?.error) {
-        setJustCarried(true);
-        toast.success(t(lang, 'carryAdded'));
+        // Carrying is done. Placing it on one's own altar is offered once, in
+        // the confirmation itself — never a second step on the group's wall.
+        const copy = res?.prayer;
+        toast.success(t(lang, 'carryAdded'), canPlaceCarried(copy)
+          ? { ttl: CHOOSE_CIRCLE_TTL, action: { label: t(lang, 'carryChooseCircle'), onClick: () => placeCarriedPrayer(copy.id) } }
+          : undefined);
       }
     } else if (wasReacted) {
-      setJustCarried(false);
       if (carriedCopy) {
         softDeletePrayer(carriedCopy.id);
         toast.success(t(lang, 'carryRemoved'));
@@ -130,6 +136,5 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
   return {
     communityHasReacted, togglingPraying, testimonySent, setTestimonySent,
     handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying,
-    carriedCopy, justCarried,
   };
 }

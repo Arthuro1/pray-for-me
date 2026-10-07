@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "終える",
   "remainStill": "静まりなさい。",
   "remainEnded": "平安のうちに一日へ戻りましょう。",
-  "placeOnAltarLabel": "祭壇に置く",
   "circle_self": "わたしの心",
   "circle_household": "わたしの家",
   "circle_people": "身近な人々",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "覚える",
   "carryCircleQuestion": "この祈りを、祭壇のどのサークルで覚えますか？",
   "carryCircleHint": "任意。これはあなただけに表示され、グループや祈りを求めた人には表示されません。",
-  "carryPlacedIn": "「{circle}」で覚えています — サークルを変更",
   "circleNotSet": "未設定",
+  "carryChooseCircle": "サークルを選ぶ",
+  "filterLabel": "絞り込む",
 };

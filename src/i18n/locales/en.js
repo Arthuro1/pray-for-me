@@ -1405,7 +1405,6 @@ export default {
   "remainFinish": "Finish",
   "remainStill": "Be still.",
   "remainEnded": "Return to your day in peace.",
-  "placeOnAltarLabel": "Place on your altar",
   "circle_self": "My heart",
   "circle_household": "My house",
   "circle_people": "My people",
@@ -1525,6 +1524,7 @@ export default {
   "rememberLabel": "Remember",
   "carryCircleQuestion": "Where would you like to carry this on your altar?",
   "carryCircleHint": "Optional. Only you see this — never the group or the person who asked.",
-  "carryPlacedIn": "Carried in {circle} — change circle",
   "circleNotSet": "Not set",
+  "carryChooseCircle": "Choose a circle",
+  "filterLabel": "Filter",
 };

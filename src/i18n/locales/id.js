@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "Selesai",
   "remainStill": "Diamlah.",
   "remainEnded": "Kembalilah ke hari Anda dengan damai.",
-  "placeOnAltarLabel": "Tempatkan di mezbah Anda",
   "circle_self": "Hatiku",
   "circle_household": "Rumahku",
   "circle_people": "Orang-orangku",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "Mengingat",
   "carryCircleQuestion": "Di mana Anda ingin membawa doa ini di mezbah Anda?",
   "carryCircleHint": "Opsional. Hanya Anda yang melihatnya — tidak pernah kelompok atau orang yang memintanya.",
-  "carryPlacedIn": "Dibawa dalam “{circle}” — ubah lingkaran",
   "circleNotSet": "Belum dipilih",
+  "carryChooseCircle": "Pilih lingkaran",
+  "filterLabel": "Saring",
 };

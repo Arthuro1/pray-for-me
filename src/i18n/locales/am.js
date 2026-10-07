@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "ጨርስ",
   "remainStill": "ጸጥ ይበሉ።",
   "remainEnded": "በሰላም ወደ ቀንዎ ይመለሱ።",
-  "placeOnAltarLabel": "በመሠዊያዎ ላይ ያስቀምጡ",
   "circle_self": "ልቤ",
   "circle_household": "ቤቴ",
   "circle_people": "ወገኖቼ",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "ማሰብ",
   "carryCircleQuestion": "ይህን ጸሎት በመሠዊያዎ ላይ በየትኛው ክበብ መሸከም ይፈልጋሉ?",
   "carryCircleHint": "አማራጭ ነው። ይህን የሚያዩት እርስዎ ብቻ ነዎት — ቡድኑም ሆነ ጸሎቱን የጠየቀው ሰው አያዩትም።",
-  "carryPlacedIn": "በ«{circle}» ውስጥ ተይዟል — ክበብ ይቀይሩ",
   "circleNotSet": "አልተመረጠም",
+  "carryChooseCircle": "ክበብ ይምረጡ",
+  "filterLabel": "አጣራ",
 };

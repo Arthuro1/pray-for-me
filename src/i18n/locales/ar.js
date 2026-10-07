@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "إنهاء",
   "remainStill": "اهدأ.",
   "remainEnded": "عُد إلى يومك بسلام.",
-  "placeOnAltarLabel": "ضعها على مذبحك",
   "circle_self": "قلبي",
   "circle_household": "بيتي",
   "circle_people": "أحبّائي",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "تذكّر",
   "carryCircleQuestion": "أين تودّ أن تحمل هذه الصلاة على مذبحك؟",
   "carryCircleHint": "اختياري. أنت وحدك ترى ذلك، لا المجموعة ولا الشخص الذي طلب الصلاة.",
-  "carryPlacedIn": "محمولة في «{circle}» — تغيير الدائرة",
   "circleNotSet": "غير محدَّد",
+  "carryChooseCircle": "اختر دائرة",
+  "filterLabel": "تصفية",
 };

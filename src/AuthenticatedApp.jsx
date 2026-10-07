@@ -7,6 +7,7 @@ import Layout from './components/Layout';
 import PrayerForm from './components/PrayerForm';
 import Toaster from './components/shared/Toaster';
 import ConfirmHost from './components/shared/ConfirmHost';
+import CarryPlacementHost from './components/circles/CarryPlacementHost';
 import OfflineBanner from './components/shared/OfflineBanner';
 import SyncIndicator from './components/shared/SyncIndicator';
 import Onboarding from './components/Onboarding';
@@ -552,6 +553,7 @@ export default function AuthenticatedApp({
       <SyncIndicator />
       <Toaster />
       <ConfirmHost />
+      <CarryPlacementHost />
       <Analytics />
       <SpeedInsights />
     </>

@@ -1405,7 +1405,6 @@ export default {
   "remainFinish": "Terminer",
   "remainStill": "Tiens-toi tranquille.",
   "remainEnded": "Retourne à ta journée dans la paix.",
-  "placeOnAltarLabel": "Placer sur votre autel",
   "circle_self": "Mon cœur",
   "circle_household": "Ma maison",
   "circle_people": "Mes proches",
@@ -1525,6 +1524,7 @@ export default {
   "rememberLabel": "Se souvenir",
   "carryCircleQuestion": "Où souhaitez-vous porter cette prière sur votre autel ?",
   "carryCircleHint": "Facultatif. Visible par vous uniquement — jamais par le groupe ni par la personne qui l'a demandée.",
-  "carryPlacedIn": "Portée dans « {circle} » — changer de cercle",
   "circleNotSet": "Aucun",
+  "carryChooseCircle": "Choisir un cercle",
+  "filterLabel": "Filtrer",
 };

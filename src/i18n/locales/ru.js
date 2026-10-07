@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "Завершить",
   "remainStill": "Остановитесь.",
   "remainEnded": "Возвращайтесь к своему дню с миром.",
-  "placeOnAltarLabel": "Поместить на алтарь",
   "circle_self": "Моё сердце",
   "circle_household": "Мой дом",
   "circle_people": "Мои близкие",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "Помнить",
   "carryCircleQuestion": "В каком круге на вашем алтаре вы хотите нести эту молитву?",
   "carryCircleHint": "Необязательно. Это видите только вы — ни группа, ни человек, который просил о молитве.",
-  "carryPlacedIn": "Несёте в круге «{circle}» — изменить круг",
   "circleNotSet": "Не выбран",
+  "carryChooseCircle": "Выбрать круг",
+  "filterLabel": "Фильтр",
 };

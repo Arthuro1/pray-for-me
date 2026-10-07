@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "마치기",
   "remainStill": "잠잠하라.",
   "remainEnded": "평안 가운데 하루로 돌아가세요.",
-  "placeOnAltarLabel": "제단에 두기",
   "circle_self": "나의 마음",
   "circle_household": "나의 집",
   "circle_people": "나의 사람들",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "기억하기",
   "carryCircleQuestion": "이 기도를 제단의 어느 원에서 품고 싶으신가요?",
   "carryCircleHint": "선택 사항입니다. 나만 볼 수 있으며, 그룹이나 기도를 요청한 사람은 볼 수 없습니다.",
-  "carryPlacedIn": "‘{circle}’에서 품는 중 — 원 변경",
   "circleNotSet": "선택 안 함",
+  "carryChooseCircle": "원 선택",
+  "filterLabel": "필터",
 };

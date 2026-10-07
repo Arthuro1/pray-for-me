@@ -3,17 +3,16 @@ import useCommunityStore from '../store/communityStore';
 import { t, tp } from '../i18n';
 import Avatar from './shared/Avatar';
 import CarryButton from './shared/CarryButton';
-import CarryPlacement from './circles/CarryPlacement';
 
 // The primary "pray together" affordance on a community prayer: "Carry this
 // prayer" — deliberately taking a request into one's own life of intercession
-// (it joins "Prayers you're carrying"), never a like. While carrying, a quiet
-// "Place on your altar" (or the carrier's own circle) sits beside it. Beneath,
+// (it joins "Prayers you're carrying"), never a like, and one action only (the
+// carrier's own circle is offered in the confirmation toast). Beneath,
 // quietly, the faces of a few who carry it too and how many they are. The
 // count is information only: nothing ranks, sorts or celebrates requests by how
 // many carry them. Toggle side effects (the saved copy, following) stay in the
 // parent; this only renders.
-export default function PrayTogetherCard({ communityPrayer, count, hasReacted, busy, lang, user, onTogglePraying, carriedCopy = null }) {
+export default function PrayTogetherCard({ communityPrayer, count, hasReacted, busy, lang, user, onTogglePraying }) {
   const fetchReactors = useCommunityStore((s) => s.fetchReactors);
   const [reactors, setReactors] = useState([]);
 
@@ -33,7 +32,6 @@ export default function PrayTogetherCard({ communityPrayer, count, hasReacted, b
     <section className="carry-section" aria-labelledby="carry-section-label">
       <p id="carry-section-label" className="section-label">{t(lang, 'prayTogether')}</p>
       <CarryButton carrying={hasReacted} busy={busy} onToggle={onTogglePraying} lang={lang} className="carry-section__button" />
-      {hasReacted && <CarryPlacement copy={carriedCopy} offer lang={lang} />}
       {/* A div, not a <p>: the avatars render block elements. */}
       <div className="carry-section__presence">
         {faces.length > 0 && (

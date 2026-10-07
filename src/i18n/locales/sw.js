@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "Maliza",
   "remainStill": "Tulia.",
   "remainEnded": "Rudi kwenye siku yako kwa amani.",
-  "placeOnAltarLabel": "Weka kwenye madhabahu yako",
   "circle_self": "Moyo wangu",
   "circle_household": "Nyumba yangu",
   "circle_people": "Watu wangu",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "Kukumbuka",
   "carryCircleQuestion": "Ungependa kulibeba ombi hili katika duara gani kwenye madhabahu yako?",
   "carryCircleHint": "Si lazima. Ni wewe tu unayeona hili — kamwe si kikundi wala mtu aliyeomba.",
-  "carryPlacedIn": "Linabebwa katika “{circle}” — badilisha duara",
   "circleNotSet": "Hakuna",
+  "carryChooseCircle": "Chagua duara",
+  "filterLabel": "Chuja",
 };

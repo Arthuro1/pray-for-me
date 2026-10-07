@@ -182,21 +182,24 @@ approvals.
   `updatePrayer(id, { circle })`). A carried copy is placeable too, with the
   carrier's question ("Where would you like to carry this on your altar?") and
   "Only you see this — never the group or the person who asked."
-- **Carry a group request** (`components/circles/CarryPlacement.jsx`, used by
-  `GroupPrayerRow` and `PrayTogetherCard`): carrying stays one tap. While the
-  person carries it, a quiet link follows the Carry button — "Place on your
-  altar" (on a wall row only right after carrying, on the request's own page
-  always), or the carrier's own circle once placed, which reopens the picker.
-  It writes `updatePrayer(copy.id, { circle })` on the carrier's encrypted copy
-  (`useCommunityPrayerActions` returns `carriedCopy` and `justCarried`) and
-  nothing else; the author's circle is never copied (`communityToPersonalInsert`)
-  and no community table, RPC or action sees it. Offered only when the copy can
-  hold private metadata and is readable on this device.
-- **Prayers you're carrying** (`components/IntercessionQueue.jsx`): once
-  carried prayers are placed in more than one circle (or one circle beside
-  unplaced ones), a quiet row of circle chips narrows what the session walks,
-  together with the source filter (`queueCircles`, `filterQueueByCircle` in
-  `lib/intercession.js`). Group walls themselves are never filtered by circle.
+- **Carry a group request** (`GroupPrayerRow`, `PrayTogetherCard`): carrying is
+  ONE action, and the wall row and the request's page show only the Carry
+  button — never the carrier's circle and never a second control. Right after
+  carrying, the "Added to the prayers you're carrying" toast offers "Choose a
+  circle" (`useCommunityPrayerActions`, 10 s), which opens the app-wide
+  `components/circles/CarryPlacementHost.jsx` (`store/carryPlacementStore.js`,
+  like ConfirmHost). It writes `updatePrayer(copy.id, { circle })` on the
+  carrier's encrypted copy and nothing else; the author's circle is never
+  copied (`communityToPersonalInsert`) and no community table, RPC or action
+  sees it. Offered only when the copy can hold private metadata and is readable
+  on this device (`canPlaceCarried`). Later, the copy's own page in the Journal
+  places or moves it like any prayer.
+- **Prayers you're carrying** (`components/IntercessionQueue.jsx`): praying
+  needs no setup. One folded "Filter" (offered only when there is something to
+  choose between) holds the source control and, once carried prayers sit in
+  more than one circle (or one circle beside unplaced ones), the circle chips
+  (`queueCircles`, `filterQueueByCircle` in `lib/intercession.js`); folded, its
+  label names what narrows the walk. Group walls are never filtered by circle.
 - **Remember**: an answered prayer keeps its circle — the row in the Journal's
   Answered segment names it beside "Testimony", the detail names it, and
   "By circle" works on the Answered segment. Nothing interprets

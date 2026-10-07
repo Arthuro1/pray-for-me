@@ -4,7 +4,6 @@ import { timeAgo } from '../../utils/date';
 import { communityAuthor, getAuthorName } from '../../utils/user';
 import Avatar from '../../components/shared/Avatar';
 import CarryButton from '../../components/shared/CarryButton';
-import CarryPlacement from '../../components/circles/CarryPlacement';
 import LockedNotice from '../../components/LockedNotice';
 import RichText from '../../components/rich/RichText';
 import { StatusLabel } from '../../components/shared/Primitives';
@@ -14,13 +13,13 @@ import useCommunityPrayerActions from '../prayerDetail/useCommunityPrayerActions
 // asked, what they asked, and the one thing to do with it — carry it. The
 // count of those carrying stays secondary; nothing here is a like, a rank or a
 // reaction. Carrying from the list is the same act as on the prayer's page
-// (it joins "Prayers you're carrying"); right after carrying, a quiet "Place on
-// your altar" follows, and a placed request names the carrier's own circle —
-// seen by the carrier alone. An answered request shows that it was
-// answered instead, and is never struck through. What a member wrote keeps
-// its own direction (dir="auto"), whatever the interface language.
+// (it joins "Prayers you're carrying"), and stays ONE action: the carrier's own
+// circle is offered in the confirmation toast, never as a second control on
+// the wall. An answered request shows that it was answered instead, and is
+// never struck through. What a member wrote keeps its own direction
+// (dir="auto"), whatever the interface language.
 export default function GroupPrayerRow({ prayer, user, lang, avatar, onOpen }) {
-  const { communityHasReacted, togglingPraying, handleTogglePraying, carriedCopy, justCarried } = useCommunityPrayerActions({
+  const { communityHasReacted, togglingPraying, handleTogglePraying } = useCommunityPrayerActions({
     communityPrayer: prayer,
     isCommunity: true,
     user,
@@ -57,20 +56,15 @@ export default function GroupPrayerRow({ prayer, user, lang, avatar, onOpen }) {
         {prayer.is_answered ? (
           <StatusLabel tone="answered">{t(lang, 'answered')}</StatusLabel>
         ) : !prayer._locked && (
-          <>
-            <CarryButton
-              variant="quiet"
-              carrying={communityHasReacted}
-              busy={togglingPraying}
-              onToggle={handleTogglePraying}
-              lang={lang}
-              className="together-prayer__carry"
-              aria-describedby={titleId}
-            />
-            {communityHasReacted && (
-              <CarryPlacement copy={carriedCopy} offer={justCarried} lang={lang} className="together-prayer__placement" />
-            )}
-          </>
+          <CarryButton
+            variant="quiet"
+            carrying={communityHasReacted}
+            busy={togglingPraying}
+            onToggle={handleTogglePraying}
+            lang={lang}
+            className="together-prayer__carry"
+            aria-describedby={titleId}
+          />
         )}
         <span className="together-prayer__meta">
           {carrying > 0 && <span>{carrying} {t(lang, 'prayingCount')}</span>}

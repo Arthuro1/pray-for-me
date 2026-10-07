@@ -55,10 +55,11 @@ import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
 import { supabase } from '../lib/supabase';
 import { guides } from '../content/teaching';
 import CirclePicker from '../components/CirclePicker';
-import { CarryPlacementLink } from '../components/circles/CarryPlacement';
+import Toaster from '../components/shared/Toaster';
+import useToastStore, { toast } from '../store/toastStore';
 import PlaceCircleModal from '../components/circles/PlaceCircleModal';
 import { Modal, PageHeader } from '../components/shared/Primitives';
-import { dirFor, isLocaleLoaded, loadLocale } from '../i18n';
+import { dirFor, isLocaleLoaded, loadLocale, t } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';
 
@@ -283,26 +284,28 @@ const REACTORS = [
 ];
 
 // "Carry this prayer" as a group member meets it: before and after carrying,
-// then placing it on one's own altar. The placement link needs the account key
-// in the app, which a preview never fakes — so it is shown here on its own, in
-// both states, with the carrier's dialog (`?open=1`).
+// the confirmation that offers the carrier's own circle, and the carrier's
+// dialog (`?open=1`). Placing needs the account key in the app, which a
+// preview never fakes — so the toast and dialog are shown here on their own.
 function CarryPreview({ lang, open: initiallyOpen }) {
   // Before the cards mount, so their first fetch already sees the faces.
   useState(() => useCommunityStore.setState({ fetchReactors: async (id) => ({ reactors: id === 'c2' ? REACTORS : [] }) }));
   const [open, setOpen] = useState(initiallyOpen);
   const [circle, setCircle] = useState('people');
   const user = useAuthStore.getState().user;
+  useEffect(() => {
+    // Replace rather than add: StrictMode runs this effect twice in dev.
+    useToastStore.setState({ toasts: [] });
+    toast.success(t(lang, 'carryAdded'), { ttl: 600000, action: { label: t(lang, 'carryChooseCircle'), onClick: () => setOpen(true) } });
+  }, [lang]);
   return (
     <div className="phase-page">
       <div className="phase-page__shell"><PageHeader eyebrow="Home group" title="Please pray for my mother" /></div>
       <div className="phase-content grid gap-10">
         <PrayTogetherCard communityPrayer={{ id: 'c1' }} count={0} hasReacted={false} busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
         <PrayTogetherCard communityPrayer={{ id: 'c2' }} count={8} hasReacted busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
-        <div className="flex flex-wrap gap-6">
-          <CarryPlacementLink circle={null} lang={lang} onOpen={() => setOpen(true)} />
-          <CarryPlacementLink circle={circle} lang={lang} onOpen={() => setOpen(true)} />
-        </div>
       </div>
+      <Toaster />
       {open && <PlaceCircleModal value={circle} onPlace={setCircle} onClose={() => setOpen(false)} lang={lang} carried idPrefix="design-carry-circle" />}
     </div>
   );

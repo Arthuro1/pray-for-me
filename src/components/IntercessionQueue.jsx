@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, SlidersHorizontal } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
@@ -24,9 +24,9 @@ import RiseMark from './shared/RiseMark';
 // collapsed disclosure. It reuses the ordinary PrayerSession and per-prayer
 // completions — leaving midway keeps real progress, and reopening resumes with
 // the first unfinished request. Renders nothing when the queue is empty, so
-// Grace never sees it. Once the user has placed carried prayers in circles, a
-// quiet circle filter narrows the walk — by the carrier's own placement, and
-// never by anything the person who asked chose.
+// Grace never sees it. One folded "Filter" can narrow the walk by source and,
+// once carried prayers sit in different circles, by circle — the carrier's own
+// placement, never anything the person who asked chose.
 export default function IntercessionQueue({ lang }) {
   const { prayers, categories, completions, markPrayedOn } = usePrayerStore(
     useShallow((s) => ({
@@ -43,6 +43,7 @@ export default function IntercessionQueue({ lang }) {
   const { tr } = useTranslationStore();
   const [filter, setFilter] = useState('all');
   const [circle, setCircle] = useState('all');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   // Snapshot of the session's prayers, fixed when it starts — completions
   // recorded while praying must not reshuffle the walk mid-session.
   const [session, setSession] = useState(null);
@@ -79,6 +80,11 @@ export default function IntercessionQueue({ lang }) {
     { value: 'personal', label: t(lang, 'srcPersonal') },
     { value: 'groups', label: t(lang, 'srcGroups') },
   ];
+  const canFilter = sources.count > 1 || circles.length > 0;
+  const activeFilters = [
+    filter !== 'all' ? FILTERS.find((f) => f.value === filter)?.label : null,
+    activeCircle !== 'all' ? t(lang, circleLabelKey(activeCircle)) : null,
+  ].filter(Boolean);
 
   const sessionOverlay = session && session.length > 0 && (
     <PrayerSession
@@ -114,23 +120,43 @@ export default function IntercessionQueue({ lang }) {
 
       <SectionHeader id="carried-queue-title" as="h2" eyebrow={t(lang, 'intercessionTitle')} supporting={t(lang, 'intercessionDueSub')} />
 
-      {/* Source filters exist only when there is more than one source to
-          filter between — no permanent filter bar for a single-source queue.
+      {/* Praying needs no setup: the session walks everything due unless the
+          person asks to narrow it. Source and circle wait behind ONE quiet
+          "Filter", offered only when there is something to choose between;
+          its label says what is narrowing the walk while it is folded.
           Filtering changes only what the session walks, never completion data. */}
-      {sources.count > 1 && (
-        <SegmentedControl label={t(lang, 'intercessionTitle')} value={filter} onChange={setFilter} options={FILTERS} className="mt-1" />
-      )}
-      {circles.length > 0 && (
-        <div className="q-chips carried-queue__circles" role="group" aria-label={t(lang, 'circleFieldLabel')}>
-          <button type="button" aria-pressed={activeCircle === 'all'} onClick={() => setCircle('all')} className="q-chip pressable">
-            {t(lang, 'all')}
-          </button>
-          {circles.map((c) => (
-            <button key={c} type="button" aria-pressed={activeCircle === c} onClick={() => setCircle(c)} className="q-chip circle-chip pressable">
-              <CircleGlyph circle={c} size={16} selected={activeCircle === c} />
-              <span>{t(lang, circleLabelKey(c))}</span>
-            </button>
-          ))}
+      {canFilter && (
+        <div className="carried-queue__filter">
+          <QuietButton
+            icon={SlidersHorizontal}
+            iconSize={16}
+            aria-expanded={filtersOpen}
+            aria-controls="carried-queue-filters"
+            onClick={() => setFiltersOpen((open) => !open)}
+            className="-ms-3"
+          >
+            {[t(lang, 'filterLabel'), ...activeFilters].join(' · ')}
+          </QuietButton>
+          {filtersOpen && (
+            <div id="carried-queue-filters" className="carried-queue__filters">
+              {sources.count > 1 && (
+                <SegmentedControl label={t(lang, 'journalSource')} value={filter} onChange={setFilter} options={FILTERS} />
+              )}
+              {circles.length > 0 && (
+                <div className="q-chips" role="group" aria-label={t(lang, 'circleFieldLabel')}>
+                  <button type="button" aria-pressed={activeCircle === 'all'} onClick={() => setCircle('all')} className="q-chip pressable">
+                    {t(lang, 'all')}
+                  </button>
+                  {circles.map((c) => (
+                    <button key={c} type="button" aria-pressed={activeCircle === c} onClick={() => setCircle(c)} className="q-chip circle-chip pressable">
+                      <CircleGlyph circle={c} size={16} selected={activeCircle === c} />
+                      <span>{t(lang, circleLabelKey(c))}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 

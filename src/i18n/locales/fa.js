@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "پایان",
   "remainStill": "آرام باشید.",
   "remainEnded": "با آرامش به روز خود بازگردید.",
-  "placeOnAltarLabel": "قرار دادن روی مذبح",
   "circle_self": "دل من",
   "circle_household": "خانهٔ من",
   "circle_people": "عزیزان من",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "به یاد آوردن",
   "carryCircleQuestion": "دوست دارید این دعا را در کدام دایره روی مذبح خود حمل کنید؟",
   "carryCircleHint": "اختیاری. فقط شما این را می‌بینید، نه گروه و نه کسی که درخواست دعا کرده است.",
-  "carryPlacedIn": "در «{circle}» حمل می‌شود — تغییر دایره",
   "circleNotSet": "انتخاب نشده",
+  "carryChooseCircle": "انتخاب دایره",
+  "filterLabel": "فیلتر",
 };

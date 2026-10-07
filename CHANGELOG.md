@@ -25,6 +25,14 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   after it; catalogue rows no longer name a circle; a plan's details say only
   "Forms prayer in …" (key `planAlsoConnects` removed; `exploreByCircle`
   reworded in all 16 languages).
+- **Carry this prayer** is one action. The quiet "Place on your altar" link
+  beside Carry on group walls and request pages is gone; instead the "Added to
+  the prayers you're carrying" confirmation offers "Choose a circle" (new key
+  `carryChooseCircle`). The group's wall never shows the carrier's circle.
+  Privacy is unchanged: the circle is still written only to the carrier's own
+  encrypted copy. Removed keys `carryPlacedIn`, `placeOnAltarLabel`.
+- **Prayers you're carrying**: the source switch and the circle chips moved
+  behind one "Filter" (new key `filterLabel`), so praying needs no setup.
 
 ### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
 

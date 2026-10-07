@@ -1400,7 +1400,6 @@ export default {
   "remainFinish": "Tapusin",
   "remainStill": "Tumahimik ka.",
   "remainEnded": "Bumalik sa iyong araw nang may kapayapaan.",
-  "placeOnAltarLabel": "Ilagay sa iyong altar",
   "circle_self": "Aking puso",
   "circle_household": "Aking tahanan",
   "circle_people": "Aking mga tao",
@@ -1520,6 +1519,7 @@ export default {
   "rememberLabel": "Alalahanin",
   "carryCircleQuestion": "Saan mo gustong pasanin ang panalanging ito sa iyong altar?",
   "carryCircleHint": "Opsyonal. Ikaw lang ang nakakakita nito — hindi kailanman ang grupo o ang taong humiling.",
-  "carryPlacedIn": "Pinapasan sa “{circle}” — palitan ang bilog",
   "circleNotSet": "Wala pa",
+  "carryChooseCircle": "Pumili ng bilog",
+  "filterLabel": "I-filter",
 };
