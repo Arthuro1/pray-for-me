@@ -30,6 +30,7 @@ import authorities from './authorities';
 import nations from './nations';
 import kingdom from './kingdom';
 import { CIRCLES } from '../../lib/circles';
+import { pick } from '../teaching/pick';
 
 // Inner to outer, in CIRCLES order (asserted by the contract test).
 export const CIRCLE_CONTENT = Object.freeze([self, household, people, church, authorities, nations, kingdom]);
@@ -42,10 +43,11 @@ export const circleContent = (circle) => BY_ID.get(circle) ?? null;
 // "Scripture" section). Each circle lists its most central passages first.
 export const KEY_REF_COUNT = 3;
 
-// Words the teaching panel itself needs, in the same two layers. The first two
+// Words the teaching panel itself needs, in the same two layers. The first three
 // appear on every short panel and are required in all 16 languages; the rest
 // belong to the deep layer and fall back to English while it is a draft.
 export const CIRCLE_UI = Object.freeze({
+  choose: { en: 'Choose a circle to see how to pray for it.', fr: 'Choisissez un cercle pour voir comment prier.' },
   prayFor: { en: 'Pray for', fr: 'Prier pour' },
   scripture: { en: 'In Scripture', fr: 'Dans l’Écriture' },
   explore: { en: 'Explore this circle', fr: 'Explorer ce cercle' },
@@ -56,7 +58,7 @@ export const CIRCLE_UI = Object.freeze({
   draft: { en: 'Draft · review pending', fr: 'Brouillon · relecture en attente' },
 });
 
-export const SHORT_UI_KEYS = Object.freeze(['prayFor', 'scripture']);
+export const SHORT_UI_KEYS = Object.freeze(['choose', 'prayFor', 'scripture']);
 
 // The deep layer of a circle, fetched only when someone opens it. A circle
 // without an entry here has no deep layer yet.
@@ -120,4 +122,56 @@ export function withOverlay(source, overlay, lang) {
 export function circlesForTheme(themeId) {
   if (!themeId) return [];
   return CIRCLES.filter((circle) => circleContent(circle)?.themes.some((theme) => theme.id === themeId));
+}
+
+// ── Ready-to-render text ────────────────────────────────────────────────
+// What components receive: plain strings in one language (the overlay folded
+// in, English as the last fallback), with ids and references untouched.
+
+export function localizeCircle(circle, lang, overlay) {
+  const content = circleContent(circle);
+  if (!content) return null;
+  const merged = withOverlay(content, overlay?.[circle], lang);
+  return {
+    id: circle,
+    formation: pick(merged.formation, lang),
+    heading: pick(merged.heading, lang),
+    summary: pick(merged.summary, lang),
+    cta: pick(merged.cta, lang),
+    themes: merged.themes.map((theme) => ({ id: theme.id, title: pick(theme.title, lang) })),
+    refs: content.refs,
+  };
+}
+
+export function localizeCircleUi(lang, overlay) {
+  const merged = withOverlay(CIRCLE_UI, overlay?.ui, lang);
+  return Object.fromEntries(Object.entries(merged).map(([key, field]) => [key, pick(field, lang)]));
+}
+
+// The deep layer is authored in English and French only; every other language
+// reads the English (the review gate decides whether it is shown at all).
+export function localizeCircleDeep(deep, lang) {
+  if (!deep) return null;
+  const prompts = (list) => (list || []).map((prompt) => pick(prompt, lang));
+  return {
+    id: deep.id,
+    meaning: pick(deep.meaning, lang),
+    framework: deep.framework
+      ? { title: pick(deep.framework.title, lang), note: pick(deep.framework.note, lang) }
+      : null,
+    themes: deep.themes.map((theme) => ({
+      id: theme.id,
+      body: pick(theme.body, lang),
+      refs: theme.refs,
+      prompts: prompts(theme.prompts),
+      facets: (theme.facets || []).map((facet) => ({
+        id: facet.id,
+        title: pick(facet.title, lang),
+        body: pick(facet.body, lang),
+        ref: facet.ref,
+        prompts: prompts(facet.prompts),
+      })),
+    })),
+    reflection: deep.reflection.map((question) => pick(question, lang)),
+  };
 }

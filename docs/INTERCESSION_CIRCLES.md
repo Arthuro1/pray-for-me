@@ -116,6 +116,18 @@ named human writes a sign-off.**
 The short layer ships without this gate; its 14 non-authored languages are
 AI-drafted and need a native review like the rest of the app copy.
 
+## Surfaces
+
+- **Landing** (`src/pages/landing/LandingCircles.jsx`): rings and list share one
+  state (`selected`, `preview`; `active = preview ?? selected`). The list is the
+  accessible control (buttons with `aria-expanded`); the SVG is `aria-hidden`
+  with invisible hit bands. The panel is `components/circles/CircleTeaching.jsx`
+  fed by `hooks/useCircleTeaching.js`. Scripture references load the app's
+  reader on demand (`LandingScriptureRef.jsx`). The call to pray opens the guest
+  flow with `{ circle, prompt }` (`lib/guestPrayerContext.js`); the circle is
+  kept in the encrypted guest draft and placed on the imported prayer.
+- **App**: the prayer composer, Journal, prayer detail and Today — see below.
+
 ## Themes and categories
 
 Circles are suggested only from **authored** themes (`circlesForTheme`) and a

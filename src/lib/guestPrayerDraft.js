@@ -20,6 +20,7 @@
 //   • CryptoKey persistence is feature-detected. Where it isn't available we fall
 //     back to memory-only and fail safely (the draft simply won't survive a
 //     reload) — we never downgrade to plaintext-at-rest.
+import { normalizeCircle } from './circles';
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { encryptJson, decryptJson } from './crypto/e2ee';
 
@@ -93,14 +94,15 @@ async function peekCreatedAt() {
 
 // Persist (encrypt) the guest draft. Pass the same `id` when re-saving so marking
 // a prayer prayed can't spawn a second prayer on import. Returns { id }.
-export async function saveGuestDraft({ id, title, completed = false, contentLanguage = null }) {
+export async function saveGuestDraft({ id, title, completed = false, contentLanguage = null, circle = null }) {
   const draftId = id || newId();
   const createdAt = (await peekCreatedAt()) || Date.now();
   const key = await freshKey();
-  // The subject / completion / writing language live only inside the ciphertext.
+  // The subject / completion / writing language / Intercession Circle live
+  // only inside the ciphertext.
   const payload = await encryptJson(
     key,
-    { id: draftId, title, completed: !!completed, contentLanguage },
+    { id: draftId, title, completed: !!completed, contentLanguage, circle: normalizeCircle(circle) },
     draftContext(draftId),
   );
   const record = { v: DRAFT_VERSION, id: draftId, createdAt, payload };
@@ -129,7 +131,7 @@ export async function saveGuestDraft({ id, title, completed = false, contentLang
 export async function markGuestDraftPrayed() {
   const draft = await loadGuestDraft();
   if (!draft) return;
-  await saveGuestDraft({ id: draft.id, title: draft.title, completed: true, contentLanguage: draft.contentLanguage });
+  await saveGuestDraft({ id: draft.id, title: draft.title, completed: true, contentLanguage: draft.contentLanguage, circle: draft.circle });
 }
 
 // Decrypt and return the pending draft, or null. Expired / malformed / undecrypt-
@@ -160,6 +162,7 @@ export async function loadGuestDraft() {
       title: data.title,
       completed: !!data.completed,
       contentLanguage: data.contentLanguage ?? null,
+      circle: normalizeCircle(data.circle),
       createdAt: record.createdAt,
     };
   } catch {

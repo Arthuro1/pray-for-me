@@ -5,13 +5,13 @@
   "bundles": {
     "fr/ui": {
       "status": "needs-review",
-      "contentHash": "44df6f5ff4ca7b3a74d82bb9dede5e4e9bdb3f9e139267ca2054f3b5bb5aa1bf",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "e35dd78f0adab430647d4bbb487c1c806360569672b51b52174619a12a937d87",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "fr/landing": {
       "status": "needs-review",
-      "contentHash": "87ef5a395521733ca65971520801d1df9fbe752102ec5cd4e503c358b203579e",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "980bc604d7e356b45030370cfcb3936200be5137f42a87c2f388f54d9f297288",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "fr/plans/fast3": {
       "status": "needs-review",
@@ -298,15 +298,60 @@
       "contentHash": "08ecf12f9ff832ca59bc08107e0d69a7a6974db99a040b437e2c1c6a883d1840",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "fr/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "38e563e71886c154bb5de9dbc91eb71710b786f63bef2899b7d4759d22246833",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "fr/circles/self": {
+      "status": "needs-review",
+      "contentHash": "0b428768f1fbbf9b4b7910567f5e08532ca591469ec637e5f76b475b47654a6b",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "fr/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "ceb9ba32920163fa6c1ffb8d4287cddd707b8952be4b41b82628b9e0f94a57b9",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "fr/circles/household": {
+      "status": "needs-review",
+      "contentHash": "c3edd459f48893912770047caf5d6f44959427e74dd47668332485a8497dc90f",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "fr/circles/people": {
+      "status": "needs-review",
+      "contentHash": "ebdd71cbcbc0eac44168a0a6f860ef91d3b8bf7a1a9b467dc5e48fe3e250e05a",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "fr/circles/church": {
+      "status": "needs-review",
+      "contentHash": "53a66dd062d795870c4cfb7da0667aa4f3ed046fd0466b40699a0386dd951b87",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "fr/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "c35bd517c565f98c079c908a14ccc32acd321bac6e2e65f5d239f189bb162669",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "fr/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "5be6107a563cc623db0162e7878f0c944d90f80561ad1cd3dc49fe83b452c549",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "fr/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "e68b87bfa9cdc71a94080b75340b95d65285b2a831c0ffbb04fefd353f9005c5",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "en/ui": {
       "status": "needs-review",
-      "contentHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "en/landing": {
       "status": "needs-review",
-      "contentHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "en/plans/fast3": {
       "status": "needs-review",
@@ -593,15 +638,60 @@
       "contentHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "en/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "en/circles/self": {
+      "status": "needs-review",
+      "contentHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "en/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "en/circles/household": {
+      "status": "needs-review",
+      "contentHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "en/circles/people": {
+      "status": "needs-review",
+      "contentHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "en/circles/church": {
+      "status": "needs-review",
+      "contentHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "en/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "en/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "en/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "de/ui": {
       "status": "needs-review",
-      "contentHash": "8a705658cb409f83671e7811d704d1963e4487d2f96f89268bac238081d28c6b",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "73c54fb4723352596928c2d2bd79262655a06fad4d4feb122341dd3428fb05e3",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "de/landing": {
       "status": "needs-review",
-      "contentHash": "1a87563c04fed34a6c623a79d0cb039dcb2072c549b6667af9282a4af0573ba8",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "7d95eb4fa9c361444a96f713f815b1ae0cbfe6026680f623b493284e3aeab899",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "de/plans/fast3": {
       "status": "needs-review",
@@ -888,15 +978,60 @@
       "contentHash": "fd462f238df3347aa75566bc2c5bc8632e690b4315bf06f84dacf108bbfbd80a",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "de/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "fad4c0a84c10015210912e216598166ac474ad47d88e8e54f357ed3e5114f8a6",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "de/circles/self": {
+      "status": "needs-review",
+      "contentHash": "732834b46f4ec83f2856a713bed9479944edf7e8238f2e4aadc03c9914bab069",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "de/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "de/circles/household": {
+      "status": "needs-review",
+      "contentHash": "c9accab6a4acc20fa732e31d6210029662abef48405e8de2cc790dcedd367c72",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "de/circles/people": {
+      "status": "needs-review",
+      "contentHash": "77ba851a10280b568f4fbbed62777e048c7432c8c02c1caae16af9ec7227a328",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "de/circles/church": {
+      "status": "needs-review",
+      "contentHash": "e34dbb45b778b52dd1f999e6dd0ad4b8302d664762a975d8565a75b515853978",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "de/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "41eaa03e1630778084c7b6c8eb774e547949de5fd74c7ed1ac5af805ccde19eb",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "de/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "97a6fd6397c89b8f0a918d645543b0948462c89b025788baed7d936288e87191",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "de/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "1024c1e5a80c4083ac0a3b7dd7e0452f5392841d748bb50e2eed3b0fe0bf3e37",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "pt/ui": {
       "status": "needs-review",
-      "contentHash": "2fb6de58c548e5784b864c0f9a64d4e7c15024377e8f137459ab9a8eef8e1c1b",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "8864aa96c17edd82e353ed3987a9584a690ad35226a009394566bedcaeffac76",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "pt/landing": {
       "status": "needs-review",
-      "contentHash": "065fbcce5808807f86f652c17178de980838930a8cd696a9e17bc1bafdff4263",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "a2f4bd203777cad091e3131a80adf7585576064e830c5e60f66e95c3f1d24652",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "pt/plans/fast3": {
       "status": "needs-review",
@@ -1183,15 +1318,60 @@
       "contentHash": "50f999b6b0448ee0928e35c99be7fa3d46691680605a262900d1a7950310b80b",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "pt/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "0597da91397d13265d4c3344515187e6011048ef487f850b945f2715a853f768",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "pt/circles/self": {
+      "status": "needs-review",
+      "contentHash": "e48f1cf4c0d37c4c0706511492a56ac1c359e0f0e009286e8ebe7fe841d66268",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "pt/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "pt/circles/household": {
+      "status": "needs-review",
+      "contentHash": "c63d593f68b1cf3f3893ff66e13965694badecfb962012cb4d2843e4c76de2d1",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "pt/circles/people": {
+      "status": "needs-review",
+      "contentHash": "3724e82e2532533f85f421f588aca5111d2443904e598cf9e26918d846ede1ab",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "pt/circles/church": {
+      "status": "needs-review",
+      "contentHash": "bb80d47485ab4ca7608963898c10d9cb72f1fce79e96d312656e6ffd6952871c",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "pt/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "7d239cc275579135a620dc8b19dade287b70c2ac0cd7b01e738c40c80cbdb6c3",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "pt/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "9aff4f5dc18d124627b19c69a756dc366ba797f1e8ba0c74a90d38d676a0fd22",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "pt/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "7cae5769b236f1bfe3944e9c0f366047dc26b7fb66290ad26a8b85f2de21093d",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "zh/ui": {
       "status": "needs-review",
-      "contentHash": "5e373bd81c1a89ef74b88e350859147dff7c0ea06fa32604adb03d7a9c09f6d0",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "9d24a25fb8ba9aa0a680497977868afa3fa26e17ed9d27f46a8b40265b26cc3a",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "zh/landing": {
       "status": "needs-review",
-      "contentHash": "65bfa6d04ed55960f1a7479c40593d8d7851425051a1e0b561e9ffb886b2cd2c",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "4fbb99133bc65ab41a4e93e093e78cdb62f561dfa6c301cb9ed4429b3ddc691d",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "zh/plans/fast3": {
       "status": "needs-review",
@@ -1478,15 +1658,60 @@
       "contentHash": "e85b246cd6b2bc2d0fb85de7b9b32ebf328603f429600d21489718d0528c0786",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "zh/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "767ae15a5c80bd77c36eed666962e9dfef19e7900af58b05eb17bd12a3cba3c0",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "zh/circles/self": {
+      "status": "needs-review",
+      "contentHash": "5fff792d5ffb10a5b9ca3d4168981314940280f4d42e7ca6b503dc895b6bb3c5",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "zh/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "zh/circles/household": {
+      "status": "needs-review",
+      "contentHash": "9548728672d27048292328c47cdb537d0e652b7f2ea684039ebf04edd904892f",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "zh/circles/people": {
+      "status": "needs-review",
+      "contentHash": "93f64a4d8e29b7b675ff927b36c465b3ac12f5842b928ae40ac18bf350ded897",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "zh/circles/church": {
+      "status": "needs-review",
+      "contentHash": "70ffeb95dc540bad648a619678e7cbb16d404f4d91a4d0a03eb89cd9b1c1a798",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "zh/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "f7fb5ce0a8e1d8318740567e932942d578fcd68b2245b70fb12b8ef8b2d8888a",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "zh/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "482fefe928f5e930f14ddbb72bfd606c0ee4153d10b99dfb27f801635f8938f3",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "zh/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "2a2c3e1483502b4f476e7f80fa8e7b39b110f7115d05236ebef9161f14a850fc",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "es/ui": {
       "status": "needs-review",
-      "contentHash": "753fab6a80d9ddc3b4ab444c61b1a2d586bf8470c0302e728a30b1277ea21aba",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "b41c4189cf06680635db7e62ee6d3bfd03924a55676a36d40ec2a1c36c801ab5",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "es/landing": {
       "status": "needs-review",
-      "contentHash": "6f52dde364366f768677601c8090b7222bc989f957eb6c86abae9c9bb339b6ec",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "570665953660fd3fec197f84ac0a27f2905faed2edcb9cb0fbc3d9e2b337ac03",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "es/plans/fast3": {
       "status": "needs-review",
@@ -1773,15 +1998,60 @@
       "contentHash": "c073cc6882083ecef4a1891950fe162041b9c539b5d4d71364cc30c0b0dbd778",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "es/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "8c47991abb926572525463f9fdd9a6fb773c57894a8102fc45df21b427c31847",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "es/circles/self": {
+      "status": "needs-review",
+      "contentHash": "26ef5c55b1e7d2e318c586ca9b6605e98aba3cb7c78c2d04b93590681dbbe323",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "es/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "es/circles/household": {
+      "status": "needs-review",
+      "contentHash": "a0eb2b59e3abf22632cdab11284489d663c9e88958245dbb14131435ac3a5dd4",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "es/circles/people": {
+      "status": "needs-review",
+      "contentHash": "31fbd4ce9f0af4c3fe5e31eba8043f7e25b649e4605d36c63f81b4e756a27927",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "es/circles/church": {
+      "status": "needs-review",
+      "contentHash": "a24e84f8b36ef4e2ed879bc0ccdf81c3b519f13893260ca8225e5078b2d000f5",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "es/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "4d3941466f84150137570bbe760a0a893870b3f60144a4f174a669518b075b94",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "es/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "aab3911874b42ed78956e88ad3cbd7a98a41156aa6e2a159f22f431936c0aaa4",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "es/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "900f78a6e034c273b815232bcf3e513026c0537d72efb0d1da8773cd0789dc40",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "hi/ui": {
       "status": "needs-review",
-      "contentHash": "d4ca8a0a7ae07e1b4472a43f56578128b22236293bd873cdc8350f9042a0b1df",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "e60571840f523a735d0b258bc31293e4d14f6d23b38636c293a503cd63597d72",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "hi/landing": {
       "status": "needs-review",
-      "contentHash": "e390eeb710070b65188c5bff4a94d2468803e77818980431bea7701eebdb7bfa",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "002afe751be504ea6b227cae6000f36da799ebeb5fa720c57ef1cbe7426160a0",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "hi/plans/fast3": {
       "status": "needs-review",
@@ -2068,15 +2338,60 @@
       "contentHash": "4b30f473759c5a7bb854a18dcd92629eae30a8bc32f76e0d0d12ddd777992553",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "hi/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "21956d981a5c56e3a14d2dff0a85ac44bf5b6f83661504162176f9cddc02c2cf",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "hi/circles/self": {
+      "status": "needs-review",
+      "contentHash": "35327124838431211f911927e73c7eb6f1805353fdb458096929561a07c3c815",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "hi/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "hi/circles/household": {
+      "status": "needs-review",
+      "contentHash": "ed90856a014b7da6b67d67761bbe7fc39eb37b2acec414555857de0225c0cc69",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "hi/circles/people": {
+      "status": "needs-review",
+      "contentHash": "bc363ab7609ab624415b721e1f2640e08cd2c56a965d08aa3b92a0a3d38aee6e",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "hi/circles/church": {
+      "status": "needs-review",
+      "contentHash": "7ca2ee5bc526126ea60eea54391354271a51fa1505c5551b62a7a8facfe6862b",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "hi/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "39be22edbc9c494a89757e92088c15a58bb964f91ee5ed79f7fb9af7dea8c9d5",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "hi/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "e5002242c985bb4e9cd6df4d6435c0ae95b296079a650c1d51e4bb7a5672429e",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "hi/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "729491d60349b340c2b9b0478b5e2cae2792171d4e8c591140ecc12bc465d93b",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "ja/ui": {
       "status": "needs-review",
-      "contentHash": "7ef55b77792e3966849e561f321ab8c9dda0cbc414a78b319d994f6510f60db2",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "b74e8e5768a773205ab00e6cef3599c24757f16013c31e24e543b2514aa95566",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "ja/landing": {
       "status": "needs-review",
-      "contentHash": "ddda5643bdefd60e0c648a52de3473e6497dc65cf19e2fe3b93fa0dddd7c0c19",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "ffc999189d051732390328e1e20dc8139f8bd2dc8495f9228b54654be6ca8c62",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "ja/plans/fast3": {
       "status": "needs-review",
@@ -2363,15 +2678,60 @@
       "contentHash": "80b13946b5a63754c88dc0c43071f20cabdd7d336bab9818c103c5f16b47d49f",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "ja/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "5c7b8955753c3bbf7b64e829695ea028ba65aa2a71b4a16da7e9201751729565",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "ja/circles/self": {
+      "status": "needs-review",
+      "contentHash": "1e5885d56fbf25e613e8046ea8c1e357de20b263b9d4b5aad1cd01adbdcd2165",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "ja/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "ja/circles/household": {
+      "status": "needs-review",
+      "contentHash": "9c4ae9ca224148c109edd912f50b920964c31be24bb408b938bf934017d070d2",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "ja/circles/people": {
+      "status": "needs-review",
+      "contentHash": "c1f40fe35018bd2f4d1fcb1636de4e3432cc3a2ddc98eb8736b4c9feeebb6392",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "ja/circles/church": {
+      "status": "needs-review",
+      "contentHash": "7fff7b9892ea5b041cbff81f63900b59b3a63488faaf8146f63d7b2ce6655025",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "ja/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "858bd0549135f77a4c6d25fcf6faf7ca819657ce04ef92cef3fcace044217f9f",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "ja/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "38467be45c8edf00dc82c90004c8c79416bbfcfe560a76c59c072526e8d00970",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "ja/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "76317f32fd1411944c89adf0ac6e35d67043759a42af70bc59c6f25ef0034651",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "sw/ui": {
       "status": "needs-review",
-      "contentHash": "05cbe2467a5590a238bcfcc7cfd73ddbc85fc597b98e126c737d7a17857486ad",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "575aecf6b8302af867a1a602da66917ff4184b2e54c5e67fbacc2515e885a247",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "sw/landing": {
       "status": "needs-review",
-      "contentHash": "3ba87a58bc67eb98f338b263990fcbdf78803b720703cf933a90bed4eecc66a7",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "4244b4139a7c29a537ee317f330d38cb1cc1cc327448b5866f9476e2800dc824",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "sw/plans/fast3": {
       "status": "needs-review",
@@ -2658,15 +3018,60 @@
       "contentHash": "e2616e18c921f7288ef2b4b3e80157ba594b624f7ec498701651f782d8cd1936",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "sw/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "a0afd2451c228b1677ae83de16bd46db0a9e42bb729ab920ac66c8d710e0bc44",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "sw/circles/self": {
+      "status": "needs-review",
+      "contentHash": "7410172891bf9bd035c23b536ef71acf6a288a16207cd563a39efa9b7771c933",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "sw/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "sw/circles/household": {
+      "status": "needs-review",
+      "contentHash": "058fdaf6d837e19b3e4e94d886a5ec1ff7e7bf2300898685e37da637fc636dd9",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "sw/circles/people": {
+      "status": "needs-review",
+      "contentHash": "d4e81270de19290ac67c32690585ce8b85f37285418da97d3907ab307efb6f8e",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "sw/circles/church": {
+      "status": "needs-review",
+      "contentHash": "0dff5da35063024d1054dea9978065104c6abc1dcbb3b706d216cd2c1ab4fc2d",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "sw/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "610a116d27f84cabffb63bace02b33e5da6c76ce59d0072b80f4e7a64906667e",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "sw/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "ac2623d260140315590d0739c40b2327110305cf2ed787053504b0658073ab7a",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "sw/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "98151b3d9261dc17b95a80a55819fef2fd18cf6cbf3cc0c44d3dd7acdbae4992",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "am/ui": {
       "status": "needs-review",
-      "contentHash": "b470240ca078de22c42255d9149f4c8b1f944875633a636c143fdd53166a9e5d",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "3e8e74e4c2a0df8249c68f0e119b9ee59abd62deb435437a7ad3b7c2f58dc593",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "am/landing": {
       "status": "needs-review",
-      "contentHash": "886c6df7e7c58c91ad79ee407207af11639878db6f01b2fae9bc833af176886a",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "e2b52c775be8118c41983bd6d754e2a2368195bbad4c0b5dea688900cf655182",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "am/plans/fast3": {
       "status": "needs-review",
@@ -2953,15 +3358,60 @@
       "contentHash": "a7a89e94c7cb85ed22f102a0bca149ef6bf7661cfdcd4cb79be2ef47ad1800c4",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "am/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "6493f9ccc140926868b33f4204054ca9194ff9ff0b2e3c7652defc716eaef56b",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "am/circles/self": {
+      "status": "needs-review",
+      "contentHash": "3caa34589bec45097fa9aa8e12ed757e09875eaad512f9bb374b8ee04e654708",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "am/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "am/circles/household": {
+      "status": "needs-review",
+      "contentHash": "2e4d62b4489093bd058df1b20e2bb93f4b950ccd429b0efe4065beba78a2064a",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "am/circles/people": {
+      "status": "needs-review",
+      "contentHash": "15ddb597fb2ad03edcb75dc90b0f16c8252d2e97d42717ba9ff355acb39a70dc",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "am/circles/church": {
+      "status": "needs-review",
+      "contentHash": "8b544c39056859cea4e9d4365ded6e0ff5b5fc3674acf87a860e8f943c49cb30",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "am/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "701fddf53b6fa7fbae5f6b7467704c034d78dfe72ec16e8e21ba4c1619302027",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "am/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "ed7ddcb69ee62e67922d38767e38ab8efa986b5f7687cf53445a67e197f1cd56",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "am/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "f0692ad41e253603f31b4df2cf56d24f9b5ce905fbd65c80db18a92ce5335a5c",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "id/ui": {
       "status": "needs-review",
-      "contentHash": "bb8cf939df8782c035b995f679611709f0d70fdf67094a70d2791cdc9944a3dc",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "098251907a1099468a58d76cae68914615c6b1ef6f6aec00d8776444280a9dbc",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "id/landing": {
       "status": "needs-review",
-      "contentHash": "eebe61fb63ae4af1de3a18fc4b7f640bfe1bdc7f1e30b3434e2fdf63d78da81d",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "ccbc1f36f8f50102758b9825d2d94786b1c6e23babd10879b63aa3c850cd56f3",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "id/plans/fast3": {
       "status": "needs-review",
@@ -3248,15 +3698,60 @@
       "contentHash": "bb4aa2f9cc779fbad433b962f4a855b631d0d660cdf7ea234cc64e33f576786a",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "id/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "66da03c74fcfae66b623d906609a47ea724fa206cc42648ab498d4362f9632b2",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "id/circles/self": {
+      "status": "needs-review",
+      "contentHash": "f0875f9e78619fc57daf3088fed26532470dc0680b28f30a44a57694fba0b9ea",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "id/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "id/circles/household": {
+      "status": "needs-review",
+      "contentHash": "ecd8a87579f47380bdbd97a23125c072dc0c5fdabe9ea02f67b01bd9e09ee0ff",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "id/circles/people": {
+      "status": "needs-review",
+      "contentHash": "fd05087d4a5ac85ddb14aee18246a736818a50c9f1d449cf74ca202c10114d9f",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "id/circles/church": {
+      "status": "needs-review",
+      "contentHash": "623cd88d9aa74e24d10f841d942898f15e3ffbf15c51511c9dfd38bc5577d7d6",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "id/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "4ef4ea38984819475ea8cf2cf265f1a9c204a0cd089f9c3f5885f1bf97af4335",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "id/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "6bb1d1edabe3f77fb43bf7dc31db33bda2c7304853f901d41523f214c6cae910",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "id/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "b95e3906a8cbaa2cf5dcd7b6a131a63cd050a22ce7d2cce199410f6ea32d83f7",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "tl/ui": {
       "status": "needs-review",
-      "contentHash": "430494a3bdc75f24702b109d0f35611d1505c024fa08df60606c88ee338b612e",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "c6a5a7011c93d5bc10977320e245d20e6236a5c20b1e0da8479d8816c02fe79e",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "tl/landing": {
       "status": "needs-review",
-      "contentHash": "96fe8f62d6a35f4eeb12de2b4873bbb6a1fc0f03fc2575796138643907f870b5",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "4343436fe26d3b8992c2912f8e836ebf843fdabe8be82cd048e8b486e3d33a9a",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "tl/plans/fast3": {
       "status": "needs-review",
@@ -3543,15 +4038,60 @@
       "contentHash": "7db262cc98c666eacf2315e8c6616ff0ef0c3daff71d9b01a61b2e279d116543",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "tl/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "f8bad8196fde75806d562f8bd77398600473ba2efc080cf1df350a198e38405f",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "tl/circles/self": {
+      "status": "needs-review",
+      "contentHash": "6d85f5456590d278f63621f0ef3251c2230a79c2698ac4730b0b9fe7608f2338",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "tl/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "tl/circles/household": {
+      "status": "needs-review",
+      "contentHash": "f042d9ae0ce04ff1ee5abfcfc5790c05b2609467e2885cfded4b5a44e5b2b0bd",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "tl/circles/people": {
+      "status": "needs-review",
+      "contentHash": "75263e32ecc3bb78359c885f9cc03775b9bc0269bfe86c0fffa0dca891ca9414",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "tl/circles/church": {
+      "status": "needs-review",
+      "contentHash": "92497ac720a7e9b70fac1602757f5a003fa1fb999eb7b5c7bf1793551e38a2c9",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "tl/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "a1773d290ce3b7530b125d1326048e623a419589a9f67df91acab1473107d529",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "tl/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "5c2a7ee537caef6a0c74d521cd393469333df71061b2ab9c629d70531c87b0ca",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "tl/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "26a5805d419ed402e1e3bc4fdb1172c53413573bed0101ccc873a88d3f2fb523",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "ko/ui": {
       "status": "needs-review",
-      "contentHash": "35680c0b5b9300021510053eabe58dea2883584318ccb3ef5489dc2d9c7df887",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "723cc36c42c2656b5ee948ceebfe339448d515e5f2e7ec13bd0e3da405138281",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "ko/landing": {
       "status": "needs-review",
-      "contentHash": "a4c111a3a56cdd191b36951f0e5ab459179aae1a8536ef53c8d45e6d58eb3b3c",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "c29f8f0a9ff2743a7c6eb0da8382a0fc0fcea2008e8fe059d78e7e9260f2f981",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "ko/plans/fast3": {
       "status": "needs-review",
@@ -3838,15 +4378,60 @@
       "contentHash": "576ad2509aedd4b2801b3f226c1e7fc71d9729dc892dab128fcc2998e5bd6b55",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "ko/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "51b48fba8cd148d2ee6c886510a185399600152000f332452da042c38e4c9b8b",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "ko/circles/self": {
+      "status": "needs-review",
+      "contentHash": "148346095cd8620ef547d4c2cb964d236449eefde1440dd38634b58c69bfa040",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "ko/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "ko/circles/household": {
+      "status": "needs-review",
+      "contentHash": "1683556134bba04cad418cb951bd30402b2b418ff1a361fe2b0a0dfbde938f76",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "ko/circles/people": {
+      "status": "needs-review",
+      "contentHash": "85221e8cd4bd1bda08dfc93229c35d6db36e7d84391d7ccf9ff1608ed3c360bf",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "ko/circles/church": {
+      "status": "needs-review",
+      "contentHash": "5abc9c85350204d68f6a698839729a1c274a6903e7b5f34c84ff35a47a23321d",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "ko/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "7a0c39f4cc89498329a816bf04cb2505706594abdb17656e2cd3f544780952e8",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "ko/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "38370be4c8d8c36c252ac06f508ddddeb450f53f7a6d6fe080a3ff1564b7a85d",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "ko/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "c39bddbf80b50b2c2ba4c59f644a0f17329aef113e000cb4943bd8c67faabf70",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "ru/ui": {
       "status": "needs-review",
-      "contentHash": "c5ed8699cd9024509a8b94a9d832f959ab6ad5a6ac064cb7a6f2b597d90d2e85",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "19a0a0700ac55fee9aa53f0508292f15eecf2038c65d0d820cc985a5a43b1637",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "ru/landing": {
       "status": "needs-review",
-      "contentHash": "d492bec715c44a628ea88984b21e699f00b6a545ef50034ab7df223f6d7db2d8",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "e3a03d71448b98080f392ebe66b63a5c4223d6ae6e2ff50fb73d8269053949c3",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "ru/plans/fast3": {
       "status": "needs-review",
@@ -4133,15 +4718,60 @@
       "contentHash": "46f2d527c44e06f232a71f886876f54b894c8546cdfe079c990e6c999c5e214c",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "ru/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "2acdc163bf21dd7789924b50f413a901b71ac29b5a3a12c614602defadf96f54",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "ru/circles/self": {
+      "status": "needs-review",
+      "contentHash": "d87e4e9f8a97e8f9292120ad0660de2c1dffdf2a2c7b9e86760d3384545b7d56",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "ru/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "ru/circles/household": {
+      "status": "needs-review",
+      "contentHash": "b305c6ca7f1ff0f5b00ae202ecf67589a2f8de7b9779b27f5d5734644bbc8ded",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "ru/circles/people": {
+      "status": "needs-review",
+      "contentHash": "cbc74791e87e55b44930c6231e93d24b7cad9ce33c91e70a8091f1fe25960e7c",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "ru/circles/church": {
+      "status": "needs-review",
+      "contentHash": "1c495db67595684d4b7bd05e857f3dbf431868ea6b918d1fda263631b4f50ba1",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "ru/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "bad51e7a0e46f998f7f5f355852bc07ef3af23f36505607659eab6ad3c45707d",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "ru/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "551c90675bded306b43d7a410fbf27c10ad67008e5545435f1f7aee12aae3cac",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "ru/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "9fa96b7f4066377b641615376d17b02b2d18e729e1dc9bcd46b8b73503590622",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "ar/ui": {
       "status": "needs-review",
-      "contentHash": "e9dcd1f42aa831d29f5ec42b7c243ecd83e932305d3c56b4fe887167fe3ea719",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "9014008ef5c4edf6af016a8f61790474d80e4d1d42b106178ffcbbaa6aeb9577",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "ar/landing": {
       "status": "needs-review",
-      "contentHash": "8ba012c458dd961ed10c35deb5a870e4ce736fa6c987fc0032a30ba69641150c",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "f0ba8703ffab279c65f6e8a5cc3e5d27b4c1374c76a24e3e6327155166028493",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "ar/plans/fast3": {
       "status": "needs-review",
@@ -4428,15 +5058,60 @@
       "contentHash": "5f0c79f87377a43d13dcfd45083b87eab3fd19b7a9217e509c4be4467cbd754e",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
     },
+    "ar/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "d97fe20fb875116ba98bbde725d5856db71050b7fc01406e78f90f7df8e6e7c5",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "ar/circles/self": {
+      "status": "needs-review",
+      "contentHash": "d93d71fab5020967b533fceddb843ad3d808ae31b07e02873106c9670a4c58cf",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "ar/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "ar/circles/household": {
+      "status": "needs-review",
+      "contentHash": "50292699d83bdc42a442bc0c27a2c5f3be54c6bdc0f6ed4f2d48515e54ffb7e9",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "ar/circles/people": {
+      "status": "needs-review",
+      "contentHash": "aad9b9a90465200080d8332e1c886aa29ad42917965dd12ec6e18c040a4dfa8f",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "ar/circles/church": {
+      "status": "needs-review",
+      "contentHash": "d4ccacac16dd4e5a0b4de81e6f6148c46c0932d3ee4a5d679a643db7fb460d3c",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "ar/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "ed6eaf446ad18b908a574c85c3290b8046d82f051e916f3e7f0d587ae1366cc4",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "ar/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "4bc7d0af4f406fcb27778d81d433063393a9926881a87b52556594e0a54b1632",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "ar/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "9aaf3ddf382a8a4d71986de9857978b4abe89466362e4aeeed21bc85cd6d77b1",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
+    },
     "fa/ui": {
       "status": "needs-review",
-      "contentHash": "b83edff620fa90326b591d16f599095d5f5dd80b6caf2a90e21e75721c2ecc5a",
-      "sourceHash": "da65748cb6985c2fbc438e2ff58e9bad54b85d6c854c13f372a2c8e05f47543f"
+      "contentHash": "e093297e10d20dfe39ad49e36f0b28d7c38bda62105371382bf9bd95220d1dcc",
+      "sourceHash": "01188429c580e9702669efb6263e33ebee352d9457523d1071520ce16e6320d0"
     },
     "fa/landing": {
       "status": "needs-review",
-      "contentHash": "07af5ad21c73dc5e26341a757af7dbbda90aa10263478d167f1e58ff1f576f04",
-      "sourceHash": "f1fe65bbcfa6586f14c238c6d07563b8df4a14d2c2da14f067f3ac6cf668967b"
+      "contentHash": "9a84e9fb7fd13ad61fe506a4a1b474de4edfbc9ce14c0410cb01d9007392a3c6",
+      "sourceHash": "987e027c1e89b3c6ae8c821cbad1cba6f0c574d14c4c2944a0154a050aeca231"
     },
     "fa/plans/fast3": {
       "status": "needs-review",
@@ -4722,6 +5397,51 @@
       "status": "needs-review",
       "contentHash": "23bc5511adc60b4e91b8ca37ecfe1e61537fb368bc71be090613226db7bf192e",
       "sourceHash": "fe80125986391dbb2c046e7ca98212ddeab954cb8fe856ca90da3e221ab9689d"
+    },
+    "fa/circles/ui": {
+      "status": "needs-review",
+      "contentHash": "91596740fd7d4f5f4d71b848e02d67fa8eff6563facb8525b01d62b6dac93921",
+      "sourceHash": "952ac05e8dc25ac4c1194d9521c047af7a660a2f39a5b8cabd6095a8ae304403"
+    },
+    "fa/circles/self": {
+      "status": "needs-review",
+      "contentHash": "86f60e92eacc87046fbf14b7d0e1c9efaff9fb959e3441ca01e2409ef15e2273",
+      "sourceHash": "5e03b299d771d07cdc68548464048f83c9f9ffd5d225ab028c584e642fb9d537"
+    },
+    "fa/circles/self/deep": {
+      "status": "needs-review",
+      "contentHash": "839cb57579fc7900ae80df631c873270cc7311fe3fe17a1047bd6d01e69beec7",
+      "sourceHash": "cc99a0bda046817e9f90601a3beb25740d67ec79df2daabd87cbbf39cd24cdb7"
+    },
+    "fa/circles/household": {
+      "status": "needs-review",
+      "contentHash": "eaf8977d958a5ec904a47fc52d4b3a73271f7750e822a0d1f53195a075385110",
+      "sourceHash": "4e2b2d088d663ea83d4261b8458a07b11361b8b4170ac307184c2acd7131cb5b"
+    },
+    "fa/circles/people": {
+      "status": "needs-review",
+      "contentHash": "b9b589c82a32c8c38b305d6413d6776a6c6e6cbcc3ef3f2e4137441db1b68ac8",
+      "sourceHash": "bad21f80810b3f3a0943d8770c3861df1280f36fe57c3394962dd9e6266e215b"
+    },
+    "fa/circles/church": {
+      "status": "needs-review",
+      "contentHash": "76c715016d19ce0d55f92608763ee4cd6a170be400c01bd2ab995d55dad2631c",
+      "sourceHash": "4bbd9ac2024c1915e5b1f4ca452fee1d6c312a5f5d1c04903db3496a5b9e42be"
+    },
+    "fa/circles/authorities": {
+      "status": "needs-review",
+      "contentHash": "34ee179971a667241b0efac1538af51183c794c531d8dd9c675bc30a8eee6199",
+      "sourceHash": "824f46de7c96e7c65ac2c8d5d11b58671ea53541b93ef1215b20cace8c4241c6"
+    },
+    "fa/circles/nations": {
+      "status": "needs-review",
+      "contentHash": "75927b6a4a64530637c76b02fb66891b4d257187e9648b86e11132e7e4dd2f9c",
+      "sourceHash": "8064064b86928260a1839c4bc68c5cee6781d3f256a68c8f804ee7af3048f0c9"
+    },
+    "fa/circles/kingdom": {
+      "status": "needs-review",
+      "contentHash": "d7021ec1ecce81b5456cee6cd6c110041f9669ffd66ea02e0382aeeeecab81a6",
+      "sourceHash": "21c386b7e755b7637ccfc57ddbb8c1e18daab50d45e67f6d2c5cabf2ae30af44"
     }
   }
 }

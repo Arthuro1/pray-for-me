@@ -124,3 +124,25 @@ describe('guestPrayerDraft — declining & completion', () => {
     expect(persistedBlob()).not.toContain(SECRET);
   });
 });
+
+describe('guestPrayerDraft — the Intercession Circle', () => {
+  it('keeps a circle chosen on the landing page only inside the ciphertext', async () => {
+    const { id } = await saveGuestDraft({ title: SECRET, contentLanguage: 'en', circle: 'household' });
+    expect(persistedBlob()).not.toContain('household');
+    expect(await loadGuestDraft()).toMatchObject({ id, circle: 'household' });
+  });
+
+  it('keeps the circle when the prayer is marked prayed', async () => {
+    await saveGuestDraft({ title: SECRET, circle: 'nations' });
+    await markGuestDraftPrayed();
+    __resetMemoryForTests();
+    expect(await loadGuestDraft()).toMatchObject({ completed: true, circle: 'nations' });
+  });
+
+  it('reads a draft without a circle, or with an unknown one, as unplaced', async () => {
+    await saveGuestDraft({ title: SECRET });
+    expect((await loadGuestDraft()).circle).toBeNull();
+    await saveGuestDraft({ title: SECRET, circle: 'galaxies' });
+    expect((await loadGuestDraft()).circle).toBeNull();
+  });
+});

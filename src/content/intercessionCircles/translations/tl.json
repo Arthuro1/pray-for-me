@@ -1,0 +1,117 @@
+{
+  "self": {
+    "formation": "Si Cristo na nahuhubog sa akin.",
+    "heading": "Hayaang mahubog si Cristo sa iyo.",
+    "summary": "Bago natin dalhin ang mundo sa panalangin, hinuhubog muna ng Diyos ang nagdadala nito. Ipanalangin hindi lamang na gumaan ang kalagayan, kundi na lumago sa iyo ang ugali ni Jesus.",
+    "themes": [
+      { "title": "Pakikipag-isa sa Diyos" },
+      { "title": "Ang Kasulatan at pagbubulay-bulay" },
+      { "title": "Pakikinig at pagkilatis" },
+      { "title": "Pagsunod" },
+      { "title": "Pananampalatayang kumikilos" },
+      { "title": "Ang bunga ng Espiritu" },
+      { "title": "Mga ugnayang ayon sa Kaharian" }
+    ],
+    "cta": "Ipanalangin ang aking puso"
+  },
+  "household": {
+    "formation": "Si Cristo na nakikita sa aking tahanan.",
+    "heading": "Hayaang hubugin ni Cristo ang iyong tahanan.",
+    "summary": "Ang pananampalataya ay isinasabuhay sa karaniwang buhay sa tahanan. Ipanalangin na makilala, mahalin at makita si Cristo sa paraan ng pamumuhay at pakikitungo ng inyong pamilya sa isa’t isa.",
+    "themes": [
+      { "title": "Mga ugnayang nakasentro kay Cristo" },
+      { "title": "Ang mga anak at ang kanilang pananampalataya" },
+      { "title": "Pagpapatawad at pagkakasundo" },
+      { "title": "Karunungan at pag-iingat" },
+      { "title": "Pananampalataya sa bawat salinlahi" }
+    ],
+    "cta": "Idulog ang aking tahanan sa Diyos"
+  },
+  "people": {
+    "formation": "Ang pag-ibig ni Cristo para sa mga nasa paligid ko.",
+    "heading": "Ang pag-ibig ay nagpapasan ng pasanin.",
+    "summary": "Mga kaibigan, kapitbahay, katrabaho, isang humingi ng panalangin, isang mahirap mahalin: idulog sila sa Diyos, at hayaang ang panalangin ay maging pag-ibig na kumikilos.",
+    "themes": [
+      { "title": "Habag" },
+      { "title": "Pagpapasan ng pasanin" },
+      { "title": "Pagpapalakas ng loob" },
+      { "title": "Pagkakasundo" },
+      { "title": "Patotoo" },
+      { "title": "Pag-ibig sa gawa" }
+    ],
+    "cta": "Ipanalangin ang isang tao"
+  },
+  "church": {
+    "formation": "Ang bayan ni Cristo na pinalalakas at hinuhubog.",
+    "heading": "Ipanalangin ang Iglesiang minamahal ni Cristo.",
+    "summary": "Ang Iglesia ay kay Cristo. Matutong ipanalangin ang kanyang pagkakaisa, kabanalan, mga pinuno at misyon nang mas madalas kaysa punahin siya.",
+    "themes": [
+      { "title": "Pagkakaisa" },
+      { "title": "Kabanalan" },
+      { "title": "Espirituwal na paglago" },
+      { "title": "Mga pastor at pinuno" },
+      { "title": "Misyon" },
+      { "title": "Mga mananampalatayang inuusig" },
+      { "title": "Mga kaloob at paglilingkod" }
+    ],
+    "cta": "Ipanalangin ang Kanyang Iglesia"
+  },
+  "authorities": {
+    "formation": "Karunungan, katarungan at kapayapaan para sa mga pinagkatiwalaan ng pananagutan.",
+    "heading": "Ipanalangin ang mga namamahala.",
+    "summary": "Tinawag ang mga mananampalataya na ipanalangin ang mga may kapangyarihan, sang-ayon man tayo sa kanila o hindi. Humingi ng karunungan, katarungan, katapatan at kapayapaan, hindi kailanman ng tagumpay ng isang partido o kandidato.",
+    "themes": [
+      { "title": "Karunungan" },
+      { "title": "Katarungan" },
+      { "title": "Katapatan" },
+      { "title": "Pagpipigil sa kapangyarihan" },
+      { "title": "Kapayapaan" },
+      { "title": "Mabuting pamamahala" },
+      { "title": "Mga pinunong hindi natin sinasang-ayunan" }
+    ],
+    "cta": "Ipanalangin ang mga may kapangyarihan"
+  },
+  "nations": {
+    "formation": "Ang awa, kapayapaan at Ebanghelyo ng Diyos sa mga bayan.",
+    "heading": "Idulog ang mga bansa sa Diyos.",
+    "summary": "Abot ng malasakit ng Diyos ang bawat bansa, lahi at wika. Hayaang lumampas ang iyong panalangin sa sarili mong mundo: para sa kapayapaan, sa pinakamahihina, sa Iglesia sa bawat lugar at sa Ebanghelyo.",
+    "themes": [
+      { "title": "Kapayapaan" },
+      { "title": "Mga sibilyan at mahihina" },
+      { "title": "Pagkakasundo" },
+      { "title": "Katarungan" },
+      { "title": "Ang Iglesia sa bawat bansa" },
+      { "title": "Misyon" },
+      { "title": "Mga mananampalatayang inuusig" },
+      { "title": "Ang sarili nating bansa, nang may kababaang-loob" }
+    ],
+    "cta": "Idulog ang isang bansa sa Diyos"
+  },
+  "kingdom": {
+    "formation": "Ang kalooban at misyon ng Diyos higit sa lahat.",
+    "heading": "Hayaang hubugin ng Kanyang Kaharian ang iyong panalangin.",
+    "summary": "Ang pinakamalawak na abot-tanaw ng panalangin ay ang Kaharian ng Diyos at ang Kanyang kalooban, hindi ang sarili nating mga plano. Nasa loob nito ang lahat ng iba pang bilog, at maaari ka nitong anyayahang makibahagi sa iyong ipinapanalangin.",
+    "themes": [
+      { "title": "Ang Kanyang Kaharian, hindi akin" },
+      { "title": "Mga manggagawa para sa anihan" },
+      { "title": "Maipahayag ang Ebanghelyo" },
+      { "title": "Paggawa ng mga alagad" },
+      { "title": "Abot-kamay na Bibliya" },
+      { "title": "Katarungan at awa" },
+      { "title": "Espirituwal na pagpapanibago" },
+      { "title": "Isinugo upang maglingkod" }
+    ],
+    "cta": "Ipanalangin ang Kaharian ng Diyos"
+  },
+  "ui": {
+    "choose": "Pumili ng bilog para makita kung paano ito ipapanalangin.",
+    "prayFor": "Ipanalangin",
+    "scripture": "Sa Kasulatan",
+    "explore": "Tuklasin ang bilog na ito",
+    "exploreLess": "Ipakita nang mas kaunti",
+    "meaning": "Ano ang ibig sabihin nito",
+    "reflect": "Pagnilayan",
+    "prayThis": "Manalangin nang ganito",
+    "draft": "Burador · naghihintay ng pagsusuri"
+  }
+}

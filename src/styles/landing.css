@@ -100,28 +100,109 @@ html.landing-root body { background: var(--q-canvas); }
   .landing__movements > li:first-child { padding-inline-start: 0; border-inline-start: 0; }
 }
 
-/* The circles: a widening ring model beside the seven names. */
+/* The circles: a widening ring model beside the seven names — one control
+   (landing/LandingCircles.jsx). One palette: royal violet for reach, temple
+   gold for the heart and the incense. Never a colour per circle. */
 .landing__circles { display: grid; align-items: center; gap: var(--q-space-10); }
 .landing__rings { width: 100%; max-width: 20rem; margin-inline: auto; }
 .landing__rings-art { display: block; width: 100%; height: auto; }
-.landing__ring { fill: none; stroke: color-mix(in srgb, var(--q-royal) 30%, transparent); stroke-width: 1; }
-.landing__ring--heart { fill: color-mix(in srgb, var(--q-royal) 8%, transparent); stroke: var(--q-royal); stroke-width: 1.5; }
+
+.landing__ring {
+  fill: none;
+  stroke: var(--q-royal);
+  stroke-opacity: 0.22;
+  stroke-width: 1;
+  transition: stroke-opacity var(--q-motion-standard) var(--q-ease), stroke-width var(--q-motion-standard) var(--q-ease), fill-opacity var(--q-motion-standard) var(--q-ease);
+}
+/* Nothing chosen: the rings rest, the heart a little stronger. */
+.landing__ring--rest { stroke-opacity: 0.3; }
+.landing__ring--rest.landing__ring--heart { fill: var(--q-royal); fill-opacity: 0.08; stroke-opacity: 1; stroke-width: 1.5; }
+/* A circle chosen: the circles it reaches across, then the circle itself. */
+.landing__ring--within { stroke-opacity: 0.5; }
+.landing__ring--selected { fill: var(--q-royal); fill-opacity: 0.05; stroke-opacity: 1; stroke-width: 1.75; }
+.landing__ring--outside { stroke-opacity: 0.22; }
+
 .landing__ring-point { fill: var(--q-gold); }
 .landing__ring-rise { fill: none; stroke: var(--q-gold); stroke-linecap: round; stroke-width: 2.5; }
+
+/* Invisible hit bands, one ring step wide; the innermost is a disc. */
+.landing__ring-hit { fill: none; stroke: transparent; pointer-events: stroke; cursor: pointer; }
+.landing__ring-hit--heart { fill: transparent; stroke: none; pointer-events: fill; }
+
+/* The first time the section is seen: the gold point and incense, then each
+   ring drawn from the heart outward, once — about a second in all. */
+.landing__rings-art--armed .landing__ring { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.landing__rings-art--armed .landing__ring-point,
+.landing__rings-art--armed .landing__ring-rise { opacity: 0; }
+.landing__rings-art--revealed .landing__ring {
+  stroke-dasharray: 1;
+  animation: landing-ring-draw 420ms var(--q-ease) both;
+  animation-delay: calc(180ms + var(--ring-index) * 100ms);
+}
+.landing__rings-art--revealed .landing__ring-point,
+.landing__rings-art--revealed .landing__ring-rise { animation: q-rise-in 260ms var(--q-ease) both; }
+
+@keyframes landing-ring-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing__rings-art--armed .landing__ring,
+  .landing__rings-art--revealed .landing__ring { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+  .landing__rings-art--armed .landing__ring-point,
+  .landing__rings-art--armed .landing__ring-rise { opacity: 1; }
+}
 
 @media (min-width: 900px) {
   .landing__circles { grid-template-columns: 0.9fr 1.1fr; gap: var(--q-space-16); }
 }
 
-.landing__circle-list { display: grid; gap: 0 var(--q-space-6); margin: var(--q-space-6) 0 0; padding: 0; list-style: none; }
-.landing__circle-list > li { display: flex; align-items: flex-start; gap: var(--q-space-3); padding-block: var(--q-space-3); border-block-end: 1px solid var(--q-border); }
-.landing__circle-list > li > svg { margin-block-start: 1px; }
-.landing__circle-name { display: block; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.landing__circles-hint { margin: var(--q-space-4) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
+
+/* The seven names stay an editorial list: a hairline under each, no cards. */
+.landing__circle-list { display: grid; gap: 0 var(--q-space-6); margin: var(--q-space-4) 0 0; padding: 0; list-style: none; }
+.landing__circle-list > li { border-block-end: 1px solid var(--q-border); }
+.landing__circle-option {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  align-items: flex-start;
+  gap: var(--q-space-3);
+  padding-block: var(--q-space-3);
+  padding-inline: var(--q-space-2) 0;
+  border: 0;
+  border-inline-start: 2px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color var(--q-motion-micro) var(--q-ease);
+}
+.landing__circle-option > svg { margin-block-start: 1px; }
+.landing__circle-option.is-active .landing__circle-name,
+.landing__circle-option:hover .landing__circle-name { color: var(--q-royal-text); }
+.landing__circle-option[aria-expanded="true"] { border-inline-start-color: var(--q-royal); }
+.landing__circle-option[aria-expanded="true"] .landing__circle-name { color: var(--q-royal-text); }
+.landing__circle-name { display: block; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; transition: color var(--q-motion-micro) var(--q-ease); }
 .landing__circle-desc { display: block; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.45; }
 .landing__start { margin: var(--q-space-5) 0 0; color: var(--q-royal-text); font-family: var(--q-font-editorial); font-size: 1.125rem; }
 
 @media (min-width: 640px) {
   .landing__circle-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* The chosen circle's teaching, beneath the rings and the list. Switching
+   circles fades the old words a little upward, then the new ones rise in —
+   no carousel, no sliding panels. */
+.landing__circle-panel { grid-column: 1 / -1; min-width: 0; scroll-margin-top: var(--q-space-6); }
+.landing__circle-panel .circle-teaching { animation: q-rise-in var(--q-motion-standard) var(--q-ease) both; }
+.landing__circle-panel.is-leaving { opacity: 0; transform: translateY(-4px); transition: opacity 140ms var(--q-ease), transform 140ms var(--q-ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .landing__circle-panel .circle-teaching { animation: none; }
+  .landing__circle-panel.is-leaving { opacity: 1; transform: none; transition: none; }
 }
 
 /* How it works: three steps, numbered in the serif. */

@@ -389,3 +389,92 @@
 
 .plan-invite__who { display: flex; min-width: 0; align-items: center; gap: var(--q-space-3); }
 .plan-invite__who > span:last-child { overflow: hidden; color: var(--q-text); text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── Intercession Circle teaching (components/circles) ─────────────────── */
+/* One circle as a doorway into prayer. Editorial, not a card: the name in
+   gold, a serif heading, the formation statement, a measure no wider than a
+   comfortable reading line. Two columns on a wide screen (name and heading
+   beside the teaching), one on a phone. */
+.circle-teaching {
+  display: grid;
+  gap: var(--q-space-6) var(--q-space-12);
+  margin-block-start: var(--q-space-4);
+  padding-block-start: var(--q-space-10);
+  border-block-start: 1px solid var(--q-border);
+}
+
+@media (min-width: 900px) {
+  .circle-teaching { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+}
+
+.circle-teaching__label { display: inline-flex; align-items: center; gap: var(--q-space-2); }
+.circle-teaching__heading {
+  max-width: 18ch;
+  margin: var(--q-space-3) 0 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: clamp(1.875rem, 4.5vw, 2.5rem);
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+.circle-teaching__formation { margin: var(--q-space-3) 0 0; color: var(--q-gold-text); font-family: var(--q-font-editorial); font-size: 1.125rem; font-style: italic; line-height: 1.4; }
+
+.circle-teaching__body { max-width: 46rem; min-width: 0; }
+.circle-teaching__summary { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.1875rem; line-height: 1.6; }
+.circle-teaching__sub { margin-block: var(--q-space-6) var(--q-space-2); }
+
+/* The themes, as one quiet line of words separated by a middle dot. */
+.circle-teaching__themes { display: flex; flex-wrap: wrap; gap: var(--q-space-1) 0; margin: 0; padding: 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; list-style: none; }
+.circle-teaching__themes > li:not(:last-child)::after { content: '·'; margin-inline: var(--q-space-2); color: var(--q-gold-text); }
+
+.circle-teaching__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-5); margin: 0; padding: 0; list-style: none; }
+.circle-teaching__refs > li { min-width: 0; }
+.circle-teaching__refs .scripture-panel { min-width: min(100%, 20rem); }
+
+.circle-teaching__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-3); margin-block-start: var(--q-space-8); }
+@media (max-width: 520px) {
+  .circle-teaching__actions > * { flex: 1 1 100%; }
+}
+
+/* The deep layer: one section open at a time, hairlines between. */
+.circle-deep { margin-block-start: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
+.circle-deep__draft { display: inline-flex; margin-block: var(--q-space-4) var(--q-space-1); }
+.circle-deep__section { border-block-end: 1px solid var(--q-border); }
+.circle-deep__toggle-heading { margin: 0; font: inherit; }
+.circle-deep__toggle-heading > .q-disclosure { width: 100%; }
+.circle-deep__panel { padding-block: var(--q-space-1) var(--q-space-6); }
+.circle-deep__body { margin: 0 0 var(--q-space-3); color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
+.circle-deep__note { margin: 0 0 var(--q-space-4); color: var(--q-text-tertiary); font-size: var(--q-type-meta); font-style: italic; line-height: 1.6; }
+
+.circle-deep__themes { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.circle-deep__themes > li { border-block-end: 1px solid var(--q-border); }
+.circle-deep__theme { padding-block: var(--q-space-1) var(--q-space-5); padding-inline-start: var(--q-space-4); border-inline-start: 2px solid var(--q-gold); }
+
+.circle-deep__prompts { display: grid; gap: var(--q-space-1); margin: var(--q-space-3) 0 0; padding: 0; list-style: none; }
+.circle-deep__prompts > li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--q-space-3); }
+.circle-deep__prompt { flex: 1 1 16rem; margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; font-style: italic; line-height: 1.5; }
+
+/* The fruit of the Spirit: nine facets of one fruit in one palette — quiet
+   text toggles, never coloured tiles, never a count. */
+.circle-deep__facets { margin-block: var(--q-space-3) var(--q-space-4); }
+.circle-deep__facet-row { display: flex; flex-wrap: wrap; gap: var(--q-space-1) var(--q-space-4); }
+.circle-deep__facet {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-block-end: 2px solid transparent;
+  background: none;
+  color: var(--q-text-secondary);
+  font-family: var(--q-font-editorial);
+  font-size: 1.0625rem;
+  cursor: pointer;
+}
+.circle-deep__facet:hover { color: var(--q-royal-text); }
+.circle-deep__facet[aria-pressed="true"] { border-block-end-color: var(--q-gold); color: var(--q-text); }
+.circle-deep__facet-detail { margin-block-start: var(--q-space-3); }
+
+.circle-deep__questions { display: grid; gap: var(--q-space-3); margin: 0; padding: 0; list-style: none; }
+.circle-deep__questions > li { color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.5; }

@@ -26,6 +26,11 @@ export const EVENTS = Object.freeze({
   GUEST_PRAYER_PRAYED: 'guest_prayer_prayed',
   GUEST_PRAYER_SAVE_REQUESTED: 'guest_prayer_save_requested',
   GUEST_PRAYER_IMPORTED: 'guest_prayer_imported',
+  // Intercession Circles: THAT someone opened a circle's teaching or began
+  // praying from it, at most with `source` — never WHICH circle. A circle says
+  // who or what someone is carrying before God, so it is never sent anywhere.
+  CIRCLE_TEACHING_OPENED: 'circle_teaching_opened',
+  CIRCLE_PRAYER_STARTED: 'circle_prayer_started',
   REMINDER_SET: 'reminder_set',
   PRAYER_PRAYED: 'prayer_prayed',
   PRAYER_UPDATED: 'prayer_updated',

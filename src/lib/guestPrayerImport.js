@@ -51,6 +51,9 @@ async function runImport() {
       title: draft.title,
       schedule: defaultNewSchedule(),
       contentLanguage: draft.contentLanguage,
+      // The circle chosen on the landing page, if any — still the person's
+      // own choice, and still only inside the ciphertext.
+      circle: draft.circle,
     });
   }
   // Record the writing language locally so translation never pays to "translate"

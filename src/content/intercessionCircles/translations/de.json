@@ -1,0 +1,117 @@
+{
+  "self": {
+    "formation": "Christus gewinnt Gestalt in mir.",
+    "heading": "Lass Christus in dir Gestalt gewinnen.",
+    "summary": "Bevor wir die Welt im Gebet tragen, formt Gott den, der sie trägt. Bete nicht nur um leichtere Umstände, sondern darum, dass das Wesen Jesu in dir wächst.",
+    "themes": [
+      { "title": "Gemeinschaft mit Gott" },
+      { "title": "Die Bibel und das Nachsinnen" },
+      { "title": "Hören und Unterscheiden" },
+      { "title": "Gehorsam" },
+      { "title": "Ein Glaube, der handelt" },
+      { "title": "Die Frucht des Geistes" },
+      { "title": "Beziehungen nach Gottes Art" }
+    ],
+    "cta": "Für mein Herz beten"
+  },
+  "household": {
+    "formation": "Christus sichtbar in meinem Zuhause.",
+    "heading": "Lass Christus dein Zuhause prägen.",
+    "summary": "Glaube gehört in den gewöhnlichen Alltag zu Hause. Bete, dass Christus in deiner Familie erkannt, geliebt und in eurem Umgang miteinander sichtbar wird.",
+    "themes": [
+      { "title": "Beziehungen mit Christus in der Mitte" },
+      { "title": "Kinder und ihr Glaube" },
+      { "title": "Vergebung und Versöhnung" },
+      { "title": "Weisheit und Bewahrung" },
+      { "title": "Glaube über Generationen" }
+    ],
+    "cta": "Meine Familie vor Gott tragen"
+  },
+  "people": {
+    "formation": "Die Liebe Christi für die Menschen um mich herum.",
+    "heading": "Liebe trägt Lasten.",
+    "summary": "Freunde, Nachbarn, Kollegen, jemand, der um Gebet gebeten hat, jemand, den du schwer lieben kannst: Bring sie vor Gott und lass das Gebet zu einer Liebe werden, die handelt.",
+    "themes": [
+      { "title": "Mitgefühl" },
+      { "title": "Lasten tragen" },
+      { "title": "Ermutigung" },
+      { "title": "Versöhnung" },
+      { "title": "Zeugnis" },
+      { "title": "Liebe, die handelt" }
+    ],
+    "cta": "Jemanden im Gebet tragen"
+  },
+  "church": {
+    "formation": "Das Volk Christi gestärkt und geformt.",
+    "heading": "Bete für die Gemeinde, die Christus liebt.",
+    "summary": "Die Gemeinde gehört Christus. Lerne, für ihre Einheit, ihre Heiligkeit, ihre Leiter und ihren Auftrag zu beten, lieber als sie zu kritisieren.",
+    "themes": [
+      { "title": "Einheit" },
+      { "title": "Heiligkeit" },
+      { "title": "Geistliche Reife" },
+      { "title": "Pastoren und Leitende" },
+      { "title": "Mission" },
+      { "title": "Verfolgte Christen" },
+      { "title": "Gaben und Dienst" }
+    ],
+    "cta": "Für Seine Gemeinde beten"
+  },
+  "authorities": {
+    "formation": "Weisheit, Gerechtigkeit und Frieden für alle, die Verantwortung tragen.",
+    "heading": "Bete für die, die regieren.",
+    "summary": "Christen sind gerufen, für alle zu beten, die Verantwortung tragen, ob wir ihnen zustimmen oder nicht. Bitte um Weisheit, Gerechtigkeit, Integrität und Frieden, nie um den Sieg einer Partei oder eines Kandidaten.",
+    "themes": [
+      { "title": "Weisheit" },
+      { "title": "Gerechtigkeit" },
+      { "title": "Integrität" },
+      { "title": "Maßhalten in der Macht" },
+      { "title": "Frieden" },
+      { "title": "Gutes Regieren" },
+      { "title": "Verantwortliche, mit denen wir nicht übereinstimmen" }
+    ],
+    "cta": "Für die Regierenden beten"
+  },
+  "nations": {
+    "formation": "Gottes Barmherzigkeit, Frieden und Evangelium unter den Völkern.",
+    "heading": "Trag die Nationen vor Gott.",
+    "summary": "Gottes Sorge reicht zu jeder Nation, jedem Volk und jeder Sprache. Lass dein Gebet über deine eigene Welt hinauswachsen: für Frieden, für die Schwächsten, für die Gemeinde an jedem Ort und für das Evangelium.",
+    "themes": [
+      { "title": "Frieden" },
+      { "title": "Zivilisten und die Schwächsten" },
+      { "title": "Versöhnung" },
+      { "title": "Gerechtigkeit" },
+      { "title": "Die Gemeinde in jedem Land" },
+      { "title": "Mission" },
+      { "title": "Verfolgte Christen" },
+      { "title": "Das eigene Land, in Demut" }
+    ],
+    "cta": "Eine Nation vor Gott tragen"
+  },
+  "kingdom": {
+    "formation": "Gottes Wille und Auftrag über allem.",
+    "heading": "Lass Gottes Reich dein Gebet prägen.",
+    "summary": "Der weiteste Horizont des Gebets ist Gottes Reich und sein Wille, nicht unsere eigenen Pläne. Alle anderen Kreise haben darin Platz, und es kann dich einladen, an dem mitzuwirken, wofür du betest.",
+    "themes": [
+      { "title": "Sein Reich, nicht meins" },
+      { "title": "Arbeiter für die Ernte" },
+      { "title": "Das Evangelium bekannt machen" },
+      { "title": "Menschen zu Jüngern machen" },
+      { "title": "Zugang zur Bibel" },
+      { "title": "Gerechtigkeit und Barmherzigkeit" },
+      { "title": "Geistliche Erweckung" },
+      { "title": "Gesandt zum Dienen" }
+    ],
+    "cta": "Für Gottes Reich beten"
+  },
+  "ui": {
+    "choose": "Wähle einen Kreis, um zu sehen, wie du dafür beten kannst.",
+    "prayFor": "Beten für",
+    "scripture": "In der Bibel",
+    "explore": "Diesen Kreis entdecken",
+    "exploreLess": "Weniger anzeigen",
+    "meaning": "Was das bedeutet",
+    "reflect": "Zum Nachdenken",
+    "prayThis": "So beten",
+    "draft": "Entwurf · Prüfung ausstehend"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "self": {
+    "formation": "Kristus terbentuk di dalam diriku.",
+    "heading": "Biarlah Kristus terbentuk di dalam diri Anda.",
+    "summary": "Sebelum kita membawa dunia dalam doa, Allah membentuk orang yang membawanya. Berdoalah bukan hanya agar keadaan menjadi lebih mudah, tetapi agar karakter Yesus bertumbuh di dalam diri Anda.",
+    "themes": [
+      { "title": "Persekutuan dengan Allah" },
+      { "title": "Firman dan perenungan" },
+      { "title": "Mendengar dan membedakan" },
+      { "title": "Ketaatan" },
+      { "title": "Iman yang bertindak" },
+      { "title": "Buah Roh" },
+      { "title": "Hubungan yang sesuai Kerajaan Allah" }
+    ],
+    "cta": "Berdoa untuk hatiku"
+  },
+  "household": {
+    "formation": "Kristus tercermin di rumahku.",
+    "heading": "Biarlah Kristus membentuk rumah Anda.",
+    "summary": "Iman dihidupi dalam keseharian di rumah. Berdoalah agar Kristus dikenal, dikasihi, dan tercermin dalam cara keluarga Anda hidup dan memperlakukan satu sama lain.",
+    "themes": [
+      { "title": "Hubungan yang berpusat pada Kristus" },
+      { "title": "Anak-anak dan iman mereka" },
+      { "title": "Pengampunan dan pendamaian" },
+      { "title": "Hikmat dan perlindungan" },
+      { "title": "Iman dari generasi ke generasi" }
+    ],
+    "cta": "Membawa keluargaku ke hadapan Allah"
+  },
+  "people": {
+    "formation": "Kasih Kristus bagi orang-orang di sekitarku.",
+    "heading": "Kasih menanggung beban.",
+    "summary": "Sahabat, tetangga, rekan kerja, seseorang yang meminta didoakan, seseorang yang sulit dikasihi: bawalah mereka ke hadapan Allah, dan biarlah doa menjadi kasih yang bertindak.",
+    "themes": [
+      { "title": "Belas kasihan" },
+      { "title": "Menanggung beban" },
+      { "title": "Penguatan" },
+      { "title": "Pendamaian" },
+      { "title": "Kesaksian" },
+      { "title": "Kasih yang nyata" }
+    ],
+    "cta": "Mendoakan seseorang"
+  },
+  "church": {
+    "formation": "Umat Kristus dikuatkan dan dibentuk.",
+    "heading": "Berdoalah bagi Gereja yang dikasihi Kristus.",
+    "summary": "Gereja adalah milik Kristus. Belajarlah lebih siap mendoakan kesatuan, kekudusan, para pemimpin, dan misinya daripada mengkritiknya.",
+    "themes": [
+      { "title": "Kesatuan" },
+      { "title": "Kekudusan" },
+      { "title": "Kedewasaan rohani" },
+      { "title": "Gembala dan pemimpin" },
+      { "title": "Misi" },
+      { "title": "Orang percaya yang dianiaya" },
+      { "title": "Karunia dan pelayanan" }
+    ],
+    "cta": "Berdoa bagi Gereja-Nya"
+  },
+  "authorities": {
+    "formation": "Hikmat, keadilan, dan damai bagi mereka yang diberi tanggung jawab.",
+    "heading": "Berdoalah bagi mereka yang memimpin.",
+    "summary": "Orang percaya dipanggil untuk mendoakan para pemimpin, baik kita setuju dengan mereka maupun tidak. Mintalah hikmat, keadilan, integritas, dan damai, jangan pernah kemenangan sebuah partai atau seorang calon.",
+    "themes": [
+      { "title": "Hikmat" },
+      { "title": "Keadilan" },
+      { "title": "Integritas" },
+      { "title": "Pengendalian diri dalam kuasa" },
+      { "title": "Damai" },
+      { "title": "Pemerintahan yang baik" },
+      { "title": "Pemimpin yang tidak kita setujui" }
+    ],
+    "cta": "Berdoa bagi para pemimpin"
+  },
+  "nations": {
+    "formation": "Kemurahan, damai, dan Injil Allah di antara bangsa-bangsa.",
+    "heading": "Bawalah bangsa-bangsa ke hadapan Allah.",
+    "summary": "Kepedulian Allah menjangkau setiap bangsa, suku, dan bahasa. Biarlah doa Anda melampaui dunia Anda sendiri: bagi damai, bagi mereka yang paling rentan, bagi Gereja di setiap tempat, dan bagi Injil.",
+    "themes": [
+      { "title": "Damai" },
+      { "title": "Warga sipil dan yang rentan" },
+      { "title": "Pendamaian" },
+      { "title": "Keadilan" },
+      { "title": "Gereja di setiap bangsa" },
+      { "title": "Misi" },
+      { "title": "Orang percaya yang dianiaya" },
+      { "title": "Bangsa sendiri, dengan rendah hati" }
+    ],
+    "cta": "Membawa satu bangsa ke hadapan Allah"
+  },
+  "kingdom": {
+    "formation": "Kehendak dan misi Allah di atas segalanya.",
+    "heading": "Biarlah Kerajaan-Nya membentuk doa Anda.",
+    "summary": "Cakrawala doa yang paling luas adalah Kerajaan Allah dan kehendak-Nya, bukan rencana kita sendiri. Semua lingkaran lain ada di dalamnya, dan Kerajaan itu dapat mengundang Anda untuk ambil bagian dalam apa yang Anda doakan.",
+    "themes": [
+      { "title": "Kerajaan-Nya, bukan kerajaanku" },
+      { "title": "Pekerja untuk tuaian" },
+      { "title": "Injil diberitakan" },
+      { "title": "Memuridkan" },
+      { "title": "Akses kepada Alkitab" },
+      { "title": "Keadilan dan belas kasihan" },
+      { "title": "Kebangunan rohani" },
+      { "title": "Diutus untuk melayani" }
+    ],
+    "cta": "Berdoa bagi Kerajaan Allah"
+  },
+  "ui": {
+    "choose": "Pilih satu lingkaran untuk melihat cara mendoakannya.",
+    "prayFor": "Berdoa untuk",
+    "scripture": "Dalam Kitab Suci",
+    "explore": "Jelajahi lingkaran ini",
+    "exploreLess": "Tampilkan lebih sedikit",
+    "meaning": "Apa artinya",
+    "reflect": "Untuk direnungkan",
+    "prayThis": "Berdoa seperti ini",
+    "draft": "Draf · menunggu peninjauan"
+  }
+}

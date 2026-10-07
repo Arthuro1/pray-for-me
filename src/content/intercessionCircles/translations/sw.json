@@ -1,0 +1,117 @@
+{
+  "self": {
+    "formation": "Kristo akiumbika ndani yangu.",
+    "heading": "Mwache Kristo aumbike ndani yako.",
+    "summary": "Kabla hatujaubeba ulimwengu katika maombi, Mungu humuunda yule anayeubeba. Omba si tu ili hali ziwe rahisi, bali ili tabia ya Yesu ikue ndani yako.",
+    "themes": [
+      { "title": "Ushirika na Mungu" },
+      { "title": "Maandiko na kutafakari" },
+      { "title": "Kusikiliza na kupambanua" },
+      { "title": "Utii" },
+      { "title": "Imani inayotenda" },
+      { "title": "Tunda la Roho" },
+      { "title": "Mahusiano yanayofaa Ufalme" }
+    ],
+    "cta": "Kuomba kwa ajili ya moyo wangu"
+  },
+  "household": {
+    "formation": "Kristo akionekana nyumbani mwangu.",
+    "heading": "Mwache Kristo aiunde nyumba yako.",
+    "summary": "Imani huishiwa katika maisha ya kawaida ya nyumbani. Omba ili Kristo ajulikane, apendwe na aonekane katika jinsi familia yako inavyoishi na kutendeana.",
+    "themes": [
+      { "title": "Mahusiano yenye Kristo katikati" },
+      { "title": "Watoto na imani yao" },
+      { "title": "Msamaha na upatanisho" },
+      { "title": "Hekima na ulinzi" },
+      { "title": "Imani kutoka kizazi hadi kizazi" }
+    ],
+    "cta": "Kuibeba nyumba yangu mbele za Mungu"
+  },
+  "people": {
+    "formation": "Upendo wa Kristo kwa wale wanaonizunguka.",
+    "heading": "Upendo hubeba mizigo.",
+    "summary": "Marafiki, majirani, wafanyakazi wenzako, mtu aliyekuomba umwombee, mtu aliye vigumu kumpenda: walete mbele za Mungu, na acha maombi yawe upendo unaotenda.",
+    "themes": [
+      { "title": "Huruma" },
+      { "title": "Kubeba mizigo" },
+      { "title": "Kutia moyo" },
+      { "title": "Upatanisho" },
+      { "title": "Ushuhuda" },
+      { "title": "Upendo kwa vitendo" }
+    ],
+    "cta": "Kumbeba mtu katika maombi"
+  },
+  "church": {
+    "formation": "Watu wa Kristo wakiimarishwa na kuundwa.",
+    "heading": "Liombee Kanisa ambalo Kristo analipenda.",
+    "summary": "Kanisa ni mali ya Kristo. Jifunze kuombea umoja wake, utakatifu wake, viongozi wake na utume wake kwa urahisi kuliko kulikosoa.",
+    "themes": [
+      { "title": "Umoja" },
+      { "title": "Utakatifu" },
+      { "title": "Ukomavu wa kiroho" },
+      { "title": "Wachungaji na viongozi" },
+      { "title": "Utume" },
+      { "title": "Waumini wanaoteswa" },
+      { "title": "Karama na huduma" }
+    ],
+    "cta": "Kuliombea Kanisa lake"
+  },
+  "authorities": {
+    "formation": "Hekima, haki na amani kwa waliokabidhiwa madaraka.",
+    "heading": "Waombee wale wanaoongoza.",
+    "summary": "Waumini wameitwa kuwaombea wenye mamlaka, tukikubaliana nao au la. Omba hekima, haki, uadilifu na amani, kamwe si ushindi wa chama au mgombea.",
+    "themes": [
+      { "title": "Hekima" },
+      { "title": "Haki" },
+      { "title": "Uadilifu" },
+      { "title": "Kiasi katika mamlaka" },
+      { "title": "Amani" },
+      { "title": "Utawala bora" },
+      { "title": "Viongozi tusiokubaliana nao" }
+    ],
+    "cta": "Kuwaombea wenye mamlaka"
+  },
+  "nations": {
+    "formation": "Rehema, amani na Injili ya Mungu kati ya mataifa.",
+    "heading": "Yabebe mataifa mbele za Mungu.",
+    "summary": "Kujali kwa Mungu kunafika kila taifa, kabila na lugha. Acha maombi yako yavuke ulimwengu wako mwenyewe: kwa ajili ya amani, wale walio hatarini zaidi, Kanisa kila mahali na Injili.",
+    "themes": [
+      { "title": "Amani" },
+      { "title": "Raia na walio hatarini" },
+      { "title": "Upatanisho" },
+      { "title": "Haki" },
+      { "title": "Kanisa katika kila taifa" },
+      { "title": "Utume" },
+      { "title": "Waumini wanaoteswa" },
+      { "title": "Taifa letu, kwa unyenyekevu" }
+    ],
+    "cta": "Kulibeba taifa mbele za Mungu"
+  },
+  "kingdom": {
+    "formation": "Mapenzi na utume wa Mungu juu ya yote.",
+    "heading": "Acha Ufalme wake uunde maombi yako.",
+    "summary": "Upeo mpana zaidi wa maombi ni Ufalme wa Mungu na mapenzi yake, si mipango yetu wenyewe. Duara nyingine zote zimo ndani yake, na unaweza kukualika ushiriki katika kile unachokiombea.",
+    "themes": [
+      { "title": "Ufalme wake, si wangu" },
+      { "title": "Watenda kazi wa mavuno" },
+      { "title": "Injili ijulikane" },
+      { "title": "Kufanya wanafunzi" },
+      { "title": "Kupata Biblia" },
+      { "title": "Haki na rehema" },
+      { "title": "Uamsho wa kiroho" },
+      { "title": "Kutumwa kutumikia" }
+    ],
+    "cta": "Kuuombea Ufalme wa Mungu"
+  },
+  "ui": {
+    "choose": "Chagua duara ili uone jinsi ya kuliombea.",
+    "prayFor": "Omba kwa ajili ya",
+    "scripture": "Katika Maandiko",
+    "explore": "Chunguza duara hili",
+    "exploreLess": "Onyesha kidogo",
+    "meaning": "Maana yake",
+    "reflect": "Kwa kutafakari",
+    "prayThis": "Omba hivi",
+    "draft": "Rasimu · inasubiri mapitio"
+  }
+}

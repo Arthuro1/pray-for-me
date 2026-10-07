@@ -4,14 +4,17 @@ import {
   CIRCLE_UI,
   circleContent,
   circlesForTheme,
+  hasCircleOverlay,
   hasDeepLayer,
   loadCircleDeep,
+  loadCircleOverlay,
   SHORT_UI_KEYS,
   withOverlay,
 } from '.';
 import { CIRCLES } from '../../lib/circles';
 import { usfmFromReference } from '../../lib/bibleRef';
 import { localizeRef } from '../teaching/pick';
+import { LANG_CODES } from '../../i18n';
 
 const AUTHORED = ['en', 'fr'];
 const SHORT_FIELDS = ['formation', 'heading', 'summary', 'cta'];
@@ -80,6 +83,35 @@ describe('the circle content contract (short layer)', () => {
     // verse would stand out here before it ever reached a reader.
     for (const text of strings([CIRCLE_CONTENT, CIRCLE_UI])) expect(text).not.toMatch(/["“”«»„]/);
   });
+});
+
+// The 14 languages that are not authored in source. The short layer must be
+// whole in each: the landing page swaps whole language files and never mixes.
+const OVERLAY_LANGS = LANG_CODES.filter((lang) => !AUTHORED.includes(lang));
+const OVERLAYS = Object.fromEntries(await Promise.all(OVERLAY_LANGS.map(async (lang) => [lang, await loadCircleOverlay(lang)])));
+const text = (value) => typeof value === 'string' && value.trim().length > 0;
+
+describe('the short layer in every language', () => {
+  it('covers exactly the 14 languages that are not authored in source', () => {
+    expect(OVERLAY_LANGS).toHaveLength(14);
+    for (const lang of OVERLAY_LANGS) expect(hasCircleOverlay(lang), lang).toBe(true);
+    for (const lang of AUTHORED) expect(hasCircleOverlay(lang), lang).toBe(false);
+  });
+
+  for (const lang of OVERLAY_LANGS) {
+    it(`is complete in ${lang}`, () => {
+      const overlay = OVERLAYS[lang];
+      expect(Object.keys(overlay).sort()).toEqual([...CIRCLES, 'ui'].sort());
+      for (const content of CIRCLE_CONTENT) {
+        const tr = overlay[content.id];
+        for (const field of SHORT_FIELDS) expect(text(tr[field]), `${content.id}.${field}`).toBe(true);
+        expect(tr.themes, `${content.id}.themes`).toHaveLength(content.themes.length);
+        tr.themes.forEach((theme, i) => expect(text(theme.title), `${content.id}.themes[${i}]`).toBe(true));
+      }
+      for (const key of Object.keys(CIRCLE_UI)) expect(text(overlay.ui[key]), `ui.${key}`).toBe(true);
+      for (const value of strings(overlay)) expect(value).not.toMatch(/["“”«»„]/);
+    });
+  }
 });
 
 describe('the deep layer', () => {

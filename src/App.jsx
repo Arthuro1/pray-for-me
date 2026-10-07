@@ -8,6 +8,7 @@ import {
 import { shouldLoadAuthenticatedShell } from './lib/authSessionHint';
 import { pwaShortcutAction } from './lib/pwaInstall';
 import { APP_NAME } from './lib/brand';
+import { guestPrayerContext } from './lib/guestPrayerContext';
 
 import { BrandLoader } from './components/shared/Brand';
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -48,6 +49,7 @@ export default function App() {
     authIntent: 'sign-in',
   });
   const [guestLang, setGuestLang] = useState(anonymousLanguage);
+  const [guestContext, setGuestContext] = useState(null);
   const [guestLocaleReady, setGuestLocaleReady] = useState(() => isLocaleLoaded(anonymousLanguage()));
 
   useEffect(() => {
@@ -86,8 +88,9 @@ export default function App() {
     navigate('/', { replace: true });
   }, [mode, location.search, navigate]);
 
-  const beginGuestPrayer = () => {
+  const beginGuestPrayer = (context) => {
     const nextLang = anonymousLanguage();
+    setGuestContext(guestPrayerContext(context));
     setGuestLang(nextLang);
     setGuestLocaleReady(isLocaleLoaded(nextLang));
     setMode('guest-prayer');
@@ -101,6 +104,7 @@ export default function App() {
   const finishGuestPrayer = async () => {
     const { clearGuestDraft } = await import('./lib/guestPrayerDraft');
     await clearGuestDraft();
+    setGuestContext(null);
     setMode('landing');
   };
 
@@ -125,6 +129,7 @@ export default function App() {
       <Suspense fallback={<AppLoader />}>
         <GuestPrayerFlow
           lang={guestLang}
+          context={guestContext}
           onRequestSave={() => openAuth('save-prayer')}
           onFinish={finishGuestPrayer}
         />

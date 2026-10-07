@@ -4,12 +4,10 @@ import { dirFor, LANGUAGES } from '../i18n';
 import { normalizeTheme } from '../utils/theme';
 import { cachedLandingCopy, FALLBACK_LANDING_COPY, FALLBACK_LANDING_LANG, resolveLandingCopy } from './landing/copy';
 import { APP_NAME } from '../lib/brand';
-import { CIRCLES } from '../lib/circles';
 import { BrandLockup, BrandMark, Wordmark } from '../components/shared/Brand';
 import { PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
-import CircleGlyph from '../components/shared/CircleGlyph';
 import RiseMark from '../components/shared/RiseMark';
-import { circleReach } from '../components/shared/circleGeometry';
+import LandingCircles from './landing/LandingCircles';
 
 // The landing page is the product's first page, built from the product's own
 // tokens, primitives and classes (src/styles/landing.css): alabaster, royal
@@ -80,30 +78,8 @@ function FAQ({ q, a }) {
   );
 }
 
-// The seven Intercession Circles as one widening model: the same rings the
-// app's circle glyph draws, from "My heart" outward, around a gold point and
-// the incense rising from it. Breadth, never rank. Decorative only: the ordered
-// list beside it carries the words, so a screen reader hears the list once.
-function CircleRings() {
-  const scale = 140 / circleReach(CIRCLES[CIRCLES.length - 1]);
-  return (
-    <svg viewBox="0 0 320 320" className="landing__rings-art" aria-hidden="true" focusable="false">
-      {[...CIRCLES].reverse().map((circle, i) => (
-        <circle
-          key={circle}
-          cx="160"
-          cy="160"
-          r={circleReach(circle) * scale}
-          className={i === CIRCLES.length - 1 ? 'landing__ring landing__ring--heart' : 'landing__ring'}
-        />
-      ))}
-      <circle cx="160" cy="160" r="5" className="landing__ring-point" />
-      <path d="M157 150C163 145 164 139 160 133C157 128 157 123 161 118" className="landing__ring-rise" />
-    </svg>
-  );
-}
-
-// `onBeginPrayer` opens the pray-first guest flow (the hero and journal CTAs);
+// `onBeginPrayer` opens the pray-first guest flow (the hero and journal CTAs,
+// and a circle's call to pray, which passes { circle, prompt } to frame it);
 // `onSignIn` is the direct path to authentication (the nav + footer "Sign in"),
 // preserved for people who already have an account.
 export default function LandingPage({ onBeginPrayer, onSignIn }) {
@@ -347,7 +323,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <h1 className="landing__title rise-in">{hero.title}</h1>
           <p className="landing__lede">{hero.subtitle}</p>
           <div className="landing__actions">
-            <PrimaryButton onClick={onBeginPrayer} className="landing__cta">{beginLabel}</PrimaryButton>
+            <PrimaryButton onClick={() => onBeginPrayer()} className="landing__cta">{beginLabel}</PrimaryButton>
             <SecondaryButton onClick={onSignIn} className="landing__cta">{c.signIn}</SecondaryButton>
           </div>
           <p className="landing__reassurance">
@@ -377,7 +353,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               <RiseMark motion="still" size={140} className="today-focus__rise" />
               <p className="today-focus__context">{todayLabel}</p>
               <p className="today-focus__title">{samplePrayerTitle}</p>
-              <PrimaryButton onClick={onBeginPrayer} className="today-focus__begin">{prayNowLabel}</PrimaryButton>
+              <PrimaryButton onClick={() => onBeginPrayer()} className="today-focus__begin">{prayNowLabel}</PrimaryButton>
             </section>
             <ul className="landing__preview-rows">
               <li>
@@ -411,31 +387,9 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       </section>
 
       {/* From your heart to the nations: the seven Intercession Circles. Not
-          levels — the widening reach of intercession. */}
-      <section className="landing__band landing__circles" aria-labelledby="landing-circles-title">
-        <div className="landing__rings">
-          <CircleRings />
-        </div>
-        <div>
-          <h2 id="landing-circles-title" className="landing__heading">{circles.title}</h2>
-          <p className="landing__text">{circles.subtitle}</p>
-          <ol className="landing__circle-list">
-            {CIRCLES.map((circle, i) => {
-              const item = circles.items[i];
-              return (
-                <li key={circle}>
-                  <CircleGlyph circle={circle} size={24} />
-                  <span className="min-w-0">
-                    <span className="landing__circle-name">{item.name}</span>
-                    <span className="landing__circle-desc">{item.desc}</span>
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
-          <p className="landing__start">{circles.start}</p>
-        </div>
-      </section>
+          levels — the widening reach of intercession, each a doorway into
+          prayer (landing/LandingCircles.jsx). */}
+      <LandingCircles lang={rendered.lang} copy={circles} onBeginPrayer={onBeginPrayer} />
 
       {/* How it works: three steps, numbered in the serif. */}
       <section id="how-it-works" className="landing__band landing__narrow">
@@ -504,7 +458,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
             <h2 className="landing__heading">{c.calloutTitle}</h2>
             <p className="landing__text">{c.calloutDesc}</p>
             <p className="landing__note">{c.calloutDisclaimer}</p>
-            <PrimaryButton onClick={onBeginPrayer} className="mt-6">{beginLabel}</PrimaryButton>
+            <PrimaryButton onClick={() => onBeginPrayer()} className="mt-6">{beginLabel}</PrimaryButton>
           </div>
           <div>
             <p className="section-label">{c.calloutPreviewLabel}</p>
@@ -535,7 +489,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         <BrandMark size={56} />
         <h2 className="landing__final-title">{c.ctaTitle}</h2>
         <div className="landing__actions landing__actions--center">
-          <PrimaryButton onClick={onBeginPrayer} className="landing__cta">{beginLabel}</PrimaryButton>
+          <PrimaryButton onClick={() => onBeginPrayer()} className="landing__cta">{beginLabel}</PrimaryButton>
           <GooglePlayLink label={playStore.cta} />
         </div>
         <p className="landing__promise">{hero.promise}</p>

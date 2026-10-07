@@ -119,6 +119,20 @@ describe('importGuestPrayerOnce', () => {
     expect(localStorage.getItem('pfm_onboarded')).toBe('1');
   });
 
+  it('places the prayer in the circle chosen on the landing page, inside the ciphertext only', async () => {
+    const { id } = await saveGuestDraft({ title: SECRET, contentLanguage: 'en', circle: 'household' });
+    await autoInitAccountKey();
+
+    await importGuestPrayerOnce();
+    await drainQueue();
+
+    expect(usePrayerStore.getState().prayers.find((p) => p.id === id)?.circle).toBe('household');
+    for (const w of prayersWrites()) {
+      expect(w.payload).not.toHaveProperty('circle');
+      expect(JSON.stringify(w.payload)).not.toContain('household');
+    }
+  });
+
   it('runs exactly once under repeated (StrictMode-style) effects', async () => {
     const { id } = await saveGuestDraft({ title: SECRET, completed: false });
     await autoInitAccountKey();

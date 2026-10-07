@@ -1,0 +1,117 @@
+{
+  "self": {
+    "formation": "Cristo formado en mí.",
+    "heading": "Deja que Cristo tome forma en ti.",
+    "summary": "Antes de que llevemos el mundo en oración, Dios forma a quien lo lleva. Ora no solo para que cambien las circunstancias, sino para que el carácter de Jesús crezca en ti.",
+    "themes": [
+      { "title": "Comunión con Dios" },
+      { "title": "Las Escrituras y la meditación" },
+      { "title": "Escuchar y discernir" },
+      { "title": "La obediencia" },
+      { "title": "Una fe que actúa" },
+      { "title": "El fruto del Espíritu" },
+      { "title": "Relaciones según el Reino" }
+    ],
+    "cta": "Orar por mi corazón"
+  },
+  "household": {
+    "formation": "Cristo reflejado en mi hogar.",
+    "heading": "Deja que Cristo forme tu hogar.",
+    "summary": "La fe se vive en lo cotidiano de la casa. Ora para que Cristo sea conocido, amado y reflejado en la manera en que tu hogar vive y se trata.",
+    "themes": [
+      { "title": "Relaciones centradas en Cristo" },
+      { "title": "Los hijos y su fe" },
+      { "title": "El perdón y la reconciliación" },
+      { "title": "Sabiduría y protección" },
+      { "title": "La fe de generación en generación" }
+    ],
+    "cta": "Llevar a mi hogar ante Dios"
+  },
+  "people": {
+    "formation": "El amor de Cristo llevado a quienes me rodean.",
+    "heading": "El amor lleva las cargas.",
+    "summary": "Amigos, vecinos, compañeros, alguien que te pidió oración, alguien difícil de amar: preséntalos ante Dios y deja que la oración se convierta en un amor que actúa.",
+    "themes": [
+      { "title": "La compasión" },
+      { "title": "Llevar las cargas" },
+      { "title": "El ánimo" },
+      { "title": "La reconciliación" },
+      { "title": "El testimonio" },
+      { "title": "El amor en acción" }
+    ],
+    "cta": "Llevar a alguien en oración"
+  },
+  "church": {
+    "formation": "El pueblo de Cristo fortalecido y formado.",
+    "heading": "Ora por la Iglesia que Cristo ama.",
+    "summary": "La Iglesia pertenece a Cristo. Aprende a orar por su unidad, su santidad, sus líderes y su misión con más disposición que a criticarla.",
+    "themes": [
+      { "title": "La unidad" },
+      { "title": "La santidad" },
+      { "title": "La madurez" },
+      { "title": "Pastores y líderes" },
+      { "title": "La misión" },
+      { "title": "Los creyentes perseguidos" },
+      { "title": "Los dones y el servicio" }
+    ],
+    "cta": "Orar por su Iglesia"
+  },
+  "authorities": {
+    "formation": "Sabiduría, justicia y paz para quienes tienen una responsabilidad.",
+    "heading": "Ora por quienes gobiernan.",
+    "summary": "Los creyentes están llamados a orar por quienes ejercen autoridad, estemos de acuerdo con ellos o no. Pide sabiduría, justicia, integridad y paz, nunca la victoria de un partido o de un candidato.",
+    "themes": [
+      { "title": "La sabiduría" },
+      { "title": "La justicia" },
+      { "title": "La integridad" },
+      { "title": "Moderación en el poder" },
+      { "title": "La paz" },
+      { "title": "Un buen gobierno" },
+      { "title": "Líderes con quienes no estamos de acuerdo" }
+    ],
+    "cta": "Orar por las autoridades"
+  },
+  "nations": {
+    "formation": "La misericordia, la paz y el evangelio de Dios entre los pueblos.",
+    "heading": "Lleva a las naciones ante Dios.",
+    "summary": "El cuidado de Dios alcanza a toda nación, pueblo y lengua. Deja que tu oración vaya más allá de tu propio mundo: por la paz, por los más vulnerables, por la Iglesia en cada lugar y por el evangelio.",
+    "themes": [
+      { "title": "La paz" },
+      { "title": "Los civiles y los más vulnerables" },
+      { "title": "La reconciliación" },
+      { "title": "La justicia" },
+      { "title": "La Iglesia en cada nación" },
+      { "title": "La misión" },
+      { "title": "Los creyentes perseguidos" },
+      { "title": "Nuestra propia nación, con humildad" }
+    ],
+    "cta": "Llevar una nación ante Dios"
+  },
+  "kingdom": {
+    "formation": "La voluntad y la misión de Dios por encima de todo.",
+    "heading": "Deja que su Reino forme tu oración.",
+    "summary": "El horizonte más amplio de la oración es el Reino de Dios y su voluntad, no nuestros propios planes. Todos los demás círculos caben en él, y puede invitarte a participar en aquello por lo que oras.",
+    "themes": [
+      { "title": "Su Reino, no el mío" },
+      { "title": "Obreros para la cosecha" },
+      { "title": "Que el evangelio sea anunciado" },
+      { "title": "Hacer discípulos" },
+      { "title": "Acceso a la Biblia" },
+      { "title": "Justicia y misericordia" },
+      { "title": "Avivamiento espiritual" },
+      { "title": "Enviados a servir" }
+    ],
+    "cta": "Orar por el Reino de Dios"
+  },
+  "ui": {
+    "choose": "Elige un círculo para ver cómo orar por él.",
+    "prayFor": "Orar por",
+    "scripture": "En las Escrituras",
+    "explore": "Explorar este círculo",
+    "exploreLess": "Mostrar menos",
+    "meaning": "Qué significa",
+    "reflect": "Para reflexionar",
+    "prayThis": "Orar así",
+    "draft": "Borrador · revisión pendiente"
+  }
+}

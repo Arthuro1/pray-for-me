@@ -17,6 +17,8 @@ import { PrimaryButton, QuietButton, SecondaryButton, SectionLabel } from './sha
 import PrayerMusicControl from './PrayerMusicControl';
 import RiseMark from './shared/RiseMark';
 import { APP_NAME } from '../lib/brand';
+import { circleLabelKey, circlePromptKey } from '../lib/circles';
+import CircleGlyph from './shared/CircleGlyph';
 
 import { BrandLockup } from './shared/Brand';
 // The guest prayer moment intentionally has no imports from prayerStore,
@@ -91,12 +93,19 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
   );
 }
 
-export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }) {
+// `context` — { circle, prompt } — when the visitor came from a circle on the
+// landing page: the circle frames the question and is kept (encrypted, with the
+// draft) so it can be placed on their altar after sign-up; a prompt from
+// "Pray this" appears ABOVE the empty field as a starting point. Neither is
+// ever written into the visitor's own words.
+export default function GuestPrayerFlow({ lang = 'en', context = null, onFinish, onRequestSave }) {
   const [phase, setPhase] = useState(() => (hasPendingGuestDraftSync() ? 'decide' : 'capture'));
   const [text, setText] = useState('');
   const [saving, setSaving] = useState(false);
   const [prayer, setPrayer] = useState(null);
   const prayedRef = useRef(false);
+  const circle = context?.circle || null;
+  const question = t(lang, circle ? circlePromptKey(circle) : 'firstPrayerQuestion');
 
   // What is typed here is a prayer before it is anything else. Protect it while
   // it is still just text on a screen — encrypted, on this device, cleared the
@@ -120,7 +129,7 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
     const title = text.trim();
     if (!title || saving) return;
     setSaving(true);
-    const { id } = await saveGuestDraft({ title, completed: false, contentLanguage: lang });
+    const { id } = await saveGuestDraft({ title, completed: false, contentLanguage: lang, circle: context?.circle });
     commitCapture(); // the words now live in the guest prayer draft instead
     setContentLang(lang);
     track(EVENTS.GUEST_PRAYER_STARTED);
@@ -209,20 +218,31 @@ export default function GuestPrayerFlow({ lang = 'en', onFinish, onRequestSave }
         </header>
 
         <div className="flex flex-1 flex-col justify-center py-10 sm:py-16">
-          <SectionLabel className="mb-4">{APP_NAME}</SectionLabel>
-          <h2 id="guest-prayer-question" className="first-prayer__question rise-in">
-            {t(lang, 'firstPrayerQuestion')}
+          {circle ? (
+            <SectionLabel sacred className="first-prayer__circle mb-4">
+              <CircleGlyph circle={circle} size={18} selected />
+              <span>{t(lang, circleLabelKey(circle))}</span>
+            </SectionLabel>
+          ) : (
+            <SectionLabel className="mb-4">{APP_NAME}</SectionLabel>
+          )}
+          <h2 id="guest-prayer-question" className={`first-prayer__question rise-in${circle ? ' first-prayer__question--circle' : ''}`}>
+            {question}
           </h2>
-          <p className="first-prayer__lede rise-in rise-in--late">
-            {t(lang, 'firstPrayerBring')}
-          </p>
+          {context?.prompt ? (
+            <p className="first-prayer__starting-point rise-in rise-in--late">{context.prompt}</p>
+          ) : (
+            <p className="first-prayer__lede rise-in rise-in--late">
+              {t(lang, 'firstPrayerBring')}
+            </p>
+          )}
 
           <textarea
             autoFocus
             value={text}
             onChange={(event) => setText(event.target.value)}
             placeholder={t(lang, 'onboardCapturePlaceholder')}
-            aria-label={t(lang, 'firstPrayerQuestion')}
+            aria-label={question}
             rows={4}
             className="first-prayer__journal"
           />

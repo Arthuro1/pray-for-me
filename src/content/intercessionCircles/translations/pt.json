@@ -1,0 +1,117 @@
+{
+  "self": {
+    "formation": "Cristo formado em mim.",
+    "heading": "Deixe Cristo ser formado em você.",
+    "summary": "Antes de levarmos o mundo em oração, Deus forma quem o leva. Ore não só para que as circunstâncias mudem, mas para que o caráter de Jesus cresça em você.",
+    "themes": [
+      { "title": "Comunhão com Deus" },
+      { "title": "As Escrituras e a meditação" },
+      { "title": "Ouvir e discernir" },
+      { "title": "A obediência" },
+      { "title": "Uma fé que age" },
+      { "title": "O fruto do Espírito" },
+      { "title": "Relacionamentos moldados pelo Reino" }
+    ],
+    "cta": "Orar pelo meu coração"
+  },
+  "household": {
+    "formation": "Cristo refletido no meu lar.",
+    "heading": "Deixe Cristo moldar o seu lar.",
+    "summary": "A fé se vive no dia a dia da casa. Ore para que Cristo seja conhecido, amado e refletido na maneira como o seu lar vive e como cada um trata o outro.",
+    "themes": [
+      { "title": "Relacionamentos centrados em Cristo" },
+      { "title": "Os filhos e a fé deles" },
+      { "title": "O perdão e a reconciliação" },
+      { "title": "Sabedoria e proteção" },
+      { "title": "A fé de geração em geração" }
+    ],
+    "cta": "Levar meu lar diante de Deus"
+  },
+  "people": {
+    "formation": "O amor de Cristo levado a quem está ao meu redor.",
+    "heading": "O amor carrega os fardos.",
+    "summary": "Amigos, vizinhos, colegas, alguém que pediu oração, alguém difícil de amar: leve-os diante de Deus e deixe a oração se tornar um amor que age.",
+    "themes": [
+      { "title": "A compaixão" },
+      { "title": "Levar os fardos" },
+      { "title": "O encorajamento" },
+      { "title": "A reconciliação" },
+      { "title": "O testemunho" },
+      { "title": "O amor em ação" }
+    ],
+    "cta": "Levar alguém em oração"
+  },
+  "church": {
+    "formation": "O povo de Cristo fortalecido e formado.",
+    "heading": "Ore pela Igreja que Cristo ama.",
+    "summary": "A Igreja pertence a Cristo. Aprenda a orar pela unidade, santidade, líderes e missão dela com mais prontidão do que a criticá-la.",
+    "themes": [
+      { "title": "A unidade" },
+      { "title": "A santidade" },
+      { "title": "A maturidade" },
+      { "title": "Pastores e líderes" },
+      { "title": "A missão" },
+      { "title": "Os cristãos perseguidos" },
+      { "title": "Os dons e o serviço" }
+    ],
+    "cta": "Orar pela sua Igreja"
+  },
+  "authorities": {
+    "formation": "Sabedoria, justiça e paz para quem recebeu uma responsabilidade.",
+    "heading": "Ore por quem governa.",
+    "summary": "Os cristãos são chamados a orar por quem exerce autoridade, concordando ou não com essas pessoas. Peça sabedoria, justiça, integridade e paz, nunca a vitória de um partido ou de um candidato.",
+    "themes": [
+      { "title": "A sabedoria" },
+      { "title": "A justiça" },
+      { "title": "A integridade" },
+      { "title": "Moderação no poder" },
+      { "title": "A paz" },
+      { "title": "Um bom governo" },
+      { "title": "Líderes de quem discordamos" }
+    ],
+    "cta": "Orar pelas autoridades"
+  },
+  "nations": {
+    "formation": "A misericórdia, a paz e o evangelho de Deus entre os povos.",
+    "heading": "Leve as nações diante de Deus.",
+    "summary": "O cuidado de Deus alcança toda nação, povo e língua. Deixe a sua oração ir além do seu próprio mundo: pela paz, pelos mais vulneráveis, pela Igreja em cada lugar e pelo evangelho.",
+    "themes": [
+      { "title": "A paz" },
+      { "title": "Os civis e os mais vulneráveis" },
+      { "title": "A reconciliação" },
+      { "title": "A justiça" },
+      { "title": "A Igreja em cada nação" },
+      { "title": "A missão" },
+      { "title": "Os cristãos perseguidos" },
+      { "title": "Nossa própria nação, com humildade" }
+    ],
+    "cta": "Levar uma nação diante de Deus"
+  },
+  "kingdom": {
+    "formation": "A vontade e a missão de Deus acima de tudo.",
+    "heading": "Deixe o Reino dele moldar a sua oração.",
+    "summary": "O horizonte mais amplo da oração é o Reino de Deus e a sua vontade, não os nossos próprios planos. Todos os outros círculos cabem nele, e ele pode convidar você a participar daquilo pelo que ora.",
+    "themes": [
+      { "title": "O Reino dele, não o meu" },
+      { "title": "Trabalhadores para a seara" },
+      { "title": "O evangelho anunciado" },
+      { "title": "Fazer discípulos" },
+      { "title": "Acesso à Bíblia" },
+      { "title": "Justiça e misericórdia" },
+      { "title": "Avivamento espiritual" },
+      { "title": "Enviados para servir" }
+    ],
+    "cta": "Orar pelo Reino de Deus"
+  },
+  "ui": {
+    "choose": "Escolha um círculo para ver como orar por ele.",
+    "prayFor": "Orar por",
+    "scripture": "Nas Escrituras",
+    "explore": "Explorar este círculo",
+    "exploreLess": "Mostrar menos",
+    "meaning": "O que isso significa",
+    "reflect": "Para refletir",
+    "prayThis": "Orar assim",
+    "draft": "Rascunho · revisão pendente"
+  }
+}

@@ -162,3 +162,34 @@ describe('GuestPrayerFlow', () => {
     expect(screen.queryByText(t(lang, 'firstPrayerQuestion'))).toBeNull();
   });
 });
+
+// Arriving from a circle on the landing page: the circle frames the question
+// and travels with the encrypted draft; a "Pray this" prompt sits above the
+// field as a starting point — the field itself stays empty.
+describe('GuestPrayerFlow from an Intercession Circle', () => {
+  it('asks the circle’s own question and keeps the circle with the draft', async () => {
+    render(<GuestPrayerFlow lang={lang} context={{ circle: 'people', prompt: null }} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    const question = t(lang, 'circlePrompt_people');
+    expect(screen.getByRole('dialog', { name: question })).toBeTruthy();
+    expect(screen.getByText(t(lang, 'circle_people'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'firstPrayerQuestion'))).toBeNull();
+
+    fireEvent.change(screen.getByRole('textbox', { name: question }), { target: { value: 'Pour Marie' } });
+    fireEvent.click(screen.getByText(t(lang, 'firstPrayerPrayCta')));
+    await screen.findByText('Pour Marie');
+    expect(saveGuestDraft).toHaveBeenCalledWith(expect.objectContaining({ title: 'Pour Marie', circle: 'people' }));
+  });
+
+  it('shows a prompt as a starting point, never as the visitor’s words', () => {
+    const prompt = 'Donne-moi de la patience envers les autres, les circonstances et ton temps.';
+    render(<GuestPrayerFlow lang={lang} context={{ circle: 'self', prompt }} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    expect(screen.getByText(prompt)).toBeTruthy();
+    expect(screen.getByRole('textbox').value).toBe('');
+  });
+
+  it('asks the usual question when there is no circle', () => {
+    render(<GuestPrayerFlow lang={lang} onFinish={vi.fn()} onRequestSave={vi.fn()} />);
+    expect(screen.getByText(t(lang, 'firstPrayerQuestion'))).toBeTruthy();
+    expect(saveGuestDraft).not.toHaveBeenCalled();
+  });
+});

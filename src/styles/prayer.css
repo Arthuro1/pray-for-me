@@ -706,3 +706,20 @@
 .saved-step__close { display: flex; justify-content: flex-end; margin-inline-end: calc(-1 * var(--q-space-3)); }
 .saved-step__body { display: flex; flex-direction: column; align-items: center; gap: var(--q-space-1); margin-block-end: var(--q-space-6); text-align: center; }
 .saved-step__body > .q-dialog__title { margin-block-start: var(--q-space-3); }
+
+/* Arriving from an Intercession Circle: the circle names the moment and its
+   question frames the empty field — a longer question, so a smaller size. A
+   prompt from "Pray this" sits above the field as a starting point, in the
+   serif, never inside the person's own words. */
+.first-prayer__circle { display: inline-flex; align-items: center; gap: var(--q-space-2); }
+.first-prayer__question--circle { max-width: 22ch; font-size: clamp(1.875rem, 6vw, 2.5rem); }
+.first-prayer__starting-point {
+  margin: var(--q-space-4) 0 0;
+  padding-inline-start: var(--q-space-4);
+  border-inline-start: 2px solid var(--q-gold);
+  color: var(--q-text-secondary);
+  font-family: var(--q-font-editorial);
+  font-size: 1.1875rem;
+  font-style: italic;
+  line-height: 1.45;
+}

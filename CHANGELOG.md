@@ -28,6 +28,31 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 - **Privacy guards** extended: the circle survives the load path, the device
   cache and offline replay without ever becoming a column, and changes
   independently of labels and rhythm.
+- **Landing: the circles become a doorway into prayer**
+  (`src/pages/landing/LandingCircles.jsx`). The rings and the list are one
+  control: hover or focus previews a circle's reach (Nations lights My heart …
+  Nations), choosing one opens its teaching beneath — heading, formation
+  statement, summary, themes, three Scripture anchors and a call to pray —
+  with a short fade between circles and a one-time outward ring reveal
+  (reduced motion: none). Generous invisible hit bands on the rings; the list
+  stays the accessible control. Teaching in all 16 languages (14 AI-drafted
+  overlays, needs a native pass); `components/circles/CircleTeaching.jsx` is
+  shell-independent for later reuse in the app.
+- **Scripture on the landing page** opens in place: the app's reader is loaded
+  only on the first tap (no Supabase before it) and resolves text through the
+  usual pipeline, else links to the reader's Bible. Chapter and verse are kept
+  left-to-right inside Arabic and Persian. `VerseAccordion` gained
+  `defaultExpanded`, and a lookup abandoned on a StrictMode re-mount now runs
+  again instead of leaving the panel idle.
+- **The circle travels into the guest prayer**: the composer asks the circle's
+  own question (`circlePrompt_*` ×16), shows a "Pray this" prompt above an empty
+  field, and keeps the circle inside the encrypted guest draft so the imported
+  prayer lands in that circle after sign-up. Analytics record only that a
+  circle was opened or prayed from (`source`), never which.
+- My heart's deep layer (seven foundations, the fruit of the Spirit, reflection)
+  shows in development and review mode with a "review pending" label, and
+  nowhere else until signed. `check:content` now audits circle content; its
+  deliberate English fallback for the deep layer is baselined.
 
 ### Changed — Qetoret design system ("Modern Royal Priesthood")
 
