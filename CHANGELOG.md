@@ -16,6 +16,10 @@ and rollback notes. Unreleased entries are moved into a dated version at release
   tapped and folds again after a choice. Coming from a circle still preselects
   it. New keys `circleFieldLabel` (was `journalCircle`) and `circleNotSet`;
   removed `circleQuestion`, `circleQuestionHint`, `placeOnAltarHint`.
+- **Journal** has one circle-oriented way to find prayers: "By circle". The
+  Circle selector in Journal filters is gone, and "By circle" now also works on
+  Answered prayers (without the add button), so answered prayers are still
+  remembered by circle.
 
 ### Added — Intercession Circles, Milestone C: carry onto your altar (`docs/INTERCESSION_CIRCLES.md`)
 

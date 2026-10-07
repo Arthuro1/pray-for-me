@@ -168,9 +168,13 @@ approvals.
   preselects the circle and swaps the field label for the circle's question; a
   `prompt` shows above the EMPTY field as a starting point and is never saved or
   written into it.
-- **Journal** (`PrayersTab.jsx`): "By circle" view (offered once a circle is in
-  use, active segment only) via `groupByCircle`; per-group add calls
-  `onAddInCircle`; rows hide the circle (`PrayerListItem showCircle={false}`).
+- **Journal** (`PrayersTab.jsx`): "By circle" is the Journal's ONE
+  circle-oriented way to find prayers — there is no circle selector in the
+  filter sheet (`lib/journalSearch.js` has no circle filter). Offered once a
+  prayer in the current segment (Active or Answered) has a circle; grouped via
+  `groupByCircle`; per-group add (Active only) calls `onAddInCircle`; rows hide
+  the circle (`PrayerListItem showCircle={false}`); the count beside each
+  heading stays quiet meta text.
 - **Prayer detail**: circle eyebrow (opens the circle page through
   `onOpenCircle`; plain text where the host passes none) + "Place in a
   circle"/"Change circle" (`components/circles/PlaceCircleModal.jsx`: the full
@@ -194,8 +198,8 @@ approvals.
   together with the source filter (`queueCircles`, `filterQueueByCircle` in
   `lib/intercession.js`). Group walls themselves are never filtered by circle.
 - **Remember**: an answered prayer keeps its circle — the row in the Journal's
-  Answered segment names it beside "Testimony", the detail leads with it, and
-  the Journal's circle filter works on the Answered segment. Nothing interprets
+  Answered segment names it beside "Testimony", the detail names it, and
+  "By circle" works on the Answered segment. Nothing interprets
   why a prayer was answered, and a testimony shared to a group never carries a
   circle.
 - **Plans** (`PlansTab.jsx`): "Explore by circle" — seven doors to the circle

@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 //
-// Journal "By circle": the same active prayers grouped inner to outer by the
-// circle each was placed in, unplaced prayers last — a way to find prayers,
-// never a tally. Offered only once a circle is in use.
+// Journal "By circle": the Journal's one circle-oriented view — the same
+// prayers (Active or Answered) grouped inner to outer by the circle each was
+// placed in, unplaced prayers last — a way to find prayers, never a tally.
+// Offered only once a circle is in use.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { act, render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -99,7 +100,28 @@ describe('PrayersTab — By circle', () => {
     expect(screen.queryByRole('region', { name: t(lang, 'circleUnplaced') })).toBeNull();
   });
 
-  it('is an active-prayer view only', () => {
+  it('groups answered prayers too, without offering to add to an answered circle', () => {
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
+    fireEvent.click(byCircle());
+    expect(groupTitles()).toEqual([t(lang, 'circle_church')]);
+    const church = screen.getByRole('region', { name: t(lang, 'circle_church') });
+    expect(within(church).getByText('Prière done')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'addToCircle', { circle: t(lang, 'circle_church') }) })).toBeNull();
+  });
+
+  it('coming back from a circle page opened on Answered reopens Answered by circle', () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/prayers', state: { journalView: 'circles', filter: 'answered' } }]}>
+        <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
+      </MemoryRouter>,
+    );
+    expect(byCircle().getAttribute('aria-pressed')).toBe('true');
+    expect(groupTitles()).toEqual([t(lang, 'circle_church')]);
+  });
+
+  it('is offered on Answered only once an answered prayer has a circle', () => {
+    usePrayerStore.setState((s) => ({ prayers: s.prayers.map((p) => (p.id === 'done' ? { ...p, circle: undefined } : p)) }));
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
     expect(screen.queryByRole('button', { name: t(lang, 'journalByCircle') })).toBeNull();
@@ -137,7 +159,7 @@ describe('PrayersTab — By circle', () => {
     );
     fireEvent.click(byCircle());
     fireEvent.click(within(screen.getByRole('region', { name: t(lang, 'circle_household') })).getByRole('link', { name: t(lang, 'circle_household') }));
-    expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/prayers","fromState":{"journalView":"circles"}}');
+    expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/prayers","fromState":{"journalView":"circles","filter":"active"}}');
     cleanup();
 
     render(
@@ -151,13 +173,16 @@ describe('PrayersTab — By circle', () => {
     expect(within(screen.getByRole('region', { name: t(lang, 'circleUnplaced') })).queryByRole('link', { name: t(lang, 'circleUnplaced') })).toBeNull();
   });
 
-  it('works alongside the circle filter opened from Today', () => {
-    render(
-      <MemoryRouter initialEntries={[{ pathname: '/prayers', state: { circle: 'household' } }]}>
-        <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
-      </MemoryRouter>,
-    );
-    fireEvent.click(byCircle());
-    expect(groupTitles()).toEqual([t(lang, 'circle_household')]);
+  // One circle-oriented way to find prayers: the filter sheet holds no
+  // second, competing circle selector.
+  it('is the only circle tool — the filters have no circle selector', () => {
+    usePrayerStore.setState({ categories: [{ id: 'cat1', name: 'Famille', emoji: '' }] });
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'journalFilters') }));
+    const sheet = screen.getByRole('dialog', { name: t(lang, 'journalFilters') });
+    expect(within(sheet).queryByText(t(lang, 'circleFieldLabel'))).toBeNull();
+    for (const select of within(sheet).queryAllByRole('combobox')) {
+      expect(select.textContent).not.toContain(t(lang, 'circle_household'));
+    }
   });
 });

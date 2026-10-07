@@ -4,7 +4,6 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import LabelsManager from './LabelsManager';
-import { circleLabelKey } from '../lib/circles';
 
 const selectClass = 'min-h-11 w-full rounded-xl px-3 text-sm';
 
@@ -16,7 +15,6 @@ export default function JournalFilters({
   groups,
   hasPersonal,
   hasPlans,
-  circles = [],
   lang,
   tr,
   active,
@@ -79,22 +77,6 @@ export default function JournalFilters({
                     {category.emoji} {tr(category.name, lang)}
                   </option>
                 ))}
-              </select>
-            </label>
-          )}
-
-          {circles.length > 0 && (
-            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
-              {t(lang, 'circleFieldLabel')}
-              <select
-                value={filters.circle || 'all'}
-                onChange={set('circle')}
-                className={selectClass}
-                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
-              >
-                <option value="all">{t(lang, 'all')}</option>
-                {circles.map((circle) => <option key={circle} value={circle}>{t(lang, circleLabelKey(circle))}</option>)}
-                <option value="none">{t(lang, 'circleUnplaced')}</option>
               </select>
             </label>
           )}

@@ -36,7 +36,7 @@ import {
   readJournalHints,
 } from '../lib/journalHints';
 import { useContextualNudgeSlot } from '../components/shared/contextualNudge';
-import { circleLabelKey, groupByCircle, isCircle } from '../lib/circles';
+import { circleLabelKey, circleOf, groupByCircle } from '../lib/circles';
 import CircleGlyph from '../components/shared/CircleGlyph';
 import { tendCandidates } from '../lib/carried';
 import TendAltar from '../components/TendAltar';
@@ -92,23 +92,20 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   useEffect(() => { if (user?.id) fetchPrayerShares(user.id); }, [user?.id, fetchPrayerShares]);
   // Opened from a shortcut (e.g. the /answered redirect) with a preset segment.
   const [segment, setSegment] = useState(location.state?.filter === 'answered' ? 'answered' : 'active');
-  // Opened from a circle on Today ("On your altar") with that circle preset.
   const [tending, setTending] = useState(false);
   // Recomputed when the review closes, so the prayers just tended drop out.
   const tendList = useMemo(() => tendCandidates(prayers, completions), [prayers, completions, tending]); // eslint-disable-line react-hooks/exhaustive-deps
-  const [filters, setFilters] = useState(() => ({
-    ...EMPTY_JOURNAL_FILTERS,
-    ...(isCircle(location.state?.circle) ? { circle: location.state.circle } : {}),
-  }));
+  const [filters, setFilters] = useState(() => ({ ...EMPTY_JOURNAL_FILTERS }));
   // Search is folded behind an icon; its text and filters survive segment
   // switches so coming back to Active resumes exactly where Grace was.
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  // By circle: the same active prayers, grouped inner to outer by the circle
-  // each was placed in, unplaced ones last. A way to find prayers, never a
-  // tally — circles without prayers simply don't appear. A circle page's back
-  // link reopens it (`journalView`).
+  // By circle: the Journal's ONE circle-oriented way to find prayers — the same
+  // prayers (Active or Answered), grouped inner to outer by the circle each was
+  // placed in, unplaced ones last. A way to find prayers, never a tally —
+  // circles without prayers simply don't appear. A circle page's back link
+  // reopens it (`journalView`).
   const [byCircle, setByCircle] = useState(() => location.state?.journalView === 'circles');
   // People view: an OPTIONAL lens over the same prayers, grouped by who
   // they're for. Only offered when enough person data exists.
@@ -169,7 +166,6 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
     || filterOptions.people.length > 0
     || filterOptions.groups.length > 0
     || filterOptions.hasPlans
-    || filterOptions.circles.length > 0
     || (segment === 'answered' && answeredCount > 0)
   );
   const resultsLabel = (count) => count === 1
@@ -182,8 +178,9 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   const toolsUseful = journalToolsUseful(prayers);
   // People has its own, stronger signal (several people prayed for by name), so
   // it never waits on the list-length threshold.
-  // "By circle" is offered once someone has placed a prayer in a circle.
-  const circleViewAvailable = segment === 'active' && filterOptions.circles.length > 0;
+  // "By circle" is offered once a prayer in this segment has been placed in a
+  // circle — on Answered too, so answered prayers can be remembered by circle.
+  const circleViewAvailable = prayers.some((prayer) => prayer.status === segment && circleOf(prayer));
   const showByCircle = byCircle && circleViewAvailable && !peopleOpen;
   const utilityPanelOpen = searchOpen || !!search || peopleOpen
     || peopleAvailable || circleViewAvailable || (toolsUseful && hasFilterControls);
@@ -226,6 +223,53 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
         onClick={() => navigate(`/prayers/${prayer.id}`)}
       />
     </SwipeableRow>
+  );
+
+  // ── By circle: the listed entries grouped under their circles ────────────
+  // A heading per circle in use: its name leads to its teaching (coming back
+  // reopens this view), a quiet count, and — on Active — a way to bring a new
+  // prayer into it. Rows don't repeat the circle they sit under.
+  const renderByCircle = (entries) => (
+    <div className="journal-circles">
+      {groupByCircle(entries.map(({ prayer }) => prayer)).map(({ circle, prayers: inCircle }) => {
+        const name = circle ? t(lang, circleLabelKey(circle)) : t(lang, 'circleUnplaced');
+        const headingId = `journal-circle-${circle || 'unplaced'}`;
+        return (
+          <section key={circle || 'unplaced'} className="journal-circle" aria-labelledby={headingId}>
+            <header className="journal-circle__header">
+              <h2 id={headingId} className="journal-circle__title">
+                {circle && <CircleGlyph circle={circle} size={18} />}
+                {circle ? (
+                  <Link
+                    to={`/circles/${circle}`}
+                    state={{ from: '/prayers', fromState: { journalView: 'circles', filter: segment } }}
+                    title={t(lang, 'circleLearnAbout', { circle: name })}
+                    className="journal-circle__link"
+                  >
+                    {name}
+                  </Link>
+                ) : <span>{name}</span>}
+              </h2>
+              <span className="q-meta">{tp(lang, 'circlePrayerCount', inCircle.length)}</span>
+              {circle && onAddInCircle && segment === 'active' && (
+                <button
+                  type="button"
+                  onClick={() => onAddInCircle(circle)}
+                  aria-label={t(lang, 'addToCircle', { circle: name })}
+                  title={t(lang, 'addToCircle', { circle: name })}
+                  className="icon-button pressable journal-circle__add"
+                >
+                  <Plus size={18} aria-hidden="true" />
+                </button>
+              )}
+            </header>
+            <div className="journal__list">
+              {inCircle.map((prayer) => renderPrayer(prayer, searchMatches[prayer.id], false))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
   );
 
   // ── People view (only reachable when the toggle is shown) ────────────────
@@ -425,7 +469,6 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
             groups={filterOptions.groups}
             hasPersonal={filterOptions.hasPersonal}
             hasPlans={filterOptions.hasPlans}
-            circles={filterOptions.circles}
             lang={lang}
             tr={tr}
             active={structuredFiltersActive}
@@ -541,6 +584,8 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                 <p className="mb-4 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noMatch')}</p>
                 <SecondaryButton onClick={clearFilters} icon={X} iconSize={16}>{t(lang, 'clearFiltersBtn')}</SecondaryButton>
               </div>
+            ) : showByCircle ? (
+              renderByCircle(filteredEntries)
             ) : (
               <div className="journal__list">
                 {filteredEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}
@@ -575,48 +620,7 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                 </div>
               )
             ) : showByCircle ? (
-              <div className="journal-circles">
-                {groupByCircle(sortedEntries.map(({ prayer }) => prayer)).map(({ circle, prayers: inCircle }) => {
-                  const name = circle ? t(lang, circleLabelKey(circle)) : t(lang, 'circleUnplaced');
-                  const headingId = `journal-circle-${circle || 'unplaced'}`;
-                  return (
-                    <section key={circle || 'unplaced'} className="journal-circle" aria-labelledby={headingId}>
-                      <header className="journal-circle__header">
-                        <h2 id={headingId} className="journal-circle__title">
-                          {circle && <CircleGlyph circle={circle} size={18} />}
-                          {/* The circle's name leads to its teaching; coming
-                              back reopens this "By circle" view. */}
-                          {circle ? (
-                            <Link
-                              to={`/circles/${circle}`}
-                              state={{ from: '/prayers', fromState: { journalView: 'circles' } }}
-                              title={t(lang, 'circleLearnAbout', { circle: name })}
-                              className="journal-circle__link"
-                            >
-                              {name}
-                            </Link>
-                          ) : <span>{name}</span>}
-                        </h2>
-                        <span className="q-meta">{tp(lang, 'circlePrayerCount', inCircle.length)}</span>
-                        {circle && onAddInCircle && (
-                          <button
-                            type="button"
-                            onClick={() => onAddInCircle(circle)}
-                            aria-label={t(lang, 'addToCircle', { circle: name })}
-                            title={t(lang, 'addToCircle', { circle: name })}
-                            className="icon-button pressable journal-circle__add"
-                          >
-                            <Plus size={18} aria-hidden="true" />
-                          </button>
-                        )}
-                      </header>
-                      <div className="journal__list">
-                        {inCircle.map((prayer) => renderPrayer(prayer, searchMatches[prayer.id], false))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
+              renderByCircle(sortedEntries)
             ) : (
               <div className="journal__list">
                 {sortedEntries.map(({ prayer, match }) => renderPrayer(prayer, match))}

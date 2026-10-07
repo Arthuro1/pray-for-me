@@ -1,15 +1,12 @@
 import { testimonyList } from '../utils/prayer';
 
-import { CIRCLES, circleOf } from './circles';
-
-// circle: 'all' | one of CIRCLES | 'none' (prayers not placed in any circle —
-// "Your prayers", which is where every older prayer lives).
+// Circles are not a filter: the Journal has one circle-oriented way to find
+// prayers, its "By circle" view, rather than two competing ones.
 export const EMPTY_JOURNAL_FILTERS = Object.freeze({
   category: 'all',
   person: 'all',
   source: 'all',
   answeredDate: 'all',
-  circle: 'all',
 });
 
 const normalize = (value) => String(value || '')
@@ -86,10 +83,7 @@ export function journalFilterOptions(prayers, prayerShares = {}) {
   const groups = new Map();
   let hasPersonal = false;
   let hasPlans = false;
-  const usedCircles = new Set();
   for (const prayer of prayers || []) {
-    const circle = circleOf(prayer);
-    if (circle) usedCircles.add(circle);
     if (!prayer?.community_origin_id && !prayer?.origin_group_name) hasPersonal = true;
     if (prayer?.schedule?.plan?.id) hasPlans = true;
     if (!prayer?._locked) {
@@ -107,9 +101,6 @@ export function journalFilterOptions(prayers, prayerShares = {}) {
     groups: [...groups.values()].sort(byLabel),
     hasPersonal,
     hasPlans,
-    // Only the circles actually in use, inner to outer — the filter appears
-    // once someone has placed a prayer, never as a form to fill in.
-    circles: CIRCLES.filter((c) => usedCircles.has(c)),
   };
 }
 
@@ -127,8 +118,6 @@ function prayerMatchesFilters(prayer, filters, prayerShares, status, now) {
     if (!categoryIds.includes(filters.category)) return false;
   }
   if (filters.person !== 'all' && normalize(prayer.person_name) !== normalize(filters.person)) return false;
-  const circleFilter = filters.circle || 'all';
-  if (circleFilter !== 'all' && circleOf(prayer) !== (circleFilter === 'none' ? null : circleFilter)) return false;
   if (filters.source === 'personal') {
     if (prayer.community_origin_id || prayer.origin_group_name) return false;
   } else if (filters.source === 'plan') {
@@ -147,7 +136,6 @@ function prayerMatchesFilters(prayer, filters, prayerShares, status, now) {
 export function journalFiltersActive(filters, status) {
   return (
     filters.category !== 'all'
-    || (filters.circle || 'all') !== 'all'
     || filters.person !== 'all'
     || filters.source !== 'all'
     || (status === 'answered' && filters.answeredDate !== 'all')

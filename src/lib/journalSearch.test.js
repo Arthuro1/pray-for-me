@@ -137,46 +137,15 @@ describe('journal retrieval filters', () => {
       groups: ['Hope Group'],
       hasPersonal: true,
       hasPlans: false,
-      // No prayer has been placed in a circle, so no circle filter is offered.
-      circles: [],
     });
   });
 
-  it('offers only the Intercession Circles in use, inner to outer', () => {
-    const placed = [
-      { id: 'c1', status: 'active', title: 'Nation', circle: 'nations' },
-      { id: 'c2', status: 'active', title: 'Home', circle: 'household' },
-      { id: 'c3', status: 'active', title: 'Unplaced' },
-      { id: 'c4', status: 'active', title: 'Odd', circle: 'not-a-circle' },
-    ];
-    expect(journalFilterOptions(placed).circles).toEqual(['household', 'nations']);
-  });
-
-  it('filters by circle, and "none" finds the prayers not yet placed', () => {
-    const placed = [
-      { id: 'c1', status: 'active', title: 'Nation', circle: 'nations' },
-      { id: 'c2', status: 'active', title: 'Home', circle: 'household' },
-      { id: 'c3', status: 'active', title: 'Unplaced' },
-    ];
-    const ids = (circle) => filterJournalPrayers({ prayers: placed, status: 'active', filters: { ...EMPTY_JOURNAL_FILTERS, circle } })
-      .map(({ prayer }) => prayer.id);
-    expect(ids('household')).toEqual(['c2']);
-    expect(ids('none')).toEqual(['c3']);
-    expect(ids('all')).toEqual(['c1', 'c2', 'c3']);
-    expect(journalFiltersActive({ ...EMPTY_JOURNAL_FILTERS, circle: 'none' }, 'active')).toBe(true);
-  });
-
-  it('looks back over answered prayers by circle — carried requests included — without counting anything', () => {
-    const remembered = [
-      { id: 'a1', status: 'answered', title: 'Sarah', circle: 'household', answered_at: '2026-03-01T00:00:00Z' },
-      { id: 'a2', status: 'answered', title: 'Group request', circle: 'household', community_origin_id: 'c-1', origin_group_name: 'Église', answered_at: '2026-04-01T00:00:00Z' },
-      { id: 'a3', status: 'answered', title: 'Our church', circle: 'church', answered_at: '2026-05-01T00:00:00Z' },
-      { id: 'x1', status: 'active', title: 'Still carried', circle: 'household' },
-    ];
-    const ids = filterJournalPrayers({ prayers: remembered, status: 'answered', filters: { ...EMPTY_JOURNAL_FILTERS, circle: 'household' } })
-      .map(({ prayer }) => prayer.id);
-    expect(ids.sort()).toEqual(['a1', 'a2']);
-    expect(journalFiltersActive({ ...EMPTY_JOURNAL_FILTERS, circle: 'household' }, 'answered')).toBe(true);
+  // The Journal finds prayers by circle through its "By circle" view alone, so
+  // the filters never grow a second, competing circle system.
+  it('has no circle filter', () => {
+    expect(EMPTY_JOURNAL_FILTERS).not.toHaveProperty('circle');
+    expect(journalFilterOptions([{ id: 'c1', status: 'active', title: 'Home', circle: 'household' }]))
+      .not.toHaveProperty('circles');
   });
 
   it('does not count an answered-date choice as active-segment filtering', () => {
