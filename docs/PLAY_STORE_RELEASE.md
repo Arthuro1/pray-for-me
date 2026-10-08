@@ -6,7 +6,7 @@ English/French listing copy, Data safety draft, reviewer access, current policy
 checks and the release gate.
 
 The package remains `space.praystead.twa`; the prepared wrapper is Qetoret
-`1.0.3` (versionCode `4`), targetSdk `36`. Final artifact paths and SHA-256 hashes
+`1.0.4` (versionCode `5`), minSdk `24`, targetSdk `36`. Final artifact paths and SHA-256 hashes
 are in [release-artifacts.md](play-store/release-artifacts.md).
 
 As of 8 October 2026, local release checks and focused terms/UGC tests passed,

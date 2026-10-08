@@ -26,6 +26,8 @@ await check('Android launch origin, identity and version', async () => {
   assert.equal(twa.fullScopeUrl, `${origin}/`);
   assert(gradle.includes("hostName: 'qetoret.com'"));
   assert.match(gradle, /targetSdkVersion\s+36\b/);
+  assert(twa.minSdkVersion >= 24, "Play automatic protection requires minSdk 24 or higher");
+  assert.match(gradle, new RegExp(`minSdkVersion\\s+${twa.minSdkVersion}\\b`));
   assert.match(gradle, new RegExp(`versionCode\\s+${twa.appVersionCode}\\b`));
   assert(gradle.includes(`versionName "${twa.appVersionName}"`));
 });

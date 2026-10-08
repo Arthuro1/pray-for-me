@@ -1,5 +1,11 @@
 # Requested release follow-up — 8 October 2026
 
+**Android correction — 8 October 2026:** the **1.0.3 (4)** Android row below
+and `release-follow-up.json` preserve the earlier release snapshot. The current
+corrected wrapper is **1.0.4 (5)** with **minSdk 24**. Use the latest artifacts
+and verification in [release-artifacts.md](release-artifacts.md); the earlier
+minSdk 21 bundle is superseded.
+
 Checked at **2026-10-08 15:21:32 UTC**. Machine-readable evidence:
 [release-follow-up.json](release-follow-up.json).
 

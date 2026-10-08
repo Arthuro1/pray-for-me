@@ -14,8 +14,8 @@ below is **unverified until executed**. Use synthetic accounts and content only.
 | Fresh browser profile and second device | New-origin sign-in, recovery, review access and group-key distribution |
 | Existing Play installation upgraded in place | Stable package/signing, new domain launch and recovery for existing users |
 
-`minSdk 21` is the wrapper's installation floor, not proof that every modern web
-feature works on Android 5. Test the actual browser/runtime combination and
+`minSdk 24` is the wrapper's installation floor, not proof that every modern web
+feature works on Android 7.0. Test the actual browser/runtime combination and
 document any support adjustment before publishing.
 
 ## App and migration checks

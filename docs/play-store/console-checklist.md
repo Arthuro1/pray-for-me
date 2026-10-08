@@ -19,8 +19,8 @@ listing text; it does not certify production readiness. Paul’s explicit
   origins automatically. Keep a recovery path on the old origin before redirecting
   existing users.
 - [ ] **Signing and Android association:** verify the final signed bundle's
-  package `space.praystead.twa`, version `4` / `1.0.3`, target `36`; confirm version
-  `4` is unused. Add the **Play app-signing** certificate to the live Digital Asset
+  package `space.praystead.twa`, version `5` / `1.0.4`, minSdk `24`, target `36`;
+  confirm version `5` is unused. Add the **Play app-signing** certificate to the live Digital Asset
   Links file. The upload certificate alone does not verify Play-installed builds.
 - [ ] **Terms acceptance before community posting:** source now includes
   `CommunityTermsGate` around every signed-in route/composer, including existing
